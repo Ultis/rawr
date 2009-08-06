@@ -762,7 +762,7 @@ namespace Rawr.Hunter
             double apFromBase = 0 + HunterRatings.CHAR_LEVEL * 2;
             double apFromAgil = 0 + (calculatedStats.BasicStats.Agility) - 10;
             double apFromCarefulAim = 0 + (character.HunterTalents.CarefulAim / 3) * (calculatedStats.BasicStats.Intellect);
-            double apFromHunterVsWild = 0 + (character.HunterTalents.HunterVsWild * 0.1) * (calculatedStats.BasicStats.Stamina);
+            double apFromHunterVsWild = Math.Floor((character.HunterTalents.HunterVsWild * 0.1) * (calculatedStats.BasicStats.Stamina));
             double apFromGear = 0 + calculatedStats.BasicStats.AttackPower;
             //double apFromBuffs = 0 + character.ActiveBuffs.
             double apFromBloodFury = 0;
@@ -962,7 +962,7 @@ namespace Rawr.Hunter
             double mortalShotsCritDamage = 0.06 * character.HunterTalents.MortalShots;
 
             //CritDamageMetaGems
-            double metaGemCritDamage = statsBaseGear.CritBonusDamage;
+            double metaGemCritDamage = statsBaseGear.BonusCritMultiplier * 2;
 
             //Marked For Death
             double markedForDeathCritDamage = 0.02 * character.HunterTalents.MarkedForDeath;
@@ -1135,9 +1135,8 @@ namespace Rawr.Hunter
             // base_damage = normalized_shot + 408
             double aimedShotDamageNormal = autoShotDamageNormalized + 408;
 
-
             // crit_damage = 1 + mortal_shots + gem_crit + marked_for_death
-            double aimedShotCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
+            double aimedShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * (1 + metaGemCritDamage);
 
             // damage_adjust = talent_adjust * barrage_adjust * target_debuff_adjust * sniper_training_adjust * improved_ss_adjust
             double aimedShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
@@ -1166,7 +1165,7 @@ namespace Rawr.Hunter
             double explosiveShotDamageNormal = 425 + (RAP * 0.14);
 
             // crit_damage = 1 + mortal_shots + gem-crit
-            double explosiveShotCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage;
+            double explosiveShotCritAdjust = (1 + mortalShotsCritDamage) * (1 + metaGemCritDamage);
 
             // damage_adjust = talent_adjust * tnt * fire_debuffs * sinper_training * partial_resist
             // TODO: missing fire debuffs
@@ -1195,7 +1194,7 @@ namespace Rawr.Hunter
             double chimeraShotDamageNormal = autoShotDamageNormalized * 1.25;
 
             // crit for 'specials'
-            double chimeraShotCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
+            double chimeraShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * (1 + metaGemCritDamage);
 
             // damage_adjust = talent_adjust * nature_debuffs * ISS_cs_bonus * partial_resist
             // TODO: nature_debuffs
@@ -1238,7 +1237,7 @@ namespace Rawr.Hunter
             // base_damage = 492 + weapon_damage_gear + (RAP * 15%)
             double arcaneShotDamageNormal = 492 + statsBaseGear.WeaponDamage + (RAP * 0.15);
 
-            double arcaneShotCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
+            double arcaneShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * (1 + metaGemCritDamage);
             double arcaneShotDamageAdjust = talentDamageAdjust * partialResist * improvedArcaneShotDamageAdjust
                                             * ferociousInspirationArcaneDamageAdjust * improvedSSArcaneShotDamageAdjust; // missing arcane_debuffs!
 
@@ -1306,7 +1305,7 @@ namespace Rawr.Hunter
             #region August 2009 Kill Shot
 
             double killShotDamageNormal = (autoShotDamage * 2) + statsBaseGear.WeaponDamage + 650 + (RAP * 0.4);
-            double killShotCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
+            double killShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * (1 + metaGemCritDamage);
             double killShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * (1 - damageReduction);
 
             double killShotDamageReal = CalcEffectiveDamage(
@@ -1328,7 +1327,7 @@ namespace Rawr.Hunter
 
             double silencingShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + damageFromRAPNormalized) * 0.5 ;
             double silencingShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * (1 - damageReduction);
-            double silencingShotCritAdjust = 1 + metaGemCritDamage;
+            double silencingShotCritAdjust = 1 * (1 + metaGemCritDamage);
 
             double silencingShotDamageReal = CalcEffectiveDamage(
                                                 silencingShotDamageNormal,
