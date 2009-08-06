@@ -42,6 +42,7 @@ namespace Rawr.Retribution
             nudInFront.Value = (decimal)(calcOpts.InFront * 100);
             nudConsEff.Value = (decimal)(calcOpts.ConsEff * 100);
             nudHoR.Value = (decimal)(calcOpts.HoREff * 100);
+            nudTargetSwitch.Value = (decimal)calcOpts.TargetSwitches;
             nudTargets.Value = (decimal)calcOpts.Targets;
 
             chkBloodlust.Checked = calcOpts.Bloodlust;
@@ -465,6 +466,16 @@ namespace Rawr.Retribution
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
                 calcOpts.HoREff = (float)nudHoR.Value / 100f;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void nudTargetSwitch_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.TargetSwitches = (float)nudTargetSwitch.Value;
                 Character.OnCalculationsInvalidated();
             }
         }

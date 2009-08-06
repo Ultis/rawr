@@ -43,9 +43,10 @@ namespace Rawr.Retribution
             }
             else if (combats.CalcOpts.Seal == SealOf.Vengeance)
             {
-                Seal = new SealOfVengeance(combats);
-                SealDot = new SealOfVengeanceDoT(combats);
-                Judge = new JudgementOfVengeance(combats);
+                float stack = AverageSoVStackSize();
+                Seal = new SealOfVengeance(combats, stack);
+                SealDot = new SealOfVengeanceDoT(combats, stack);
+                Judge = new JudgementOfVengeance(combats, stack);
             }
             else
             {
@@ -92,9 +93,27 @@ namespace Rawr.Retribution
             {
                 return GetMeleeAttacksPerSec();
             }
+            else if (Seal.GetType() == typeof(SealOfRighteousness))
+            {
+                return GetMeleeAttacksPerSec() + GetJudgementsPerSec() + GetJudgementsPerSec();
+            }
             else
             {
                 return GetMeleeAttacksPerSec() + GetJudgementsPerSec();
+            }
+        }
+
+        public float AverageSoVStackSize()
+        {
+            float averageTimeOnMob = Combats.CalcOpts.FightLength * 60f / (Combats.CalcOpts.TargetSwitches + 1);
+            float timeToMaxStack = Combats.AttackSpeed * 4f;
+            if (averageTimeOnMob > timeToMaxStack)
+            {
+                return (2.5f * timeToMaxStack + 5f * (averageTimeOnMob - timeToMaxStack)) / averageTimeOnMob;
+            }
+            else
+            {
+                return 2.5f * averageTimeOnMob / timeToMaxStack;
             }
         }
 

@@ -179,11 +179,18 @@ namespace Rawr.Retribution
     public class JudgementOfVengeance : Skill
     {
 
-        public JudgementOfVengeance(CombatStats combats) : base(combats, AbilityType.Range, DamageType.Holy, true, true) { }
+        public JudgementOfVengeance(CombatStats combats, float averageStack)
+            : base(combats, AbilityType.Range, DamageType.Holy, true, true)
+        {
+            AverageStackSize = averageStack;
+        }
+
+
+        public float AverageStackSize { get; private set; }
 
         public override float AbilityDamage()
         {
-            return (1.0f + Stats.SpellPower * 0.22f + Stats.AttackPower * 0.14f) * 1.5f
+            return (1.0f + Stats.SpellPower * 0.22f + Stats.AttackPower * 0.14f) * (1f + 0.1f * AverageStackSize)
                 * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure + (Talents.GlyphOfJudgement ? 0.1f : 0f));
         }
 
@@ -325,11 +332,17 @@ namespace Rawr.Retribution
     public class SealOfVengeanceDoT : Skill
     {
 
-        public SealOfVengeanceDoT(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
+        public SealOfVengeanceDoT(CombatStats combats, float averageStack)
+            : base(combats, AbilityType.Spell, DamageType.Holy, false, false)
+        {
+            AverageStackSize = averageStack;
+        }
+
+        public float AverageStackSize { get; private set; }
 
         public override float AbilityDamage()
         {
-            return 5f * (Stats.SpellPower * 0.065f + Stats.AttackPower * 0.13f) / 5f
+            return AverageStackSize * (Stats.SpellPower * 0.065f + Stats.AttackPower * 0.13f) / 5f
                 * (1f + .03f * Talents.SealsOfThePure);
         }
 
@@ -341,11 +354,17 @@ namespace Rawr.Retribution
     public class SealOfVengeance : Skill
     {
 
-        public SealOfVengeance(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
+        public SealOfVengeance(CombatStats combats, float averageStack)
+            : base(combats, AbilityType.Melee, DamageType.Holy, true, false)
+        {
+            AverageStackSize = averageStack;
+        }
+
+        public float AverageStackSize { get; private set; }
 
         public override float AbilityDamage()
         {
-            return (Combats.WeaponDamage * 0.33f) * (1f + Talents.SealsOfThePure * .03f);
+            return (Combats.WeaponDamage * 0.066f * AverageStackSize) * (1f + Talents.SealsOfThePure * .03f);
         }
 
         public override float ChanceToLand() { return 1f; }

@@ -32,6 +32,7 @@ namespace Rawr.Retribution
             hoREff = 0f;
             bloodlust = true;
             stackTrinketReset = 0;
+            targetSwitches = 0f;
 
             simulateRotation = true;
 
@@ -153,6 +154,13 @@ namespace Rawr.Retribution
         {
             get { return stackTrinketReset; }
             set { stackTrinketReset = value; OnPropertyChanged("StackTrinketReset"); }
+        }
+
+        private float targetSwitches;
+        public float TargetSwitches
+        {
+            get { return targetSwitches; }
+            set { targetSwitches = value; OnPropertyChanged("TargetSwitches"); }
         }
 
         private bool simulateRotation;
@@ -306,6 +314,7 @@ namespace Rawr.Retribution
             clone.HoREff = HoREff;
             clone.Bloodlust = Bloodlust;
             clone.StackTrinketReset = StackTrinketReset;
+            clone.TargetSwitches = TargetSwitches;
 
             clone.JudgeCD = JudgeCD;
             clone.CSCD = CSCD;

@@ -112,6 +112,8 @@
             this.label28 = new System.Windows.Forms.Label();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
+            this.label31 = new System.Windows.Forms.Label();
+            this.nudTargetSwitch = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo20)).BeginInit();
@@ -143,6 +145,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTargetSwitch)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbMobType
@@ -964,6 +967,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label31);
+            this.tabPage1.Controls.Add(this.nudTargetSwitch);
             this.tabPage1.Controls.Add(this.label29);
             this.tabPage1.Controls.Add(this.nudHoR);
             this.tabPage1.Controls.Add(this.label30);
@@ -1377,6 +1382,34 @@
             0,
             0});
             // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(51, 291);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(85, 13);
+            this.label31.TabIndex = 50;
+            this.label31.Text = "Target switches:";
+            // 
+            // nudTargetSwitch
+            // 
+            this.nudTargetSwitch.DecimalPlaces = 1;
+            this.nudTargetSwitch.Location = new System.Drawing.Point(146, 289);
+            this.nudTargetSwitch.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.nudTargetSwitch.Name = "nudTargetSwitch";
+            this.nudTargetSwitch.Size = new System.Drawing.Size(60, 20);
+            this.nudTargetSwitch.TabIndex = 51;
+            this.nudTargetSwitch.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.nudTargetSwitch.ValueChanged += new System.EventHandler(this.nudTargetSwitch_ValueChanged);
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1418,6 +1451,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTargetSwitch)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1507,6 +1541,8 @@
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.NumericUpDown numericUpDown6;
         private System.Windows.Forms.NumericUpDown numericUpDown7;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.NumericUpDown nudTargetSwitch;
 
     }
 }
