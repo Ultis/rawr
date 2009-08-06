@@ -23,6 +23,9 @@ namespace Rawr.Hunter
         public bool useKillShot = false; // TODO
         public double viperDamagePenalty = 0; // TODO
 
+        public double specialShotsPerSecond = 0;
+        public double critSpecialShotsPerSecond = 0;
+
         public double DPS = 0;
         public double MPS = 0;
 
@@ -117,13 +120,20 @@ namespace Rawr.Hunter
 
             ShotData PrevShot = null;
 
+            specialShotsPerSecond = 0;
+            critSpecialShotsPerSecond = 0;
+
             for (int i = 0; i < priorities.Length; i++)
             {
                 if (priorities[i] == null) continue;
                 ShotData s = priorities[i];
                 s.calculateTimings(this, PrevShot);
+
+                if (s.freq > 0) specialShotsPerSecond += 1 / s.freq;
+                critSpecialShotsPerSecond += s.crits_per_sec;
+
                 PrevShot = s;
-            }
+            }            
         }
 
         public void calculateRotationDPS(Character character)
@@ -316,6 +326,8 @@ namespace Rawr.Hunter
         protected double final_freq = 0;
         protected double final_ratio = 0;
 
+        public double crits_per_sec = 0;
+
 
         public ShotData(Shots aType, bool aCritProcs, bool aGcd)
         {
@@ -464,6 +476,8 @@ namespace Rawr.Hunter
             final_ratio = final_freq > 0 ? (time_used > final_freq ? 1 : time_used / final_freq) : 0;
             if (!Priority.useKillShot && type == Shots.KillShot) final_ratio = 0;
             if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_ratio = 0;
+
+            crits_per_sec = (critProcs && final_freq > 0) ? 1 / final_freq : 0;
 
             //Debug.WriteLine("Final Freq is " + final_freq);
             //Debug.WriteLine("Final Ratio is " + final_ratio);

@@ -594,20 +594,18 @@ namespace Rawr.Hunter
             //Debug.WriteLine("hastePercentFromRacial = " + hastePercentFromRacial);
 
             #endregion
-            #region May 2009 Shot Speeds
-            double autoShotSpeed;
-            if ((character.Ranged.Speed / hasteMultiplier <= 0.5))
-            {
-                autoShotSpeed = (float)0.5;
-            }
-            else
-            {
-                autoShotSpeed = (float)(character.Ranged.Speed / hasteMultiplier);
-            }
+            #region August 2009 Shot Speeds
 
-            double shotsPerSec = 1 / autoShotSpeed;
+            double QSBaseFreqnecyIncrease = 0; //TODO!
+            double autoShotSpeed = character.Ranged.Speed / (totalStaticHaste * totalDynamicHaste);
 
-            shotsPerSec += 1 / 1.5;
+            double baseAutoShotsPerSecond = autoShotSpeed > 0 ? 1 / autoShotSpeed : 0;
+            double autoShotsPerSecond = baseAutoShotsPerSecond + QSBaseFreqnecyIncrease;
+            double specialShotsPerSecond = calculatedStats.priorityRotation.specialShotsPerSecond;
+            double totalShotsPerSecond = autoShotsPerSecond + specialShotsPerSecond;
+
+            double crittingSpecialsPerSecond = calculatedStats.priorityRotation.critSpecialShotsPerSecond;
+            double crittingShotsPerSecond = autoShotsPerSecond + crittingSpecialsPerSecond;
 
             #endregion
             #region May 2009 Hit Chance
@@ -651,48 +649,43 @@ namespace Rawr.Hunter
             #endregion
             #region May 2009 Crit Chance
 
-            double critHitPercent = HunterRatings.BASE_CRIT_PERCENT;
+            double critHitPercent = 0;
+
             calculatedStats.critBase = HunterRatings.BASE_CRIT_PERCENT;
+            critHitPercent += calculatedStats.critBase;
 
-            critHitPercent += (calculatedStats.BasicStats.Agility / HunterRatings.AGILITY_PER_CRIT) / 100;
             calculatedStats.critFromAgi = (calculatedStats.BasicStats.Agility / HunterRatings.AGILITY_PER_CRIT) / 100;
+            critHitPercent += calculatedStats.critFromAgi;
 
-            critHitPercent += (calculatedStats.BasicStats.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT) / 100;
             calculatedStats.critFromRating = (calculatedStats.BasicStats.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT) / 100;
+            critHitPercent += calculatedStats.critFromRating;
 
             //TODO:  	+= Proc Crit
 
-            critHitPercent += character.HunterTalents.LethalShots * 0.01;
-            critHitPercent += character.HunterTalents.KillerInstinct * 0.01;
-            critHitPercent += character.HunterTalents.MasterMarksman * 0.01;
-            calculatedStats.critFromTalents = (character.HunterTalents.LethalShots * 0.01) + (character.HunterTalents.KillerInstinct * 0.01) + (character.HunterTalents.MasterMarksman * 0.01);
+            // Simple talents
+            calculatedStats.critFromTalents = (character.HunterTalents.LethalShots * 0.01)
+                                            + (character.HunterTalents.KillerInstinct * 0.01)
+                                            + (character.HunterTalents.MasterMarksman * 0.01);
+            critHitPercent += calculatedStats.critFromTalents;
 
-            // += talents.mastertactician ( 10% chance to proc on "successful attack" for 8 seconds = 2% per point)
-            double masterTacticianUptime = CalcUptime(8, (0.1 * hitChance * shotsPerSec), options.duration);
-            critHitPercent += 0.02 * character.HunterTalents.MasterTactician * masterTacticianUptime;
 
+            // Master Tactician
+            double masterTacticianProcChance = 0.02 * character.HunterTalents.MasterTactician;
+            double masterTacticianShotsIn8Seconds = totalShotsPerSecond * 8 * hitChance;
+            double masterTacticianCritBonus = (1 - (Math.Pow(1 - 0.1, masterTacticianShotsIn8Seconds))) * masterTacticianProcChance;
+            critHitPercent += masterTacticianCritBonus;
 
             // Crit From target debuffs / player buffs TODO: Check this
-            critHitPercent += statsBuffs.PhysicalCrit;
             calculatedStats.critFromBuffs = statsBuffs.PhysicalCrit;
+            critHitPercent += calculatedStats.critFromBuffs;
 
-            //
-            double critdepression = 0;
-
-            if (levelDifference > 2)
-            {
-                critdepression = 0.03 + (levelDifference * 0.006);
-            }
-            else
-            {
-                critdepression += (levelDifference * 5 * 0.04) / 100;
-            }
-
+            // Crit Depression
+            double critdepression = (levelDifference > 2) ?  0.03 + (levelDifference * 0.006) : (levelDifference * 5 * 0.04) / 100;
             critHitPercent -= critdepression;
-            calculatedStats.critfromDepression = 0 - critdepression;
 
+            calculatedStats.critfromDepression = 0 - critdepression;
             calculatedStats.critRateOverall = critHitPercent;
-            double normalHitPercent = 1.0 - critHitPercent;
+
             #endregion
             #region May 2009 Ranged Attackpower
 
@@ -747,7 +740,7 @@ namespace Rawr.Hunter
             if (character.HunterTalents.ExposeWeakness > 0)
             {
                 apFromExposeWeakness = 0.25 * calculatedStats.BasicStats.Agility;
-                apFromExposeWeakness *= CalcUptime(7, ((character.HunterTalents.ExposeWeakness / 3) * critHitPercent * hitChance * shotsPerSec), options.duration);
+                apFromExposeWeakness *= CalcUptime(7, ((character.HunterTalents.ExposeWeakness / 3) * critHitPercent * hitChance * crittingShotsPerSecond), options.duration);
             }
 
 
@@ -1401,7 +1394,6 @@ namespace Rawr.Hunter
             double manaPerSecond = calculatedStats.BasicStats.Mp5 / 5;
             manaPerSecond += 0.6 * Math.Sqrt(calculatedStats.BasicStats.Intellect) * calculatedStats.BasicStats.Spirit * 0.005575;
             manaPerSecond += (statsBuffs.ManaRestoreFromMaxManaPerSecond * calculatedStats.BasicStats.Mana);
-            double autoShotsPerMin = shotsPerSec * 60;
 
             //RapidRecuperation
             manaPerSecond += (0.02 * character.HunterTalents.RapidRecuperation * calculatedStats.BasicStats.Mana / 3) * CalcUptime(15, rapidFireCooldown, options.duration);
