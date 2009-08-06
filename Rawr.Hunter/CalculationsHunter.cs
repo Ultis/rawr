@@ -147,12 +147,16 @@ namespace Rawr.Hunter
                 "Shot Stats:Blood Fury",
                 "Shot Stats:Berserk",
 
-                "Hunter Calculated Stats:Autoshot DPS",
-                "Hunter Calculated Stats:Priority Rotation DPS",
+                "Hunter DPS:Autoshot DPS",
+                "Hunter DPS:Priority Rotation DPS",
+                "Hunter DPS:Wild Quiver DPS",
+                "Hunter DPS:Proc DPS",
+                "Hunter DPS:Kill Shot low HP gain",
+                "Hunter DPS:Aspect Loss",
 
-				"Combined Stats:Hunter Total DPS",
-				"Combined Stats:Pet DPS",
-				"Combined Stats:Overall DPS"
+				"Combined DPS:Hunter DPS",
+				"Combined DPS:Pet DPS",
+				"Combined DPS:Total DPS"
 			};
 
             customChartNames = new string[] { "Relative Stat Values" };
@@ -1001,7 +1005,7 @@ namespace Rawr.Hunter
             // shot calcs
             // for all special shots, we populate a ShotData object
 
-            #region July 2009 AutoShot
+            #region August 2009 AutoShot
 
             double rangedWeaponDamage = 0;
             double rangedWeaponSpeed = 0;
@@ -1020,23 +1024,25 @@ namespace Rawr.Hunter
             // scope damage only applies to autoshot, so is not added to the normalized damage
             double rangedAmmoDamage = rangedAmmoDPS * rangedWeaponSpeed;
             double rangedAmmoDamageNormalized = rangedAmmoDPS * 2.8;
+
             double damageFromRAP = (float)RAP / 14 * rangedWeaponSpeed;
             double damageFromRAPNormalized = (float)RAP / 14 * 2.8;
+
             double autoShotDamage = rangedWeaponDamage + rangedAmmoDamage + statsBaseGear.WeaponDamage + damageFromRAP + calculatedStats.BasicStats.ScopeDamage;
             double autoShotDamageNormalized = rangedWeaponDamage + rangedAmmoDamageNormalized + statsBaseGear.WeaponDamage + damageFromRAPNormalized;
 
-            double autoShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust;
-            double autoShotCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage;
+            double autoShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * (1.0 - damageReduction);
+            double autoShotCritAdjust = 1 * (1 + metaGemCritDamage);
 
-            double autoShotDamageCrit = autoShotDamage * (1.0 + autoShotCritDamage);
-            double autoShotDamageTotal = autoShotDamage * (1 - critHitPercent)
-                                       + autoShotDamageCrit * critHitPercent;
-            double autoShotDamageReal = autoShotDamageTotal * autoShotDamageAdjust * (1 - damageReduction) * hitChance;
+            double autoShotDamageReal = CalcEffectiveDamage(
+                                           autoShotDamage,
+                                           hitChance,
+                                           critHitPercent,
+                                           autoShotCritAdjust,
+                                           autoShotDamageAdjust
+                                         );
 
-            calculatedStats.BaseAutoshotDPS = autoShotDamageReal / autoShotSpeed;
-
-            // this is used below, but id somewhat cryptic - will be phased out
-            double autoShotHitMissAdjust = (critHitPercent * autoShotCritDamage + 1) * hitChance;
+            calculatedStats.AutoshotDPS = autoShotDamageReal / autoShotSpeed;
 
             //Debug.WriteLine("rangedWeaponDamage = " + rangedWeaponDamage);
             //Debug.WriteLine("rangedAmmoDamage = " + rangedAmmoDamage);
@@ -1045,24 +1051,34 @@ namespace Rawr.Hunter
             //Debug.WriteLine("autoShotDamage = " + autoShotDamage);
             //Debug.WriteLine("autoShotDamageNormalized = " + autoShotDamageNormalized);
             //Debug.WriteLine("autoShotDPS : " + calculatedStats.BaseAutoshotDPS);
+            //Debug.WriteLine("autoShotCritDamage = " + autoShotCritDamage);
+
+            #endregion
+            #region August 2009 Wild Quiver
 
             calculatedStats.WildQuiverDPS = 0;
             //character.HunterTalents.WildQuiver = 2; // for isolation testing
             if (character.HunterTalents.WildQuiver > 0)
             {
-                double wildQuiverFrequency = (autoShotSpeed / (character.HunterTalents.WildQuiver * 0.04));
-                double wildQuiverBaseDamage = 0.8 * (rangedWeaponDamage + statsBaseGear.WeaponDamage + damageFromRAP);
-                double wildQuiverAdjustment = autoShotHitMissAdjust * partialResist;
-                double wildQuiverTotalDamage = wildQuiverBaseDamage * wildQuiverAdjustment;
+                double wildQuiverProcChance = character.HunterTalents.WildQuiver * 0.04;
+                double wildQuiverProcFrequency = (autoShotSpeed / wildQuiverProcChance);
+                double wildQuiverDamageNormal = 0.8 * (rangedWeaponDamage + statsBaseGear.WeaponDamage + damageFromRAP);
+                double wildQuiverDamageAdjust = talentDamageAdjust * partialResist; // TODO: add nature_debuffs
 
-                calculatedStats.WildQuiverDPS = wildQuiverTotalDamage / wildQuiverFrequency;
+                double wildQuiverDamageReal = CalcEffectiveDamage(
+                                                wildQuiverDamageNormal,
+                                                hitChance,
+                                                critHitPercent,
+                                                1,
+                                                wildQuiverDamageAdjust
+                                              );
 
-                //Debug.WriteLine("wildQuiverFrequency : " + wildQuiverFrequency);
-                //Debug.WriteLine("wildQuiverBaseDamage : " + wildQuiverBaseDamage);
+                calculatedStats.WildQuiverDPS = wildQuiverDamageReal / wildQuiverProcFrequency;
+
+                //Debug.WriteLine("wildQuiverProcFrequency : " + wildQuiverProcFrequency);
+                //Debug.WriteLine("wildQuiverDamageReal : " + wildQuiverDamageReal);
                 //Debug.WriteLine("wildQuiverDPS : " + calculatedStats.WildQuiverDPS);
             }
-
-            calculatedStats.AutoshotDPS = calculatedStats.BaseAutoshotDPS + calculatedStats.WildQuiverDPS;
 
             #endregion
             #region August 2009 Steady Shot
@@ -1445,7 +1461,7 @@ namespace Rawr.Hunter
             //Debug.WriteLine("options.petCobraReflexes = " + options.petCobraReflexes);
 
             calculatedStats.PetDpsPoints = pet.getDPS();
-            calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + calculatedStats.CustomDPS);
+            calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + calculatedStats.WildQuiverDPS + calculatedStats.CustomDPS);
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints + calculatedStats.PetDpsPoints;
 
             return calculatedStats;

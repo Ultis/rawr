@@ -20,7 +20,6 @@ namespace Rawr.Hunter
 		private double _PetKillCommandDPS;
         private double _autoshotDPS;
         private double _wildQuiverDPS;
-        private double _baseAutoshotDPS;
         private double _customDPS;
 	
         
@@ -58,8 +57,7 @@ namespace Rawr.Hunter
         public double hitFromTalents {get; set;}
         public double hitFromBuffs {get; set;}
         public double hitLevelAdjustment {get; set;}       
-        #endregion
-        
+        #endregion        
    		
         #region Crit Stats
         public double critRateOverall {get; set;}
@@ -120,12 +118,6 @@ namespace Rawr.Hunter
         {
             get { return _autoshotDPS; }
             set { _autoshotDPS = value; }
-        }
-
-        public double BaseAutoshotDPS
-        {
-            get { return _baseAutoshotDPS; }
-            set { _baseAutoshotDPS = value; }
         }
 
         public double WildQuiverDPS
@@ -205,13 +197,16 @@ namespace Rawr.Hunter
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
-			
+
+            // Basic Stats
 			dictValues.Add("Agility", BasicStats.Agility.ToString("F0"));
+            dictValues.Add("Stamina", BasicStats.Stamina.ToString("F0"));
+            dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0"));
+            dictValues.Add("Armor", BasicStats.Armor.ToString("F0"));
 			dictValues.Add("Crit Rating", BasicStats.CritRating.ToString("F0"));
 			dictValues.Add("Hit Rating", BasicStats.HitRating.ToString("F0"));
-			dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0"));
-			dictValues.Add("Stamina", BasicStats.Stamina.ToString("F0"));
-			dictValues.Add("Armor", BasicStats.Armor.ToString("F0"));
+            dictValues.Add("Armor Penetration", BasicStats.ArmorPenetrationRating.ToString() +
+                            "* Enemy's Damage Reduction from armor: " + damageReductionFromArmor.ToString("P2"));
 			dictValues.Add("Haste", hasteEffectsTotal.ToString("F2")+ " %*includes: \n"+
 			               hasteFromBase.ToString("F2") + "% from quiver\n" +
 			               hasteFromTalentsStatic.ToString("F2") +" % from talents\n"+ 
@@ -219,22 +214,20 @@ namespace Rawr.Hunter
 			               hasteFromTalentsProc.ToString("F2") +" % from talented procs\n"+ 
 			               hasteFromRating.ToString("F2") +" % from "+BasicStats.HasteRating.ToString("F0")+ " haste rating\n"+ 
 			               hasteFromRangedBuffs.ToString("F2") +" % from buffs");
-			dictValues.Add("Armor Penetration", BasicStats.ArmorPenetrationRating.ToString() + "* Enemy's Damage Reduction from armor: " + damageReductionFromArmor.ToString("P2"));
 			dictValues.Add("Mana Per Second", manaRegenTotal.ToString("F0")+"*includes:\n" +
 			              	manaRegenBase.ToString("F0")+" from base spirit regen\n" +
 			              	manaRegenGearBuffs.ToString("F0")+" from mp5 gear & buffs\n" +
 			              	manaRegenReplenishment.ToString("F0")+" from replenishment\n");
-			dictValues.Add("Mana", BasicStats.Mana.ToString("F0"));
-			dictValues.Add("Health", BasicStats.Health.ToString("F0"));
+
+            // Basic Calculated Stats
+            dictValues.Add("Health", BasicStats.Health.ToString("F0"));
+            dictValues.Add("Mana", BasicStats.Mana.ToString("F0"));
 			dictValues.Add("Hit Percentage", hitOverall.ToString("P2") + "*includes: \n" +
       						hitBase.ToString("P2") + " base hit chance \n" +
         					hitRating.ToString("P2") + " from rating \n" +
         					hitFromTalents.ToString("P2") + " from talents \n" +
         					hitFromBuffs.ToString("P2") + " from buffs \n" +
         					hitLevelAdjustment.ToString("P2") + " level penalty");
-			
-			
-			
 			dictValues.Add("Crit Percentage", critRateOverall.ToString("P2") + "*includes: \n" +
 			               critBase.ToString("P2") + " base crit \n" +
 			               critFromAgi.ToString("P2") + " from Agility \n" +
@@ -242,40 +235,30 @@ namespace Rawr.Hunter
 			               critFromTalents.ToString("P2") + " from Talents \n" +
 			               critFromBuffs.ToString("P2") + " from Buffs \n" +
 			               critfromDepression.ToString("P2") + " from Depression");
+            dictValues.Add("Ranged AP", RAPtotal.ToString("F0") + "*includes: \n" +
+                            apFromBase.ToString("F0") + " from base \n" +
+                            apFromAgil.ToString("F0") + " from Agility \n" +
+                            apFromCarefulAim.ToString("F0") + " from CarefulAim \n" +
+                            apFromHunterVsWild.ToString("F0") + " from HunterVsWild \n" +
+                            apFromGear.ToString("F0") + " from +ap gear & buffs \n" +
+                            apFromBloodFury.ToString("F0") + " from racials \n" +
+                            apFromAspectOfTheHawk.ToString("F0") + " from Aspect of the Hawk \n" +
+                            apFromAspectMastery.ToString("F0") + " from Aspect Mastery \n" +
+                            apFromFuriousHowl.ToString("F0") + " from Furious Howl \n" +
+                            apFromCallOfTheWild.ToString("F0") + "% from CallOfTheWild \n" +
+                            apFromTrueshotAura.ToString("F0") + "% from Trueshot Aura \n" +
+                            apFromHuntersMark.ToString("F0") + " from Hunter's Mark \n" +
+                            apFromExposeWeakness.ToString("F0") + " from Expose Weakness");
+            dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
 			
-			
-			
+            // Pet Stats						
 			dictValues.Add("Pet Attack Power", PetStats.AttackPower.ToString("F0"));
 			dictValues.Add("Pet Hit Percentage", PetStats.PhysicalHit.ToString("P2"));
 			dictValues.Add("Pet Crit Percentage", PetStats.PhysicalCrit.ToString("P2"));
 			dictValues.Add("Pet Base DPS", PetBaseDPS.ToString("F2"));
 			dictValues.Add("Pet Special DPS", PetSpecialDPS.ToString("F2"));
-			dictValues.Add("Ranged AP", RAPtotal.ToString("F0") + "*includes: \n"+
-			               	apFromBase.ToString("F0")+" from base \n"+
-							apFromAgil.ToString("F0")+" from Agility \n"+
-							apFromCarefulAim.ToString("F0")+" from CarefulAim \n"+
-							apFromHunterVsWild.ToString("F0")+" from HunterVsWild \n"+
-							apFromGear.ToString("F0")+" from +ap gear & buffs \n"+
-							apFromBloodFury.ToString("F0")+" from racials \n"+
-							apFromAspectOfTheHawk.ToString("F0")+" from Aspect of the Hawk \n"+
-							apFromAspectMastery.ToString("F0")+" from Aspect Mastery \n"+
-							apFromFuriousHowl.ToString("F0")+" from Furious Howl \n"+
-							apFromCallOfTheWild.ToString("F0")+"% from CallOfTheWild \n"+
-							apFromTrueshotAura.ToString("F0")+"% from Trueshot Aura \n"+
-							apFromHuntersMark.ToString("F0") + " from Hunter's Mark \n"+
-                            apFromExposeWeakness.ToString("F0") + " from Expose Weakness");
 
-			dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
-
-            dictValues.Add("Hunter Total DPS", HunterDpsPoints.ToString("F2"));
-			dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
-			dictValues.Add("Overall DPS", OverallPoints.ToString("F2"));
-
-            dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2") + "*includes: \n"+
-                            BaseAutoshotDPS.ToString("F2")+" base Autoshot \n"+
-                            WildQuiverDPS.ToString("F2")+" from Wild Quiver");
-            dictValues.Add("Priority Rotation DPS", CustomDPS.ToString("F2"));
-
+            // Shot Stats
             dictValues.Add("Aimed Shot", aimedShot.formatTooltip());
             dictValues.Add("Arcane Shot", arcaneShot.formatTooltip());
             dictValues.Add("Multi Shot", multiShot.formatTooltip());
@@ -294,6 +277,19 @@ namespace Rawr.Hunter
             dictValues.Add("Beastial Wrath", beastialWrath.formatTooltip());
             dictValues.Add("Blood Fury", bloodFury.formatTooltip());
             dictValues.Add("Berserk", berserk.formatTooltip());
+
+            // Hunter DPS
+            dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2"));
+            dictValues.Add("Priority Rotation DPS", CustomDPS.ToString("F2"));
+            dictValues.Add("Wild Quiver DPS", WildQuiverDPS.ToString("F2"));
+            dictValues.Add("Proc DPS", "?");
+            dictValues.Add("Kill Shot low HP gain", "?");
+            dictValues.Add("Aspect Loss", "?");
+
+            // Combined DPS
+            dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2"));
+            dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
+            dictValues.Add("Total DPS", OverallPoints.ToString("F2"));
 
 			return dictValues;
 		}
