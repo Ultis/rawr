@@ -32,10 +32,14 @@ namespace Rawr.Hunter
         KillShot,
         SilencingShot,
         ChimeraShot,
-        ScorpidSting, // TODO
-        ViperSting, // TODO
-        RapidFire, // used in rotations
-        ImmolationTrap, // used in rotations
+        ScorpidSting,
+        ViperSting,
+        RapidFire,
+        ImmolationTrap,
+        Readiness,
+        BeastialWrath,
+        BloodFury,
+        Berserk
     }
 
     public enum PetFamily

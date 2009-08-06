@@ -619,10 +619,10 @@ namespace Rawr.Hunter
             if (cmbPriorityDefaults.SelectedIndex == 0) return;
             if (loadingOptions) return;
 
+            loadingOptions = true;
+
             if (cmbPriorityDefaults.SelectedIndex == 1) // beast master
             {
-                loadingOptions = true;
-
                 cmbPriority1.SelectedIndex = 14; // Rapid Fire
                 cmbPriority2.SelectedIndex = 16; // Bestial Wrath
                 cmbPriority3.SelectedIndex = 9; // Kill Shot
@@ -633,15 +633,10 @@ namespace Rawr.Hunter
                 cmbPriority8.SelectedIndex = 0;
                 cmbPriority9.SelectedIndex = 0;
                 cmbPriority10.SelectedIndex = 0;
-
-                loadingOptions = false;
-                Character.OnCalculationsInvalidated();
             }
 
             if (cmbPriorityDefaults.SelectedIndex == 2) // marksman
             {
-                loadingOptions = true;
-
                 cmbPriority1.SelectedIndex = 14; // Rapid Fire
                 cmbPriority2.SelectedIndex = 15; // Readiness
                 cmbPriority3.SelectedIndex = 4; // Serpent Sting
@@ -652,15 +647,10 @@ namespace Rawr.Hunter
                 cmbPriority8.SelectedIndex = 8; // Steady Shot
                 cmbPriority9.SelectedIndex = 0;
                 cmbPriority10.SelectedIndex = 0;
-
-                loadingOptions = false;
-                Character.OnCalculationsInvalidated();
             }
 
             if (cmbPriorityDefaults.SelectedIndex == 3) // survival
             {
-                loadingOptions = true;
-
                 cmbPriority1.SelectedIndex = 14; // Rapid Fire
                 cmbPriority2.SelectedIndex = 9; // Kill Shot
                 cmbPriority3.SelectedIndex = 10; // Explosive Shot
@@ -671,10 +661,23 @@ namespace Rawr.Hunter
                 cmbPriority8.SelectedIndex = 0;
                 cmbPriority9.SelectedIndex = 0;
                 cmbPriority10.SelectedIndex = 0;
+            }
 
-                loadingOptions = false;
-                Character.OnCalculationsInvalidated();
-            }            
+            loadingOptions = false;
+
+            options.PriorityIndex1 = cmbPriority1.SelectedIndex;
+            options.PriorityIndex2 = cmbPriority2.SelectedIndex;
+            options.PriorityIndex3 = cmbPriority3.SelectedIndex;
+            options.PriorityIndex4 = cmbPriority4.SelectedIndex;
+            options.PriorityIndex5 = cmbPriority5.SelectedIndex;
+            options.PriorityIndex6 = cmbPriority6.SelectedIndex;
+            options.PriorityIndex7 = cmbPriority7.SelectedIndex;
+            options.PriorityIndex8 = cmbPriority8.SelectedIndex;
+            options.PriorityIndex9 = cmbPriority9.SelectedIndex;
+            options.PriorityIndex10 = cmbPriority10.SelectedIndex;
+
+            Character.OnCalculationsInvalidated();
+
         }
     }
 }

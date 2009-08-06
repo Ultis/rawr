@@ -114,35 +114,45 @@ namespace Rawr.Hunter
 				"Basic Stats:Armor Penetration",
 				"Basic Stats:Haste",
 				"Basic Stats:Mana Per Second",				
+
 				"Basic Calculated Stats:Health",
 				"Basic Calculated Stats:Mana",
 				"Basic Calculated Stats:Hit Percentage",
 				"Basic Calculated Stats:Crit Percentage",
 				"Basic Calculated Stats:Ranged AP",
 				"Basic Calculated Stats:Attack Speed",
-                "Basic Calculated Stats:Steady Speed",
-                "Basic Calculated Stats:Specials Per Second",
-				"Pet Stats:Pet Attack Power",
+
+                "Pet Stats:Pet Attack Power",
 				"Pet Stats:Pet Hit Percentage",
 				"Pet Stats:Pet Crit Percentage",
 				"Pet Stats:Pet Base DPS",
 				"Pet Stats:Pet Special DPS*Based on all damaging or DPS boosting skills on auto-cast",
-				"Shot Stats:Auto Shot",
-				"Shot Stats:Steady Shot",
-				"Shot Stats:Serpent Sting",
-				"Shot Stats:Arcane Shot",
-				"Shot Stats:Explosive Shot",
+
 				"Shot Stats:Aimed Shot",
+				"Shot Stats:Arcane Shot",
 				"Shot Stats:Multi Shot",
-				"Shot Stats:Black Arrow",
-                "Shot Stats:Chimera Shot",
+				"Shot Stats:Serpent Sting",
+				"Shot Stats:Scorpid Sting",
+				"Shot Stats:Viper Sting",
                 "Shot Stats:Silencing Shot",
+                "Shot Stats:Steady Shot",
                 "Shot Stats:Kill Shot",
-                "Intermediate Stats:Autoshot DPS",
-                "Intermediate Stats:Custom Rotation",
-				"Complex Calculated Stats:Hunter Total DPS",
-				"Complex Calculated Stats:Pet DPS",
-				"Complex Calculated Stats:Overall DPS"
+				"Shot Stats:Explosive Shot",
+				"Shot Stats:Black Arrow",
+                "Shot Stats:Immolation Trap",
+                "Shot Stats:Chimera Shot",
+                "Shot Stats:Rapid Fire",
+                "Shot Stats:Readiness",
+                "Shot Stats:Beastial Wrath",
+                "Shot Stats:Blood Fury",
+                "Shot Stats:Berserk",
+
+                "Hunter Calculated Stats:Autoshot DPS",
+                "Hunter Calculated Stats:Priority Rotation DPS",
+
+				"Combined Stats:Hunter Total DPS",
+				"Combined Stats:Pet DPS",
+				"Combined Stats:Overall DPS"
 			};
 
             customChartNames = new string[] { "Relative Stat Values" };
@@ -1666,20 +1676,20 @@ namespace Rawr.Hunter
             if (index == 2) return calculatedStats.arcaneShot;
             if (index == 3) return calculatedStats.multiShot;
             if (index == 4) return calculatedStats.serpentSting;
-            if (index == 5) return null; // scorpid sting
-            if (index == 6) return null; // viper sting
+            if (index == 5) return calculatedStats.scorpidSting;
+            if (index == 6) return calculatedStats.viperSting;
             if (index == 7) return calculatedStats.silencingShot;
             if (index == 8) return calculatedStats.steadyShot;
             if (index == 9) return calculatedStats.killShot;
             if (index == 10) return calculatedStats.explosiveShot;
             if (index == 11) return calculatedStats.blackArrow;
-            if (index == 12) return null; // immolation trap
+            if (index == 12) return calculatedStats.immolationTrap;
             if (index == 13) return calculatedStats.chimeraShot;
             if (index == 14) return calculatedStats.rapidFire;
-            if (index == 15) return null; // readiness
-            if (index == 16) return null; // beastial wrath
-            if (index == 17) return null; // blood fury
-            if (index == 18) return null; // berserk
+            if (index == 15) return calculatedStats.readiness;
+            if (index == 16) return calculatedStats.beastialWrath;
+            if (index == 17) return calculatedStats.bloodFury;
+            if (index == 18) return calculatedStats.berserk;
             return null;
         }
 

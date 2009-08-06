@@ -75,15 +75,22 @@ namespace Rawr.Hunter
         // new shots data
         public ShotData aimedShot = new ShotData(Shots.AimedShot, true, true);
         public ShotData arcaneShot = new ShotData(Shots.ArcaneShot, true, true);
-        public ShotData steadyShot = new ShotData(Shots.SteadyShot, true, true);
-        public ShotData serpentSting = new ShotData(Shots.SerpentSting, false, true);
-        public ShotData explosiveShot = new ShotData(Shots.ExplosiveShot, true, true);
         public ShotData multiShot = new ShotData(Shots.MultiShot, true, true);
-        public ShotData blackArrow = new ShotData(Shots.BlackArrow, false, true);
-        public ShotData killShot = new ShotData(Shots.KillShot, true, true);
+        public ShotData serpentSting = new ShotData(Shots.SerpentSting, false, true);
+        public ShotData scorpidSting = new ShotData(Shots.ScorpidSting, false, true);
+        public ShotData viperSting = new ShotData(Shots.ViperSting, false, true);
         public ShotData silencingShot = new ShotData(Shots.SilencingShot, true, false);
+        public ShotData steadyShot = new ShotData(Shots.SteadyShot, true, true);
+        public ShotData killShot = new ShotData(Shots.KillShot, true, true);       
+        public ShotData explosiveShot = new ShotData(Shots.ExplosiveShot, true, true);        
+        public ShotData blackArrow = new ShotData(Shots.BlackArrow, false, true);
+        public ShotData immolationTrap = new ShotData(Shots.ImmolationTrap, false, true);
         public ShotData chimeraShot = new ShotData(Shots.ChimeraShot, true, true);
         public ShotData rapidFire = new ShotData(Shots.RapidFire, false, false);
+        public ShotData readiness = new ShotData(Shots.Readiness, false, false);
+        public ShotData beastialWrath = new ShotData(Shots.BeastialWrath, false, false);
+        public ShotData bloodFury = new ShotData(Shots.BloodFury, false, false);
+        public ShotData berserk = new ShotData(Shots.Berserk, false, false);
 
         public ShotPriority priorityRotation = new ShotPriority();
 
@@ -256,7 +263,6 @@ namespace Rawr.Hunter
 							apFromTrueshotAura.ToString("F0")+"% from Trueshot Aura \n"+
 							apFromHuntersMark.ToString("F0") + " from Hunter's Mark");
 			dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
-            dictValues.Add("Steady Speed", SteadySpeed.ToString("F2"));
 
             dictValues.Add("Hunter Total DPS", HunterDpsPoints.ToString("F2"));
 			dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
@@ -265,20 +271,26 @@ namespace Rawr.Hunter
             dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2") + "*includes: \n"+
                             BaseAutoshotDPS.ToString("F2")+" base Autoshot \n"+
                             WildQuiverDPS.ToString("F2")+" from Wild Quiver");
-            dictValues.Add("Custom Rotation", CustomDPS.ToString("F2"));
-            
-            dictValues.Add("Auto Shot", AutoshotDPS.ToString("F2") + "*DPS");
+            dictValues.Add("Priority Rotation DPS", CustomDPS.ToString("F2"));
 
-            dictValues.Add("Steady Shot", steadyShot.formatTooltip());
-            dictValues.Add("Serpent Sting", serpentSting.formatTooltip());
-            dictValues.Add("Silencing Shot", silencingShot.formatTooltip());
-            dictValues.Add("Arcane Shot", arcaneShot.formatTooltip());
-            dictValues.Add("Explosive Shot", explosiveShot.formatTooltip());
-            dictValues.Add("Chimera Shot", chimeraShot.formatTooltip());
             dictValues.Add("Aimed Shot", aimedShot.formatTooltip());
+            dictValues.Add("Arcane Shot", arcaneShot.formatTooltip());
             dictValues.Add("Multi Shot", multiShot.formatTooltip());
-            dictValues.Add("Black Arrow", blackArrow.formatTooltip());
+            dictValues.Add("Serpent Sting", serpentSting.formatTooltip());
+            dictValues.Add("Scorpid Sting", scorpidSting.formatTooltip());
+            dictValues.Add("Viper Sting", viperSting.formatTooltip());
+            dictValues.Add("Silencing Shot", silencingShot.formatTooltip());
+            dictValues.Add("Steady Shot", steadyShot.formatTooltip());
             dictValues.Add("Kill Shot", killShot.formatTooltip());
+            dictValues.Add("Explosive Shot", explosiveShot.formatTooltip());
+            dictValues.Add("Black Arrow", blackArrow.formatTooltip());
+            dictValues.Add("Immolation Trap", immolationTrap.formatTooltip());
+            dictValues.Add("Chimera Shot", chimeraShot.formatTooltip());
+            dictValues.Add("Rapid Fire", rapidFire.formatTooltip());
+            dictValues.Add("Readiness", readiness.formatTooltip());
+            dictValues.Add("Beastial Wrath", beastialWrath.formatTooltip());
+            dictValues.Add("Blood Fury", bloodFury.formatTooltip());
+            dictValues.Add("Berserk", berserk.formatTooltip());
 
 			return dictValues;
 		}
