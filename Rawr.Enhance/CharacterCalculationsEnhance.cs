@@ -63,13 +63,20 @@ namespace Rawr.Enhance
 			set { _targetLevel = value; }
 		}
 
-        private float _totalExpertise;
-        public float TotalExpertise
+        private float _totalExpertiseMH;
+        public float TotalExpertiseMH
         {
-            get { return _totalExpertise; }
-            set { _totalExpertise = value; }
+            get { return _totalExpertiseMH; }
+            set { _totalExpertiseMH = value; }
         }
-        
+
+        private float _totalExpertiseOH;
+        public float TotalExpertiseOH
+        {
+            get { return _totalExpertiseOH; }
+            set { _totalExpertiseOH = value; }
+        }
+
         private float _avoidedAttacks;
 		public float AvoidedAttacks
 		{
@@ -318,13 +325,7 @@ namespace Rawr.Enhance
                 (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
 
             dictValues.Add("Spellpower", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Total Expertise",
-                String.Format((TotalExpertise > 26 ? "{0} (Cap Exceeded)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged" :
-                                                     "{0}*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged"),
-                TotalExpertise.ToString("F0", CultureInfo.InvariantCulture),
-                BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
-                BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture), 
-                DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Total Expertise", getExpertiseString());
             dictValues.Add("Haste Rating", String.Format("{0}*{1}% Melee Haste\r\n{2}% Spell Haste", 
                 BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),
@@ -392,6 +393,30 @@ namespace Rawr.Enhance
             return string.Format("{0}*{1}% of total dps", 
                 dps.ToString("F2", CultureInfo.InvariantCulture),
                 percent.ToString("F2", CultureInfo.InvariantCulture));
+        }
+
+        private String getExpertiseString()
+        {
+            if (TotalExpertiseMH == TotalExpertiseOH)
+            {
+                return String.Format((TotalExpertiseMH > 26 ? "{0} (Cap Exceeded)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged" :
+                                                              "{0}*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged"),
+                    TotalExpertiseMH.ToString("F0", CultureInfo.InvariantCulture),
+                    BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
+                    BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture),
+                    DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                return String.Format(((TotalExpertiseMH > 26 || TotalExpertiseOH > 26) ?
+                        "{0}/{1} (Cap Exceeded)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged" :
+                        "{0}/{1}*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged"),
+                    TotalExpertiseMH.ToString("F0", CultureInfo.InvariantCulture),
+                    TotalExpertiseOH.ToString("F0", CultureInfo.InvariantCulture), 
+                    BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
+                    BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture),
+                    DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture));
+            }
         }
 
 		public override float GetOptimizableCalculationValue(string calculation)
