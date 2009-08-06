@@ -26,6 +26,9 @@ namespace Rawr.Hunter
         public double specialShotsPerSecond = 0;
         public double critSpecialShotsPerSecond = 0;
 
+        public double critsRatioSum = 0;
+        public double critsCompositeSum = 0;
+
         public double DPS = 0;
         public double MPS = 0;
 
@@ -122,6 +125,7 @@ namespace Rawr.Hunter
 
             specialShotsPerSecond = 0;
             critSpecialShotsPerSecond = 0;
+            critsRatioSum = 0;
 
             for (int i = 0; i < priorities.Length; i++)
             {
@@ -129,11 +133,29 @@ namespace Rawr.Hunter
                 ShotData s = priorities[i];
                 s.calculateTimings(this, PrevShot);
 
-                if (s.freq > 0) specialShotsPerSecond += 1 / s.freq;
+                if (s.freq > 0)
+                {
+                    specialShotsPerSecond += 1 / s.freq;
+                }
                 critSpecialShotsPerSecond += s.crits_per_sec;
+                critsRatioSum += s.crits_ratio;
 
                 PrevShot = s;
-            }            
+            }
+        }
+
+        public void calculateCrits()
+        {
+            critsCompositeSum = 0;
+
+            for (int i = 0; i < priorities.Length; i++)
+            {
+                if (priorities[i] == null) continue;
+                ShotData s = priorities[i];
+
+                s.calculateComposites(this);
+                critsCompositeSum += s.crits_composite;
+            }
         }
 
         public void calculateRotationDPS(Character character)
@@ -295,6 +317,7 @@ namespace Rawr.Hunter
         public double duration = 0;
         public bool critProcs = false;
         public bool gcd = false;
+        public double critChance = 0;
 
         public bool steadyBefore = false;
         public bool cooldownUsed = false; // used in tooltip display        
@@ -327,7 +350,8 @@ namespace Rawr.Hunter
         protected double final_ratio = 0;
 
         public double crits_per_sec = 0;
-
+        public double crits_ratio = 0;
+        public double crits_composite = 0;
 
         public ShotData(Shots aType, bool aCritProcs, bool aGcd)
         {
@@ -478,7 +502,7 @@ namespace Rawr.Hunter
             if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_ratio = 0;
 
             crits_per_sec = (critProcs && final_freq > 0) ? 1 / final_freq : 0;
-
+            
             //Debug.WriteLine("Final Freq is " + final_freq);
             //Debug.WriteLine("Final Ratio is " + final_ratio);
 
@@ -496,9 +520,28 @@ namespace Rawr.Hunter
             {
                 ratio = final_ratio;
                 freq = final_freq;
+                crits_ratio = (critProcs) ? ratio : 0;
             }
 
             #endregion
+
+            if (type == Shots.ExplosiveShot && false)
+            {
+                Debug.WriteLine("start_freq = "+start_freq);
+                Debug.WriteLine("inbet_freq = " + inbet_freq);
+                Debug.WriteLine("lal_freq = " + lal_freq);
+                Debug.WriteLine("final_freq = " + final_freq);
+            }
+        }
+
+        public void calculateComposites(ShotPriority Priority)
+        {
+            if (crits_ratio == 0)
+            {
+                crits_composite = 0;
+                return;
+            }
+            crits_composite = crits_ratio > 0 ? critChance * (crits_ratio / Priority.critsRatioSum) : 0;
         }
 
         public void calculateDPSMPS(ShotPriority Priority)
@@ -572,6 +615,7 @@ namespace Rawr.Hunter
             ret += "Mana: " + mana.ToString("F2") + "\n";
             ret += "Cooldown: "+cooldown.ToString("F2")+"\n";
             if (duration > 0) ret += "Duration: " + duration.ToString("F2") + "\n";
+            if (critProcs) ret += "Crit Chance: " + critChance.ToString("P2") + "\n";
 
             if (freq > 0)
             {

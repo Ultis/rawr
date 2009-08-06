@@ -48,6 +48,7 @@ namespace Rawr.Hunter
 		public double apFromCallOfTheWild { get; set; }
 		public double apFromTrueshotAura { get; set; }
 		public double apFromHuntersMark {get; set;}
+        public double apFromExposeWeakness { get; set; }
         #endregion
         
         #region Hit Stats
@@ -235,9 +236,9 @@ namespace Rawr.Hunter
 			
 			
 			dictValues.Add("Crit Percentage", critRateOverall.ToString("P2") + "*includes: \n" +
-			               critBase.ToString("P2") + "base crit \n" +
-			               critFromAgi.ToString("P2") + "from Agility \n" +
-			               critFromRating.ToString("P2") + "from Rating \n" +
+			               critBase.ToString("P2") + " base crit \n" +
+			               critFromAgi.ToString("P2") + " from Agility \n" +
+			               critFromRating.ToString("P2") + " from Rating \n" +
 			               critFromTalents.ToString("P2") + " from Talents \n" +
 			               critFromBuffs.ToString("P2") + " from Buffs \n" +
 			               critfromDepression.ToString("P2") + " from Depression");
@@ -261,7 +262,9 @@ namespace Rawr.Hunter
 							apFromFuriousHowl.ToString("F0")+" from Furious Howl \n"+
 							apFromCallOfTheWild.ToString("F0")+"% from CallOfTheWild \n"+
 							apFromTrueshotAura.ToString("F0")+"% from Trueshot Aura \n"+
-							apFromHuntersMark.ToString("F0") + " from Hunter's Mark");
+							apFromHuntersMark.ToString("F0") + " from Hunter's Mark \n"+
+                            apFromExposeWeakness.ToString("F0") + " from Expose Weakness");
+
 			dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
 
             dictValues.Add("Hunter Total DPS", HunterDpsPoints.ToString("F2"));

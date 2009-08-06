@@ -539,7 +539,6 @@ namespace Rawr.Hunter
                 case PetFamily.SporeBat:
                 case PetFamily.WindSerpent:
                     return PetFamilyTree.Cunning;
-                    break;
 
                 case PetFamily.Bear:
                 case PetFamily.Boar:
@@ -552,7 +551,6 @@ namespace Rawr.Hunter
                 case PetFamily.WarpStalker:
                 case PetFamily.Worm:
                     return PetFamilyTree.Tenacity;
-                    break;
 
                 case PetFamily.BirdOfPrey:
                 case PetFamily.CarrionBird:
@@ -567,7 +565,6 @@ namespace Rawr.Hunter
                 case PetFamily.Wasp:
                 case PetFamily.Wolf:
                     return PetFamilyTree.Ferocity;
-                    break;
             }
 
             // hmmm!
