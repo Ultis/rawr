@@ -59,6 +59,7 @@ namespace Rawr.Retribution
 
         public void SetDPS(CharacterCalculationsRetribution calc)
         {
+            calc.AverageSoVStack = AverageSoVStackSize();
             calc.WhiteDPS = White.WhiteDPS();
             SetAbilityDPS(calc);
 

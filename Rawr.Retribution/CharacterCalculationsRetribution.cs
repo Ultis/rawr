@@ -37,6 +37,7 @@ namespace Rawr.Retribution {
         public float ToDodge { get; set; }
         public float ToResist { get; set; }
 
+        public float AverageSoVStack { get; set; }
         public float WeaponDamage { get; set; }
         public float AttackSpeed { get; set; }
         public Stats BasicStats { get; set; }
@@ -68,6 +69,7 @@ namespace Rawr.Retribution {
             dictValues["Other"] = OtherDPS.ToString("N0");
             dictValues["Total DPS"] = OverallPoints.ToString("N0");
 
+            dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
             dictValues["Crusader Strike CD"] = Rotation.CrusaderStrikeCD.ToString("N2");
             dictValues["Judgement CD"] = Rotation.JudgementCD.ToString("N2");
             dictValues["Consecration CD"] = Rotation.ConsecrationCD.ToString("N2");

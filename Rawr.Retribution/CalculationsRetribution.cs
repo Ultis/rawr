@@ -252,6 +252,7 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Hammer of Wrath",
                         "DPS Breakdown:Hand of Reckoning",
                         "DPS Breakdown:Other*From trinket procs",
+                        "Rotation Info:Average SoV Stack",
                         "Rotation Info:Crusader Strike CD",
                         "Rotation Info:Judgement CD",
                         "Rotation Info:Consecration CD",
