@@ -482,12 +482,12 @@ namespace Rawr.Warlock
             MinBuffedDamage = (BaseMinDamage + 145 + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f))
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f)
-                      * (1 + character.WarlockTalents.FireAndBrimstone * 0.03f);
+                      * (1 + character.WarlockTalents.FireAndBrimstone * 0.02f);
 
             MaxBuffedDamage = (BaseMaxDamage + 169 + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f))
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f)
-                      * (1 + character.WarlockTalents.FireAndBrimstone * 0.03f);
+                      * (1 + character.WarlockTalents.FireAndBrimstone * 0.02f);
 
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
@@ -773,6 +773,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
 
             CritChance = stats.SpellCrit * 0.05f + character.WarlockTalents.Backlash * 0.01f;
+            CritCoef = (character.WarlockTalents.Pandemic > 0 ? 2 : 1);
 
             Range = (int)Math.Round(BaseRange * (1 + character.WarlockTalents.GrimReach * 0.1));
         }
@@ -1168,13 +1169,13 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Emberstorm * 0.03f)
                       * (1 + character.WarlockTalents.FireAndBrimstone * 0.03f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f)
-                      * (1 + character.WarlockTalents.FireAndBrimstone * 0.03f);
+                      * (1 + character.WarlockTalents.FireAndBrimstone * 0.02f);
 
             MaxBuffedDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f))
                      * (1 + character.WarlockTalents.Emberstorm * 0.03f)
                      * (1 + character.WarlockTalents.FireAndBrimstone * 0.03f)
                      * (1 + character.WarlockTalents.Malediction * 0.01f)
-                     * (1 + character.WarlockTalents.FireAndBrimstone * 0.03f);
+                     * (1 + character.WarlockTalents.FireAndBrimstone * 0.02f);
 
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
