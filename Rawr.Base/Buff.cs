@@ -2192,20 +2192,38 @@ namespace Rawr
             #region Moonkin Tier 9 set bonuses
             defaultBuffs.Add(new Buff()
             {
-                Name = "Stormrage's Garb 2 Piece Bonus",
+                Name = "Malfurion's Regaila 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { MoonfireDotCrit = 1f },
-                SetName = "Stormrage's Garb",
+                SetName = "Malfurion's Regaila",
                 SetThreshold = 2
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Stormrage's Garb 4 Piece Bonus",
+                Name = "Malfurion's Regaila 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusMoonkinNukeDamage = 0.04f },
-                SetName = "Stormrage's Garb",
+                SetName = "Malfurion's Regaila",
+                SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Runetotem's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MoonfireDotCrit = 1f },
+                SetName = "Runetotem's Regalia",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Runetotem's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusMoonkinNukeDamage = 0.04f },
+                SetName = "Runetotem's Regalia",
                 SetThreshold = 4
             });
             #endregion
