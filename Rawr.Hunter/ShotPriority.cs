@@ -7,7 +7,7 @@ namespace Rawr.Hunter
 {
     public class ShotPriority
     {
-        public int latency;
+        public double latency; // in seconds
         public ShotData[] priorities = new ShotData[10];
 
         // these are options on the spreadsheet 'Settings' page.
@@ -336,7 +336,7 @@ namespace Rawr.Hunter
 
         public void calculateTimings(ShotPriority Priority, ShotData PrevShot)
         {
-            double CastLag = (Priority.latency / 1000.0);
+            double CastLag = Priority.latency;
 
             #region Timing Calculations
 

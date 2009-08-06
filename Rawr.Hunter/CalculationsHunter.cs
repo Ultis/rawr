@@ -421,6 +421,12 @@ namespace Rawr.Hunter
 			return returnValue;
 		}
 
+        // NOTE: setting this to true does 'bad' uptime calculations,
+        // to help match the spread sheet. if a fight last 10 seconds
+        // and an ability has a 4 second cooldown, the spreadsheet says
+        // you can use it 2.5 times, while we say you can use it twice.
+        public bool calculateUptimesLikeSpreadsheet = true;
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
@@ -439,17 +445,11 @@ namespace Rawr.Hunter
                 return calculatedStats;
             }
 
-            // NOTE: setting this to true does 'bad' uptime calculations,
-            // to help match the spread sheet. if a fight last 10 seconds
-            // and an ability has a 4 second cooldown, the spreadsheet says
-            // you can use it 2.5 times, while we say you can use it twice.
-            bool calculateUptimesLikeSpreadsheet = true;
-
             #region August 2009 Priority Rotation Setup
 
             calculatedStats.priorityRotation = new ShotPriority();
 
-            calculatedStats.priorityRotation.latency = 150;
+            calculatedStats.priorityRotation.latency = options.Latency;
 
             calculatedStats.priorityRotation.priorities[0] = getShotByIndex(options.PriorityIndex1, calculatedStats);
             calculatedStats.priorityRotation.priorities[1] = getShotByIndex(options.PriorityIndex2, calculatedStats);
@@ -463,8 +463,6 @@ namespace Rawr.Hunter
             calculatedStats.priorityRotation.priorities[9] = getShotByIndex(options.PriorityIndex10, calculatedStats);
 
             calculatedStats.priorityRotation.validateShots(character.HunterTalents);
-
-            //Debug.WriteLine("first priority index = "+options.PriorityIndex1);
 
             #endregion
             #region August 2009 Shot Cooldowns & Durations
@@ -529,15 +527,7 @@ namespace Rawr.Hunter
                 rapidFireHaste = 0;
             }
 
-            if (calculateUptimesLikeSpreadsheet)
-            {
-                calculatedStats.hasteFromProcs = rapidFireHaste * (15 / rapidFireCooldown);
-            }
-            else
-            {
-                calculatedStats.hasteFromProcs = rapidFireHaste * CalcUptime(15, rapidFireCooldown, options.duration);
-            }
-
+            calculatedStats.hasteFromProcs = rapidFireHaste * CalcUptime(15, rapidFireCooldown, options.duration);
 
             calculatedStats.hasteFromRangedBuffs = calculatedStats.BasicStats.RangedHaste * 100;
 
@@ -824,14 +814,7 @@ namespace Rawr.Hunter
             double blackArrowUptime = 0;
             if (calculatedStats.priorityRotation.containsShot(Shots.BlackArrow))
             {
-                if (calculateUptimesLikeSpreadsheet)
-                {
-                    blackArrowUptime = calculatedStats.blackArrow.duration / calculatedStats.blackArrow.freq;
-                }
-                else
-                {
-                    blackArrowUptime = CalcUptime(calculatedStats.blackArrow.duration, calculatedStats.blackArrow.freq, options.duration);
-                }
+                blackArrowUptime = CalcUptime(calculatedStats.blackArrow.duration, calculatedStats.blackArrow.freq, options.duration);
             }
             double blackArrowAuraDamageAdjust = 1 + (0.06 * blackArrowUptime);
             double blackArrowSelfDamageAdjust = 1 + (RAP / 225000);
@@ -1419,7 +1402,6 @@ namespace Rawr.Hunter
 
             calculatedStats.manaRegenTotal = manaPerSecond;
             #endregion
-
             #region August 2009 Shot Rotation
 
             calculatedStats.priorityRotation.calculateRotationDPS(character);
@@ -1639,6 +1621,11 @@ namespace Rawr.Hunter
 
         private double CalcUptime(double duration, double cooldown, double length)
         {
+            if (calculateUptimesLikeSpreadsheet)
+            {
+                return cooldown > 0 ? duration / cooldown : 0;
+            }
+
             double durationleft = length;
             double numBuff = 0;
             if (duration >= cooldown)
