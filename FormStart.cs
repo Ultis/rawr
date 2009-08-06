@@ -18,7 +18,7 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.11.0
+			labelVersionHistory.Text = @"v2.2.12.0
  - NOTE! Everyone, please do NOT reuse your GemmingTemplates.xml file from a previous version of Rawr, due to all the changes in gems in 3.2.
  - Updated the default item cache with more 3.2 items, and updated data about existing items in 3.2. More data is still showing up on Wowhead/Armory daily, so be sure to try refreshing from Wowhead/Armory if you see any data that looks old/wrong. Also updated some of the enchants changed in 3.2.
  - Rawr.Enhance: Fix for Orcs with Axes. Fixes for default gemming templates.
