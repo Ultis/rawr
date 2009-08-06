@@ -9,7 +9,19 @@ namespace Rawr.Hunter
     {
         public int latency;
         public ShotData[] priorities = new ShotData[10];
-        public double GCD = 1.5;
+
+        // these are options on the spreadsheet 'Settings' page.
+        // i'm just using defaults for now
+        public Shots LALShotToUse = Shots.ExplosiveShot;
+        public int LALShotsReplaced = 2;
+
+        public bool chimeraRefreshesSerpent = false;
+        public bool chimeraRefreshesViper = false;
+        public double LALExplosiveFrequency = 0;
+        public double LALArcaneFrequency = 0;
+        public bool useRotationTest = false; // TODO
+        public bool useKillShot = false; // TODO
+        public double viperDamagePenalty = 0; // TODO
 
         public double DPS = 0;
         public double MPS = 0;
@@ -28,24 +40,24 @@ namespace Rawr.Hunter
             for (int i = 0; i < priorities.Length; i++)
             {
                 // we've already seen steadyShot - remove everything else
-                if (priorities[i] != null && removeAll) priorities[i] = null;
+                if (priorities[i] != null && removeAll) { priorities[i].steadyBefore = true; priorities[i] = null; }
 
                 // this shot has been used aleady
                 if (priorities[i] != null && priorities[i].used) priorities[i] = null;                
 
                 // we've already used a shot which shares cooldown with this one
-                if (priorities[i] != null && (priorities[i].type == Shots.ArcaneShot && used_arcane_explosive)) priorities[i] = null;
-                if (priorities[i] != null && (priorities[i].type == Shots.ExplosiveShot && used_arcane_explosive)) priorities[i] = null;
-                if (priorities[i] != null && (priorities[i].type == Shots.AimedShot && used_aimed_multi)) priorities[i] = null;
-                if (priorities[i] != null && (priorities[i].type == Shots.MultiShot && used_aimed_multi)) priorities[i] = null;
-                if (priorities[i] != null && (priorities[i].type == Shots.BlackArrow && used_black_immo)) priorities[i] = null;
-                if (priorities[i] != null && (priorities[i].type == Shots.ImmolationTrap && used_black_immo)) priorities[i] = null;
+                if (priorities[i] != null && (priorities[i].type == Shots.ArcaneShot && used_arcane_explosive)) { priorities[i].cooldownUsed = true; priorities[i] = null; }
+                if (priorities[i] != null && (priorities[i].type == Shots.ExplosiveShot && used_arcane_explosive)){ priorities[i].cooldownUsed = true; priorities[i] = null;}
+                if (priorities[i] != null && (priorities[i].type == Shots.AimedShot && used_aimed_multi)){ priorities[i].cooldownUsed = true; priorities[i] = null;}
+                if (priorities[i] != null && (priorities[i].type == Shots.MultiShot && used_aimed_multi)){ priorities[i].cooldownUsed = true; priorities[i] = null;}
+                if (priorities[i] != null && (priorities[i].type == Shots.BlackArrow && used_black_immo)){ priorities[i].cooldownUsed = true; priorities[i] = null;}
+                if (priorities[i] != null && (priorities[i].type == Shots.ImmolationTrap && used_black_immo)){ priorities[i].cooldownUsed = true; priorities[i] = null;}
 
                 // shots which require talents
-                if (priorities[i] != null && priorities[i].type == Shots.BlackArrow && hunterTalents.BlackArrow == 0) priorities[i] = null;
-                if (priorities[i] != null && priorities[i].type == Shots.ChimeraShot && hunterTalents.ChimeraShot == 0) priorities[i] = null;
-                if (priorities[i] != null && priorities[i].type == Shots.AimedShot && hunterTalents.AimedShot == 0) priorities[i] = null;
-                if (priorities[i] != null && priorities[i].type == Shots.ExplosiveShot && hunterTalents.ExplosiveShot == 0) priorities[i] = null;
+                if (priorities[i] != null && priorities[i].type == Shots.BlackArrow && hunterTalents.BlackArrow == 0){ priorities[i].lackTalent = true; priorities[i] = null; }
+                if (priorities[i] != null && priorities[i].type == Shots.ChimeraShot && hunterTalents.ChimeraShot == 0) { priorities[i].lackTalent = true; priorities[i] = null; }
+                if (priorities[i] != null && priorities[i].type == Shots.AimedShot && hunterTalents.AimedShot == 0) { priorities[i].lackTalent = true; priorities[i] = null; }
+                if (priorities[i] != null && priorities[i].type == Shots.ExplosiveShot && hunterTalents.ExplosiveShot == 0){priorities[i].lackTalent = true; priorities[i] = null;}
 
                 if (priorities[i] != null)
                 {
@@ -59,7 +71,16 @@ namespace Rawr.Hunter
                     if (priorities[i].type == Shots.BlackArrow) used_black_immo = true;
                     if (priorities[i].type == Shots.ImmolationTrap) used_black_immo = true;
                 }
-            }       
+            }    
+   
+            // store some derived facts about the rotation for later use
+            chimeraRefreshesSerpent = false;
+            chimeraRefreshesViper = false;
+            if (containsShot(Shots.ChimeraShot))
+            {
+                if (containsShot(Shots.SerpentSting)) chimeraRefreshesSerpent = true;
+                if (containsShot(Shots.ViperSting)) chimeraRefreshesViper = true;
+            }
         }
 
         public bool containsShot(Shots aType)
@@ -75,18 +96,97 @@ namespace Rawr.Hunter
             return false;
         }
 
-        public void calculateRotationDPS(){
+        public ShotData getShotInRotation(Shots aType)
+        {
+            for (int i = 0; i < priorities.Length; i++)
+            {
+                if (priorities[i] != null)
+                {
+                    if (priorities[i].type == aType) return priorities[i];
+                }
+            }
 
-            double CastLag = (latency / 1000.0);
+            return null;
+        }
+
+
+        public void calculateFrequencies()
+        {
+            // This function calculates the frequencies for each shot.
+            // We have already calculated all shot cooldowns and validated the rotation by this point.
+
             ShotData PrevShot = null;
 
-            bool ChimeraRefreshesViper = false; // TODO
-            bool ChimeraRefreshesSerpent = false; // TODO
-            double LALExplosiveFrequency = 0; // TODO
-            double LALArcaneFrequency = 0; // TODO
-            bool UseKillShot = false; // TODO
-            double ViperDamagePenalty = 0; // TODO
-            bool UseRotationTest = false; // TODO
+            for (int i = 0; i < priorities.Length; i++)
+            {
+                if (priorities[i] == null) continue;
+                ShotData s = priorities[i];
+                s.calculateTimings(this, PrevShot);
+                PrevShot = s;
+            }
+        }
+
+        public void calculateRotationDPS(Character character)
+        {
+
+            ShotData PrevShot = null;
+
+            bool debug_shot_rotation = false;
+
+            #region Lock and Load procs
+
+            double lal_trigger_freq = 0;
+            double lal_trigger_duration = 0;
+
+            ShotData proc_shot = null;
+            if (proc_shot == null) proc_shot = getShotInRotation(Shots.BlackArrow);
+            if (proc_shot == null) proc_shot = getShotInRotation(Shots.ImmolationTrap);
+
+            if (proc_shot != null)
+            {
+                lal_trigger_freq = proc_shot.lal_freq;
+                lal_trigger_duration = proc_shot.duration;
+            }
+
+            double lal_proc_chance = 0.02 * character.HunterTalents.LockAndLoad;
+            //lal_proc_chance = 0.06; //isolation testing for LAL
+            double lal_proc_freq = 0;
+
+            if (useRotationTest)
+            {
+                // TODO: get LAL proc time from rotation test
+            }
+            else
+            {
+                if (lal_trigger_freq > 0 && lal_proc_chance > 0)
+                {
+                    lal_proc_freq = (lal_trigger_duration > lal_trigger_freq ? 1 : lal_trigger_freq / lal_trigger_duration) * 3 / lal_proc_chance;
+                }
+            }
+
+            ShotData lalExplosive = getShotInRotation(Shots.ExplosiveShot);
+            ShotData lalArcane = getShotInRotation(Shots.ArcaneShot);
+
+            double pre_lal_explosive_freq = (lalExplosive != null && LALShotToUse == Shots.ExplosiveShot) ? lalExplosive.inbet_freq : 0;
+            double pre_lal_arcane_freq = (lalArcane != null && LALShotToUse == Shots.ArcaneShot) ? lalArcane.inbet_freq : 0;
+
+            LALExplosiveFrequency = 0;
+            if (lal_proc_freq > 0 && pre_lal_explosive_freq > 0)
+            {
+                LALExplosiveFrequency = 1 / (1 / (lal_proc_freq / (pre_lal_explosive_freq / (pre_lal_arcane_freq + pre_lal_explosive_freq) * LALShotsReplaced)) + 1 / pre_lal_explosive_freq);
+            }
+
+            LALArcaneFrequency = 0;
+            if (lal_proc_freq > 0 && pre_lal_arcane_freq > 0)
+            {
+                LALArcaneFrequency = 1 / (1 / (lal_proc_freq / (pre_lal_arcane_freq / (pre_lal_explosive_freq + pre_lal_arcane_freq) * LALShotsReplaced)) + 1 / pre_lal_arcane_freq);
+            }
+
+            //Debug.WriteLine("LAL Proc Frequency = " + lal_proc_freq);
+            //Debug.WriteLine("LAL Explosive Frequency = " + LALExplosiveFrequency);
+            //Debug.WriteLine("LAL Arcane Frequency = " + LALArcaneFrequency);
+
+            #endregion
 
             MPS = 0;
             DPS = 0;
@@ -96,45 +196,17 @@ namespace Rawr.Hunter
                 if (priorities[i] != null){
                     ShotData s = priorities[i];
 
-                    #region Timing Calculations
-
-                    // cooldown
-                    s.rotation_cooldown = priorities[i].cooldown;
-                    if (s.type == Shots.SerpentSting)
+                    // hack: always running this for now. need to get frequencies to do LAL, but that
+                    // alters frequencies. ouch!
+                    if (s.type == Shots.SteadyShot || true)
                     {
-                        s.rotation_cooldown = priorities[i].duration;
+                        // Steady shot will have had its cooldown correctly calculated now, so recalc
+                        // frequency. this wont affect other shots since steady always comes last.
+                        s.calculateTimings(this, PrevShot);
                     }
 
-                    // time used
-                    switch (s.type)
-                    {
-                        case Shots.None:
-                            s.time_used = 0;
-                            break;
+                    s.calculateDPSMPS(this);
 
-                        case Shots.ImmolationTrap:
-                            s.time_used = 0; // 1.5 * ImmoTrapCastTime
-                            break;
-
-                        case Shots.SteadyShot:
-                            s.time_used = s.cooldown < GCD ? GCD : s.cooldown;
-                            break;
-
-                        default:
-                            s.time_used = s.gcd ? GCD : 0;
-                            break;
-                    }
-
-                    if (s.type != Shots.None){
-                        double lag = s.gcd ? CastLag : 0.001; // non GCD = 1ms
-
-                        s.time_used += lag;
-                    }
-
-                    //Debug.WriteLine("Cooldown " + i + " is " + s.rotation_cooldown);
-                    //Debug.WriteLine("Time used " + i + " is " + s.time_used);
-
-                    #endregion
                     #region Spreadsheet Calculations
 
                     // the hidden shot calculations!
@@ -161,177 +233,49 @@ namespace Rawr.Hunter
                     // AJ (InvalidShotPriority) =IF(VLOOKUP(E30,ShotPriorityList,2,FALSE)<>F30,TRUE,OR(IF(AND(E30="Arcane Shot",ExplosiveInRotation),IF(VLOOKUP("Explosive Shot",ShotPriorityList,2,FALSE)<F30,TRUE,FALSE),FALSE,IF(AND(
 
                     #endregion
-                    #region Starting Calculations
-
-                    double start_freq = (s.rotation_cooldown > s.time_used) ? Math.Ceiling((s.rotation_cooldown - s.time_used) / (GCD + CastLag)) * (GCD + CastLag) + s.time_used : GCD + CastLag;
-
-                    s.start_gcd_needed = (start_freq > 0) ? (s.time_used > start_freq ? 1 : s.time_used / start_freq) : 0;
-
-                    if (ChimeraRefreshesViper && s.type == Shots.ViperSting) s.start_gcd_needed = 0;
-                    if (ChimeraRefreshesSerpent && s.type == Shots.SerpentSting) s.start_gcd_needed = 0;
-                    if (!UseKillShot && s.type == Shots.KillShot) s.start_gcd_needed = 0;
-
-                    s.start_gcd_left = 1;
-                    if (PrevShot != null)
-                    {
-                        s.start_gcd_left = PrevShot.start_gcd_left - PrevShot.start_gcd_used;
-                    }
-
-                    s.start_gcd_used = 1 - (s.start_gcd_left - s.start_gcd_needed);
-                    if (PrevShot != null)
-                    {
-                        s.start_gcd_used = s.start_gcd_left > s.start_gcd_needed ? s.start_gcd_needed : s.start_gcd_left;
-                    }
-
-                    //Debug.WriteLine("Start Freq " + i + " is " + start_freq);
-                    //Debug.WriteLine("GCD Left " + i + " is " + s.start_gcd_left);
-                    //Debug.WriteLine("GCD Needed " + i + " is " + s.start_gcd_needed);
-                    //Debug.WriteLine("GCD Used " + i + " is " + s.start_gcd_used);
-
-                    #endregion
-                    #region In-Between Calculations
-
-                    double inbet_freq = (start_freq > 0 && s.start_gcd_used > 0) ? s.time_used / s.start_gcd_used : 0;
-
-                    if (PrevShot != null)
-                    {
-                        if (s.type == Shots.SerpentSting || s.type == Shots.ScorpidSting)
-                        {
-                            s.sting_count = PrevShot.sting_count < 2 ? PrevShot.sting_count + 1 : PrevShot.sting_count;
-                        }
-                        else 
-                        {
-                            s.sting_count = PrevShot.sting_count == 2 ? 3 : PrevShot.sting_count;
-                        }
-                    }
-                    else
-                    {
-                        s.sting_count = (s.type == Shots.SerpentSting || s.type == Shots.ScorpidSting) ? 1 : 0;
-                    }
-
-                    double inbet_dps = inbet_freq > 0 ? s.damage / inbet_freq : 0;
-
-                    if (ChimeraRefreshesViper && s.type == Shots.ViperSting) inbet_dps = s.damage / start_freq;
-                    if (ChimeraRefreshesSerpent && s.type == Shots.SerpentSting) inbet_dps = s.damage / start_freq;
-
-                    double inbet_mps = inbet_freq > 0 ? s.mana / inbet_freq : 0;
-
-
-                    //Debug.WriteLine("InBet Freq " + i + " is " + inbet_freq);
-                    //Debug.WriteLine("Sting Count " + i + " is " + s.sting_count);
-                    //Debug.WriteLine("InBet DPS " + i + " is " + inbet_dps);
-                    //Debug.WriteLine("InBet MPS " + i + " is " + inbet_mps);
-
-                    #endregion
-                    #region Lock-and-Load Calculations
-
-                    double lal_freq = inbet_freq;
-                    if (s.type == Shots.ExplosiveShot && LALExplosiveFrequency > 0) lal_freq = LALExplosiveFrequency;
-                    if (s.type == Shots.ArcaneShot && LALArcaneFrequency > 0) lal_freq = LALArcaneFrequency;
-                    if (start_freq == 0 || s.sting_count == 2) lal_freq = 0;
-
-                    s.lal_gcd_left = 1;
-                    if (PrevShot != null)
-                    {
-                        s.lal_gcd_left = PrevShot.lal_gcd_left - PrevShot.lal_gcd_used;
-                    }
-
-                    s.lal_gcd_needed = lal_freq > 0 ? (s.time_used > lal_freq ? 1 : s.time_used / lal_freq) : 0;
-                    if (!UseKillShot && s.type == Shots.KillShot) s.lal_gcd_needed = 0;
-                    if (ChimeraRefreshesSerpent && s.type == Shots.SerpentSting) s.lal_gcd_needed = 0;
-
-                    s.lal_gcd_used = 1 - (s.lal_gcd_left - s.lal_gcd_needed);
-                    if (PrevShot != null)
-                    {
-                        s.lal_gcd_used = s.lal_gcd_left > s.lal_gcd_needed ? s.lal_gcd_needed : s.lal_gcd_left;
-                    }
-                    
-                    //Debug.WriteLine("LAL Freq " + i + " is " + lal_freq);
-                    //Debug.WriteLine("LAL GCD Left " + i + " is " + s.lal_gcd_left);
-                    //Debug.WriteLine("LAL GCD Needed " + i + " is " + s.lal_gcd_needed);
-                    //Debug.WriteLine("LAL GCD Used " + i + " is " + s.lal_gcd_used);
-
-                    #endregion
-                    #region Final/Actual Calculations
-
-                    // TODO: insert rotation test data here...
-                    double final_freq = (lal_freq > 0 && s.lal_gcd_used > 0) ? s.time_used / s.lal_gcd_used : 0;
-
-                    double final_ratio = final_freq > 0 ? (s.time_used > final_freq ? 1 : s.time_used / final_freq) : 0;
-                    if (!UseKillShot && s.type == Shots.KillShot) final_ratio = 0;
-                    if (ChimeraRefreshesSerpent && s.type == Shots.SerpentSting) final_ratio = 0;
-
-                    double final_dps = final_freq > 0 ? s.damage / final_freq : 0;
-                    if (ChimeraRefreshesViper && s.type == Shots.ViperSting) final_dps = s.damage / s.rotation_cooldown;
-                    if (ChimeraRefreshesSerpent && s.type == Shots.SerpentSting) final_dps = s.damage / s.rotation_cooldown;
-
-                    double final_mps = final_freq > 0 ? s.mana / final_freq : 0;
-                    if (ChimeraRefreshesViper && s.type == Shots.ViperSting) final_mps = 0;
-                    if (ChimeraRefreshesSerpent && s.type == Shots.SerpentSting) final_mps = 0;
-
-                    //Debug.WriteLine("Final Freq " + i + " is " + final_freq);
-                    //Debug.WriteLine("Final Ratio " + i + " is " + final_ratio);
-                    //Debug.WriteLine("Final DPS " + i + " is " + final_dps);
-                    //Debug.WriteLine("Final MPS " + i + " is " + final_mps);
-
-                    #endregion
-                    #region Output Calculations
-
-                    s.is_refreshed = false;
-                    s.ratio = 0;
-                    s.freq = 0;
-
-                    if (ChimeraRefreshesViper && s.type == Shots.ViperSting) s.is_refreshed = true;
-                    if (ChimeraRefreshesSerpent && s.type == Shots.SerpentSting) s.is_refreshed = true;
-
-                    if (!s.is_refreshed)
-                    {
-                        s.ratio = final_ratio;
-                        s.freq = final_freq;
-                    }
-
-                    s.dps = final_dps;
-                    if (ChimeraRefreshesSerpent && s.type == Shots.SerpentSting)
-                    {
-                        // immune to AspectOfViper
-                    }
-                    else
-                    {
-                        s.dps *= 1 - ViperDamagePenalty;
-                    }
-
-                    if (!UseRotationTest && (s.type == Shots.ExplosiveShot || s.type == Shots.ArcaneShot))
-                    {
-                        s.mps = inbet_mps;
-                    }
-                    else 
-                    {
-                        if (s.is_refreshed)
-                        {
-                            s.mps = 0;
-                        }
-                        else
-                        {
-                            s.mps = final_mps;
-                        }
-                    }
-
-                    //Debug.WriteLine("DPS " + i + " is " + s.dps);
-                    //Debug.WriteLine("MPS " + i + " is " + s.mps);
-
-                    #endregion
 
                     DPS += s.dps;
                     MPS += s.mps;
 
+                    if (debug_shot_rotation)
+                    {
+                        string col1 = String.Format("{0,6:0.00}", s.rotation_cooldown);
+                        string col2 = String.Format("{0,3:0}", s.mana);
+                        string col3 = String.Format("{0,4:0}", s.damage);
+                        string col4 = String.Format("{0:0.00}", s.time_used);
+                        string col5 = String.Format("{0,6:0.00}%", 100*s.ratio);
+                        string col6 = String.Format("{0,6:0.00}", s.freq);
+                        string col7 = String.Format("{0,6:0.00}", s.dps);
+                        string col8 = String.Format("{0,6:0.00}", s.mps);
+
+                        Debug.WriteLine("Shot: |" + col1 + "|" + col2 + "|" + col3 + "|" + col4 + "|" + col5 + "|" + col6 + "|" + col7 + "|" + col8 + "|");
+                    }
+
                     PrevShot = s;
                 }
+                else
+                {
+                    if (debug_shot_rotation)
+                    {
+                        Debug.WriteLine("None: |------|---|----|----|-------|------|  0.00|  0.00|");
+                    }
+                }
+            }
+
+            if (debug_shot_rotation)
+            {
+                string debug_dps = String.Format("{0,6:0.00}", DPS);
+                string debug_mps = String.Format("{0,6:0.00}", MPS);
+
+                Debug.WriteLine("TOTAL:                                    |"+debug_dps+"|"+debug_mps+"|");
             }
         }
     }
 
     public class ShotData
     {
+        public const double GCD = 1.5;
+
         public Shots type = Shots.None;
         public double damage = 0;
         public double damageNormal = 0;
@@ -341,30 +285,43 @@ namespace Rawr.Hunter
         public double duration = 0;
         public bool critProcs = false;
         public bool gcd = false;
-        
+
+        public bool steadyBefore = false;
+        public bool cooldownUsed = false; // used in tooltip display        
+        public bool lackTalent = false; // used in tooltip display        
         public bool used = false; // for de-duping the priority list
 
         public double rotation_cooldown = 0;
         public double time_used = 0;
-
-        public double start_gcd_left = 0;
-        public double start_gcd_needed = 0;
-        public double start_gcd_used = 0;
-        public int sting_count = 0;
-        public double lal_gcd_left = 0;
-        public double lal_gcd_needed = 0;
-        public double lal_gcd_used = 0;
-
         public double ratio = 0;
         public bool is_refreshed = false;
         public double freq = 0;
         public double dps = 0;
         public double mps = 0;
 
+        // used in the 4 intermediate stages of calculations (start, inbet, lal, final)
+        protected double start_freq = 0;
+        protected double start_gcd_left = 0;
+        protected double start_gcd_needed = 0;
+        protected double start_gcd_used = 0;
 
-        public ShotData(Shots aType)
+        public double inbet_freq = 0;
+        protected int sting_count = 0;
+
+        public double lal_freq = 0;
+        protected double lal_gcd_left = 0;
+        protected double lal_gcd_needed = 0;
+        protected double lal_gcd_used = 0;
+
+        protected double final_freq = 0;
+        protected double final_ratio = 0;
+
+
+        public ShotData(Shots aType, bool aCritProcs, bool aGcd)
         {
             type = aType;
+            critProcs = aCritProcs;
+            gcd = aGcd;
         }
 
         public void Dump(string label)
@@ -375,6 +332,248 @@ namespace Rawr.Hunter
             Debug.WriteLine(label + " duration = " + duration);
             Debug.WriteLine(label + " critProcs = " + critProcs);
             Debug.WriteLine(label + " gcd = " + gcd);
+        }
+
+        public void calculateTimings(ShotPriority Priority, ShotData PrevShot)
+        {
+            double CastLag = (Priority.latency / 1000.0);
+
+            #region Timing Calculations
+
+            // rotation cooldown
+            rotation_cooldown = cooldown;
+            if (type == Shots.SerpentSting)
+            {
+                rotation_cooldown = duration;
+            }
+
+            // time used
+            switch (type)
+            {
+                case Shots.None:
+                    time_used = 0;
+                    break;
+
+                case Shots.ImmolationTrap:
+                    time_used = 0; // 1.5 * ImmoTrapCastTime
+                    break;
+
+                case Shots.SteadyShot:
+                    time_used = cooldown < GCD ? GCD : cooldown;
+                    break;
+
+                default:
+                    time_used = gcd ? GCD : 0;
+                    break;
+            }
+
+            if (type != Shots.None)
+            {
+                double lag = gcd ? CastLag : 0.001; // non GCD = 1ms
+
+                time_used += lag;
+            }
+
+            #endregion
+            #region Starting Calculations
+
+            start_freq = (rotation_cooldown > time_used) ? Math.Ceiling((rotation_cooldown - time_used) / (GCD + CastLag)) * (GCD + CastLag) + time_used : GCD + CastLag;
+
+            start_gcd_needed = (start_freq > 0) ? (time_used > start_freq ? 1 : time_used / start_freq) : 0;
+
+            if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) start_gcd_needed = 0;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) start_gcd_needed = 0;
+            if (!Priority.useKillShot && type == Shots.KillShot) start_gcd_needed = 0;
+
+            start_gcd_left = 1;
+            if (PrevShot != null)
+            {
+                start_gcd_left = PrevShot.start_gcd_left - PrevShot.start_gcd_used;
+            }
+
+            start_gcd_used = 1 - (start_gcd_left - start_gcd_needed);
+            if (PrevShot != null)
+            {
+                start_gcd_used = start_gcd_left > start_gcd_needed ? start_gcd_needed : start_gcd_left;
+            }
+
+            //Debug.WriteLine("Start Freq is " + start_freq);
+            //Debug.WriteLine("GCD Left is " + start_gcd_left);
+            //Debug.WriteLine("GCD Needed is " + start_gcd_needed);
+            //Debug.WriteLine("GCD Used is " + start_gcd_used);
+
+            #endregion
+            #region In-Between Calculations
+
+            inbet_freq = (start_freq > 0 && start_gcd_used > 0) ? time_used / start_gcd_used : 0;
+
+            if (PrevShot != null)
+            {
+                if (type == Shots.SerpentSting || type == Shots.ScorpidSting)
+                {
+                    sting_count = PrevShot.sting_count < 2 ? PrevShot.sting_count + 1 : PrevShot.sting_count;
+                }
+                else
+                {
+                    sting_count = PrevShot.sting_count == 2 ? 3 : PrevShot.sting_count;
+                }
+            }
+            else
+            {
+                sting_count = (type == Shots.SerpentSting || type == Shots.ScorpidSting) ? 1 : 0;
+            }
+
+            //Debug.WriteLine("Pre-LAL freq = "+inbet_freq);
+            //Debug.WriteLine("Pre-LAL sting count = " + sting_count);
+
+            #endregion
+            #region Lock-and-Load Calculations
+
+            lal_freq = inbet_freq;
+            if (type == Shots.ExplosiveShot && Priority.LALExplosiveFrequency > 0) lal_freq = Priority.LALExplosiveFrequency;
+            if (type == Shots.ArcaneShot && Priority.LALArcaneFrequency > 0) lal_freq = Priority.LALArcaneFrequency;
+            if (start_freq == 0 || sting_count == 2) lal_freq = 0;
+
+            lal_gcd_left = 1;
+            if (PrevShot != null)
+            {
+                lal_gcd_left = PrevShot.lal_gcd_left - PrevShot.lal_gcd_used;
+            }
+
+            lal_gcd_needed = lal_freq > 0 ? (time_used > lal_freq ? 1 : time_used / lal_freq) : 0;
+            if (!Priority.useKillShot && type == Shots.KillShot) lal_gcd_needed = 0;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) lal_gcd_needed = 0;
+
+            lal_gcd_used = 1 - (lal_gcd_left - lal_gcd_needed);
+            if (PrevShot != null)
+            {
+                lal_gcd_used = lal_gcd_left > lal_gcd_needed ? lal_gcd_needed : lal_gcd_left;
+            }
+
+            //Debug.WriteLine("LAL Freq is " + lal_freq);
+            //Debug.WriteLine("LAL GCD Left is " + lal_gcd_left);
+            //Debug.WriteLine("LAL GCD Needed is " + lal_gcd_needed);
+            //Debug.WriteLine("LAL GCD Used is " + lal_gcd_used);
+
+            #endregion
+            #region Final/Actual Calculations
+
+            // TODO: insert rotation test data here...
+            final_freq = (lal_freq > 0 && lal_gcd_used > 0) ? time_used / lal_gcd_used : 0;
+
+            final_ratio = final_freq > 0 ? (time_used > final_freq ? 1 : time_used / final_freq) : 0;
+            if (!Priority.useKillShot && type == Shots.KillShot) final_ratio = 0;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_ratio = 0;
+
+            //Debug.WriteLine("Final Freq is " + final_freq);
+            //Debug.WriteLine("Final Ratio is " + final_ratio);
+
+            #endregion
+            #region Output Calculations
+
+            is_refreshed = false;
+            ratio = 0;
+            freq = 0;
+
+            if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) is_refreshed = true;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) is_refreshed = true;
+
+            if (!is_refreshed)
+            {
+                ratio = final_ratio;
+                freq = final_freq;
+            }
+
+            #endregion
+        }
+
+        public void calculateDPSMPS(ShotPriority Priority)
+        {
+            #region In-Between Calculations
+
+            double inbet_dps = inbet_freq > 0 ? damage / inbet_freq : 0;
+
+            if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) inbet_dps = damage / start_freq;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) inbet_dps = damage / start_freq;
+
+            double inbet_mps = inbet_freq > 0 ? mana / inbet_freq : 0;
+
+            //Debug.WriteLine("InBet DPS is " + inbet_dps);
+            //Debug.WriteLine("InBet MPS is " + inbet_mps);
+
+            #endregion
+            #region Final/Actual Calculations
+
+            double final_dps = final_freq > 0 ? damage / final_freq : 0;
+            if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) final_dps = damage / rotation_cooldown;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_dps = damage / rotation_cooldown;
+
+            double final_mps = final_freq > 0 ? mana / final_freq : 0;
+            if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) final_mps = 0;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_mps = 0;
+
+            //Debug.WriteLine("Final DPS is " + final_dps);
+            //Debug.WriteLine("Final MPS " is " + final_mps);
+
+            #endregion
+            #region Output Calculations
+
+            dps = final_dps;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting)
+            {
+                // immune to AspectOfViper
+            }
+            else
+            {
+                dps *= 1 - Priority.viperDamagePenalty;
+            }
+
+            if (!Priority.useRotationTest && (type == Shots.ExplosiveShot || type == Shots.ArcaneShot))
+            {
+                mps = inbet_mps;
+            }
+            else
+            {
+                if (is_refreshed)
+                {
+                    mps = 0;
+                }
+                else
+                {
+                    mps = final_mps;
+                }
+            }
+
+            //Debug.WriteLine("DPS is " + dps);
+            //Debug.WriteLine("MPS is " + mps);
+
+            #endregion
+        }
+
+        public string formatTooltip()
+        {
+            string ret = damage.ToString("F2")+"*";
+
+            ret += "Damage: " + damage.ToString("F2") + "\n";
+            ret += "Mana: " + mana.ToString("F2") + "\n";
+            ret += "Cooldown: "+cooldown.ToString("F2")+"\n";
+            if (duration > 0) ret += "Duration: " + duration.ToString("F2") + "\n";
+
+            if (freq > 0)
+            {
+                ret += "Rotation Freqency: " + freq.ToString("F2") + "\n";
+                ret += "Rotation DPS: " + dps.ToString("F2") + "\n";
+                ret += "Rotation MPS: " + mps.ToString("F2");
+            }
+            else
+            {
+                ret += cooldownUsed ? "Not being used in rotation:\n  Shares a cooldown with a higher\n  priority shot" : 
+                    lackTalent      ? "Not being used in rotation:\n  You lack the needed talent" :
+                    steadyBefore    ? "Not being used in rotation:\n  Steady shot has a higher\n  priority" :
+                    "(Not in rotation)";
+            }
+            
+            return ret;
         }
     }
 

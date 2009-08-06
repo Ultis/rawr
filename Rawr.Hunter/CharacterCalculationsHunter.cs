@@ -21,14 +21,8 @@ namespace Rawr.Hunter
         private double _autoshotDPS;
         private double _wildQuiverDPS;
         private double _baseAutoshotDPS;
-        private double _explosiveShotDPS;
-        private double _chimeraShotDPS;
-        private double _killshotDPS;
-        private double _silencingshotDPS;
-        private double _blackDPS;
-
         private double _customDPS;
-		
+	
         
         #region HasteStats
         public double hasteFromTalentsStatic { get; set; }
@@ -38,8 +32,7 @@ namespace Rawr.Hunter
         public double hasteFromBase { get; set; }
    		public double hasteFromRating { get; set; }
    		public double hasteFromRangedBuffs { get; set; }
-        #endregion
-   		
+        #endregion   		
    		
         #region RAP Stats
         public double RAPtotal { get; set; }
@@ -79,73 +72,30 @@ namespace Rawr.Hunter
         
         public double damageReductionFromArmor  {get; set;}
 
-        public double SilencingDPS
-        {
-            get { return _silencingshotDPS; }
-            set { _silencingshotDPS = value; }
-        }
-
         // new shots data
-        public ShotData aimedShot = new ShotData(Shots.AimedShot);
-        public ShotData arcaneShot = new ShotData(Shots.ArcaneShot);
-        public ShotData steadyShot = new ShotData(Shots.SteadyShot);
-        public ShotData serpentSting = new ShotData(Shots.SerpentSting);
-        public ShotData explosiveShot = new ShotData(Shots.ExplosiveShot);
-        public ShotData multiShot = new ShotData(Shots.MultiShot);
-        public ShotData blackArrow = new ShotData(Shots.BlackArrow);
-        public ShotData killShot = new ShotData(Shots.KillShot);
-        public ShotData silencingShot = new ShotData(Shots.SilencingShot);
-        public ShotData chimeraShot = new ShotData(Shots.ChimeraShot);
+        public ShotData aimedShot = new ShotData(Shots.AimedShot, true, true);
+        public ShotData arcaneShot = new ShotData(Shots.ArcaneShot, true, true);
+        public ShotData steadyShot = new ShotData(Shots.SteadyShot, true, true);
+        public ShotData serpentSting = new ShotData(Shots.SerpentSting, false, true);
+        public ShotData explosiveShot = new ShotData(Shots.ExplosiveShot, true, true);
+        public ShotData multiShot = new ShotData(Shots.MultiShot, true, true);
+        public ShotData blackArrow = new ShotData(Shots.BlackArrow, false, true);
+        public ShotData killShot = new ShotData(Shots.KillShot, true, true);
+        public ShotData silencingShot = new ShotData(Shots.SilencingShot, true, false);
+        public ShotData chimeraShot = new ShotData(Shots.ChimeraShot, true, true);
+        public ShotData rapidFire = new ShotData(Shots.RapidFire, false, false);
+
         public ShotPriority priorityRotation = new ShotPriority();
 
-        
-        #region Steady Shot
-        public double steadyCrit {get; set;}
-        public double steadyHit {get; set;}
-        public double steadyDamageNormal {get; set;}
-        public double steadyDamageCrit {get; set;}
-        public double steadyDamageTotal {get; set;}
-        public double steadyDamagePerMana {get; set;}
-        public double steadyDPS {get; set;}
-        #endregion
-        
-        #region Arcane Shot
-        public double arcaneCrit  {get; set;}
-        public double arcaneHit  {get; set;}
-        public double arcaneDamageNormal  {get; set;}
-        public double arcaneDamageCrit  {get; set;}
-        public double arcaneDamageTotal  {get; set;}
-        public double arcaneDamagePerMana  {get; set;}
-        public double arcaneDPS  {get; set;} 
-        #endregion
-        
-        #region Multi Shot
-        public double multiDPCD {get; set;}
-        
-        #endregion
-        
-        #region Aimed Shot
-        public double aimedDPCD {get; set;}
-        
-        #endregion
-        
-        public double SerpentDPS {get; set; }
-        
+
         #region mana regen
         public double manaRegenGearBuffs {get; set;}
         public double manaRegenBase {get; set;}
         public double manaRegenReplenishment {get; set;}
         public double manaRegenTotal { get; set; }
-        
-        
+                
         #endregion
-
-        public double BlackDPS
-        {
-            get { return _blackDPS; }
-            set { _blackDPS = value; }
-        }
-        
+ 
 		public float BaseAttackSpeed
 		{
 			get { return _baseAttackSpeed; }
@@ -174,31 +124,6 @@ namespace Rawr.Hunter
         {
             get { return _wildQuiverDPS; }
             set { _wildQuiverDPS = value; }
-        }
-
-        public double ExplosiveShotDPS
-        {
-            get { return _explosiveShotDPS; }
-            set { _explosiveShotDPS = value; }
-        }
-
-        public double ChimeraShotDPS
-        {
-            get { return _chimeraShotDPS; }
-            set { _chimeraShotDPS = value; }
-        }
-
-        private double _aimedDPS;
-        public double AimedShotDPS
-        {
-            get { return _aimedDPS; }
-            set { _aimedDPS = value; }
-        }
-
-        public double KillDPS
-        {
-            get { return _killshotDPS; }
-            set { _killshotDPS = value; }
         }
 
         public double CustomDPS
@@ -343,16 +268,17 @@ namespace Rawr.Hunter
             dictValues.Add("Custom Rotation", CustomDPS.ToString("F2"));
             
             dictValues.Add("Auto Shot", AutoshotDPS.ToString("F2") + "*DPS");
-            dictValues.Add("Steady Shot", steadyDPS.ToString("F2") + "*Damage per shot");
-            dictValues.Add("Serpent Sting", SerpentDPS.ToString("F2") + "*DPS at 100% uptime");
-            dictValues.Add("Silencing Shot", SilencingDPS.ToString("F2") + "*Damage per shot");
-            dictValues.Add("Arcane Shot", arcaneDPS.ToString("F2") + "*Damage per shot");
-            dictValues.Add("Explosive Shot", ExplosiveShotDPS.ToString("F2") + "*DPS when spammed");
-            dictValues.Add("Chimera Shot", ChimeraShotDPS.ToString("F2") + "*DPS when spammed");
-			dictValues.Add("Aimed Shot", aimedDPCD.ToString("F2") + "*DPS when spammed");
-            dictValues.Add("Multi Shot", multiDPCD.ToString("F2") + "*Damage per shot");
-            dictValues.Add("Black Arrow", BlackDPS.ToString("F2") + "*DPS when spammed");
-            dictValues.Add("Kill Shot", KillDPS.ToString("F2") + "*20% of DPS when spammed");
+
+            dictValues.Add("Steady Shot", steadyShot.formatTooltip());
+            dictValues.Add("Serpent Sting", serpentSting.formatTooltip());
+            dictValues.Add("Silencing Shot", silencingShot.formatTooltip());
+            dictValues.Add("Arcane Shot", arcaneShot.formatTooltip());
+            dictValues.Add("Explosive Shot", explosiveShot.formatTooltip());
+            dictValues.Add("Chimera Shot", chimeraShot.formatTooltip());
+            dictValues.Add("Aimed Shot", aimedShot.formatTooltip());
+            dictValues.Add("Multi Shot", multiShot.formatTooltip());
+            dictValues.Add("Black Arrow", blackArrow.formatTooltip());
+            dictValues.Add("Kill Shot", killShot.formatTooltip());
 
 			return dictValues;
 		}

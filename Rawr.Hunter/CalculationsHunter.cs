@@ -439,6 +439,12 @@ namespace Rawr.Hunter
                 return calculatedStats;
             }
 
+            // NOTE: setting this to true does 'bad' uptime calculations,
+            // to help match the spread sheet. if a fight last 10 seconds
+            // and an ability has a 4 second cooldown, the spreadsheet says
+            // you can use it 2.5 times, while we say you can use it twice.
+            bool calculateUptimesLikeSpreadsheet = true;
+
             #region August 2009 Priority Rotation Setup
 
             calculatedStats.priorityRotation = new ShotPriority();
@@ -461,6 +467,39 @@ namespace Rawr.Hunter
             //Debug.WriteLine("first priority index = "+options.PriorityIndex1);
 
             #endregion
+            #region August 2009 Shot Cooldowns & Durations
+
+            calculatedStats.serpentSting.cooldown = 1.5;
+            calculatedStats.serpentSting.duration = character.HunterTalents.GlyphOfSerpentSting ? 21 : 15;
+
+            calculatedStats.aimedShot.cooldown = character.HunterTalents.GlyphOfAimedShot ? 8 : 10;
+
+            calculatedStats.explosiveShot.cooldown = 6;
+
+            calculatedStats.chimeraShot.cooldown = character.HunterTalents.GlyphOfChimeraShot ? 9 : 10;
+
+            calculatedStats.arcaneShot.cooldown = 6;
+
+            calculatedStats.multiShot.cooldown = character.HunterTalents.GlyphOfMultiShot ? 9 : 10;
+            // TODO: remove one more second from multi-shot for galdiator's pursuit set bonus
+
+            calculatedStats.blackArrow.cooldown = 30 - (character.HunterTalents.Resourcefulness * 2);
+            calculatedStats.blackArrow.duration = 15;
+
+            calculatedStats.killShot.cooldown = character.HunterTalents.GlyphOfKillShot ? 9 : 15;
+
+            calculatedStats.silencingShot.cooldown = 20;
+
+            calculatedStats.rapidFire.cooldown = 300 - (60 * character.HunterTalents.RapidKilling);
+            // TODO: readiness should affect rapid fire cooldown
+            calculatedStats.rapidFire.duration = 15;
+
+            // We will set the correct value for this later, after we've calculated haste
+            calculatedStats.steadyShot.cooldown = 2; 
+
+            #endregion
+
+            calculatedStats.priorityRotation.calculateFrequencies();
 
             #region May 2009 Haste Calcs
 
@@ -478,19 +517,28 @@ namespace Rawr.Hunter
             // haste from haste rating
             calculatedStats.hasteFromRating = calculatedStats.BasicStats.HasteRating / HunterRatings.HASTE_RATING_PER_PERCENT;
 
-            // serpent swiftness, 
+            // serpent swiftness
             calculatedStats.hasteFromTalentsStatic = 4.0 * character.HunterTalents.SerpentsSwiftness;
 
-            //rapid fire * (  duration/cooldown-depends on talent rapid killing)
+            // rapid fire (we know real rotation frequency already)
             double rapidFireHaste = character.HunterTalents.GlyphOfRapidFire ? 48.0 : 40.0;
-            double rapidFireCooldown = 300 - (60 * character.HunterTalents.RapidKilling);
+            double rapidFireCooldown = calculatedStats.rapidFire.freq;
 
             if (!calculatedStats.priorityRotation.containsShot(Shots.RapidFire))
             {
                 rapidFireHaste = 0;
             }
 
-            calculatedStats.hasteFromProcs = rapidFireHaste * CalcUptime(15, rapidFireCooldown, options.duration);
+            if (calculateUptimesLikeSpreadsheet)
+            {
+                calculatedStats.hasteFromProcs = rapidFireHaste * (15 / rapidFireCooldown);
+            }
+            else
+            {
+                calculatedStats.hasteFromProcs = rapidFireHaste * CalcUptime(15, rapidFireCooldown, options.duration);
+            }
+
+
             calculatedStats.hasteFromRangedBuffs = calculatedStats.BasicStats.RangedHaste * 100;
 
             double autoShotPreProcs = 1.0;
@@ -753,16 +801,12 @@ namespace Rawr.Hunter
             #region July 2009 Damage Adjustments
 
             //Beastial Wrath
-            double beastialWrathCooldown = (2 * 60);
-            if (character.HunterTalents.GlyphOfBestialWrath == true)
-            {
-                beastialWrathCooldown -= 20;
-            }
+            double beastialWrathCooldown = character.HunterTalents.GlyphOfBestialWrath ? 100 : 120;
+
             beastialWrathCooldown *= 1 - 0.1 * character.HunterTalents.Longevity;
 
             double beastialWrathUptime = CalcUptime(18, beastialWrathCooldown, options.duration);
 
-            double blackArrowUptime = CalcUptime(15, 30, options.duration);
 
             //TODO: calculate this properly
             double ferociousInspirationUptime = 1;
@@ -777,7 +821,19 @@ namespace Rawr.Hunter
             double sancRetributionAuraDamageAdjust = 1 + statsBuffs.BonusDamageMultiplier;
 
             //Black Arrow Damage Multiplier
-            double blackArrowAuraDamageAdjust = 1 + (0.06 * character.HunterTalents.BlackArrow) * blackArrowUptime;
+            double blackArrowUptime = 0;
+            if (calculatedStats.priorityRotation.containsShot(Shots.BlackArrow))
+            {
+                if (calculateUptimesLikeSpreadsheet)
+                {
+                    blackArrowUptime = calculatedStats.blackArrow.duration / calculatedStats.blackArrow.freq;
+                }
+                else
+                {
+                    blackArrowUptime = CalcUptime(calculatedStats.blackArrow.duration, calculatedStats.blackArrow.freq, options.duration);
+                }
+            }
+            double blackArrowAuraDamageAdjust = 1 + (0.06 * blackArrowUptime);
             double blackArrowSelfDamageAdjust = 1 + (RAP / 225000);
 
             //Noxious Stings
@@ -987,7 +1043,7 @@ namespace Rawr.Hunter
 
             // base = shot_base + gear_weapon_damage + normalized_ammo_dps + (RAP * 0.1)
             //        + (rangedWeaponDamage / ranged_weapon_speed * 2.8)
-            double steadyShotBaseDamage = 252
+            double steadyShotDamageNormal = 252
                         + statsBaseGear.WeaponDamage
                         + rangedAmmoDamageNormalized
                         + (RAP * 0.1)
@@ -996,9 +1052,6 @@ namespace Rawr.Hunter
             // crit chance = base_crit + 5%_rift_stalker_bonus + (2% * survivial_instincts)
             //TODO: add rift stalker set bonus
             double steadyShotCritChance = critHitPercent + survivalInstinctsCritModifier;
-
-            // hit chance = base_hit
-            double steadyShotHitChance = hitChance;
 
             // mana per shot
             double steadyShotManaCost = (baseMana * 0.05)
@@ -1010,27 +1063,24 @@ namespace Rawr.Hunter
             double steadyShotDamageAdjust = talentDamageAdjust
                                             * targetPhysicalDebuffsDamageAdjust
                                             * sniperTrainingDamageAdjust
-                                            * glyphOfSteadyShotDamageAdjust;
+                                            * glyphOfSteadyShotDamageAdjust
+                                            * (1.0 - damageReduction);
 
-            double steadyShotCritDamage = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
+            double steadyShotCritAdjust = 1 + mortalShotsCritDamage + metaGemCritDamage + markedForDeathCritDamage;
 
-            // the final stats
-            calculatedStats.steadyCrit = steadyShotCritChance;
-            calculatedStats.steadyHit = steadyShotHitChance;
-            calculatedStats.steadyDamageNormal = steadyShotBaseDamage;
-            calculatedStats.steadyDamageCrit = steadyShotBaseDamage * (1.0 + steadyShotCritDamage);
-            calculatedStats.steadyDamageTotal = calculatedStats.steadyDamageNormal * (1 - calculatedStats.steadyCrit)
-                                              + calculatedStats.steadyDamageCrit * calculatedStats.steadyCrit;
-            calculatedStats.steadyDamagePerMana = calculatedStats.steadyDamageTotal / steadyShotManaCost;
-            calculatedStats.steadyDPS = (calculatedStats.steadyDamageTotal * steadyShotDamageAdjust * (1.0 - damageReduction)) * steadyShotHitChance;
+            double steadyShotDamageReal = CalcEffectiveDamage(
+                                            steadyShotDamageNormal,
+                                            hitChance,
+                                            steadyShotCritChance,
+                                            steadyShotCritAdjust,
+                                            steadyShotDamageAdjust
+                                          );
 
             double steadyShotCastTime = 2 * (1 / (totalStaticHaste * totalDynamicHaste));
 
-            calculatedStats.steadyShot.damage = calculatedStats.steadyDPS;
+            calculatedStats.steadyShot.damage = steadyShotDamageReal;
             calculatedStats.steadyShot.mana = steadyShotManaCost;
             calculatedStats.steadyShot.cooldown = steadyShotCastTime;
-            calculatedStats.steadyShot.critProcs = true;
-            calculatedStats.steadyShot.gcd = true;
             //calculatedStats.steadyShot.Dump("Steady Shot");
 
             #endregion
@@ -1049,26 +1099,11 @@ namespace Rawr.Hunter
 
             double serpentStingDamageReal = serpentStingDamageBase * serpentStingDamageAdjust;
 
-            double serpentStingDamagePerTick = Math.Round(serpentStingDamageReal / 5);
-
-            // duration and ticks
-            double serpentStingDuration = 15;
-            if (character.HunterTalents.GlyphOfSerpentSting)
-                serpentStingDuration += 6;
-            double serpentStingTicks = Math.Floor(serpentStingDuration / 3);
-
-            // unlike some shots, this really is DPS, not damage per shot
-            calculatedStats.SerpentDPS = (serpentStingDamagePerTick * serpentStingTicks) / serpentStingDuration;
-
             double serpentStingManaCost = (baseMana * 0.09) * efficiencyManaAdjust;
 
             calculatedStats.serpentSting.type = Shots.SerpentSting;
             calculatedStats.serpentSting.damage = serpentStingDamageReal;
             calculatedStats.serpentSting.mana = serpentStingManaCost;
-            calculatedStats.serpentSting.cooldown = 1.5;
-            calculatedStats.serpentSting.duration = serpentStingDuration;
-            calculatedStats.serpentSting.critProcs = false;
-            calculatedStats.serpentSting.gcd = true;
             //calculatedStats.serpentSting.Dump("Serpent Sting");
 
             #endregion //Has DPS
@@ -1085,26 +1120,22 @@ namespace Rawr.Hunter
 
             // damage_adjust = talent_adjust * barrage_adjust * target_debuff_adjust * sniper_training_adjust * improved_ss_adjust
             double aimedShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
-                                            * sniperTrainingDamageAdjust * improvedSSAimedShotDamageAdjust;
+                                            * sniperTrainingDamageAdjust * improvedSSAimedShotDamageAdjust
+                                            * (1 - damageReduction);
 
-            // calculate the effective shot damage
-            double aimedShotHit = hitChance;
-            double aimedShotDamageCrit = aimedShotDamageNormal * (1 + aimedShotCritAdjust);
-            double aimedShotDamageTotal = (aimedShotDamageNormal * (1 - aimedShotCrit) + (aimedShotDamageCrit * aimedShotCrit));
-            double aimedShotDamageReal = aimedShotDamageTotal * aimedShotDamageAdjust * (1 - damageReduction) * aimedShotHit;
-
-            double aimedShotCooldown = character.HunterTalents.GlyphOfAimedShot ? 8 : 10;
+            double aimedShotDamageReal = CalcEffectiveDamage(
+                                            aimedShotDamageNormal,
+                                            hitChance,
+                                            aimedShotCrit,
+                                            aimedShotCritAdjust,
+                                            aimedShotDamageAdjust
+                                          );
 
             double aimedShotManaCost = (baseMana * 0.08) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust 
                                         * masterMarksmanManaAdjust * ISSAimedShotManaAdjust;
 
-            calculatedStats.aimedDPCD = aimedShotDamageReal / aimedShotCooldown;
-
             calculatedStats.aimedShot.damage = aimedShotDamageReal;
             calculatedStats.aimedShot.mana = aimedShotManaCost;
-            calculatedStats.aimedShot.cooldown = aimedShotCooldown;
-            calculatedStats.aimedShot.critProcs = true;
-            calculatedStats.aimedShot.gcd = true;
             //calculatedStats.aimedShot.Dump("Aimed Shot");
 
             #endregion//Has DPS
@@ -1123,21 +1154,20 @@ namespace Rawr.Hunter
             // TODO: missing fire debuffs
             double explosiveShotDamageAdjust = talentDamageAdjust * TNTDamageAdjust * sniperTrainingDamageAdjust * partialResist;
 
-            double explosiveShotDamageCrit = explosiveShotDamageNormal * (1 + explosiveShotCritAdjust);
-            double explosiveShotDamageTotal = (explosiveShotDamageNormal * (1 - explosiveShotCrit) + (explosiveShotDamageCrit * explosiveShotCrit));
-            double explosiveShotDamageReal = explosiveShotDamageTotal * explosiveShotDamageAdjust * hitChance;
+            double explosiveShotDamageReal = CalcEffectiveDamage(
+                                                explosiveShotDamageNormal,
+                                                hitChance,
+                                                explosiveShotCrit,
+                                                explosiveShotCritAdjust,
+                                                explosiveShotDamageAdjust
+                                              );
 
             double explosiveShotDamagePerShot = explosiveShotDamageReal * 3;
-
-            calculatedStats.ExplosiveShotDPS = explosiveShotDamagePerShot / 6;
 
             double explosiveShotManaCost = (baseMana * 0.07) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
 
             calculatedStats.explosiveShot.damage = explosiveShotDamagePerShot;
             calculatedStats.explosiveShot.mana = explosiveShotManaCost;
-            calculatedStats.explosiveShot.cooldown = 6;
-            calculatedStats.explosiveShot.critProcs = true;
-            calculatedStats.explosiveShot.gcd = true;
             //calculatedStats.explosiveShot.Dump("Explosive Shot");
 
             #endregion
@@ -1177,18 +1207,11 @@ namespace Rawr.Hunter
 
             double chimeraShotDamageTotal = chimeraShotDamageReal + chimeraShotSerpentDamageReal;
 
-            double chimeraShotCooldown = character.HunterTalents.GlyphOfChimeraShot ? 9 : 10;
-
             double chimeraShotManaCost = (baseMana * 0.12) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust
                                             * masterMarksmanManaAdjust * ISSChimeraShotManaAdjust;
 
-            calculatedStats.ChimeraShotDPS = chimeraShotDamageTotal / chimeraShotCooldown;
-
             calculatedStats.chimeraShot.damage = chimeraShotDamageTotal;
             calculatedStats.chimeraShot.mana = chimeraShotManaCost;
-            calculatedStats.chimeraShot.cooldown = chimeraShotCooldown;
-            calculatedStats.chimeraShot.critProcs = true;
-            calculatedStats.chimeraShot.gcd = true;
             //calculatedStats.chimeraShot.Dump("Chimera Shot");
 
             #endregion
@@ -1210,20 +1233,11 @@ namespace Rawr.Hunter
                                             arcaneShotDamageAdjust
                                           );
 
-            double arcaneShotCooldown = 6;
-            double arcaneShotDPS = arcaneShotDamageReal / arcaneShotCooldown;
-
-            calculatedStats.arcaneDPS = arcaneShotDamageReal;
-
             double arcaneShotManaCost = (baseMana * 0.05) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust
                                         * ISSArcaneShotManaAdjust * glyphOfArcaneShotManaAdjust;
 
-
             calculatedStats.arcaneShot.damage = arcaneShotDamageReal;
             calculatedStats.arcaneShot.mana = arcaneShotManaCost;
-            calculatedStats.arcaneShot.cooldown = 6;
-            calculatedStats.arcaneShot.critProcs = true;
-            calculatedStats.arcaneShot.gcd = true;
             //calculatedStats.arcaneShot.Dump("Arcane Shot");
 
             #endregion
@@ -1243,21 +1257,10 @@ namespace Rawr.Hunter
                                             multiShotDamageAdjust
                                          );
 
-            double multiShotCooldown = 10;
-            if (character.HunterTalents.GlyphOfMultiShot) multiShotCooldown -= 1;
-            // TODO: remove one more second for galdiator's pursuit set bonus
-
-            double multiShotDPS = multiShotDamageReal / multiShotCooldown;
-
             double multiShotManaCost = (baseMana * 0.09) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-
-            calculatedStats.multiDPCD = multiShotDamageReal;
 
             calculatedStats.multiShot.damage = multiShotDamageReal;
             calculatedStats.multiShot.mana = multiShotManaCost;
-            calculatedStats.multiShot.cooldown = multiShotCooldown;
-            calculatedStats.multiShot.critProcs = true;
-            calculatedStats.multiShot.gcd = true;
             //calculatedStats.multiShot.Dump("Multi Shot");
 
             #endregion
@@ -1276,17 +1279,11 @@ namespace Rawr.Hunter
                                           * blackArrowSelfDamageAdjust;
 
             double blackArrowDamage = blackArrowDamageNormal * blackArrowDamageAdjust;
-            double blackArrowCooldown = 30 - (character.HunterTalents.Resourcefulness * 2);
-            calculatedStats.BlackDPS = blackArrowDamage / blackArrowCooldown;
 
             double blackArrowManaCost = (baseMana * 0.06) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * resourcefulnessManaAdjust;
 
             calculatedStats.blackArrow.damage = blackArrowDamage;
             calculatedStats.blackArrow.mana = blackArrowManaCost;
-            calculatedStats.blackArrow.cooldown = blackArrowCooldown;
-            calculatedStats.blackArrow.duration = 15;
-            calculatedStats.blackArrow.critProcs = false;
-            calculatedStats.blackArrow.gcd = true;
             //calculatedStats.blackArrow.Dump("Black Arrow");
 
             #endregion
@@ -1305,18 +1302,10 @@ namespace Rawr.Hunter
                                             killShotDamageAdjust
                                         );
 
-            double killShotCooldown = character.HunterTalents.GlyphOfKillShot ? 9 : 15;
-
             double killShotManaCost = (baseMana * 0.07) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
 
-            calculatedStats.KillDPS = (killShotDamageReal / killShotCooldown) * 0.2;
-
             calculatedStats.killShot.damage = killShotDamageReal;
-            calculatedStats.killShot.mana = 0;
-            calculatedStats.killShot.cooldown = killShotCooldown;
-            calculatedStats.killShot.duration = killShotManaCost;
-            calculatedStats.killShot.critProcs = true;
-            calculatedStats.killShot.gcd = true;
+            calculatedStats.killShot.mana = killShotManaCost;
             //calculatedStats.killShot.Dump("Kill Shot");
 
             #endregion
@@ -1336,16 +1325,18 @@ namespace Rawr.Hunter
 
             double silencingShotManaCost = (baseMana * 0.06) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
 
-            calculatedStats.SilencingDPS = silencingShotDamageReal;
-
             calculatedStats.silencingShot.damage = silencingShotDamageReal;
             calculatedStats.silencingShot.mana = silencingShotManaCost;
-            calculatedStats.silencingShot.cooldown = 20;
-            calculatedStats.silencingShot.critProcs = true;
-            calculatedStats.silencingShot.gcd = false;
             //calculatedStats.silencingShot.Dump("Silencing Shot");
 
             #endregion
+            #region August 2009 Rapid Fire
+
+            calculatedStats.rapidFire.damage = 0;
+            calculatedStats.rapidFire.mana = (baseMana * 0.03);
+
+            #endregion
+
 
             #region Base Attack Speed
 
@@ -1431,7 +1422,7 @@ namespace Rawr.Hunter
 
             #region August 2009 Shot Rotation
 
-            calculatedStats.priorityRotation.calculateRotationDPS();
+            calculatedStats.priorityRotation.calculateRotationDPS(character);
             calculatedStats.CustomDPS = calculatedStats.priorityRotation.DPS;
 
             //Debug.WriteLine("Rotation DPS = " + calculatedStats.priorityRotation.DPS);
@@ -1697,7 +1688,7 @@ namespace Rawr.Hunter
             if (index == 11) return calculatedStats.blackArrow;
             if (index == 12) return null; // immolation trap
             if (index == 13) return calculatedStats.chimeraShot;
-            if (index == 14) return null; // rapid fire
+            if (index == 14) return calculatedStats.rapidFire;
             if (index == 15) return null; // readiness
             if (index == 16) return null; // beastial wrath
             if (index == 17) return null; // blood fury
