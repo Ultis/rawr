@@ -1570,9 +1570,8 @@ namespace Rawr.Hunter
                 talents.PhysicalCrit += (talentTree.MasterMarksman * 0.01f);
 
 				//Combat Experience
-				int combatExperience = talentTree.CombatExperience;
-				talents.BonusAgilityMultiplier = .02f * combatExperience;
-				talents.BonusIntellectMultiplier = .02f * combatExperience;
+                talents.BonusAgilityMultiplier = addCumulativePercentage(talents.BonusAgilityMultiplier, 0.02f * talentTree.CombatExperience);
+                talents.BonusIntellectMultiplier = addCumulativePercentage(talents.BonusIntellectMultiplier, 0.02f * talentTree.CombatExperience);
 			}
 
             // Survival Talents
@@ -1580,17 +1579,14 @@ namespace Rawr.Hunter
 				//Killer Instincts
 				talents.PhysicalCrit += (talentTree.KillerInstinct * 0.01f);
 
-				//Master Tactitian
-                
-				// TODO: Implement properly
-
-				//surefooted
-
 				//Lighting Reflexes
-				talents.BonusAgilityMultiplier = ((1.0f + talents.BonusAgilityMultiplier) * (1.0f + .03f * talentTree.LightningReflexes)) - 1.0f;
+				talents.BonusAgilityMultiplier = addCumulativePercentage(talents.BonusAgilityMultiplier, 0.03f * talentTree.LightningReflexes);
+
+                //Hunting Party
+                talents.BonusAgilityMultiplier = addCumulativePercentage(talents.BonusAgilityMultiplier, 0.01f * talentTree.HuntingParty);
 
                 // Survivalist
-                talents.BonusStaminaMultiplier = ((1.0f + talents.BonusStaminaMultiplier) * (1.0f + .02f * talentTree.Survivalist)) - 1.0f;
+                talents.BonusStaminaMultiplier = addCumulativePercentage(talents.BonusStaminaMultiplier, 0.02f * talentTree.Survivalist);
 			}
 
 			return talents;
@@ -1662,6 +1658,15 @@ namespace Rawr.Hunter
             double damageReal = damageTotal * damageAdjust * hitChance;
 
             return damageReal;
+        }
+
+        private float addCumulativePercentage(float current, double new_chance)
+        {
+            // helper function for calculating multiplicitive bonuses, such as agi from talents.
+            // if we gain 2% from Hunting Party and 15% from Lightning Reflexes, we actually
+            // get a final 17.3% bonus, not 17% ( [1.15 * 1.02] - 1 )
+
+            return (float)((current + 1) * (new_chance + 1)) - 1;
         }
 
         private ShotData getShotByIndex(int index, CharacterCalculationsHunter calculatedStats)
