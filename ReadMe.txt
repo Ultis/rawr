@@ -1,24 +1,16 @@
-Rawr v2.2.11.0
+Rawr v2.2.12.0
 ------------
-Welcome to Rawr 2.2.11.0.
+Welcome to Rawr 2.2.12.0.
    
 Recent Changes:
  - NOTE! Everyone, please do NOT reuse your GemmingTemplates.xml file from a previous version of Rawr, due to all the changes in gems in 3.2.
- - Updated base stats, stat conversions, and gemming rules for 3.2
- - Fixed a potential crash in Batch Tools
- - Rawr.Cat: Updated for 3.2.
- - Rawr.Mage: Updated for 3.2. Fix for FFB threat multiplier. Improved Hot Streak modeling.
- - Rawr.Retribution: Updated for 3.2.
- - Rawr.Enhance: Added support for Orc axe racial. Fix for weapon speed charts.
- - Rawr.DPSWarr: Rearranged the options panel. Fixed several calculation bugs/improvements.
- - Rawr.Warlock: Fixed several calculation bugs/improvements.
- - Rawr.RestoSham: Fixed several calculation bugs/improvements.
- - Rawr.Hunter: Fixed many calculation bugs/improvements.
- - Rawr.Moonkin: Now properly counts lost GCDs due to FF/Starfall/Treants.
- - Rawr.Elemental: Improved handling of special effects. Fixed several calculation bugs/improvements.
- - Rawr.Healadin: Updated for 3.2.
- - Rawr.RestoSham: Updated for 3.2.
- - Rawr.Tree: Updated for 3.2.
+ - Updated the default item cache with more 3.2 items, and updated data about existing items in 3.2. More data is still showing up on Wowhead/Armory daily, so be sure to try refreshing from Wowhead/Armory if you see any data that looks old/wrong. Also updated some of the enchants changed in 3.2.
+ - Rawr.Enhance: Fix for Orcs with Axes. Fixes for default gemming templates.
+ - Rawr.Hunter: Tons of more calculation improvements and fixes.
+ - Rawr.Mage: Reverted to 3.1 hot streak model, due to hotfix that was just applied.
+ - Rawr.DPSDK: Updated for 3.2.
+ - Rawr.Warlock: Some more calculation improvements to Haunt and Fire & Brimstone.
+ 
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -89,6 +81,23 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.11.0
+ - Updated base stats, stat conversions, and gemming rules for 3.2
+ - Fixed a potential crash in Batch Tools
+ - Rawr.Cat: Updated for 3.2.
+ - Rawr.Mage: Updated for 3.2. Fix for FFB threat multiplier. Improved Hot Streak modeling.
+ - Rawr.Retribution: Updated for 3.2.
+ - Rawr.Enhance: Added support for Orc axe racial. Fix for weapon speed charts.
+ - Rawr.DPSWarr: Rearranged the options panel. Fixed several calculation bugs/improvements.
+ - Rawr.Warlock: Fixed several calculation bugs/improvements.
+ - Rawr.RestoSham: Fixed several calculation bugs/improvements.
+ - Rawr.Hunter: Fixed many calculation bugs/improvements.
+ - Rawr.Moonkin: Now properly counts lost GCDs due to FF/Starfall/Treants.
+ - Rawr.Elemental: Improved handling of special effects. Fixed several calculation bugs/improvements.
+ - Rawr.Healadin: Updated for 3.2.
+ - Rawr.RestoSham: Updated for 3.2.
+ - Rawr.Tree: Updated for 3.2.
+
 v2.2.10.0
  - Rawr.Tree: Added Survival as a 3rd rating
  - Rawr.Retribution: Slight fix to partial resist calculations
