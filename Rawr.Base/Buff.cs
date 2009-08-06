@@ -3040,9 +3040,30 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { RighteousVengeanceCanCrit = 1f },
-                SetName = "Paladin T9 Retribution",
+				SetName = "Turalyon's Battlegear",
                 SetThreshold = 2
-            });
+			});
+
+			//Retribution T9
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Paladin T9 Retribution 2 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { RighteousVengeanceCanCrit = 1f },
+				SetName = "Liadrin's Battlegear",
+				SetThreshold = 2
+			});
+
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Paladin T9 Retribution 4 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { JudgementCrit = .05f },
+				SetName = "Turalyon's Battlegear",
+				SetThreshold = 4
+			});
 
             defaultBuffs.Add(new Buff()
             {
@@ -3050,7 +3071,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { JudgementCrit = .05f },
-                SetName = "Paladin T9 Retribution",
+				SetName = "Liadrin's Battlegear",
                 SetThreshold = 4
             });
 
