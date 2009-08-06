@@ -605,7 +605,7 @@ namespace Rawr
 				htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
 				htmlTooltip = htmlTooltip.Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
 					.Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
-					.Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Kirin'dor", "Kirin Tor");
+                    .Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor");
                 // normalize alliance/horde set names
                 htmlTooltip = htmlTooltip.Replace("Sunstrider's Regalia", "Khadgar's Regalia")   // Mage T9
                                          .Replace("Nobundo's Battlegear", "Thrall's Battlegear") // Enhance T9
