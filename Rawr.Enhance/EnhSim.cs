@@ -82,10 +82,10 @@ namespace Rawr.Enhance
             String weaponType = "-";
             if (character.MainHand != null)
             {
-                if (character.MainHand.Type == ItemType.OneHandAxe)
+                if (character.MainHand.Type == ItemType.OneHandAxe || character.MainHand.Type == ItemType.TwoHandAxe)
                     weaponType = "axe";
-                else if (character.MainHand.Type == ItemType.TwoHandAxe)
-                    weaponType = "axe";
+                if (character.MainHand.Type == ItemType.FistWeapon)
+                    weaponType = "fist";
             }
             sb.AppendLine("mh_weapon                       " + weaponType);
             sb.AppendLine("oh_enchant                      " + _ohEnchant);
@@ -94,6 +94,8 @@ namespace Rawr.Enhance
             {
                 if (character.OffHand.Type == ItemType.OneHandAxe)
                     weaponType = "axe";
+                if (character.OffHand.Type == ItemType.FistWeapon)
+                    weaponType = "fist";
             }
             sb.AppendLine("oh_weapon                       " + weaponType);
             sb.AppendLine();
