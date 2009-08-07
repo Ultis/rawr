@@ -253,6 +253,7 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Hand of Reckoning",
                         "DPS Breakdown:Other*From trinket procs",
                         "Rotation Info:Average SoV Stack",
+                        "Rotation Info:SoV Overtake*How long you need to dps a target for SoV to do more DPS then SoR",
                         "Rotation Info:Crusader Strike CD",
                         "Rotation Info:Judgement CD",
                         "Rotation Info:Consecration CD",

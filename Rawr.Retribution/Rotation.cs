@@ -55,13 +55,24 @@ namespace Rawr.Retribution
             }
         }
 
-        public abstract void SetAbilityDPS(CharacterCalculationsRetribution calc);
+        public abstract void SetCharacterCalculations(CharacterCalculationsRetribution calc);
 
         public void SetDPS(CharacterCalculationsRetribution calc)
         {
+            SetCharacterCalculations(calc);
+
             calc.AverageSoVStack = AverageSoVStackSize();
+            calc.SoVOvertake = SoVOvertakeTime();
+
             calc.WhiteDPS = White.WhiteDPS();
-            SetAbilityDPS(calc);
+            calc.SealDPS = SealDPS(Seal, SealDot);
+            calc.JudgementDPS = JudgementDPS(Judge);
+            calc.DivineStormDPS = DivineStormDPS(DS);
+            calc.CrusaderStrikeDPS = CrusaderStrikeDPS(CS);
+            calc.ConsecrationDPS = ConsecrationDPS(Cons);
+            calc.ExorcismDPS = ExorcismDPS(Exo);
+            calc.HammerOfWrathDPS = HammerOfWrathDPS(HoW);
+            calc.HandOfReckoningDPS = HandOfReckoningDPS(HoR);          
 
             calc.WhiteSkill = White;
             calc.SealSkill = Seal;
@@ -72,8 +83,6 @@ namespace Rawr.Retribution
             calc.ExorcismSkill = Exo;
             calc.HammerOfWrathSkill = HoW;
             calc.HandOfReckoningSkill = HoR;
-
-            calc.HandOfReckoningDPS = HoR.AverageDamage() / 8f * Combats.CalcOpts.HoREff;
 
             calc.DPSPoints =
                 calc.WhiteDPS +
@@ -88,13 +97,13 @@ namespace Rawr.Retribution
                 calc.OtherDPS;
         }
 
-        public float SealProcsPerSec()
+        public float SealProcsPerSec(Skill seal)
         {
-            if (Seal.GetType() == typeof(SealOfVengeance))
+            if (seal.GetType() == typeof(SealOfVengeance))
             {
                 return GetMeleeAttacksPerSec();
             }
-            else if (Seal.GetType() == typeof(SealOfRighteousness))
+            else if (seal.GetType() == typeof(SealOfRighteousness))
             {
                 return GetMeleeAttacksPerSec() + GetJudgementsPerSec() + GetJudgementsPerSec();
             }
@@ -102,6 +111,23 @@ namespace Rawr.Retribution
             {
                 return GetMeleeAttacksPerSec() + GetJudgementsPerSec();
             }
+        }
+
+        public float SoVOvertakeTime()
+        {
+            float sov0dps = JudgementDPS(new JudgementOfVengeance(Combats, 0));
+            float sov5dps = JudgementDPS(new JudgementOfVengeance(Combats, 5))
+                + SealDPS(new SealOfVengeance(Combats, 5), new SealOfVengeanceDoT(Combats, 5));
+            float sordps = JudgementDPS(new JudgementOfRighteousness(Combats))
+                + SealDPS(new SealOfRighteousness(Combats), null);
+
+            if (sordps > sov0dps)
+            {
+                float averageStack = (sordps - sov0dps) / (sov5dps - sov0dps) * 5f;
+                float timeToMaxStack = Combats.AttackSpeed * 4f;
+                return 2.5f * timeToMaxStack / (5f - averageStack);
+            }
+            else return 0;
         }
 
         public float AverageSoVStackSize()
@@ -118,8 +144,25 @@ namespace Rawr.Retribution
             }
         }
 
-        public abstract float GetJudgementsPerSec();
+        public virtual float SealDPS(Skill seal, Skill sealdot)
+        {
+            if (sealdot == null) return seal.AverageDamage() * SealProcsPerSec(seal);
+            else return sealdot.AverageDamage() / 3f + seal.AverageDamage() * SealProcsPerSec(seal);
+        }
 
+        public virtual float HandOfReckoningDPS(Skill hor)
+        {
+            return hor.AverageDamage() / 8f * Combats.CalcOpts.HoREff;
+        }
+
+        public abstract float JudgementDPS(Skill judge);
+        public abstract float CrusaderStrikeDPS(Skill cs);
+        public abstract float DivineStormDPS(Skill ds);
+        public abstract float ConsecrationDPS(Skill cons);
+        public abstract float ExorcismDPS(Skill exo);
+        public abstract float HammerOfWrathDPS(Skill how);
+
+        public abstract float GetJudgementsPerSec();
         public abstract float GetMeleeAttacksPerSec();
         public abstract float GetPhysicalAttacksPerSec();
         public abstract float GetMeleeCritsPerSec();
@@ -149,20 +192,39 @@ namespace Rawr.Retribution
             );
         }
 
-        public override void SetAbilityDPS(CharacterCalculationsRetribution calc)
+        public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
         {
             calc.Rotation = Solution;
+        }
 
+        public override float JudgementDPS(Skill judge)
+        {
+            return judge.AverageDamage() * Solution.Judgement / Solution.FightLength; 
+        }
 
-            calc.SealDPS = Seal.AverageDamage() * SealProcsPerSec();
-            if (SealDot != null) calc.SealDPS += SealDot.AverageDamage() / 3f;
+        public override float CrusaderStrikeDPS(Skill cs)
+        {
+            return cs.AverageDamage() * Solution.CrusaderStrike / Solution.FightLength;
+        }
 
-            calc.JudgementDPS = Judge.AverageDamage() * Solution.Judgement / Solution.FightLength;
-            calc.CrusaderStrikeDPS = CS.AverageDamage() * Solution.CrusaderStrike / Solution.FightLength;
-            calc.DivineStormDPS = DS.AverageDamage() * Solution.DivineStorm / Solution.FightLength;
-            calc.ConsecrationDPS = Cons.AverageDamage() * Solution.Consecration / Solution.FightLength;
-            calc.ExorcismDPS = Exo.AverageDamage() * Solution.Exorcism / Solution.FightLength;
-            calc.HammerOfWrathDPS = HoW.AverageDamage() * Solution.HammerOfWrath / Solution.FightLength;
+        public override float DivineStormDPS(Skill ds)
+        {
+            return ds.AverageDamage() * Solution.DivineStorm / Solution.FightLength;
+        }
+
+        public override float ConsecrationDPS(Skill cons)
+        {
+            return cons.AverageDamage() * Solution.Consecration / Solution.FightLength;
+        }
+
+        public override float ExorcismDPS(Skill exo)
+        {
+            return exo.AverageDamage() * Solution.Exorcism / Solution.FightLength;
+        }
+
+        public override float HammerOfWrathDPS(Skill how)
+        {
+            return how.AverageDamage() * Solution.HammerOfWrath / Solution.FightLength;
         }
 
         public override float GetJudgementsPerSec()
@@ -221,9 +283,8 @@ namespace Rawr.Retribution
             _calcOpts = combats.CalcOpts;
         }
 
-        public override void SetAbilityDPS(CharacterCalculationsRetribution calc)
+        public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
         {
-
             calc.Rotation = new RotationSolution();
             calc.Rotation.JudgementCD = _calcOpts.JudgeCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.JudgeCD20 * _calcOpts.TimeUnder20;
             calc.Rotation.CrusaderStrikeCD = _calcOpts.CSCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.CSCD20 * _calcOpts.TimeUnder20;
@@ -231,16 +292,36 @@ namespace Rawr.Retribution
             calc.Rotation.ConsecrationCD = _calcOpts.ConsCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.ConsCD20 * _calcOpts.TimeUnder20;
             calc.Rotation.ExorcismCD = _calcOpts.ExoCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.ExoCD20 * _calcOpts.TimeUnder20;
             calc.Rotation.HammerOfWrathCD = _calcOpts.HoWCD20;
+        }
 
-            calc.SealDPS = Seal.AverageDamage() * SealProcsPerSec();
-            if (SealDot != null) calc.SealDPS += SealDot.AverageDamage() / 3f;
+        public override float JudgementDPS(Skill judge)
+        {
+            return judge.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.JudgeCD + _calcOpts.TimeUnder20 / _calcOpts.JudgeCD20);
+        }
 
-            calc.JudgementDPS = Judge.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.JudgeCD + _calcOpts.TimeUnder20 / _calcOpts.JudgeCD20);
-            calc.CrusaderStrikeDPS = CS.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.CSCD + _calcOpts.TimeUnder20 / _calcOpts.CSCD20);
-            calc.DivineStormDPS = DS.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.DSCD + _calcOpts.TimeUnder20 / _calcOpts.DSCD20);
-            calc.ConsecrationDPS = Cons.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.ConsCD + _calcOpts.TimeUnder20 / _calcOpts.ConsCD20);
-            calc.ExorcismDPS = Exo.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.ExoCD + _calcOpts.TimeUnder20 / _calcOpts.ExoCD20);
-            calc.HammerOfWrathDPS = HoW.AverageDamage() * (_calcOpts.TimeUnder20 / _calcOpts.HoWCD20);
+        public override float CrusaderStrikeDPS(Skill cs)
+        {
+            return cs.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.CSCD + _calcOpts.TimeUnder20 / _calcOpts.CSCD20);
+        }
+
+        public override float DivineStormDPS(Skill ds)
+        {
+            return ds.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.DSCD + _calcOpts.TimeUnder20 / _calcOpts.DSCD20);
+        }
+
+        public override float ConsecrationDPS(Skill cons)
+        {
+            return cons.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.ConsCD + _calcOpts.TimeUnder20 / _calcOpts.ConsCD20);
+        }
+
+        public override float ExorcismDPS(Skill exo)
+        {
+            return exo.AverageDamage() * ((1f - _calcOpts.TimeUnder20) / _calcOpts.ExoCD + _calcOpts.TimeUnder20 / _calcOpts.ExoCD20);
+        }
+
+        public override float HammerOfWrathDPS(Skill how)
+        {
+            return how.AverageDamage() * (_calcOpts.TimeUnder20 / _calcOpts.HoWCD20);
         }
 
         public override float GetJudgementsPerSec()

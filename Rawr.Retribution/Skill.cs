@@ -185,7 +185,6 @@ namespace Rawr.Retribution
             AverageStackSize = averageStack;
         }
 
-
         public float AverageStackSize { get; private set; }
 
         public override float AbilityDamage()
