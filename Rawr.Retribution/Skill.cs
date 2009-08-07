@@ -118,7 +118,8 @@ namespace Rawr.Retribution
             damage *= 1f + Stats.BonusDamageMultiplier;
             damage *= 1f + .03f * Talents.Vengeance;
             if (UsesWeapon) damage *= 1f + .02f * Talents.TwoHandedWeaponSpecialization;
-            damage *= (1f + (CalcOpts.Mob == MobType.Other ? .01f : .02f) * Talents.Crusade);
+            damage *= (1f + .01f * Talents.Crusade);
+            if (CalcOpts.Mob != MobType.Other) damage *= (1f + .01f * Talents.Crusade);
             damage *= Combats.AvengingWrathMulti;
             damage *= (Talents.GlyphOfSenseUndead && CalcOpts.Mob == MobType.Undead ? 1.01f : 1f);
             return damage;
@@ -315,7 +316,7 @@ namespace Rawr.Retribution
     public class SealOfRighteousness : Skill
     {
 
-        public SealOfRighteousness(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
+        public SealOfRighteousness(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy, true, false) { }
 
         public override float AbilityDamage()
         {
