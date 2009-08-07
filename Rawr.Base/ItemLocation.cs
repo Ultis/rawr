@@ -777,11 +777,18 @@ namespace Rawr
             Quest = subNode.Attributes["name"].Value;
             MinLevel = int.Parse(subNode.Attributes["reqMinLevel"].Value);
             Party = int.Parse(subNode.Attributes["suggestedPartySize"].Value);
-            switch (subNode.Attributes["type"].Value)
+            if (subNode.Attributes["type"] != null)
             {
-                case "Dungeon": Type = "d"; break;
-                case "Raid": Type = "r"; break;
-                default: Type = ""; break;
+                switch (subNode.Attributes["type"].Value)
+                {
+                    case "Dungeon": Type = "d"; break;
+                    case "Raid": Type = "r"; break;
+                    default: Type = ""; break;
+                }
+            }
+            else
+            {
+                Type = "";
             }
             return this;
         }
