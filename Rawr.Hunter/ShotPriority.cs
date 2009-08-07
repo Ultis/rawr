@@ -524,14 +524,6 @@ namespace Rawr.Hunter
             }
 
             #endregion
-
-            if (type == Shots.ExplosiveShot && false)
-            {
-                Debug.WriteLine("start_freq = "+start_freq);
-                Debug.WriteLine("inbet_freq = " + inbet_freq);
-                Debug.WriteLine("lal_freq = " + lal_freq);
-                Debug.WriteLine("final_freq = " + final_freq);
-            }
         }
 
         public void calculateComposites(ShotPriority Priority)
@@ -629,6 +621,15 @@ namespace Rawr.Hunter
                     lackTalent      ? "Not being used in rotation:\n  You lack the needed talent" :
                     steadyBefore    ? "Not being used in rotation:\n  Steady shot has a higher\n  priority" :
                     "(Not in rotation)";
+            }
+
+            if (false) // yet another rotation debug block
+            {
+                ret += "\n-\n";
+                ret += "start_freq = " + start_freq.ToString("F2") + "\n";
+                ret += "inbet_freq = " + inbet_freq.ToString("F2") + "\n";
+                ret += "lal_freq = " + lal_freq.ToString("F2") + "\n";
+                ret += "final_freq = " + final_freq.ToString("F2");
             }
             
             return ret;

@@ -42,6 +42,7 @@ namespace Rawr.Hunter
 		public double apFromAspectOfTheHawk { get; set; }
 		public double apFromAspectMastery { get; set; }
 		public double apFromFuriousHowl { get; set; }
+        public double apFromProc { get; set; }
 		public double apFromCallOfTheWild { get; set; }
 		public double apFromTrueshotAura { get; set; }
 		public double apFromHuntersMark {get; set;}
@@ -59,11 +60,15 @@ namespace Rawr.Hunter
    		
         #region Crit Stats
         public double critRateOverall {get; set;}
-        public double critBase  {get; set;}
-        public double critFromAgi  {get; set;}
-        public double critFromRating  {get; set;}
-        public double critFromTalents  {get; set;}
-        public double critFromBuffs  {get; set;}
+        public double critBase {get; set;}
+        public double critFromAgi {get; set;}
+        public double critFromRating {get; set;}
+        public double critFromProcRating { get; set; }
+        public double critFromLethalShots {get; set;}
+        public double critFromKillerInstincts {get; set;}
+        public double critFromMasterMarksman {get; set;}
+        public double critFromMasterTactician { get; set; }
+        public double critFromBuffs {get; set;}
         public double critfromDepression  {get; set;}
         #endregion
         
@@ -227,7 +232,11 @@ namespace Rawr.Hunter
 			               critBase.ToString("P2") + " base crit \n" +
 			               critFromAgi.ToString("P2") + " from agility \n" +
 			               critFromRating.ToString("P2") + " from rating \n" +
-			               critFromTalents.ToString("P2") + " from talents \n" +
+                           critFromProcRating.ToString("P2") + " from proc rating \n" +
+                           critFromLethalShots.ToString("P2") + " from Lethal Shots\n" +
+                           critFromKillerInstincts.ToString("P2") + " from Killer Instincts\n" +
+                           critFromMasterMarksman.ToString("P2") + " from Master Marksman\n" +
+                           critFromMasterTactician.ToString("P2") + " from Master Tactician\n" +
 			               critFromBuffs.ToString("P2") + " from buffs \n" +
 			               critfromDepression.ToString("P2") + " from depression");
             dictValues.Add("Ranged AP", apTotal.ToString("F0") + "*includes: \n" +
@@ -240,6 +249,7 @@ namespace Rawr.Hunter
                             apFromAspectOfTheHawk.ToString("F0") + " from Aspect of the Hawk \n" +
                             apFromAspectMastery.ToString("F0") + " from Aspect Mastery \n" +
                             apFromFuriousHowl.ToString("F0") + " from Furious Howl \n" +
+                            apFromProc.ToString("F0") + " from proc effects \n" +
                             apFromCallOfTheWild.ToString("P2") + " from Call of the Wild \n" +
                             apFromTrueshotAura.ToString("P2") + " from Trueshot Aura \n" +
                             apFromHuntersMark.ToString("F0") + " from Hunter's Mark \n" +
