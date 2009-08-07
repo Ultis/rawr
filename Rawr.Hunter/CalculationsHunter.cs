@@ -465,6 +465,7 @@ namespace Rawr.Hunter
             //    Debug.WriteLine(buff);
             //}
 
+            // shot basics
             #region August 2009 Priority Rotation Setup
 
             calculatedStats.priorityRotation = new ShotPriority();
@@ -522,6 +523,24 @@ namespace Rawr.Hunter
 
             #endregion
 
+            // speed
+            #region August 2009 Ranged Weapon Stats
+
+            double rangedWeaponDamage = 0;
+            double rangedWeaponSpeed = 0;
+            double rangedAmmoDPS = 0;
+
+            if (character.Ranged != null)
+            {
+                rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
+                rangedWeaponSpeed = character.Ranged.Item.Speed;
+            }
+            if (character.Projectile != null)
+            {
+                rangedAmmoDPS = (float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f;
+            }
+
+            #endregion
             #region May 2009 Haste Calcs
 
             double hasteFromRacial = 1;
@@ -624,6 +643,8 @@ namespace Rawr.Hunter
             double crittingSpecialsPerSecond = calculatedStats.priorityRotation.critSpecialShotsPerSecond;
             double crittingShotsPerSecond = autoShotsPerSecond + crittingSpecialsPerSecond;
 
+            double shotsPerSecondWithoutHawk = specialShotsPerSecond + baseAutoShotsPerSecond;
+
             calculatedStats.BaseAttackSpeed = (float)autoShotSpeed;
 
             //Debug.WriteLine("baseAutoShotsPerSecond = " + baseAutoShotsPerSecond);
@@ -632,6 +653,8 @@ namespace Rawr.Hunter
             //Debug.WriteLine("Total shots per second = " + totalShotsPerSecond);
 
             #endregion
+
+            // shot crit
             #region May 2009 Hit Chance
             double missPercent = HunterRatings.BASE_MISS_PERCENT;
             calculatedStats.hitBase = 1.0 - HunterRatings.BASE_MISS_PERCENT;
@@ -741,12 +764,6 @@ namespace Rawr.Hunter
             }
 
             #endregion
-
-            // now we can calculate crit chances.
-            // we need to do this and then generate composite crit rates from the rotation
-            // so that we can correctly generate effective RAP (since expose weakness depends
-            // on how many shots in our rotation crit)
-
             #region August 2009 Shot Crit Chances
 
             // crit chance = base_crit + 5%_rift_stalker_bonus + (2% * survivial_instincts)
@@ -776,8 +793,224 @@ namespace Rawr.Hunter
             calculatedStats.silencingShot.critChance = critHitPercent;
 
             calculatedStats.priorityRotation.calculateCrits();
-            
+
             #endregion
+
+            // mana consumption
+            #region August 2009 Mana Adjustments
+
+            double efficiencyManaAdjust = 1 - (character.HunterTalents.Efficiency * 0.03);
+
+            // TODO: this should use the 'composite' crit chance, based on out actual rotation,
+            // not the base crit chance (since some shots in our rotation don't crit)
+            double thrillOfTheHuntManaAdjust = 1 - (calculatedStats.priorityRotation.critsCompositeSum * 0.4 * (character.HunterTalents.ThrillOfTheHunt / 3));
+
+            double masterMarksmanManaAdjust = 1 - (character.HunterTalents.MasterMarksman * 0.05);
+
+            // TODO: this should only activate if we have serpent or scorpid in the rotation
+            double glyphOfArcaneShotManaAdjust = character.HunterTalents.GlyphOfArcaneShot ? 0.8 : 1;
+
+            double ISSAimedShotManaAdjust = 1; // TODO: calculate this!
+            double ISSArcaneShotManaAdjust = 1; // TODO: calculate this!
+            double ISSChimeraShotManaAdjust = 1; // TODO: calculate this!
+
+            double resourcefulnessManaAdjust = 1 - (character.HunterTalents.Resourcefulness * 0.2);
+
+            Stats statsRace = BaseStats.GetBaseStats(80, CharacterClass.Hunter, character.Race);
+            float baseMana = statsRace.Mana;
+
+            #endregion
+            #region August 2009 Shot Mana Usage
+
+            // we do this ASAP so that we can get the MPS.
+            // this allows us to calculate viper/aspect bonuses & penalties
+
+            calculatedStats.steadyShot.mana = (baseMana * 0.05) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust;
+            calculatedStats.serpentSting.mana = (baseMana * 0.09) * efficiencyManaAdjust;
+            calculatedStats.aimedShot.mana = (baseMana * 0.08) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSAimedShotManaAdjust;
+            calculatedStats.explosiveShot.mana = (baseMana * 0.07) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.chimeraShot.mana = (baseMana * 0.12) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSChimeraShotManaAdjust;
+            calculatedStats.arcaneShot.mana = (baseMana * 0.05) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * ISSArcaneShotManaAdjust * glyphOfArcaneShotManaAdjust;
+            calculatedStats.multiShot.mana = (baseMana * 0.09) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.blackArrow.mana = (baseMana * 0.06) * efficiencyManaAdjust * resourcefulnessManaAdjust;
+            calculatedStats.killShot.mana = (baseMana * 0.07) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.silencingShot.mana = (baseMana * 0.06) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.rapidFire.mana = (baseMana * 0.03);
+
+            calculatedStats.priorityRotation.calculateRotationMPS();
+
+            #endregion
+            #region August 2009 Mana Regen
+
+            calculatedStats.manaRegenGearBuffs = 0; // mp5 on gear
+
+            calculatedStats.manaRegenViper = 0; //TODO
+
+            // Roar of Recovery
+            calculatedStats.manaRegenRoarOfRecovery = 0; //TODO
+
+            // Rapid Recuperation
+            calculatedStats.manaRegenRapidRecuperation = 0;
+            if (calculatedStats.rapidFire.freq > 0)
+            {
+                double rapidRecuperationManaGain = 0.02 * character.HunterTalents.RapidRecuperation * calculatedStats.BasicStats.Mana * 5;
+                calculatedStats.manaRegenRapidRecuperation = rapidRecuperationManaGain / calculatedStats.rapidFire.freq;
+            }
+
+            // Chimera shot refreshing Viper
+            calculatedStats.manaRegenChimeraViperProc = 0;
+            if (calculatedStats.priorityRotation.chimeraRefreshesViper)
+            {
+                if (calculatedStats.chimeraShot.freq > 0)
+                {
+                    calculatedStats.manaRegenChimeraViperProc = 0.6 * 3092 / calculatedStats.chimeraShot.freq;
+                }
+            }
+
+            // Invigoration
+            calculatedStats.manaRegenInvigoration = 0; // TODO
+
+            // Hunting Party
+
+            double huntingPartyProc = (float)(character.HunterTalents.HuntingParty / 3.0);
+
+            double huntingPartyArcaneFreq = calculatedStats.arcaneShot.freq;
+            double huntingPartyArcaneCrit = calculatedStats.arcaneShot.critChance;
+            double huntingPartyArcaneUptime = huntingPartyArcaneFreq > 0 ? 1 - Math.Pow(1 - huntingPartyArcaneCrit * huntingPartyProc, 15 / huntingPartyArcaneFreq) : 0;
+
+            double huntingPartyExplosiveFreq = calculatedStats.explosiveShot.freq; // spreadsheet divides by 3, but doesn't use that value?
+            double huntingPartyExplosiveCrit = calculatedStats.explosiveShot.critChance;
+            double huntingPartyExplosiveUptime = huntingPartyExplosiveFreq > 0 ? 1 - Math.Pow(1 - huntingPartyExplosiveCrit * huntingPartyProc, 15 / huntingPartyExplosiveFreq) : 0;
+
+            double huntingPartySteadyFreq = calculatedStats.steadyShot.freq;
+            double huntingPartySteadyCrit = calculatedStats.steadyShot.critChance;
+            double huntingPartySteadyUptime = huntingPartySteadyFreq > 0 ? 1 - Math.Pow(1 - huntingPartySteadyCrit * huntingPartyProc, 15 / huntingPartySteadyFreq) : 0;
+
+            double huntingPartyCumulativeUptime = huntingPartyArcaneUptime + ((1 - huntingPartyArcaneUptime) * huntingPartyExplosiveUptime);
+            double huntingPartyUptime = huntingPartyCumulativeUptime + ((1 - huntingPartyCumulativeUptime) * huntingPartySteadyUptime);
+
+            calculatedStats.manaRegenHuntingParty = 0.002 * calculatedStats.BasicStats.Mana * huntingPartyUptime;
+
+            // If we've got a replenishment buff up, use that instead of our own Hunting Party
+            double manaRegenReplenishment = statsBuffs.ManaRestoreFromMaxManaPerSecond * calculatedStats.BasicStats.Mana;
+            if (manaRegenReplenishment > 0)
+            {
+                calculatedStats.manaRegenHuntingParty = manaRegenReplenishment;
+            }
+
+            // Target Debuffs
+            calculatedStats.manaRegenTargetDebuffs = 0; // TODO!
+
+            // Total
+            calculatedStats.manaRegenTotal =
+                calculatedStats.manaRegenGearBuffs +
+                calculatedStats.manaRegenViper +
+                calculatedStats.manaRegenRoarOfRecovery +
+                calculatedStats.manaRegenRapidRecuperation +
+                calculatedStats.manaRegenChimeraViperProc +
+                calculatedStats.manaRegenInvigoration +
+                calculatedStats.manaRegenHuntingParty +
+                calculatedStats.manaRegenTargetDebuffs;
+
+
+            #endregion
+            #region August 2009 Aspect Usage
+
+            double manaRegenTier7ViperBonus = character.ActiveBuffsContains("Cryptstalker Battlegear 4 Piece Bonus") ? 1.2 : 1;
+
+            double glpyhOfAspectOfTheViperBonus = character.HunterTalents.GlyphOfAspectOfTheViper ? 1.1 : 1;
+
+            double manaRegenFromViper = calculatedStats.BasicStats.Mana * Math.Round(rangedWeaponSpeed, 1) / 100 * shotsPerSecondWithoutHawk
+                                        * manaRegenTier7ViperBonus * glpyhOfAspectOfTheViperBonus
+                                        + calculatedStats.BasicStats.Mana * 0.04 / 3;
+
+            double manaFromPotion = 0;
+            if (options.useManaPotion == ManaPotionType.RunicManaPotion) manaFromPotion = 4300;
+            if (options.useManaPotion == ManaPotionType.SuperManaPotion) manaFromPotion = 2400;
+
+            bool manaHasAlchemistStone = false;
+            if (IsWearingTrinket(character, 35751)) manaHasAlchemistStone = true; // Assassin's Alchemist Stone
+            if (IsWearingTrinket(character, 44324)) manaHasAlchemistStone = true; // Mighty Alchemist's Stone
+            manaHasAlchemistStone = true; // hack for broken SS
+
+            double manaRegenFromPotion = manaFromPotion / options.duration * (manaHasAlchemistStone ? 1.4 : 1.0);
+
+            double manaExpenditure = calculatedStats.priorityRotation.MPS;
+            // TODO: add mana used by others/pets
+            manaExpenditure += 2.52; // hack to emulate SS
+
+            double manaChangeDuringViper = manaRegenFromViper + manaRegenFromPotion + calculatedStats.manaRegenTotal - manaExpenditure;
+            double manaChangeDuringNormal = manaExpenditure - calculatedStats.manaRegenTotal - manaRegenFromPotion;
+
+            double timeToFull = manaChangeDuringViper > 0 ? calculatedStats.BasicStats.Mana / manaChangeDuringViper : -1;
+            double timeToOOM = manaChangeDuringNormal > 0 ? calculatedStats.BasicStats.Mana / manaChangeDuringNormal : -1;
+
+            double viperTimeNeededToLastFight = 0;
+            if (timeToOOM >= 0 && timeToOOM < options.duration && manaRegenFromViper > 0)
+            {
+                viperTimeNeededToLastFight = ((manaChangeDuringNormal * options.duration) - calculatedStats.BasicStats.Mana) / manaRegenFromViper;
+            }
+
+            double aspectUptimeHawk = 0;
+
+            double aspectUptimeViper = 0;
+            if (timeToOOM >= 0 && options.aspectUsage != AspectUsage.AlwaysOn)
+            {
+                if (options.aspectUsage == AspectUsage.ViperRegen)
+                {
+                    aspectUptimeViper = timeToFull / (timeToFull + timeToOOM);
+                }
+                else
+                {
+                    if (viperTimeNeededToLastFight > 0)
+                    {
+                        aspectUptimeViper = viperTimeNeededToLastFight / options.duration;
+                    }
+                }
+            }
+
+            // TODO: use BW uptime here                
+            double aspectUptimeBeast = options.useBeastDuringBeastialWrath ? 0 : 0;
+
+            switch (options.selectedAspect)
+            {
+                case Aspect.Viper:
+                    aspectUptimeViper = options.useBeastDuringBeastialWrath ? 1 - aspectUptimeBeast : 1;
+                    break;
+
+                case Aspect.Beast:
+                    aspectUptimeBeast = (options.aspectUsage == AspectUsage.AlwaysOn) ? 1 : 1 - aspectUptimeViper;
+                    break;
+
+                case Aspect.Hawk:
+                case Aspect.Dragonhawk:
+                    aspectUptimeHawk = 1 - aspectUptimeViper - aspectUptimeBeast;
+                    break;
+            }
+
+
+            // we now know aspect uptimes - calculate bonuses and penalties
+
+            double viperDamageEffect = character.HunterTalents.AspectMastery == 1 ? 0.4 : 0.5;
+            double viperDamagePenalty = aspectUptimeViper * viperDamageEffect;
+
+            double beastStaticAPBonus = character.HunterTalents.GlyphOfTheBeast ? 0.12 : 0.1;
+            double beastAPBonus = aspectUptimeBeast * beastStaticAPBonus;
+
+            double tier7ViperDamageAdjust = 1.0 + (character.ActiveBuffsContains("Cryptstalker Battlegear 4 Piece Bonus") ? 0.2 * aspectUptimeViper : 0);
+
+            calculatedStats.aspectUptimeHawk = aspectUptimeHawk;
+            calculatedStats.aspectUptimeBeast = aspectUptimeBeast;
+            calculatedStats.aspectUptimeViper = aspectUptimeViper;
+            calculatedStats.aspectViperPenalty = viperDamagePenalty;
+
+            #endregion
+
+            // now we can calculate crit chances.
+            // we need to do this and then generate composite crit rates from the rotation
+            // so that we can correctly generate effective RAP (since expose weakness depends
+            // on how many shots in our rotation crit)
+
             #region August 2009 Ranged Attack Power
 
             calculatedStats.apFromBase = 0 + HunterRatings.CHAR_LEVEL * 2;
@@ -793,8 +1026,12 @@ namespace Rawr.Hunter
                 calculatedStats.apFromBloodFury *= CalcUptime(15, 120, options.duration);
             }
 
-            calculatedStats.apFromAspectOfTheHawk = 300;
-            calculatedStats.apFromAspectMastery = (character.HunterTalents.AspectMastery * 0.3 * calculatedStats.apFromAspectOfTheHawk);
+            // Aspect of the Hawk
+            calculatedStats.apFromAspectOfTheHawk = 0;
+            if (options.selectedAspect == Aspect.Hawk || options.selectedAspect == Aspect.Dragonhawk)
+            {
+                calculatedStats.apFromAspectOfTheHawk = 300 * aspectUptimeHawk;
+            }
 
             calculatedStats.apFromFuriousHowl = 0;
             if (options.PetFamily == PetFamily.Wolf)
@@ -1007,48 +1244,10 @@ namespace Rawr.Hunter
             double markedForDeathCritDamage = 0.02 * character.HunterTalents.MarkedForDeath;
 
             #endregion
-            #region August 2009 Mana Adjustments
 
-            double efficiencyManaAdjust = 1 - (character.HunterTalents.Efficiency * 0.03);
-
-            // TODO: this should use the 'composite' crit chance, based on out actual rotation,
-            // not the base crit chance (since some shots in our rotation don't crit)
-            double thrillOfTheHuntManaAdjust = 1 - (calculatedStats.priorityRotation.critsCompositeSum * 0.4 * (character.HunterTalents.ThrillOfTheHunt / 3));
-            
-            double masterMarksmanManaAdjust = 1 - (character.HunterTalents.MasterMarksman * 0.05);
-
-            // TODO: this should only activate if we have serpent or scorpid in the rotation
-            double glyphOfArcaneShotManaAdjust = character.HunterTalents.GlyphOfArcaneShot ? 0.8 : 1;
-
-            double ISSAimedShotManaAdjust = 1; // TODO: calculate this!
-            double ISSArcaneShotManaAdjust = 1; // TODO: calculate this!
-            double ISSChimeraShotManaAdjust = 1; // TODO: calculate this!
-
-            double resourcefulnessManaAdjust = 1 - (character.HunterTalents.Resourcefulness * 0.2);
-
-            Stats statsRace = BaseStats.GetBaseStats(80, CharacterClass.Hunter, character.Race);
-            float baseMana = statsRace.Mana;
-
-            #endregion
-
-            // shot calcs
-            // for all special shots, we populate a ShotData object
+            // shot damage calcs
 
             #region August 2009 AutoShot
-
-            double rangedWeaponDamage = 0;
-            double rangedWeaponSpeed = 0;
-            double rangedAmmoDPS = 0;
-
-            if (character.Ranged != null)
-            {
-                rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
-                rangedWeaponSpeed = character.Ranged.Item.Speed;
-            }
-            if (character.Projectile != null)
-            {
-                rangedAmmoDPS = (float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f;
-            }
 
             // scope damage only applies to autoshot, so is not added to the normalized damage
             double rangedAmmoDamage = rangedAmmoDPS * rangedWeaponSpeed;
@@ -1060,7 +1259,7 @@ namespace Rawr.Hunter
             double autoShotDamage = rangedWeaponDamage + rangedAmmoDamage + statsBaseGear.WeaponDamage + damageFromRAP + calculatedStats.BasicStats.ScopeDamage;
             double autoShotDamageNormalized = rangedWeaponDamage + rangedAmmoDamageNormalized + statsBaseGear.WeaponDamage + damageFromRAPNormalized;
 
-            double autoShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * armorReductionDamageAdjust;
+            double autoShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust *armorReductionDamageAdjust;
             double autoShotCritAdjust = 1 * metaGemCritDamage;
 
             double autoShotDamageReal = CalcEffectiveDamage(
@@ -1071,7 +1270,15 @@ namespace Rawr.Hunter
                                            autoShotDamageAdjust
                                          );
 
-            calculatedStats.AutoshotDPS = autoShotDamageReal / autoShotSpeed;
+            double hunterAutoDPS = autoShotsPerSecond * autoShotDamageReal
+                                    * (1 - viperDamagePenalty) * tier7ViperDamageAdjust;
+
+            calculatedStats.aspectBeastLostDPS = (0 - QSBaseFreqnecyIncrease) * (1 - aspectUptimeHawk) * hunterAutoDPS;
+
+            calculatedStats.AutoshotDPS = hunterAutoDPS;
+
+            
+
 
             //Debug.WriteLine("rangedWeaponDamage = " + rangedWeaponDamage);
             //Debug.WriteLine("rangedAmmoDamage = " + rangedAmmoDamage);
@@ -1121,10 +1328,6 @@ namespace Rawr.Hunter
                         + (rangedWeaponDamage / rangedWeaponSpeed * 2.8);
 
 
-            // mana per shot
-            double steadyShotManaCost = (baseMana * 0.05)
-                                        * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust;
-
             // adjust = talent_adjust * gronnstalker_bonus * glyph_of_steadyshot
             //          * sniper_training * physcial_debuffs
             // TODO: Gronnstalker set bonus
@@ -1145,7 +1348,6 @@ namespace Rawr.Hunter
                                           );
 
             calculatedStats.steadyShot.damage = steadyShotDamageReal;
-            calculatedStats.steadyShot.mana = steadyShotManaCost;
             //calculatedStats.steadyShot.Dump("Steady Shot");
 
             #endregion
@@ -1171,11 +1373,8 @@ namespace Rawr.Hunter
             double serpentStingDamagePerTick = Math.Round(serpentStingDamageBase * serpentStingDamageAdjust / 5, 1);
             double serpentStingDamageReal = serpentStingDamagePerTick * serpentStingTicks;
 
-            double serpentStingManaCost = (baseMana * 0.09) * efficiencyManaAdjust;
-
             calculatedStats.serpentSting.type = Shots.SerpentSting;
             calculatedStats.serpentSting.damage = serpentStingDamageReal;
-            calculatedStats.serpentSting.mana = serpentStingManaCost;
             //calculatedStats.serpentSting.Dump("Serpent Sting");
 
             #endregion
@@ -1204,11 +1403,7 @@ namespace Rawr.Hunter
             //Debug.WriteLine("aimedShotCritAdjust = " + aimedShotCritAdjust);
             //Debug.WriteLine("aimedShotDamageAdjust = " + aimedShotDamageAdjust);
 
-            double aimedShotManaCost = (baseMana * 0.08) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust 
-                                        * masterMarksmanManaAdjust * ISSAimedShotManaAdjust;
-
             calculatedStats.aimedShot.damage = aimedShotDamageReal;
-            calculatedStats.aimedShot.mana = aimedShotManaCost;
             //calculatedStats.aimedShot.Dump("Aimed Shot");
 
             #endregion
@@ -1234,10 +1429,7 @@ namespace Rawr.Hunter
 
             double explosiveShotDamagePerShot = explosiveShotDamageReal * 3;
 
-            double explosiveShotManaCost = (baseMana * 0.07) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-
             calculatedStats.explosiveShot.damage = explosiveShotDamagePerShot;
-            calculatedStats.explosiveShot.mana = explosiveShotManaCost;            
             //calculatedStats.explosiveShot.Dump("Explosive Shot");
 
             #endregion
@@ -1277,11 +1469,7 @@ namespace Rawr.Hunter
 
             double chimeraShotDamageTotal = chimeraShotDamageReal + chimeraShotSerpentDamageReal;
 
-            double chimeraShotManaCost = (baseMana * 0.12) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust
-                                            * masterMarksmanManaAdjust * ISSChimeraShotManaAdjust;
-
             calculatedStats.chimeraShot.damage = chimeraShotDamageTotal;
-            calculatedStats.chimeraShot.mana = chimeraShotManaCost;
             //calculatedStats.chimeraShot.Dump("Chimera Shot");
 
             #endregion
@@ -1302,11 +1490,7 @@ namespace Rawr.Hunter
                                             arcaneShotDamageAdjust
                                           );
 
-            double arcaneShotManaCost = (baseMana * 0.05) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust
-                                        * ISSArcaneShotManaAdjust * glyphOfArcaneShotManaAdjust;
-
             calculatedStats.arcaneShot.damage = arcaneShotDamageReal;
-            calculatedStats.arcaneShot.mana = arcaneShotManaCost;
             //calculatedStats.arcaneShot.Dump("Arcane Shot");
 
             #endregion
@@ -1325,10 +1509,7 @@ namespace Rawr.Hunter
                                             multiShotDamageAdjust
                                          );
 
-            double multiShotManaCost = (baseMana * 0.09) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-
             calculatedStats.multiShot.damage = multiShotDamageReal;
-            calculatedStats.multiShot.mana = multiShotManaCost;
             //calculatedStats.multiShot.Dump("Multi Shot");
 
             #endregion
@@ -1348,10 +1529,7 @@ namespace Rawr.Hunter
 
             double blackArrowDamage = blackArrowDamageNormal * blackArrowDamageAdjust;
 
-            double blackArrowManaCost = (baseMana * 0.06) * efficiencyManaAdjust * resourcefulnessManaAdjust;
-
             calculatedStats.blackArrow.damage = blackArrowDamage;
-            calculatedStats.blackArrow.mana = blackArrowManaCost;
             //calculatedStats.blackArrow.Dump("Black Arrow");
 
             #endregion
@@ -1369,10 +1547,7 @@ namespace Rawr.Hunter
                                             killShotDamageAdjust
                                         );
 
-            double killShotManaCost = (baseMana * 0.07) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-
             calculatedStats.killShot.damage = killShotDamageReal;
-            calculatedStats.killShot.mana = killShotManaCost;
             //calculatedStats.killShot.Dump("Kill Shot");
 
             #endregion
@@ -1390,20 +1565,23 @@ namespace Rawr.Hunter
                                                 silencingShotDamageAdjust
                                              );
 
-            double silencingShotManaCost = (baseMana * 0.06) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-
             calculatedStats.silencingShot.damage = silencingShotDamageReal;
-            calculatedStats.silencingShot.mana = silencingShotManaCost;
             //calculatedStats.silencingShot.Dump("Silencing Shot");
 
             #endregion
             #region August 2009 Rapid Fire
 
             calculatedStats.rapidFire.damage = 0;
-            calculatedStats.rapidFire.mana = (baseMana * 0.03);
 
             #endregion
 
+            #region On-Proc DPS
+            // TODO: Bandit's Insignia
+            // TODO: Gnomish Lightning Generator
+            // TODO: Darkmoon Card: Death
+            // TODO: Hand-Mounted Pyro Rocket
+            // TODO: Vestige of Haldor
+            #endregion
             #region Quick Shots
 
             //TODO: this is in the wrong place and is not being used.
@@ -1433,90 +1611,17 @@ namespace Rawr.Hunter
             PetCalculations pet = new PetCalculations(character, calculatedStats, options, statsBuffs, PetFamily.Bat, statsBaseGear);
 
             #endregion
-            #region August 2009 Mana Regen
-
-            calculatedStats.manaRegenGearBuffs = 0; // mp5 on gear
-
-            calculatedStats.manaRegenViper = 0; //TODO
-
-            // Roar of Recovery
-            calculatedStats.manaRegenRoarOfRecovery = 0; //TODO
-
-            // Rapid Recuperation
-            calculatedStats.manaRegenRapidRecuperation = 0;
-            if (calculatedStats.rapidFire.freq > 0)
-            {
-                double rapidRecuperationManaGain = 0.02 * character.HunterTalents.RapidRecuperation * calculatedStats.BasicStats.Mana * 5;
-                calculatedStats.manaRegenRapidRecuperation = rapidRecuperationManaGain / calculatedStats.rapidFire.freq;
-            }
-
-            // Chimera shot refreshing Viper
-            calculatedStats.manaRegenChimeraViperProc = 0;
-            if (calculatedStats.priorityRotation.chimeraRefreshesViper)
-            {
-                if (calculatedStats.chimeraShot.freq > 0)
-                {
-                    calculatedStats.manaRegenChimeraViperProc = 0.6 * 3092 / calculatedStats.chimeraShot.freq;
-                }
-            }
-
-            // Invigoration
-            calculatedStats.manaRegenInvigoration = 0; // TODO
-
-            // Hunting Party
-
-            double huntingPartyProc = (float)(character.HunterTalents.HuntingParty / 3.0);
-
-            double huntingPartyArcaneFreq = calculatedStats.arcaneShot.freq;
-            double huntingPartyArcaneCrit = calculatedStats.arcaneShot.critChance;
-            double huntingPartyArcaneUptime = huntingPartyArcaneFreq > 0 ? 1 - Math.Pow(1-huntingPartyArcaneCrit * huntingPartyProc, 15/huntingPartyArcaneFreq) : 0;
-
-            double huntingPartyExplosiveFreq = calculatedStats.explosiveShot.freq; // spreadsheet divides by 3, but doesn't use that value?
-            double huntingPartyExplosiveCrit = calculatedStats.explosiveShot.critChance;
-            double huntingPartyExplosiveUptime = huntingPartyExplosiveFreq > 0 ? 1 - Math.Pow(1 - huntingPartyExplosiveCrit * huntingPartyProc, 15 / huntingPartyExplosiveFreq) : 0;
-
-            double huntingPartySteadyFreq = calculatedStats.steadyShot.freq;
-            double huntingPartySteadyCrit = calculatedStats.steadyShot.critChance;
-            double huntingPartySteadyUptime = huntingPartySteadyFreq > 0 ? 1 - Math.Pow(1 - huntingPartySteadyCrit * huntingPartyProc, 15 / huntingPartySteadyFreq) : 0;
-
-            double huntingPartyCumulativeUptime = huntingPartyArcaneUptime + ((1 - huntingPartyArcaneUptime) * huntingPartyExplosiveUptime);
-            double huntingPartyUptime = huntingPartyCumulativeUptime + ((1 - huntingPartyCumulativeUptime) * huntingPartySteadyUptime);
-
-            calculatedStats.manaRegenHuntingParty = 0.002 * calculatedStats.BasicStats.Mana * huntingPartyUptime;
-
-            // If we've got a replenishment buff up, use that instead of our own Hunting Party
-            double manaRegenReplenishment = statsBuffs.ManaRestoreFromMaxManaPerSecond * calculatedStats.BasicStats.Mana;
-            if (manaRegenReplenishment > 0)
-            {
-                calculatedStats.manaRegenHuntingParty = manaRegenReplenishment;
-            }
-
-            // Target Debuffs
-            calculatedStats.manaRegenTargetDebuffs = 0; // TODO!
- 
-            // Total
-            calculatedStats.manaRegenTotal =
-                calculatedStats.manaRegenGearBuffs +
-                calculatedStats.manaRegenViper +
-                calculatedStats.manaRegenRoarOfRecovery +
-                calculatedStats.manaRegenRapidRecuperation +
-                calculatedStats.manaRegenChimeraViperProc +
-                calculatedStats.manaRegenInvigoration +
-                calculatedStats.manaRegenHuntingParty +
-                calculatedStats.manaRegenTargetDebuffs;
-
-
-            #endregion
             #region August 2009 Shot Rotation
 
-            calculatedStats.priorityRotation.calculateRotationDPS(character);
+            calculatedStats.priorityRotation.viperDamagePenalty = viperDamagePenalty;
+            calculatedStats.priorityRotation.calculateRotationDPS();
             calculatedStats.CustomDPS = calculatedStats.priorityRotation.DPS;
 
             //Debug.WriteLine("Rotation DPS = " + calculatedStats.priorityRotation.DPS);
             //Debug.WriteLine("Rotation MPS = " + calculatedStats.priorityRotation.MPS);
 
             #endregion
-            #region August 2009 killShot Sub-20% Usage
+            #region August 2009 Kill Shot Sub-20% Usage
 
             double killShotCurrentFreq = calculatedStats.killShot.freq;
             double killShotPossibleFreq = calculatedStats.killShot.start_freq;
@@ -1540,7 +1645,7 @@ namespace Rawr.Hunter
             if (options.duration > 0 && options.timeSpentSub20 > 0) timeSpentSubTwenty = (double)options.timeSpentSub20 / (double)options.duration;
             if (options.bossHPPercentage < 0.2) timeSpentSubTwenty = 1;
 
-            double killShotSubGain = timeSpentSubTwenty * killShotDPSGain;
+            double killShotSubGain = timeSpentSubTwenty * killShotDPSGain * (1 - viperDamagePenalty);
 
             calculatedStats.killShotSub20NewSteadyFreq = steadyShotNewFreq;
             calculatedStats.killShotSub20NewDPS = newKillDhotDPS;
@@ -1550,18 +1655,16 @@ namespace Rawr.Hunter
             calculatedStats.killShotSub20FinalGain = killShotSubGain;
 
             #endregion
-            #region August 2009 Aspect of the Viper Usage
 
-            //Debug.WriteLine("rotation MPS: "+calculatedStats.priorityRotation.MPS.ToString("F2"));
-
-            #endregion
 
             calculatedStats.PetDpsPoints = pet.getDPS();
             calculatedStats.HunterDpsPoints = (float)(
                                                     calculatedStats.AutoshotDPS
                                                   + calculatedStats.WildQuiverDPS 
                                                   + calculatedStats.CustomDPS
+                                                  + calculatedStats.OnProcDPS
                                                   + calculatedStats.killShotSub20FinalGain
+                                                  + calculatedStats.aspectBeastLostDPS
                                                );
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints + calculatedStats.PetDpsPoints;
 
@@ -1654,7 +1757,8 @@ namespace Rawr.Hunter
 
             // The first 20 Int = 20 Mana, while each subsequent Int = 15 Mana
             // (20-(20/15)) = 18.66666
-            statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * (statsTotal.Intellect - (20f - (20f / 15f))) + statsGearEnchantsBuffs.Mana);
+            // spreadsheet uses 18.7, so we will too :)
+            statsTotal.Mana = (float)(statsRace.Mana + 15f * (statsTotal.Intellect - 18.7) + statsGearEnchantsBuffs.Mana);
 
             // TODO: Implement new racials
             // The first 20 Stam = 20 Health, while each subsequent Stam = 10 Health, so Health = (Stam-18)*10

@@ -83,25 +83,40 @@ namespace Rawr.Hunter
             comboPetFamily.SelectedItem = options.PetFamily;
             numericUpDownLatency.Value = (decimal)(options.Latency * 1000.0);
 
-/*
-            numCobraReflexes.Value = (options.CobraReflexes);
-            numSpikedCollar.Value = (options.SpikedCollar);
-            numSpidersBite.Value = (options.SpidersBite);
-            numRabid.Value = (options.Rabid);
-            numCallOfTheWild.Value = (options.CallOfTheWild);
-            numSharkAttack.Value = (options.SharkAttack);
-            numWildHunt.Value = (options.WildHunt);
- */
             trackBarTargetArmor.Value = options.TargetArmor;
             lblTargetArmorValue.Text = options.TargetArmor.ToString();
 
             foreach (PetFamily f in Enum.GetValues(typeof(PetFamily)))
                 comboPetFamily.Items.Add(f);
 
-            // TODO: these are backwards - they should be populated from options
             comboPetFamily.SelectedItem = options.PetFamily;
-            options.duration = 360;
 
+            //options.duration = 360;
+
+            duration.Value = options.duration;
+            numericTime20.Value = options.timeSpentSub20;
+            numericTime35.Value = options.timeSpent35To20;
+            numericBossHP.Value = (decimal)Math.Round(100 * options.bossHPPercentage);
+
+            numericTime20.Maximum = duration.Value;
+            numericTime35.Maximum = duration.Value;
+
+            if (options.useManaPotion == ManaPotionType.None) cmbManaPotion.SelectedIndex = 0;
+            if (options.useManaPotion == ManaPotionType.RunicManaPotion) cmbManaPotion.SelectedIndex = 1;
+            if (options.useManaPotion == ManaPotionType.SuperManaPotion) cmbManaPotion.SelectedIndex = 2;
+
+            if (options.selectedAspect == Aspect.None) cmbAspect.SelectedIndex = 0;
+            if (options.selectedAspect == Aspect.Beast) cmbAspect.SelectedIndex = 1;
+            if (options.selectedAspect == Aspect.Hawk) cmbAspect.SelectedIndex = 2;
+            if (options.selectedAspect == Aspect.Viper) cmbAspect.SelectedIndex = 3;
+            if (options.selectedAspect == Aspect.Monkey) cmbAspect.SelectedIndex = 4;
+            if (options.selectedAspect == Aspect.Dragonhawk) cmbAspect.SelectedIndex = 5;
+
+            if (options.aspectUsage == AspectUsage.AlwaysOn) cmbAspectUsage.SelectedIndex = 0;
+            if (options.aspectUsage == AspectUsage.ViperToOOM) cmbAspectUsage.SelectedIndex = 1;
+            if (options.aspectUsage == AspectUsage.ViperRegen) cmbAspectUsage.SelectedIndex = 2;
+
+            chkUseBeastDuringBW.Checked = options.useBeastDuringBeastialWrath;
 
             PopulateAbilities();
 
@@ -363,6 +378,8 @@ namespace Rawr.Hunter
             if (!loadingOptions)
             {
             	options.duration = (int)duration.Value;
+                numericTime20.Maximum = duration.Value; // don't allow these two to be 
+                numericTime35.Maximum = duration.Value; // longer than than the fight!
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -823,6 +840,64 @@ namespace Rawr.Hunter
             cmbTenacityTaunt.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petTaunt : 0;
             cmbTenacityThunderstomp.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petThunderstomp : 0;
             cmbTenacityWildHunt.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petWildHunt : 0;
+        }
+
+        private void numericTime20_ValueChanged(object sender, EventArgs e)
+        {
+            if (loadingOptions) return;
+            options.timeSpentSub20 = (int)numericTime20.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void numericTime35_ValueChanged(object sender, EventArgs e)
+        {
+            if (loadingOptions) return;
+            options.timeSpent35To20 = (int)numericTime35.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void numericBossHP_ValueChanged(object sender, EventArgs e)
+        {
+            if (loadingOptions) return;
+            options.bossHPPercentage = (float)(numericBossHP.Value / 100);
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cmbManaPotion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (loadingOptions) return;
+            if (cmbManaPotion.SelectedIndex == 0) options.useManaPotion = ManaPotionType.None;
+            if (cmbManaPotion.SelectedIndex == 1) options.useManaPotion = ManaPotionType.RunicManaPotion;
+            if (cmbManaPotion.SelectedIndex == 2) options.useManaPotion = ManaPotionType.SuperManaPotion;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cmbAspect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (loadingOptions) return;
+            if (cmbAspect.SelectedIndex == 0) options.selectedAspect = Aspect.None;
+            if (cmbAspect.SelectedIndex == 1) options.selectedAspect = Aspect.Beast;
+            if (cmbAspect.SelectedIndex == 2) options.selectedAspect = Aspect.Hawk;
+            if (cmbAspect.SelectedIndex == 3) options.selectedAspect = Aspect.Viper;
+            if (cmbAspect.SelectedIndex == 4) options.selectedAspect = Aspect.Monkey;
+            if (cmbAspect.SelectedIndex == 5) options.selectedAspect = Aspect.Dragonhawk;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cmbAspectUsage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (loadingOptions) return;
+            if (cmbAspectUsage.SelectedIndex == 0) options.aspectUsage = AspectUsage.AlwaysOn;
+            if (cmbAspectUsage.SelectedIndex == 1) options.aspectUsage = AspectUsage.ViperToOOM;
+            if (cmbAspectUsage.SelectedIndex == 2) options.aspectUsage = AspectUsage.ViperRegen;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void chkUseBeastDuringBW_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loadingOptions) return;
+            options.useBeastDuringBeastialWrath = chkUseBeastDuringBW.Checked;
+            Character.OnCalculationsInvalidated();
         }
 
 

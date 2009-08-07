@@ -13,7 +13,6 @@ namespace Rawr.Hunter
 	{
 		private int _TargetLevel = 83;
 		private int _TargetArmor = 10643; //Wrath boss armor
-		private Aspect _Aspect = Aspect.Hawk;
         private PetFamily _petFamily = PetFamily.Cat;
 
         private PetAttacks _petPriority1 = PetAttacks.Growl;
@@ -24,10 +23,14 @@ namespace Rawr.Hunter
 		private Faction _ScryerAldor = Faction.Aldor;
 		private float _latency = .2f;
 
-        public int duration { get; set; }
+        public int duration = 360;
         public int timeSpentSub20 = 72;
         public int timeSpent35To20 = 54;
         public float bossHPPercentage = 1;
+        public ManaPotionType useManaPotion = ManaPotionType.RunicManaPotion;
+        public bool useBeastDuringBeastialWrath = false;
+        public Aspect selectedAspect = Aspect.Dragonhawk;
+        public AspectUsage aspectUsage = AspectUsage.ViperToOOM;
 
         // new priority rotation stuff
         public int PriorityIndex1 = 0;
@@ -101,13 +104,7 @@ namespace Rawr.Hunter
             set { _petPriority4 = value; }
         }
 
-		public Aspect Aspect
-		{
-			get { return _Aspect; }
-			set { _Aspect = value; }
-		}
-
-		public PetFamily PetFamily
+        public PetFamily PetFamily
 		{
 			get { return _petFamily; }
 			set { _petFamily = value; }

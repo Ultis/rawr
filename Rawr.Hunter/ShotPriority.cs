@@ -213,14 +213,26 @@ namespace Rawr.Hunter
             //Debug.WriteLine("LAL Arcane Frequency = " + LALArcaneFrequency);
         }
 
-        public void calculateRotationDPS(Character character)
+        public void calculateRotationMPS()
         {
+            MPS = 0;
+            for (int i = 0; i < priorities.Length; i++)
+            {
+                if (priorities[i] != null)
+                {
+                    ShotData s = priorities[i];
 
-            ShotData PrevShot = null;
+                    s.calculateMPS(this);
 
+                    MPS += Math.Round(s.mps, 3);
+                }
+            }
+        }
+
+        public void calculateRotationDPS()
+        {
             bool debug_shot_rotation = false;
 
-            MPS = 0;
             DPS = 0;
 
             for (int i=0; i<priorities.Length; i++)
@@ -228,7 +240,7 @@ namespace Rawr.Hunter
                 if (priorities[i] != null){
                     ShotData s = priorities[i];
 
-                    s.calculateDPSMPS(this);
+                    s.calculateDPS(this);
 
                     #region Spreadsheet Calculations
 
@@ -258,7 +270,6 @@ namespace Rawr.Hunter
                     #endregion
 
                     DPS += s.dps;
-                    MPS += Math.Round(s.mps, 3);
 
                     if (debug_shot_rotation)
                     {
@@ -273,8 +284,6 @@ namespace Rawr.Hunter
 
                         Debug.WriteLine("Shot: |" + col1 + "|" + col2 + "|" + col3 + "|" + col4 + "|" + col5 + "|" + col6 + "|" + col7 + "|" + col8 + "|");
                     }
-
-                    PrevShot = s;
                 }
                 else
                 {
@@ -527,46 +536,14 @@ namespace Rawr.Hunter
             crits_composite = crits_ratio > 0 ? critChance * (crits_ratio / Priority.critsRatioSum) : 0;
         }
 
-        public void calculateDPSMPS(ShotPriority Priority)
+        public void calculateMPS(ShotPriority Priority)
         {
-            #region In-Between Calculations
-
-            double inbet_dps = inbet_freq > 0 ? damage / inbet_freq : 0;
-
-            if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) inbet_dps = damage / start_freq;
-            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) inbet_dps = damage / start_freq;
-
             double inbet_mps = inbet_freq > 0 ? mana / inbet_freq : 0;
 
-            //Debug.WriteLine("InBet DPS is " + inbet_dps);
-            //Debug.WriteLine("InBet MPS is " + inbet_mps);
-
-            #endregion
-            #region Final/Actual Calculations
-
-            double final_dps = final_freq > 0 ? damage / final_freq : 0;
-            if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) final_dps = damage / rotation_cooldown;
-            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_dps = damage / rotation_cooldown;
-
             double final_mps = final_freq > 0 ? mana / final_freq : 0;
+
             if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) final_mps = 0;
             if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_mps = 0;
-
-            //Debug.WriteLine("Final DPS is " + final_dps);
-            //Debug.WriteLine("Final MPS " is " + final_mps);
-
-            #endregion
-            #region Output Calculations
-
-            dps = final_dps;
-            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting)
-            {
-                // immune to AspectOfViper
-            }
-            else
-            {
-                dps *= 1 - Priority.viperDamagePenalty;
-            }
 
             if (!Priority.useRotationTest && (type == Shots.ExplosiveShot || type == Shots.ArcaneShot))
             {
@@ -583,9 +560,42 @@ namespace Rawr.Hunter
                     mps = final_mps;
                 }
             }
+        }
+
+        public void calculateDPS(ShotPriority Priority)
+        {
+            #region In-Between Calculations
+
+            double inbet_dps = inbet_freq > 0 ? damage / inbet_freq : 0;
+
+            if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) inbet_dps = damage / start_freq;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) inbet_dps = damage / start_freq;
+
+            //Debug.WriteLine("InBet DPS is " + inbet_dps);
+
+            #endregion
+            #region Final/Actual Calculations
+
+            double final_dps = final_freq > 0 ? damage / final_freq : 0;
+            if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) final_dps = damage / rotation_cooldown;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_dps = damage / rotation_cooldown;
+
+            //Debug.WriteLine("Final DPS is " + final_dps);
+
+            #endregion
+            #region Output Calculations
+
+            dps = final_dps;
+            if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting)
+            {
+                // immune to AspectOfViper
+            }
+            else
+            {
+                dps *= 1 - Priority.viperDamagePenalty;
+            }
 
             //Debug.WriteLine("DPS is " + dps);
-            //Debug.WriteLine("MPS is " + mps);
 
             #endregion
         }

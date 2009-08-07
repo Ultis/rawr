@@ -8,7 +8,10 @@ namespace Rawr.Hunter
 	{
         Beast,
 		Hawk,
-		Viper
+		Viper,
+        Monkey,
+        Dragonhawk,
+        None
 	}
 
 	public enum ShotRotation
@@ -139,6 +142,20 @@ namespace Rawr.Hunter
         Warp,
         Web,
         Wolverine
+    }
+
+    public enum ManaPotionType
+    {
+        None,
+        RunicManaPotion,
+        SuperManaPotion
+    }
+
+    public enum AspectUsage
+    {
+        AlwaysOn,
+        ViperToOOM,
+        ViperRegen
     }
 
     public static class HunterRatings

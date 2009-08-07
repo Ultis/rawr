@@ -114,9 +114,9 @@ namespace Rawr.Hunter
             petStats.AttackPower += getFuriousHowlEffect();
             petStats.AttackPower += getT8Bonus();
 
-            if (options.Aspect == Aspect.Beast)
+            if (options.selectedAspect == Aspect.Beast)
                 petStats.AttackPower *= 1.1f;
-            else if (options.Aspect == Aspect.Hawk)
+            else if (options.selectedAspect == Aspect.Hawk)
             {
                 petStats.AttackPower += (300 + (character.HunterTalents.AspectMastery * 90));
             }

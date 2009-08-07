@@ -110,13 +110,26 @@ namespace Rawr.Hunter
         #endregion
 
         #region Kill shot used sub-20%
-        public double killShotSub20NewSteadyFreq;
-        public double killShotSub20NewDPS;
-        public double killShotSub20NewSteadyDPS;
-        public double killShotSub20Gain;
-        public double killShotSub20TimeSpent;
-        public double killShotSub20FinalGain;
+        public double killShotSub20NewSteadyFreq { get; set; }
+        public double killShotSub20NewDPS { get; set; }
+        public double killShotSub20NewSteadyDPS { get; set; }
+        public double killShotSub20Gain { get; set; }
+        public double killShotSub20TimeSpent { get; set; }
+        public double killShotSub20FinalGain { get; set; }
         #endregion
+
+        #region Aspect uptime/penalties/bonuses
+        public double aspectUptimeHawk { get; set; }
+        public double aspectUptimeViper { get; set; }
+        public double aspectUptimeBeast { get; set; }
+        public double aspectBeastLostDPS { get; set; }
+        public double aspectViperPenalty { get; set; }
+        #endregion
+
+        #region Final Hunter DPS stats
+        public double OnProcDPS { get; set; }
+        #endregion
+
 
         public float BaseAttackSpeed
 		{
@@ -296,7 +309,7 @@ namespace Rawr.Hunter
             dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2"));
             dictValues.Add("Priority Rotation DPS", CustomDPS.ToString("F2"));
             dictValues.Add("Wild Quiver DPS", WildQuiverDPS.ToString("F2"));
-            dictValues.Add("Proc DPS", "?");
+            dictValues.Add("Proc DPS", OnProcDPS.ToString("F2"));
             dictValues.Add("Kill Shot low HP gain", killShotSub20FinalGain.ToString("F2")+"*"+
                             "Kill Shot freq: "+killShot.freq.ToString("F2")+" -> "+killShot.start_freq.ToString("F2")+"\n"+
                             "Steady Shot freq: "+steadyShot.freq.ToString("F2")+" -> "+killShotSub20NewSteadyFreq.ToString("F2")+"\n"+
@@ -304,7 +317,11 @@ namespace Rawr.Hunter
                             "Steady Shot DPS: "+steadyShot.dps.ToString("F2")+" -> "+killShotSub20NewSteadyDPS.ToString("F2")+"\n"+
                             "DPS Gain when switched: " + killShotSub20Gain.ToString("F2")+"\n"+
                             "Time spent sub-20%: " + killShotSub20TimeSpent.ToString("P2"));
-            dictValues.Add("Aspect Loss", "?");
+            dictValues.Add("Aspect Loss", aspectBeastLostDPS.ToString("F2") + "*" +
+                            "Hawk Uptime: " + aspectUptimeHawk.ToString("P2") + "\n" + 
+                            "Viper Uptime: " + aspectUptimeViper.ToString("P2") + "\n" + 
+                            "Beast Uptime: " + aspectUptimeBeast.ToString("P2") + "\n" +
+                            "Viper Damage Penalty: " + aspectViperPenalty.ToString("P2"));
 
             // Combined DPS
             dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2"));
