@@ -41,6 +41,10 @@ namespace Rawr.TankDK
         public float TargetDodge { get; set; }
         public float TargetParry { get; set; }
 
+        public float BurstTime { get; set; }
+        public float ReactionTime { get; set; }
+
+
         public float Expertise { get; set; }
 
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
@@ -316,11 +320,13 @@ namespace Rawr.TankDK
             {
                 case "Chance to be Crit": return Crit; // Def cap chance to be critted by boss.  For optimization this needs to be  <= 0
                 case "Avoidance %": return (Miss + Parry + Dodge); // Another duplicate math location?
-                case "Target Miss %": return TargetMiss * 100.0f; 
+                case "Target Miss %": return TargetMiss * 100.0f;
                 case "Target Parry %": return TargetParry * 100.0f; // Expertise related.
                 case "Target Dodge %": return TargetDodge * 100.0f; // Expertise related.
                 case "Damage Reduction %": return ArmorDamageReduction * 100.0f; // % Damage reduction by Armor
                 case "Armor": return Armor; // Raw Armor
+                case "Burst Time": return BurstTime;
+                case "Reaction Time": return ReactionTime;
                 default:
                     return 0.0f;
             }
@@ -336,6 +342,8 @@ namespace Rawr.TankDK
             dict["Armor Damage Reduction"] = (ArmorDamageReduction * 100.0f).ToString("F2") + "%";
 
             dict["Total Avoidance"] = (Miss + Parry + Dodge).ToString("F2") + "%"; // Another duplicate math location.
+            dict["Burst Time"] = BurstTime.ToString("F2") + " sec";
+            dict["Reaction Time"] = ReactionTime.ToString("F2") + " sec";
 
             dict["Health"] = BasicStats.Health.ToString("F0");
             dict["Armor"] = BasicStats.Armor.ToString("F0");

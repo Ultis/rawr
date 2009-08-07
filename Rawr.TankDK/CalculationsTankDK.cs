@@ -61,6 +61,7 @@ namespace Rawr.TankDK
 				//Meta
 				int austere = 41380;
 
+                // TODO: Update template to handle new gems.
 				return new List<GemmingTemplate>()
 				{
 				    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Max Defense
@@ -219,6 +220,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                         "Advanced Stats:Parry*After Diminishing Returns. Includes Str bonus from Unbreakable Armor's average uptime.",
                         "Advanced Stats:Total Avoidance*Miss + Dodge + Parry",
                         "Advanced Stats:Armor Damage Reduction",
+                        "Advanced Stats:Reaction Time",
+                        "Advanced Stats:Burst Time",
 
                         "Threat Stats:Target Miss*Chance to miss the target",
                         "Threat Stats:Target Dodge*Chance the target dodges",
@@ -341,7 +344,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     "Target Miss %",
                     "Target Parry %",
                     "Target Dodge %",
-                    "Armor"
+                    "Armor",
+                    "Reaction Time",
+                    "Burst Time"
                 }; 
             } 
         }
@@ -435,6 +440,72 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 return calcs;
             }
 
+            #region TargetDodge/Parry/Miss & Expertise - finish populating totalstats.
+            bool bDualWielding = false;
+            float f2hWeaponDamageMultiplier = 0f;
+            float hitChance = 0;
+            float chanceTargetParry = 0f;
+            float chanceTargetDodge = 0f;
+            float chanceTargetMiss = 0f;
+            if (character.MainHand != null)
+            {
+                // 2-hander weapon specialization.
+                if (character.MainHand.Slot == ItemSlot.TwoHand)
+                {
+                    f2hWeaponDamageMultiplier = (.02f * character.DeathKnightTalents.TwoHandedWeaponSpecialization);
+                }
+                else
+                {
+                    // Toon is not using a 2h, meaning that he's DW if he's got something in his off hand.
+                    bDualWielding = (character.OffHand != null);
+                }
+
+                float hitBonus = StatConversion.GetHitFromRating(stats.HitRating, character.Class) + stats.PhysicalHit;
+                // 8% default miss rate vs lvl 83
+                chanceTargetMiss = Math.Max(0f, 0.08f - hitBonus);
+                if ((opts.TargetLevel - 80f) < 3)
+                {
+                    chanceTargetMiss = Math.Max(0f, 0.05f + 0.005f * (opts.TargetLevel - 80f) - hitBonus);
+                }
+                if (bDualWielding)
+                {
+                    // Talent: Nerves of Cold Steel. .////////////////////////////////////////////
+                    // +hit changes only.  See damage buff change further down.
+                    chanceTargetMiss += (0.19f - (.01f * character.DeathKnightTalents.NervesOfColdSteel));
+                }
+
+                if (character.Race == CharacterRace.Dwarf &&
+                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace))
+                {
+                    stats.Expertise += 5;
+                }
+                if (character.Race == CharacterRace.Human &&
+                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace ||
+                    character.MainHand.Type == ItemType.TwoHandSword || character.MainHand.Type == ItemType.OneHandSword))
+                {
+                    stats.Expertise += 3;
+                }
+                if (character.Race == CharacterRace.Orc &&
+                    (character.MainHand.Type == ItemType.TwoHandAxe || character.MainHand.Type == ItemType.OneHandAxe))
+                {
+                    stats.Expertise += 5;
+                }
+
+                // 6.5 % for a boss mob to dodge.
+                // 15% for a boss mob to parry.
+                chanceTargetParry = Math.Max(0.0f, 0.15f - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
+                chanceTargetDodge = Math.Max(0.0f, 0.065f - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
+                hitChance = 1.0f - (chanceTargetMiss + chanceTargetDodge + chanceTargetParry);
+                // Can't have more than 100% hit chance.
+                hitChance = Math.Min(1f, hitChance);
+
+                calcs.TargetDodge = chanceTargetDodge;
+                calcs.TargetMiss = chanceTargetMiss;
+                calcs.TargetParry = chanceTargetParry;
+            }
+            calcs.Expertise = stats.Expertise;
+            #endregion
+
             // need to calculate the rotation after we have the DR values for Dodge/Parry/Miss.
             opts.m_Rotation.m_FullStats = stats.Clone() as Stats;
 
@@ -472,70 +543,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // I'll do more research and see if it needs to go into the general function.
             calcs.ArmorDamageReduction = (float)Math.Min(0.75f, StatConversion.GetArmorDamageReduction(iTargetLevel, stats.Armor, 0f, 0f, 0f));
 
-            #region TargetDodge/Parry/Miss & Expertise
-            bool bDualWielding = false;
-            float f2hWeaponDamageMultiplier = 0f;
-            float hitChance = 0;
-            if (character.MainHand != null)
-            {
-                // 2-hander weapon specialization.
-                if (character.MainHand.Slot == ItemSlot.TwoHand)
-                {
-                    f2hWeaponDamageMultiplier = (.02f * character.DeathKnightTalents.TwoHandedWeaponSpecialization);
-                }
-                else
-                {
-                    // Toon is not using a 2h, meaning that he's DW if he's got something in his off hand.
-                    bDualWielding = (character.OffHand != null);
-                }
-
-                float hitBonus = StatConversion.GetHitFromRating(stats.HitRating, character.Class) + stats.PhysicalHit;
-                // 8% default miss rate vs lvl 83
-                float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
-                if ((opts.TargetLevel - 80f) < 3)
-                {
-                    chanceMiss = Math.Max(0f, 0.05f + 0.005f * (opts.TargetLevel - 80f) - hitBonus);
-                }
-                if (bDualWielding)
-                {
-                    // Talent: Nerves of Cold Steel. .////////////////////////////////////////////
-                    // +hit changes only.  See damage buff change further down.
-                    chanceMiss += (0.19f - (.01f * character.DeathKnightTalents.NervesOfColdSteel));
-                }
-
-
-
-                // 6.5 % for a boss mob to dodge.
-                // 15% for a boss mob to parry.
-                float chanceParry = Math.Max(0.0f, 0.15f - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
-                float chanceDodge = Math.Max(0.0f, 0.065f - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
-                hitChance = 1.0f - (chanceMiss + chanceDodge + chanceParry);
-                // Can't have more than 100% hit chance.
-                hitChance = Math.Min(1f, hitChance);
-
-                calcs.TargetDodge = chanceDodge;
-                calcs.TargetMiss = chanceMiss;
-                calcs.TargetParry = chanceParry;
-
-                calcs.Expertise = stats.Expertise + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating);
-                if (character.Race == CharacterRace.Dwarf &&
-                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace))
-                {
-                    calcs.Expertise += 5;
-                }
-                if (character.Race == CharacterRace.Human &&
-                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace ||
-                    character.MainHand.Type == ItemType.TwoHandSword || character.MainHand.Type == ItemType.OneHandSword))
-                {
-                    calcs.Expertise += 3;
-                }
-                if (character.Race == CharacterRace.Orc &&
-                    (character.MainHand.Type == ItemType.TwoHandAxe || character.MainHand.Type == ItemType.OneHandAxe))
-                {
-                    calcs.Expertise += 5;
-                }
-            }
-            #endregion
 
             #region ***** Survival Rating *****
 
@@ -561,6 +568,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fMagicalSurvival = hp / (1f - StatConversion.GetAverageResistance(iTargetLevel, character.Level, fMaxResist, 0f) * opts.PercentIncomingFromMagic);
 
             calcs.Survival = (fPhysicalSurvival * (1 - opts.PercentIncomingFromMagic)) + (fMagicalSurvival * opts.PercentIncomingFromMagic);
+            float fEffectiveHealth = calcs.Survival;
             calcs.SurvivalWeight = opts.SurvivalWeight;
 
             #endregion
@@ -590,23 +598,25 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 opts.FightLength = fFightDuration = 10f;
             }
             float fNumRotations = 0f;
-            float fIncMagicalDamage = (opts.IncomingDPS * opts.PercentIncomingFromMagic);
-            float fIncPhysicalDamage = (opts.IncomingDPS - fIncMagicalDamage);
+            float fIncMagicalDamage = (opts.IncomingDamage * opts.PercentIncomingFromMagic);
+            float fIncPhysicalDamage = (opts.IncomingDamage - fIncMagicalDamage);
             // How much damage per shot normal shot?
-            float fPerShotPhysical = fIncPhysicalDamage * opts.BossAttackSpeed;
+            float fPerShotPhysical = fIncPhysicalDamage;
             // How many shots over the length of the fight?
             float fTotalBossAttacksPerFight = (fFightDuration * 60f) / opts.BossAttackSpeed;
             // Integrate Expertise values to prevent additional physical damage coming in:
             // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
             // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
             // Figure out how many shots there are.  Right now, just calculating white damage.
-            float fBossParryHastedSpeed = opts.BossAttackSpeed * (1f - .24f); 
-
+            float fBossParryHastedSpeed = opts.BossAttackSpeed * (1f - .24f);
+            float fBossAverageAttackSpeed = opts.BossAttackSpeed;
+            float fShotsParried = 0f;
+            float fBossShotCountPerRot = 0f;
             if (fRotDuration > 0)
             {
                 fNumRotations = (fFightDuration * 60f) / fRotDuration;
                 // How many shots does the boss take over a given rotation period.
-                float fBossShotCountPerRot = fRotDuration / opts.BossAttackSpeed;
+                fBossShotCountPerRot = fRotDuration / opts.BossAttackSpeed;
                 // How fast is a hasted shot? 40% faster.
                 // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
                 float fCharacterShotCount = 0f;
@@ -617,7 +627,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 fCharacterShotCount += ct.totalParryableAbilities;
                 // The number of shots taken * the chance to be parried.
                 // Ensure that this value doesn't go over 100%
-                float fShotsParried = Math.Min(1f, calcs.TargetParry) * fCharacterShotCount;
+                fShotsParried = Math.Min(1f, chanceTargetParry) * fCharacterShotCount;
                 // How many shots parried * how fast that is.  is what % of the total GCD we're talking about.
                 float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
                 float fTimeNormal = fRotDuration - fTimeHasted;
@@ -625,6 +635,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 fBossShotCountPerRot = (fTimeNormal / opts.BossAttackSpeed) + fShotsParried;
                 // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
                 fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
+                fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
             }
 
             if (character.DeathKnightTalents.SpellDeflection > 0)
@@ -657,14 +668,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fPerShotPhysical -= uaDR;
 
             // For any physical only damage reductions. 
-            // if only 60% of the hits are landing, then tank is only taking 60% of the inc damage.
-            fTotalBossAttacksPerFight *= (fChanceToGetHit / 100f);
-            // Turn IncPhysical to TOTALIncomingPhysical over fight Duration.
-            fIncPhysicalDamage = fTotalBossAttacksPerFight * fPerShotPhysical;
             // Adjust the damage by chance of crit getting through
-            fIncPhysicalDamage += (fIncPhysicalDamage * attackerCrit) * 2f;
+            fPerShotPhysical += (fPerShotPhysical * attackerCrit) * 2f;
             // Factor in armor Damage Reduction
-            fIncPhysicalDamage *= (1f - calcs.ArmorDamageReduction);
+            fPerShotPhysical *= (1f - calcs.ArmorDamageReduction);
             // Talent: Unbreakable Armor
 
             // Four T8 : AMS grants 10% damage reductions.
@@ -675,17 +682,39 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fIncMagicalDamage = StatConversion.ApplyMultiplier(fIncMagicalDamage, stats.SpellDamageTakenMultiplier);
 
             fIncMagicalDamage = StatConversion.ApplyMultiplier(fIncMagicalDamage, stats.DamageTakenMultiplier);
-            fIncPhysicalDamage = StatConversion.ApplyMultiplier(fIncPhysicalDamage, stats.DamageTakenMultiplier);
+            fPerShotPhysical = StatConversion.ApplyMultiplier(fPerShotPhysical, stats.DamageTakenMultiplier);
 
             // Since IncMagical was MagicalDPS - now distribute the damage over the whole fight.
             fIncMagicalDamage *= (fFightDuration * 60f);
 
             // Let's make sure we don't go into negative damage here.
             fIncMagicalDamage = Math.Max(0f, fIncMagicalDamage);
-            fIncPhysicalDamage = Math.Max(0f, fIncPhysicalDamage);
+            fPerShotPhysical = Math.Max(0f, fPerShotPhysical);
 
-            calcs.Mitigation = (opts.IncomingDPS * 60f * fFightDuration) - (fIncMagicalDamage + fIncPhysicalDamage);
-            calcs.Mitigation = calcs.Mitigation / (60f * fFightDuration);
+
+            // Get the raw per-swing Reaction & Burst Time
+            float fAvoidanceTotal = stats.Dodge + stats.Miss;
+            // If the character has no weapon, his Parry chance == 0
+            if (character.MainHand != null)
+                fAvoidanceTotal += stats.Parry;
+
+            // The next 2 returns are in swing count.
+            float fReactionSwingCount = GetReactionTime(fAvoidanceTotal);
+            float fBurstSwingCount = GetBurstTime(fAvoidanceTotal, fEffectiveHealth, fIncPhysicalDamage);
+
+            // Get how long that actually will be on Average.
+            calcs.ReactionTime = fReactionSwingCount * fBossAverageAttackSpeed;
+            calcs.BurstTime = fBurstSwingCount * fBossAverageAttackSpeed;
+
+//            calcs.Mitigation = (opts.IncomingDamage * 60f * fFightDuration) - (fIncMagicalDamage + fIncPhysicalDamage);
+//            calcs.Mitigation = calcs.Mitigation / (60f * fFightDuration);
+
+            // Total damage avoided between bursts.
+            float fBurstDamage = fBurstSwingCount * fPerShotPhysical;
+            float fBurstDPS = fBurstDamage / fBossAverageAttackSpeed;
+            float fReactionDamage = fReactionSwingCount * fPerShotPhysical;
+
+            calcs.Mitigation = fReactionSwingCount * fBossAverageAttackSpeed * fIncPhysicalDamage;
 
             #endregion
 
@@ -849,11 +878,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
- 
-                // Frost presence.
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
  
-           // Defect 13301: Integrate 2% Threat increase for Armsmen enchant.
+               // Defect 13301: Integrate 2% Threat increase for Armsmen enchant.
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 
@@ -1626,6 +1653,39 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #endregion
 
             return sReturn;
+        }
+
+        /// <summary>
+        /// Evaluate how many swings until the tank is next hit.
+        /// </summary>
+        /// <param name="PercAvoidance">a float that is a 0-1 value for % of total avoidance (Dodge + Parry + Miss)</param>
+        /// <returns>Float of how many swings until the next hit. Should be > 1</returns>
+        private float GetReactionTime(float PercAvoidance)
+        {
+            float fReactionTime = 0f;
+            // check args.
+            if (PercAvoidance < 0 || PercAvoidance > 1)
+                // error
+                return 0f;
+
+            fReactionTime = 1 / (1 - PercAvoidance);
+
+            return fReactionTime;
+        }
+
+        private float GetBurstTime(float PercAvoidance, float EffectiveHealth, float RawPerHit)
+        {
+            float fBurstTime = 0f;
+            // check args.
+            if (PercAvoidance < 0 || PercAvoidance > 1)
+                // error
+                return 0f;
+
+            float fHvH = (EffectiveHealth / RawPerHit);
+
+            fBurstTime = (1 / PercAvoidance) * ((1 / (float)Math.Pow((1 - PercAvoidance), fHvH)) - 1f);
+
+            return fBurstTime;
         }
 
         /// <summary>

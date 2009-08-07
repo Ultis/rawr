@@ -92,7 +92,7 @@ namespace Rawr.TankDK
         /// <summary>
         /// User Option whether to use the Base Stat feature for relative stats calcs
         /// </summary>
-        public override bool getBaseStatOption(Character character) { return true; }
+        public override bool getBaseStatOption(Character character) { return false; }
 
         public override string ToString()
         {

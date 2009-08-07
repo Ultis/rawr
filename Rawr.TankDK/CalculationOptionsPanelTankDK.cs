@@ -83,7 +83,7 @@ namespace Rawr.TankDK
         {
             if (!_loadingCalculationOptions)
             {
-                options.IncomingDPS = (uint)(numIncomingDamage.Value);
+                options. IncomingDamage = (uint)(numIncomingDamage.Value);
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -144,7 +144,7 @@ namespace Rawr.TankDK
         public int TargetLevel = 83;
         public float ThreatWeight = 1.00f;
         public float SurvivalWeight = 1.00f;
-        public uint IncomingDPS = 100000;
+        public uint  IncomingDamage = 10000;
         public float PercentIncomingFromMagic = .0f;
         public float BossAttackSpeed = 2.5f;
         public float BossArmor = StatConversion.NPC_BOSS_ARMOR;

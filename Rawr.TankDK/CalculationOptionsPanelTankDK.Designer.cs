@@ -147,7 +147,6 @@
             // 
             // numIncomingDamage
             // 
-            this.numIncomingDamage.Enabled = false;
             this.numIncomingDamage.Increment = new decimal(new int[] {
             1000,
             0,
@@ -155,7 +154,7 @@
             0});
             this.numIncomingDamage.Location = new System.Drawing.Point(150, 122);
             this.numIncomingDamage.Maximum = new decimal(new int[] {
-            500000,
+            100000,
             0,
             0,
             0});
@@ -169,7 +168,7 @@
             this.numIncomingDamage.TabIndex = 9;
             this.numIncomingDamage.ThousandsSeparator = true;
             this.numIncomingDamage.Value = new decimal(new int[] {
-            100000,
+            10000,
             0,
             0,
             0});
@@ -178,17 +177,15 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Enabled = false;
             this.label4.Location = new System.Drawing.Point(3, 122);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(75, 13);
+            this.label4.Size = new System.Drawing.Size(137, 13);
             this.label4.TabIndex = 6;
-            this.label4.Text = "Incoming DPS";
+            this.label4.Text = "Incoming Damage Per Shot";
             // 
             // numBossAttackSpeed
             // 
             this.numBossAttackSpeed.DecimalPlaces = 2;
-            this.numBossAttackSpeed.Enabled = false;
             this.numBossAttackSpeed.Increment = new decimal(new int[] {
             5,
             0,
@@ -218,7 +215,6 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Enabled = false;
             this.label5.Location = new System.Drawing.Point(3, 97);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(98, 13);
@@ -228,7 +224,6 @@
             // numPercIncFromMagic
             // 
             this.numPercIncFromMagic.DecimalPlaces = 2;
-            this.numPercIncFromMagic.Enabled = false;
             this.numPercIncFromMagic.Increment = new decimal(new int[] {
             5,
             0,
@@ -248,7 +243,6 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Enabled = false;
             this.label6.Location = new System.Drawing.Point(3, 148);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(116, 13);
