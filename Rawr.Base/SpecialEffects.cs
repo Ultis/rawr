@@ -1036,6 +1036,16 @@ namespace Rawr
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 18f, 0f, 0.8f));
                 }
             }
+            else if (line.StartsWith("Each time you cast Lightning Bolt,"))
+            {
+                Regex r = new Regex("Each time you cast Lightning Bolt, you have a chance to gain (?<hasterating>\\d*) haste rating for 12 sec.");
+                Match m = r.Match(line);
+                if (m.Success) // Totem of Electrifying Wind
+                {
+                    float hasterating = (float)int.Parse(m.Groups["hasterating"].Value);
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLightningBolt, new Stats() { HasteRating = hasterating }, 12f, 0f, 0.7f));
+                }
+            }   
             else if (line.StartsWith("Your Shock spells grant "))
             {
                 Regex r = new Regex("Your Shock spells grant (?<spellpower>\\d*) spell power for 6 sec.");
