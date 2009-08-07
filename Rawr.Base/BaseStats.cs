@@ -504,7 +504,7 @@ namespace Rawr
                 case CharacterClass.Shaman:
                     // Draenei, Orc, Tauren, Troll
                     S.Mana = 4396;
-                    S.Health = 6485;
+                    S.Health = 6960;
                     S.Armor = 0;
                     S.AttackPower = 140;
                     S.PhysicalCrit = 0.0292f;
