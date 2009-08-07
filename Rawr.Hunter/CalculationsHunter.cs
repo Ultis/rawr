@@ -511,9 +511,10 @@ namespace Rawr.Hunter
 
             // We can calculate the rough frequencies now
             calculatedStats.priorityRotation.calculateFrequencies();
+            calculatedStats.priorityRotation.calculateLALProcs(character);
+            calculatedStats.priorityRotation.calculateFrequencies();
 
             #endregion
-
 
             #region May 2009 Haste Calcs
 
@@ -799,7 +800,12 @@ namespace Rawr.Hunter
             double exposeWeaknessShotsPerSecond = crittingShotsPerSecond;
             double exposeWeaknessCritChance = calculatedStats.priorityRotation.critsCompositeSum;
             double exposeWeaknessAgility = calculatedStats.BasicStats.Agility * 0.25;
-            double exposeWeaknessUptime = 1 - Math.Pow(1 - ((character.HunterTalents.ExposeWeakness / 3) * exposeWeaknessCritChance), 7 * crittingShotsPerSecond);
+            double exposeWeaknessPercent = 0;
+            if (character.HunterTalents.ExposeWeakness == 1) exposeWeaknessPercent = 0.33;
+            if (character.HunterTalents.ExposeWeakness == 2) exposeWeaknessPercent = 0.66;
+            if (character.HunterTalents.ExposeWeakness == 3) exposeWeaknessPercent = 1;
+            double exposeWeaknessUptime = 1 - Math.Pow(1 - (exposeWeaknessPercent * exposeWeaknessCritChance), 7 * exposeWeaknessShotsPerSecond);
+
             calculatedStats.apFromExposeWeakness = exposeWeaknessUptime * exposeWeaknessAgility;
 
             calculatedStats.apFromCallOfTheWild = options.petCallOfTheWild * (CalcUptime(20, 300, options.duration) * 0.1);
@@ -817,7 +823,28 @@ namespace Rawr.Hunter
                 calculatedStats.apFromHuntersMark += 0.2 * HunterRatings.HUNTERS_MARK;
             }
 
-            calculatedStats.apFromProc = 0; // mine is 322.99
+
+            calculatedStats.apFromProc = 0;
+
+            // Mirror of Truth
+            if (character.Trinket1.Id == 40684 || character.Trinket2.Id == 40684)
+            {
+                calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, crittingShotsPerSecond * critHitPercent);
+            }
+
+            // Anvil of Titans
+            if (character.Trinket1.Id == 44914 || character.Trinket2.Id == 44914)
+            {
+                calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, totalShotsPerSecond * hitChance);
+            }
+
+            // Swordguard Embroidery
+            if (character.BackEnchant.Id == 3730)
+            {
+                calculatedStats.apFromProc += 300 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * hitChance);
+            }
+
+
             // TODO: proc AP effects!
 
             // additive AP bonuses
@@ -1451,7 +1478,7 @@ namespace Rawr.Hunter
             double huntingPartyCumulativeUptime = huntingPartyArcaneUptime + ((1 - huntingPartyArcaneUptime) * huntingPartyExplosiveUptime);
             double huntingPartyUptime = huntingPartyCumulativeUptime + ((1 - huntingPartyCumulativeUptime) * huntingPartySteadyUptime);
 
-            calculatedStats.manaRegenHuntingParty = 0.0025 * calculatedStats.BasicStats.Mana * huntingPartyUptime;
+            calculatedStats.manaRegenHuntingParty = 0.002 * calculatedStats.BasicStats.Mana * huntingPartyUptime;
 
             // We actually compare the replenishment buff value with the hunting party
             // value and pick the largest. the spreadsheet just ignores hunting party
@@ -1754,6 +1781,13 @@ namespace Rawr.Hunter
             // get a final 17.3% bonus, not 17% ( [1.15 * 1.02] - 1 )
 
             return (float)((current + 1) * (new_chance + 1)) - 1;
+        }
+
+        private double CalcTrinketUptime(double duration, double cooldown, double chance, double triggersPerSecond)
+        {
+            double timePerTrigger = triggersPerSecond > 0 ? 1 / triggersPerSecond : 0;
+            double time_between_procs = timePerTrigger > 0 ? 1 / chance * timePerTrigger + cooldown : 0;
+            return time_between_procs > 0 ? duration / time_between_procs : 0;
         }
 
         private ShotData getShotByIndex(int index, CharacterCalculationsHunter calculatedStats)

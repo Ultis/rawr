@@ -115,7 +115,6 @@ namespace Rawr.Hunter
             return null;
         }
 
-
         public void calculateFrequencies()
         {
             // This function calculates the frequencies for each shot.
@@ -156,17 +155,12 @@ namespace Rawr.Hunter
                 s.calculateComposites(this);
                 critsCompositeSum += s.crits_composite;
             }
+
+            //Debug.WriteLine("critsRatioSum = " + critsRatioSum);
         }
 
-        public void calculateRotationDPS(Character character)
+        public void calculateLALProcs(Character character)
         {
-
-            ShotData PrevShot = null;
-
-            bool debug_shot_rotation = false;
-
-            #region Lock and Load procs
-
             double lal_trigger_freq = 0;
             double lal_trigger_duration = 0;
 
@@ -217,8 +211,14 @@ namespace Rawr.Hunter
             //Debug.WriteLine("LAL Proc Frequency = " + lal_proc_freq);
             //Debug.WriteLine("LAL Explosive Frequency = " + LALExplosiveFrequency);
             //Debug.WriteLine("LAL Arcane Frequency = " + LALArcaneFrequency);
+        }
 
-            #endregion
+        public void calculateRotationDPS(Character character)
+        {
+
+            ShotData PrevShot = null;
+
+            bool debug_shot_rotation = false;
 
             MPS = 0;
             DPS = 0;
@@ -227,15 +227,6 @@ namespace Rawr.Hunter
             {
                 if (priorities[i] != null){
                     ShotData s = priorities[i];
-
-                    // hack: always running this for now. need to get frequencies to do LAL, but that
-                    // alters frequencies. ouch!
-                    if (s.type == Shots.SteadyShot || true)
-                    {
-                        // Steady shot will have had its cooldown correctly calculated now, so recalc
-                        // frequency. this wont affect other shots since steady always comes last.
-                        s.calculateTimings(this, PrevShot);
-                    }
 
                     s.calculateDPSMPS(this);
 
@@ -626,10 +617,15 @@ namespace Rawr.Hunter
             if (false) // yet another rotation debug block
             {
                 ret += "\n-\n";
-                ret += "start_freq = " + start_freq.ToString("F2") + "\n";
-                ret += "inbet_freq = " + inbet_freq.ToString("F2") + "\n";
-                ret += "lal_freq = " + lal_freq.ToString("F2") + "\n";
-                ret += "final_freq = " + final_freq.ToString("F2");
+                //ret += "start_freq = " + start_freq.ToString("F2") + "\n";
+                //ret += "inbet_freq = " + inbet_freq.ToString("F2") + "\n";
+                //ret += "lal_freq = " + lal_freq.ToString("F2") + "\n";
+                //ret += "final_freq = " + final_freq.ToString("F2") + "\n";
+                ret += "crits_per_sec = " + crits_per_sec.ToString("P2") + "\n";
+                ret += "crits_ratio = " + crits_ratio.ToString("P2") + "\n";
+                ret += "crits_composite = " + crits_composite.ToString("P2") + "\n";
+                //ret += "ratio = " + ratio.ToString("P2") + "\n";
+                //ret += "time_used = " + time_used.ToString("F2") + "\n";
             }
             
             return ret;
