@@ -24,6 +24,11 @@ namespace Rawr.Hunter
 		private Faction _ScryerAldor = Faction.Aldor;
 		private float _latency = .2f;
 
+        public int duration { get; set; }
+        public int timeSpentSub20 = 72;
+        public int timeSpent35To20 = 54;
+        public float bossHPPercentage = 1;
+
         // new priority rotation stuff
         public int PriorityIndex1 = 0;
         public int PriorityIndex2 = 0;
@@ -74,10 +79,7 @@ namespace Rawr.Hunter
         public int petRoarOfSacrifice = 0;
         public int petSharkAttack = 0;
         public int petSilverback = 0;
-        
-
-        public int duration {get; set;}
-        
+                
         public PetAttacks PetPriority1
         {
             get { return _petPriority1; }

@@ -324,7 +324,7 @@ namespace Rawr.Hunter
         public double mps = 0;
 
         // used in the 4 intermediate stages of calculations (start, inbet, lal, final)
-        protected double start_freq = 0;
+        public double start_freq = 0;
         protected double start_gcd_left = 0;
         protected double start_gcd_needed = 0;
         protected double start_gcd_used = 0;

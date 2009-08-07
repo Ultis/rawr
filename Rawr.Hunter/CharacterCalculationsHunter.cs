@@ -108,8 +108,17 @@ namespace Rawr.Hunter
         public double manaRegenTargetDebuffs { get; set; }
         public double manaRegenTotal { get; set; }                
         #endregion
- 
-		public float BaseAttackSpeed
+
+        #region Kill shot used sub-20%
+        public double killShotSub20NewSteadyFreq;
+        public double killShotSub20NewDPS;
+        public double killShotSub20NewSteadyDPS;
+        public double killShotSub20Gain;
+        public double killShotSub20TimeSpent;
+        public double killShotSub20FinalGain;
+        #endregion
+
+        public float BaseAttackSpeed
 		{
 			get { return _baseAttackSpeed; }
 			set { _baseAttackSpeed = value; }
@@ -288,7 +297,13 @@ namespace Rawr.Hunter
             dictValues.Add("Priority Rotation DPS", CustomDPS.ToString("F2"));
             dictValues.Add("Wild Quiver DPS", WildQuiverDPS.ToString("F2"));
             dictValues.Add("Proc DPS", "?");
-            dictValues.Add("Kill Shot low HP gain", "?");
+            dictValues.Add("Kill Shot low HP gain", killShotSub20FinalGain.ToString("F2")+"*"+
+                            "Kill Shot freq: "+killShot.freq.ToString("F2")+" -> "+killShot.start_freq.ToString("F2")+"\n"+
+                            "Steady Shot freq: "+steadyShot.freq.ToString("F2")+" -> "+killShotSub20NewSteadyFreq.ToString("F2")+"\n"+
+                            "Kill Shot DPS: "+killShot.dps.ToString("F2")+" -> "+killShotSub20NewDPS.ToString("F2")+"\n"+
+                            "Steady Shot DPS: "+steadyShot.dps.ToString("F2")+" -> "+killShotSub20NewSteadyDPS.ToString("F2")+"\n"+
+                            "DPS Gain when switched: " + killShotSub20Gain.ToString("F2")+"\n"+
+                            "Time spent sub-20%: " + killShotSub20TimeSpent.ToString("P2"));
             dictValues.Add("Aspect Loss", "?");
 
             // Combined DPS

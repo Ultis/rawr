@@ -1399,7 +1399,6 @@ namespace Rawr.Hunter
 
             #endregion
 
-
             #region Quick Shots
 
             //TODO: this is in the wrong place and is not being used.
@@ -1480,11 +1479,9 @@ namespace Rawr.Hunter
 
             calculatedStats.manaRegenHuntingParty = 0.002 * calculatedStats.BasicStats.Mana * huntingPartyUptime;
 
-            // We actually compare the replenishment buff value with the hunting party
-            // value and pick the largest. the spreadsheet just ignores hunting party
-            // if aay replenishment is up?
+            // If we've got a replenishment buff up, use that instead of our own Hunting Party
             double manaRegenReplenishment = statsBuffs.ManaRestoreFromMaxManaPerSecond * calculatedStats.BasicStats.Mana;
-            if (manaRegenReplenishment > calculatedStats.manaRegenHuntingParty)
+            if (manaRegenReplenishment > 0)
             {
                 calculatedStats.manaRegenHuntingParty = manaRegenReplenishment;
             }
@@ -1514,9 +1511,48 @@ namespace Rawr.Hunter
             //Debug.WriteLine("Rotation MPS = " + calculatedStats.priorityRotation.MPS);
 
             #endregion
+            #region August 2009 killShot Sub-20% Usage
+
+            double killShotCurrentFreq = calculatedStats.killShot.freq;
+            double killShotPossibleFreq = calculatedStats.killShot.start_freq;
+            double steadyShotCurrentFreq = calculatedStats.steadyShot.freq;
+
+            double steadyShotNewFreq = steadyShotCurrentFreq;
+            if (killShotCurrentFreq == 0 && steadyShotCurrentFreq > 0 && killShotPossibleFreq > 0)
+            {
+                steadyShotNewFreq = 1 / (1 / steadyShotCurrentFreq - 1 / killShotPossibleFreq);
+            }
+
+            double oldKillShotDPS = calculatedStats.killShot.dps;
+            double newKillDhotDPS = killShotPossibleFreq > 0 ? calculatedStats.killShot.damage / killShotPossibleFreq : 0;
+
+            double oldSteadyShotDPS = calculatedStats.steadyShot.dps;
+            double newSteadyShotDPS = steadyShotNewFreq > 0 ? calculatedStats.steadyShot.damage / steadyShotNewFreq : 0;
+
+            double killShotDPSGain = newKillDhotDPS > 0 ? (newKillDhotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0;
+
+            double timeSpentSubTwenty = 0;
+            if (options.duration > 0 && options.timeSpentSub20 > 0) timeSpentSubTwenty = (double)options.timeSpentSub20 / (double)options.duration;
+            if (options.bossHPPercentage < 0.2) timeSpentSubTwenty = 1;
+
+            double killShotSubGain = timeSpentSubTwenty * killShotDPSGain;
+
+            calculatedStats.killShotSub20NewSteadyFreq = steadyShotNewFreq;
+            calculatedStats.killShotSub20NewDPS = newKillDhotDPS;
+            calculatedStats.killShotSub20NewSteadyDPS = newSteadyShotDPS;
+            calculatedStats.killShotSub20Gain = killShotDPSGain;
+            calculatedStats.killShotSub20TimeSpent = timeSpentSubTwenty;
+            calculatedStats.killShotSub20FinalGain = killShotSubGain;
+
+            #endregion
 
             calculatedStats.PetDpsPoints = pet.getDPS();
-            calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + calculatedStats.WildQuiverDPS + calculatedStats.CustomDPS);
+            calculatedStats.HunterDpsPoints = (float)(
+                                                    calculatedStats.AutoshotDPS
+                                                  + calculatedStats.WildQuiverDPS 
+                                                  + calculatedStats.CustomDPS
+                                                  + calculatedStats.killShotSub20FinalGain
+                                               );
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints + calculatedStats.PetDpsPoints;
 
             return calculatedStats;
