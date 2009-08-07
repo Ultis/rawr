@@ -102,7 +102,6 @@ namespace Rawr {
         ExtractOfNecromanticPowerProc,
         DarkmoonCardDeathProc,
         PVPTrinket,
-        RangedAttackPower,
         RangedHitRating,
         RangedCritRating,
         RangedHasteRating,
@@ -161,7 +160,6 @@ namespace Rawr {
         WindfuryAPBonus,
         WrathDmg,
         DruidAshtongueTrinket,
-        BonusPetCritChance,
         BonusWarlockSchoolDamageOnCast,
         BonusWarlockDotExtension,
         RegrowthExtraTicks,
@@ -323,6 +321,17 @@ namespace Rawr {
         BonusTargets,
         BonusRageGen,
         #endregion
+        #region Added by Rawr.Hunter
+        RangedAttackPower,
+        BonusPetCritChance,
+        BonusSteadyShotCrit,
+        BonusSteadyShotAttackPowerBuff,
+        BonusSerpentStingCanCrit,
+        BonusSteadyShotPetAttackPowerBuff,
+        MultiShotManaDiscount,
+        MultiShotCooldownReduction,
+        TrapCooldownReduction,
+        #endregion
         #region Set Bonuses: Warlock
         LifeTapBonusSpirit,
         #endregion
@@ -396,7 +405,6 @@ namespace Rawr {
         BonusMageNukeMultiplier,
         BonusWarlockNukeMultiplier,
         BonusNatureDamageMultiplier,
-        BonusPetDamageMultiplier,
         BonusPhysicalDamageMultiplier,
         BonusDamageMultiplier,
         BonusRipDamageMultiplier,
@@ -421,8 +429,6 @@ namespace Rawr {
         BonusDiseaseDamageMultiplier,
         ThreatIncreaseMultiplier,
         BonusWarlockDotDamageMultiplier,
-        BonusRangedAttackPowerMultiplier,
-        BonusSteadyShotDamageMultiplier,
         BonusManaregenWhileCastingMultiplier,
         PhysicalHaste,
         RangedHaste,
@@ -445,6 +451,14 @@ namespace Rawr {
         BonusSealOfRighteousnessDamageMultiplier,
         BonusSealOfVengeanceDamageMultiplier,
         HammerOfTheRighteousMultiplier,
+        #endregion
+        #region Added by Rawr.Hunter
+        BonusRangedAttackPowerMultiplier,
+        BonusSteadyShotDamageMultiplier,
+        BonusPetDamageMultiplier,
+        BonusAspectOfTheViperGain,
+        BonusAspectOfTheViperAttackSpeed,
+        BonusSerpentStingDamage,
         #endregion
         #region Warlock set bonuses
         CorruptionTriggersCrit,
@@ -2910,6 +2924,67 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("Steady shot has a chance to increase attack power")]
+        [Category("Hunter")]
+        public float BonusSteadyShotAttackPowerBuff
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusSteadyShotAttackPowerBuff]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusSteadyShotAttackPowerBuff] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("Serpent Sting can crit")]
+        [Category("Hunter")]
+        public float BonusSerpentStingCanCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusSerpentStingCanCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusSerpentStingCanCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("Steady shot has a chance to increase pet's attack power")]
+        [Category("Hunter")]
+        public float BonusSteadyShotPetAttackPowerBuff
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusSteadyShotPetAttackPowerBuff]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusSteadyShotPetAttackPowerBuff] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Multishot mana discount")]
+        [Category("Hunter")]
+        public float MultiShotManaDiscount
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MultiShotManaDiscount]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MultiShotManaDiscount] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("Seconds cooldown reduction for Multi-Shot")]
+        [Category("Hunter")]
+        public float MultiShotCooldownReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MultiShotCooldownReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MultiShotCooldownReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("Seconds cooldown reduction for Traps")]
+        [Category("Hunter")]
+        public float TrapCooldownReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TrapCooldownReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TrapCooldownReduction] = value; }
+        }
+
         #endregion
         #region Added by Rawr.Tree
         // Tree 2-piece T5
@@ -3830,6 +3905,37 @@ namespace Rawr {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Hunter")]
+        [DisplayName("% Aspect of the Viper Bonus Mana Regen")]
+        public float BonusAspectOfTheViperGain
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusAspectOfTheViperGain]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusAspectOfTheViperGain] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Ranged Attack Speed Increase while Aspect of the Viper is active")]
+        [Category("Hunter")]
+        public float BonusAspectOfTheViperAttackSpeed
+        {
+            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusAspectOfTheViperAttackSpeed]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.BonusAspectOfTheViperAttackSpeed] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Damage increase for Serpent Sting")]
+        [Category("Hunter")]
+        public float BonusSerpentStingDamage
+        {
+            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusSerpentStingDamage]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.BonusSerpentStingDamage] = value; }
+        }
+
         #endregion
         #region Added by Rawr.DPSWarr
         [System.ComponentModel.DefaultValueAttribute(0f)]

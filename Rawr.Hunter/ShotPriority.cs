@@ -258,7 +258,7 @@ namespace Rawr.Hunter
                     #endregion
 
                     DPS += s.dps;
-                    MPS += s.mps;
+                    MPS += Math.Round(s.mps, 3);
 
                     if (debug_shot_rotation)
                     {

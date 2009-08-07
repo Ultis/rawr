@@ -459,6 +459,12 @@ namespace Rawr.Hunter
                 return calculatedStats;
             }
 
+            //Debug.WriteLine("Buffs:");
+            //foreach (Buff buff in character.ActiveBuffs)
+            //{
+            //    Debug.WriteLine(buff);
+            //}
+
             #region August 2009 Priority Rotation Setup
 
             calculatedStats.priorityRotation = new ShotPriority();
@@ -827,25 +833,24 @@ namespace Rawr.Hunter
             calculatedStats.apFromProc = 0;
 
             // Mirror of Truth
-            if (character.Trinket1.Id == 40684 || character.Trinket2.Id == 40684)
+            if (IsWearingTrinket(character, 40684))
             {
                 calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, crittingShotsPerSecond * critHitPercent);
             }
 
             // Anvil of Titans
-            if (character.Trinket1.Id == 44914 || character.Trinket2.Id == 44914)
+            if (IsWearingTrinket(character, 44914))
             {
                 calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, totalShotsPerSecond * hitChance);
             }
 
             // Swordguard Embroidery
-            if (character.BackEnchant.Id == 3730)
+            if (character.BackEnchant != null && character.BackEnchant.Id == 3730)
             {
                 calculatedStats.apFromProc += 300 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * hitChance);
             }
 
-
-            // TODO: proc AP effects!
+            // TODO: more proc AP effects!
 
             // additive AP bonuses
             calculatedStats.apTotal = 0
@@ -1008,8 +1013,8 @@ namespace Rawr.Hunter
 
             // TODO: this should use the 'composite' crit chance, based on out actual rotation,
             // not the base crit chance (since some shots in our rotation don't crit)
-            double thrillOfTheHuntManaAdjust = 1 - (critHitPercent * 0.4 * (character.HunterTalents.ThrillOfTheHunt / 3));
-
+            double thrillOfTheHuntManaAdjust = 1 - (calculatedStats.priorityRotation.critsCompositeSum * 0.4 * (character.HunterTalents.ThrillOfTheHunt / 3));
+            
             double masterMarksmanManaAdjust = 1 - (character.HunterTalents.MasterMarksman * 0.05);
 
             // TODO: this should only activate if we have serpent or scorpid in the rotation
@@ -1343,7 +1348,7 @@ namespace Rawr.Hunter
 
             double blackArrowDamage = blackArrowDamageNormal * blackArrowDamageAdjust;
 
-            double blackArrowManaCost = (baseMana * 0.06) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * resourcefulnessManaAdjust;
+            double blackArrowManaCost = (baseMana * 0.06) * efficiencyManaAdjust * resourcefulnessManaAdjust;
 
             calculatedStats.blackArrow.damage = blackArrowDamage;
             calculatedStats.blackArrow.mana = blackArrowManaCost;
@@ -1543,6 +1548,11 @@ namespace Rawr.Hunter
             calculatedStats.killShotSub20Gain = killShotDPSGain;
             calculatedStats.killShotSub20TimeSpent = timeSpentSubTwenty;
             calculatedStats.killShotSub20FinalGain = killShotSubGain;
+
+            #endregion
+            #region August 2009 Aspect of the Viper Usage
+
+            //Debug.WriteLine("rotation MPS: "+calculatedStats.priorityRotation.MPS.ToString("F2"));
 
             #endregion
 
@@ -1824,6 +1834,13 @@ namespace Rawr.Hunter
             double timePerTrigger = triggersPerSecond > 0 ? 1 / triggersPerSecond : 0;
             double time_between_procs = timePerTrigger > 0 ? 1 / chance * timePerTrigger + cooldown : 0;
             return time_between_procs > 0 ? duration / time_between_procs : 0;
+        }
+
+        private bool IsWearingTrinket(Character character, int trinket_id)
+        {
+            if (character.Trinket1 != null && character.Trinket1.Id == trinket_id) return true;
+            if (character.Trinket2 != null && character.Trinket2.Id == trinket_id) return true;
+            return false;
         }
 
         private ShotData getShotByIndex(int index, CharacterCalculationsHunter calculatedStats)
