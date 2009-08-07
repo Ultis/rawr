@@ -269,40 +269,44 @@ namespace Rawr
 		{
 			m_characterInfo = characterInfo;
 			m_sName = sName;
+            m_sRealm = sRealm;
 			m_iLevel = (int)(characterInfo["Level"] as long?);
 
 			m_sRace = (string)characterInfo["Race"];
 			m_sClass = (string)characterInfo["Class"];
+        }
 
-			CharacterRace race = (CharacterRace)(characterInfo["RaceId"] as long?);
-			CharacterClass charClass = (CharacterClass)(characterInfo["ClassId"] as long?);
+		public void loadFromInfo()
+        {
+			CharacterRace race = (CharacterRace)(m_characterInfo["RaceId"] as long?);
+			CharacterClass charClass = (CharacterClass)(m_characterInfo["ClassId"] as long?);
 
 			// it might be possible to get this from the Locale field, but I'd need data from the other regions
 			CharacterRegion charRegion = CharacterRegion.US;
 
-			m_character = new Character(sName, sRealm,
+            m_character = new Character(m_sName, m_sRealm,
 			charRegion,
 			race,
-			getGearStringBySlot(characterInfo, "Head"),
-			getGearStringBySlot(characterInfo, "Neck"),
-			getGearStringBySlot(characterInfo, "Shoulder"),
-			getGearStringBySlot(characterInfo, "Back"),
-			getGearStringBySlot(characterInfo, "Chest"),
-			getGearStringBySlot(characterInfo, "Shirt"),
-			getGearStringBySlot(characterInfo, "Tabard"),
-			getGearStringBySlot(characterInfo, "Wrist"),
-			getGearStringBySlot(characterInfo, "Hands"),
-			getGearStringBySlot(characterInfo, "Waist"),
-			getGearStringBySlot(characterInfo, "Legs"),
-			getGearStringBySlot(characterInfo, "Feet"),
-			getGearStringBySlot(characterInfo, "Finger0"),
-			getGearStringBySlot(characterInfo, "Finger1"),
-			getGearStringBySlot(characterInfo, "Trinket0"),
-			getGearStringBySlot(characterInfo, "Trinket1"),
-			getGearStringBySlot(characterInfo, "MainHand"),
-			getGearStringBySlot(characterInfo, "SecondaryHand"),
-			getGearStringBySlot(characterInfo, "Ranged"),
-			getGearStringBySlot(characterInfo, "Ammo"),
+			getGearStringBySlot(m_characterInfo, "Head"),
+			getGearStringBySlot(m_characterInfo, "Neck"),
+			getGearStringBySlot(m_characterInfo, "Shoulder"),
+			getGearStringBySlot(m_characterInfo, "Back"),
+			getGearStringBySlot(m_characterInfo, "Chest"),
+			getGearStringBySlot(m_characterInfo, "Shirt"),
+			getGearStringBySlot(m_characterInfo, "Tabard"),
+			getGearStringBySlot(m_characterInfo, "Wrist"),
+			getGearStringBySlot(m_characterInfo, "Hands"),
+			getGearStringBySlot(m_characterInfo, "Waist"),
+			getGearStringBySlot(m_characterInfo, "Legs"),
+			getGearStringBySlot(m_characterInfo, "Feet"),
+			getGearStringBySlot(m_characterInfo, "Finger0"),
+			getGearStringBySlot(m_characterInfo, "Finger1"),
+			getGearStringBySlot(m_characterInfo, "Trinket0"),
+			getGearStringBySlot(m_characterInfo, "Trinket1"),
+			getGearStringBySlot(m_characterInfo, "MainHand"),
+			getGearStringBySlot(m_characterInfo, "SecondaryHand"),
+			getGearStringBySlot(m_characterInfo, "Ranged"),
+			getGearStringBySlot(m_characterInfo, "Ammo"),
 			null // Not sure what projectile bag is called
 				/*null, //TODO: Find ExtraWristSocket
 				null, //TODO: Find ExtraHandsSocket
@@ -366,40 +370,41 @@ namespace Rawr
 				}
 
 				// load up the talents
-				setTalentsFromTree(characterInfo);
+				setTalentsFromTree(m_characterInfo);
 			}
 
 			// Populate available items
 			// Note that some of these items cannot be enchanted
 			// But they should correctly return ".0" for their enchants.
 			List<string> asOptimizableItems = new List<string>();
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Head");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Neck");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Shoulder");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Back");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Chest");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Shirt");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Tabard");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Wrist");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Hands");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Waist");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Legs");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Feet");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Finger0");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Finger1");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Trinket0");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Trinket1");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "MainHand");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "SecondaryHand");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Ranged");
-			addEquippedItemForOptimization(asOptimizableItems, characterInfo, "Ammo");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Head");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Neck");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Shoulder");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Back");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Chest");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Shirt");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Tabard");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Wrist");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Hands");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Waist");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Legs");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Feet");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Finger0");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Finger1");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Trinket0");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Trinket1");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "MainHand");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "SecondaryHand");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Ranged");
+			addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Ammo");
 
-			addPossessionsForOptimization(asOptimizableItems, characterInfo);
+			addPossessionsForOptimization(asOptimizableItems, m_characterInfo);
 
 			m_character.AvailableItems = asOptimizableItems;
 		}
 
 		string m_sName;
+        string m_sRealm;
 		string m_sRace;
 		string m_sClass;
 		int m_iLevel;
@@ -421,7 +426,7 @@ namespace Rawr
 		{
 			get { return m_sName; }
 		}
-
+        
 		public List<CharacterProfilerCharacter> Characters
 		{
 			get { return m_aCharacters; }

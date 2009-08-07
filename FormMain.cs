@@ -1741,6 +1741,7 @@ namespace Rawr
             StatusMessaging.UpdateStatus("Update Item Cache", "Queued");
             StatusMessaging.UpdateStatus("Cache Item Icons", "Queued");
             CharacterProfilerCharacter characterProfilerChoice = e.Argument as CharacterProfilerCharacter;
+            characterProfilerChoice.loadFromInfo();
             StatusMessaging.UpdateStatusFinished("Loading Character");
             if (characterProfilerChoice != null)
             {
@@ -1964,6 +1965,7 @@ namespace Rawr
             StatusMessaging.UpdateStatus("Load Character", " Loading Character");
             StatusMessaging.UpdateStatus("Update Item Cache", "Queued");
             StatusMessaging.UpdateStatus("Cache Item Icons", "Queued");
+            characterProfilerCharacter.loadFromInfo();
             Character character = characterProfilerCharacter.Character;
             StatusMessaging.UpdateStatusFinished("Load Character");
             if (characterProfilerCharacter.Character != null)
