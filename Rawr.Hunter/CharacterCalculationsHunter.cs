@@ -12,9 +12,7 @@ namespace Rawr.Hunter
 		private float[] _subPoints = new float[] { 0f,0f };
 		private Stats _basicStats;
 		private Stats _petStats;
-		private float _RAP;
 		private float _baseAttackSpeed;
-        private float _steadySpeed;
 		private double _PetBaseDPS;
 		private double _PetSpecialDPS;
 		private double _PetKillCommandDPS;
@@ -34,7 +32,7 @@ namespace Rawr.Hunter
         #endregion   		
    		
         #region RAP Stats
-        public double RAPtotal { get; set; }
+        public double apTotal { get; set; }
 		public double apFromBase { get; set; }
 		public double apFromAgil { get; set; }
 		public double apFromCarefulAim { get; set; }
@@ -96,10 +94,14 @@ namespace Rawr.Hunter
 
         #region mana regen
         public double manaRegenGearBuffs {get; set;}
-        public double manaRegenBase {get; set;}
-        public double manaRegenReplenishment {get; set;}
-        public double manaRegenTotal { get; set; }
-                
+        public double manaRegenViper { get; set; }
+        public double manaRegenRoarOfRecovery { get; set; }
+        public double manaRegenRapidRecuperation { get; set; }
+        public double manaRegenChimeraViperProc { get; set; }
+        public double manaRegenInvigoration { get; set; }
+        public double manaRegenHuntingParty { get; set; }
+        public double manaRegenTargetDebuffs { get; set; }
+        public double manaRegenTotal { get; set; }                
         #endregion
  
 		public float BaseAttackSpeed
@@ -107,12 +109,6 @@ namespace Rawr.Hunter
 			get { return _baseAttackSpeed; }
 			set { _baseAttackSpeed = value; }
 		}
-
-        public float SteadySpeed
-        {
-            get { return _steadySpeed; }
-            set { _steadySpeed = value; }
-        }
 
         public double AutoshotDPS
         {
@@ -170,12 +166,6 @@ namespace Rawr.Hunter
 		}
 		public List<string> ActiveBuffs { get; set; }
 
-		public float RAP
-		{
-			get { return _RAP; }
-			set { _RAP = value; }
-		}
-
 		public double PetBaseDPS
 		{
 			get { return _PetBaseDPS; }
@@ -214,10 +204,15 @@ namespace Rawr.Hunter
 			               hasteFromTalentsProc.ToString("F2") +" % from talented procs\n"+ 
 			               hasteFromRating.ToString("F2") +" % from "+BasicStats.HasteRating.ToString("F0")+ " haste rating\n"+ 
 			               hasteFromRangedBuffs.ToString("F2") +" % from buffs");
-			dictValues.Add("Mana Per Second", manaRegenTotal.ToString("F0")+"*includes:\n" +
-			              	manaRegenBase.ToString("F0")+" from base spirit regen\n" +
-			              	manaRegenGearBuffs.ToString("F0")+" from mp5 gear & buffs\n" +
-			              	manaRegenReplenishment.ToString("F0")+" from replenishment\n");
+			dictValues.Add("Mana Per Second", manaRegenTotal.ToString("F2")+"*includes:\n" +
+                           manaRegenGearBuffs.ToString("F2") + " from Gear and Buffs\n"+
+                           manaRegenViper.ToString("F2") + " from Aspect of the Viper\n"+
+                           manaRegenRoarOfRecovery.ToString("F2") + " from Roar of Recovery\n"+
+                           manaRegenRapidRecuperation.ToString("F2") + " from Rapid Recuperation\n"+
+                           manaRegenChimeraViperProc.ToString("F2") + " from Chimera Viper String Proc\n"+
+                           manaRegenInvigoration.ToString("F2") + " from Invigoration\n"+
+                           manaRegenHuntingParty.ToString("F2") + " from Hunting Party\n"+
+                           manaRegenTargetDebuffs.ToString("F2") + " from Target Debuffs");
 
             // Basic Calculated Stats
             dictValues.Add("Health", BasicStats.Health.ToString("F0"));
@@ -230,23 +225,23 @@ namespace Rawr.Hunter
         					hitLevelAdjustment.ToString("P2") + " level penalty");
 			dictValues.Add("Crit Percentage", critRateOverall.ToString("P2") + "*includes: \n" +
 			               critBase.ToString("P2") + " base crit \n" +
-			               critFromAgi.ToString("P2") + " from Agility \n" +
-			               critFromRating.ToString("P2") + " from Rating \n" +
-			               critFromTalents.ToString("P2") + " from Talents \n" +
-			               critFromBuffs.ToString("P2") + " from Buffs \n" +
-			               critfromDepression.ToString("P2") + " from Depression");
-            dictValues.Add("Ranged AP", RAPtotal.ToString("F0") + "*includes: \n" +
+			               critFromAgi.ToString("P2") + " from agility \n" +
+			               critFromRating.ToString("P2") + " from rating \n" +
+			               critFromTalents.ToString("P2") + " from talents \n" +
+			               critFromBuffs.ToString("P2") + " from buffs \n" +
+			               critfromDepression.ToString("P2") + " from depression");
+            dictValues.Add("Ranged AP", apTotal.ToString("F0") + "*includes: \n" +
                             apFromBase.ToString("F0") + " from base \n" +
-                            apFromAgil.ToString("F0") + " from Agility \n" +
-                            apFromCarefulAim.ToString("F0") + " from CarefulAim \n" +
-                            apFromHunterVsWild.ToString("F0") + " from HunterVsWild \n" +
-                            apFromGear.ToString("F0") + " from +ap gear & buffs \n" +
+                            apFromAgil.ToString("F0") + " from agility \n" +
+                            apFromCarefulAim.ToString("F0") + " from Careful Aim \n" +
+                            apFromHunterVsWild.ToString("F0") + " from Hunter vs Wild \n" +
+                            apFromGear.ToString("F0") + " from +AP gear & buffs \n" +
                             apFromBloodFury.ToString("F0") + " from racials \n" +
                             apFromAspectOfTheHawk.ToString("F0") + " from Aspect of the Hawk \n" +
                             apFromAspectMastery.ToString("F0") + " from Aspect Mastery \n" +
                             apFromFuriousHowl.ToString("F0") + " from Furious Howl \n" +
-                            apFromCallOfTheWild.ToString("F0") + "% from CallOfTheWild \n" +
-                            apFromTrueshotAura.ToString("F0") + "% from Trueshot Aura \n" +
+                            apFromCallOfTheWild.ToString("P2") + " from Call of the Wild \n" +
+                            apFromTrueshotAura.ToString("P2") + " from Trueshot Aura \n" +
                             apFromHuntersMark.ToString("F0") + " from Hunter's Mark \n" +
                             apFromExposeWeakness.ToString("F0") + " from Expose Weakness");
             dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
