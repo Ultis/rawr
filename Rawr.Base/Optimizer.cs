@@ -1123,7 +1123,17 @@ namespace Rawr.Optimizer
                                 bool injected;
                                 OptimizerCharacter inject = Optimize(__character, 0, out injectValue, out bestCalculations, out injected);
                                 _thoroughness = saveThoroughness;
-                                bestCharacter = Optimize(inject, injectValue, out best, out bestCalculations, out injected).Character;
+                                OptimizerCharacter OC = Optimize(inject, injectValue, out best, out bestCalculations, out injected);
+                                if (null == OC)
+                                {
+                                    // Optimize can return null, but none of the calls that depend on bestCharacter 
+                                    // can handle bestCharacter when it is null.  
+                                    bestCharacter = new Character();
+                                }
+                                else
+                                {
+                                    bestCharacter = OC.Character;
+                                }
                             }
                             else
                             {

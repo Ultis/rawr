@@ -17,9 +17,13 @@ namespace Rawr
 
         public void EvaluateUpgrades(Item itemToEvaluate)
         {
-            _itemToEvaluate = itemToEvaluate;
-            buttonUpgrades_Click(null, null);
-            _itemToEvaluate = null;
+            // Let's ensure that we're not seeing a null value incoming
+            if (null != itemToEvaluate)
+            {
+                _itemToEvaluate = itemToEvaluate;
+                buttonUpgrades_Click(null, null);
+                _itemToEvaluate = null;
+            }
         }
 
 		public FormOptimize(Character character)

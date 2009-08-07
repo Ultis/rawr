@@ -477,15 +477,23 @@ namespace Rawr.Optimizer
             TValuation directValuation;
             for (int slot = 0; slot < slotCount; slot++)
             {
-                results = LookForDirectItemUpgrades(slotItems[slot], slot, this.bestValue, bestIndividual, out directValuation);
-                if (results.Key > this.bestValue)
+                // bestIndividual could potentially be null here... need to validate.
+                if (null == bestIndividual)
                 {
-                    this.bestValue = results.Key;
-                    this.bestValuation = directValuation;
-                    bestIndividual = results.Value;
-                    noImprove = 0;
-                    population[0] = bestIndividual;
-                    //population[0].Geneology = "DirectUpgrade";
+                    //error Do we want to do some special handling here?
+                }
+                else
+                {
+                    results = LookForDirectItemUpgrades(slotItems[slot], slot, this.bestValue, bestIndividual, out directValuation);
+                    if (results.Key > this.bestValue)
+                    {
+                        this.bestValue = results.Key;
+                        this.bestValuation = directValuation;
+                        bestIndividual = results.Value;
+                        noImprove = 0;
+                        population[0] = bestIndividual;
+                        //population[0].Geneology = "DirectUpgrade";
+                    }
                 }
             }
         }
