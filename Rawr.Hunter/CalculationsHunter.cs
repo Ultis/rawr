@@ -440,6 +440,7 @@ namespace Rawr.Hunter
         // and an ability has a 4 second cooldown, the spreadsheet says
         // you can use it 2.5 times, while we say you can use it twice.
         public bool calculateUptimesLikeSpreadsheet = true;
+        public bool emulateSpreadsheetBugs = true;
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
@@ -929,15 +930,22 @@ namespace Rawr.Hunter
             if (options.useManaPotion == ManaPotionType.SuperManaPotion) manaFromPotion = 2400;
 
             bool manaHasAlchemistStone = false;
-            if (IsWearingTrinket(character, 35751)) manaHasAlchemistStone = true; // Assassin's Alchemist Stone
-            if (IsWearingTrinket(character, 44324)) manaHasAlchemistStone = true; // Mighty Alchemist's Stone
-            manaHasAlchemistStone = true; // hack for broken SS
+            if (emulateSpreadsheetBugs)
+            {
+                if (IsWearingTrinket(character, 40684)) manaHasAlchemistStone = true; // Mirror of Truth (bug)
+                if (IsWearingTrinket(character, 31856)) manaHasAlchemistStone = true; // Darkmoon Card: Crusade (bug)
+            }
+            else
+            {
+                if (IsWearingTrinket(character, 35751)) manaHasAlchemistStone = true; // Assassin's Alchemist Stone
+                if (IsWearingTrinket(character, 44324)) manaHasAlchemistStone = true; // Mighty Alchemist's Stone
+            }
 
             double manaRegenFromPotion = manaFromPotion / options.duration * (manaHasAlchemistStone ? 1.4 : 1.0);
 
             double manaExpenditure = calculatedStats.priorityRotation.MPS;
             // TODO: add mana used by others/pets
-            manaExpenditure += 2.52; // hack to emulate SS
+            //manaExpenditure += 2.52; // hack to emulate SS
 
             double manaChangeDuringViper = manaRegenFromViper + manaRegenFromPotion + calculatedStats.manaRegenTotal - manaExpenditure;
             double manaChangeDuringNormal = manaExpenditure - calculatedStats.manaRegenTotal - manaRegenFromPotion;
@@ -1072,7 +1080,14 @@ namespace Rawr.Hunter
             // Mirror of Truth
             if (IsWearingTrinket(character, 40684))
             {
-                calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, crittingShotsPerSecond * critHitPercent);
+                if (emulateSpreadsheetBugs)
+                {
+                    calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, crittingShotsPerSecond * critHitPercent);
+                }
+                else
+                {
+                    calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, crittingShotsPerSecond * critHitPercent * hitChance);
+                }
             }
 
             // Anvil of Titans
@@ -1084,7 +1099,14 @@ namespace Rawr.Hunter
             // Swordguard Embroidery
             if (character.BackEnchant != null && character.BackEnchant.Id == 3730)
             {
-                calculatedStats.apFromProc += 300 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * hitChance);
+                if (emulateSpreadsheetBugs)
+                {
+                    calculatedStats.apFromProc += 300 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * critHitPercent);
+                }
+                else
+                {
+                    calculatedStats.apFromProc += 300 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * hitChance);
+                }
             }
 
             // TODO: more proc AP effects!
