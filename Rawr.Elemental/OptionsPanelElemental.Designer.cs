@@ -28,19 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.extendedToolTipLabel11 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel10 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel8 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel9 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel7 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel6 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cbMup = new System.Windows.Forms.CheckBox();
-            this.cbNup = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbThunderstorm = new System.Windows.Forms.CheckBox();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
@@ -48,82 +38,19 @@
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.trkFightLength = new System.Windows.Forms.TrackBar();
             this.lblFightLength = new System.Windows.Forms.Label();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tbBSRatio = new System.Windows.Forms.TrackBar();
-            this.lblBSRatio = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblBSRatio = new System.Windows.Forms.Label();
+            this.tbBSRatio = new System.Windows.Forms.TrackBar();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage4.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
-            this.tabPage1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
+            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // extendedToolTipLabel11
-            // 
-            this.extendedToolTipLabel11.AutoSize = true;
-            this.extendedToolTipLabel11.Location = new System.Drawing.Point(6, 116);
-            this.extendedToolTipLabel11.Name = "extendedToolTipLabel11";
-            this.extendedToolTipLabel11.Size = new System.Drawing.Size(94, 13);
-            this.extendedToolTipLabel11.TabIndex = 5;
-            this.extendedToolTipLabel11.Text = "Glyph of Shocking";
-            this.extendedToolTipLabel11.ToolTipText = "-0.5 gcd for Shock spells";
-            // 
-            // extendedToolTipLabel10
-            // 
-            this.extendedToolTipLabel10.AutoSize = true;
-            this.extendedToolTipLabel10.Location = new System.Drawing.Point(6, 96);
-            this.extendedToolTipLabel10.Name = "extendedToolTipLabel10";
-            this.extendedToolTipLabel10.Size = new System.Drawing.Size(113, 13);
-            this.extendedToolTipLabel10.TabIndex = 4;
-            this.extendedToolTipLabel10.Text = "Glyph of Lightning Bolt";
-            this.extendedToolTipLabel10.ToolTipText = "Lightning Bolt +4% damage";
-            // 
-            // extendedToolTipLabel8
-            // 
-            this.extendedToolTipLabel8.AutoSize = true;
-            this.extendedToolTipLabel8.Location = new System.Drawing.Point(6, 55);
-            this.extendedToolTipLabel8.Name = "extendedToolTipLabel8";
-            this.extendedToolTipLabel8.Size = new System.Drawing.Size(110, 13);
-            this.extendedToolTipLabel8.TabIndex = 2;
-            this.extendedToolTipLabel8.Text = "Glyph of Flametongue";
-            this.extendedToolTipLabel8.ToolTipText = "+2% crit with Flametongue active";
-            // 
-            // extendedToolTipLabel9
-            // 
-            this.extendedToolTipLabel9.AutoSize = true;
-            this.extendedToolTipLabel9.Location = new System.Drawing.Point(6, 76);
-            this.extendedToolTipLabel9.Name = "extendedToolTipLabel9";
-            this.extendedToolTipLabel9.Size = new System.Drawing.Size(73, 13);
-            this.extendedToolTipLabel9.TabIndex = 3;
-            this.extendedToolTipLabel9.Text = "Glyph of Lava";
-            this.extendedToolTipLabel9.ToolTipText = "+10% SP to Lava Burst";
-            // 
-            // extendedToolTipLabel7
-            // 
-            this.extendedToolTipLabel7.AutoSize = true;
-            this.extendedToolTipLabel7.Location = new System.Drawing.Point(6, 35);
-            this.extendedToolTipLabel7.Name = "extendedToolTipLabel7";
-            this.extendedToolTipLabel7.Size = new System.Drawing.Size(135, 13);
-            this.extendedToolTipLabel7.TabIndex = 1;
-            this.extendedToolTipLabel7.Text = "Glyph of Elemental Mastery";
-            this.extendedToolTipLabel7.ToolTipText = "-30sec on EM cd";
-            // 
-            // extendedToolTipLabel6
-            // 
-            this.extendedToolTipLabel6.AutoSize = true;
-            this.extendedToolTipLabel6.Location = new System.Drawing.Point(6, 16);
-            this.extendedToolTipLabel6.Name = "extendedToolTipLabel6";
-            this.extendedToolTipLabel6.Size = new System.Drawing.Size(111, 13);
-            this.extendedToolTipLabel6.TabIndex = 0;
-            this.extendedToolTipLabel6.Text = "Glyph of Flame Shock";
-            this.extendedToolTipLabel6.ToolTipText = "+6 sec FS and not consumed";
             // 
             // tabPage4
             // 
@@ -148,68 +75,25 @@
             this.tbModuleNotes.Size = new System.Drawing.Size(276, 537);
             this.tbModuleNotes.TabIndex = 0;
             // 
-            // tabPage2
+            // tabPage1
             // 
-            this.tabPage2.Controls.Add(this.groupBox1);
-            this.tabPage2.Controls.Add(this.groupBox3);
-            this.tabPage2.Controls.Add(this.groupBox7);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(289, 550);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Fight";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.cbMup);
-            this.groupBox1.Controls.Add(this.cbNup);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(6, 170);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(277, 81);
-            this.groupBox1.TabIndex = 55;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Rotation details";
-            // 
-            // cbMup
-            // 
-            this.cbMup.AutoSize = true;
-            this.cbMup.Location = new System.Drawing.Point(9, 55);
-            this.cbMup.Name = "cbMup";
-            this.cbMup.Size = new System.Drawing.Size(162, 17);
-            this.cbMup.TabIndex = 2;
-            this.cbMup.Text = "Round m up instead of down";
-            this.cbMup.UseVisualStyleBackColor = true;
-            this.cbMup.CheckedChanged += new System.EventHandler(this.cbMupdown_CheckedChanged);
-            // 
-            // cbNup
-            // 
-            this.cbNup.AutoSize = true;
-            this.cbNup.Location = new System.Drawing.Point(9, 32);
-            this.cbNup.Name = "cbNup";
-            this.cbNup.Size = new System.Drawing.Size(160, 17);
-            this.cbNup.TabIndex = 1;
-            this.cbNup.Text = "Round n up instead of down";
-            this.cbNup.UseVisualStyleBackColor = true;
-            this.cbNup.CheckedChanged += new System.EventHandler(this.cbNupdown_CheckedChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(188, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Rotation: FS/LavaB/nLB/LavaB/mLB";
+            this.tabPage1.Controls.Add(this.groupBox3);
+            this.tabPage1.Controls.Add(this.groupBox7);
+            this.tabPage1.Controls.Add(this.groupBox2);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(289, 527);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Settings";
+            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.cbThunderstorm);
             this.groupBox3.Controls.Add(this.cmbManaAmt);
             this.groupBox3.Controls.Add(this.label10);
-            this.groupBox3.Location = new System.Drawing.Point(6, 91);
+            this.groupBox3.Location = new System.Drawing.Point(6, 186);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(277, 73);
             this.groupBox3.TabIndex = 54;
@@ -257,7 +141,7 @@
             // 
             this.groupBox7.Controls.Add(this.trkFightLength);
             this.groupBox7.Controls.Add(this.lblFightLength);
-            this.groupBox7.Location = new System.Drawing.Point(6, 6);
+            this.groupBox7.Location = new System.Drawing.Point(6, 93);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(277, 87);
             this.groupBox7.TabIndex = 33;
@@ -285,27 +169,25 @@
             this.lblFightLength.TabIndex = 38;
             this.lblFightLength.Text = "Fight Length:";
             // 
-            // tabPage1
+            // groupBox2
             // 
-            this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(289, 550);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Stats";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.groupBox2.Controls.Add(this.lblBSRatio);
+            this.groupBox2.Controls.Add(this.tbBSRatio);
+            this.groupBox2.Location = new System.Drawing.Point(6, 6);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(277, 87);
+            this.groupBox2.TabIndex = 41;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Burst : Sustained Ratio";
             // 
-            // tabControl1
+            // lblBSRatio
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Location = new System.Drawing.Point(3, 3);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(297, 576);
-            this.tabControl1.TabIndex = 23;
+            this.lblBSRatio.AutoSize = true;
+            this.lblBSRatio.Location = new System.Drawing.Point(6, 20);
+            this.lblBSRatio.Name = "lblBSRatio";
+            this.lblBSRatio.Size = new System.Drawing.Size(32, 13);
+            this.lblBSRatio.TabIndex = 41;
+            this.lblBSRatio.Text = "Ratio";
             // 
             // tbBSRatio
             // 
@@ -318,25 +200,15 @@
             this.tbBSRatio.Value = 50;
             this.tbBSRatio.Scroll += new System.EventHandler(this.tbBSRatio_Scroll);
             // 
-            // lblBSRatio
+            // tabControl1
             // 
-            this.lblBSRatio.AutoSize = true;
-            this.lblBSRatio.Location = new System.Drawing.Point(6, 20);
-            this.lblBSRatio.Name = "lblBSRatio";
-            this.lblBSRatio.Size = new System.Drawing.Size(32, 13);
-            this.lblBSRatio.TabIndex = 41;
-            this.lblBSRatio.Text = "Ratio";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.lblBSRatio);
-            this.groupBox2.Controls.Add(this.tbBSRatio);
-            this.groupBox2.Location = new System.Drawing.Point(6, 6);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(277, 87);
-            this.groupBox2.TabIndex = 41;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Burst : Sustained Ratio";
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Location = new System.Drawing.Point(3, 3);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(297, 553);
+            this.tabControl1.TabIndex = 23;
             // 
             // CalculationOptionsPanelElemental
             // 
@@ -348,50 +220,36 @@
             this.Size = new System.Drawing.Size(303, 582);
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
-            this.tabPage1.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).EndInit();
+            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel11;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel10;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel8;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel9;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel7;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel6;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TextBox tbModuleNotes;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.CheckBox cbThunderstorm;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.ComboBox cmbManaAmt;
-        private System.Windows.Forms.TrackBar trkFightLength;
-        private System.Windows.Forms.Label lblFightLength;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox cbMup;
-        private System.Windows.Forms.CheckBox cbNup;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label lblBSRatio;
         private System.Windows.Forms.TrackBar tbBSRatio;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox cbThunderstorm;
+        private System.Windows.Forms.ComboBox cmbManaAmt;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.TrackBar trkFightLength;
+        private System.Windows.Forms.Label lblFightLength;
 
     }
 }

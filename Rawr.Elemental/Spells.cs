@@ -25,6 +25,8 @@ namespace Rawr.Elemental
         protected float dotCanCrit = 0f;
         protected float spellPower = 0f;
 
+        protected string shortName = "Spell";
+
         protected static void add(Spell sp1, Spell sp2, Spell nS)
         {
             nS.baseMinDamage = (sp1.baseMinDamage + sp2.baseMaxDamage);
@@ -115,6 +117,12 @@ namespace Rawr.Elemental
         public float CritChance
         { get { return Math.Min(1f, crit); } }
 
+        /// <summary>
+        /// Crit chance for all kind of proc triggers. This exists seperately because of Lightning Overload.
+        /// </summary>
+        public virtual float CCCritChance
+        { get { return CritChance; } }
+
         public float MissChance
         { get { return missChance; } }
 
@@ -130,7 +138,7 @@ namespace Rawr.Elemental
         public float PeriodicTicks
         { get { return periodicTicks; } }
 
-        public float TotalDamage
+        public virtual float TotalDamage
         { get { return AvgDamage + PeriodicTick * PeriodicTicks; } }
 
         public float DirectDpS
@@ -198,6 +206,19 @@ namespace Rawr.Elemental
         {
             return (Spell)this.MemberwiseClone();
         }
+
+        public override string ToString()
+        {
+            return shortName;
+        }
+    }
+
+    public class Shock : Spell
+    {
+        public void Initialize(Stats stats, ShamanTalents shamanTalents)
+        {
+            base.Initialize(stats, shamanTalents);
+        }
     }
 
     public class Thunderstorm : Spell
@@ -211,6 +232,7 @@ namespace Rawr.Elemental
             spCoef = 1.5f / 7f * .9f; // NOT CORRECT YET, assuming 1.5f/7f * 0.9f (aoe with additional effect)
             manaCost = 0f;
             cooldown = 45f;
+            shortName = "TS";
             #endregion
 
             totalCoef += .01f * shamanTalents.Concussion;
@@ -269,6 +291,7 @@ namespace Rawr.Elemental
             castTime = 2.5f;
             spCoef = 2.5f / 3.5f;
             manaCost = 0.1f * Constants.BaseMana;
+            shortName = "LB";
             #endregion
 
             castTime -= .1f * shamanTalents.LightningMastery;
@@ -284,6 +307,8 @@ namespace Rawr.Elemental
             totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f; // T6 4 piece
 
             critModifier *= 1 + stats.LightningBoltCritDamageModifier; // T8 4 piece
+
+            lightningOverload = shamanTalents.LightningOverload;
 
             base.Initialize(stats, shamanTalents);
         }
@@ -302,10 +327,22 @@ namespace Rawr.Elemental
             return C;
         }
 
+        private int lightningOverload = 0;
+
+        public override float CCCritChance
+        {
+            get { return Math.Min(1f, CritChance * (1f + .11f * lightningOverload)); }
+        }
+
+        public override float TotalDamage
+        {
+            get { return base.TotalDamage * (1f + .11f * lightningOverload * .5f); }
+        }
     }
 
     public class ChainLightning : Spell
     {
+        private int additionalTargets;
         public ChainLightning(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts, int additionalTargets)
         {
             #region Base Values
@@ -318,8 +355,14 @@ namespace Rawr.Elemental
             #endregion
 
             // jumps
-            if (additionalTargets < 0) additionalTargets = 0;
-            if (additionalTargets > 4) additionalTargets = 4;
+            if (additionalTargets < 0)
+                additionalTargets = 0;
+            if (additionalTargets > 4)
+                additionalTargets = 4;
+            shortName = "CL" + additionalTargets;
+            if (!shamanTalents.GlyphofChainLightning && additionalTargets > 3)
+                additionalTargets = 3;
+            this.additionalTargets = additionalTargets;
             totalCoef *= new float[] { 1f, 1.7f, 2.19f, 2.533f, 2.7731f }[additionalTargets];
 
             manaCost *= 1f - .02f * shamanTalents.Convection;
@@ -331,7 +374,14 @@ namespace Rawr.Elemental
             spellPower += stats.LightningSpellPower + stats.SpellNatureDamageRating;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
 
+            lightningOverload = shamanTalents.LightningOverload;
+
             base.Initialize(stats, shamanTalents);
+        }
+
+        public int AdditionalTargets
+        {
+            get { return additionalTargets; }
         }
 
         public static ChainLightning operator +(ChainLightning A, ChainLightning B)
@@ -348,6 +398,17 @@ namespace Rawr.Elemental
             return C;
         }
 
+        private int lightningOverload = 0;
+
+        public override float CCCritChance
+        {
+            get { return Math.Min(1f, CritChance * (1f + .11f * lightningOverload / 3f * AdditionalTargets)); }
+        }
+
+        public override float TotalDamage
+        {
+            get { return base.TotalDamage * (1f + .11f * lightningOverload / 3f * AdditionalTargets); }
+        }
     }
 
     public class LavaBurst : Spell
@@ -361,11 +422,13 @@ namespace Rawr.Elemental
             spCoef = 2f / 3.5f;
             manaCost = .1f * Constants.BaseMana;
             cooldown = 8f;
+            shortName = "LvB";
             #endregion
 
             manaCost *= 1f - .02f * shamanTalents.Convection;
             totalCoef += .01f * shamanTalents.Concussion;
             totalCoef += .02f * shamanTalents.CallOfFlame;
+            totalCoef += stats.BonusLavaBurstDamageMultiplier; // t9 4 piece
             castTime -= .1f * shamanTalents.LightningMastery;
             spCoef += .04f * shamanTalents.Shamanism;
             critModifier += new float[] { 0f, 0.06f, 0.12f, 0.24f }[shamanTalents.LavaFlows];
@@ -398,7 +461,7 @@ namespace Rawr.Elemental
 
     }
 
-    public class FlameShock : Spell
+    public class FlameShock : Shock
     {
         public FlameShock(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
         {
@@ -411,6 +474,7 @@ namespace Rawr.Elemental
             periodicTicks = 4f;
             manaCost = .17f * Constants.BaseMana;
             cooldown = 6f;
+            shortName = "FS";
             #endregion
 
             //for reference
@@ -430,9 +494,12 @@ namespace Rawr.Elemental
             cooldown -= 1f * shamanTalents.BoomingEchoes;
             spellPower += stats.SpellFireDamageRating;
             totalCoef *= 1 + stats.BonusFireDamageMultiplier;
+            periodicTicks += stats.BonusFlameShockDuration / 3f; // t9 2 piece
 
             if (shamanTalents.GlyphofFlameShock)
+            {
                 periodicTicks += 2;
+            }
             if (shamanTalents.GlyphofShocking)
                 gcd -= .5f;
 
@@ -457,7 +524,7 @@ namespace Rawr.Elemental
 
     }
 
-    public class EarthShock : Spell
+    public class EarthShock : Shock
     {
         public EarthShock(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
         {
@@ -467,6 +534,7 @@ namespace Rawr.Elemental
             spCoef = 1.5f / 3.5f * .9f;
             manaCost = .18f * Constants.BaseMana;
             cooldown = 6f;
+            shortName = "ES";
             #endregion
 
             totalCoef += .01f * shamanTalents.Concussion;
@@ -497,7 +565,7 @@ namespace Rawr.Elemental
 
     }
 
-    public class FrostShock : Spell
+    public class FrostShock : Shock
     {
         public FrostShock(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
         {
@@ -507,6 +575,7 @@ namespace Rawr.Elemental
             spCoef = 1.5f / 3.5f * .9f;
             manaCost = .18f * Constants.BaseMana;
             cooldown = 6f;
+            shortName = "FrS";
             #endregion
 
             totalCoef += .01f * shamanTalents.Concussion;
@@ -546,6 +615,7 @@ namespace Rawr.Elemental
             missChance = 0;
             cooldown = 180f;
             gcd = 0; // no global cooldown ;)
+            shortName = "EM";
             #endregion
 
             if (shamanTalents.GlyphofElementalMastery)
@@ -567,6 +637,23 @@ namespace Rawr.Elemental
             ElementalMastery C = (ElementalMastery)A.MemberwiseClone();
             multiply(A, b, C);
             return C;
+        }
+    }
+
+    public class Wait : Spell
+    {
+        public Wait(float duration)
+        {
+            gcd = 0f;
+            missChance = 0f;
+            totalCoef = 0f;
+            spCoef = 0f;
+            castTime = duration;
+        }
+
+        public override string ToString()
+        {
+            return "W(" + Math.Round(castTime,2) + ")";
         }
     }
 

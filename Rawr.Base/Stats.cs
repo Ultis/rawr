@@ -250,6 +250,7 @@ namespace Rawr {
         BonusLavaBurstCritDamage,
         ChainLightningCooldownReduction,
         BonusFlameShockDoTDamage,
+        BonusFlameShockDuration,
         BonusFlametongueDamage,
         ShockManaCostReduction,
         LightningBoltDamageModifier,
@@ -444,8 +445,8 @@ namespace Rawr {
         BonusMindBlastMultiplier,
         #endregion
         #region Added by Rawr.Elemental
-        BonusLavaBurstDamage,
-        #endregion        
+        BonusLavaBurstDamageMultiplier,
+        #endregion      
         #region Added by Rawr.ProtPaladin
         BonusSealOfCorruptionDamageMultiplier,
         BonusSealOfRighteousnessDamageMultiplier,
@@ -3288,6 +3289,14 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Elemental")]
+        public float BonusFlameShockDuration
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusFlameShockDuration]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusFlameShockDuration] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Elemental")]
         public float BonusFlameShockDoTDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusFlameShockDoTDamage]; }
@@ -4316,11 +4325,12 @@ namespace Rawr {
         #region Added by Rawr.Elemental
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
+        [DisplayName("% bonus damage for Lava Burst")]
         [Category("Elemental")]
-        public float BonusLavaBurstDamage
+        public float BonusLavaBurstDamageMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamage]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamage] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamageMultiplier] = value; }
         }
         #endregion
         #region Added by Rawr.Restosham

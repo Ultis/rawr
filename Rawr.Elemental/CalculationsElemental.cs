@@ -381,6 +381,8 @@ namespace Rawr.Elemental
                 BonusLavaBurstCritDamage = stats.BonusLavaBurstCritDamage,
                 FlameShockDoTCanCrit = stats.FlameShockDoTCanCrit,
                 LightningBoltCritDamageModifier = stats.LightningBoltCritDamageModifier,
+                BonusLavaBurstDamageMultiplier = stats.BonusLavaBurstDamageMultiplier,
+                BonusFlameShockDuration = stats.BonusFlameShockDuration,
                 #endregion
                 #region Misc Damage
                 NatureDamage = stats.NatureDamage,
@@ -459,7 +461,9 @@ namespace Rawr.Elemental
                 stats.LightningBoltCostReduction +
                 stats.LightningBoltDamageModifier +
                 stats.LightningBoltCritDamageModifier + 
-                stats.FlameShockDoTCanCrit;
+                stats.FlameShockDoTCanCrit + 
+                stats.BonusLavaBurstDamageMultiplier + 
+                stats.BonusFlameShockDuration;
             #endregion
             #region Misc Damage
             elementalStats +=
@@ -520,13 +524,9 @@ namespace Rawr.Elemental
         public float RotationDPS;
         public float TotalDPS;
         public float RotationMPS;
-        public float CastFraction;
-        public float CritFraction;
-        public float MissFraction;
-
-        public float LBFraction;
-        public float LvBFraction;
-        public float FSFraction;
+        public float CastsPerSecond;
+        public float CritsPerSecond;
+        public float MissesPerSecond;
 
         public float LBPerSecond;
         public float LvBPerSecond;
@@ -536,9 +536,8 @@ namespace Rawr.Elemental
         public float ClearCast_LavaBurst;
         public float ClearCast_LightningBolt;
 
-        public float nLBfirst;
-        public float nLBsecond;
-        public float WaitAfterLB;
+        public string Rotation;
+        public string RotationDetails;
 
         public Character LocalCharacter { get; set; }
 
@@ -595,15 +594,8 @@ namespace Rawr.Elemental
             dictValues.Add("Earth Shock", Math.Round(EarthShock.MinHit).ToString() + "-" + Math.Round(EarthShock.MaxHit).ToString() + " / " + Math.Round(EarthShock.MinCrit).ToString() + "-" + Math.Round(EarthShock.MaxCrit).ToString() + "*Mana cost: " + Math.Round(EarthShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * EarthShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * EarthShock.MissChance, 2).ToString() + " %\nGCD: " + Math.Round(EarthShock.CastTime, 2) + " sec.\n");
             dictValues.Add("Frost Shock", Math.Round(FrostShock.MinHit).ToString() + "-" + Math.Round(FrostShock.MaxHit).ToString() + " / " + Math.Round(FrostShock.MinCrit).ToString() + "-" + Math.Round(FrostShock.MaxCrit).ToString() + "*Mana cost: " + Math.Round(FrostShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * FrostShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FrostShock.MissChance, 2).ToString() + " %\nGCD: " + Math.Round(FrostShock.CastTime, 2) + " sec.\n");
 
-            dictValues.Add("Simulation", Math.Round(TotalDPS).ToString() + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastFraction, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritFraction, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissFraction, 1).ToString() + " misses per minute\n" + Math.Round(60f * LvBPerSecond, 1).ToString() + " Lava Bursts per minute\n" + Math.Round(60f * FSPerSecond, 1).ToString() + " Flame Shocks per minute\n" + Math.Round(60f * LBPerSecond, 1).ToString() + " Lightning Bolts per minute\n");
-            if (LocalCharacter.ShamanTalents.GlyphofFlameShock)
-            {
-                dictValues.Add("Rotation", "FS/LvB/"+Math.Round(nLBfirst, 2).ToString() + "LB/LvB/"+Math.Round(nLBsecond, 2).ToString() + "LB");
-            }
-            else
-            {
-                dictValues.Add("Rotation", "LvB/FS/" + Math.Round(nLBfirst, 2).ToString() + "LB/LvB/FS/" + Math.Round(nLBsecond, 2).ToString() + "LB");
-            }
+            dictValues.Add("Simulation", Math.Round(TotalDPS).ToString() + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastsPerSecond, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritsPerSecond, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissesPerSecond, 1).ToString() + " misses per minute\n" + Math.Round(60f * LvBPerSecond, 1).ToString() + " Lava Bursts per minute\n" + Math.Round(60f * FSPerSecond, 1).ToString() + " Flame Shocks per minute\n" + Math.Round(60f * LBPerSecond, 1).ToString() + " Lightning Bolts per minute\n");
+            dictValues.Add("Rotation", Rotation + "*" + RotationDetails);
 
             return dictValues;
         }
@@ -670,126 +662,6 @@ namespace Rawr.Elemental
 			return string.Format("{0}: ({1}O {2}Burst {3}Sustained)", Name, Math.Round(OverallPoints), Math.Round(BurstPoints), Math.Round(SustainedPoints));
 		}
 	}
-
-    public class Rotation
-    {
-        public float CastFraction;
-        public float CritFraction;
-        public float MissFraction;
-        public float DPS;
-        public float MPS;
-
-        public float LBFraction;
-        public float LvBFraction;
-        public float FSFraction;
-
-        public float LBPerSecond;
-        public float LvBPerSecond;
-        public float FSPerSecond;
-
-        public float CC_FS;
-        public float CC_LvB;
-        public float CC_LB;
-
-        public float nLBfirst, nLBsecond;
-        public float WaitAfterLB;
-
-        public LightningBolt LB;
-        public ChainLightning CL;
-        public ChainLightning CL3;
-        public ChainLightning CL4;
-        public LavaBurst LvB;
-        public LavaBurst LvBFS;
-        public FlameShock FS;
-        public EarthShock ES;
-        public FrostShock FrS;
-
-        public float getCastsPerSecond()
-        {
-            return LBPerSecond + LvBPerSecond + FSPerSecond;
-        }
-
-        public float getWeightedHitchance()
-        {
-            return ((LBPerSecond * LB.HitChance) + (LvBPerSecond * LvBFS.HitChance) + (FSPerSecond * FS.HitChance)) / getCastsPerSecond();
-        }
-
-        /// <summary>
-        /// Returns the average Critchance with Hitchance factored in.
-        /// </summary>
-        /// <returns></returns>
-        public float getWeightedCritchance(int lightningOverload)
-        {
-            float critLB = LB.CritChance * (1f + .11f * lightningOverload);
-            return ((LBPerSecond * critLB * LB.HitChance) + (LvBPerSecond * LvBFS.CritChance * LvBFS.HitChance) + (FSPerSecond * FS.CritChance * FS.HitChance)) / getCastsPerSecond();
-        }
-
-        public static Rotation operator +(Rotation A, Rotation B)
-        {
-            return new Rotation()
-            {
-                DPS = (A.DPS + B.DPS),
-                MPS = (A.MPS + B.MPS),
-                CastFraction = (A.CastFraction + B.CastFraction),
-                CritFraction = (A.CritFraction + B.CritFraction),
-                MissFraction = (A.MissFraction + B.MissFraction),
-                LB = (LightningBolt)A.LB + B.LB,
-                CL = (ChainLightning)A.CL + B.CL,
-                CL3 = (ChainLightning)A.CL3 + B.CL3,
-                CL4 = (ChainLightning)A.CL4 + B.CL4,
-                LvB = (LavaBurst)A.LvB + B.LvB,
-                LvBFS = (LavaBurst)A.LvBFS + B.LvBFS,
-                FS = (FlameShock)A.FS + B.FS,
-                ES = (EarthShock)A.ES + B.ES,
-                FrS = (FrostShock)A.FrS + B.FrS,
-                CC_FS = A.CC_FS + B.CC_FS,
-                CC_LvB = A.CC_LvB + B.CC_LvB,
-                CC_LB = A.CC_LB + B.CC_LB,
-                LBFraction = (A.LBFraction + B.LBFraction),
-                LvBFraction = (A.LvBFraction + B.LvBFraction),
-                FSFraction = (A.FSFraction + B.FSFraction),
-                LBPerSecond = (A.LBPerSecond + B.LBPerSecond),
-                LvBPerSecond = (A.LvBPerSecond + B.LvBPerSecond),
-                FSPerSecond = (A.FSPerSecond + B.FSPerSecond),
-                nLBfirst = (A.nLBfirst + B.nLBfirst),
-                nLBsecond = (A.nLBsecond + B.nLBsecond),
-                WaitAfterLB = (A.WaitAfterLB + B.WaitAfterLB)
-            };
-        }
-
-        public static Rotation operator *(Rotation A, float b)
-        {
-            return new Rotation()
-            {
-                DPS = A.DPS * b,
-                MPS = A.MPS * b,
-                CastFraction = A.CastFraction * b,
-                CritFraction = A.CritFraction * b,
-                MissFraction =A.MissFraction * b,
-                LB = (LightningBolt)A.LB * b,
-                CL = (ChainLightning)A.CL * b,
-                CL3 = (ChainLightning)A.CL3 * b,
-                CL4 = (ChainLightning)A.CL4 * b,
-                LvB = (LavaBurst)A.LvB * b,
-                LvBFS = (LavaBurst)A.LvBFS * b,
-                FS = (FlameShock)A.FS * b,
-                ES = (EarthShock)A.ES * b,
-                FrS = (FrostShock)A.FrS * b,
-                CC_FS = A.CC_FS * b,
-                CC_LvB = A.CC_LvB * b,
-                CC_LB = A.CC_LB * b,
-                LBFraction = A.LBFraction * b,
-                LvBFraction = A.LvBFraction * b,
-                FSFraction = A.FSFraction * b,
-                LBPerSecond = A.LBPerSecond * b,
-                LvBPerSecond = A.LvBPerSecond * b,
-                FSPerSecond = A.FSPerSecond * b,
-                nLBfirst = A.nLBfirst * b,
-                nLBsecond = A.nLBsecond * b,
-                WaitAfterLB = A.WaitAfterLB * b
-            };
-        }
-    }
 
     public static class Constants
     {

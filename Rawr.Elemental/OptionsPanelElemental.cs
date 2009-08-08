@@ -53,9 +53,6 @@ namespace Rawr.Elemental
 
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
 
-            cbNup.Checked = (calcOpts.rotationType & 1) == 0;
-            cbMup.Checked = (calcOpts.rotationType & 2) == 0;
-
             loading = false;
         }
 
@@ -106,24 +103,6 @@ namespace Rawr.Elemental
             if (loading) return;
             CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
             calcOpts.UseThunderstorm = cbThunderstorm.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbNupdown_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
-            if (cbNup.Checked) calcOpts.rotationType &= ~1;
-            else calcOpts.rotationType |= 1;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbMupdown_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
-            if (cbMup.Checked) calcOpts.rotationType &= ~2;
-            else calcOpts.rotationType |= 2;
             Character.OnCalculationsInvalidated();
         }
     }
