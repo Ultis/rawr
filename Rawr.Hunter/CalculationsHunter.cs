@@ -636,31 +636,8 @@ namespace Rawr.Hunter
             calculatedStats.priorityRotation.calculateFrequencies();
 
             #endregion
-            #region August 2009 Shots Per Second
 
-            double QSBaseFreqnecyIncrease = 0; //TODO!
-            double autoShotSpeed = character.Ranged.Speed / (totalStaticHaste * totalDynamicHaste);
-
-            double baseAutoShotsPerSecond = autoShotSpeed > 0 ? 1 / autoShotSpeed : 0;
-            double autoShotsPerSecond = baseAutoShotsPerSecond + QSBaseFreqnecyIncrease;
-            double specialShotsPerSecond = calculatedStats.priorityRotation.specialShotsPerSecond;
-            double totalShotsPerSecond = autoShotsPerSecond + specialShotsPerSecond;
-
-            double crittingSpecialsPerSecond = calculatedStats.priorityRotation.critSpecialShotsPerSecond;
-            double crittingShotsPerSecond = autoShotsPerSecond + crittingSpecialsPerSecond;
-
-            double shotsPerSecondWithoutHawk = specialShotsPerSecond + baseAutoShotsPerSecond;
-
-            calculatedStats.BaseAttackSpeed = (float)autoShotSpeed;
-
-            //Debug.WriteLine("baseAutoShotsPerSecond = " + baseAutoShotsPerSecond);
-            //Debug.WriteLine("autoShotsPerSecond = " + autoShotsPerSecond);
-            //Debug.WriteLine("specialShotsPerSecond = " + specialShotsPerSecond);
-            //Debug.WriteLine("Total shots per second = " + totalShotsPerSecond);
-
-            #endregion
-
-            // shot crit
+            // hits
             #region May 2009 Hit Chance
             double missPercent = HunterRatings.BASE_MISS_PERCENT;
             calculatedStats.hitBase = 1.0 - HunterRatings.BASE_MISS_PERCENT;
@@ -700,6 +677,78 @@ namespace Rawr.Hunter
             double hitChance = calculatedStats.hitOverall;
 
             #endregion
+            #region August 2009 Quick Shots
+
+            double QSBaseFreqnecyIncrease = 0;
+            double autoShotSpeed = character.Ranged.Speed / (totalStaticHaste * totalDynamicHaste);
+
+            if (options.selectedAspect == Aspect.Hawk || options.selectedAspect == Aspect.Dragonhawk)
+            {
+                if (character.HunterTalents.ImprovedAspectOfTheHawk > 0)
+                {
+                    double quickShotsProcChance = 0.1;
+                    double quickShotsEffect = 0.03 * character.HunterTalents.ImprovedAspectOfTheHawk;
+                    if (character.HunterTalents.GlyphOfTheHawk) quickShotsEffect += 0.06;
+
+                    double quickShotsSpeed = autoShotSpeed / (1 + quickShotsEffect);
+
+                    double quickShotsInInitialProc = (autoShotSpeed > 0 ? (12 - autoShotSpeed) / quickShotsSpeed + 1 : 1) * hitChance;
+                    double quickShotsInReProc = (quickShotsSpeed > 0 ? 12 / quickShotsSpeed : 1) * hitChance;
+
+                    double quickShotsProcInitial = 1 - Math.Pow(1 - quickShotsProcChance, quickShotsInInitialProc);
+                    double quickShotsProcSubsequent = 1 - Math.Pow(1 - quickShotsProcChance, quickShotsInReProc);
+
+                    double quickShotsAvgShotsBeforeInit = 0;
+                    if (quickShotsProcChance > 0 && quickShotsProcInitial > 0)
+                    {
+                        quickShotsAvgShotsBeforeInit = ((1 - Math.Pow(0.9, quickShotsInInitialProc + 1)) / 0.01 - (quickShotsInInitialProc + 1) * Math.Pow(0.9, quickShotsInInitialProc) / 0.1 ) / quickShotsProcInitial * 0.1;
+                    }
+                        
+                    double quickShotsAvgShotsBeforeNext = 0;
+                    if (quickShotsProcChance > 0 && quickShotsProcSubsequent > 0)
+                    {
+                        quickShotsAvgShotsBeforeNext = ((1 - Math.Pow(0.9, quickShotsInReProc + 1)) / 0.01 - (quickShotsInReProc + 1) * Math.Pow(0.9, quickShotsInReProc) / 0.1) / quickShotsProcSubsequent * 0.1;
+                    }
+
+                    double quickShotsAverageChainQuick = quickShotsInInitialProc * (1 - quickShotsProcInitial)
+                                                       + quickShotsProcInitial * (1 - quickShotsProcSubsequent)
+                                                       * (quickShotsAvgShotsBeforeNext * quickShotsProcSubsequent / (Math.Pow(1 - quickShotsProcSubsequent, 2))
+                                                       + (quickShotsAvgShotsBeforeInit + quickShotsInReProc) / (1 - quickShotsProcSubsequent));
+
+                    double quickShotsAverageChainSlow = quickShotsProcChance > 0 ? 1 / quickShotsProcChance : 0;
+
+                    // TODO: use rotation test to get this value
+                    double quickShotsUptime = quickShotsProcChance > 0 ? quickShotsAverageChainQuick / (quickShotsAverageChainQuick + quickShotsAverageChainSlow) : 0;
+
+                    QSBaseFreqnecyIncrease = autoShotSpeed > 0 ? (1 / quickShotsSpeed - 1 / autoShotSpeed) * quickShotsUptime : 0;
+                }
+            }
+
+
+
+            #endregion
+            #region August 2009 Shots Per Second
+
+            double baseAutoShotsPerSecond = autoShotSpeed > 0 ? 1 / autoShotSpeed : 0;
+            double autoShotsPerSecond = baseAutoShotsPerSecond + QSBaseFreqnecyIncrease;
+            double specialShotsPerSecond = calculatedStats.priorityRotation.specialShotsPerSecond;
+            double totalShotsPerSecond = autoShotsPerSecond + specialShotsPerSecond;
+
+            double crittingSpecialsPerSecond = calculatedStats.priorityRotation.critSpecialShotsPerSecond;
+            double crittingShotsPerSecond = autoShotsPerSecond + crittingSpecialsPerSecond;
+
+            double shotsPerSecondWithoutHawk = specialShotsPerSecond + baseAutoShotsPerSecond;
+
+            calculatedStats.BaseAttackSpeed = (float)autoShotSpeed;
+
+            //Debug.WriteLine("baseAutoShotsPerSecond = " + baseAutoShotsPerSecond);
+            //Debug.WriteLine("autoShotsPerSecond = " + autoShotsPerSecond);
+            //Debug.WriteLine("specialShotsPerSecond = " + specialShotsPerSecond);
+            //Debug.WriteLine("Total shots per second = " + totalShotsPerSecond);
+
+            #endregion
+
+            // crits
             #region August 2009 Crit Chance
 
             calculatedStats.critBase = HunterRatings.BASE_CRIT_PERCENT;
@@ -1019,11 +1068,7 @@ namespace Rawr.Hunter
 
             #endregion
 
-            // now we can calculate crit chances.
-            // we need to do this and then generate composite crit rates from the rotation
-            // so that we can correctly generate effective RAP (since expose weakness depends
-            // on how many shots in our rotation crit)
-
+            // damage
             #region August 2009 Ranged Attack Power
 
             calculatedStats.apFromBase = 0 + HunterRatings.CHAR_LEVEL * 2;
@@ -1603,35 +1648,12 @@ namespace Rawr.Hunter
             #endregion
 
             #region On-Proc DPS
+            // calculatedStats.OnProcDPS
             // TODO: Bandit's Insignia
             // TODO: Gnomish Lightning Generator
             // TODO: Darkmoon Card: Death
             // TODO: Hand-Mounted Pyro Rocket
             // TODO: Vestige of Haldor
-            #endregion
-            #region Quick Shots
-
-            //TODO: this is in the wrong place and is not being used.
-            // move this somewhere sensible (after wild quiver?) and plug the values in
-
-            // Model Quickshots
-
-            double quickShotsUpTime = 0;
-            double quickShotHaste = 1.0;
-            if (character.HunterTalents.ImprovedAspectOfTheHawk > 0)
-            {
-                quickShotHaste = .03 * character.HunterTalents.ImprovedAspectOfTheHawk;
-                double quickAutoShotsPerSecond = (1.0f + quickShotHaste) / calculatedStats.BaseAttackSpeed;
-                //Quick Shot Uptime From Cheeky's DPS Spreadsheet with special notation - "By Norwest"
-                double shotsInProc = (Math.Floor((12f - calculatedStats.BaseAttackSpeed) * baseAutoShotsPerSecond) + 1) * calculatedStats.BasicStats.PhysicalHit;
-                double shotsInReProc = Math.Floor(12f * quickAutoShotsPerSecond) * calculatedStats.BasicStats.PhysicalHit;
-                double reprocChanceInitial = 1 - Math.Pow(.9, shotsInProc);
-                double reprocChanceSub = 1 - Math.Pow(.9, shotsInReProc);
-                double AvgShotBeforeFirstReProc = ((1 - Math.Pow(0.9, (shotsInProc + 1))) / Math.Pow(.1, 2) - (shotsInProc + 1) * Math.Pow(0.9, shotsInProc) / .1) / reprocChanceInitial * 0.1;
-                double AvgShotBeforeNthReProc = ((1 - Math.Pow(0.9, (shotsInReProc + 1))) / Math.Pow(.1, 2) - (shotsInReProc + 1) * Math.Pow(0.9, shotsInReProc) / .1) / reprocChanceSub * 0.1;
-                double avgQuickShotChain = shotsInProc * (1 - reprocChanceInitial) + reprocChanceInitial * (1 - reprocChanceSub) * (AvgShotBeforeNthReProc * reprocChanceSub / Math.Pow((1 - reprocChanceSub), 2) + (AvgShotBeforeFirstReProc + shotsInReProc) / (1 - reprocChanceSub));
-                quickShotsUpTime = avgQuickShotChain / (avgQuickShotChain + 10);
-            }
             #endregion
             #region Pet
 
@@ -1697,9 +1719,6 @@ namespace Rawr.Hunter
 
             return calculatedStats;
         }
-
-        //Stats statsBaseGear = new Stats();
-        //Stats statsBuffs = new Stats();
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
