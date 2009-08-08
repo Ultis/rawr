@@ -672,15 +672,17 @@ namespace Rawr.TankDK
                 {
                     float dpsMHglancing = (0.24f * this.MH.DPS) * 0.75f;
                     float dpsMHBeforeArmor = ((this.MH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + this.physCrits)) + dpsMHglancing;
-                    fDamOtherFrost += (dpsMHBeforeArmor - dpsMHglancing) * stats.BonusFrostWeaponDamage;   // presumably doesn't proc off of glancings, like necrosis
+                    fDamOtherFrost += (dpsMHBeforeArmor - dpsMHglancing);   // presumably doesn't proc off of glancings, like necrosis
                 }
 
                 if (this.OH != null)
                 {
                     float dpsOHglancing = (0.24f * this.OH.DPS) * 0.75f;
                     float dpsOHBeforeArmor = ((this.OH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + this.physCrits)) + dpsOHglancing;
-                    fDamOtherFrost += (dpsOHBeforeArmor - dpsOHglancing) * stats.BonusFrostWeaponDamage;
+                    fDamOtherFrost += (dpsOHBeforeArmor - dpsOHglancing);
                 }
+
+                fDamOtherFrost += fDamOtherFrost * stats.BonusFrostWeaponDamage;
 
                 float OtherCritDmgMult = .5f * (1f + stats.CritBonusDamage);
                 float OtherCrit = 1f + ((this.spellCrits) * OtherCritDmgMult);
@@ -1079,6 +1081,11 @@ namespace Rawr.TankDK
             DPSPoints += calcs.DeathNDecayDPS;
 
             DPSPoints *= 2.0735f;
+
+            if ( float.IsNaN(DPSPoints) )
+            {
+                throw new Exception("DPSPoints NaN");
+            }
 
             return DPSPoints;
         }

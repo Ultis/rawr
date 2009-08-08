@@ -70,7 +70,11 @@ namespace Rawr.TankDK
             {
                 // White damage per hit.  Basic white hits are use elsewhere.
                 damage = baseDamage + (stats.AttackPower / 14.0f) * baseSpeed;
-                DPS = damage / hastedSpeed;
+                DPS = 0f;
+                if (hastedSpeed > 0)
+                {
+                    DPS = damage / hastedSpeed;
+                }
             }
             #endregion
         }

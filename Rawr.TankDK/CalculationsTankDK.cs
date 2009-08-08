@@ -620,9 +620,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // How fast is a hasted shot? 40% faster.
                 // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
                 float fCharacterShotCount = 0f;
-                if (character.MainHand != null)
+                if (character.MainHand != null && ct.MH.hastedSpeed > 0)
                     fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed);
-                if (character.OffHand != null)
+                if (character.OffHand != null && ct.OH.hastedSpeed > 0)
                     fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed);
                 fCharacterShotCount += ct.totalParryableAbilities;
                 // The number of shots taken * the chance to be parried.
@@ -695,7 +695,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Get the raw per-swing Reaction & Burst Time
             float fAvoidanceTotal = stats.Dodge + stats.Miss;
             // If the character has no weapon, his Parry chance == 0
-            if (character.MainHand != null)
+            if (character.MainHand != null || character.OffHand != null)
                 fAvoidanceTotal += stats.Parry;
 
             // The next 2 returns are in swing count.
@@ -715,6 +715,18 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float fReactionDamage = fReactionSwingCount * fPerShotPhysical;
 
             calcs.Mitigation = fReactionSwingCount * fBossAverageAttackSpeed * fIncPhysicalDamage;
+
+            #endregion
+
+            #region Key Data Validation
+
+            if (float.IsNaN(calcs.Threat) ||
+                float.IsNaN(calcs.Survival) ||
+                float.IsNaN(calcs.Mitigation) ||
+                float.IsNaN(calcs.OverallPoints) )
+            {
+                throw new Exception("One of the Subpoints are Invalid.");
+            }
 
             #endregion
 
@@ -740,7 +752,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (null == character.CalculationOptions)
             {
                 // Possibly put some error text here.
-                return null;
+                return new Stats();
             }
             CalculationOptionsTankDK calcOpts = character.CalculationOptions as CalculationOptionsTankDK;
 
