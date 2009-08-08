@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#if SILVERLIGHT
+#if RAWR3
 using System.Linq;
 #endif
 

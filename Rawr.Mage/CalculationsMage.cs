@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
-#if SILVERLIGHT
+#if RAWR3
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -218,7 +218,7 @@ namespace Rawr.Mage
         }
 
         private CalculationOptionsPanelMage _calculationOptionsPanel = null;
-#if SILVERLIGHT
+#if RAWR3
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
         public override CalculationOptionsPanelBase CalculationOptionsPanel
@@ -1021,7 +1021,7 @@ namespace Rawr.Mage
             return string.Format("{0:0}:{1:00}", span.Minutes, span.Seconds, span.Milliseconds);
         }
 
-#if !SILVERLIGHT
+#if !RAWR3
         public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
             Rectangle rectSubPoint;
@@ -1081,7 +1081,7 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        #region Legend
+        #region Legend
                         legendY = 2;
 
                         Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.PotionOfWildMagic, Cooldown.PotionOfSpeed, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect, Cooldown.PowerInfusion };
@@ -1138,7 +1138,7 @@ namespace Rawr.Mage
                         g.DrawString("Dps", fontLegend, Brushes.Black, new Point(maxWidth + 90, 18));
                         #endregion
 
-                        #region Graph Ticks
+        #region Graph Ticks
                         graphStart = 20f;
                         graphWidth = width - 40f;
                         graphTop = legendY;
@@ -1344,7 +1344,7 @@ namespace Rawr.Mage
                     break;
                 case "Scaling vs Spell Power":
 
-                    #region Legend
+        #region Legend
                     legendY = 2;
 
                     brushSubPoints = new Brush[statColors.Length];
@@ -1367,7 +1367,7 @@ namespace Rawr.Mage
                     }
                     #endregion
 
-                    #region Graph Ticks
+        #region Graph Ticks
                     graphStart = 20f;
                     graphWidth = width - 40f;
                     graphTop = legendY;
@@ -1459,7 +1459,7 @@ namespace Rawr.Mage
                     break;
                 case "Scaling vs Crit Rating":
 
-                    #region Legend
+        #region Legend
                     legendY = 2;
 
                     brushSubPoints = new Brush[statColors.Length];
@@ -1482,7 +1482,7 @@ namespace Rawr.Mage
                     }
                     #endregion
 
-                    #region Graph Ticks
+        #region Graph Ticks
                     graphStart = 20f;
                     graphWidth = width - 40f;
                     graphTop = legendY;
@@ -1574,7 +1574,7 @@ namespace Rawr.Mage
                     break;
                 case "Scaling vs Haste Rating":
 
-                    #region Legend
+        #region Legend
                     legendY = 2;
 
                     brushSubPoints = new Brush[statColors.Length];
@@ -1597,7 +1597,7 @@ namespace Rawr.Mage
                     }
                     #endregion
 
-                    #region Graph Ticks
+        #region Graph Ticks
                     graphStart = 20f;
                     graphWidth = width - 40f;
                     graphTop = legendY;
@@ -1690,7 +1690,7 @@ namespace Rawr.Mage
                     break;
                 case "Scaling vs Intellect":
 
-                    #region Legend
+        #region Legend
                     legendY = 2;
 
                     brushSubPoints = new Brush[statColors.Length];
@@ -1713,7 +1713,7 @@ namespace Rawr.Mage
                     }
                     #endregion
 
-                    #region Graph Ticks
+        #region Graph Ticks
                     graphStart = 20f;
                     graphWidth = width - 40f;
                     graphTop = legendY;
@@ -1805,7 +1805,7 @@ namespace Rawr.Mage
                     break;
 				case "Scaling vs Spirit":
 
-					#region Legend
+        #region Legend
 					legendY = 2;
 
 					brushSubPoints = new Brush[statColors.Length];
@@ -1826,9 +1826,9 @@ namespace Rawr.Mage
 
 						legendY += 16;
 					}
-					#endregion
+                    #endregion
 
-					#region Graph Ticks
+        #region Graph Ticks
 					graphStart = 20f;
 					graphWidth = width - 40f;
 					graphTop = legendY;
@@ -1883,7 +1883,7 @@ namespace Rawr.Mage
 					g.DrawString((maxScale * 0.625f).ToString("0"), fontLegend, black75brush, ticks[5], graphTop + 36, formatTick);
 					g.DrawString((maxScale * 0.875f).ToString("0"), fontLegend, black75brush, ticks[6], graphTop + 36, formatTick);
 
-					#endregion
+                    #endregion
 
 
 					baseStats = GetCharacterStats(character);

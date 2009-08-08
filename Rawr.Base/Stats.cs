@@ -5,7 +5,7 @@ using System.Reflection;
 using System.ComponentModel;
 using System.Reflection.Emit;
 using System.Xml.Serialization;
-#if SILVERLIGHT
+#if RAWR3
 using System.Linq;
 #endif
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.ComponentModel;
-#if SILVERLIGHT
+#if RAWR3
 using System.Linq;
 #endif
 
@@ -567,10 +567,10 @@ namespace Rawr
 				default:
                     return gem == null || gem.Slot != ItemSlot.Meta;
 			}
-		}
+        }
 
-#if SILVERLIGHT
-		public static Dictionary<ItemSlot, CharacterSlot> DefaultSlotMap { get; private set; }
+#if RAWR3
+        public static Dictionary<ItemSlot, CharacterSlot> DefaultSlotMap { get; private set; }
 		static Item()
 		{
             Dictionary<ItemSlot, CharacterSlot> list = new Dictionary<ItemSlot, CharacterSlot>();
@@ -606,7 +606,7 @@ namespace Rawr
 			list[ItemSlot.Ranged] = CharacterSlot.Ranged;
 			list[ItemSlot.Projectile] = CharacterSlot.Projectile;
 			list[ItemSlot.ProjectileBag] = CharacterSlot.ProjectileBag;
-#if SILVERLIGHT
+#if RAWR3
             list.OrderBy(kvp => (int)kvp.Key);
 #else
             list.TrimExcess();
@@ -867,7 +867,7 @@ namespace Rawr
 			if (cachedItem != null && !forceRefresh) return cachedItem;
 			else
 			{
-#if SILVERLIGHT
+#if RAWR3
                 Armory.GetItem(id, ItemLoaded);
                 if (cachedItem != null) return cachedItem;
                 else
@@ -905,7 +905,7 @@ namespace Rawr
 			}
 		}
 
-#if SILVERLIGHT
+#if RAWR3
         private static void ItemLoaded(Item item)
         {
             ItemCache.AddItem(item, true);

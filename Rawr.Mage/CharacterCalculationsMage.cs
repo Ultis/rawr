@@ -650,7 +650,7 @@ namespace Rawr.Mage
 
             sequence.RemoveIndex(ColumnTimeExtension);
             sequence.Compact(true);
-#if !SILVERLIGHT
+#if !RAWR3
             if (displaySolver == null || SolverLogForm.Instance.IsSolverEnabled(displaySolver))
 #endif
             {
@@ -769,7 +769,7 @@ namespace Rawr.Mage
         {
             if (RequiresAsynchronousDisplayCalculation)
             {
-#if SILVERLIGHT
+#if RAWR3
                 Dictionary<string, string> ret; // = GetCharacterDisplayCalculationValuesInternal(false);
                 displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization, true, true);
                 CharacterCalculationsMage smp = displaySolver.GetCharacterCalculations(null, Calculations);
@@ -816,7 +816,7 @@ namespace Rawr.Mage
             CharacterCalculationsMage smp = displaySolver.GetCharacterCalculations(null, Calculations);
             smp.displaySolver = displaySolver;
             Dictionary<string, string> ret = smp.GetCharacterDisplayCalculationValuesInternal(true);
-#if !SILVERLIGHT
+#if !RAWR3
             SolverLogForm.Instance.DisableSolver(displaySolver);
 #endif
             ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.DpsRating, Math.Abs(DpsRating - smp.DpsRating) / DpsRating * 100);

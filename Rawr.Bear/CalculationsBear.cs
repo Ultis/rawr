@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if SILVERLIGHT
+#if RAWR3
 using System.Windows.Media;
 #endif
 
@@ -113,10 +113,10 @@ namespace Rawr.Bear
 						RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = austere },
 				};
 			}
-		}
+        }
 
-#if SILVERLIGHT
-		private ICalculationOptionsPanel _calculationOptionsPanel = null;
+#if RAWR3
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		/// <summary>
 		/// Panel to be placed on the Options tab of the main form
 		/// </summary>
@@ -287,10 +287,10 @@ the Threat Scale defined on the Options tab.",
 					};
 				return _customChartNames;
 			}
-		}
+        }
 
-#if SILVERLIGHT
-		private Dictionary<string, Color> _subPointNameColors = null;
+#if RAWR3
+        private Dictionary<string, Color> _subPointNameColors = null;
 		/// <summary>
 		/// Names and colors for the SubPoints that Rawr.Bear uses
 		/// </summary>

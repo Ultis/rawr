@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-#if SILVERLIGHT
-    using System.Linq;
+#if RAWR3
+using System.Linq;
 #endif
 
 namespace Rawr.Rogue

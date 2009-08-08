@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;RAWR3</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -32,7 +32,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;RAWR3</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -54,6 +54,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Retribution\CalculationOptionsRetribution.cs">
+      <Link>CalculationOptionsRetribution.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Retribution\CalculationsRetribution.cs">
       <Link>CalculationsRetribution.cs</Link>
     </Compile>
@@ -90,7 +93,6 @@
     <Compile Include="CalculationOptionsPanelRetribution.xaml.cs">
       <DependentUpon>CalculationOptionsPanelRetribution.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalculationOptionsRetribution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

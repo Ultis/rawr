@@ -83,7 +83,7 @@ namespace Rawr.ProtWarr
 
         #region Variables and Properties
 
-#if SILVERLIGHT
+#if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -222,9 +222,9 @@ threat and limited threat scaled by the threat scale.",
 					};
 				return _customChartNames;
 			}
-		}
+        }
 
-#if SILVERLIGHT
+#if RAWR3
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {

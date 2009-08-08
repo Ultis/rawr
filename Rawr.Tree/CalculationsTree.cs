@@ -191,13 +191,13 @@ namespace Rawr.Tree
             list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = brilliant, BlueId = sparkling, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
 
-#if SILVERLIGHT
+#if RAWR3
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
 #else
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
 #endif
 
-#if SILVERLIGHT
+#if RAWR3
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {
             get
@@ -381,7 +381,7 @@ applied and result is scaled down by 100)",
         }
 
 
-#if SILVERLIGHT
+#if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else

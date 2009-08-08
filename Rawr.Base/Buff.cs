@@ -32,7 +32,7 @@ namespace Rawr
             set { _conflictingBuffs = value; }
         }
 
-#if SILVERLIGHT
+#if RAWR3
         public static void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));

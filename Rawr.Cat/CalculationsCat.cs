@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if SILVERLIGHT
+#if RAWR3
 using System.Windows.Media;
 #endif
 
@@ -76,8 +76,8 @@ namespace Rawr.Cat
 			}
         }
 
-#if SILVERLIGHT
-		private ICalculationOptionsPanel _calculationOptionsPanel = null;
+#if RAWR3
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
 		{
 			get
@@ -177,10 +177,10 @@ namespace Rawr.Cat
 					};
 				return _customChartNames;
 			}
-		}
+        }
 
-#if SILVERLIGHT
-		private Dictionary<string, Color> _subPointNameColors = null;
+#if RAWR3
+        private Dictionary<string, Color> _subPointNameColors = null;
 		public override Dictionary<string, Color> SubPointNameColors
 		{
 			get

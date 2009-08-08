@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rawr.Rogue.FinishingMoves;
-#if SILVERLIGHT
-    using System.Linq;
+#if RAWR3
+using System.Linq;
 #endif
 
 namespace Rawr.Rogue

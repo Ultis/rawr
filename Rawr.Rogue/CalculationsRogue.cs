@@ -8,7 +8,7 @@ using Rawr.Rogue.FinishingMoves;
 using Rawr.Rogue.Poisons;
 using Rawr.Rogue.SpecialAbilities;
 
-#if SILVERLIGHT
+#if RAWR3
     using System.Windows.Media;
 #else
     using System.Drawing;
@@ -22,7 +22,7 @@ namespace Rawr.Rogue
         public CalculationsRogue(){}
 
         private CalculationOptionsPanelRogue _calculationOptionsPanel = null;
-#if SILVERLIGHT
+#if RAWR3
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
         public override CalculationOptionsPanelBase CalculationOptionsPanel

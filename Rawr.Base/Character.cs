@@ -1723,14 +1723,14 @@ namespace Rawr //O O . .
             clone.WaistBlacksmithingSocketEnabled = this.WaistBlacksmithingSocketEnabled;
             clone.WristBlacksmithingSocketEnabled = this.WristBlacksmithingSocketEnabled;
             clone.HandsBlacksmithingSocketEnabled = this.HandsBlacksmithingSocketEnabled;
-#if !SILVERLIGHT
+#if !RAWR3
             clone.OptimizationRequirements = this.OptimizationRequirements;
 #endif
             clone.CalculationToOptimize = this.CalculationToOptimize;
 			return clone;
 		}
     
-#if SILVERLIGHT
+#if RAWR3
         public void Save(Stream writer)
         {
             SerializeCalculationOptions();
@@ -1755,7 +1755,7 @@ namespace Rawr //O O . .
 		}
 #endif
 
-#if SILVERLIGHT
+#if RAWR3
         public void SaveBuffs(Stream writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
@@ -1775,7 +1775,7 @@ namespace Rawr //O O . .
         }
 #endif
 
-#if !SILVERLIGHT
+#if !RAWR3
         public static Character Load(string path)
         {
             Character character;
@@ -1826,7 +1826,7 @@ namespace Rawr //O O . .
 				}
 				catch (Exception)
 				{
-#if !SILVERLIGHT
+#if !RAWR3
 					Log.Show("There was an error attempting to open this character. Most likely, it was saved with a previous version of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
 #endif
 					character = new Character();
@@ -1841,7 +1841,7 @@ namespace Rawr //O O . .
         public void LoadBuffsFromXml(string path)
         {
             string xml = null;
-#if !SILVERLIGHT
+#if !RAWR3
             if (File.Exists(path))
             {
                 try
@@ -1868,7 +1868,7 @@ namespace Rawr //O O . .
                 }
                 catch (Exception)
                 {
-#if !SILVERLIGHT
+#if !RAWR3
                     Log.Show("There was an error attempting to open this buffs file. Most likely, it was saved with a previous beta of Rawr, and isn't upgradable to the new format. Sorry. No buff changes have been applied.");
 #endif
                 }

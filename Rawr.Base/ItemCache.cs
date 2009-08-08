@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml.Serialization;
-#if SILVERLIGHT
+#if RAWR3
 using System.Linq;
 #endif
 
@@ -11,7 +11,7 @@ namespace Rawr
 {
 	public static class ItemCache
 	{
-#if !SILVERLIGHT
+#if !RAWR3
 		public static readonly string SavedFilePath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "ItemCache.xml");
 #endif
 
@@ -21,7 +21,7 @@ namespace Rawr
 			get { return _instance; }
 			set { _instance = value; }
 		}
-#if SILVERLIGHT
+#if RAWR3
 		public static Dictionary<int, Item> Items { get { return _instance.Items; } }
 #else
         public static SortedDictionary<int, Item> Items { get { return _instance.Items; } }
@@ -45,7 +45,7 @@ namespace Rawr
         public static Item[] GetRelevantItems(CalculationsBase model) { return _instance.GetRelevantItems(model); }
 
 		public static void OnItemsChanged() { _instance.OnItemsChanged(); }
-#if SILVERLIGHT
+#if RAWR3
         public static void Save(TextWriter writer) { _instance.Save(writer); }
         public static void Load(TextReader reader) { _instance.Load(reader); }
 #else
@@ -59,7 +59,7 @@ namespace Rawr
 		public ItemCacheInstance() { }
 		public ItemCacheInstance(ItemCacheInstance instanceToClone)
 		{
-#if SILVERLIGHT
+#if RAWR3
 			_items = new Dictionary<int, Item>();
 #else
             _items = new SortedDictionary<int, Item>();
@@ -70,7 +70,7 @@ namespace Rawr
 			}
 		}
 
-#if SILVERLIGHT
+#if RAWR3
         private Dictionary<int, Item> _items;
         public Dictionary<int, Item> Items
         {
@@ -134,7 +134,7 @@ namespace Rawr
             }
             item.LastChange = DateTime.Now;
             Items[item.Id] = item;
-#if SILVERLIGHT
+#if RAWR3
             Items.OrderBy(kvp => kvp.Key);
 #endif
 
@@ -216,7 +216,7 @@ namespace Rawr
 			_relevantItems = null;
 			if (ItemsChanged != null) ItemsChanged(null, null);
 		}
-#if SILVERLIGHT
+#if RAWR3
         public void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));

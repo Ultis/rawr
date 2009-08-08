@@ -169,7 +169,7 @@ namespace Rawr.Enhance
             _configText = sb.ToString();
         }
 
-#if SILVERLIGHT
+#if RAWR3
         public void copyToClipboard()
         {
 			try

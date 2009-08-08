@@ -86,7 +86,7 @@ namespace Rawr
         private static EnchantList _allEnchants = null;
         private static readonly string _SaveFilePath;
 
-#if !SILVERLIGHT
+#if !RAWR3
         static Enchant()
         {
             _SaveFilePath = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "EnchantCache.xml");
@@ -261,7 +261,7 @@ namespace Rawr
             ));
         }
 
-#if SILVERLIGHT
+#if RAWR3
         public static void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(EnchantList));

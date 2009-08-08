@@ -175,7 +175,7 @@ namespace Rawr.Retribution
         /// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
         /// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
         /// </summary>
-#if SILVERLIGHT
+#if RAWR3
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {
@@ -280,7 +280,7 @@ namespace Rawr.Retribution
             }
         }
 
-#if SILVERLIGHT
+#if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else

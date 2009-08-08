@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
-#if SILVERLIGHT
+#if RAWR3
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -83,7 +83,7 @@ namespace Rawr.DPSDK
             {
                 if (_subPointNameColors == null)
                 {
-#if SILVERLIGHT
+#if RAWR3
                     _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
                     _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255,0,0,255));
 #else
@@ -197,7 +197,7 @@ namespace Rawr.DPSDK
             }
         }
 
-#if SILVERLIGHT
+#if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -289,7 +289,7 @@ namespace Rawr.DPSDK
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
             GetTalents(character);
 
-#if SILVERLIGHT
+#if RAWR3
             if (character != null && character.MainHand != null && character.MainHand.Item == null)
             {
                 character.MainHand.Item = new Item("Test Weapon", ItemQuality.Artifact, ItemType.TwoHandAxe, 12345, "",

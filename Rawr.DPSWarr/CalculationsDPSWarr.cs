@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
-#if SILVERLIGHT
+#if RAWR3
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -48,8 +48,8 @@ namespace Rawr.DPSWarr {
 
         #region Variables and Properties
 
-        #if SILVERLIGHT
-            public ICalculationOptionsPanel _calculationOptionsPanel = null;
+#if RAWR3
+        public ICalculationOptionsPanel _calculationOptionsPanel = null;
             public override ICalculationOptionsPanel CalculationOptionsPanel
             {
                 get
@@ -194,8 +194,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
             get
             {
                 
-                if (_subPointNameColors == null){
-#if SILVERLIGHT
+                if (_subPointNameColors == null)
+                {
+#if RAWR3
                     _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
                     _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255,255,0,0));
 #else

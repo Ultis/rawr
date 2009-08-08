@@ -2,7 +2,7 @@
 using System.Net;
 using System.Reflection;
 using System.Collections.Generic;
-#if SILVERLIGHT
+#if RAWR3
 using System.Linq;
 #endif
 

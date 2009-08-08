@@ -40,7 +40,7 @@ namespace Rawr.DPSDK
             totalSpellAbilities = 0f;
 
 
-#if SILVERLIGHT
+#if RAWR3
             if (calcOpts.rotation == null)
             {
                 calcOpts.rotation = new Rotation();

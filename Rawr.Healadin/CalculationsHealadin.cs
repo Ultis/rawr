@@ -110,7 +110,7 @@ namespace Rawr.Healadin
             }
         }
 
-#if SILVERLIGHT
+#if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -190,7 +190,7 @@ namespace Rawr.Healadin
             }
         }
 
-#if SILVERLIGHT
+#if RAWR3
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {
