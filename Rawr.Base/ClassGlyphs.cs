@@ -204,7 +204,7 @@ namespace Rawr
 
     public partial class WarriorTalents
     {
-        private bool[] _glyphData = new bool[33];
+        private bool[] _glyphData = new bool[34];
         public override bool[] GlyphData { get { return _glyphData; } }
         
         // ===== MAJOR GLYPHS =====
@@ -250,8 +250,8 @@ namespace Rawr
         /// <summary>Adds a 100% chance to enable your Overpower when your attacks are parried.</summary>
         [GlyphData(13, "Glyph of Overpower", true, @"Adds a 100% chance to enable your Overpower when your attacks are parried.")]
         public bool GlyphOfOverpower { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
-        /// <summary>Reduces the cooldown of your Charge ability by 20%.</summary>
-        [GlyphData(14, "Glyph of Rapid Charge", true, @"Reduces the cooldown of your Charge ability by 20%.")]
+        /// <summary>Reduces the cooldown of your Charge ability by 7%.</summary>
+        [GlyphData(14, "Glyph of Rapid Charge", true, @"Reduces the cooldown of your Charge ability by 7%.")]
         public bool GlyphOfRapidCharge { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
         /// <summary>Increases the duration of your Rend ability by 6 sec.</summary>
         [GlyphData(15, "Glyph of Rending", true, @"Increases the duration of your Rend ability by 6 sec.")]
@@ -290,8 +290,8 @@ namespace Rawr
         [GlyphData(26, "Glyph of Whirlwind", true, @"Reduces the cooldown of your Whirlwind ability by 2 sec.")]
         public bool GlyphOfWhirlwind { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
         // ===== MINOR GLYPHS =====
-        /// <summary>Increases the duration of your Battle Shout by 1 min.</summary>
-        [GlyphData(27, "Glyph of Battle", false, @"Increases the duration of your Battle Shout by 1 min.")]
+        /// <summary>Increases the duration of your Battle Shout by 2 min.</summary>
+        [GlyphData(27, "Glyph of Battle", false, @"Increases the duration of your Battle Shout by 2 min.")]
         public bool GlyphOfBattle { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
         /// <summary>Reduces the health cost of your Bloodrage ability by 100%.</summary>
         [GlyphData(28, "Glyph of Bloodrage", false, @"Reduces the health cost of your Bloodrage ability by 100%.")]
@@ -308,6 +308,8 @@ namespace Rawr
         /// <summary>Increases the radius of your Thunder Clap ability by 2 yards.</summary>
         [GlyphData(32, "Glyph of Thunder Clap", false, @"Increases the radius of your Thunder Clap ability by 2 yards.")]
         public bool GlyphOfThunderClap { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
+        [GlyphData(33, "Glyph of Command", false, @"Increases the duration of your Commanding Shout ability by 2 min.")]
+        public bool GlyphOfCommand { get { return _glyphData[33]; } set { _glyphData[33] = value; } }
     }
 
     public partial class ShamanTalents

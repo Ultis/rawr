@@ -309,11 +309,11 @@ namespace Rawr
         public int SecondWind { get { return _data[19]; } set { _data[19] = value; } }
 
         /// <summary>
-        /// A vicious strike that deals weapon damage plus 85 and wounds the target, reducing the
+        /// A vicious strike that deals weapon damage plus 380 and wounds the target, reducing the
         /// effectiveness of any healing by 50% for 10 sec.
         /// </summary>
         [TalentData(20, "Mortal Strike", 1, 0, 2, 7, 13, new string[] {
-@"A vicious strike that deals weapon damage plus 85 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.",}, "ability_warrior_savageblow")]
+@"A vicious strike that deals weapon damage plus 380 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.",}, "ability_warrior_savageblow")]
         public int MortalStrike { get { return _data[20]; } set { _data[20] = value; } }
 
         /// <summary>
@@ -333,11 +333,12 @@ namespace Rawr
         public int ImprovedSlam { get { return _data[22]; } set { _data[22] = value; } }
 
         /// <summary>
-        /// Your Charge ability is now usable while in combat. Following a Charge, your next Slam or
-        /// Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.
+        /// Your Charge ability is now usable while in combat but the Cooldown on Charge is
+        /// increased by 5 sec. Following a Charge, your next Slam or Mortal Strike has an
+        /// additional 25% chance to critically hit if used within 10 sec.
         /// </summary>
         [TalentData(23, "Juggernaut", 1, 0, 1, 8, -1, new string[] {
-@"Your Charge ability is now usable while in combat.  Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.",}, "ability_warrior_bullrush")]
+@"Your Charge ability is now usable while in combat but the Cooldown on Charge is increased by 5 sec. Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.",}, "ability_warrior_bullrush")]
         public int Juggernaut { get { return _data[23]; } set { _data[23] = value; } }
 
         /// <summary>
@@ -345,8 +346,8 @@ namespace Rawr
         /// the cooldown by [(1/3)*Pts] sec.
         /// </summary>
         [TalentData(24, "Improved Mortal Strike", 3, 0, 2, 8, 20, new string[] {
-@"Increases the damage caused by your Mortal Strike ability by 3% and reduces the cooldown by 0.3 sec.",
-@"Increases the damage caused by your Mortal Strike ability by 6% and reduces the cooldown by 0.7 sec.",
+@"Increases the damage caused by your Mortal Strike ability by 3% and reduces the cooldown by 0.3333 sec.",
+@"Increases the damage caused by your Mortal Strike ability by 6% and reduces the cooldown by 0.6666 sec.",
 @"Increases the damage caused by your Mortal Strike ability by 10% and reduces the cooldown by 1 sec.",}, "ability_warrior_savageblow")]
         public int ImprovedMortalStrike { get { return _data[24]; } set { _data[24] = value; } }
 
@@ -408,12 +409,12 @@ namespace Rawr
         public int Bladestorm { get { return _data[30]; } set { _data[30] = value; } }
 
         /// <summary>
-        /// Increases your attack power by [Pts] for every 180 armor value you have.
+        /// Increases your attack power by [Pts] for every 108 armor value you have.
         /// </summary>
         [TalentData(31, "Armored to the Teeth", 3, 1, 1, 1, -1, new string[] {
-@"Increases your attack power by 1 for every 180 armor value you have.",
-@"Increases your attack power by 2 for every 180 armor value you have.",
-@"Increases your attack power by 3 for every 180 armor value you have.",}, "inv_shoulder_22")]
+@"Increases your attack power by 1 for every 108 armor value you have.",
+@"Increases your attack power by 2 for every 108 armor value you have.",
+@"Increases your attack power by 3 for every 108 armor value you have.",}, "inv_shoulder_22")]
         public int ArmoredToTheTeeth { get { return _data[31]; } set { _data[31] = value; } }
 
         /// <summary>
@@ -668,14 +669,14 @@ namespace Rawr
 
         /// <summary>
         /// Increases your chance to block attacks with a shield by [1*Pts]% and has a [20*Pts]% chance to
-        /// generate 2 rage when a block occurs.
+        /// generate 2 rage when a block, dodge or parry occurs.
         /// </summary>
         [TalentData(59, "Shield Specialization", 5, 2, 2, 1, -1, new string[] {
-@"Increases your chance to block attacks with a shield by 1% and has a 20% chance to generate 2 rage when a block occurs.",
-@"Increases your chance to block attacks with a shield by 2% and has a 40% chance to generate 2 rage when a block occurs.",
-@"Increases your chance to block attacks with a shield by 3% and has a 60% chance to generate 2 rage when a block occurs.",
-@"Increases your chance to block attacks with a shield by 4% and has a 80% chance to generate 2 rage when a block occurs.",
-@"Increases your chance to block attacks with a shield by 5% and has a 100% chance to generate 2 rage when a block occurs.",}, "inv_shield_06")]
+@"Increases your chance to block attacks with a shield by 1% and has a 20% chance to generate 5 rage when a block, dodge or parry occurs.",
+@"Increases your chance to block attacks with a shield by 2% and has a 40% chance to generate 5 rage when a block, dodge or parry occurs.",
+@"Increases your chance to block attacks with a shield by 3% and has a 60% chance to generate 5 rage when a block, dodge or parry occurs.",
+@"Increases your chance to block attacks with a shield by 4% and has a 80% chance to generate 5 rage when a block, dodge or parry occurs.",
+@"Increases your chance to block attacks with a shield by 5% and has a 100% chance to generate 5 rage when a block, dodge or parry occurs.",}, "inv_shield_06")]
         public int ShieldSpecialization { get { return _data[59]; } set { _data[59] = value; } }
 
         /// <summary>
@@ -867,7 +868,7 @@ namespace Rawr
         /// Armor effect can stack up to 5 times.
         /// </summary>
         [TalentData(80, "Devastate", 1, 2, 2, 9, -1, new string[] {
-@"Sunder the target's armor causing the Sunder Armor effect. In addition, causes 50% of weapon damage plus 24 for each application of Sunder Armor on the target. The Sunder Armor effect can stack up to 5 times.",}, "inv_sword_11")]
+@"Sunder the target's armor causing the Sunder Armor effect. In addition, causes 50% of weapon damage plus 48 for each application of Sunder Armor on the target. The Sunder Armor effect can stack up to 5 times.",}, "inv_sword_11")]
         public int Devastate { get { return _data[80]; } set { _data[80] = value; } }
 
         /// <summary>
