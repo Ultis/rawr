@@ -439,8 +439,8 @@ namespace Rawr.Hunter
         // to help match the spread sheet. if a fight last 10 seconds
         // and an ability has a 4 second cooldown, the spreadsheet says
         // you can use it 2.5 times, while we say you can use it twice.
-        public bool calculateUptimesLikeSpreadsheet = true;
-        public bool emulateSpreadsheetBugs = true;
+        public const bool calculateUptimesLikeSpreadsheet = true;
+        public const bool emulateSpreadsheetBugs = true;
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
@@ -451,8 +451,13 @@ namespace Rawr.Hunter
             }
 
             CalculationOptionsHunter options = character.CalculationOptions as CalculationOptionsHunter;
+
+            Stats statsBaseGear = GetItemStats(character, additionalItem);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
             calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
-            calculatedStats.PetStats = GetPetStats(options, calculatedStats, character);
+            calculatedStats.PetStats = GetPetStats(options, calculatedStats, character, statsBuffs, statsBaseGear);
+
             if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow && character.Ranged.Item.Type != ItemType.Gun
                                             && character.Ranged.Item.Type != ItemType.Crossbow))
             {
@@ -501,7 +506,7 @@ namespace Rawr.Hunter
             calculatedStats.arcaneShot.cooldown = 6;
 
             calculatedStats.multiShot.cooldown = character.HunterTalents.GlyphOfMultiShot ? 9 : 10;
-            // TODO: remove one more second from multi-shot for galdiator's pursuit set bonus
+            calculatedStats.multiShot.cooldown -= calculatedStats.BasicStats.MultiShotCooldownReduction; // PVP S1 Set Bonus
 
             calculatedStats.blackArrow.cooldown = 30 - (character.HunterTalents.Resourcefulness * 2);
             calculatedStats.blackArrow.duration = 15;
@@ -1692,15 +1697,18 @@ namespace Rawr.Hunter
 
             return calculatedStats;
         }
-        Stats statsBaseGear = new Stats();
-        Stats statsBuffs = new Stats();
+
+        //Stats statsBaseGear = new Stats();
+        //Stats statsBuffs = new Stats();
+
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
             Stats statsRace = BaseStats.GetBaseStats(80, CharacterClass.Hunter, character.Race);
-			statsBaseGear = GetItemStats(character, additionalItem);
-			statsBuffs = GetBuffsStats(character.ActiveBuffs);
+			Stats statsBaseGear = GetItemStats(character, additionalItem);
+			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 			Stats statsTalents = GetBaseTalentStats(character.HunterTalents);
 			Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
+
 			statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
 			CalculationOptionsHunter options = character.CalculationOptions as CalculationOptionsHunter;
@@ -1747,7 +1755,6 @@ namespace Rawr.Hunter
             statsTotal.ArmorPenetrationRating = statsRace.ArmorPenetrationRating + statsGearEnchantsBuffs.ArmorPenetrationRating;
 			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
             statsTotal.BonusCritMultiplier = 0.0f; // ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
-            statsTotal.PhysicalCrit = statsBuffs.PhysicalCrit;
 
             statsTotal.CritRating = (float)Math.Floor(
                                                (double)statsRace.CritRating +                       
@@ -1812,25 +1819,7 @@ namespace Rawr.Hunter
 
 			statsTotal.AttackPower = statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower;
 			statsTotal.BonusRangedAttackPowerMultiplier = statsGearEnchantsBuffs.BonusRangedAttackPowerMultiplier;
-			//TODO:Target Resilience
-			//TODO:Darkmoon Card: Wrath
-
-
-			#region Base RAP
-            float RAP = 140f + (statsTotal.Agility - 10.0f);
-		
-
-			//TODO: Better model on proc events (current model is a static AP gain on the item, not based on shot speed, crit chance, etc)
-			RAP += statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower;
-
-			RAP += statsTalents.AttackPower + statsTalents.RangedAttackPower;
-
-			//TODO: Add new racials
-
-			RAP += (RAP * statsTalents.BonusRangedAttackPowerMultiplier);
-
-			statsTotal.RangedAttackPower = RAP;
-			#endregion 
+            statsTotal.MultiShotCooldownReduction = statsGearEnchantsBuffs.MultiShotCooldownReduction;
 
 			return statsTotal;
 		}
@@ -1879,32 +1868,6 @@ namespace Rawr.Hunter
 		}
 		
 		
-		
-		public double CalcTimeToOOM (double shotsPerSecond, double shotsAvgManaUse, double mana, double regen)
-		{
-			double manaUsePerSecond = (1/shotsAvgManaUse) * shotsPerSecond;
-			if (manaUsePerSecond <= regen)
-				return 0;
-			else
-			{
-				manaUsePerSecond -= regen;
-				double timeTilOOM = mana / manaUsePerSecond;
-				return timeTilOOM;
-			}
-		}
-		
-		public double AspectOfViperRegen (double shotsPerSecond, double weaponspeed, double mana, bool glyph)
-		{
-			double manaPerSecond = 0;
-			manaPerSecond += mana * weaponspeed * shotsPerSecond;
-			if (glyph == true)
-			{
-				manaPerSecond *= 1.1;
-			}
-			manaPerSecond += 0.04 * mana / 3;
-			return manaPerSecond;
-		}
-
         private double CalcUptime(double duration, double cooldown, double length)
         {
             if (calculateUptimesLikeSpreadsheet)
@@ -1992,7 +1955,7 @@ namespace Rawr.Hunter
             return null;
         }
 
-		private Stats GetPetStats(CalculationOptionsHunter options, CharacterCalculationsHunter hunterStats, Character character)
+		private Stats GetPetStats(CalculationOptionsHunter options, CharacterCalculationsHunter hunterStats, Character character, Stats statsBuffs, Stats statsBaseGear)
 		{
             //Moved to one place so changes are easier, all now in PetCalculations
             return new PetCalculations(character, hunterStats, options, statsBuffs, options.PetFamily, statsBaseGear).petStats;
