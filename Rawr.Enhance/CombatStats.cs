@@ -382,7 +382,11 @@ namespace Rawr.Enhance
             chanceYellowCritOH += edBonusCrit;
             meleeAttacksPerSec = hitsPerSMH + hitsPerSOH;
             meleeCritsPerSec = (hitsPerSMH * chanceWhiteCritMH) + (hitsPerSOH * chanceWhiteCritOH);
-            spellAttacksPerSec = 1 / secondsToFiveStack + 1 / shockSpeed;
+            spellAttacksPerSec = 1f / secondsToFiveStack + 1f / shockSpeed;
+            if (_calcOpts.MainhandImbue == "Flametongue")  // flametongue weapon imbue is spell damage so we have extra spell attacks per second with it imbued.
+                spellAttacksPerSec += hitsPerSMH;
+            if (_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1)
+                spellAttacksPerSec += hitsPerSOH;
             spellCritsPerSec = spellAttacksPerSec * ChanceSpellCrit;
             spellCastsPerSec = spellAttacksPerSec;
             spellMissesPerSec = spellAttacksPerSec * chanceSpellMiss;
