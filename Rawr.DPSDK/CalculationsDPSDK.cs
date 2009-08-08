@@ -663,6 +663,7 @@ namespace Rawr.DPSDK
                     // now does 20% damage of each death coil over 10 seconds, with glyph increasing
 					// damage by 40%. It rolls like deep wounds, but luckily, we don't care.
                     dpsUnholyBlight = dpsDeathCoil * (0.2f * (1f + (talents.GlyphofUnholyBlight ? 0.4f : 0f)));
+                    dpsUnholyBlight *= talents.UnholyBlight;
                 }
                 #endregion
 
