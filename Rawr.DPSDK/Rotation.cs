@@ -23,7 +23,6 @@ namespace Rawr.DPSDK
         public float FrostFever = 0f;
         public float BloodPlague = 0f;
         public float ScourgeStrike = 0f;
-        public float UnholyBlight = 0f;
         public float FrostStrike = 0f;
         public float HowlingBlast = 0f;
         public float Obliterate = 0f;
@@ -94,7 +93,7 @@ namespace Rawr.DPSDK
             else
             {
                 RP -= ((40 * DeathCoil) +
-                    ((GlyphofFS ? 32 : 40) * FrostStrike) + (40 * UnholyBlight));
+                    ((GlyphofFS ? 32 : 40) * FrostStrike));
             }
             return RP;
         }
@@ -113,14 +112,12 @@ namespace Rawr.DPSDK
 			{
 				FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
 				DeathCoil = 0f;
-				UnholyBlight = 0f;
 				RP = 0f;
 			}
 			else
 			{
 				DeathCoil = RP / 40f;
 				FrostStrike = 0f;
-				UnholyBlight = 0f;
 				RP = 0f;
 			}
             return RP;
@@ -130,7 +127,7 @@ namespace Rawr.DPSDK
         {
             if (presence.Equals(CalculationOptionsDPSDK.Presence.Unholy))
             {
-                GCDTime = DeathCoil + IcyTouch + PlagueStrike + ScourgeStrike + UnholyBlight +
+                GCDTime = DeathCoil + IcyTouch + PlagueStrike + ScourgeStrike +
                     FrostStrike + HowlingBlast + Obliterate + DeathStrike + BloodStrike +
                     HeartStrike + Horn;
             }
@@ -138,7 +135,7 @@ namespace Rawr.DPSDK
             {
                 GCDTime = 1.5f * (PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike +
                     BloodStrike + HeartStrike);
-                GCDTime += 1.5f * (DeathCoil + IcyTouch + UnholyBlight + HowlingBlast + Horn);
+                GCDTime += 1.5f * (DeathCoil + IcyTouch + HowlingBlast + Horn);
                 // this does not currently account for haste, and I don't think it is possible in the current design.
             }
             return GCDTime;
@@ -156,7 +153,7 @@ namespace Rawr.DPSDK
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
                     ScourgeStrike = 0f;
-                    UnholyBlight = 0f;
+                    
                     FrostStrike = 0f;
                     HowlingBlast = 0f;
                     Obliterate = 0f;
@@ -178,7 +175,7 @@ namespace Rawr.DPSDK
                     IcyTouch = 0f;
                     PlagueStrike = 0f;
                     ScourgeStrike = 0f;
-                    UnholyBlight = 0f;
+                    
                     FrostStrike = 3f;
                     HowlingBlast = 0f;
                     Obliterate = 5f;
@@ -199,7 +196,7 @@ namespace Rawr.DPSDK
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
                     ScourgeStrike = 4f;
-                    UnholyBlight = 0f;
+                    
                     FrostStrike = 0f;
                     HowlingBlast = 0f;
                     Obliterate = 0f;

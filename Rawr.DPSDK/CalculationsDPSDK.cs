@@ -662,8 +662,9 @@ namespace Rawr.DPSDK
                 {
                     // now does 20% damage of each death coil over 10 seconds, with glyph increasing
 					// damage by 40%. It rolls like deep wounds, but luckily, we don't care.
-                    dpsUnholyBlight = dpsDeathCoil * (0.2f * (1f + (talents.GlyphofUnholyBlight ? 0.4f : 0f)));
-                    dpsUnholyBlight *= talents.UnholyBlight;
+                    if (talents.UnholyBlight > 0f && calcOpts.rotation.DeathCoil > 0f)
+                        dpsUnholyBlight = dpsDeathCoil * (0.2f * (1f + (talents.GlyphofUnholyBlight ? 0.4f : 0f)));
+                    else dpsUnholyBlight = 0f;
                 }
                 #endregion
 
@@ -742,9 +743,7 @@ namespace Rawr.DPSDK
                 {
                     float bonusHB = talents.Rime * calcOpts.rotation.Obliterate * 0.05f;
                     if (talents.HowlingBlast > 0 && (calcOpts.rotation.HowlingBlast + bonusHB) > 0f)
-                    {
-						// TODO: let's make rime a special effect chance on obliterate HB proc, perhaps
-						
+                    {						
                         float addedCritFromKM = KMRatio;
                         float HBCD = combatTable.realDuration / (calcOpts.rotation.HowlingBlast + bonusHB);
                         float HBDmg = 540 + HowlingBlastAPMult * stats.AttackPower;

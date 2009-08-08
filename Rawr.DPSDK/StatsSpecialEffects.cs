@@ -41,6 +41,7 @@ namespace Rawr.DPSDK
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
+                    case Trigger.DamageDone:
                         trigger = (1f / rotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
                         chance = 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial);
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
