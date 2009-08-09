@@ -98,50 +98,68 @@ namespace Rawr.Hunter
 
 	public enum PetAttacks
 	{
-        Acid,
-        Attitude,
+        AcidSpit,
+        BadAttitude,
         Bite,
+        Bullheaded,
+        CallOfTheWild,
+        Charge,
         Claw,
-        Cornered,
+        //Cornered,
         Cower,
+        Dash,
         Dive,
-        Dust,
+        DemoralizingScreech,
+        DustCloud,
         FireBreath,
-        Frost,
+        FroststormBreath,
         FuriousHowl,
         Gore,
         Growl,
-        Howl,
-        Lava,
+        LastStand,
+        LavaBreath,
+        LickYourWounds,
         LightningBreath,
-        Monstrous,
+        MonstrousBite,
+        NetherShock,
         None,
         Pin,
-        Poison,
         PoisonSpit,
+        Prowl,
         Pummel,
         Rabid,
         Rake,
         Ravage,
-        Savage,
-        Screech,
-        Scorpid,
-        Serenity,
-        Shell,
-        Shock,
+        RoarOfRecovery,
+        RoarOfSacrifice,
+        SavageRend,
+        ScorpidPoison,
+        SerenityDust,
+        ShellShield,
         Smack,
         Snatch,
         SonicBlast,
-        Spirit,
-        Spore,
+        SpiritStrike,
+        SporeCloud,
         Stampede,
         Sting,
         Swipe,
-        Tendon,
+        Taunt,
+        TendonRip,
         Thunderstomp,
+        VenomWebSpray,
         Warp,
         Web,
-        Wolverine
+        WolverineBite
+    }
+
+    public enum PetSkillType
+    {
+        FocusDump, // 0
+        PhysicalSpecial, // 1
+        SpellSpecial, // 2
+        NonDamaging, // 3
+        Unique // >= 4
     }
 
     public enum ManaPotionType
@@ -158,6 +176,13 @@ namespace Rawr.Hunter
         ViperRegen
     }
 
+    public enum PetHappiness
+    {
+        Happy,
+        Content,
+        Unhappy
+    }
+
     public static class HunterRatings
     {
         public static double BASE_HIT_PERCENT = .95; // Check
@@ -172,7 +197,6 @@ namespace Rawr.Hunter
         public static double HASTE_RATING_PER_PERCENT = 32.78998947;
 
         public static double QUIVER_SPEED_INCREASE = 1.15;
-
 
         public static double STEADY_AP_SCALE = 0.1;
         public static double STEADY_BONUS_DMG = 252.0;
@@ -191,9 +215,7 @@ namespace Rawr.Hunter
         public static double AIMED_BONUS_DMG = 408.0;
 
         public static double HAWK_BONUS_AP = 300.0;
-        
-        
-        
+                      
         public static double BASE_MISS_PERCENT = 0.05;
         public static double CHAR_LEVEL = 80.0;
         

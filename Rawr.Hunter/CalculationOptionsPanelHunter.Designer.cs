@@ -153,17 +153,32 @@
             this.label4 = new System.Windows.Forms.Label();
             this.comboPetFamily = new System.Windows.Forms.ComboBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.chkUseBeastDuringBW = new System.Windows.Forms.CheckBox();
+            this.label84 = new System.Windows.Forms.Label();
+            this.cmbAspectUsage = new System.Windows.Forms.ComboBox();
+            this.label83 = new System.Windows.Forms.Label();
+            this.cmbAspect = new System.Windows.Forms.ComboBox();
+            this.label82 = new System.Windows.Forms.Label();
+            this.cmbManaPotion = new System.Windows.Forms.ComboBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.numericBossHP = new System.Windows.Forms.NumericUpDown();
+            this.label81 = new System.Windows.Forms.Label();
+            this.numericTime35 = new System.Windows.Forms.NumericUpDown();
+            this.label80 = new System.Windows.Forms.Label();
+            this.numericTime20 = new System.Windows.Forms.NumericUpDown();
+            this.label79 = new System.Windows.Forms.Label();
+            this.duration = new System.Windows.Forms.NumericUpDown();
+            this.label25 = new System.Windows.Forms.Label();
+            this.numericUpDownLatency = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cmbTargetLevel = new System.Windows.Forms.ComboBox();
+            this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
+            this.lblTargetArmorValue = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.comboBoxPet4 = new System.Windows.Forms.ComboBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.comboBoxPet3 = new System.Windows.Forms.ComboBox();
-            this.comboBoxPet2 = new System.Windows.Forms.ComboBox();
-            this.comboBoxPet1 = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblPriStatus10 = new System.Windows.Forms.Label();
             this.lblPriStatus9 = new System.Windows.Forms.Label();
@@ -196,47 +211,34 @@
             this.cmbPriority3 = new System.Windows.Forms.ComboBox();
             this.cmbPriority2 = new System.Windows.Forms.ComboBox();
             this.cmbPriority1 = new System.Windows.Forms.ComboBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.duration = new System.Windows.Forms.NumericUpDown();
-            this.label25 = new System.Windows.Forms.Label();
-            this.numericUpDownLatency = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbTargetLevel = new System.Windows.Forms.ComboBox();
-            this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
-            this.lblTargetArmorValue = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.numericTime20 = new System.Windows.Forms.NumericUpDown();
-            this.label79 = new System.Windows.Forms.Label();
-            this.numericTime35 = new System.Windows.Forms.NumericUpDown();
-            this.label80 = new System.Windows.Forms.Label();
-            this.numericBossHP = new System.Windows.Forms.NumericUpDown();
-            this.label81 = new System.Windows.Forms.Label();
-            this.cmbManaPotion = new System.Windows.Forms.ComboBox();
-            this.label82 = new System.Windows.Forms.Label();
-            this.label83 = new System.Windows.Forms.Label();
-            this.cmbAspect = new System.Windows.Forms.ComboBox();
-            this.label84 = new System.Windows.Forms.Label();
-            this.cmbAspectUsage = new System.Windows.Forms.ComboBox();
-            this.chkUseBeastDuringBW = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.comboBoxPet4 = new System.Windows.Forms.ComboBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.comboBoxPet3 = new System.Windows.Forms.ComboBox();
+            this.comboBoxPet2 = new System.Windows.Forms.ComboBox();
+            this.comboBoxPet1 = new System.Windows.Forms.ComboBox();
+            this.chkEmulateBugs = new System.Windows.Forms.CheckBox();
+            this.chkSpreadsheetUptimes = new System.Windows.Forms.CheckBox();
             this.tabPage2.SuspendLayout();
             this.grpTalentsCunning.SuspendLayout();
             this.grpTalentsTenacity.SuspendLayout();
             this.grpTalentsFerocity.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericBossHP)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTime35)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTime20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.duration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLatency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
-            this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTime20)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTime35)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericBossHP)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage2
@@ -1551,6 +1553,348 @@
             this.tabPage1.Text = "Hunter Options";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.chkSpreadsheetUptimes);
+            this.groupBox4.Controls.Add(this.chkEmulateBugs);
+            this.groupBox4.Controls.Add(this.chkUseBeastDuringBW);
+            this.groupBox4.Controls.Add(this.label84);
+            this.groupBox4.Controls.Add(this.cmbAspectUsage);
+            this.groupBox4.Controls.Add(this.label83);
+            this.groupBox4.Controls.Add(this.cmbAspect);
+            this.groupBox4.Controls.Add(this.label82);
+            this.groupBox4.Controls.Add(this.cmbManaPotion);
+            this.groupBox4.Location = new System.Drawing.Point(9, 255);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(277, 201);
+            this.groupBox4.TabIndex = 19;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Hunter Settings";
+            // 
+            // chkUseBeastDuringBW
+            // 
+            this.chkUseBeastDuringBW.AutoSize = true;
+            this.chkUseBeastDuringBW.Location = new System.Drawing.Point(18, 113);
+            this.chkUseBeastDuringBW.Name = "chkUseBeastDuringBW";
+            this.chkUseBeastDuringBW.Size = new System.Drawing.Size(245, 17);
+            this.chkUseBeastDuringBW.TabIndex = 6;
+            this.chkUseBeastDuringBW.Text = "Use Aspect of the Beast during Beastial Wrath";
+            this.chkUseBeastDuringBW.UseVisualStyleBackColor = true;
+            this.chkUseBeastDuringBW.CheckedChanged += new System.EventHandler(this.chkUseBeastDuringBW_CheckedChanged);
+            // 
+            // label84
+            // 
+            this.label84.AutoSize = true;
+            this.label84.Location = new System.Drawing.Point(15, 76);
+            this.label84.Name = "label84";
+            this.label84.Size = new System.Drawing.Size(68, 13);
+            this.label84.TabIndex = 5;
+            this.label84.Text = "Viper Usage:";
+            // 
+            // cmbAspectUsage
+            // 
+            this.cmbAspectUsage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAspectUsage.FormattingEnabled = true;
+            this.cmbAspectUsage.Items.AddRange(new object[] {
+            "No Viper",
+            "Viper - Just Enough",
+            "Viper - Fully Regen"});
+            this.cmbAspectUsage.Location = new System.Drawing.Point(128, 73);
+            this.cmbAspectUsage.Name = "cmbAspectUsage";
+            this.cmbAspectUsage.Size = new System.Drawing.Size(131, 21);
+            this.cmbAspectUsage.TabIndex = 4;
+            this.cmbAspectUsage.SelectedIndexChanged += new System.EventHandler(this.cmbAspectUsage_SelectedIndexChanged);
+            // 
+            // label83
+            // 
+            this.label83.AutoSize = true;
+            this.label83.Location = new System.Drawing.Point(15, 49);
+            this.label83.Name = "label83";
+            this.label83.Size = new System.Drawing.Size(43, 13);
+            this.label83.TabIndex = 3;
+            this.label83.Text = "Aspect:";
+            // 
+            // cmbAspect
+            // 
+            this.cmbAspect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAspect.FormattingEnabled = true;
+            this.cmbAspect.Items.AddRange(new object[] {
+            "None",
+            "Beast",
+            "Hawk",
+            "Viper",
+            "Monkey",
+            "Dragonhawk"});
+            this.cmbAspect.Location = new System.Drawing.Point(128, 46);
+            this.cmbAspect.Name = "cmbAspect";
+            this.cmbAspect.Size = new System.Drawing.Size(131, 21);
+            this.cmbAspect.TabIndex = 2;
+            this.cmbAspect.SelectedIndexChanged += new System.EventHandler(this.cmbAspect_SelectedIndexChanged);
+            // 
+            // label82
+            // 
+            this.label82.AutoSize = true;
+            this.label82.Location = new System.Drawing.Point(15, 22);
+            this.label82.Name = "label82";
+            this.label82.Size = new System.Drawing.Size(92, 13);
+            this.label82.TabIndex = 1;
+            this.label82.Text = "Use Mana Potion:";
+            // 
+            // cmbManaPotion
+            // 
+            this.cmbManaPotion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbManaPotion.FormattingEnabled = true;
+            this.cmbManaPotion.Items.AddRange(new object[] {
+            "None",
+            "Runic Mana Potion",
+            "Icy/Super Mana Potion"});
+            this.cmbManaPotion.Location = new System.Drawing.Point(128, 19);
+            this.cmbManaPotion.Name = "cmbManaPotion";
+            this.cmbManaPotion.Size = new System.Drawing.Size(131, 21);
+            this.cmbManaPotion.TabIndex = 0;
+            this.cmbManaPotion.SelectedIndexChanged += new System.EventHandler(this.cmbManaPotion_SelectedIndexChanged);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.numericBossHP);
+            this.groupBox3.Controls.Add(this.label81);
+            this.groupBox3.Controls.Add(this.numericTime35);
+            this.groupBox3.Controls.Add(this.label80);
+            this.groupBox3.Controls.Add(this.numericTime20);
+            this.groupBox3.Controls.Add(this.label79);
+            this.groupBox3.Controls.Add(this.duration);
+            this.groupBox3.Controls.Add(this.label25);
+            this.groupBox3.Controls.Add(this.numericUpDownLatency);
+            this.groupBox3.Controls.Add(this.label11);
+            this.groupBox3.Controls.Add(this.label1);
+            this.groupBox3.Controls.Add(this.cmbTargetLevel);
+            this.groupBox3.Controls.Add(this.trackBarTargetArmor);
+            this.groupBox3.Controls.Add(this.lblTargetArmorValue);
+            this.groupBox3.Controls.Add(this.label2);
+            this.groupBox3.Location = new System.Drawing.Point(9, 11);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(277, 238);
+            this.groupBox3.TabIndex = 18;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Fight Settings";
+            // 
+            // numericBossHP
+            // 
+            this.numericBossHP.Increment = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericBossHP.Location = new System.Drawing.Point(163, 209);
+            this.numericBossHP.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericBossHP.Name = "numericBossHP";
+            this.numericBossHP.Size = new System.Drawing.Size(96, 20);
+            this.numericBossHP.TabIndex = 32;
+            this.numericBossHP.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericBossHP.ValueChanged += new System.EventHandler(this.numericBossHP_ValueChanged);
+            // 
+            // label81
+            // 
+            this.label81.AutoSize = true;
+            this.label81.Location = new System.Drawing.Point(15, 211);
+            this.label81.Name = "label81";
+            this.label81.Size = new System.Drawing.Size(96, 13);
+            this.label81.TabIndex = 31;
+            this.label81.Text = "Boss starting HP%:";
+            // 
+            // numericTime35
+            // 
+            this.numericTime35.Increment = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericTime35.Location = new System.Drawing.Point(163, 183);
+            this.numericTime35.Maximum = new decimal(new int[] {
+            1200,
+            0,
+            0,
+            0});
+            this.numericTime35.Name = "numericTime35";
+            this.numericTime35.Size = new System.Drawing.Size(96, 20);
+            this.numericTime35.TabIndex = 30;
+            this.numericTime35.Value = new decimal(new int[] {
+            54,
+            0,
+            0,
+            0});
+            this.numericTime35.ValueChanged += new System.EventHandler(this.numericTime35_ValueChanged);
+            // 
+            // label80
+            // 
+            this.label80.AutoSize = true;
+            this.label80.Location = new System.Drawing.Point(15, 185);
+            this.label80.Name = "label80";
+            this.label80.Size = new System.Drawing.Size(108, 13);
+            this.label80.TabIndex = 29;
+            this.label80.Text = "Time spent 35%-20%:";
+            // 
+            // numericTime20
+            // 
+            this.numericTime20.Increment = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericTime20.Location = new System.Drawing.Point(163, 157);
+            this.numericTime20.Maximum = new decimal(new int[] {
+            1200,
+            0,
+            0,
+            0});
+            this.numericTime20.Name = "numericTime20";
+            this.numericTime20.Size = new System.Drawing.Size(96, 20);
+            this.numericTime20.TabIndex = 28;
+            this.numericTime20.Value = new decimal(new int[] {
+            72,
+            0,
+            0,
+            0});
+            this.numericTime20.ValueChanged += new System.EventHandler(this.numericTime20_ValueChanged);
+            // 
+            // label79
+            // 
+            this.label79.AutoSize = true;
+            this.label79.Location = new System.Drawing.Point(15, 159);
+            this.label79.Name = "label79";
+            this.label79.Size = new System.Drawing.Size(102, 13);
+            this.label79.TabIndex = 27;
+            this.label79.Text = "Time spent sub 20%";
+            // 
+            // duration
+            // 
+            this.duration.Increment = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.duration.Location = new System.Drawing.Point(163, 131);
+            this.duration.Maximum = new decimal(new int[] {
+            1200,
+            0,
+            0,
+            0});
+            this.duration.Name = "duration";
+            this.duration.Size = new System.Drawing.Size(96, 20);
+            this.duration.TabIndex = 26;
+            this.duration.Value = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.duration.ValueChanged += new System.EventHandler(this.duration_ValueChanged);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(15, 133);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(110, 13);
+            this.label25.TabIndex = 25;
+            this.label25.Text = "Duration (in seconds):";
+            // 
+            // numericUpDownLatency
+            // 
+            this.numericUpDownLatency.Increment = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownLatency.Location = new System.Drawing.Point(163, 105);
+            this.numericUpDownLatency.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownLatency.Name = "numericUpDownLatency";
+            this.numericUpDownLatency.Size = new System.Drawing.Size(96, 20);
+            this.numericUpDownLatency.TabIndex = 24;
+            this.numericUpDownLatency.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownLatency.ValueChanged += new System.EventHandler(this.numericUpDownLatency_ValueChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(16, 107);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(70, 13);
+            this.label11.TabIndex = 23;
+            this.label11.Text = "Latency (ms):";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 30);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(77, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Target\'s Level:";
+            // 
+            // cmbTargetLevel
+            // 
+            this.cmbTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTargetLevel.FormattingEnabled = true;
+            this.cmbTargetLevel.Items.AddRange(new object[] {
+            "80",
+            "81",
+            "82",
+            "83"});
+            this.cmbTargetLevel.Location = new System.Drawing.Point(128, 27);
+            this.cmbTargetLevel.Name = "cmbTargetLevel";
+            this.cmbTargetLevel.Size = new System.Drawing.Size(131, 21);
+            this.cmbTargetLevel.TabIndex = 19;
+            this.cmbTargetLevel.SelectedIndexChanged += new System.EventHandler(this.cmbTargetLevel_SelectedIndexChanged);
+            // 
+            // trackBarTargetArmor
+            // 
+            this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.Control;
+            this.trackBarTargetArmor.LargeChange = 1000;
+            this.trackBarTargetArmor.Location = new System.Drawing.Point(128, 54);
+            this.trackBarTargetArmor.Maximum = 20000;
+            this.trackBarTargetArmor.Minimum = 6000;
+            this.trackBarTargetArmor.Name = "trackBarTargetArmor";
+            this.trackBarTargetArmor.Size = new System.Drawing.Size(131, 42);
+            this.trackBarTargetArmor.SmallChange = 100;
+            this.trackBarTargetArmor.TabIndex = 20;
+            this.trackBarTargetArmor.TickFrequency = 2000;
+            this.trackBarTargetArmor.Value = 13100;
+            this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.trackBarTargetArmor_Scroll);
+            // 
+            // lblTargetArmorValue
+            // 
+            this.lblTargetArmorValue.AutoSize = true;
+            this.lblTargetArmorValue.Location = new System.Drawing.Point(37, 72);
+            this.lblTargetArmorValue.Name = "lblTargetArmorValue";
+            this.lblTargetArmorValue.Size = new System.Drawing.Size(37, 13);
+            this.lblTargetArmorValue.TabIndex = 22;
+            this.lblTargetArmorValue.Text = "13100";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(15, 59);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(78, 13);
+            this.label2.TabIndex = 21;
+            this.label2.Text = "Target\'s Armor:";
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
@@ -1574,99 +1918,6 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Rotations";
             this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label24);
-            this.groupBox1.Controls.Add(this.comboBoxPet4);
-            this.groupBox1.Controls.Add(this.label23);
-            this.groupBox1.Controls.Add(this.label22);
-            this.groupBox1.Controls.Add(this.label21);
-            this.groupBox1.Controls.Add(this.comboBoxPet3);
-            this.groupBox1.Controls.Add(this.comboBoxPet2);
-            this.groupBox1.Controls.Add(this.comboBoxPet1);
-            this.groupBox1.Location = new System.Drawing.Point(9, 350);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(277, 130);
-            this.groupBox1.TabIndex = 39;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Pet Auto-cast Priority";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(6, 103);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(50, 13);
-            this.label24.TabIndex = 51;
-            this.label24.Text = "Priority 4:";
-            // 
-            // comboBoxPet4
-            // 
-            this.comboBoxPet4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxPet4.FormattingEnabled = true;
-            this.comboBoxPet4.Location = new System.Drawing.Point(75, 100);
-            this.comboBoxPet4.Name = "comboBoxPet4";
-            this.comboBoxPet4.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet4.TabIndex = 50;
-            this.comboBoxPet4.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet4_SelectedIndexChanged);
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(6, 76);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(50, 13);
-            this.label23.TabIndex = 49;
-            this.label23.Text = "Priority 3:";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(6, 49);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(50, 13);
-            this.label22.TabIndex = 48;
-            this.label22.Text = "Priority 2:";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 22);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(50, 13);
-            this.label21.TabIndex = 47;
-            this.label21.Text = "Priority 1:";
-            // 
-            // comboBoxPet3
-            // 
-            this.comboBoxPet3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxPet3.FormattingEnabled = true;
-            this.comboBoxPet3.Location = new System.Drawing.Point(75, 73);
-            this.comboBoxPet3.Name = "comboBoxPet3";
-            this.comboBoxPet3.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet3.TabIndex = 46;
-            this.comboBoxPet3.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet3_SelectedIndexChanged);
-            // 
-            // comboBoxPet2
-            // 
-            this.comboBoxPet2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxPet2.FormattingEnabled = true;
-            this.comboBoxPet2.Location = new System.Drawing.Point(75, 46);
-            this.comboBoxPet2.Name = "comboBoxPet2";
-            this.comboBoxPet2.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet2.TabIndex = 45;
-            this.comboBoxPet2.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet2_SelectedIndexChanged);
-            // 
-            // comboBoxPet1
-            // 
-            this.comboBoxPet1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxPet1.FormattingEnabled = true;
-            this.comboBoxPet1.Location = new System.Drawing.Point(75, 19);
-            this.comboBoxPet1.Name = "comboBoxPet1";
-            this.comboBoxPet1.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet1.TabIndex = 44;
-            this.comboBoxPet1.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet1_SelectedIndexChanged);
             // 
             // groupBox2
             // 
@@ -2004,345 +2255,120 @@
             this.cmbPriority1.TabIndex = 20;
             this.cmbPriority1.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
-            // groupBox3
+            // groupBox1
             // 
-            this.groupBox3.Controls.Add(this.numericBossHP);
-            this.groupBox3.Controls.Add(this.label81);
-            this.groupBox3.Controls.Add(this.numericTime35);
-            this.groupBox3.Controls.Add(this.label80);
-            this.groupBox3.Controls.Add(this.numericTime20);
-            this.groupBox3.Controls.Add(this.label79);
-            this.groupBox3.Controls.Add(this.duration);
-            this.groupBox3.Controls.Add(this.label25);
-            this.groupBox3.Controls.Add(this.numericUpDownLatency);
-            this.groupBox3.Controls.Add(this.label11);
-            this.groupBox3.Controls.Add(this.label1);
-            this.groupBox3.Controls.Add(this.cmbTargetLevel);
-            this.groupBox3.Controls.Add(this.trackBarTargetArmor);
-            this.groupBox3.Controls.Add(this.lblTargetArmorValue);
-            this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(9, 11);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(277, 238);
-            this.groupBox3.TabIndex = 18;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Fight Settings";
+            this.groupBox1.Controls.Add(this.label24);
+            this.groupBox1.Controls.Add(this.comboBoxPet4);
+            this.groupBox1.Controls.Add(this.label23);
+            this.groupBox1.Controls.Add(this.label22);
+            this.groupBox1.Controls.Add(this.label21);
+            this.groupBox1.Controls.Add(this.comboBoxPet3);
+            this.groupBox1.Controls.Add(this.comboBoxPet2);
+            this.groupBox1.Controls.Add(this.comboBoxPet1);
+            this.groupBox1.Location = new System.Drawing.Point(9, 350);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(277, 130);
+            this.groupBox1.TabIndex = 39;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Pet Auto-cast Priority";
             // 
-            // duration
+            // label24
             // 
-            this.duration.Increment = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.duration.Location = new System.Drawing.Point(163, 131);
-            this.duration.Maximum = new decimal(new int[] {
-            1200,
-            0,
-            0,
-            0});
-            this.duration.Name = "duration";
-            this.duration.Size = new System.Drawing.Size(96, 20);
-            this.duration.TabIndex = 26;
-            this.duration.Value = new decimal(new int[] {
-            360,
-            0,
-            0,
-            0});
-            this.duration.ValueChanged += new System.EventHandler(this.duration_ValueChanged);
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(6, 103);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(50, 13);
+            this.label24.TabIndex = 51;
+            this.label24.Text = "Priority 4:";
             // 
-            // label25
+            // comboBoxPet4
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(15, 133);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(110, 13);
-            this.label25.TabIndex = 25;
-            this.label25.Text = "Duration (in seconds):";
+            this.comboBoxPet4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPet4.FormattingEnabled = true;
+            this.comboBoxPet4.Location = new System.Drawing.Point(75, 100);
+            this.comboBoxPet4.Name = "comboBoxPet4";
+            this.comboBoxPet4.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxPet4.TabIndex = 50;
+            this.comboBoxPet4.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet4_SelectedIndexChanged);
             // 
-            // numericUpDownLatency
+            // label23
             // 
-            this.numericUpDownLatency.Increment = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownLatency.Location = new System.Drawing.Point(163, 105);
-            this.numericUpDownLatency.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownLatency.Name = "numericUpDownLatency";
-            this.numericUpDownLatency.Size = new System.Drawing.Size(96, 20);
-            this.numericUpDownLatency.TabIndex = 24;
-            this.numericUpDownLatency.Value = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.numericUpDownLatency.ValueChanged += new System.EventHandler(this.numericUpDownLatency_ValueChanged);
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(6, 76);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(50, 13);
+            this.label23.TabIndex = 49;
+            this.label23.Text = "Priority 3:";
             // 
-            // label11
+            // label22
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(16, 107);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(70, 13);
-            this.label11.TabIndex = 23;
-            this.label11.Text = "Latency (ms):";
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(6, 49);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(50, 13);
+            this.label22.TabIndex = 48;
+            this.label22.Text = "Priority 2:";
             // 
-            // label1
+            // label21
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 30);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 13);
-            this.label1.TabIndex = 18;
-            this.label1.Text = "Target\'s Level:";
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 22);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(50, 13);
+            this.label21.TabIndex = 47;
+            this.label21.Text = "Priority 1:";
             // 
-            // cmbTargetLevel
+            // comboBoxPet3
             // 
-            this.cmbTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbTargetLevel.FormattingEnabled = true;
-            this.cmbTargetLevel.Items.AddRange(new object[] {
-            "80",
-            "81",
-            "82",
-            "83"});
-            this.cmbTargetLevel.Location = new System.Drawing.Point(128, 27);
-            this.cmbTargetLevel.Name = "cmbTargetLevel";
-            this.cmbTargetLevel.Size = new System.Drawing.Size(131, 21);
-            this.cmbTargetLevel.TabIndex = 19;
-            this.cmbTargetLevel.SelectedIndexChanged += new System.EventHandler(this.cmbTargetLevel_SelectedIndexChanged);
+            this.comboBoxPet3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPet3.FormattingEnabled = true;
+            this.comboBoxPet3.Location = new System.Drawing.Point(75, 73);
+            this.comboBoxPet3.Name = "comboBoxPet3";
+            this.comboBoxPet3.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxPet3.TabIndex = 46;
+            this.comboBoxPet3.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet3_SelectedIndexChanged);
             // 
-            // trackBarTargetArmor
+            // comboBoxPet2
             // 
-            this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.Control;
-            this.trackBarTargetArmor.LargeChange = 1000;
-            this.trackBarTargetArmor.Location = new System.Drawing.Point(128, 54);
-            this.trackBarTargetArmor.Maximum = 20000;
-            this.trackBarTargetArmor.Minimum = 6000;
-            this.trackBarTargetArmor.Name = "trackBarTargetArmor";
-            this.trackBarTargetArmor.Size = new System.Drawing.Size(131, 42);
-            this.trackBarTargetArmor.SmallChange = 100;
-            this.trackBarTargetArmor.TabIndex = 20;
-            this.trackBarTargetArmor.TickFrequency = 2000;
-            this.trackBarTargetArmor.Value = 13100;
-            this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.trackBarTargetArmor_Scroll);
+            this.comboBoxPet2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPet2.FormattingEnabled = true;
+            this.comboBoxPet2.Location = new System.Drawing.Point(75, 46);
+            this.comboBoxPet2.Name = "comboBoxPet2";
+            this.comboBoxPet2.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxPet2.TabIndex = 45;
+            this.comboBoxPet2.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet2_SelectedIndexChanged);
             // 
-            // lblTargetArmorValue
+            // comboBoxPet1
             // 
-            this.lblTargetArmorValue.AutoSize = true;
-            this.lblTargetArmorValue.Location = new System.Drawing.Point(37, 72);
-            this.lblTargetArmorValue.Name = "lblTargetArmorValue";
-            this.lblTargetArmorValue.Size = new System.Drawing.Size(37, 13);
-            this.lblTargetArmorValue.TabIndex = 22;
-            this.lblTargetArmorValue.Text = "13100";
+            this.comboBoxPet1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPet1.FormattingEnabled = true;
+            this.comboBoxPet1.Location = new System.Drawing.Point(75, 19);
+            this.comboBoxPet1.Name = "comboBoxPet1";
+            this.comboBoxPet1.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxPet1.TabIndex = 44;
+            this.comboBoxPet1.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet1_SelectedIndexChanged);
             // 
-            // label2
+            // chkEmulateBugs
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 59);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(78, 13);
-            this.label2.TabIndex = 21;
-            this.label2.Text = "Target\'s Armor:";
+            this.chkEmulateBugs.AutoSize = true;
+            this.chkEmulateBugs.Location = new System.Drawing.Point(18, 150);
+            this.chkEmulateBugs.Name = "chkEmulateBugs";
+            this.chkEmulateBugs.Size = new System.Drawing.Size(218, 17);
+            this.chkEmulateBugs.TabIndex = 7;
+            this.chkEmulateBugs.Text = "Emulate known bugs in spreadsheet 91a";
+            this.chkEmulateBugs.UseVisualStyleBackColor = true;
+            this.chkEmulateBugs.CheckedChanged += new System.EventHandler(this.chkEmulateBugs_CheckedChanged);
             // 
-            // groupBox4
+            // chkSpreadsheetUptimes
             // 
-            this.groupBox4.Controls.Add(this.chkUseBeastDuringBW);
-            this.groupBox4.Controls.Add(this.label84);
-            this.groupBox4.Controls.Add(this.cmbAspectUsage);
-            this.groupBox4.Controls.Add(this.label83);
-            this.groupBox4.Controls.Add(this.cmbAspect);
-            this.groupBox4.Controls.Add(this.label82);
-            this.groupBox4.Controls.Add(this.cmbManaPotion);
-            this.groupBox4.Location = new System.Drawing.Point(9, 255);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(277, 149);
-            this.groupBox4.TabIndex = 19;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Hunter Settings";
-            // 
-            // numericTime20
-            // 
-            this.numericTime20.Increment = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.numericTime20.Location = new System.Drawing.Point(163, 157);
-            this.numericTime20.Maximum = new decimal(new int[] {
-            1200,
-            0,
-            0,
-            0});
-            this.numericTime20.Name = "numericTime20";
-            this.numericTime20.Size = new System.Drawing.Size(96, 20);
-            this.numericTime20.TabIndex = 28;
-            this.numericTime20.Value = new decimal(new int[] {
-            72,
-            0,
-            0,
-            0});
-            this.numericTime20.ValueChanged += new System.EventHandler(this.numericTime20_ValueChanged);
-            // 
-            // label79
-            // 
-            this.label79.AutoSize = true;
-            this.label79.Location = new System.Drawing.Point(15, 159);
-            this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(102, 13);
-            this.label79.TabIndex = 27;
-            this.label79.Text = "Time spent sub 20%";
-            // 
-            // numericTime35
-            // 
-            this.numericTime35.Increment = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.numericTime35.Location = new System.Drawing.Point(163, 183);
-            this.numericTime35.Maximum = new decimal(new int[] {
-            1200,
-            0,
-            0,
-            0});
-            this.numericTime35.Name = "numericTime35";
-            this.numericTime35.Size = new System.Drawing.Size(96, 20);
-            this.numericTime35.TabIndex = 30;
-            this.numericTime35.Value = new decimal(new int[] {
-            54,
-            0,
-            0,
-            0});
-            this.numericTime35.ValueChanged += new System.EventHandler(this.numericTime35_ValueChanged);
-            // 
-            // label80
-            // 
-            this.label80.AutoSize = true;
-            this.label80.Location = new System.Drawing.Point(15, 185);
-            this.label80.Name = "label80";
-            this.label80.Size = new System.Drawing.Size(108, 13);
-            this.label80.TabIndex = 29;
-            this.label80.Text = "Time spent 35%-20%:";
-            // 
-            // numericBossHP
-            // 
-            this.numericBossHP.Increment = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.numericBossHP.Location = new System.Drawing.Point(163, 209);
-            this.numericBossHP.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericBossHP.Name = "numericBossHP";
-            this.numericBossHP.Size = new System.Drawing.Size(96, 20);
-            this.numericBossHP.TabIndex = 32;
-            this.numericBossHP.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericBossHP.ValueChanged += new System.EventHandler(this.numericBossHP_ValueChanged);
-            // 
-            // label81
-            // 
-            this.label81.AutoSize = true;
-            this.label81.Location = new System.Drawing.Point(15, 211);
-            this.label81.Name = "label81";
-            this.label81.Size = new System.Drawing.Size(96, 13);
-            this.label81.TabIndex = 31;
-            this.label81.Text = "Boss starting HP%:";
-            // 
-            // cmbManaPotion
-            // 
-            this.cmbManaPotion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbManaPotion.FormattingEnabled = true;
-            this.cmbManaPotion.Items.AddRange(new object[] {
-            "None",
-            "Runic Mana Potion",
-            "Icy/Super Mana Potion"});
-            this.cmbManaPotion.Location = new System.Drawing.Point(128, 19);
-            this.cmbManaPotion.Name = "cmbManaPotion";
-            this.cmbManaPotion.Size = new System.Drawing.Size(131, 21);
-            this.cmbManaPotion.TabIndex = 0;
-            this.cmbManaPotion.SelectedIndexChanged += new System.EventHandler(this.cmbManaPotion_SelectedIndexChanged);
-            // 
-            // label82
-            // 
-            this.label82.AutoSize = true;
-            this.label82.Location = new System.Drawing.Point(15, 22);
-            this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(92, 13);
-            this.label82.TabIndex = 1;
-            this.label82.Text = "Use Mana Potion:";
-            // 
-            // label83
-            // 
-            this.label83.AutoSize = true;
-            this.label83.Location = new System.Drawing.Point(15, 49);
-            this.label83.Name = "label83";
-            this.label83.Size = new System.Drawing.Size(43, 13);
-            this.label83.TabIndex = 3;
-            this.label83.Text = "Aspect:";
-            // 
-            // cmbAspect
-            // 
-            this.cmbAspect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAspect.FormattingEnabled = true;
-            this.cmbAspect.Items.AddRange(new object[] {
-            "None",
-            "Beast",
-            "Hawk",
-            "Viper",
-            "Monkey",
-            "Dragonhawk"});
-            this.cmbAspect.Location = new System.Drawing.Point(128, 46);
-            this.cmbAspect.Name = "cmbAspect";
-            this.cmbAspect.Size = new System.Drawing.Size(131, 21);
-            this.cmbAspect.TabIndex = 2;
-            this.cmbAspect.SelectedIndexChanged += new System.EventHandler(this.cmbAspect_SelectedIndexChanged);
-            // 
-            // label84
-            // 
-            this.label84.AutoSize = true;
-            this.label84.Location = new System.Drawing.Point(15, 76);
-            this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(68, 13);
-            this.label84.TabIndex = 5;
-            this.label84.Text = "Viper Usage:";
-            // 
-            // cmbAspectUsage
-            // 
-            this.cmbAspectUsage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAspectUsage.FormattingEnabled = true;
-            this.cmbAspectUsage.Items.AddRange(new object[] {
-            "No Viper",
-            "Viper - Just Enough",
-            "Viper - Fully Regen"});
-            this.cmbAspectUsage.Location = new System.Drawing.Point(128, 73);
-            this.cmbAspectUsage.Name = "cmbAspectUsage";
-            this.cmbAspectUsage.Size = new System.Drawing.Size(131, 21);
-            this.cmbAspectUsage.TabIndex = 4;
-            this.cmbAspectUsage.SelectedIndexChanged += new System.EventHandler(this.cmbAspectUsage_SelectedIndexChanged);
-            // 
-            // chkUseBeastDuringBW
-            // 
-            this.chkUseBeastDuringBW.AutoSize = true;
-            this.chkUseBeastDuringBW.Location = new System.Drawing.Point(18, 113);
-            this.chkUseBeastDuringBW.Name = "chkUseBeastDuringBW";
-            this.chkUseBeastDuringBW.Size = new System.Drawing.Size(245, 17);
-            this.chkUseBeastDuringBW.TabIndex = 6;
-            this.chkUseBeastDuringBW.Text = "Use Aspect of the Beast during Beastial Wrath";
-            this.chkUseBeastDuringBW.UseVisualStyleBackColor = true;
-            this.chkUseBeastDuringBW.CheckedChanged += new System.EventHandler(this.chkUseBeastDuringBW_CheckedChanged);
+            this.chkSpreadsheetUptimes.AutoSize = true;
+            this.chkSpreadsheetUptimes.Location = new System.Drawing.Point(18, 173);
+            this.chkSpreadsheetUptimes.Name = "chkSpreadsheetUptimes";
+            this.chkSpreadsheetUptimes.Size = new System.Drawing.Size(199, 17);
+            this.chkSpreadsheetUptimes.TabIndex = 8;
+            this.chkSpreadsheetUptimes.Text = "Use spreadsheet uptime calculations";
+            this.chkSpreadsheetUptimes.UseVisualStyleBackColor = true;
+            this.chkSpreadsheetUptimes.CheckedChanged += new System.EventHandler(this.chkSpreadsheetUptimes_CheckedChanged);
             // 
             // CalculationOptionsPanelHunter
             // 
@@ -2360,22 +2386,22 @@
             this.grpTalentsFerocity.ResumeLayout(false);
             this.grpTalentsFerocity.PerformLayout();
             this.tabPage1.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericBossHP)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTime35)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTime20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.duration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLatency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTime20)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTime35)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericBossHP)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2574,5 +2600,7 @@
         private System.Windows.Forms.Label label84;
         private System.Windows.Forms.ComboBox cmbAspectUsage;
         private System.Windows.Forms.CheckBox chkUseBeastDuringBW;
+        private System.Windows.Forms.CheckBox chkSpreadsheetUptimes;
+        private System.Windows.Forms.CheckBox chkEmulateBugs;
     }
 }

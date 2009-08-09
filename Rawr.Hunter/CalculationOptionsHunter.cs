@@ -29,8 +29,17 @@ namespace Rawr.Hunter
         public float bossHPPercentage = 1;
         public ManaPotionType useManaPotion = ManaPotionType.RunicManaPotion;
         public bool useBeastDuringBeastialWrath = false;
+        public bool useKillCommand = true;
         public Aspect selectedAspect = Aspect.Dragonhawk;
         public AspectUsage aspectUsage = AspectUsage.ViperToOOM;
+        public PetHappiness petHappiness = PetHappiness.Happy;
+
+        // NOTE: setting this to true does 'bad' uptime calculations,
+        // to help match the spread sheet. if a fight last 10 seconds
+        // and an ability has a 4 second cooldown, the spreadsheet says
+        // you can use it 2.5 times, while we say you can use it twice.
+        public bool calculateUptimesLikeSpreadsheet = true;
+        public bool emulateSpreadsheetBugs = true;
 
         // new priority rotation stuff
         public int PriorityIndex1 = 0;

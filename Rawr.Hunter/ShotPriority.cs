@@ -21,7 +21,7 @@ namespace Rawr.Hunter
         public double LALArcaneFrequency = 0;
         public bool useRotationTest = false; // TODO
         public bool useKillShot = false; // TODO
-        public double viperDamagePenalty = 0; // TODO
+        public double viperDamagePenalty = 0;
 
         public double specialShotsPerSecond = 0;
         public double critSpecialShotsPerSecond = 0;
@@ -623,7 +623,7 @@ namespace Rawr.Hunter
                     steadyBefore    ? "Not being used in rotation:\n  Steady shot has a higher\n  priority" :
                     "(Not in rotation)";
             }
-
+            /*
             if (false) // yet another rotation debug block
             {
                 ret += "\n-\n";
@@ -637,7 +637,7 @@ namespace Rawr.Hunter
                 //ret += "ratio = " + ratio.ToString("P2") + "\n";
                 //ret += "time_used = " + time_used.ToString("F2") + "\n";
             }
-            
+            */
             return ret;
         }
     }
