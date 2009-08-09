@@ -81,7 +81,7 @@ namespace Rawr.DPSWarr {
                 float arpenBuffs =
                     ((_c_mhItemType == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f) +
                     (!CalcOpts.FuryStance ? 0.1f : 0.0f);
-                if(CalcOpts==null){
+                if (CalcOpts == null) {
                     // you're supposed to pass the character level, not the target level.  GC misspoke.
 				    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,(int)StatConversion.NPC_BOSS_ARMOR,StatS.ArmorPenetration,arpenBuffs,StatS.ArmorPenetrationRating)); // default is vs raid boss
                 }else{
@@ -102,8 +102,8 @@ namespace Rawr.DPSWarr {
         public float NormalizedMhWeaponDmg { get { return CalcNormalizedWeaponDamage(MH); } }
         public float NormalizedOhWeaponDmg { get { return CalcNormalizedWeaponDamage(OH); } }
         private float CalcNormalizedWeaponDamage(Item weapon) {
-            float baseDamage = weapon.Speed * weapon.DPS;
-            baseDamage += StatS.AttackPower / 14f * 3.3f;
+            float baseDamage  = weapon.Speed * weapon.DPS;
+                  baseDamage += StatS.AttackPower / 14f * 3.3f;
             return baseDamage;
         }
         public float AvgMhWeaponDmgUnhasted              { get { return (MH == null ? 0f : (StatS.AttackPower / 14f + MH.DPS) * MH.Speed); } }

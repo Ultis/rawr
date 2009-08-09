@@ -4,18 +4,24 @@ using System.Text;
 
 namespace Rawr.DPSWarr {
     public class CharacterCalculationsDPSWarr : CharacterCalculationsBase {
+        #region Variables
         public Stats BasicStats { get; set; }
         public Skills SkillAttacks { get; set; }
         public CombatFactors combatFactors { get; set; }
         public Rotation Rot { get; set; }
         public List<Buff> ActiveBuffs { get; set; }
+        #endregion
 
+        #region Points
         private float _overallPoints = 0f;
         public override float OverallPoints { get { return _overallPoints; } set { _overallPoints = value; } }
         private float[] _subPoints = new float[] { 0f };
         public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
-        public float TotalDPS { get { return _subPoints[0];} set { _subPoints[0] = value; } }
+        public float TotalDPS { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
         public float TotalDPS2 { get; set; }
+        #endregion
+
+        #region display values
         public int TargetLevel { get; set; }
         public float Duration { get; set; }
         public string floorstring { get; set; }
@@ -114,6 +120,7 @@ namespace Rawr.DPSWarr {
         public float ParriedAttacks { get; set; }
         public float BlockedAttacks { get; set; }
         #endregion
+        #endregion
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -123,10 +130,9 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
                                 Environment.NewLine + "{3:00,000} : Stam Bonus",
                                 BasicStats.Health, BasicStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
-            //dictValues.Add("Stamina",string.Format("{0}*Increases Health by {1}",BasicStats.Stamina,StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
             dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*2));
-            dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)BasicStats.AttackPower,BasicStats.AttackPower/14));
+            dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)BasicStats.AttackPower,BasicStats.AttackPower/14f));
             dictValues.Add("Agility",string.Format("{0}*3.192% : Base Crit at lvl 80"+
                                 Environment.NewLine + "{1:0.000%} : Crit Increase"+
                                 Environment.NewLine + "{2:0.000%} : Total Crit Increase"+
@@ -251,40 +257,22 @@ namespace Rawr.DPSWarr {
             
             return dictValues;
         }
+
         public override float GetOptimizableCalculationValue(string calculation) {
             switch (calculation) {
                 case "Health": return BasicStats.Health;
-                case "Resilience": return BasicStats.Resilience;
                 case "Armor": return BasicStats.Armor + BasicStats.BonusArmor;
-
                 case "Strength": return BasicStats.Strength;
                 case "Attack Power": return BasicStats.AttackPower;
-
                 case "Agility": return BasicStats.Agility;
-                case "Crit Rating": return BasicStats.CritRating;
                 case "Crit %": return combatFactors._c_mhycrit;
-
-                case "Haste Rating": return BasicStats.HasteRating;
                 case "Haste %": return combatFactors.TotalHaste;
-
-                case "Armor Penetration Rating": return BasicStats.ArmorPenetrationRating;
                 case "Armor Penetration %": return BasicStats.ArmorPenetration;
-
-                case "Hit Rating": return BasicStats.HitRating;
-                case "Hit %": return combatFactors.HitPerc;
-                case "White Miss %": return combatFactors._c_wmiss;
-                case "Yellow Miss %": return combatFactors._c_ymiss;
-
-                case "Expertise Rating": return BasicStats.ExpertiseRating;
-                case "Expertise": return BasicStats.Expertise;
-                case "Dodge/Parry Reduction %": return StatConversion.GetDodgeParryReducFromExpertise(combatFactors._c_mhexpertise, CharacterClass.Warrior);
-                case "Dodge %": return combatFactors._c_mhdodge;
-                case "Parry %": return combatFactors._c_mhparry;
-
-                case "Chance to be Avoided %": return combatFactors._c_ymiss + combatFactors._c_mhdodge;
-
-                //case "Threat Reduction": return ThreatReduction;
-                //case "Threat Per Second": return ThreatPerSecond;*/
+                case "% Chance to Miss (White)": return combatFactors._c_wmiss;
+                case "% Chance to Miss (Yellow)": return combatFactors._c_ymiss;
+                case "% Chance to be Dodged": return  combatFactors._c_mhdodge;
+                case "% Chance to be Parried": return combatFactors._c_mhparry;
+                case "% Chance to be Avoided (Yellow/Dodge)": return combatFactors._c_ymiss + combatFactors._c_mhdodge;
             }
             return 0.0f;
         }

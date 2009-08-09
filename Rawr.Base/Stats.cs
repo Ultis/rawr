@@ -1205,6 +1205,7 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Combat Values")]
+        [DisplayName("% Parry")]
         public float Parry
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Parry]; }

@@ -53,6 +53,8 @@ namespace Rawr
         public const float RATING_PER_MANA = 15.00f; //15 Mana per 1 INT;
         public const float RATING_PER_DODGEPARRYREDUC = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
         public const float DEFENSE_RATING_AVOIDANCE_MULTIPLIER = 0.04f;
+        public const float BLOCKVALUE_PER_STR = 2.0f;
+        public const float CRITREDUC_PER_RESILIENCE = 81.97497559f;
 
         // Attack Table for players attacking mobs
         public const float WHITE_MISS_CHANCE_CAP            = 0.0800f; //  8%
@@ -275,16 +277,29 @@ namespace Rawr
             return Rating / RATING_PER_BLOCK;
         }
 
+        public static float GetBlockValueFromStrength(float str, CharacterClass Class) { return GetBlockValueFromStrength(str); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% added chance to Block)
+        /// </summary>
+        /// <param name="Rating">Block Rating</param>
+        /// <returns>A Percentage (0.05 = 5% added chance to Block)</returns>
+        public static float GetBlockValueFromStrength(float str) { return str / BLOCKVALUE_PER_STR; }
+
         public static float GetDefenseFromRating(float Rating, CharacterClass Class) { return GetDefenseFromRating(Rating); }
         /// <summary>
         /// Returns a Value (5.4 = 5 extra Defense)
         /// </summary>
         /// <param name="Rating">Defense Rating</param>
         /// <returns>A Value (5.4 = 5 extra Defense)</returns>
-        public static float GetDefenseFromRating(float Rating)
-        {
-            return (float)Math.Round(Rating / RATING_PER_DEFENSE);
-        }
+        public static float GetDefenseFromRating(float Rating) { return (float)Math.Round(Rating / RATING_PER_DEFENSE); }
+
+        public static float GetCritReducFromResilience(float resil, CharacterClass Class) { return GetCritReducFromResilience(resil); }
+        /// <summary>
+        /// Returns a Percent
+        /// </summary>
+        /// <param name="Rating">Resilience</param>
+        /// <returns>A Percent</returns>
+        public static float GetCritReducFromResilience(float resil) { return (float)Math.Round(resil / CRITREDUC_PER_RESILIENCE); }
 
         public static float GetDodgeFromRating(float Rating, CharacterClass Class) { return GetDodgeFromRating(Rating); }
         /// <summary>

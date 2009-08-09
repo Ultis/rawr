@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Xml.Serialization;
+#if SILVERLIGHT
+using System.Windows.Media;
+#else
+using System.Drawing;
+#endif
 
-namespace Rawr.ProtWarr
-{
+namespace Rawr.ProtWarr {
 	[Rawr.Calculations.RawrModelInfo("ProtWarr", "Ability_Warrior_DefensiveStance", CharacterClass.Warrior)]
-	public class CalculationsProtWarr : CalculationsBase
-    {
-        public override List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get
-            {
+	public class CalculationsProtWarr : CalculationsBase {
+        public override List<GemmingTemplate> DefaultGemmingTemplates {
+            get {
                 // Relevant Gem IDs for ProtWarr
                 // Red
                 int[] bold = { 39900, 39996, 40111, 42142 };        // Strength
@@ -80,131 +83,150 @@ namespace Rawr.ProtWarr
         }
 
         #region Variables and Properties
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-		public override CalculationOptionsPanelBase CalculationOptionsPanel
-		{
-			get
-			{
-				if (_calculationOptionsPanel == null)
-				{
-					_calculationOptionsPanel = new CalculationOptionsPanelProtWarr();
-				}
-				return _calculationOptionsPanel;
-			}
-		}
+
+        #if SILVERLIGHT
+            public ICalculationOptionsPanel _calculationOptionsPanel = null;
+            public override ICalculationOptionsPanel CalculationOptionsPanel {
+                get {
+                    if (_calculationOptionsPanel == null) {
+                        _calculationOptionsPanel = new CalculationOptionsPanelProtWarr();
+                    }
+                    return _calculationOptionsPanel;
+                }
+            }
+        #else
+            private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+		    public override CalculationOptionsPanelBase CalculationOptionsPanel {
+			    get {
+				    if (_calculationOptionsPanel == null) {
+					    _calculationOptionsPanel = new CalculationOptionsPanelProtWarr();
+				    }
+				    return _calculationOptionsPanel;
+			    }
+		    }
+        #endif
 
 		private string[] _characterDisplayCalculationLabels = null;
-		public override string[] CharacterDisplayCalculationLabels
-		{
-			get
-			{
+		public override string[] CharacterDisplayCalculationLabels {
+			get {
 				if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
-					"Base Stats:Health",
-                    "Base Stats:Strength",
-                    "Base Stats:Agility",
-                    "Base Stats:Stamina",
+    					"Base Stats:Health and Stamina",
+                        "Base Stats:Armor",
+                        "Base Stats:Strength",
+                        "Base Stats:Attack Power",
+                        "Base Stats:Agility",
+                        "Base Stats:Crit",
+                        "Base Stats:Haste",
+                        @"Base Stats:Armor Penetration*Rating to Cap with bonuses applied
+1232-None
+1109-Arms(123)
+0924-Arms(123)+Mace(185)",
+                        @"Base Stats:Hit*8.00% chance to miss base for Yellow Attacks
+Precision 0- 8%-0%=8%=262 Rating soft cap
+Precision 1- 8%-1%=7%=230 Rating soft cap
+Precision 2- 8%-2%=6%=197 Rating soft cap
+Precision 3- 8%-3%=5%=164 Rating soft cap",
+                        @"Base Stats:Expertise*6.50% chance to dodge/parry for attacks
+Weapon Mastery 0- 6.50%-0%=6.50%=214 Rating Cap
+Weapon Mastery 1- 6.50%-1%=6.50%=181 Rating Cap
+Weapon Mastery 2- 6.50%-2%=6.50%=148 Rating Cap
 
-                    "Defensive Stats:Armor",
-                    "Defensive Stats:Defense",
-                    "Defensive Stats:Dodge",
-                    "Defensive Stats:Parry",
-                    "Defensive Stats:Block",
-                    "Defensive Stats:Resilience",
-                    "Defensive Stats:Miss",
-                    "Defensive Stats:Block Value",
-                    "Defensive Stats:Chance to be Crit",
-                    "Defensive Stats:Guaranteed Reduction",
-					"Defensive Stats:Avoidance",
-                    "Defensive Stats:Avoidance + Block",
-					"Defensive Stats:Total Mitigation",
-                    "Defensive Stats:Attacker Speed",
-					"Defensive Stats:Damage Taken",
+Don't forget your weapons used matched with races can affect these numbers.",
+                        "Base Stats:Defense",
+                        "Base Stats:Resilience",
+                        "Base Stats:Block Value",
 
-                    "Offensive Stats:Weapon Speed",
-                    "Offensive Stats:Attack Power",
-                    "Offensive Stats:Hit",
-					"Offensive Stats:Haste",
-					"Offensive Stats:Armor Penetration",
-					"Offensive Stats:Crit",
-                    "Offensive Stats:Expertise",
-					"Offensive Stats:Weapon Damage",
-                    "Offensive Stats:Missed Attacks",
-                    "Offensive Stats:Total Damage/sec",
-                    "Offensive Stats:Limited Threat/sec",
-                    "Offensive Stats:Unlimited Threat/sec*All white damage converted to Heroic Strikes.",
+                        "Defensive Table:Chance Attacker Misses",
+                        "Defensive Table:Chance to Dodge",
+                        "Defensive Table:Chance to Parry",
+                        "Defensive Table:Chance to Block",
+                        "Defensive Table:Chance Attacker Crits",
+                        "Defensive Table:Chance Attacker Hits",
+					    "Defensive Table:Total Avoidance",
 
-                    "Resistances:Nature Resist",
-					"Resistances:Fire Resist",
-					"Resistances:Frost Resist",
-					"Resistances:Shadow Resist",
-					"Resistances:Arcane Resist",
-                    "Complex Stats:Ranking Mode*The currently selected ranking mode. Ranking modes can be changed in the Options tab.",
-					@"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
+					    "Defensive Stats:Damage Taken",
+                        "Defensive Stats:Guaranteed Reduction",
+					    "Defensive Stats:Total Mitigation",
+
+                        "Offensive Stats:Chance to Not Land",
+                        "Offensive Stats:Total DPS",
+                        "Offensive Stats:Limited Threat/sec",
+                        "Offensive Stats:Unlimited Threat/sec*All white damage converted to Heroic Strikes.",
+
+                        "Resistances:Nature Resist",
+					    "Resistances:Fire Resist",
+					    "Resistances:Frost Resist",
+					    "Resistances:Shadow Resist",
+					    "Resistances:Arcane Resist",
+
+                        "Complex Stats:Ranking Mode*The currently selected ranking mode. Ranking modes can be changed in the Options tab.",
+					    @"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
 Overall is typically, but not always, the best way to rate gear. 
 For specific encounters, closer attention to Mitigation and 
 Survival Points individually may be important.",
-					@"Complex Stats:Mitigation Points*Mitigation Points represent the amount of damage you mitigate, 
+					    @"Complex Stats:Mitigation Points*Mitigation Points represent the amount of damage you mitigate, 
 on average, through armor mitigation and avoidance. It is directly 
 relational to your Damage Taken. Ideally, you want to maximize 
 Mitigation Points, while maintaining 'enough' Survival Points 
 (see Survival Points). If you find yourself dying due to healers 
 running OOM, or being too busy healing you and letting other 
 raid members die, then focus on Mitigation Points.",
-					@"Complex Stats:Survival Points*Survival Points represents the total raw physical damage 
+					    @"Complex Stats:Survival Points*Survival Points represents the total raw physical damage 
 (pre-avoidance/block) you can take before dying. Unlike 
 Mitigation Points, you should not attempt to maximize this, 
 but rather get 'enough' of it, and then focus on Mitigation. 
 'Enough' can vary greatly by fight and by your healers.
 If you find that you are being killed by burst damage,
 focus on Survival Points.",
-                    @"Complex Stats:Threat Points*Threat Points represents the average between unlimited
+                        @"Complex Stats:Threat Points*Threat Points represents the average between unlimited
 threat and limited threat scaled by the threat scale.",
-                    "Complex Stats:Nature Survival",
-                    "Complex Stats:Fire Survival",
-                    "Complex Stats:Frost Survival",
-                    "Complex Stats:Shadow Survival",
-                    "Complex Stats:Arcane Survival",
+                        "Complex Stats:Nature Survival",
+                        "Complex Stats:Fire Survival",
+                        "Complex Stats:Frost Survival",
+                        "Complex Stats:Shadow Survival",
+                        "Complex Stats:Arcane Survival",
 					};
 				return _characterDisplayCalculationLabels;
 			}
 		}
 
 		private string[] _optimizableCalculationLabels = null;
-		public override string[]  OptimizableCalculationLabels
-		{
-			get
-			{
+		public override string[] OptimizableCalculationLabels {
+			get {
 				if (_optimizableCalculationLabels == null)
 					_optimizableCalculationLabels = new string[] {
-					"Health",
-                    "Unlimited TPS",
-                    "Limited TPS",
-                    "% Total Mitigation",
-					"% Guaranteed Reduction",
-					"% Chance to Avoid Attacks",
-					"% Chance to be Crit",
-                    "% Chance to be Avoided", 
-                    "% Chance to be Dodged",
-                    "Hit %",
-                    "Expertise %",
-                    "Burst Time", 
-                    "TankPoints", 
-                    "Nature Survival",
-                    "Fire Survival",
-                    "Frost Survival",
-                    "Shadow Survival",
-                    "Arcane Survival",
+					    "Health",
+                        "Resilience",
+                        "Unlimited TPS",
+                        "Limited TPS",
+
+                        "% Total Mitigation",
+					    "% Guaranteed Reduction",
+					    "% Total Avoidance",
+					    "% Chance to be Crit",
+
+                        "% Chance to Miss (White)",
+                        "% Chance to Miss (Yellow)",
+                        "% Chance to be Dodged",
+                        "% Chance to be Parried",
+                        "% Chance to be Avoided (Yellow/Dodge)",
+
+                        "Burst Time", 
+                        "TankPoints", 
+                        "Nature Survival",
+                        "Fire Survival",
+                        "Frost Survival",
+                        "Shadow Survival",
+                        "Arcane Survival",
 					};
 				return _optimizableCalculationLabels;
 			}
 		}
 
 		private string[] _customChartNames = null;
-		public override string[] CustomChartNames
-		{
-			get
-			{
+		public override string[] CustomChartNames {
+			get {
 				if (_customChartNames == null)
 					_customChartNames = new string[] {
                     "Ability Damage",
@@ -217,38 +239,36 @@ threat and limited threat scaled by the threat scale.",
 		}
 
 		private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-		public override Dictionary<string, System.Drawing.Color> SubPointNameColors
-		{
-			get
-			{
-				if (_subPointNameColors == null)
-				{
-					_subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-					_subPointNameColors.Add("Survival", System.Drawing.Color.Blue);
-                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("Threat", System.Drawing.Color.Green);
+		public override Dictionary<string, System.Drawing.Color> SubPointNameColors {
+			get {
+				if (_subPointNameColors == null) {
+                    #if SILVERLIGHT
+                        _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
+					    _subPointNameColors.Add("Survival", System.Windows.Media.Color.FromArgb(0,0,255,0));
+                        _subPointNameColors.Add("Mitigation", System.Windows.Media.Color.FromArgb(255,0,0,0));
+                        _subPointNameColors.Add("Threat", System.Windows.Media.Color.FromArgb(0,255,0,0));
+                    #else
+					    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+					    _subPointNameColors.Add("Survival", System.Drawing.Color.Blue);
+                        _subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
+                        _subPointNameColors.Add("Threat", System.Drawing.Color.Green);
+                    #endif
 				}
 				return _subPointNameColors;
 			}
 		}
 
 		private List<ItemType> _relevantItemTypes = null;
-		public override List<ItemType> RelevantItemTypes
-		{
-			get
-			{
-				if (_relevantItemTypes == null)
-				{
-					_relevantItemTypes = new List<ItemType>(new ItemType[]
-					{
+		public override List<ItemType> RelevantItemTypes {
+			get {
+				if (_relevantItemTypes == null) {
+					_relevantItemTypes = new List<ItemType>(new ItemType[] {
 						ItemType.None,
                         ItemType.Plate,
                         ItemType.Bow,
                         ItemType.Crossbow,
                         ItemType.Gun,
                         ItemType.Thrown,
-                        ItemType.Arrow,
-                        ItemType.Bullet,
                         ItemType.FistWeapon,
                         ItemType.Dagger,
                         ItemType.OneHandAxe,
@@ -261,57 +281,26 @@ threat and limited threat scaled by the threat scale.",
 			}
 		}
 
-        public override void SetDefaults(Character character)
-        {
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Agility/Strength)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Devotion Aura"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Devotion Aura (Armor)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Inspiration"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Grace"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Presence (Health)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Windfury Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Trauma"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Insect Swarm"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
-        }
-
 		public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationProtWarr(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsProtWarr(); }
 
-		public override ICalculationOptionBase DeserializeDataObject(string xml)
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsProtWarr));
-			System.IO.StringReader reader = new System.IO.StringReader(xml);
-			CalculationOptionsProtWarr calcOpts = serializer.Deserialize(reader) as CalculationOptionsProtWarr;
+		public override ICalculationOptionBase DeserializeDataObject(string xml) {
+			XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsProtWarr));
+			StringReader sr = new StringReader(xml);
+			CalculationOptionsProtWarr calcOpts = s.Deserialize(sr) as CalculationOptionsProtWarr;
 			return calcOpts;
         }
         #endregion
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
-        {
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             CharacterCalculationsProtWarr   calculatedStats = new CharacterCalculationsProtWarr();
             CalculationOptionsProtWarr      calcOpts        = character.CalculationOptions as CalculationOptionsProtWarr;
             Stats                           stats           = GetCharacterStats(character, additionalItem);
+            WarriorTalents                  talents         = character.WarriorTalents;
+
+            CombatFactors combatFactors = new CombatFactors(character, stats);
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
 
             AttackModelMode amm = AttackModelMode.Basic;
             if (character.WarriorTalents.UnrelentingAssault > 0)
@@ -325,21 +314,22 @@ threat and limited threat scaled by the threat scale.",
             AttackModel am = new AttackModel(character, stats, amm);
 
             calculatedStats.BasicStats = stats;
+            calculatedStats.BaseHealth = statsRace.Health;
 			calculatedStats.TargetLevel = calcOpts.TargetLevel;
 			calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calculatedStats.Abilities = am.Abilities;
 
-            calculatedStats.Miss = dm.DefendTable.Miss;
+            calculatedStats.Miss  = dm.DefendTable.Miss;
             calculatedStats.Dodge = dm.DefendTable.Dodge;
             calculatedStats.Parry = dm.DefendTable.Parry; 
             calculatedStats.Block = dm.DefendTable.Block;
 
-            calculatedStats.Defense = (float)Math.Floor(400.0f + stats.Defense + StatConversion.GetDefenseFromRating(stats.DefenseRating));
+            calculatedStats.Defense = (float)Math.Floor(stats.Defense + StatConversion.GetDefenseFromRating(stats.DefenseRating));
             calculatedStats.BlockValue = stats.BlockValue;
             
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
-            calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit);
+            calculatedStats.CritReduction = StatConversion.GetDRAvoidanceChance(character, stats, HitResult.Crit,calcOpts.TargetLevel);
             calculatedStats.CritVulnerability = dm.DefendTable.Critical;
 
             calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats);
@@ -363,17 +353,41 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Nature);
             calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow);
 
-            calculatedStats.Hit = Lookup.BonusHitPercentage(character, stats);
+            calculatedStats.HitRating = stats.HitRating;
+            calculatedStats.HitPercent = StatConversion.GetHitFromRating(stats.HitRating);
+            calculatedStats.HitPercBonus = stats.PhysicalHit;
+            calculatedStats.HitPercentTtl = calculatedStats.HitPercent + calculatedStats.HitPercBonus;
+            calculatedStats.HitCanFree =
+                StatConversion.GetRatingFromHit(
+                    StatConversion.WHITE_MISS_CHANCE_CAP
+                    - calculatedStats.HitPercBonus
+                    - StatConversion.GetHitFromRating(calculatedStats.HitRating)
+                )
+                * -1f;
+            calculatedStats.ExpertiseRating = stats.ExpertiseRating;
+            calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Warrior);
+            calculatedStats.MhExpertise = combatFactors._c_mhexpertise;
+            calculatedStats.OhExpertise = combatFactors._c_ohexpertise;
+            calculatedStats.WeapMastPerc = character.WarriorTalents.WeaponMastery / 100f;
             calculatedStats.Crit = Lookup.BonusCritPercentage(character, stats);
-            calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);
-            calculatedStats.Haste = Lookup.BonusHastePercentage(character, stats);
+            calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;
+            calculatedStats.MhCrit = Lookup.BonusCritPercentage(character, stats) + stats.PhysicalCrit;// combatFactors._c_mhycrit;
+            calculatedStats.OhCrit = Lookup.BonusCritPercentage(character, stats) + stats.PhysicalCrit;// combatFactors._c_ohycrit;
+            calculatedStats.HasteRating = stats.HasteRating;
+            calculatedStats.HastePercent = Lookup.BonusHastePercentage(character, stats);
+                //talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
             calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
-            calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyMiss;
+            calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyNotLand;
             calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
             calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
             calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
             calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
+            float teethbonus = stats.Armor;
+            teethbonus *= (float)character.WarriorTalents.ArmoredToTheTeeth;
+            teethbonus /= 108f;
+            calculatedStats.TeethBonus = (int)teethbonus;
+            calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Warrior);
 
             calculatedStats.UnlimitedThreat = am.ThreatPerSecond;
             am.RageModelMode = RageModelMode.Limited;
@@ -416,263 +430,31 @@ threat and limited threat scaled by the threat scale.",
             return calculatedStats;
         }
 
-        #region Warrior Race Stats
-        private static float[,] BaseWarriorRaceStats = new float[,] 
-		{
-							//	Strength,	Agility,	Stamina
-            /*Human*/		{	174f,	    113f,	    159f,   },
-            /*Orc*/			{	178f,		110f,		162f,	},
-            /*Dwarf*/		{	176f,	    109f,	    162f,   },
-			/*Night Elf*/	{	172f,	    118f,	    159f,   },
-	        /*Undead*/		{	174f,	    111f,	    160f,   },
-			/*Tauren*/		{	180f,		108f,		162f,	},
-	        /*Gnome*/		{	170f,	    116f,	    159f,   },
-			/*Troll*/		{	175f,	    115f,	    160f,   },	
-			/*BloodElf*/	{	0f,		    0f,		    0f,	    },
-			/*Draenei*/		{	175f,		110f,		158f,	},
-		};
-
-        private Stats GetRaceStats(Character character)
-        {
-            Stats statsRace;
-            switch (character.Race)
-            {
-                case CharacterRace.Human:
-                    statsRace = new Stats()
-                    {
-                        Health = 7941f,
-                        Strength = (float)BaseWarriorRaceStats[0, 0],
-                        Agility = (float)BaseWarriorRaceStats[0, 1],
-                        Stamina = (float)BaseWarriorRaceStats[0, 2],
-
-                        AttackPower = 220f,
-                        Dodge = 3.4636f,
-                        Miss = 0.05f,
-                        Parry = 5f,
-                        PhysicalCrit = 0.03185f,
-                    };
-                    if ((character.MainHand != null) &&
-                        ((character.MainHand.Item.Type == ItemType.OneHandSword) ||
-                         (character.MainHand.Item.Type == ItemType.OneHandMace)))
-                    {
-                        statsRace.Expertise += 3f;
-                    }
-                    break;
-                case CharacterRace.Orc:
-                    statsRace = new Stats()
-                    {
-                        Health = 7941f,
-                        Strength = (float)BaseWarriorRaceStats[1, 0],
-                        Agility = (float)BaseWarriorRaceStats[1, 1],
-                        Stamina = (float)BaseWarriorRaceStats[1, 2],
-
-                        AttackPower = 220f,
-                        Dodge = 3.4636f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
-                    };
-
-                    if ((character.MainHand != null) &&
-                        (character.MainHand.Item.Type == ItemType.OneHandAxe))
-                    {
-                        statsRace.Expertise += 5f;
-                    }
-                    break;
-                case CharacterRace.Dwarf:
-                    statsRace = new Stats()
-                    {
-                        Health = 7941f,
-                        Strength = (float)BaseWarriorRaceStats[2, 0],
-                        Agility = (float)BaseWarriorRaceStats[2, 1],
-                        Stamina = (float)BaseWarriorRaceStats[2, 2],
-
-                        AttackPower = 220f,
-                        Dodge = 3.4636f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
-                    };
-                    if ((character.MainHand != null) &&
-                        (character.MainHand.Item.Type == ItemType.OneHandMace))
-                    {
-                        statsRace.Expertise += 5f;
-                    }
-                    break;
-                case CharacterRace.NightElf:
-                    statsRace = new Stats()
-                    {
-                        Health = 7941f,
-                        Strength = (float)BaseWarriorRaceStats[3, 0],
-                        Agility = (float)BaseWarriorRaceStats[3, 1],
-                        Stamina = (float)BaseWarriorRaceStats[3, 2],
-
-                        AttackPower = 220f,
-                        Dodge = 3.4636f,
-                        Miss = 0.05f + 0.02f,
-                        Parry = 5f,
-                        PhysicalCrit = 0.03185f,
-                    };
-                    break;
-                case CharacterRace.Undead:
-                    statsRace = new Stats()
-                    {
-                        Health = 7941f,
-                        Strength = (float)BaseWarriorRaceStats[4, 0],
-                        Agility = (float)BaseWarriorRaceStats[4, 1],
-                        Stamina = (float)BaseWarriorRaceStats[4, 2],
-
-                        AttackPower = 220f,
-                        Dodge = 3.4636f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
-                    };
-                    break;
-                case CharacterRace.Tauren:
-                    statsRace = new Stats()
-                    {
-                        Health = 8338f,
-                        Strength = (float)BaseWarriorRaceStats[5, 0],
-                        Agility = (float)BaseWarriorRaceStats[5, 1],
-                        Stamina = (float)BaseWarriorRaceStats[5, 2],
-
-                        AttackPower = 220f,
-                        Dodge = 3.4636f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
-                    };
-                    break;
-                case CharacterRace.Gnome:
-                    statsRace = new Stats()
-                    {
-                        Health = 7941f,
-                        Strength = (float)BaseWarriorRaceStats[6, 0],
-                        Agility = (float)BaseWarriorRaceStats[6, 1],
-                        Stamina = (float)BaseWarriorRaceStats[6, 2],
-
-                        AttackPower = 220f,
-                        Dodge = 3.4636f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
-                    };
-                    break;
-                case CharacterRace.Troll:
-                    statsRace = new Stats()
-                    {
-                        Health = 7941f,
-                        Strength = (float)BaseWarriorRaceStats[7, 0],
-                        Agility = (float)BaseWarriorRaceStats[7, 1],
-                        Stamina = (float)BaseWarriorRaceStats[7, 2],
-
-                        AttackPower = 220f,
-                        Dodge = 3.4636f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
-                    };
-                    break;
-                case CharacterRace.Draenei:
-                    statsRace = new Stats()
-                    {
-                        Health = 7941f,
-                        Strength = (float)BaseWarriorRaceStats[9, 0],
-                        Agility = (float)BaseWarriorRaceStats[9, 1],
-                        Stamina = (float)BaseWarriorRaceStats[9, 2],
-
-                        AttackPower = 220f,
-                        Dodge = 3.4636f,
-                        Parry = 5f,
-                        Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
-                        PhysicalHit = 0.01f,
-                    };
-                    break;
-                default:
-                    statsRace = new Stats();
-                    break;
-            }
-
-            return statsRace;
-        }
-        #endregion
-
-        private Stats GetSpecialEffectStats(Character character, Stats stats)
-        {
-            Stats statsSpecialEffects = new Stats();
-
-            float weaponSpeed = 1.0f;
-            if (character.MainHand != null)
-                weaponSpeed = character.MainHand.Speed;
-
-            AttackModelMode amm = AttackModelMode.Basic;
-            if (character.WarriorTalents.UnrelentingAssault > 0)
-                amm = AttackModelMode.UnrelentingAssault;
-            else if (character.WarriorTalents.Shockwave > 0)
-                amm = AttackModelMode.FullProtection;
-            else if (character.WarriorTalents.Devastate > 0)
-                amm = AttackModelMode.Devastate;
-
-            AttackModel am = new AttackModel(character, stats, amm);
-
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                switch (effect.Trigger)
-                {
-                    case Trigger.Use:
-                        statsSpecialEffects += effect.GetAverageStats(0.0f, 1.0f, weaponSpeed);
-                        break;
-                    case Trigger.MeleeHit:
-                    case Trigger.PhysicalHit:
-                        statsSpecialEffects += effect.GetAverageStats(am.AttacksPerSecond, 1.0f, weaponSpeed);
-                        break;
-                    case Trigger.MeleeCrit:
-                    case Trigger.PhysicalCrit:
-                        statsSpecialEffects += effect.GetAverageStats(am.CritsPerSecond, 1.0f, weaponSpeed);
-                        break;
-                    case Trigger.DoTTick:
-                        if (character.WarriorTalents.DeepWounds > 0)
-                            statsSpecialEffects += effect.GetAverageStats(2.0f, 1.0f, weaponSpeed);
-                        break;
-                    case Trigger.DamageDone:
-                        statsSpecialEffects += effect.GetAverageStats(am.AttacksPerSecond, 1.0f, weaponSpeed);
-                        break;
-                }
-            }
-
-            statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + stats.BonusStaminaMultiplier));
-            statsSpecialEffects.Strength = (float)Math.Floor(statsSpecialEffects.Strength * (1.0f + stats.BonusStrengthMultiplier));
-            statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + stats.BonusAgilityMultiplier));
-            statsSpecialEffects.Armor += 2.0f * statsSpecialEffects.Agility;
-            statsSpecialEffects.Armor = (float)Math.Floor(statsSpecialEffects.Armor * (1f + stats.BonusArmorMultiplier));
-            statsSpecialEffects.Health += (float)Math.Floor(statsSpecialEffects.Stamina * 10.0f);
-            statsSpecialEffects.AttackPower += statsSpecialEffects.Strength;
-            statsSpecialEffects.AttackPower += (float)Math.Floor(character.WarriorTalents.ArmoredToTheTeeth * statsSpecialEffects.Armor / 180.0f);
-            statsSpecialEffects.AttackPower = (float)Math.Floor(statsSpecialEffects.AttackPower * (1f + stats.BonusAttackPowerMultiplier));
-            statsSpecialEffects.BlockValue += (float)Math.Floor(statsSpecialEffects.Strength * ProtWarr.StrengthToBlockValue);
-            statsSpecialEffects.BlockValue = (float)Math.Floor(statsSpecialEffects.BlockValue * (1 + stats.BonusBlockValueMultiplier));
-
-            return statsSpecialEffects;
-        }
-
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-		{
+        public override Stats GetCharacterStats(Character character, Item additionalItem) {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
             WarriorTalents talents = character.WarriorTalents;
 
-            Stats statsRace = GetRaceStats(character);
+            Stats statsRace  = BaseStats.GetBaseStats(character.Level, CharacterClass.Warrior, character.Race);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsItems = GetItemStats(character, additionalItem);
-            Stats statsTalents = new Stats()
-            {
-                Parry = talents.Deflection * 1.0f,
+            Stats statsOptionsPanel = new Stats() {
+                //BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
+                // handle boss level difference
+                PhysicalCrit = -0.006f * (calcOpts.TargetLevel - 80f) - (calcOpts.TargetLevel == 83f ? 0.03f : 0f),
+            };
+            Stats statsTalents = new Stats() {
+                Parry = talents.Deflection * 0.01f,
                 PhysicalCrit = talents.Cruelty * 0.01f,
-                Dodge = talents.Anticipation * 1.0f,
-                Block = talents.ShieldSpecialization * 1.0f,
+                Dodge = talents.Anticipation * 0.01f,
+                Block = talents.ShieldSpecialization * 1f, // Block isn't a percentage?
                 BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
-                BonusDamageMultiplier = talents.OneHandedWeaponSpecialization * 0.02f,
+                BonusDamageMultiplier = (character.MainHand != null &&
+                                         (character.MainHand.Type == ItemType.OneHandAxe   ||
+                                          character.MainHand.Type == ItemType.OneHandMace  ||
+                                          character.MainHand.Type == ItemType.OneHandSword ||
+                                          character.MainHand.Type == ItemType.Dagger       ||
+                                          character.MainHand.Type == ItemType.FistWeapon)
+                                         ? talents.OneHandedWeaponSpecialization * 0.02f: 0f),
                 BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
@@ -680,61 +462,122 @@ threat and limited threat scaled by the threat scale.",
                 DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalHaste = talents.BloodFrenzy * 0.03f,
+                PhysicalHit = talents.Precision * 0.01f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
-            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
+            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
             Stats statsProcs = new Stats();
 
-            statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
-            statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Health += statsTotal.Stamina * 10f;
-            if (character.ActiveBuffsContains("Commanding Shout"))
-                statsBuffs.Health += statsBuffs.BonusCommandingShoutHP;
+            // Stamina
+            float totalBSTAM = statsTotal.BonusStaminaMultiplier;
+            float staBase    = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina);
+            float staBonus   = (float)Math.Floor((1f + totalBSTAM) * statsGearEnchantsBuffs.Stamina);
+            statsTotal.Stamina = staBase + staBonus;
+
+            // Health
+            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
-            statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
-            statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
-            statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
-            statsTotal.AttackPower += statsTotal.Strength * 2 + (float)Math.Floor(talents.ArmoredToTheTeeth * statsTotal.Armor / 180);
-            statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
+
+            // Strength
+            float totalBSM = statsTotal.BonusStrengthMultiplier;
+            float strBase  = (float)Math.Floor((1f + totalBSM) * statsRace.Strength);
+            float strBonus = (float)Math.Floor((1f + totalBSM) * statsGearEnchantsBuffs.Strength);
+            statsTotal.Strength = strBase + strBonus;
+
+            // Agility
+            float totalBAM = statsTotal.BonusAgilityMultiplier;
+            float agiBase = (float)Math.Floor((1f + totalBAM) * statsRace.Agility);
+            float agiBonus = (float)Math.Floor((1f + totalBAM) * statsGearEnchantsBuffs.Agility);
+            statsTotal.Strength = strBase + strBonus;
+
+            // Armor
+            statsTotal.Armor += statsTotal.BonusArmor;
+            statsTotal.Armor += statsTotal.Agility * 2f;
+            statsTotal.Armor *= (1f + statsTotal.BonusArmorMultiplier);
+
+            // Attack Power
+            float totalBAPM = statsTotal.BonusAttackPowerMultiplier;
+            float apBase       = (float)Math.Floor((1f + totalBAPM) * (statsRace.AttackPower));
+            float apBonusSTR   = (float)Math.Floor((1f + totalBAPM) * (statsTotal.Strength * 2f));
+            float apBonusAttT  = (float)Math.Floor((1f + totalBAPM) * ((statsTotal.Armor / 108f) * talents.ArmoredToTheTeeth));
+            float apBonusOther = (float)Math.Floor((1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower));
+            statsTotal.AttackPower = apBase + apBonusSTR + apBonusAttT + apBonusOther;
+
+            // Crit
+            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
+            statsTotal.PhysicalCrit = (float)Math.Max(0f, statsTotal.PhysicalCrit); // puts a minimum of 0 on it
+
+            // ===== YOUR DEFENSE AGAINST ATTACKERS =====
+            // Dodge
+            statsTotal.Dodge = statsTotal.Dodge;
+
+            // Block
+            //statsTotal.Block += 5f;
+
+            // Block Value
+            // Glyph of Blocking has 100% uptime for any normal fight
+            statsTotal.BonusBlockValueMultiplier += talents.GlyphOfBlocking ? 0.1f : 0f;
+            statsTotal.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsTotal.Strength) - 10f);
+            statsTotal.BlockValue  = (float)Math.Floor(statsTotal.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
+
+            // Resistances
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
-            statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
-            statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
+            statsTotal.FireResistance   += statsTotal.FireResistanceBuff   + statsTotal.AllResist;
+            statsTotal.FrostResistance  += statsTotal.FrostResistanceBuff  + statsTotal.AllResist;
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 
-            // Glyph of Blocking has 100% uptime for any normal fight
-            if (talents.GlyphOfBlocking)
-                statsTotal.BonusBlockValueMultiplier += 0.1f;
-            statsTotal.BlockValue += (float)Math.Floor(statsTotal.Strength * ProtWarr.StrengthToBlockValue - 10f);
-            statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1 + statsTotal.BonusBlockValueMultiplier));
- 
-            statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
-            if (character.MainHand != null && (character.MainHand.Type == ItemType.OneHandMace))
-            {
-                statsTotal.ArmorPenetration += talents.MaceSpecialization * 0.03f;
-            }
-            statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
-            statsTotal.BonusCritMultiplier = statsRace.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
-            if (character.MainHand != null && (character.MainHand.Type == ItemType.OneHandAxe))
-            {
-                statsTotal.PhysicalCrit += talents.PoleaxeSpecialization * 0.01f;
-                statsTotal.BonusCritMultiplier += talents.PoleaxeSpecialization * 0.01f;
-            }
-            statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
-            statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
-            statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
-            statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
-
             // Calculate Procs and Special Effects
-            statsTotal += GetSpecialEffectStats(character, statsTotal);
+            float weaponSpeed = 1.0f;
+            if (character.MainHand != null) { weaponSpeed = character.MainHand.Speed; }
+
+            AttackModelMode amm = AttackModelMode.Basic;
+            if (talents.UnrelentingAssault > 0) amm = AttackModelMode.UnrelentingAssault;
+            else if (talents.Shockwave > 0)     amm = AttackModelMode.FullProtection;
+            else if (talents.Devastate > 0)     amm = AttackModelMode.Devastate;
+
+            AttackModel am = new AttackModel(character, statsTotal, amm);
+
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects()){
+                switch (effect.Trigger){
+                    case Trigger.Use:
+                        statsProcs += effect.GetAverageStats(0.0f, 1.0f, weaponSpeed);
+                        break;
+                    case Trigger.MeleeHit:
+                    case Trigger.PhysicalHit:
+                        statsProcs += effect.GetAverageStats(am.AttacksPerSecond, 1.0f, weaponSpeed);
+                        break;
+                    case Trigger.MeleeCrit:
+                    case Trigger.PhysicalCrit:
+                        statsProcs += effect.GetAverageStats(am.CritsPerSecond, 1.0f, weaponSpeed);
+                        break;
+                    case Trigger.DoTTick:
+                        if (character.WarriorTalents.DeepWounds > 0)
+                            statsProcs += effect.GetAverageStats(2.0f, 1.0f, weaponSpeed);
+                        break;
+                    case Trigger.DamageDone:
+                        statsProcs += effect.GetAverageStats(am.AttacksPerSecond, 1.0f, weaponSpeed);
+                        break;
+                }
+            }
+
+            statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina  * (1f + totalBSTAM + statsProcs.BonusStaminaMultiplier));
+            statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength * (1f + totalBSM + statsProcs.BonusStrengthMultiplier));
+            statsProcs.Agility      = (float)Math.Floor(statsProcs.Agility  * (1f + totalBAM + statsProcs.BonusAgilityMultiplier));
+            statsProcs.Armor       += statsProcs.BonusArmor;
+            statsProcs.Armor       += statsProcs.Agility * 2f;
+            statsProcs.Armor        = (float)Math.Floor(statsProcs.Armor    * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
+            statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina  * 10f);
+            statsProcs.AttackPower += statsProcs.Strength * 2f;
+            statsProcs.AttackPower += (float)Math.Floor(talents.ArmoredToTheTeeth * statsProcs.Armor / 108.0f);
+            statsProcs.AttackPower  = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
+            statsProcs.BlockValue  += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsProcs.Strength));
+            statsProcs.BlockValue   = (float)Math.Floor(statsProcs.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
+
+            statsTotal += statsProcs;
 
             // Greatness/Highest Stat Effect
-            statsTotal.Strength += (float)Math.Floor(statsTotal.HighestStat * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Strength += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusStrengthMultiplier));
 
 			return statsTotal;
 		}
@@ -786,12 +629,13 @@ threat and limited threat scaled by the threat scale.",
                             calcCrush.Name = "Crush";
                             calcHit.Name = "Hit";
 
-                            calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.Miss * 100.0f;
+                            calcMiss.OverallPoints  = calcMiss.MitigationPoints  = calculations.Miss  * 100.0f;
                             calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.Dodge * 100.0f;
                             calcParry.OverallPoints = calcParry.MitigationPoints = calculations.Parry * 100.0f;
                             calcBlock.OverallPoints = calcBlock.MitigationPoints = calculations.Block * 100.0f;
-                            calcCrit.OverallPoints = calcCrit.SurvivalPoints = calculations.CritVulnerability * 100.0f;
-                            calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - (calculations.DodgePlusMissPlusParryPlusBlock + calculations.CritVulnerability)) * 100.0f;
+                            calcCrit.OverallPoints  = calcCrit.SurvivalPoints    = calculations.CritVulnerability * 100.0f;
+                            calcHit.OverallPoints   = calcHit.SurvivalPoints     =
+                                (1.0f - (calculations.DodgePlusMissPlusParryPlusBlock + calculations.CritVulnerability)) * 100.0f;
                         }
                         return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcBlock, calcCrit, calcCrush, calcHit };
                     }
@@ -1001,30 +845,24 @@ threat and limited threat scaled by the threat scale.",
 					return new ComparisonCalculationBase[0];
 			}
 		}
-        //Hide the ranged weapon enchants. None of them apply to melee damage at all.
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
-        {
-            return enchant.Slot == ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant, character, slot);
+
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
+            //Hide the ranged weapon enchants. None of them apply to melee damage at all.
+            if (character != null && (character.WarriorTalents != null && enchant != null)) {
+                return enchant.Slot == ItemSlot.Ranged ? false :
+                    base.EnchantFitsInSlot(enchant, character, slot)
+                    || (character.WarriorTalents.TitansGrip == 1 && enchant.Slot == ItemSlot.TwoHand && slot == ItemSlot.OffHand);
+            }
+            return enchant.Slot == ItemSlot.Ranged ? false : enchant.FitsInSlot(slot);
         }
 
-        public override bool IsItemRelevant(Item item)
-        {
-            // Bone Fishing Pole
-            if (item.Id == 45991)
-                return false;
-
-            return base.IsItemRelevant(item);
-        }
-
-		public override Stats GetRelevantStats(Stats stats)
-		{
-            Stats relevantStats = new Stats()
-			{
-				Armor = stats.Armor,
+		public override Stats GetRelevantStats(Stats stats) {
+            Stats relevantStats = new Stats() {
+                Stamina = stats.Stamina,
+                Agility = stats.Agility,
+                Armor = stats.Armor,
 				BonusArmor = stats.BonusArmor,
                 AverageArmor = stats.AverageArmor,
-				Stamina = stats.Stamina,
-				Agility = stats.Agility,
 				DodgeRating = stats.DodgeRating,
                 ParryRating = stats.ParryRating,
                 BlockRating = stats.BlockRating,
@@ -1078,8 +916,7 @@ threat and limited threat scaled by the threat scale.",
                 DevastateCritIncrease = stats.DevastateCritIncrease
 			};
 
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if ((effect.Trigger == Trigger.Use || 
                     effect.Trigger == Trigger.MeleeCrit || 
                     effect.Trigger == Trigger.MeleeHit || 
@@ -1094,9 +931,7 @@ threat and limited threat scaled by the threat scale.",
 
             return relevantStats;
 		}
-
-		public override bool HasRelevantStats(Stats stats)
-		{
+		public override bool HasRelevantStats(Stats stats) {
             bool relevant = 
                 (stats.Agility + stats.Armor + stats.AverageArmor + stats.BonusArmor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier +
@@ -1116,9 +951,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusBleedDamageMultiplier +
                     stats.HighestStat + stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage + stats.DevastateCritIncrease
                 ) != 0;
-
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use ||
                     effect.Trigger == Trigger.MeleeCrit ||
                     effect.Trigger == Trigger.MeleeHit ||
@@ -1131,43 +964,90 @@ threat and limited threat scaled by the threat scale.",
                     if (relevant) break;
                 }
             }
-
             return relevant;
 		}
 
-        /// <summary>
-        /// Saves the talents for the character
-        /// </summary>
-        /// <param name="character">The character for whom the talents should be saved</param>
-        public void GetTalents(Character character)
-        {
+        // public override Stats GetBuffsStats(){ return new Stats(){};}
+        public override void SetDefaults(Character character) {
+            /*character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Agility/Strength)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Devotion Aura"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Devotion Aura (Armor)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Inspiration"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Grace"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Presence (Health)"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Windfury Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Trauma"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Insect Swarm"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));*/
+        }
+
+        public void GetTalents(Character character) {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
             calcOpts.talents = character.WarriorTalents;
         }
-    }
-    public class ProtWarr {
-        //public static readonly float AgilityToDodge = 1.0f / 73.52941176f;
-        //public static readonly float DodgeRatingToDodge = 1.0f / 39.34798813f;
-        //public static readonly float StrengthToAP = 2.0f;
-        public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
-        //public static readonly float AgilityToArmor = 2.0f;
-        //public static readonly float AgilityToCrit = 1.0f / 62.5f;
-        //public static readonly float StaminaToHP = 10.0f;
-        //public static readonly float HitRatingToHit = 1.0f / 32.78998947f;
-        //public static readonly float CritRatingToCrit = 1.0f / 45.90598679f;
-        //public static readonly float HasteRatingToHaste = 1.0f / 32.78998947f;
-        //public static readonly float ExpertiseRatingToExpertise = 1.0f / (32.78998947f / 4f);
-        //public static readonly float ExpertiseToDodgeParryReduction = 0.25f;
-        public static readonly float DefenseRatingToDefense = 1.0f / 4.918498039f;
-        public static readonly float DefenseToDodge = 0.04f;
-        public static readonly float DefenseToBlock = 0.04f;
-        public static readonly float DefenseToParry = 0.04f;
-        public static readonly float DefenseToMiss = 0.04f;
-        public static readonly float DefenseToCritReduction = 0.04f;
-        public static readonly float DefenseToDazeReduction = 0.04f;
-        //public static readonly float ParryRatingToParry = 1.0f / 49.18498611f;
-        //public static readonly float BlockRatingToBlock = 1.0f / 16.39499474f;
-        public static readonly float ResilienceRatingToCritReduction = 1.0f / 81.97497559f;
-        //public static readonly float ArPToArmorPenetration = 1.0f / 15.395298f;
+
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs() {
+            if (_relevantGlyphs == null) {
+                _relevantGlyphs = new List<string>();
+                // ===== MAJOR GLYPHS =====
+                _relevantGlyphs.Add("Glyph of Barbaric Insults");
+                _relevantGlyphs.Add("Glyph of Blocking");
+                _relevantGlyphs.Add("Glyph of Bloodthirst");
+                _relevantGlyphs.Add("Glyph of Cleaving");
+                _relevantGlyphs.Add("Glyph of Devastate");
+                _relevantGlyphs.Add("Glyph of Enraged Regeneration");
+                _relevantGlyphs.Add("Glyph of Heroic Strike");
+                _relevantGlyphs.Add("Glyph of Intervene");
+                _relevantGlyphs.Add("Glyph of Last Stand");
+                _relevantGlyphs.Add("Glyph of Revenge");
+                _relevantGlyphs.Add("Glyph of Shield Wall");
+                _relevantGlyphs.Add("Glyph of Shockwave");
+                _relevantGlyphs.Add("Glyph of Spell Reflection");
+                _relevantGlyphs.Add("Glyph of Sunder Armor");
+                _relevantGlyphs.Add("Glyph of Taunt");
+                _relevantGlyphs.Add("Glyph of Rapid Charge");
+                _relevantGlyphs.Add("Glyph of Rending");
+                _relevantGlyphs.Add("Glyph of Resonating Power");
+                _relevantGlyphs.Add("Glyph of Vigilance");
+                /* The following Glyphs have been disabled as they are not used by Wartanks
+                _relevantGlyphs.Add("Glyph of Bladestorm");
+                _relevantGlyphs.Add("Glyph of Execution");
+                _relevantGlyphs.Add("Glyph of Hamstring");
+                _relevantGlyphs.Add("Glyph of Mortal Strike");
+                _relevantGlyphs.Add("Glyph of Overpower");
+                _relevantGlyphs.Add("Glyph of Sweeping Strikes");
+                _relevantGlyphs.Add("Glyph of Victory Rush");
+                _relevantGlyphs.Add("Glyph of Whirlwind");*/
+                // ===== MINOR GLYPHS =====
+                _relevantGlyphs.Add("Glyph of Battle");
+                _relevantGlyphs.Add("Glyph of Bloodrage");
+                _relevantGlyphs.Add("Glyph of Charge");
+                _relevantGlyphs.Add("Glyph of Command");
+                _relevantGlyphs.Add("Glyph of Mocking Blow");
+                _relevantGlyphs.Add("Glyph of Thunder Clap");
+                /* The following Glyphs have been disabled as they are solely Defensive in nature.
+                _relevantGlyphs.Add("Glyph of Enduring Victory");*/
+            }
+            return _relevantGlyphs;
+        }
     }
 }

@@ -607,12 +607,13 @@ namespace Rawr
                     S.Health = 8121f;
                     S.Armor = 0f;
                     S.AttackPower = 220f;
-                    S.PhysicalCrit = 0.03192f;
-                    S.Dodge = 0.0366400f;
+                    S.PhysicalCrit = 0.03192f; // This + the base agi makes 4.88%
+                    S.Dodge = 0.05f; // ?? 0.0366400f;
                     S.Parry = 0.05f;
                     S.Block = 0.05f;
                     S.SpellPower = 0f;
                     S.SpellCrit = 0.0f;
+                    S.Defense = 400.0f;
                     switch (characterRace)
                     {
                         case CharacterRace.Draenei:

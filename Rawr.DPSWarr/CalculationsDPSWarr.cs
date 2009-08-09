@@ -74,14 +74,11 @@ namespace Rawr.DPSWarr {
         #endif
 
 		private string[] _characterDisplayCalculationLabels = null;
-        public override string[] CharacterDisplayCalculationLabels
-        {
-            get
-            {
+        public override string[] CharacterDisplayCalculationLabels {
+            get {
                 if (_characterDisplayCalculationLabels == null) {
                     _characterDisplayCalculationLabels = new string[] {
     					"Base Stats:Health and Stamina",
-    					//"Base Stats:Stamina",
                         "Base Stats:Armor",
                         "Base Stats:Strength",
                         "Base Stats:Attack Power",
@@ -144,30 +141,19 @@ Don't forget your weapons used matched with races can affect these numbers.",
             get {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-                    "Health",
-                    "Resilience",
-                    "Armor",
-                    "Strength",
-                    "Attack Power",
-                    "Agility",
-					"Crit Rating",
-                    "Crit %",
-                    "Haste Rating",
-                    "Haste %",
-					"Armor Penetration Rating",
-					"Armor Penetration %",
-                    "Hit Rating",
-                    "Hit %",
-                    "White Miss %",
-                    "Yellow Miss %",
-                    "Expertise Rating",
-                    "Expertise",
-                    "Dodge/Parry Reduction %",
-                    "Dodge %",
-                    "Parry %",
-                    "Chance to be Avoided %",
-                    //"Threat Reduction",
-                    //"Threat Per Second",
+                        "Health",
+                        "Armor",
+                        "Strength",
+                        "Attack Power",
+                        "Agility",
+                        "Crit %",
+                        "Haste %",
+					    "Armor Penetration %",
+                        "% Chance to Miss (White)",
+                        "% Chance to Miss (Yellow)",
+                        "% Chance to be Dodged",
+                        "% Chance to be Parried",
+                        "% Chance to be Avoided (Yellow/Dodge)",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -189,11 +175,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
 
         private Dictionary<string, Color> _subPointNameColors = null;
-        public override Dictionary<string, Color> SubPointNameColors
-        {
-            get
-            {
-                
+        public override Dictionary<string, Color> SubPointNameColors {
+            get {
                 if (_subPointNameColors == null)
                 {
 #if RAWR3
@@ -209,12 +192,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
 
         private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
+        public override List<ItemType> RelevantItemTypes {
+            get {
+                if (_relevantItemTypes == null) {
                     _relevantItemTypes = new List<ItemType>(new[] {
                         ItemType.None,
                         ItemType.Leather,
@@ -261,7 +241,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character.WarriorTalents, stats, combatFactors, character);
             Skills skillAttacks = new Skills(character, character.WarriorTalents, stats, combatFactors, whiteAttacks);
             Rotation Rot = new Rotation(character, character.WarriorTalents, stats, combatFactors, whiteAttacks);
-            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);// GetRaceStats(character);
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
 
             calculatedStats.Duration = calcOpts.Duration;
             calculatedStats.BasicStats = stats;
@@ -285,11 +265,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     )
                     * -1f;
                 calculatedStats.ExpertiseRating = stats.ExpertiseRating;
-                calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, character.Class);
+                calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Warrior);
                 calculatedStats.MhExpertise = combatFactors._c_mhexpertise;
                 calculatedStats.OhExpertise = combatFactors._c_ohexpertise;
                 calculatedStats.WeapMastPerc = character.WarriorTalents.WeaponMastery / 100f;
-                calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, character.Class);
+                calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Warrior);
                 calculatedStats.CritRating = stats.CritRating;
                 calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;
                 calculatedStats.MhCrit = combatFactors._c_mhycrit;
@@ -298,7 +278,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // Offensive
             float teethbonus = stats.Armor;
             teethbonus *= (float)character.WarriorTalents.ArmoredToTheTeeth;
-            teethbonus /= 180.0f;
+            teethbonus /= 108f;
             calculatedStats.TeethBonus = (int)teethbonus;
             calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && combatFactors._c_mhItemType == ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
             calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
@@ -348,16 +328,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return calculatedStats;
         }
 
-        public override Stats GetItemStats(Character character, Item additionalItem) {
-            Stats statsItems = base.GetItemStats(character,additionalItem);
-            return statsItems;
-        }
-
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             WarriorTalents talents = character.WarriorTalents;
 
-            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);// GetRaceStats(character);
+            Stats statsRace  = BaseStats.GetBaseStats(character.Level, CharacterClass.Warrior, character.Race);
             Stats statsBuffs = GetBuffsStats(character);
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsOptionsPanel = new Stats() {
@@ -368,11 +343,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
                             - (calcOpts.TargetLevel == 83f ? 0.03f : 0f),
             };
             Stats statsTalents = new Stats() {
-                //Parry = talents.Deflection * 1.0f,
+                Parry = talents.Deflection * 1.0f,
                 PhysicalCrit = talents.Cruelty * 0.01f,
-                //Dodge = talents.Anticipation * 1.0f,
-                //Block = talents.ShieldSpecialization * 1.0f,
-                //BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
+                Dodge = talents.Anticipation * 1.0f,
+                Block = talents.ShieldSpecialization * 1.0f,
+                BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
                 BonusDamageMultiplier = /*(character.MainHand != null &&
                                          (character.MainHand.Type == ItemType.OneHandAxe ||
                                          character.MainHand.Type == ItemType.OneHandMace ||
@@ -394,23 +369,25 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
+                BonusShieldSlamDamage = talents.GagOrder * 0.05f,
+                DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 BonusArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalHaste = talents.BloodFrenzy * 0.05f,
-                // Removing this line, and instead adding it to CombatFactors as a buff, since statsTotal.ArmorPenetration includes arp from debuffs and not buffs, and they need to be separate
-                //ArmorPenetration = ((character.MainHand != null && character.MainHand.Type == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f),
                 PhysicalHit = talents.Precision * 0.01f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
+            Stats statsProcs = new Stats();
 
             // Stamina
             float totalBSTAM = statsTotal.BonusStaminaMultiplier;
-            float staBase   = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina             );
-            float staBonus  = (float)Math.Floor((1f + totalBSTAM) * statsGearEnchantsBuffs.Stamina);
+            float staBase    = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina             );
+            float staBonus   = (float)Math.Floor((1f + totalBSTAM) * statsGearEnchantsBuffs.Stamina);
             statsTotal.Stamina = staBase + staBonus;
             
             // Health
-            statsTotal.Health  += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+            statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
 
             // Strength
             float totalBSM = statsTotal.BonusStrengthMultiplier;
@@ -419,7 +396,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsTotal.Strength = strBase + strBonus;
 
             // Agility
-            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
+            float totalBAM = statsTotal.BonusAgilityMultiplier;
+            float agiBase = (float)Math.Floor((1f + totalBAM) * statsRace.Agility);
+            float agiBonus = (float)Math.Floor((1f + totalBAM) * statsGearEnchantsBuffs.Agility);
+            statsTotal.Strength = strBase + strBonus;
             
             // Armor
             statsTotal.Armor += statsTotal.BonusArmor;
@@ -461,7 +441,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
             float dmgDoneInterval  = 1f / (mhHitsPerSecond + ohHitsPerSecond + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
-            Stats statsProcs = new Stats();
             SpecialEffect bersMainHand = null;
             SpecialEffect bersOffHand = null;
 
@@ -583,9 +562,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return enchant.Slot == ItemSlot.Ranged ? false : enchant.FitsInSlot(slot);
         }
 
-        public override Stats GetRelevantStats(Stats stats)
-        {
-			Stats s = new Stats() {
+        public override Stats GetRelevantStats(Stats stats) {
+            Stats relevantStats = new Stats() {
                 Stamina = stats.Stamina,
                 Agility = stats.Agility,
                 Strength = stats.Strength,
@@ -616,19 +594,19 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 ArcaneDamage = stats.ArcaneDamage,
                 DreadnaughtBonusRageProc = stats.DreadnaughtBonusRageProc,
             };
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
-                    || effect.Trigger == Trigger.DamageDone)
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if ((effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.MeleeCrit ||
+                    effect.Trigger == Trigger.MeleeHit ||
+                    effect.Trigger == Trigger.PhysicalCrit ||
+                    effect.Trigger == Trigger.PhysicalHit ||
+                    effect.Trigger == Trigger.DoTTick
+                    || effect.Trigger == Trigger.DamageDone) && HasRelevantStats(effect.Stats))
                 {
-                    if (HasRelevantStats(effect.Stats))
-                    {
-                        s.AddSpecialEffect(effect);
-                    }
+                    relevantStats.AddSpecialEffect(effect);
                 }
             }
-            return s;
+            return relevantStats;
         }
         public override bool HasRelevantStats(Stats stats) {
             bool relevant = (
@@ -663,13 +641,17 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.BonusWarrior2PT8Haste +
                 stats.MortalstrikeBloodthirstCritIncrease +
                 stats.BonusSlamDamage +
-                //stats.BloodlustProc +
                 stats.DarkmoonCardDeathProc + 
                 stats.HighestStat
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.MeleeCrit ||
+                    effect.Trigger == Trigger.MeleeHit ||
+                    effect.Trigger == Trigger.PhysicalCrit ||
+                    effect.Trigger == Trigger.PhysicalHit ||
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                     if (relevant) break;
@@ -679,6 +661,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
+            // We need specilized handling due to Titan's Grip
             if (item == null || character == null) {
                 return false;
             } else if (character.WarriorTalents.TitansGrip == 1 && item.Type == ItemType.Polearm && slot == CharacterSlot.OffHand) {
@@ -859,6 +842,5 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
             return _relevantGlyphs;
         }
-    
     }
 }

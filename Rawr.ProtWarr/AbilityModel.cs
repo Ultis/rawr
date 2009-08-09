@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.ProtWarr
-{
-    public class AbilityModel
-    {
+namespace Rawr.ProtWarr {
+    public class AbilityModel {
         private Ability Ability;
         private Character Character;
         private Stats Stats;
@@ -19,17 +17,10 @@ namespace Rawr.ProtWarr
         public float Threat { get; private set; }
         public float DamageMultiplier { get; private set; }
         public float ArmorReduction { get; private set; }
-        public float CritPercentage
-        {
-            get { return AttackTable.Critical; }
-        }
-        public float HitPercentage
-        {
-            get { return AttackTable.AnyHit; }
-        }
+        public float CritPercentage { get { return AttackTable.Critical; } }
+        public float LandPercentage { get { return AttackTable.AnyLand ; } }
 
-        private void CalculateDamage()
-        {
+        private void CalculateDamage() {
             float baseDamage        = 0.0f;
             float critMultiplier    = 1.0f + Lookup.BonusCritMultiplier(Character, Stats, Ability);
 
@@ -100,7 +91,7 @@ namespace Rawr.ProtWarr
             // Armor reduction
             baseDamage *= (1.0f - ArmorReduction);
             // Missed attacks
-            baseDamage *= (1.0f - AttackTable.AnyMiss);
+            baseDamage *= (1.0f - AttackTable.AnyNotLand);
 
             Damage = baseDamage;
         }
