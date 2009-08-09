@@ -840,11 +840,9 @@ namespace Rawr
                 stats.SpellPowerFor10SecOnCast_15_45 += 765;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 765 }, 10, 45, 0.15f));
             }
-            else if (line.StartsWith("Each time you cast a damaging or healing spell, there is chance you will gain up to 176 mana per 5 for 15 sec."))
+            else if ((match = Regex.Match(line, @"Each time you cast a damaging or healing spell, there is chance you will gain up to (?<amount>\d+) mana per 5 for 15 sec.")).Success)
             {
-                // Spark of Life
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = 176f }, 15f, 45f, .10f));
-                stats.ManaRestoreOnCast_10_45 += 176 * 3;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Mp5 = int.Parse(match.Groups["amount"].Value) }, 15f, 45f, .10f));
             }
             else if (line.StartsWith("Each time you cast a spell, there is chance you will gain 290 spell power."))
             {
@@ -1104,11 +1102,9 @@ namespace Rawr
                 stats.TotemThunderhead = 1f; // Totem of the Thunderhead, Possible Future totems
             }
             #endregion
-            else if (line.StartsWith("Reduces the mana cost of your spells by "))
+            else if ((match = Regex.Match(line, @"Reduces the base mana cost of your spells by (?<amount>\d+).")).Success)
             {
-                line = line.Replace(".", "");
-                line = line.Substring("Reduces the mana cost of your spells by ".Length);
-                stats.SpellsManaReduction = float.Parse(line);
+                stats.SpellsManaReduction = int.Parse(match.Groups["amount"].Value);
             }
             #region 3.2 Trinkets
             else if ((match = Regex.Match(line, @"Each time you hit with a melee or ranged attack, you have a chance to gain (?<amount>\d+) attack power for 10 sec.")).Success)
