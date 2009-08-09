@@ -943,13 +943,13 @@ namespace Rawr
             {
                 stats.ConsecrationSpellPower = 141f;
             }
-            else if (line == "Increases the damage dealt by Crusader Strike by 115.5.")
+            else if (line == "Increases the damage dealt by Crusader Strike by 78.75.")
             {
-                stats.CrusaderStrikeDamage = 115.5f;
+                stats.CrusaderStrikeDamage = 78.75f;
             }
-            else if (line == "Increases the damage dealt by Crusader Strike by 116.")
+            else if (line == "Increases the damage dealt by Crusader Strike by 79.")
             {
-                stats.CrusaderStrikeDamage = 115.5f;
+                stats.CrusaderStrikeDamage = 78.75f;
             }
             else if (line == "Increases the damage done by Divine Storm by 235.")
             {
@@ -1118,6 +1118,10 @@ namespace Rawr
             else if ((match = Regex.Match(line, @"When you deal damage you have a chance to gain Paragon, increasing your Strength or Agility by (?<amount>\d+) for 15 sec.  Your highest stat is always chosen.")).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HighestStat = int.Parse(match.Groups["amount"].Value) }, 15f, 45f, 0.35f));
+            }
+            else if ((match = Regex.Match(line, @"Each time you cast a helpful spell, you have a chance to gain (?<amount>\d+) mana.")).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = int.Parse(match.Groups["amount"].Value) }, 0f, 45f, 0.25f));
             }
             #endregion
             else
