@@ -399,7 +399,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float totalBAM = statsTotal.BonusAgilityMultiplier;
             float agiBase = (float)Math.Floor((1f + totalBAM) * statsRace.Agility);
             float agiBonus = (float)Math.Floor((1f + totalBAM) * statsGearEnchantsBuffs.Agility);
-            statsTotal.Strength = strBase + strBonus;
+            statsTotal.Agility = agiBase + agiBonus;
             
             // Armor
             statsTotal.Armor += statsTotal.BonusArmor;
@@ -524,7 +524,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina     * 10f);
             statsProcs.Armor       += statsProcs.BonusArmor;
             statsProcs.Armor       += 2f * statsProcs.Agility;
-            statsProcs.Armor       *= 1f + statsTotal.BonusArmorMultiplier;
+            statsProcs.Armor       *= (float)Math.Floor(1f + statsTotal.BonusArmorMultiplier);
 
             statsTotal             += statsProcs;
 
