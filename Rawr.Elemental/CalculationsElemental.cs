@@ -496,6 +496,13 @@ namespace Rawr.Elemental
             #endregion
             return relevant;
 		}
+
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
+        {
+            // Filters out Non-Shield Offhand Enchants and Ranged Enchants
+            if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
+            return base.EnchantFitsInSlot(enchant, character, slot);
+        }
 	}
 
     public class CharacterCalculationsElemental : CharacterCalculationsBase
