@@ -110,7 +110,7 @@ namespace Rawr.Elemental
         /// </summary>
         public void CalculateRotation()
         {
-            float optimalWait = (LvB.TotalDamage * LB.CastTime / LB.TotalDamage) - LvB.CastTime;
+            float optimalWait = LvBFS.TotalDamage * (LB.CastTime + LvBFS.CastTime) / (LB.TotalDamage + LvBFS.TotalDamage) - LvBFS.CastTime;
             CalculateRotation(optimalWait);
         }
 
