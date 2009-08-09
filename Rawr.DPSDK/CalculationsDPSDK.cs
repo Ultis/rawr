@@ -883,8 +883,8 @@ namespace Rawr.DPSDK
                         if (talents.MasterOfGhouls == 0)
                         {
                             float timeleft = calcOpts.FightLength * 60;
-                            float numCDs = timeleft / (5 * 60);
-                            float duration = numCDs * 120f;
+                            float numCDs = timeleft / ((4f - .75f * talents.NightOfTheDead) * 60f);
+                            float duration = numCDs * 60f;
 
                             uptime = duration / timeleft;
                         }
