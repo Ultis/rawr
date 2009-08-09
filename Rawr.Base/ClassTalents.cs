@@ -961,11 +961,11 @@ namespace Rawr
         public int HealingLight { get { return _data[2]; } set { _data[2] = value; } }
 
         [TalentData(3, "Divine Intellect", 5, 0, 2, 2, -1, new string[] {
-@"Increases your total Intellect by 3%.",
+@"Increases your total Intellect by 2%.",
+@"Increases your total Intellect by 4%.",
 @"Increases your total Intellect by 6%.",
-@"Increases your total Intellect by 9%.",
-@"Increases your total Intellect by 12%.",
-@"Increases your total Intellect by 15%.",}, "spell_nature_sleep")]
+@"Increases your total Intellect by 8%.",
+@"Increases your total Intellect by 10%.",}, "spell_nature_sleep")]
         public int DivineIntellect { get { return _data[3]; } set { _data[3] = value; } }
 
         [TalentData(4, "Unyielding Faith", 2, 0, 3, 2, -1, new string[] {
@@ -978,16 +978,16 @@ namespace Rawr
         public int AuraMastery { get { return _data[5]; } set { _data[5] = value; } }
 
         [TalentData(6, "Illumination", 5, 0, 2, 3, -1, new string[] {
-@"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 20% chance to gain mana equal to 60% of the base cost of the spell.",
-@"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 40% chance to gain mana equal to 60% of the base cost of the spell.",
-@"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 60% chance to gain mana equal to 60% of the base cost of the spell.",
-@"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 80% chance to gain mana equal to 60% of the base cost of the spell.",
-@"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 100% chance to gain mana equal to 60% of the base cost of the spell.",}, "spell_holy_greaterheal")]
+@"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 20% chance to gain mana equal to 30% of the base cost of the spell.",
+@"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 40% chance to gain mana equal to 30% of the base cost of the spell.",
+@"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 60% chance to gain mana equal to 30% of the base cost of the spell.",
+@"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 80% chance to gain mana equal to 30% of the base cost of the spell.",
+@"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell you have a 100% chance to gain mana equal to 30% of the base cost of the spell.",}, "spell_holy_greaterheal")]
         public int Illumination { get { return _data[6]; } set { _data[6] = value; } }
 
         [TalentData(7, "Improved Lay on Hands", 2, 0, 3, 3, -1, new string[] {
-@"Gives the target of your Lay on Hands spell a 25% bonus to their armor value from items for 15 sec.  In addition, the cooldown for your Lay on Hands spell is reduced by 2 min.",
-@"Gives the target of your Lay on Hands spell a 50% bonus to their armor value from items for 15 sec.  In addition, the cooldown for your Lay on Hands spell is reduced by 4 min.",}, "spell_holy_layonhands")]
+@"Grants the target of your Lay on Hands spell 10% reduced physical damage taken for 15 sec.  In addition, the cooldown for your Lay on Hands spell is reduced by 2 min.",
+@"Grants the target of your Lay on Hands spell 20% reduced physical damage taken for 15 sec.  In addition, the cooldown for your Lay on Hands spell is reduced by 4 min.",}, "spell_holy_layonhands")]
         public int ImprovedLayOnHands { get { return _data[7]; } set { _data[7] = value; } }
 
         [TalentData(8, "Improved Concentration Aura", 3, 0, 1, 4, -1, new string[] {
@@ -1364,7 +1364,7 @@ namespace Rawr
         public int SwiftRetribution { get { return _data[73]; } set { _data[73] = value; } }
 
         [TalentData(74, "Crusader Strike", 1, 2, 2, 9, -1, new string[] {
-@"An instant strike that causes 110% weapon damage.",}, "spell_holy_crusaderstrike")]
+@"An instant strike that causes 75% weapon damage.",}, "spell_holy_crusaderstrike")]
         public int CrusaderStrike { get { return _data[74]; } set { _data[74] = value; } }
 
         [TalentData(75, "Sheath of Light", 3, 2, 3, 9, -1, new string[] {
