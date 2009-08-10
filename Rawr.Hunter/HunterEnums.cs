@@ -144,6 +144,7 @@ namespace Rawr.Hunter
         Stampede,
         Sting,
         Swipe,
+        Swoop,
         Taunt,
         TendonRip,
         Thunderstomp,

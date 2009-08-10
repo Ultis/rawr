@@ -128,7 +128,7 @@
             this.label17 = new System.Windows.Forms.Label();
             this.cmbFerocityHeartOfThePhoenix = new System.Windows.Forms.ComboBox();
             this.label53 = new System.Windows.Forms.Label();
-            this.cmbFerocityCharge = new System.Windows.Forms.ComboBox();
+            this.cmbFerocityChargeSwoop = new System.Windows.Forms.ComboBox();
             this.label14 = new System.Windows.Forms.Label();
             this.cmbFerocityLionhearted = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -214,6 +214,10 @@
             this.cmbPriority2 = new System.Windows.Forms.ComboBox();
             this.cmbPriority1 = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.comboBoxPet7 = new System.Windows.Forms.ComboBox();
+            this.comboBoxPet6 = new System.Windows.Forms.ComboBox();
+            this.label85 = new System.Windows.Forms.Label();
+            this.comboBoxPet5 = new System.Windows.Forms.ComboBox();
             this.label24 = new System.Windows.Forms.Label();
             this.comboBoxPet4 = new System.Windows.Forms.ComboBox();
             this.label23 = new System.Windows.Forms.Label();
@@ -251,7 +255,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(292, 504);
+            this.tabPage2.Size = new System.Drawing.Size(292, 531);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Pet Talents";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1132,7 +1136,7 @@
             this.grpTalentsFerocity.Controls.Add(this.label17);
             this.grpTalentsFerocity.Controls.Add(this.cmbFerocityHeartOfThePhoenix);
             this.grpTalentsFerocity.Controls.Add(this.label53);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityCharge);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityChargeSwoop);
             this.grpTalentsFerocity.Controls.Add(this.label14);
             this.grpTalentsFerocity.Controls.Add(this.cmbFerocityLionhearted);
             this.grpTalentsFerocity.Controls.Add(this.label15);
@@ -1313,24 +1317,24 @@
             this.label53.TabIndex = 50;
             this.label53.Text = "Heart of the Phoenix:";
             // 
-            // cmbFerocityCharge
+            // cmbFerocityChargeSwoop
             // 
-            this.cmbFerocityCharge.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityCharge.FormattingEnabled = true;
-            this.cmbFerocityCharge.Location = new System.Drawing.Point(219, 142);
-            this.cmbFerocityCharge.Name = "cmbFerocityCharge";
-            this.cmbFerocityCharge.Size = new System.Drawing.Size(38, 21);
-            this.cmbFerocityCharge.TabIndex = 49;
-            this.cmbFerocityCharge.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            this.cmbFerocityChargeSwoop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityChargeSwoop.FormattingEnabled = true;
+            this.cmbFerocityChargeSwoop.Location = new System.Drawing.Point(219, 142);
+            this.cmbFerocityChargeSwoop.Name = "cmbFerocityChargeSwoop";
+            this.cmbFerocityChargeSwoop.Size = new System.Drawing.Size(38, 21);
+            this.cmbFerocityChargeSwoop.TabIndex = 49;
+            this.cmbFerocityChargeSwoop.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(139, 145);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(44, 13);
+            this.label14.Size = new System.Drawing.Size(82, 13);
             this.label14.TabIndex = 48;
-            this.label14.Text = "Charge:";
+            this.label14.Text = "Charge/Swoop:";
             // 
             // cmbFerocityLionhearted
             // 
@@ -1548,7 +1552,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(292, 504);
+            this.tabPage1.Size = new System.Drawing.Size(292, 531);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Hunter Options";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1925,7 +1929,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 5);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(300, 530);
+            this.tabControl1.Size = new System.Drawing.Size(300, 557);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tabControl1.TabIndex = 48;
             // 
@@ -1936,7 +1940,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(292, 504);
+            this.tabPage3.Size = new System.Drawing.Size(292, 531);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Rotations";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -2279,6 +2283,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.comboBoxPet7);
+            this.groupBox1.Controls.Add(this.comboBoxPet6);
+            this.groupBox1.Controls.Add(this.label85);
+            this.groupBox1.Controls.Add(this.comboBoxPet5);
             this.groupBox1.Controls.Add(this.label24);
             this.groupBox1.Controls.Add(this.comboBoxPet4);
             this.groupBox1.Controls.Add(this.label23);
@@ -2289,10 +2297,49 @@
             this.groupBox1.Controls.Add(this.comboBoxPet1);
             this.groupBox1.Location = new System.Drawing.Point(9, 350);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(277, 130);
+            this.groupBox1.Size = new System.Drawing.Size(277, 175);
             this.groupBox1.TabIndex = 39;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Pet Auto-cast Priority";
+            this.groupBox1.Text = "Pet Skill Priority";
+            // 
+            // comboBoxPet7
+            // 
+            this.comboBoxPet7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPet7.FormattingEnabled = true;
+            this.comboBoxPet7.Location = new System.Drawing.Point(103, 148);
+            this.comboBoxPet7.Name = "comboBoxPet7";
+            this.comboBoxPet7.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxPet7.TabIndex = 55;
+            this.comboBoxPet7.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
+            // 
+            // comboBoxPet6
+            // 
+            this.comboBoxPet6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPet6.FormattingEnabled = true;
+            this.comboBoxPet6.Location = new System.Drawing.Point(89, 139);
+            this.comboBoxPet6.Name = "comboBoxPet6";
+            this.comboBoxPet6.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxPet6.TabIndex = 54;
+            this.comboBoxPet6.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
+            // 
+            // label85
+            // 
+            this.label85.AutoSize = true;
+            this.label85.Location = new System.Drawing.Point(6, 130);
+            this.label85.Name = "label85";
+            this.label85.Size = new System.Drawing.Size(50, 13);
+            this.label85.TabIndex = 53;
+            this.label85.Text = "Priority 5:";
+            // 
+            // comboBoxPet5
+            // 
+            this.comboBoxPet5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPet5.FormattingEnabled = true;
+            this.comboBoxPet5.Location = new System.Drawing.Point(75, 127);
+            this.comboBoxPet5.Name = "comboBoxPet5";
+            this.comboBoxPet5.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxPet5.TabIndex = 52;
+            this.comboBoxPet5.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // label24
             // 
@@ -2311,7 +2358,7 @@
             this.comboBoxPet4.Name = "comboBoxPet4";
             this.comboBoxPet4.Size = new System.Drawing.Size(121, 21);
             this.comboBoxPet4.TabIndex = 50;
-            this.comboBoxPet4.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet4_SelectedIndexChanged);
+            this.comboBoxPet4.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // label23
             // 
@@ -2348,7 +2395,7 @@
             this.comboBoxPet3.Name = "comboBoxPet3";
             this.comboBoxPet3.Size = new System.Drawing.Size(121, 21);
             this.comboBoxPet3.TabIndex = 46;
-            this.comboBoxPet3.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet3_SelectedIndexChanged);
+            this.comboBoxPet3.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // comboBoxPet2
             // 
@@ -2358,7 +2405,7 @@
             this.comboBoxPet2.Name = "comboBoxPet2";
             this.comboBoxPet2.Size = new System.Drawing.Size(121, 21);
             this.comboBoxPet2.TabIndex = 45;
-            this.comboBoxPet2.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet2_SelectedIndexChanged);
+            this.comboBoxPet2.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // comboBoxPet1
             // 
@@ -2368,7 +2415,7 @@
             this.comboBoxPet1.Name = "comboBoxPet1";
             this.comboBoxPet1.Size = new System.Drawing.Size(121, 21);
             this.comboBoxPet1.TabIndex = 44;
-            this.comboBoxPet1.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet1_SelectedIndexChanged);
+            this.comboBoxPet1.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // CalculationOptionsPanelHunter
             // 
@@ -2376,7 +2423,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControl1);
             this.Name = "CalculationOptionsPanelHunter";
-            this.Size = new System.Drawing.Size(300, 535);
+            this.Size = new System.Drawing.Size(300, 600);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.grpTalentsCunning.ResumeLayout(false);
@@ -2482,7 +2529,7 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ComboBox cmbFerocityHeartOfThePhoenix;
         private System.Windows.Forms.Label label53;
-        private System.Windows.Forms.ComboBox cmbFerocityCharge;
+        private System.Windows.Forms.ComboBox cmbFerocityChargeSwoop;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox cmbFerocityLionhearted;
         private System.Windows.Forms.Label label15;
@@ -2602,5 +2649,9 @@
         private System.Windows.Forms.CheckBox chkUseBeastDuringBW;
         private System.Windows.Forms.CheckBox chkSpreadsheetUptimes;
         private System.Windows.Forms.CheckBox chkEmulateBugs;
+        private System.Windows.Forms.Label label85;
+        private System.Windows.Forms.ComboBox comboBoxPet5;
+        private System.Windows.Forms.ComboBox comboBoxPet7;
+        private System.Windows.Forms.ComboBox comboBoxPet6;
     }
 }

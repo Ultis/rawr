@@ -52,7 +52,6 @@ namespace Rawr.Hunter
             // movement skills
             {PetAttacks.Dive, new PetSkill(false, 32, 20, PetSkillType.NonDamaging)},
             {PetAttacks.Dash, new PetSkill(false, 32, 20, PetSkillType.NonDamaging)},
-            {PetAttacks.Charge, new PetSkill(false, 25, 35, PetSkillType.Unimplemented)}, // maybe this will cause damage :)
 
             // family skills - non damaging
             {PetAttacks.Snatch, new PetSkill(false, 60, 20, PetSkillType.NonDamaging)},
@@ -90,20 +89,20 @@ namespace Rawr.Hunter
             {PetAttacks.Sting, new PetSkill(true, 6, 20, PetSkillType.SpecialSpell, 64, 86)},
             {PetAttacks.LightningBreath, new PetSkill(true, 10, 20, PetSkillType.SpecialSpell, 80, 120)},
             {PetAttacks.AcidSpit, new PetSkill(true, 10, 20, PetSkillType.SpecialUnique, 124, 176)},
-            {PetAttacks.Thunderstomp, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
 
-            // special - non-damaging
-            {PetAttacks.Rabid, new PetSkill(false, 45, 0, PetSkillType.NonDamaging)},
-            {PetAttacks.Bullheaded, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
-            {PetAttacks.CallOfTheWild, new PetSkill(false, 300, 0, PetSkillType.NonDamaging)},
-            {PetAttacks.Taunt, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
+            // talented skills
+            {PetAttacks.Charge, new PetSkill(false, 25, 35, PetSkillType.Unimplemented)}, // maybe this will cause damage :)
+            {PetAttacks.WolverineBite, new PetSkill(true, 0, 0, PetSkillType.Unimplemented)},
+            {PetAttacks.LastStand, new PetSkill(false, 360, 0, PetSkillType.NonDamaging)},
             {PetAttacks.RoarOfRecovery, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
             {PetAttacks.RoarOfSacrifice, new PetSkill(false, 30, 0, PetSkillType.NonDamaging)},
             {PetAttacks.LickYourWounds, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
-            {PetAttacks.LastStand, new PetSkill(false, 360, 0, PetSkillType.NonDamaging)},
+            {PetAttacks.Taunt, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
+            {PetAttacks.Thunderstomp, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
 
-            // special - damaging
-            {PetAttacks.WolverineBite, new PetSkill(true, 0, 0, PetSkillType.Unimplemented)},
+            {PetAttacks.Rabid, new PetSkill(false, 45, 0, PetSkillType.NonDamaging)},
+            {PetAttacks.Bullheaded, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
+            {PetAttacks.CallOfTheWild, new PetSkill(false, 300, 0, PetSkillType.NonDamaging)},
         };
 
         public PetSkillPriorityRotation(Character character, CalculationOptionsHunter options)
@@ -136,6 +135,9 @@ namespace Rawr.Hunter
             if (skillType == PetAttacks.RoarOfSacrifice && options.petRoarOfSacrifice == 0) return;
             if (skillType == PetAttacks.Taunt && options.petTaunt == 0) return;
             if (skillType == PetAttacks.WolverineBite && options.petWolverineBite == 0) return;
+            if (skillType == PetAttacks.Thunderstomp && options.petThunderstomp == 0) return;
+            if (skillType == PetAttacks.Charge && options.petChargeSwoop == 0) return;
+            if (skillType == PetAttacks.Swoop && options.petChargeSwoop == 0) return;
 
             // it looks good - create an instance wrapper
             skills.Add(new PetSkillInstance(this, skillType, skillLibrary[skillType]));

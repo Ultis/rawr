@@ -15,10 +15,13 @@ namespace Rawr.Hunter
 		private int _TargetArmor = 10643; //Wrath boss armor
         private PetFamily _petFamily = PetFamily.Cat;
 
-        private PetAttacks _petPriority1 = PetAttacks.Growl;
-        private PetAttacks _petPriority2 = PetAttacks.Bite;
-        private PetAttacks _petPriority3 = PetAttacks.None;
-        private PetAttacks _petPriority4 = PetAttacks.None;
+        public PetAttacks PetPriority1 = PetAttacks.Growl;
+        public PetAttacks PetPriority2 = PetAttacks.Bite;
+        public PetAttacks PetPriority3 = PetAttacks.None;
+        public PetAttacks PetPriority4 = PetAttacks.None;
+        public PetAttacks PetPriority5 = PetAttacks.None;
+        public PetAttacks PetPriority6 = PetAttacks.None;
+        public PetAttacks PetPriority7 = PetAttacks.None;
 
 		private Faction _ScryerAldor = Faction.Aldor;
 		public double Latency = 0.15;
@@ -56,7 +59,7 @@ namespace Rawr.Hunter
 		// pet talents
         public int petCobraReflexes = 0;
         public int petDiveDash = 0;
-        public int petCharge = 0;
+        public int petChargeSwoop = 0;
         public int petGreatStamina = 0;
         public int petNaturalArmor = 0;
         public int petBoarsSpeed = 0;
@@ -92,27 +95,6 @@ namespace Rawr.Hunter
         public int petSharkAttack = 0;
         public int petSilverback = 0;
                 
-        public PetAttacks PetPriority1
-        {
-            get { return _petPriority1; }
-            set { _petPriority1 = value; }
-        }
-        public PetAttacks PetPriority2
-        {
-            get { return _petPriority2; }
-            set { _petPriority2 = value; }
-        }
-        public PetAttacks PetPriority3
-        {
-            get { return _petPriority3; }
-            set { _petPriority3 = value; }
-        }
-        public PetAttacks PetPriority4
-        {
-            get { return _petPriority4; }
-            set { _petPriority4 = value; }
-        }
-
         public PetFamily PetFamily
 		{
 			get { return _petFamily; }
