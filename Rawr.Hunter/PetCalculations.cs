@@ -138,26 +138,38 @@ namespace Rawr.Hunter
                 apAdjustFromCallOfTheWild = 0.1 * callOfTheWildUptime;
             }
 
+            // Serenity Dust
+            double apAdjustFromSerenityDust = 0;
+            if (priorityRotation.getSkillFrequency(PetAttacks.SerenityDust) > 0)
+            {
+                apAdjustFromSerenityDust = 0.025; // 0.1 * (15 / 60);
+            }
+
             double apAdjustFromRabidProc = 0; //TODO getRabidProcEffect(petStats.PhysicalHit);
-            double apAdjustFromSerenityDust = 0; //TODO getSerenityEffect();
             double apAdjustFromTrueShotAura = calculatedStats.apFromTrueshotAura;
             double apAdjustFromAnimalHandler = 0; //TODO
             double apAdjustFromAspectOfTheBeast = 0; //TODO
 
-            double apBonus = (apFromHunterVsWild
-                                 + apFromTier9
-                                 + apFromBuffs
-                                 + apFromFuriousHowl
-                                 + apFromHunterRAP)
+            double apScalingFactor = 1
                                  * (1 + apAdjustFromCallOfTheWild)
                                  * (1 + apAdjustFromRabidProc)
                                  * (1 + apAdjustFromSerenityDust)
                                  * (1 + apAdjustFromTrueShotAura)
                                  * (1 + apAdjustFromAnimalHandler)
                                  * (1 + apAdjustFromAspectOfTheBeast);
+
+            apFromStrength *= apScalingFactor;
+
+            double apBonus = (apFromHunterVsWild
+                                 + apFromTier9
+                                 + apFromBuffs
+                                 + apFromFuriousHowl
+                                 + apFromHunterRAP) * apScalingFactor;
+
             double apTotal = Math.Round(apFromStrength + apBonus);
 
-            double damageBonusFromAP = 0.07 * apTotal;
+            double damageBonusMeleeFromAP = 0.07 * apTotal; // PetAPBonus
+            double damageBonusSpellsFromAP = (1.5 / 35) * apTotal; // PetSpellScaling * PetAP
 
             petStats.AttackPower = (float)apTotal;
 
@@ -190,7 +202,23 @@ namespace Rawr.Hunter
                             + hitFromHunter
                             + hitFromLevelAdjust;
 
-            petStats.PhysicalHit = hitTotal > 1 ? 1 : (float)hitTotal;
+            petStats.PhysicalHit = hitTotal > 1 ? 1 : (float)hitTotal; // PetHit
+
+            //Full Resists (Spell Hit)
+            double levelResistFactor = 0.04;
+            if (levelDifference == 1) levelResistFactor = 0.05;
+            if (levelDifference == 2) levelResistFactor = 0.06;
+            if (levelDifference == 3) levelResistFactor = 0.08;
+
+            double fullResist = levelResistFactor - (hitFromTargetDebuffs + hitFromFocusedAim + hitFromRacial + hitFromHunter);
+            if (fullResist < 0) fullResist = 0;
+            double fullResistDamageAdjust = 1 - fullResist;
+
+            //Partial Resists (Spell Hit)
+            double averageResist = (options.TargetLevel - 80) * 0.02;
+            double resist10 = 5 * averageResist;
+            double resist20 = 2.5 * averageResist;
+            double partialResistDamageAdjust = 1 - (resist10 * 0.1 + resist20 * 0.1);
 
             #endregion
             #region Crit Chance
@@ -226,7 +254,8 @@ namespace Rawr.Hunter
             //petStats.PhysicalCrit = (float)critTotal;
 
             double cobraStrikesPetBonus = 0; // TODO
-            double critTotalSpecials = critTotalMelee + cobraStrikesPetBonus;
+            double critTotalSpecials = critTotalMelee + cobraStrikesPetBonus; // PetCritChance
+            double critSpecialsAdjust = critTotalSpecials * 1.5 + 1;
 
             #endregion
             #region Attack Speed
@@ -255,7 +284,7 @@ namespace Rawr.Hunter
             double expertiseDodgeReduced = expertiseRatingGain / 4 / 100;
 
             // Dodge adjust can't help us, only hinder
-            double dodgeFactor = (0.05 + levelDifference * 0.005) - expertiseDodgeReduced;
+            double dodgeFactor = (0.05 + levelDifference * 0.005) - expertiseDodgeReduced; // PetTargetDodge
             double damageAdjustDodge = 1 - dodgeFactor;
             if (damageAdjustDodge > 1) damageAdjustDodge = 1;
 
@@ -270,7 +299,6 @@ namespace Rawr.Hunter
             double damageAdjustFerociousInspiration = 1; // TODO - getFerociousInspirationEffect();
             double damageAdjustBeastialWrath = 1; // TODO - getBestialWrathEffect();
             double damageAdjustKindredSpirits = 1 + (character.HunterTalents.KindredSpirits * 0.04);
-            double damageAdjustMonstrousBite = 1; // TODO - getMonstrousBiteEffect();
             double damageAdjustSavageRend = 1; // TODO - getSavageRendEffect();
             double damageAdjustFeedingFrenzy = 1; // TODO - getFeedingFrenzyEffect();
             double damageAdjustSancRetributionAura = 1; // TODO
@@ -281,6 +309,63 @@ namespace Rawr.Hunter
             double damageAdjustMarkedForDeath = 1 + (character.HunterTalents.MarkedForDeath * 0.02);
             double damageAdjustCobraReflexes = 1 - (options.petCobraReflexes * 0.075); // this is a negative effect!
             double damageAdjustGlancingBlows = 0.9125; // TODO - getGlancingBlows()
+
+            // Monstrous Bite
+            double damageAdjustMonstrousBite = 1;
+
+            if (priorityRotation.getSkillFrequency(PetAttacks.MonstrousBite) > 0)
+            {
+                double monstrousBiteCooldown = 10;
+                double monstrousBiteDuration = 12;
+
+                double monstrousBiteChanceToApply = hitTotal - dodgeFactor;
+                double monstrousBiteChancesToMaintain = 1;
+
+                double monstrousBiteChanceToApplyFirst = monstrousBiteChancesToMaintain == 0 ? 0 : monstrousBiteChanceToApply;
+                double monstrousBiteChanceToStop = 1 - monstrousBiteChanceToApplyFirst;
+
+                double monstrousBiteAverageIncTime = 1 - monstrousBiteChanceToStop == 0 ? 0 : monstrousBiteCooldown;
+                double monstrousBiteAverageStackTime = monstrousBiteAverageIncTime + monstrousBiteDuration * monstrousBiteChanceToStop;
+
+                PetSkillStack[] stacks = new PetSkillStack[4];
+                stacks[0] = new PetSkillStack();
+                stacks[1] = new PetSkillStack();
+                stacks[2] = new PetSkillStack();
+                stacks[3] = new PetSkillStack();
+
+                stacks[0].time_to_reach = 0;
+                stacks[1].time_to_reach = monstrousBiteAverageIncTime * 1;
+                stacks[2].time_to_reach = monstrousBiteAverageIncTime * 2;
+                stacks[3].time_to_reach = monstrousBiteAverageIncTime * 3;
+
+                stacks[0].chance_to_max = 0;
+                stacks[1].chance_to_max = monstrousBiteChanceToStop == 1 ? 0 : monstrousBiteChanceToStop;
+                stacks[2].chance_to_max = monstrousBiteChanceToStop == 1 ? 0 : monstrousBiteChanceToStop * (1 - stacks[1].chance_to_max);
+                stacks[3].chance_to_max = monstrousBiteChanceToStop == 1 ? 0 : 1 - (stacks[0].chance_to_max + stacks[1].chance_to_max + stacks[2].chance_to_max);
+
+                stacks[0].time_spent = stacks[3].chance_to_max == 1 ? 0 : stacks[1].time_to_reach;
+                stacks[1].time_spent = stacks[3].chance_to_max == 1 ? 0 : (stacks[1].time_to_reach == 0 ? 0 : monstrousBiteAverageStackTime) * (1 - (stacks[0].chance_to_max));
+                stacks[2].time_spent = stacks[3].chance_to_max == 1 ? 0 : (stacks[2].time_to_reach == 0 ? 0 : monstrousBiteAverageStackTime) * (1 - (stacks[0].chance_to_max + stacks[1].chance_to_max));
+                stacks[3].time_spent = monstrousBiteChanceToStop == 0 ? 1 : stacks[3].time_to_reach == 0 ? 0 : 1 / monstrousBiteChanceToStop * monstrousBiteCooldown * (1 - (stacks[0].chance_to_max + stacks[1].chance_to_max + stacks[2].chance_to_max));
+
+                double monstrousBiteTotalTime = stacks[0].time_spent + stacks[1].time_spent + stacks[2].time_spent + stacks[3].time_spent;
+
+                stacks[0].percent_time = monstrousBiteTotalTime == 0 ? 1 : stacks[0].time_spent / monstrousBiteTotalTime;
+                stacks[1].percent_time = monstrousBiteTotalTime == 0 ? 0 : stacks[1].time_spent / monstrousBiteTotalTime;
+                stacks[2].percent_time = monstrousBiteTotalTime == 0 ? 0 : stacks[2].time_spent / monstrousBiteTotalTime;
+                stacks[3].percent_time = monstrousBiteTotalTime == 0 ? 0 : stacks[3].time_spent / monstrousBiteTotalTime;
+
+                double monstrousBiteUptime = stacks[0].percent_time + stacks[1].percent_time + stacks[2].percent_time + stacks[3].percent_time;
+
+                stacks[0].total = 0;
+                stacks[1].total = 0.03 * stacks[1].percent_time;
+                stacks[2].total = 0.06 * stacks[1].percent_time;
+                stacks[3].total = stacks[3].chance_to_max == 1 ? 0.09 : 0.09 * stacks[1].percent_time;
+
+                double monstrousBiteProcEffect = stacks[0].total + stacks[1].total + stacks[2].total + stacks[3].total;
+
+                damageAdjustMonstrousBite = 1 + monstrousBiteProcEffect;
+            }
 
             double damageAdjustMangle = 1; // TODO : 1 + (mangle_effect * 0.3)
 
@@ -334,12 +419,31 @@ namespace Rawr.Hunter
             foreach (PetSkillInstance S in priorityRotation.skills)
             {
                 S.damage = 0;
-                
+
+                #region Skill Groups
+
                 if (S.skillData.type == PetSkillType.FocusDump)
                 {
-                    double focsDumpDamageAverage = ((118 + 168) / 2) + damageBonusFromAP;
-                    S.damage = focsDumpDamageAverage * damageAdjustSpecials * damageAdjustMitigation;
+                    double focusDumpDamageAverage = ((118 + 168) / 2) + damageBonusMeleeFromAP;
+                    S.damage = focusDumpDamageAverage * damageAdjustSpecials * damageAdjustMitigation;
                 }
+
+                if (S.skillData.type == PetSkillType.SpecialMelee)
+                {
+                    double meleeDamageAverage = S.skillData.average + damageBonusMeleeFromAP;
+                    S.damage = meleeDamageAverage * damageAdjustSpecials * damageAdjustMitigation;
+                }
+
+                if (S.skillData.type == PetSkillType.SpecialSpell)
+                {
+                    double spellDamageAverage = S.skillData.average + damageBonusSpellsFromAP;
+                    // TODO: add nature_debuffs (rly? for every spell school?)
+                    S.damage = spellDamageAverage * critSpecialsAdjust * fullResistDamageAdjust* partialResistDamageAdjust * damageAdjustMagic;                       
+                }
+
+                #endregion
+                #region Unique Skills
+
                 if (S.skillType == PetAttacks.Rake)
                 {
                     double rakeDamageFromAP = apTotal * 0.0175;
@@ -351,23 +455,24 @@ namespace Rawr.Hunter
 
                     S.damage = rakeInitialHitDamage + rakeDotDamage * 3;
                 }
-                
+
+                if (S.skillType == PetAttacks.FireBreath)
+                {
+                    double fireBreathDamageAverage = ((43 + 57) / 2) + damageBonusSpellsFromAP;
+                    double fireBreathDamageInitial = fireBreathDamageAverage * fullResistDamageAdjust * partialResistDamageAdjust * damageAdjustMagic;
+                    double fireBreathDamageDot = 50 + damageBonusSpellsFromAP;
+                    S.damage = fireBreathDamageInitial + fireBreathDamageDot;
+                }
+
+
+                #endregion
+
                 S.CalculateDPS();
             }
 
             // now add everything up...
 
             priorityRotation.calculateDPS();
-
-
-            double skill1Damage = priorityRotation.skills[0].damage;
-            double skill1DPS = priorityRotation.skills[0].dps;
-            
-            double skill2Damage = priorityRotation.skills[1].damage;
-            double skill2DPS = priorityRotation.skills[1].dps;
-
-            Debug.WriteLine("TRAP");
-
 
             #endregion
             #region Kill Command
@@ -404,15 +509,6 @@ namespace Rawr.Hunter
 
 
 
-
-        private double getFocusDumpDPS(double freq, double bonus, double critmiss, double damageFromAP)
-        {
-            double avgPer = ((168 - 118) / 2) + 118;
-            double avgDamage = avgPer + damageFromAP;
-            double armorMit = options.TargetArmor / (options.TargetArmor - 22167.5 + (467.5 * options.TargetLevel));
-            double totalDamage = avgDamage * bonus * (1 - armorMit) * critmiss;
-            return totalDamage / freq;
-        }
 
 
 
@@ -501,7 +597,7 @@ namespace Rawr.Hunter
                 switch (skills[i].Type)
                 {
                     case 0:
-                        dps += getFocusDumpDPS(freqs[i], bonus, critmiss, damageFromAP);
+                        //dps += getFocusDumpDPS(freqs[i], bonus, critmiss, damageFromAP);
                         break;
                     case 1:
                         dps += getPhysicalSpecialDPS(freqs[i], bonus, critmiss, damageFromAP, S.Min, S.Max);

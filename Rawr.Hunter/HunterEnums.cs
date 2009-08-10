@@ -155,12 +155,12 @@ namespace Rawr.Hunter
 
     public enum PetSkillType
     {
-        FocusDump, // 0
-        PhysicalSpecial, // 1
-        SpellSpecial, // 2
-        NonDamaging, // 3
-        Unique, // >= 4
-        Damaging
+        FocusDump,
+        NonDamaging,
+        SpecialMelee,
+        SpecialSpell,
+        SpecialUnique,
+        Unimplemented
     }
 
     public enum ManaPotionType

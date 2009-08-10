@@ -11,13 +11,14 @@ namespace Rawr.Hunter
         public int Cost = 0; // not used, but referenced in old code
         public int Type = 0; // not used, but referenced in old code
         public int Talent = 0;  // not used, but referenced in old code
+        public int Min; // not used, but referenced in old code
+        public int Max; // not used, but referenced in old code
 
         public bool can_crit;
         public double cooldown;
         public int focus;
         public PetSkillType type;
-        public int Min;
-        public int Max;
+        public double average;
 
         public PetSkill(bool can_crit, double cooldown, int focus, PetSkillType type)
         {
@@ -25,8 +26,7 @@ namespace Rawr.Hunter
             this.cooldown = cooldown;
             this.focus = focus;
             this.type = type;
-            Min = 0;
-            Max = 0;
+            this.average = 0;
         }
 
         public PetSkill(bool can_crit, double cooldown, int focus, PetSkillType type, int min, int max)
@@ -35,8 +35,7 @@ namespace Rawr.Hunter
             this.cooldown = cooldown;
             this.focus = focus;
             this.type = type;
-            Min = min;
-            Max = max;
+            this.average = (min + max) / 2;
         }
     }
 
@@ -60,47 +59,48 @@ namespace Rawr.Hunter
             // movement skills
             {PetAttacks.Dive, new PetSkill(false, 32, 20, PetSkillType.NonDamaging)},
             {PetAttacks.Dash, new PetSkill(false, 32, 20, PetSkillType.NonDamaging)},
-            {PetAttacks.Charge, new PetSkill(false, 25, 35, PetSkillType.Unique)},
+            {PetAttacks.Charge, new PetSkill(false, 25, 35, PetSkillType.Unimplemented)}, // maybe this will cause damage :)
 
-            // family skills
-            {PetAttacks.SonicBlast, new PetSkill(true, 80, 0, PetSkillType.SpellSpecial)},
-            {PetAttacks.Swipe, new PetSkill(true, 5, 20, PetSkillType.PhysicalSpecial, 90, 126)},
-            {PetAttacks.Snatch, new PetSkill(true, 60, 20, PetSkillType.Unique, 89, 125)}, // not sure what kind of damage this does...
-            {PetAttacks.Gore, new PetSkill(true, 10, 20, PetSkillType.PhysicalSpecial, 122, 164)},
-            {PetAttacks.DemoralizingScreech, new PetSkill(true, 10, 20, PetSkillType.PhysicalSpecial, 85, 129)},
-            {PetAttacks.Rake, new PetSkill(true, 10, 20, PetSkillType.Damaging)},
+            // family skills - non damaging
+            {PetAttacks.Snatch, new PetSkill(true, 60, 20, PetSkillType.NonDamaging)},
             {PetAttacks.Prowl, new PetSkill(false, 10, 0, PetSkillType.NonDamaging)},
-            {PetAttacks.FroststormBreath, new PetSkill(true, 10, 20, PetSkillType.SpellSpecial, 128, 172)},
-            {PetAttacks.LavaBreath, new PetSkill(true, 10, 20, PetSkillType.SpellSpecial, 128, 172)},
             {PetAttacks.Pin, new PetSkill(false, 60, 0, PetSkillType.NonDamaging)},
             {PetAttacks.BadAttitude, new PetSkill(false, 120, 0, PetSkillType.NonDamaging)}, // technically a damaging ability, but only if you get hit
-            {PetAttacks.MonstrousBite, new PetSkill(true, 10, 20, PetSkillType.PhysicalSpecial, 91, 123)},
-            {PetAttacks.FireBreath, new PetSkill(false, 10, 20, PetSkillType.Unique)},
             {PetAttacks.Pummel, new PetSkill(false, 30, 20, PetSkillType.NonDamaging)},
-            {PetAttacks.TendonRip, new PetSkill(true, 20, 20, PetSkillType.PhysicalSpecial, 49, 69)},
             {PetAttacks.SerenityDust, new PetSkill(false, 60, 0, PetSkillType.NonDamaging)},
-            {PetAttacks.NetherShock, new PetSkill(true, 40, 0, PetSkillType.SpellSpecial, 64, 86)},
-            {PetAttacks.SavageRend, new PetSkill(true, 60, 20, PetSkillType.Unique)},
-            {PetAttacks.Ravage, new PetSkill(true, 40, 0, PetSkillType.PhysicalSpecial, 106, 150)},
             {PetAttacks.Stampede, new PetSkill(false, 60, 0, PetSkillType.NonDamaging)},
-            {PetAttacks.ScorpidPoison, new PetSkill(false, 10, 20, PetSkillType.Unique)},
-            {PetAttacks.PoisonSpit, new PetSkill(false, 10, 20, PetSkillType.Unique)},
-            {PetAttacks.VenomWebSpray, new PetSkill(false, 120, 0, PetSkillType.Unique, 46, 68)},
             {PetAttacks.Web, new PetSkill(false, 120, 0, PetSkillType.NonDamaging)},
-            {PetAttacks.SpiritStrike, new PetSkill(true, 10, 20, PetSkillType.Unique)},
-            {PetAttacks.SporeCloud, new PetSkill(false, 10, 20, PetSkillType.SpellSpecial)},
-            {PetAttacks.DustCloud, new PetSkill(false, 40, 20, PetSkillType.NonDamaging)}, // why does the spreadsheet think this causes damage?
+            {PetAttacks.DustCloud, new PetSkill(false, 40, 20, PetSkillType.NonDamaging)},
             {PetAttacks.ShellShield, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
             {PetAttacks.Warp, new PetSkill(false, 15, 0, PetSkillType.NonDamaging)},
-            {PetAttacks.Sting, new PetSkill(true, 6, 20, PetSkillType.SpellSpecial, 64, 86)},
-            {PetAttacks.LightningBreath, new PetSkill(true, 10, 20, PetSkillType.SpellSpecial, 80, 120)},
             {PetAttacks.FuriousHowl, new PetSkill(false, 40, 20, PetSkillType.NonDamaging)},
-            {PetAttacks.AcidSpit, new PetSkill(true, 10, 20, PetSkillType.SpellSpecial, 124, 176)},
+            {PetAttacks.TendonRip, new PetSkill(true, 20, 20, PetSkillType.NonDamaging)},
 
-            // other?
-            {PetAttacks.Thunderstomp, new PetSkill(true, 10, 20, PetSkillType.SpellSpecial, 236, 334)}, // check numbers
+            // family skills - damaging
+            {PetAttacks.SonicBlast, new PetSkill(true, 80, 0, PetSkillType.SpecialSpell, 62, 88)},
+            {PetAttacks.Swipe, new PetSkill(true, 5, 20, PetSkillType.SpecialMelee, 90, 126)},
+            {PetAttacks.Gore, new PetSkill(true, 10, 20, PetSkillType.SpecialMelee, 122, 164)},
+            {PetAttacks.DemoralizingScreech, new PetSkill(true, 10, 20, PetSkillType.SpecialMelee, 85, 129)},
+            {PetAttacks.Rake, new PetSkill(true, 10, 20, PetSkillType.SpecialUnique)},
+            {PetAttacks.FroststormBreath, new PetSkill(true, 10, 20, PetSkillType.SpecialSpell, 128, 172)},
+            {PetAttacks.LavaBreath, new PetSkill(true, 10, 20, PetSkillType.SpecialSpell, 128, 172)},
+            {PetAttacks.MonstrousBite, new PetSkill(true, 10, 20, PetSkillType.SpecialMelee, 91, 123)},
+            {PetAttacks.FireBreath, new PetSkill(false, 10, 20, PetSkillType.SpecialUnique)},
+
+            {PetAttacks.NetherShock, new PetSkill(true, 40, 0, PetSkillType.Unimplemented)},
+            {PetAttacks.SavageRend, new PetSkill(true, 60, 20, PetSkillType.Unimplemented)},
+            {PetAttacks.Ravage, new PetSkill(true, 40, 0, PetSkillType.Unimplemented)},
+            {PetAttacks.ScorpidPoison, new PetSkill(false, 10, 20, PetSkillType.Unimplemented)},
+            {PetAttacks.PoisonSpit, new PetSkill(false, 10, 20, PetSkillType.Unimplemented)},
+            {PetAttacks.VenomWebSpray, new PetSkill(false, 120, 0, PetSkillType.Unimplemented)},
+            {PetAttacks.SpiritStrike, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
+            {PetAttacks.SporeCloud, new PetSkill(false, 10, 20, PetSkillType.Unimplemented)},
+            {PetAttacks.Sting, new PetSkill(true, 6, 20, PetSkillType.Unimplemented)},
+            {PetAttacks.LightningBreath, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
+            {PetAttacks.AcidSpit, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
+
+            // special - non-damaging
             {PetAttacks.Rabid, new PetSkill(false, 45, 0, PetSkillType.NonDamaging)},
-            {PetAttacks.WolverineBite, new PetSkill(true, 0, 0, PetSkillType.Unique)},
             {PetAttacks.Bullheaded, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
             {PetAttacks.CallOfTheWild, new PetSkill(false, 300, 0, PetSkillType.NonDamaging)},
             {PetAttacks.Taunt, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
@@ -108,6 +108,10 @@ namespace Rawr.Hunter
             {PetAttacks.RoarOfSacrifice, new PetSkill(false, 30, 0, PetSkillType.NonDamaging)},
             {PetAttacks.LickYourWounds, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
             {PetAttacks.LastStand, new PetSkill(false, 360, 0, PetSkillType.NonDamaging)},
+
+            // special - damaging
+            {PetAttacks.Thunderstomp, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
+            {PetAttacks.WolverineBite, new PetSkill(true, 0, 0, PetSkillType.Unimplemented)},
         };
 
         public PetSkillPriorityRotation(Character character, CalculationOptionsHunter options)
@@ -158,8 +162,6 @@ namespace Rawr.Hunter
                 S.CalculateTimings(PrevSkill);
                 PrevSkill = S;
             }
-
-            Debug.WriteLine("calc'd!");
         }
 
         private void CalculateSkillData()
@@ -174,16 +176,11 @@ namespace Rawr.Hunter
                 S.cooldown = S.skillData.cooldown;
                 S.focus = S.skillData.focus;
                 S.can_crit = S.skillData.can_crit;
-                S.causes_kc_damage = true;
 
                 if (S.skillType == PetAttacks.Dive) S.cooldown -= options.petDiveDash * 8;
                 if (S.skillType == PetAttacks.Dash) S.cooldown -= options.petDiveDash * 8;
 
                 if (S.skillData.type != PetSkillType.FocusDump) S.cooldown *= longevityCooldownAdjust;
-
-                if (S.skillData.type == PetSkillType.NonDamaging) S.causes_kc_damage = false;
-                if (S.skillType == PetAttacks.Charge) S.causes_kc_damage = false; // charge only causes damage once - maybe i will model this...
-                if (S.skillType == PetAttacks.VenomWebSpray) S.causes_kc_damage = false; // only causes a tick
             }
         }
 
@@ -206,6 +203,16 @@ namespace Rawr.Hunter
 
             petSpecialFrequency = crittableInverseSum > 0 ? 1 / crittableInverseSum : 0;
         }
+
+        public double getSkillFrequency(PetAttacks skill)
+        {
+            foreach (PetSkillInstance S in skills)
+            {
+                if (S.skillType == skill) return S.frequency;
+            }
+            return 0;
+        }
+
     }
 
     // This class is used for building the priority list.
@@ -230,9 +237,7 @@ namespace Rawr.Hunter
         public double focus = 0; // D
         public double cooldown = 0; // E
         public double damage = 0; // scattered all over 'Pet Calculations'
-
         public bool can_crit = false;
-        public bool causes_kc_damage = false;
 
         public double dps = 0; // I
         public double possible_freq = 0; // K
@@ -284,7 +289,17 @@ namespace Rawr.Hunter
         public void CalculateDPS()
         {
             dps = frequency > 0 ? damage / frequency : 0;
-            kc_dps = causes_kc_damage ? dps : 0;
+            kc_dps = can_crit ? dps : 0;
         }
+    }
+       
+    public class PetSkillStack
+    {
+        public double time_to_reach = 0;
+        public double chance_to_max = 0;
+        public double time_spent = 0;
+        public double percent_time = 0;
+        public double effect = 0;
+        public double total = 0;
     }
 }
