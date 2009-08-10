@@ -154,6 +154,8 @@
             this.comboPetFamily = new System.Windows.Forms.ComboBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.chkSpreadsheetUptimes = new System.Windows.Forms.CheckBox();
+            this.chkEmulateBugs = new System.Windows.Forms.CheckBox();
             this.chkUseBeastDuringBW = new System.Windows.Forms.CheckBox();
             this.label84 = new System.Windows.Forms.Label();
             this.cmbAspectUsage = new System.Windows.Forms.ComboBox();
@@ -220,8 +222,6 @@
             this.comboBoxPet3 = new System.Windows.Forms.ComboBox();
             this.comboBoxPet2 = new System.Windows.Forms.ComboBox();
             this.comboBoxPet1 = new System.Windows.Forms.ComboBox();
-            this.chkEmulateBugs = new System.Windows.Forms.CheckBox();
-            this.chkSpreadsheetUptimes = new System.Windows.Forms.CheckBox();
             this.tabPage2.SuspendLayout();
             this.grpTalentsCunning.SuspendLayout();
             this.grpTalentsTenacity.SuspendLayout();
@@ -1571,6 +1571,28 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Hunter Settings";
             // 
+            // chkSpreadsheetUptimes
+            // 
+            this.chkSpreadsheetUptimes.AutoSize = true;
+            this.chkSpreadsheetUptimes.Location = new System.Drawing.Point(18, 173);
+            this.chkSpreadsheetUptimes.Name = "chkSpreadsheetUptimes";
+            this.chkSpreadsheetUptimes.Size = new System.Drawing.Size(199, 17);
+            this.chkSpreadsheetUptimes.TabIndex = 8;
+            this.chkSpreadsheetUptimes.Text = "Use spreadsheet uptime calculations";
+            this.chkSpreadsheetUptimes.UseVisualStyleBackColor = true;
+            this.chkSpreadsheetUptimes.CheckedChanged += new System.EventHandler(this.chkSpreadsheetUptimes_CheckedChanged);
+            // 
+            // chkEmulateBugs
+            // 
+            this.chkEmulateBugs.AutoSize = true;
+            this.chkEmulateBugs.Location = new System.Drawing.Point(18, 150);
+            this.chkEmulateBugs.Name = "chkEmulateBugs";
+            this.chkEmulateBugs.Size = new System.Drawing.Size(218, 17);
+            this.chkEmulateBugs.TabIndex = 7;
+            this.chkEmulateBugs.Text = "Emulate known bugs in spreadsheet 91a";
+            this.chkEmulateBugs.UseVisualStyleBackColor = true;
+            this.chkEmulateBugs.CheckedChanged += new System.EventHandler(this.chkEmulateBugs_CheckedChanged);
+            // 
             // chkUseBeastDuringBW
             // 
             this.chkUseBeastDuringBW.AutoSize = true;
@@ -2347,28 +2369,6 @@
             this.comboBoxPet1.Size = new System.Drawing.Size(121, 21);
             this.comboBoxPet1.TabIndex = 44;
             this.comboBoxPet1.SelectedIndexChanged += new System.EventHandler(this.comboBoxPet1_SelectedIndexChanged);
-            // 
-            // chkEmulateBugs
-            // 
-            this.chkEmulateBugs.AutoSize = true;
-            this.chkEmulateBugs.Location = new System.Drawing.Point(18, 150);
-            this.chkEmulateBugs.Name = "chkEmulateBugs";
-            this.chkEmulateBugs.Size = new System.Drawing.Size(218, 17);
-            this.chkEmulateBugs.TabIndex = 7;
-            this.chkEmulateBugs.Text = "Emulate known bugs in spreadsheet 91a";
-            this.chkEmulateBugs.UseVisualStyleBackColor = true;
-            this.chkEmulateBugs.CheckedChanged += new System.EventHandler(this.chkEmulateBugs_CheckedChanged);
-            // 
-            // chkSpreadsheetUptimes
-            // 
-            this.chkSpreadsheetUptimes.AutoSize = true;
-            this.chkSpreadsheetUptimes.Location = new System.Drawing.Point(18, 173);
-            this.chkSpreadsheetUptimes.Name = "chkSpreadsheetUptimes";
-            this.chkSpreadsheetUptimes.Size = new System.Drawing.Size(199, 17);
-            this.chkSpreadsheetUptimes.TabIndex = 8;
-            this.chkSpreadsheetUptimes.Text = "Use spreadsheet uptime calculations";
-            this.chkSpreadsheetUptimes.UseVisualStyleBackColor = true;
-            this.chkSpreadsheetUptimes.CheckedChanged += new System.EventHandler(this.chkSpreadsheetUptimes_CheckedChanged);
             // 
             // CalculationOptionsPanelHunter
             // 

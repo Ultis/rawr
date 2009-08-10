@@ -7,13 +7,6 @@ namespace Rawr.Hunter
 {
     public class PetSkill
     {
-        public double CD = 0; // not used, but referenced in old code
-        public int Cost = 0; // not used, but referenced in old code
-        public int Type = 0; // not used, but referenced in old code
-        public int Talent = 0;  // not used, but referenced in old code
-        public int Min; // not used, but referenced in old code
-        public int Max; // not used, but referenced in old code
-
         public bool can_crit;
         public double cooldown;
         public int focus;
@@ -62,7 +55,7 @@ namespace Rawr.Hunter
             {PetAttacks.Charge, new PetSkill(false, 25, 35, PetSkillType.Unimplemented)}, // maybe this will cause damage :)
 
             // family skills - non damaging
-            {PetAttacks.Snatch, new PetSkill(true, 60, 20, PetSkillType.NonDamaging)},
+            {PetAttacks.Snatch, new PetSkill(false, 60, 20, PetSkillType.NonDamaging)},
             {PetAttacks.Prowl, new PetSkill(false, 10, 0, PetSkillType.NonDamaging)},
             {PetAttacks.Pin, new PetSkill(false, 60, 0, PetSkillType.NonDamaging)},
             {PetAttacks.BadAttitude, new PetSkill(false, 120, 0, PetSkillType.NonDamaging)}, // technically a damaging ability, but only if you get hit
@@ -74,7 +67,7 @@ namespace Rawr.Hunter
             {PetAttacks.ShellShield, new PetSkill(false, 180, 0, PetSkillType.NonDamaging)},
             {PetAttacks.Warp, new PetSkill(false, 15, 0, PetSkillType.NonDamaging)},
             {PetAttacks.FuriousHowl, new PetSkill(false, 40, 20, PetSkillType.NonDamaging)},
-            {PetAttacks.TendonRip, new PetSkill(true, 20, 20, PetSkillType.NonDamaging)},
+            {PetAttacks.TendonRip, new PetSkill(false, 20, 20, PetSkillType.NonDamaging)},
 
             // family skills - damaging
             {PetAttacks.SonicBlast, new PetSkill(true, 80, 0, PetSkillType.SpecialSpell, 62, 88)},
@@ -93,11 +86,11 @@ namespace Rawr.Hunter
             {PetAttacks.PoisonSpit, new PetSkill(false, 10, 20, PetSkillType.SpecialUnique)},
             {PetAttacks.VenomWebSpray, new PetSkill(false, 120, 0, PetSkillType.SpecialUnique)},
             {PetAttacks.SpiritStrike, new PetSkill(true, 10, 20, PetSkillType.SpecialUnique)},
-            {PetAttacks.SporeCloud, new PetSkill(false, 10, 20, PetSkillType.SpecialSpell, 25, 25)},
-
-            {PetAttacks.Sting, new PetSkill(true, 6, 20, PetSkillType.Unimplemented)},
-            {PetAttacks.LightningBreath, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
-            {PetAttacks.AcidSpit, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
+            {PetAttacks.SporeCloud, new PetSkill(false, 10, 20, PetSkillType.SpecialUnique, 25, 25)},
+            {PetAttacks.Sting, new PetSkill(true, 6, 20, PetSkillType.SpecialSpell, 64, 86)},
+            {PetAttacks.LightningBreath, new PetSkill(true, 10, 20, PetSkillType.SpecialSpell, 80, 120)},
+            {PetAttacks.AcidSpit, new PetSkill(true, 10, 20, PetSkillType.SpecialUnique, 124, 176)},
+            {PetAttacks.Thunderstomp, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
 
             // special - non-damaging
             {PetAttacks.Rabid, new PetSkill(false, 45, 0, PetSkillType.NonDamaging)},
@@ -110,7 +103,6 @@ namespace Rawr.Hunter
             {PetAttacks.LastStand, new PetSkill(false, 360, 0, PetSkillType.NonDamaging)},
 
             // special - damaging
-            {PetAttacks.Thunderstomp, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
             {PetAttacks.WolverineBite, new PetSkill(true, 0, 0, PetSkillType.Unimplemented)},
         };
 
@@ -181,6 +173,10 @@ namespace Rawr.Hunter
                 if (S.skillType == PetAttacks.Dash) S.cooldown -= options.petDiveDash * 8;
 
                 if (S.skillData.type != PetSkillType.FocusDump) S.cooldown *= longevityCooldownAdjust;
+                if (S.skillType == PetAttacks.DustCloud && options.emulateSpreadsheetBugs) S.can_crit = true;
+                if (S.skillType == PetAttacks.BadAttitude && options.emulateSpreadsheetBugs) S.can_crit = true;
+                if (S.skillType == PetAttacks.Snatch && options.emulateSpreadsheetBugs) S.can_crit = true;
+                if (S.skillType == PetAttacks.TendonRip && options.emulateSpreadsheetBugs) S.can_crit = true;
             }
         }
 
@@ -308,7 +304,6 @@ namespace Rawr.Hunter
         public double chance_to_max = 0;
         public double time_spent = 0;
         public double percent_time = 0;
-        public double effect = 0;
         public double total = 0;
     }
 }

@@ -80,18 +80,15 @@ namespace Rawr.Hunter
 					break;
 				}
 			}
-            comboPetFamily.SelectedItem = options.PetFamily;
+
             numericUpDownLatency.Value = (decimal)(options.Latency * 1000.0);
 
             trackBarTargetArmor.Value = options.TargetArmor;
             lblTargetArmorValue.Text = options.TargetArmor.ToString();
 
-            foreach (PetFamily f in Enum.GetValues(typeof(PetFamily)))
-                comboPetFamily.Items.Add(f);
-
+            comboPetFamily.Items.Clear();
+            foreach (PetFamily f in Enum.GetValues(typeof(PetFamily))) comboPetFamily.Items.Add(f);
             comboPetFamily.SelectedItem = options.PetFamily;
-
-            //options.duration = 360;
 
             duration.Value = options.duration;
             numericTime20.Value = options.timeSpentSub20;

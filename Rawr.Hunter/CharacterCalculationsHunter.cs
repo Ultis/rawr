@@ -24,6 +24,9 @@ namespace Rawr.Hunter
         public double petWhiteDPS { get; set; }
         public double petSpecialDPS { get; set; }
         public double petArmorDebuffs { get; set; }
+        public double petHit { get; set; }
+        public double petSpellHit { get; set; }
+        public double petTargetDodge { get; set; }
         #endregion
 
         #region Debuffs

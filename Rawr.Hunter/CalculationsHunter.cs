@@ -1095,11 +1095,8 @@ namespace Rawr.Hunter
                 calculatedStats.apFromAspectOfTheHawk = 300 * aspectUptimeHawk;
             }
 
-            calculatedStats.apFromFuriousHowl = 0;
-            if (options.PetFamily == PetFamily.Wolf)
-            {
-                calculatedStats.apFromFuriousHowl = 320 * CalcUptime(20, 40, options);
-            }
+            // Furious Howl was calculated earlier by the pet model
+            //calculatedStats.apFromFuriousHowl = 0;
 
             // Expose Weakness
             double exposeWeaknessShotsPerSecond = crittingShotsPerSecond;
