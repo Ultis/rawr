@@ -282,6 +282,8 @@ namespace Rawr.Hunter
             double damageAdjustCobraReflexes = 1 - (options.petCobraReflexes * 0.075); // this is a negative effect!
             double damageAdjustGlancingBlows = 0.9125; // TODO - getGlancingBlows()
 
+            double damageAdjustMangle = 1; // TODO : 1 + (mangle_effect * 0.3)
+
             double effectiveTargetArmor = options.TargetArmor; // TODO: apply debuffs
             double damageAdjustMitigation = 1 - (effectiveTargetArmor / (effectiveTargetArmor - 22167.5 + (467.5 * 80)));
 
@@ -303,10 +305,11 @@ namespace Rawr.Hunter
                     * damageAdjustTargetDebuffs
                     * damageAdjustPetFamily;
 
+            double damageAdjustDots = damageAdjustBase;
             double damageAdjustWhite = damageAdjustBase * damageAdjustHitCritMelee;
-            double damageAdjustMelee = damageAdjustBase * damageAdjustHitCritSpecials;
-            double damageAdjustSpecials = damageAdjustBase * damageAdjustHitCritSpecials * damageAdjustMarkedForDeath;
-            double damageAdjustMagic = damageAdjustBase * damageAdjustMarkedForDeath / damageAdjustTargetDebuffs;
+            double damageAdjustMelee = damageAdjustBase * damageAdjustHitCritSpecials; // MeleeAttackAdjustment
+            double damageAdjustSpecials = damageAdjustBase * damageAdjustHitCritSpecials * damageAdjustMarkedForDeath; // DamageAdjustment
+            double damageAdjustMagic = damageAdjustBase * damageAdjustMarkedForDeath / damageAdjustTargetDebuffs; // MagicDamageAdjustments
 
             #endregion
 
@@ -326,25 +329,45 @@ namespace Rawr.Hunter
             #endregion
             #region Priority Rotation
 
-            // loop over each shot, figuriung out the damage value
+            // loop over each skill, figuriung out the damage value
 
             foreach (PetSkillInstance S in priorityRotation.skills)
             {
-                S.dps = 0;
-                if (S.skillData.type == PetSkillType.FocusDump) S.damage = getFocusDumpDamage(damageAdjustSpecials * damageAdjustMitigation, damageBonusFromAP);
-                if (S.skillData.type == PetSkillType.PhysicalSpecial) S.dps = 0;
-                if (S.skillData.type == PetSkillType.SpellSpecial) S.dps = 0;
-                if (S.skillData.type == PetSkillType.Unique)
+                S.damage = 0;
+                
+                if (S.skillData.type == PetSkillType.FocusDump)
                 {
-                    // deal with different unique damage modes here...
+                    double focsDumpDamageAverage = ((118 + 168) / 2) + damageBonusFromAP;
+                    S.damage = focsDumpDamageAverage * damageAdjustSpecials * damageAdjustMitigation;
                 }
+                if (S.skillType == PetAttacks.Rake)
+                {
+                    double rakeDamageFromAP = apTotal * 0.0175;
+                    double rakeAverageDamage = ((47  + 67) / 2) + rakeDamageFromAP;
+                    double rakeAverageDamageDot = ((19 + 25) / 2) + rakeDamageFromAP;
 
+                    double rakeInitialHitDamage = rakeAverageDamage * damageAdjustSpecials * damageAdjustMangle; // spreadsheet doesn't add armor mitigation, appears to be wow bug?
+                    double rakeDotDamage = rakeAverageDamageDot * damageAdjustMangle * damageAdjustDots;
+
+                    S.damage = rakeInitialHitDamage + rakeDotDamage * 3;
+                }
+                
                 S.CalculateDPS();
             }
 
             // now add everything up...
 
             priorityRotation.calculateDPS();
+
+
+            double skill1Damage = priorityRotation.skills[0].damage;
+            double skill1DPS = priorityRotation.skills[0].dps;
+            
+            double skill2Damage = priorityRotation.skills[1].damage;
+            double skill2DPS = priorityRotation.skills[1].dps;
+
+            Debug.WriteLine("TRAP");
+
 
             #endregion
             #region Kill Command
@@ -379,11 +402,6 @@ namespace Rawr.Hunter
                                                 + calculatedStats.petKillCommandDPS);
         }
 
-        private double getFocusDumpDamage(double damageAdjust, double damageBonusFromAP)
-        {
-            double damageAverage = ((118 + 168) / 2) + damageBonusFromAP;
-            return damageAverage * damageAdjust;
-        }
 
 
 

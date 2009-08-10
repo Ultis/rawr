@@ -537,7 +537,7 @@ namespace Rawr.Hunter
             if (character.Ranged != null)
             {
                 rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
-                rangedWeaponSpeed = character.Ranged.Item.Speed;
+                rangedWeaponSpeed = Math.Round(character.Ranged.Item.Speed * 10) / 10;
             }
             if (character.Projectile != null)
             {
@@ -633,7 +633,7 @@ namespace Rawr.Hunter
             #region August 2009 Quick Shots
 
             double QSBaseFreqnecyIncrease = 0;
-            double autoShotSpeed = character.Ranged.Speed / (totalStaticHaste * totalDynamicHaste);
+            double autoShotSpeed = rangedWeaponSpeed / (totalStaticHaste * totalDynamicHaste);
 
             if (options.selectedAspect == Aspect.Hawk || options.selectedAspect == Aspect.Dragonhawk)
             {
@@ -731,21 +731,21 @@ namespace Rawr.Hunter
 
             // Crit Depression
             double critdepression = (levelDifference > 2) ? 0.03 + (levelDifference * 0.006) : (levelDifference * 5 * 0.04) / 100;
-            calculatedStats.critfromDepression = 0 - critdepression;
+            calculatedStats.critFromDepression = 0 - critdepression;
 
-            calculatedStats.critRateOverall = 0
-                + Math.Round(calculatedStats.critBase, 4)
-                + Math.Round(calculatedStats.critFromAgi, 4)
-                + Math.Round(calculatedStats.critFromRating, 4)
-                + Math.Round(calculatedStats.critFromProcRating, 4)
-                + Math.Round(calculatedStats.critFromLethalShots, 4)
-                + Math.Round(calculatedStats.critFromKillerInstincts, 4)
-                + Math.Round(calculatedStats.critFromMasterMarksman, 4)
-                + Math.Round(calculatedStats.critFromMasterTactician, 4)
-                + Math.Round(calculatedStats.critFromBuffs, 4)
-                + Math.Round(calculatedStats.critfromDepression, 4);
+            double critHitPercent = 0
+                + calculatedStats.critBase
+                + calculatedStats.critFromAgi
+                + calculatedStats.critFromRating
+                + calculatedStats.critFromProcRating
+                + calculatedStats.critFromLethalShots
+                + calculatedStats.critFromKillerInstincts
+                + calculatedStats.critFromMasterMarksman
+                + calculatedStats.critFromMasterTactician
+                + calculatedStats.critFromBuffs
+                + calculatedStats.critFromDepression;
 
-            double critHitPercent = calculatedStats.critRateOverall;
+            calculatedStats.critRateOverall = critHitPercent;
 
             #endregion
             #region August 2009 Bonus Crit Chance
@@ -891,7 +891,7 @@ namespace Rawr.Hunter
 
             // Hunting Party
 
-            double huntingPartyProc = (float)(character.HunterTalents.HuntingParty / 3.0);
+            double huntingPartyProc = (double)character.HunterTalents.HuntingParty / 3.0;
 
             double huntingPartyArcaneFreq = calculatedStats.arcaneShot.freq;
             double huntingPartyArcaneCrit = calculatedStats.arcaneShot.critChance;
@@ -1137,11 +1137,11 @@ namespace Rawr.Hunter
                 + calculatedStats.apFromHunterVsWild
                 + calculatedStats.apFromGear // includes buffs
                 + calculatedStats.apFromBloodFury
-                + calculatedStats.apFromAspectOfTheHawk // TODO: this is a little off
+                + calculatedStats.apFromAspectOfTheHawk
                 + calculatedStats.apFromAspectMastery
                 + calculatedStats.apFromFuriousHowl
                 // TODO: target debuffs
-                + calculatedStats.apFromProc; // TODO: this is a little off
+                + calculatedStats.apFromProc;
 
             // used for hunter calculations
             calculatedStats.apTotal = calculatedStats.apSelfBuffed

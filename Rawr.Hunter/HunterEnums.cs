@@ -159,7 +159,8 @@ namespace Rawr.Hunter
         PhysicalSpecial, // 1
         SpellSpecial, // 2
         NonDamaging, // 3
-        Unique // >= 4
+        Unique, // >= 4
+        Damaging
     }
 
     public enum ManaPotionType
@@ -185,52 +186,20 @@ namespace Rawr.Hunter
 
     public static class HunterRatings
     {
-        public static double BASE_HIT_PERCENT = .95; // Check
         public static double HIT_RATING_PER_PERCENT = 32.78998947;
 
-        public static double AGILITY_PER_CRIT = 83.33333333;
+        public static double AGILITY_PER_CRIT = 83.33; // was previously 83.33333333 - rounded down for spreadsheet
+        public static double CRIT_RATING_PER_PERCENT = 45.905985258; // from spreadsheet. we were using 45.90598679                                                       
+        public static double HASTE_RATING_PER_PERCENT = 32.78998947; // matches spreadsheet
+
         public static double BASE_CRIT_PERCENT = -.0153; // Check
-        public static double CRIT_RATING_PER_PERCENT = 45.90598679;
 
         public static double ARP_RATING_PER_PERCENT = 15.39529991;
 
-        public static double HASTE_RATING_PER_PERCENT = 32.78998947;
-
-        public static double QUIVER_SPEED_INCREASE = 1.15;
-
-        public static double STEADY_AP_SCALE = 0.1;
-        public static double STEADY_BONUS_DMG = 252.0;
-
-        public static double EXPLOSIVE_AP_SCALE = 0.16;
-        public static double EXPLOSIVE_BONUS_DMG = (428.0 + 516.0) / 2.0;
-
-        public static double ARCANE_AP_SCALE = 0.15;
-        public static double ARCANE_BONUS_DMG = 492.0;
-
-        public static double SERPENT_AP_SCALE = 0.2;
-        public static double SERPENT_BONUS_DMG = 1210.0;
-
-        public static double MULTI_BONUS_DMG = 408.0;
-
-        public static double AIMED_BONUS_DMG = 408.0;
-
-        public static double HAWK_BONUS_AP = 300.0;
-                      
         public static double BASE_MISS_PERCENT = 0.05;
         public static double CHAR_LEVEL = 80.0;
         
         public static double HUNTERS_MARK = 500.0;
-    }
-    
-   
-   
+    }  
 
-    public enum PetTrees
-    { 
-        CunningGround,
-        CunningFlying,
-        FerocityGround,
-        FerocityFlying,
-        Tenacity
-    }
 }

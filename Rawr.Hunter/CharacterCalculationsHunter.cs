@@ -75,7 +75,7 @@ namespace Rawr.Hunter
         public double critFromMasterMarksman {get; set;}
         public double critFromMasterTactician { get; set; }
         public double critFromBuffs {get; set;}
-        public double critfromDepression  {get; set;}
+        public double critFromDepression  {get; set;}
         #endregion
 
         #region Shots Per Second
@@ -250,7 +250,7 @@ namespace Rawr.Hunter
                            critFromMasterMarksman.ToString("P2") + " from Master Marksman\n" +
                            critFromMasterTactician.ToString("P2") + " from Master Tactician\n" +
 			               critFromBuffs.ToString("P2") + " from buffs \n" +
-			               critfromDepression.ToString("P2") + " from depression");
+			               critFromDepression.ToString("P2") + " from depression");
             dictValues.Add("Ranged AP", apTotal.ToString("F0") + "*includes: \n" +
                             apFromBase.ToString("F0") + " from base \n" +
                             apFromAgil.ToString("F0") + " from agility \n" +

@@ -68,7 +68,7 @@ namespace Rawr.Hunter
             {PetAttacks.Snatch, new PetSkill(true, 60, 20, PetSkillType.Unique, 89, 125)}, // not sure what kind of damage this does...
             {PetAttacks.Gore, new PetSkill(true, 10, 20, PetSkillType.PhysicalSpecial, 122, 164)},
             {PetAttacks.DemoralizingScreech, new PetSkill(true, 10, 20, PetSkillType.PhysicalSpecial, 85, 129)},
-            {PetAttacks.Rake, new PetSkill(true, 10, 20, PetSkillType.PhysicalSpecial, 47, 67)},
+            {PetAttacks.Rake, new PetSkill(true, 10, 20, PetSkillType.Damaging)},
             {PetAttacks.Prowl, new PetSkill(false, 10, 0, PetSkillType.NonDamaging)},
             {PetAttacks.FroststormBreath, new PetSkill(true, 10, 20, PetSkillType.SpellSpecial, 128, 172)},
             {PetAttacks.LavaBreath, new PetSkill(true, 10, 20, PetSkillType.SpellSpecial, 128, 172)},

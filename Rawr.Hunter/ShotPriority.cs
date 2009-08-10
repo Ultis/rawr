@@ -120,6 +120,11 @@ namespace Rawr.Hunter
             // This function calculates the frequencies for each shot.
             // We have already calculated all shot cooldowns and validated the rotation by this point.
 
+            // THIS FUNCTION IS CALLED THREE TIMES - TRY TO REMEMBER THIS!
+            // 1) When we have mana and basic timings
+            // 2) When we have LAL proc info
+            // 3) When we have steady shot speed
+
             ShotData PrevShot = null;
 
             specialShotsPerSecond = 0;
@@ -224,7 +229,7 @@ namespace Rawr.Hunter
 
                     s.calculateMPS(this);
 
-                    MPS += Math.Round(s.mps, 3);
+                    MPS += s.mps;
                 }
             }
         }

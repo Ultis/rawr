@@ -21,7 +21,7 @@ namespace Rawr.Hunter
         private PetAttacks _petPriority4 = PetAttacks.None;
 
 		private Faction _ScryerAldor = Faction.Aldor;
-		private float _latency = .2f;
+		public double Latency = 0.15;
 
         public int duration = 360;
         public int timeSpentSub20 = 72;
@@ -134,12 +134,6 @@ namespace Rawr.Hunter
 		{
 			get { return _ScryerAldor; }
 			set { _ScryerAldor = value; }
-		}
-
-		public float Latency
-		{
-			get { return _latency; }
-			set { _latency = value;}
 		}
 		
 		#region ICalculationOptionBase Members
