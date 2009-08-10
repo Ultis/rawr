@@ -86,15 +86,15 @@ namespace Rawr.Hunter
             {PetAttacks.LavaBreath, new PetSkill(true, 10, 20, PetSkillType.SpecialSpell, 128, 172)},
             {PetAttacks.MonstrousBite, new PetSkill(true, 10, 20, PetSkillType.SpecialMelee, 91, 123)},
             {PetAttacks.FireBreath, new PetSkill(false, 10, 20, PetSkillType.SpecialUnique)},
+            {PetAttacks.NetherShock, new PetSkill(true, 40, 0, PetSkillType.SpecialSpell, 64, 86)},
+            {PetAttacks.SavageRend, new PetSkill(true, 60, 20, PetSkillType.SpecialUnique)},
+            {PetAttacks.Ravage, new PetSkill(true, 40, 0, PetSkillType.SpecialMelee, 85, 129)},
+            {PetAttacks.ScorpidPoison, new PetSkill(false, 10, 20, PetSkillType.SpecialUnique)},
+            {PetAttacks.PoisonSpit, new PetSkill(false, 10, 20, PetSkillType.SpecialUnique)},
+            {PetAttacks.VenomWebSpray, new PetSkill(false, 120, 0, PetSkillType.SpecialUnique)},
+            {PetAttacks.SpiritStrike, new PetSkill(true, 10, 20, PetSkillType.SpecialUnique)},
+            {PetAttacks.SporeCloud, new PetSkill(false, 10, 20, PetSkillType.SpecialSpell, 25, 25)},
 
-            {PetAttacks.NetherShock, new PetSkill(true, 40, 0, PetSkillType.Unimplemented)},
-            {PetAttacks.SavageRend, new PetSkill(true, 60, 20, PetSkillType.Unimplemented)},
-            {PetAttacks.Ravage, new PetSkill(true, 40, 0, PetSkillType.Unimplemented)},
-            {PetAttacks.ScorpidPoison, new PetSkill(false, 10, 20, PetSkillType.Unimplemented)},
-            {PetAttacks.PoisonSpit, new PetSkill(false, 10, 20, PetSkillType.Unimplemented)},
-            {PetAttacks.VenomWebSpray, new PetSkill(false, 120, 0, PetSkillType.Unimplemented)},
-            {PetAttacks.SpiritStrike, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
-            {PetAttacks.SporeCloud, new PetSkill(false, 10, 20, PetSkillType.Unimplemented)},
             {PetAttacks.Sting, new PetSkill(true, 6, 20, PetSkillType.Unimplemented)},
             {PetAttacks.LightningBreath, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
             {PetAttacks.AcidSpit, new PetSkill(true, 10, 20, PetSkillType.Unimplemented)},
@@ -209,6 +209,15 @@ namespace Rawr.Hunter
             foreach (PetSkillInstance S in skills)
             {
                 if (S.skillType == skill) return S.frequency;
+            }
+            return 0;
+        }
+
+        public double getSkillCooldown(PetAttacks skill)
+        {
+            foreach (PetSkillInstance S in skills)
+            {
+                if (S.skillType == skill) return S.cooldown;
             }
             return 0;
         }

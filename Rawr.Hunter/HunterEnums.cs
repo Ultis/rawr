@@ -191,10 +191,9 @@ namespace Rawr.Hunter
         public static double AGILITY_PER_CRIT = 83.33; // was previously 83.33333333 - rounded down for spreadsheet
         public static double CRIT_RATING_PER_PERCENT = 45.905985258; // from spreadsheet. we were using 45.90598679                                                       
         public static double HASTE_RATING_PER_PERCENT = 32.78998947; // matches spreadsheet
+        public static double ARP_RATING_PER_PERCENT = 12.3162; // from spreadsheet (was 15.39529991)
 
         public static double BASE_CRIT_PERCENT = -.0153; // Check
-
-        public static double ARP_RATING_PER_PERCENT = 15.39529991;
 
         public static double BASE_MISS_PERCENT = 0.05;
         public static double CHAR_LEVEL = 80.0;

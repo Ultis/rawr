@@ -463,6 +463,10 @@ namespace Rawr.Hunter
                 return calculatedStats;
             }
 
+            // NOTE: this model just breaks if you're not level 80.
+            // we should be using character.Level everywhere, but also
+            // all of the spell levels will be wrong. do we care?
+
             //Debug.WriteLine("Buffs:");
             //foreach (Buff buff in character.ActiveBuffs)
             //{
@@ -818,6 +822,43 @@ namespace Rawr.Hunter
 
             #endregion
 
+            // target debuffs
+            #region Target Debuffs
+
+            double targetDebuffsAP = 0; // Buffs!E77
+            double targetDebuffsHit = 0; // Buffs!F77
+
+            double targetDebuffsArmorCurseOfWeakness = 0; // TODO
+            double targetDebuffsArmorFaerieFire = 0; // TODO
+            double targetDebuffsArmorSunder = 0; // TODO
+            double targetDebuffsArmorPet = calculatedStats.petArmorDebuffs;
+            
+            // only use one of CoW, FF or Pet
+            double targetDebuffsArmorUse = targetDebuffsArmorCurseOfWeakness;
+            if (targetDebuffsArmorUse == 0) targetDebuffsArmorUse = targetDebuffsArmorFaerieFire;
+            if (targetDebuffsArmorUse == 0) targetDebuffsArmorUse = targetDebuffsArmorPet;
+
+            double targetDebuffsArmor = 1 - (1 - targetDebuffsArmorSunder) * (1 - targetDebuffsArmorUse); // Buffs!G77
+
+            double targetDebuffsMP5JudgmentOfWisdom = 0; // TODO!
+            double targetDebuffsMP5 = targetDebuffsMP5JudgmentOfWisdom; // Buffs!H77
+
+            double targetDebuffsMagicCurseOfElements = 0; // TODO
+            double targetDebuffsMagicEarthAndMoon = 0; // TODO
+            double targetDebuffsMagic = Math.Max(targetDebuffsMagicCurseOfElements, targetDebuffsMagicEarthAndMoon);
+
+            double targetDebuffsFire = targetDebuffsMagic; // Buffs!I77
+            double targetDebuffsArcane = targetDebuffsMagic; // Buffs!J77
+            double targetDebuffsNature = targetDebuffsMagic; // Buffs!K77
+
+            double targetDebuffsCritHeartOfTheCrusader = 0; // TODO
+            double targetDebuffsCrit = targetDebuffsCritHeartOfTheCrusader; // Buffs!L77
+
+            calculatedStats.targetDebuffsArmor = 1 - targetDebuffsArmor;
+            calculatedStats.targetDebuffsNature = 1 + targetDebuffsNature;
+
+            #endregion
+
             // mana consumption
             #region August 2009 Mana Adjustments
 
@@ -1157,15 +1198,24 @@ namespace Rawr.Hunter
             #endregion
             #region August 2009 Damage Adjustments
 
-            //Damage Reduction
-            calculatedStats.damageReductionFromArmor = StatConversion.GetArmorDamageReduction(
-                    character.Level,
-                    options.TargetArmor,
-                    calculatedStats.BasicStats.ArmorPenetration,
-                    0f,
-                    calculatedStats.BasicStats.ArmorPenetrationRating
-                  );
-            double armorReductionDamageAdjust = 1 - calculatedStats.damageReductionFromArmor;
+            // Armor Penetration & Debuffs
+            double targetArmorSubtotal = options.TargetArmor * calculatedStats.targetDebuffsArmor;
+            double arpOnProcRating = 0; // TODO
+            double arpGearRating = calculatedStats.BasicStats.ArmorPenetrationRating;
+            double arpTotal = arpGearRating + arpOnProcRating;
+
+            double arpPercentReduction = arpTotal / HunterRatings.ARP_RATING_PER_PERCENT / 100;
+            if (arpPercentReduction > 1) arpPercentReduction = 1;
+
+            double arpEffectCap = (targetArmorSubtotal + (400 + 85 * character.Level + 4.5 * 85 * (character.Level - 59))) / 3;
+            if (arpEffectCap > targetArmorSubtotal) arpEffectCap = targetArmorSubtotal;
+
+            double targetArmorRemoved = arpEffectCap * arpPercentReduction;
+
+            double effectiveArmor = targetArmorSubtotal - targetArmorRemoved;
+            double armorReduction = effectiveArmor / (effectiveArmor - 22167.5 + (467.5 * character.Level));
+
+            double armorReductionDamageAdjust = 1 - armorReduction;
 
             //Partial Resists
             double averageResist = (options.TargetLevel - 80) * 0.02;
@@ -1179,7 +1229,6 @@ namespace Rawr.Hunter
             beastialWrathCooldown *= 1 - 0.1 * character.HunterTalents.Longevity;
 
             double beastialWrathUptime = CalcUptime(18, beastialWrathCooldown, options);
-
 
             //TODO: calculate this properly
             double ferociousInspirationUptime = 1;
@@ -1308,7 +1357,7 @@ namespace Rawr.Hunter
             double autoShotDamage = rangedWeaponDamage + rangedAmmoDamage + statsBaseGear.WeaponDamage + damageFromRAP + calculatedStats.BasicStats.ScopeDamage;
             double autoShotDamageNormalized = rangedWeaponDamage + rangedAmmoDamageNormalized + statsBaseGear.WeaponDamage + damageFromRAPNormalized;
 
-            double autoShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust *armorReductionDamageAdjust;
+            double autoShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * armorReductionDamageAdjust;
             double autoShotCritAdjust = 1 * metaGemCritDamage;
 
             double autoShotDamageReal = CalcEffectiveDamage(

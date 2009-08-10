@@ -23,6 +23,12 @@ namespace Rawr.Hunter
         public double petKillCommandMPS { get; set; }
         public double petWhiteDPS { get; set; }
         public double petSpecialDPS { get; set; }
+        public double petArmorDebuffs { get; set; }
+        #endregion
+
+        #region Debuffs
+        public double targetDebuffsArmor { get; set; }
+        public double targetDebuffsNature { get; set; }
         #endregion
 
         #region Haste Stats
