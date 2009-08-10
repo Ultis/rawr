@@ -54,7 +54,7 @@ namespace Rawr
             int[] _data = Data;
             string[] tmp = code.Split('.');
             string talents = tmp[0];
-            if (talents.Length == _data.Length)
+            if (talents.Length >= _data.Length)
             {
                 List<int> data = new List<int>();
                 foreach (Char digit in talents)
@@ -103,23 +103,35 @@ namespace Rawr
             else if (this.GetType() == typeof(DeathKnightTalents)) return CharacterClass.DeathKnight;
             else if (this.GetType() == typeof(PaladinTalents)) return CharacterClass.Paladin;
             else return CharacterClass.Warrior;
-        }
+		}
+
+#if RAWR3
+		public abstract TalentsBase Clone();
+#endif
     }
 
-    public partial class WarriorTalents : TalentsBase, ICloneable {
-        private int[] _data = new int[85];
+    public partial class WarriorTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+		, ICloneable 
+	{
+        public WarriorTalents Clone() { return (WarriorTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif	
+		{
+			WarriorTalents clone = (WarriorTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}
+
+		private int[] _data = new int[85];
         public override int[] Data { get { return _data; } }
         public WarriorTalents() { }
         public WarriorTalents(string talents) { LoadString(talents); }
-        object ICloneable.Clone() {
-            WarriorTalents clone = (WarriorTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public WarriorTalents Clone() { return (WarriorTalents)((ICloneable)this).Clone(); }
-
+       
         public static string[] TreeNames = new string[] {@"Arms",@"Fury",@"Protection",};
 
         /// <summary>
@@ -910,26 +922,29 @@ namespace Rawr
         public int Shockwave { get { return _data[84]; } set { _data[84] = value; } }
     }
 
-    public partial class PaladinTalents : TalentsBase, ICloneable
-    {
+	public partial class PaladinTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+, ICloneable
+	{
+		public PaladinTalents Clone() { return (PaladinTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif
+		{
+			PaladinTalents clone = (PaladinTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}
+
         private int[] _data = new int[78];
         public override int[] Data { get { return _data; } }
         public PaladinTalents() { }
         public PaladinTalents(string talents)
         {
             LoadString(talents);
-        }
-        object ICloneable.Clone()
-        {
-            PaladinTalents clone = (PaladinTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public PaladinTalents Clone()
-        {
-            return (PaladinTalents)((ICloneable)this).Clone();
         }
 
         public static string[] TreeNames = new string[] {
@@ -1384,27 +1399,29 @@ namespace Rawr
         public int DivineStorm { get { return _data[77]; } set { _data[77] = value; } }
     }
 
-    public partial class HunterTalents : TalentsBase, ICloneable
-    {
+	public partial class HunterTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+		, ICloneable 
+	{
+        public HunterTalents Clone() { return (HunterTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif
+		{
+			HunterTalents clone = (HunterTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}
+
         private int[] _data = new int[81];
         public override int[] Data { get { return _data; } }
         public HunterTalents() { }
         public HunterTalents(string talents)
         {
             LoadString(talents);
-        }
-        object ICloneable.Clone()
-        {
-            HunterTalents clone = (HunterTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            // Uncommenting this out so that it handles the glyph data that's now being populated.
-            clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public HunterTalents Clone()
-        {
-            return (HunterTalents)((ICloneable)this).Clone();
         }
 
         public static string[] TreeNames = new string[] {
@@ -1884,27 +1901,28 @@ namespace Rawr
         public int ExplosiveShot { get { return _data[80]; } set { _data[80] = value; } }
     }
 
-    public partial class HunterPetTalents : TalentsBase, ICloneable
-    {
+	public partial class HunterPetTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+		, ICloneable 
+	{
+        public HunterPetTalents Clone() { return (HunterPetTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif
+		{
+			HunterPetTalents clone = (HunterPetTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			return clone;
+		}
+
         private int[] _data = new int[2];
         public override int[] Data { get { return _data; } }
         public HunterPetTalents() { }
         public HunterPetTalents(string talents)
         {
             LoadString(talents);
-        }
-        object ICloneable.Clone()
-        {
-            HunterPetTalents clone = (HunterPetTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            // Pets don't have glyphs
-            //clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public HunterPetTalents Clone()
-        {
-            return (HunterPetTalents)((ICloneable)this).Clone();
         }
 
         public static string[] TreeNames = new string[] {
@@ -1931,27 +1949,30 @@ namespace Rawr
 
   
     }
-    
-    public partial class RogueTalents : TalentsBase, ICloneable
-    {
+
+	public partial class RogueTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+, ICloneable
+	{
+		public RogueTalents Clone() { return (RogueTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif
+		{
+			RogueTalents clone = (RogueTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}
+
         private int[] _data = new int[83];
         public override int[] Data { get { return _data; } }
         public RogueTalents() { }
         public RogueTalents(string talents)
         {
             LoadString(talents);
-        }
-        object ICloneable.Clone()
-        {
-            RogueTalents clone = (RogueTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            //clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public RogueTalents Clone()
-        {
-            return (RogueTalents)((ICloneable)this).Clone();
         }
 
         public static string[] TreeNames = new string[] {
@@ -2434,26 +2455,29 @@ namespace Rawr
         public int ShadowDance { get { return _data[82]; } set { _data[82] = value; } }
     }
 
-    public partial class PriestTalents : TalentsBase, ICloneable
-    {
+	public partial class PriestTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+, ICloneable
+	{
+		public PriestTalents Clone() { return (PriestTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif
+		{
+			PriestTalents clone = (PriestTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}
+
         private int[] _data = new int[82];
         public override int[] Data { get { return _data; } }
         public PriestTalents() { }
         public PriestTalents(string talents)
         {
             LoadString(talents);
-        }
-        object ICloneable.Clone()
-        {
-            PriestTalents clone = (PriestTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            //clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public PriestTalents Clone()
-        {
-            return (PriestTalents)((ICloneable)this).Clone();
         }
 
         public static string[] TreeNames = new string[] {
@@ -2929,26 +2953,29 @@ namespace Rawr
         public int Dispersion { get { return _data[81]; } set { _data[81] = value; } }
     }
 
-    public partial class DeathKnightTalents : TalentsBase, ICloneable
-    {
+	public partial class DeathKnightTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+		, ICloneable 
+	{
+        public DeathKnightTalents Clone() { return (DeathKnightTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif
+		{
+			DeathKnightTalents clone = (DeathKnightTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}
+
         private int[] _data = new int[88];
         public override int[] Data { get { return _data; } }
         public DeathKnightTalents() { }
         public DeathKnightTalents(string talents)
         {
             LoadString(talents);
-        }
-        object ICloneable.Clone()
-        {
-            DeathKnightTalents clone = (DeathKnightTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public DeathKnightTalents Clone()
-        {
-            return (DeathKnightTalents)((ICloneable)this).Clone();
         }
 
         public static string[] TreeNames = new string[] {
@@ -3453,26 +3480,29 @@ namespace Rawr
         public int SummonGargoyle { get { return _data[87]; } set { _data[87] = value; } }
     }
 
-    public partial class ShamanTalents : TalentsBase, ICloneable
-    {
+	public partial class ShamanTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+, ICloneable
+	{
+		public ShamanTalents Clone() { return (ShamanTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif
+		{
+			ShamanTalents clone = (ShamanTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}
+
         private int[] _data = new int[80];
         public override int[] Data { get { return _data; } }
         public ShamanTalents() { }
         public ShamanTalents(string talents)
         {
             LoadString(talents);
-        }
-        object ICloneable.Clone()
-        {
-            ShamanTalents clone = (ShamanTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public ShamanTalents Clone()
-        {
-            return (ShamanTalents)((ICloneable)this).Clone();
         }
 
         public static string[] TreeNames = new string[] {
@@ -3947,26 +3977,29 @@ namespace Rawr
         public int Riptide { get { return _data[79]; } set { _data[79] = value; } }
     }
 
-    public partial class MageTalents : TalentsBase, ICloneable
-    {
+    public partial class MageTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+		, ICloneable 
+	{
+        public MageTalents Clone() { return (MageTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif
+		{
+			MageTalents clone = (MageTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}
+
         private int[] _data = new int[86];
         public override int[] Data { get { return _data; } }
         public MageTalents() { }
         public MageTalents(string talents)
         {
             LoadString(talents);
-        }
-        object ICloneable.Clone()
-        {
-            MageTalents clone = (MageTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public MageTalents Clone()
-        {
-            return (MageTalents)((ICloneable)this).Clone();
         }
 
         public static string[] TreeNames = new string[] {
@@ -4462,26 +4495,29 @@ namespace Rawr
         public int DeepFreeze { get { return _data[85]; } set { _data[85] = value; } }
     }
 
-    public partial class WarlockTalents : TalentsBase, ICloneable
-    {
+	public partial class WarlockTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+, ICloneable
+	{
+		public WarlockTalents Clone() { return (WarlockTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif
+		{
+			WarlockTalents clone = (WarlockTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}
+
         private int[] _data = new int[81];
         public override int[] Data { get { return _data; } }
         public WarlockTalents() { }
         public WarlockTalents(string talents)
         {
             LoadString(talents);
-        }
-        object ICloneable.Clone()
-        {
-            WarlockTalents clone = (WarlockTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            //clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public WarlockTalents Clone()
-        {
-            return (WarlockTalents)((ICloneable)this).Clone();
         }
 
         public static string[] TreeNames = new string[] {
@@ -4950,26 +4986,29 @@ namespace Rawr
         public int ChaosBolt { get { return _data[80]; } set { _data[80] = value; } }
     }
 
-    public partial class DruidTalents : TalentsBase, ICloneable
-    {
+    public partial class DruidTalents : TalentsBase
+#if RAWR3
+	{
+		public override TalentsBase Clone()
+#else
+		, ICloneable
+	{
+		public DruidTalents Clone() { return (DruidTalents)((ICloneable)this).Clone(); }
+		object ICloneable.Clone()
+#endif
+		{
+			DruidTalents clone = (DruidTalents)MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}
+
         private int[] _data = new int[85];
         public override int[] Data { get { return _data; } }
         public DruidTalents() { }
         public DruidTalents(string talents)
         {
             LoadString(talents);
-        }
-        object ICloneable.Clone()
-        {
-            DruidTalents clone = (DruidTalents)MemberwiseClone();
-            clone._data = (int[])_data.Clone();
-            clone._glyphData = (bool[])_glyphData.Clone();
-            return clone;
-        }
-
-        public DruidTalents Clone()
-        {
-            return (DruidTalents)((ICloneable)this).Clone();
         }
 
         public static string[] TreeNames = new string[] {
