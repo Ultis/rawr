@@ -491,22 +491,24 @@ namespace Rawr.Cat
 			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 			statsTotal.WeaponDamage += 16f; //Tiger's Fury
 
-			//TODO: TEMPORARY! Remove this once we have ability-specific procs working!
-			if (statsTotal.TerrorProc > 0)
-			{
-				float terrorUptime = (character.ActiveBuffsContains("Mangle") || 
-					character.ActiveBuffsContains("Trauma")) ? 0f: 1f; //TODO: Calculate this
-				statsTotal.Agility += statsTotal.TerrorProc * terrorUptime * (1f + statsTotal.BonusAgilityMultiplier);
-				statsTotal.AttackPower += statsTotal.TerrorProc * terrorUptime * (1f + statsTotal.BonusAgilityMultiplier) * (1f + statsTotal.BonusAttackPowerMultiplier);
-			}
-            
 			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
 			hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
 			float meleeHitInterval = 1f / ((1f + hasteBonus) + 1f / 3.5f);
-			float chanceCrit = StatConversion.GetCritFromRating(statsTotal.CritRating) + statsTotal.PhysicalCrit +
-				StatConversion.GetCritFromAgility(statsTotal.Agility, CharacterClass.Druid) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
-				- (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
+			float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;//stats.HitRating / 32.78998947f / 100f;
+			float expertiseBonus = (StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating) + statsTotal.Expertise) * 0.0025f;//stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+			float chanceDodge = Math.Max(0f, 0.065f + .005f * (calcOpts.TargetLevel - 83) - expertiseBonus);
+			float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
+			float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
+			if (calcOpts.TargetLevel < 83) chanceMiss = Math.Max(0f, 0.05f + 0.005f * (calcOpts.TargetLevel - 80f) - hitBonus);
+			float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+			float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating) +
+				StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
+				statsTotal.PhysicalCrit - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
+			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
+			float chanceHit = 1f - chanceAvoided;
 
+            
+			
 			Stats statsProcs = new Stats();
 
 			tempArPenRating = 0f;
@@ -535,6 +537,13 @@ namespace Rawr.Cat
 							break;
 						case Trigger.DamageDone:
 							statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration);
+							break;
+						case Trigger.MangleCatHit:
+							if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
+								statsProcs += effect.GetAverageStats(talents.GlyphOfMangle ? 18f : 12f, 1f, 1f, calcOpts.Duration);
+							break;
+						case Trigger.MangleCatOrShredHit:
+							statsProcs += effect.GetAverageStats(4f, chanceHit, 1f, calcOpts.Duration);
 							break;
 					}
 				}
@@ -866,7 +875,8 @@ namespace Rawr.Cat
 			{
 				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
 				|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
-					|| effect.Trigger == Trigger.DamageDone)
+					|| effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleCatHit 
+					|| effect.Trigger == Trigger.MangleCatOrShredHit)
 				{
 					if (HasRelevantStats(effect.Stats))
 					{
@@ -897,7 +907,8 @@ namespace Rawr.Cat
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{
 				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
+					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit
+					|| effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatOrShredHit)
 				{
 					relevant |= HasRelevantStats(effect.Stats);
 					if (relevant) break;

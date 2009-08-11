@@ -281,20 +281,20 @@ namespace Rawr
             });
             #endregion
 
-            #region Armor (%)
+            #region Damage Reduction (Major %)
             defaultBuffs.Add(new Buff
             {
                 Name = "Ancestral Healing",
                 Source = "Resto Shaman",
-                Group = "Armor (%)",
-                Stats = { BonusArmorMultiplier = 0.25f }
+				Group = "Damage Reduction (Major %)",
+				Stats = { DamageTakenMultiplier = -0.1f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Inspiration",
                 Source = "Priest",
-                Group = "Armor (%)",
-                Stats = { BonusArmorMultiplier = 0.25f }
+				Group = "Damage Reduction (Major %)",
+				Stats = { DamageTakenMultiplier = -0.1f }
             });
             #endregion
 
@@ -367,14 +367,14 @@ namespace Rawr
             {
                 Name = "Blessing of Sanctuary",
                 Source = "Prot Paladin",
-                Group = "Damage Reduction (%)",
+				Group = "Damage Reduction (Minor %)",
                 Stats = { DamageTakenMultiplier = -0.03f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Grace",
                 Source = "Disc Priest",
-                Group = "Damage Reduction (%)",
+				Group = "Damage Reduction (Minor %)",
                 Stats = { DamageTakenMultiplier = -0.03f }
             });
             #endregion

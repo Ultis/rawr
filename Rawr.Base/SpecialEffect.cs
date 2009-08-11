@@ -21,6 +21,7 @@ namespace Rawr
         MeleeCrit,
         PhysicalHit,
         PhysicalCrit,
+		DamageTaken,
         ManaGem,
         DoTTick,
         DamageDone,
@@ -43,7 +44,11 @@ namespace Rawr
         IcyTouchHit,
         RuneStrikeHit,
         SealOfVengeanceTick,
-        RejuvenationTick,
+		RejuvenationTick,
+		MangleCatHit,
+		MangleBearHit,
+		SwipeBearOrLacerateHit,
+		MangleCatOrShredHit,
         NUM_Trigger // Should always be the last entry.
     }
 

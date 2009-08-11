@@ -866,15 +866,22 @@ the Threat Scale defined on the Options tab.",
 				StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
 				statsTotal.PhysicalCrit - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
-			
+			float chanceHit = 1f - chanceAvoided;
 
-			//TODO: TEMPORARY! Remove this once we have ability-specific procs working!
-			if (statsTotal.TerrorProc > 0)
-			{
-				float terrorAgi = (1 - (float)Math.Pow(chanceAvoided, 3f)) * statsTotal.TerrorProc * 2f / 3f * (1f + statsTotal.BonusAgilityMultiplier);
-				statsTotal.Agility += terrorAgi;
-				statsTotal.Armor += terrorAgi * 2;
-			}
+			float levelDifference = (calcOpts.TargetLevel - character.Level) * 0.002f;
+			float baseAgi = character.Race == CharacterRace.NightElf ? 87 : 77;
+
+			float defSkill = (float)Math.Floor(StatConversion.GetDefenseFromRating(statsTotal.DefenseRating)); //stats.DefenseRating / 4.918498039f);
+			float dodgeNonDR = statsTotal.Dodge - levelDifference + StatConversion.GetDodgeFromAgility(baseAgi, CharacterClass.Druid); //stats.Dodge * 100f - levelDifference + baseAgi * 0.024f; //TODO: Find correct Agi->Dodge ratio
+			float missNonDR = statsTotal.Miss - levelDifference;
+			float dodgePreDR = StatConversion.GetDodgeFromAgility(statsTotal.Agility - baseAgi, CharacterClass.Druid) +
+				StatConversion.GetDodgeFromRating(statsTotal.DodgeRating) + defSkill * 0.0004f;
+			//(stats.Agility + (stats.TerrorProc * 0.55f) - baseAgi) * 0.024f + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); //TODO: Find correct Agi->Dodge ratio
+			float missPreDR = (defSkill * 0.0004f);
+			float dodgePostDR = 0.01f / (1f / 116.890707f + 0.00972f / dodgePreDR);
+			float missPostDR = 0.01f / (1f / 16f + 0.00972f / missPreDR);
+			float dodgeTotal = dodgeNonDR + dodgePostDR;
+			float missTotal = missNonDR + missPostDR;
 
 			Stats statsProcs = new Stats();
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
@@ -886,7 +893,7 @@ the Threat Scale defined on the Options tab.",
 						break;
 					case Trigger.MeleeHit:
 					case Trigger.PhysicalHit:
-						statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 2.5f);
+						statsProcs += effect.GetAverageStats(meleeHitInterval, chanceHit, 2.5f);
 						break;
 					case Trigger.MeleeCrit:
 					case Trigger.PhysicalCrit:
@@ -898,6 +905,16 @@ the Threat Scale defined on the Options tab.",
 					case Trigger.DamageDone:
 						statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 2.5f);
 						break;
+					case Trigger.MangleBearHit:
+						if (talents.Mangle > 0)
+							statsProcs += effect.GetAverageStats(4.5f, chanceHit, 2.5f);
+						break;
+					case Trigger.SwipeBearOrLacerateHit:
+						statsProcs += effect.GetAverageStats(2.25f, chanceHit, 2.5f);
+						break;
+					case Trigger.DamageTaken:
+						statsProcs += effect.GetAverageStats(calcOpts.TargetAttackSpeed, 1f - dodgeTotal - missTotal);
+						break;
 				}
 			}
 
@@ -908,7 +925,8 @@ the Threat Scale defined on the Options tab.",
 			statsProcs.AttackPower += statsProcs.Strength * 2f;
 			statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
 			statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
-			statsProcs.Armor += 2f * statsProcs.Agility;
+			statsProcs.Health *= (1f + statsProcs.BonusHealthMultiplier);
+			statsProcs.Armor += 2f * (float)Math.Floor(statsProcs.Agility) + statsProcs.BonusArmor;
 			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
 			statsTotal += statsProcs;
 
@@ -1330,7 +1348,8 @@ the Threat Scale defined on the Options tab.",
 			{
 				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
 				|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
-					|| effect.Trigger == Trigger.DamageDone)
+				|| effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleBearHit
+				|| effect.Trigger == Trigger.SwipeBearOrLacerateHit || effect.Trigger == Trigger.DamageTaken)
 				{
 					if (HasRelevantStats(effect.Stats))
 					{
@@ -1361,7 +1380,9 @@ the Threat Scale defined on the Options tab.",
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{
 				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit)
+					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit
+					|| effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.SwipeBearOrLacerateHit
+					|| effect.Trigger == Trigger.DamageTaken)
 				{
 					relevant |= HasRelevantStats(effect.Stats);
 					if (relevant) break;

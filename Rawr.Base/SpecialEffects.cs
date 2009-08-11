@@ -434,14 +434,44 @@ namespace Rawr
                 line = line.Trim('+').Substring(0, line.IndexOf(" "));
                 stats.WeaponDamage += int.Parse(line);
             }
-            else if (line.StartsWith("Your Mangle ability has a chance to grant "))
-            {
-                line = line.Substring("Your Mangle ability has a chance to grant ".Length);
-                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                stats.TerrorProc += int.Parse(line);
-            }
-            else if (isArmory && line.StartsWith("Increases spell power by"))
+			else if (line.StartsWith("Your Mangle ability has a chance to grant ") &&
+				line.EndsWith("agility for 10 sec.")) //10sec = Idol of Terror
+			{
+				line = line.Substring("Your Mangle ability has a chance to grant ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit, new Stats() { Agility = int.Parse(line) }, 10f, 0f, .65f));
+				stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleBearHit, new Stats() { Agility = int.Parse(line) }, 10f, 0f, .45f));
+			}
+			else if (line.StartsWith("Your Mangle ability has a chance to grant ") &&
+				line.EndsWith("agility for 12 sec.")) //12sec = Idol of Corruptor
+			{
+				line = line.Substring("Your Mangle ability has a chance to grant ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit, new Stats() { Agility = int.Parse(line) }, 12f, 0f, 1f));
+				stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleBearHit, new Stats() { Agility = int.Parse(line) }, 12f, 0f, .7f));
+			}
+			else if (line.StartsWith("While in Bear Form, your Lacerate and Swipe abilities have a chance to grant "))
+			{
+				//While in Bear Form, your Lacerate and Swipe abilities have a chance to grant 200 dodge rating for 9 sec, and your Cat Form's Mangle and Shred abilities have a chance to grant 200 Agility for 16 sec.
+
+				line = line.Substring("While in Bear Form, your Lacerate and Swipe abilities have a chance to grant ".Length);
+				string bearDodge = line.Substring(0, line.IndexOf(' '));
+				line = line.Substring("200 dodge rating for 9 sec, and your Cat Form's Mangle and Shred abilities have a chance to grant ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.AddSpecialEffect(new SpecialEffect(Trigger.SwipeBearOrLacerateHit, new Stats() { DodgeRating = int.Parse(bearDodge) }, 9f, 0f, .65f));
+				stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatOrShredHit, new Stats() { Agility = int.Parse(line) }, 16f, 0f, .85f));
+			}
+			else if (line.StartsWith("Each time a melee attack strikes you, you have a chance to gain "))
+			{
+				line = line.Substring("Each time a melee attack strikes you, you have a chance to gain ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { BonusArmor = int.Parse(line) }, 10f, 45f, 0.25f));
+			}
+			else if (isArmory && line.StartsWith("Increases spell power by"))
             {
                 line = line.Substring("Increases spell power by".Length);
                 line = line.Replace(".", "").Replace(" ", "");
@@ -1392,9 +1422,9 @@ namespace Rawr
             else if (line.StartsWith("Increases maximum health by "))
             {
                 // Increases maximum health by 3385 for 15 sec. Shares cooldown with other Battlemaster's trinkets. (3 Min Cooldown)
-                Regex r = new Regex("Increases maximum health by (?<health>\\d*) for (?<dur>\\d*) sec\\. Shares cooldown with other Battlemaster\\'s trinkets\\."); // \\((?<cd>\\d*) Min Cooldown\\)");
+				Regex r = new Regex("Increases maximum health by (?<health>\\d*) for (?<dur>\\d*) sec\\. Shares cooldown with (other )?Battlemaster\\'s trinkets\\."); // \\((?<cd>\\d*) Min Cooldown\\)");
                 Match m = r.Match(line);
-                if (m.Success)
+				if (m.Success)
                 {
                     int health = int.Parse(m.Groups["health"].Value);
                     int dur = int.Parse(m.Groups["dur"].Value);
