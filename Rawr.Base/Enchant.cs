@@ -505,7 +505,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3788, "Accuracy", ItemSlot.OneHand, new Stats() { CritRating = 25, HitRating = 25 }));
             defaultEnchants.Add(new Enchant(2666, "Major Intellect", ItemSlot.OneHand, new Stats() { Intellect = 30 }));
             defaultEnchants.Add(new Enchant(3844, "Exceptional Spirit", ItemSlot.OneHand, new Stats() { Spirit = 45 }));
-            defaultEnchants.Add(new Enchant(2679, "Restore Mana Prime", ItemSlot.Wrist, new Stats() { Mp5 = 6 }));
+            defaultEnchants.Add(new Enchant(2679, "Restore Mana Prime", ItemSlot.Wrist, new Stats() { Mp5 = 8 }));
             defaultEnchants.Add(new Enchant(1147, "Major Spirit", ItemSlot.Wrist, new Stats() { Spirit = 18 }));
             defaultEnchants.Add(new Enchant(3872, "Sanctified Spellthread", ItemSlot.Legs, new Stats() { SpellPower = 50, Spirit = 20 }));
             defaultEnchants.Add(new Enchant(2748, "Runic Spellthread", ItemSlot.Legs, new Stats() { SpellPower = 35, Stamina = 20 }));
@@ -534,17 +534,17 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(1147, "Greater Spirit", ItemSlot.Feet, new Stats() { Spirit = 18 }));
 
             // Healing enchants (add spell damage too)
-            defaultEnchants.Add(new Enchant(3001, "Arcanum of Renewal", ItemSlot.Head, new Stats() { SpellPower = 19, Mp5 = 7 }));
-            defaultEnchants.Add(new Enchant(3819, "Arcanum of Blissful Mending", ItemSlot.Head, new Stats() { SpellPower = 30, Mp5 = 8 }));
+            defaultEnchants.Add(new Enchant(3001, "Arcanum of Renewal", ItemSlot.Head, new Stats() { SpellPower = 19, Mp5 = 9 }));
+            defaultEnchants.Add(new Enchant(3819, "Arcanum of Blissful Mending", ItemSlot.Head, new Stats() { SpellPower = 30, Mp5 = 10 }));
 
-            defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", ItemSlot.Chest, new Stats() { Mp5 = 8f }));
+            defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", ItemSlot.Chest, new Stats() { Mp5 = 7f }));
             defaultEnchants.Add(new Enchant(2381, "Greater Mana Restoration", ItemSlot.Chest, new Stats() { Mp5 = 10f }));
             defaultEnchants.Add(new Enchant(3233, "Exceptional Mana", ItemSlot.Chest, new Stats() { Mana = 250 }));
 
-            defaultEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
-            defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", ItemSlot.Shoulders, new Stats() { SpellPower = 12, Mp5 = 6 }));
+            defaultEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 5 }));
+            defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", ItemSlot.Shoulders, new Stats() { SpellPower = 12, Mp5 = 8 }));
             defaultEnchants.Add(new Enchant(2979, "Inscription of Faith", ItemSlot.Shoulders, new Stats() { SpellPower = 15 }));
-            defaultEnchants.Add(new Enchant(2992, "Inscription of the Oracle", ItemSlot.Shoulders, new Stats() { Mp5 = 5 }));
+            defaultEnchants.Add(new Enchant(2992, "Inscription of the Oracle", ItemSlot.Shoulders, new Stats() { Mp5 = 6 }));
             defaultEnchants.Add(new Enchant(2604, "Zandalar Signet of Serenity", ItemSlot.Shoulders, new Stats() { SpellPower = 18 }));
 
             defaultEnchants.Add(new Enchant(2322, "Major Healing", ItemSlot.Hands, new Stats() { SpellPower = 19 }));
@@ -554,10 +554,10 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2746, "Golden Spellthread", ItemSlot.Legs, new Stats() { SpellPower = 35, Stamina = 20 }));
             defaultEnchants.Add(new Enchant(2745, "Silver Spellthread", ItemSlot.Legs, new Stats() { SpellPower = 25, Stamina = 15 }));
 
-            defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", ItemSlot.Chest, new Stats() { Mp5 = 3 }));
-            defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", ItemSlot.Feet, new Stats() { Mp5 = 3 }));
-            defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", ItemSlot.Legs, new Stats() { Mp5 = 3 }));
-            defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", ItemSlot.Hands, new Stats() { Mp5 = 3 }));
+            defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", ItemSlot.Chest, new Stats() { Mp5 = 4 }));
+            defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", ItemSlot.Feet, new Stats() { Mp5 = 4 }));
+            defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", ItemSlot.Legs, new Stats() { Mp5 = 4 }));
+            defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", ItemSlot.Hands, new Stats() { Mp5 = 4 }));
 
             defaultEnchants.Add(new Enchant(2930, "Healing Power", ItemSlot.Finger, new Stats() { SpellPower = 12 }));
 
@@ -655,8 +655,8 @@ namespace Rawr
             //Hodir Enchants
             defaultEnchants.Add(new Enchant(3808, "Greater Inscription of the Axe", ItemSlot.Shoulders, new Stats() { AttackPower = 40, CritRating = 15 }));
             defaultEnchants.Add(new Enchant(2986, "Lesser Inscription of the Axe", ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
-            defaultEnchants.Add(new Enchant(3809, "Greater Inscription of the Crag", ItemSlot.Shoulders, new Stats() { SpellPower = 24, Mp5 = 6 }));
-            defaultEnchants.Add(new Enchant(3807, "Lesser Inscription of the Crag", ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
+            defaultEnchants.Add(new Enchant(3809, "Greater Inscription of the Crag", ItemSlot.Shoulders, new Stats() { SpellPower = 24, Mp5 = 8 }));
+            defaultEnchants.Add(new Enchant(3807, "Lesser Inscription of the Crag", ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 5 }));
             defaultEnchants.Add(new Enchant(3811, "Greater Inscription of the Pinnacle", ItemSlot.Shoulders, new Stats() { DodgeRating = 20, DefenseRating = 15 }));
             defaultEnchants.Add(new Enchant(2978, "Lesser Inscription of the Pinnacle", ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
             defaultEnchants.Add(new Enchant(3810, "Greater Inscription of the Storm", ItemSlot.Shoulders, new Stats() { SpellPower = 24, CritRating = 15 }));
