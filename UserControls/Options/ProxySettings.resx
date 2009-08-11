@@ -181,7 +181,7 @@
     <value>47, 20</value>
   </data>
   <data name="ProxyPort.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+    <value>4</value>
   </data>
   <data name="&gt;&gt;ProxyPort.Name" xml:space="preserve">
     <value>ProxyPort</value>
@@ -238,7 +238,7 @@
     <value>100, 20</value>
   </data>
   <data name="DomainTextBox.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
+    <value>6</value>
   </data>
   <data name="&gt;&gt;DomainTextBox.Name" xml:space="preserve">
     <value>DomainTextBox</value>
@@ -265,7 +265,7 @@
     <value>43, 13</value>
   </data>
   <data name="label5.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
+    <value>5</value>
   </data>
   <data name="label5.Text" xml:space="preserve">
     <value>Domain</value>
@@ -292,7 +292,7 @@
     <value>137, 17</value>
   </data>
   <data name="UseDefaultCredentials.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
+    <value>0</value>
   </data>
   <data name="UseDefaultCredentials.Text" xml:space="preserve">
     <value>Use Default Credentials</value>
@@ -316,7 +316,7 @@
     <value>100, 20</value>
   </data>
   <data name="Password.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
+    <value>4</value>
   </data>
   <data name="&gt;&gt;Password.Name" xml:space="preserve">
     <value>Password</value>
@@ -343,7 +343,7 @@
     <value>53, 13</value>
   </data>
   <data name="label4.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
+    <value>3</value>
   </data>
   <data name="label4.Text" xml:space="preserve">
     <value>Password</value>
@@ -373,7 +373,7 @@
     <value>55, 13</value>
   </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
+    <value>1</value>
   </data>
   <data name="label3.Text" xml:space="preserve">
     <value>Username</value>
@@ -397,7 +397,7 @@
     <value>100, 20</value>
   </data>
   <data name="UserName.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+    <value>2</value>
   </data>
   <data name="&gt;&gt;UserName.Name" xml:space="preserve">
     <value>UserName</value>
@@ -418,7 +418,7 @@
     <value>230, 134</value>
   </data>
   <data name="AuthGroupBox.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
+    <value>6</value>
   </data>
   <data name="AuthGroupBox.Text" xml:space="preserve">
     <value>Authentication</value>
@@ -607,39 +607,39 @@
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj0yLjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
-        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABO
+        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABI
         BwAAAk1TRnQBSQFMAwEBAAEEAQABBAEAARABAAEQAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoAwABQAMA
-        ARADAAEBAQABIAYAARASAAENAgEBEAFCAgEBfAFBAgEBeQE2AgEBWAEmAgEBNwEaAgEBIgENAgEBEAED
-        AgEBAuAAAVYBDQECAYsB7QHLAY4B/wHwAdMBpAH/AeYBugFlAf8BuAGHATUB9wFwAS4BAgHYAVABCwEH
-        AbEBRQICAYsBPQIBAWoBLwIBAUgBIQIBAS0BMwIBAVEBOgIBAWABCwIBAQ3IAAFXAQ4BAgGNAegBvQFw
+        ARADAAEBAQABIAYAARASAAENAgEBEAFGAgEBfAFFAgEBeQE3AgEBWAEmAgEBNwEaAgEBIgENAgEBEAED
+        AgEBAuAAAUwBAwECAYsB7QHLAY4B/wHwAdMBpAH/AeYBugFnAf8BrgF3AS0B9wFpARkBBAHYAVYBBAED
+        AbEBSwICAYsBPwIBAWoBLwIBAUgBIQIBAS0BNAIBAVEBOwIBAWABCwIBAQ3IAAFNAQMBAgGNAegBvQFy
         Af8B9AHdAbsB/wH0Ad0BuwH/AfQB3QG6Af8B9AHcAboB/wH0AdwBuQH/AfQB2wG4Af8B7AHKAYoB/wHW
-        AaYBQgH/AX4BWgEIAe4BuwHZAaAB/wFGAWQBCgHzAUUCAgGNATgCAQFcAQ0CAQEQwAABegEoAQIBugHu
-        AcwBlAH/AeIBrwFKAf8B9gHkAckB/wH2AeQByAH/AfYB4wHHAf8B9QHjAccB/wH1AeIBxgH/AfEB3gHC
-        Af8BtQGnAZQB/wFtAa0BMwH/AYEBzgGVAf8BfAHOAZcB/wGKAa4BVQH/AcgBigEOAfsBIgIBAS/AAAGH
-        ATYBAgHIAe8BzAGWAf8B8QHUAagB/wHcAaEBJAH/AfgB6gHWAf8B+AHqAdUB/wH4AeoB1QH/AfgB6gHU
-        Af8BtwGsAZ4B/wFZAaoBEgH/AYkBzwGRAf8BdAHGAYEB/wF3AckBiQH/AXsBzAGSAf8BkAGfASoB/wE3
-        AgEBWsAAAYcBNgECAcgB7wHNAZcB/wHyAdUBqQH/AfQB3AG6Af8B3QGlASsB/wH6AfEB4gH/AfoB8QHi
-        Af8B+gHwAeEB/wF6AbsBOgH/AbwB4gG5Af8BagG/AWsB/wFuAcIBdAH/AXIBxQF9Af8BdQHHAYQB/wF5
-        AcoBjAH/AUACAQF0wAABjAE9ARMByQHvAc4BmQH/AfIB1QGrAf8B9AHdAbsB/wH3AeYBzQH/AeQBuQFc
-        Af8B/QH4AfAB/wH9AfcB8AH/AfwB9wHvAf8B7AHmAd8B/wFNAaEBAwH/AWgBvgFlAf8BbAHAAW4B/wFn
-        AaMBOgH/AeUBugFjAf8BIgIBATDAAAHEAYQBHwHyAe8BzgGbAf8B8gHWAa0B/wH0Ad4BvQH/AfcB5wHP
-        Af8B+gHwAeEB/wHqAckBgQL/Av4C/wH+Af0B/wHEAsMB/wFMAZ0BAwH/AWMBugFSAf8BZgG8AV4B/wGr
-        AcIBfwH/AeYBvgFqAf8BLAIBAULAAAHcAaIBJwH/AfABzwGcAf8B8gHXAa4B/wH1Ad8BvwH/Ae8B0wGc
-        Af8BvgHOAb0B/wGzAeAB/AH/AbAB3wH7Af8BoAG0AasB/wGBAZgBbQH/AWoBoQE0Af8BXgG2AT4B/wFc
-        AbABPQH/AfoB7wHeAf8B6AHBAXEB/wEvAgEBSMAAAdwBogEnAf8B8AHQAZ4B/wHyAdgBsAH/AdkBqAE5
-        Af8BlwGtAbsB/wGVAawBuwH/AZMBqwG6Af8BkQGqAboB/wFnAakBSAH/AVQBlgEUAf8BeAG/AUUB/wFZ
-        AbABJgH/AdoB4gHDAf8B/AH3Ae4B/wHpAcUBeQH/AS8CAQFIwAAB4gGwAUwB/wHqAcEBeQH/Ad4B2wG/
-        Af8B3QHyAf4B/wHbAfEB/QH/AVsBmgEkAf8BeAGvAUMB/wF6AbcBQwH/AYYBxQFSAf8BTgGfAQMB/wFz
-        AaoBUwH/AckB6QH8Af8B1gGrAUEC/wH+Af0B/wHqAckBgAH/AS8CAQFIwAABggExAQIBwQF9AccB+AH/
-        AWIBsAH1Af8BYgGwAfUB/wFiAbAB9QH/AYUBxAH4Af8BgQHBAfcB/wF5AbkB9wH/AXkBuQH3Af8BeAG5
-        AfYB/wGXAcsB+QH/AZYBywH5Af8BlQHKAfkB/wGtAZ8BXgH/AesBygGBAf8BLgIBAUXEAAEOAgEBEQG3
-        AaoBXwH/AYQBzgH5Af8BhAHOAfkB/wGGAc4B+QH/AYgBzwH5Af8BiwHRAfkB/wGPAdIB+gH/AZMB1AH6
-        Af8BmAHVAfoB/wGcAdcB+gH/AaAB2QH7Af8BpQHbAfsB/wHAAXsBAgH1AQ4CAQERzAABPwEEAQEBYgGt
-        AccBvAH/AaYB2wH7Af8BqgHdAfsB/wGvAd8B+wH/AbQB4AH8Af8BuQHiAfwB/wG9AeQB/AH/AcIB5wH8
-        Af8B0QGoAUEB/wEpAgEBOwECAwHYAAGEATQBBwHDAdMB7gH9Af8B1wHwAf0B/wHcAfIB/gH/AeEB8wH+
-        Af8B2gG4AWEB/wE0AQIBAQFPAQMCAQEC5AABDgIBAREB5AG8AWIB/wHoAcMBcgH/AUEBBAEBAWkBBAIB
-        AQTUAAFCAU0BPgcAAT4DAAEoAwABQAMAARADAAEBAQABAQUAAYAXAAP/AgAB/wcAAQNWAAGABwAB4AEB
-        BgAB+AEHBgAB/AEfBgAL
+        AaYBRAH/AXoBRQEIAe4BuwHZAaAB/wFOAVMBCgHzAUsCAgGNATkCAQFcAQ0CAQEQwAABYgEMAQIBugHu
+        AcwBlAH/AeIBrwFMAf8B9gHkAckB/wH2AeQByAH/AfYB4wHHAf8B9QHjAccB/wH1AeIBxgH/AfEB3gHC
+        Af8BtQGnAZQB/wFvAa0BNQH/AYEBzgGVAf8BfgHOAZcB/wGKAa4BVwH/AcIBggEQAfsBIgIBAS/AAAFu
+        ARYBAwHIAe8BzAGWAf8B8QHUAagB/wHcAaEBJgH/AfgB6gHWAf8B+AHqAdUB/wH4AeoB1QH/AfgB6gHU
+        Af8BtwGsAZ4B/wFbAaoBFAH/AYkBzwGRAf8BdgHGAYEB/wF5AckBiQH/AX0BzAGSAf8BkAGfASwB/wE4
+        AgEBWsAAAW4BFgEDAcgB7wHNAZcB/wHyAdUBqQH/AfQB3AG6Af8B3QGlAS0B/wH6AfEB4gH/AfoB8QHi
+        Af8B+gHwAeEB/wF8AbsBPAH/AbwB4gG5Af8BbAG/AW0B/wFwAcIBdgH/AXQBxQF/Af8BdwHHAYQB/wF7
+        AcoBjAH/AUMCAQF0wAABcAEZAQgByQHvAc4BmQH/AfIB1QGrAf8B9AHdAbsB/wH3AeYBzQH/AeQBuQFe
+        Af8B/QH4AfAB/wH9AfcB8AH/AfwB9wHvAf8B7AHmAd8B/wFPAaEBBQH/AWoBvgFnAf8BbgHAAXAB/wFp
+        AaMBPAH/AeUBugFlAf8BIgIBATDAAAGzAWsBGgHyAe8BzgGbAf8B8gHWAa0B/wH0Ad4BvQH/AfcB5wHP
+        Af8B+gHwAeEB/wHqAckBgQL/Av4C/wH+Af0B/wHEAsMB/wFOAZ0BBQH/AWUBugFUAf8BaAG8AWAB/wGr
+        AcIBgQH/AeYBvgFsAf8BLAIBAULAAAHcAaIBKQH/AfABzwGcAf8B8gHXAa4B/wH1Ad8BvwH/Ae8B0wGc
+        Af8BvgHOAb0B/wGzAeAB/AH/AbAB3wH7Af8BoAG0AasB/wGBAZgBbwH/AWwBoQE2Af8BYAG2AUAB/wFe
+        AbABPwH/AfoB7wHeAf8B6AHBAXMB/wEvAgEBSMAAAdwBogEpAf8B8AHQAZ4B/wHyAdgBsAH/AdkBqAE7
+        Af8BlwGtAbsB/wGVAawBuwH/AZMBqwG6Af8BkQGqAboB/wFpAakBSgH/AVYBlgEWAf8BegG/AUcB/wFb
+        AbABKAH/AdoB4gHDAf8B/AH3Ae4B/wHpAcUBewH/AS8CAQFIwAAB4gGwAU4B/wHqAcEBewH/Ad4B2wG/
+        Af8B3QHyAf4B/wHbAfEB/QH/AV0BmgEmAf8BegGvAUUB/wF8AbcBRQH/AYYBxQFUAf8BUAGfAQUB/wF1
+        AaoBVQH/AckB6QH8Af8B1gGrAUMC/wH+Af0B/wHqAckBgQH/AS8CAQFIwAABaAEQAQMBwQF/AccB+AH/
+        AWQBsAH1Af8BZAGwAfUB/wFkAbAB9QH/AYUBxAH4Af8BgQHBAfcB/wF7AbkB9wH/AXsBuQH3Af8BegG5
+        AfYB/wGXAcsB+QH/AZYBywH5Af8BlQHKAfkB/wGtAZ8BYAH/AesBygGBAf8BLgIBAUXEAAEOAgEBEQG3
+        AaoBYQH/AYQBzgH5Af8BhAHOAfkB/wGGAc4B+QH/AYgBzwH5Af8BiwHRAfkB/wGPAdIB+gH/AZMB1AH6
+        Af8BmAHVAfoB/wGcAdcB+gH/AaAB2QH7Af8BpQHbAfsB/wGzAWkBBAH1AQ4CAQERzAABPAIBAWIBrQHH
+        AbwB/wGmAdsB+wH/AaoB3QH7Af8BrwHfAfsB/wG0AeAB/AH/AbkB4gH8Af8BvQHkAfwB/wHCAecB/AH/
+        AdEBqAFDAf8BKAIBATsBAgMB2AABawETAQQBwwHTAe4B/QH/AdcB8AH9Af8B3AHyAf4B/wHhAfMB/gH/
+        AdoBuAFjAf8BMwIBAU8BAwIBAQLkAAEOAgEBEQHkAbwBZAH/AegBwwF0Af8BPwIBAWkBBAIBAQTUAAFC
+        AU0BPgcAAT4DAAEoAwABQAMAARADAAEBAQABAQUAAYAXAAP/AgAB/wcAAQNWAAGABwAB4AEBBgAB+AEH
+        BgAB/AEfBgAL
 </value>
   </data>
 </root>

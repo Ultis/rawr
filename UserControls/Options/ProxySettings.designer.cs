@@ -35,24 +35,24 @@
             this.ProxyPort = new System.Windows.Forms.TextBox();
             this.RequiresAuthCheckBox = new System.Windows.Forms.CheckBox();
             this.SettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.AuthGroupBox = new System.Windows.Forms.GroupBox();
+            this.DomainTextBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.UseDefaultCredentials = new System.Windows.Forms.CheckBox();
+            this.Password = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.UserName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.ProxyHost = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.UseDefaultProxySettingsCheckBox = new System.Windows.Forms.CheckBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.OptionImageList = new System.Windows.Forms.ImageList(this.components);
-            this.AuthGroupBox = new System.Windows.Forms.GroupBox();
-            this.Password = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.UserName = new System.Windows.Forms.TextBox();
-            this.UseDefaultCredentials = new System.Windows.Forms.CheckBox();
-            this.DomainTextBox = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SettingsGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.AuthGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -99,6 +99,58 @@
             this.SettingsGroupBox.Name = "SettingsGroupBox";
             this.SettingsGroupBox.TabStop = false;
             // 
+            // AuthGroupBox
+            // 
+            resources.ApplyResources(this.AuthGroupBox, "AuthGroupBox");
+            this.AuthGroupBox.Controls.Add(this.DomainTextBox);
+            this.AuthGroupBox.Controls.Add(this.label5);
+            this.AuthGroupBox.Controls.Add(this.UseDefaultCredentials);
+            this.AuthGroupBox.Controls.Add(this.Password);
+            this.AuthGroupBox.Controls.Add(this.label4);
+            this.AuthGroupBox.Controls.Add(this.label3);
+            this.AuthGroupBox.Controls.Add(this.UserName);
+            this.AuthGroupBox.Name = "AuthGroupBox";
+            this.AuthGroupBox.TabStop = false;
+            // 
+            // DomainTextBox
+            // 
+            resources.ApplyResources(this.DomainTextBox, "DomainTextBox");
+            this.DomainTextBox.Name = "DomainTextBox";
+            this.DomainTextBox.UseSystemPasswordChar = true;
+            // 
+            // label5
+            // 
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.Name = "label5";
+            // 
+            // UseDefaultCredentials
+            // 
+            resources.ApplyResources(this.UseDefaultCredentials, "UseDefaultCredentials");
+            this.UseDefaultCredentials.Name = "UseDefaultCredentials";
+            this.UseDefaultCredentials.UseVisualStyleBackColor = true;
+            this.UseDefaultCredentials.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // Password
+            // 
+            resources.ApplyResources(this.Password, "Password");
+            this.Password.Name = "Password";
+            this.Password.UseSystemPasswordChar = true;
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.Name = "label4";
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            // 
+            // UserName
+            // 
+            resources.ApplyResources(this.UserName, "UserName");
+            this.UserName.Name = "UserName";
+            // 
             // label2
             // 
             resources.ApplyResources(this.label2, "label2");
@@ -131,58 +183,6 @@
             this.OptionImageList.TransparentColor = System.Drawing.Color.Transparent;
             this.OptionImageList.Images.SetKeyName(0, "ei0021-32.ico");
             // 
-            // AuthGroupBox
-            // 
-            resources.ApplyResources(this.AuthGroupBox, "AuthGroupBox");
-            this.AuthGroupBox.Controls.Add(this.DomainTextBox);
-            this.AuthGroupBox.Controls.Add(this.label5);
-            this.AuthGroupBox.Controls.Add(this.UseDefaultCredentials);
-            this.AuthGroupBox.Controls.Add(this.Password);
-            this.AuthGroupBox.Controls.Add(this.label4);
-            this.AuthGroupBox.Controls.Add(this.label3);
-            this.AuthGroupBox.Controls.Add(this.UserName);
-            this.AuthGroupBox.Name = "AuthGroupBox";
-            this.AuthGroupBox.TabStop = false;
-            // 
-            // Password
-            // 
-            resources.ApplyResources(this.Password, "Password");
-            this.Password.Name = "Password";
-            this.Password.UseSystemPasswordChar = true;
-            // 
-            // label4
-            // 
-            resources.ApplyResources(this.label4, "label4");
-            this.label4.Name = "label4";
-            // 
-            // label3
-            // 
-            resources.ApplyResources(this.label3, "label3");
-            this.label3.Name = "label3";
-            // 
-            // UserName
-            // 
-            resources.ApplyResources(this.UserName, "UserName");
-            this.UserName.Name = "UserName";
-            // 
-            // UseDefaultCredentials
-            // 
-            resources.ApplyResources(this.UseDefaultCredentials, "UseDefaultCredentials");
-            this.UseDefaultCredentials.Name = "UseDefaultCredentials";
-            this.UseDefaultCredentials.UseVisualStyleBackColor = true;
-            this.UseDefaultCredentials.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // DomainTextBox
-            // 
-            resources.ApplyResources(this.DomainTextBox, "DomainTextBox");
-            this.DomainTextBox.Name = "DomainTextBox";
-            this.DomainTextBox.UseSystemPasswordChar = true;
-            // 
-            // label5
-            // 
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.Name = "label5";
-            // 
             // ProxySettings
             // 
             resources.ApplyResources(this, "$this");
@@ -193,9 +193,9 @@
             this.groupBox1.ResumeLayout(false);
             this.SettingsGroupBox.ResumeLayout(false);
             this.SettingsGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.AuthGroupBox.ResumeLayout(false);
             this.AuthGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
 		}
