@@ -12,16 +12,19 @@ using System.Diagnostics;
 namespace Rawr.Hunter
 {
 	/// <summary>
-    /// The rotation calculations in this module are based upon the work of Wertez and Indora
-    /// over at The Hunting Lodge http://www.brigwyn.com/ 
-    /// Endless thanks to them. 
-    /// Please respect their work.
-    /// They have allowed us to use their work on the following conditions:
-    /// 1) Wertez and Indora did not get any money for doing this work, so neither can you
-    /// 2) If their worked is passed on to a third party they must also give proper credit and
-    ///    follow condition 1.
+    /// All calculations in this module are based on Shandara's DPS Spreadsheet
+    /// and will be updated from that sheet until it is no longer actively 
+    /// maintained.
+    /// 
+    /// Version: 0.91a
+    /// Released: July 28, 2009
+    /// Link: http://elitistjerks.com/f74/t30710-wotlk_dps_spreadsheet/
+    /// 
+    /// Current maintainer: iamcal
+    /// Previous maintainers: lawjpbo, nosnevel
 	/// </summary>
-	[Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
+
+    [Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
 
 	public class CalculationsHunter : CalculationsBase
 

@@ -4,7 +4,7 @@ using System.Text;
 using System.Diagnostics;
 
 namespace Rawr.Hunter
-{
+{   
     public class PetCalculations
     {
     
@@ -42,16 +42,8 @@ namespace Rawr.Hunter
 
         public void calculateTimings()
         {
-            //All calculations in this function and the functions it calls are based off 
-            //Shandara's DPS Spreadsheet and will be updated from that sheet and should 
-            //continue to be updated from that sheet until it is no longer actively 
-            //maintained.
-            //Shandara DPS Spreadhseet Info:
-            //Version: 0.87c
-            //Release date: April 28, 2009
-            //Forum: http://elitistjerks.com/f74/t30710-wotlk_dps_spreadsheet/
-
-            //if (options.PetFamily == PetFamily.None) return;
+            // See the main hunter module file (CalculationsHunter.cs) for credits
+            // and source information.
 
             // base stats for a level 80 pet
             petStats.Agility = 113;
