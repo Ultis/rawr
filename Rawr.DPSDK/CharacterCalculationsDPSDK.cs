@@ -322,12 +322,12 @@ namespace Rawr.DPSDK
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues.Add("Health", BasicStats.Health.ToString("N0"));
             dictValues.Add("Strength", BasicStats.Strength.ToString("N0"));
-            dictValues.Add("Agility", string.Format("{0:0}*Provides {1:P} crit chance", BasicStats.Agility, ( BasicStats.Agility / 6250f )));
+            dictValues.Add("Agility", string.Format("{0:0}*Provides {1:P} crit chance", BasicStats.Agility, StatConversion.GetCritFromAgility(BasicStats.Agility, CharacterClass.DeathKnight)));
             dictValues.Add("Attack Power", attackPower.ToString("N0"));
-            dictValues.Add("Crit Rating", string.Format("{0:0}*Provides {1:P} crit chance", critRating, ( critRating / 4591f )));
-            dictValues.Add("Hit Rating", string.Format("{0:0}*Negates {1:P} melee miss / {2:P} spell miss", hitRating, (hitRating / 3279f), (hitRating / 2624)));
+            dictValues.Add("Crit Rating", string.Format("{0:0}*Provides {1:P} crit chance", critRating, StatConversion.GetCritFromRating(critRating, CharacterClass.DeathKnight)));
+            dictValues.Add("Hit Rating", string.Format("{0:0}*Negates {1:P} melee miss / {2:P} spell miss", hitRating, StatConversion.GetPhysicalHitFromRating(hitRating, CharacterClass.DeathKnight), StatConversion.GetSpellHitFromRating(hitRating,CharacterClass.DeathKnight)));
             dictValues.Add("Expertise", string.Format("{0:0} // {1:0}*Negates {2:P} / {3:P} dodge chance", MHExpertise, OHExpertise, (MHExpertise / 400), (OHExpertise / 400)));
-            dictValues.Add("Haste Rating", string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, ( BasicStats.HasteRating / 3278f )));
+            dictValues.Add("Haste Rating", string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.DeathKnight)));
             dictValues.Add("Armor Penetration Rating", armorPenetrationRating.ToString("N0"));
             dictValues.Add("Armor", BasicStats.Armor.ToString("N0"));
 
