@@ -185,7 +185,6 @@ namespace Rawr
                     // Blood Elf, Draenei, Dwarf, Night Elf, Orc, Tauren, Troll
 
                     S.Mana = 5046;
-                    S.Health = 7324;
                     S.Armor = 0;
                     S.AttackPower = 140;
                     S.RangedAttackPower = 150;
@@ -202,6 +201,7 @@ namespace Rawr
                             S.Stamina = 126;
                             S.Intellect = 94;
                             S.Spirit = 96;
+                            S.Health = 7324;
                             break;
                         case CharacterRace.Draenei:
                             S.Strength = 75;
@@ -209,6 +209,7 @@ namespace Rawr
                             S.Stamina = 129;
                             S.Intellect = 91;
                             S.Spirit = 99;
+                            S.Health = 7400;
                             break;
                         case CharacterRace.Dwarf:
                             S.Strength = 76;
@@ -216,6 +217,7 @@ namespace Rawr
                             S.Stamina = 131;
                             S.Intellect = 89;
                             S.Spirit = 96;
+                            S.Health = 7412;
                             break;
                         case CharacterRace.NightElf:
                             S.Strength = 71;
@@ -223,6 +225,7 @@ namespace Rawr
                             S.Stamina = 127;
                             S.Intellect = 90;
                             S.Spirit = 97;
+                            S.Health = 7324;
                             break;
                         case CharacterRace.Orc:
                             S.Strength = 77;
@@ -230,6 +233,7 @@ namespace Rawr
                             S.Stamina = 130;
                             S.Intellect = 87;
                             S.Spirit = 100;
+                            S.Health = 7324;
                             break;
                         case CharacterRace.Tauren:
                             S.Strength = 79;
@@ -237,6 +241,7 @@ namespace Rawr
                             S.Stamina = 130;
                             S.Intellect = 85;
                             S.Spirit = 99;
+                            S.Health = 7400;
                             break;
                         case CharacterRace.Troll:
                             S.Strength = 75;
@@ -244,6 +249,7 @@ namespace Rawr
                             S.Stamina = 129;
                             S.Intellect = 86;
                             S.Spirit = 98;
+                            S.Health = 7324;
                             break;
                         default:
                             break;
