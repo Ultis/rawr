@@ -27,6 +27,7 @@ namespace Rawr.Hunter
         public double petHit { get; set; }
         public double petSpellHit { get; set; }
         public double petTargetDodge { get; set; }
+        public double ferociousInspirationDamageAdjust { get; set; }
         #endregion
 
         #region Debuffs

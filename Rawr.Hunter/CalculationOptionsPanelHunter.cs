@@ -341,40 +341,44 @@ namespace Rawr.Hunter
 
             comboBoxPet1.Items.Clear();
             comboBoxPet1.Items.Add(PetAttacks.None);
-            comboBoxPet1.Items.Add(PetAttacks.Growl);
-            comboBoxPet1.Items.Add(PetAttacks.Cower);
 
-            foreach (PetAttacks A in familyList)
+            if (options.PetFamily != PetFamily.None)
             {
-                if (A != PetAttacks.None)
+                comboBoxPet1.Items.Add(PetAttacks.Growl);
+                comboBoxPet1.Items.Add(PetAttacks.Cower);
+
+                foreach (PetAttacks A in familyList)
                 {
-                    comboBoxPet1.Items.Add(A);
+                    if (A != PetAttacks.None)
+                    {
+                        comboBoxPet1.Items.Add(A);
+                    }
                 }
-            }
 
-            PetFamilyTree family = getPetFamilyTree();
+                PetFamilyTree family = getPetFamilyTree();
 
-            if (family == PetFamilyTree.Cunning)
-            {
-                comboBoxPet1.Items.Add(PetAttacks.RoarOfRecovery);
-                comboBoxPet1.Items.Add(PetAttacks.RoarOfSacrifice);
-                comboBoxPet1.Items.Add(PetAttacks.WolverineBite);
-                comboBoxPet1.Items.Add(PetAttacks.Bullheaded);
-            }
+                if (family == PetFamilyTree.Cunning)
+                {
+                    comboBoxPet1.Items.Add(PetAttacks.RoarOfRecovery);
+                    comboBoxPet1.Items.Add(PetAttacks.RoarOfSacrifice);
+                    comboBoxPet1.Items.Add(PetAttacks.WolverineBite);
+                    comboBoxPet1.Items.Add(PetAttacks.Bullheaded);
+                }
 
-            if (family == PetFamilyTree.Ferocity)
-            {
-                comboBoxPet1.Items.Add(PetAttacks.LickYourWounds);
-                comboBoxPet1.Items.Add(PetAttacks.CallOfTheWild);
-                comboBoxPet1.Items.Add(PetAttacks.Rabid);
-            }
+                if (family == PetFamilyTree.Ferocity)
+                {
+                    comboBoxPet1.Items.Add(PetAttacks.LickYourWounds);
+                    comboBoxPet1.Items.Add(PetAttacks.CallOfTheWild);
+                    comboBoxPet1.Items.Add(PetAttacks.Rabid);
+                }
 
-            if (family == PetFamilyTree.Tenacity)
-            {
-                comboBoxPet1.Items.Add(PetAttacks.Thunderstomp);
-                comboBoxPet1.Items.Add(PetAttacks.LastStand);
-                comboBoxPet1.Items.Add(PetAttacks.Taunt);
-                comboBoxPet1.Items.Add(PetAttacks.RoarOfSacrifice);
+                if (family == PetFamilyTree.Tenacity)
+                {
+                    comboBoxPet1.Items.Add(PetAttacks.Thunderstomp);
+                    comboBoxPet1.Items.Add(PetAttacks.LastStand);
+                    comboBoxPet1.Items.Add(PetAttacks.Taunt);
+                    comboBoxPet1.Items.Add(PetAttacks.RoarOfSacrifice);
+                }
             }
 
             object[] attacks_picklist = new object[comboBoxPet1.Items.Count];
@@ -392,10 +396,19 @@ namespace Rawr.Hunter
             comboBoxPet4.Items.AddRange(attacks_picklist);
             comboBoxPet5.Items.AddRange(attacks_picklist);
             comboBoxPet6.Items.AddRange(attacks_picklist);
-            comboBoxPet7.Items.AddRange(attacks_picklist);            
+            comboBoxPet7.Items.AddRange(attacks_picklist);
 
-            comboBoxPet1.SelectedIndex = 6; // family skill 1
-            comboBoxPet2.SelectedIndex = 3; // focus dump
+            if (options.PetFamily != PetFamily.None)
+            {
+                comboBoxPet1.SelectedIndex = 6; // family skill 1
+                comboBoxPet2.SelectedIndex = 3; // focus dump
+            }
+            else
+            {
+                comboBoxPet1.SelectedIndex = 0; // none
+                comboBoxPet2.SelectedIndex = 0; // none
+            }
+
             comboBoxPet3.SelectedIndex = 0; // none
             comboBoxPet4.SelectedIndex = 0; // none
             comboBoxPet5.SelectedIndex = 0; // none
@@ -462,13 +475,13 @@ namespace Rawr.Hunter
         private void comboBoxPets_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (loadingOptions) return;
-            options.PetPriority1 = (PetAttacks)comboBoxPet1.SelectedItem;
-            options.PetPriority2 = (PetAttacks)comboBoxPet2.SelectedItem;
-            options.PetPriority3 = (PetAttacks)comboBoxPet3.SelectedItem;
-            options.PetPriority4 = (PetAttacks)comboBoxPet4.SelectedItem;
-            options.PetPriority5 = (PetAttacks)comboBoxPet5.SelectedItem;
-            options.PetPriority6 = (PetAttacks)comboBoxPet6.SelectedItem;
-            options.PetPriority7 = (PetAttacks)comboBoxPet7.SelectedItem;
+            options.PetPriority1 = comboBoxPet1.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet1.SelectedItem;
+            options.PetPriority2 = comboBoxPet2.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet2.SelectedItem;
+            options.PetPriority3 = comboBoxPet3.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet3.SelectedItem;
+            options.PetPriority4 = comboBoxPet4.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet4.SelectedItem;
+            options.PetPriority5 = comboBoxPet5.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet5.SelectedItem;
+            options.PetPriority6 = comboBoxPet6.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet6.SelectedItem;
+            options.PetPriority7 = comboBoxPet7.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet7.SelectedItem;
             Character.OnCalculationsInvalidated();
         }
 
@@ -630,7 +643,7 @@ namespace Rawr.Hunter
             }
 
             // hmmm!
-            return PetFamilyTree.Unknown;
+            return PetFamilyTree.None;
         }
 
         private void updateTalentDisplay()
@@ -813,6 +826,47 @@ namespace Rawr.Hunter
                 options.petRoarOfSacrifice = cmbTenacityRoarOfSacrifice.SelectedIndex;
                 options.petSharkAttack = 0;
                 options.petSilverback = cmbTenacitySilverback.SelectedIndex;
+            }
+
+            if (tree == PetFamilyTree.None)
+            {
+                options.petCobraReflexes = 0;
+                options.petDiveDash = 0;
+                options.petChargeSwoop = 0;
+                options.petGreatStamina = 0;
+                options.petNaturalArmor = 0;
+                options.petBoarsSpeed = 0;
+                options.petMobility = 0;
+                options.petSpikedCollar = 0;
+                options.petImprovedCower = 0;
+                options.petBloodthirsty = 0;
+                options.petBloodOfTheRhino = 0;
+                options.petPetBarding = 0;
+                options.petAvoidance = 0;
+                options.petLionhearted = 0;
+                options.petCarrionFeeder = 0;
+                options.petGuardDog = 0;
+                options.petThunderstomp = 0;
+                options.petGreatResistance = 0;
+                options.petOwlsFocus = 0;
+                options.petCornered = 0;
+                options.petFeedingFrenzy = 0;
+                options.petHeartOfThePhoenix = 0;
+                options.petSpidersBite = 0;
+                options.petWolverineBite = 0;
+                options.petRoarOfRecovery = 0;
+                options.petBullheaded = 0;
+                options.petGraceOfTheMantis = 0;
+                options.petRabid = 0;
+                options.petLickYourWounds = 0;
+                options.petCallOfTheWild = 0;
+                options.petLastStand = 0;
+                options.petTaunt = 0;
+                options.petIntervene = 0;
+                options.petWildHunt = 0;
+                options.petRoarOfSacrifice = 0;
+                options.petSharkAttack = 0;
+                options.petSilverback = 0;
             }
 
             Character.OnCalculationsInvalidated();

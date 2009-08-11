@@ -47,6 +47,7 @@ namespace Rawr.Hunter
 
     public enum PetFamily
     {
+        None,
         Bat,
         Bear,
         BirdOfPrey,
@@ -86,7 +87,7 @@ namespace Rawr.Hunter
         Cunning,
         Ferocity,
         Tenacity,
-        Unknown
+        None
     }
 
     public enum Faction
@@ -193,6 +194,7 @@ namespace Rawr.Hunter
         public static double CRIT_RATING_PER_PERCENT = 45.905985258; // from spreadsheet. we were using 45.90598679                                                       
         public static double HASTE_RATING_PER_PERCENT = 32.78998947; // matches spreadsheet
         public static double ARP_RATING_PER_PERCENT = 12.3162; // from spreadsheet (was 15.39529991)
+        public static double INTELLECT_PER_SPELL_CRIT = 166.667; // from spreadsheet 
 
         public static double BASE_CRIT_PERCENT = -.0153; // Check
 

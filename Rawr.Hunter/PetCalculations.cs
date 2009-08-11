@@ -14,19 +14,19 @@ namespace Rawr.Hunter
         CalculationsHunter hunterCalc;
         Stats statsBuffs;
         Stats statsGear;
-        PetFamily family;
         public Stats petStats;
-
         private PetSkillPriorityRotation priorityRotation;
-
-        double specialAttackSpeed = 1;
-        double whiteAttackSpeed = 1;
 
         public double ferociousInspirationUptime;
         private List<double> freqs = new List<double>();
 
         // things we save earlier for later DPS calcs
+        private double attackSpeedEffective;
         private double killCommandCooldown;
+        private double critTotalMelee;
+        private double critTotalSpecials;
+        private double critSpecialsAdjust;
+        private bool isWearingBeastTamersShoulders;
 
         public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, Stats statsBuffs, Stats statsGear, CalculationsHunter hunterCalc)
         {
@@ -35,11 +35,9 @@ namespace Rawr.Hunter
             this.options = options;
             this.statsBuffs = statsBuffs;
             this.statsGear = statsGear;
-            this.family = options.PetFamily;
             this.hunterCalc = hunterCalc;
 
             petStats = new Stats();
-
         }
 
         public void calculateTimings()
@@ -53,6 +51,7 @@ namespace Rawr.Hunter
             //Release date: April 28, 2009
             //Forum: http://elitistjerks.com/f74/t30710-wotlk_dps_spreadsheet/
 
+            //if (options.PetFamily == PetFamily.None) return;
 
             // base stats for a level 80 pet
             petStats.Agility = 113;
@@ -86,6 +85,9 @@ namespace Rawr.Hunter
             priorityRotation.AddSkill(options.PetPriority2);
             priorityRotation.AddSkill(options.PetPriority3);
             priorityRotation.AddSkill(options.PetPriority4);
+            priorityRotation.AddSkill(options.PetPriority5);
+            priorityRotation.AddSkill(options.PetPriority6);
+            priorityRotation.AddSkill(options.PetPriority7);
 
             priorityRotation.owlsFocus = owlsFocusEffect;
             priorityRotation.fpsGained = focusRegenPerSecond;
@@ -135,6 +137,85 @@ namespace Rawr.Hunter
             calculatedStats.petSpellHit = hitSpellTotal > 1 ? 1 : hitSpellTotal;
 
             petStats.PhysicalHit = hitTotal > 1 ? 1 : (float)hitTotal; 
+
+            #endregion
+            #region Crit Chance
+
+            isWearingBeastTamersShoulders = character.Shoulders != null && character.Shoulders.Id == 30892;
+
+            double critAgilityBase = petStats.Agility;
+            double critAgilityBuffsAdditive = 0; // TODO
+            double critAgilityBuffsMultiplicitive = 0; // TODO statsBuffs.BonusAgilityMultiplier
+            double critAgilityTotal = (critAgilityBase + critAgilityBuffsAdditive) * (1 + critAgilityBuffsMultiplicitive);
+
+            double critBuffsAdditive = 0; // TODO - calculatedStats.BasicStats.BonusPetCritChance
+
+            double critFromBase = 0.032;
+            double critFromAgility = critAgilityTotal / (100 * 62.5);
+            double critFromSpidersBite = options.petSpidersBite * 0.03;
+            double critFromFerocity = character.HunterTalents.Ferocity * 0.02;
+            double critFromGear = isWearingBeastTamersShoulders ? 0.02 : 0;
+            double critFromBuffs = critBuffsAdditive / (HunterRatings.CRIT_RATING_PER_PERCENT * 100); ;
+            double critFromTargetDebuffs = 0; // TODO
+
+            double critFromDepression = (levelDifference > 2) ? 0 - (0.03 + (levelDifference * 0.006)) : 0 - ((levelDifference * 5 * 0.04) / 100);
+
+            // PetCritBaseChance
+            critTotalMelee = critFromBase 
+                             + critFromAgility
+                             + critFromSpidersBite
+                             + critFromFerocity
+                             + critFromGear
+                             + critFromBuffs
+                             + critFromTargetDebuffs
+                             + critFromDepression;
+
+            //petStats.PhysicalCrit = (float)critTotal;
+
+            double cobraStrikesPetBonus = 0; // TODO
+            critTotalSpecials = critTotalMelee + cobraStrikesPetBonus; // PetCritChance
+            critSpecialsAdjust = critTotalSpecials * 1.5 + 1;
+
+            #endregion
+            #region Attack Speed
+
+            double attackSpeedFromSerpentsSwiftness = 1 + (character.HunterTalents.SerpentsSwiftness * 0.04);
+            double attackSpeedFromHeroism = 1; // TODO
+            double attackSpeedFromCobraReflexes = 1 + (options.petCobraReflexes * 0.15);
+            double attackSpeedFromMultiplicitiveHasteBuffs = 1; // TODO
+            double attackSpeedAdjust = attackSpeedFromSerpentsSwiftness
+                                     * attackSpeedFromHeroism
+                                     * attackSpeedFromCobraReflexes
+                                     * attackSpeedFromMultiplicitiveHasteBuffs;
+
+            double attackSpeedBase = 2.0;
+            double attackSpeedAdjusted = attackSpeedBase / attackSpeedAdjust;
+
+            // Frenzy
+            double attackSpeedFrenzyUptime = 0;
+            if (character.HunterTalents.Frenzy > 0)
+            {
+                double frenzyNormalSpeed = attackSpeedAdjusted; // L5
+                double frenzySpecialSpeed = priorityRotation.petSpecialFrequency; // L6
+                double frenzyFrenziedSpeed = frenzyNormalSpeed / 1.3; // L7
+                double frenzyNumberAttacks = Math.Floor(8 / frenzyFrenziedSpeed) + (frenzySpecialSpeed == 0 ? 0 : (8 / frenzySpecialSpeed)); // L8
+
+                double frenzyNormalSpeedInvert = frenzyNormalSpeed > 0 ? 1 / frenzyNormalSpeed : 0; // 1/L5
+                double frenzySpecialSpeedInvert = frenzySpecialSpeed > 0 ? 1 / frenzySpecialSpeed : 0; // 1/L6
+
+                double frenzyChancePart1 = frenzySpecialSpeed > 0 ? critTotalSpecials * (frenzySpecialSpeedInvert / (frenzyNormalSpeedInvert + frenzySpecialSpeedInvert)) : 0;
+                double frenzyChancePart2 = frenzyNormalSpeed > 0 ? critTotalMelee * (frenzyNormalSpeedInvert / (frenzyNormalSpeedInvert + frenzySpecialSpeedInvert)) : 0;
+
+                double frenzyChanceToCause = (frenzyChancePart1 + frenzyChancePart2) * character.HunterTalents.Frenzy * 0.2; // L4
+
+                double frenzyChanceToNot = Math.Pow(1 - frenzyChanceToCause, frenzyNumberAttacks);
+
+                attackSpeedFrenzyUptime = 1 - frenzyChanceToNot;
+            }
+
+            double attackSpeedFrenzyBoost = 1 + (0.3 * attackSpeedFrenzyUptime);
+
+            attackSpeedEffective = attackSpeedAdjusted / attackSpeedFrenzyBoost; // EffectivePetAttackSpeed
 
             #endregion
             #region Target Debuffs
@@ -229,11 +310,28 @@ namespace Rawr.Hunter
                 calculatedStats.apFromFuriousHowl = 320 * furiousHowlUptime;
             }
 
+            //Ferocious Inspiraion
+            // (Same as above)
+            calculatedStats.ferociousInspirationDamageAdjust = 1;
+            if (character.HunterTalents.FerociousInspiration > 0)
+            {
+                if (options.PetFamily != PetFamily.None || options.emulateSpreadsheetBugs)
+                {
+                    double ferociousInspirationSpecialsEffect = priorityRotation.petSpecialFrequency == 0 ? 0 : 10 / priorityRotation.petSpecialFrequency;
+                    double ferociousInspirationUptime = 1 - Math.Pow(1 - critTotalSpecials, (10 / attackSpeedEffective) + ferociousInspirationSpecialsEffect);
+                    double ferociousInspirationEffect = 0.01 * character.HunterTalents.FerociousInspiration;
+
+                    calculatedStats.ferociousInspirationDamageAdjust = 1 + ferociousInspirationUptime * ferociousInspirationEffect;                    
+                }
+            }
+
             #endregion
         }
 
         public void calculateDPS()
         {
+            if (options.PetFamily == PetFamily.None) return;
+
             int levelDifference = options.TargetLevel - 80;
 
             // setup
@@ -327,62 +425,6 @@ namespace Rawr.Hunter
             double resist10 = 5 * averageResist;
             double resist20 = 2.5 * averageResist;
             double partialResistDamageAdjust = 1 - (resist10 * 0.1 + resist20 * 0.1);
-
-            #endregion
-            #region Crit Chance
-
-            bool isWearingBeastTamersShoulders = character.Shoulders != null && character.Shoulders.Id == 30892;
-
-            double critAgilityBase = petStats.Agility;
-            double critAgilityBuffsAdditive = 0; // TODO
-            double critAgilityBuffsMultiplicitive = 0; // TODO statsBuffs.BonusAgilityMultiplier
-            double critAgilityTotal = (critAgilityBase + critAgilityBuffsAdditive) * (1 + critAgilityBuffsMultiplicitive);
-
-            double critBuffsAdditive = 0; // TODO - calculatedStats.BasicStats.BonusPetCritChance
-
-            double critFromBase = 0.032;
-            double critFromAgility = critAgilityTotal / (100 * 62.5);
-            double critFromSpidersBite = options.petSpidersBite * 0.03;
-            double critFromFerocity = character.HunterTalents.Ferocity * 0.02;
-            double critFromGear = isWearingBeastTamersShoulders ? 0.02 : 0;
-            double critFromBuffs = critBuffsAdditive / (HunterRatings.CRIT_RATING_PER_PERCENT * 100); ;
-            double critFromTargetDebuffs = 0; // TODO
-
-            double critFromDepression = (levelDifference > 2) ? 0 - (0.03 + (levelDifference * 0.006)) : 0 - ((levelDifference * 5 * 0.04) / 100);
-
-            double critTotalMelee = critFromBase
-                             + critFromAgility
-                             + critFromSpidersBite
-                             + critFromFerocity
-                             + critFromGear
-                             + critFromBuffs
-                             + critFromTargetDebuffs
-                             + critFromDepression;
-
-            //petStats.PhysicalCrit = (float)critTotal;
-
-            double cobraStrikesPetBonus = 0; // TODO
-            double critTotalSpecials = critTotalMelee + cobraStrikesPetBonus; // PetCritChance
-            double critSpecialsAdjust = critTotalSpecials * 1.5 + 1;
-
-            #endregion
-            #region Attack Speed
-
-            double attackSpeedFromSerpentsSwiftness = 1 + (character.HunterTalents.SerpentsSwiftness * 0.04);
-            double attackSpeedFromHeroism = 1; // TODO
-            double attackSpeedFromCobraReflexes = 1 + (options.petCobraReflexes * 0.15);
-            double attackSpeedFromMultiplicitiveHasteBuffs = 1; // TODO
-            double attackSpeedAdjust = attackSpeedFromSerpentsSwiftness
-                                     * attackSpeedFromHeroism
-                                     * attackSpeedFromCobraReflexes
-                                     * attackSpeedFromMultiplicitiveHasteBuffs;
-
-            double attackSpeedFrenzyUptime = 0; // TODO: getFrenzyEffect()
-            double attackSpeedFrenzyBoost = 1 + (0.3 * attackSpeedFrenzyUptime);
-
-            double attackSpeedBase = 2.0;
-            double attackSpeedAdjusted = attackSpeedBase / attackSpeedAdjust;
-            double attackSpeedEffective = attackSpeedAdjusted / attackSpeedFrenzyBoost;
 
             #endregion
             #region Damage Adjustments
@@ -690,10 +732,8 @@ namespace Rawr.Hunter
             calculatedStats.petKillCommandDPS = killCommandDPS;
 
             #endregion
-         
-            //cruft:
-            //ferociousInspirationUptime = 1.0 - Math.Pow(1.0 - petStats.PhysicalCrit, 10.0 / whiteAttackSpeed + 10.0 / specialAttackSpeed);
 
+         
             calculatedStats.petSpecialDPS = priorityRotation.dps;
 
             calculatedStats.PetDpsPoints = (float)(calculatedStats.petWhiteDPS 
@@ -711,7 +751,7 @@ namespace Rawr.Hunter
         ///////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
 
         private float getRabidProcEffect(double physhit)
         {
@@ -762,40 +802,7 @@ namespace Rawr.Hunter
             else
                 return 0.0f;
         }
-
-        private double getFerociousInspirationEffect()
-        {
-            ferociousInspirationUptime = 1.0 - Math.Pow(1.0 - petStats.PhysicalCrit, 10.0 / whiteAttackSpeed + 10.0 / specialAttackSpeed);
-            double benefit = 0.01f * character.HunterTalents.FerociousInspiration;
-            return ferociousInspirationUptime * benefit;
-        }
-
-        private double getFrenzyEffect(double spd)
-        {
-            double chancetocause = petStats.CritRating * (1 / spd / ((1 / spd) + (1 / specialAttackSpeed)));
-            chancetocause += petStats.CritRating * (1 / spd / ((1 / spd) + (1 / specialAttackSpeed)));
-            chancetocause *= character.HunterTalents.Frenzy * 0.2;
-
-            double effectivespd = spd / 1.3f;
-            double numattacks = Math.Floor(8 / effectivespd) + (8 / specialAttackSpeed);
-            double chancetonotbein = Math.Pow(1 - chancetocause, numattacks);
-            return (1 - chancetonotbein) * 0.3f;
-        }
-
-        private double getBestialWrathEffect()
-        {
-            if (character.HunterTalents.BestialWrath >= 1)
-            {
-                double cd = 120;
-                cd *= 1.0f - character.HunterTalents.Longevity * 0.1f;
-                double uptime = 18 / cd;
-                return uptime * 0.5f;
-            }
-            else
-                return 0.0f;
-            
-        }
-
+ 
         private double getFeedingFrenzyEffect()
         {
             return (options.petFeedingFrenzy * 0.08) * 0.35f;
@@ -885,6 +892,6 @@ namespace Rawr.Hunter
             else
                 return 0;
         }
-
+        */
     }
 }

@@ -524,10 +524,24 @@ namespace Rawr.Hunter
             // We will set the correct value for this later, after we've calculated haste
             calculatedStats.steadyShot.cooldown = 2;
 
+            calculatedStats.immolationTrap.cooldown = 30 - (character.HunterTalents.Resourcefulness * 2);
+            calculatedStats.immolationTrap.duration = character.HunterTalents.GlyphOfImmolationTrap ? 9 : 15;
+
+            calculatedStats.readiness.cooldown = 180;
+
+            calculatedStats.beastialWrath.cooldown = (character.HunterTalents.GlyphOfBestialWrath ? 100 : 120) * (1 - character.HunterTalents.Longevity * 0.1);
+            calculatedStats.beastialWrath.duration = 18 * character.HunterTalents.TheBeastWithin;
+
+            calculatedStats.bloodFury.cooldown = 120;
+            calculatedStats.bloodFury.duration = 15;
+
+            calculatedStats.berserk.cooldown = 180;
+            calculatedStats.berserk.duration = 10;
+
             // We can calculate the rough frequencies now
             calculatedStats.priorityRotation.calculateFrequencies();
             calculatedStats.priorityRotation.calculateLALProcs(character);
-            calculatedStats.priorityRotation.calculateFrequencies();
+            calculatedStats.priorityRotation.calculateFrequencies();           
 
             #endregion
 
@@ -715,7 +729,8 @@ namespace Rawr.Hunter
 
             calculatedStats.critFromRating = (calculatedStats.BasicStats.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT) / 100;
 
-            // TODO: DK Anguish & Dark Matter trinket
+            // TODO: DK Anguish
+            // TODO: Dark Matter (trinket)
             calculatedStats.critFromProcRating = 0;
 
             // Simple talents
@@ -806,6 +821,17 @@ namespace Rawr.Hunter
             calculatedStats.silencingShot.critChance = critHitPercent;
 
             calculatedStats.priorityRotation.calculateCrits();
+
+            #endregion
+            #region August 2009 Spell Crit
+
+            double spellCritFromBase = 0.05;
+            double spellCritFromIntellect = calculatedStats.BasicStats.Intellect / (HunterRatings.INTELLECT_PER_SPELL_CRIT * 100);
+
+            double spellCritTotal = spellCritFromBase
+                                  + spellCritFromIntellect
+                                  + calculatedStats.critFromRating
+                                  + calculatedStats.critFromProcRating;
 
             #endregion
 
@@ -1095,6 +1121,13 @@ namespace Rawr.Hunter
                 calculatedStats.apFromAspectOfTheHawk = 300 * aspectUptimeHawk;
             }
 
+            // Aspect Mastery
+            calculatedStats.apFromAspectMastery = 0;
+            if (character.HunterTalents.AspectMastery > 0)
+            {
+                calculatedStats.apFromAspectMastery = calculatedStats.apFromAspectOfTheHawk * 0.3 * aspectUptimeHawk;
+            }
+
             // Furious Howl was calculated earlier by the pet model
             //calculatedStats.apFromFuriousHowl = 0;
 
@@ -1110,6 +1143,7 @@ namespace Rawr.Hunter
 
             calculatedStats.apFromExposeWeakness = exposeWeaknessUptime * exposeWeaknessAgility;
 
+            //TODO: use frequency to calc this
             calculatedStats.apFromCallOfTheWild = options.petCallOfTheWild * (CalcUptime(20, 300, options) * 0.1);
 
             calculatedStats.apFromTrueshotAura = (0.1 * character.HunterTalents.TrueshotAura);
@@ -1193,12 +1227,30 @@ namespace Rawr.Hunter
             double RAP = calculatedStats.apTotal;
 
             #endregion
-            #region August 2009 Damage Adjustments
+            #region August 2009 Armor Penetration
 
             // Armor Penetration & Debuffs
             double targetArmorSubtotal = options.TargetArmor * calculatedStats.targetDebuffsArmor;
-            double arpOnProcRating = 0; // TODO
             double arpGearRating = calculatedStats.BasicStats.ArmorPenetrationRating;
+
+            // ArPen from On-Proc trinkets
+            double arpOnProcRating = 0;
+
+            // Grim Toll
+            if (IsWearingTrinket(character, 40256))
+            {
+                double grimTollArpProcCap = 100 * HunterRatings.ARP_RATING_PER_PERCENT - arpGearRating; // T8
+                double grimTollTimePerShot = totalShotsPerSecond > 0 ? 1 / totalShotsPerSecond / hitChance : 0; // T12
+                double grimTollTimeBetween = grimTollTimePerShot > 0 ? 1 / 0.15 * grimTollTimePerShot + 45 : 0; // T13
+                double grimTollUptime = grimTollTimeBetween > 0 ? 10 / grimTollTimeBetween : 0;
+
+                arpOnProcRating += Math.Min(grimTollArpProcCap, 612) * grimTollUptime;
+            }
+
+            // TODO: Madness of the Betrayer
+            // TODO: Mjolnir Runestone
+            // TODO: Incisor Fragment
+
             double arpTotal = arpGearRating + arpOnProcRating;
 
             double arpPercentReduction = arpTotal / HunterRatings.ARP_RATING_PER_PERCENT / 100;
@@ -1214,29 +1266,30 @@ namespace Rawr.Hunter
 
             double armorReductionDamageAdjust = 1 - armorReduction;
 
+            #endregion
+            #region August 2009 Damage Adjustments
+
             //Partial Resists
             double averageResist = (options.TargetLevel - 80) * 0.02;
             double resist10 = 5 * averageResist;
             double resist20 = 2.5 * averageResist;
             double partialResistDamageAdjust = 1 - (resist10 * 0.1 + resist20 * 0.1);
 
-            //Beastial Wrath
-            double beastialWrathCooldown = character.HunterTalents.GlyphOfBestialWrath ? 100 : 120;
+            //Beast Within
+            double beastWithinDamageAdjust = 1;
 
-            beastialWrathCooldown *= 1 - 0.1 * character.HunterTalents.Longevity;
+            if (calculatedStats.beastialWrath.freq > 0)
+            {
+                double beastialWrathUptime =  calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq;
 
-            double beastialWrathUptime = CalcUptime(18, beastialWrathCooldown, options);
-
-            //TODO: calculate this properly
-            double ferociousInspirationUptime = 1;
+                beastWithinDamageAdjust = 1 + (0.1 * beastialWrathUptime);
+            }            
 
             //Focused Fire
             double focusedFireDamageAdjust = 1 + 0.01 * character.HunterTalents.FocusedFire;
 
-            //Beast Within
-            double beastWithinDamageAdjust = 1 + (0.01 * character.HunterTalents.TheBeastWithin) * beastialWrathUptime;
-
             //Sanc. Retribution Aura
+            // TODO: THIS IS WRONG. also, it needs to check ferocious inspiration isn't up
             double sancRetributionAuraDamageAdjust = 1 + statsBuffs.BonusDamageMultiplier;
 
             //Black Arrow Damage Multiplier
@@ -1255,8 +1308,8 @@ namespace Rawr.Hunter
             double noxiousStingsDamageAdjust = 1 + (0.01 * character.HunterTalents.NoxiousStings * noxiousStingsSerpentUptime);
             double noxiousStingsSerpentDamageAdjust = 1 + (0.01 * character.HunterTalents.NoxiousStings);
 
-            //Ferocious Inspiration
-            double ferociousInspirationDamageAdjust = 1 + (0.01 * character.HunterTalents.FerociousInspiration) * ferociousInspirationUptime;
+            //Ferocious Inspiration (calculated by pet model)
+            double ferociousInspirationDamageAdjust = calculatedStats.ferociousInspirationDamageAdjust;
             double ferociousInspirationArcaneDamageAdjust = 1 + (0.03 * character.HunterTalents.FerociousInspiration);
 
             //Improved Tracking
@@ -1453,7 +1506,6 @@ namespace Rawr.Hunter
 
             // damage_adjust = (sting_talent_adjusts ~ noxious stings) * improved_stings * improved_tracking
             //                  + partial_resists * tier-8_2-piece_bonus * target_nature_debuffs * 100%_noxious_stings
-            // TODO: nature debuffs & t8 bonus
             double serpentStingDamageAdjust = focusedFireDamageAdjust
                                                 * beastWithinDamageAdjust
                                                 * sancRetributionAuraDamageAdjust
@@ -1462,7 +1514,11 @@ namespace Rawr.Hunter
                                                 * noxiousStingsSerpentDamageAdjust
                                                 * improvedStingsDamageAdjust
                                                 * improvedTrackingDamageAdjust
-                                                * partialResistDamageAdjust;
+                                                * partialResistDamageAdjust
+                                                * (1 + targetDebuffsNature);
+
+            // T8 2-piece bonus
+            serpentStingDamageAdjust += statsBuffs.BonusSerpentStingDamage;
 
             double serpentStingTicks = calculatedStats.serpentSting.duration / 3;
             double serpentStingDamagePerTick = Math.Round(serpentStingDamageBase * serpentStingDamageAdjust / 5, 1);
@@ -1470,13 +1526,12 @@ namespace Rawr.Hunter
 
             calculatedStats.serpentSting.type = Shots.SerpentSting;
             calculatedStats.serpentSting.damage = serpentStingDamageReal;
-            //calculatedStats.serpentSting.Dump("Serpent Sting");
 
             #endregion
             #region August 2009 Aimed Shot
 
-            // base_damage = normalized_shot + 408
-            double aimedShotDamageNormal = autoShotDamageNormalized + 408;
+            // base_damage = normalized_shot + 408 (but ammo is not normalized!)
+            double aimedShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + statsBaseGear.WeaponDamage + damageFromRAPNormalized) + 408;
 
             // crit_damage = 1 + mortal_shots + gem_crit + marked_for_death
             double aimedShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
@@ -1671,12 +1726,26 @@ namespace Rawr.Hunter
             #endregion
 
             #region August 2009 On-Proc DPS
-            // calculatedStats.OnProcDPS
-            // TODO: Bandit's Insignia
+
+            // Bandit's Insignia
+            if (IsWearingTrinket(character, 40371))
+            {
+                double banditsInsigniaDamageAverage = ((1504 + 2256) / 2) * (1 + spellCritTotal) * (1 + targetDebuffsArcane)
+                                                        * (1 - 0.17 + calculatedStats.hitFromRating);
+                double banditsInsigniaTimePer = totalShotsPerSecond > 0 ? 1 / totalShotsPerSecond / hitChance : 0; // T54
+                double banditsInsigniaTimeBetween = banditsInsigniaTimePer > 0 ? 1 / 0.15 * banditsInsigniaTimePer + 45 : 0;
+                double banditsInsigniaDPS = banditsInsigniaTimeBetween > 0 ? banditsInsigniaDamageAverage / banditsInsigniaTimeBetween : 0;
+
+                calculatedStats.OnProcDPS += banditsInsigniaDPS;
+            }
+
             // TODO: Gnomish Lightning Generator
             // TODO: Darkmoon Card: Death
             // TODO: Hand-Mounted Pyro Rocket
             // TODO: Vestige of Haldor
+
+            calculatedStats.OnProcDPS *= (1 - viperDamagePenalty);
+
             #endregion
             #region August 2009 Shot Rotation
 
@@ -1777,14 +1846,15 @@ namespace Rawr.Hunter
             double agi_part_3 = Math.Round(agi_race_talent_adjusted * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
             statsTotal.Agility = (float)(agi_part_1 + agi_part_2 + agi_part_3);
 
-
             statsTotal.Intellect = (statsRace.Intellect + statsGearEnchantsBuffs.Intellect) * (1 + statsTotal.BonusIntellectMultiplier);
 			statsTotal.Spirit = (statsRace.Spirit + statsGearEnchantsBuffs.Spirit);  // * (1 + statsTotal.BonusSpiritMultiplier);
 			statsTotal.Resilience = statsRace.Resilience + statsGearEnchantsBuffs.Resilience;
-			statsTotal.Armor = (float)Math.Round((statsGearEnchantsBuffs.Armor + statsRace.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
 
-            if (character.HunterTalents.ThickHide > 0)
-                statsTotal.Armor *= 1 + ((character.HunterTalents.ThickHide * 0.03f) + 0.01f);
+            // Armor
+            double armorFromGear = (statsGearEnchantsBuffs.Armor + statsRace.Armor) * (1 + statsBuffs.BonusArmorMultiplier);
+            double armorFromAgility = statsTotal.Agility * 2.0;
+            double armorThickHideAdjust = 1 + character.HunterTalents.ThickHide * 0.0333;
+			statsTotal.Armor = (float)(armorFromGear * armorThickHideAdjust + armorFromAgility);
 
             statsTotal.Miss = 0.0f;
 			statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
@@ -1828,9 +1898,13 @@ namespace Rawr.Hunter
             // TODO: Implement new racials
             // The first 20 Stam = 20 Health, while each subsequent Stam = 10 Health, so Health = (Stam-18)*10
             // (20-(20/10)) = 18
-            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - 18.0f) * 10f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f)));
-
-			statsTotal.Health += (float)Math.Round((statsTotal.Health * character.HunterTalents.EnduranceTraining * .01f));
+            double healthFromBase = statsRace.Health;
+            double healthFromStamina = (statsTotal.Stamina - 18) * 10;
+            double healthFromGearBuffs = statsGearEnchantsBuffs.Health;
+            double healthFromTalents = (healthFromBase + healthFromStamina + healthFromGearBuffs) * (character.HunterTalents.EnduranceTraining * 0.01);
+            double healthSubTotal = healthFromBase + healthFromStamina + healthFromGearBuffs + healthFromTalents;
+            double healthTaurenAdjust = character.Race == CharacterRace.Tauren ? 1.05 : 1;
+            statsTotal.Health = (float)(healthSubTotal * healthTaurenAdjust);               
 
             float hitBonus = (float)(statsTotal.HitRating / (HunterRatings.HIT_RATING_PER_PERCENT * 100.0f) + statsTalents.PhysicalHit + statsRace.PhysicalHit);
 
