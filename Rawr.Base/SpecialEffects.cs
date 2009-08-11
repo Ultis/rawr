@@ -1265,6 +1265,20 @@ namespace Rawr
                     EvalAbility(ability, stats, amount);
                     EvalAbility(ability2, stats, amount);
                 }
+                // 2 Abilities with separate damage increases.
+                regex = new Regex(@"Increases the (base )?damage (dealt |done )?by your (?<ability>\w+\s*\w*) ability by (?<amount>\d+) and by your (?<ability2>\w+\s*\w*) ability by (?<amount2>\d+).");
+                match = regex.Match(line);
+                if (match.Success)
+                {
+                    string statName = match.Groups["stat"].Value;
+                    float amount = int.Parse(match.Groups["amount"].Value);
+                    float amount2 = int.Parse(match.Groups["amount2"].Value);
+                    string ability = match.Groups["ability"].Value;
+                    string ability2 = match.Groups["ability2"].Value;
+
+                    EvalAbility(ability, stats, amount);
+                    EvalAbility(ability2, stats, amount2);
+                }
                 // 3 Abilities damage increase.
                 regex = new Regex(@"Increases the (base )?damage (dealt |done )?by your (?<ability>\w+\s*\w*) by (?<amount>\d+), your (?<ability2>\w+\s*\w*) by (?<amount2>\d+), and your (?<ability3>\w+\s*\w*) by (?<amount3>\d+).");
                 match = regex.Match(line);
