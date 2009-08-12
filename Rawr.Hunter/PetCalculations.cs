@@ -251,9 +251,8 @@ namespace Rawr.Hunter
             double sporeCloudFrequency = priorityRotation.getSkillFrequency(PetAttacks.SporeCloud);
             if (sporeCloudFrequency > 0)
             {
-                double sporeCloudCalcFreq = options.emulateSpreadsheetBugs ? 10 : sporeCloudFrequency;
                 double sporeCloudDuration = 9;
-                double sporeCloudUptime = sporeCloudDuration > sporeCloudCalcFreq ? 1 : sporeCloudDuration / sporeCloudCalcFreq;
+                double sporeCloudUptime = sporeCloudDuration > sporeCloudFrequency ? 1 : sporeCloudDuration / sporeCloudFrequency;
 
                 armorDebuffSporeCloud = sporeCloudUptime * 0.03;
             }
@@ -262,7 +261,7 @@ namespace Rawr.Hunter
             double acidSpitFrequency = priorityRotation.getSkillFrequency(PetAttacks.AcidSpit); // AcidSpitEffectiveRate
             if (acidSpitFrequency > 0)
             {
-                double acidSpitCalcFreq = options.emulateSpreadsheetBugs ? priorityRotation.getSkillCooldown(PetAttacks.AcidSpit) : acidSpitFrequency;
+                double acidSpitCalcFreq = priorityRotation.getSkillCooldown(PetAttacks.AcidSpit);
                 double acidSpitDuration = 30;
 
                 double acidSpitChanceToApply = calculatedStats.petHit - calculatedStats.petTargetDodge; // V45
@@ -296,7 +295,7 @@ namespace Rawr.Hunter
                 stacks[2].percent_time = acidSpitTotalTime == 0 ? 1 : stacks[2].time_spent / acidSpitTotalTime;
 
                 double acidSpitUptime = stacks[1].percent_time + stacks[2].percent_time;
-                if (options.emulateSpreadsheetBugs) acidSpitUptime += stacks[0].percent_time;
+                if (options.emulateSpreadsheetBugs) acidSpitUptime += stacks[0].percent_time; // still an issue in 91b
 
                 stacks[0].total = stacks[0].percent_time * 0;
                 stacks[1].total = stacks[0].percent_time * 0.1;
@@ -309,9 +308,9 @@ namespace Rawr.Hunter
             double stingFrequency = priorityRotation.getSkillFrequency(PetAttacks.Sting);
             if (stingFrequency > 0)
             {
-                double stingCalcFreq = options.emulateSpreadsheetBugs ? 6 : stingFrequency;
+                double stingUseFreq = options.emulateSpreadsheetBugs ? priorityRotation.getSkillCooldown(PetAttacks.Sting) : priorityRotation.getSkillFrequency(PetAttacks.Sting); // still an issue in 91b
                 double stingDuration = 20;
-                double stingUptime = stingDuration > stingCalcFreq ? 1 : stingDuration / stingCalcFreq;
+                double stingUptime = stingDuration > stingUseFreq ? 1 : stingDuration / stingUseFreq;
 
                 armorDebuffSting = stingUptime * 0.05;
             }
@@ -336,13 +335,13 @@ namespace Rawr.Hunter
             calculatedStats.ferociousInspirationDamageAdjust = 1;
             if (character.HunterTalents.FerociousInspiration > 0)
             {
-                if (options.PetFamily != PetFamily.None || options.emulateSpreadsheetBugs)
+                if (options.PetFamily != PetFamily.None || options.emulateSpreadsheetBugs) // still an issue in 91b
                 {
                     double ferociousInspirationSpecialsEffect = priorityRotation.petSpecialFrequency == 0 ? 0 : 10 / priorityRotation.petSpecialFrequency;
                     double ferociousInspirationUptime = 1 - Math.Pow(1 - critTotalSpecials, (10 / attackSpeedEffective) + ferociousInspirationSpecialsEffect);
                     double ferociousInspirationEffect = 0.01 * character.HunterTalents.FerociousInspiration;
 
-                    calculatedStats.ferociousInspirationDamageAdjust = 1 + ferociousInspirationUptime * ferociousInspirationEffect;                    
+                    calculatedStats.ferociousInspirationDamageAdjust = 1.0 + ferociousInspirationUptime * ferociousInspirationEffect;                    
                 }
             }
 
@@ -351,7 +350,7 @@ namespace Rawr.Hunter
             double roarOfRecoveryFreq = priorityRotation.getSkillFrequency(PetAttacks.RoarOfRecovery);
             if (roarOfRecoveryFreq > 0)
             {
-                double roarOfRecoveryUseFreq = options.emulateSpreadsheetBugs ? Math.Ceiling(options.duration / priorityRotation.getSkillCooldown(PetAttacks.RoarOfRecovery)) : roarOfRecoveryFreq;
+                double roarOfRecoveryUseFreq = options.emulateSpreadsheetBugs ? Math.Ceiling(options.duration / priorityRotation.getSkillCooldown(PetAttacks.RoarOfRecovery)) : roarOfRecoveryFreq; // still an issue in 91b
                 double roarOfRecoveryManaRestored = calculatedStats.BasicStats.Mana * 0.3 * roarOfRecoveryUseFreq; // E129
                 calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseFreq > 0 ? roarOfRecoveryManaRestored / options.duration : 0;
             }
@@ -372,8 +371,7 @@ namespace Rawr.Hunter
             calculatedStats.apFromCallOfTheWild = 0;
             if (options.petCallOfTheWild > 0)
             {
-                double callOfTheWildCooldown = 300 * (1 - character.HunterTalents.Longevity * 0.1);
-                double callOfTheWildUseFreq = options.emulateSpreadsheetBugs ? callOfTheWildCooldown : priorityRotation.getSkillFrequency(PetAttacks.CallOfTheWild);
+                double callOfTheWildUseFreq = options.emulateSpreadsheetBugs ? priorityRotation.getSkillCooldown(PetAttacks.CallOfTheWild) : priorityRotation.getSkillFrequency(PetAttacks.CallOfTheWild); // still an issue in 91b
                 double callOfTheWildUptime = CalculationsHunter.CalcUptime(20, callOfTheWildUseFreq, options);
                 calculatedStats.apFromCallOfTheWild = 0.1 * callOfTheWildUptime;
             }
@@ -630,7 +628,7 @@ namespace Rawr.Hunter
             double monstrousBiteFrequency = priorityRotation.getSkillFrequency(PetAttacks.MonstrousBite);
             if (monstrousBiteFrequency > 0)
             {
-                double monstrousBiteUseFreq = options.emulateSpreadsheetBugs ? priorityRotation.getSkillCooldown(PetAttacks.MonstrousBite) : monstrousBiteFrequency;
+                double monstrousBiteUseFreq = monstrousBiteFrequency;
                 double monstrousBiteDuration = 12;
 
                 double monstrousBiteChanceToApply = calculatedStats.petHit - calculatedStats.petTargetDodge;
@@ -671,7 +669,7 @@ namespace Rawr.Hunter
                 stacks[3].percent_time = monstrousBiteTotalTime == 0 ? 0 : stacks[3].time_spent / monstrousBiteTotalTime;
 
                 double monstrousBiteUptime = stacks[1].percent_time + stacks[2].percent_time + stacks[3].percent_time;
-                if (options.emulateSpreadsheetBugs) monstrousBiteUptime += stacks[0].percent_time;
+                if (options.emulateSpreadsheetBugs) monstrousBiteUptime += stacks[0].percent_time; // still an issue in 91b
 
                 stacks[0].total = 0;
                 stacks[1].total = 0.03 * stacks[1].percent_time;
@@ -794,8 +792,7 @@ namespace Rawr.Hunter
 
                 if (S.skillType == PetAttacks.ScorpidPoison)
                 {
-                    double scorpidPoisionDamageFromAP = options.emulateSpreadsheetBugs ? 0.04 * apTotal : damageBonusSpellsFromAP;
-                    double scorpidPoisionDamageAverage = ((100 + 130) / 2) + scorpidPoisionDamageFromAP;
+                    double scorpidPoisionDamageAverage = ((100 + 130) / 2) + damageBonusSpellsFromAP;
                     double scorpidPoisionDamageNormal = scorpidPoisionDamageAverage * fullResistDamageAdjust * partialResistDamageAdjust
                                                         * damageAdjustMagic * calculatedStats.targetDebuffsNature;
                     double scorpidPoisionDamageTick = scorpidPoisionDamageNormal / 5;
@@ -811,10 +808,6 @@ namespace Rawr.Hunter
                     double poisonSpitDamageTick = poisonSpitDamageNormal / 3;
                     double poisonSpitTicks = S.cooldown >= 9 ? 3 : 2;
                     S.damage = poisonSpitDamageTick * poisonSpitTicks;
-                    if (options.emulateSpreadsheetBugs)
-                    {
-                        S.damage = poisonSpitDamageNormal;
-                    }
                 }
 
                 if (S.skillType == PetAttacks.VenomWebSpray)
@@ -829,12 +822,11 @@ namespace Rawr.Hunter
                 {
                     double spiritStrikeAdjust = fullResistDamageAdjust * partialResistDamageAdjust * damageAdjustMagic
                                                      * calculatedStats.targetDebuffsNature;
-                    double spiritStrikeDamageFromAP = options.emulateSpreadsheetBugs ? 0.04 * apTotal : damageBonusSpellsFromAP;
 
-                    double spiritStrikeInitialDamageAverage = ((49 + 65) / 2) + spiritStrikeDamageFromAP;
+                    double spiritStrikeInitialDamageAverage = ((49 + 65) / 2) + damageBonusSpellsFromAP;
                     double spiritStrikeInitialDamageNormal = spiritStrikeInitialDamageAverage * spiritStrikeAdjust * damageAdjustHitCritSpecials;
 
-                    double spiritStrikeDotDamageAverage = ((49 + 65) / 2) + spiritStrikeDamageFromAP;
+                    double spiritStrikeDotDamageAverage = ((49 + 65) / 2) + damageBonusSpellsFromAP;
                     double spiritStrikeDotDamageNormal = spiritStrikeDotDamageAverage * spiritStrikeAdjust;
 
                     S.damage = spiritStrikeInitialDamageNormal + spiritStrikeDotDamageNormal;
@@ -855,17 +847,10 @@ namespace Rawr.Hunter
 
                 #endregion
 
-                if (options.emulateSpreadsheetBugs && S.skillType == PetAttacks.NetherShock) S.damage = 0;
-                if (options.emulateSpreadsheetBugs && S.skillType == PetAttacks.VenomWebSpray) S.damage = 0;
+                if (options.emulateSpreadsheetBugs && S.skillType == PetAttacks.NetherShock) S.damage = 0; // still an issue in 91b
+                if (options.emulateSpreadsheetBugs && S.skillType == PetAttacks.VenomWebSpray) S.damage = 0; // still an issue in 91b
 
                 S.CalculateDPS();
-
-                if (options.emulateSpreadsheetBugs && S.skillType == PetAttacks.ScorpidPoison)
-                {
-                    S.dps = S.cooldown > 0 ? S.damage / S.cooldown : 0;
-                    S.kc_dps = S.can_crit ? S.dps : 0;
-                }
-
             }
 
             // now add everything up...

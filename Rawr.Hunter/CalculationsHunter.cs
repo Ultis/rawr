@@ -579,7 +579,7 @@ namespace Rawr.Hunter
             calculatedStats.readiness.cooldown = 180;
 
             calculatedStats.beastialWrath.cooldown = (character.HunterTalents.GlyphOfBestialWrath ? 100 : 120) * (1 - character.HunterTalents.Longevity * 0.1);
-            calculatedStats.beastialWrath.duration = 18 * character.HunterTalents.TheBeastWithin;
+            calculatedStats.beastialWrath.duration = options.PetFamily == PetFamily.None ? 0 : 18;
 
             calculatedStats.bloodFury.cooldown = 120;
             calculatedStats.bloodFury.duration = 15;
@@ -620,7 +620,7 @@ namespace Rawr.Hunter
             calculatedStats.hasteFromRacial = 0;
             if (character.Race == CharacterRace.Troll && calculatedStats.berserk.freq > 0)
             {
-                double berserkingUseFreq = options.emulateSpreadsheetBugs ? calculatedStats.berserk.cooldown : calculatedStats.berserk.freq;
+                double berserkingUseFreq = options.emulateSpreadsheetBugs ? calculatedStats.berserk.cooldown : calculatedStats.berserk.freq; // still an issue in 91b
                 calculatedStats.hasteFromRacial = 0.2 * CalcUptime(calculatedStats.berserk.duration, berserkingUseFreq, options);
             }
 
@@ -694,6 +694,28 @@ namespace Rawr.Hunter
                 double meteoriteWhetstoneTimePerShot = 0.9;
                 double meteoriteWhetstoneTimeBetweenProcs = 1 / 0.15 * meteoriteWhetstoneTimePerShot + 45;
                 hasteRatingFromProcs += 444 * CalcUptime(10, meteoriteWhetstoneTimeBetweenProcs, options);
+            }
+
+            // Simple-use haste trinkets
+            if (character.Trinket1 != null)
+            {
+                foreach (SpecialEffect e in character.Trinket1.GetTotalStats().SpecialEffects())
+                {
+                    if (e.Trigger == Trigger.Use && e.Stats.HasteRating > 0)
+                    {
+                        hasteRatingFromProcs += e.Stats.HasteRating * e.Duration / e.Cooldown;
+                    }
+                }
+            }
+            if (character.Trinket2 != null)
+            {
+                foreach (SpecialEffect e in character.Trinket2.GetTotalStats().SpecialEffects())
+                {
+                    if (e.Trigger == Trigger.Use && e.Stats.HasteRating > 0)
+                    {
+                        hasteRatingFromProcs += e.Stats.HasteRating * e.Duration / e.Cooldown;
+                    }
+                }
             }
 
             calculatedStats.hasteFromProcs = hasteRatingFromProcs / (HunterRatings.HASTE_RATING_PER_PERCENT * 100);
@@ -1247,21 +1269,15 @@ namespace Rawr.Hunter
             if (options.useManaPotion == ManaPotionType.SuperManaPotion) manaFromPotion = 2400;
 
             bool manaHasAlchemistStone = false;
-            if (options.emulateSpreadsheetBugs)
-            {
-                if (IsWearingTrinket(character, 40684)) manaHasAlchemistStone = true; // Mirror of Truth (bug)
-                if (IsWearingTrinket(character, 31856)) manaHasAlchemistStone = true; // Darkmoon Card: Crusade (bug)
-            }
-            else
-            {
-                if (IsWearingTrinket(character, 35751)) manaHasAlchemistStone = true; // Assassin's Alchemist Stone
-                if (IsWearingTrinket(character, 44324)) manaHasAlchemistStone = true; // Mighty Alchemist's Stone
-            }
+            if (IsWearingTrinket(character, 35751)) manaHasAlchemistStone = true; // Assassin's Alchemist Stone
+            if (IsWearingTrinket(character, 44324)) manaHasAlchemistStone = true; // Mighty Alchemist's Stone
 
             double manaRegenFromPotion = manaFromPotion / options.duration * (manaHasAlchemistStone ? 1.4 : 1.0);
 
-            double manaExpenditure = calculatedStats.priorityRotation.MPS;
-            manaExpenditure += calculatedStats.petKillCommandMPS;
+            double beastWithinManaBenefit = beastialWrathUptime * 0.2;
+            double manaExpenditureSpecial = calculatedStats.petKillCommandMPS * (1 - beastWithinManaBenefit);
+
+            double manaExpenditure = calculatedStats.priorityRotation.MPS + manaExpenditureSpecial;
 
             double manaChangeDuringViper = manaRegenFromViper + manaRegenFromPotion + calculatedStats.manaRegenTotal - manaExpenditure;
             double manaChangeDuringNormal = manaExpenditure - calculatedStats.manaRegenTotal - manaRegenFromPotion;
@@ -1339,6 +1355,9 @@ namespace Rawr.Hunter
             calculatedStats.apFromHunterVsWild = Math.Floor((character.HunterTalents.HunterVsWild * 0.1) * (calculatedStats.BasicStats.Stamina));
             calculatedStats.apFromGear = 0 + calculatedStats.BasicStats.AttackPower;
 
+            // Darkmoon Card: Crusade
+            if (IsWearingTrinket(character, 31856)) calculatedStats.apFromGear += 120;
+
             calculatedStats.apFromBloodFury = 0;
             if (character.Race == CharacterRace.Orc && calculatedStats.bloodFury.freq > 0)
             {
@@ -1396,7 +1415,7 @@ namespace Rawr.Hunter
             calculatedStats.apFromProc = 0;
 
 
-            double crittingTriggersPerSecond = options.emulateSpreadsheetBugs
+            double crittingTriggersPerSecond = options.emulateSpreadsheetBugs // still an issue in 91b
                                              ? crittingShotsPerSecond * critHitPercent
                                              : crittingShotsPerSecond * critHitPercent * hitChance;
 
@@ -1415,13 +1434,13 @@ namespace Rawr.Hunter
             // Swordguard Embroidery
             if (character.BackEnchant != null && character.BackEnchant.Id == 3730)
             {
-                if (options.emulateSpreadsheetBugs)
+                if (options.emulateSpreadsheetBugs) // still an issue in 91b
                 {
-                    calculatedStats.apFromProc += 300 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * critHitPercent);
+                    calculatedStats.apFromProc += 400 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * critHitPercent);
                 }
                 else
                 {
-                    calculatedStats.apFromProc += 300 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * hitChance);
+                    calculatedStats.apFromProc += 400 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * hitChance);
                 }
             }
 
@@ -1511,7 +1530,7 @@ namespace Rawr.Hunter
                 double mjolnirRunestoneTimeBetween = mjolnirRunestoneTimePerShot > 0 ? 1 / 0.15 * mjolnirRunestoneTimePerShot + 45 : 0; // T122
                 double mjolnirRunestoneUptime = mjolnirRunestoneTimeBetween > 0 ? 10 / mjolnirRunestoneTimeBetween : 0;
 
-                arpOnProcRating += Math.Min(arpProcCap, 655) * mjolnirRunestoneUptime;
+                arpOnProcRating += Math.Min(arpProcCap, 665) * mjolnirRunestoneUptime;
             }
 
             // Incisor Fragment
@@ -1664,8 +1683,8 @@ namespace Rawr.Hunter
             double rangedAmmoDamage = rangedAmmoDPS * rangedWeaponSpeed;
             double rangedAmmoDamageNormalized = rangedAmmoDPS * 2.8;
 
-            double damageFromRAP = (float)RAP / 14 * rangedWeaponSpeed;
-            double damageFromRAPNormalized = (float)RAP / 14 * 2.8;
+            double damageFromRAP = RAP / 14 * rangedWeaponSpeed;
+            double damageFromRAPNormalized = RAP / 14 * 2.8;
 
             double autoShotDamage = rangedWeaponDamage + rangedAmmoDamage + statsBaseGear.WeaponDamage + damageFromRAP + calculatedStats.BasicStats.ScopeDamage;
             double autoShotDamageNormalized = rangedWeaponDamage + rangedAmmoDamageNormalized + statsBaseGear.WeaponDamage + damageFromRAPNormalized;
