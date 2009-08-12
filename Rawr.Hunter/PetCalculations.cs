@@ -368,6 +368,16 @@ namespace Rawr.Hunter
                 calculatedStats.manaRegenInvigoration = invigorationManaPerMinute / 60;
             }
 
+            // Call of the Wild
+            calculatedStats.apFromCallOfTheWild = 0;
+            if (options.petCallOfTheWild > 0)
+            {
+                double callOfTheWildCooldown = 300 * (1 - character.HunterTalents.Longevity * 0.1);
+                double callOfTheWildUseFreq = options.emulateSpreadsheetBugs ? callOfTheWildCooldown : priorityRotation.getSkillFrequency(PetAttacks.CallOfTheWild);
+                double callOfTheWildUptime = CalculationsHunter.CalcUptime(20, callOfTheWildUseFreq, options);
+                calculatedStats.apFromCallOfTheWild = 0.1 * callOfTheWildUptime;
+            }
+
             #endregion
         }
 
@@ -386,7 +396,7 @@ namespace Rawr.Hunter
             double apFromHunterScaling = 0.22 * (1 + options.petWildHunt * 0.15);
             double apFromStrength = (petStats.Strength - 10) * 2;
             double apFromHunterVsWild = Math.Floor(calculatedStats.BasicStats.Stamina * (0.1 * character.HunterTalents.HunterVsWild));
-            double apFromBuffs = 0; //TODO: Pet +AP buffs
+            double apFromBuffs = 0; //TODO: +AP buffs
             double apFromHunterRAP = Math.Floor(calculatedStats.apSelfBuffed * apFromHunterScaling);
 
             // Tier 9 4-pice bonus is complex
@@ -402,14 +412,7 @@ namespace Rawr.Hunter
             double apFromFuriousHowl = calculatedStats.apFromFuriousHowl;
 
             // Call of the Wild
-            double apAdjustFromCallOfTheWild = 0;
-            if (options.petCallOfTheWild > 0)
-            {
-                double callOfTheWildCooldown = 300 * (1 - character.HunterTalents.Longevity * 0.1);
-                double callOfTheWildDuration = 20;
-                double callOfTheWildUptime = CalculationsHunter.CalcUptime(callOfTheWildDuration, callOfTheWildCooldown, options);
-                apAdjustFromCallOfTheWild = 0.1 * callOfTheWildUptime;
-            }
+            double apAdjustFromCallOfTheWild = calculatedStats.apFromCallOfTheWild;
 
             // Serenity Dust
             double apAdjustFromSerenityDust = 0;

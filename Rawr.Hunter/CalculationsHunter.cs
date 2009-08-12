@@ -362,6 +362,7 @@ namespace Rawr.Hunter
 				MultiShotManaDiscount = stats.MultiShotManaDiscount,
 				MultiShotCooldownReduction = stats.MultiShotCooldownReduction,
 				TrapCooldownReduction = stats.TrapCooldownReduction,
+                FireDamage = stats.FireDamage,
             };
         }
 
@@ -416,7 +417,8 @@ namespace Rawr.Hunter
             stats.BonusSteadyShotPetAttackPowerBuff +
             stats.MultiShotManaDiscount +
             stats.MultiShotCooldownReduction +
-            stats.TrapCooldownReduction;
+            stats.TrapCooldownReduction +
+            stats.FireDamage;
 
             if (totalStats > 0) return true;
 
@@ -484,6 +486,7 @@ namespace Rawr.Hunter
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsRace = BaseStats.GetBaseStats(80, CharacterClass.Hunter, character.Race);
+            Stats statsTalents = GetBaseTalentStats(character.HunterTalents);
 
             calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
 
@@ -580,7 +583,9 @@ namespace Rawr.Hunter
             // We can calculate the rough frequencies now
             calculatedStats.priorityRotation.calculateFrequencies();
             calculatedStats.priorityRotation.calculateLALProcs(character);
-            calculatedStats.priorityRotation.calculateFrequencies();           
+            calculatedStats.priorityRotation.calculateFrequencies();
+
+            double beastialWrathUptime = calculatedStats.beastialWrath.freq > 0 ? calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq : 0;
 
             #endregion
 
@@ -822,6 +827,52 @@ namespace Rawr.Hunter
 
             #endregion
 
+            // base stats
+            #region Agility
+
+            // We need to re-calculate this now that we can figure out
+            // trinket effects correctly
+
+            double agilityFromProcs = 0;
+
+            // Darkmoon Card: Greatness
+            // Technically you can wear multiple cards (for each stat)
+            double darkmoonGreatnessCount = 0;
+            if (IsWearingTrinket(character, 44253)) darkmoonGreatnessCount++; // Agi
+            if (IsWearingTrinket(character, 44255)) darkmoonGreatnessCount++; // Int
+            if (IsWearingTrinket(character, 42987)) darkmoonGreatnessCount++; // Str
+            if (IsWearingTrinket(character, 44254)) darkmoonGreatnessCount++; // Spi
+            if (darkmoonGreatnessCount > 0)
+            {
+                double greatnessCardTimePer = totalShotsPerSecond > 0 ? 1 / totalShotsPerSecond / hitChance : 0; // T62
+                double greatnessCardTimeBetween = greatnessCardTimePer > 0 ? 1 / 0.35 * greatnessCardTimePer + 45 : 0; // T63
+                double greatnessCardUptime = greatnessCardTimeBetween > 0 ? 15 / greatnessCardTimeBetween : 0; // T65
+                double greatnessCardEffect = 300 * greatnessCardUptime;
+
+                agilityFromProcs += darkmoonGreatnessCount * greatnessCardEffect;
+            }
+
+            // Death's Choice / Death's Verdict
+            // (you can only have one, since they are Alliance-only and Horde-only)
+            if (IsWearingTrinket(character, 47303) || IsWearingTrinket(character, 47115))
+            {
+                double deathsChoiceTimePer = totalShotsPerSecond > 0 ? 1 / totalShotsPerSecond / hitChance : 0; // T138
+                double deathsChoiceTimeBetween = deathsChoiceTimePer > 0 ? 1 / 0.35 * deathsChoiceTimePer + 45 : 0; // T139
+                double deathsChoiceUptime = deathsChoiceTimeBetween > 0 ? 15 / deathsChoiceTimeBetween : 0; // T141
+                agilityFromProcs += 450 * deathsChoiceUptime;
+            }
+
+            // Agility
+            double agilityMultiplier = statsBaseGear.BonusAgilityMultiplier + statsBuffs.BonusAgilityMultiplier;
+
+            double agilityRaceTalentAdjusted = Math.Floor(statsRace.Agility * (1 + character.HunterTalents.LightningReflexes * 0.03));
+            double agi_part_1 = Math.Round((statsBaseGear.Agility + agilityFromProcs) * (1 + agilityMultiplier) * (1 + statsTalents.BonusAgilityMultiplier));
+            double agi_part_2 = Math.Round(statsRace.Agility * character.HunterTalents.HuntingParty * 0.01);
+            double agi_part_3 = Math.Round(agilityRaceTalentAdjusted * (1 + agilityMultiplier));
+            calculatedStats.BasicStats.Agility = (float)(agi_part_1 + agi_part_2 + agi_part_3);
+
+            #endregion
+
             // crits
             #region August 2009 Crit Chance
 
@@ -959,7 +1010,7 @@ namespace Rawr.Hunter
             double spellCritTotal = spellCritFromBase
                                   + spellCritFromIntellect
                                   + calculatedStats.critFromRating
-                                  + calculatedStats.critFromProcRating;
+                                  + calculatedStats.critFromProcRating; // SpellCrit
 
             #endregion
 
@@ -992,8 +1043,8 @@ namespace Rawr.Hunter
             double targetDebuffsNature = targetDebuffsMagic; // Buffs!K77
             double targetDebuffsShadow = targetDebuffsMagic;
 
-            double bloodFrenzyEffect = 0.04; // * uptime
-            double targetDebuffsPetDamage = 0; // TODO - apply bloodfrenzy up to 4%
+            // double bloodFrenzyEffect = 0.04 * uptime;
+            double targetDebuffsPetDamage = 0; // TODO - apply bloodFrenzyEffect
 
             calculatedStats.targetDebuffsArmor = 1 - targetDebuffsArmor;
             calculatedStats.targetDebuffsNature = 1 + targetDebuffsNature;
@@ -1237,8 +1288,7 @@ namespace Rawr.Hunter
                 }
             }
 
-            // TODO: use BW uptime here                
-            double aspectUptimeBeast = options.useBeastDuringBeastialWrath ? 0 : 0;
+            double aspectUptimeBeast = options.useBeastDuringBeastialWrath ? beastialWrathUptime : 0;
 
             switch (options.selectedAspect)
             {
@@ -1320,8 +1370,8 @@ namespace Rawr.Hunter
 
             calculatedStats.apFromExposeWeakness = exposeWeaknessUptime * exposeWeaknessAgility;
 
-            //TODO: use frequency to calc this
-            calculatedStats.apFromCallOfTheWild = options.petCallOfTheWild * (CalcUptime(20, 300, options) * 0.1);
+            // CallOfTheWild - this is calculated in the pet model
+            //calculatedStats.apFromCallOfTheWild = 0;
 
             calculatedStats.apFromTrueshotAura = (0.1 * character.HunterTalents.TrueshotAura);
             if (character.HunterTalents.TrueshotAura == 0)
@@ -1340,17 +1390,15 @@ namespace Rawr.Hunter
 
             calculatedStats.apFromProc = 0;
 
+
+            double crittingTriggersPerSecond = options.emulateSpreadsheetBugs
+                                             ? crittingShotsPerSecond * critHitPercent
+                                             : crittingShotsPerSecond * critHitPercent * hitChance;
+
             // Mirror of Truth
             if (IsWearingTrinket(character, 40684))
             {
-                if (options.emulateSpreadsheetBugs)
-                {
-                    calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, crittingShotsPerSecond * critHitPercent);
-                }
-                else
-                {
-                    calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, crittingShotsPerSecond * critHitPercent * hitChance);
-                }
+                calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, crittingTriggersPerSecond);
             }
 
             // Anvil of Titans
@@ -1372,12 +1420,32 @@ namespace Rawr.Hunter
                 }
             }
 
-            // TODO: Pyrite Infuser
-            // TODO: Blood of the Old God
-            // TODO: Fury of the Five Flights
-            // TODO: Tier-8 4-set bonus
-            // TODO: Dark Matter
-            // TODO: Grim Toll
+            // Pyrite Infuser
+            if (IsWearingTrinket(character, 45286))
+            {
+                calculatedStats.apFromProc += 1234 * CalcTrinketUptime(10, 45, 0.1, crittingTriggersPerSecond);
+            }
+
+            // Blood of the Old God
+            if (IsWearingTrinket(character, 45522))
+            {
+                calculatedStats.apFromProc += 1284 * CalcTrinketUptime(10, 45, 0.1, crittingTriggersPerSecond);
+            }
+
+            // Fury of the Five Flights            
+            if (IsWearingTrinket(character, 40431))
+            {
+                if (totalShotsPerSecond > 0)
+                {
+                    calculatedStats.apFromProc += (3040 * (1 / totalShotsPerSecond) / options.duration + 320 * (options.duration - 1 / totalShotsPerSecond * 20)) / options.duration;
+                }                
+            }
+
+            // Tier-8 4-set bonus
+            if (character.ActiveBuffsContains("Scourgestalker Battlegear 4 Piece Bonus"))
+            {
+                calculatedStats.apFromProc += 600 * CalcTrinketUptime(15, 45, 0.1, calculatedStats.steadyShot.freq > 0 ? 1 / calculatedStats.steadyShot.freq : 0);
+            }
 
             // TODO: add multiplicitive buffs
             double apScalingFactor = 1
@@ -1419,20 +1487,33 @@ namespace Rawr.Hunter
             // ArPen from On-Proc trinkets
             double arpOnProcRating = 0;
 
+            double arpProcCap = 100 * HunterRatings.ARP_RATING_PER_PERCENT - arpGearRating;
+
             // Grim Toll
             if (IsWearingTrinket(character, 40256))
             {
-                double grimTollArpProcCap = 100 * HunterRatings.ARP_RATING_PER_PERCENT - arpGearRating; // T8
                 double grimTollTimePerShot = totalShotsPerSecond > 0 ? 1 / totalShotsPerSecond / hitChance : 0; // T12
                 double grimTollTimeBetween = grimTollTimePerShot > 0 ? 1 / 0.15 * grimTollTimePerShot + 45 : 0; // T13
                 double grimTollUptime = grimTollTimeBetween > 0 ? 10 / grimTollTimeBetween : 0;
 
-                arpOnProcRating += Math.Min(grimTollArpProcCap, 612) * grimTollUptime;
+                arpOnProcRating += Math.Min(arpProcCap, 612) * grimTollUptime;
             }
 
-            // TODO: Madness of the Betrayer
-            // TODO: Mjolnir Runestone
-            // TODO: Incisor Fragment
+            // Mjolnir Runestone
+            if (IsWearingTrinket(character, 45931))
+            {
+                double mjolnirRunestoneTimePerShot = totalShotsPerSecond > 0 ? 1 / totalShotsPerSecond / hitChance : 0; // T121
+                double mjolnirRunestoneTimeBetween = mjolnirRunestoneTimePerShot > 0 ? 1 / 0.15 * mjolnirRunestoneTimePerShot + 45 : 0; // T122
+                double mjolnirRunestoneUptime = mjolnirRunestoneTimeBetween > 0 ? 10 / mjolnirRunestoneTimeBetween : 0;
+
+                arpOnProcRating += Math.Min(arpProcCap, 655) * mjolnirRunestoneUptime;
+            }
+
+            // Incisor Fragment
+            if (IsWearingTrinket(character, 37723))
+            {
+                arpOnProcRating += 291.0 * 20 / 120;
+            }
 
             double arpTotal = arpGearRating + arpOnProcRating;
 
@@ -1460,11 +1541,8 @@ namespace Rawr.Hunter
 
             //Beast Within
             double beastWithinDamageAdjust = 1;
-
             if (calculatedStats.beastialWrath.freq > 0)
             {
-                double beastialWrathUptime =  calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq;
-
                 beastWithinDamageAdjust = 1 + (0.1 * beastialWrathUptime);
             }            
 
@@ -1641,7 +1719,7 @@ namespace Rawr.Hunter
 
             // adjust = talent_adjust * gronnstalker_bonus * glyph_of_steadyshot
             //          * sniper_training * physcial_debuffs
-            // TODO: Gronnstalker set bonus
+            // to-maybe-do: Gronnstalker set bonus
             double steadyShotDamageAdjust = talentDamageAdjust
                                             * targetPhysicalDebuffsDamageAdjust
                                             * sniperTrainingDamageAdjust
@@ -1664,7 +1742,7 @@ namespace Rawr.Hunter
             #region August 2009 Serpent Sting
 
             // base_damage = 1210 + (0.2 * RAP)
-            double serpentStingDamageBase = 1210 + (RAP * 0.2);
+            double serpentStingDamageBase = Math.Round(1210 + (RAP * 0.2), 1);
 
             // T9 2-piece bonus
             double serpentStingT9CritAdjust = 1;
@@ -1898,10 +1976,39 @@ namespace Rawr.Hunter
                 calculatedStats.OnProcDPS += banditsInsigniaDPS;
             }
 
-            // TODO: Gnomish Lightning Generator
-            // TODO: Darkmoon Card: Death
-            // TODO: Hand-Mounted Pyro Rocket
-            // TODO: Vestige of Haldor
+            // Gnomish Lightning Generator
+            if (IsWearingTrinket(character, 41121))
+            {
+                double gnomishLGDamage = ((1530 + 1870) / 2) * (1 + spellCritTotal) * (1 + targetDebuffsFire) * (1 - 0.17 + calculatedStats.hitFromRating);
+                calculatedStats.OnProcDPS += gnomishLGDamage / 60;
+            }
+
+            // Darkmoon Card: Death
+            if (IsWearingTrinket(character, 42990))
+            {
+                double cardDeathDamage = ((1750 + 2250) / 2) * (1 + critHitPercent); // Q66
+                double cardDeathTimePerShot = totalShotsPerSecond > 0 ? 1 / totalShotsPerSecond / hitChance : 0; // Q69
+                double cardDeathBetweenTime = cardDeathTimePerShot > 0 ? 1 / 0.35 * cardDeathTimePerShot + 45 : 0; // Q70
+
+                calculatedStats.OnProcDPS += cardDeathBetweenTime > 0 ? cardDeathDamage / cardDeathBetweenTime : 0;                    
+            }
+
+            // Hand-Mounted Pyro Rocket
+            if (character.HandsEnchant != null && character.HandsEnchant.Id == 3603)
+            {
+                double pyroRocketDamage = ((1654 + 2020) / 2) * (1 + spellCritTotal) * (1 + targetDebuffsFire) * (1 - 0.17 + calculatedStats.hitFromRating);
+                calculatedStats.OnProcDPS += pyroRocketDamage / 45;
+            }
+
+            // Vestige of Haldor
+            if (IsWearingTrinket(character, 37064))
+            {
+                double vestigeDamage = ((1024 + 1536) / 2) * (1 + critHitPercent); // T40
+                double vestigeTimePerShot = totalShotsPerSecond > 0 ? 1 / totalShotsPerSecond / hitChance : 0; // T43
+                double vestigeBetweenTime = vestigeTimePerShot > 0 ? 1 / 0.1 * vestigeTimePerShot + 45 : 0; // T44
+
+                calculatedStats.OnProcDPS += vestigeBetweenTime > 0 ? vestigeDamage / vestigeBetweenTime : 0;
+            }
 
             calculatedStats.OnProcDPS *= (1 - viperDamagePenalty);
 
@@ -1995,9 +2102,9 @@ namespace Rawr.Hunter
             double stam_from_race = statsRace.Stamina * (1 + statsTotal.BonusStaminaMultiplier);
             statsTotal.Stamina = (float)(Math.Round(stam_from_gear) + Math.Floor(stam_from_race));
 
-            // Agility
+            // Agility - This gets recalculated for trinkets later
             double agi_race_talent_adjusted = Math.Floor(statsRace.Agility * (1 + character.HunterTalents.LightningReflexes * 0.03));
-            double agi_part_1 = Math.Round(statsBaseGear.Agility * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) * (1 + statsTalents.BonusAgilityMultiplier));
+            double agi_part_1 = Math.Round((statsBaseGear.Agility) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) * (1 + statsTalents.BonusAgilityMultiplier));
             double agi_part_2 = Math.Round(statsRace.Agility * character.HunterTalents.HuntingParty * 0.01);
             double agi_part_3 = Math.Round(agi_race_talent_adjusted * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
             statsTotal.Agility = (float)(agi_part_1 + agi_part_2 + agi_part_3);
@@ -2028,8 +2135,6 @@ namespace Rawr.Hunter
                                     );
 
             statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating + statsGearEnchantsBuffs.RangedHasteRating;
-            // Haste trinket (Meteorite Whetstone)
-           // statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
             statsTotal.RangedHaste = statsGearEnchantsBuffs.RangedHaste;
             	
             statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
