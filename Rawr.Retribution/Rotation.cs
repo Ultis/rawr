@@ -103,10 +103,10 @@ namespace Rawr.Retribution
             {
                 return GetMeleeAttacksPerSec();
             }
-            else if (seal.GetType() == typeof(SealOfRighteousness))
-            {
-                return GetMeleeAttacksPerSec() + GetJudgementsPerSec() + GetJudgementsPerSec();
-            }
+            //else if (seal.GetType() == typeof(SealOfRighteousness))
+            //{
+            //    return GetMeleeAttacksPerSec() + GetJudgementsPerSec() + GetJudgementsPerSec();
+            //}
             else
             {
                 return GetMeleeAttacksPerSec() + GetJudgementsPerSec();
