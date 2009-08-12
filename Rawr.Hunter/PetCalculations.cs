@@ -11,7 +11,6 @@ namespace Rawr.Hunter
         Character character;
         CharacterCalculationsHunter calculatedStats;
         CalculationOptionsHunter options;
-        CalculationsHunter hunterCalc;
         Stats statsBuffs;
         Stats statsGear;
         public Stats petStats;
@@ -22,20 +21,20 @@ namespace Rawr.Hunter
 
         // things we save earlier for later DPS calcs
         private double attackSpeedEffective;
+        private double compositeSpeed;
         private double killCommandCooldown;
         private double critTotalMelee;
         private double critTotalSpecials;
         private double critSpecialsAdjust;
         private bool isWearingBeastTamersShoulders;
 
-        public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, Stats statsBuffs, Stats statsGear, CalculationsHunter hunterCalc)
+        public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, Stats statsBuffs, Stats statsGear)
         {
             this.character = character;
             this.calculatedStats = calculatedStats;
             this.options = options;
             this.statsBuffs = statsBuffs;
             this.statsGear = statsGear;
-            this.hunterCalc = hunterCalc;
 
             petStats = new Stats();
         }
@@ -95,7 +94,7 @@ namespace Rawr.Hunter
             {
                 double killCommandManaCost = 0.03 * calculatedStats.baseMana;
 
-                double killCommandReadinessFactor = calculatedStats.priorityRotation.containsShot(Shots.Readiness) ? 1 / 180 : 0;
+                double killCommandReadinessFactor = calculatedStats.priorityRotation.containsShot(Shots.Readiness) ? 1.0 / 180 : 0;
                 double killCommandCooldownBase = 1.0 / (60 - character.HunterTalents.CatlikeReflexes * 10);
 
                 killCommandCooldown = 1.0 / (killCommandCooldownBase + killCommandReadinessFactor);
@@ -148,7 +147,7 @@ namespace Rawr.Hunter
             double critFromFerocity = character.HunterTalents.Ferocity * 0.02;
             double critFromGear = isWearingBeastTamersShoulders ? 0.02 : 0;
             double critFromBuffs = critBuffsAdditive / (HunterRatings.CRIT_RATING_PER_PERCENT * 100); ;
-            double critFromTargetDebuffs = 0; // TODO
+            double critFromTargetDebuffs = calculatedStats.targetDebuffsCrit;
 
             double critFromDepression = (levelDifference > 2) ? 0 - (0.03 + (levelDifference * 0.006)) : 0 - ((levelDifference * 5 * 0.04) / 100);
 
@@ -162,17 +161,44 @@ namespace Rawr.Hunter
                              + critFromTargetDebuffs
                              + critFromDepression;
 
-            //petStats.PhysicalCrit = (float)critTotal;
+            // Cobra Strikes
+            double cobraStrikesPetBonus = 0;
+            double cobraStrikesProc = character.HunterTalents.CobraStrikes * 0.2;
+            if (cobraStrikesProc > 0)
+            {
+                double cobraStrikesCritFreqSteady = calculatedStats.steadyShot.freq * (1 / calculatedStats.steadyShot.critChance);
+                double cobraStrikesCritFreqArcane = calculatedStats.arcaneShot.freq * (1 / calculatedStats.arcaneShot.critChance);
+                double cobraStrikesCritFreqKill = calculatedStats.killShot.freq * (1 / calculatedStats.killShot.critChance);
 
-            double cobraStrikesPetBonus = 0; // TODO
+                double cobraStrikesCritFreqSteadyInv = cobraStrikesCritFreqSteady > 0 ? 1 / cobraStrikesCritFreqSteady : 0;
+                double cobraStrikesCritFreqArcaneInv = cobraStrikesCritFreqArcane > 0 ? 1 / cobraStrikesCritFreqArcane : 0;
+                double cobraStrikesCritFreqKillInv = cobraStrikesCritFreqKill > 0 ? 1 / cobraStrikesCritFreqKill : 0;
+                double cobraStrikesCritFreqInv = cobraStrikesCritFreqSteadyInv + cobraStrikesCritFreqArcaneInv + cobraStrikesCritFreqKillInv;
+                double cobraStrikesCritFreq = cobraStrikesCritFreqInv > 0 ? 1 / cobraStrikesCritFreqInv : 0;
+                double cobraStrikesProcAdjust = cobraStrikesCritFreq / cobraStrikesProc;
+
+                double cobraStrikesFreqSteadyInv = calculatedStats.steadyShot.freq > 0 ? 1 / calculatedStats.steadyShot.freq : 0;
+                double cobraStrikesFreqArcaneInv = calculatedStats.arcaneShot.freq > 0 ? 1 / calculatedStats.arcaneShot.freq : 0;
+                double cobraStrikesFreqKillInv = calculatedStats.killShot.freq > 0 ? 1 / calculatedStats.killShot.freq : 0;
+                double cobraStrikesFreqInv = cobraStrikesFreqSteadyInv + cobraStrikesFreqArcaneInv + cobraStrikesFreqKillInv;
+
+                double cobraStrikesTwoSpecials = 2 * priorityRotation.petSpecialFrequency;
+                double cobraStrikesUptime = 1 - Math.Pow(1 - calculatedStats.steadyShot.critChance * cobraStrikesProc, cobraStrikesFreqInv * cobraStrikesTwoSpecials);
+
+                cobraStrikesPetBonus = (cobraStrikesUptime + (1 - cobraStrikesUptime) * critTotalMelee) - critTotalMelee;
+            }
+
             critTotalSpecials = critTotalMelee + cobraStrikesPetBonus; // PetCritChance
             critSpecialsAdjust = critTotalSpecials * 1.5 + 1;
+
+            calculatedStats.petCritMelee = critTotalMelee;
+            calculatedStats.petCritSpecials = critTotalSpecials;
 
             #endregion
             #region Attack Speed
 
             double attackSpeedFromSerpentsSwiftness = 1 + (character.HunterTalents.SerpentsSwiftness * 0.04);
-            double attackSpeedFromHeroism = 1; // TODO
+            double attackSpeedFromHeroism = 1 + calculatedStats.hasteFromHeroism;
             double attackSpeedFromCobraReflexes = 1 + (options.petCobraReflexes * 0.15);
             double attackSpeedFromMultiplicitiveHasteBuffs = 1; // TODO
             double attackSpeedAdjust = attackSpeedFromSerpentsSwiftness
@@ -207,7 +233,9 @@ namespace Rawr.Hunter
 
             double attackSpeedFrenzyBoost = 1 + (0.3 * attackSpeedFrenzyUptime);
 
-            attackSpeedEffective = attackSpeedAdjusted / attackSpeedFrenzyBoost; // EffectivePetAttackSpeed
+            attackSpeedEffective = attackSpeedAdjusted / attackSpeedFrenzyBoost; // EffectivePetAttackSpeed            
+
+            compositeSpeed = 1 / (1 / attackSpeedEffective + (priorityRotation.petSpecialFrequency > 0 ? 1 / priorityRotation.petSpecialFrequency : 0)); // PetCompSpeed
 
             #endregion
             #region Target Debuffs
@@ -217,6 +245,7 @@ namespace Rawr.Hunter
             double expertiseDodgeReduced = expertiseRatingGain / 4 / 100;
 
             calculatedStats.petTargetDodge = (0.05 + levelDifference * 0.005) - expertiseDodgeReduced; // PetTargetDodge
+            if (calculatedStats.petTargetDodge < 0) calculatedStats.petTargetDodge = 0;
 
             double armorDebuffSporeCloud = 0;
             double sporeCloudFrequency = priorityRotation.getSkillFrequency(PetAttacks.SporeCloud);
@@ -317,6 +346,28 @@ namespace Rawr.Hunter
                 }
             }
 
+            //Roar of Recovery
+            calculatedStats.manaRegenRoarOfRecovery = 0;
+            double roarOfRecoveryFreq = priorityRotation.getSkillFrequency(PetAttacks.RoarOfRecovery);
+            if (roarOfRecoveryFreq > 0)
+            {
+                double roarOfRecoveryUseFreq = options.emulateSpreadsheetBugs ? Math.Ceiling(options.duration / priorityRotation.getSkillCooldown(PetAttacks.RoarOfRecovery)) : roarOfRecoveryFreq;
+                double roarOfRecoveryManaRestored = calculatedStats.BasicStats.Mana * 0.3 * roarOfRecoveryUseFreq; // E129
+                calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseFreq > 0 ? roarOfRecoveryManaRestored / options.duration : 0;
+            }
+
+            //Invigoration
+            //calculatedStats.manaRegenInvigoration = 0;
+            double invigorationProcChance = character.HunterTalents.Invigoration * 0.5; // C32
+            if (invigorationProcChance > 0)
+            {               
+                double invigorationProcFreq = (priorityRotation.petSpecialFrequency / critTotalSpecials) / invigorationProcChance; //C35
+                double invigorationEffect = character.HunterTalents.Invigoration > 0 ? 0.01 : 0;
+                double invigorationManaGainedPercent = invigorationProcFreq > 0 ? 60 / invigorationProcFreq * invigorationEffect : 0; // C36
+                double invigorationManaPerMinute = invigorationProcFreq > 0 ? 60 / invigorationProcFreq * invigorationEffect * calculatedStats.BasicStats.Mana : 0; // C37
+                calculatedStats.manaRegenInvigoration = invigorationManaPerMinute / 60;
+            }
+
             #endregion
         }
 
@@ -335,9 +386,17 @@ namespace Rawr.Hunter
             double apFromHunterScaling = 0.22 * (1 + options.petWildHunt * 0.15);
             double apFromStrength = (petStats.Strength - 10) * 2;
             double apFromHunterVsWild = Math.Floor(calculatedStats.BasicStats.Stamina * (0.1 * character.HunterTalents.HunterVsWild));
-            double apFromTier9 = 0; //TODO
             double apFromBuffs = 0; //TODO: Pet +AP buffs
             double apFromHunterRAP = Math.Floor(calculatedStats.apSelfBuffed * apFromHunterScaling);
+
+            // Tier 9 4-pice bonus is complex
+            double apFromTier9 = 0;
+            if (character.ActiveBuffsContains("Windrunner's Pursuit 4 Piece Bonus"))
+            {
+                double tier9BonusTimePetShot = 0.9;
+                double tier9BonusTimeBetween = tier9BonusTimePetShot > 0 ? 1 / 0.15 * tier9BonusTimePetShot + 45 : 0;
+                apFromTier9 = 600 * CalculationsHunter.CalcUptime(15, tier9BonusTimeBetween, options);
+            }
 
             // Furious Howl was calculated earlier
             double apFromFuriousHowl = calculatedStats.apFromFuriousHowl;
@@ -348,7 +407,7 @@ namespace Rawr.Hunter
             {
                 double callOfTheWildCooldown = 300 * (1 - character.HunterTalents.Longevity * 0.1);
                 double callOfTheWildDuration = 20;
-                double callOfTheWildUptime = hunterCalc.CalcUptime(callOfTheWildDuration, callOfTheWildCooldown, options);
+                double callOfTheWildUptime = CalculationsHunter.CalcUptime(callOfTheWildDuration, callOfTheWildCooldown, options);
                 apAdjustFromCallOfTheWild = 0.1 * callOfTheWildUptime;
             }
 
@@ -359,10 +418,107 @@ namespace Rawr.Hunter
                 apAdjustFromSerenityDust = 0.025; // 0.1 * (15 / 60);
             }
 
-            double apAdjustFromRabidProc = 0; //TODO getRabidProcEffect(petStats.PhysicalHit);
             double apAdjustFromTrueShotAura = calculatedStats.apFromTrueshotAura;
-            double apAdjustFromAnimalHandler = 0; //TODO
-            double apAdjustFromAspectOfTheBeast = 0; //TODO
+            double apAdjustFromAnimalHandler = character.HunterTalents.AnimalHandler * 0.05;
+            double apAdjustFromAspectOfTheBeast = calculatedStats.aspectBonusAPBeast;
+
+            double apAdjustFromRabidProc = 0;
+
+            double longevityCooldownAdjust = 1 - character.HunterTalents.Longevity * 0.1;
+            double rabidCooldown = 45 * longevityCooldownAdjust;
+            double rabidUptime = options.petRabid * CalculationsHunter.CalcUptime(20, rabidCooldown, options);
+
+            if (rabidUptime > 0)
+            {
+                double rabidDuration = 20; // Q24
+                // Q25 - rabidCooldown
+                double rabidEffectiveRate = compositeSpeed; // Q26
+                double rabidHit = calculatedStats.petHit; // Q27
+                double rabidDodge = calculatedStats.petTargetDodge; // Q28
+                double rabidChanceToApply = 0.5 * (rabidHit - rabidDodge); // Q29
+                double rabidChancesToMaintain = rabidUptime > 0 ? rabidCooldown / rabidEffectiveRate : 0; // Q30
+
+                double rabidChanceApply1 = rabidChancesToMaintain == 0 ? 0 : rabidChanceToApply; // S22
+                double rabidChanceApply2 = rabidChancesToMaintain >= 2 ? (1 - rabidChanceApply1) * rabidChanceToApply : 0; // S23
+                double rabidChanceApply3 = rabidChancesToMaintain >= 3 ? (1 - (rabidChanceApply1 + rabidChanceApply2)) * rabidChanceToApply : 0; // S24
+                double rabidChanceApply4 = rabidChancesToMaintain >= 4 ? (1 - (rabidChanceApply1 + rabidChanceApply2 + rabidChanceApply3)) * rabidChanceToApply : 0; // S25
+                double rabidChanceApply5 = rabidChancesToMaintain >= 5 ? (1 - (rabidChanceApply1 + rabidChanceApply2 + rabidChanceApply3 + rabidChanceApply4)) * rabidChanceToApply : 0; // S26
+                double rabidChanceApplySum = rabidChanceApply1 + rabidChanceApply2 + rabidChanceApply3 + rabidChanceApply4 + rabidChanceApply5; // SUM(S22:S26)
+                double rabidChanceFallOff = 1-rabidChanceApplySum < 0 ? 0 : 1-rabidChanceApplySum; // S27 RabidChanceToStop
+
+                double rabidAverageIncTime = 0; // S28 RabidAverageTimeToInc
+                if (1 - rabidChanceFallOff != 0)
+                {
+                    rabidAverageIncTime = rabidChanceApply1 / rabidChanceApplySum * rabidEffectiveRate
+                                        + rabidChanceApply2 / rabidChanceApplySum * rabidEffectiveRate * 2
+                                        + rabidChanceApply3 / rabidChanceApplySum * rabidEffectiveRate * 3
+                                        + rabidChanceApply4 / rabidChanceApplySum * rabidEffectiveRate * 4
+                                        + rabidChanceApply5 / rabidChanceApplySum * rabidEffectiveRate * 5;
+                }
+                double rabidTimeSpentMax = rabidUptime > 0 ? rabidAverageIncTime + (rabidEffectiveRate * rabidChanceFallOff) : 0; // RabidAverageStackTime
+
+                PetSkillStack[] stacks = new PetSkillStack[7];
+                stacks[0] = new PetSkillStack();
+                stacks[1] = new PetSkillStack();
+                stacks[2] = new PetSkillStack();
+                stacks[3] = new PetSkillStack();
+                stacks[4] = new PetSkillStack();
+                stacks[5] = new PetSkillStack();
+                stacks[6] = new PetSkillStack();
+
+                stacks[0].time_to_reach = 0;
+                stacks[1].time_to_reach = rabidAverageIncTime * 1;
+                stacks[2].time_to_reach = rabidAverageIncTime * 2;
+                stacks[3].time_to_reach = rabidAverageIncTime * 3;
+                stacks[4].time_to_reach = rabidAverageIncTime * 4;
+                stacks[5].time_to_reach = rabidAverageIncTime * 5;
+                stacks[6].time_to_reach = rabidDuration;
+
+                stacks[0].chance_to_max = 0;
+                stacks[1].chance_to_max = rabidChanceFallOff == 1 ? 0 : rabidChanceFallOff;
+                stacks[2].chance_to_max = rabidChanceFallOff == 1 ? 0 : rabidChanceFallOff * (1 - stacks[1].chance_to_max);
+                stacks[3].chance_to_max = rabidChanceFallOff == 1 ? 0 : rabidChanceFallOff * (1 - stacks[2].chance_to_max);
+                stacks[4].chance_to_max = rabidChanceFallOff == 1 ? 0 : rabidChanceFallOff * (1 - stacks[3].chance_to_max);
+                stacks[5].chance_to_max = rabidChanceFallOff == 1 ? 0 : 1 - (stacks[0].chance_to_max + stacks[1].chance_to_max + stacks[2].chance_to_max + stacks[3].chance_to_max + stacks[4].chance_to_max);
+
+                stacks[0].time_spent = stacks[1].time_to_reach;
+                stacks[1].time_spent = stacks[1].time_to_reach == 0 ? 0 : rabidTimeSpentMax * (1 - (stacks[0].chance_to_max));
+                stacks[2].time_spent = stacks[2].time_to_reach == 0 ? 0 : rabidTimeSpentMax * (1 - (stacks[0].chance_to_max + stacks[1].chance_to_max));
+                stacks[3].time_spent = stacks[3].time_to_reach == 0 ? 0 : rabidTimeSpentMax * (1 - (stacks[0].chance_to_max + stacks[1].chance_to_max + stacks[2].chance_to_max));
+                stacks[4].time_spent = stacks[4].time_to_reach == 0 ? 0 : rabidTimeSpentMax * (1 - (stacks[0].chance_to_max + stacks[1].chance_to_max + stacks[2].chance_to_max + stacks[3].chance_to_max));
+                stacks[5].time_spent = 0;
+                if (rabidUptime > 1)
+                {
+                    stacks[5].time_spent = stacks[5].time_to_reach == 0 ? 0 : 1 / rabidChanceFallOff * rabidCooldown *(1 - (stacks[0].chance_to_max + stacks[1].chance_to_max + stacks[2].chance_to_max));
+                }
+                else if (rabidUptime > 0)
+                {
+                    stacks[5].time_spent = rabidDuration - (stacks[0].time_spent + stacks[1].time_spent + stacks[2].time_spent + stacks[3].time_spent + stacks[4].time_spent);
+                }
+                stacks[6].time_spent = rabidCooldown - rabidDuration;
+
+                double rabidTotalTime = stacks[0].time_spent + stacks[1].time_spent + stacks[2].time_spent + stacks[3].time_spent
+                                      + stacks[4].time_spent + stacks[5].time_spent + stacks[6].time_spent;
+
+                stacks[0].percent_time = rabidTotalTime == 0 ? (rabidUptime > 0 ? 1 : 0) : stacks[0].time_spent / rabidTotalTime;
+                stacks[1].percent_time = rabidTotalTime == 0 ? (rabidUptime > 0 ? 1 : 0) : stacks[1].time_spent / rabidTotalTime;
+                stacks[2].percent_time = rabidTotalTime == 0 ? (rabidUptime > 0 ? 1 : 0) : stacks[2].time_spent / rabidTotalTime;
+                stacks[3].percent_time = rabidTotalTime == 0 ? (rabidUptime > 0 ? 1 : 0) : stacks[3].time_spent / rabidTotalTime;
+                stacks[4].percent_time = rabidTotalTime == 0 ? (rabidUptime > 0 ? 1 : 0) : stacks[4].time_spent / rabidTotalTime;
+                stacks[5].percent_time = rabidTotalTime == 0 ? (rabidUptime > 0 ? 1 : 0) : stacks[5].time_spent / rabidTotalTime;
+                stacks[6].percent_time = rabidTotalTime == 0 ? (rabidUptime > 0 ? 1 : 0) : stacks[6].time_spent / rabidTotalTime;
+
+                stacks[0].total = stacks[0].percent_time * 0;
+                stacks[1].total = stacks[1].percent_time * 0.05;
+                stacks[2].total = stacks[2].percent_time * 0.1;
+                stacks[3].total = stacks[3].percent_time * 0.15;
+                stacks[4].total = stacks[4].percent_time * 0.2;
+                stacks[5].total = stacks[5].percent_time * 0.25;
+                stacks[6].total = stacks[6].percent_time * 0;
+
+                apAdjustFromRabidProc = rabidEffectiveRate > 0 ? stacks[0].total + stacks[1].total + stacks[2].total + stacks[3].total
+                                                               + stacks[4].total + stacks[5].total + stacks[6].total : 0;
+            }
 
             double apScalingFactor = 1
                                  * (1 + apAdjustFromCallOfTheWild)
@@ -387,18 +543,6 @@ namespace Rawr.Hunter
 
             petStats.AttackPower = (float)apTotal;
 
-
-            /*
-                        // TODO: T8 donus is the RAP proc - does it actually apply to pets?
-                        //petStats.AttackPower += getT8Bonus();
-
-                        if (options.selectedAspect == Aspect.Beast)
-                            petStats.AttackPower *= 1.1f;
-                        else if (options.selectedAspect == Aspect.Hawk)
-                        {
-                            petStats.AttackPower += (300 + (character.HunterTalents.AspectMastery * 90));
-                        }
-            */
             #endregion
             #region Spell Hit
 
@@ -433,18 +577,40 @@ namespace Rawr.Hunter
             double damageAdjustSpikedCollar = 1 + (options.petSpikedCollar * 0.03);
             double damageAdjustRaceModifier = character.Race == CharacterRace.Orc ? 1.05 : 1;
             double damageAdjustGearModifier = isWearingBeastTamersShoulders ? 1.03 : 1;
-            double damageAdjustFerociousInspiration = 1; // TODO - getFerociousInspirationEffect();
-            double damageAdjustBeastialWrath = 1; // TODO - getBestialWrathEffect();
+            double damageAdjustFerociousInspiration = calculatedStats.ferociousInspirationDamageAdjust;
             double damageAdjustKindredSpirits = 1 + (character.HunterTalents.KindredSpirits * 0.04);
-            double damageAdjustFeedingFrenzy = 1; // TODO - getFeedingFrenzyEffect();
             double damageAdjustSancRetributionAura = 1; // TODO
-            double damageAdjustTier7Bonus = 1.05; // TODO - getT7Bonus();
+            double damageAdjustTier7Bonus = 1 + statsBuffs.BonusPetDamageMultiplier;
             double damageAdjustSharkAttack = 1 + (options.petSharkAttack * 0.03);
             double damageAdjustTargetDebuffs = 1; // TODO
             double damageAdjustPetFamily = 1.05;
             double damageAdjustMarkedForDeath = 1 + (character.HunterTalents.MarkedForDeath * 0.02);
             double damageAdjustCobraReflexes = 1 - (options.petCobraReflexes * 0.075); // this is a negative effect!
-            double damageAdjustGlancingBlows = 0.9125; // TODO - getGlancingBlows()
+
+            // Feeding Frenzy
+            double damageAdjustFeedingFrenzy = 1;
+            if (options.petFeedingFrenzy > 0)
+            {
+                double feedingFrenzyTimeSpent = options.timeSpentSub20 + options.timeSpent35To20;
+                double feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / options.duration : 0;
+                damageAdjustFeedingFrenzy = 1 + feedingFrenzyUptime * options.petFeedingFrenzy * 0.08;
+            }
+
+            // Glancing Blows
+            double glancingBlowsSkillDiff = (options.TargetLevel * 5) - (options.petLevel * 5); // F55
+            if (glancingBlowsSkillDiff < 0) glancingBlowsSkillDiff = 0;
+            double glancingBlowsChance = glancingBlowsSkillDiff > 15 ? 0.25 : 0.1 + glancingBlowsSkillDiff * 0.01; // F56
+            double glancingBlowsLowEnd = Math.Min(1.3 - 0.05 * glancingBlowsSkillDiff, 0.91); // F57
+            double glancingBlowsHighEnd = Math.Min(1.2 - 0.03 * glancingBlowsSkillDiff, 0.99); // F58
+            double damageAdjustGlancingBlows = 1 - (glancingBlowsChance * (1 - ((glancingBlowsLowEnd + glancingBlowsHighEnd) / 2)));
+
+            // Bestial Wrath
+            double damageAdjustBeastialWrath = 1;
+            if (calculatedStats.beastialWrath.freq > 0)
+            {
+                double beastialWrathUptime = character.HunterTalents.BestialWrath > 0 ? 18 / calculatedStats.beastialWrath.freq : 0;
+                damageAdjustBeastialWrath = 1 + beastialWrathUptime * 0.5;
+            }
 
             // Savage Rend
             double damageAdjustSavageRend = 1;
@@ -599,8 +765,9 @@ namespace Rawr.Hunter
 
                     double rakeInitialHitDamage = rakeAverageDamage * damageAdjustSpecials * damageAdjustMangle; // spreadsheet doesn't add armor mitigation, appears to be wow bug?
                     double rakeDotDamage = rakeAverageDamageDot * damageAdjustMangle * damageAdjustDots;
+                    double rakeDots = S.frequency > 9 ? 3 : 2;
 
-                    S.damage = rakeInitialHitDamage + rakeDotDamage * 3;
+                    S.damage = rakeInitialHitDamage + rakeDotDamage * rakeDots;
                 }
 
                 if (S.skillType == PetAttacks.FireBreath)
@@ -732,158 +899,5 @@ namespace Rawr.Hunter
                                                 + calculatedStats.petSpecialDPS 
                                                 + calculatedStats.petKillCommandDPS);
         }
-
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
-        // everything below here is not used and is gradually being removed as it gets re-implemented
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-/*
-
-        private float getRabidProcEffect(double physhit)
-        {
-            if (options.petRabid > 0)
-            {
-                float frequency = 45.0f * (1.0f - character.HunterTalents.Longevity * 0.1f);
-                float uptime = 20.0f / frequency;
-                float targetdodge = (0.05f + (options.TargetLevel - 80) * 0.005f) - character.HunterTalents.AnimalHandler * 0.0125f;
-                float chancetoapply = (float)(0.5f * (physhit - targetdodge));
-                float avgattackstofull = 5 / chancetoapply;
-                float timetofull = (float)(avgattackstofull * specialAttackSpeed);
-
-                float result = 0;
-                if (timetofull > 20)
-                {
-                    result = (float)(specialAttackSpeed * chancetoapply * 0.5f);
-                }
-                else
-                {
-                    result = (timetofull / 20) * 0.125f;
-                    result += ((20 - timetofull) / 20) * 0.25f;
-                }
-                return result;
-            }
-            else
-                return 0.0f;
-        }
-
-        private float getCobraEffect()
-        {
-            if (character.HunterTalents.CobraStrikes > 0)
-            {
-                float procchance = character.HunterTalents.CobraStrikes * 0.2f;
-                float twospecialtime = (float)specialAttackSpeed * 2f;
-                float exp = 0.0f;
-                if (calculatedStats.priorityRotation.containsShot(Shots.ArcaneShot))
-                {
-                    exp += 1.0f / 6.0f;
-                }
-                if (calculatedStats.priorityRotation.containsShot(Shots.SteadyShot))
-                {
-                    exp += 1.0f / 2.5f;
-                }
-                float critchance = 0.3566f + statsBuffs.BonusSteadyShotCrit + (character.HunterTalents.SurvivalInstincts * 0.02f);
-                float basecrit = 1 - (1 - critchance * procchance);
-                return (float)Math.Pow(basecrit , critchance) * twospecialtime;
-            }
-            else
-                return 0.0f;
-        }
- 
-        private double getFeedingFrenzyEffect()
-        {
-            return (options.petFeedingFrenzy * 0.08) * 0.35f;
-        }
-
-        private double getGlancingBlows()
-        {
-            int diff = 400 - (options.TargetLevel * 5);
-            if (diff < 0)
-                diff = 0;
-            double chance = 0.0f;
-            if (diff >= 15)
-                chance = 0.25;
-            else
-                chance = (diff * 0.01) + 0.1f;
-
-            double lowEnd = 1.3 - 0.05 * diff;
-            if (lowEnd > 0.91)
-                lowEnd = 0.91;
-            double hiEnd = 1.2 * 0.03 * diff;
-            if (hiEnd > 0.99)
-                hiEnd = 0.99;
-            double avgDamage = lowEnd + hiEnd / 2;
-            return 1 - (chance * (1 - avgDamage));
-        }
-
-        public double getT7Bonus()
-        {
-            int i = 0;
-
-            if (character._head != null && character._chest != null && character._legs != null && character._shoulders != null && character._hands != null)
-            {
-
-                if (character._head.Contains("Cryptstalker Battlegear"))
-                    i++;
-
-                if (character._chest.Contains("Cryptstalker Battlegear"))
-                    i++;
-
-                if (character._legs.Contains("Cryptstalker Battlegear"))
-                    i++;
-
-                if (character._shoulders.Contains("Cryptstalker Battlegear"))
-                    i++;
-
-                if (character._hands.Contains("Cryptstalker Battlegear"))
-                    i++;
-
-                if (i >= 2)
-                    return 0.05f;
-                else
-                    return 0.0f;
-            }
-            else
-                return 0.0f;
-        }
-
-        public int getT8Bonus()
-        {
-            int i = 0;
-
-            if (character._head != null && character._chest != null && character._legs != null && character._shoulders != null && character._hands != null)
-            {
-
-                if (character._head.Contains("Scourgestalker Battlegear"))
-                    i++;
-
-                if (character._chest.Contains("Scourgestalker Battlegear"))
-                    i++;
-
-                if (character._legs.Contains("Scourgestalker Battlegear"))
-                    i++;
-
-                if (character._shoulders.Contains("Scourgestalker Battlegear"))
-                    i++;
-
-                if (character._hands.Contains("Scourgestalker Battlegear"))
-                    i++;
-
-                //only procs if steady shot is being used
-                if (calculatedStats.priorityRotation.containsShot(Shots.SteadyShot) && i >= 4)
-                    //15s duration of 600AP 45s cooldown = ~33.33%uptime = 200AP average for hunter = 44AP average for pet
-                    return 44;
-                else
-                    return 0;
-            }
-            else
-                return 0;
-        }
-        */
     }
 }

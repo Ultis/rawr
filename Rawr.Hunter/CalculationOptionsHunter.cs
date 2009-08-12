@@ -35,7 +35,9 @@ namespace Rawr.Hunter
         public bool useKillCommand = true;
         public Aspect selectedAspect = Aspect.Dragonhawk;
         public AspectUsage aspectUsage = AspectUsage.ViperToOOM;
+        public HeroismUsage heroismUsage = HeroismUsage.Once;
         public PetHappiness petHappiness = PetHappiness.Happy;
+        public int petLevel = 80;
 
         // NOTE: setting this to true does 'bad' uptime calculations,
         // to help match the spread sheet. if a fight last 10 seconds

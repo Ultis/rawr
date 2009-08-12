@@ -150,12 +150,18 @@ namespace Rawr.Hunter
         {
             CalculateSkillData();
 
+            double crittableInverseSum = 0;
+
             PetSkillInstance PrevSkill = null;
             foreach (PetSkillInstance S in skills)
             {
                 S.CalculateTimings(PrevSkill);
                 PrevSkill = S;
+
+                crittableInverseSum += S.crittable_freq > 0 ? 1 / S.crittable_freq : 0;
             }
+
+            petSpecialFrequency = crittableInverseSum > 0 ? 1 / crittableInverseSum : 0;
         }
 
         private void CalculateSkillData()
@@ -189,17 +195,13 @@ namespace Rawr.Hunter
         public void calculateDPS()
         {
             dps = 0;
-            double crittableInverseSum = 0;
+            kc_dps = 0;
 
             foreach (PetSkillInstance S in skills)
             {
                 dps += S.dps;
                 kc_dps += S.kc_dps;
-
-                crittableInverseSum += S.crittable_freq > 0 ? 1 / S.crittable_freq : 0;
             }
-
-            petSpecialFrequency = crittableInverseSum > 0 ? 1 / crittableInverseSum : 0;
         }
 
         public double getSkillFrequency(PetAttacks skill)

@@ -28,20 +28,27 @@ namespace Rawr.Hunter
         public double petSpellHit { get; set; }
         public double petTargetDodge { get; set; }
         public double ferociousInspirationDamageAdjust { get; set; }
+        public double petCritMelee { get; set; }
+        public double petCritSpecials { get; set; }
         #endregion
 
         #region Debuffs
+        public double targetDebuffsCrit { get; set; }
         public double targetDebuffsArmor { get; set; }
         public double targetDebuffsNature { get; set; }
         #endregion
 
         #region Haste Stats
+        public double hasteFromHeroism { get; set; }
         public double hasteFromTalentsStatic { get; set; }
+        public double hasteFromRapidFire { get; set; }
         public double hasteFromProcs { get; set; }
         public double hasteFromBase { get; set; }
    		public double hasteFromRating { get; set; }
    		public double hasteFromRangedBuffs { get; set; }
         public double hasteFromRacial { get; set; }
+        public double hasteStaticTotal { get; set; }
+        public double hasteDynamicTotal { get; set; }
         public double hasteEffectsTotal { get; set; }
         #endregion   		
    		
@@ -110,7 +117,7 @@ namespace Rawr.Hunter
         public ShotData immolationTrap = new ShotData(Shots.ImmolationTrap, false, true);
         public ShotData chimeraShot = new ShotData(Shots.ChimeraShot, true, true);
         public ShotData rapidFire = new ShotData(Shots.RapidFire, false, false);
-        public ShotData readiness = new ShotData(Shots.Readiness, false, false);
+        public ShotData readiness = new ShotData(Shots.Readiness, false, true);
         public ShotData beastialWrath = new ShotData(Shots.BeastialWrath, false, false);
         public ShotData bloodFury = new ShotData(Shots.BloodFury, false, false);
         public ShotData berserk = new ShotData(Shots.Berserk, false, false);
@@ -145,6 +152,7 @@ namespace Rawr.Hunter
         public double aspectUptimeBeast { get; set; }
         public double aspectBeastLostDPS { get; set; }
         public double aspectViperPenalty { get; set; }
+        public double aspectBonusAPBeast { get; set; }
         #endregion
 
         #region Final Hunter DPS stats
@@ -223,14 +231,17 @@ namespace Rawr.Hunter
 			dictValues.Add("Hit Rating", BasicStats.HitRating.ToString("F0"));
             dictValues.Add("Armor Penetration", BasicStats.ArmorPenetrationRating.ToString() +
                             "* Enemy's Damage Reduction from armor: " + damageReductionFromArmor.ToString("P2"));
-			dictValues.Add("Haste", hasteEffectsTotal.ToString("P2")+ "*includes: \n"+
-			               hasteFromBase.ToString("F2") + "% from quiver\n" +
-                           hasteFromRacial.ToString("F2") + " % from racial\n" + 
-			               hasteFromTalentsStatic.ToString("F2") +" % from talents\n"+ 
-			               hasteFromProcs.ToString("F2") +" % from procs\n"+ 
-			               hasteFromRating.ToString("F2") +" % from "+BasicStats.HasteRating.ToString("F0")+ " haste rating\n"+ 
-			               hasteFromRangedBuffs.ToString("F2") +" % from buffs");
-			dictValues.Add("Mana Per Second", manaRegenTotal.ToString("F2")+"*includes:\n" +
+            dictValues.Add("Static Haste", hasteStaticTotal.ToString("P2")+ "*includes: \n"+
+			               hasteFromBase.ToString("P2") + " from quiver\n" +
+                           hasteFromRating.ToString("P2") + " from " + BasicStats.HasteRating.ToString("F0") + " gear haste rating\n" +
+                           hasteFromTalentsStatic.ToString("P2") + " from Serpent's Swiftness\n" + 
+			               hasteFromRangedBuffs.ToString("P2") +" from buffs");
+            dictValues.Add("Dynamic Haste", hasteDynamicTotal.ToString("P2") + "*includes: \n" +
+                           hasteFromRapidFire.ToString("P2") + " from rapid fire\n" +
+                           hasteFromRacial.ToString("P2") + " from troll Berserk\n" +
+                           hasteFromHeroism.ToString("P2") + " from Heroism\n" +
+                           hasteFromProcs.ToString("P2") + " from procs");
+			dictValues.Add("Mana Regen Per Second", manaRegenTotal.ToString("F2")+"*includes:\n" +
                            manaRegenGearBuffs.ToString("F2") + " from Gear and Buffs\n"+
                            manaRegenViper.ToString("F2") + " from Aspect of the Viper\n"+
                            manaRegenRoarOfRecovery.ToString("F2") + " from Roar of Recovery\n"+
@@ -281,10 +292,11 @@ namespace Rawr.Hunter
             // Pet Stats						
 			dictValues.Add("Pet Attack Power", pet.petStats.AttackPower.ToString("F0"));
             dictValues.Add("Pet Hit Percentage", pet.petStats.PhysicalHit.ToString("P2"));
-            dictValues.Add("Pet Crit Percentage", pet.petStats.PhysicalCrit.ToString("P2"));
-			dictValues.Add("Pet White DPS", petWhiteDPS.ToString("F2"));
+            dictValues.Add("Pet Melee Crit Percentage", petCritMelee.ToString("P2"));
+            dictValues.Add("Pet Specials Crit Percentage", petCritSpecials.ToString("P2"));
+            dictValues.Add("Pet White DPS", petWhiteDPS.ToString("F2"));
             dictValues.Add("Pet Kill Command DPS", petKillCommandDPS.ToString("F2"));
-            dictValues.Add("Pet Special DPS", petSpecialDPS.ToString("F2"));
+            dictValues.Add("Pet Specials DPS", petSpecialDPS.ToString("F2"));
 
             // Shot Stats
             dictValues.Add("Aimed Shot", aimedShot.formatTooltip());

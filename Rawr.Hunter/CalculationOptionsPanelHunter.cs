@@ -112,6 +112,10 @@ namespace Rawr.Hunter
             if (options.aspectUsage == AspectUsage.ViperToOOM) cmbAspectUsage.SelectedIndex = 1;
             if (options.aspectUsage == AspectUsage.ViperRegen) cmbAspectUsage.SelectedIndex = 2;
 
+            if (options.heroismUsage == HeroismUsage.Repeat) cmbHeroismUsage.SelectedIndex = 0;
+            if (options.heroismUsage == HeroismUsage.Once) cmbHeroismUsage.SelectedIndex = 1;
+            if (options.heroismUsage == HeroismUsage.Never) cmbHeroismUsage.SelectedIndex = 2;
+
             chkUseBeastDuringBW.Checked = options.useBeastDuringBeastialWrath;
             chkEmulateBugs.Checked = options.emulateSpreadsheetBugs;
             chkSpreadsheetUptimes.Checked = options.calculateUptimesLikeSpreadsheet;
@@ -204,9 +208,6 @@ namespace Rawr.Hunter
             cmbPriority9.SelectedIndex = options.PriorityIndex9;
             cmbPriority10.SelectedIndex = options.PriorityIndex10;
             cmbPriorityDefaults.SelectedIndex = 0;
-
-            // TODO: if this ever works, we need to call this *after* the model has been calculated
-            ShotPrioritiesStatusUpdate(); 
 
             loadingOptions = false;
         }
@@ -342,6 +343,8 @@ namespace Rawr.Hunter
             comboBoxPet1.Items.Clear();
             comboBoxPet1.Items.Add(PetAttacks.None);
 
+            int family_mod = 0;
+
             if (options.PetFamily != PetFamily.None)
             {
                 comboBoxPet1.Items.Add(PetAttacks.Growl);
@@ -349,7 +352,11 @@ namespace Rawr.Hunter
 
                 foreach (PetAttacks A in familyList)
                 {
-                    if (A != PetAttacks.None)
+                    if (A == PetAttacks.None)
+                    {
+                        family_mod++;
+                    }
+                    else
                     {
                         comboBoxPet1.Items.Add(A);
                     }
@@ -400,7 +407,7 @@ namespace Rawr.Hunter
 
             if (options.PetFamily != PetFamily.None)
             {
-                comboBoxPet1.SelectedIndex = 6; // family skill 1
+                comboBoxPet1.SelectedIndex = 6 - family_mod; // family skill 1
                 comboBoxPet2.SelectedIndex = 3; // focus dump
             }
             else
@@ -504,7 +511,6 @@ namespace Rawr.Hunter
             cmbPriorityDefaults.SelectedIndex = 0;
 
             Character.OnCalculationsInvalidated();
-            ShotPrioritiesStatusUpdate();
         }
 
         private void cmbPriorityDefaults_SelectedIndexChanged(object sender, EventArgs e)
@@ -571,22 +577,6 @@ namespace Rawr.Hunter
             options.PriorityIndex10 = cmbPriority10.SelectedIndex;
 
             Character.OnCalculationsInvalidated();
-            ShotPrioritiesStatusUpdate();
-        }
-
-        private void ShotPrioritiesStatusUpdate()
-        {
-            //TODO: get the status of this shot in the rotation
-            lblPriStatus1.Text = "";
-            lblPriStatus2.Text = "";
-            lblPriStatus3.Text = "";
-            lblPriStatus4.Text = "";
-            lblPriStatus5.Text = "";
-            lblPriStatus6.Text = "";
-            lblPriStatus7.Text = "";
-            lblPriStatus8.Text = "";
-            lblPriStatus9.Text = "";
-            lblPriStatus10.Text = "";
         }
 
         private void initTalentValues(ComboBox cmbBox, int max)
@@ -1011,6 +1001,20 @@ namespace Rawr.Hunter
             if (loadingOptions) return;
             options.calculateUptimesLikeSpreadsheet = chkSpreadsheetUptimes.Checked;
             Character.OnCalculationsInvalidated();
+        }
+
+        private void cmbHeroismUsage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (loadingOptions) return;
+            if (cmbHeroismUsage.SelectedIndex == 0) options.heroismUsage = HeroismUsage.Repeat;
+            if (cmbHeroismUsage.SelectedIndex == 1) options.heroismUsage = HeroismUsage.Once;
+            if (cmbHeroismUsage.SelectedIndex == 2) options.heroismUsage = HeroismUsage.Never;
+            Character.OnCalculationsInvalidated();            
+        }
+
+        private void CalculationOptionsPanelHunter_Resize(object sender, EventArgs e)
+        {
+            tabControl1.Height = tabControl1.Parent.Height - 5;
         }
 
     }

@@ -179,6 +179,13 @@ namespace Rawr.Hunter
         ViperRegen
     }
 
+    public enum HeroismUsage
+    {
+        Repeat,
+        Once,
+        Never
+    }
+
     public enum PetHappiness
     {
         Happy,

@@ -29,6 +29,47 @@
         private void InitializeComponent()
         {
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.grpTalentsFerocity = new System.Windows.Forms.GroupBox();
+            this.cmbFerocityWildHunt = new System.Windows.Forms.ComboBox();
+            this.label57 = new System.Windows.Forms.Label();
+            this.cmbFerocitySharkAttack = new System.Windows.Forms.ComboBox();
+            this.label59 = new System.Windows.Forms.Label();
+            this.cmbFerocityLickYourWounds = new System.Windows.Forms.ComboBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.cmbFerocityCallOfTheWild = new System.Windows.Forms.ComboBox();
+            this.label55 = new System.Windows.Forms.Label();
+            this.cmbFerocityRabid = new System.Windows.Forms.ComboBox();
+            this.label56 = new System.Windows.Forms.Label();
+            this.cmbFerocityGreatResistance = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.cmbFerocitySpidersBite = new System.Windows.Forms.ComboBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.cmbFerocityHeartOfThePhoenix = new System.Windows.Forms.ComboBox();
+            this.label53 = new System.Windows.Forms.Label();
+            this.cmbFerocityChargeSwoop = new System.Windows.Forms.ComboBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.cmbFerocityLionhearted = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.cmbFerocityAvoidance = new System.Windows.Forms.ComboBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.cmbFerocityBoarsSpeed = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cmbFerocitySpikedCollar = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.cmbFerocityBloodthirsty = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.cmbFerocityImprovedCower = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.cmbFerocityNaturalArmor = new System.Windows.Forms.ComboBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.cmbFerocityGreatStamina = new System.Windows.Forms.ComboBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.cmbFerocityDiveDash = new System.Windows.Forms.ComboBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.cmbFerocityCobraReflexes = new System.Windows.Forms.ComboBox();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.comboPetFamily = new System.Windows.Forms.ComboBox();
             this.grpTalentsCunning = new System.Windows.Forms.GroupBox();
             this.cmbCunningRoarOfSacrifice = new System.Windows.Forms.ComboBox();
             this.label50 = new System.Windows.Forms.Label();
@@ -111,49 +152,10 @@
             this.label76 = new System.Windows.Forms.Label();
             this.cmbTenacityCobraReflexes = new System.Windows.Forms.ComboBox();
             this.label77 = new System.Windows.Forms.Label();
-            this.grpTalentsFerocity = new System.Windows.Forms.GroupBox();
-            this.cmbFerocityWildHunt = new System.Windows.Forms.ComboBox();
-            this.label57 = new System.Windows.Forms.Label();
-            this.cmbFerocitySharkAttack = new System.Windows.Forms.ComboBox();
-            this.label59 = new System.Windows.Forms.Label();
-            this.cmbFerocityLickYourWounds = new System.Windows.Forms.ComboBox();
-            this.label54 = new System.Windows.Forms.Label();
-            this.cmbFerocityCallOfTheWild = new System.Windows.Forms.ComboBox();
-            this.label55 = new System.Windows.Forms.Label();
-            this.cmbFerocityRabid = new System.Windows.Forms.ComboBox();
-            this.label56 = new System.Windows.Forms.Label();
-            this.cmbFerocityGreatResistance = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.cmbFerocitySpidersBite = new System.Windows.Forms.ComboBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.cmbFerocityHeartOfThePhoenix = new System.Windows.Forms.ComboBox();
-            this.label53 = new System.Windows.Forms.Label();
-            this.cmbFerocityChargeSwoop = new System.Windows.Forms.ComboBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.cmbFerocityLionhearted = new System.Windows.Forms.ComboBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.cmbFerocityAvoidance = new System.Windows.Forms.ComboBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.cmbFerocityBoarsSpeed = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.cmbFerocitySpikedCollar = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.cmbFerocityBloodthirsty = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.cmbFerocityImprovedCower = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.cmbFerocityNaturalArmor = new System.Windows.Forms.ComboBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.cmbFerocityGreatStamina = new System.Windows.Forms.ComboBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.cmbFerocityDiveDash = new System.Windows.Forms.ComboBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.cmbFerocityCobraReflexes = new System.Windows.Forms.ComboBox();
-            this.label52 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboPetFamily = new System.Windows.Forms.ComboBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label86 = new System.Windows.Forms.Label();
+            this.cmbHeroismUsage = new System.Windows.Forms.ComboBox();
             this.chkSpreadsheetUptimes = new System.Windows.Forms.CheckBox();
             this.chkEmulateBugs = new System.Windows.Forms.CheckBox();
             this.chkUseBeastDuringBW = new System.Windows.Forms.CheckBox();
@@ -182,16 +184,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lblPriStatus10 = new System.Windows.Forms.Label();
-            this.lblPriStatus9 = new System.Windows.Forms.Label();
-            this.lblPriStatus8 = new System.Windows.Forms.Label();
-            this.lblPriStatus7 = new System.Windows.Forms.Label();
-            this.lblPriStatus6 = new System.Windows.Forms.Label();
-            this.lblPriStatus5 = new System.Windows.Forms.Label();
-            this.lblPriStatus4 = new System.Windows.Forms.Label();
-            this.lblPriStatus3 = new System.Windows.Forms.Label();
-            this.lblPriStatus2 = new System.Windows.Forms.Label();
-            this.lblPriStatus1 = new System.Windows.Forms.Label();
             this.cmbPriorityDefaults = new System.Windows.Forms.ComboBox();
             this.label31 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
@@ -214,6 +206,8 @@
             this.cmbPriority2 = new System.Windows.Forms.ComboBox();
             this.cmbPriority1 = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label88 = new System.Windows.Forms.Label();
+            this.label87 = new System.Windows.Forms.Label();
             this.comboBoxPet7 = new System.Windows.Forms.ComboBox();
             this.comboBoxPet6 = new System.Windows.Forms.ComboBox();
             this.label85 = new System.Windows.Forms.Label();
@@ -227,9 +221,9 @@
             this.comboBoxPet2 = new System.Windows.Forms.ComboBox();
             this.comboBoxPet1 = new System.Windows.Forms.ComboBox();
             this.tabPage2.SuspendLayout();
+            this.grpTalentsFerocity.SuspendLayout();
             this.grpTalentsCunning.SuspendLayout();
             this.grpTalentsTenacity.SuspendLayout();
-            this.grpTalentsFerocity.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -247,18 +241,447 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.grpTalentsCunning);
-            this.tabPage2.Controls.Add(this.grpTalentsTenacity);
-            this.tabPage2.Controls.Add(this.grpTalentsFerocity);
+            this.tabPage2.AutoScroll = true;
+            this.tabPage2.AutoScrollMinSize = new System.Drawing.Size(0, 400);
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.comboPetFamily);
+            this.tabPage2.Controls.Add(this.grpTalentsTenacity);
+            this.tabPage2.Controls.Add(this.grpTalentsFerocity);
+            this.tabPage2.Controls.Add(this.grpTalentsCunning);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(292, 531);
+            this.tabPage2.Size = new System.Drawing.Size(292, 647);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Pet Talents";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // grpTalentsFerocity
+            // 
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityWildHunt);
+            this.grpTalentsFerocity.Controls.Add(this.label57);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocitySharkAttack);
+            this.grpTalentsFerocity.Controls.Add(this.label59);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityLickYourWounds);
+            this.grpTalentsFerocity.Controls.Add(this.label54);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityCallOfTheWild);
+            this.grpTalentsFerocity.Controls.Add(this.label55);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityRabid);
+            this.grpTalentsFerocity.Controls.Add(this.label56);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityGreatResistance);
+            this.grpTalentsFerocity.Controls.Add(this.label13);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocitySpidersBite);
+            this.grpTalentsFerocity.Controls.Add(this.label17);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityHeartOfThePhoenix);
+            this.grpTalentsFerocity.Controls.Add(this.label53);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityChargeSwoop);
+            this.grpTalentsFerocity.Controls.Add(this.label14);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityLionhearted);
+            this.grpTalentsFerocity.Controls.Add(this.label15);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityAvoidance);
+            this.grpTalentsFerocity.Controls.Add(this.label16);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityBoarsSpeed);
+            this.grpTalentsFerocity.Controls.Add(this.label5);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocitySpikedCollar);
+            this.grpTalentsFerocity.Controls.Add(this.label6);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityBloodthirsty);
+            this.grpTalentsFerocity.Controls.Add(this.label7);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityImprovedCower);
+            this.grpTalentsFerocity.Controls.Add(this.label12);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityNaturalArmor);
+            this.grpTalentsFerocity.Controls.Add(this.label18);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityGreatStamina);
+            this.grpTalentsFerocity.Controls.Add(this.label19);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityDiveDash);
+            this.grpTalentsFerocity.Controls.Add(this.label20);
+            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityCobraReflexes);
+            this.grpTalentsFerocity.Controls.Add(this.label52);
+            this.grpTalentsFerocity.Location = new System.Drawing.Point(9, 34);
+            this.grpTalentsFerocity.Name = "grpTalentsFerocity";
+            this.grpTalentsFerocity.Size = new System.Drawing.Size(277, 365);
+            this.grpTalentsFerocity.TabIndex = 47;
+            this.grpTalentsFerocity.TabStop = false;
+            this.grpTalentsFerocity.Text = "Ferocity Talents";
+            // 
+            // cmbFerocityWildHunt
+            // 
+            this.cmbFerocityWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityWildHunt.FormattingEnabled = true;
+            this.cmbFerocityWildHunt.Location = new System.Drawing.Point(219, 327);
+            this.cmbFerocityWildHunt.Name = "cmbFerocityWildHunt";
+            this.cmbFerocityWildHunt.Size = new System.Drawing.Size(38, 21);
+            this.cmbFerocityWildHunt.TabIndex = 67;
+            this.cmbFerocityWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(139, 330);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(57, 13);
+            this.label57.TabIndex = 66;
+            this.label57.Text = "Wild Hunt:";
+            // 
+            // cmbFerocitySharkAttack
+            // 
+            this.cmbFerocitySharkAttack.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocitySharkAttack.FormattingEnabled = true;
+            this.cmbFerocitySharkAttack.Location = new System.Drawing.Point(91, 327);
+            this.cmbFerocitySharkAttack.Name = "cmbFerocitySharkAttack";
+            this.cmbFerocitySharkAttack.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocitySharkAttack.TabIndex = 63;
+            this.cmbFerocitySharkAttack.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(9, 330);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(72, 13);
+            this.label59.TabIndex = 62;
+            this.label59.Text = "Shark Attack:";
+            // 
+            // cmbFerocityLickYourWounds
+            // 
+            this.cmbFerocityLickYourWounds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityLickYourWounds.FormattingEnabled = true;
+            this.cmbFerocityLickYourWounds.Location = new System.Drawing.Point(219, 264);
+            this.cmbFerocityLickYourWounds.Name = "cmbFerocityLickYourWounds";
+            this.cmbFerocityLickYourWounds.Size = new System.Drawing.Size(38, 21);
+            this.cmbFerocityLickYourWounds.TabIndex = 61;
+            this.cmbFerocityLickYourWounds.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Location = new System.Drawing.Point(139, 267);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(98, 13);
+            this.label54.TabIndex = 60;
+            this.label54.Text = "Lick Your Wounds:";
+            // 
+            // cmbFerocityCallOfTheWild
+            // 
+            this.cmbFerocityCallOfTheWild.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityCallOfTheWild.FormattingEnabled = true;
+            this.cmbFerocityCallOfTheWild.Location = new System.Drawing.Point(91, 289);
+            this.cmbFerocityCallOfTheWild.Name = "cmbFerocityCallOfTheWild";
+            this.cmbFerocityCallOfTheWild.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocityCallOfTheWild.TabIndex = 59;
+            this.cmbFerocityCallOfTheWild.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Location = new System.Drawing.Point(9, 292);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(81, 13);
+            this.label55.TabIndex = 58;
+            this.label55.Text = "Call of the Wild:";
+            // 
+            // cmbFerocityRabid
+            // 
+            this.cmbFerocityRabid.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityRabid.FormattingEnabled = true;
+            this.cmbFerocityRabid.Location = new System.Drawing.Point(91, 264);
+            this.cmbFerocityRabid.Name = "cmbFerocityRabid";
+            this.cmbFerocityRabid.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocityRabid.TabIndex = 57;
+            this.cmbFerocityRabid.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(9, 267);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(38, 13);
+            this.label56.TabIndex = 56;
+            this.label56.Text = "Rabid:";
+            // 
+            // cmbFerocityGreatResistance
+            // 
+            this.cmbFerocityGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityGreatResistance.FormattingEnabled = true;
+            this.cmbFerocityGreatResistance.Location = new System.Drawing.Point(219, 204);
+            this.cmbFerocityGreatResistance.Name = "cmbFerocityGreatResistance";
+            this.cmbFerocityGreatResistance.Size = new System.Drawing.Size(38, 21);
+            this.cmbFerocityGreatResistance.TabIndex = 55;
+            this.cmbFerocityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(139, 207);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(92, 13);
+            this.label13.TabIndex = 54;
+            this.label13.Text = "Great Resistance:";
+            // 
+            // cmbFerocitySpidersBite
+            // 
+            this.cmbFerocitySpidersBite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocitySpidersBite.FormattingEnabled = true;
+            this.cmbFerocitySpidersBite.Location = new System.Drawing.Point(91, 229);
+            this.cmbFerocitySpidersBite.Name = "cmbFerocitySpidersBite";
+            this.cmbFerocitySpidersBite.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocitySpidersBite.TabIndex = 53;
+            this.cmbFerocitySpidersBite.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(9, 232);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(68, 13);
+            this.label17.TabIndex = 52;
+            this.label17.Text = "Spider\'s Bite:";
+            // 
+            // cmbFerocityHeartOfThePhoenix
+            // 
+            this.cmbFerocityHeartOfThePhoenix.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityHeartOfThePhoenix.FormattingEnabled = true;
+            this.cmbFerocityHeartOfThePhoenix.Location = new System.Drawing.Point(91, 204);
+            this.cmbFerocityHeartOfThePhoenix.Name = "cmbFerocityHeartOfThePhoenix";
+            this.cmbFerocityHeartOfThePhoenix.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocityHeartOfThePhoenix.TabIndex = 51;
+            this.cmbFerocityHeartOfThePhoenix.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(9, 207);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(107, 13);
+            this.label53.TabIndex = 50;
+            this.label53.Text = "Heart of the Phoenix:";
+            // 
+            // cmbFerocityChargeSwoop
+            // 
+            this.cmbFerocityChargeSwoop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityChargeSwoop.FormattingEnabled = true;
+            this.cmbFerocityChargeSwoop.Location = new System.Drawing.Point(219, 142);
+            this.cmbFerocityChargeSwoop.Name = "cmbFerocityChargeSwoop";
+            this.cmbFerocityChargeSwoop.Size = new System.Drawing.Size(38, 21);
+            this.cmbFerocityChargeSwoop.TabIndex = 49;
+            this.cmbFerocityChargeSwoop.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(139, 145);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(82, 13);
+            this.label14.TabIndex = 48;
+            this.label14.Text = "Charge/Swoop:";
+            // 
+            // cmbFerocityLionhearted
+            // 
+            this.cmbFerocityLionhearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityLionhearted.FormattingEnabled = true;
+            this.cmbFerocityLionhearted.Location = new System.Drawing.Point(91, 167);
+            this.cmbFerocityLionhearted.Name = "cmbFerocityLionhearted";
+            this.cmbFerocityLionhearted.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocityLionhearted.TabIndex = 47;
+            this.cmbFerocityLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(9, 170);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(66, 13);
+            this.label15.TabIndex = 46;
+            this.label15.Text = "Lionhearted:";
+            // 
+            // cmbFerocityAvoidance
+            // 
+            this.cmbFerocityAvoidance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityAvoidance.FormattingEnabled = true;
+            this.cmbFerocityAvoidance.Location = new System.Drawing.Point(91, 142);
+            this.cmbFerocityAvoidance.Name = "cmbFerocityAvoidance";
+            this.cmbFerocityAvoidance.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocityAvoidance.TabIndex = 45;
+            this.cmbFerocityAvoidance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(9, 145);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(61, 13);
+            this.label16.TabIndex = 44;
+            this.label16.Text = "Avoidance:";
+            // 
+            // cmbFerocityBoarsSpeed
+            // 
+            this.cmbFerocityBoarsSpeed.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityBoarsSpeed.FormattingEnabled = true;
+            this.cmbFerocityBoarsSpeed.Location = new System.Drawing.Point(219, 107);
+            this.cmbFerocityBoarsSpeed.Name = "cmbFerocityBoarsSpeed";
+            this.cmbFerocityBoarsSpeed.Size = new System.Drawing.Size(38, 21);
+            this.cmbFerocityBoarsSpeed.TabIndex = 43;
+            this.cmbFerocityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(139, 110);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(73, 13);
+            this.label5.TabIndex = 42;
+            this.label5.Text = "Boar\'s Speed:";
+            // 
+            // cmbFerocitySpikedCollar
+            // 
+            this.cmbFerocitySpikedCollar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocitySpikedCollar.FormattingEnabled = true;
+            this.cmbFerocitySpikedCollar.Location = new System.Drawing.Point(219, 82);
+            this.cmbFerocitySpikedCollar.Name = "cmbFerocitySpikedCollar";
+            this.cmbFerocitySpikedCollar.Size = new System.Drawing.Size(38, 21);
+            this.cmbFerocitySpikedCollar.TabIndex = 41;
+            this.cmbFerocitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(139, 85);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(72, 13);
+            this.label6.TabIndex = 40;
+            this.label6.Text = "Spiked Collar:";
+            // 
+            // cmbFerocityBloodthirsty
+            // 
+            this.cmbFerocityBloodthirsty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityBloodthirsty.FormattingEnabled = true;
+            this.cmbFerocityBloodthirsty.Location = new System.Drawing.Point(91, 107);
+            this.cmbFerocityBloodthirsty.Name = "cmbFerocityBloodthirsty";
+            this.cmbFerocityBloodthirsty.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocityBloodthirsty.TabIndex = 39;
+            this.cmbFerocityBloodthirsty.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 110);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(64, 13);
+            this.label7.TabIndex = 38;
+            this.label7.Text = "Bloodthirsty:";
+            // 
+            // cmbFerocityImprovedCower
+            // 
+            this.cmbFerocityImprovedCower.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityImprovedCower.FormattingEnabled = true;
+            this.cmbFerocityImprovedCower.Location = new System.Drawing.Point(91, 82);
+            this.cmbFerocityImprovedCower.Name = "cmbFerocityImprovedCower";
+            this.cmbFerocityImprovedCower.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocityImprovedCower.TabIndex = 37;
+            this.cmbFerocityImprovedCower.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(9, 85);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(87, 13);
+            this.label12.TabIndex = 36;
+            this.label12.Text = "Improved Cower:";
+            // 
+            // cmbFerocityNaturalArmor
+            // 
+            this.cmbFerocityNaturalArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityNaturalArmor.FormattingEnabled = true;
+            this.cmbFerocityNaturalArmor.Location = new System.Drawing.Point(219, 48);
+            this.cmbFerocityNaturalArmor.Name = "cmbFerocityNaturalArmor";
+            this.cmbFerocityNaturalArmor.Size = new System.Drawing.Size(38, 21);
+            this.cmbFerocityNaturalArmor.TabIndex = 35;
+            this.cmbFerocityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(139, 51);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(74, 13);
+            this.label18.TabIndex = 34;
+            this.label18.Text = "Natural Armor:";
+            // 
+            // cmbFerocityGreatStamina
+            // 
+            this.cmbFerocityGreatStamina.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityGreatStamina.FormattingEnabled = true;
+            this.cmbFerocityGreatStamina.Location = new System.Drawing.Point(219, 23);
+            this.cmbFerocityGreatStamina.Name = "cmbFerocityGreatStamina";
+            this.cmbFerocityGreatStamina.Size = new System.Drawing.Size(38, 21);
+            this.cmbFerocityGreatStamina.TabIndex = 33;
+            this.cmbFerocityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(139, 26);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(77, 13);
+            this.label19.TabIndex = 32;
+            this.label19.Text = "Great Stamina:";
+            // 
+            // cmbFerocityDiveDash
+            // 
+            this.cmbFerocityDiveDash.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityDiveDash.FormattingEnabled = true;
+            this.cmbFerocityDiveDash.Location = new System.Drawing.Point(91, 48);
+            this.cmbFerocityDiveDash.Name = "cmbFerocityDiveDash";
+            this.cmbFerocityDiveDash.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocityDiveDash.TabIndex = 31;
+            this.cmbFerocityDiveDash.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(9, 51);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(62, 13);
+            this.label20.TabIndex = 30;
+            this.label20.Text = "Dive/Dash:";
+            // 
+            // cmbFerocityCobraReflexes
+            // 
+            this.cmbFerocityCobraReflexes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFerocityCobraReflexes.FormattingEnabled = true;
+            this.cmbFerocityCobraReflexes.Location = new System.Drawing.Point(91, 23);
+            this.cmbFerocityCobraReflexes.Name = "cmbFerocityCobraReflexes";
+            this.cmbFerocityCobraReflexes.Size = new System.Drawing.Size(36, 21);
+            this.cmbFerocityCobraReflexes.TabIndex = 29;
+            this.cmbFerocityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(9, 26);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(82, 13);
+            this.label52.TabIndex = 28;
+            this.label52.Text = "Cobra Reflexes:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(8, 9);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(58, 13);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "Pet Family:";
+            // 
+            // comboPetFamily
+            // 
+            this.comboPetFamily.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboPetFamily.FormattingEnabled = true;
+            this.comboPetFamily.Location = new System.Drawing.Point(102, 6);
+            this.comboPetFamily.Name = "comboPetFamily";
+            this.comboPetFamily.Size = new System.Drawing.Size(147, 21);
+            this.comboPetFamily.TabIndex = 0;
+            this.comboPetFamily.SelectedIndexChanged += new System.EventHandler(this.comboPetFamily_SelectedIndexChanged);
             // 
             // grpTalentsCunning
             // 
@@ -302,9 +725,9 @@
             this.grpTalentsCunning.Controls.Add(this.label33);
             this.grpTalentsCunning.Controls.Add(this.cmbCunningCorbaReflexes);
             this.grpTalentsCunning.Controls.Add(this.label32);
-            this.grpTalentsCunning.Location = new System.Drawing.Point(6, 34);
+            this.grpTalentsCunning.Location = new System.Drawing.Point(9, 34);
             this.grpTalentsCunning.Name = "grpTalentsCunning";
-            this.grpTalentsCunning.Size = new System.Drawing.Size(280, 355);
+            this.grpTalentsCunning.Size = new System.Drawing.Size(277, 355);
             this.grpTalentsCunning.TabIndex = 42;
             this.grpTalentsCunning.TabStop = false;
             this.grpTalentsCunning.Text = "Cunning Talents";
@@ -731,9 +1154,9 @@
             this.grpTalentsTenacity.Controls.Add(this.label76);
             this.grpTalentsTenacity.Controls.Add(this.cmbTenacityCobraReflexes);
             this.grpTalentsTenacity.Controls.Add(this.label77);
-            this.grpTalentsTenacity.Location = new System.Drawing.Point(6, 34);
+            this.grpTalentsTenacity.Location = new System.Drawing.Point(9, 34);
             this.grpTalentsTenacity.Name = "grpTalentsTenacity";
-            this.grpTalentsTenacity.Size = new System.Drawing.Size(280, 403);
+            this.grpTalentsTenacity.Size = new System.Drawing.Size(277, 355);
             this.grpTalentsTenacity.TabIndex = 46;
             this.grpTalentsTenacity.TabStop = false;
             this.grpTalentsTenacity.Text = "Tenacity Talents";
@@ -745,7 +1168,7 @@
             this.cmbTenacityIntervene.Location = new System.Drawing.Point(224, 272);
             this.cmbTenacityIntervene.Name = "cmbTenacityIntervene";
             this.cmbTenacityIntervene.Size = new System.Drawing.Size(38, 21);
-            this.cmbTenacityIntervene.TabIndex = 109;
+            this.cmbTenacityIntervene.TabIndex = 103;
             this.cmbTenacityIntervene.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
             // label65
@@ -754,7 +1177,7 @@
             this.label65.Location = new System.Drawing.Point(144, 275);
             this.label65.Name = "label65";
             this.label65.Size = new System.Drawing.Size(55, 13);
-            this.label65.TabIndex = 108;
+            this.label65.TabIndex = 102;
             this.label65.Text = "Intervene:";
             // 
             // cmbTenacityThunderstomp
@@ -764,7 +1187,7 @@
             this.cmbTenacityThunderstomp.Location = new System.Drawing.Point(224, 167);
             this.cmbTenacityThunderstomp.Name = "cmbTenacityThunderstomp";
             this.cmbTenacityThunderstomp.Size = new System.Drawing.Size(38, 21);
-            this.cmbTenacityThunderstomp.TabIndex = 107;
+            this.cmbTenacityThunderstomp.TabIndex = 91;
             this.cmbTenacityThunderstomp.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
             // label78
@@ -773,7 +1196,7 @@
             this.label78.Location = new System.Drawing.Point(144, 170);
             this.label78.Name = "label78";
             this.label78.Size = new System.Drawing.Size(78, 13);
-            this.label78.TabIndex = 106;
+            this.label78.TabIndex = 90;
             this.label78.Text = "Thunderstomp:";
             // 
             // cmbTenacityWildHunt
@@ -783,7 +1206,7 @@
             this.cmbTenacityWildHunt.Location = new System.Drawing.Point(224, 310);
             this.cmbTenacityWildHunt.Name = "cmbTenacityWildHunt";
             this.cmbTenacityWildHunt.Size = new System.Drawing.Size(38, 21);
-            this.cmbTenacityWildHunt.TabIndex = 105;
+            this.cmbTenacityWildHunt.TabIndex = 107;
             this.cmbTenacityWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
             // label58
@@ -792,7 +1215,7 @@
             this.label58.Location = new System.Drawing.Point(144, 313);
             this.label58.Name = "label58";
             this.label58.Size = new System.Drawing.Size(57, 13);
-            this.label58.TabIndex = 104;
+            this.label58.TabIndex = 106;
             this.label58.Text = "Wild Hunt:";
             // 
             // cmbTenacitySilverback
@@ -802,7 +1225,7 @@
             this.cmbTenacitySilverback.Location = new System.Drawing.Point(96, 310);
             this.cmbTenacitySilverback.Name = "cmbTenacitySilverback";
             this.cmbTenacitySilverback.Size = new System.Drawing.Size(36, 21);
-            this.cmbTenacitySilverback.TabIndex = 103;
+            this.cmbTenacitySilverback.TabIndex = 105;
             this.cmbTenacitySilverback.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
             // label60
@@ -811,7 +1234,7 @@
             this.label60.Location = new System.Drawing.Point(14, 313);
             this.label60.Name = "label60";
             this.label60.Size = new System.Drawing.Size(60, 13);
-            this.label60.TabIndex = 102;
+            this.label60.TabIndex = 104;
             this.label60.Text = "Silverback:";
             // 
             // cmbTenacityRoarOfSacrifice
@@ -897,7 +1320,7 @@
             this.cmbTenacityGraceOfTheMantis.Location = new System.Drawing.Point(96, 204);
             this.cmbTenacityGraceOfTheMantis.Name = "cmbTenacityGraceOfTheMantis";
             this.cmbTenacityGraceOfTheMantis.Size = new System.Drawing.Size(36, 21);
-            this.cmbTenacityGraceOfTheMantis.TabIndex = 91;
+            this.cmbTenacityGraceOfTheMantis.TabIndex = 93;
             this.cmbTenacityGraceOfTheMantis.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
             // 
             // label66
@@ -906,7 +1329,7 @@
             this.label66.Location = new System.Drawing.Point(14, 207);
             this.label66.Name = "label66";
             this.label66.Size = new System.Drawing.Size(103, 13);
-            this.label66.TabIndex = 90;
+            this.label66.TabIndex = 92;
             this.label66.Text = "Grace of the Mantis:";
             // 
             // cmbTenacityLiohearted
@@ -1118,447 +1541,24 @@
             this.label77.TabIndex = 68;
             this.label77.Text = "Cobra Reflexes:";
             // 
-            // grpTalentsFerocity
-            // 
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityWildHunt);
-            this.grpTalentsFerocity.Controls.Add(this.label57);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocitySharkAttack);
-            this.grpTalentsFerocity.Controls.Add(this.label59);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityLickYourWounds);
-            this.grpTalentsFerocity.Controls.Add(this.label54);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityCallOfTheWild);
-            this.grpTalentsFerocity.Controls.Add(this.label55);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityRabid);
-            this.grpTalentsFerocity.Controls.Add(this.label56);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityGreatResistance);
-            this.grpTalentsFerocity.Controls.Add(this.label13);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocitySpidersBite);
-            this.grpTalentsFerocity.Controls.Add(this.label17);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityHeartOfThePhoenix);
-            this.grpTalentsFerocity.Controls.Add(this.label53);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityChargeSwoop);
-            this.grpTalentsFerocity.Controls.Add(this.label14);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityLionhearted);
-            this.grpTalentsFerocity.Controls.Add(this.label15);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityAvoidance);
-            this.grpTalentsFerocity.Controls.Add(this.label16);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityBoarsSpeed);
-            this.grpTalentsFerocity.Controls.Add(this.label5);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocitySpikedCollar);
-            this.grpTalentsFerocity.Controls.Add(this.label6);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityBloodthirsty);
-            this.grpTalentsFerocity.Controls.Add(this.label7);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityImprovedCower);
-            this.grpTalentsFerocity.Controls.Add(this.label12);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityNaturalArmor);
-            this.grpTalentsFerocity.Controls.Add(this.label18);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityGreatStamina);
-            this.grpTalentsFerocity.Controls.Add(this.label19);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityDiveDash);
-            this.grpTalentsFerocity.Controls.Add(this.label20);
-            this.grpTalentsFerocity.Controls.Add(this.cmbFerocityCobraReflexes);
-            this.grpTalentsFerocity.Controls.Add(this.label52);
-            this.grpTalentsFerocity.Location = new System.Drawing.Point(6, 34);
-            this.grpTalentsFerocity.Name = "grpTalentsFerocity";
-            this.grpTalentsFerocity.Size = new System.Drawing.Size(280, 403);
-            this.grpTalentsFerocity.TabIndex = 47;
-            this.grpTalentsFerocity.TabStop = false;
-            this.grpTalentsFerocity.Text = "Ferocity Talents";
-            // 
-            // cmbFerocityWildHunt
-            // 
-            this.cmbFerocityWildHunt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityWildHunt.FormattingEnabled = true;
-            this.cmbFerocityWildHunt.Location = new System.Drawing.Point(219, 327);
-            this.cmbFerocityWildHunt.Name = "cmbFerocityWildHunt";
-            this.cmbFerocityWildHunt.Size = new System.Drawing.Size(38, 21);
-            this.cmbFerocityWildHunt.TabIndex = 67;
-            this.cmbFerocityWildHunt.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label57
-            // 
-            this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(139, 330);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(57, 13);
-            this.label57.TabIndex = 66;
-            this.label57.Text = "Wild Hunt:";
-            // 
-            // cmbFerocitySharkAttack
-            // 
-            this.cmbFerocitySharkAttack.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocitySharkAttack.FormattingEnabled = true;
-            this.cmbFerocitySharkAttack.Location = new System.Drawing.Point(91, 327);
-            this.cmbFerocitySharkAttack.Name = "cmbFerocitySharkAttack";
-            this.cmbFerocitySharkAttack.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocitySharkAttack.TabIndex = 63;
-            this.cmbFerocitySharkAttack.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label59
-            // 
-            this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(9, 330);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(72, 13);
-            this.label59.TabIndex = 62;
-            this.label59.Text = "Shark Attack:";
-            // 
-            // cmbFerocityLickYourWounds
-            // 
-            this.cmbFerocityLickYourWounds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityLickYourWounds.FormattingEnabled = true;
-            this.cmbFerocityLickYourWounds.Location = new System.Drawing.Point(219, 264);
-            this.cmbFerocityLickYourWounds.Name = "cmbFerocityLickYourWounds";
-            this.cmbFerocityLickYourWounds.Size = new System.Drawing.Size(38, 21);
-            this.cmbFerocityLickYourWounds.TabIndex = 61;
-            this.cmbFerocityLickYourWounds.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(139, 267);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(98, 13);
-            this.label54.TabIndex = 60;
-            this.label54.Text = "Lick Your Wounds:";
-            // 
-            // cmbFerocityCallOfTheWild
-            // 
-            this.cmbFerocityCallOfTheWild.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityCallOfTheWild.FormattingEnabled = true;
-            this.cmbFerocityCallOfTheWild.Location = new System.Drawing.Point(91, 289);
-            this.cmbFerocityCallOfTheWild.Name = "cmbFerocityCallOfTheWild";
-            this.cmbFerocityCallOfTheWild.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocityCallOfTheWild.TabIndex = 59;
-            this.cmbFerocityCallOfTheWild.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label55
-            // 
-            this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(9, 292);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(81, 13);
-            this.label55.TabIndex = 58;
-            this.label55.Text = "Call of the Wild:";
-            // 
-            // cmbFerocityRabid
-            // 
-            this.cmbFerocityRabid.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityRabid.FormattingEnabled = true;
-            this.cmbFerocityRabid.Location = new System.Drawing.Point(91, 264);
-            this.cmbFerocityRabid.Name = "cmbFerocityRabid";
-            this.cmbFerocityRabid.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocityRabid.TabIndex = 57;
-            this.cmbFerocityRabid.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label56
-            // 
-            this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(9, 267);
-            this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(38, 13);
-            this.label56.TabIndex = 56;
-            this.label56.Text = "Rabid:";
-            // 
-            // cmbFerocityGreatResistance
-            // 
-            this.cmbFerocityGreatResistance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityGreatResistance.FormattingEnabled = true;
-            this.cmbFerocityGreatResistance.Location = new System.Drawing.Point(219, 204);
-            this.cmbFerocityGreatResistance.Name = "cmbFerocityGreatResistance";
-            this.cmbFerocityGreatResistance.Size = new System.Drawing.Size(38, 21);
-            this.cmbFerocityGreatResistance.TabIndex = 55;
-            this.cmbFerocityGreatResistance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(139, 207);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(92, 13);
-            this.label13.TabIndex = 54;
-            this.label13.Text = "Great Resistance:";
-            // 
-            // cmbFerocitySpidersBite
-            // 
-            this.cmbFerocitySpidersBite.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocitySpidersBite.FormattingEnabled = true;
-            this.cmbFerocitySpidersBite.Location = new System.Drawing.Point(91, 229);
-            this.cmbFerocitySpidersBite.Name = "cmbFerocitySpidersBite";
-            this.cmbFerocitySpidersBite.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocitySpidersBite.TabIndex = 53;
-            this.cmbFerocitySpidersBite.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(9, 232);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(68, 13);
-            this.label17.TabIndex = 52;
-            this.label17.Text = "Spider\'s Bite:";
-            // 
-            // cmbFerocityHeartOfThePhoenix
-            // 
-            this.cmbFerocityHeartOfThePhoenix.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityHeartOfThePhoenix.FormattingEnabled = true;
-            this.cmbFerocityHeartOfThePhoenix.Location = new System.Drawing.Point(91, 204);
-            this.cmbFerocityHeartOfThePhoenix.Name = "cmbFerocityHeartOfThePhoenix";
-            this.cmbFerocityHeartOfThePhoenix.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocityHeartOfThePhoenix.TabIndex = 51;
-            this.cmbFerocityHeartOfThePhoenix.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.Location = new System.Drawing.Point(9, 207);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(107, 13);
-            this.label53.TabIndex = 50;
-            this.label53.Text = "Heart of the Phoenix:";
-            // 
-            // cmbFerocityChargeSwoop
-            // 
-            this.cmbFerocityChargeSwoop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityChargeSwoop.FormattingEnabled = true;
-            this.cmbFerocityChargeSwoop.Location = new System.Drawing.Point(219, 142);
-            this.cmbFerocityChargeSwoop.Name = "cmbFerocityChargeSwoop";
-            this.cmbFerocityChargeSwoop.Size = new System.Drawing.Size(38, 21);
-            this.cmbFerocityChargeSwoop.TabIndex = 49;
-            this.cmbFerocityChargeSwoop.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(139, 145);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(82, 13);
-            this.label14.TabIndex = 48;
-            this.label14.Text = "Charge/Swoop:";
-            // 
-            // cmbFerocityLionhearted
-            // 
-            this.cmbFerocityLionhearted.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityLionhearted.FormattingEnabled = true;
-            this.cmbFerocityLionhearted.Location = new System.Drawing.Point(91, 167);
-            this.cmbFerocityLionhearted.Name = "cmbFerocityLionhearted";
-            this.cmbFerocityLionhearted.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocityLionhearted.TabIndex = 47;
-            this.cmbFerocityLionhearted.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(9, 170);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(66, 13);
-            this.label15.TabIndex = 46;
-            this.label15.Text = "Lionhearted:";
-            // 
-            // cmbFerocityAvoidance
-            // 
-            this.cmbFerocityAvoidance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityAvoidance.FormattingEnabled = true;
-            this.cmbFerocityAvoidance.Location = new System.Drawing.Point(91, 142);
-            this.cmbFerocityAvoidance.Name = "cmbFerocityAvoidance";
-            this.cmbFerocityAvoidance.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocityAvoidance.TabIndex = 45;
-            this.cmbFerocityAvoidance.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(9, 145);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(61, 13);
-            this.label16.TabIndex = 44;
-            this.label16.Text = "Avoidance:";
-            // 
-            // cmbFerocityBoarsSpeed
-            // 
-            this.cmbFerocityBoarsSpeed.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityBoarsSpeed.FormattingEnabled = true;
-            this.cmbFerocityBoarsSpeed.Location = new System.Drawing.Point(219, 107);
-            this.cmbFerocityBoarsSpeed.Name = "cmbFerocityBoarsSpeed";
-            this.cmbFerocityBoarsSpeed.Size = new System.Drawing.Size(38, 21);
-            this.cmbFerocityBoarsSpeed.TabIndex = 43;
-            this.cmbFerocityBoarsSpeed.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(139, 110);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(73, 13);
-            this.label5.TabIndex = 42;
-            this.label5.Text = "Boar\'s Speed:";
-            // 
-            // cmbFerocitySpikedCollar
-            // 
-            this.cmbFerocitySpikedCollar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocitySpikedCollar.FormattingEnabled = true;
-            this.cmbFerocitySpikedCollar.Location = new System.Drawing.Point(219, 82);
-            this.cmbFerocitySpikedCollar.Name = "cmbFerocitySpikedCollar";
-            this.cmbFerocitySpikedCollar.Size = new System.Drawing.Size(38, 21);
-            this.cmbFerocitySpikedCollar.TabIndex = 41;
-            this.cmbFerocitySpikedCollar.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(139, 85);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(72, 13);
-            this.label6.TabIndex = 40;
-            this.label6.Text = "Spiked Collar:";
-            // 
-            // cmbFerocityBloodthirsty
-            // 
-            this.cmbFerocityBloodthirsty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityBloodthirsty.FormattingEnabled = true;
-            this.cmbFerocityBloodthirsty.Location = new System.Drawing.Point(91, 107);
-            this.cmbFerocityBloodthirsty.Name = "cmbFerocityBloodthirsty";
-            this.cmbFerocityBloodthirsty.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocityBloodthirsty.TabIndex = 39;
-            this.cmbFerocityBloodthirsty.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 110);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(64, 13);
-            this.label7.TabIndex = 38;
-            this.label7.Text = "Bloodthirsty:";
-            // 
-            // cmbFerocityImprovedCower
-            // 
-            this.cmbFerocityImprovedCower.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityImprovedCower.FormattingEnabled = true;
-            this.cmbFerocityImprovedCower.Location = new System.Drawing.Point(91, 82);
-            this.cmbFerocityImprovedCower.Name = "cmbFerocityImprovedCower";
-            this.cmbFerocityImprovedCower.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocityImprovedCower.TabIndex = 37;
-            this.cmbFerocityImprovedCower.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(9, 85);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(87, 13);
-            this.label12.TabIndex = 36;
-            this.label12.Text = "Improved Cower:";
-            // 
-            // cmbFerocityNaturalArmor
-            // 
-            this.cmbFerocityNaturalArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityNaturalArmor.FormattingEnabled = true;
-            this.cmbFerocityNaturalArmor.Location = new System.Drawing.Point(219, 48);
-            this.cmbFerocityNaturalArmor.Name = "cmbFerocityNaturalArmor";
-            this.cmbFerocityNaturalArmor.Size = new System.Drawing.Size(38, 21);
-            this.cmbFerocityNaturalArmor.TabIndex = 35;
-            this.cmbFerocityNaturalArmor.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(139, 51);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(74, 13);
-            this.label18.TabIndex = 34;
-            this.label18.Text = "Natural Armor:";
-            // 
-            // cmbFerocityGreatStamina
-            // 
-            this.cmbFerocityGreatStamina.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityGreatStamina.FormattingEnabled = true;
-            this.cmbFerocityGreatStamina.Location = new System.Drawing.Point(219, 23);
-            this.cmbFerocityGreatStamina.Name = "cmbFerocityGreatStamina";
-            this.cmbFerocityGreatStamina.Size = new System.Drawing.Size(38, 21);
-            this.cmbFerocityGreatStamina.TabIndex = 33;
-            this.cmbFerocityGreatStamina.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(139, 26);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(77, 13);
-            this.label19.TabIndex = 32;
-            this.label19.Text = "Great Stamina:";
-            // 
-            // cmbFerocityDiveDash
-            // 
-            this.cmbFerocityDiveDash.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityDiveDash.FormattingEnabled = true;
-            this.cmbFerocityDiveDash.Location = new System.Drawing.Point(91, 48);
-            this.cmbFerocityDiveDash.Name = "cmbFerocityDiveDash";
-            this.cmbFerocityDiveDash.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocityDiveDash.TabIndex = 31;
-            this.cmbFerocityDiveDash.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(9, 51);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(62, 13);
-            this.label20.TabIndex = 30;
-            this.label20.Text = "Dive/Dash:";
-            // 
-            // cmbFerocityCobraReflexes
-            // 
-            this.cmbFerocityCobraReflexes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFerocityCobraReflexes.FormattingEnabled = true;
-            this.cmbFerocityCobraReflexes.Location = new System.Drawing.Point(91, 23);
-            this.cmbFerocityCobraReflexes.Name = "cmbFerocityCobraReflexes";
-            this.cmbFerocityCobraReflexes.Size = new System.Drawing.Size(36, 21);
-            this.cmbFerocityCobraReflexes.TabIndex = 29;
-            this.cmbFerocityCobraReflexes.SelectedIndexChanged += new System.EventHandler(this.talentComboChanged);
-            // 
-            // label52
-            // 
-            this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(9, 26);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(82, 13);
-            this.label52.TabIndex = 28;
-            this.label52.Text = "Cobra Reflexes:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 9);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 13);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "Pet Family:";
-            // 
-            // comboPetFamily
-            // 
-            this.comboPetFamily.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboPetFamily.FormattingEnabled = true;
-            this.comboPetFamily.Location = new System.Drawing.Point(102, 6);
-            this.comboPetFamily.Name = "comboPetFamily";
-            this.comboPetFamily.Size = new System.Drawing.Size(147, 21);
-            this.comboPetFamily.TabIndex = 0;
-            this.comboPetFamily.SelectedIndexChanged += new System.EventHandler(this.comboPetFamily_SelectedIndexChanged);
-            // 
             // tabPage1
             // 
+            this.tabPage1.AutoScroll = true;
+            this.tabPage1.AutoScrollMinSize = new System.Drawing.Size(0, 400);
             this.tabPage1.Controls.Add(this.groupBox4);
             this.tabPage1.Controls.Add(this.groupBox3);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(292, 531);
+            this.tabPage1.Size = new System.Drawing.Size(292, 647);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Hunter Options";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label86);
+            this.groupBox4.Controls.Add(this.cmbHeroismUsage);
             this.groupBox4.Controls.Add(this.chkSpreadsheetUptimes);
             this.groupBox4.Controls.Add(this.chkEmulateBugs);
             this.groupBox4.Controls.Add(this.chkUseBeastDuringBW);
@@ -1570,18 +1570,41 @@
             this.groupBox4.Controls.Add(this.cmbManaPotion);
             this.groupBox4.Location = new System.Drawing.Point(9, 255);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(277, 201);
+            this.groupBox4.Size = new System.Drawing.Size(277, 237);
             this.groupBox4.TabIndex = 19;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Hunter Settings";
             // 
+            // label86
+            // 
+            this.label86.AutoSize = true;
+            this.label86.Location = new System.Drawing.Point(15, 103);
+            this.label86.Name = "label86";
+            this.label86.Size = new System.Drawing.Size(82, 13);
+            this.label86.TabIndex = 6;
+            this.label86.Text = "Heroism Usage:";
+            // 
+            // cmbHeroismUsage
+            // 
+            this.cmbHeroismUsage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbHeroismUsage.FormattingEnabled = true;
+            this.cmbHeroismUsage.Items.AddRange(new object[] {
+            "Spammed",
+            "Once",
+            "Never"});
+            this.cmbHeroismUsage.Location = new System.Drawing.Point(128, 100);
+            this.cmbHeroismUsage.Name = "cmbHeroismUsage";
+            this.cmbHeroismUsage.Size = new System.Drawing.Size(131, 21);
+            this.cmbHeroismUsage.TabIndex = 7;
+            this.cmbHeroismUsage.SelectedIndexChanged += new System.EventHandler(this.cmbHeroismUsage_SelectedIndexChanged);
+            // 
             // chkSpreadsheetUptimes
             // 
             this.chkSpreadsheetUptimes.AutoSize = true;
-            this.chkSpreadsheetUptimes.Location = new System.Drawing.Point(18, 173);
+            this.chkSpreadsheetUptimes.Location = new System.Drawing.Point(18, 206);
             this.chkSpreadsheetUptimes.Name = "chkSpreadsheetUptimes";
             this.chkSpreadsheetUptimes.Size = new System.Drawing.Size(199, 17);
-            this.chkSpreadsheetUptimes.TabIndex = 8;
+            this.chkSpreadsheetUptimes.TabIndex = 10;
             this.chkSpreadsheetUptimes.Text = "Use spreadsheet uptime calculations";
             this.chkSpreadsheetUptimes.UseVisualStyleBackColor = true;
             this.chkSpreadsheetUptimes.CheckedChanged += new System.EventHandler(this.chkSpreadsheetUptimes_CheckedChanged);
@@ -1589,10 +1612,10 @@
             // chkEmulateBugs
             // 
             this.chkEmulateBugs.AutoSize = true;
-            this.chkEmulateBugs.Location = new System.Drawing.Point(18, 150);
+            this.chkEmulateBugs.Location = new System.Drawing.Point(18, 183);
             this.chkEmulateBugs.Name = "chkEmulateBugs";
             this.chkEmulateBugs.Size = new System.Drawing.Size(218, 17);
-            this.chkEmulateBugs.TabIndex = 7;
+            this.chkEmulateBugs.TabIndex = 9;
             this.chkEmulateBugs.Text = "Emulate known bugs in spreadsheet 91a";
             this.chkEmulateBugs.UseVisualStyleBackColor = true;
             this.chkEmulateBugs.CheckedChanged += new System.EventHandler(this.chkEmulateBugs_CheckedChanged);
@@ -1600,10 +1623,10 @@
             // chkUseBeastDuringBW
             // 
             this.chkUseBeastDuringBW.AutoSize = true;
-            this.chkUseBeastDuringBW.Location = new System.Drawing.Point(18, 113);
+            this.chkUseBeastDuringBW.Location = new System.Drawing.Point(18, 146);
             this.chkUseBeastDuringBW.Name = "chkUseBeastDuringBW";
             this.chkUseBeastDuringBW.Size = new System.Drawing.Size(245, 17);
-            this.chkUseBeastDuringBW.TabIndex = 6;
+            this.chkUseBeastDuringBW.TabIndex = 8;
             this.chkUseBeastDuringBW.Text = "Use Aspect of the Beast during Beastial Wrath";
             this.chkUseBeastDuringBW.UseVisualStyleBackColor = true;
             this.chkUseBeastDuringBW.CheckedChanged += new System.EventHandler(this.chkUseBeastDuringBW_CheckedChanged);
@@ -1614,7 +1637,7 @@
             this.label84.Location = new System.Drawing.Point(15, 76);
             this.label84.Name = "label84";
             this.label84.Size = new System.Drawing.Size(68, 13);
-            this.label84.TabIndex = 5;
+            this.label84.TabIndex = 4;
             this.label84.Text = "Viper Usage:";
             // 
             // cmbAspectUsage
@@ -1628,7 +1651,7 @@
             this.cmbAspectUsage.Location = new System.Drawing.Point(128, 73);
             this.cmbAspectUsage.Name = "cmbAspectUsage";
             this.cmbAspectUsage.Size = new System.Drawing.Size(131, 21);
-            this.cmbAspectUsage.TabIndex = 4;
+            this.cmbAspectUsage.TabIndex = 5;
             this.cmbAspectUsage.SelectedIndexChanged += new System.EventHandler(this.cmbAspectUsage_SelectedIndexChanged);
             // 
             // label83
@@ -1637,7 +1660,7 @@
             this.label83.Location = new System.Drawing.Point(15, 49);
             this.label83.Name = "label83";
             this.label83.Size = new System.Drawing.Size(43, 13);
-            this.label83.TabIndex = 3;
+            this.label83.TabIndex = 2;
             this.label83.Text = "Aspect:";
             // 
             // cmbAspect
@@ -1654,7 +1677,7 @@
             this.cmbAspect.Location = new System.Drawing.Point(128, 46);
             this.cmbAspect.Name = "cmbAspect";
             this.cmbAspect.Size = new System.Drawing.Size(131, 21);
-            this.cmbAspect.TabIndex = 2;
+            this.cmbAspect.TabIndex = 3;
             this.cmbAspect.SelectedIndexChanged += new System.EventHandler(this.cmbAspect_SelectedIndexChanged);
             // 
             // label82
@@ -1663,7 +1686,7 @@
             this.label82.Location = new System.Drawing.Point(15, 22);
             this.label82.Name = "label82";
             this.label82.Size = new System.Drawing.Size(92, 13);
-            this.label82.TabIndex = 1;
+            this.label82.TabIndex = 0;
             this.label82.Text = "Use Mana Potion:";
             // 
             // cmbManaPotion
@@ -1677,7 +1700,7 @@
             this.cmbManaPotion.Location = new System.Drawing.Point(128, 19);
             this.cmbManaPotion.Name = "cmbManaPotion";
             this.cmbManaPotion.Size = new System.Drawing.Size(131, 21);
-            this.cmbManaPotion.TabIndex = 0;
+            this.cmbManaPotion.TabIndex = 1;
             this.cmbManaPotion.SelectedIndexChanged += new System.EventHandler(this.cmbManaPotion_SelectedIndexChanged);
             // 
             // groupBox3
@@ -1929,34 +1952,26 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 5);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(300, 557);
+            this.tabControl1.Size = new System.Drawing.Size(300, 673);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
-            this.tabControl1.TabIndex = 48;
+            this.tabControl1.TabIndex = 0;
             // 
             // tabPage3
             // 
+            this.tabPage3.AutoScroll = true;
+            this.tabPage3.AutoScrollMinSize = new System.Drawing.Size(0, 400);
             this.tabPage3.Controls.Add(this.groupBox2);
             this.tabPage3.Controls.Add(this.groupBox1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(292, 531);
+            this.tabPage3.Size = new System.Drawing.Size(292, 647);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Rotations";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.lblPriStatus10);
-            this.groupBox2.Controls.Add(this.lblPriStatus9);
-            this.groupBox2.Controls.Add(this.lblPriStatus8);
-            this.groupBox2.Controls.Add(this.lblPriStatus7);
-            this.groupBox2.Controls.Add(this.lblPriStatus6);
-            this.groupBox2.Controls.Add(this.lblPriStatus5);
-            this.groupBox2.Controls.Add(this.lblPriStatus4);
-            this.groupBox2.Controls.Add(this.lblPriStatus3);
-            this.groupBox2.Controls.Add(this.lblPriStatus2);
-            this.groupBox2.Controls.Add(this.lblPriStatus1);
             this.groupBox2.Controls.Add(this.cmbPriorityDefaults);
             this.groupBox2.Controls.Add(this.label31);
             this.groupBox2.Controls.Add(this.label30);
@@ -1980,100 +1995,10 @@
             this.groupBox2.Controls.Add(this.cmbPriority1);
             this.groupBox2.Location = new System.Drawing.Point(9, 11);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(277, 333);
-            this.groupBox2.TabIndex = 40;
+            this.groupBox2.Size = new System.Drawing.Size(259, 333);
+            this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Hunter Shot Priority";
-            // 
-            // lblPriStatus10
-            // 
-            this.lblPriStatus10.AutoSize = true;
-            this.lblPriStatus10.Location = new System.Drawing.Point(209, 302);
-            this.lblPriStatus10.Name = "lblPriStatus10";
-            this.lblPriStatus10.Size = new System.Drawing.Size(43, 13);
-            this.lblPriStatus10.TabIndex = 50;
-            this.lblPriStatus10.Text = "*status*";
-            // 
-            // lblPriStatus9
-            // 
-            this.lblPriStatus9.AutoSize = true;
-            this.lblPriStatus9.Location = new System.Drawing.Point(209, 275);
-            this.lblPriStatus9.Name = "lblPriStatus9";
-            this.lblPriStatus9.Size = new System.Drawing.Size(43, 13);
-            this.lblPriStatus9.TabIndex = 49;
-            this.lblPriStatus9.Text = "*status*";
-            // 
-            // lblPriStatus8
-            // 
-            this.lblPriStatus8.AutoSize = true;
-            this.lblPriStatus8.Location = new System.Drawing.Point(209, 248);
-            this.lblPriStatus8.Name = "lblPriStatus8";
-            this.lblPriStatus8.Size = new System.Drawing.Size(43, 13);
-            this.lblPriStatus8.TabIndex = 48;
-            this.lblPriStatus8.Text = "*status*";
-            // 
-            // lblPriStatus7
-            // 
-            this.lblPriStatus7.AutoSize = true;
-            this.lblPriStatus7.Location = new System.Drawing.Point(209, 221);
-            this.lblPriStatus7.Name = "lblPriStatus7";
-            this.lblPriStatus7.Size = new System.Drawing.Size(43, 13);
-            this.lblPriStatus7.TabIndex = 47;
-            this.lblPriStatus7.Text = "*status*";
-            // 
-            // lblPriStatus6
-            // 
-            this.lblPriStatus6.AutoSize = true;
-            this.lblPriStatus6.Location = new System.Drawing.Point(209, 194);
-            this.lblPriStatus6.Name = "lblPriStatus6";
-            this.lblPriStatus6.Size = new System.Drawing.Size(43, 13);
-            this.lblPriStatus6.TabIndex = 46;
-            this.lblPriStatus6.Text = "*status*";
-            // 
-            // lblPriStatus5
-            // 
-            this.lblPriStatus5.AutoSize = true;
-            this.lblPriStatus5.Location = new System.Drawing.Point(209, 167);
-            this.lblPriStatus5.Name = "lblPriStatus5";
-            this.lblPriStatus5.Size = new System.Drawing.Size(43, 13);
-            this.lblPriStatus5.TabIndex = 45;
-            this.lblPriStatus5.Text = "*status*";
-            // 
-            // lblPriStatus4
-            // 
-            this.lblPriStatus4.AutoSize = true;
-            this.lblPriStatus4.Location = new System.Drawing.Point(209, 140);
-            this.lblPriStatus4.Name = "lblPriStatus4";
-            this.lblPriStatus4.Size = new System.Drawing.Size(43, 13);
-            this.lblPriStatus4.TabIndex = 44;
-            this.lblPriStatus4.Text = "*status*";
-            // 
-            // lblPriStatus3
-            // 
-            this.lblPriStatus3.AutoSize = true;
-            this.lblPriStatus3.Location = new System.Drawing.Point(209, 113);
-            this.lblPriStatus3.Name = "lblPriStatus3";
-            this.lblPriStatus3.Size = new System.Drawing.Size(43, 13);
-            this.lblPriStatus3.TabIndex = 43;
-            this.lblPriStatus3.Text = "*status*";
-            // 
-            // lblPriStatus2
-            // 
-            this.lblPriStatus2.AutoSize = true;
-            this.lblPriStatus2.Location = new System.Drawing.Point(209, 86);
-            this.lblPriStatus2.Name = "lblPriStatus2";
-            this.lblPriStatus2.Size = new System.Drawing.Size(43, 13);
-            this.lblPriStatus2.TabIndex = 42;
-            this.lblPriStatus2.Text = "*status*";
-            // 
-            // lblPriStatus1
-            // 
-            this.lblPriStatus1.AutoSize = true;
-            this.lblPriStatus1.Location = new System.Drawing.Point(209, 59);
-            this.lblPriStatus1.Name = "lblPriStatus1";
-            this.lblPriStatus1.Size = new System.Drawing.Size(43, 13);
-            this.lblPriStatus1.TabIndex = 41;
-            this.lblPriStatus1.Text = "*status*";
             // 
             // cmbPriorityDefaults
             // 
@@ -2085,204 +2010,206 @@
             "Beast Master",
             "Marksman",
             "Survival"});
-            this.cmbPriorityDefaults.Location = new System.Drawing.Point(9, 20);
+            this.cmbPriorityDefaults.Location = new System.Drawing.Point(15, 20);
             this.cmbPriorityDefaults.Name = "cmbPriorityDefaults";
-            this.cmbPriorityDefaults.Size = new System.Drawing.Size(262, 21);
-            this.cmbPriorityDefaults.TabIndex = 40;
+            this.cmbPriorityDefaults.Size = new System.Drawing.Size(226, 21);
+            this.cmbPriorityDefaults.TabIndex = 0;
             this.cmbPriorityDefaults.SelectedIndexChanged += new System.EventHandler(this.cmbPriorityDefaults_SelectedIndexChanged);
             // 
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(6, 302);
+            this.label31.Location = new System.Drawing.Point(29, 293);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(56, 13);
-            this.label31.TabIndex = 39;
+            this.label31.TabIndex = 19;
             this.label31.Text = "Priority 10:";
             // 
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(6, 275);
+            this.label30.Location = new System.Drawing.Point(29, 266);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(50, 13);
-            this.label30.TabIndex = 38;
+            this.label30.TabIndex = 17;
             this.label30.Text = "Priority 9:";
             // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(6, 248);
+            this.label29.Location = new System.Drawing.Point(29, 239);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(50, 13);
-            this.label29.TabIndex = 37;
+            this.label29.TabIndex = 15;
             this.label29.Text = "Priority 8:";
             // 
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(6, 221);
+            this.label28.Location = new System.Drawing.Point(29, 212);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(50, 13);
-            this.label28.TabIndex = 36;
+            this.label28.TabIndex = 13;
             this.label28.Text = "Priority 7:";
             // 
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(6, 194);
+            this.label27.Location = new System.Drawing.Point(29, 185);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(50, 13);
-            this.label27.TabIndex = 35;
+            this.label27.TabIndex = 11;
             this.label27.Text = "Priority 6:";
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(6, 167);
+            this.label26.Location = new System.Drawing.Point(29, 158);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(50, 13);
-            this.label26.TabIndex = 34;
+            this.label26.TabIndex = 9;
             this.label26.Text = "Priority 5:";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 140);
+            this.label10.Location = new System.Drawing.Point(29, 131);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(50, 13);
-            this.label10.TabIndex = 33;
+            this.label10.TabIndex = 7;
             this.label10.Text = "Priority 4:";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 113);
+            this.label9.Location = new System.Drawing.Point(29, 104);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(50, 13);
-            this.label9.TabIndex = 32;
+            this.label9.TabIndex = 5;
             this.label9.Text = "Priority 3:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 86);
+            this.label3.Location = new System.Drawing.Point(29, 77);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(50, 13);
-            this.label3.TabIndex = 31;
+            this.label3.TabIndex = 3;
             this.label3.Text = "Priority 2:";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 59);
+            this.label8.Location = new System.Drawing.Point(29, 50);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(50, 13);
-            this.label8.TabIndex = 30;
+            this.label8.TabIndex = 1;
             this.label8.Text = "Priority 1:";
             // 
             // cmbPriority10
             // 
             this.cmbPriority10.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPriority10.FormattingEnabled = true;
-            this.cmbPriority10.Location = new System.Drawing.Point(75, 299);
+            this.cmbPriority10.Location = new System.Drawing.Point(98, 290);
             this.cmbPriority10.Name = "cmbPriority10";
             this.cmbPriority10.Size = new System.Drawing.Size(121, 21);
-            this.cmbPriority10.TabIndex = 29;
+            this.cmbPriority10.TabIndex = 20;
             this.cmbPriority10.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // cmbPriority9
             // 
             this.cmbPriority9.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPriority9.FormattingEnabled = true;
-            this.cmbPriority9.Location = new System.Drawing.Point(75, 272);
+            this.cmbPriority9.Location = new System.Drawing.Point(98, 263);
             this.cmbPriority9.Name = "cmbPriority9";
             this.cmbPriority9.Size = new System.Drawing.Size(121, 21);
-            this.cmbPriority9.TabIndex = 28;
+            this.cmbPriority9.TabIndex = 18;
             this.cmbPriority9.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // cmbPriority8
             // 
             this.cmbPriority8.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPriority8.FormattingEnabled = true;
-            this.cmbPriority8.Location = new System.Drawing.Point(75, 245);
+            this.cmbPriority8.Location = new System.Drawing.Point(98, 236);
             this.cmbPriority8.Name = "cmbPriority8";
             this.cmbPriority8.Size = new System.Drawing.Size(121, 21);
-            this.cmbPriority8.TabIndex = 27;
+            this.cmbPriority8.TabIndex = 16;
             this.cmbPriority8.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // cmbPriority7
             // 
             this.cmbPriority7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPriority7.FormattingEnabled = true;
-            this.cmbPriority7.Location = new System.Drawing.Point(75, 218);
+            this.cmbPriority7.Location = new System.Drawing.Point(98, 209);
             this.cmbPriority7.Name = "cmbPriority7";
             this.cmbPriority7.Size = new System.Drawing.Size(121, 21);
-            this.cmbPriority7.TabIndex = 26;
+            this.cmbPriority7.TabIndex = 14;
             this.cmbPriority7.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // cmbPriority6
             // 
             this.cmbPriority6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPriority6.FormattingEnabled = true;
-            this.cmbPriority6.Location = new System.Drawing.Point(75, 191);
+            this.cmbPriority6.Location = new System.Drawing.Point(98, 182);
             this.cmbPriority6.Name = "cmbPriority6";
             this.cmbPriority6.Size = new System.Drawing.Size(121, 21);
-            this.cmbPriority6.TabIndex = 25;
+            this.cmbPriority6.TabIndex = 12;
             this.cmbPriority6.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // cmbPriority5
             // 
             this.cmbPriority5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPriority5.FormattingEnabled = true;
-            this.cmbPriority5.Location = new System.Drawing.Point(75, 164);
+            this.cmbPriority5.Location = new System.Drawing.Point(98, 155);
             this.cmbPriority5.Name = "cmbPriority5";
             this.cmbPriority5.Size = new System.Drawing.Size(121, 21);
-            this.cmbPriority5.TabIndex = 24;
+            this.cmbPriority5.TabIndex = 10;
             this.cmbPriority5.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // cmbPriority4
             // 
             this.cmbPriority4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPriority4.FormattingEnabled = true;
-            this.cmbPriority4.Location = new System.Drawing.Point(75, 137);
+            this.cmbPriority4.Location = new System.Drawing.Point(98, 128);
             this.cmbPriority4.Name = "cmbPriority4";
             this.cmbPriority4.Size = new System.Drawing.Size(121, 21);
-            this.cmbPriority4.TabIndex = 23;
+            this.cmbPriority4.TabIndex = 8;
             this.cmbPriority4.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // cmbPriority3
             // 
             this.cmbPriority3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPriority3.FormattingEnabled = true;
-            this.cmbPriority3.Location = new System.Drawing.Point(75, 110);
+            this.cmbPriority3.Location = new System.Drawing.Point(98, 101);
             this.cmbPriority3.Name = "cmbPriority3";
             this.cmbPriority3.Size = new System.Drawing.Size(121, 21);
-            this.cmbPriority3.TabIndex = 22;
+            this.cmbPriority3.TabIndex = 6;
             this.cmbPriority3.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // cmbPriority2
             // 
             this.cmbPriority2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPriority2.FormattingEnabled = true;
-            this.cmbPriority2.Location = new System.Drawing.Point(75, 83);
+            this.cmbPriority2.Location = new System.Drawing.Point(98, 74);
             this.cmbPriority2.Name = "cmbPriority2";
             this.cmbPriority2.Size = new System.Drawing.Size(121, 21);
-            this.cmbPriority2.TabIndex = 21;
+            this.cmbPriority2.TabIndex = 4;
             this.cmbPriority2.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // cmbPriority1
             // 
             this.cmbPriority1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPriority1.FormattingEnabled = true;
-            this.cmbPriority1.Location = new System.Drawing.Point(75, 56);
+            this.cmbPriority1.Location = new System.Drawing.Point(98, 47);
             this.cmbPriority1.Name = "cmbPriority1";
             this.cmbPriority1.Size = new System.Drawing.Size(121, 21);
-            this.cmbPriority1.TabIndex = 20;
+            this.cmbPriority1.TabIndex = 2;
             this.cmbPriority1.SelectedIndexChanged += new System.EventHandler(this.PrioritySelectedIndexChanged);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label88);
+            this.groupBox1.Controls.Add(this.label87);
             this.groupBox1.Controls.Add(this.comboBoxPet7);
             this.groupBox1.Controls.Add(this.comboBoxPet6);
             this.groupBox1.Controls.Add(this.label85);
@@ -2297,124 +2224,142 @@
             this.groupBox1.Controls.Add(this.comboBoxPet1);
             this.groupBox1.Location = new System.Drawing.Point(9, 350);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(277, 175);
-            this.groupBox1.TabIndex = 39;
+            this.groupBox1.Size = new System.Drawing.Size(259, 223);
+            this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Pet Skill Priority";
+            // 
+            // label88
+            // 
+            this.label88.AutoSize = true;
+            this.label88.Location = new System.Drawing.Point(29, 184);
+            this.label88.Name = "label88";
+            this.label88.Size = new System.Drawing.Size(50, 13);
+            this.label88.TabIndex = 12;
+            this.label88.Text = "Priority 7:";
+            // 
+            // label87
+            // 
+            this.label87.AutoSize = true;
+            this.label87.Location = new System.Drawing.Point(29, 157);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(50, 13);
+            this.label87.TabIndex = 10;
+            this.label87.Text = "Priority 6:";
             // 
             // comboBoxPet7
             // 
             this.comboBoxPet7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPet7.FormattingEnabled = true;
-            this.comboBoxPet7.Location = new System.Drawing.Point(103, 148);
+            this.comboBoxPet7.Location = new System.Drawing.Point(98, 181);
             this.comboBoxPet7.Name = "comboBoxPet7";
             this.comboBoxPet7.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet7.TabIndex = 55;
+            this.comboBoxPet7.TabIndex = 13;
             this.comboBoxPet7.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // comboBoxPet6
             // 
             this.comboBoxPet6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPet6.FormattingEnabled = true;
-            this.comboBoxPet6.Location = new System.Drawing.Point(89, 139);
+            this.comboBoxPet6.Location = new System.Drawing.Point(98, 154);
             this.comboBoxPet6.Name = "comboBoxPet6";
             this.comboBoxPet6.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet6.TabIndex = 54;
+            this.comboBoxPet6.TabIndex = 11;
             this.comboBoxPet6.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // label85
             // 
             this.label85.AutoSize = true;
-            this.label85.Location = new System.Drawing.Point(6, 130);
+            this.label85.Location = new System.Drawing.Point(29, 130);
             this.label85.Name = "label85";
             this.label85.Size = new System.Drawing.Size(50, 13);
-            this.label85.TabIndex = 53;
+            this.label85.TabIndex = 8;
             this.label85.Text = "Priority 5:";
             // 
             // comboBoxPet5
             // 
             this.comboBoxPet5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPet5.FormattingEnabled = true;
-            this.comboBoxPet5.Location = new System.Drawing.Point(75, 127);
+            this.comboBoxPet5.Location = new System.Drawing.Point(98, 127);
             this.comboBoxPet5.Name = "comboBoxPet5";
             this.comboBoxPet5.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet5.TabIndex = 52;
+            this.comboBoxPet5.TabIndex = 9;
             this.comboBoxPet5.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(6, 103);
+            this.label24.Location = new System.Drawing.Point(29, 103);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(50, 13);
-            this.label24.TabIndex = 51;
+            this.label24.TabIndex = 6;
             this.label24.Text = "Priority 4:";
             // 
             // comboBoxPet4
             // 
             this.comboBoxPet4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPet4.FormattingEnabled = true;
-            this.comboBoxPet4.Location = new System.Drawing.Point(75, 100);
+            this.comboBoxPet4.Location = new System.Drawing.Point(98, 100);
             this.comboBoxPet4.Name = "comboBoxPet4";
             this.comboBoxPet4.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet4.TabIndex = 50;
+            this.comboBoxPet4.TabIndex = 7;
             this.comboBoxPet4.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(6, 76);
+            this.label23.Location = new System.Drawing.Point(29, 76);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(50, 13);
-            this.label23.TabIndex = 49;
+            this.label23.TabIndex = 4;
             this.label23.Text = "Priority 3:";
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(6, 49);
+            this.label22.Location = new System.Drawing.Point(29, 49);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(50, 13);
-            this.label22.TabIndex = 48;
+            this.label22.TabIndex = 2;
             this.label22.Text = "Priority 2:";
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 22);
+            this.label21.Location = new System.Drawing.Point(29, 22);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(50, 13);
-            this.label21.TabIndex = 47;
+            this.label21.TabIndex = 0;
             this.label21.Text = "Priority 1:";
             // 
             // comboBoxPet3
             // 
             this.comboBoxPet3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPet3.FormattingEnabled = true;
-            this.comboBoxPet3.Location = new System.Drawing.Point(75, 73);
+            this.comboBoxPet3.Location = new System.Drawing.Point(98, 73);
             this.comboBoxPet3.Name = "comboBoxPet3";
             this.comboBoxPet3.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet3.TabIndex = 46;
+            this.comboBoxPet3.TabIndex = 5;
             this.comboBoxPet3.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // comboBoxPet2
             // 
             this.comboBoxPet2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPet2.FormattingEnabled = true;
-            this.comboBoxPet2.Location = new System.Drawing.Point(75, 46);
+            this.comboBoxPet2.Location = new System.Drawing.Point(98, 46);
             this.comboBoxPet2.Name = "comboBoxPet2";
             this.comboBoxPet2.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet2.TabIndex = 45;
+            this.comboBoxPet2.TabIndex = 3;
             this.comboBoxPet2.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // comboBoxPet1
             // 
             this.comboBoxPet1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPet1.FormattingEnabled = true;
-            this.comboBoxPet1.Location = new System.Drawing.Point(75, 19);
+            this.comboBoxPet1.Location = new System.Drawing.Point(98, 19);
             this.comboBoxPet1.Name = "comboBoxPet1";
             this.comboBoxPet1.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxPet1.TabIndex = 44;
+            this.comboBoxPet1.TabIndex = 1;
             this.comboBoxPet1.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
             // CalculationOptionsPanelHunter
@@ -2423,15 +2368,16 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControl1);
             this.Name = "CalculationOptionsPanelHunter";
-            this.Size = new System.Drawing.Size(300, 600);
+            this.Size = new System.Drawing.Size(300, 700);
+            this.Resize += new System.EventHandler(this.CalculationOptionsPanelHunter_Resize);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.grpTalentsFerocity.ResumeLayout(false);
+            this.grpTalentsFerocity.PerformLayout();
             this.grpTalentsCunning.ResumeLayout(false);
             this.grpTalentsCunning.PerformLayout();
             this.grpTalentsTenacity.ResumeLayout(false);
             this.grpTalentsTenacity.PerformLayout();
-            this.grpTalentsFerocity.ResumeLayout(false);
-            this.grpTalentsFerocity.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
@@ -2603,16 +2549,6 @@
         private System.Windows.Forms.Label lblTargetArmorValue;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label lblPriStatus10;
-        private System.Windows.Forms.Label lblPriStatus9;
-        private System.Windows.Forms.Label lblPriStatus8;
-        private System.Windows.Forms.Label lblPriStatus7;
-        private System.Windows.Forms.Label lblPriStatus6;
-        private System.Windows.Forms.Label lblPriStatus5;
-        private System.Windows.Forms.Label lblPriStatus4;
-        private System.Windows.Forms.Label lblPriStatus3;
-        private System.Windows.Forms.Label lblPriStatus2;
-        private System.Windows.Forms.Label lblPriStatus1;
         private System.Windows.Forms.ComboBox cmbPriorityDefaults;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label label30;
@@ -2653,5 +2589,9 @@
         private System.Windows.Forms.ComboBox comboBoxPet5;
         private System.Windows.Forms.ComboBox comboBoxPet7;
         private System.Windows.Forms.ComboBox comboBoxPet6;
+        private System.Windows.Forms.Label label86;
+        private System.Windows.Forms.ComboBox cmbHeroismUsage;
+        private System.Windows.Forms.Label label88;
+        private System.Windows.Forms.Label label87;
     }
 }
