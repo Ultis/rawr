@@ -2692,7 +2692,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Cryptstalker Battlegear",
-                Stats = { BonusPetDamageMultiplier = 0.5f },
+                Stats = { BonusPetDamageMultiplier = 0.05f },
                 SetThreshold = 2
             });
             defaultBuffs.Add(new Buff()

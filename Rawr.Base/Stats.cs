@@ -2928,7 +2928,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
         [DisplayName("Steady shot has a chance to increase attack power")]
         [Category("Hunter")]
         public float BonusSteadyShotAttackPowerBuff
@@ -2938,7 +2937,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
         [DisplayName("Serpent Sting can crit")]
         [Category("Hunter")]
         public float BonusSerpentStingCanCrit
@@ -2948,7 +2946,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
         [DisplayName("Steady shot has a chance to increase pet's attack power")]
         [Category("Hunter")]
         public float BonusSteadyShotPetAttackPowerBuff
@@ -2968,8 +2965,7 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("Seconds cooldown reduction for Multi-Shot")]
+        [DisplayName("second cooldown reduction for Multi-Shot")]
         [Category("Hunter")]
         public float MultiShotCooldownReduction
         {
@@ -2978,8 +2974,7 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("Seconds cooldown reduction for Traps")]
+        [DisplayName("second cooldown reduction for Traps")]
         [Category("Hunter")]
         public float TrapCooldownReduction
         {
