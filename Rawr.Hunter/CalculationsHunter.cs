@@ -611,12 +611,10 @@ namespace Rawr.Hunter
 
             // troll berserking
             calculatedStats.hasteFromRacial = 0;
-            if (character.Race == CharacterRace.Troll)
+            if (character.Race == CharacterRace.Troll && calculatedStats.berserk.freq > 0)
             {
-                if (calculatedStats.priorityRotation.containsShot(Shots.Berserk))
-                {
-                    calculatedStats.hasteFromRacial = 10 / 180 * 0.2;
-                }
+                double berserkingUseFreq = options.emulateSpreadsheetBugs ? calculatedStats.berserk.cooldown : calculatedStats.berserk.freq;
+                calculatedStats.hasteFromRacial = 0.2 * CalcUptime(calculatedStats.berserk.duration, berserkingUseFreq, options);
             }
 
             //default quiver speed
@@ -1335,10 +1333,10 @@ namespace Rawr.Hunter
             calculatedStats.apFromGear = 0 + calculatedStats.BasicStats.AttackPower;
 
             calculatedStats.apFromBloodFury = 0;
-            if (character.Race == CharacterRace.Orc)
+            if (character.Race == CharacterRace.Orc && calculatedStats.bloodFury.freq > 0)
             {
                 calculatedStats.apFromBloodFury = (4 * HunterRatings.CHAR_LEVEL) + 2;
-                calculatedStats.apFromBloodFury *= CalcUptime(15, 120, options);
+                calculatedStats.apFromBloodFury *= CalcUptime(calculatedStats.bloodFury.duration, calculatedStats.bloodFury.freq, options);
             }
 
             // Aspect of the Hawk
