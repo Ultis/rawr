@@ -1,16 +1,21 @@
-Rawr v2.2.12.0
+Rawr v2.2.13.0
 ------------
-Welcome to Rawr 2.2.12.0.
+Welcome to Rawr 2.2.13.0.
    
 Recent Changes:
- - NOTE! Everyone, please do NOT reuse your GemmingTemplates.xml file from a previous version of Rawr, due to all the changes in gems in 3.2.
- - Updated the default item cache with more 3.2 items, and updated data about existing items in 3.2. More data is still showing up on Wowhead/Armory daily, so be sure to try refreshing from Wowhead/Armory if you see any data that looks old/wrong. Also updated some of the enchants changed in 3.2.
- - Rawr.Enhance: Fix for Orcs with Axes. Fixes for default gemming templates.
- - Rawr.Hunter: Tons of more calculation improvements and fixes.
- - Rawr.Mage: Reverted to 3.1 hot streak model, due to hotfix that was just applied.
- - Rawr.DPSDK: Updated for 3.2.
- - Rawr.Warlock: Some more calculation improvements to Haunt and Fire & Brimstone.
- 
+ - Adjusted base stats for shamans to match 3.2.
+ - Tweaks to CharacterProfiler import.
+ - Updated the stats of several more buffs and enchants to match 3.2.
+ - Rawr.Retribution: Fixed T9 set bonuses. Added Hand of Reckoning modeling. Added info about switching targets and SoV stacking. Adjustment to JoR procing 2x SoR, since that was hotfixed.
+ - Rawr.Hunter: Tons and tons of more improvements and additions.
+ - Rawr.Moonkin: Fixed T9 set bonuses.
+ - Rawr.TankDK: Added BurstTime and ReactionTime values. Fixes for expertise rating, and for parry rating on weapons. Added support for more trinkets and sigils.
+ - Rawr.Enhance: Fix for fist weapons in export to EnhSim. Added support for Totem of the Elemental Winds
+ - Rawr.DPSDK: Fixes for Night of the Dead, Greatness procs, and Unholy Blight damage.
+ - Rawr.DPSWarr: Updated base stats, talents, and glyphs for 3.2.
+ - Rawr.Healadin: Support for a few more trinkets and librams.
+ - Rawr.ProtWarr: Significant updates for 3.2.
+ - Rawr.Elemental: Further tweaks to how haste affects rotations.
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -81,6 +86,15 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.12.0
+ - NOTE! Everyone, please do NOT reuse your GemmingTemplates.xml file from a previous version of Rawr, due to all the changes in gems in 3.2.
+ - Updated the default item cache with more 3.2 items, and updated data about existing items in 3.2. More data is still showing up on Wowhead/Armory daily, so be sure to try refreshing from Wowhead/Armory if you see any data that looks old/wrong. Also updated some of the enchants changed in 3.2.
+ - Rawr.Enhance: Fix for Orcs with Axes. Fixes for default gemming templates.
+ - Rawr.Hunter: Tons of more calculation improvements and fixes.
+ - Rawr.Mage: Reverted to 3.1 hot streak model, due to hotfix that was just applied.
+ - Rawr.DPSDK: Updated for 3.2.
+ - Rawr.Warlock: Some more calculation improvements to Haunt and Fire & Brimstone.
+
 v2.2.11.0
  - Updated base stats, stat conversions, and gemming rules for 3.2
  - Fixed a potential crash in Batch Tools

@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.2.12.0")]
-[assembly: AssemblyFileVersion("2.2.12.0")]
+[assembly: AssemblyVersion("2.2.13.0")]
+[assembly: AssemblyFileVersion("2.2.13.0")]
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Rawr.UnitTests")]
