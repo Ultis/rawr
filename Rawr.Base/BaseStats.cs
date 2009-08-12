@@ -326,7 +326,7 @@ namespace Rawr
                     S.PhysicalCrit = 0.0327f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.0345f;
-                    S.Dodge = 0.0345430f;
+                    S.Dodge = 0.0349430f;
                     S.Parry = 0.05f;
                     S.Block = 0.05f;
                     switch (characterRace)

@@ -576,7 +576,7 @@ focus on Survival Points.",
                 PhysicalCrit = 0.032685f,   // Base PhysicalCrit for paladins
                 SpellCrit = 0.03336f,       // Base SpellCrit for paladins
                 Miss = 0.05f,               // Base Miss for a character with maxed out defense skill
-                Dodge = 0.032685f,          // Base Dodge for a paladin
+                Dodge = 0.0349430f,          // Base Dodge for a paladin
                 Parry = 0.05f,              // Base Parry for a chracter with maxed out defense skill
                 Block = 0.05f,              // Base Block for character with maxed out defense skill
             };
@@ -1722,8 +1722,8 @@ focus on Survival Points.",
         //Percentage = Rating / RatingBase / H
         //lvl 80 base taken from LibStatLogic-1.1, Author: Whitetooth, hotdogee [at] gmail [dot] com
         static readonly float H = 100.0f * (82.0f / 52.0f) * (131.0f / 63.0f);
-        public static readonly float AgilityToDodge = 1.0f / 52.08333333f / 100.0f;
-        public static readonly float DodgeRatingToDodge = 1.0f / 12.0f / H;                 // 39.347998535
+        public static readonly float AgilityToDodge = 1.0f / 59.88023952f / 100.0f;
+        public static readonly float DodgeRatingToDodge = 1.0f / 13.8f / H;                 // 45.25018692
         public static readonly float StrengthToAP = 2.0f;
         public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
         public static readonly float AgilityToArmor = 2.0f;
@@ -1744,7 +1744,7 @@ focus on Survival Points.",
         public static readonly float DefenseToMiss = 0.0004f;
         public static readonly float DefenseToCritReduction = 0.0004f;
         public static readonly float DefenseToDazeReduction = 0.0004f;
-        public static readonly float ParryRatingToParry = 1.0f / 15.0f / H;                 // 49.18498168
+        public static readonly float ParryRatingToParry = 1.0f / 13.8f / H;                 // 45.25018692
         public static readonly float BlockRatingToBlock = 1.0f / 5.0f / H;                  // 16.39499389
         public static readonly float ResilienceRatingToCritReduction = 1.0f / 25.0f / H;    // 81.97496947
         public static readonly float ArPToArmorPenetration = 1.25f / 4.69512176513672f / H; // 12.31623883
