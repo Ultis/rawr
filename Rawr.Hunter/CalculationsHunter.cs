@@ -741,8 +741,7 @@ namespace Rawr.Hunter
             // TODO: Heroic Presence should appear here
             calculatedStats.hitFromBuffs = statsBuffs.SpellHit;
 
-            // No debuffs in spreadsheet that give +hit
-            calculatedStats.hitFromTargetDebuffs = 0;
+            calculatedStats.hitFromTargetDebuffs = targetDebuffsHit;
 
             calculatedStats.hitOverall = calculatedStats.hitFromBase
                                        + calculatedStats.hitFromLevelAdjustment
@@ -991,9 +990,14 @@ namespace Rawr.Hunter
             double targetDebuffsFire = targetDebuffsMagic; // Buffs!I77
             double targetDebuffsArcane = targetDebuffsMagic; // Buffs!J77
             double targetDebuffsNature = targetDebuffsMagic; // Buffs!K77
+            double targetDebuffsShadow = targetDebuffsMagic;
+
+            double bloodFrenzyEffect = 0.04; // * uptime
+            double targetDebuffsPetDamage = 0; // TODO - apply bloodfrenzy up to 4%
 
             calculatedStats.targetDebuffsArmor = 1 - targetDebuffsArmor;
             calculatedStats.targetDebuffsNature = 1 + targetDebuffsNature;
+            calculatedStats.targetDebuffsPetDamage = 1 + targetDebuffsPetDamage;
 
             #endregion
 
@@ -1157,7 +1161,7 @@ namespace Rawr.Hunter
             }
 
             // Target Debuffs
-            calculatedStats.manaRegenTargetDebuffs = 0; // TODO!
+            calculatedStats.manaRegenTargetDebuffs = targetDebuffsMP5;
 
             // Total
             calculatedStats.manaRegenTotal =
@@ -1332,6 +1336,7 @@ namespace Rawr.Hunter
                 calculatedStats.apFromHuntersMark += 0.2 * HunterRatings.HUNTERS_MARK;
             }
 
+            calculatedStats.apFromDebuffs = targetDebuffsAP;
 
             calculatedStats.apFromProc = 0;
 
@@ -1367,7 +1372,12 @@ namespace Rawr.Hunter
                 }
             }
 
-            // TODO: more proc AP effects!
+            // TODO: Pyrite Infuser
+            // TODO: Blood of the Old God
+            // TODO: Fury of the Five Flights
+            // TODO: Tier-8 4-set bonus
+            // TODO: Dark Matter
+            // TODO: Grim Toll
 
             // TODO: add multiplicitive buffs
             double apScalingFactor = 1
@@ -1385,7 +1395,7 @@ namespace Rawr.Hunter
                 + calculatedStats.apFromAspectOfTheHawk
                 + calculatedStats.apFromAspectMastery
                 + calculatedStats.apFromFuriousHowl
-                // TODO: target debuffs
+                + calculatedStats.apFromDebuffs
                 + calculatedStats.apFromProc;
 
             // used for hunter calculations
@@ -1599,13 +1609,12 @@ namespace Rawr.Hunter
             #region August 2009 Wild Quiver
 
             calculatedStats.WildQuiverDPS = 0;
-            //character.HunterTalents.WildQuiver = 2; // for isolation testing
             if (character.HunterTalents.WildQuiver > 0)
             {
                 double wildQuiverProcChance = character.HunterTalents.WildQuiver * 0.04;
                 double wildQuiverProcFrequency = (autoShotSpeed / wildQuiverProcChance);
                 double wildQuiverDamageNormal = 0.8 * (rangedWeaponDamage + statsBaseGear.WeaponDamage + damageFromRAP);
-                double wildQuiverDamageAdjust = talentDamageAdjust * partialResistDamageAdjust; // TODO: add nature_debuffs
+                double wildQuiverDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * (1 + targetDebuffsNature);
 
                 double wildQuiverDamageReal = CalcEffectiveDamage(
                                                 wildQuiverDamageNormal,
@@ -1650,7 +1659,6 @@ namespace Rawr.Hunter
                                           );
 
             calculatedStats.steadyShot.damage = steadyShotDamageReal;
-            //calculatedStats.steadyShot.Dump("Steady Shot");
 
             #endregion
             #region August 2009 Serpent Sting
@@ -1723,8 +1731,8 @@ namespace Rawr.Hunter
             double explosiveShotCritAdjust = (1 + mortalShotsCritDamage) * metaGemCritDamage;
 
             // damage_adjust = talent_adjust * tnt * fire_debuffs * sinper_training * partial_resist
-            // TODO: missing fire debuffs
-            double explosiveShotDamageAdjust = talentDamageAdjust * TNTDamageAdjust * sniperTrainingDamageAdjust * partialResistDamageAdjust;
+            double explosiveShotDamageAdjust = talentDamageAdjust * TNTDamageAdjust * sniperTrainingDamageAdjust
+                                             * partialResistDamageAdjust * (1 + targetDebuffsFire);
 
             double explosiveShotDamageReal = CalcEffectiveDamage(
                                                 explosiveShotDamageNormal,
@@ -1737,7 +1745,6 @@ namespace Rawr.Hunter
             double explosiveShotDamagePerShot = explosiveShotDamageReal * 3;
 
             calculatedStats.explosiveShot.damage = explosiveShotDamagePerShot;
-            //calculatedStats.explosiveShot.Dump("Explosive Shot");
 
             #endregion
             #region August 2009 Chimera Shot
@@ -1749,8 +1756,8 @@ namespace Rawr.Hunter
             double chimeraShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
 
             // damage_adjust = talent_adjust * nature_debuffs * ISS_cs_bonus * partial_resist
-            // TODO: nature_debuffs
-            double chimeraShotDamageAdjust = talentDamageAdjust * ISSChimeraShotDamageAdjust * partialResistDamageAdjust;
+            double chimeraShotDamageAdjust = talentDamageAdjust * ISSChimeraShotDamageAdjust
+                                           * partialResistDamageAdjust * (1 + targetDebuffsNature);
 
             double chimeraShotDamageReal = CalcEffectiveDamage(
                                                 chimeraShotDamageNormal,
@@ -1764,7 +1771,7 @@ namespace Rawr.Hunter
             // calculate damage from serpent sting
             double chimeraShotSerpentDamage = serpentStingDamageReal * 0.4;
             double chimeraShotSerpentCritAdjust = (1 + mortalShotsCritDamage) * metaGemCritDamage;
-            double chimeraShotSerpentDamageAdjust = talentDamageAdjust * 1; // TODO: add nature_debuffs here!
+            double chimeraShotSerpentDamageAdjust = talentDamageAdjust * (1 + targetDebuffsNature);
 
             double chimeraShotSerpentDamageReal = CalcEffectiveDamage(
                                                     chimeraShotSerpentDamage,
@@ -1777,7 +1784,6 @@ namespace Rawr.Hunter
             double chimeraShotDamageTotal = chimeraShotDamageReal + chimeraShotSerpentDamageReal;
 
             calculatedStats.chimeraShot.damage = chimeraShotDamageTotal;
-            //calculatedStats.chimeraShot.Dump("Chimera Shot");
 
             #endregion
             #region August 2009 Arcane Shot
@@ -1825,19 +1831,17 @@ namespace Rawr.Hunter
             double blackArrowDamageNormal = 2765 + (RAP * 0.1);
 
             // this is a long list...
-            // TODO: add shadow_debuffs
             double blackArrowDamageAdjust = partialResistDamageAdjust * focusedFireDamageAdjust * beastWithinDamageAdjust
                                           * sancRetributionAuraDamageAdjust * noxiousStingsDamageAdjust
                                           * ferociousInspirationDamageAdjust * improvedTrackingDamageAdjust
                                           * rangedWeaponSpecializationDamageAdjust * markedForDeathDamageAdjust
                                           * targetPhysicalDebuffsDamageAdjust
                                           * (sniperTrainingDamageAdjust + trapMasteryDamageAdjust + TNTDamageAdjust - 2)
-                                          * blackArrowSelfDamageAdjust;
+                                          * blackArrowSelfDamageAdjust * (1 + targetDebuffsShadow);
 
             double blackArrowDamage = blackArrowDamageNormal * blackArrowDamageAdjust;
 
             calculatedStats.blackArrow.damage = blackArrowDamage;
-            //calculatedStats.blackArrow.Dump("Black Arrow");
 
             #endregion
             #region August 2009 Kill Shot
@@ -1855,7 +1859,6 @@ namespace Rawr.Hunter
                                         );
 
             calculatedStats.killShot.damage = killShotDamageReal;
-            //calculatedStats.killShot.Dump("Kill Shot");
 
             #endregion
             #region August 2009 Silencing Shot
@@ -1873,7 +1876,6 @@ namespace Rawr.Hunter
                                              );
 
             calculatedStats.silencingShot.damage = silencingShotDamageReal;
-            //calculatedStats.silencingShot.Dump("Silencing Shot");
 
             #endregion
             #region August 2009 Rapid Fire
@@ -1909,9 +1911,6 @@ namespace Rawr.Hunter
             calculatedStats.priorityRotation.viperDamagePenalty = viperDamagePenalty;
             calculatedStats.priorityRotation.calculateRotationDPS();
             calculatedStats.CustomDPS = calculatedStats.priorityRotation.DPS;
-
-            //Debug.WriteLine("Rotation DPS = " + calculatedStats.priorityRotation.DPS);
-            //Debug.WriteLine("Rotation MPS = " + calculatedStats.priorityRotation.MPS);
 
             #endregion
             #region August 2009 Kill Shot Sub-20% Usage
@@ -2052,7 +2051,6 @@ namespace Rawr.Hunter
             // spreadsheet uses 18.7, so we will too :)
             statsTotal.Mana = (float)(statsRace.Mana + 15f * (statsTotal.Intellect - 18.7) + statsGearEnchantsBuffs.Mana);
 
-            // TODO: Implement new racials
             // The first 20 Stam = 20 Health, while each subsequent Stam = 10 Health, so Health = (Stam-18)*10
             // (20-(20/10)) = 18
             double healthFromBase = statsRace.Health;

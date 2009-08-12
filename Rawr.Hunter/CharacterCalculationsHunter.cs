@@ -36,6 +36,7 @@ namespace Rawr.Hunter
         public double targetDebuffsCrit { get; set; }
         public double targetDebuffsArmor { get; set; }
         public double targetDebuffsNature { get; set; }
+        public double targetDebuffsPetDamage { get; set; }
         #endregion
 
         #region Haste Stats
@@ -64,6 +65,7 @@ namespace Rawr.Hunter
 		public double apFromAspectOfTheHawk { get; set; }
 		public double apFromAspectMastery { get; set; }
 		public double apFromFuriousHowl { get; set; }
+        public double apFromDebuffs { get; set; }
         public double apFromProc { get; set; }
 		public double apFromCallOfTheWild { get; set; }
 		public double apFromTrueshotAura { get; set; }
@@ -282,6 +284,7 @@ namespace Rawr.Hunter
                             apFromAspectOfTheHawk.ToString("F0") + " from Aspect of the Hawk \n" +
                             apFromAspectMastery.ToString("F0") + " from Aspect Mastery \n" +
                             apFromFuriousHowl.ToString("F0") + " from Furious Howl \n" +
+                            apFromDebuffs.ToString("F0") + " from target debuffs \n" +
                             apFromProc.ToString("F0") + " from proc effects \n" +
                             apFromCallOfTheWild.ToString("P2") + " from Call of the Wild \n" +
                             apFromTrueshotAura.ToString("P2") + " from Trueshot Aura \n" +

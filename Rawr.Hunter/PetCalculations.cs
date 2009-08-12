@@ -582,7 +582,7 @@ namespace Rawr.Hunter
             double damageAdjustSancRetributionAura = 1; // TODO
             double damageAdjustTier7Bonus = 1 + statsBuffs.BonusPetDamageMultiplier;
             double damageAdjustSharkAttack = 1 + (options.petSharkAttack * 0.03);
-            double damageAdjustTargetDebuffs = 1; // TODO
+            double damageAdjustTargetDebuffs = calculatedStats.targetDebuffsPetDamage;
             double damageAdjustPetFamily = 1.05;
             double damageAdjustMarkedForDeath = 1 + (character.HunterTalents.MarkedForDeath * 0.02);
             double damageAdjustCobraReflexes = 1 - (options.petCobraReflexes * 0.075); // this is a negative effect!
