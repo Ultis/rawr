@@ -347,7 +347,6 @@ namespace Rawr.Hunter
 				Miss = stats.Miss,
 				Mp5 = stats.Mp5,
 				ScopeDamage = stats.ScopeDamage,
-				Spirit = stats.Spirit,
 				ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
 				ShatteredSunMightProc = stats.ShatteredSunMightProc,
 				BonusSteadyShotCrit = stats.BonusSteadyShotCrit,
@@ -400,7 +399,6 @@ namespace Rawr.Hunter
             stats.HitRating +
             stats.RangedHitRating +
             stats.Intellect +
-            stats.Spirit +
             stats.Mp5 +
             stats.ScopeDamage +
             stats.ShatteredSunAcumenProc +
@@ -424,10 +422,19 @@ namespace Rawr.Hunter
 
             foreach (SpecialEffect e in stats.SpecialEffects())
             {
-                if (HasRelevantStats(e.Stats)) return true;
+                if (e.Trigger != Trigger.MeleeHit)
+                {
+                    if (HasRelevantStats(e.Stats)) return true;
+                }
             }
 
             return false;
+        }
+
+        public override bool IsEnchantRelevant(Enchant enchant)
+        {
+            if (enchant.Id == 3847) return false; // Rune of the Stoneskin Gargoyle - only DKs can use this
+            return base.IsEnchantRelevant(enchant);
         }
        
         public override List<ItemType> RelevantItemTypes
@@ -1146,7 +1153,7 @@ namespace Rawr.Hunter
             #endregion
             #region August 2009 Mana Regen
 
-            calculatedStats.manaRegenGearBuffs = 0; // mp5 on gear
+            calculatedStats.manaRegenGearBuffs = (statsBaseGear.Mp5 + statsBuffs.Mp5) / 5;
 
             // Viper Regen if viper is up 100%
             calculatedStats.manaRegenViper = 0;
