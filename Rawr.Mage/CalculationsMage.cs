@@ -168,7 +168,7 @@ namespace Rawr.Mage
                     "Spell Info:Arcane Explosion",
                     "Spell Info:Blizzard",
                     "Spell Info:Cone of Cold",
-                    "Spell Info:Flamestrike*Spammed",
+                    "Spell Info:Flamestrike*With full dot",
                     "Spell Info:Blast Wave*Requires talent points",
                     "Spell Info:Dragon's Breath*Requires talent points",
                     "Spell Info:Fire Ward*Set incoming fire damage under survivability settings",
