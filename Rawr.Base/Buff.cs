@@ -1237,15 +1237,15 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { AttackPower = 180 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of Endless Rage (Mixology)", Stats = { AttackPower = 64 } } }
+                Improvements = { new Buff { Name = "Flask of Endless Rage (Mixology)", Stats = { AttackPower = 80 } } }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Flask of Pure Mojo",
                 Group = "Elixirs and Flasks",
-                Stats = { Mp5 = 38 },
+                Stats = { Mp5 = 45 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of Pure Mojo (Mixology)", Stats = { Mp5 = 13 } } }
+                Improvements = { new Buff { Name = "Flask of Pure Mojo (Mixology)", Stats = { Mp5 = 20 } } }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -1253,7 +1253,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { Health = 1300 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of Stoneblood (Mixology)", Stats = { Health = 320 } } }
+                Improvements = { new Buff { Name = "Flask of Stoneblood (Mixology)", Stats = { Health = 650 } } }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -1261,7 +1261,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { SpellPower = 125 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of the Frost Wyrm (Mixology)", Stats = { SpellPower = 37 } } }
+                Improvements = { new Buff { Name = "Flask of the Frost Wyrm (Mixology)", Stats = { SpellPower = 47 } } }
             });
 
             defaultBuffs.Add(new Buff()
