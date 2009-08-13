@@ -3338,7 +3338,7 @@ namespace Rawr
             //Retribution T9
             defaultBuffs.Add(new Buff()
             {
-                Name = "Paladin T9 Retribution 2 Piece Bonus",
+                Name = "Turalyon's Battlegear 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { RighteousVengeanceCanCrit = 1f },
@@ -3349,7 +3349,7 @@ namespace Rawr
 			//Retribution T9
 			defaultBuffs.Add(new Buff()
 			{
-				Name = "Paladin T9 Retribution 2 Piece Bonus",
+                Name = "Liadrin's Battlegear 2 Piece Bonus",
 				Group = "Set Bonuses",
 				ConflictingBuffs = new List<string>(new string[] { }),
 				Stats = { RighteousVengeanceCanCrit = 1f },
@@ -3359,7 +3359,7 @@ namespace Rawr
 
 			defaultBuffs.Add(new Buff()
 			{
-				Name = "Paladin T9 Retribution 4 Piece Bonus",
+                Name = "Turalyon's Battlegear 4 Piece Bonus",
 				Group = "Set Bonuses",
 				ConflictingBuffs = new List<string>(new string[] { }),
 				Stats = { JudgementCrit = .05f },
@@ -3369,7 +3369,7 @@ namespace Rawr
 
             defaultBuffs.Add(new Buff()
             {
-                Name = "Paladin T9 Retribution 4 Piece Bonus",
+                Name = "Liadrin's Battlegear 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { JudgementCrit = .05f },
