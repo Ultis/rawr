@@ -1230,7 +1230,9 @@ namespace Rawr
                 case "3842": return "The Eye";
                 case "3805": return "Zul'Aman";
                 case "4273": return "Ulduar";
-				default: return "Unknown - " + zoneId;
+                case "4723": return "Trial of the Champion";
+                case "4722": return "Trial of the Crusader";
+                default: return "Unknown - " + zoneId;
     			}
             }
 		}
