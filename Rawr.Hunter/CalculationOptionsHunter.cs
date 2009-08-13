@@ -23,9 +23,7 @@ namespace Rawr.Hunter
         public PetAttacks PetPriority6 = PetAttacks.None;
         public PetAttacks PetPriority7 = PetAttacks.None;
 
-		private Faction _ScryerAldor = Faction.Aldor;
 		public double Latency = 0.15;
-
         public int duration = 360;
         public int timeSpentSub20 = 72;
         public int timeSpent35To20 = 54;
@@ -36,13 +34,19 @@ namespace Rawr.Hunter
         public Aspect selectedAspect = Aspect.Dragonhawk;
         public AspectUsage aspectUsage = AspectUsage.ViperToOOM;
         public HeroismUsage heroismUsage = HeroismUsage.Once;
+        public int petLevel = 80; // not editable
+        public PetHappiness petHappiness = PetHappiness.Happy; // not editable
+        public double gcdsToLayImmoTrap = 2.0; // not editable
+        public Shots LALShotToUse = Shots.ExplosiveShot; // not editable
+        public int LALShotsReplaced = 2; // not editable
 
-        // currently not editable:
-        public int petLevel = 80;
-        public PetHappiness petHappiness = PetHappiness.Happy;
-        public double gcdsToLayImmoTrap = 2.0;
-        public Shots LALShotToUse = Shots.ExplosiveShot;
-        public int LALShotsReplaced = 2;
+        // rotation test
+        public bool useRotationTest = false;
+        public int cooldownCutoff = 15;  // not editable (not sure what this does)
+        public bool randomizeProcs = false; // not editable
+        public double waitForCooldown = 0.8; // not editable
+        public bool interleaveLAL = false; // not editable
+        public bool prioritiseArcAimedOverSteady = true; // not editable
 
         // NOTE: setting this to true does 'bad' uptime calculations,
         // to help match the spread sheet. if a fight last 10 seconds
@@ -119,13 +123,7 @@ namespace Rawr.Hunter
 			set { _TargetArmor = value; }
 		}
 
-		public Faction ScryerAldor
-		{
-			get { return _ScryerAldor; }
-			set { _ScryerAldor = value; }
-		}
-		
-		#region ICalculationOptionBase Members
+        #region ICalculationOptionBase Members
 
 		public string GetXml()
 		{

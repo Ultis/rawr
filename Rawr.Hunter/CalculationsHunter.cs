@@ -599,8 +599,6 @@ namespace Rawr.Hunter
             calculatedStats.priorityRotation.calculateLALProcs(character);
             calculatedStats.priorityRotation.calculateFrequencies();
 
-            double beastialWrathUptime = calculatedStats.beastialWrath.freq > 0 ? calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq : 0;
-
             #endregion
 
             // speed
@@ -621,15 +619,7 @@ namespace Rawr.Hunter
             }
 
             #endregion
-            #region August 2009 Haste Calcs
-
-            // troll berserking
-            calculatedStats.hasteFromRacial = 0;
-            if (character.Race == CharacterRace.Troll && calculatedStats.berserk.freq > 0)
-            {
-                double berserkingUseFreq = options.emulateSpreadsheetBugs ? calculatedStats.berserk.cooldown : calculatedStats.berserk.freq; // still an issue in 91b
-                calculatedStats.hasteFromRacial = 0.2 * CalcUptime(calculatedStats.berserk.duration, berserkingUseFreq, options);
-            }
+            #region August 2009 Static Haste Calcs
 
             //default quiver speed
             calculatedStats.hasteFromBase = 0.15;
@@ -640,14 +630,64 @@ namespace Rawr.Hunter
             // serpent swiftness
             calculatedStats.hasteFromTalentsStatic = 0.04 * character.HunterTalents.SerpentsSwiftness;
 
+            // haste buffs
+            calculatedStats.hasteFromRangedBuffs = calculatedStats.BasicStats.RangedHaste;
+
+            // total hastes
+            double totalStaticHaste = (1 + calculatedStats.hasteFromBase)             // quiver
+                                    * (1 + calculatedStats.hasteFromRating)           // gear haste rating
+                                    * (1 + calculatedStats.hasteFromTalentsStatic)    // serpent's swiftness
+                                    * (1 + calculatedStats.hasteFromRangedBuffs);     // buffs like swift ret / moonkin
+
+            calculatedStats.hasteStaticTotal = totalStaticHaste;
+
+
+            // Needed by the rotation test
+            calculatedStats.autoShotStaticSpeed = rangedWeaponSpeed / totalStaticHaste;
+
+            // Quick shots effect is needed for rotation test
+            calculatedStats.quickShotsEffect = 0;
+            if (options.selectedAspect == Aspect.Hawk || options.selectedAspect == Aspect.Dragonhawk)
+            {
+                if (character.HunterTalents.ImprovedAspectOfTheHawk > 0)
+                {
+                    double quickShotsEffect = 0.03 * character.HunterTalents.ImprovedAspectOfTheHawk;
+                    if (character.HunterTalents.GlyphOfTheHawk) quickShotsEffect += 0.06;
+
+                    calculatedStats.quickShotsEffect = quickShotsEffect;
+                }
+            }
+
+
+            // Rotation test will get us better frequencies
+            if (options.useRotationTest)
+            {
+                // The following properties of CalculatedStats must be ready by this call:
+                //  * priorityRotation (shot order, durations, cooldowns)
+                //  * quickShotsEffect
+                //  * hasteStaticTotal
+                //  * autoShotStaticSpeed
+
+                RotationTest r = new RotationTest(character, calculatedStats, options);
+                r.RunTest();
+            }
+
+            #endregion
+            #region August 2009 Dynamic Haste Calcs
+
+            // troll berserking
+            calculatedStats.hasteFromRacial = 0;
+            if (character.Race == CharacterRace.Troll && calculatedStats.berserk.freq > 0)
+            {
+                double berserkingUseFreq = options.emulateSpreadsheetBugs ? calculatedStats.berserk.cooldown : calculatedStats.berserk.freq; // still an issue in 91b
+                calculatedStats.hasteFromRacial = 0.2 * CalcUptime(calculatedStats.berserk.duration, berserkingUseFreq, options);
+            }
+
             // rapid fire
             double rapidFireHaste = character.HunterTalents.GlyphOfRapidFire ? 0.48 : 0.4;
             double rapidFireCooldown = calculatedStats.rapidFire.freq;
             if (!calculatedStats.priorityRotation.containsShot(Shots.RapidFire))  rapidFireHaste = 0;
             calculatedStats.hasteFromRapidFire = rapidFireHaste * CalcUptime(15, rapidFireCooldown, options);
-
-            // haste buffs
-            calculatedStats.hasteFromRangedBuffs = calculatedStats.BasicStats.RangedHaste;
 
             // heroism
             calculatedStats.hasteFromHeroism = 0;
@@ -727,27 +767,24 @@ namespace Rawr.Hunter
 
             calculatedStats.hasteFromProcs = hasteRatingFromProcs / (HunterRatings.HASTE_RATING_PER_PERCENT * 100);
 
-
-            // total hastes
-            double totalStaticHaste = (1 + calculatedStats.hasteFromBase)             // quiver
-                                    * (1 + calculatedStats.hasteFromRating )          // gear haste rating
-                                    * (1 + calculatedStats.hasteFromTalentsStatic)    // serpent's swiftness
-                                    * (1 + calculatedStats.hasteFromRangedBuffs);     // buffs like swift ret / moonkin
-
             double totalDynamicHaste = (1 + calculatedStats.hasteFromRapidFire)       // rapid fire
                                      * (1 + calculatedStats.hasteFromRacial)          // troll beserking
                                      * (1 + calculatedStats.hasteFromHeroism)         // heroism
                                      * (1 + calculatedStats.hasteFromProcs);          // procs
 
 
-            calculatedStats.hasteStaticTotal = totalStaticHaste;
             calculatedStats.hasteDynamicTotal = totalDynamicHaste;
             calculatedStats.hasteEffectsTotal = (totalStaticHaste * totalDynamicHaste) - 1;
 
             // Now we have the haste, we can calculate steady shot cast time
             // And so rebuild other various times
-            calculatedStats.steadyShot.cooldown = 2 * (1 / (totalStaticHaste * totalDynamicHaste));
-            calculatedStats.priorityRotation.calculateFrequencies();
+            if (!options.useRotationTest)
+            {
+                calculatedStats.steadyShot.cooldown = 2 * (1 / (totalStaticHaste * totalDynamicHaste));
+                calculatedStats.priorityRotation.calculateFrequencies();
+            }
+
+            double autoShotSpeed = rangedWeaponSpeed / (totalStaticHaste * totalDynamicHaste);
 
             #endregion
 
@@ -797,17 +834,14 @@ namespace Rawr.Hunter
             #region August 2009 Quick Shots
 
             double QSBaseFreqnecyIncrease = 0;
-            double autoShotSpeed = rangedWeaponSpeed / (totalStaticHaste * totalDynamicHaste);
 
             if (options.selectedAspect == Aspect.Hawk || options.selectedAspect == Aspect.Dragonhawk)
             {
                 if (character.HunterTalents.ImprovedAspectOfTheHawk > 0)
                 {
                     double quickShotsProcChance = 0.1;
-                    double quickShotsEffect = 0.03 * character.HunterTalents.ImprovedAspectOfTheHawk;
-                    if (character.HunterTalents.GlyphOfTheHawk) quickShotsEffect += 0.06;
 
-                    double quickShotsSpeed = autoShotSpeed / (1 + quickShotsEffect);
+                    double quickShotsSpeed = autoShotSpeed / (1 + calculatedStats.quickShotsEffect);
 
                     double quickShotsInInitialProc = (autoShotSpeed > 0 ? (12 - autoShotSpeed) / quickShotsSpeed + 1 : 1) * hitChance;
                     double quickShotsInReProc = (quickShotsSpeed > 0 ? 12 / quickShotsSpeed : 1) * hitChance;
@@ -840,8 +874,6 @@ namespace Rawr.Hunter
                     QSBaseFreqnecyIncrease = autoShotSpeed > 0 ? (1 / quickShotsSpeed - 1 / autoShotSpeed) * quickShotsUptime : 0;
                 }
             }
-
-
 
             #endregion
             #region August 2009 Shots Per Second
@@ -1284,6 +1316,8 @@ namespace Rawr.Hunter
             if (IsWearingTrinket(character, 44324)) manaHasAlchemistStone = true; // Mighty Alchemist's Stone
 
             double manaRegenFromPotion = manaFromPotion / options.duration * (manaHasAlchemistStone ? 1.4 : 1.0);
+
+            double beastialWrathUptime = calculatedStats.beastialWrath.freq > 0 ? calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq : 0;
 
             double beastWithinManaBenefit = beastialWrathUptime * 0.2;
             double manaExpenditureSpecial = calculatedStats.petKillCommandMPS * (1 - beastWithinManaBenefit);
@@ -1798,7 +1832,7 @@ namespace Rawr.Hunter
                                                 * improvedTrackingDamageAdjust
                                                 * partialResistDamageAdjust
                                                 * serpentStingT9CritAdjust
-                                                * (1 + targetDebuffsNature);                                                
+                                                * (1 + targetDebuffsNature);
 
             // T8 2-piece bonus
             serpentStingDamageAdjust += statsBuffs.BonusSerpentStingDamage;
@@ -1976,7 +2010,7 @@ namespace Rawr.Hunter
             #endregion
             #region August 2009 Silencing Shot
 
-            double silencingShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + damageFromRAPNormalized) * 0.5 ;
+            double silencingShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + damageFromRAPNormalized) * 0.5;
             double silencingShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * armorReductionDamageAdjust;
             double silencingShotCritAdjust = 1 * metaGemCritDamage;
 
@@ -2008,6 +2042,7 @@ namespace Rawr.Hunter
             calculatedStats.rapidFire.damage = 0;
 
             #endregion
+
 
             #region August 2009 On-Proc DPS
 
@@ -2062,6 +2097,7 @@ namespace Rawr.Hunter
             #endregion
             #region August 2009 Shot Rotation
 
+
             calculatedStats.priorityRotation.viperDamagePenalty = viperDamagePenalty;
             calculatedStats.priorityRotation.calculateRotationDPS();
             calculatedStats.CustomDPS = calculatedStats.priorityRotation.DPS;
@@ -2070,7 +2106,7 @@ namespace Rawr.Hunter
             #region August 2009 Kill Shot Sub-20% Usage
 
             double killShotCurrentFreq = calculatedStats.killShot.freq;
-            double killShotPossibleFreq = calculatedStats.killShot.start_freq;
+            double killShotPossibleFreq = options.useRotationTest ? calculatedStats.killShot.freq : calculatedStats.killShot.start_freq;
             double steadyShotCurrentFreq = calculatedStats.steadyShot.freq;
 
             double steadyShotNewFreq = steadyShotCurrentFreq;

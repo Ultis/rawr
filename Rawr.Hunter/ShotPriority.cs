@@ -349,7 +349,7 @@ namespace Rawr.Hunter
         protected double lal_gcd_needed = 0;
         protected double lal_gcd_used = 0;
 
-        protected double final_freq = 0;
+        public double final_freq = 0; // the rotation test can set this
         protected double final_ratio = 0;
 
         public double crits_per_sec = 0;
@@ -495,10 +495,16 @@ namespace Rawr.Hunter
             //Debug.WriteLine("LAL GCD Used is " + lal_gcd_used);
 
             #endregion
-            #region Final/Actual Calculations
 
-            // TODO: insert rotation test data here...
+            // RotationTest may come in laste and override this value,
+            // hence the split-function that we call here
             final_freq = (lal_freq > 0 && lal_gcd_used > 0) ? time_used / lal_gcd_used : 0;
+
+            finishCalculateTimings(Priority);
+        }
+
+        private void finishCalculateTimings(ShotPriority Priority)
+        {
 
             final_ratio = final_freq > 0 ? (time_used > final_freq ? 1 : time_used / final_freq) : 0;
             if (!Priority.useKillShot && type == Shots.KillShot) final_ratio = 0;
@@ -506,10 +512,6 @@ namespace Rawr.Hunter
 
             crits_per_sec = (critProcs && final_freq > 0) ? 1 / final_freq : 0;
             
-            //Debug.WriteLine("Final Freq is " + final_freq);
-            //Debug.WriteLine("Final Ratio is " + final_ratio);
-
-            #endregion
             #region Output Calculations
 
             is_refreshed = false;
@@ -527,6 +529,13 @@ namespace Rawr.Hunter
             }
 
             #endregion
+        }
+
+        public void setFrequency(ShotPriority Priority, double new_freq)
+        {
+            // called by the RotationTest after it calculates real frequencies
+            final_freq = new_freq;
+            finishCalculateTimings(Priority);
         }
 
         public void calculateComposites(ShotPriority Priority)

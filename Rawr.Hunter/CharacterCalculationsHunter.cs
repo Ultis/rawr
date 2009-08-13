@@ -104,6 +104,11 @@ namespace Rawr.Hunter
         public double damageReductionFromArmor { get; set; }
         public double baseMana { get; set; }
 
+        // stuff for rotation test
+        //public double autoShotSpeed { get; set; }
+        public double autoShotStaticSpeed { get; set; }
+        public double quickShotsEffect { get; set; }
+
         // new shots data
         public ShotData aimedShot = new ShotData(Shots.AimedShot, true, true);
         public ShotData arcaneShot = new ShotData(Shots.ArcaneShot, true, true);
@@ -127,7 +132,7 @@ namespace Rawr.Hunter
         public ShotPriority priorityRotation = null;
 
 
-        #region mana regen
+        #region Mana Regen
         public double manaRegenGearBuffs {get; set;}
         public double manaRegenViper { get; set; }
         public double manaRegenRoarOfRecovery { get; set; }

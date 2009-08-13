@@ -220,6 +220,7 @@
             this.comboBoxPet3 = new System.Windows.Forms.ComboBox();
             this.comboBoxPet2 = new System.Windows.Forms.ComboBox();
             this.comboBoxPet1 = new System.Windows.Forms.ComboBox();
+            this.chkUseRotation = new System.Windows.Forms.CheckBox();
             this.tabPage2.SuspendLayout();
             this.grpTalentsTenacity.SuspendLayout();
             this.grpTalentsFerocity.SuspendLayout();
@@ -1557,6 +1558,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.chkUseRotation);
             this.groupBox4.Controls.Add(this.label86);
             this.groupBox4.Controls.Add(this.cmbHeroismUsage);
             this.groupBox4.Controls.Add(this.chkSpreadsheetUptimes);
@@ -1570,7 +1572,7 @@
             this.groupBox4.Controls.Add(this.cmbManaPotion);
             this.groupBox4.Location = new System.Drawing.Point(9, 255);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(277, 237);
+            this.groupBox4.Size = new System.Drawing.Size(277, 267);
             this.groupBox4.TabIndex = 19;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Hunter Settings";
@@ -1601,10 +1603,10 @@
             // chkSpreadsheetUptimes
             // 
             this.chkSpreadsheetUptimes.AutoSize = true;
-            this.chkSpreadsheetUptimes.Location = new System.Drawing.Point(18, 206);
+            this.chkSpreadsheetUptimes.Location = new System.Drawing.Point(18, 236);
             this.chkSpreadsheetUptimes.Name = "chkSpreadsheetUptimes";
             this.chkSpreadsheetUptimes.Size = new System.Drawing.Size(199, 17);
-            this.chkSpreadsheetUptimes.TabIndex = 10;
+            this.chkSpreadsheetUptimes.TabIndex = 11;
             this.chkSpreadsheetUptimes.Text = "Use spreadsheet uptime calculations";
             this.chkSpreadsheetUptimes.UseVisualStyleBackColor = true;
             this.chkSpreadsheetUptimes.CheckedChanged += new System.EventHandler(this.chkSpreadsheetUptimes_CheckedChanged);
@@ -1612,10 +1614,10 @@
             // chkEmulateBugs
             // 
             this.chkEmulateBugs.AutoSize = true;
-            this.chkEmulateBugs.Location = new System.Drawing.Point(18, 183);
+            this.chkEmulateBugs.Location = new System.Drawing.Point(18, 213);
             this.chkEmulateBugs.Name = "chkEmulateBugs";
             this.chkEmulateBugs.Size = new System.Drawing.Size(218, 17);
-            this.chkEmulateBugs.TabIndex = 9;
+            this.chkEmulateBugs.TabIndex = 10;
             this.chkEmulateBugs.Text = "Emulate known bugs in spreadsheet 91b";
             this.chkEmulateBugs.UseVisualStyleBackColor = true;
             this.chkEmulateBugs.CheckedChanged += new System.EventHandler(this.chkEmulateBugs_CheckedChanged);
@@ -2362,6 +2364,17 @@
             this.comboBoxPet1.TabIndex = 1;
             this.comboBoxPet1.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
+            // chkUseRotation
+            // 
+            this.chkUseRotation.AutoSize = true;
+            this.chkUseRotation.Location = new System.Drawing.Point(18, 190);
+            this.chkUseRotation.Name = "chkUseRotation";
+            this.chkUseRotation.Size = new System.Drawing.Size(194, 17);
+            this.chkUseRotation.TabIndex = 9;
+            this.chkUseRotation.Text = "Use shot rotation test (experimental)";
+            this.chkUseRotation.UseVisualStyleBackColor = true;
+            this.chkUseRotation.CheckedChanged += new System.EventHandler(this.chkUseRotation_CheckedChanged);
+            // 
             // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2593,5 +2606,6 @@
         private System.Windows.Forms.ComboBox cmbHeroismUsage;
         private System.Windows.Forms.Label label88;
         private System.Windows.Forms.Label label87;
+        private System.Windows.Forms.CheckBox chkUseRotation;
     }
 }

@@ -119,6 +119,7 @@ namespace Rawr.Hunter
             chkUseBeastDuringBW.Checked = options.useBeastDuringBeastialWrath;
             chkEmulateBugs.Checked = options.emulateSpreadsheetBugs;
             chkSpreadsheetUptimes.Checked = options.calculateUptimesLikeSpreadsheet;
+            chkUseRotation.Checked = options.useRotationTest;
 
             PopulateAbilities();
 
@@ -1015,6 +1016,13 @@ namespace Rawr.Hunter
         private void CalculationOptionsPanelHunter_Resize(object sender, EventArgs e)
         {
             tabControl1.Height = tabControl1.Parent.Height - 5;
+        }
+
+        private void chkUseRotation_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loadingOptions) return;
+            options.useRotationTest = chkUseRotation.Checked;
+            Character.OnCalculationsInvalidated();
         }
 
     }
