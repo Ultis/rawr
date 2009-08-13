@@ -762,8 +762,7 @@ namespace Rawr.Optimizer
 
         private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, List<OptimizationRequirement> requirements)
         {
-            float gemValue = 0f;
-            if (!character.MeetsGemRequirements) gemValue = -100000;
+            float gemValue = -100000 * character.GemRequirementsInvalid;
             float ret = 0;
             foreach (OptimizationRequirement requirement in requirements)
             {

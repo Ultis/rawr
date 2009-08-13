@@ -1163,8 +1163,8 @@ namespace Rawr //O O . .
         private int blueGemCount;
 		private int jewelersGemCount;
 		private int stormjewelCount;
-        private bool meetsGemRequirements;
-        private bool meetsNonjewelerGemRequirements;
+        private int gemRequirementsInvalid;
+        private int nonjewelerGemRequirementsInvalid;
 
         public int RedGemCount
         {
@@ -1211,21 +1211,21 @@ namespace Rawr //O O . .
 			}
 		}
 
-        public bool MeetsGemRequirements
+        public int GemRequirementsInvalid
         {
             get
             {
                 ComputeGemCount();
-                return meetsGemRequirements;
+                return gemRequirementsInvalid;
             }
         }
 
-        public bool MeetsNonjewelerGemRequirements
+        public int NonjewelerGemRequirementsInvalid
         {
             get
             {
                 ComputeGemCount();
-                return meetsNonjewelerGemRequirements;
+                return nonjewelerGemRequirementsInvalid;
             }
         }
 
@@ -1252,8 +1252,8 @@ namespace Rawr //O O . .
                 jewelersGemCount = 0;
                 stormjewelCount = 0;
                 Dictionary<int, bool> uniqueMap = new Dictionary<int, bool>();
-                meetsGemRequirements = true;
-                meetsNonjewelerGemRequirements = true;
+                gemRequirementsInvalid = 0;
+                nonjewelerGemRequirementsInvalid = 0;
                 for (int slot = 0; slot < 19; slot++)
                 {
                     ItemInstance item = _item[slot];
@@ -1272,7 +1272,8 @@ namespace Rawr //O O . .
                             {
                                 if (uniqueMap.ContainsKey(gem.Id))
                                 {
-                                    meetsNonjewelerGemRequirements = meetsGemRequirements = false;
+                                    gemRequirementsInvalid++;
+                                    nonjewelerGemRequirementsInvalid++;
                                 }
                                 else
                                 {
@@ -1282,8 +1283,15 @@ namespace Rawr //O O . .
                         }
                     }
                 }
-                if (jewelersGemCount > 3) meetsGemRequirements = false;
-                if (stormjewelCount > 1) meetsNonjewelerGemRequirements = meetsGemRequirements = false;
+                if (jewelersGemCount > 3)
+                {
+                    gemRequirementsInvalid += jewelersGemCount - 3;
+                }
+                if (stormjewelCount > 1)
+                {
+                    gemRequirementsInvalid += stormjewelCount - 1;
+                    nonjewelerGemRequirementsInvalid += stormjewelCount - 1;
+                }
 
                 gemCountValid = true;
             }

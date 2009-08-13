@@ -1596,10 +1596,8 @@ namespace Rawr.Optimizer
 
         private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, OptimizationRequirement[] requirements, out float nonJewelerValue)
         {
-            float gemValue = 0f;
-            float nonJewelerGemValue = 0f;
-            if (!character.MeetsGemRequirements) gemValue = -100000;
-            if (!character.MeetsNonjewelerGemRequirements) nonJewelerGemValue = -100000;
+            float gemValue = -100000 * character.GemRequirementsInvalid;
+            float nonJewelerGemValue = -100000 * character.NonjewelerGemRequirementsInvalid;
             float ret = 0;
             foreach (OptimizationRequirement requirement in requirements)
             {
@@ -3650,8 +3648,7 @@ namespace Rawr.Optimizer
 
         private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, OptimizationRequirement[] requirements)
         {
-            float gemValue = 0f;
-            if (!character.MeetsGemRequirements) gemValue = -100000;
+            float gemValue = -100000 * character.GemRequirementsInvalid;
             float ret = 0;
             foreach (OptimizationRequirement requirement in requirements)
             {
