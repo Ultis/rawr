@@ -286,6 +286,11 @@ namespace Rawr
                 // Pandora's Plea
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 751f }, 10f, 45f, .1f));
             }
+            else if (line.StartsWith("Each time you cast a harmful spell, you have a chance to gain 590 spell power for 10 sec."))
+            {
+                // Abyssal Rune
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { SpellPower = 590f }, 10f, 45f, 0.25f));
+            }
             // Idol of the Raven Goddess (already added)
             else if (line.Contains(" critical strike rating to the Leader of the Pack aura"))
             {
