@@ -36,8 +36,13 @@ namespace Rawr.Hunter
         public Aspect selectedAspect = Aspect.Dragonhawk;
         public AspectUsage aspectUsage = AspectUsage.ViperToOOM;
         public HeroismUsage heroismUsage = HeroismUsage.Once;
-        public PetHappiness petHappiness = PetHappiness.Happy;
+
+        // currently not editable:
         public int petLevel = 80;
+        public PetHappiness petHappiness = PetHappiness.Happy;
+        public double gcdsToLayImmoTrap = 2.0;
+        public Shots LALShotToUse = Shots.ExplosiveShot;
+        public int LALShotsReplaced = 2;
 
         // NOTE: setting this to true does 'bad' uptime calculations,
         // to help match the spread sheet. if a fight last 10 seconds

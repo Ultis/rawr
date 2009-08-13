@@ -124,7 +124,7 @@ namespace Rawr.Hunter
         public ShotData bloodFury = new ShotData(Shots.BloodFury, false, false);
         public ShotData berserk = new ShotData(Shots.Berserk, false, false);
 
-        public ShotPriority priorityRotation = new ShotPriority();
+        public ShotPriority priorityRotation = null;
 
 
         #region mana regen

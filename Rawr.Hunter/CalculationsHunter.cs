@@ -519,9 +519,7 @@ namespace Rawr.Hunter
             // shot basics
             #region August 2009 Priority Rotation Setup
 
-            calculatedStats.priorityRotation = new ShotPriority();
-
-            calculatedStats.priorityRotation.latency = options.Latency;
+            calculatedStats.priorityRotation = new ShotPriority(options);
 
             calculatedStats.priorityRotation.priorities[0] = getShotByIndex(options.PriorityIndex1, calculatedStats);
             calculatedStats.priorityRotation.priorities[1] = getShotByIndex(options.PriorityIndex2, calculatedStats);
@@ -559,6 +557,15 @@ namespace Rawr.Hunter
             calculatedStats.killShot.cooldown = character.HunterTalents.GlyphOfKillShot ? 9 : 15;
 
             calculatedStats.silencingShot.cooldown = 20;
+
+            calculatedStats.scorpidSting.cooldown = 20;
+            calculatedStats.scorpidSting.duration = 15;
+
+            calculatedStats.viperSting.cooldown = 15;
+            calculatedStats.viperSting.duration = 8;
+
+            calculatedStats.immolationTrap.cooldown = 30 - character.HunterTalents.Resourcefulness * 2;
+            calculatedStats.immolationTrap.duration = character.HunterTalents.GlyphOfImmolationTrap ? 9 : 15;
 
             if (calculatedStats.priorityRotation.containsShot(Shots.Readiness))
             {
@@ -1108,6 +1115,7 @@ namespace Rawr.Hunter
                 glyphOfArcaneShotManaAdjust = character.HunterTalents.GlyphOfArcaneShot ? 0.8 : 1;
             }
 
+            double resourcefullnessManaAdjust = 1 - character.HunterTalents.Resourcefulness * 0.2;
 
             // Improved Steady Shot
 
@@ -1168,6 +1176,9 @@ namespace Rawr.Hunter
             calculatedStats.blackArrow.mana = (baseMana * 0.06) * efficiencyManaAdjust * resourcefulnessManaAdjust;
             calculatedStats.killShot.mana = (baseMana * 0.07) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
             calculatedStats.silencingShot.mana = (baseMana * 0.06) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
+            calculatedStats.scorpidSting.mana = (baseMana * 0.11) * efficiencyManaAdjust;
+            calculatedStats.viperSting.mana = (baseMana * 0.08) * efficiencyManaAdjust;
+            calculatedStats.immolationTrap.mana = (baseMana * 0.13) * resourcefullnessManaAdjust;
             calculatedStats.rapidFire.mana = (baseMana * 0.03);
 
             calculatedStats.priorityRotation.calculateRotationMPS();
@@ -1978,6 +1989,18 @@ namespace Rawr.Hunter
                                              );
 
             calculatedStats.silencingShot.damage = silencingShotDamageReal;
+
+            #endregion
+            #region August 2009 Immolation Trap
+
+            double immolationTrapDamage = 1885 + (0.1 * RAP);
+            double immolationTrapDamageAdjust = (1 - targetDebuffsFire) * partialResistDamageAdjust * trapMasteryDamageAdjust
+                                              * TNTDamageAdjust * talentDamageStingAdjust;
+            double immolationTrapProjectedDamage = immolationTrapDamage * immolationTrapDamageAdjust;
+            double immolationTrapDamagePerTick = immolationTrapProjectedDamage / (character.HunterTalents.GlyphOfImmolationTrap ? 2.5 : 5);
+            double immolationTrapTicks = character.HunterTalents.GlyphOfImmolationTrap ? 3 : 5;
+
+            calculatedStats.immolationTrap.damage = immolationTrapDamagePerTick * immolationTrapTicks;
 
             #endregion
             #region August 2009 Rapid Fire

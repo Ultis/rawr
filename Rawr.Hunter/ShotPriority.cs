@@ -7,13 +7,9 @@ namespace Rawr.Hunter
 {
     public class ShotPriority
     {
-        public double latency; // in seconds
         public ShotData[] priorities = new ShotData[10];
 
-        // these are options on the spreadsheet 'Settings' page.
-        // i'm just using defaults for now
-        public Shots LALShotToUse = Shots.ExplosiveShot;
-        public int LALShotsReplaced = 2;
+        public CalculationOptionsHunter options;
 
         public bool chimeraRefreshesSerpent = false;
         public bool chimeraRefreshesViper = false;
@@ -31,6 +27,11 @@ namespace Rawr.Hunter
 
         public double DPS = 0;
         public double MPS = 0;
+
+        public ShotPriority(CalculationOptionsHunter options)
+        {
+            this.options = options;
+        }
 
         public void validateShots(HunterTalents hunterTalents)
         { 
@@ -64,6 +65,7 @@ namespace Rawr.Hunter
                 if (priorities[i] != null && priorities[i].type == Shots.ChimeraShot && hunterTalents.ChimeraShot == 0) { priorities[i].lackTalent = true; priorities[i] = null; }
                 if (priorities[i] != null && priorities[i].type == Shots.AimedShot && hunterTalents.AimedShot == 0) { priorities[i].lackTalent = true; priorities[i] = null; }
                 if (priorities[i] != null && priorities[i].type == Shots.ExplosiveShot && hunterTalents.ExplosiveShot == 0){priorities[i].lackTalent = true; priorities[i] = null;}
+                if (priorities[i] != null && priorities[i].type == Shots.BeastialWrath && hunterTalents.BestialWrath == 0) { priorities[i].lackTalent = true; priorities[i] = null; }
 
                 if (priorities[i] != null)
                 {
@@ -198,24 +200,20 @@ namespace Rawr.Hunter
             ShotData lalExplosive = getShotInRotation(Shots.ExplosiveShot);
             ShotData lalArcane = getShotInRotation(Shots.ArcaneShot);
 
-            double pre_lal_explosive_freq = (lalExplosive != null && LALShotToUse == Shots.ExplosiveShot) ? lalExplosive.inbet_freq : 0;
-            double pre_lal_arcane_freq = (lalArcane != null && LALShotToUse == Shots.ArcaneShot) ? lalArcane.inbet_freq : 0;
+            double pre_lal_explosive_freq = (lalExplosive != null && options.LALShotToUse == Shots.ExplosiveShot) ? lalExplosive.inbet_freq : 0;
+            double pre_lal_arcane_freq = (lalArcane != null && options.LALShotToUse == Shots.ArcaneShot) ? lalArcane.inbet_freq : 0;
 
             LALExplosiveFrequency = 0;
             if (lal_proc_freq > 0 && pre_lal_explosive_freq > 0)
             {
-                LALExplosiveFrequency = 1 / (1 / (lal_proc_freq / (pre_lal_explosive_freq / (pre_lal_arcane_freq + pre_lal_explosive_freq) * LALShotsReplaced)) + 1 / pre_lal_explosive_freq);
+                LALExplosiveFrequency = 1 / (1 / (lal_proc_freq / (pre_lal_explosive_freq / (pre_lal_arcane_freq + pre_lal_explosive_freq) * options.LALShotsReplaced)) + 1 / pre_lal_explosive_freq);
             }
 
             LALArcaneFrequency = 0;
             if (lal_proc_freq > 0 && pre_lal_arcane_freq > 0)
             {
-                LALArcaneFrequency = 1 / (1 / (lal_proc_freq / (pre_lal_arcane_freq / (pre_lal_explosive_freq + pre_lal_arcane_freq) * LALShotsReplaced)) + 1 / pre_lal_arcane_freq);
+                LALArcaneFrequency = 1 / (1 / (lal_proc_freq / (pre_lal_arcane_freq / (pre_lal_explosive_freq + pre_lal_arcane_freq) * options.LALShotsReplaced)) + 1 / pre_lal_arcane_freq);
             }
-
-            //Debug.WriteLine("LAL Proc Frequency = " + lal_proc_freq);
-            //Debug.WriteLine("LAL Explosive Frequency = " + LALExplosiveFrequency);
-            //Debug.WriteLine("LAL Arcane Frequency = " + LALArcaneFrequency);
         }
 
         public void calculateRotationMPS()
@@ -377,7 +375,7 @@ namespace Rawr.Hunter
 
         public void calculateTimings(ShotPriority Priority, ShotData PrevShot)
         {
-            double CastLag = Priority.latency;
+            double CastLag = Priority.options.Latency;
 
             #region Timing Calculations
 
@@ -396,7 +394,7 @@ namespace Rawr.Hunter
                     break;
 
                 case Shots.ImmolationTrap:
-                    time_used = 0; // 1.5 * ImmoTrapCastTime
+                    time_used = Priority.options.gcdsToLayImmoTrap * GCD;
                     break;
 
                 case Shots.SteadyShot:
