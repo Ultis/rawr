@@ -709,6 +709,7 @@ namespace Rawr.Hunter
                     s.setFrequency(calculatedStats.priorityRotation, shotData.ContainsKey(s.type) ? shotData[s.type].frequency : 0);
                 }
             }
+            calculatedStats.priorityRotation.calculateFrequencySums();
 
             this.TestTimeElapsed = currentTime;
             this.ISSProcsAimed = ISSprocsAimed;

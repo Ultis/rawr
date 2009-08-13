@@ -595,9 +595,13 @@ namespace Rawr.Hunter
             calculatedStats.berserk.duration = 10;
 
             // We can calculate the rough frequencies now
-            calculatedStats.priorityRotation.calculateFrequencies();
-            calculatedStats.priorityRotation.calculateLALProcs(character);
-            calculatedStats.priorityRotation.calculateFrequencies();
+            if (!options.useRotationTest)
+            {
+                calculatedStats.priorityRotation.calculateFrequencies();
+                calculatedStats.priorityRotation.calculateLALProcs(character);
+                calculatedStats.priorityRotation.calculateFrequencies();
+                calculatedStats.priorityRotation.calculateFrequencySums();
+            }
 
             #endregion
 
@@ -644,6 +648,9 @@ namespace Rawr.Hunter
 
             // Needed by the rotation test
             calculatedStats.autoShotStaticSpeed = rangedWeaponSpeed / totalStaticHaste;
+
+            #endregion
+            #region Rotation Test
 
             // Quick shots effect is needed for rotation test
             calculatedStats.quickShotsEffect = 0;
@@ -782,6 +789,7 @@ namespace Rawr.Hunter
             {
                 calculatedStats.steadyShot.cooldown = 2 * (1 / (totalStaticHaste * totalDynamicHaste));
                 calculatedStats.priorityRotation.calculateFrequencies();
+                calculatedStats.priorityRotation.calculateFrequencySums();
             }
 
             double autoShotSpeed = rangedWeaponSpeed / (totalStaticHaste * totalDynamicHaste);
@@ -2137,7 +2145,6 @@ namespace Rawr.Hunter
             calculatedStats.killShotSub20FinalGain = killShotSubGain;
 
             #endregion
-
 
             calculatedStats.HunterDpsPoints = (float)(
                                                     calculatedStats.AutoshotDPS

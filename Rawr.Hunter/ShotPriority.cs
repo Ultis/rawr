@@ -15,7 +15,6 @@ namespace Rawr.Hunter
         public bool chimeraRefreshesViper = false;
         public double LALExplosiveFrequency = 0;
         public double LALArcaneFrequency = 0;
-        public bool useRotationTest = false; // TODO
         public bool useKillShot = false; // TODO
         public double viperDamagePenalty = 0;
 
@@ -78,6 +77,8 @@ namespace Rawr.Hunter
                     if (priorities[i].type == Shots.MultiShot) used_aimed_multi = true;
                     if (priorities[i].type == Shots.BlackArrow) used_black_immo = true;
                     if (priorities[i].type == Shots.ImmolationTrap) used_black_immo = true;
+
+                    priorities[i].initializeTimings(this);
                 }
             }    
    
@@ -129,6 +130,21 @@ namespace Rawr.Hunter
 
             ShotData PrevShot = null;
 
+            for (int i = 0; i < priorities.Length; i++)
+            {
+                if (priorities[i] == null) continue;
+                ShotData s = priorities[i];
+                s.calculateTimings(this, PrevShot);
+
+                PrevShot = s;
+            }
+        }
+
+        public void calculateFrequencySums()
+        {
+            // This function gets by calculateFrequencies() once we have frequencies,
+            // but also by the rotation test after it has set frequencies directly.
+
             specialShotsPerSecond = 0;
             critSpecialShotsPerSecond = 0;
             critsRatioSum = 0;
@@ -137,16 +153,10 @@ namespace Rawr.Hunter
             {
                 if (priorities[i] == null) continue;
                 ShotData s = priorities[i];
-                s.calculateTimings(this, PrevShot);
 
-                if (s.freq > 0)
-                {
-                    specialShotsPerSecond += 1 / s.freq;
-                }
+                if (s.freq > 0) specialShotsPerSecond += 1 / s.freq;
                 critSpecialShotsPerSecond += s.crits_per_sec;
                 critsRatioSum += s.crits_ratio;
-
-                PrevShot = s;
             }
         }
 
@@ -185,9 +195,11 @@ namespace Rawr.Hunter
             //lal_proc_chance = 0.06; //isolation testing for LAL
             double lal_proc_freq = 0;
 
-            if (useRotationTest)
+            if (options.useRotationTest)
             {
-                // TODO: get LAL proc time from rotation test
+                // the spreadsheet gets the LAL proc frequency from the rotation test,
+                // but it doesn;t really matter because it's only used to calculate some
+                // stats we'll throw away (final_freq via lal_freq).
             }
             else
             {
@@ -373,7 +385,7 @@ namespace Rawr.Hunter
             Debug.WriteLine(label + " gcd = " + gcd);
         }
 
-        public void calculateTimings(ShotPriority Priority, ShotData PrevShot)
+        public void initializeTimings(ShotPriority Priority)
         {
             double CastLag = Priority.options.Latency;
 
@@ -414,6 +426,12 @@ namespace Rawr.Hunter
             }
 
             #endregion
+        }
+
+        public void calculateTimings(ShotPriority Priority, ShotData PrevShot)
+        {
+            double CastLag = Priority.options.Latency;
+
             #region Starting Calculations
 
             start_freq = (rotation_cooldown > time_used) ? Math.Ceiling((rotation_cooldown - time_used) / (GCD + CastLag)) * (GCD + CastLag) + time_used : GCD + CastLag;
@@ -489,14 +507,9 @@ namespace Rawr.Hunter
                 lal_gcd_used = lal_gcd_left > lal_gcd_needed ? lal_gcd_needed : lal_gcd_left;
             }
 
-            //Debug.WriteLine("LAL Freq is " + lal_freq);
-            //Debug.WriteLine("LAL GCD Left is " + lal_gcd_left);
-            //Debug.WriteLine("LAL GCD Needed is " + lal_gcd_needed);
-            //Debug.WriteLine("LAL GCD Used is " + lal_gcd_used);
-
             #endregion
 
-            // RotationTest may come in laste and override this value,
+            // RotationTest may come in later and override this value,
             // hence the split-function that we call here
             final_freq = (lal_freq > 0 && lal_gcd_used > 0) ? time_used / lal_gcd_used : 0;
 
@@ -557,7 +570,7 @@ namespace Rawr.Hunter
             if (Priority.chimeraRefreshesViper && type == Shots.ViperSting) final_mps = 0;
             if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_mps = 0;
 
-            if (!Priority.useRotationTest && (type == Shots.ExplosiveShot || type == Shots.ArcaneShot))
+            if (!Priority.options.useRotationTest && (type == Shots.ExplosiveShot || type == Shots.ArcaneShot))
             {
                 mps = inbet_mps;
             }
