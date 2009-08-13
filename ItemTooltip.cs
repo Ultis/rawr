@@ -642,11 +642,7 @@ namespace Rawr
                                         { // hide the name brush scope to reduce bugs
                                             Brush nameBrush = null;
                                             switch (tinyItem.Item.Quality)
-                                            {
-                                                case ItemQuality.Common:
-                                                case ItemQuality.Temp:
-                                                    nameBrush = SystemBrushes.InfoText;
-                                                    break;
+                                            {                                                
                                                 case ItemQuality.Epic:
                                                     nameBrush = Brushes.Purple;
                                                     break;
@@ -660,7 +656,14 @@ namespace Rawr
                                                     nameBrush = Brushes.Blue;
                                                     break;
                                                 case ItemQuality.Uncommon:
-                                                    nameBrush = Brushes.Gray;
+                                                    nameBrush = Brushes.Green;
+                                                    break;
+                                                case ItemQuality.Heirloom:
+                                                case ItemQuality.Artifact:
+                                                    nameBrush = Brushes.Gold;
+                                                    break;
+                                                default:
+                                                    nameBrush = SystemBrushes.InfoText;
                                                     break;
                                             }
                                             string label = tinyItem.Item.Name;
