@@ -71,17 +71,17 @@ namespace Rawr.Elemental
             nS.spellPower = sp1.spellPower * c;
         }
 
-        public float MinHit
+        public virtual float MinHit
         { get { return totalCoef * (baseMinDamage * baseCoef + spellPower * spCoef); } }
 
         public float MinCrit
-        { get { return MinHit * critModifier; } }
+        { get { return MinHit * (1+critModifier); } }
 
-        public float MaxHit
+        public virtual float MaxHit
         { get { return totalCoef * (baseMaxDamage * baseCoef + spellPower * spCoef); } }
 
         public float MaxCrit
-        { get { return MaxHit * critModifier; } }
+        { get { return MaxHit * (1+critModifier); } }
 
         public float AvgHit
         { get { return (MinHit + MaxHit) / 2; } }
@@ -186,12 +186,13 @@ namespace Rawr.Elemental
             float Speed = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
             gcd = (float)Math.Round(gcd / Speed, 4);
             castTime = (float)Math.Round(castTime / Speed, 4);
-            critModifier += .20f * shamanTalents.ElementalFury;
-            critModifier *= 1.5f * (1 + stats.BonusSpellCritMultiplier) - 1;
-            critModifier += 1f;
+            critModifier += .2f * shamanTalents.ElementalFury;
+            critModifier *= (float)Math.Round(1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f, 6);
+            //critModifier += 1f;
             spellPower += stats.SpellPower;
             crit += stats.SpellCrit;
             missChance -= stats.SpellHit;
+            totalCoef *= 1 + stats.BonusDamageMultiplier; //ret + bm buff
             if (missChance < 0) missChance = 0;
         }
 
@@ -215,15 +216,11 @@ namespace Rawr.Elemental
 
     public class Shock : Spell
     {
-        public void Initialize(Stats stats, ShamanTalents shamanTalents)
-        {
-            base.Initialize(stats, shamanTalents);
-        }
     }
 
     public class Thunderstorm : Spell
     {
-        public Thunderstorm(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
+        public Thunderstorm()
         {
             #region Base Values
             baseMinDamage = 1450;
@@ -234,17 +231,25 @@ namespace Rawr.Elemental
             cooldown = 45f;
             shortName = "TS";
             #endregion
+        }
 
+        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        {
             totalCoef += .01f * shamanTalents.Concussion;
             crit += .05f * shamanTalents.CallOfThunder;
             crit += .01f * shamanTalents.TidalMastery;
             spellPower += stats.SpellNatureDamageRating;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
-            
+
             if (shamanTalents.GlyphofThunder)
                 cooldown -= 10f;
 
             base.Initialize(stats, shamanTalents);
+        }
+
+        public Thunderstorm(Stats stats, ShamanTalents shamanTalents) : this()
+        {
+            Initialize(stats, shamanTalents);
         }
 
         public static float getProcsPerSecond(bool glyphed, int fightDuration)
@@ -283,34 +288,46 @@ namespace Rawr.Elemental
 
     public class LightningBolt : Spell
     {
-        public LightningBolt(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
+        public LightningBolt()
         {
             #region Base Values
             baseMinDamage = 715;
             baseMaxDamage = 815;
             castTime = 2.5f;
             spCoef = 2.5f / 3.5f;
+            lspCoef = spCoef;
+            loCoef = spCoef / 2f;
             manaCost = 0.1f * Constants.BaseMana;
             shortName = "LB";
             #endregion
+        }
 
+        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        {
             castTime -= .1f * shamanTalents.LightningMastery;
             manaCost *= 1f - .02f * shamanTalents.Convection;
             totalCoef += .01f * shamanTalents.Concussion;
             crit += .05f * shamanTalents.CallOfThunder;
             spCoef += .02f * shamanTalents.Shamanism;
+            loCoef += .02f * shamanTalents.Shamanism;
             crit += .05f * shamanTalents.TidalMastery;
             manaCost *= 1 - stats.LightningBoltCostReduction / 100f; // T7 2 piece
-            spellPower += stats.LightningSpellPower + stats.SpellNatureDamageRating; // Totem (relic) + Nature SP
-            if (shamanTalents.GlyphofLightningBolt) totalCoef *= 1.04f;
+            spellPower += stats.SpellNatureDamageRating; // Nature SP
+            lightningSpellpower += stats.LightningSpellPower; // Totem (relic) is not affected by shamanism
+            if (shamanTalents.GlyphofLightningBolt) totalCoef += .04f;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
             totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f; // T6 4 piece
-
-            critModifier *= 1 + stats.LightningBoltCritDamageModifier; // T8 4 piece
-
+            
             lightningOverload = shamanTalents.LightningOverload;
 
             base.Initialize(stats, shamanTalents);
+            critModifier *= 1 + stats.LightningBoltCritDamageModifier; // T8 4 piece
+        }
+
+        public LightningBolt(Stats stats, ShamanTalents shamanTalents)
+            : this()
+        {
+            Initialize(stats, shamanTalents);
         }
 
         public static LightningBolt operator +(LightningBolt A, LightningBolt B)
@@ -328,38 +345,65 @@ namespace Rawr.Elemental
         }
 
         private int lightningOverload = 0;
+        private float loCoef, lightningSpellpower = 0f, lspCoef;
 
         public override float CCCritChance
         {
-            get { return Math.Min(1f, CritChance * (1f + .11f * lightningOverload)); }
+            get { return Math.Min(1f, CritChance * (1f + LOChance())); }
+        }
+
+        public override float MinHit
+        {
+            get { return totalCoef * (baseMinDamage * baseCoef + spellPower * spCoef + lightningSpellpower * lspCoef); }
+        }
+
+        public override float MaxHit
+        {
+            get { return totalCoef * (baseMaxDamage * baseCoef + spellPower * spCoef + lightningSpellpower * lspCoef); }
+        }
+
+        private float LOChance()
+        {
+            return .11f * lightningOverload;
         }
 
         public override float TotalDamage
         {
-            get { return base.TotalDamage * (1f + .11f * lightningOverload * .5f); }
+            get { return base.TotalDamage + LOChance() * LightningOverloadDamage; }
+        }
+
+        public float LightningOverloadDamage
+        {
+            get { return totalCoef * ((baseMinDamage + baseMaxDamage) / 4f * baseCoef + spellPower * loCoef + lightningSpellpower * lspCoef) * (1 + CritChance * critModifier); }
         }
     }
 
     public class ChainLightning : Spell
     {
         private int additionalTargets;
-        public ChainLightning(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts, int additionalTargets)
+        private float loCoef, lightningSpellpower = 0f, lspCoef;
+        public ChainLightning()
         {
             #region Base Values
             baseMinDamage = 973;
             baseMaxDamage = 1111;
             castTime = 2f;
             spCoef = 2f / 3.5f;
+            lspCoef = spCoef;
+            loCoef = spCoef / 2f;
             manaCost = 0.26f * Constants.BaseMana;
             cooldown = 6f;
             #endregion
+        }
 
+        public new void Initialize(Stats stats, ShamanTalents shamanTalents, int additionalTargets)
+        {
             // jumps
             if (additionalTargets < 0)
                 additionalTargets = 0;
-            if (additionalTargets > 4)
-                additionalTargets = 4;
-            shortName = "CL" + additionalTargets;
+            if (additionalTargets > 3)
+                additionalTargets = 3;
+            shortName = "CL" + 1 + additionalTargets;
             if (!shamanTalents.GlyphofChainLightning && additionalTargets > 3)
                 additionalTargets = 3;
             this.additionalTargets = additionalTargets;
@@ -371,12 +415,19 @@ namespace Rawr.Elemental
             castTime -= .1f * shamanTalents.LightningMastery;
             cooldown -= new float[] { 0, .75f, 1.5f, 2.5f }[shamanTalents.StormEarthAndFire];
             crit += .01f * shamanTalents.TidalMastery;
-            spellPower += stats.LightningSpellPower + stats.SpellNatureDamageRating;
+            spellPower += stats.SpellNatureDamageRating;
+            lightningSpellpower += stats.LightningSpellPower;  
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
 
             lightningOverload = shamanTalents.LightningOverload;
 
             base.Initialize(stats, shamanTalents);
+        }
+
+        public ChainLightning(Stats stats, ShamanTalents shamanTalents, int additionalTargets)
+            : this()
+        {
+            Initialize(stats, shamanTalents, additionalTargets);
         }
 
         public int AdditionalTargets
@@ -402,18 +453,38 @@ namespace Rawr.Elemental
 
         public override float CCCritChance
         {
-            get { return Math.Min(1f, CritChance * (1f + .11f * lightningOverload / 3f * AdditionalTargets)); }
+            get { return Math.Min(1f, CritChance * (1f + LOChance())); }
+        }
+
+        public override float MinHit
+        {
+            get { return totalCoef * (baseMinDamage * baseCoef + spellPower * spCoef + lightningSpellpower * lspCoef); }
+        }
+
+        public override float MaxHit
+        {
+            get { return totalCoef * (baseMaxDamage * baseCoef + spellPower * spCoef + lightningSpellpower * lspCoef); }
+        }
+
+        private float LOChance()
+        {
+            return .11f * lightningOverload / 3f * (1 + AdditionalTargets);
         }
 
         public override float TotalDamage
         {
-            get { return base.TotalDamage * (1f + .11f * lightningOverload / 3f * AdditionalTargets); }
+            get { return base.TotalDamage + LOChance() * LightningOverloadDamage; }
+        }
+
+        public float LightningOverloadDamage
+        {
+            get { return totalCoef * ((baseMinDamage + baseMaxDamage) / 4f * baseCoef + spellPower * loCoef + lightningSpellpower * lspCoef) * (1 + CritChance * critModifier); }
         }
     }
 
     public class LavaBurst : Spell
     {
-        public LavaBurst(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts, float fs)
+        public LavaBurst()
         {
             #region Base Values
             baseMinDamage = 1192;
@@ -424,7 +495,10 @@ namespace Rawr.Elemental
             cooldown = 8f;
             shortName = "LvB";
             #endregion
+        }
 
+        public new void Initialize(Stats stats, ShamanTalents shamanTalents, float fs)
+        {
             manaCost *= 1f - .02f * shamanTalents.Convection;
             totalCoef += .01f * shamanTalents.Concussion;
             totalCoef += .02f * shamanTalents.CallOfFlame;
@@ -442,7 +516,13 @@ namespace Rawr.Elemental
 
             base.Initialize(stats, shamanTalents);
 
-            crit = (1-fs)*crit + fs;
+            crit = (1 - fs) * crit + fs;
+        }
+
+        public LavaBurst(Stats stats, ShamanTalents shamanTalents, float fs)
+            : this()
+        {
+            Initialize(stats, shamanTalents, fs);
         }
 
         public static LavaBurst operator +(LavaBurst A, LavaBurst B)
@@ -463,7 +543,7 @@ namespace Rawr.Elemental
 
     public class FlameShock : Shock
     {
-        public FlameShock(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
+        public FlameShock()
         {
             #region Base Values
             baseMinDamage = 500;
@@ -476,12 +556,15 @@ namespace Rawr.Elemental
             cooldown = 6f;
             shortName = "FS";
             #endregion
+        }
 
+        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        {
             //for reference
             //dotTick = (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)
 
             totalCoef += .01f * shamanTalents.Concussion;
-            spCoef *= 1 + .1f * shamanTalents.BoomingEchoes;
+            totalCoef += .1f * shamanTalents.BoomingEchoes;
             manaCost *= 1 - .02f * shamanTalents.Convection;
             dotBaseCoef *= 1 + .2f * shamanTalents.StormEarthAndFire;
             dotSpCoef *= 1 + .2f * shamanTalents.StormEarthAndFire;
@@ -508,6 +591,12 @@ namespace Rawr.Elemental
             base.Initialize(stats, shamanTalents);
         }
 
+        public FlameShock(Stats stats, ShamanTalents shamanTalents)
+            : this()
+        {
+            Initialize(stats, shamanTalents);
+        }
+
         public static FlameShock operator +(FlameShock A, FlameShock B)
         {
             FlameShock C = (FlameShock)A.MemberwiseClone();
@@ -526,7 +615,7 @@ namespace Rawr.Elemental
 
     public class EarthShock : Shock
     {
-        public EarthShock(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
+        public EarthShock()
         {
             #region Base Values
             baseMinDamage = 849;
@@ -536,7 +625,10 @@ namespace Rawr.Elemental
             cooldown = 6f;
             shortName = "ES";
             #endregion
+        }
 
+        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        {
             totalCoef += .01f * shamanTalents.Concussion;
             manaCost *= 1 - .02f * shamanTalents.Convection;
             manaCost *= 1 - .45f * shamanTalents.ShamanisticFocus;
@@ -547,6 +639,11 @@ namespace Rawr.Elemental
                 gcd -= .5f;
 
             base.Initialize(stats, shamanTalents);
+        }
+
+        public EarthShock(Stats stats, ShamanTalents shamanTalents)
+        {
+            Initialize(stats, shamanTalents);
         }
 
         public static EarthShock operator +(EarthShock A, EarthShock B)
@@ -567,7 +664,7 @@ namespace Rawr.Elemental
 
     public class FrostShock : Shock
     {
-        public FrostShock(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
+        public FrostShock()
         {
             #region Base Values
             baseMinDamage = 802;
@@ -577,7 +674,10 @@ namespace Rawr.Elemental
             cooldown = 6f;
             shortName = "FrS";
             #endregion
+        }
 
+        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        {
             totalCoef += .01f * shamanTalents.Concussion;
             spCoef *= 1f + .1f * shamanTalents.BoomingEchoes;
             manaCost *= 1 - .02f * shamanTalents.Convection;
@@ -590,6 +690,12 @@ namespace Rawr.Elemental
                 gcd -= .5f;
 
             base.Initialize(stats, shamanTalents);
+        }
+
+        public FrostShock(Stats stats, ShamanTalents shamanTalents)
+            : this()
+        {
+            Initialize(stats, shamanTalents);
         }
 
         public static FrostShock operator +(FrostShock A, FrostShock B)
@@ -609,7 +715,7 @@ namespace Rawr.Elemental
 
     public class ElementalMastery : Spell
     {
-        public ElementalMastery(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
+        public ElementalMastery()
         {
             #region Base Values
             missChance = 0;
@@ -617,11 +723,20 @@ namespace Rawr.Elemental
             gcd = 0; // no global cooldown ;)
             shortName = "EM";
             #endregion
+        }
 
+        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        {
             if (shamanTalents.GlyphofElementalMastery)
                 cooldown -= 30f;
 
             base.Initialize(stats, shamanTalents);
+        }
+
+        public ElementalMastery(Stats stats, ShamanTalents shamanTalents)
+            : this()
+        {
+            Initialize(stats, shamanTalents);
         }
 
 
@@ -642,13 +757,23 @@ namespace Rawr.Elemental
 
     public class Wait : Spell
     {
-        public Wait(float duration)
+        public Wait()
         {
             gcd = 0f;
             missChance = 0f;
             totalCoef = 0f;
             spCoef = 0f;
+        }
+
+        public new void Initialize(float duration)
+        {
             castTime = duration;
+        }
+
+        public Wait(float duration)
+            : this()
+        {
+            Initialize(duration);
         }
 
         public override string ToString()

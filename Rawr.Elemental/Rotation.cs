@@ -16,8 +16,8 @@ namespace Rawr.Elemental
                 return casts;
             }
         }
-        Dictionary<Type, float> cc = null;
-        public Dictionary<Type, float> ClearCasting
+        SerializableDictionary<Type, float> cc = null;
+        public SerializableDictionary<Type, float> ClearCasting
         {
             get
             {
@@ -73,16 +73,16 @@ namespace Rawr.Elemental
         public EarthShock ES;
         public FrostShock FrS;
 
-        private ShamanTalents talents;
+        public ShamanTalents Talents;
 
-        public Rotation(ShamanTalents talents)
+        public Rotation()
         {
-            this.talents = talents;
             spells = new List<Spell>(15);
         }
 
-        public Rotation(ShamanTalents talents, LightningBolt lb, ChainLightning cl, ChainLightning cl3, ChainLightning cl4, LavaBurst lvb, LavaBurst lvbfs, FlameShock fs, EarthShock es, FrostShock frs) : this(talents)
+        public Rotation(ShamanTalents talents, LightningBolt lb, ChainLightning cl, ChainLightning cl3, ChainLightning cl4, LavaBurst lvb, LavaBurst lvbfs, FlameShock fs, EarthShock es, FrostShock frs) : this()
         {
+            Talents = talents;
             LB = lb;
             CL = cl;
             CL3 = cl3;
@@ -105,13 +105,19 @@ namespace Rawr.Elemental
             dps = float.PositiveInfinity;
         }
 
+        public float OptimalWait
+        {
+            get { return LvBFS.TotalDamage * (LB.CastTime + LvBFS.CastTime) / (LB.TotalDamage + LvBFS.TotalDamage) - LvBFS.CastTime; }
+        }
+
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
         public void CalculateRotation()
         {
-            float optimalWait = LvBFS.TotalDamage * (LB.CastTime + LvBFS.CastTime) / (LB.TotalDamage + LvBFS.TotalDamage) - LvBFS.CastTime;
-            CalculateRotation(optimalWait);
+            if (LB == null || FS == null || LvBFS == null || LvB == null)
+                return;
+            CalculateRotation(OptimalWait);
         }
 
         /// <summary>
@@ -120,10 +126,12 @@ namespace Rawr.Elemental
         /// <param name="waitThreshold">amount of time before LvB gets ready when a lightning bolt shall be skipped</param>
         public void CalculateRotation(float waitThreshold)
         {
+            if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null)
+                return;
             spells.Clear();
             waitThreshold = Math.Min(waitThreshold, LB.CastTime);
 
-            if (talents.GlyphofFlameShock)
+            if (Talents.GlyphofFlameShock)
             {
                 float LvBreadyAt = 0, FSdropsAt = 0;
                 while (true)
@@ -242,7 +250,7 @@ namespace Rawr.Elemental
         public float getWeightedCritchance()
         {
             float critLB = LB.CritChance;
-            float critCL = LB.CritChance * (1f + .11f * talents.LightningOverload);
+            float critCL = LB.CritChance * (1f + .11f * Talents.LightningOverload);
             float critchance = 0f;
             foreach (Spell s in Casts)
                 critchance += s.HitChance * s.CCCritChance;
@@ -270,7 +278,7 @@ namespace Rawr.Elemental
         {
             mps = 0f; //summing up total manacost
             dps = 0f; //summing up total damage
-            cc = new Dictionary<Type, float>(); //clear casting
+            cc = new SerializableDictionary<Type, float>(); //clear casting
             Dictionary<Type, int> count = new Dictionary<Type, int>(); //counting spells
             Spell prev1 = null, prev2 = null;
             for (int i = -2; i < Casts.Count; i++)
@@ -284,10 +292,10 @@ namespace Rawr.Elemental
                         count.Add(s.GetType(), 0);
                     }
                     float ccc = 0f;
-                    if (talents.ElementalFocus > 0)
+                    if (Talents.ElementalFocus > 0)
                         ccc = 1f - (1f - prev1.CCCritChance) * (1f - prev2.CCCritChance);
                     mps += s.ManaCost * (1 - .4f * ccc);
-                    dps += s.HitChance * s.TotalDamage * (1 + .05f * talents.ElementalOath * ccc); //bad for FS ticks. FS ticks calculation would need to be added if the rotation can be changed by everyone.
+                    dps += s.HitChance * s.TotalDamage * (1 + .05f * Talents.ElementalOath * ccc); //bad for FS ticks. FS ticks calculation would need to be added if the rotation can be changed by everyone.
                     cc[s.GetType()] += ccc;
                     count[s.GetType()]++;
                 }

@@ -369,6 +369,7 @@ namespace Rawr.Elemental
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 #endregion
                 #region Totems
                 LightningSpellPower = stats.LightningSpellPower,
@@ -447,7 +448,8 @@ namespace Rawr.Elemental
                 stats.BonusSpellPowerMultiplier +
                 stats.BonusFireDamageMultiplier +
                 stats.BonusNatureDamageMultiplier +
-                stats.BonusFrostDamageMultiplier;
+                stats.BonusFrostDamageMultiplier +
+                stats.BonusDamageMultiplier;
             #endregion
             #region Totems
             elementalStats +=

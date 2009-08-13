@@ -32,16 +32,16 @@ namespace Rawr.Elemental.Estimation
             #region Spells
             Stats addedStats = baseStats.Clone();
             addedStats.Accumulate(procStats);
-            LB = new LightningBolt(addedStats, talents, calcOpts);
-            CL = new ChainLightning(addedStats, talents, calcOpts, 0);
-            CL3 = new ChainLightning(addedStats, talents, calcOpts, 3);
-            CL4 = new ChainLightning(addedStats, talents, calcOpts, 4);
-            LvB = new LavaBurst(addedStats, talents, calcOpts, 0);
-            LvBFS = new LavaBurst(addedStats, talents, calcOpts, 1);
-            FS = new FlameShock(addedStats, talents, calcOpts);
-            ES = new EarthShock(addedStats, talents, calcOpts);
-            FrS = new FrostShock(addedStats, talents, calcOpts);
-            TS = new Thunderstorm(addedStats, talents, calcOpts);
+            LB = new LightningBolt(addedStats, talents);
+            CL = new ChainLightning(addedStats, talents, 0);
+            CL3 = new ChainLightning(addedStats, talents, 3);
+            CL4 = new ChainLightning(addedStats, talents, 4);
+            LvB = new LavaBurst(addedStats, talents, 0);
+            LvBFS = new LavaBurst(addedStats, talents, 1);
+            FS = new FlameShock(addedStats, talents);
+            ES = new EarthShock(addedStats, talents);
+            FrS = new FrostShock(addedStats, talents);
+            TS = new Thunderstorm(addedStats, talents);
             #endregion
         }
 
