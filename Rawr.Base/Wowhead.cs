@@ -201,6 +201,7 @@ namespace Rawr
                     _vendorTokenMap["40752"] = "Emblem of Heroism";
                     _vendorTokenMap["40753"] = "Emblem of Valor";
                     _vendorTokenMap["45624"] = "Emblem of Conquest";
+                    _vendorTokenMap["47241"] = "Emblem of Triumph";
                     break;
             }
         }
@@ -263,7 +264,7 @@ namespace Rawr
 			}
 			if (item.Slot == ItemSlot.None) return null;
 			//if (!string.IsNullOrEmpty(source)) ProcessKeyValue(item, "source", source);
-            if (!string.IsNullOrEmpty(source) && !string.IsNullOrEmpty(sourcemore))
+            if (!string.IsNullOrEmpty(source))
             {
                 string[] sourceKeys = source.Split(',');
                 string[] sourcemoreKeys = sourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
@@ -271,13 +272,19 @@ namespace Rawr
                 // most mobs that have a vendor bought alternative will give more information through the vendor than the mob
                 // this is specially case for vault of archavon drops
                 source = sourceKeys[0];
-                sourcemore = sourcemoreKeys[0];
+                if (sourcemoreKeys.Length > 0)
+                {
+                    sourcemore = sourcemoreKeys[0];
+                }
 
                 int vendorIndex = Array.IndexOf(sourceKeys, "5");
                 if (vendorIndex >= 0)
                 {
                     source = sourceKeys[vendorIndex];
-                    sourcemore = sourcemoreKeys[vendorIndex];
+                    if (sourcemoreKeys.Length > 0)
+                    {
+                        sourcemore = sourcemoreKeys[vendorIndex];
+                    }
                 }
 
 				string n = string.Empty;
