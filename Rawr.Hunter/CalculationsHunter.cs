@@ -510,7 +510,6 @@ namespace Rawr.Hunter
             // we should be using character.Level everywhere, but also
             // all of the spell levels will be wrong. do we care?
 
-
             //foreach (Buff buff in character.ActiveBuffs)
             //{
             //    Debug.WriteLine(buff);
@@ -667,7 +666,9 @@ namespace Rawr.Hunter
             }
 
 
-            // Rotation test will get us better frequencies
+            // Using the rotation test will get us better frequencies
+            RotationTest rotationTest = new RotationTest(character, calculatedStats, options);
+
             if (options.useRotationTest)
             {
                 // The following properties of CalculatedStats must be ready by this call:
@@ -676,8 +677,7 @@ namespace Rawr.Hunter
                 //  * hasteStaticTotal
                 //  * autoShotStaticSpeed
 
-                RotationTest r = new RotationTest(character, calculatedStats, options);
-                r.RunTest();
+                rotationTest.RunTest();
             }
 
             #endregion
@@ -878,8 +878,16 @@ namespace Rawr.Hunter
 
                     double quickShotsAverageChainSlow = quickShotsProcChance > 0 ? 1 / quickShotsProcChance : 0;
 
-                    // TODO: use rotation test to get this value
-                    double quickShotsUptime = quickShotsProcChance > 0 ? quickShotsAverageChainQuick / (quickShotsAverageChainQuick + quickShotsAverageChainSlow) : 0;
+                    double quickShotsUptime;
+
+                    if (options.useRotationTest)
+                    {
+                        quickShotsUptime = rotationTest.IAotHUptime;
+                    }
+                    else
+                    {
+                        quickShotsUptime = quickShotsProcChance > 0 ? quickShotsAverageChainQuick / (quickShotsAverageChainQuick + quickShotsAverageChainSlow) : 0;
+                    }
 
                     QSBaseFreqnecyIncrease = autoShotSpeed > 0 ? (1 / quickShotsSpeed - 1 / autoShotSpeed) * quickShotsUptime : 0;
                 }
@@ -1171,33 +1179,46 @@ namespace Rawr.Hunter
 
             double ISSProcChance = 0.05 * character.HunterTalents.ImprovedSteadyShot;
             if (ISSProcChance > 0)
-            {
-                double ISSRealProcChance = 0; // N120
-                if (calculatedStats.steadyShot.freq > 0)
+            {                
+                if (options.useRotationTest)
                 {
-                    double ISSSteadyFreq = calculatedStats.steadyShot.freq;
-                    double ISSOtherFreq = calculatedStats.arcaneShot.freq
-                                        + calculatedStats.chimeraShot.freq
-                                        + calculatedStats.aimedShot.freq;
+                    ISSChimeraShotDamageAdjust = 1 + rotationTest.ISSChimeraUptime * 0.15;
+                    ISSArcaneShotDamageAdjust = 1 + rotationTest.ISSArcaneUptime * 0.15;
+                    ISSAimedShotDamageAdjust = 1 + rotationTest.ISSAimedUptime * 0.15;
 
-                    ISSRealProcChance = 1 - Math.Pow(1 - ISSProcChance, ISSOtherFreq / ISSSteadyFreq);
+                    ISSChimeraShotManaAdjust = 1 - rotationTest.ISSChimeraUptime * 0.2;
+                    ISSArcaneShotManaAdjust = 1 - rotationTest.ISSArcaneUptime * 0.2;
+                    ISSAimedShotManaAdjust = 1 - rotationTest.ISSAimedUptime * 0.2;
                 }
-                double ISSProcFreqChimera = ISSRealProcChance > 0 ? calculatedStats.chimeraShot.freq / ISSRealProcChance : 0; // N121
-                double ISSProcFreqArcane = ISSRealProcChance > 0 ? calculatedStats.arcaneShot.freq / ISSRealProcChance : 0; // N122
-                double ISSProcFreqAimed = ISSRealProcChance > 0 ? calculatedStats.aimedShot.freq / ISSRealProcChance : 0; // N123
+                else
+                {
+                    double ISSRealProcChance = 0; // N120
+                    if (calculatedStats.steadyShot.freq > 0)
+                    {
+                        double ISSSteadyFreq = calculatedStats.steadyShot.freq;
+                        double ISSOtherFreq = calculatedStats.arcaneShot.freq
+                                            + calculatedStats.chimeraShot.freq
+                                            + calculatedStats.aimedShot.freq;
 
-                double ISSProcFreqSumInverse = (ISSProcFreqChimera > 0 ? 1 / ISSProcFreqChimera : 0)
-                                             + (ISSProcFreqArcane > 0 ? 1 / ISSProcFreqArcane : 0)
-                                             + (ISSProcFreqAimed > 0 ? 1 / ISSProcFreqAimed : 0);
-                double ISSProcFreqCombined = ISSProcFreqSumInverse > 0 ? 1 / ISSProcFreqSumInverse : 0; // N124
+                        ISSRealProcChance = 1 - Math.Pow(1 - ISSProcChance, ISSOtherFreq / ISSSteadyFreq);
+                    }
+                    double ISSProcFreqChimera = ISSRealProcChance > 0 ? calculatedStats.chimeraShot.freq / ISSRealProcChance : 0; // N121
+                    double ISSProcFreqArcane = ISSRealProcChance > 0 ? calculatedStats.arcaneShot.freq / ISSRealProcChance : 0; // N122
+                    double ISSProcFreqAimed = ISSRealProcChance > 0 ? calculatedStats.aimedShot.freq / ISSRealProcChance : 0; // N123
 
-                ISSChimeraShotDamageAdjust = ISSProcFreqChimera > 0 ? 1 + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.15 : 1;
-                ISSArcaneShotDamageAdjust = ISSProcFreqArcane > 0 ? 1 + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.15 : 1;
-                ISSAimedShotDamageAdjust = ISSProcFreqAimed > 0 ? 1 + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.15 : 1;
+                    double ISSProcFreqSumInverse = (ISSProcFreqChimera > 0 ? 1 / ISSProcFreqChimera : 0)
+                                                 + (ISSProcFreqArcane > 0 ? 1 / ISSProcFreqArcane : 0)
+                                                 + (ISSProcFreqAimed > 0 ? 1 / ISSProcFreqAimed : 0);
+                    double ISSProcFreqCombined = ISSProcFreqSumInverse > 0 ? 1 / ISSProcFreqSumInverse : 0; // N124
 
-                ISSChimeraShotManaAdjust = ISSProcFreqChimera > 0 ? 1 - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.2 : 1;
-                ISSArcaneShotManaAdjust = ISSProcFreqArcane > 0 ? 1 - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.2 : 1;
-                ISSAimedShotManaAdjust = ISSProcFreqAimed > 0 ? 1 - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.2 : 1;
+                    ISSChimeraShotDamageAdjust = ISSProcFreqChimera > 0 ? 1 + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.15 : 1;
+                    ISSArcaneShotDamageAdjust = ISSProcFreqArcane > 0 ? 1 + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.15 : 1;
+                    ISSAimedShotDamageAdjust = ISSProcFreqAimed > 0 ? 1 + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.15 : 1;
+
+                    ISSChimeraShotManaAdjust = ISSProcFreqChimera > 0 ? 1 - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.2 : 1;
+                    ISSArcaneShotManaAdjust = ISSProcFreqArcane > 0 ? 1 - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.2 : 1;
+                    ISSAimedShotManaAdjust = ISSProcFreqAimed > 0 ? 1 - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.2 : 1;
+                }
             }
 
             double resourcefulnessManaAdjust = 1 - (character.HunterTalents.Resourcefulness * 0.2);

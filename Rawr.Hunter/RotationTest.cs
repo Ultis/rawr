@@ -28,7 +28,7 @@ namespace Rawr.Hunter
         public double ISSChimeraUptime = 0;
         public int IAotHProcs = 0;
         public double IAotHTime = 0;
-        public double TestIAotHUptime;
+        public double IAotHUptime = 0;
  
 
         public RotationTest(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options)
@@ -719,10 +719,10 @@ namespace Rawr.Hunter
             this.IAotHTime = IAotHUptime;
             this.LALProcCount = LALProcs;
 
-            this.TestIAotHUptime = this.TestTimeElapsed > 0 ? this.IAotHTime / this.TestTimeElapsed : 0;
-            this.ISSAimedUptime = this.ISSProcsAimed > 0 ? this.ISSProcsAimed / shotData[Shots.AimedShot].countUsed : 0;
-            this.ISSArcaneUptime = this.ISSProcsArcane > 0 ? this.ISSProcsArcane / shotData[Shots.ArcaneShot].countUsed : 0;
-            this.ISSChimeraUptime = this.ISSProcsChimera > 0 ? this.ISSProcsChimera / shotData[Shots.ChimeraShot].countUsed : 0;
+            this.IAotHUptime = this.TestTimeElapsed > 0 ? 1.0 * this.IAotHTime / this.TestTimeElapsed : 0;
+            this.ISSAimedUptime = this.ISSProcsAimed > 0 ? 1.0 * this.ISSProcsAimed / shotData[Shots.AimedShot].countUsed : 0;
+            this.ISSArcaneUptime = this.ISSProcsArcane > 0 ? 1.0 * this.ISSProcsArcane / shotData[Shots.ArcaneShot].countUsed : 0;
+            this.ISSChimeraUptime = this.ISSProcsChimera > 0 ? 1.0 * this.ISSProcsChimera / shotData[Shots.ChimeraShot].countUsed : 0;
 
             #endregion
 
