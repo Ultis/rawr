@@ -654,11 +654,11 @@ namespace Rawr
 
             //Hodir Enchants
             defaultEnchants.Add(new Enchant(3808, "Greater Inscription of the Axe", ItemSlot.Shoulders, new Stats() { AttackPower = 40, CritRating = 15 }));
-            defaultEnchants.Add(new Enchant(2986, "Lesser Inscription of the Axe", ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
+            defaultEnchants.Add(new Enchant(3875, "Lesser Inscription of the Axe", ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
             defaultEnchants.Add(new Enchant(3809, "Greater Inscription of the Crag", ItemSlot.Shoulders, new Stats() { SpellPower = 24, Mp5 = 8 }));
             defaultEnchants.Add(new Enchant(3807, "Lesser Inscription of the Crag", ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 5 }));
             defaultEnchants.Add(new Enchant(3811, "Greater Inscription of the Pinnacle", ItemSlot.Shoulders, new Stats() { DodgeRating = 20, DefenseRating = 15 }));
-            defaultEnchants.Add(new Enchant(2978, "Lesser Inscription of the Pinnacle", ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
+            defaultEnchants.Add(new Enchant(3876, "Lesser Inscription of the Pinnacle", ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
             defaultEnchants.Add(new Enchant(3810, "Greater Inscription of the Storm", ItemSlot.Shoulders, new Stats() { SpellPower = 24, CritRating = 15 }));
             defaultEnchants.Add(new Enchant(3806, "Lesser Inscription of the Storm", ItemSlot.Shoulders, new Stats() { SpellPower = 18, CritRating = 10 }));
 
