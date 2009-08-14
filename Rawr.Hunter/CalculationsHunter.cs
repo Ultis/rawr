@@ -595,6 +595,7 @@ namespace Rawr.Hunter
             calculatedStats.berserk.duration = 10;
 
             // We can calculate the rough frequencies now
+            calculatedStats.priorityRotation.initializeTimings();
             if (!options.useRotationTest)
             {
                 calculatedStats.priorityRotation.calculateFrequencies();
@@ -693,7 +694,7 @@ namespace Rawr.Hunter
             // rapid fire
             double rapidFireHaste = character.HunterTalents.GlyphOfRapidFire ? 0.48 : 0.4;
             double rapidFireCooldown = calculatedStats.rapidFire.freq;
-            if (!calculatedStats.priorityRotation.containsShot(Shots.RapidFire))  rapidFireHaste = 0;
+            if (!calculatedStats.priorityRotation.containsShot(Shots.RapidFire)) rapidFireHaste = 0;
             calculatedStats.hasteFromRapidFire = rapidFireHaste * CalcUptime(15, rapidFireCooldown, options);
 
             // heroism
@@ -788,6 +789,7 @@ namespace Rawr.Hunter
             if (!options.useRotationTest)
             {
                 calculatedStats.steadyShot.cooldown = 2 * (1 / (totalStaticHaste * totalDynamicHaste));
+                calculatedStats.priorityRotation.initializeTimings();
                 calculatedStats.priorityRotation.calculateFrequencies();
                 calculatedStats.priorityRotation.calculateFrequencySums();
             }

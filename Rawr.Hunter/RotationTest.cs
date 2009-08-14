@@ -727,8 +727,6 @@ namespace Rawr.Hunter
             #endregion
 
 
-            Debug.WriteLine("yo!");
-
             /*
            
                 ActiveWorkbook.Names.Add name:="RotationTestResultNames", RefersToR1C1:= _

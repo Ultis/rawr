@@ -77,8 +77,6 @@ namespace Rawr.Hunter
                     if (priorities[i].type == Shots.MultiShot) used_aimed_multi = true;
                     if (priorities[i].type == Shots.BlackArrow) used_black_immo = true;
                     if (priorities[i].type == Shots.ImmolationTrap) used_black_immo = true;
-
-                    priorities[i].initializeTimings(this);
                 }
             }    
    
@@ -89,6 +87,14 @@ namespace Rawr.Hunter
             {
                 if (containsShot(Shots.SerpentSting)) chimeraRefreshesSerpent = true;
                 if (containsShot(Shots.ViperSting)) chimeraRefreshesViper = true;
+            }
+        }
+
+        public void initializeTimings()
+        {
+            for (int i = 0; i < priorities.Length; i++)
+            {
+                if (priorities[i] != null) priorities[i].initializeTimings(this);
             }
         }
 
