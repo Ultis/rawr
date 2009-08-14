@@ -124,7 +124,10 @@
     <value>17, 17</value>
   </metadata>
   <data name="label44.ToolTip" xml:space="preserve">
-    <value>Setting this to a low value simulates having a limited time to regen mana on chain pulls (value is in seconds, optimizer has the option to continue drinking into the pull if it increases overall damage done, but that time counts toward total time).</value>
+    <value>How long you have available to drink before the fight starts assuming you start at 0 mana.
+Setting this to a low value simulates having a limited time to regen mana on chain pulls (value is in seconds,
+optimizer has the option to continue drinking into the pull if it increases overall damage done,
+but that time counts toward total time). Leave at high value to start at full mana.</value>
   </data>
   <data name="label101.ToolTip" xml:space="preserve">
     <value>Enables advanced constraints that are too expensive for comparisons, but are needed for sequence reconstruction.
