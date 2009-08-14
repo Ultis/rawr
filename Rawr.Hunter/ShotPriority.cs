@@ -178,8 +178,6 @@ namespace Rawr.Hunter
                 s.calculateComposites(this);
                 critsCompositeSum += s.crits_composite;
             }
-
-            //Debug.WriteLine("critsRatioSum = " + critsRatioSum);
         }
 
         public void calculateLALProcs(Character character)
@@ -528,8 +526,6 @@ namespace Rawr.Hunter
             final_ratio = final_freq > 0 ? (time_used > final_freq ? 1 : time_used / final_freq) : 0;
             if (!Priority.useKillShot && type == Shots.KillShot) final_ratio = 0;
             if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_ratio = 0;
-
-            crits_per_sec = (critProcs && final_freq > 0) ? 1 / final_freq : 0;
             
             #region Output Calculations
 
@@ -544,8 +540,11 @@ namespace Rawr.Hunter
             {
                 ratio = final_ratio;
                 freq = final_freq;
-                crits_ratio = (critProcs) ? ratio : 0;
+                
             }
+
+            crits_per_sec = (critProcs && final_freq > 0) ? 1 / final_freq : 0;
+            crits_ratio = (critProcs) ? ratio : 0;
 
             #endregion
         }
