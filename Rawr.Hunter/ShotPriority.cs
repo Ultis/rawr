@@ -146,11 +146,22 @@ namespace Rawr.Hunter
             }
         }
 
+        public void recalculateRatios()
+        {
+            // this function is called when we're using the rotation test.
+            // we call it once we know the cast time for steady shot, to 
+            // get the correct ratio numbers.
+
+            for (int i = 0; i < priorities.Length; i++)
+            {
+                if (priorities[i] == null) continue;
+                priorities[i].finishCalculateTimings(this);
+            }
+        }
+
+
         public void calculateFrequencySums()
         {
-            // This function gets by calculateFrequencies() once we have frequencies,
-            // but also by the rotation test after it has set frequencies directly.
-
             specialShotsPerSecond = 0;
             critSpecialShotsPerSecond = 0;
             critsRatioSum = 0;
@@ -168,6 +179,9 @@ namespace Rawr.Hunter
 
         public void calculateCrits()
         {
+            // called after we find out shot crit rates.
+            // we calculated frequencies and ratios in earlier calls.
+
             critsCompositeSum = 0;
 
             for (int i = 0; i < priorities.Length; i++)
@@ -520,9 +534,8 @@ namespace Rawr.Hunter
             finishCalculateTimings(Priority);
         }
 
-        private void finishCalculateTimings(ShotPriority Priority)
+        public void finishCalculateTimings(ShotPriority Priority)
         {
-
             final_ratio = final_freq > 0 ? (time_used > final_freq ? 1 : time_used / final_freq) : 0;
             if (!Priority.useKillShot && type == Shots.KillShot) final_ratio = 0;
             if (Priority.chimeraRefreshesSerpent && type == Shots.SerpentSting) final_ratio = 0;

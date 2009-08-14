@@ -784,11 +784,18 @@ namespace Rawr.Hunter
             calculatedStats.hasteDynamicTotal = totalDynamicHaste;
             calculatedStats.hasteEffectsTotal = (totalStaticHaste * totalDynamicHaste) - 1;
 
-            // Now we have the haste, we can calculate steady shot cast time
-            // And so rebuild other various times
-            if (!options.useRotationTest)
+            // Now we have the haste, we can calculate steady shot cast time,
+            // then rebuild other various stats.
+            // (future enhancement: we only really need to rebuild steady shot)
+            calculatedStats.steadyShot.cooldown = 2 * (1 / (totalStaticHaste * totalDynamicHaste));
+            if (options.useRotationTest)
             {
-                calculatedStats.steadyShot.cooldown = 2 * (1 / (totalStaticHaste * totalDynamicHaste));
+                calculatedStats.priorityRotation.initializeTimings();
+                calculatedStats.priorityRotation.recalculateRatios();
+                calculatedStats.priorityRotation.calculateFrequencySums();
+            }
+            else
+            {
                 calculatedStats.priorityRotation.initializeTimings();
                 calculatedStats.priorityRotation.calculateFrequencies();
                 calculatedStats.priorityRotation.calculateFrequencySums();
