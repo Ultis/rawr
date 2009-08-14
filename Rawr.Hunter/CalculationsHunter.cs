@@ -163,9 +163,11 @@ namespace Rawr.Hunter
 			};
 
             customChartNames = new string[] {
-                "Shots: Spammed DPS",
-                "Shots: Spammed MPS",
-                "Shots: Damage per Mana",
+                "Spammed Shots DPS",
+                "Spammed Shots MPS",
+                "Rotation DPS",
+                "Rotation MPS",
+                "Shot Damage per Mana",
                 "Item Budget"
             };
 
@@ -279,49 +281,100 @@ namespace Rawr.Hunter
 
             switch (chartName)
             {
-                case "Shots: Spammed DPS":
+                case "Spammed Shots DPS":
 
                     return new ComparisonCalculationBase[] {
-                        comparisonFromShot(calculations.aimedShot),
-                        comparisonFromShot(calculations.arcaneShot),
-                        comparisonFromShot(calculations.multiShot),
-                        comparisonFromShot(calculations.serpentSting),
-                        comparisonFromShot(calculations.scorpidSting),
-                        comparisonFromShot(calculations.viperSting),
-                        comparisonFromShot(calculations.silencingShot),
-                        comparisonFromShot(calculations.steadyShot),
-                        comparisonFromShot(calculations.killShot),
-                        comparisonFromShot(calculations.explosiveShot),
-                        comparisonFromShot(calculations.blackArrow),
-                        comparisonFromShot(calculations.immolationTrap),
-                        comparisonFromShot(calculations.chimeraShot),
+                        comparisonFromShotSpammedDPS(calculations.aimedShot),
+                        comparisonFromShotSpammedDPS(calculations.arcaneShot),
+                        comparisonFromShotSpammedDPS(calculations.multiShot),
+                        comparisonFromShotSpammedDPS(calculations.serpentSting),
+                        comparisonFromShotSpammedDPS(calculations.scorpidSting),
+                        comparisonFromShotSpammedDPS(calculations.viperSting),
+                        comparisonFromShotSpammedDPS(calculations.silencingShot),
+                        comparisonFromShotSpammedDPS(calculations.steadyShot),
+                        comparisonFromShotSpammedDPS(calculations.killShot),
+                        comparisonFromShotSpammedDPS(calculations.explosiveShot),
+                        comparisonFromShotSpammedDPS(calculations.blackArrow),
+                        comparisonFromShotSpammedDPS(calculations.immolationTrap),
+                        comparisonFromShotSpammedDPS(calculations.chimeraShot),
                     };
 
-                case "Shots: Spammed MPS":
+                case "Spammed Shots MPS":
 
                     _subPointNameColors = _subPointNameColorsMPS;
                     return new ComparisonCalculationBase[] {
-                        comparisonFromShotMPS(calculations.aimedShot),
-                        comparisonFromShotMPS(calculations.arcaneShot),
-                        comparisonFromShotMPS(calculations.multiShot),
-                        comparisonFromShotMPS(calculations.serpentSting),
-                        comparisonFromShotMPS(calculations.scorpidSting),
-                        comparisonFromShotMPS(calculations.viperSting),
-                        comparisonFromShotMPS(calculations.silencingShot),
-                        comparisonFromShotMPS(calculations.steadyShot),
-                        comparisonFromShotMPS(calculations.killShot),
-                        comparisonFromShotMPS(calculations.explosiveShot),
-                        comparisonFromShotMPS(calculations.blackArrow),
-                        comparisonFromShotMPS(calculations.immolationTrap),
-                        comparisonFromShotMPS(calculations.chimeraShot),
-                        comparisonFromShotMPS(calculations.rapidFire),
-                        comparisonFromShotMPS(calculations.readiness),
-                        comparisonFromShotMPS(calculations.beastialWrath),
-                        comparisonFromShotMPS(calculations.bloodFury),
-                        comparisonFromShotMPS(calculations.berserk),
+                        comparisonFromShotSpammedMPS(calculations.aimedShot),
+                        comparisonFromShotSpammedMPS(calculations.arcaneShot),
+                        comparisonFromShotSpammedMPS(calculations.multiShot),
+                        comparisonFromShotSpammedMPS(calculations.serpentSting),
+                        comparisonFromShotSpammedMPS(calculations.scorpidSting),
+                        comparisonFromShotSpammedMPS(calculations.viperSting),
+                        comparisonFromShotSpammedMPS(calculations.silencingShot),
+                        comparisonFromShotSpammedMPS(calculations.steadyShot),
+                        comparisonFromShotSpammedMPS(calculations.killShot),
+                        comparisonFromShotSpammedMPS(calculations.explosiveShot),
+                        comparisonFromShotSpammedMPS(calculations.blackArrow),
+                        comparisonFromShotSpammedMPS(calculations.immolationTrap),
+                        comparisonFromShotSpammedMPS(calculations.chimeraShot),
+                        comparisonFromShotSpammedMPS(calculations.rapidFire),
+                        comparisonFromShotSpammedMPS(calculations.readiness),
+                        comparisonFromShotSpammedMPS(calculations.beastialWrath),
+                        comparisonFromShotSpammedMPS(calculations.bloodFury),
+                        comparisonFromShotSpammedMPS(calculations.berserk),
                     };
 
-                case "Shots: Damage per Mana":
+                case "Rotation DPS":
+
+                    return new ComparisonCalculationBase[] {
+                        comparisonFromShotRotationDPS(calculations.aimedShot),
+                        comparisonFromShotRotationDPS(calculations.arcaneShot),
+                        comparisonFromShotRotationDPS(calculations.multiShot),
+                        comparisonFromShotRotationDPS(calculations.serpentSting),
+                        comparisonFromShotRotationDPS(calculations.scorpidSting),
+                        comparisonFromShotRotationDPS(calculations.viperSting),
+                        comparisonFromShotRotationDPS(calculations.silencingShot),
+                        comparisonFromShotRotationDPS(calculations.steadyShot),
+                        comparisonFromShotRotationDPS(calculations.killShot),
+                        comparisonFromShotRotationDPS(calculations.explosiveShot),
+                        comparisonFromShotRotationDPS(calculations.blackArrow),
+                        comparisonFromShotRotationDPS(calculations.immolationTrap),
+                        comparisonFromShotRotationDPS(calculations.chimeraShot),
+                        comparisonFromDoubles("Autoshot", calculations.AutoshotDPS, 0),
+                        comparisonFromDoubles("WildQuiver", calculations.WildQuiverDPS, 0),
+                        comparisonFromDoubles("OnProc", calculations.OnProcDPS, 0),
+                        comparisonFromDoubles("KillShotSub20", calculations.killShotSub20FinalGain, 0),
+                        comparisonFromDoubles("AspectBeastLoss", calculations.aspectBeastLostDPS, 0),
+                        comparisonFromDoubles("PetAutoAttack", 0, calculations.petWhiteDPS),
+                        comparisonFromDoubles("PetSkills", 0, calculations.petSpecialDPS),
+                        comparisonFromDoubles("KillCommand", 0, calculations.petKillCommandDPS),
+                    };
+
+                case "Rotation MPS":
+
+                    _subPointNameColors = _subPointNameColorsMPS;
+                    return new ComparisonCalculationBase[] {
+                        comparisonFromShotRotationMPS(calculations.aimedShot),
+                        comparisonFromShotRotationMPS(calculations.arcaneShot),
+                        comparisonFromShotRotationMPS(calculations.multiShot),
+                        comparisonFromShotRotationMPS(calculations.serpentSting),
+                        comparisonFromShotRotationMPS(calculations.scorpidSting),
+                        comparisonFromShotRotationMPS(calculations.viperSting),
+                        comparisonFromShotRotationMPS(calculations.silencingShot),
+                        comparisonFromShotRotationMPS(calculations.steadyShot),
+                        comparisonFromShotRotationMPS(calculations.killShot),
+                        comparisonFromShotRotationMPS(calculations.explosiveShot),
+                        comparisonFromShotRotationMPS(calculations.blackArrow),
+                        comparisonFromShotRotationMPS(calculations.immolationTrap),
+                        comparisonFromShotRotationMPS(calculations.chimeraShot),
+                        comparisonFromShotRotationMPS(calculations.rapidFire),
+                        comparisonFromShotRotationMPS(calculations.readiness),
+                        comparisonFromShotRotationMPS(calculations.beastialWrath),
+                        comparisonFromShotRotationMPS(calculations.bloodFury),
+                        comparisonFromShotRotationMPS(calculations.berserk),
+                        comparisonFromDouble("KillCommand", calculations.petKillCommandMPS),
+                    };
+
+                case "Shot Damage per Mana":
 
                     _subPointNameColors = _subPointNameColorsDPM;
                     return new ComparisonCalculationBase[] {
@@ -2493,7 +2546,7 @@ namespace Rawr.Hunter
             return null;
         }
 
-        private ComparisonCalculationHunter comparisonFromShot(ShotData shot)
+        private ComparisonCalculationHunter comparisonFromShotSpammedDPS(ShotData shot)
         {
             ComparisonCalculationHunter comp =  new ComparisonCalculationHunter();
 
@@ -2503,6 +2556,37 @@ namespace Rawr.Hunter
             comp.Name = Enum.GetName(typeof(Shots), shot.type);
             comp.HunterDpsPoints = dps;
             comp.OverallPoints = dps;
+            return comp;
+        }
+
+        private ComparisonCalculationHunter comparisonFromShotSpammedMPS(ShotData shot)
+        {
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
+
+            double shotWait = shot.duration > shot.cooldown ? shot.duration : shot.cooldown;
+            float mps = shotWait > 0 ? (float)(shot.mana / shotWait) : 0;
+
+            comp.Name = Enum.GetName(typeof(Shots), shot.type);
+            comp.SubPoints = new float[] { mps };
+            comp.OverallPoints = mps;
+            return comp;
+        }
+
+        private ComparisonCalculationHunter comparisonFromShotRotationDPS(ShotData shot)
+        {
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
+            comp.Name = Enum.GetName(typeof(Shots), shot.type);
+            comp.SubPoints = new float[] { (float)shot.dps };
+            comp.OverallPoints = (float)shot.dps;
+            return comp;
+        }
+
+        private ComparisonCalculationHunter comparisonFromShotRotationMPS(ShotData shot)
+        {
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
+            comp.Name = Enum.GetName(typeof(Shots), shot.type);
+            comp.SubPoints = new float[] { (float)shot.mps };
+            comp.OverallPoints = (float)shot.mps;
             return comp;
         }
 
@@ -2518,19 +2602,6 @@ namespace Rawr.Hunter
             return comp;
         }
 
-        private ComparisonCalculationHunter comparisonFromShotMPS(ShotData shot)
-        {
-            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
-
-            double shotWait = shot.duration > shot.cooldown ? shot.duration : shot.cooldown;
-            float mps = shotWait > 0 ? (float)(shot.mana / shotWait) : 0;
-
-            comp.Name = Enum.GetName(typeof(Shots), shot.type);
-            comp.SubPoints = new float[] { mps };
-            comp.OverallPoints = mps;
-            return comp;
-        }
-
         private ComparisonCalculationHunter comparisonFromStat(Character character, CharacterCalculationsHunter calcBase, Stats stats, string label)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
@@ -2543,6 +2614,26 @@ namespace Rawr.Hunter
             comp.OverallPoints = calcStat.OverallPoints - calcBase.OverallPoints;
 
             return comp;
+        }
+
+        private ComparisonCalculationHunter comparisonFromDouble(string label, double value)
+        {
+            return new ComparisonCalculationHunter()
+            {
+                Name = label,
+                SubPoints = new float[] { (float)value },
+                OverallPoints = (float)value,
+            };
+        }
+
+        private ComparisonCalculationHunter comparisonFromDoubles(string label, double value1, double value2)
+        {
+            return new ComparisonCalculationHunter()
+            {
+                Name = label,
+                SubPoints = new float[] { (float)value1, (float)value2 },
+                OverallPoints = (float)(value1 + value2),
+            };
         }
 
         #endregion
