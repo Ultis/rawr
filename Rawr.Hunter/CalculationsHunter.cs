@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 #if SILVERLIGHT
+using System.Windows.Media;
 #else
 using System.Drawing;
 #endif
@@ -100,11 +101,7 @@ namespace Rawr.Hunter
         private string[] characterDisplayCalculationLabels = null;
         private string[] customChartNames = null;
         private List<ItemType> relevantItemTypes = null;
-#if SILVERLIGHT
-        private Dictionary<string, System.Windows.Media.Color> subPointNameColors = null;
-#else
-        private Dictionary<string, System.Drawing.Color> subPointNameColors = null;
-#endif
+
         public CalculationsHunter()
 		{
 			characterDisplayCalculationLabels = new string[] {
@@ -165,7 +162,12 @@ namespace Rawr.Hunter
 				"Combined DPS:Total DPS"
 			};
 
-            customChartNames = new string[] { "Relative Stat Values" };
+            customChartNames = new string[] {
+                "Shots: Spammed DPS",
+                "Shots: Spammed MPS",
+                "Shots: Damage per Mana",
+                "Item Budget"
+            };
 
 			relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
@@ -189,16 +191,32 @@ namespace Rawr.Hunter
                         ItemType.TwoHandSword
 					});
 
-#if SILVERLIGHT
-            subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
-            subPointNameColors.Add("HunterDps", System.Windows.Media.Color.FromArgb(1, 0, 128, 255));
-            subPointNameColors.Add("PetDps", System.Windows.Media.Color.FromArgb(1, 255, 100, 0));
-#else
-			subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-			subPointNameColors.Add("HunterDps", System.Drawing.Color.FromArgb(0, 128, 255));
-			subPointNameColors.Add("PetDps", System.Drawing.Color.FromArgb(255, 100, 0));		
-#endif
+            _subPointNameColorsDPS = new Dictionary<string, Color>();
+            _subPointNameColorsDPS.Add("Hunter DPS", Color.FromArgb(0, 128, 255));
+            _subPointNameColorsDPS.Add("Pet DPS", Color.FromArgb(255, 100, 0));
+
+            _subPointNameColorsMPS = new Dictionary<string, Color>();
+            _subPointNameColorsMPS.Add("MPS", Color.FromArgb(0, 0, 255));
+
+            _subPointNameColorsDPM = new Dictionary<string, Color>();
+            _subPointNameColorsDPM.Add("Damage per Mana", Color.FromArgb(0, 0, 255));
+
+            _subPointNameColors = _subPointNameColorsDPS;
 		}
+
+        private Dictionary<string, Color> _subPointNameColors = null;
+        private Dictionary<string, Color> _subPointNameColorsDPS = null;
+        private Dictionary<string, Color> _subPointNameColorsMPS = null;
+        private Dictionary<string, Color> _subPointNameColorsDPM = null;
+        public override Dictionary<string, Color> SubPointNameColors
+        {
+            get
+            {
+                Dictionary<string, Color> ret = _subPointNameColors;
+                _subPointNameColors = _subPointNameColorsDPS;
+                return ret;
+            }
+        }
 
 		#region CalculationsBase Overrides
 
@@ -257,52 +275,84 @@ namespace Rawr.Hunter
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
+            CharacterCalculationsHunter calculations = GetCharacterCalculations(character) as CharacterCalculationsHunter;
+
             switch (chartName)
             {
-                case "Relative Stat Values":
-                    CharacterCalculationsHunter baseCalc = GetCharacterCalculations(character) as CharacterCalculationsHunter;
-                    CharacterCalculationsHunter calcCritValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 1 } }) as CharacterCalculationsHunter;
-                    CharacterCalculationsHunter calcAPValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 2 } }) as CharacterCalculationsHunter;
-                    CharacterCalculationsHunter calcHitValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }) as CharacterCalculationsHunter;
-                    CharacterCalculationsHunter calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }) as CharacterCalculationsHunter;
+                case "Shots: Spammed DPS":
 
-                    CharacterCalculationsHunter calcAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 1 } }) as CharacterCalculationsHunter;
-                    CharacterCalculationsHunter calcArPValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetrationRating = 1 } }) as CharacterCalculationsHunter;
-                    CharacterCalculationsHunter calcIntValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 1 } }) as CharacterCalculationsHunter;
-
-                    return new ComparisonCalculationBase[] {  
-						        new ComparisonCalculationHunter() { Name = "+1 Crit Rating", 
-                                    HunterDpsPoints = (calcCritValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
-                                    PetDpsPoints = (calcCritValue.PetDpsPoints - baseCalc.PetDpsPoints), 
-                                    OverallPoints = (calcCritValue.OverallPoints - baseCalc.OverallPoints),},      
-						        new ComparisonCalculationHunter() { Name = "+2 Attack Power", 
-                                    HunterDpsPoints = (calcAPValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
-                                    PetDpsPoints = (calcAPValue.PetDpsPoints - baseCalc.PetDpsPoints), 
-                                    OverallPoints = (calcAPValue.OverallPoints - baseCalc.OverallPoints),},       
-						        new ComparisonCalculationHunter() { Name = "+1 Hit Rating", 
-                                    HunterDpsPoints = (calcHitValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
-                                    PetDpsPoints = (calcHitValue.PetDpsPoints - baseCalc.PetDpsPoints), 
-                                    OverallPoints = (calcHitValue.OverallPoints - baseCalc.OverallPoints),},
-						        new ComparisonCalculationHunter() { Name = "+1 Haste Rating", 
-                                    HunterDpsPoints = (calcHasteValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
-                                    PetDpsPoints = (calcHasteValue.PetDpsPoints - baseCalc.PetDpsPoints), 
-                                    OverallPoints = (calcHasteValue.OverallPoints - baseCalc.OverallPoints),},
-						        new ComparisonCalculationHunter() { Name = "+1 Agility", 
-                                    HunterDpsPoints = (calcAgiValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
-                                    PetDpsPoints = (calcAgiValue.PetDpsPoints - baseCalc.PetDpsPoints), 
-                                    OverallPoints = (calcAgiValue.OverallPoints - baseCalc.OverallPoints),},
-						        new ComparisonCalculationHunter() { Name = "+1 Intellect", 
-                                    HunterDpsPoints = (calcIntValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
-                                    PetDpsPoints = (calcIntValue.PetDpsPoints - baseCalc.PetDpsPoints), 
-                                    OverallPoints = (calcIntValue.OverallPoints - baseCalc.OverallPoints),},
-
-                                new ComparisonCalculationHunter() { Name = "+1 ArP Rating", 
-                                    HunterDpsPoints = (calcArPValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
-                                    PetDpsPoints = (calcArPValue.PetDpsPoints - baseCalc.PetDpsPoints), 
-                                    OverallPoints = (calcArPValue.OverallPoints - baseCalc.OverallPoints),},
-
+                    return new ComparisonCalculationBase[] {
+                        comparisonFromShot(calculations.aimedShot),
+                        comparisonFromShot(calculations.arcaneShot),
+                        comparisonFromShot(calculations.multiShot),
+                        comparisonFromShot(calculations.serpentSting),
+                        comparisonFromShot(calculations.scorpidSting),
+                        comparisonFromShot(calculations.viperSting),
+                        comparisonFromShot(calculations.silencingShot),
+                        comparisonFromShot(calculations.steadyShot),
+                        comparisonFromShot(calculations.killShot),
+                        comparisonFromShot(calculations.explosiveShot),
+                        comparisonFromShot(calculations.blackArrow),
+                        comparisonFromShot(calculations.immolationTrap),
+                        comparisonFromShot(calculations.chimeraShot),
                     };
 
+                case "Shots: Spammed MPS":
+
+                    _subPointNameColors = _subPointNameColorsMPS;
+                    return new ComparisonCalculationBase[] {
+                        comparisonFromShotMPS(calculations.aimedShot),
+                        comparisonFromShotMPS(calculations.arcaneShot),
+                        comparisonFromShotMPS(calculations.multiShot),
+                        comparisonFromShotMPS(calculations.serpentSting),
+                        comparisonFromShotMPS(calculations.scorpidSting),
+                        comparisonFromShotMPS(calculations.viperSting),
+                        comparisonFromShotMPS(calculations.silencingShot),
+                        comparisonFromShotMPS(calculations.steadyShot),
+                        comparisonFromShotMPS(calculations.killShot),
+                        comparisonFromShotMPS(calculations.explosiveShot),
+                        comparisonFromShotMPS(calculations.blackArrow),
+                        comparisonFromShotMPS(calculations.immolationTrap),
+                        comparisonFromShotMPS(calculations.chimeraShot),
+                        comparisonFromShotMPS(calculations.rapidFire),
+                        comparisonFromShotMPS(calculations.readiness),
+                        comparisonFromShotMPS(calculations.beastialWrath),
+                        comparisonFromShotMPS(calculations.bloodFury),
+                        comparisonFromShotMPS(calculations.berserk),
+                    };
+
+                case "Shots: Damage per Mana":
+
+                    _subPointNameColors = _subPointNameColorsDPM;
+                    return new ComparisonCalculationBase[] {
+                        comparisonFromShotDPM(calculations.aimedShot),
+                        comparisonFromShotDPM(calculations.arcaneShot),
+                        comparisonFromShotDPM(calculations.multiShot),
+                        comparisonFromShotDPM(calculations.serpentSting),
+                        comparisonFromShotDPM(calculations.scorpidSting),
+                        comparisonFromShotDPM(calculations.viperSting),
+                        comparisonFromShotDPM(calculations.silencingShot),
+                        comparisonFromShotDPM(calculations.steadyShot),
+                        comparisonFromShotDPM(calculations.killShot),
+                        comparisonFromShotDPM(calculations.explosiveShot),
+                        comparisonFromShotDPM(calculations.blackArrow),
+                        comparisonFromShotDPM(calculations.immolationTrap),
+                        comparisonFromShotDPM(calculations.chimeraShot),
+                    };
+
+                case "Item Budget":
+
+                    return new ComparisonCalculationBase[] { 
+                        comparisonFromStat(character, calculations, new Stats() { Intellect = 10f }, "10 Intellect"),
+                        comparisonFromStat(character, calculations, new Stats() { Agility = 10f }, "10 Agility"),
+                        comparisonFromStat(character, calculations, new Stats() { Mp5 = 4f }, "4 MP5"),
+                        comparisonFromStat(character, calculations, new Stats() { CritRating = 10f }, "10 Crit Rating"),
+                        comparisonFromStat(character, calculations, new Stats() { HitRating = 10f }, "10 Hit Rating"),
+                        comparisonFromStat(character, calculations, new Stats() { ArmorPenetrationRating = 10f }, "1.4 Armor Penetration Rating"),
+                        comparisonFromStat(character, calculations, new Stats() { AttackPower = 20f }, "20 Attack Power"),
+                        comparisonFromStat(character, calculations, new Stats() { RangedAttackPower = 25f }, "25 Ranged Attack Power"),
+                        comparisonFromStat(character, calculations, new Stats() { HasteRating = 10f }, "10 Haste Rating"),
+                    };
             }
 
             return new ComparisonCalculationBase[0];
@@ -440,15 +490,6 @@ namespace Rawr.Hunter
         public override List<ItemType> RelevantItemTypes
         {
             get { return relevantItemTypes; }
-        }
-
-#if SILVERLIGHT
-        public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
-#else
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
-#endif
-        {
-            get { return subPointNameColors; }
         }
  
         public override CharacterClass TargetClass
@@ -2450,6 +2491,58 @@ namespace Rawr.Hunter
             if (index == 17) return calculatedStats.bloodFury;
             if (index == 18) return calculatedStats.berserk;
             return null;
+        }
+
+        private ComparisonCalculationHunter comparisonFromShot(ShotData shot)
+        {
+            ComparisonCalculationHunter comp =  new ComparisonCalculationHunter();
+
+            double shotWait = shot.duration > shot.cooldown ? shot.duration : shot.cooldown;
+            float dps = shotWait > 0 ? (float)(shot.damage / shotWait) : 0;
+
+            comp.Name = Enum.GetName(typeof(Shots), shot.type);
+            comp.HunterDpsPoints = dps;
+            comp.OverallPoints = dps;
+            return comp;
+        }
+
+        private ComparisonCalculationHunter comparisonFromShotDPM(ShotData shot)
+        {
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
+
+            float dpm = shot.mana > 0 ? (float)(shot.damage / shot.mana) : 0;
+
+            comp.Name = Enum.GetName(typeof(Shots), shot.type);
+            comp.SubPoints = new float[] { dpm };
+            comp.OverallPoints = dpm;
+            return comp;
+        }
+
+        private ComparisonCalculationHunter comparisonFromShotMPS(ShotData shot)
+        {
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
+
+            double shotWait = shot.duration > shot.cooldown ? shot.duration : shot.cooldown;
+            float mps = shotWait > 0 ? (float)(shot.mana / shotWait) : 0;
+
+            comp.Name = Enum.GetName(typeof(Shots), shot.type);
+            comp.SubPoints = new float[] { mps };
+            comp.OverallPoints = mps;
+            return comp;
+        }
+
+        private ComparisonCalculationHunter comparisonFromStat(Character character, CharacterCalculationsHunter calcBase, Stats stats, string label)
+        {
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
+
+            CharacterCalculationsHunter calcStat = GetCharacterCalculations(character, new Item() { Stats = stats }) as CharacterCalculationsHunter;
+
+            comp.Name = label;
+            comp.HunterDpsPoints = calcStat.HunterDpsPoints - calcBase.HunterDpsPoints;
+            comp.PetDpsPoints = calcStat.PetDpsPoints - calcBase.PetDpsPoints;
+            comp.OverallPoints = calcStat.OverallPoints - calcBase.OverallPoints;
+
+            return comp;
         }
 
         #endregion
