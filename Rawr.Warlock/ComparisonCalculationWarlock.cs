@@ -23,17 +23,11 @@ namespace Rawr.Warlock
             set { _name = value; }
         }
 
+		private float _overallPoints = 0f;
         public override float OverallPoints
         {
-            get
-            {
-                float f = 0f;
-                foreach (float f2 in _subPoints)
-                    if (f2 > 0)
-                        f += f2;
-                return f;
-            }
-            set { }
+			get { return _overallPoints; }
+			set { _overallPoints = value; }
         }
 
         private float[] _subPoints = new float[] { 0f, 0f };

@@ -307,6 +307,7 @@ namespace Rawr.Warlock
                         comparison.Name = string.Format("{0} Haste Rating", x);
                         comparison.SubPoints[0] = hrnew.DpsPoints - hrbase.DpsPoints;
                         comparison.SubPoints[1] = hrnew.PetDPSPoints - hrbase.PetDPSPoints;
+						comparison.OverallPoints = comparison.SubPoints[0] + comparison.SubPoints[1];
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
                     }
