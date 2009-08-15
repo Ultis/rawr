@@ -465,6 +465,16 @@ namespace Rawr.Hunter
 				MultiShotCooldownReduction = stats.MultiShotCooldownReduction,
 				TrapCooldownReduction = stats.TrapCooldownReduction,
                 FireDamage = stats.FireDamage,
+                Stamina = stats.Stamina,
+                ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
+                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
+                BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
+                BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
+                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+                BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
             };
         }
 
@@ -497,7 +507,6 @@ namespace Rawr.Hunter
             stats.HasteRating +
             stats.RangedHasteRating +
             stats.PhysicalHaste +
-            stats.Health +
             stats.PhysicalHit +
             stats.HitRating +
             stats.RangedHitRating +
@@ -519,7 +528,17 @@ namespace Rawr.Hunter
             stats.MultiShotManaDiscount +
             stats.MultiShotCooldownReduction +
             stats.TrapCooldownReduction +
-            stats.FireDamage;
+            stats.FireDamage + 
+            stats.Stamina +
+            stats.ManaRestoreFromBaseManaPerHit +
+            stats.BonusFireDamageMultiplier +
+            stats.BonusFrostDamageMultiplier +
+            stats.BonusArcaneDamageMultiplier +
+            stats.BonusShadowDamageMultiplier +
+            stats.BonusHolyDamageMultiplier +
+            stats.BonusNatureDamageMultiplier +
+            stats.BonusBleedDamageMultiplier +
+            stats.BonusPhysicalDamageMultiplier;
 
             if (totalStats > 0) return true;
 
@@ -538,6 +557,13 @@ namespace Rawr.Hunter
         {
             if (enchant.Id == 3847) return false; // Rune of the Stoneskin Gargoyle - only DKs can use this
             return base.IsEnchantRelevant(enchant);
+        }
+
+        public override bool IsBuffRelevant(Buff buff)
+        {
+            if (buff.Name == "Concentration Aura") return false; // Gets selected due to a bug saying it increases BonusAspectOfTheViperAttackSpeed
+            if (buff.Group == "Potion") return false;
+            return base.IsBuffRelevant(buff);               
         }
        
         public override List<ItemType> RelevantItemTypes
@@ -604,10 +630,27 @@ namespace Rawr.Hunter
             // we should be using character.Level everywhere, but also
             // all of the spell levels will be wrong. do we care?
 
+
             //foreach (Buff buff in character.ActiveBuffs)
             //{
             //    Debug.WriteLine(buff);
             //}
+
+            #region Spreadsheet bugs
+
+            if (statsBuffs.PhysicalCrit > 0 && options.emulateSpreadsheetBugs)
+            {
+                // Leader of the Pack should give 5%, but instead gives 4.98845627020046000000%
+                // (same as 229 crit rating)
+                // BUT, *only* LotP/Rampage - other PhysicalCrit buffs (target debuffs like Heart of the Crusader) remain in place
+                if (character.ActiveBuffsContains("Leader of the Pack") || character.ActiveBuffsContains("Rampage"))
+                {
+                    statsBuffs.CritRating += 229;
+                    statsBuffs.PhysicalCrit -= 0.05f;
+                }
+            }
+
+            #endregion
 
             // shot basics
             #region August 2009 Priority Rotation Setup
@@ -904,8 +947,7 @@ namespace Rawr.Hunter
 
             double targetDebuffsHit = 0; // Buffs!F77
 
-            double targetDebuffsCritHeartOfTheCrusader = 0; // TODO
-            double targetDebuffsCrit = targetDebuffsCritHeartOfTheCrusader; // Buffs!L77
+            double targetDebuffsCrit = statsBuffs.PhysicalCrit; // Buffs!L77
 
             calculatedStats.targetDebuffsCrit = targetDebuffsCrit;
 
@@ -925,8 +967,8 @@ namespace Rawr.Hunter
             // Focused Aim
             calculatedStats.hitFromTalents = (1.0 * character.HunterTalents.FocusedAim) / 100;
 
-            // TODO: Heroic Presence should appear here
-            calculatedStats.hitFromBuffs = statsBuffs.SpellHit;
+            // Heroic Presence
+            calculatedStats.hitFromBuffs = character.Race == CharacterRace.Draenei ? 0.01 : statsBuffs.SpellHit;
 
             calculatedStats.hitFromTargetDebuffs = targetDebuffsHit;
 
@@ -1051,10 +1093,17 @@ namespace Rawr.Hunter
             double agilityMultiplier = statsBaseGear.BonusAgilityMultiplier + statsBuffs.BonusAgilityMultiplier;
 
             double agilityRaceTalentAdjusted = Math.Floor(statsRace.Agility * (1 + character.HunterTalents.LightningReflexes * 0.03));
-            double agi_part_1 = Math.Round((statsBaseGear.Agility + agilityFromProcs) * (1 + agilityMultiplier) * (1 + statsTalents.BonusAgilityMultiplier));
+            double agi_part_1 = Math.Round((statsBaseGear.Agility + statsBuffs.Agility + agilityFromProcs) * (1 + agilityMultiplier) * (1 + statsTalents.BonusAgilityMultiplier));
             double agi_part_2 = Math.Round(statsRace.Agility * character.HunterTalents.HuntingParty * 0.01);
-            double agi_part_3 = Math.Round(agilityRaceTalentAdjusted * (1 + agilityMultiplier));
-            calculatedStats.BasicStats.Agility = (float)(agi_part_1 + agi_part_2 + agi_part_3);
+            double agi_part_3 = agilityRaceTalentAdjusted * (1 + agilityMultiplier);
+            double totalAgility = agi_part_1 + agi_part_2 + agi_part_3;
+            calculatedStats.BasicStats.Agility = (float)totalAgility;
+
+            // Armor
+            double armorFromGear = (statsBaseGear.Armor + statsBuffs.Armor + statsRace.Armor + statsBuffs.BonusArmor) * (1 + statsBuffs.BonusArmorMultiplier);
+            double armorFromAgility = totalAgility * 2.0;
+            double armorThickHideAdjust = 1 + character.HunterTalents.ThickHide * 0.0333;
+            calculatedStats.BasicStats.Armor = (float)(armorFromGear * armorThickHideAdjust + armorFromAgility);
 
             #endregion
 
@@ -1063,8 +1112,9 @@ namespace Rawr.Hunter
 
             calculatedStats.critBase = HunterRatings.BASE_CRIT_PERCENT;
 
-            calculatedStats.critFromAgi = (calculatedStats.BasicStats.Agility / HunterRatings.AGILITY_PER_CRIT) / 100;
+            calculatedStats.critFromAgi = totalAgility / (HunterRatings.AGILITY_PER_CRIT * 100);
 
+            calculatedStats.BasicStats.CritRating = statsBaseGear.CritRating + statsBuffs.CritRating + statsBaseGear.RangedCritRating;
             calculatedStats.critFromRating = (calculatedStats.BasicStats.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT) / 100;
 
             double critProcRating = 0;
@@ -1204,32 +1254,32 @@ namespace Rawr.Hunter
 
             double targetDebuffsAP = 0; // Buffs!E77
 
-            double targetDebuffsArmorCurseOfWeakness = 0; // TODO
-            double targetDebuffsArmorFaerieFire = 0; // TODO
-            double targetDebuffsArmorSunder = 0; // TODO
-            double targetDebuffsArmorPet = calculatedStats.petArmorDebuffs;
+            // The pet debuffs deal with stacking correctly themselves
+            double targetDebuffsArmor = 1 - (1 - calculatedStats.petArmorDebuffs)
+                                          * (1 - statsBuffs.ArmorPenetration); // Buffs!G77
 
-            // only use one of CoW, FF or Pet
-            double targetDebuffsArmorUse = targetDebuffsArmorCurseOfWeakness;
-            if (targetDebuffsArmorUse == 0) targetDebuffsArmorUse = targetDebuffsArmorFaerieFire;
-            if (targetDebuffsArmorUse == 0) targetDebuffsArmorUse = targetDebuffsArmorPet;
-
-            double targetDebuffsArmor = 1 - (1 - targetDebuffsArmorSunder) * (1 - targetDebuffsArmorUse); // Buffs!G77
-
-            double targetDebuffsMP5JudgmentOfWisdom = 0; // TODO!
+            double targetDebuffsMP5JudgmentOfWisdom = 0;
+            if (statsBuffs.ManaRestoreFromBaseManaPerHit > 0)
+            {
+                double jowPPM = 15; // E95
+                double jowAutosPM = autoShotsPerSecond > 0 ? 60 / (1 / autoShotsPerSecond) : 0; // E96
+                double jowSpecialsPM = specialShotsPerSecond > 0 ? 60 / (1 / specialShotsPerSecond) : 0; // E97
+                double jowActualPPM = jowAutosPM > 0 ? (jowAutosPM + jowSpecialsPM) / jowAutosPM * jowPPM : 0; // E98
+                double jowAvgShotTime = jowAutosPM + jowSpecialsPM > 0 ? 60 / (jowAutosPM + jowSpecialsPM) : 0; // E99
+                double jowProcChance = jowAvgShotTime * jowActualPPM / 60; // E100
+                double jowTimeToProc = jowProcChance > 0 ? jowAvgShotTime / jowProcChance : 0; // E101
+                double jowManaGained = statsRace.Mana * statsBuffs.ManaRestoreFromBaseManaPerHit; // E102
+                double jowMPSGained = jowTimeToProc > 0 ? jowManaGained / jowTimeToProc : 0; // E103
+                targetDebuffsMP5JudgmentOfWisdom = jowTimeToProc > 0 ? jowManaGained / jowTimeToProc * 5 : 0; // E104
+            }
             double targetDebuffsMP5 = targetDebuffsMP5JudgmentOfWisdom; // Buffs!H77
 
-            double targetDebuffsMagicCurseOfElements = 0; // TODO
-            double targetDebuffsMagicEarthAndMoon = 0; // TODO
-            double targetDebuffsMagic = Math.Max(targetDebuffsMagicCurseOfElements, targetDebuffsMagicEarthAndMoon);
+            double targetDebuffsFire = statsBuffs.BonusFireDamageMultiplier; // Buffs!I77
+            double targetDebuffsArcane = statsBuffs.BonusArcaneDamageMultiplier; // Buffs!J77
+            double targetDebuffsNature = statsBuffs.BonusNatureDamageMultiplier; // Buffs!K77
+            double targetDebuffsShadow = statsBuffs.BonusShadowDamageMultiplier;
 
-            double targetDebuffsFire = targetDebuffsMagic; // Buffs!I77
-            double targetDebuffsArcane = targetDebuffsMagic; // Buffs!J77
-            double targetDebuffsNature = targetDebuffsMagic; // Buffs!K77
-            double targetDebuffsShadow = targetDebuffsMagic;
-
-            // double bloodFrenzyEffect = 0.04 * uptime;
-            double targetDebuffsPetDamage = 0; // TODO - apply bloodFrenzyEffect
+            double targetDebuffsPetDamage = statsBuffs.BonusPhysicalDamageMultiplier;
 
             calculatedStats.targetDebuffsArmor = 1 - targetDebuffsArmor;
             calculatedStats.targetDebuffsNature = 1 + targetDebuffsNature;
@@ -1414,7 +1464,7 @@ namespace Rawr.Hunter
             }
 
             // Target Debuffs
-            calculatedStats.manaRegenTargetDebuffs = targetDebuffsMP5;
+            calculatedStats.manaRegenTargetDebuffs = targetDebuffsMP5 / 5;
 
             // Total
             calculatedStats.manaRegenTotal =
@@ -1526,11 +1576,11 @@ namespace Rawr.Hunter
             // damage
             #region August 2009 Ranged Attack Power
 
-            calculatedStats.apFromBase = 0 + HunterRatings.CHAR_LEVEL * 2;
-            calculatedStats.apFromAgil = 0 + (calculatedStats.BasicStats.Agility) - 10;
-            calculatedStats.apFromCarefulAim = 0 + (character.HunterTalents.CarefulAim / 3) * (calculatedStats.BasicStats.Intellect);
+            calculatedStats.apFromBase = 0.0 + HunterRatings.CHAR_LEVEL * 2;
+            calculatedStats.apFromAgil = 0.0 + totalAgility - 10;
+            calculatedStats.apFromCarefulAim = Math.Floor((character.HunterTalents.CarefulAim / 3) * (calculatedStats.BasicStats.Intellect));
             calculatedStats.apFromHunterVsWild = Math.Floor((character.HunterTalents.HunterVsWild * 0.1) * (calculatedStats.BasicStats.Stamina));
-            calculatedStats.apFromGear = 0 + calculatedStats.BasicStats.AttackPower;
+            calculatedStats.apFromGear = 0.0 + calculatedStats.BasicStats.AttackPower;
 
             // Darkmoon Card: Crusade
             if (IsWearingTrinket(character, 31856)) calculatedStats.apFromGear += 120;
@@ -1562,7 +1612,7 @@ namespace Rawr.Hunter
             // Expose Weakness
             double exposeWeaknessShotsPerSecond = crittingShotsPerSecond;
             double exposeWeaknessCritChance = calculatedStats.priorityRotation.critsCompositeSum;
-            double exposeWeaknessAgility = calculatedStats.BasicStats.Agility * 0.25;
+            double exposeWeaknessAgility = totalAgility * 0.25;
             double exposeWeaknessPercent = 0;
             if (character.HunterTalents.ExposeWeakness == 1) exposeWeaknessPercent = 0.33;
             if (character.HunterTalents.ExposeWeakness == 2) exposeWeaknessPercent = 0.66;
@@ -1587,10 +1637,25 @@ namespace Rawr.Hunter
                 calculatedStats.apFromHuntersMark += 0.2 * HunterRatings.HUNTERS_MARK;
             }
 
+
             calculatedStats.apFromDebuffs = targetDebuffsAP;
 
-            calculatedStats.apFromProc = 0;
+            // debuffs may contain hunters mark too - only count the debuff if it's worth more
+            // than our mark is
+            double apFromHuntersMarkDebuff = 0;
+            if (character.ActiveBuffsContains("Hunter's Mark")) apFromHuntersMarkDebuff += 500;
+            if (character.ActiveBuffsContains("Improved Hunter's Mark")) apFromHuntersMarkDebuff += 150;
+            calculatedStats.apFromGear -= apFromHuntersMarkDebuff;
 
+            if (apFromHuntersMarkDebuff > calculatedStats.apFromHuntersMark)
+            {
+                // the hunters mark buff (not ours) is better than ours.
+                // add the difference as a target debuff
+                calculatedStats.apFromDebuffs += apFromHuntersMarkDebuff - calculatedStats.apFromHuntersMark;
+            }
+
+                    
+            calculatedStats.apFromProc = 0;
 
             double crittingTriggersPerSecond = options.emulateSpreadsheetBugs // still an issue in 91b
                                              ? crittingShotsPerSecond * critHitPercent
@@ -1664,12 +1729,12 @@ namespace Rawr.Hunter
                 + calculatedStats.apFromAspectOfTheHawk
                 + calculatedStats.apFromAspectMastery
                 + calculatedStats.apFromFuriousHowl
-                + calculatedStats.apFromDebuffs
                 + calculatedStats.apFromProc;
 
             // used for hunter calculations
             calculatedStats.apTotal = calculatedStats.apSelfBuffed
                 + calculatedStats.apFromExposeWeakness
+                + calculatedStats.apFromDebuffs
                 + calculatedStats.apFromHuntersMark;
 
             // apply scaling
@@ -1751,7 +1816,6 @@ namespace Rawr.Hunter
             double focusedFireDamageAdjust = 1 + 0.01 * character.HunterTalents.FocusedFire;
 
             //Sanc. Retribution Aura
-            // TODO: THIS IS WRONG. also, it needs to check ferocious inspiration isn't up
             double sancRetributionAuraDamageAdjust = 1 + statsBuffs.BonusDamageMultiplier;
 
             //Black Arrow Damage Multiplier
@@ -1787,7 +1851,8 @@ namespace Rawr.Hunter
             double markedForDeathDamageAdjust = 1 + 0.01 * character.HunterTalents.MarkedForDeath;
 
             //DamageTakenDebuffs
-            double targetPhysicalDebuffsDamageAdjust = 1 + statsBuffs.DamageTakenMultiplier;
+            double targetPhysicalDebuffsDamageAdjust = (1 + statsBuffs.DamageTakenMultiplier)
+                                                     * (1 + statsBuffs.BonusPhysicalDamageMultiplier);
 
             //Barrage
             double barrageDamageAdjust = 1 + 0.04 * character.HunterTalents.Barrage;
@@ -1798,7 +1863,7 @@ namespace Rawr.Hunter
             //Improve Stings
             double improvedStingsDamageAdjust = 1 + 0.1 * character.HunterTalents.ImprovedStings;
 
-            // Steady Shot Glyph
+            //Steady Shot Glyph
             double glyphOfSteadyShotDamageAdjust = character.HunterTalents.GlyphOfSteadyShot ? 1.1 : 1;
 
             //Improved Arcane Shot 
@@ -2114,7 +2179,6 @@ namespace Rawr.Hunter
                                           * sancRetributionAuraDamageAdjust * noxiousStingsDamageAdjust
                                           * ferociousInspirationDamageAdjust * improvedTrackingDamageAdjust
                                           * rangedWeaponSpecializationDamageAdjust * markedForDeathDamageAdjust
-                                          * targetPhysicalDebuffsDamageAdjust
                                           * (sniperTrainingDamageAdjust + trapMasteryDamageAdjust + TNTDamageAdjust - 2)
                                           * blackArrowSelfDamageAdjust * (1 + targetDebuffsShadow);
 
@@ -2318,17 +2382,21 @@ namespace Rawr.Hunter
 
             // Agility - This gets recalculated for trinkets later
             double agi_race_talent_adjusted = Math.Floor(statsRace.Agility * (1 + character.HunterTalents.LightningReflexes * 0.03));
-            double agi_part_1 = Math.Round((statsBaseGear.Agility) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) * (1 + statsTalents.BonusAgilityMultiplier));
+            double agi_part_1 = Math.Round((statsBaseGear.Agility + statsBuffs.Agility) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) * (1 + statsTalents.BonusAgilityMultiplier));
             double agi_part_2 = Math.Round(statsRace.Agility * character.HunterTalents.HuntingParty * 0.01);
             double agi_part_3 = Math.Round(agi_race_talent_adjusted * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
             statsTotal.Agility = (float)(agi_part_1 + agi_part_2 + agi_part_3);
 
-            statsTotal.Intellect = (statsRace.Intellect + statsGearEnchantsBuffs.Intellect) * (1 + statsTotal.BonusIntellectMultiplier);
+            // Intellect
+            double intellectFromGear = Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier) * (1 + statsTalents.BonusIntellectMultiplier));
+            double intellectFromRace = (statsRace.Intellect * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
+            statsTotal.Intellect = (float)(intellectFromGear + intellectFromRace);
+
 			statsTotal.Spirit = (statsRace.Spirit + statsGearEnchantsBuffs.Spirit);  // * (1 + statsTotal.BonusSpiritMultiplier);
 			statsTotal.Resilience = statsRace.Resilience + statsGearEnchantsBuffs.Resilience;
 
             // Armor
-            double armorFromGear = (statsGearEnchantsBuffs.Armor + statsRace.Armor) * (1 + statsBuffs.BonusArmorMultiplier);
+            double armorFromGear = (statsGearEnchantsBuffs.Armor + statsRace.Armor + statsBuffs.BonusArmor) * (1 + statsBuffs.BonusArmorMultiplier);
             double armorFromAgility = statsTotal.Agility * 2.0;
             double armorThickHideAdjust = 1 + character.HunterTalents.ThickHide * 0.0333;
 			statsTotal.Armor = (float)(armorFromGear * armorThickHideAdjust + armorFromAgility);
@@ -2339,13 +2407,13 @@ namespace Rawr.Hunter
 			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
             statsTotal.BonusCritMultiplier = 0.0f; // ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
 
+            // Crit Rating - we will recalculate this later when we convert some crit
+            //               multiplier to crit rating for a spreadsheet bug
             statsTotal.CritRating = (float)Math.Floor(
                                                (double)statsRace.CritRating +                       
                                                (double)statsBaseGear.CritRating +                   // gear crit
-                                               (double)statsBuffs.CritRating +                      // master of anatomy!
-                                               (double)statsGearEnchantsBuffs.RangedCritRating +    // crit from scopes
-                                               (double)statsRace.LotPCritRating +                   // leader of the pack
-                                               (double)statsGearEnchantsBuffs.LotPCritRating        // leader of the pack
+                                               (double)statsBuffs.CritRating +                      // master of anatomy, etc
+                                               (double)statsBuffs.RangedCritRating                  // crit from scopes
                                     );
 
             statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating + statsGearEnchantsBuffs.RangedHasteRating;

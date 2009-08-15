@@ -277,7 +277,7 @@ namespace Rawr.Hunter
                            critFromKillerInstincts.ToString("P2") + " from Killer Instincts\n" +
                            critFromMasterMarksman.ToString("P2") + " from Master Marksman\n" +
                            critFromMasterTactician.ToString("P2") + " from Master Tactician\n" +
-			               critFromBuffs.ToString("P2") + " from buffs \n" +
+			               critFromBuffs.ToString("P2") + " from target debuffs \n" +
 			               critFromDepression.ToString("P2") + " from depression");
             dictValues.Add("Ranged AP", apTotal.ToString("F0") + "*includes: \n" +
                             apFromBase.ToString("F0") + " from base \n" +

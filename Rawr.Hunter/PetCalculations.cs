@@ -108,7 +108,7 @@ namespace Rawr.Hunter
             double hitFromBase = 0.95;
             double hitFromTargetDebuffs = 0;
             double hitFromFocusedAim = character.HunterTalents.FocusedAim * 0.01;
-            double hitFromRacial = character.Race == CharacterRace.Draenei ? 0.01 : 0; // TODO: or draenei buff
+            double hitFromRacial = character.Race == CharacterRace.Draenei ? 0.01 : statsBuffs.SpellHit;
             double hitFromHunter = Math.Floor(calculatedStats.BasicStats.HitRating / HunterRatings.HIT_RATING_PER_PERCENT) / 100;
             double hitFromLevelAdjust = 0 - levelDifference / 100.0;
 
@@ -135,18 +135,19 @@ namespace Rawr.Hunter
             isWearingBeastTamersShoulders = character.Shoulders != null && character.Shoulders.Id == 30892;
 
             double critAgilityBase = petStats.Agility;
-            double critAgilityBuffsAdditive = 0; // TODO
-            double critAgilityBuffsMultiplicitive = 0; // TODO statsBuffs.BonusAgilityMultiplier
+            double critAgilityBuffsAdditive = statsBuffs.Agility;
+            double critAgilityBuffsMultiplicitive = statsBuffs.BonusAgilityMultiplier;
             double critAgilityTotal = (critAgilityBase + critAgilityBuffsAdditive) * (1 + critAgilityBuffsMultiplicitive);
 
-            double critBuffsAdditive = 0; // TODO - calculatedStats.BasicStats.BonusPetCritChance
+            double petCritRatingBuff = statsBuffs.CritRating;
+            if (character.ActiveBuffsContains("Master of Anatomy")) petCritRatingBuff -= 40;
 
             double critFromBase = 0.032;
             double critFromAgility = critAgilityTotal / (100 * 62.5);
             double critFromSpidersBite = options.petSpidersBite * 0.03;
             double critFromFerocity = character.HunterTalents.Ferocity * 0.02;
             double critFromGear = isWearingBeastTamersShoulders ? 0.02 : 0;
-            double critFromBuffs = critBuffsAdditive / (HunterRatings.CRIT_RATING_PER_PERCENT * 100); ;
+            double critFromBuffs = (petCritRatingBuff / HunterRatings.CRIT_RATING_PER_PERCENT) / 100;
             double critFromTargetDebuffs = calculatedStats.targetDebuffsCrit;
 
             double critFromDepression = (levelDifference > 2) ? 0 - (0.03 + (levelDifference * 0.006)) : 0 - ((levelDifference * 5 * 0.04) / 100);
@@ -200,7 +201,7 @@ namespace Rawr.Hunter
             double attackSpeedFromSerpentsSwiftness = 1 + (character.HunterTalents.SerpentsSwiftness * 0.04);
             double attackSpeedFromHeroism = 1 + calculatedStats.hasteFromHeroism;
             double attackSpeedFromCobraReflexes = 1 + (options.petCobraReflexes * 0.15);
-            double attackSpeedFromMultiplicitiveHasteBuffs = 1; // TODO
+            double attackSpeedFromMultiplicitiveHasteBuffs = 1 + statsBuffs.PhysicalHaste;
             double attackSpeedAdjust = attackSpeedFromSerpentsSwiftness
                                      * attackSpeedFromHeroism
                                      * attackSpeedFromCobraReflexes
@@ -315,6 +316,17 @@ namespace Rawr.Hunter
                 armorDebuffSting = stingUptime * 0.05;
             }
 
+            // these local buffs can be overridden
+            if (character.ActiveBuffsConflictingBuffContains("Sting"))
+            {
+                armorDebuffSporeCloud = 0;
+                armorDebuffSting = 0;
+            }
+            if (character.ActiveBuffsConflictingBuffContains("Acid Spit"))
+            {
+                armorDebuffAcidSpit = 0;
+            }
+
             calculatedStats.petArmorDebuffs = 0 - (1 - armorDebuffSporeCloud) * (1 - armorDebuffAcidSpit) * (1 - armorDebuffSting) + 1;
 
             #endregion
@@ -394,7 +406,7 @@ namespace Rawr.Hunter
             double apFromHunterScaling = 0.22 * (1 + options.petWildHunt * 0.15);
             double apFromStrength = (petStats.Strength - 10) * 2;
             double apFromHunterVsWild = Math.Floor(calculatedStats.BasicStats.Stamina * (0.1 * character.HunterTalents.HunterVsWild));
-            double apFromBuffs = 0; //TODO: +AP buffs
+            double apFromBuffs = statsBuffs.AttackPower;
             double apFromHunterRAP = Math.Floor(calculatedStats.apSelfBuffed * apFromHunterScaling);
 
             // Tier 9 4-pice bonus is complex
@@ -580,7 +592,7 @@ namespace Rawr.Hunter
             double damageAdjustGearModifier = isWearingBeastTamersShoulders ? 1.03 : 1;
             double damageAdjustFerociousInspiration = calculatedStats.ferociousInspirationDamageAdjust;
             double damageAdjustKindredSpirits = 1 + (character.HunterTalents.KindredSpirits * 0.04);
-            double damageAdjustSancRetributionAura = 1; // TODO
+            double damageAdjustSancRetributionAura = 1 + statsBuffs.BonusDamageMultiplier;
             double damageAdjustTier7Bonus = 1 + statsBuffs.BonusPetDamageMultiplier;
             double damageAdjustSharkAttack = 1 + (options.petSharkAttack * 0.03);
             double damageAdjustTargetDebuffs = calculatedStats.targetDebuffsPetDamage;
@@ -681,7 +693,7 @@ namespace Rawr.Hunter
                 damageAdjustMonstrousBite = 1 + monstrousBiteProcEffect;
             }
 
-            double damageAdjustMangle = 1; // TODO : 1 + (mangle_effect * 0.3)
+            double damageAdjustMangle = 1 + statsBuffs.BonusBleedDamageMultiplier;
 
             double effectiveTargetArmor = options.TargetArmor * calculatedStats.targetDebuffsArmor;
             double damageAdjustMitigation = 1 - (effectiveTargetArmor / (effectiveTargetArmor - 22167.5 + (467.5 * 80)));
@@ -718,7 +730,7 @@ namespace Rawr.Hunter
             double whiteDamageBase = (52 + 78) / 2;
             double whiteDamageFromAP = Math.Floor(petStats.AttackPower / 14 * 2);
             double whiteDamageNormal = whiteDamageBase + whiteDamageFromAP;
-            double whiteDamageAdjust = damageAdjustWhite * damageAdjustCobraReflexes * damageAdjustMitigation * damageAdjustGlancingBlows * damageAdjustDodge;
+            double whiteDamageAdjust = damageAdjustWhite * damageAdjustCobraReflexes * damageAdjustMitigation * damageAdjustGlancingBlows;
             double whiteDamageReal = whiteDamageNormal * whiteDamageAdjust;
 
             double whiteDPS = whiteDamageReal / attackSpeedEffective;
