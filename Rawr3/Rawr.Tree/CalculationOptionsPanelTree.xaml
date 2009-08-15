@@ -92,7 +92,7 @@
     				<TextBlock Margin="8,0,8,0" Grid.Row="2" Text="Replenishment Uptime" TextWrapping="Wrap" VerticalAlignment="Center"/>
     				<TextBlock Margin="8,0,8,0" Grid.Row="3" Text="Time in FSR" TextWrapping="Wrap" VerticalAlignment="Center"/>
     				<CheckBox Margin="8,17,8,8" Content="Own Innervates" Grid.Row="4" IsChecked="{Binding Mode=TwoWay, Path=Innervates}"/>
-    				<CheckBox Margin="8,17,8,8" Content="Patch 3.2 Mode" Grid.Column="1" Grid.Row="4" IsChecked="{Binding Mode=TwoWay, Path=Patch3_2}"/>
+    				<CheckBox Margin="8,17,8,8" Content="Patch 3.2 Mode" Grid.Column="1" Grid.Row="4" IsChecked="{Binding Mode=TwoWay, Path=Patch3_2}" Visibility="Collapsed"/>
     				<Slider Margin="8,0,8,0" Grid.Column="1" Grid.Row="3" Maximum="100" Value="{Binding Mode=TwoWay, Path=FSRRatio}" LargeChange="10" SmallChange="1"/>
     				<Slider Margin="8,0,8,0" Grid.Column="1" Grid.Row="2" Maximum="100" Value="{Binding Mode=TwoWay, Path=ReplenishmentUptime}" LargeChange="10" SmallChange="1"/>
     				<ListBox Margin="8,8,8,8" Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding Mode=OneWay, Path=ManaPotionDesc}" SelectedIndex="{Binding Mode=TwoWay, Path=ManaPot}"/>
