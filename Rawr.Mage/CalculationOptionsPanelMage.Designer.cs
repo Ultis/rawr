@@ -224,6 +224,8 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label85 = new System.Windows.Forms.Label();
+            this.checkBoxMode322 = new System.Windows.Forms.CheckBox();
             this.buttonHotStreakUtilization = new System.Windows.Forms.Button();
             this.buttonComputeOptimalFrostCycles = new System.Windows.Forms.Button();
             this.buttonEditTalentScores = new System.Windows.Forms.Button();
@@ -2299,6 +2301,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label85);
+            this.tabPage4.Controls.Add(this.checkBoxMode322);
             this.tabPage4.Controls.Add(this.buttonHotStreakUtilization);
             this.tabPage4.Controls.Add(this.buttonComputeOptimalFrostCycles);
             this.tabPage4.Controls.Add(this.buttonEditTalentScores);
@@ -2346,6 +2350,26 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // label85
+            // 
+            this.label85.AutoSize = true;
+            this.label85.Location = new System.Drawing.Point(0, 87);
+            this.label85.Name = "label85";
+            this.label85.Size = new System.Drawing.Size(71, 13);
+            this.label85.TabIndex = 206;
+            this.label85.Text = "3.2.2 Mode: *";
+            this.toolTipMage.SetToolTip(this.label85, "Enables Patch 3.2.2 calculations.");
+            // 
+            // checkBoxMode322
+            // 
+            this.checkBoxMode322.AutoSize = true;
+            this.checkBoxMode322.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Mode322", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxMode322.Location = new System.Drawing.Point(185, 87);
+            this.checkBoxMode322.Name = "checkBoxMode322";
+            this.checkBoxMode322.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMode322.TabIndex = 205;
+            this.checkBoxMode322.UseVisualStyleBackColor = true;
             // 
             // buttonHotStreakUtilization
             // 
@@ -3049,6 +3073,8 @@
         private System.Windows.Forms.Label label88;
         private System.Windows.Forms.TextBox textBoxCastLatency;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label85;
+        private System.Windows.Forms.CheckBox checkBoxMode322;
 
     }
 }

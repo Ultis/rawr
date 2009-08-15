@@ -1177,10 +1177,12 @@ namespace Rawr.Mage
             public int ArcaneBlastStack { get; set; }
         }
 
-        public Spell AB0, AB1, AB2, AB3, ABar0, ABar1, ABar2, ABar3, AM0, AM1, AM2, AM3, MBAM0, MBAM1, MBAM2, MBAM3;
+        public Spell AB0, AB1, AB2, AB3, AB4, ABar0, ABar1, ABar2, ABar3, ABar4, AM0, AM1, AM2, AM3, AM4, MBAM0, MBAM1, MBAM2, MBAM3, MBAM4;
 
+        private float ABMB;
         private float MB;
         private float T8;
+        private int maxStack;
 
         public ArcaneCycleGenerator(CastingState castingState)
         {
@@ -1188,19 +1190,33 @@ namespace Rawr.Mage
             AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
             AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
             AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+            AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
             ABar0 = castingState.GetSpell(SpellId.ArcaneBarrage);
             ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
             ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
             ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            ABar4 = castingState.GetSpell(SpellId.ArcaneBarrage4);
             AM0 = castingState.GetSpell(SpellId.ArcaneMissiles);
             AM1 = castingState.GetSpell(SpellId.ArcaneMissiles1);
             AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
             AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
+            AM4 = castingState.GetSpell(SpellId.ArcaneMissiles4);
             MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
             MBAM1 = castingState.GetSpell(SpellId.ArcaneMissilesMB1);
             MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
             MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+            MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
 
+            if (castingState.CalculationOptions.Mode322)
+            {
+                ABMB = 0.08f * castingState.MageTalents.MissileBarrage;
+                maxStack = 4;
+            }
+            else
+            {
+                ABMB = 0.04f * castingState.MageTalents.MissileBarrage;
+                maxStack = 3;
+            }
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
@@ -1241,6 +1257,11 @@ namespace Rawr.Mage
                     ABar = ABar3;
                     AM = (s.MissileBarrageDuration > 0) ? MBAM3 : AM3;
                     break;
+                case 4:
+                    AB = AB4;
+                    ABar = ABar4;
+                    AM = (s.MissileBarrageDuration > 0) ? MBAM4 : AM4;
+                    break;
             }
             if (MB > 0)
             {
@@ -1251,9 +1272,9 @@ namespace Rawr.Mage
                         s.MissileBarrageDuration > AB.CastTime,
                         15.0f,
                         Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime),
-                        Math.Min(3, s.ArcaneBlastStack + 1)
+                        Math.Min(maxStack, s.ArcaneBlastStack + 1)
                     ),
-                    TransitionProbability = MB
+                    TransitionProbability = ABMB
                 });
             }
             list.Add(new CycleControlledStateTransition()
@@ -1263,9 +1284,9 @@ namespace Rawr.Mage
                     s.MissileBarrageDuration > AB.CastTime,
                     Math.Max(0.0f, s.MissileBarrageDuration - AB.CastTime),
                     Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime),
-                    Math.Min(3, s.ArcaneBlastStack + 1)
+                    Math.Min(maxStack, s.ArcaneBlastStack + 1)
                 ),
-                TransitionProbability = 1.0f - MB
+                TransitionProbability = 1.0f - ABMB
             });
             //if (s.ArcaneBarrageCooldown == 0)
             {

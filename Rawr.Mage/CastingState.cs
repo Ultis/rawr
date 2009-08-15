@@ -685,6 +685,9 @@ namespace Rawr.Mage
                 case SpellId.ArcaneMissiles3:
                     s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 3);
                     break;
+                case SpellId.ArcaneMissiles4:
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 4);
+                    break;
                 case SpellId.ArcaneMissilesMB:
                     s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 0);
                     break;
@@ -696,6 +699,9 @@ namespace Rawr.Mage
                     break;
                 case SpellId.ArcaneMissilesMB3:
                     s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 3);
+                    break;
+                case SpellId.ArcaneMissilesMB4:
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 4);
                     break;
                 case SpellId.ArcaneMissilesNoProc:
                     s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, true, false, false, 0, 5);
@@ -739,8 +745,14 @@ namespace Rawr.Mage
                 case SpellId.ArcaneBarrage3:
                     s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 3);
                     break;
+                case SpellId.ArcaneBarrage4:
+                    s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 4);
+                    break;
                 case SpellId.ArcaneBlast3:
                     s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3);
+                    break;
+                case SpellId.ArcaneBlast4:
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 4);
                     break;
                 case SpellId.ArcaneBlast3NoCC:
                     s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, true, false, false);
