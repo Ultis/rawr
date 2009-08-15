@@ -419,7 +419,29 @@ namespace Rawr.Mage
                     c = new AB3MBAMABarSc(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ArcaneBlastSpam:
-                    c = GetSpell(SpellId.ArcaneBlast3);
+                    if (CalculationOptions.Mode322)
+                    {
+                        c = GetSpell(SpellId.ArcaneBlast4);
+                    }
+                    else
+                    {
+                        c = GetSpell(SpellId.ArcaneBlast3);
+                    }
+                    break;
+                case CycleId.ABSpam4MBAM:
+                    c = new ABSpam4MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.ABSpam24MBAM:
+                    c = new ABSpam24MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.ABSpam234MBAM:
+                    c = new ABSpam234MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AB4AM234MBAM:
+                    c = new AB4AM234MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AB3AM23MBAM:
+                    c = new AB3AM23MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABarAM:
                     c = new ABarAM(Calculations.NeedsDisplayCalculations, this);

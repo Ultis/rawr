@@ -1075,6 +1075,35 @@ namespace Rawr.Mage
             cycle.threatPerSecond += multiplier * rawSpell.CastTime * rawSpell.ThreatPerSecond;
         }
 
+        public void AddToCycle(CharacterCalculationsMage calculations, Cycle cycle, Spell rawSpell, float weight0, float weight1, float weight2, float weight3, float weight4)
+        {
+            MageTalents mageTalents = calculations.MageTalents;
+            float weight = weight0 + weight1 + weight2 + weight3 + weight4;
+            cycle.CastTime += weight * rawSpell.CastTime;
+            cycle.CastProcs += weight * rawSpell.CastProcs;
+            cycle.NukeProcs += weight * rawSpell.NukeProcs;
+            cycle.Ticks += weight * rawSpell.Ticks;
+            cycle.HitProcs += weight * rawSpell.HitProcs;
+            cycle.CritProcs += weight * rawSpell.CritProcs;
+            cycle.TargetProcs += weight * rawSpell.TargetProcs;
+
+            double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
+            if (calculations.CalculationOptions.Mode322)
+            {
+                cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.30f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.60f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.90f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.20f)));
+            }
+            else
+            {
+                cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.00f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 4.00f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 6.00f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 8.00f)));
+            }
+            cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
+
+            float multiplier = weight * baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4);
+            cycle.DpsPerSpellPower += multiplier * rawSpell.CastTime * rawSpell.DpsPerSpellPower;
+            cycle.damagePerSecond += multiplier * rawSpell.CastTime * rawSpell.DamagePerSecond;
+            cycle.threatPerSecond += multiplier * rawSpell.CastTime * rawSpell.ThreatPerSecond;
+        }
+
         private float arcaneBlastDamageMultiplier;
         private float baseAdditiveSpellModifier;
         private float tormentTheWeak;
