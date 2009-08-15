@@ -28,10 +28,12 @@ namespace Rawr.Tree
         public float ManaPer5In5SR;
         public float ManaPer5Out5SR;
         public float ManaPer5InRotation;
-        public float ManaPer5OutRotation;
-        public float ManaFromInnervate;
+        public float ManaFromEachInnervate;
+        public float ManaFromInnervates;
+        public float ManaFromSpirit;
+        public float ManaFromMP5;
+        public float ManaFromPotions;
         public float ReplenishRegen;
-        public float TotalMod;
         public float TotalHealing;
         public float TotalCastsPerMinute;
         public float TotalCritsPerMinute;
@@ -252,7 +254,7 @@ applied and result is scaled down by 100)",
                         "Basic Stats:Intellect",
                         "Basic Stats:Spirit",
                         "Basic Stats:Healing",
-                        "Basic Stats:MP5",
+                        "Basic Stats:Effective MP5",
                         "Basic Stats:Spell Crit",
                         "Basic Stats:Spell Haste",
                         "Basic Stats:Global CD",
@@ -686,17 +688,17 @@ applied and result is scaled down by 100)",
             spiritRegen *= 5.0f;    // Change to MP5, since GetSpiritRegenSec works per sec 
             
             float replenishment;
-            if (calcOpts.Patch3_2)
+//            if (1) //calcOpts.Patch3_2
             {
                 replenishment = stats.Mana * 0.01f * (calcOpts.ReplenishmentUptime / 100f); // Now 1% every 5 sec
             }
-            else
+            /*else      // patch 3.1
             {
                 replenishment = stats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);   // Old: 0.25% every sec
-            }
+            } */
             float ManaRegenInFSR = stats.Mp5 + replenishment + spiritRegen * stats.SpellCombatManaRegeneration;
             float ManaRegenOutFSR = stats.Mp5 + replenishment + spiritRegen;
-            float ManaRegenOutFSRNoCast =  stats.Mp5 + replenishment + 0.2f * spiritRegen + 0.8f * spiritRegen;
+//            float ManaRegenOutFSRNoCast =  stats.Mp5 + replenishment + 0.2f * spiritRegen + 0.8f * spiritRegen;
 
             float ratio = .01f * calcOpts.FSRRatio;
             float manaRegen = ratio * ManaRegenInFSR + (1 - ratio) * ManaRegenOutFSR;
@@ -725,21 +727,24 @@ applied and result is scaled down by 100)",
             #endregion */
 
             #region Innervates
-            float manaFromInnervate = 4.5f * calcOpts.Innervates;       // Use self innervate?
+            float numInnervates = (float) Math.Ceiling(calcOpts.FightDuration / 180.0f);      // 3 min CD, for 3:15 fight durations, will give unrealistic value of 2 innervates, not practical, since one will over-mana 
+            float manaFromEachInnervate = 2.25f * calcOpts.Innervates;       // Use self innervate?
 
             if (calculatedStats.LocalCharacter.DruidTalents.GlyphOfInnervate)
             {
-                manaFromInnervate += 0.9f;
+                manaFromEachInnervate += 0.45f;
             }
 
-            manaFromInnervate *= Rawr.Tree.TreeConstants.BaseMana;
+            manaFromEachInnervate *= Rawr.Tree.TreeConstants.BaseMana;
+
+            float manaFromInnervates = manaFromEachInnervate * numInnervates;
 
             //TODO: Should we add this limit back in?
             // lets assume the mana return is maximally 95% of your mana
             // thus take the smaller value of 95% of mana pool and total mana regenerated
 //            manaFromInnervate = Math.Min(manaFromInnervate, .95f * stats.Mana);
 
-            extraMana += manaFromInnervate;
+            extraMana += manaFromInnervates;
             #endregion
 
 
@@ -849,12 +854,13 @@ applied and result is scaled down by 100)",
             }
 
             float TotalMod = 1f;
-            if (TotalTime > TimeToOOM)
-            {
-                float TimeToRegenAll = 5f * stats.Mana / ManaRegenOutFSRNoCast;
+            if (TotalTime > TimeToOOM + 1.0f)
+            {       // Should only happen if running OOM from tank HoTs and even attempts to scale back there wasn't enough
+                float TimeToRegenAll = 5f * stats.Mana / ManaRegenOutFSR;
                 float TimeToBurnAll = stats.Mana / EffectiveManaBurn;
                 //CvRFraction = (stats.Mana / EffectiveManaBurn) / TotalCycle;
-                TotalMod = 1f + (TotalTime - TimeToOOM) / (TimeToRegenAll + TimeToBurnAll);
+                TotalMod = 1f - (TotalTime - TimeToOOM) / (TimeToRegenAll + TimeToBurnAll);
+                hps *= TotalMod;        // Penalise hps
             }
             #endregion
 
@@ -883,10 +889,12 @@ applied and result is scaled down by 100)",
                 ManaPer5In5SR = ManaRegenInFSR,
                 ManaPer5Out5SR = ManaRegenOutFSR,
                 ManaPer5InRotation = manaRegen,
-                ManaPer5OutRotation = ManaRegenOutFSRNoCast,
-                ManaFromInnervate = manaFromInnervate,
+                ManaFromEachInnervate = manaFromEachInnervate,
+                ManaFromInnervates = manaFromInnervates / calcOpts.FightDuration * 5.0f,
+                ManaFromSpirit = spiritRegen,
+                ManaFromMP5 = stats.Mp5,
+                ManaFromPotions = extraManaFromPot, 
                 TimeToOOM = TimeToOOM,
-                TotalMod = TotalMod,
                 TotalTime = TotalTime,
                 TotalHealing = TimeToOOM * hps * TotalMod,
                 TotalCastsPerMinute = castsPerMinute * TotalMod,

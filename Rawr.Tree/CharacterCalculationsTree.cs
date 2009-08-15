@@ -113,7 +113,7 @@ namespace Rawr.Tree
             dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus");
 
             bool hasSpiWhileCasting = BasicStats.ExtraSpiritWhileCasting > 0;
-            dictValues.Add("MP5", Math.Round(Simulation.ManaPer5In5SR).ToString() + "*" + Math.Round(Simulation.ManaPer5Out5SR).ToString() + " Out of FSR\n" + Math.Round(Simulation.ReplenishRegen).ToString() + " From Replenishment\n" + (hasSpiWhileCasting ? "(values include extra Spirit while casting)\n" : "\n") + Math.Round(Simulation.ManaFromInnervate).ToString() + " extra mana from each Innervate");
+            dictValues.Add("Effective MP5", Math.Round(Simulation.ManaPer5In5SR).ToString() + "*" + Math.Round(Simulation.ManaFromSpirit*BasicStats.SpellCombatManaRegeneration).ToString() + " From Spirit (" + Math.Round(Simulation.ManaFromSpirit).ToString() + " while not Casting)\n" + Math.Round(Simulation.ManaFromMP5).ToString() + " From MP5 gear\n" + Math.Round(Simulation.ReplenishRegen).ToString() + " From Replenishment\n("  + Math.Round(Simulation.ManaPer5Out5SR).ToString() + " Out of FSR)\nAlso adding to mana pool is:\n" + Math.Round(Simulation.ManaFromInnervates).ToString() + " (" + Math.Round(Simulation.ManaFromEachInnervate).ToString() + " extra mana from each Innervate)\n" + Math.Round(Simulation.ManaFromPotions / Simulation.TotalTime * 5.0f).ToString() + " (" + Math.Round(Simulation.ManaFromPotions).ToString() + " extra mana from Potion)\n");
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
 
             doHasteCalcs();

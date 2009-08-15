@@ -449,6 +449,7 @@
             // 
             // cbPatch3_2
             // 
+            this.cbPatch3_2.Visible = false;
             this.cbPatch3_2.AutoSize = true;
             this.cbPatch3_2.Checked = true;
             this.cbPatch3_2.CheckState = System.Windows.Forms.CheckState.Checked;

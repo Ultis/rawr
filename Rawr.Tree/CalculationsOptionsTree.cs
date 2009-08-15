@@ -42,7 +42,7 @@ namespace Rawr.Tree
 
         private int swiftmendPerMinute;
 
-        private bool patch3_2;
+        private bool patch3_2;          // Unused atm
 
         //        public int MainSpellFraction = 60;
         public RotationSettings customRotationSettings;

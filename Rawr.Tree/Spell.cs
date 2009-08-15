@@ -282,7 +282,7 @@ namespace Rawr.Tree
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1 + 0.06f * druidTalents.TreeOfLife);
 
-            coefDH *= (1 + 0.2f * druidTalents.EmpoweredTouch);
+            coefDH += (0.2f * druidTalents.EmpoweredTouch);     // ET is additive from http://elitistjerks.com/f73/t37038-restoration_glyphs/p8/#post1240879 
 
             coefDH *=
                 (1 + 0.02f * druidTalents.GiftOfNature) *
@@ -528,18 +528,18 @@ namespace Rawr.Tree
             healingBonus = calculatedStats.SpellPower;
             critPercent = calculatedStats.SpellCrit;
 
-            if (calcOpts.Patch3_2)
+//            if (calcOpts.Patch3_2)
             {
                 minHeal = 776f;                             // Patch 3.2 nerfs bloom value
                 maxHeal = 776f;
                 coefDH = 0.645f * 0.8f;                     // 20 % Nerf
             }
-            else
+            /*else  // patch 3.1
             {
                 minHeal = 970f;
                 maxHeal = 970f;
                 coefDH = 0.645f;
-            }
+            }*/
 
             periodicTick = 53f;
             periodicTicks = 7;
@@ -859,13 +859,14 @@ namespace Rawr.Tree
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1 + 0.06f * druidTalents.TreeOfLife);
 
+//            if (calcOpts.Patch3_2)
+                coefDH += (0.1f * druidTalents.EmpoweredTouch);     // From 3.2 Empowered Touch also boosts Nourish
+            //  Assume also additive, also see http://elitistjerks.com/f73/t37038-restoration_glyphs/p8/#post1240879 
+
             coefDH *=
                 (1 + 0.02f * druidTalents.GiftOfNature) *
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1 + 0.06f * druidTalents.TreeOfLife);
-
-            if (calcOpts.Patch3_2)
-                coefDH *= (1 + 0.1f * druidTalents.EmpoweredTouch);     // From 3.2 Empowered Touch also boosts Nourish
 
             if (druidTalents.GlyphOfNourish)
                 NourishBonusPerHoTGlyphs = 0.06f;
