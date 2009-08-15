@@ -906,7 +906,7 @@ namespace Rawr
             #region Armor (Minor)
             defaultBuffs.Add(new Buff
             {
-                Name = "Curse of Recklessness",
+                Name = "Curse of Weakness",
                 Source = "Warlock",
                 Group = "Armor (Minor)",
                 Stats = { ArmorPenetration = 0.05f }
@@ -933,9 +933,9 @@ namespace Rawr
                 Name = "Hunter's Mark",
                 Source = "Hunter",
                 Group = "Ranged Attack Power",
-                Stats = { RangedAttackPower = 300f },
+                Stats = { RangedAttackPower = 500f },
                 Improvements = { 
-					new Buff { Name = "Improved Hunter's Mark", Stats = { RangedAttackPower = (float)Math.Floor(300f * 0.3f) } }
+					new Buff { Name = "Improved Hunter's Mark", Stats = { RangedAttackPower = 150f } } // 30%
                 }
             });
             #endregion
@@ -996,7 +996,7 @@ namespace Rawr
                 Name = "Judgement of Wisdom",
                 Source = "Paladin",
                 Group = "Mana Restore",
-                Stats = { ManaRestoreFromBaseManaPerHit = 0.01f }
+                Stats = { ManaRestoreFromBaseManaPerHit = 0.02f }
             });
             #endregion
 
