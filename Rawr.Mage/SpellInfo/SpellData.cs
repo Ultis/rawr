@@ -1040,7 +1040,7 @@ namespace Rawr.Mage
         {
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
-            spell.SpellModifier *= baseAdditiveSpellModifier;
+            // do not use baseAdditiveSpellModifier, this overload is used for the raw version that combines all debuffs and that is already taken into account
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
             return spell;

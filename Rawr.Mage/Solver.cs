@@ -393,7 +393,7 @@ namespace Rawr.Mage
             calculationResult.CalculationOptions = calculationOptions;
             calculationResult.MageTalents = talents;
             calculationResult.ActiveBuffs = activeBuffs;
-            calculationResult.NeedsDisplayCalculations = needsDisplayCalculations;
+            calculationResult.NeedsDisplayCalculations = true;
 
             evocationAvailable = calculationOptions.EvocationEnabled && !calculationOptions.EffectDisableManaSources;
             manaPotionAvailable = calculationOptions.ManaPotionEnabled && !calculationOptions.EffectDisableManaSources;

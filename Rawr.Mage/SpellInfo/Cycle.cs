@@ -955,23 +955,31 @@ namespace Rawr.Mage
 
             foreach (CycleState state in StateList)
             {
-                foreach (CycleStateTransition transition in state.Transitions)
+                double stateWeight = StateWeight[state.Index];
+                if (stateWeight > 0)
                 {
-                    if (transition.Spell != null)
+                    foreach (CycleStateTransition transition in state.Transitions)
                     {
-                        double weight;
-                        SpellWeight.TryGetValue(transition.Spell, out weight);
-                        SpellWeight[transition.Spell] = weight + StateWeight[state.Index] * transition.TransitionProbability;
-                    }
-                    if (transition.Cycle != null)
-                    {
-                        double weight;
-                        CycleWeight.TryGetValue(transition.Cycle, out weight);
-                        CycleWeight[transition.Cycle] = weight + StateWeight[state.Index] * transition.TransitionProbability;
-                    }
-                    if (transition.Pause > 0)
-                    {
-                        AddPause(transition.Pause, (float)(StateWeight[state.Index] * transition.TransitionProbability));
+                        float transitionProbability = transition.TransitionProbability;
+                        if (transitionProbability > 0)
+                        {
+                            if (transition.Spell != null)
+                            {
+                                double weight;
+                                SpellWeight.TryGetValue(transition.Spell, out weight);
+                                SpellWeight[transition.Spell] = weight + stateWeight * transitionProbability;
+                            }
+                            if (transition.Cycle != null)
+                            {
+                                double weight;
+                                CycleWeight.TryGetValue(transition.Cycle, out weight);
+                                CycleWeight[transition.Cycle] = weight + stateWeight * transitionProbability;
+                            }
+                            if (transition.Pause > 0)
+                            {
+                                AddPause(transition.Pause, (float)(stateWeight * transitionProbability));
+                            }
+                        }
                     }
                 }
             }
