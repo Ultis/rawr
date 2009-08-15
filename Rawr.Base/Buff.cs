@@ -2148,7 +2148,45 @@ namespace Rawr
 			    SetThreshold = 4
 			});
             #endregion
-            #region Moonkin Tier 7 set bonuses
+			#region Feral Tier 9 set bonuses
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Malfurion's Battlegear 2 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { BonusRakeDuration = 3f, BonusLacerateDamageMultiplier = 0.05f },
+				SetName = "Malfurion's Battlegear",
+				SetThreshold = 2
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Malfurion's Battlegear 4 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { BonusRipCrit = 0.05f, BonusFerociousBiteCrit = 0.05f },
+				SetName = "Malfurion's Battlegear",
+				SetThreshold = 4
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Runetotem's Battlegear 2 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { BonusRakeDuration = 3f, BonusLacerateDamageMultiplier = 0.05f },
+				SetName = "Runetotem's Battlegear",
+				SetThreshold = 2
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Runetotem's Battlegear 4 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { BonusRipCrit = 0.05f, BonusFerociousBiteCrit = 0.05f },
+				SetName = "Runetotem's Battlegear",
+				SetThreshold = 4
+			});
+			#endregion
+			#region Moonkin Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Dreamwalker Garb 2 Piece Bonus",

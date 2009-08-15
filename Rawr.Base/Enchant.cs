@@ -711,7 +711,7 @@ namespace Rawr
 
             // Tailoring enchant
             Stats stats = new Stats() { Spirit = 1 };
-            stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 295 }, 15, 45, 0.5f));
+            stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 295 }, 15, 60, 0.35f));
             defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", ItemSlot.Back, stats));
 
             stats = new Stats();

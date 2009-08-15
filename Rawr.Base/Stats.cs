@@ -34,7 +34,8 @@ namespace Rawr {
         BonusMangleBearDamage,
         BonusMangleCatDamage,
         BonusMaxRunicPower,
-        BonusRipDamagePerCPPerTick,
+		BonusRakeDuration,
+		BonusRipDamagePerCPPerTick,
         BonusRipDuration,
 		BonusSavageRoarDuration,
         BonusShredDamage,
@@ -183,8 +184,9 @@ namespace Rawr {
         BonusCPOnCrit,
         BonusEnergyOnTigersFury,
         FinisherEnergyOnAvoid,
-        MangleCooldownReduction,
-        BonusFerociousBiteCrit,
+		MangleCooldownReduction,
+		BonusFerociousBiteCrit,
+		BonusRipCrit,
         BonusObliterateDamage,
         BonusScourgeStrikeDamage,
         BonusInsectSwarmDamage,
@@ -1863,7 +1865,16 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusRipDamagePerCPPerTick]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusRipDamagePerCPPerTick] = value; }
-        }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("Bonus Rake Duration")]
+		[Category("Feral")]
+		public float BonusRakeDuration
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusRakeDuration]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusRakeDuration] = value; }
+		}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Rip Duration")]
@@ -3927,8 +3938,8 @@ namespace Rawr {
         [Category("Hunter")]
         public float BonusAspectOfTheViperAttackSpeed
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusAspectOfTheViperAttackSpeed]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.BonusAspectOfTheViperAttackSpeed] = value; }
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusAspectOfTheViperAttackSpeed]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusAspectOfTheViperAttackSpeed] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -3937,8 +3948,8 @@ namespace Rawr {
         [Category("Hunter")]
         public float BonusSerpentStingDamage
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusSerpentStingDamage]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.BonusSerpentStingDamage] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSerpentStingDamage]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSerpentStingDamage] = value; }
         }
 
         #endregion
@@ -4100,6 +4111,16 @@ namespace Rawr {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnrageDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnrageDamageMultiplier] = value; }
         }
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("Bonus Rip Crit Chance")]
+		[Category("Feral")]
+		public float BonusRipCrit
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusRipCrit]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusRipCrit] = value; }
+		}
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Ferocious Bite Crit Chance")]
         [Category("Feral")]
