@@ -1755,7 +1755,9 @@ applied and result is scaled down by 100)",
             {
                 if (effect.Trigger == Trigger.Use || 
                     effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
-                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
+                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit
+                    || effect.Trigger == Trigger.RejuvenationTick  // Idol of Flaring Growth
+                    )
                 {
                     if (HasRelevantSpecialEffectStats(effect.Stats))
                     {
@@ -1783,7 +1785,9 @@ applied and result is scaled down by 100)",
             {
                 if (effect.Trigger == Trigger.Use ||
                     effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit 
-                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit)
+                    || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit
+                    || effect.Trigger == Trigger.RejuvenationTick  // Idol of Flaring Growth
+                    )
                 {
                     if (HasRelevantSpecialEffectStats(effect.Stats))
                       return true;

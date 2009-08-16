@@ -754,7 +754,7 @@ namespace Rawr {
                 int spellPower = int.Parse(match.Groups["spellPower"].Value);
                 // Idol of Flaring Growth
                 // Not yet sure about cooldown and proc chance
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.RejuvenationTick, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 45, 0.1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.RejuvenationTick, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 0, 0.7f));
             }
             else if (line.StartsWith("Increases the spell power on the periodic portion of your Lifebloom by ")) //if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
             {
