@@ -154,6 +154,7 @@
             this.label32 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.chkUseRotation = new System.Windows.Forms.CheckBox();
             this.label86 = new System.Windows.Forms.Label();
             this.cmbHeroismUsage = new System.Windows.Forms.ComboBox();
             this.chkSpreadsheetUptimes = new System.Windows.Forms.CheckBox();
@@ -220,7 +221,7 @@
             this.comboBoxPet3 = new System.Windows.Forms.ComboBox();
             this.comboBoxPet2 = new System.Windows.Forms.ComboBox();
             this.comboBoxPet1 = new System.Windows.Forms.ComboBox();
-            this.chkUseRotation = new System.Windows.Forms.CheckBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage2.SuspendLayout();
             this.grpTalentsTenacity.SuspendLayout();
             this.grpTalentsFerocity.SuspendLayout();
@@ -1577,6 +1578,17 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Hunter Settings";
             // 
+            // chkUseRotation
+            // 
+            this.chkUseRotation.AutoSize = true;
+            this.chkUseRotation.Location = new System.Drawing.Point(18, 190);
+            this.chkUseRotation.Name = "chkUseRotation";
+            this.chkUseRotation.Size = new System.Drawing.Size(194, 17);
+            this.chkUseRotation.TabIndex = 9;
+            this.chkUseRotation.Text = "Use shot rotation test (experimental)";
+            this.chkUseRotation.UseVisualStyleBackColor = true;
+            this.chkUseRotation.CheckedChanged += new System.EventHandler(this.chkUseRotation_CheckedChanged);
+            // 
             // label86
             // 
             this.label86.AutoSize = true;
@@ -1951,6 +1963,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(0, 5);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -2364,16 +2377,15 @@
             this.comboBoxPet1.TabIndex = 1;
             this.comboBoxPet1.SelectedIndexChanged += new System.EventHandler(this.comboBoxPets_SelectedIndexChanged);
             // 
-            // chkUseRotation
+            // tabPage4
             // 
-            this.chkUseRotation.AutoSize = true;
-            this.chkUseRotation.Location = new System.Drawing.Point(18, 190);
-            this.chkUseRotation.Name = "chkUseRotation";
-            this.chkUseRotation.Size = new System.Drawing.Size(194, 17);
-            this.chkUseRotation.TabIndex = 9;
-            this.chkUseRotation.Text = "Use shot rotation test (experimental)";
-            this.chkUseRotation.UseVisualStyleBackColor = true;
-            this.chkUseRotation.CheckedChanged += new System.EventHandler(this.chkUseRotation_CheckedChanged);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(292, 647);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Pet Buffs";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelHunter
             // 
@@ -2607,5 +2619,6 @@
         private System.Windows.Forms.Label label88;
         private System.Windows.Forms.Label label87;
         private System.Windows.Forms.CheckBox chkUseRotation;
+        private System.Windows.Forms.TabPage tabPage4;
     }
 }

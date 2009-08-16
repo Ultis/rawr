@@ -12,6 +12,7 @@ namespace Rawr.Hunter
         CharacterCalculationsHunter calculatedStats;
         CalculationOptionsHunter options;
         Stats statsBuffs;
+        Stats statsHunterBuffs;
         Stats statsGear;
         public Stats petStats;
         private PetSkillPriorityRotation priorityRotation;
@@ -28,11 +29,12 @@ namespace Rawr.Hunter
         private double critSpecialsAdjust;
         private bool isWearingBeastTamersShoulders;
 
-        public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, Stats statsBuffs, Stats statsGear)
+        public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, Stats statsHunterBuffs, Stats statsBuffs, Stats statsGear)
         {
             this.character = character;
             this.calculatedStats = calculatedStats;
             this.options = options;
+            this.statsHunterBuffs = statsHunterBuffs;
             this.statsBuffs = statsBuffs;
             this.statsGear = statsGear;
 
@@ -50,6 +52,10 @@ namespace Rawr.Hunter
             petStats.Stamina = 361;
             petStats.Intellect = 65;
             petStats.Spirit = 10;
+
+            statsBuffs.Stamina += statsBuffs.PetStamina;
+            statsBuffs.Strength += statsBuffs.PetStrength;
+            statsBuffs.Spirit += statsBuffs.PetSpirit;
 
             int levelDifference = options.TargetLevel - 80;
 
@@ -132,6 +138,15 @@ namespace Rawr.Hunter
             #endregion
             #region Crit Chance
 
+            if (statsBuffs.PhysicalCrit > 0 && options.emulateSpreadsheetBugs)
+            {
+                // Leader of the Pack should give 5%, but instead gives 4.98845627020046000000%
+                // (same as 229 crit rating)
+                // TODO: check that we have LotP/Rampage in the buffs list, incase there are other %crit buffs
+                statsBuffs.CritRating += 229;
+                statsBuffs.PhysicalCrit -= 0.05f;
+            }
+
             isWearingBeastTamersShoulders = character.Shoulders != null && character.Shoulders.Id == 30892;
 
             double critAgilityBase = petStats.Agility;
@@ -139,15 +154,12 @@ namespace Rawr.Hunter
             double critAgilityBuffsMultiplicitive = statsBuffs.BonusAgilityMultiplier;
             double critAgilityTotal = (critAgilityBase + critAgilityBuffsAdditive) * (1 + critAgilityBuffsMultiplicitive);
 
-            double petCritRatingBuff = statsBuffs.CritRating;
-            if (character.ActiveBuffsContains("Master of Anatomy")) petCritRatingBuff -= 40;
-
             double critFromBase = 0.032;
             double critFromAgility = critAgilityTotal / (100 * 62.5);
             double critFromSpidersBite = options.petSpidersBite * 0.03;
             double critFromFerocity = character.HunterTalents.Ferocity * 0.02;
             double critFromGear = isWearingBeastTamersShoulders ? 0.02 : 0;
-            double critFromBuffs = (petCritRatingBuff / HunterRatings.CRIT_RATING_PER_PERCENT) / 100;
+            double critFromBuffs = statsBuffs.PhysicalCrit + (statsBuffs.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT) / 100;
             double critFromTargetDebuffs = calculatedStats.targetDebuffsCrit;
 
             double critFromDepression = (levelDifference > 2) ? 0 - (0.03 + (levelDifference * 0.006)) : 0 - ((levelDifference * 5 * 0.04) / 100);
@@ -435,6 +447,12 @@ namespace Rawr.Hunter
             double apAdjustFromAnimalHandler = character.HunterTalents.AnimalHandler * 0.05;
             double apAdjustFromAspectOfTheBeast = calculatedStats.aspectBonusAPBeast;
 
+            double apAdjustFromOutsideBuffs = 0;
+            if (apAdjustFromTrueShotAura == 0)
+            {
+                apAdjustFromOutsideBuffs = 0.0 + statsBuffs.BonusAttackPowerMultiplier;
+            }
+
             double apAdjustFromRabidProc = 0;
 
             double longevityCooldownAdjust = 1 - character.HunterTalents.Longevity * 0.1;
@@ -538,6 +556,7 @@ namespace Rawr.Hunter
                                  * (1 + apAdjustFromRabidProc)
                                  * (1 + apAdjustFromSerenityDust)
                                  * (1 + apAdjustFromTrueShotAura)
+                                 * (1 + apAdjustFromOutsideBuffs)
                                  * (1 + apAdjustFromAnimalHandler)
                                  * (1 + apAdjustFromAspectOfTheBeast);
 
@@ -593,7 +612,7 @@ namespace Rawr.Hunter
             double damageAdjustFerociousInspiration = calculatedStats.ferociousInspirationDamageAdjust;
             double damageAdjustKindredSpirits = 1 + (character.HunterTalents.KindredSpirits * 0.04);
             double damageAdjustSancRetributionAura = 1 + statsBuffs.BonusDamageMultiplier;
-            double damageAdjustTier7Bonus = 1 + statsBuffs.BonusPetDamageMultiplier;
+            double damageAdjustTier7Bonus = 1 + statsHunterBuffs.BonusPetDamageMultiplier;
             double damageAdjustSharkAttack = 1 + (options.petSharkAttack * 0.03);
             double damageAdjustTargetDebuffs = calculatedStats.targetDebuffsPetDamage;
             double damageAdjustPetFamily = 1.05;
@@ -693,7 +712,7 @@ namespace Rawr.Hunter
                 damageAdjustMonstrousBite = 1 + monstrousBiteProcEffect;
             }
 
-            double damageAdjustMangle = 1 + statsBuffs.BonusBleedDamageMultiplier;
+            double damageAdjustMangle = 1 + statsHunterBuffs.BonusBleedDamageMultiplier;
 
             double effectiveTargetArmor = options.TargetArmor * calculatedStats.targetDebuffsArmor;
             double damageAdjustMitigation = 1 - (effectiveTargetArmor / (effectiveTargetArmor - 22167.5 + (467.5 * 80)));

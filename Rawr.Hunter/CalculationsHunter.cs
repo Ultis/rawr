@@ -506,7 +506,7 @@ namespace Rawr.Hunter
             stats.ExposeWeakness +
             stats.HasteRating +
             stats.RangedHasteRating +
-            stats.PhysicalHaste +
+            stats.RangedHaste +
             stats.PhysicalHit +
             stats.HitRating +
             stats.RangedHitRating +
@@ -617,7 +617,7 @@ namespace Rawr.Hunter
 
             calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
 
-            calculatedStats.pet = new PetCalculations(character, calculatedStats, options, statsBuffs, statsBaseGear);
+            calculatedStats.pet = new PetCalculations(character, calculatedStats, options, statsBuffs, GetBuffsStats(options.petActiveBuffs), statsBaseGear);
             
             if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow && character.Ranged.Item.Type != ItemType.Gun
                                             && character.Ranged.Item.Type != ItemType.Crossbow))
@@ -1628,9 +1628,10 @@ namespace Rawr.Hunter
             //calculatedStats.apFromCallOfTheWild = 0;
 
             calculatedStats.apFromTrueshotAura = (0.1 * character.HunterTalents.TrueshotAura);
+            calculatedStats.apFromBuffs = 0;
             if (character.HunterTalents.TrueshotAura == 0)
             {
-                calculatedStats.apFromTrueshotAura = (calculatedStats.BasicStats.BonusAttackPowerMultiplier + calculatedStats.BasicStats.BonusRangedAttackPowerMultiplier) - 1;
+                calculatedStats.apFromBuffs = (calculatedStats.BasicStats.BonusAttackPowerMultiplier + calculatedStats.BasicStats.BonusRangedAttackPowerMultiplier) - 1;
             }
 
             calculatedStats.apFromHuntersMark = HunterRatings.HUNTERS_MARK;
@@ -1721,7 +1722,8 @@ namespace Rawr.Hunter
             // TODO: add multiplicitive buffs
             double apScalingFactor = 1
                 * (1 + calculatedStats.apFromCallOfTheWild)
-                * (1 + calculatedStats.apFromTrueshotAura);
+                * (1 + calculatedStats.apFromTrueshotAura)
+                * (1 + calculatedStats.apFromBuffs);
 
             // use for pet calculations
             calculatedStats.apSelfBuffed = 0
@@ -2711,11 +2713,76 @@ namespace Rawr.Hunter
 
         #endregion
 
+        private static List<Buff> _relevantPetBuffs = new List<Buff>();
+        public static List<Buff> RelevantPetBuffs
+        {
+            get
+            {
+                if (_relevantPetBuffs.Count == 0)
+                {
+                    _relevantPetBuffs = Buff.AllBuffs.FindAll(buff => CalculationsHunter.IsPetBuffRelevant(buff));
+                }
+                return _relevantPetBuffs;
+            }
+        }
+
+        private static bool IsPetBuffRelevant(Buff buff)
+        {
+            if (buff.Group == "Elixirs and Flasks") return false;
+            if (buff.Group == "Food") return false;
+            if (buff.Group == "Set Bonuses") return false;
+            if (buff.Group == "Profession Buffs") return false;
+            if (buff.Group == "Temporary Buffs") return false;
+            if (buff.Group == "Critical Strike Chance Taken") return false; // target debuff
+
+            // Greater Blessing of Kings
+            if (buff.Stats.BonusAgilityMultiplier != 0) return true;
+            if (buff.Stats.BonusStrengthMultiplier != 0) return true;
+            if (buff.Stats.BonusStaminaMultiplier != 0) return true;
+
+            //Commanding Shout & Blood Pact
+            //if (buff.Stats.Health != 0) return true;
+
+            // Greater Blessing of Might & Battle Shout
+		    if (buff.Stats.AttackPower != 0) return true;
+
+            // True Shot Aura (not you) & Abo. Might & Unl. Rage
+		    if (buff.Stats.BonusAttackPowerMultiplier != 0) return true;
+
+            // Leader of the Pack/Rampage
+		    if (buff.Stats.PhysicalCrit != 0) return true;
+
+            // Strength of Earth Totem & Horn of Winter &  Gift of the Wild & Prayer of Fortitude & Scrolls
+            if (buff.Stats.Strength != 0) return true;
+            if (buff.Stats.Agility != 0) return true;
+            //if (buff.Stats.Stamina != 0) return true;
+
+            // WF Totem & Imp. Icy Talons & Swift Ret & Moonkin Aura
+		    if (buff.Stats.PhysicalHaste != 0) return true;
+
+            // Ret Aura & Feroc. Insp.
+		    if (buff.Stats.BonusDamageMultiplier  != 0) return true;
+
+            // Draenei racial (not you)
+		    if (buff.Stats.PhysicalHit != 0) return true;
+
+            // Pet Food
+            //if (buff.Stats.PetStamina != 0) return true;
+            if (buff.Stats.PetStrength != 0) return true;
+
+            return false;
+        }
+
 		public override ICalculationOptionBase DeserializeDataObject(string xml)
 		{
 			XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsHunter));
 			StringReader reader = new StringReader(xml);
 			CalculationOptionsHunter calcOpts = serializer.Deserialize(reader) as CalculationOptionsHunter;
+
+            // convert buffs here!
+            calcOpts.petActiveBuffs = new List<Buff>(calcOpts._petActiveBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
+            calcOpts.petActiveBuffs.RemoveAll(buff => buff == null);
+
 			return calcOpts;
 		}
 

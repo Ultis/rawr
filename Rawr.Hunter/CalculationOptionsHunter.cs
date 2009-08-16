@@ -22,6 +22,17 @@ namespace Rawr.Hunter
         public PetAttacks PetPriority5 = PetAttacks.None;
         public PetAttacks PetPriority6 = PetAttacks.None;
         public PetAttacks PetPriority7 = PetAttacks.None;
+        
+        [XmlIgnore]
+        private List<Buff> _petActiveBuffs = new List<Buff>();
+        [XmlElement("petActiveBuffs")]
+        public List<string> _petActiveBuffsXml = new List<string>();
+        [XmlIgnore]
+        public List<Buff> petActiveBuffs
+        {
+            get { return _petActiveBuffs; }
+            set { _petActiveBuffs = value; }
+        }
 
 		public double Latency = 0.15;
         public int duration = 360;
@@ -127,8 +138,9 @@ namespace Rawr.Hunter
 
 		public string GetXml()
 		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHunter));
+            _petActiveBuffsXml = new List<string>(_petActiveBuffs.ConvertAll(buff => buff.Name));
+
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHunter));
 			StringBuilder xml = new StringBuilder();
 			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
 			serializer.Serialize(writer, this);

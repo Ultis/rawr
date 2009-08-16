@@ -15,6 +15,7 @@ namespace Rawr.Hunter
 
         private bool loadingOptions = false;
 		private CalculationOptionsHunter options = null;
+        private PetBuffSelector petBuffSelector = null;
         #endregion
 
         #region Constructors
@@ -22,6 +23,20 @@ namespace Rawr.Hunter
         public CalculationOptionsPanelHunter()
         {
             InitializeComponent();
+
+            // The PetBuffSelector doesn't work in the designer. bah
+            petBuffSelector = new PetBuffSelector();
+            petBuffSelector.character = Character;
+
+            tabPage4.Controls.Add(petBuffSelector);
+            petBuffSelector.AutoScroll = true;
+            petBuffSelector.Dock = System.Windows.Forms.DockStyle.Fill;
+            petBuffSelector.Location = new System.Drawing.Point(0, 0);
+            petBuffSelector.Name = "petBuffSelector";
+            petBuffSelector.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            petBuffSelector.Size = new System.Drawing.Size(303, 558);
+            petBuffSelector.TabIndex = 0;
+
 
             InitializeShotList(cmbPriority1);
             InitializeShotList(cmbPriority2);
@@ -79,6 +94,9 @@ namespace Rawr.Hunter
 					break;
 				}
 			}
+
+            petBuffSelector.character = Character;
+            petBuffSelector.LoadBuffsFromOptions();
 
             numericUpDownLatency.Value = (decimal)(options.Latency * 1000.0);
 

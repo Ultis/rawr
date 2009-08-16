@@ -111,6 +111,12 @@
     <Compile Include="CharacterCalculationsHunter.cs" />
     <Compile Include="ComparisonCalculationHunter.cs" />
     <Compile Include="HunterEnums.cs" />
+    <Compile Include="PetBuffSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PetBuffSelector.Designer.cs">
+      <DependentUpon>PetBuffSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="PetCalculations.cs" />
     <Compile Include="PetSkill.cs">
       <SubType>Code</SubType>

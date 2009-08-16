@@ -69,6 +69,7 @@ namespace Rawr.Hunter
         public double apFromProc { get; set; }
 		public double apFromCallOfTheWild { get; set; }
 		public double apFromTrueshotAura { get; set; }
+        public double apFromBuffs { get; set; }
 		public double apFromHuntersMark {get; set;}
         public double apFromExposeWeakness { get; set; }
         #endregion
