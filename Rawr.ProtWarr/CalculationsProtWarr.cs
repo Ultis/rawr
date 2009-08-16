@@ -204,6 +204,7 @@ threat and limited threat scaled by the threat scale.",
                         "% Total Mitigation",
 					    "% Guaranteed Reduction",
 					    "% Total Avoidance",
+                        "% Total Avoidance+Block",
 					    "% Chance to be Crit",
 
                         "% Chance to Miss (White)",
@@ -374,9 +375,9 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.MhCrit = Lookup.BonusCritPercentage(character, stats) + stats.PhysicalCrit;// combatFactors._c_mhycrit;
             calculatedStats.OhCrit = Lookup.BonusCritPercentage(character, stats) + stats.PhysicalCrit;// combatFactors._c_ohycrit;
             calculatedStats.HasteRating = stats.HasteRating;
-            calculatedStats.HastePercent = Lookup.BonusHastePercentage(character, stats);
+            calculatedStats.HastePercent = StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior) + stats.PhysicalHaste;
                 //talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
-            calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
+            calculatedStats.ArmorPenetration = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
             calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyNotLand;
             calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
             calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
@@ -541,22 +542,25 @@ threat and limited threat scaled by the threat scale.",
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()){
                 switch (effect.Trigger){
                     case Trigger.Use:
-                        statsProcs += effect.GetAverageStats(0.0f, 1.0f, weaponSpeed);
+                        statsProcs += effect.GetAverageStats(0f, 1f, weaponSpeed);
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
-                        statsProcs += effect.GetAverageStats(am.AttacksPerSecond, 1.0f, weaponSpeed);
+                        statsProcs += effect.GetAverageStats(am.AttacksPerSecond, 1f, weaponSpeed);
                         break;
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
-                        statsProcs += effect.GetAverageStats(am.CritsPerSecond, 1.0f, weaponSpeed);
+                        statsProcs += effect.GetAverageStats(am.CritsPerSecond, 1f, weaponSpeed);
                         break;
                     case Trigger.DoTTick:
-                        if (character.WarriorTalents.DeepWounds > 0)
-                            statsProcs += effect.GetAverageStats(2.0f, 1.0f, weaponSpeed);
+                        if (talents.DeepWounds > 0) { statsProcs += effect.GetAverageStats(1f, 1f, weaponSpeed); }
+                        /*if (calcOpts > 0) {*/ statsProcs += effect.GetAverageStats(3f, 1f, weaponSpeed); /*}*/
                         break;
                     case Trigger.DamageDone:
-                        statsProcs += effect.GetAverageStats(am.AttacksPerSecond, 1.0f, weaponSpeed);
+                        statsProcs += effect.GetAverageStats(am.AttacksPerSecond, 1f, weaponSpeed);
+                        break;
+                    case Trigger.DamageTaken:
+                        statsProcs += effect.GetAverageStats(calcOpts.BossAttackSpeed, 1f, weaponSpeed);
                         break;
                 }
             }
@@ -569,7 +573,7 @@ threat and limited threat scaled by the threat scale.",
             statsProcs.Armor        = (float)Math.Floor(statsProcs.Armor    * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
             statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina  * 10f);
             statsProcs.AttackPower += statsProcs.Strength * 2f;
-            statsProcs.AttackPower += (float)Math.Floor(talents.ArmoredToTheTeeth * statsProcs.Armor / 108.0f);
+            statsProcs.AttackPower += (float)Math.Floor(talents.ArmoredToTheTeeth * statsProcs.Armor / 108f);
             statsProcs.AttackPower  = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsProcs.BlockValue  += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsProcs.Strength));
             statsProcs.BlockValue   = (float)Math.Floor(statsProcs.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
@@ -923,7 +927,8 @@ threat and limited threat scaled by the threat scale.",
                     effect.Trigger == Trigger.PhysicalCrit || 
                     effect.Trigger == Trigger.PhysicalHit || 
                     effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone) && HasRelevantStats(effect.Stats))
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageTaken) && HasRelevantStats(effect.Stats))
                 {
                     relevantStats.AddSpecialEffect(effect);
                 }
@@ -958,7 +963,8 @@ threat and limited threat scaled by the threat scale.",
                     effect.Trigger == Trigger.PhysicalCrit ||
                     effect.Trigger == Trigger.PhysicalHit ||
                     effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone)
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageTaken)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                     if (relevant) break;

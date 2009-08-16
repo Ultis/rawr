@@ -131,7 +131,7 @@ namespace Rawr.DPSWarr {
                                 Environment.NewLine + "{3:00,000} : Stam Bonus",
                                 BasicStats.Health, BasicStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
-            dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*2));
+            dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*2f));
             dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)BasicStats.AttackPower,BasicStats.AttackPower/14f));
             dictValues.Add("Agility",string.Format("{0}*3.192% : Base Crit at lvl 80"+
                                 Environment.NewLine + "{1:0.000%} : Crit Increase"+

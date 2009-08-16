@@ -39,7 +39,7 @@ namespace Rawr.ProtWarr {
             float attackSpeed           = ParryModel.BossAttackSpeed; // Options.BossAttackSpeed;
             float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats));
             float baseDamagePerSecond   = Options.BossAttackValue / Options.BossAttackSpeed;
-            float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
+            float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats,DamageType.Physical) * armorReduction);
 
             DamagePerHit    = Options.BossAttackValue * guaranteedReduction;
             DamagePerCrit   = 2.0f * DamagePerHit;

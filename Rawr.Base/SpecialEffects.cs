@@ -3,26 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Rawr
-{
-	public static class SpecialEffects
-	{
-        public static void ProcessMetaGem(string line, Stats stats, bool bisArmory)
-        {
+namespace Rawr {
+	public static class SpecialEffects {
+        public static void ProcessMetaGem(string line, Stats stats, bool bisArmory) {
             List<string> gemBonuses = new List<string>();
 			string[] gemBonusStrings = line.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
-			foreach (string gemBonusString in gemBonusStrings)
-			{
-                if (gemBonusString.IndexOf('+') != gemBonusString.LastIndexOf('+'))
-                {
+			foreach (string gemBonusString in gemBonusStrings) {
+                if (gemBonusString.IndexOf('+') != gemBonusString.LastIndexOf('+')) {
                     gemBonuses.Add(gemBonusString.Substring(0, gemBonusString.IndexOf(" +")));
                     gemBonuses.Add(gemBonusString.Substring(gemBonusString.IndexOf(" +") + 1));
-                }
-                else
-                    gemBonuses.Add(gemBonusString);
+                } else{ gemBonuses.Add(gemBonusString); }
 			}
-            foreach (string gemBonus in gemBonuses)
-            {
+            foreach (string gemBonus in gemBonuses)             {
                 if (gemBonus == "Spell Damage +6")
                 {
                     stats.SpellPower = 6.0f;
@@ -183,8 +175,7 @@ namespace Rawr
             }
         }
 
-		public static void ProcessEquipLine(string line, Stats stats, bool isArmory)
-		{
+		public static void ProcessEquipLine(string line, Stats stats, bool isArmory) {
             Match match;
 			if (line.StartsWith("Increases initial and per application periodic damage done by Lacerate by "))
 			{
@@ -1305,8 +1296,7 @@ namespace Rawr
             }
         }
 
-		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id)
-		{
+		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id) {
             Regex regex = new Regex(@"Increases (your )?(?<stat>\w\w*( \w\w*)*) by (?<amount>\+?\d\d*)(nbsp;\<small\>.*\<\/small\>)? for (?<duration>\d\d*) sec\. \((?<cooldown>\d\d*) Min Cooldown\)");
             Match match = regex.Match(line);
             if (match.Success)
@@ -1594,8 +1584,7 @@ namespace Rawr
         /// <param name="cooldown">How long in seconds?</param>
         /// <param name="chance">What is the percent chance? (0-1)</param>
         /// <returns>A new SpecialEffect instance that can be used in Stats.AddSpecialEffect()</returns>
-        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown, float chance)
-        {
+        public static SpecialEffect EvalRegex(string statName, float amount, float duration, string ability, float cooldown, float chance) {
             Stats s = new Stats();
 
             if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
@@ -1650,8 +1639,7 @@ namespace Rawr
         /// <param name="s">the Stats instance to be updated.</param>
         /// <param name="statName">The stat to update.</param>
         /// <param name="amount">The amount to update the stat by.</param>
-        public static void EvalRegex(Stats s, string statName, float amount)
-        {
+        public static void EvalRegex(Stats s, string statName, float amount) {
             if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
             else if (statName.Equals("agility", StringComparison.InvariantCultureIgnoreCase)) { s.Agility = amount; }
             else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
@@ -1668,7 +1656,6 @@ namespace Rawr
             else if (statName.Equals("parry rating", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
             else if (statName.Equals("spell power", StringComparison.InvariantCultureIgnoreCase)) { s.SpellPower = amount; }
             else if (statName.Equals("spirit", StringComparison.InvariantCultureIgnoreCase)) { s.Spirit = amount; }
-
         }
 
         /// <summary>
@@ -1679,55 +1666,17 @@ namespace Rawr
         /// <param name="ability">What ability is having it's damage boosted?</param>
         /// <param name="s">The Stats instance to be updated.</param>
         /// <param name="amount">The amount by which the bonSus should be applied.</param>
-        public static void EvalAbility(string ability, Stats s, float amount)
-        {
-            switch (ability)
-            {
-                case "Blood Strike":
-                    {
-                        s.BonusBloodStrikeDamage += amount;
-                        break;
-                    }
-                case "Heart Strike":
-                    {
-                        s.BonusHeartStrikeDamage += amount;
-                        break;
-                    }
-                case "Death Coil":
-                    {
-                        s.BonusDeathCoilDamage += amount;
-                        break;
-                    }
-                case "Frost Strike":
-                    {
-                        s.BonusFrostStrikeDamage += amount;
-                        break;
-                    }
-                case "Obliterate":
-                    {
-                        s.BonusObliterateDamage += amount;
-                        break;
-                    }
-                case "Scourge Strike":
-                    {
-                        s.BonusScourgeStrikeDamage += amount;
-                        break;
-                    }
-                case "Death Strike":
-                    {
-                        s.BonusDeathStrikeDamage += amount;
-                        break;
-                    }
-                case "Icy Touch":
-                    {
-                        s.BonusIcyTouchDamage += amount;
-                        break;
-                    }
-                default:
-                    {
-                        // Error.
-                        break;
-                    }
+        public static void EvalAbility(string ability, Stats s, float amount) {
+            switch (ability) {
+                case "Blood Strike"  : { s.BonusBloodStrikeDamage   += amount; break; }
+                case "Heart Strike"  : { s.BonusHeartStrikeDamage   += amount; break; }
+                case "Death Coil"    : { s.BonusDeathCoilDamage     += amount; break; }
+                case "Frost Strike"  : { s.BonusFrostStrikeDamage   += amount; break; }
+                case "Obliterate"    : { s.BonusObliterateDamage    += amount; break; }
+                case "Scourge Strike": { s.BonusScourgeStrikeDamage += amount; break; }
+                case "Death Strike"  : { s.BonusDeathStrikeDamage   += amount; break; }
+                case "Icy Touch"     : { s.BonusIcyTouchDamage      += amount; break; }
+                default: { break; } // Error.
             }
         }
     }

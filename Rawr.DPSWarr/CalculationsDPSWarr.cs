@@ -397,7 +397,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             // Agility
             float totalBAM = statsTotal.BonusAgilityMultiplier;
-            float agiBase = (float)Math.Floor((1f + totalBAM) * statsRace.Agility);
+            float agiBase  = (float)Math.Floor((1f + totalBAM) * statsRace.Agility);
             float agiBonus = (float)Math.Floor((1f + totalBAM) * statsGearEnchantsBuffs.Agility);
             statsTotal.Agility = agiBase + agiBonus;
             
@@ -408,11 +408,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             // Attack Power
             float totalBAPM = statsTotal.BonusAttackPowerMultiplier;
-            float apBase        = (float)Math.Floor((1f + totalBAPM) * (statsRace.AttackPower                                ));
-            float apBonusSTR    = (float)Math.Floor((1f + totalBAPM) * (statsTotal.Strength * 2f                             ));
-            float apBonusAttT   = (float)Math.Floor((1f + totalBAPM) * ((statsTotal.Armor / 108f) * talents.ArmoredToTheTeeth));
-            float apBonusOther  = (float)Math.Floor((1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower                   ));
-            statsTotal.AttackPower = apBase + apBonusSTR + apBonusAttT + apBonusOther;
+            float apBase        = (1f + totalBAPM) * (statsRace.AttackPower                                );
+            float apBonusSTR    = (1f + totalBAPM) * (statsTotal.Strength * 2f                             );
+            float apBonusAttT   = (1f + totalBAPM) * ((statsTotal.Armor / 108f) * talents.ArmoredToTheTeeth);
+            float apBonusOther  = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower                   );
+            statsTotal.AttackPower = (float)Math.Floor(apBase + apBonusSTR + apBonusAttT + apBonusOther);
 
             // Crit
             statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
@@ -515,12 +515,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             avgstats += CS.AverageStats;
             statsProcs += avgstats;
 
-            statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + statsTotal.BonusStaminaMultiplier));
-            statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength    * (1f + statsTotal.BonusStrengthMultiplier));
-            statsProcs.Strength    += statsProcs.HighestStat;
-            statsProcs.Agility      = (float)Math.Floor(statsProcs.Agility     * (1f + statsTotal.BonusAgilityMultiplier));
+            statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier    ));
+            statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
+            statsProcs.Strength    += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
+            statsProcs.Agility      = (float)Math.Floor(statsProcs.Agility     * (1f + totalBAM)   * (1f + statsProcs.BonusAgilityMultiplier    ));
             statsProcs.AttackPower += statsProcs.Strength * 2f;
-            statsProcs.AttackPower  = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
+            statsProcs.AttackPower  = (float)Math.Floor(statsProcs.AttackPower * (1f + totalBAPM)  * (1f + statsProcs.BonusAttackPowerMultiplier));
             statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina     * 10f);
             statsProcs.Armor       += statsProcs.BonusArmor;
             statsProcs.Armor       += 2f * statsProcs.Agility;
@@ -529,6 +529,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsTotal             += statsProcs;
 
             // Haste
+            statsTotal.HasteRating = (float)Math.Floor(statsTotal.HasteRating);
             statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
                                        (1f + statsItems.PhysicalHaste) *
                                        (1f + statsBuffs.PhysicalHaste) *
@@ -537,7 +538,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                        (1f + statsProcs.PhysicalHaste)
                                        - 1f;
             float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Warrior);
-            statsTotal.PhysicalHaste = (1f + statsTotal.PhysicalHaste) * (1f + ratingHasteBonus) - 1f;
+            statsTotal.PhysicalHaste = (float)Math.Floor((1f + statsTotal.PhysicalHaste) * (1f + ratingHasteBonus) - 1f);
 
             return statsTotal;
         }

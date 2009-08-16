@@ -115,7 +115,7 @@ namespace Rawr.ProtWarr {
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            string format = "";
+            //string format = "";
 
             // Base Stats
             dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
@@ -200,9 +200,9 @@ namespace Rawr.ProtWarr {
             dictValues.Add("Total Avoidance", string.Format("{0:00.00%} (+Block {1:00.00%})", Miss + Dodge + Parry,  Miss + Dodge + Parry + Block));
             // Defensive Stats
             dictValues.Add("Damage Taken", string.Format("{0:0.0} DPS*{1:0} damage per normal attack" +
-                                              Environment.NewLine + "{2:0} damage per blocked attack" +
-                                              Environment.NewLine + "{3:0} damage per critical attack",
-                                              DamageTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCrit));
+                                               Environment.NewLine + "{2:0} damage per blocked attack" +
+                                               Environment.NewLine + "{3:0} damage per critical attack",
+                                               DamageTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCrit));
             dictValues.Add("Guaranteed Reduction", string.Format("{0:0.00%}", GuaranteedReduction));
             dictValues.Add("Total Mitigation", string.Format("{0:0.00%}", TotalMitigation));
             // Offensive Stats
@@ -253,23 +253,28 @@ namespace Rawr.ProtWarr {
         }
 
         public override float GetOptimizableCalculationValue(string calculation) {
+            float missw = StatConversion.WHITE_MISS_CHANCE_CAP - HitPercent * 100f;
+            float missy = StatConversion.YELLOW_MISS_CHANCE_CAP - HitPercent * 100f;
+            float dodge = (StatConversion.YELLOW_DODGE_CHANCE_CAP - StatConversion.GetDodgeParryReducFromExpertise(MhExpertise)) * 100f;
+            float parry = (StatConversion.YELLOW_PARRY_CHANCE_CAP - StatConversion.GetDodgeParryReducFromExpertise(MhExpertise)) * 100f;
+
             switch (calculation) {
                 case "Health": return BasicStats.Health;
                 case "Resilience": return BasicStats.Resilience;
                 case "Unlimited TPS": return UnlimitedThreat;
                 case "Limited TPS": return LimitedThreat;
 
-                case "% Total Mitigation": return TotalMitigation * 100.0f;
-                case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
-                case "% Total Avoidance": return DodgePlusMissPlusParry * 100.0f;
-                case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
+                case "% Total Mitigation": return TotalMitigation * 100f;
+                case "% Guaranteed Reduction": return GuaranteedReduction * 100f;
+                case "% Total Avoidance": return DodgePlusMissPlusParry * 100f;
+                case "% Total Avoidance+Block": return DodgePlusMissPlusParryPlusBlock * 100f;
+                case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100f, 2));
 
-                case "% Chance to Miss (White)": return StatConversion.WHITE_MISS_CHANCE_CAP - HitPercent;
-                case "% Chance to Miss (Yellow)": return StatConversion.YELLOW_MISS_CHANCE_CAP - HitPercent;
-                case "% Chance to be Dodged": return StatConversion.YELLOW_DODGE_CHANCE_CAP - Expertise;
-                case "% Chance to be Parried": return StatConversion.YELLOW_PARRY_CHANCE_CAP - Expertise;
-                case "% Chance to be Avoided (Yellow/Dodge)": return (StatConversion.YELLOW_MISS_CHANCE_CAP - HitPercent) +
-                                                                     (StatConversion.YELLOW_DODGE_CHANCE_CAP - Expertise);
+                case "% Chance to Miss (White)": return missw;
+                case "% Chance to Miss (Yellow)": return missy;
+                case "% Chance to be Dodged": return dodge;
+                case "% Chance to be Parried": return parry;
+                case "% Chance to be Avoided (Yellow/Dodge)": return missy + dodge;
 
                 case "Burst Time": return BurstTime;
                 case "TankPoints": return TankPoints;
@@ -279,7 +284,7 @@ namespace Rawr.ProtWarr {
                 case "Shadow Survival": return ShadowSurvivalPoints;
                 case "Arcane Survival": return ArcaneSurvivalPoints;
             }
-            return 0.0f;
+            return 0f;
         }
     }
 }
