@@ -36,7 +36,8 @@ namespace Rawr
 		private ToolStripMenuItem _menuItemRefresh;
 		private ToolStripMenuItem _menuItemRefreshWowhead;
 		private ToolStripMenuItem _menuItemEquip;
-        private ToolStripMenuItem _menuItemEquipAll;
+		private ToolStripMenuItem _menuItemEquipAll;
+		private ToolStripMenuItem _menuItemRemoveFromUpgradeList;
         private ToolStripMenuItem _menuItemDelete;
 		private ToolStripMenuItem _menuItemDeleteDuplicates;
 		//private ToolStripMenuItem _menuItemCreateBearGemmings;
@@ -65,7 +66,10 @@ namespace Rawr
 			_menuItemEquip.Click += new EventHandler(_menuItemEquip_Click);
 
             _menuItemEquipAll = new ToolStripMenuItem("Equip All");
-            _menuItemEquipAll.Click += new EventHandler(_menuItemEquipAll_Click);
+			_menuItemEquipAll.Click += new EventHandler(_menuItemEquipAll_Click);
+
+			_menuItemRemoveFromUpgradeList = new ToolStripMenuItem("Remove from Upgrade List");
+			_menuItemRemoveFromUpgradeList.Click += new EventHandler(_menuItemRemoveFromUpgradeList_Click);
 
 			_menuItemDelete = new ToolStripMenuItem("Delete Custom Gemming");
 			_menuItemDelete.Click += new EventHandler(_menuItemDelete_Click);
@@ -89,7 +93,8 @@ namespace Rawr
 			this.Items.Add(_menuItemRefresh);
 			this.Items.Add(_menuItemRefreshWowhead);
 			this.Items.Add(_menuItemEquip);
-            this.Items.Add(_menuItemEquipAll);
+			this.Items.Add(_menuItemEquipAll);
+			this.Items.Add(_menuItemRemoveFromUpgradeList);
             this.Items.Add(_menuItemCustomizeItem);
             this.Items.Add(_menuItemEquipCustomizedItem);
             this.Items.Add(_menuItemDelete);
@@ -152,7 +157,7 @@ namespace Rawr
             Character = character;
 			_item = item;
             _characterItems = characterItems;
-            _menuItemEquipAll.Visible = (_characterItems != null);
+            _menuItemEquipAll.Visible = _menuItemRemoveFromUpgradeList.Visible = (_characterItems != null);
 			_equipSlot = equipSlot;
 			_menuItemEquip.Enabled = (Character[equipSlot] != item);
             _menuItemEquip.Visible = _menuItemEvaluateUpgrade.Visible = _menuItemEquipCustomizedItem.Visible = equipSlot != CharacterSlot.None;
@@ -290,7 +295,12 @@ namespace Rawr
         void _menuItemEquipAll_Click(object sender, EventArgs e)
         {
             _character.SetItems(_characterItems);
-        }
+		}
+
+		void _menuItemRemoveFromUpgradeList_Click(object sender, EventArgs e)
+		{
+			FormUpgradeComparison.Instance.RemoveItem(_item);
+		}
 
 		void _menuItemRefresh_Click(object sender, EventArgs e)
 		{

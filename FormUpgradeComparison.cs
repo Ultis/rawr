@@ -63,7 +63,25 @@ namespace Rawr
             }
         }
 
-        private Dictionary<string, ComparisonCalculationUpgrades[]> itemCalculations;
+        private Dictionary<string, ComparisonCalculationUpgrades[]> _itemCalculations;
+
+		public void RemoveItem(ItemInstance item)
+		{
+			string[] keys = new string[_itemCalculations.Keys.Count];
+			_itemCalculations.Keys.CopyTo(keys, 0);
+			foreach (string slot in keys)
+			{
+				List<ComparisonCalculationUpgrades> slotItems = new List<ComparisonCalculationUpgrades>(
+					_itemCalculations[slot]);
+				ComparisonCalculationUpgrades existing = slotItems.Find(ccu => ccu.ItemInstance.GemmedId == item.GemmedId);
+				if (existing != null)
+				{
+					slotItems.Remove(existing);
+				}
+				_itemCalculations[slot] = slotItems.ToArray();
+			}
+			comparisonGraph1.ItemCalculations = _itemCalculations[_currentSlot];
+		}
 
         [Serializable]
         public class SerializationData
@@ -90,10 +108,10 @@ namespace Rawr
                     comparisonGraph1.Character = FormMain.Instance.Character;
                     SetCustomSubpoints(data.CustomSubpoints);
 
-                    itemCalculations = new Dictionary<string, ComparisonCalculationUpgrades[]>();
+                    _itemCalculations = new Dictionary<string, ComparisonCalculationUpgrades[]>();
                     for (int i = 0; i < data.Keys.Count; i++)
                     {
-                        itemCalculations[data.Keys[i]] = data.ItemCalculations[i];
+                        _itemCalculations[data.Keys[i]] = data.ItemCalculations[i];
                     }
                     slotToolStripMenuItem_Click(allToolStripMenuItem, null);
 					return true;
@@ -112,7 +130,7 @@ namespace Rawr
             data.CustomSubpoints = customSubpoints;
             data.Keys = new List<string>();
             data.ItemCalculations = new List<ComparisonCalculationUpgrades[]>();
-            foreach (KeyValuePair<string, ComparisonCalculationUpgrades[]> kvp in itemCalculations)
+            foreach (KeyValuePair<string, ComparisonCalculationUpgrades[]> kvp in _itemCalculations)
             {
                 data.Keys.Add(kvp.Key);
                 data.ItemCalculations.Add(kvp.Value);
@@ -139,17 +157,18 @@ namespace Rawr
             comparisonGraph1.Character = FormMain.Instance.Character;
             SetCustomSubpoints(customSubpoints);
 
-            itemCalculations = new Dictionary<string, ComparisonCalculationUpgrades[]>();
+            _itemCalculations = new Dictionary<string, ComparisonCalculationUpgrades[]>();
             List<ComparisonCalculationUpgrades> all = new List<ComparisonCalculationUpgrades>();
             foreach (KeyValuePair<CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in calculations)
             {
                 all.AddRange(kvp.Value);
-                itemCalculations["Gear." + kvp.Key.ToString()] = kvp.Value.ToArray();
+                _itemCalculations["Gear." + kvp.Key.ToString()] = kvp.Value.ToArray();
             }
-            itemCalculations["Gear.All"] = all.ToArray();
+            _itemCalculations["Gear.All"] = all.ToArray();
             slotToolStripMenuItem_Click(allToolStripMenuItem, null);
         }
 
+		private string _currentSlot = "Gear.All";
         private void slotToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
@@ -164,7 +183,8 @@ namespace Rawr
                         toolStripDropDownButtonSlot.Text = "Chart: " + tag[0];
                         if (tag.Length > 1) toolStripDropDownButtonSlot.Text += " > " + item.Text;
                         comparisonGraph1.RoundValues = true;
-                        comparisonGraph1.ItemCalculations = itemCalculations[(string)item.Tag];
+						_currentSlot = (string)item.Tag;
+                        comparisonGraph1.ItemCalculations = _itemCalculations[_currentSlot];
                     }
                 }
             }
