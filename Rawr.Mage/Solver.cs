@@ -682,8 +682,8 @@ namespace Rawr.Mage
             }
             else
             {
-                calculationResult.ManaRegenDrinking = calculationResult.ManaRegen + 432f;
-                calculationResult.HealthRegenEating = calculationResult.HealthRegen + 500f;
+                calculationResult.ManaRegenDrinking = calculationResult.ManaRegen + 640f;
+                calculationResult.HealthRegenEating = calculationResult.HealthRegen + 750f;
             }
             calculationResult.MeleeMitigation = (1 - 1 / (1 + 0.1f * baseStats.Armor / (8.5f * (targetLevel + 4.5f * (targetLevel - 59)) + 40)));
             calculationResult.Defense = 5 * playerLevel + baseStats.DefenseRating / 4.918498039f; // this is for level 80 only
