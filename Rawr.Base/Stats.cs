@@ -334,6 +334,9 @@ namespace Rawr {
         MultiShotManaDiscount,
         MultiShotCooldownReduction,
         TrapCooldownReduction,
+        PetStamina,
+        PetStrength,
+        PetSpirit,
         #endregion
         #region Set Bonuses: Warlock
         LifeTapBonusSpirit,
@@ -2991,6 +2994,33 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.TrapCooldownReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.TrapCooldownReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Stamina")]
+        [Category("Hunter")]
+        public float PetStamina
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PetStamina]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PetStamina] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Strength")]
+        [Category("Hunter")]
+        public float PetStrength
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PetStrength]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PetStrength] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spirit")]
+        [Category("Hunter")]
+        public float PetSpirit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PetSpirit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PetSpirit] = value; }
         }
 
         #endregion

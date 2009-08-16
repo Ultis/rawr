@@ -1602,6 +1602,26 @@ namespace Rawr
                 Stats = { AttackPower = 80, SpellPower = 46, Stamina = 40 }
             });
             #endregion
+            #region Pet Food
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Kibler's Bits",
+                Group = "Pet Food",
+                Stats = { PetStrength = 20, PetStamina = 20 }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Spiced Mammoth Treats",
+                Group = "Pet Food",
+                Stats = { PetStrength = 30, PetStamina = 30 }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Sporeling Snack",
+                Group = "Pet Food",
+                Stats = { PetSpirit = 20, PetStamina = 20 }
+            });
+            #endregion
 
             #region Scrolls
             defaultBuffs.Add(new Buff()
