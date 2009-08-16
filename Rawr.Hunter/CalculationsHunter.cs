@@ -1646,7 +1646,9 @@ namespace Rawr.Hunter
             // than our mark is
             double apFromHuntersMarkDebuff = 0;
             if (character.ActiveBuffsContains("Hunter's Mark")) apFromHuntersMarkDebuff += 500;
+            if (character.ActiveBuffsContains("Glyphed Hunter's Mark")) apFromHuntersMarkDebuff += 100;
             if (character.ActiveBuffsContains("Improved Hunter's Mark")) apFromHuntersMarkDebuff += 150;
+            if (character.ActiveBuffsContains("Improved and Glyphed Hunter's Mark")) apFromHuntersMarkDebuff += 250;
             calculatedStats.apFromGear -= apFromHuntersMarkDebuff;
 
             if (apFromHuntersMarkDebuff > calculatedStats.apFromHuntersMark)

@@ -935,7 +935,21 @@ namespace Rawr
                 Group = "Ranged Attack Power",
                 Stats = { RangedAttackPower = 500f },
                 Improvements = { 
-					new Buff { Name = "Improved Hunter's Mark", Stats = { RangedAttackPower = 150f } } // 30%
+					new Buff {
+                        Name = "Glyphed Hunter's Mark",
+                        Stats = { RangedAttackPower = 100f },
+                        ConflictingBuffs = { "Hunter's Mark Improvements" } 
+                    },
+					new Buff { 
+                        Name = "Improved Hunter's Mark", 
+                        Stats = { RangedAttackPower = 150f }, 
+                        ConflictingBuffs = { "Hunter's Mark Improvements" } 
+                    },
+					new Buff { 
+                        Name = "Improved and Glyphed Hunter's Mark", 
+                        Stats = { RangedAttackPower = 250f }, 
+                        ConflictingBuffs = { "Hunter's Mark Improvements" } 
+                    }
                 }
             });
             #endregion
