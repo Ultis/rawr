@@ -590,6 +590,9 @@ namespace Rawr.Mage
             if (!calculations.CalculationOptions.EffectDisableManaSources)
             {
                 cost -= CritRate * BaseCost * 0.1f * calculations.MageTalents.MasterOfElements;
+                // Judgement of Wisdom
+                // this is actually a PPM
+                cost -= template.BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
             }
             return cost;
         }
@@ -622,6 +625,9 @@ namespace Rawr.Mage
             if (!calculations.CalculationOptions.EffectDisableManaSources)
             {
                 cost -= CritRate * BaseCost * 0.1f * calculations.MageTalents.MasterOfElements;
+                // Judgement of Wisdom
+                // this is actually a PPM
+                cost -= template.BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
             }
             CostPerSecond = cost / CastTime;
         }

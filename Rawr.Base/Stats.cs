@@ -84,7 +84,7 @@ namespace Rawr {
         ManaRestorePerCast,
         ManaRestoreOnCast_5_15,
         ManaRestoreOnCast_10_45,
-        ManaRestoreFromBaseManaPerHit,
+        ManaRestoreFromBaseManaPPM,
         ManaRestoreFromMaxManaPerSecond,
         ManaRestoreOnCrit_25_45,
         MangleCostReduction,
@@ -1006,12 +1006,12 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
-        [DisplayName("% Base Mana / Hit")]
+        [DisplayName("% Base Mana / Minute (PPM)")]
         [Category("Buffs / Debuffs")]
-        public float ManaRestoreFromBaseManaPerHit
+        public float ManaRestoreFromBaseManaPPM
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPerHit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPerHit] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPPM]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromBaseManaPPM] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

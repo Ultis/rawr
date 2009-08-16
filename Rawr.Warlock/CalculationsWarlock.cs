@@ -556,7 +556,7 @@ namespace Rawr.Warlock
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
-                ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
+                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
                 SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
@@ -662,7 +662,7 @@ namespace Rawr.Warlock
                 + stats.WarlockGrandSpellstone
                 + stats.WarlockGrandFirestone
                 + stats.ManaRestoreOnCast_5_15
-                + stats.ManaRestoreFromBaseManaPerHit
+                + stats.ManaRestoreFromBaseManaPPM
                 + stats.SpellPowerFor15SecOnUse90Sec
                 + stats.SpellPowerFor15SecOnUse2Min
                 + stats.SpellPowerFor20SecOnUse2Min

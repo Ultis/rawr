@@ -213,18 +213,18 @@ namespace Rawr.Warlock
             if (CalculationOptions.Replenishment > 0)
                 availableMana += petStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f) * solver.time;
             availableMana += solver.petManaGain;
-            if (charStats.ManaRestoreFromBaseManaPerHit > 0)
+            if (charStats.ManaRestoreFromBaseManaPPM > 0)
             {
                 double hitCount = solver.time / baseAttackSpeed;
-                availableMana += baseMana * charStats.ManaRestoreFromBaseManaPerHit * (CalculationOptions.JoW / 100f) * hitCount * petHit;
+                availableMana += baseMana * charStats.ManaRestoreFromBaseManaPPM * (CalculationOptions.JoW / 100f) * hitCount * petHit;
             }
             int specialHits = 0;
             while (availableMana > 0 && specialHits + 1 <= solver.time / specialAttackSpeed && specialAttackSpeed > 0)
             {
                 specialHits++;
                 availableMana -= specialCost;
-                if (charStats.ManaRestoreFromBaseManaPerHit > 0)
-                    availableMana += baseMana * charStats.ManaRestoreFromBaseManaPerHit * (CalculationOptions.JoW / 100f) * petHit;
+                if (charStats.ManaRestoreFromBaseManaPPM > 0)
+                    availableMana += baseMana * charStats.ManaRestoreFromBaseManaPPM * (CalculationOptions.JoW / 100f) * petHit;
                 if (Pet == "Felhunter" && character.WarlockTalents.ImprovedFelhunter > 0)
                     availableMana += petStats.Mana * character.WarlockTalents.ImprovedFelhunter * 0.04;
             }

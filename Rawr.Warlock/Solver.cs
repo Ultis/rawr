@@ -590,12 +590,12 @@ namespace Rawr.Warlock
                 currentMana += manaGain;
                 ManaSources.Add(new ManaSource("Replenishment", manaGain));
             }
-            if (simStats.ManaRestoreFromBaseManaPerHit > 0)
+            if (simStats.ManaRestoreFromBaseManaPPM > 0)
             {
                 float hitCount = 0;
                 foreach (Spell spell in SpellPriority)
                     hitCount += spell.SpellStatistics.HitCount;
-                manaGain = 3856 * simStats.ManaRestoreFromBaseManaPerHit * (CalculationOptions.JoW / 100f) * hitCount;
+                manaGain = 3856 * simStats.ManaRestoreFromBaseManaPPM * (CalculationOptions.JoW / 100f) * hitCount;
                 currentMana += manaGain;
                 ManaSources.Add(new ManaSource("Judgement of Wisdom", manaGain));
             }

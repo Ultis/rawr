@@ -130,7 +130,7 @@ namespace Rawr.Elemental.Estimation
             #region Calculate Regen
             float spiRegen = 5 * StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect);
             float replenishRegen = 5 * stats.Mana * stats.ManaRestoreFromMaxManaPerSecond;
-            float judgementRegen = 5 * rot.getCastsPerSecond() * rot.getWeightedHitchance() * stats.ManaRestoreFromBaseManaPerHit * BaseStats.GetBaseStats(character).Mana * .25f; //judgment proc chance is believed 25%
+            float judgementRegen = 5 * rot.getCastsPerSecond() * rot.getWeightedHitchance() * stats.ManaRestoreFromBaseManaPPM * BaseStats.GetBaseStats(character).Mana * .25f; //judgment proc chance is believed 25%
             float ManaRegInFSR = spiRegen * stats.SpellCombatManaRegeneration + stats.Mp5 + replenishRegen + judgementRegen + thunderstormRegen;
             float ManaRegOutFSR = spiRegen + stats.Mp5 + replenishRegen + thunderstormRegen;
             float ManaRegen = ManaRegInFSR;

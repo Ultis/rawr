@@ -1010,7 +1010,7 @@ namespace Rawr
                 Name = "Judgement of Wisdom",
                 Source = "Paladin",
                 Group = "Mana Restore",
-                Stats = { ManaRestoreFromBaseManaPerHit = 0.01f }
+                Stats = { ManaRestoreFromBaseManaPPM = 0.24f }
             });
             #endregion
 

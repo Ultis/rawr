@@ -830,7 +830,7 @@ namespace Rawr.ShadowPriest
                 + stats.MindBlastCostReduction + stats.ShadowWordDeathCritIncrease
                 + stats.WeakenedSoulDurationDecrease
                 + stats.DevouringPlagueBonusDamage + stats.MindBlastHasteProc
-                + stats.ManaRestoreFromBaseManaPerHit + stats.BonusSpellCritMultiplier
+                + stats.ManaRestoreFromBaseManaPPM + stats.BonusSpellCritMultiplier
                 + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat
                 + stats.ShadowDamage
 

@@ -574,7 +574,7 @@ namespace Rawr.ShadowPriest
             tmpregen = simStats.Mana * 0.002f * (CalculationOptions.Replenishment / 100f);
             ManaSources.Add(new ManaSource("Replenishment", tmpregen));
             regen += tmpregen;
-            tmpregen = SWP.BaseMana * (simStats.ManaRestoreFromBaseManaPerHit > 0 ? 0.02f * 0.25f : 0f) * HitsPerSecond * (CalculationOptions.JoW / 100f);
+            tmpregen = SWP.BaseMana * (simStats.ManaRestoreFromBaseManaPPM > 0 ? 0.02f * 0.25f : 0f) * HitsPerSecond * (CalculationOptions.JoW / 100f);
             if (tmpregen > 0)
             {
                 ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));

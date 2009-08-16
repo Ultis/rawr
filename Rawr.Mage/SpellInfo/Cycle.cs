@@ -316,7 +316,7 @@ namespace Rawr.Mage
         {
             if (CastingState.CalculationOptions.EffectDisableManaSources) return;
             Stats baseStats = CastingState.BaseStats;
-            manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR) + CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
+            manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR);
             float fight = CastingState.CalculationOptions.FightDuration;
             foreach (SpecialEffect effect in CastingState.Calculations.ManaRestoreEffects)
             {
@@ -378,7 +378,7 @@ namespace Rawr.Mage
                         break;
                 }
             }
-            threatPerSecond += (baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
+            //threatPerSecond += (baseStats.ManaRestoreFromBaseManaPPM * 3268 / CastTime * HitProcs) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
             // 3.2 mode Empowered Fire ignite return
             if (IgniteProcs > 0 && CastingState.MageTalents.EmpoweredFire > 0)
             {
@@ -414,7 +414,7 @@ namespace Rawr.Mage
             dict["Innervate"] += duration * (15732 * CastingState.CalculationOptions.Innervate / CastingState.CalculationOptions.FightDuration);
             dict["Mana Tide"] += duration * CastingState.CalculationOptions.ManaTide * 0.24f * CastingState.BaseStats.Mana / CastingState.CalculationOptions.FightDuration;
             dict["Replenishment"] += duration * CastingState.BaseStats.ManaRestoreFromMaxManaPerSecond * CastingState.BaseStats.Mana;
-            dict["Judgement of Wisdom"] += duration * CastingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
+            //dict["Judgement of Wisdom"] += duration * CastingState.BaseStats.ManaRestoreFromBaseManaPPM * 3268 / CastTime * HitProcs;
             float fight = CastingState.CalculationOptions.FightDuration;
             foreach (SpecialEffect effect in CastingState.Calculations.ManaRestoreEffects)
             {

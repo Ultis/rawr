@@ -466,7 +466,7 @@ namespace Rawr.Hunter
 				TrapCooldownReduction = stats.TrapCooldownReduction,
                 FireDamage = stats.FireDamage,
                 Stamina = stats.Stamina,
-                ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
+                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
@@ -530,7 +530,7 @@ namespace Rawr.Hunter
             stats.TrapCooldownReduction +
             stats.FireDamage + 
             stats.Stamina +
-            stats.ManaRestoreFromBaseManaPerHit +
+            stats.ManaRestoreFromBaseManaPPM +
             stats.BonusFireDamageMultiplier +
             stats.BonusFrostDamageMultiplier +
             stats.BonusArcaneDamageMultiplier +
@@ -1259,7 +1259,7 @@ namespace Rawr.Hunter
                                           * (1 - statsBuffs.ArmorPenetration); // Buffs!G77
 
             double targetDebuffsMP5JudgmentOfWisdom = 0;
-            if (statsBuffs.ManaRestoreFromBaseManaPerHit > 0)
+            if (statsBuffs.ManaRestoreFromBaseManaPPM > 0)
             {
                 // Note: we have to multiply the chance by 2 because it's stored in Buff.cs
                 // as 0.01. this is because other models are not doing this calculation :)
@@ -1270,7 +1270,7 @@ namespace Rawr.Hunter
                 double jowAvgShotTime = jowAutosPM + jowSpecialsPM > 0 ? 60 / (jowAutosPM + jowSpecialsPM) : 0; // E99
                 double jowProcChance = jowAvgShotTime * jowActualPPM / 60; // E100
                 double jowTimeToProc = jowProcChance > 0 ? jowAvgShotTime / jowProcChance : 0; // E101
-                double jowManaGained = statsRace.Mana * statsBuffs.ManaRestoreFromBaseManaPerHit * 2; // E102
+                double jowManaGained = statsRace.Mana * statsBuffs.ManaRestoreFromBaseManaPPM; // E102
                 double jowMPSGained = jowTimeToProc > 0 ? jowManaGained / jowTimeToProc : 0; // E103
                 targetDebuffsMP5JudgmentOfWisdom = jowTimeToProc > 0 ? jowManaGained / jowTimeToProc * 5 : 0; // E104
             }

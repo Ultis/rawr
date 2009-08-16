@@ -19,6 +19,7 @@ namespace Rawr.Mage
         public int BaseCost;
         public float Range;
         public float BaseCastTime;
+        public float BaseUntalentedCastTime;
         public float BaseCooldown;
         public MagicSchool MagicSchool;
         public float BaseMinDamage;
@@ -106,6 +107,7 @@ namespace Rawr.Mage
             AreaEffect = areaEffect;
             BaseCost = cost;
             BaseCastTime = castTime;
+            BaseUntalentedCastTime = instant ? 1.5f : castTime;
             BaseCooldown = cooldown;
             Range = range;
             MagicSchool = magicSchool;

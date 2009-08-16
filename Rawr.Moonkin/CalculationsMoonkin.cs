@@ -942,7 +942,7 @@ namespace Rawr.Moonkin
                 StarfireCritChance = stats.StarfireCritChance,
                 BonusManaPotion = stats.BonusManaPotion,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                ManaRestoreFromBaseManaPerHit  = stats.ManaRestoreFromBaseManaPerHit,
+                ManaRestoreFromBaseManaPPM  = stats.ManaRestoreFromBaseManaPPM,
                 SpellHaste = stats.SpellHaste,
                 SpellCrit = stats.SpellCrit,
                 SpellHit = stats.SpellHit,
@@ -1037,7 +1037,7 @@ namespace Rawr.Moonkin
                 + stats.HitRating + stats.SpellHit + stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier
                 + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier
                 + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier
-                + stats.Mana + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromBaseManaPerHit
+                + stats.Mana + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromBaseManaPPM
                 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.StarfireDmg
                 + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc
                 + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot

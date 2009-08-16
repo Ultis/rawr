@@ -359,7 +359,7 @@ namespace Rawr.Elemental
                 SpellFrostDamageRating = stats.SpellFrostDamageRating,
                 Mp5 = stats.Mp5,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
+                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 #endregion
                 #region Multipliers
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
@@ -438,7 +438,7 @@ namespace Rawr.Elemental
                 stats.SpellFrostDamageRating +
                 stats.Mp5 +
                 stats.ManaRestoreFromMaxManaPerSecond +
-                stats.ManaRestoreFromBaseManaPerHit;
+                stats.ManaRestoreFromBaseManaPPM;
             #endregion
             #region Multipliers
             elementalStats +=
