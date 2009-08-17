@@ -254,7 +254,8 @@ namespace Rawr.Hunter
             #region Target Debuffs
 
             // Expertise
-            double expertiseRatingGain = Math.Round(hitFromHunter * 3.25 * 100);
+            double hitFromHunterWhole = (calculatedStats.BasicStats.HitRating / HunterRatings.HIT_RATING_PER_PERCENT) / 100;
+            double expertiseRatingGain = Math.Round(hitFromHunterWhole * 3.25 * 100);
             double expertiseDodgeReduced = expertiseRatingGain / 4 / 100;
 
             calculatedStats.petTargetDodge = (0.05 + levelDifference * 0.005) - expertiseDodgeReduced; // PetTargetDodge

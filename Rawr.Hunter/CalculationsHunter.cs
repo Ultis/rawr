@@ -563,6 +563,14 @@ namespace Rawr.Hunter
         {
             if (buff.Name == "Concentration Aura") return false; // Gets selected due to a bug saying it increases BonusAspectOfTheViperAttackSpeed
             if (buff.Group == "Potion") return false;
+
+            // these four foods give stam, which is the only useful part of their buff.
+            // removed because you shouldn't use these foods - other foods are always better.
+            if (buff.Name == "Spirit Food") return false;
+            if (buff.Name == "Strength Food") return false;
+            if (buff.Name == "Expertise Food") return false;
+            if (buff.Name == "Spell Power Food") return false;
+
             return base.IsBuffRelevant(buff);               
         }
        
@@ -1403,6 +1411,9 @@ namespace Rawr.Hunter
             #endregion
             #region August 2009 Mana Regen
 
+            // this could be a spreadsheet bug, but might be a rawr bug:
+            // the MP5 from Mana Spring Totem / Blessing of Wisdom doesn't stack with MP5 food.
+            // here we stack them.
             calculatedStats.manaRegenGearBuffs = (statsBaseGear.Mp5 + statsBuffs.Mp5) / 5;
 
             // Viper Regen if viper is up 100%
