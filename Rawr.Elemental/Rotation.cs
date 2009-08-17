@@ -105,11 +105,6 @@ namespace Rawr.Elemental
             dps = float.PositiveInfinity;
         }
 
-        public float OptimalWait
-        {
-            get { return LvBFS.TotalDamage * (LB.CastTime + LvBFS.CastTime) / (LB.TotalDamage + LvBFS.TotalDamage) - LvBFS.CastTime; }
-        }
-
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
@@ -117,19 +112,45 @@ namespace Rawr.Elemental
         {
             if (LB == null || FS == null || LvBFS == null || LvB == null)
                 return;
-            CalculateRotation(OptimalWait);
+
+            Spell[][] sp = new Spell[4][];
+            float[] dps = new float[4];
+            
+            CalculateRotation(false, false);
+            sp[0] = new Spell[spells.Count];
+            spells.CopyTo(sp[0]);
+            dps[0] = DPS;
+            CalculateRotation(true, false);
+            sp[1] = new Spell[spells.Count];
+            spells.CopyTo(sp[1]);
+            dps[1] = DPS;
+            CalculateRotation(false, true);
+            sp[2] = new Spell[spells.Count];
+            spells.CopyTo(sp[2]);
+            dps[2] = DPS;
+            CalculateRotation(true, true);
+            sp[3] = new Spell[spells.Count];
+            spells.CopyTo(sp[3]);
+            dps[3] = DPS;
+
+            float sdps = 0;
+            int pos = 0;
+            for (int i = 0; i < dps.Length; i++)
+                if (sdps < dps[i])
+                    pos = i;
+            spells = new List<Spell>(sp[pos]);
         }
 
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        /// <param name="waitThreshold">amount of time before LvB gets ready when a lightning bolt shall be skipped</param>
-        public void CalculateRotation(float waitThreshold)
+        public void CalculateRotation(bool addlb1, bool addlb2)
         {
             if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null)
                 return;
             spells.Clear();
-            waitThreshold = Math.Min(waitThreshold, LB.CastTime);
+            Invalidate();
+            float waitThreshold = LB.CastTime;
 
             if (Talents.GlyphofFlameShock)
             {
@@ -155,17 +176,25 @@ namespace Rawr.Elemental
                     {
                         if (GetTime() + LvB.CastTime > FSdropsAt)
                         {
-                            if (LvBreadyAt - (GetTime() + FS.CastTime) <= waitThreshold)
+                            if (LvBreadyAt - (GetTime() + FS.CastTime) > LB.CastTime)
+                            {
+                                AddSpell(LB);
+                                break;
+                            }
+                            else if (LvBreadyAt - (GetTime() + FS.CastTime) > 0 && addlb2)
+                            {
+                                AddSpell(LB);
+                                break;
+                            }
+                            else
                             {
                                 float waitTime = LvBreadyAt - (GetTime() + FS.CastTime);
-                                if(waitTime>0f)
+                                if (waitTime > 0f)
                                     AddSpell(new Wait(waitTime));
                                 break; //done
                             }
-                            else
-                                AddSpell(LB);
                         }
-                        else if (LvBreadyAt - GetTime() <= waitThreshold)
+                        else if (LvBreadyAt - GetTime() <= LB.CastTime && !addlb1)
                             AddSpell(new Wait(LvBreadyAt - GetTime()));
                         else
                             AddSpell(LB);
@@ -215,8 +244,8 @@ namespace Rawr.Elemental
         public float GetTime(int i)
         {
             float time = 0f;
-            for (int j = 0; j < i && j < spells.Count; j++ )
-                time += spells[j].CastTime;
+            for (int j = 0; j < i; j++ )
+                time += spells[Mod(j,spells.Count)].CastTime;
             return time;
         }
 
@@ -295,7 +324,14 @@ namespace Rawr.Elemental
                     if (Talents.ElementalFocus > 0)
                         ccc = 1f - (1f - prev1.CCCritChance) * (1f - prev2.CCCritChance);
                     mps += s.ManaCost * (1 - .4f * ccc);
-                    dps += s.HitChance * s.TotalDamage * (1 + .05f * Talents.ElementalOath * ccc); //bad for FS ticks. FS ticks calculation would need to be added if the rotation can be changed by everyone.
+                    if (s.Duration > 0) //dot
+                    {
+                        int j = getSpellNumber(i);
+                        float durationActive = getNextCastTime(j) - (GetTime(j) + s.CastTimeWithoutGCD);
+                        dps += s.HitChance * (s.AvgDamage * (1 + .05f * Talents.ElementalOath * ccc) + s.PeriodicDamage(durationActive)); //bad for FS ticks.
+                    }
+                    else
+                        dps += s.HitChance * s.TotalDamage * (1 + .05f * Talents.ElementalOath * ccc); //bad for FS ticks.
                     cc[s.GetType()] += ccc;
                     count[s.GetType()]++;
                 }
@@ -316,6 +352,27 @@ namespace Rawr.Elemental
         public Spell getCast(int i)
         {
             return Casts[Mod(i, Casts.Count)]; ;
+        }
+
+        /// <summary>
+        /// Spells based.
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="spellType"></param>
+        /// <returns></returns>
+        public float getNextCastTime(int i)
+        {
+            Type spellType = spells[Mod(i, spells.Count)].GetType();
+            int start = Mod(i + 1, spells.Count);
+            float time = GetTime(i);
+            for (int j = start; j != start; j = Mod(i++, spells.Count))
+            {
+                if (!spellType.IsInstanceOfType(spells[j]))
+                    time += spells[j].CastTime;
+                else
+                    return time;
+            }
+            return 0f;
         }
 
         /// <summary>
@@ -363,7 +420,7 @@ namespace Rawr.Elemental
             {
                 r += "\n" + Math.Round(GetTime(i),2) + "s\t" + spells[i].ToString();
             }
-            r += "\n" + Math.Round(GetTime() + spells[spells.Count-1].CastTime, 2) + "s\t...";
+            r += "\n" + Math.Round(GetTime(), 2) + "s\t...";
             return r.Substring(1);
         }
 

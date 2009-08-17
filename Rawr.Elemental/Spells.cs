@@ -138,8 +138,21 @@ namespace Rawr.Elemental
         public float PeriodicTicks
         { get { return periodicTicks; } }
 
+        public float PeriodicDamage()
+        {
+            return PeriodicDamage(Duration);
+        }
+
+        public float PeriodicDamage(float duration)
+        {
+            if (PeriodicTickTime == 0)
+                return 0;
+            int effectiveTicks = (int)Math.Floor(Math.Min(duration, Duration) / PeriodicTickTime);
+            return PeriodicTick * effectiveTicks;
+        }
+
         public virtual float TotalDamage
-        { get { return AvgDamage + PeriodicTick * PeriodicTicks; } }
+        { get { return AvgDamage + PeriodicDamage(); } }
 
         public float DirectDpS
         { get { return AvgDamage / CastTime; } }
