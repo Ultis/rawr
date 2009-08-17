@@ -259,7 +259,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.HitPercentTtl = calculatedStats.HitPercent + calculatedStats.HitPercBonus;
                 calculatedStats.HitCanFree =
                     StatConversion.GetRatingFromHit(
-                        StatConversion.WHITE_MISS_CHANCE_CAP
+                        combatFactors.WhMissCap //StatConversion.WHITE_MISS_CHANCE_CAP
                         - calculatedStats.HitPercBonus
                         - StatConversion.GetHitFromRating(calculatedStats.HitRating)
                     )

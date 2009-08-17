@@ -186,20 +186,38 @@ namespace Rawr.DPSWarr {
                         + HitPerc;              // Bonus from Hit Rating
             }
         }
-        public float WhMissChance {
+        public float WhMissCap {
             get {
-                float missChance =
-                    // Determine which cap to use
-                    (Talents.TitansGrip == 1f && OH != null
+                float twoHandCheck = (Talents.TitansGrip == 1f && OH != null
                         && MH.Slot == ItemSlot.TwoHand
                         && OH.Slot == ItemSlot.TwoHand ?
-                       StatConversion.WHITE_MISS_CHANCE_CAP_DW : StatConversion.WHITE_MISS_CHANCE_CAP)
-                    // Reduce the Perc by dees much
-                       - MissPrevBonuses;
+                       StatConversion.WHITE_MISS_CHANCE_CAP_DW : StatConversion.WHITE_MISS_CHANCE_CAP);
+                float levelAdj = (CalcOpts.TargetLevel == 83 ? 0.00f :
+                                 (CalcOpts.TargetLevel == 82 ? 0.01f :
+                                 (CalcOpts.TargetLevel == 81 ? 0.02f :
+                                 (CalcOpts.TargetLevel == 80 ? 0.03f :
+                                  0.00f))));
+
+                return twoHandCheck - levelAdj;
+            }
+        }
+        public float WhMissChance {
+            get {
+                float missChance = WhMissCap - MissPrevBonuses;
                 return (float)Math.Max(0f, missChance); 
             }
         }
-        public float YwMissChance { get { return (float)Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP - MissPrevBonuses); } }
+        public float YwMissCap {
+            get {
+                float levelAdj = (CalcOpts.TargetLevel == 83 ? 0.00f :
+                                 (CalcOpts.TargetLevel == 82 ? 0.01f :
+                                 (CalcOpts.TargetLevel == 81 ? 0.02f :
+                                 (CalcOpts.TargetLevel == 80 ? 0.03f :
+                                  0.00f))));
+                return StatConversion.YELLOW_MISS_CHANCE_CAP - levelAdj;
+            }
+        }
+        public float YwMissChance { get { return (float)Math.Max(0f, YwMissCap - MissPrevBonuses); } }
         #endregion
         #region Dodge
         private float MhDodgeChance { get { return (float)Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP - GetDPRfromExp(_c_mhexpertise) - Talents.WeaponMastery * 0.01f); } }
