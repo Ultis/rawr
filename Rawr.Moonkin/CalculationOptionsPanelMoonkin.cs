@@ -40,8 +40,12 @@ namespace Rawr.Moonkin
             else
                 cmbEclipseType.SelectedItem = "Solar";
             chkMoonfireAlways.Checked = calcOpts.MoonfireAlways;
-            chk32Mode.Checked = calcOpts.Use32Mode;
+            chk32Mode.Checked = true;
             if (!calcOpts.Use32Mode)
+                calcOpts.Use32Mode = true;
+            cmbEclipseType.Enabled = false;
+            chkMoonfireAlways.Enabled = false;
+            /*if (!calcOpts.Use32Mode)
             {
                 cmbEclipseType.Enabled = true;
                 chkMoonfireAlways.Enabled = true;
@@ -50,7 +54,7 @@ namespace Rawr.Moonkin
             {
                 cmbEclipseType.Enabled = false;
                 chkMoonfireAlways.Enabled = false;
-            }
+            }*/
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)

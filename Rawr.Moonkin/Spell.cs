@@ -484,7 +484,6 @@ namespace Rawr.Moonkin
             }
             float latency = calcs.Latency;
 
-            float JoWProc = character.ActiveBuffsContains("Judgement of Wisdom") ? 0.02f * CalculationsMoonkin.BaseMana : 0.0f;
             float moonkinFormProc = (character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             bool starfireGlyph = character.DruidTalents.GlyphOfStarfire;
@@ -497,7 +496,7 @@ namespace Rawr.Moonkin
                     DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
 
                     float omenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f : 0;
-                    mainNuke.ManaCost = mainNuke.BaseManaCost - 0.25f * JoWProc * spellHit - (spellCrit + mainNuke.CriticalChanceModifier) * moonkinFormProc - mainNuke.BaseManaCost * omenProcChance * spellHit;
+                    mainNuke.ManaCost = mainNuke.BaseManaCost - mainNuke.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana * spellHit - (spellCrit + mainNuke.CriticalChanceModifier) * moonkinFormProc - mainNuke.BaseManaCost * omenProcChance * spellHit;
                     Duration = mainNuke.CastTime;
                     RotationData.ManaUsed = ManaUsed = mainNuke.ManaCost;
                     RotationData.ManaGained = ManaGained = mainNuke.BaseManaCost - mainNuke.ManaCost;
@@ -550,7 +549,8 @@ namespace Rawr.Moonkin
                         MoonfireCasts = 1f;
                     }
 
-                    float manaFromJoW = (numNukeCasts + 1) / 4 * JoWProc * spellHit;
+                    float manaFromJoW = (mainNuke.ManaCost - mainNuke.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana) * numNukeCasts;
+                    manaFromJoW += DotEffectSpell.ManaCost - 1.5f / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana;
                     float manaFromOoC = ((0.06f) * mainNuke.BaseManaCost
                         + (numNukeCasts - 1) * (0.06f) * mainNuke.BaseManaCost
                         + (0.06f) * DotEffectSpell.BaseManaCost) * spellHit;
@@ -617,7 +617,9 @@ namespace Rawr.Moonkin
                     MoonfireTicks = moonFire.DotEffect.NumberOfTicks;
                     MoonfireCasts = 1.0f;
 
-                    manaFromJoW = (numNukeCasts + 1 + numISCasts) / 4 * JoWProc * spellHit;
+                    manaFromJoW = numNukeCasts * (mainNuke.ManaCost - mainNuke.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana) +
+                        (moonFire.ManaCost - 1.5f / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana) +
+                        numISCasts * (insectSwarm.ManaCost - 1.5f / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana);
                     manaFromOoC = ((0.06f) * mainNuke.BaseManaCost
                         + (numNukeCasts - 1 - numISCasts) * (0.06f) * mainNuke.BaseManaCost
                         + (0.06f) * moonFire.BaseManaCost
@@ -648,7 +650,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        private float DoEclipseCalcs(Character character, CharacterCalculationsMoonkin calcs, MoonkinSolver solver, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        /*private float DoEclipseCalcs(Character character, CharacterCalculationsMoonkin calcs, MoonkinSolver solver, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             // Do 3.2 Eclipse calculations in a new function to minimize code impact in non-3.2 mode
             if ((character.CalculationOptions as CalculationOptionsMoonkin).Use32Mode)
@@ -828,13 +830,12 @@ namespace Rawr.Moonkin
             }
 
             return damageDone;
-        }
+        }*/
 
-        private float Do32EclipseCalcs(Character character, CharacterCalculationsMoonkin calcs, MoonkinSolver solver, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        private float DoEclipseCalcs(Character character, CharacterCalculationsMoonkin calcs, MoonkinSolver solver, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
 
-            float JoWProc = character.ActiveBuffsContains("Judgement of Wisdom") ? 0.02f * CalculationsMoonkin.BaseMana : 0.0f;
             float omenOfClarityProcChance = character.DruidTalents.OmenOfClarity * 0.06f;
             float moonkinFormProc = (character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
@@ -901,28 +902,28 @@ namespace Rawr.Moonkin
             float preLunarManaUsed = preLunarCast.BaseManaCost / preLunarCast.CastTime * preLunarTime;
             float preLunarManaGained = (preLunarCast.BaseManaCost * omenOfClarityProcChance) +
                 ((spellCrit + preLunarCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
-                (JoWProc / 4 * spellHit);
+                (preLunarCast.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana);
 
             float lunarTime = eclipseDuration - (preLunarCast.NGCastTime * 1.5f) -  lunarEclipseCast.CastTime * 0.5f;
             float lunarDPS = lunarEclipseCast.DamagePerHit / lunarEclipseCast.CastTime;
             float lunarManaUsed = lunarEclipseCast.BaseManaCost / lunarEclipseCast.CastTime * lunarTime;
             float lunarManaGained = (lunarEclipseCast.BaseManaCost * omenOfClarityProcChance) +
                 ((spellCrit + lunarEclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
-                (JoWProc / 4 * spellHit);
+                (lunarEclipseCast.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana);
 
             float preSolarTime = timeToProcSolar + (lunarEclipseCast.CastTime * 0.5f) + preSolarCast.NGCastTime;
             float preSolarDPS = preSolarCast.DamagePerHit / preSolarCast.CastTime;
             float preSolarManaUsed = preSolarCast.BaseManaCost / preSolarCast.CastTime * preSolarTime;
             float preSolarManaGained = (preSolarCast.BaseManaCost * omenOfClarityProcChance) +
                 ((spellCrit + preSolarCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
-                (JoWProc / 4 * spellHit);
+                (preSolarCast.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana);
 
             float solarTime = eclipseDuration - (preSolarCast.NGCastTime) - (preLunarCast.CastTime * 0.5f);
             float solarDPS = solarEclipseCast.DamagePerHit / solarEclipseCast.CastTime;
             float solarManaUsed = solarEclipseCast.BaseManaCost / solarEclipseCast.CastTime * solarTime;
             float solarManaGained = (solarEclipseCast.BaseManaCost * omenOfClarityProcChance) +
                 ((spellCrit + solarEclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
-                (JoWProc / 4 * spellHit);
+                (solarEclipseCast.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana);
 
             // Moonfire tick calculation:
             // Min(rotationLength, SFglyph + regMF + regMF) / tickLength if 100% uptime specified
@@ -960,8 +961,10 @@ namespace Rawr.Moonkin
                 (1 - StarfireCount / WrathCount * 0.06f - (1 - StarfireCount / WrathCount) * 0.06f))) : 0.0f;
             float isSavingsFromOoC = insectSwarm != null ? (insectSwarm.BaseManaCost - (insectSwarm.BaseManaCost *
                 (1 - StarfireCount / WrathCount * 0.06f - (1 - StarfireCount / WrathCount) * 0.06f))) : 0.0f;
-            ManaGained += moonfire != null ? (moonfireCasts * (mfSavingsFromOoC + ((spellCrit + moonfire.CriticalChanceModifier) * moonkinFormProc * spellHit) + JoWProc * spellHit / 4.0f)) : 0.0f;
-            ManaGained += insectSwarm != null ? (insectSwarmCasts * (isSavingsFromOoC + JoWProc * spellHit / 4.0f)) : 0.0f;
+            ManaGained += moonfire != null ? (moonfireCasts * (mfSavingsFromOoC +
+                ((spellCrit + moonfire.CriticalChanceModifier) * moonkinFormProc * spellHit)
+                + 1.5f / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana)) : 0.0f;
+            ManaGained += insectSwarm != null ? (insectSwarmCasts * (isSavingsFromOoC + 1.5f / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana)) : 0.0f;
 
             RotationData.ManaGained = ManaGained;
             RotationData.DPM = damageDone / ManaUsed;
@@ -1398,8 +1401,8 @@ namespace Rawr.Moonkin
             // Replenishment calculations
             // 3.2 MODE: 1% max mana per 5s (down from 1.25 max mana per 5s, .25 max mana per second)
             float replenishmentPerTick = calcs.BasicStats.Mana * calcs.BasicStats.ManaRestoreFromMaxManaPerSecond;
-            if (calcOpts.Use32Mode)
-                replenishmentPerTick = calcs.BasicStats.Mana * (0.01f / 5f);
+            /*if (calcOpts.Use32Mode)
+                replenishmentPerTick = calcs.BasicStats.Mana * (0.01f / 5f);*/
             float replenishmentMana = calcOpts.ReplenishmentUptime * replenishmentPerTick * calcOpts.FightLength * 60;
 
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
