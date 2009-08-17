@@ -1411,10 +1411,17 @@ namespace Rawr.Hunter
             #endregion
             #region August 2009 Mana Regen
 
-            // this could be a spreadsheet bug, but might be a rawr bug:
-            // the MP5 from Mana Spring Totem / Blessing of Wisdom doesn't stack with MP5 food.
-            // here we stack them.
-            calculatedStats.manaRegenGearBuffs = (statsBaseGear.Mp5 + statsBuffs.Mp5) / 5;
+            double mp5FromBuffs = statsBaseGear.Mp5 + statsBuffs.Mp5;
+            if (options.emulateSpreadsheetBugs)
+            {
+                // These effects are completely ignored by the spreadsheet
+                if (character.ActiveBuffsContains("Mp5 Food")) mp5FromBuffs -= 16;
+                if (character.ActiveBuffsContains("Flask of Pure Mojo")) mp5FromBuffs -= 45;
+                if (character.ActiveBuffsContains("Flask of Pure Mojo (Mixology)")) mp5FromBuffs -= 20;
+                if (character.ActiveBuffsContains("Elixir of Mighty Mageblood")) mp5FromBuffs -= 24;
+                if (character.ActiveBuffsContains("Elixir of Mighty Mageblood (Mixology)")) mp5FromBuffs -= 6;
+            }
+            calculatedStats.manaRegenGearBuffs = mp5FromBuffs / 5;
 
             // Viper Regen if viper is up 100%
             calculatedStats.manaRegenViper = 0;
