@@ -8,6 +8,7 @@ namespace Rawr.ProtWarr {
         public Stats BasicStats { get; set; }
         public List<Buff> ActiveBuffs { get; set; }
         public AbilityModelList Abilities { get; set; }
+        public CombatFactors combatFactors { get; set; }
         #endregion
 
         #region Points
@@ -210,8 +211,8 @@ namespace Rawr.ProtWarr {
                                                     Environment.NewLine + "{2:00.00%} : Dodged" +
                                                     Environment.NewLine + "{3:00.00%} : Parried" +
                                                     Environment.NewLine + "{4:00.00%} : Blocked",
-                                                    (StatConversion.YELLOW_MISS_CHANCE_CAP - HitPercentTtl) + DodgedAttacks + ParriedAttacks + 0.065f,
-                                                    StatConversion.YELLOW_MISS_CHANCE_CAP - HitPercentTtl,DodgedAttacks, ParriedAttacks, 0.065f));
+                                                    (combatFactors.YwMissCap - HitPercentTtl) + DodgedAttacks + ParriedAttacks + 0.065f,
+                                                     combatFactors.YwMissCap - HitPercentTtl, DodgedAttacks, ParriedAttacks, 0.065f));
             dictValues.Add("Total DPS", string.Format("{0:0.0}", TotalDamagePerSecond) + "*" + ThreatModel);
             dictValues.Add("Limited Threat/sec", string.Format("{0:0.0}", LimitedThreat) + "*" + ThreatModel);
             dictValues.Add("Unlimited Threat/sec", string.Format("{0:0.0}", UnlimitedThreat) + "*" + ThreatModel);
@@ -253,10 +254,10 @@ namespace Rawr.ProtWarr {
         }
 
         public override float GetOptimizableCalculationValue(string calculation) {
-            float missw = StatConversion.WHITE_MISS_CHANCE_CAP - HitPercent * 100f;
-            float missy = StatConversion.YELLOW_MISS_CHANCE_CAP - HitPercent * 100f;
-            float dodge = (StatConversion.YELLOW_DODGE_CHANCE_CAP - StatConversion.GetDodgeParryReducFromExpertise(MhExpertise)) * 100f;
-            float parry = (StatConversion.YELLOW_PARRY_CHANCE_CAP - StatConversion.GetDodgeParryReducFromExpertise(MhExpertise)) * 100f;
+            float missw = combatFactors._c_wmiss;  // StatConversion.WHITE_MISS_CHANCE_CAP[83] - HitPercent * 100f;
+            float missy = combatFactors._c_ymiss;  // StatConversion.YELLOW_MISS_CHANCE_CAP[83] - HitPercent * 100f;
+            float dodge = combatFactors._c_mhdodge;//(StatConversion.YELLOW_DODGE_CHANCE_CAP[83] - StatConversion.GetDodgeParryReducFromExpertise(MhExpertise)) * 100f;
+            float parry = combatFactors._c_mhparry;//(StatConversion.YELLOW_PARRY_CHANCE_CAP[83] - StatConversion.GetDodgeParryReducFromExpertise(MhExpertise)) * 100f;
 
             switch (calculation) {
                 case "Health": return BasicStats.Health;

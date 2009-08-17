@@ -56,33 +56,33 @@ namespace Rawr
         public const float BLOCKVALUE_PER_STR = 2.0f;
         public const float CRITREDUC_PER_RESILIENCE = 81.97497559f;
 
-        // Attack Table for players attacking mobs
-        public const float WHITE_MISS_CHANCE_CAP            = 0.0800f; //  8%
-        public const float WHITE_MISS_CHANCE_CAP_DW         = 0.2700f; //  8% + 19% = 27%
-        public const float WHITE_MISS_CHANCE_CAP_BEHIND     = WHITE_MISS_CHANCE_CAP;
-        public const float WHITE_MISS_CHANCE_CAP_DW_BEHIND  = WHITE_MISS_CHANCE_CAP_DW;
-        public const float YELLOW_MISS_CHANCE_CAP           = WHITE_MISS_CHANCE_CAP;
-        public const float YELLOW_MISS_CHANCE_CAP_BEHIND    = WHITE_MISS_CHANCE_CAP_BEHIND;
+        // Attack Table for players attacking mobs                                        80       81        82      83
+        public static readonly float[] WHITE_MISS_CHANCE_CAP            = new float[] { 0.0500f, 0.0520f, 0.0540f, 0.0800f };
+        public static readonly float[] WHITE_MISS_CHANCE_CAP_DW         = new float[] { 0.2400f, 0.2420f, 0.2440f, 0.2700f }; //  WHITE_MISS_CHANCE_CAP + 19%
+        //public static readonly float[] WHITE_MISS_CHANCE_CAP_BEHIND     = WHITE_MISS_CHANCE_CAP;
+        //public static readonly float[] WHITE_MISS_CHANCE_CAP_DW_BEHIND  = WHITE_MISS_CHANCE_CAP_DW;
+        public static readonly float[] YELLOW_MISS_CHANCE_CAP           = WHITE_MISS_CHANCE_CAP;
+        //public static readonly float[] YELLOW_MISS_CHANCE_CAP_BEHIND    = WHITE_MISS_CHANCE_CAP_BEHIND;
 
-        public const float WHITE_DODGE_CHANCE_CAP           = 0.0650f; //  6.5%
-        public const float WHITE_DODGE_CHANCE_CAP_BEHIND    = WHITE_DODGE_CHANCE_CAP; // 6.5% Attacks from behind *can* be dodged
-        public const float YELLOW_DODGE_CHANCE_CAP          = WHITE_DODGE_CHANCE_CAP;
-        public const float YELLOW_DODGE_CHANCE_CAP_BEHIND   = WHITE_DODGE_CHANCE_CAP_BEHIND;
+        public static readonly float[] WHITE_DODGE_CHANCE_CAP           = new float[] { 0.0500f, 0.0550f, 0.0600f, 0.0650f }; //  6.5%
+        //public static readonly float[] WHITE_DODGE_CHANCE_CAP_BEHIND    = WHITE_DODGE_CHANCE_CAP; // 6.5% Attacks from behind *can* be dodged
+        public static readonly float[] YELLOW_DODGE_CHANCE_CAP          = WHITE_DODGE_CHANCE_CAP;
+        //public static readonly float[] YELLOW_DODGE_CHANCE_CAP_BEHIND   = WHITE_DODGE_CHANCE_CAP_BEHIND;
 
-        public const float WHITE_PARRY_CHANCE_CAP           = 0.1375f; // 13.75%
-        public const float WHITE_PARRY_CHANCE_CAP_BEHIND    = 0.0000f; //  0% Attacks from behind can't be parried
-        public const float YELLOW_PARRY_CHANCE_CAP          = WHITE_PARRY_CHANCE_CAP;
-        public const float YELLOW_PARRY_CHANCE_CAP_BEHIND   = WHITE_PARRY_CHANCE_CAP_BEHIND;
+        public static readonly float[] WHITE_PARRY_CHANCE_CAP           = new float[] { 0.0500f, 0.0550f, 0.0600f, 0.1375f }; // 13.75%
+        //public static readonly float[] WHITE_PARRY_CHANCE_CAP_BEHIND    = new float[] { 0.0000f, 0.0000f, 0.0000f, 0.0000f }; //  0% Attacks from behind can't be parried
+        public static readonly float[] YELLOW_PARRY_CHANCE_CAP          = WHITE_PARRY_CHANCE_CAP;
+        //public static readonly float[] YELLOW_PARRY_CHANCE_CAP_BEHIND   = WHITE_PARRY_CHANCE_CAP_BEHIND;
 
-        public const float WHITE_GLANCE_CHANCE_CAP          = 0.2500f; // 25%
-        public const float WHITE_GLANCE_CHANCE_CAP_BEHIND   = WHITE_GLANCE_CHANCE_CAP;
-        public const float YELLOW_GLANCE_CHANCE_CAP         = 0.000f; //  0% Yellows don't glance
-        public const float YELLOW_GLANCE_CHANCE_CAP_BEHIND  = YELLOW_GLANCE_CHANCE_CAP;
+        public static readonly float[] WHITE_GLANCE_CHANCE_CAP          = new float[] { 0.2500f, 0.2500f, 0.2500f, 0.2500f }; // 25%
+        //public static readonly float[] WHITE_GLANCE_CHANCE_CAP_BEHIND   = WHITE_GLANCE_CHANCE_CAP;
+        public static readonly float[] YELLOW_GLANCE_CHANCE_CAP         = new float[] { 0.0000f, 0.0000f, 0.0000f, 0.0000f }; //  0% Yellows don't glance
+        //public static readonly float[] YELLOW_GLANCE_CHANCE_CAP_BEHIND  = YELLOW_GLANCE_CHANCE_CAP;
 
-        public const float WHITE_BLOCK_CHANCE_CAP           = 0.0650f; //  6.5%
-        public const float WHITE_BLOCK_CHANCE_CAP_BEHIND    = 0.0000f; //  0% Attacks from behind can't be blocked
-        public const float YELLOW_BLOCK_CHANCE_CAP          = WHITE_BLOCK_CHANCE_CAP;
-        public const float YELLOW_BLOCK_CHANCE_CAP_BEHIND   = WHITE_BLOCK_CHANCE_CAP_BEHIND;
+        public static readonly float[] WHITE_BLOCK_CHANCE_CAP           = new float[] { 0.0650f, 0.0650f, 0.0650f, 0.0650f }; //  6.5%
+        //public static readonly float[] WHITE_BLOCK_CHANCE_CAP_BEHIND    = new float[] { 0.0000f, 0.0000f, 0.0000f, 0.0000f }; //  0% Attacks from behind can't be blocked
+        public static readonly float[] YELLOW_BLOCK_CHANCE_CAP          = WHITE_BLOCK_CHANCE_CAP;
+        //public static readonly float[] YELLOW_BLOCK_CHANCE_CAP_BEHIND   = WHITE_BLOCK_CHANCE_CAP_BEHIND;
 
         // Same for all classes
         public const float INT_PER_SPELLCRIT = 166.66667f;

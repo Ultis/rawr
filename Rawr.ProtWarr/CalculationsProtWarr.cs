@@ -302,6 +302,7 @@ threat and limited threat scaled by the threat scale.",
 
             CombatFactors combatFactors = new CombatFactors(character, stats);
             Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+            calculatedStats.combatFactors = combatFactors;
 
             AttackModelMode amm = AttackModelMode.Basic;
             if (character.WarriorTalents.UnrelentingAssault > 0)
@@ -360,7 +361,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.HitPercentTtl = calculatedStats.HitPercent + calculatedStats.HitPercBonus;
             calculatedStats.HitCanFree =
                 StatConversion.GetRatingFromHit(
-                    StatConversion.WHITE_MISS_CHANCE_CAP
+                    StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel-80]
                     - calculatedStats.HitPercBonus
                     - StatConversion.GetHitFromRating(calculatedStats.HitRating)
                 )

@@ -188,45 +188,51 @@ namespace Rawr.ProtWarr {
                         + HitPerc;              // Bonus from Hit Rating
             }
         }
-        public float WhMissChance {
+        public float WhMissCap {
             get {
-                float missChance =
-                    // Determine which cap to use
-                    (Talents.TitansGrip == 1f && OH != null
+                float twoHandCheck = (Talents.TitansGrip == 1f && OH != null
                         && MH.Slot == ItemSlot.TwoHand
                         && OH.Slot == ItemSlot.TwoHand ?
-                       StatConversion.WHITE_MISS_CHANCE_CAP_DW : StatConversion.WHITE_MISS_CHANCE_CAP)
-                    // Reduce the Perc by dees much
-                       - MissPrevBonuses;
+                       StatConversion.WHITE_MISS_CHANCE_CAP_DW[CalcOpts.TargetLevel - 80] : StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - 80]);
+                return twoHandCheck;
+            }
+        }
+        public float WhMissChance {
+            get {
+                float missChance = WhMissCap - MissPrevBonuses;
                 return (float)Math.Max(0f, missChance);
             }
         }
-        public float YwMissChance { get { return (float)Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP - MissPrevBonuses); } }
+        public float YwMissCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
+        public float YwMissChance { get { return (float)Math.Max(0f, YwMissCap - MissPrevBonuses); } }
         #endregion
         #region Dodge
-        private float MhDodgeChance { get { return (float)Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP - GetDPRfromExp(_c_mhexpertise) - Talents.WeaponMastery * 0.01f); } }
-        private float OhDodgeChance { get { return (float)Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP - GetDPRfromExp(_c_ohexpertise) - Talents.WeaponMastery * 0.01f); } }
+        public float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
+        private float MhDodgeChance { get { return (float)Math.Max(0f, DodgeChanceCap - GetDPRfromExp(_c_mhexpertise) - Talents.WeaponMastery * 0.01f); } }
+        private float OhDodgeChance { get { return (float)Math.Max(0f, DodgeChanceCap - GetDPRfromExp(_c_ohexpertise) - Talents.WeaponMastery * 0.01f); } }
         #endregion
         #region Parry
+        public float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
         private float MhParryChance {
             get {
-                float ParryChance = StatConversion.WHITE_PARRY_CHANCE_CAP - GetDPRfromExp(_c_mhexpertise);
+                float ParryChance = ParryChanceCap - GetDPRfromExp(_c_mhexpertise);
                 return (float)Math.Max(0f, /*CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) :*/ ParryChance);
             }
         }
         private float OhParryChance {
             get {
-                float ParryChance = StatConversion.WHITE_PARRY_CHANCE_CAP - GetDPRfromExp(_c_ohexpertise);
+                float ParryChance = ParryChanceCap - GetDPRfromExp(_c_ohexpertise);
                 return (float)Math.Max(0f, /*CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) :*/ ParryChance);
             }
         }
         #endregion
         #region Glance
-        public float GlanceChance { get { return StatConversion.WHITE_GLANCE_CHANCE_CAP; } }
+        public float GlanceChance { get { return StatConversion.WHITE_GLANCE_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
         #endregion
         #region Block
-        private float MhBlockChance { get { return (float)Math.Max(0f, /*CalcOpts.InBack ? StatConversion.WHITE_BLOCK_CHANCE_CAP * (1f - CalcOpts.InBackPerc / 100f) :*/ StatConversion.WHITE_BLOCK_CHANCE_CAP); } }
-        private float OhBlockChance { get { return (float)Math.Max(0f, /*CalcOpts.InBack ? StatConversion.WHITE_BLOCK_CHANCE_CAP * (1f - CalcOpts.InBackPerc / 100f) :*/ StatConversion.WHITE_BLOCK_CHANCE_CAP); } }
+        public float BlockChanceCap { get { return StatConversion.WHITE_BLOCK_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
+        private float MhBlockChance { get { return (float)Math.Max(0f, /*CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) :*/ BlockChanceCap); } }
+        private float OhBlockChance { get { return (float)Math.Max(0f, /*CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) :*/ BlockChanceCap); } }
         #endregion
         #region Crit
         private float MhWhCritChance {
@@ -409,12 +415,11 @@ namespace Rawr.ProtWarr {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
             WarriorTalents Talents = character.WarriorTalents;
 
-            bool leveldif = (calcOpts.TargetLevel - character.Level) < 3;
             switch (avoidanceType) {
-                case HitResult.Miss:   return (leveldif ? 0.05f + 0.005f * (calcOpts.TargetLevel - character.Level) : 0.08f);
-                case HitResult.Dodge:  return StatConversion.YELLOW_DODGE_CHANCE_CAP - (0.01f * Talents.WeaponMastery);
-                case HitResult.Parry:  return (leveldif ? 0.065f : 0.14f);
-                case HitResult.Glance: return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);
+                case HitResult.Miss:   return StatConversion.YELLOW_MISS_CHANCE_CAP[ calcOpts.TargetLevel-80];
+                case HitResult.Dodge:  return StatConversion.YELLOW_DODGE_CHANCE_CAP[calcOpts.TargetLevel-80] - (0.01f * Talents.WeaponMastery);
+                case HitResult.Parry:  return StatConversion.YELLOW_PARRY_CHANCE_CAP[calcOpts.TargetLevel-80];
+                case HitResult.Glance: return StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel-80];
                 default:               return 0f;
             }
         }

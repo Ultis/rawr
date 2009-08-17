@@ -748,6 +748,13 @@ namespace Rawr.DPSWarr {
         }
         private void LoadAbilBools(CalculationOptionsDPSWarr calcOpts) {
             CTL_Maints.AfterCheck -= new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
+            // Bounds Check
+            if (calcOpts.Maintenance.GetUpperBound(0) != (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_) {
+                bool[] newArray = new bool[] {true, true, true, false, false, false, false, false, false, false, false, true,
+                                              true, true, true, true, true, true, true, true, true, true, true, true, true,
+                                              true, true, true, true,  true, true };
+                calcOpts.Maintenance = newArray;
+            }
             //
             CTL_Maints.Nodes[0].Checked                     = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageGen__];
             CTL_Maints.Nodes[0].Nodes[0].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BerserkerRage_];
