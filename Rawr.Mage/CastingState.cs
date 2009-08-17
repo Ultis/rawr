@@ -337,6 +337,13 @@ namespace Rawr.Mage
         public float ThunderBoltAverageDamage { get { return Calculations.ThunderBoltTemplate.GetEffectAverageDamage(this); } }
         public float PendulumOfTelluricCurrentsAverageDamage { get { return Calculations.PendulumOfTelluricCurrentsTemplate.GetEffectAverageDamage(this); } }
 
+        public float ArcaneAverageDamage { get { return Calculations.ArcaneDamageTemplate.GetEffectAverageDamage(this); } }
+        public float FireAverageDamage { get { return Calculations.FireDamageTemplate.GetEffectAverageDamage(this); } }
+        public float FrostAverageDamage { get { return Calculations.FrostDamageTemplate.GetEffectAverageDamage(this); } }
+        public float ShadowAverageDamage { get { return Calculations.ShadowDamageTemplate.GetEffectAverageDamage(this); } }
+        public float NatureAverageDamage { get { return Calculations.NatureDamageTemplate.GetEffectAverageDamage(this); } }
+        public float HolyAverageDamage { get { return Calculations.HolyDamageTemplate.GetEffectAverageDamage(this); } }
+
         //private static int CycleIdCount;
         //private static int SpellIdCount;
 

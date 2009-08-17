@@ -272,7 +272,66 @@ namespace Rawr.Mage
                 waterbolt = CastingState.Calculations.WaterboltTemplate.GetSpell(CastingState, CastingState.FrostSpellPower + spellPower);
                 effectDamagePerSecond += waterbolt.DamagePerSecond;
             }
-            if (baseStats.LightningCapacitorProc > 0)
+            if (Ticks > 0)
+            {
+                foreach (SpecialEffect effect in CastingState.Calculations.DamageProcEffects)
+                {
+                    float avgTriggersPerTick = 0;
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.SpellCrit:
+                        case Trigger.DamageSpellCrit:
+                            avgTriggersPerTick = CritProcs / Ticks * TargetProcs / HitProcs;
+                            break;
+                        case Trigger.SpellHit:
+                        case Trigger.DamageSpellHit:
+                            avgTriggersPerTick = TargetProcs / Ticks;
+                            break;
+                    }
+                    /*int hitsInsideCooldown = (int)(effect.Cooldown / (CastTime / Ticks));
+                    float avgHitsToDischarge = 1f / (avgTriggersPerTick * effect.Chance);
+                    if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
+                    float effectsPerSecond = 1f / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));*/
+                    float effectsPerSecond = effect.GetAverageProcsPerSecond(CastTime / Ticks, avgTriggersPerTick, 3f, CastingState.CalculationOptions.FightDuration);
+                    if (effect.Stats.ArcaneDamage > 0)
+                    {
+                        float boltDps = CastingState.ArcaneAverageDamage * effect.Stats.ArcaneDamage * effectsPerSecond;
+                        effectDamagePerSecond += boltDps;
+                        effectThreatPerSecond += boltDps * CastingState.ArcaneThreatMultiplier;
+                    }
+                    if (effect.Stats.FireDamage > 0)
+                    {
+                        float boltDps = CastingState.FireAverageDamage * effect.Stats.FireDamage * effectsPerSecond;
+                        effectDamagePerSecond += boltDps;
+                        effectThreatPerSecond += boltDps * CastingState.FireThreatMultiplier;
+                    }
+                    /*if (effect.Stats.FrostDamage > 0)
+                    {
+                        float boltDps = CastingState.FrostAverageDamage * effect.Stats.FrostDamage * effectsPerSecond;
+                        effectDamagePerSecond += boltDps;
+                        effectThreatPerSecond += boltDps * CastingState.FrostThreatMultiplier;
+                    }*/
+                    if (effect.Stats.ShadowDamage > 0)
+                    {
+                        float boltDps = CastingState.ShadowAverageDamage * effect.Stats.ShadowDamage * effectsPerSecond;
+                        effectDamagePerSecond += boltDps;
+                        effectThreatPerSecond += boltDps * CastingState.ShadowThreatMultiplier;
+                    }
+                    if (effect.Stats.NatureDamage > 0)
+                    {
+                        float boltDps = CastingState.NatureAverageDamage * effect.Stats.NatureDamage * effectsPerSecond;
+                        effectDamagePerSecond += boltDps;
+                        effectThreatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
+                    }
+                    /*if (effect.Stats.HolyDamage > 0)
+                    {
+                        float boltDps = CastingState.HolyAverageDamage * effect.Stats.HolyDamage * effectsPerSecond;
+                        effectDamagePerSecond += boltDps;
+                        effectThreatPerSecond += boltDps * CastingState.HolyThreatMultiplier;
+                    }*/
+                }
+            }
+            /*if (baseStats.LightningCapacitorProc > 0)
             {
                 //discrete model
                 int hitsInsideCooldown = (int)(2.5f / (CastTime / Ticks));
@@ -297,19 +356,19 @@ namespace Rawr.Mage
                 effectThreatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
                 //continuous model
                 //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 4f * CastTime / (CritRate * TargetProcs));
-            }
+            }*/
             if (baseStats.ShatteredSunAcumenProc > 0 && !CastingState.CalculationOptions.Aldor)
             {
                 float boltDps = CastingState.ArcaneBoltAverageDamage / (45f + CastTime / HitProcs / 0.1f);
                 effectDamagePerSecond += boltDps;
                 effectThreatPerSecond += boltDps * CastingState.ArcaneThreatMultiplier;
             }
-            if (baseStats.PendulumOfTelluricCurrentsProc > 0)
+            /*if (baseStats.PendulumOfTelluricCurrentsProc > 0)
             {
                 float boltDps = CastingState.PendulumOfTelluricCurrentsAverageDamage / (45f + CastTime / HitProcs / 0.15f);
                 effectDamagePerSecond += boltDps;
                 effectThreatPerSecond += boltDps * CastingState.ShadowThreatMultiplier;
-            }
+            }*/
         }
 
         private void CalculateManaRegen()

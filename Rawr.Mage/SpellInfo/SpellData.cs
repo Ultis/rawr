@@ -1496,4 +1496,64 @@ namespace Rawr.Mage
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
         }
     }
+
+    public class ArcaneDamageTemplate : SpellTemplate
+    {
+        public ArcaneDamageTemplate(CharacterCalculationsMage calculations)
+            : base("Arcane Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Arcane, 1, 1, 0, 0, 0, 0, 0, 0)
+        {
+            Calculate(calculations);
+            CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+        }
+    }
+
+    public class FireDamageTemplate : SpellTemplate
+    {
+        public FireDamageTemplate(CharacterCalculationsMage calculations)
+            : base("Fire Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Fire, 1, 1, 0, 0, 0, 0, 0, 0)
+        {
+            Calculate(calculations);
+            CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+        }
+    }
+
+    public class FrostDamageTemplate : SpellTemplate
+    {
+        public FrostDamageTemplate(CharacterCalculationsMage calculations)
+            : base("Frost Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Frost, 1, 1, 0, 0, 0, 0, 0, 0)
+        {
+            Calculate(calculations);
+            CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+        }
+    }
+
+    public class ShadowDamageTemplate : SpellTemplate
+    {
+        public ShadowDamageTemplate(CharacterCalculationsMage calculations)
+            : base("Shadow Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Shadow, 1, 1, 0, 0, 0, 0, 0, 0)
+        {
+            Calculate(calculations);
+            CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+        }
+    }
+
+    public class NatureDamageTemplate : SpellTemplate
+    {
+        public NatureDamageTemplate(CharacterCalculationsMage calculations)
+            : base("Nature Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Nature, 1, 1, 0, 0, 0, 0, 0, 0)
+        {
+            Calculate(calculations);
+            CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+        }
+    }
+
+    public class HolyDamageTemplate : SpellTemplate
+    {
+        public HolyDamageTemplate(CharacterCalculationsMage calculations)
+            : base("Holy Damage", false, true, false, 0, 0, 0, 0, MagicSchool.Holy, 1, 1, 0, 0, 0, 0, 0, 0)
+        {
+            Calculate(calculations);
+            CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+        }
+    }
 }

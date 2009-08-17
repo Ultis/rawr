@@ -175,6 +175,7 @@ namespace Rawr.Mage
 
         public SpecialEffect[] SpellPowerEffects { get; set; }
         public SpecialEffect[] HasteRatingEffects { get; set; }
+        public SpecialEffect[] DamageProcEffects { get; set; }
         public SpecialEffect[] ManaRestoreEffects { get; set; }
         public SpecialEffect[] Mp5Effects { get; set; }
         public float Trinket1SpellPower { get; set; }
@@ -621,6 +622,84 @@ namespace Rawr.Mage
                     _ConjureManaGemTemplate = new ConjureManaGemTemplate(this);
                 }
                 return _ConjureManaGemTemplate;
+            }
+        }
+
+        private ArcaneDamageTemplate _ArcaneDamageTemplate;
+        public ArcaneDamageTemplate ArcaneDamageTemplate
+        {
+            get
+            {
+                if (_ArcaneDamageTemplate == null)
+                {
+                    _ArcaneDamageTemplate = new ArcaneDamageTemplate(this);
+                }
+                return _ArcaneDamageTemplate;
+            }
+        }
+
+        private FireDamageTemplate _FireDamageTemplate;
+        public FireDamageTemplate FireDamageTemplate
+        {
+            get
+            {
+                if (_FireDamageTemplate == null)
+                {
+                    _FireDamageTemplate = new FireDamageTemplate(this);
+                }
+                return _FireDamageTemplate;
+            }
+        }
+
+        private FrostDamageTemplate _FrostDamageTemplate;
+        public FrostDamageTemplate FrostDamageTemplate
+        {
+            get
+            {
+                if (_FrostDamageTemplate == null)
+                {
+                    _FrostDamageTemplate = new FrostDamageTemplate(this);
+                }
+                return _FrostDamageTemplate;
+            }
+        }
+
+        private ShadowDamageTemplate _ShadowDamageTemplate;
+        public ShadowDamageTemplate ShadowDamageTemplate
+        {
+            get
+            {
+                if (_ShadowDamageTemplate == null)
+                {
+                    _ShadowDamageTemplate = new ShadowDamageTemplate(this);
+                }
+                return _ShadowDamageTemplate;
+            }
+        }
+
+        private NatureDamageTemplate _NatureDamageTemplate;
+        public NatureDamageTemplate NatureDamageTemplate
+        {
+            get
+            {
+                if (_NatureDamageTemplate == null)
+                {
+                    _NatureDamageTemplate = new NatureDamageTemplate(this);
+                }
+                return _NatureDamageTemplate;
+            }
+        }
+
+        private HolyDamageTemplate _HolyDamageTemplate;
+        public HolyDamageTemplate HolyDamageTemplate
+        {
+            get
+            {
+                if (_HolyDamageTemplate == null)
+                {
+                    _HolyDamageTemplate = new HolyDamageTemplate(this);
+                }
+                return _HolyDamageTemplate;
             }
         }
         #endregion

@@ -2001,7 +2001,7 @@ namespace Rawr.Mage
                 //SpellPowerFor6SecOnCrit = stats.SpellPowerFor6SecOnCrit,
                 EvocationExtension = stats.EvocationExtension,
                 BonusMageNukeMultiplier = stats.BonusMageNukeMultiplier,
-                LightningCapacitorProc = stats.LightningCapacitorProc,
+                //LightningCapacitorProc = stats.LightningCapacitorProc,
                 //SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
                 //HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
@@ -2045,8 +2045,8 @@ namespace Rawr.Mage
                 //ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
                 //SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
                 //ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
-                PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
-                ThunderCapacitorProc = stats.ThunderCapacitorProc,
+                //PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
+                //ThunderCapacitorProc = stats.ThunderCapacitorProc,
                 //SpellPowerFor20SecOnUse5Min = stats.SpellPowerFor20SecOnUse5Min,
 				CritBonusDamage = stats.CritBonusDamage,
 				BonusDamageMultiplier = stats.BonusDamageMultiplier,
@@ -2062,6 +2062,14 @@ namespace Rawr.Mage
                     if (effect.Stats.SpellPower > 0)
                     {
                         if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast)
+                        {
+                            s.AddSpecialEffect(effect);
+                            continue;
+                        }
+                    }
+                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage /*+ effect.Stats.FrostDamage*/ + effect.Stats.NatureDamage + effect.Stats.ShadowDamage/* + effect.Stats.HolyDamage*/ > 0)
+                    {
+                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit)
                         {
                             s.AddSpecialEffect(effect);
                             continue;
@@ -2119,7 +2127,7 @@ namespace Rawr.Mage
 
         private bool HasMageStats(Stats stats)
         {
-            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.SpellFireDamageRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.ArcaneBlastBonus + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.ManaRestoreFromBaseManaPPM + stats.BonusManaGem + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.AldorRegaliaInterruptProtection + stats.ShatteredSunAcumenProc + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + stats.CritBonusDamage + stats.BonusDamageMultiplier + stats.BonusSpellPowerDemonicPactMultiplier + stats.SpellsManaReduction + stats.Mage4T8 + stats.Mage2T9 + stats.Mage4T9;
+            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.SpellFireDamageRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.ArcaneBlastBonus + stats.EvocationExtension + stats.BonusMageNukeMultiplier + /*stats.LightningCapacitorProc + */stats.ManaRestoreFromBaseManaPPM + stats.BonusManaGem + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.AldorRegaliaInterruptProtection + stats.ShatteredSunAcumenProc + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + /*stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + */stats.CritBonusDamage + stats.BonusDamageMultiplier + stats.BonusSpellPowerDemonicPactMultiplier + stats.SpellsManaReduction + stats.Mage4T8 + stats.Mage2T9 + stats.Mage4T9;
             return mageStats > 0;
         }
 
@@ -2135,6 +2143,13 @@ namespace Rawr.Mage
                     if (effect.Stats.SpellPower > 0)
                     {
                         if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast)
+                        {
+                            return true;
+                        }
+                    }
+                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage /*+ effect.Stats.FrostDamage*/ + effect.Stats.NatureDamage + effect.Stats.ShadowDamage/* + effect.Stats.HolyDamage*/ > 0)
+                    {
+                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit)
                         {
                             return true;
                         }
