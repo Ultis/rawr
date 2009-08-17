@@ -161,13 +161,12 @@ namespace Rawr.ProtPaladin
                 string.Format(@"{0}*Reduces periodic damage and chance to be critically hit by {1:0.00%}." + Environment.NewLine +
                                 "Reduces the effect of mana-drains and the damage of critical strikes by {2:0.00%}.",
                                 BasicStats.Resilience,
-                                BasicStats.Resilience * ProtPaladin.ResilienceRatingToCritReduction,
-                                BasicStats.Resilience * ProtPaladin.ResilienceRatingToCritReduction * 2));
+                                StatConversion.GetResilienceCritReduction(BasicStats.Resilience,CharacterClass.Paladin),
+                                StatConversion.GetResilienceCritReduction(BasicStats.Resilience,CharacterClass.Paladin)*2f));
 
-            if (CritVulnerability > 0.0001f)
-            {
-                double defenseNeeded = Math.Ceiling((CritVulnerability / (ProtPaladin.DefenseToCritReduction)) / ProtPaladin.DefenseRatingToDefense);
-                double resilienceNeeded = Math.Ceiling(CritVulnerability / (ProtPaladin.ResilienceRatingToCritReduction));
+            if (CritVulnerability > 0.0001f) {
+                double defenseNeeded = Math.Ceiling((CritVulnerability / StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER) / StatConversion.RATING_PER_DEFENSE);
+                double resilienceNeeded = Math.Ceiling(CritVulnerability / StatConversion.CRITREDUC_PER_RESILIENCE);
                 dictValues.Add("Chance to be Crit",
                     string.Format("{0:0.00%}*CRITTABLE! Short by {1:0} defense rating or {2:0} resilience rating to be uncrittable.",
                                     CritVulnerability, defenseNeeded, resilienceNeeded));
@@ -194,8 +193,8 @@ namespace Rawr.ProtPaladin
                                                       SpellHit, BasicStats.HitRating, TargetLevel));
             dictValues.Add("Expertise",
                 string.Format("{0:0.00}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}.",
-                                         BasicStats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise + BasicStats.Expertise,
-                                BasicStats.ExpertiseRating, Expertise));
+                                         StatConversion.GetExpertiseFromRating(BasicStats.ExpertiseRating,CharacterClass.Paladin) + BasicStats.Expertise,
+                                         BasicStats.ExpertiseRating, Expertise));
             dictValues.Add("Physical Haste", string.Format("{0:0.00%}*Haste Rating {1:0.00}", PhysicalHaste, BasicStats.HasteRating));
             dictValues.Add("Effective Target Armor", 
                 string.Format("{0}*Reduces the physical damage you deal by {1:0.00%}" + Environment.NewLine + Environment.NewLine +

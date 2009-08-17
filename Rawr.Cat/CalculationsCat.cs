@@ -262,36 +262,32 @@ namespace Rawr.Cat
 			stats.BonusBleedDamageMultiplier = 0.3f;
 
 			#region Basic Chances and Constants
-			float modArmorStatic = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor,
-                stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
-			float modArmorTemporary = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor,
-                stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + tempArPenRating);
+			float modArmorStatic    = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+			float modArmorTemporary = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + tempArPenRating);
 
 			float modArmor = modArmorStatic + (modArmorTemporary - modArmorStatic) * tempArPenRatingUptime;
 
 			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
 			float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
-			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);
 			hasteBonus = (1f + hasteBonus) * (1f + stats.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
 			float attackSpeed = 1f / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
-			float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating);//stats.HitRating / 32.78998947f / 100f + stats.PhysicalHit;
-			float expertiseBonus = (StatConversion.GetExpertiseFromRating(stats.ExpertiseRating) + stats.Expertise) * 0.0025f;//stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+            float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Druid);
+            float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Druid) + stats.Expertise, CharacterClass.Druid);
 
-			float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
-			float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
-			if ((targetLevel - 80f) < 3)
-			{
-				chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 80f) - hitBonus);
-			}
+			float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel-80] - expertiseBonus);
+            float chanceParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel-80] - expertiseBonus);
+            float chanceMiss  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[ targetLevel-80] - hitBonus);
 			
-			float glanceMultiplier = .7f;
-			float chanceAvoided = chanceMiss + chanceDodge;
-			float chanceGlance = 0.24f;
-			float chanceCrit = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit + 
-				StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Druid) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
-				- (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
+			float glanceMultiplier = 0.7f;
+            float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+			float chanceGlance = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80];
+            float chanceCrit = StatConversion.GetCritFromRating(stats.CritRating, CharacterClass.Druid)
+                + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Druid)
+                + stats.PhysicalCrit
+                + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel-80];
 			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCrit : 0f;
 			float chanceHit = 1f - chanceCrit - chanceAvoided;
 			float chanceHitNonGlance = 1f - chanceCrit - chanceAvoided - chanceGlance;
@@ -304,6 +300,7 @@ namespace Rawr.Cat
 
 			float cpPerCPG = (chanceHit + chanceCrit * (1f + stats.BonusCPOnCrit)) / chanceNonAvoided;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
+            calculatedStats.ParriedAttacks = chanceParry * 100f;
 			calculatedStats.MissedAttacks = chanceMiss * 100f;
 			#endregion
 
@@ -385,6 +382,7 @@ namespace Rawr.Cat
 
 			calculatedStats.AvoidedAttacks = chanceAvoided * 100f;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
+            calculatedStats.ParriedAttacks = chanceParry * 100f;
 			calculatedStats.MissedAttacks = chanceMiss * 100f;
 			calculatedStats.CritChance = chanceCrit * 100f;
 			calculatedStats.AttackSpeed = attackSpeed;
@@ -419,6 +417,7 @@ namespace Rawr.Cat
 		private Stats GetCharacterStatsWithTemporaryArPen(Character character, Item additionalItem, out float tempArPenRating, out float tempArPenRatingUptime)
 		{
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
+            int targetLevel = calcOpts.TargetLevel;
 
 			Stats statsRace = BaseStats.GetBaseStats(80, character.Class, character.Race, BaseStats.DruidForm.Cat);
 			statsRace.BonusPhysicalDamageMultiplier = character.DruidTalents.GlyphOfSavageRoar ? 0.33f : 0.3f; //Savage Roar
@@ -492,24 +491,24 @@ namespace Rawr.Cat
 			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 			statsTotal.WeaponDamage += 16f; //Tiger's Fury
 
-			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);
 			hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + statsTotal.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
 			float meleeHitInterval = 1f / ((1f + hasteBonus) + 1f / 3.5f);
-			float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;//stats.HitRating / 32.78998947f / 100f;
-			float expertiseBonus = (StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating) + statsTotal.Expertise) * 0.0025f;//stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
-			float chanceDodge = Math.Max(0f, 0.065f + .005f * (calcOpts.TargetLevel - 83) - expertiseBonus);
-			float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
-			float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
-			if (calcOpts.TargetLevel < 83) chanceMiss = Math.Max(0f, 0.05f + 0.005f * (calcOpts.TargetLevel - 80f) - hitBonus);
+			float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
+            float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Druid) + statsTotal.Expertise, CharacterClass.Druid);
+            float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel-80] - expertiseBonus);
+            float chanceParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel-80] - expertiseBonus);
+            float chanceMiss  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[ targetLevel-80] - hitBonus);
 			float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
-			float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating) +
-				StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Druid) + //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
-				statsTotal.PhysicalCrit - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0f));
+
+            float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating)
+                                + StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Druid)
+                                + statsTotal.PhysicalCrit
+                                + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			float chanceHit = 1f - chanceAvoided;
 
-            
-			
+            // Handle Trinket procs
 			Stats statsProcs = new Stats();
 
 			tempArPenRating = 0f;
@@ -992,6 +991,7 @@ namespace Rawr.Cat
 
 		public float AvoidedAttacks { get; set; }
 		public float DodgedAttacks { get; set; }
+        public float ParriedAttacks { get; set; }
 		public float MissedAttacks { get; set; }
 		public float CritChance { get; set; }
 		public float AttackSpeed { get; set; }
@@ -1023,10 +1023,12 @@ namespace Rawr.Cat
 			dictValues.Add("DPS Points", DPSPoints.ToString());
 			dictValues.Add("Survivability Points", SurvivabilityPoints.ToString());
 
-			float baseMiss = (new float[] { 0.05f, 0.055f, 0.06f, 0.08f })[TargetLevel - 80] - BasicStats.PhysicalHit;
-			float baseDodge = (new float[] { 0.05f, 0.055f, 0.06f, 0.065f })[TargetLevel - 80] - BasicStats.Expertise * 0.0025f;
-			float capMiss = (float)Math.Ceiling(baseMiss * 100f * 32.78998947f);
-			float capDodge = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
+			float baseMiss  = StatConversion.WHITE_MISS_CHANCE_CAP[ TargetLevel-80] - BasicStats.PhysicalHit;
+            float baseDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel-80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
+            float baseParry = StatConversion.WHITE_PARRY_CHANCE_CAP[TargetLevel-80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
+			float capMiss   = (float)Math.Ceiling(baseMiss  * 100f * 32.78998947f);
+			float capDodge  = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
+            float capParry  = (float)Math.Ceiling(baseParry * 100f * 32.78998947f); // TODO: Check this value
 
 			string tipMiss = string.Empty;
 			if (BasicStats.HitRating > capMiss)

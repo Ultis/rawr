@@ -339,8 +339,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 PhysicalCrit = (calcOpts.FuryStance ? 0.03f : 0f)
                             // handle boss level difference
-                            - 0.006f * (calcOpts.TargetLevel - 80f)
-                            - (calcOpts.TargetLevel == 83f ? 0.03f : 0f),
+                            + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - 80],
             };
             Stats statsTalents = new Stats() {
                 Parry = talents.Deflection * 1.0f,
@@ -348,24 +347,18 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 Dodge = talents.Anticipation * 1.0f,
                 Block = talents.ShieldSpecialization * 1.0f,
                 BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
-                BonusDamageMultiplier = /*(character.MainHand != null &&
-                                         (character.MainHand.Type == ItemType.OneHandAxe ||
-                                         character.MainHand.Type == ItemType.OneHandMace ||
-                                         character.MainHand.Type == ItemType.OneHandSword ||
-                                         character.MainHand.Type == ItemType.Dagger ||
-                                         character.MainHand.Type == ItemType.FistWeapon)
-                                         ? talents.OneHandedWeaponSpecialization * 0.02f: 0f)
-                                         +*/ 
-                                        1f *
-                                        (character.MainHand != null &&
-                                        (character.MainHand.Slot == ItemSlot.TwoHand)
-                                         ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 1f)
-                                         *
-                                         ((talents.TitansGrip == 1 && (character.MainHand != null && character.OffHand != null) &&
-                                        (character.OffHand.Slot  == ItemSlot.TwoHand ||
-                                         character.MainHand.Slot == ItemSlot.TwoHand)
-                                         ? 0.90f : 1f)) -
-                                         1f,
+                BonusDamageMultiplier = (character.MainHand == null ? 0f :
+                                            /* One Handed Weapon Spec  Not using this to prevent any misconceptions
+                                            ((character.MainHand.Slot == ItemSlot.OneHand) ? 1f + talents.OneHandedWeaponSpecialization * 0.02f : 1f)
+                                            * */
+                                            // Two Handed Weapon Spec
+                                            ((character.MainHand.Slot == ItemSlot.TwoHand) ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 1f)
+                                            *
+                                            // Titan's Grip Penalty
+                                            ((talents.TitansGrip == 1 && character.OffHand != null && (character.OffHand.Slot  == ItemSlot.TwoHand || character.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
+                                            // Convert it back a simple mod number
+                                            - 1f
+                                         ),
                 BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,

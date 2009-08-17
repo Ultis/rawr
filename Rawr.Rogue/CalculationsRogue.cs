@@ -178,7 +178,7 @@ namespace Rawr.Rogue
             displayedValues.AddRoundedDisplayValue(DisplayValue.CpgCrit, calcOpts.CpGenerator.Crit(combatFactors, calcOpts) * 100);
             displayedValues.AddToolTip(DisplayValue.CpgCrit, "Crit From Stats: " + stats.PhysicalCrit);
             displayedValues.AddToolTip(DisplayValue.CpgCrit, "Crit from Crit Rating: " + combatFactors.CritFromCritRating);
-            displayedValues.AddPercentageToolTip(DisplayValue.CpgCrit, "Boss Crit Reduction: ", combatFactors.BossCriticalReductionChance);
+            displayedValues.AddPercentageToolTip(DisplayValue.CpgCrit, "Boss Crit Reduction: ", StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel-80]);
 
             displayedValues.AddRoundedDisplayValue(DisplayValue.WhiteDps, whiteAttacks.CalcMhWhiteDps() + whiteAttacks.CalcOhWhiteDps());
             displayedValues.AddToolTip(DisplayValue.WhiteDps, "MH White DPS: " + whiteAttacks.CalcMhWhiteDps());
@@ -235,7 +235,7 @@ namespace Rawr.Rogue
 
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
 
-            statsTotal.PhysicalHaste = (1f + (statsTotal.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
+            statsTotal.PhysicalHaste = (1f + StatConversion.GetHasteFromRating(statsTotal.HasteRating,CharacterClass.Rogue));
             statsTotal.PhysicalHaste += Talents.BladeFlurry.Haste.Bonus;
             statsTotal.PhysicalHaste += Talents.LightningReflexes.Haste.Bonus;
 
@@ -245,7 +245,7 @@ namespace Rawr.Rogue
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
 
             statsTotal.PhysicalCrit = -0.295f + (statsGearEnchantsBuffs.PhysicalCrit*100); //TODO: Change crit from whole numbers (e.g. 11) to percentages (e.g.  .11);
-            statsTotal.PhysicalCrit += statsTotal.Agility*RogueConversions.AgilityToCrit;
+            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility,CharacterClass.Rogue);
             statsTotal.PhysicalCrit += Talents.Malice.Bonus;
 
             if (character.ActiveBuffs.FindAll(buff => buff.Group == "Critical Strike Chance Taken").Count == 0)
@@ -254,8 +254,8 @@ namespace Rawr.Rogue
             }
 
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
-            statsTotal.Dodge += Talents.LightningReflexes.Dodge.Bonus + statsTotal.Agility*RogueConversions.AgilityToDodge;
-            statsTotal.Parry += 5f+ Talents.Deflection.Bonus;  //base rogue parry is 5%
+            statsTotal.Dodge += Talents.LightningReflexes.Dodge.Bonus + StatConversion.GetDodgeFromAgility(statsTotal.Agility, CharacterClass.Rogue);
+            statsTotal.Parry += 5f + Talents.Deflection.Bonus;  //base rogue parry is 5%
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
             statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;
@@ -273,12 +273,10 @@ namespace Rawr.Rogue
             statsTotal.BonusSnDHaste = statsGearEnchantsBuffs.BonusSnDHaste;
 
             //Berserking
-            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789)
-            {
+            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789) {
                 statsTotal.AttackPower += 135f;  //taken straight from Elitist Jerks  
             }
-            if (character.OffHand != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789)
-            {
+            if (character.OffHand != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789) {
                 statsTotal.AttackPower += 135f;  //taken straight from Elitist Jerks  
             }
 

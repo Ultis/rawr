@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.Retribution
-{
-    public class SimulatorAbility
-    {
+namespace Rawr.Retribution {
+    public class SimulatorAbility {
+        public SimulatorAbility(float cooldown) {
+            Cooldown = cooldown;
+            FirstUse = -1;
+            LastUse = -1;
+            NextUse = 0;
+        }
 
         public static float Wait { get; set; }
         public static float Delay { get; set; }
@@ -16,35 +20,17 @@ namespace Rawr.Retribution
         public float NextUse { get; set; }
         public int Uses { get; set; }
 
-        public SimulatorAbility(float cooldown)
-        {
-            this.Cooldown = cooldown;
-            FirstUse = -1;
-            LastUse = -1;
-            NextUse = 0;
-        }
-
-        public float UseAbility(float currentTime)
-        {
-            if (NextUse <= currentTime + Wait)
-            {
-                if (NextUse > currentTime) currentTime = NextUse;
-                if (FirstUse < 0) FirstUse = currentTime;
+        public float UseAbility(float currentTime) {
+            if (NextUse <= currentTime + Wait) {
+                if (NextUse > currentTime) { currentTime = NextUse; }
+                if (FirstUse < 0) { FirstUse = currentTime; }
                 LastUse = currentTime;
                 NextUse = currentTime + Cooldown + Delay;
                 Uses++;
                 return currentTime + 1.5f + Delay;
-            }
-            else
-            {
-                return -1;
-            }
+            }else{return -1;}
         }
 
-        public float EffectiveCooldown()
-        {
-            return (LastUse - FirstUse) / (Uses - 1);
-        }
-
+        public float EffectiveCooldown() { return (LastUse - FirstUse) / (Uses - 1); }
     }
 }

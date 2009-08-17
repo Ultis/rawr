@@ -140,7 +140,7 @@ namespace Rawr
 
 		public int TargetLevel = 83;
 		public float ThreatScale = 10f;
-		public int TargetArmor = (int) StatConversion.NPC_BOSS_ARMOR;
+        public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
 		public int SurvivalSoftCap = 160000;
 		public int TargetDamage = 65000;
 		public float TargetAttackSpeed = 2.0f;

@@ -158,8 +158,8 @@ namespace Rawr.ProtWarr {
                                 HitPercBonus,
                                 HitPercentTtl,
                                 (HitCanFree > 0 ? HitCanFree : HitCanFree * -1)));
-            float sec2lastNum = (StatConversion.GetExpertiseFromDodgeParryReduc(0.065f) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1;
-            float lastNum = StatConversion.GetRatingFromExpertise((StatConversion.GetExpertiseFromDodgeParryReduc(0.065f) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
+            float sec2lastNum = (StatConversion.GetExpertiseFromDodgeParryReduc(StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel-80]) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1;
+            float lastNum = StatConversion.GetRatingFromExpertise((StatConversion.GetExpertiseFromDodgeParryReduc(StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel-80]) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
             dictValues.Add("Expertise",
                 string.Format("{0:00.00%} : {1:00.00} : {2}*" +
                                                       "Following includes Racial bonus and Strength of Arms" +

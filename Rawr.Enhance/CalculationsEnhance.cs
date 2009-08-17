@@ -223,40 +223,21 @@ namespace Rawr.Enhance
             float windfuryWeaponBonus = 1250f + stats.BonusWFAttackPower;
             float windfuryDamageBonus = 1f;
             switch (character.ShamanTalents.ElementalWeapons){
-                case 1:
-                    windfuryDamageBonus = 1.13f;
-                    break;
-                case 2:
-                    windfuryDamageBonus = 1.27f;
-                    break;
-                case 3:
-                    windfuryDamageBonus = 1.4f;
-                    break;
+                case 1: windfuryDamageBonus = 1.13f; break;
+                case 2: windfuryDamageBonus = 1.27f; break;
+                case 3: windfuryDamageBonus = 1.40f; break;
             }
             float weaponMastery = 1f;
             switch (character.ShamanTalents.WeaponMastery){
-                case 1:
-                    weaponMastery = 1.04f;
-                    break;
-                case 2:
-                    weaponMastery = 1.07f;
-                    break;
-                case 3:
-                    weaponMastery = 1.1f;
-                    break;
+                case 1: weaponMastery = 1.04f; break;
+                case 2: weaponMastery = 1.07f; break;
+                case 3: weaponMastery = 1.10f; break;
             }
             float unleashedRage = 0f;
-            switch (character.ShamanTalents.UnleashedRage)
-            {
-                case 1:
-                    unleashedRage = .04f;
-                    break;
-                case 2:
-                    unleashedRage = .07f;
-                    break;
-                case 3:
-                    unleashedRage = .1f;
-                    break;
+            switch (character.ShamanTalents.UnleashedRage) {
+                case 1: unleashedRage = .04f; break;
+                case 2: unleashedRage = .07f; break;
+                case 3: unleashedRage = .10f; break;
             }
 
             float FTspellpower = (float)Math.Floor((float)(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f)));
@@ -447,7 +428,7 @@ namespace Rawr.Enhance
                 float enhTotems = IsBuffChecked(character.ActiveBuffs, "Enhancing Totems (Agility/Strength)") ? 23f : 0f;
                 float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 plus SoE totem if active giving extra 178 str buff
                 float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * cs.URUptime * (1f + unleashedRage);
-                float dogsMissrate = Math.Max(0f, 0.08f - hitBonus) + cs.AverageDodge; 
+                float dogsMissrate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel-80] - hitBonus) + cs.AverageDodge; 
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
                 float dogsBaseSpeed = 1.5f;
                 float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste) / cs.BloodlustHaste);
@@ -462,11 +443,7 @@ namespace Rawr.Enhance
 
                 dpsDogs = 2 * (45f / 180f) * dogsTotalDPS * dogsHitsPerS * dogsMultipliers;
                 calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, 0.065f, cs.GlancingRate, dogsCrit);
-            }
-            else
-            {
-                calculatedStats.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0);
-            }
+            } else { calculatedStats.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0); }
             #endregion
 
             #region Set CalculatedStats

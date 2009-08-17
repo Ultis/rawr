@@ -125,7 +125,6 @@
     <Compile Include="Poisons\PoisonList.cs" />
     <Compile Include="Poisons\WoundPoison.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RogueConversions.cs" />
     <Compile Include="SpecialAbilities\Feint.cs" />
     <Compile Include="SpecialAbilities\SwordSpec.cs" />
     <Compile Include="ClassAbilities\Talents.cs" />

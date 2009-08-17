@@ -25,10 +25,10 @@ namespace Rawr.DPSWarr {
             InitializeComponent();
             CTL_Maints.ExpandAll();
 
-            armorBosses.Add((int)StatConversion.NPC_BOSS_ARMOR, "Default Boss Armor");
-            armorBosses.Add(10900, "Patchwerk");
-            armorBosses.Add(12000, "Grobbulus");
-            armorBosses.Add(13083, "-");
+            armorBosses.Add((int)StatConversion.NPC_ARMOR[80-80], "Level 80 Mob");
+            armorBosses.Add((int)StatConversion.NPC_ARMOR[81-80], "Level 81 Mob");
+            armorBosses.Add((int)StatConversion.NPC_ARMOR[82-80], "Level 82 Mob");
+            armorBosses.Add((int)StatConversion.NPC_ARMOR[83-80], "Ulduar Bosses");
 
             CB_TargArmor.DisplayMember = "Key";
             CB_TargArmor.DataSource = new BindingSource(armorBosses, null);
@@ -801,7 +801,7 @@ namespace Rawr.DPSWarr {
     [Serializable]
     public class CalculationOptionsDPSWarr : ICalculationOptionBase {
         public int TargetLevel = 83;
-        public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+        public int TargetArmor = (int)StatConversion.NPC_ARMOR[83-80];
         public float Duration = 300f;
         public bool FuryStance = true;
         public bool AllowFlooring = true;

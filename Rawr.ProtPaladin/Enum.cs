@@ -385,7 +385,7 @@ public enum CreatureType
         HandOfReckoning,
     }
     
-    public enum HitResult
+    /*public enum HitResult
     {
         AnyMiss,
         AnyHit,
@@ -397,7 +397,7 @@ public enum CreatureType
         Resist,
         Crit,
         Hit,
-    }
+    }*/
 
     public enum AttackModelMode
     {

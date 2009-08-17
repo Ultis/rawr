@@ -1411,13 +1411,14 @@ namespace Rawr.Moonkin
         // Now returns damage per cast to allow adjustments for fight length
         private float DoTreeCalcs(float effectiveNatureDamage, float meleeHaste, float armorPen, float meleeCrit, float bloodLust, float treantLifespan, int bramblesLevel)
         {
+            //CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // 642 = base AP, 57% spell power scaling
             float attackPower = 642.0f + (float)Math.Floor(0.57f * effectiveNatureDamage);
             // 398.8 = base DPS, 1.7 = best observed swing speed
             float damagePerHit = (398.8f + attackPower / 14.0f) * 1.7f;
             float critRate = 0.05f + meleeCrit;
             float glancingRate = 0.2f;
-            float bossArmor = StatConversion.NPC_BOSS_ARMOR * (1.0f - armorPen);
+            float bossArmor = StatConversion.NPC_ARMOR[83/*calcOpts.TargetLevel*/-80] * (1.0f - armorPen);
             float damageReduction = bossArmor / (bossArmor + 15232.5f);
             damagePerHit *= 1.0f - damageReduction;
             damagePerHit = (critRate * damagePerHit * 2.0f) + (glancingRate * damagePerHit * 0.75f) + ((1 - critRate - glancingRate) * damagePerHit);

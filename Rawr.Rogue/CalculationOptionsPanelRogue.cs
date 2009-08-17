@@ -17,8 +17,10 @@ namespace Rawr.Rogue
         {
             InitializeComponent();
 
-            _armorBosses.Add((int)StatConversion.NPC_BOSS_ARMOR, "All Level 83 Bosses");
-            _armorBosses.Add(10338, "Generic 82 Elite");
+            _armorBosses.Add((int)StatConversion.NPC_ARMOR[80 - 80], "Level 80 Mob");
+            _armorBosses.Add((int)StatConversion.NPC_ARMOR[81 - 80], "Level 81 Mob");
+            _armorBosses.Add((int)StatConversion.NPC_ARMOR[82 - 80], "Level 82 Mob");
+            _armorBosses.Add((int)StatConversion.NPC_ARMOR[83 - 80], "Ulduar Bosses");
 
             comboBoxArmorBosses.DisplayMember = "Key";
             comboBoxArmorBosses.DataSource = new BindingSource(_armorBosses, null);

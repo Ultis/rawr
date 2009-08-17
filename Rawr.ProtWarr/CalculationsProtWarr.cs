@@ -370,7 +370,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Warrior);
             calculatedStats.MhExpertise = combatFactors._c_mhexpertise;
             calculatedStats.OhExpertise = combatFactors._c_ohexpertise;
-            calculatedStats.WeapMastPerc = character.WarriorTalents.WeaponMastery / 100f;
+            calculatedStats.WeapMastPerc = talents.WeaponMastery / 100f;
             calculatedStats.Crit = Lookup.BonusCritPercentage(character, stats);
             calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;
             calculatedStats.MhCrit = Lookup.BonusCritPercentage(character, stats) + stats.PhysicalCrit;// combatFactors._c_mhycrit;
@@ -442,7 +442,7 @@ threat and limited threat scaled by the threat scale.",
             Stats statsOptionsPanel = new Stats() {
                 //BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 // handle boss level difference
-                PhysicalCrit = -0.006f * (calcOpts.TargetLevel - 80f) - (calcOpts.TargetLevel == 83f ? 0.03f : 0f),
+                PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel-80],
             };
             Stats statsTalents = new Stats() {
                 Parry = talents.Deflection * 0.01f,

@@ -2,19 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.DPSDK
-{
-    public class Weapon
-    {
+namespace Rawr.DPSDK {
+    public class Weapon {
         public float baseSpeed, baseDamage, hastedSpeed, mitigation, effectiveExpertise, chanceDodged, DPS, damage;
 
-        public Weapon (Item i, Stats stats, CalculationOptionsDPSDK calcOpts, float expertise)
-        {
-            if (stats == null || calcOpts == null)
-                return;
+        public Weapon (Item i, Stats stats, CalculationOptionsDPSDK calcOpts, float expertise) {
+            if (stats == null || calcOpts == null) { return; }
 
-            if (i == null)
-            {
+            if (i == null) {
                 i = new Item();
                 i.Speed = 2.0f;
                 i.MinDamage = 0;
@@ -24,7 +19,7 @@ namespace Rawr.DPSDK
             effectiveExpertise = expertise;
             float fightDuration = calcOpts.FightLength * 60;
 
-            if (i == null) return;
+            if (i == null) { return; }
 
             baseSpeed = i.Speed;
             baseDamage = (float)(i.MinDamage + i.MaxDamage) / 2f + stats.WeaponDamage;
@@ -33,7 +28,7 @@ namespace Rawr.DPSDK
             #region Attack Speed
             {
                 hastedSpeed = baseSpeed / (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.PhysicalHaste);
-                hastedSpeed /= 1f + .05f * (float)calcOpts.talents.ImprovedIcyTalons;
+                hastedSpeed /= 1f + 0.05f * (float)calcOpts.talents.ImprovedIcyTalons;
 
                 if (calcOpts.Bloodlust)
                 {
@@ -60,9 +55,9 @@ namespace Rawr.DPSDK
 
             #region Dodge
             {
-                chanceDodged = .065f;
-                chanceDodged -= effectiveExpertise / 400;
-                if (chanceDodged < 0f) chanceDodged = 0f;
+                chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-80];
+                chanceDodged -= StatConversion.GetDodgeParryReducFromExpertise(effectiveExpertise);
+                if (chanceDodged < 0f) { chanceDodged = 0f; }
             }
             #endregion
 

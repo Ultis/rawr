@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.ProtPaladin
-{
-    public class ParryModel
-    {
+namespace Rawr.ProtPaladin {
+    public class ParryModel {
         private Character Character;
         private CalculationOptionsProtPaladin Options;
         private Stats Stats;
@@ -16,8 +14,7 @@ namespace Rawr.ProtPaladin
         public float BossAttackSpeed { get; private set; }
         public float WeaponSpeed { get; private set; }
 
-        private void Calculate()
-        {
+        private void Calculate() {
             float baseBossAttackSpeed   = Options.BossAttackSpeed * (1f - Stats.BossAttackSpeedMultiplier);
             float baseWeaponSpeed       = Lookup.WeaponSpeed(Character, Stats);
             float bossAttackHaste       = 0.0f;
@@ -26,28 +23,23 @@ namespace Rawr.ProtPaladin
             BossAttackSpeed             = baseBossAttackSpeed ;
             WeaponSpeed                 = baseWeaponSpeed;
 
-            if (Options.UseParryHaste)
-            {
+            if (Options.UseParryHaste) {
                 // Iterate on this a few times to get a 'stable' result
-                for (int j = 0; j < 4; j++)
-                {
+                for (int j = 0; j < 4; j++) {
                     bossAttackHaste = AttackTable.Parry * 0.24f * ((BossAttackSpeed / WeaponSpeed) + (BossAttackSpeed / 1.5f));
                     weaponHaste     = DefendTable.Parry * 0.24f * (WeaponSpeed / BossAttackSpeed);
 
                     BossAttackSpeed = baseBossAttackSpeed / (1.0f + bossAttackHaste);
                     WeaponSpeed     = baseWeaponSpeed / (1.0f + weaponHaste);
                 }
-            }
-            else
-            {
+            }else{
                 // Simple adjust to the defender's speed if the attacker isn't parry hasted
                 WeaponSpeed /= (1.0f + (DefendTable.Parry * 0.24f * (WeaponSpeed / BossAttackSpeed)));
                 BossAttackSpeed = baseBossAttackSpeed;
             }
         }
 
-        public ParryModel(Character character, Stats stats)
-        {
+        public ParryModel(Character character, Stats stats) {
             Character   = character;
             Stats       = stats;
             Options     = character.CalculationOptions as CalculationOptionsProtPaladin;

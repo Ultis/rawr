@@ -69,8 +69,10 @@ namespace Rawr.DPSWarr {
         #region Major Damage Factors
         public float DamageBonus {
             get {
+                               // General Bonuses
                 float bonus  = 1f + StatS.BonusDamageMultiplier;
                       bonus *= 1f + StatS.BonusPhysicalDamageMultiplier;
+                               // Talents
                       bonus *= 1f + Talents.WreckingCrew * 0.02f;
                 return bonus;
             }
@@ -83,7 +85,7 @@ namespace Rawr.DPSWarr {
                     (!CalcOpts.FuryStance ? 0.1f : 0.0f);
                 if (CalcOpts == null) {
                     // you're supposed to pass the character level, not the target level.  GC misspoke.
-				    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,(int)StatConversion.NPC_BOSS_ARMOR,StatS.ArmorPenetration,arpenBuffs,StatS.ArmorPenetrationRating)); // default is vs raid boss
+				    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,(int)StatConversion.NPC_ARMOR[83-80],StatS.ArmorPenetration,arpenBuffs,StatS.ArmorPenetrationRating)); // default is vs raid boss
                 }else{
                     armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,CalcOpts.TargetArmor,StatS.ArmorPenetration,arpenBuffs,StatS.ArmorPenetrationRating));
                 }

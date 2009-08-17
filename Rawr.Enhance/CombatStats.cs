@@ -90,9 +90,9 @@ namespace Rawr.Enhance
         public float ExpertiseBonusMH { get { return expertiseBonusMH; } }
         public float ExpertiseBonusOH { get { return expertiseBonusOH; } }
 
-        public float NormalHitModifier { get { return 1 - AverageWhiteCrit - glancingRate; } }
+        public float NormalHitModifier { get { return 1f - AverageWhiteCrit - glancingRate; } }
         public float CritHitModifier { get { return AverageWhiteCrit * (2f * (1f + _stats.BonusCritMultiplier)); } }
-        public float GlancingHitModifier { get { return glancingRate * .7f; } }
+        public float GlancingHitModifier { get { return glancingRate * 0.7f; } }
         public float YellowHitModifierMH { get { return ChanceYellowHitMH * (1 - chanceYellowCritMH); } }
         public float YellowHitModifierOH { get { return ChanceYellowHitOH * (1 - chanceYellowCritOH); } }
         public float YellowCritModifierMH { get { return ChanceYellowHitMH * chanceYellowCritMH; } }
@@ -134,10 +134,7 @@ namespace Rawr.Enhance
         public float SecondsToFiveStack { get { return secondsToFiveStack; } }
         public float BaseShockSpeed { get { return 6f - .2f * _character.ShamanTalents.Reverberation; } }
         public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
-        public float StaticShockAvDuration 
-        { get { 
-            return StaticShockProcsPerS == 0 ? 600f : ((3f + 2f * _character.ShamanTalents.StaticShock) / StaticShockProcsPerS); 
-        } }
+        public float StaticShockAvDuration { get { return StaticShockProcsPerS == 0 ? 600f : ((3f + 2f * _character.ShamanTalents.StaticShock) / StaticShockProcsPerS); } }
             
         public float HitsPerSOH { get { return hitsPerSOH; } }
         public float HitsPerSMH { get { return hitsPerSMH; } }
@@ -159,10 +156,7 @@ namespace Rawr.Enhance
             get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor, _stats.ArmorPenetration, 0f, _stats.ArmorPenetrationRating); }
         }
 
-        private const float DODGE = 0.065f;
-        private const float WHITE_MISS = 0.27f;
-        private const float YELLOW_MISS = 0.08f;
-        private const float SPELL_MISS = 0.17f;
+        private static readonly float SPELL_MISS  = 0.17f;
 
         private void SetupAbilities()
         {
@@ -241,9 +235,9 @@ namespace Rawr.Enhance
             critMultiplierSpell = (1.5f + .1f * _character.ShamanTalents.ElementalFury) * (1 + _stats.BonusSpellCritMultiplier);
             
             // Melee
-            float hitBonus = _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating) + .02f * _talents.DualWieldSpecialization;
-            expertiseBonusMH = 0.0025f * (_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
-            expertiseBonusOH = 0.0025f * (_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
+            float hitBonus = _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating) + 0.02f * _talents.DualWieldSpecialization;
+            expertiseBonusMH = StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
+            expertiseBonusOH = StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
 
             // Need to modify expertiseBonusMH & OH if Orc and have racial bonus weapons
             if (_character.Race == CharacterRace.Orc)
@@ -259,15 +253,15 @@ namespace Rawr.Enhance
             float meleeCritModifier = _stats.PhysicalCrit;
             float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritMeleeRating + _stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
-            chanceCrit = Math.Min(1 - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
-            chanceDodgeMH = Math.Max(0f, DODGE - expertiseBonusMH);
-            chanceDodgeOH = Math.Max(0f, DODGE - expertiseBonusOH);
-            chanceWhiteMissMH = Math.Max(0f, WHITE_MISS - hitBonus) + chanceDodgeMH;
-            chanceWhiteMissOH = Math.Max(0f, WHITE_MISS - hitBonus) + chanceDodgeOH;
-            chanceYellowMissMH = Math.Max(0f, YELLOW_MISS - hitBonus) + chanceDodgeMH; // base miss 8% now
-            chanceYellowMissOH = Math.Max(0f, YELLOW_MISS - hitBonus) + chanceDodgeOH; // base miss 8% now
-            chanceWhiteCritMH = Math.Min(chanceCrit - whiteCritDepression, 1f - glancingRate - chanceWhiteMissMH);
-            chanceWhiteCritOH = Math.Min(chanceCrit - whiteCritDepression, 1f - glancingRate - chanceWhiteMissOH);
+            chanceCrit         = Math.Min(1 - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
+            chanceDodgeMH      = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[  _calcOpts.TargetLevel - 80] - expertiseBonusMH);
+            chanceDodgeOH      = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[  _calcOpts.TargetLevel - 80] - expertiseBonusOH);
+            chanceWhiteMissMH  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - 80] - hitBonus) + chanceDodgeMH;
+            chanceWhiteMissOH  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - 80] - hitBonus) + chanceDodgeOH;
+            chanceYellowMissMH = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[  _calcOpts.TargetLevel - 80] - hitBonus) + chanceDodgeMH; // base miss 8% now
+            chanceYellowMissOH = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[  _calcOpts.TargetLevel - 80] - hitBonus) + chanceDodgeOH; // base miss 8% now
+            chanceWhiteCritMH  = Math.Min(chanceCrit - whiteCritDepression , 1f - glancingRate - chanceWhiteMissMH);
+            chanceWhiteCritOH  = Math.Min(chanceCrit - whiteCritDepression , 1f - glancingRate - chanceWhiteMissOH);
             chanceYellowCritMH = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMissMH);
             chanceYellowCritOH = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMissOH);
 
@@ -429,7 +423,6 @@ namespace Rawr.Enhance
     }
 
     #region DPSAnalysis
-
     public class DPSAnalysis
     {
         private float _dps = 0f;

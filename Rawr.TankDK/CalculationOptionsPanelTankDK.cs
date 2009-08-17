@@ -147,7 +147,7 @@ namespace Rawr.TankDK
         public uint  IncomingDamage = 10000;
         public float PercentIncomingFromMagic = .0f;
         public float BossAttackSpeed = 2.5f;
-        public float BossArmor = StatConversion.NPC_BOSS_ARMOR;
+        public float BossArmor = StatConversion.NPC_ARMOR[83-80];
 
         public bool Bloodlust = false;
         public float FightLength = 10f;

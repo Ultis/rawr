@@ -80,34 +80,25 @@ namespace Rawr.DPSDK
 
                 float chanceAvoided = 0.335f;
 
-                float chanceDodged = 0.065f;
+                float chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-80];
 
                 calcs.DodgedMHAttacks = MH.chanceDodged;
                 calcs.DodgedOHAttacks = OH.chanceDodged;
 
-                if (character.MainHand != null)
-                {
-                    chanceDodged = MH.chanceDodged;
-                }
+                if (character.MainHand != null) { chanceDodged = MH.chanceDodged; }
 
-                if (character.OffHand != null)
-                {
-                    if (DW)
-                    {
+                if (character.OffHand != null) {
+                    if (DW) {
                         chanceDodged += OH.chanceDodged;
                         chanceDodged /= 2;
-                    }
-                    else if (character.MainHand == null )
-                    {
+                    } else if (character.MainHand == null ) {
                         chanceDodged = OH.chanceDodged;
                     }
                 }
 
                 calcs.DodgedAttacks = chanceDodged;
 
-                float chanceMiss = 0f;
-                if (DW || (character.MainHand == null && character.OffHand != null)) chanceMiss = .27f;
-                else chanceMiss = .08f;
+                float chanceMiss = (DW || (character.MainHand != null && character.OffHand != null)) ? StatConversion.WHITE_MISS_CHANCE_CAP_DW[calcOpts.TargetLevel - 80] : StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80];
                 chanceMiss -= StatConversion.GetPhysicalHitFromRating(stats.HitRating);
                 chanceMiss -= hitBonus;
                 chanceMiss -= stats.PhysicalHit;
@@ -117,7 +108,7 @@ namespace Rawr.DPSDK
                 chanceAvoided = chanceDodged + chanceMiss;
                 calcs.AvoidedAttacks = chanceDodged + chanceMiss;
 
-                chanceMiss = .08f;
+                chanceMiss = StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80];
                 chanceMiss -= StatConversion.GetPhysicalHitFromRating(stats.HitRating);
                 chanceMiss -= hitBonus;
                 chanceMiss -= stats.PhysicalHit;

@@ -28,10 +28,10 @@ namespace Rawr.ProtPaladin
 			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
 			armorBosses.Add(8200, ": Midnight");
 			armorBosses.Add(8800, ": Void Reaver");
-			armorBosses.Add((int)StatConversion.NPC_80_ARMOR, ": Level 80 Warrior Type Creature");//9729
-			armorBosses.Add((int)StatConversion.NPC_81_ARMOR, ": Level 81 Warrior Type Creature");//10026 own value
-			armorBosses.Add((int)StatConversion.NPC_82_ARMOR, ": Level 82 Warrior Type Creature");//10331 own value
-            armorBosses.Add((int)StatConversion.NPC_BOSS_ARMOR, ": Wotlk Bosses in 3.1");
+			armorBosses.Add((int)StatConversion.NPC_ARMOR[80-80], ": Level 80 Warrior Type Creature");//9729
+			armorBosses.Add((int)StatConversion.NPC_ARMOR[81-80], ": Level 81 Warrior Type Creature");//10026 own value
+			armorBosses.Add((int)StatConversion.NPC_ARMOR[82-80], ": Level 82 Warrior Type Creature");//10331 own value
+            armorBosses.Add((int)StatConversion.NPC_ARMOR[83-80], ": Wotlk Bosses in 3.1");
             armorBosses.Add(13100, ": Tier 7 Bosses in 3.08");
 		}
 
@@ -251,16 +251,7 @@ namespace Rawr.ProtPaladin
             {
                 CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
                 calcOpts.TargetLevel = (int)numericUpDownTargetLevel.Value;
-                if (calcOpts.TargetLevel == 83)
-                    trackBarTargetArmor.Value = (int)StatConversion.NPC_BOSS_ARMOR;
-                else if (calcOpts.TargetLevel == 82)
-                    trackBarTargetArmor.Value = (int)StatConversion.NPC_82_ARMOR;
-                else if (calcOpts.TargetLevel == 81)
-                    trackBarTargetArmor.Value = (int)StatConversion.NPC_81_ARMOR;
-                else if (calcOpts.TargetLevel == 80)
-                    trackBarTargetArmor.Value = (int)StatConversion.NPC_80_ARMOR;
-//                else if (calcOpts.TargetLevel == custom)
-//                    calcOpts.TargetArmor = trackBarTargetArmor.Value;
+                trackBarTargetArmor.Value = (int)StatConversion.NPC_ARMOR[calcOpts.TargetLevel-80];
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -312,7 +303,7 @@ namespace Rawr.ProtPaladin
 		}
 
 		public int TargetLevel = 83;
-		public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+		public int TargetArmor = (int)StatConversion.NPC_ARMOR[83-80];
 		public int BossAttackValue = 50000;
         public float BossAttackSpeed = 2.0f;
 

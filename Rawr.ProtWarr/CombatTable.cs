@@ -84,7 +84,7 @@ namespace Rawr.ProtWarr {
                 float arpenBuffs = ((_c_mhItemType == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f);
                 if (CalcOpts == null) {
                     // you're supposed to pass the character level, not the target level.  GC misspoke.
-                    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_BOSS_ARMOR, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
+                    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[83-80], StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
                 } else {
                     armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
                 }
@@ -447,9 +447,7 @@ namespace Rawr.ProtWarr {
                     return damageTaken;
             }
         }
-        public static float BonusHitPercentage(Character character, Stats stats) {
-            return StatConversion.GetHitFromRating(stats.HitRating) + stats.PhysicalHit;
-        }
+        public static float BonusHitPercentage(Character character, Stats stats) {return StatConversion.GetHitFromRating(stats.HitRating) + stats.PhysicalHit;}
         public static float BonusCritMultiplier(Character character, Stats stats, Ability ability) {
             return (2f * (1f + stats.BonusCritMultiplier) - 1f) * (1f + (ability == Ability.None ? character.WarriorTalents.Impale * 0.1f : 0f));
         }

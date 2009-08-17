@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.Retribution
-{
-    public abstract class Rotation
-    {
-
+namespace Rawr.Retribution {
+    public abstract class Rotation {
         public Skill CS;
         public Skill Judge;
         public Skill DS;
@@ -20,8 +17,7 @@ namespace Rawr.Retribution
 
         protected CombatStats Combats;
 
-        public Rotation(CombatStats combats)
-        {
+        public Rotation(CombatStats combats) {
             Combats = combats;
             CS = new CrusaderStrike(combats);
             DS = new DivineStorm(combats);
@@ -31,25 +27,18 @@ namespace Rawr.Retribution
             White = new White(combats);
             HoR = new HandOfReckoning(combats);
 
-            if (combats.CalcOpts.Seal == SealOf.Righteousness)
-            {
+            if (combats.CalcOpts.Seal == SealOf.Righteousness) {
                 Seal = new SealOfRighteousness(combats);
                 Judge = new JudgementOfRighteousness(combats);
-            }
-            else if (combats.CalcOpts.Seal == SealOf.Command)
-            {
+            } else if (combats.CalcOpts.Seal == SealOf.Command) {
                 Seal = new SealOfCommand(combats);
                 Judge = new JudgementOfCommand(combats);
-            }
-            else if (combats.CalcOpts.Seal == SealOf.Vengeance)
-            {
+            } else if (combats.CalcOpts.Seal == SealOf.Vengeance) {
                 float stack = AverageSoVStackSize();
                 Seal = new SealOfVengeance(combats, stack);
                 SealDot = new SealOfVengeanceDoT(combats, stack);
                 Judge = new JudgementOfVengeance(combats, stack);
-            }
-            else
-            {
+            } else {
                 Seal = new None(combats);
                 Judge = new None(combats);
             }
@@ -57,8 +46,7 @@ namespace Rawr.Retribution
 
         public abstract void SetCharacterCalculations(CharacterCalculationsRetribution calc);
 
-        public void SetDPS(CharacterCalculationsRetribution calc)
-        {
+        public void SetDPS(CharacterCalculationsRetribution calc) {
             SetCharacterCalculations(calc);
 
             calc.AverageSoVStack = AverageSoVStackSize();
@@ -97,63 +85,47 @@ namespace Rawr.Retribution
                 calc.OtherDPS;
         }
 
-        public float SealProcsPerSec(Skill seal)
-        {
-            if (seal.GetType() == typeof(SealOfVengeance))
-            {
+        public float SealProcsPerSec(Skill seal) {
+            if (seal.GetType() == typeof(SealOfVengeance)) {
                 return GetMeleeAttacksPerSec();
-            }
-            //else if (seal.GetType() == typeof(SealOfRighteousness))
-            //{
+            //}else if (seal.GetType() == typeof(SealOfRighteousness)){
             //    return GetMeleeAttacksPerSec() + GetJudgementsPerSec() + GetJudgementsPerSec();
             //}
-            else
-            {
+            } else {
                 return GetMeleeAttacksPerSec() + GetJudgementsPerSec();
             }
         }
 
-        public float SoVOvertakeTime()
-        {
+        public float SoVOvertakeTime() {
             float sov0dps = JudgementDPS(new JudgementOfVengeance(Combats, 0));
             float sov5dps = JudgementDPS(new JudgementOfVengeance(Combats, 5))
                 + SealDPS(new SealOfVengeance(Combats, 5), new SealOfVengeanceDoT(Combats, 5));
             float sordps = JudgementDPS(new JudgementOfRighteousness(Combats))
                 + SealDPS(new SealOfRighteousness(Combats), null);
 
-            if (sordps > sov0dps)
-            {
+            if (sordps > sov0dps) {
                 float averageStack = (sordps - sov0dps) / (sov5dps - sov0dps) * 5f;
                 float timeToMaxStack = Combats.AttackSpeed * 4f;
                 return 2.5f * timeToMaxStack / (5f - averageStack);
-            }
-            else return 0;
+            } else { return 0; }
         }
 
-        public float AverageSoVStackSize()
-        {
+        public float AverageSoVStackSize() {
             float averageTimeOnMob = Combats.CalcOpts.FightLength * 60f / (Combats.CalcOpts.TargetSwitches + 1);
             float timeToMaxStack = Combats.AttackSpeed * 4f;
-            if (averageTimeOnMob > timeToMaxStack)
-            {
+            if (averageTimeOnMob > timeToMaxStack) {
                 return (2.5f * timeToMaxStack + 5f * (averageTimeOnMob - timeToMaxStack)) / averageTimeOnMob;
-            }
-            else
-            {
+            } else {
                 return 2.5f * averageTimeOnMob / timeToMaxStack;
             }
         }
 
-        public virtual float SealDPS(Skill seal, Skill sealdot)
-        {
+        public virtual float SealDPS(Skill seal, Skill sealdot) {
             if (sealdot == null) return seal.AverageDamage() * SealProcsPerSec(seal);
             else return sealdot.AverageDamage() / 3f + seal.AverageDamage() * SealProcsPerSec(seal);
         }
 
-        public virtual float HandOfReckoningDPS(Skill hor)
-        {
-            return hor.AverageDamage() / 8f * Combats.CalcOpts.HoREff;
-        }
+        public virtual float HandOfReckoningDPS(Skill hor) { return hor.AverageDamage() / 8f * Combats.CalcOpts.HoREff; }
 
         public abstract float JudgementDPS(Skill judge);
         public abstract float CrusaderStrikeDPS(Skill cs);
@@ -173,9 +145,7 @@ namespace Rawr.Retribution
 
     }
 
-    public class Simulator : Rotation
-    {
-
+    public class Simulator : Rotation {
         public RotationSolution Solution { get; set; }
 
         public Simulator(CombatStats combats)
@@ -192,99 +162,57 @@ namespace Rawr.Retribution
             );
         }
 
-        public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
-        {
-            calc.Rotation = Solution;
-        }
+        public override void SetCharacterCalculations(CharacterCalculationsRetribution calc) { calc.Rotation = Solution; }
 
-        public override float JudgementDPS(Skill judge)
-        {
-            return judge.AverageDamage() * Solution.Judgement / Solution.FightLength; 
-        }
+        public override float JudgementDPS(Skill judge) { return judge.AverageDamage() * Solution.Judgement / Solution.FightLength;  }
 
-        public override float CrusaderStrikeDPS(Skill cs)
-        {
-            return cs.AverageDamage() * Solution.CrusaderStrike / Solution.FightLength;
-        }
+        public override float CrusaderStrikeDPS(Skill cs) { return cs.AverageDamage() * Solution.CrusaderStrike / Solution.FightLength; }
 
-        public override float DivineStormDPS(Skill ds)
-        {
-            return ds.AverageDamage() * Solution.DivineStorm / Solution.FightLength;
-        }
+        public override float DivineStormDPS(Skill ds) { return ds.AverageDamage() * Solution.DivineStorm / Solution.FightLength; }
 
-        public override float ConsecrationDPS(Skill cons)
-        {
-            return cons.AverageDamage() * Solution.Consecration / Solution.FightLength;
-        }
+        public override float ConsecrationDPS(Skill cons) { return cons.AverageDamage() * Solution.Consecration / Solution.FightLength; }
 
-        public override float ExorcismDPS(Skill exo)
-        {
-            return exo.AverageDamage() * Solution.Exorcism / Solution.FightLength;
-        }
+        public override float ExorcismDPS(Skill exo) { return exo.AverageDamage() * Solution.Exorcism / Solution.FightLength; }
 
-        public override float HammerOfWrathDPS(Skill how)
-        {
-            return how.AverageDamage() * Solution.HammerOfWrath / Solution.FightLength;
-        }
+        public override float HammerOfWrathDPS(Skill how) { return how.AverageDamage() * Solution.HammerOfWrath / Solution.FightLength; }
 
-        public override float GetJudgementsPerSec()
-        {
-            return Solution.Judgement / Solution.FightLength * Judge.ChanceToLand() * Judge.Targets();
-        }
+        public override float GetJudgementsPerSec() { return Solution.Judgement / Solution.FightLength * Judge.ChanceToLand() * Judge.Targets(); }
 
-        public override float GetMeleeAttacksPerSec()
-        {
+        public override float GetMeleeAttacksPerSec() {
             return Solution.CrusaderStrike / Solution.FightLength * CS.ChanceToLand() * CS.Targets()
                 + Solution.DivineStorm / Solution.FightLength * DS.ChanceToLand() * DS.Targets()
                 + White.ChanceToLand() / Combats.AttackSpeed;
         }
 
-        public override float GetMeleeCritsPerSec()
-        {
+        public override float GetMeleeCritsPerSec() {
             return Solution.CrusaderStrike * CS.ChanceToCrit() / Solution.FightLength * CS.Targets()
                 + Solution.DivineStorm * DS.ChanceToCrit() / Solution.FightLength * DS.Targets()
                 + 1f / Combats.AttackSpeed;
         }
 
-        public override float GetPhysicalAttacksPerSec()
-        {
+        public override float GetPhysicalAttacksPerSec() {
             return GetMeleeAttacksPerSec()
                 + Solution.Judgement * Judge.ChanceToLand() / Solution.FightLength * Judge.Targets()
                 + Solution.HammerOfWrath * HoW.ChanceToLand() / Solution.FightLength * HoW.Targets();
         }
 
-        public override float GetPhysicalCritsPerSec()
-        {
+        public override float GetPhysicalCritsPerSec() {
             return GetMeleeAttacksPerSec()
                 + Solution.Judgement * Judge.ChanceToCrit() / Solution.FightLength * Judge.Targets()
                 + Solution.HammerOfWrath * HoW.ChanceToCrit() / Solution.FightLength * HoW.Targets();
         }
 
-        public override float GetCrusaderStrikeCD()
-        {
-            return Solution.FightLength / Solution.CrusaderStrike;
-        }
+        public override float GetCrusaderStrikeCD() { return Solution.FightLength / Solution.CrusaderStrike; }
 
-        public override float GetJudgementCD()
-        {
-            return Solution.FightLength / Solution.Judgement;
-        }
-
+        public override float GetJudgementCD() { return Solution.FightLength / Solution.Judgement; }
     }
 
-    public class EffectiveCooldown : Rotation
-    {
-
+    public class EffectiveCooldown : Rotation {
         private readonly CalculationOptionsRetribution _calcOpts;
 
-        public EffectiveCooldown(CombatStats combats)
-            : base(combats)
-        {
-            _calcOpts = combats.CalcOpts;
-        }
+        public EffectiveCooldown(CombatStats combats) : base(combats) { _calcOpts = combats.CalcOpts; }
 
-        public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
-        {
+        public override void SetCharacterCalculations(CharacterCalculationsRetribution calc) {
             calc.Rotation = new RotationSolution();
             calc.Rotation.JudgementCD = _calcOpts.JudgeCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.JudgeCD20 * _calcOpts.TimeUnder20;
             calc.Rotation.CrusaderStrikeCD = _calcOpts.CSCD * (1f - _calcOpts.TimeUnder20) + _calcOpts.CSCD20 * _calcOpts.TimeUnder20;

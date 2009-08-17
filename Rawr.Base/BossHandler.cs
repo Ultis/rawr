@@ -27,13 +27,13 @@ namespace Rawr {
             NPC_83,
         }
         /// <summary>Enumerator for creating a list of possible values for the Armor box</summary>
-        public enum POSSIBLE_ARMORS {
-            NPC_80 = (int)StatConversion.NPC_80_ARMOR,
-            NPC_81 = (int)StatConversion.NPC_81_ARMOR,
-            NPC_82 = (int)StatConversion.NPC_82_ARMOR,
-            BOSS   = (int)StatConversion.NPC_BOSS_ARMOR,
+        /*public enum POSSIBLE_ARMORS {
+            NPC_80 = (int)StatConversion.NPC_ARMOR[80],
+            NPC_81 = (int)StatConversion.NPC_ARMOR[81],
+            NPC_82 = (int)StatConversion.NPC_ARMOR[82],
+            BOSS   = (int)StatConversion.NPC_ARMOR[83],
             CUSTOM = 10000,
-        }
+        }*/
         /// <summary>A single Attack of various types</summary>
         public struct Attack {
             /// <summary>The type of damage done, use the DAMAGETYPES enumerator to select</summary>
@@ -54,7 +54,7 @@ namespace Rawr {
             BerserkTimer = 15f * 60f; // The longest noted Enrage timer is 15 minutes, and seriously, if the fight is taking that long, then fail... just fail.
             Level = 83;
             Health = 1000000f;
-            Armor = (float)POSSIBLE_ARMORS.BOSS;
+            Armor = (float)StatConversion.NPC_ARMOR[Level];
             UseParryHaste = false;
             // Resistance
             RESISTANCE_PHYSICAL = 0f;

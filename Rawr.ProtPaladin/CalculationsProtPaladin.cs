@@ -328,7 +328,7 @@ focus on Survival Points.",
             calculatedStats.Parry = dm.DefendTable.Parry;
             calculatedStats.Block = dm.DefendTable.Block;
 
-            calculatedStats.Defense = stats.Defense + (float)Math.Floor(stats.DefenseRating * ProtPaladin.DefenseRatingToDefense);
+            calculatedStats.Defense = stats.Defense + (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating,CharacterClass.Paladin));
             calculatedStats.StaticBlockValue = stats.BlockValue;
             calculatedStats.ActiveBlockValue = stats.BlockValue + stats.JudgementBlockValue + stats.ShieldOfRighteousnessBlockValue;
 
@@ -350,13 +350,13 @@ focus on Survival Points.",
 
             calculatedStats.ResistanceTable = StatConversion.GetResistanceTable(calcOpts.TargetLevel, character.Level, stats.AllResist + stats.FrostResistance, 0.0f);
             calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane));
-            calculatedStats.FireReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire));
-            calculatedStats.FrostReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost));
+            calculatedStats.FireReduction   = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire));
+            calculatedStats.FrostReduction  = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost));
             calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature));
             calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow));
             calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane);
-            calculatedStats.FireSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire);
-            calculatedStats.FrostSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost);
+            calculatedStats.FireSurvivalPoints   = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire);
+            calculatedStats.FrostSurvivalPoints  = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost);
             calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Nature);
             calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow);
 
@@ -804,7 +804,7 @@ focus on Survival Points.",
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
-            statsTotal.BlockValue += (float)Math.Floor(statsTotal.Strength * ProtPaladin.StrengthToBlockValue - 10f);
+            statsTotal.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsTotal.Strength,CharacterClass.Paladin) - 10f);
             statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
             statsTotal.ArmorPenetration = statsBase.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.BonusCritMultiplier = statsBase.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
@@ -817,23 +817,23 @@ focus on Survival Points.",
 
             #region Triggers and SpecialEffect stats
             // temporary combat table, used for the implementation of special effects.
-            float hitBonusPhysical = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
-            float hitBonusSpell = StatConversion.GetSpellHitFromRating(statsTotal.HitRating) + statsTotal.SpellHit;
-            float expertiseBonus = (StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating) + statsTotal.Expertise) * 0.0025f;
-            float chanceMissSpell = Math.Max(0f, StatConversion.GetSpellMiss(character.Level - calcOpts.TargetLevel, false) - hitBonusSpell);
-            float chanceMissPhysical = Math.Max(0f, 0.08f - hitBonusPhysical);
-            float chanceMissDodge = Math.Max(0f, 0.065f + .005f * (calcOpts.TargetLevel - 83) - expertiseBonus);
-            float chanceMissParry = Math.Max(0f, 0.1375f - expertiseBonus);
-            if (calcOpts.TargetLevel < 83) chanceMissPhysical = Math.Max(0f, 0.05f + 0.005f * (calcOpts.TargetLevel - 80f) - hitBonusPhysical);
+            float hitBonusPhysical   = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating,CharacterClass.Paladin) + statsTotal.PhysicalHit;
+            float hitBonusSpell      = StatConversion.GetSpellHitFromRating(statsTotal.HitRating,CharacterClass.Paladin) + statsTotal.SpellHit;
+            float expertiseBonus     = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating,CharacterClass.Paladin) + statsTotal.Expertise,CharacterClass.Paladin);
+            float chanceMissSpell    = Math.Max(0f, StatConversion.GetSpellMiss(character.Level - calcOpts.TargetLevel, false) - hitBonusSpell);
+            float chanceMissPhysical = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[ calcOpts.TargetLevel-80] - hitBonusPhysical);
+            float chanceMissDodge    = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-80] - expertiseBonus);
+            float chanceMissParry    = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[calcOpts.TargetLevel-80] - expertiseBonus);
             float chanceMissPhysicalAny = chanceMissPhysical + chanceMissDodge + chanceMissParry;
-            float chanceCritPhysical = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating) +
-                                        StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Paladin) +
-                                        statsTotal.PhysicalCrit - (0.006f * (calcOpts.TargetLevel - character.Level) + 
-                                        (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
-            float chanceCritSpell = StatConversion.GetSpellCritFromRating(statsTotal.CritRating) +
-                                        StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect, CharacterClass.Paladin) +
-                                        statsTotal.SpellCrit - (0.006f * (calcOpts.TargetLevel - character.Level) +
-                                        (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
+
+            float chanceCritPhysical = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating, CharacterClass.Paladin)
+                                       + StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Paladin)
+                                       + statsTotal.PhysicalCrit
+                                       + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel-80];
+            float chanceCritSpell    = StatConversion.GetSpellCritFromRating(statsTotal.CritRating, CharacterClass.Paladin)
+                                       + StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect, CharacterClass.Paladin)
+                                       + statsTotal.SpellCrit
+                                       - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
             float chanceHitPhysical = 1.0f - chanceMissPhysicalAny;
             float chanceHitSpell = 1.0f - chanceMissSpell;
             float chanceDoTTick = chanceHitSpell * 16.0f / 18.0f;// 16 ticks in 18 seconds of 9696 rotation. cba with cons. glyph atm.
@@ -855,26 +855,20 @@ focus on Survival Points.",
              // either way, TODO: 9696 Rotation trigger intervals, change these values once custom rotations are supported.
             
             Stats effectsToAdd = new Stats();
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
-            {
-                if (effect.Trigger == Trigger.Use)
-                    {
-                        if (calcOpts.TrinketOnUseHandling != "Ignore")
-                            if (calcOpts.TrinketOnUseHandling == "Active")
-                                statsTotal += effect.Stats;
-                            else
-                            {
-                                effectsToAdd += effect.GetAverageStats();
-                                effectsToAdd.Health = 0.0f; // Health on Use Effects are never averaged.
-                                statsTotal += effectsToAdd;
-                            }
-                        //else
-                            //statsTotal = statsTotal;
-                    }
-                else
-                {
-                    switch (effect.Trigger)
-                    {
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
+                if (effect.Trigger == Trigger.Use) {
+                    if (calcOpts.TrinketOnUseHandling != "Ignore")
+                        if (calcOpts.TrinketOnUseHandling == "Active"){
+                            statsTotal += effect.Stats;
+                        }else{
+                            effectsToAdd += effect.GetAverageStats();
+                            effectsToAdd.Health = 0.0f; // Health on Use Effects are never averaged.
+                            statsTotal += effectsToAdd;
+                        }
+                    //else
+                        //statsTotal = statsTotal;
+                } else {
+                    switch (effect.Trigger) {
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit:
                             effectsToAdd += effect.GetAverageStats(intervalPhysical, chanceHitPhysical, 2.4f);
@@ -916,17 +910,13 @@ focus on Survival Points.",
                     }
                 }
             }
-
             
-            if ((calcOpts.UseHolyShield)&&character.OffHand != null &&(character.OffHand.Type == ItemType.Shield))
-            {
+            if ((calcOpts.UseHolyShield)&&character.OffHand != null &&(character.OffHand.Type == ItemType.Shield)) {
                 statsTotal.JudgementBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
                 statsTotal.JudgementBlockValue = (float)Math.Floor(statsTotal.JudgementBlockValue);
                 statsTotal.ShieldOfRighteousnessBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
                 statsTotal.ShieldOfRighteousnessBlockValue = (float)Math.Floor(statsTotal.ShieldOfRighteousnessBlockValue);
-            }
-            else
-            {
+            }else{
                 statsTotal.ShieldOfRighteousnessBlockValue = 0.0f;
                 statsTotal.JudgementBlockValue = 0.0f;
             }
@@ -1717,8 +1707,7 @@ focus on Survival Points.",
         }
     }
 
-    public class ProtPaladin
-    {
+/*    public class ProtPaladin {
         //Percentage = Rating / RatingBase / H
         //lvl 80 base taken from LibStatLogic-1.1, Author: Whitetooth, hotdogee [at] gmail [dot] com
         static readonly float H = 100.0f * (82.0f / 52.0f) * (131.0f / 63.0f);
@@ -1748,5 +1737,5 @@ focus on Survival Points.",
         public static readonly float BlockRatingToBlock = 1.0f / 5.0f / H;                  // 16.39499389
         public static readonly float ResilienceRatingToCritReduction = 1.0f / 25.0f / H;    // 81.97496947
         public static readonly float ArPToArmorPenetration = 1.25f / 4.69512176513672f / H; // 12.31623883
-    }
+    }*/
 }

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.Retribution
-{
-    public class RotationSolution
-    {
+namespace Rawr.Retribution {
+    public class RotationSolution {
         public int Judgement { get; set;}
         public int CrusaderStrike { get; set; }
         public int DivineStorm { get; set; }

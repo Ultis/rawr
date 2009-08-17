@@ -98,47 +98,26 @@ namespace Rawr.DPSDK
 
         private string[] _characterDisplayCalculationLabels = null;
         /// <summary>
-
         /// An array of strings which will be used to build the calculation display.
-
         /// Each string must be in the format of "Heading:Label". Heading will be used as the
-
         /// text of the group box containing all labels that have the same Heading.
-
         /// Label will be the label of that calculation, and may be appended with '*' followed by
-
         /// a description of that calculation which will be displayed in a tooltip for that label.
-
         /// Label (without the tooltip string) must be unique.
-
         /// 
-
         /// EXAMPLE:
-
         /// characterDisplayCalculationLabels = new string[]
-
         /// {
-
         ///		"Basic Stats:Health",
-
         ///		"Basic Stats:Armor",
-
         ///		"Advanced Stats:Dodge",
-
         ///		"Advanced Stats:Miss*Chance to be missed"
-
         /// };
-
         /// </summary>
-
-        public override string[] CharacterDisplayCalculationLabels
-        {
-            get
-            {
-                if (_characterDisplayCalculationLabels == null)
-                {
-                    List<string> labels = new List<string>(new string[]
-                    {
+        public override string[] CharacterDisplayCalculationLabels {
+            get {
+                if (_characterDisplayCalculationLabels == null) {
+                    List<string> labels = new List<string>(new string[] {
                         "Basic Stats:Health",
 					    "Basic Stats:Strength",
 					    "Basic Stats:Agility",
@@ -185,14 +164,9 @@ namespace Rawr.DPSDK
         }
 
         private string[] _customChartNames = null;
-        public override string[] CustomChartNames
-        {
-            get
-            {
-                if (_customChartNames == null)
-                {
-                    _customChartNames = new string[] { "Item Budget"};
-                }
+        public override string[] CustomChartNames {
+            get {
+                if (_customChartNames == null) { _customChartNames = new string[] { "Item Budget"}; }
                 return _customChartNames;
             }
         }
@@ -209,12 +183,9 @@ namespace Rawr.DPSDK
         }
 
         private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
-					{
+        public override List<ItemType> RelevantItemTypes {
+            get {
+                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[] {
 						ItemType.None,
                         ItemType.Leather,
                         ItemType.Mail,
@@ -232,61 +203,35 @@ namespace Rawr.DPSDK
         }
 
         public override CharacterClass TargetClass { get { return CharacterClass.DeathKnight; } }
-        public override ComparisonCalculationBase CreateNewComparisonCalculation()
-        {
-            return new ComparisonCalculationDPSDK();
-        }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationDPSDK(); }
 
-        public override CharacterCalculationsBase CreateNewCharacterCalculations()
-        {
-            return new CharacterCalculationsDPSDK();
-        }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSDK(); }
 
-
-        public override ICalculationOptionBase DeserializeDataObject(string xml)
-        {
-            XmlSerializer serializer =
-                new XmlSerializer(typeof(CalculationOptionsDPSDK));
+        public override ICalculationOptionBase DeserializeDataObject(string xml) {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsDPSDK));
             System.IO.StringReader reader = new System.IO.StringReader(xml);
             CalculationOptionsDPSDK calcOpts = serializer.Deserialize(reader) as CalculationOptionsDPSDK;
             return calcOpts;
         }
 
-
         /// <summary>
-
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
-
         /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
-
         /// those total stats for the character, and any calculationoptions on the character, perform all the 
-
         /// calculations required to come up with the final calculations defined in 
-
         /// CharacterDisplayCalculationLabels, including an Overall rating, and all Sub ratings defined in 
-
         /// SubPointNameColors.
-
         /// </summary>
-
         /// <param name="character">The character to perform calculations for.</param>
-
         /// <param name="additionalItem">An additional item to treat the character as wearing.
-
         /// This is used for gems, which don't have a slot on the character to fit in, so are just
-
         /// added onto the character, in order to get gem calculations.</param>
-
         /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
-
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
-
         /// CharacterCalculationsBase comments for more details.</returns>
-
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
-        {
-
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
+            int targetLevel = calcOpts.TargetLevel;
             GetTalents(character);
 
 #if RAWR3
@@ -406,10 +351,7 @@ namespace Rawr.DPSDK
 
                 #region racials
                 {
-                    if (character.Race == CharacterRace.Orc)
-                    {
-                        commandMult += .05f;
-                    }
+                    if (character.Race == CharacterRace.Orc) { commandMult += .05f; }
                 }
                 #endregion
 
@@ -422,7 +364,7 @@ namespace Rawr.DPSDK
 
                     KMPpM *= addHastePercent;
 
-                    float KMPpR = KMPpM / (60 / calcOpts.rotation.curRotationDuration);
+                    float KMPpR = KMPpM / (60f / calcOpts.rotation.curRotationDuration);
                     float totalAbilities = calcOpts.rotation.FrostStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast;
                     KMRatio = KMPpR / totalAbilities;
                 }
@@ -456,8 +398,8 @@ namespace Rawr.DPSDK
                     float MHDPS = 0f, OHDPS = 0f;
                     #region Main Hand
                     {
-                        float dpsMHglancing = (0.24f * combatTable.MH.DPS) * 0.75f;
-                        float dpsMHBeforeArmor = ((combatTable.MH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + combatTable.physCrits)) + dpsMHglancing;
+                        float dpsMHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80] * combatTable.MH.DPS) * 0.7f;
+                        float dpsMHBeforeArmor = ((combatTable.MH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80])) * (1f + combatTable.physCrits)) + dpsMHglancing;
                         dpsWhiteMinusGlancing = dpsMHBeforeArmor - dpsMHglancing;
                         dpsWhiteBeforeArmor = dpsMHBeforeArmor;
                         MHDPS = dpsMHBeforeArmor * mitigation;
@@ -467,8 +409,8 @@ namespace Rawr.DPSDK
                     #region Off Hand
                     if (DW || (character.MainHand == null && character.OffHand != null))
                     {
-                        float dpsOHglancing = (0.24f * combatTable.OH.DPS) * 0.75f;
-                        float dpsOHBeforeArmor = ((combatTable.OH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + combatTable.physCrits)) + dpsOHglancing;
+                        float dpsOHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80] * combatTable.OH.DPS) * 0.7f;
+                        float dpsOHBeforeArmor = ((combatTable.OH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80])) * (1f + combatTable.physCrits)) + dpsOHglancing;
 						dpsOHBeforeArmor *= OHMult;
                         dpsWhiteMinusGlancing += dpsOHBeforeArmor - dpsOHglancing;
                         dpsWhiteBeforeArmor += dpsOHBeforeArmor;
@@ -585,13 +527,10 @@ namespace Rawr.DPSDK
 						(talents.GlyphofHowlingBlast ? calcOpts.rotation.HowlingBlast : 0f));
 						float PestRefresh = (15f + talents.Epidemic * 3f);
                         float FFCD = 0f;
-                        if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f)
-                        {
+                        if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f){
                             ITCD = calcOpts.rotation.curRotationDuration;
                             FFCD = 3f;
-                        }
-                        else
-                        {
+                        }else{
                             FFCD = 3f / (calcOpts.rotation.diseaseUptime / 100);
                             int tempF = (int)Math.Floor(ITCD / FFCD);
                             FFCD = ((ITCD - ((float)tempF * FFCD)) / ((float)tempF + 1f)) + FFCD;
@@ -653,7 +592,7 @@ namespace Rawr.DPSDK
                         float SSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier;
                         float SSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.ViciousStrikes) + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
                         dpsScourgeStrike = dpsScourgeStrike * SSCrit;
-                        dpsScourgeStrike *= 1f + (.0666666666666666666f * (float)talents.Outbreak);
+                        dpsScourgeStrike *= 1f + (2f/3f*.01f /*0.0666666666666666666f*/ * (float)talents.Outbreak);
                     }
                 }
                 #endregion
@@ -691,7 +630,7 @@ namespace Rawr.DPSDK
 						float dpsFrostStrikeOH = FSDmgOH / FSCD;
 						dpsFrostStrikeOH *= 1f + ((combatTable.physCrits + stats.BonusFrostStrikeCrit) * FSCritDmgMult); // OH FS hits don't get KM
 						dpsFrostStrike += dpsFrostStrikeOH;
-						dpsFrostStrike *= 1f + .0333333333333333f * talents.BloodOfTheNorth;
+						dpsFrostStrike *= 1f + (1f/3f*0.01f /*0.0333333333333333f*/) * talents.BloodOfTheNorth;
                     }
                 }
                 #endregion
@@ -705,7 +644,7 @@ namespace Rawr.DPSDK
                         float TotalBloodworms = ((fightDuration / combatTable.MH.hastedSpeed) + calcOpts.rotation.getMeleeSpecialsPerSecond() * fightDuration)
                             * (0.03f * talents.Bloodworms)
                             * 3f /*average of 3 bloodworms per proc*/;
-                        dpsBloodworms = ((TotalBloodworms * BloodwormSwingDPS * 20) / fightDuration);
+                        dpsBloodworms = ((TotalBloodworms * BloodwormSwingDPS * 20f) / fightDuration);
                     }
                 }
                 #endregion
@@ -718,15 +657,15 @@ namespace Rawr.DPSDK
 					// TODO: Differentiate between MH razorice and OH razorice
                     if (combatTable.MH != null)
                     {
-                        float dpsMHglancing = (0.24f * combatTable.MH.DPS) * 0.75f;
-                        float dpsMHBeforeArmor = ((combatTable.MH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + combatTable.physCrits)) + dpsMHglancing;
+                        float dpsMHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80] * combatTable.MH.DPS) * 0.7f;
+                        float dpsMHBeforeArmor = ((combatTable.MH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80])) * (1f + combatTable.physCrits)) + dpsMHglancing;
                         dpsOtherFrost += (dpsMHBeforeArmor - dpsMHglancing) * stats.BonusFrostWeaponDamage;   // presumably doesn't proc off of glancings, like necrosis
                     }
 
                     if (combatTable.OH != null)
                     {
-                        float dpsOHglancing = (0.24f * combatTable.OH.DPS) * 0.75f;
-                        float dpsOHBeforeArmor = ((combatTable.OH.DPS * (1f - calcs.AvoidedAttacks - 0.24f)) * (1f + combatTable.physCrits)) + dpsOHglancing;
+                        float dpsOHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80] * combatTable.OH.DPS) * 0.7f;
+                        float dpsOHBeforeArmor = ((combatTable.OH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80])) * (1f + combatTable.physCrits)) + dpsOHglancing;
 						dpsOHBeforeArmor *= OHMult;
                         dpsOtherFrost += (dpsOHBeforeArmor - dpsOHglancing) * stats.BonusFrostWeaponDamage;
                     }
@@ -767,13 +706,13 @@ namespace Rawr.DPSDK
 						if (DW) OblitDmgOH = ((((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
 							0.8f) + 467.2f) * 0.5f) + stats.BonusObliterateDamage;
 						OblitDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
-						OblitDmgOH *= (talents.ThreatOfThassarian * 0.33333333333f);
+						OblitDmgOH *= (talents.ThreatOfThassarian * (1f/3f/*0.33333333333f*/));
 						
 						dpsObliterate = (OblitDmg + OblitDmgOH) / OblitCD;
 						dpsObliterate *= 1f + 0.125f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
                         float OblitCritDmgMult = 1f + (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
 						float OblitCrit = 1f + ((combatTable.physCrits +
-							(.03f * (float)talents.Subversion) +
+							(0.03f * (float)talents.Subversion) +
 							(0.05f * (float)talents.Rime) +
 							stats.BonusObliterateCrit) * OblitCritDmgMult);
 						dpsObliterate *= OblitCrit;
@@ -789,14 +728,13 @@ namespace Rawr.DPSDK
                         float DSCD = combatTable.realDuration / calcOpts.rotation.DeathStrike;
                         // TODO: This should be changed to make use of the new glyph stats:
                         float DSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) * 0.75f) + 222.75f + stats.BonusDeathStrikeDamage;
-						if(DW)
-						{
+						if(DW) {
 							float DSDmgOH = ((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) * 
 							combatTable.normalizationFactor)) * 0.75f) + 222.75f;
 							DSDmgOH *= 0.5f;
 							DSDmgOH += stats.BonusDeathStrikeDamage;
 							DSDmgOH *= 1f + 0.05f * talents.NervesOfColdSteel;
-							DSDmgOH *= (talents.ThreatOfThassarian * 0.33333333333333f);
+							DSDmgOH *= (talents.ThreatOfThassarian * (1f/3f/*0.33333333333333f*/));
 							DSDmg += DSDmgOH;
 						}
                         DSDmg *= 1f + 0.15f * (float)talents.ImprovedDeathStrike;
@@ -825,7 +763,7 @@ namespace Rawr.DPSDK
 							BSDmgOH *= 0.5f;
 							BSDmgOH += stats.BonusBloodStrikeDamage;
 							BSDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
-							BSDmgOH *= (talents.ThreatOfThassarian * 0.3333333333333333f);
+							BSDmgOH *= (talents.ThreatOfThassarian * (1f/3f/*0.3333333333333333f*/));
 							BSDmg += BSDmgOH;
 						}
                         BSDmg *= 1f + 0.12f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage);
@@ -834,7 +772,7 @@ namespace Rawr.DPSDK
                         BSCritDmgMult += (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
                         float BSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.Subversion)) * BSCritDmgMult);
                         dpsBloodStrike = (dpsBloodStrike) * BSCrit;
-                        dpsBloodStrike *= 1f + (.033333333333333f * (float)talents.BloodOfTheNorth);
+                        dpsBloodStrike *= 1f + ((1f/3f/*0.3333333333333333f*/) * (float)talents.BloodOfTheNorth);
                         dpsBloodStrike *= 1f + (.05f * (float)talents.BloodyStrikes);
                     }
                 }
@@ -1042,11 +980,11 @@ namespace Rawr.DPSDK
 
                     dpsNecrosis *= magicMit;
                     dpsBloodPlague *= magicMit;
-                    dpsDeathCoil *= magicMit * (1 - combatTable.spellResist);
+                    dpsDeathCoil *= magicMit * (1f - combatTable.spellResist);
                     dpsFrostFever *= magicMit;
-                    dpsHowlingBlast *= magicMit * (1 - combatTable.spellResist);
+                    dpsHowlingBlast *= magicMit * (1f - combatTable.spellResist);
                     dpsIcyTouch *= magicMit;
-                    dpsUnholyBlight *= magicMit * (1 - combatTable.spellResist);
+                    dpsUnholyBlight *= magicMit * (1f - combatTable.spellResist);
 
 
                     NecrosisMult += spellPowerMult - 1f;
@@ -1110,7 +1048,7 @@ namespace Rawr.DPSDK
                     IcyTouchMult *= 1 + MercilessCombatMult;
                     FrostStrikeMult *= 1 + MercilessCombatMult;
 
-                    float GlacierRot = .0666666666666f * (float)talents.GlacierRot;
+                    float GlacierRot = (2f/3f/*0.66666666666666666*/) * (float)talents.GlacierRot;
                     HowlingBlastMult *= 1 + GlacierRot;
                     IcyTouchMult *= 1 + GlacierRot;
                     FrostStrikeMult *= 1 + GlacierRot;
@@ -1227,15 +1165,13 @@ namespace Rawr.DPSDK
                 calcs.OverallPoints = calcs.DPSPoints;
             }
 
-
             return calcs;
         }
 
-        private Stats GetRaceStats(Character character)
-        {
-            Stats statsRace;
-            switch (character.Race)
-            {
+        private Stats GetRaceStats(Character character) {
+            return BaseStats.GetBaseStats(character.Level, CharacterClass.DeathKnight, character.Race);
+            /*Stats statsRace;
+            switch (character.Race) {
                 case CharacterRace.Human:
                     statsRace = new Stats() { Strength = 108f, Agility = 73f, Stamina = 99f, Intellect = 29f, Spirit = 46f, Armor = 146f, Health = 2169f };
                     break;
@@ -1281,35 +1217,22 @@ namespace Rawr.DPSDK
             statsRace.Health += 8328f;
             statsRace.AttackPower = 202f + (67f * 2);
 
-            return statsRace;
+            return statsRace;*/
         }
 
         /// <summary>
-
         /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
-
         /// combine all of the information about the character, including race, gear, enchants, buffs,
-
         /// calculationoptions, etc., to form a single combined Stats object. Three of the methods below
-
         /// can be called from this method to help total up stats: GetItemStats(character, additionalItem),
-
         /// GetEnchantsStats(character), and GetBuffsStats(character.ActiveBuffs).
-
         /// </summary>
-
         /// <param name="character">The character whose stats should be totaled.</param>
-
         /// <param name="additionalItem">An additional item to treat the character as wearing.
-
         /// This is used for gems, which don't have a slot on the character to fit in, so are just
-
         /// added onto the character, in order to get gem calculations.</param>
-
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
-
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-        {
+        public override Stats GetCharacterStats(Character character, Item additionalItem) {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
             DeathKnightTalents talents = calcOpts.talents;
 
@@ -1450,8 +1373,7 @@ namespace Rawr.DPSDK
         public override bool IsItemRelevant(Item item)
         {
             if (item.Slot == ItemSlot.OffHand /*  ||
-                (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Sigil) */
-                                                                                          )
+                (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Sigil) */)
                 return false;
             return base.IsItemRelevant(item);
         }
