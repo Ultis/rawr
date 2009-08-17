@@ -6,6 +6,7 @@ namespace Rawr.Elemental
     {
         protected float baseMinDamage = 0f;
         protected float baseMaxDamage = 0f;
+        protected float baseCastTime = 0f;
         protected float castTime = 0f;
         protected float periodicTick = 0f;
         protected float periodicTicks = 0f;
@@ -108,6 +109,14 @@ namespace Rawr.Elemental
                     return gcd;
                 else
                     return 1;
+            }
+        }
+
+        public float BaseCastTime
+        {
+            get
+            {
+                return Math.Max(baseCastTime, 1.5f);
             }
         }
 
@@ -306,6 +315,7 @@ namespace Rawr.Elemental
             #region Base Values
             baseMinDamage = 715;
             baseMaxDamage = 815;
+            baseCastTime = 2.5f;
             castTime = 2.5f;
             spCoef = 2.5f / 3.5f;
             lspCoef = spCoef;
@@ -400,6 +410,7 @@ namespace Rawr.Elemental
             #region Base Values
             baseMinDamage = 973;
             baseMaxDamage = 1111;
+            baseCastTime = 2f;
             castTime = 2f;
             spCoef = 2f / 3.5f;
             lspCoef = spCoef;
@@ -502,6 +513,7 @@ namespace Rawr.Elemental
             #region Base Values
             baseMinDamage = 1192;
             baseMaxDamage = 1518;
+            baseCastTime = 2f;
             castTime = 2f;
             spCoef = 2f / 3.5f;
             manaCost = .1f * Constants.BaseMana;
@@ -654,7 +666,7 @@ namespace Rawr.Elemental
             base.Initialize(stats, shamanTalents);
         }
 
-        public EarthShock(Stats stats, ShamanTalents shamanTalents)
+        public EarthShock(Stats stats, ShamanTalents shamanTalents) : this()
         {
             Initialize(stats, shamanTalents);
         }
@@ -778,9 +790,10 @@ namespace Rawr.Elemental
             spCoef = 0f;
         }
 
-        public new void Initialize(float duration)
+        public void Initialize(float duration)
         {
             castTime = duration;
+            baseCastTime = duration;
         }
 
         public Wait(float duration)

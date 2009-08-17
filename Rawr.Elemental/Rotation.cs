@@ -249,6 +249,14 @@ namespace Rawr.Elemental
             return time;
         }
 
+        public float GetBaseCastTime()
+        {
+            float time = 0f;
+            for (int j = 0; j < spells.Count; j++)
+                time += spells[j].BaseCastTime;
+            return time;
+        }
+
         public float getCastsPerSecond()
         {
             return Casts.Count / GetTime();
