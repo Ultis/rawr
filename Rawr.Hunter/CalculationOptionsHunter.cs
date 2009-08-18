@@ -50,10 +50,11 @@ namespace Rawr.Hunter
         public double gcdsToLayImmoTrap = 2.0; // not editable
         public Shots LALShotToUse = Shots.ExplosiveShot; // not editable
         public int LALShotsReplaced = 2; // not editable
+        public double LALProcChance = 2; // not editable
 
         // rotation test
-        public bool useRotationTest = false;
-        public int cooldownCutoff = 15;  // not editable (not sure what this does)
+        public bool useRotationTest = true;
+        public int cooldownCutoff = 15; // not editable (not sure what this does)
         public bool randomizeProcs = false; // not editable
         public double waitForCooldown = 0.8; // not editable
         public bool interleaveLAL = false; // not editable

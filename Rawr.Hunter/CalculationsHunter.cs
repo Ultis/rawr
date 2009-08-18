@@ -646,7 +646,7 @@ namespace Rawr.Hunter
 
             #region Spreadsheet bugs
 
-            if (statsBuffs.PhysicalCrit > 0 && options.emulateSpreadsheetBugs)
+            if (statsBuffs.PhysicalCrit > 0 && options.emulateSpreadsheetBugs) // still an issue in 91c
             {
                 // Leader of the Pack should give 5%, but instead gives 4.98845627020046000000%
                 // (same as 229 crit rating)
@@ -832,7 +832,7 @@ namespace Rawr.Hunter
             calculatedStats.hasteFromRacial = 0;
             if (character.Race == CharacterRace.Troll && calculatedStats.berserk.freq > 0)
             {
-                double berserkingUseFreq = options.emulateSpreadsheetBugs ? calculatedStats.berserk.cooldown : calculatedStats.berserk.freq; // still an issue in 91b
+                double berserkingUseFreq = options.emulateSpreadsheetBugs ? calculatedStats.berserk.cooldown : calculatedStats.berserk.freq; // still an issue in 91c
                 calculatedStats.hasteFromRacial = 0.2 * CalcUptime(calculatedStats.berserk.duration, berserkingUseFreq, options);
             }
 
@@ -1270,18 +1270,13 @@ namespace Rawr.Hunter
             if (statsBuffs.ManaRestoreFromBaseManaPPM > 0)
             {
                 // Note: we ignore the value stored in Buff.cs and calculate it as the spreadsheet
-                // does, using shots per second and a derived 50% proc chance. this may change to a
-                // fixed 50% proc in the future (discussion is in EJ hunter spreadsheet thread).
-                double jowPPM = 15; // E95
-                double jowAutosPM = autoShotsPerSecond > 0 ? 60 / (1 / autoShotsPerSecond) : 0; // E96
-                double jowSpecialsPM = specialShotsPerSecond > 0 ? 60 / (1 / specialShotsPerSecond) : 0; // E97
-                double jowActualPPM = jowAutosPM > 0 ? (jowAutosPM + jowSpecialsPM) / jowAutosPM * jowPPM : 0; // E98
-                double jowAvgShotTime = jowAutosPM + jowSpecialsPM > 0 ? 60 / (jowAutosPM + jowSpecialsPM) : 0; // E99
-                double jowProcChance = jowAvgShotTime * jowActualPPM / 60; // E100
-                double jowTimeToProc = jowProcChance > 0 ? jowAvgShotTime / jowProcChance : 0; // E101
-                double jowManaGained = statsRace.Mana * 0.02; // E102
-                double jowMPSGained = jowTimeToProc > 0 ? jowManaGained / jowTimeToProc : 0; // E103
-                targetDebuffsMP5JudgmentOfWisdom = jowTimeToProc > 0 ? jowManaGained / jowTimeToProc * 5 : 0; // E104
+                // does, using shots per second and a derived 50% proc chance.                
+                double jowAvgShotTime = autoShotsPerSecond + specialShotsPerSecond > 0 ? 1 / (autoShotsPerSecond + specialShotsPerSecond) : 0;
+                double jowProcChance = 0.5;
+                double jowTimeToProc = jowProcChance > 0 ? 0.25 + jowAvgShotTime / jowProcChance : 0;
+                double jowManaGained = statsRace.Mana * 0.02;
+                double jowMPSGained = jowTimeToProc > 0 ? jowManaGained / jowTimeToProc : 0;
+                targetDebuffsMP5JudgmentOfWisdom = jowTimeToProc > 0 ? jowManaGained / jowTimeToProc * 5 : 0;
             }
             double targetDebuffsMP5 = targetDebuffsMP5JudgmentOfWisdom; // Buffs!H77
 
@@ -1412,15 +1407,6 @@ namespace Rawr.Hunter
             #region August 2009 Mana Regen
 
             double mp5FromBuffs = statsBaseGear.Mp5 + statsBuffs.Mp5;
-            if (options.emulateSpreadsheetBugs)
-            {
-                // These effects are completely ignored by the spreadsheet
-                if (character.ActiveBuffsContains("Mp5 Food")) mp5FromBuffs -= 16;
-                if (character.ActiveBuffsContains("Flask of Pure Mojo")) mp5FromBuffs -= 45;
-                if (character.ActiveBuffsContains("Flask of Pure Mojo (Mixology)")) mp5FromBuffs -= 20;
-                if (character.ActiveBuffsContains("Elixir of Mighty Mageblood")) mp5FromBuffs -= 24;
-                if (character.ActiveBuffsContains("Elixir of Mighty Mageblood (Mixology)")) mp5FromBuffs -= 6;
-            }
             calculatedStats.manaRegenGearBuffs = mp5FromBuffs / 5;
 
             // Viper Regen if viper is up 100%
@@ -1681,7 +1667,7 @@ namespace Rawr.Hunter
                     
             calculatedStats.apFromProc = 0;
 
-            double crittingTriggersPerSecond = options.emulateSpreadsheetBugs // still an issue in 91b
+            double crittingTriggersPerSecond = options.emulateSpreadsheetBugs // still an issue in 91c
                                              ? crittingShotsPerSecond * critHitPercent
                                              : crittingShotsPerSecond * critHitPercent * hitChance;
 
@@ -1700,14 +1686,7 @@ namespace Rawr.Hunter
             // Swordguard Embroidery
             if (character.BackEnchant != null && character.BackEnchant.Id == 3730)
             {
-                if (options.emulateSpreadsheetBugs) // still an issue in 91b
-                {
-                    calculatedStats.apFromProc += 400 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * critHitPercent);
-                }
-                else
-                {
-                    calculatedStats.apFromProc += 400 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * hitChance);
-                }
+                calculatedStats.apFromProc += 400 * CalcTrinketUptime(15, 45, 0.5, totalShotsPerSecond * hitChance);
             }
 
             // Pyrite Infuser

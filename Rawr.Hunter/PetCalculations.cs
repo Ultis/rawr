@@ -138,7 +138,7 @@ namespace Rawr.Hunter
             #endregion
             #region Crit Chance
 
-            if (statsBuffs.PhysicalCrit > 0 && options.emulateSpreadsheetBugs)
+            if (statsBuffs.PhysicalCrit > 0 && options.emulateSpreadsheetBugs) // still an issue in 91c
             {
                 // Leader of the Pack should give 5%, but instead gives 4.98845627020046000000%
                 // (same as 229 crit rating)
@@ -219,7 +219,7 @@ namespace Rawr.Hunter
                                      * attackSpeedFromCobraReflexes
                                      * attackSpeedFromMultiplicitiveHasteBuffs;
 
-            double attackSpeedBase = 2.0;
+            double attackSpeedBase = options.PetFamily == PetFamily.None ? 0.0 : 2.0;
             double attackSpeedAdjusted = attackSpeedBase / attackSpeedAdjust;
 
             // Frenzy
@@ -308,9 +308,6 @@ namespace Rawr.Hunter
                 stacks[1].percent_time = acidSpitTotalTime == 0 ? 1 : stacks[1].time_spent / acidSpitTotalTime;
                 stacks[2].percent_time = acidSpitTotalTime == 0 ? 1 : stacks[2].time_spent / acidSpitTotalTime;
 
-                double acidSpitUptime = stacks[1].percent_time + stacks[2].percent_time;
-                if (options.emulateSpreadsheetBugs) acidSpitUptime += stacks[0].percent_time; // still an issue in 91b
-
                 stacks[0].total = stacks[0].percent_time * 0;
                 stacks[1].total = stacks[0].percent_time * 0.1;
                 stacks[2].total = stacks[0].percent_time * 0.2;
@@ -322,7 +319,7 @@ namespace Rawr.Hunter
             double stingFrequency = priorityRotation.getSkillFrequency(PetAttacks.Sting);
             if (stingFrequency > 0)
             {
-                double stingUseFreq = options.emulateSpreadsheetBugs ? priorityRotation.getSkillCooldown(PetAttacks.Sting) : priorityRotation.getSkillFrequency(PetAttacks.Sting); // still an issue in 91b
+                double stingUseFreq = options.emulateSpreadsheetBugs ? priorityRotation.getSkillCooldown(PetAttacks.Sting) : priorityRotation.getSkillFrequency(PetAttacks.Sting); // still an issue in 91c
                 double stingDuration = 20;
                 double stingUptime = stingDuration > stingUseFreq ? 1 : stingDuration / stingUseFreq;
 
@@ -360,7 +357,7 @@ namespace Rawr.Hunter
             calculatedStats.ferociousInspirationDamageAdjust = 1;
             if (character.HunterTalents.FerociousInspiration > 0)
             {
-                if (options.PetFamily != PetFamily.None || options.emulateSpreadsheetBugs) // still an issue in 91b
+                if (options.PetFamily != PetFamily.None)
                 {
                     double ferociousInspirationSpecialsEffect = priorityRotation.petSpecialFrequency == 0 ? 0 : 10 / priorityRotation.petSpecialFrequency;
                     double ferociousInspirationUptime = 1 - Math.Pow(1 - critTotalSpecials, (10 / attackSpeedEffective) + ferociousInspirationSpecialsEffect);
@@ -375,7 +372,7 @@ namespace Rawr.Hunter
             double roarOfRecoveryFreq = priorityRotation.getSkillFrequency(PetAttacks.RoarOfRecovery);
             if (roarOfRecoveryFreq > 0)
             {
-                double roarOfRecoveryUseFreq = options.emulateSpreadsheetBugs ? Math.Ceiling(options.duration / priorityRotation.getSkillCooldown(PetAttacks.RoarOfRecovery)) : roarOfRecoveryFreq; // still an issue in 91b
+                double roarOfRecoveryUseFreq = options.emulateSpreadsheetBugs ? Math.Ceiling(options.duration / priorityRotation.getSkillCooldown(PetAttacks.RoarOfRecovery)) : roarOfRecoveryFreq; // still an issue in 91c
                 double roarOfRecoveryManaRestored = calculatedStats.BasicStats.Mana * 0.3 * roarOfRecoveryUseFreq; // E129
                 calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseFreq > 0 ? roarOfRecoveryManaRestored / options.duration : 0;
             }
@@ -396,7 +393,7 @@ namespace Rawr.Hunter
             calculatedStats.apFromCallOfTheWild = 0;
             if (options.petCallOfTheWild > 0)
             {
-                double callOfTheWildUseFreq = options.emulateSpreadsheetBugs ? priorityRotation.getSkillCooldown(PetAttacks.CallOfTheWild) : priorityRotation.getSkillFrequency(PetAttacks.CallOfTheWild); // still an issue in 91b
+                double callOfTheWildUseFreq = options.emulateSpreadsheetBugs ? priorityRotation.getSkillCooldown(PetAttacks.CallOfTheWild) : priorityRotation.getSkillFrequency(PetAttacks.CallOfTheWild); // still an issue in 91c
                 double callOfTheWildUptime = CalculationsHunter.CalcUptime(20, callOfTheWildUseFreq, options);
                 calculatedStats.apFromCallOfTheWild = 0.1 * callOfTheWildUptime;
             }
@@ -700,9 +697,6 @@ namespace Rawr.Hunter
                 stacks[2].percent_time = monstrousBiteTotalTime == 0 ? 0 : stacks[2].time_spent / monstrousBiteTotalTime;
                 stacks[3].percent_time = monstrousBiteTotalTime == 0 ? 0 : stacks[3].time_spent / monstrousBiteTotalTime;
 
-                double monstrousBiteUptime = stacks[1].percent_time + stacks[2].percent_time + stacks[3].percent_time;
-                if (options.emulateSpreadsheetBugs) monstrousBiteUptime += stacks[0].percent_time; // still an issue in 91b
-
                 stacks[0].total = 0;
                 stacks[1].total = 0.03 * stacks[1].percent_time;
                 stacks[2].total = 0.06 * stacks[1].percent_time;
@@ -879,8 +873,8 @@ namespace Rawr.Hunter
 
                 #endregion
 
-                if (options.emulateSpreadsheetBugs && S.skillType == PetAttacks.NetherShock) S.damage = 0; // still an issue in 91b
-                if (options.emulateSpreadsheetBugs && S.skillType == PetAttacks.VenomWebSpray) S.damage = 0; // still an issue in 91b
+                if (options.emulateSpreadsheetBugs && S.skillType == PetAttacks.NetherShock) S.damage = 0; // still an issue in 91c
+                if (options.emulateSpreadsheetBugs && S.skillType == PetAttacks.VenomWebSpray) S.damage = 0; // still an issue in 91c
 
                 S.CalculateDPS();
             }

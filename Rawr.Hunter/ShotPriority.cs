@@ -65,6 +65,14 @@ namespace Rawr.Hunter
                 if (priorities[i] != null && priorities[i].type == Shots.AimedShot && hunterTalents.AimedShot == 0) { priorities[i].lackTalent = true; priorities[i] = null; }
                 if (priorities[i] != null && priorities[i].type == Shots.ExplosiveShot && hunterTalents.ExplosiveShot == 0){priorities[i].lackTalent = true; priorities[i] = null;}
                 if (priorities[i] != null && priorities[i].type == Shots.BeastialWrath && hunterTalents.BestialWrath == 0) { priorities[i].lackTalent = true; priorities[i] = null; }
+                if (options.emulateSpreadsheetBugs && !options.useRotationTest) // still an issue in 91c
+                {
+                    // don't try and remove silencing shot - spreadsheet doesn't when in priorities mode                       
+                }
+                else
+                {
+                    if (priorities[i] != null && priorities[i].type == Shots.SilencingShot && hunterTalents.SilencingShot == 0) { priorities[i].lackTalent = true; priorities[i] = null; }
+                }
 
                 if (priorities[i] != null)
                 {

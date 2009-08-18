@@ -47,7 +47,7 @@ namespace Rawr.Hunter
             double GCD = 1.5;
             double BA = calculatedStats.blackArrow.duration;
             double it = calculatedStats.immolationTrap.duration;
-            double LALChance = character.HunterTalents.BlackArrow == 1 ? character.HunterTalents.LockAndLoad * 2 : -1;
+            double LALChance = character.HunterTalents.BlackArrow == 1 ? character.HunterTalents.LockAndLoad * options.LALProcChance : -1;
             bool RandomProcs = options.randomizeProcs;
             int ISSfix = 0;
             int IAotHfix = 0;
@@ -67,6 +67,8 @@ namespace Rawr.Hunter
             double Sub20Time = (BossHPPercentage > 20) ? FightLength - options.timeSpentSub20 : 0; // time *until* we hit sub-20
             bool UseKillShot = calculatedStats.priorityRotation.containsShot(Shots.KillShot);
             bool BMSpec = character.HunterTalents.BestialWrath + character.HunterTalents.TheBeastWithin > 0;
+
+            if (options.PetFamily == PetFamily.None) BMSpec = false;
 
             int currentShot;
             double currentTime;
@@ -120,12 +122,11 @@ namespace Rawr.Hunter
             // set Steady Shot cast time so it's only static haste
             if (shotData.ContainsKey(Shots.SteadyShot))
             {
-                shotData[Shots.SteadyShot].castTime = 2 * (1 / calculatedStats.hasteStaticTotal);
+                shotData[Shots.SteadyShot].castTime = 2 / calculatedStats.hasteStaticTotal;
             }
 
             // Set Auto Shot Speed to statically hasted value
             AutoShotSpeed = calculatedStats.autoShotStaticSpeed;
-            // NOTE: the spreadsheet is currently broken in an unstable way - we can't emulate
 
             #endregion
             #region Variable setup
@@ -191,6 +192,11 @@ namespace Rawr.Hunter
                         }
                         else if (s.type == Shots.Readiness && RFCD < (currentTime + CDCutoff))
                         {
+                            // wait for Rapid Fire
+                        }
+                        else if (s.type == Shots.BeastialWrath && !BMSpec)
+                        {
+                            // do nothing
                         }
                         else
                         {
@@ -339,6 +345,10 @@ namespace Rawr.Hunter
                             else if (s.type == Shots.BlackArrow && FightLength - currentTime < BA)
                             {
                             }
+                            // do nothing
+                            else if (s.type == Shots.BeastialWrath && !BMSpec)
+                            {
+                            }
                             else
                             {
                                 thisShot = s.type;
@@ -384,6 +394,7 @@ namespace Rawr.Hunter
                     // Check if we had an auto shot since the last check
                     if (currentTime - LastAutoShotCheck > currentAutoShotSpeed)
                     {
+                        LastAutoShotCheck = currentTime;
                         if (RandomProcs)
                         {
                             // 10% proc chance                    

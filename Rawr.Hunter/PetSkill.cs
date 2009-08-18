@@ -181,7 +181,7 @@ namespace Rawr.Hunter
                 if (S.skillType == PetAttacks.Dash) S.cooldown -= options.petDiveDash * 8;
 
                 if (S.skillData.type != PetSkillType.FocusDump) S.cooldown *= longevityCooldownAdjust;
-                if (S.skillType == PetAttacks.BadAttitude && options.emulateSpreadsheetBugs) S.can_crit = true; // still an issue in 91b
+                if (S.skillType == PetAttacks.BadAttitude && options.emulateSpreadsheetBugs) S.can_crit = true; // still an issue in 91c
             }
         }
 

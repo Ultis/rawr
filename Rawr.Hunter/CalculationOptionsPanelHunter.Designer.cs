@@ -1583,9 +1583,9 @@
             this.chkUseRotation.AutoSize = true;
             this.chkUseRotation.Location = new System.Drawing.Point(18, 190);
             this.chkUseRotation.Name = "chkUseRotation";
-            this.chkUseRotation.Size = new System.Drawing.Size(194, 17);
+            this.chkUseRotation.Size = new System.Drawing.Size(233, 17);
             this.chkUseRotation.TabIndex = 9;
-            this.chkUseRotation.Text = "Use shot rotation test (experimental)";
+            this.chkUseRotation.Text = "Use shot rotation test instead of frequencies";
             this.chkUseRotation.UseVisualStyleBackColor = true;
             this.chkUseRotation.CheckedChanged += new System.EventHandler(this.chkUseRotation_CheckedChanged);
             // 
@@ -1630,7 +1630,7 @@
             this.chkEmulateBugs.Name = "chkEmulateBugs";
             this.chkEmulateBugs.Size = new System.Drawing.Size(218, 17);
             this.chkEmulateBugs.TabIndex = 10;
-            this.chkEmulateBugs.Text = "Emulate known bugs in spreadsheet 91b";
+            this.chkEmulateBugs.Text = "Emulate known bugs in spreadsheet 91c";
             this.chkEmulateBugs.UseVisualStyleBackColor = true;
             this.chkEmulateBugs.CheckedChanged += new System.EventHandler(this.chkEmulateBugs_CheckedChanged);
             // 
