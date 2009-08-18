@@ -2,29 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.TankDK
-{
-    public class Weapon
-    {
+namespace Rawr.TankDK {
+    public class Weapon {
         public float baseSpeed, baseDamage, hastedSpeed, mitigation, effectiveExpertise, chanceDodged, DPS, damage;
+        public Weapon (Item i, Stats stats, CalculationOptionsTankDK calcOpts, float expertise) {
+            if (stats == null || calcOpts == null || calcOpts.talents == null) { return; }
 
-        public Weapon (Item i, Stats stats, CalculationOptionsTankDK calcOpts, float expertise)
-        {
-            if (stats == null || calcOpts == null || calcOpts.talents == null)
-                return;
-
-            if (i == null)
-            {
+            if (i == null) {
                 i = new Item();
-                i.Speed = 2.0f;
+                i.Speed = 2f;
                 i.MinDamage = 0;
                 i.MaxDamage = 0;
             }
 
             effectiveExpertise = expertise;
-            float fightDuration = calcOpts.FightLength * 60;
+            float fightDuration = calcOpts.FightLength * 60f;
 
-            if (i == null) return;
+            if (i == null) { return; }
 
             baseSpeed = i.Speed;
             baseDamage = (float)(i.MinDamage + i.MaxDamage) / 2f + stats.WeaponDamage;
@@ -33,10 +27,9 @@ namespace Rawr.TankDK
             #region Attack Speed
             {
                 hastedSpeed = baseSpeed / (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.PhysicalHaste);
-                hastedSpeed /= 1f + .05f * (float)calcOpts.talents.ImprovedIcyTalons;
+                hastedSpeed /= 1f + 0.05f * (float)calcOpts.talents.ImprovedIcyTalons;
 
-                if (calcOpts.Bloodlust)
-                {
+                if (calcOpts.Bloodlust) {
                     //float bloodlustUptime = (calcOpts.Bloodlust * 40f);
 
                     //if (bloodlustUptime > fightDuration) bloodlustUptime = 1f;
@@ -60,8 +53,8 @@ namespace Rawr.TankDK
 
             #region Dodge
             {
-                chanceDodged = .065f;
-                chanceDodged -= effectiveExpertise / 400;
+                chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-80];
+                chanceDodged -= effectiveExpertise / 400f;
                 if (chanceDodged < 0f) chanceDodged = 0f;
             }
             #endregion
@@ -69,12 +62,9 @@ namespace Rawr.TankDK
             #region White Damage
             {
                 // White damage per hit.  Basic white hits are use elsewhere.
-                damage = baseDamage + (stats.AttackPower / 14.0f) * baseSpeed;
+                damage = baseDamage + (stats.AttackPower / 14f) * baseSpeed;
                 DPS = 0f;
-                if (hastedSpeed > 0)
-                {
-                    DPS = damage / hastedSpeed;
-                }
+                if (hastedSpeed > 0) { DPS = damage / hastedSpeed; }
             }
             #endregion
         }

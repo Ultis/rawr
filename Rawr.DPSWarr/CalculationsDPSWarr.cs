@@ -48,14 +48,11 @@ namespace Rawr.DPSWarr {
 
         #region Variables and Properties
 
-#if RAWR3
+        #if RAWR3
         public ICalculationOptionsPanel _calculationOptionsPanel = null;
-            public override ICalculationOptionsPanel CalculationOptionsPanel
-            {
-                get
-                {
-                    if (_calculationOptionsPanel == null)
-                    {
+            public override ICalculationOptionsPanel CalculationOptionsPanel {
+                get {
+                    if (_calculationOptionsPanel == null) {
                         _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
                     }
                     return _calculationOptionsPanel;
@@ -787,12 +784,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor")); }*/
         }
 
-        public void GetTalents(Character character) {
-            CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.talents = character.WarriorTalents;
-        }
-
-        private static List<string> _relevantGlyphs;
+        private static List<string> _relevantGlyphs = null;
         public override List<string> GetRelevantGlyphs() {
             if (_relevantGlyphs == null) {
                 _relevantGlyphs = new List<string>();

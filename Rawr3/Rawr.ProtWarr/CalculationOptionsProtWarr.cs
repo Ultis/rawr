@@ -21,7 +21,7 @@ namespace Rawr.ProtWarr
         public CalculationOptionsProtWarr()
         {
             TargetLevel = 83;
-            TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+            TargetArmor = (int)StatConversion.NPC_ARMOR[83-80];
             BossAttackValue = 60000;
             BossAttackSpeed = 2.0f;
             UseParryHaste = false;

@@ -2,16 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.TankDK
-{
+namespace Rawr.TankDK {
     // Reminder: This is the character totals based on all gear and talents.  Apply the weights here.
-    class CharacterCalculationsTankDK : CharacterCalculationsBase
-    {
-
-        public override float OverallPoints {
-            get { return ((Survival * SurvivalWeight) + Mitigation + (Threat * ThreatWeight)); }
-            set {   } 
-        }
+    class CharacterCalculationsTankDK : CharacterCalculationsBase {
+        public override float OverallPoints { get { return ((Survival * SurvivalWeight) + Mitigation + (Threat * ThreatWeight)); } set { } }
 
         public Stats BasicStats { get; set; }
         public float BasicStrength { get; set; }
@@ -48,276 +42,197 @@ namespace Rawr.TankDK
         public float Expertise { get; set; }
 
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
-        public override float[] SubPoints
-        {
-            get { return new float[] {  Survival * SurvivalWeight, 
-                                        Mitigation, 
-                                        Threat * ThreatWeight }; }
+        public override float[] SubPoints {
+            get { return new float[] {  Survival * SurvivalWeight, Mitigation, Threat * ThreatWeight }; }
             set { _subPoints = value; }
         }
-
         private float _whiteDPS;
-        public float WhiteDPS
-        {
+        public float WhiteDPS {
             get { return _whiteDPS; }
             set { _whiteDPS = value; }
         }
-
         private float _NecrosisDPS;
-        public float NecrosisDPS
-        {
+        public float NecrosisDPS {
             get { return _NecrosisDPS; }
             set { _NecrosisDPS = value; }
         }
-
         private float _BCBDPS;
-        public float BCBDPS
-        {
+        public float BCBDPS {
             get { return _BCBDPS; }
             set { _BCBDPS = value; }
         }
-
         private float _DeathCoilDPS;
-        public float DeathCoilDPS
-        {
+        public float DeathCoilDPS {
             get { return _DeathCoilDPS; }
             set { _DeathCoilDPS = value; }
         }
-
         private float _IcyTouchDPS;
-        public float IcyTouchDPS
-        {
+        public float IcyTouchDPS {
             get { return _IcyTouchDPS; }
             set { _IcyTouchDPS = value; }
         }
-
         private float _PlagueStrikeDPS;
-        public float PlagueStrikeDPS
-        {
+        public float PlagueStrikeDPS {
             get { return _PlagueStrikeDPS; }
             set { _PlagueStrikeDPS = value; }
         }
-
         private float _FrostFeverDPS;
-        public float FrostFeverDPS
-        {
+        public float FrostFeverDPS {
             get { return _FrostFeverDPS; }
             set { _FrostFeverDPS = value; }
         }
-
         private float _BloodPlagueDPS;
-        public float BloodPlagueDPS
-        {
+        public float BloodPlagueDPS {
             get { return _BloodPlagueDPS; }
             set { _BloodPlagueDPS = value; }
         }
-
         private float _ScourgeStrikeDPS;
-        public float ScourgeStrikeDPS
-        {
+        public float ScourgeStrikeDPS {
             get { return _ScourgeStrikeDPS; }
             set { _ScourgeStrikeDPS = value; }
         }
-
         private float _UnholyBlightDPS;
-        public float UnholyBlightDPS
-        {
+        public float UnholyBlightDPS {
             get { return _UnholyBlightDPS; }
             set { _UnholyBlightDPS = value; }
         }
-
         private float _RuneStrikeDPS;
-        public float RuneStrikeDPS
-        {
+        public float RuneStrikeDPS {
             get { return _RuneStrikeDPS; }
             set { _RuneStrikeDPS = value; }
         }
-
         private float _BloodwormsDPS;
-        public float BloodwormsDPS
-        {
+        public float BloodwormsDPS {
             get { return _BloodwormsDPS; }
             set { _BloodwormsDPS = value; }
         }
-
         private float _OtherDPS;
-        public float OtherDPS
-        {
+        public float OtherDPS {
             get { return _OtherDPS; }
             set { _OtherDPS = value; }
         }
-
         private float _FrostStrikeDPS;
-        public float FrostStrikeDPS
-        {
+        public float FrostStrikeDPS {
             get { return _FrostStrikeDPS; }
             set { _FrostStrikeDPS = value; }
         }
-
         private float _HowlingBlastDPS;
-        public float HowlingBlastDPS
-        {
+        public float HowlingBlastDPS {
             get { return _HowlingBlastDPS; }
             set { _HowlingBlastDPS = value; }
         }
-
         private float _DeathNDecayDPS;
-        public float DeathNDecayDPS
-        {
+        public float DeathNDecayDPS {
             get { return _DeathNDecayDPS; }
             set { _DeathNDecayDPS = value; }
         }
-
         private float _ObliterateDPS;
-        public float ObliterateDPS
-        {
+        public float ObliterateDPS {
             get { return _ObliterateDPS; }
             set { _ObliterateDPS = value; }
         }
-
         private float _DeathStrikeDPS;
-        public float DeathStrikeDPS
-        {
+        public float DeathStrikeDPS {
             get { return _DeathStrikeDPS; }
             set { _DeathStrikeDPS = value; }
         }
-
         private float _BloodStrikeDPS;
-        public float BloodStrikeDPS
-        {
+        public float BloodStrikeDPS {
             get { return _BloodStrikeDPS; }
             set { _BloodStrikeDPS = value; }
         }
-
         private float _HeartStrikeDPS;
-        public float HeartStrikeDPS
-        {
+        public float HeartStrikeDPS {
             get { return _HeartStrikeDPS; }
             set { _HeartStrikeDPS = value; }
         }
-
         private float _DRWDPS;
-        public float DRWDPS
-        {
+        public float DRWDPS {
             get { return _DRWDPS; }
             set { _DRWDPS = value; }
         }
-
         private float _WanderingPlagueDPS;
-        public float WanderingPlagueDPS
-        {
+        public float WanderingPlagueDPS {
             get { return _WanderingPlagueDPS; }
             set { _WanderingPlagueDPS = value; }
         }
-
         private float _MHweaponDamage;
-        public float MHWeaponDamage
-        {
+        public float MHWeaponDamage {
             get { return _MHweaponDamage; }
             set { _MHweaponDamage = value; }
         }
-
         private float _OHWeaponDamage;
-        public float OHWeaponDamage
-        {
+        public float OHWeaponDamage {
             get { return _OHWeaponDamage; }
             set { _OHWeaponDamage = value; }
         }
-
         private float _MHattackSpeed;
-        public float MHAttackSpeed
-        {
+        public float MHAttackSpeed {
             get { return _MHattackSpeed; }
             set { _MHattackSpeed = value; }
         }
-
         private float _OHattackSpeed;
-        public float OHAttackSpeed
-        {
+        public float OHAttackSpeed {
             get { return _OHattackSpeed; }
             set { _OHattackSpeed = value; }
         }
-
         private float _critChance;
-        public float CritChance
-        {
+        public float CritChance {
             get { return _critChance; }
             set { _critChance = value; }
         }
-
         private float _SpellCritChance;
-        public float SpellCritChance
-        {
+        public float SpellCritChance {
             get { return _SpellCritChance; }
             set { _SpellCritChance = value; }
         }
-
         private float _avoidedAttacks;
-        public float AvoidedAttacks
-        {
+        public float AvoidedAttacks {
             get { return _avoidedAttacks; }
             set { _avoidedAttacks = value; }
         }
-
         private float _dodgedMHAttacks;
-        public float DodgedMHAttacks
-        {
+        public float DodgedMHAttacks {
             get { return _dodgedMHAttacks; }
             set { _dodgedMHAttacks = value; }
         }
-
         private float _dodgedOHAttacks;
-        public float DodgedOHAttacks
-        {
+        public float DodgedOHAttacks {
             get { return _dodgedOHAttacks; }
             set { _dodgedOHAttacks = value; }
         }
-
         private float _dodgedAttacks;
-        public float DodgedAttacks
-        {
+        public float DodgedAttacks {
             get { return _dodgedAttacks; }
             set { _dodgedAttacks = value; }
         }
-
         private float _missedAttacks;
-        public float MissedAttacks
-        {
+        public float MissedAttacks {
             get { return _missedAttacks; }
             set { _missedAttacks = value; }
         }
-
         private float _enemyMitigation;
-        public float EnemyMitigation
-        {
+        public float EnemyMitigation {
             get { return _enemyMitigation; }
             set { _enemyMitigation = value; }
         }
         private float _effectiveArmor;
-        public float EffectiveArmor
-        {
+        public float EffectiveArmor {
             get { return _effectiveArmor; }
             set { _effectiveArmor = value; }
         }
         private float _MHExpertise;
-        public float MHExpertise
-        {
+        public float MHExpertise {
             get { return _MHExpertise; }
             set { _MHExpertise = value; }
         }
-
         private float _OHExpertise;
-        public float OHExpertise
-        {
+        public float OHExpertise {
             get { return _OHExpertise; }
             set { _OHExpertise = value; }
         }
-
-
-        public override float GetOptimizableCalculationValue(string calculation)
-        {
-            switch (calculation)
-            {
+        public override float GetOptimizableCalculationValue(string calculation) {
+            switch (calculation) {
                 case "Chance to be Crit": return Crit; // Def cap chance to be critted by boss.  For optimization this needs to be  <= 0
                 case "Avoidance %": return (Miss + Parry + Dodge); // Another duplicate math location?
                 case "Target Miss %": return TargetMiss * 100.0f;
@@ -327,13 +242,10 @@ namespace Rawr.TankDK
                 case "Armor": return Armor; // Raw Armor
                 case "Burst Time": return BurstTime;
                 case "Reaction Time": return ReactionTime;
-                default:
-                    return 0.0f;
+                default: return 0.0f;
             }
         }
-
-        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
-        {
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
             dict["Miss"] = Miss.ToString("F2") + "%";
@@ -382,6 +294,5 @@ namespace Rawr.TankDK
 
             return dict;
         }
-
     }
 }

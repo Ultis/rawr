@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpellPriorityForm));
             this.cmbSpells = new System.Windows.Forms.ComboBox();
             this.lsSpellPriority = new System.Windows.Forms.ListBox();
             this.bAdd = new System.Windows.Forms.Button();
@@ -127,6 +128,8 @@
             this.Controls.Add(this.bAdd);
             this.Controls.Add(this.lsSpellPriority);
             this.Controls.Add(this.cmbSpells);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "SpellPriorityForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Spell Priority";

@@ -1,133 +1,96 @@
 ﻿using System;
 
-namespace Rawr.Tree
-{
-    public abstract class Spell
-    {
-        protected float minHeal = 0f;
-        public float MinHeal
-        { get { return minHeal + healingBonus * coefDH; } }
-        public float BaseMinHeal
-        { get { return minHeal; } }
-        protected float maxHeal = 0f;
-        public float MaxHeal
-        { get { return maxHeal + healingBonus * coefDH; } }
-        public float BaseMaxHeal
-        { get { return maxHeal; } }
-        public float castTime = 0f;
-        public float castTimeBeforeHaste = 0f;
-        public float CastTime
-        { 
-            get 
-            {
-                if (castTime > gcd)
-                    return castTime;        // Not castTimeBeforeHaste
-                else if (gcd > 1)
-                    return gcd;
-                else
-                    return 1;
+namespace Rawr.Tree {
+    public abstract class Spell {
+        protected float minHeal             = 0f;
+        public float    MinHeal     { get { return minHeal + healingBonus * coefDH; } }
+        public float    BaseMinHeal { get { return minHeal; } }
+        protected float maxHeal             = 0f;
+        public float    MaxHeal     { get { return maxHeal + healingBonus * coefDH; } }
+        public float    BaseMaxHeal { get { return maxHeal; } }
+        public float    castTime            = 0f;
+        public float    castTimeBeforeHaste = 0f;
+        public float CastTime { 
+            get {
+                if (castTime > gcd) { return castTime; // Not castTimeBeforeHaste
+                } else if (gcd > 1) { return gcd;
+                } else {              return 1f; }
             }
         }
-        public float gcd = 1.5f;
+        public float gcd            = 1.5f;
         public float gcdBeforeHaste = 1.5f;
-        protected float manaCost = 0f;
+        protected float manaCost    = 0f;
 
-        virtual public float ManaCost
-        {
-            get { return checkOmenlikeProcs(); }
-//            set { manaCost = value; }
-        }
+        virtual public float ManaCost { get { return checkOmenlikeProcs(); } /*set { manaCost = value; }*/ }
 
-        public float coefDH = 0f; //coef for DirectHeal
-        public float speed = 1.0f;
-        public float NGspeed = 1.0f;
-        public float NGmod = 0;
-
+        public float coefDH  = 0f; //coef for DirectHeal
+        public float speed   = 1f;
+        public float NGspeed = 1f;
+        public float NGmod   = 0f;
         protected float healingBonus = 0f;
-        virtual public float HealingBonus
-        {
+        virtual public float HealingBonus {
             get { return healingBonus; }
             set { healingBonus = value; }
         }
-
         protected float critModifier = 1.5f;
-        public float CritModifier
-        {
+        public float CritModifier {
             get { return critModifier; }
             set { critModifier = value; }
         }
-
         protected float critPercent = 0f;
-        public float CritPercent
-        {
+        public float CritPercent {
             get { return critPercent; }
             set { critPercent = value; }
         }
-
         protected float critHoTPercent = 0f;
-        public float CritHoTPercent
-        {
+        public float CritHoTPercent {
             get { return critHoTPercent; }
             set { critHoTPercent = value; }
         }
-
         protected float periodicTick = 0f;
         protected float periodicTicks = 0f;
-        public float PeriodicTicks
-        { get { return periodicTicks; } }
+        public float PeriodicTicks { get { return periodicTicks; } }
         protected float periodicTickTime = 3f;
-        public float PeriodicTickTime
-        { get { return periodicTickTime; } }
+        public float PeriodicTickTime { get { return periodicTickTime; } }
         public float coefHoT = 0f; //coef for HoT
 
         protected float extraHealing = 0f; // for BonusHoTOnDirectHeals
-
-        virtual public float AverageHealing
-        { get { return extraHealing + (minHeal + maxHeal) / 2 + HealingBonus * coefDH; } }
+        
+        virtual public float AverageHealing { get { return extraHealing + (minHeal + maxHeal) / 2f + HealingBonus * coefDH; } }
 
         /// <summary>
         ///  Direct heal component of this spell
         /// </summary>
-        public float AverageHealingwithCrit
-        { get { return (AverageHealing * (100 - critPercent) + (AverageHealing * critModifier) * critPercent) / 100; } }
+        public float AverageHealingwithCrit { get { return (AverageHealing * (100f - critPercent) + (AverageHealing * critModifier) * critPercent) / 100f; } }
 
-        virtual public float PeriodicTick
-        { get { return periodicTick + healingBonus * coefHoT; } }
+        virtual public float PeriodicTick { get { return periodicTick + healingBonus * coefHoT; } }
 
-        virtual public float PeriodicTickwithCrit
-        { get { return (PeriodicTick * (100 - critHoTPercent) + (PeriodicTick * critModifier) * critHoTPercent) / 100; } }
+        virtual public float PeriodicTickwithCrit { get { return (PeriodicTick * (100f - critHoTPercent) + (PeriodicTick * critModifier) * critHoTPercent) / 100f; } }
 
         // Direct Healing divided per cast time
-        virtual public float HPS                                
-        { get { return AverageHealingwithCrit / CastTime; } }
+        virtual public float HPS { get { return AverageHealingwithCrit / CastTime; } }
 
         // Rate at which HoT healing is applied
-        //   Different from the rate at which it can be generated by the druid (see HPCT)
-        public float HPSHoT                                     
-        { get { return (PeriodicTickwithCrit) / periodicTickTime; } }
+        // Different from the rate at which it can be generated by the druid (see HPCT)
+        public float HPSHoT { get { return (PeriodicTickwithCrit) / periodicTickTime; } }
 
         /// <summary>
         /// Total healing generated by this spell, includes base, crit and HoT effects 
         /// </summary>
-        public float TotalAverageHealing
-        { get { return (AverageHealingwithCrit + PeriodicTickwithCrit * PeriodicTicks); } }
+        public float TotalAverageHealing { get { return (AverageHealingwithCrit + PeriodicTickwithCrit * PeriodicTicks); } }
 
-        public float HPM
-        { get { return (TotalAverageHealing) / ManaCost; } }
+        public float HPM { get { return (TotalAverageHealing) / ManaCost; } }
 
         // Wildebees: 20090221 : Healing per cast time, considers direct healing and HoT parts
         //     Total healing divided by CastTime
         // This indicates the rate at which the healing is generated
-        public float HPCT
-        { get { return (TotalAverageHealing) / CastTime; } }
+        public float HPCT { get { return (TotalAverageHealing) / CastTime; } }
 
-        public float Duration
-        { get { return periodicTicks * periodicTickTime; } }
+        public float Duration { get { return periodicTicks * periodicTickTime; } }
 
         private Stats cachedStats;  // Keep a local copy of stats used to create spell
 
-        public void Initialize(CharacterCalculationsTree calcs, Stats calculatedStats)
-        {
+        public void Initialize(CharacterCalculationsTree calcs, Stats calculatedStats) {
             speed = (1 + StatConversion.GetSpellHasteFromRating(calculatedStats.HasteRating) );
             speed *= (1 + calculatedStats.SpellHaste);
             critModifier *= 1f + calculatedStats.BonusCritHealMultiplier;
@@ -137,19 +100,15 @@ namespace Rawr.Tree
             applyHaste();
         }
 
-        public virtual void calculateOldNaturesGrace(float critChance)
-        {
-            if (castTimeBeforeHaste > 0)
-            {
+        public virtual void calculateOldNaturesGrace(float critChance) {
+            if (castTimeBeforeHaste > 0) {
                 castTimeBeforeHaste -= NGmod * critChance * 0.5f;
                 applyHaste();
             }
         }
 
-        public virtual void calculateNewNaturesGrace(float critChance)
-        {
-            if (castTimeBeforeHaste > 0)
-            {
+        public virtual void calculateNewNaturesGrace(float critChance) {
+            if (castTimeBeforeHaste > 0) {
                 applyHaste(); // calculate cast time
                 /**
                  * Actually, if you have low primary heal usage, this will be a lot less!
@@ -157,8 +116,7 @@ namespace Rawr.Tree
                  * spellsAffected = (int)(3f / castTime)
                  */
                 float pNoBuff = 1f;
-                for (int k = 0; k < 3f / castTime; k++)
-                {
+                for (int k = 0; k < 3f / castTime; k++) {
                     pNoBuff *= 1 - NGmod * critChance;
                 }
                 NGspeed = ( (1 - pNoBuff) * 0.2f) + 1f;
@@ -166,53 +124,33 @@ namespace Rawr.Tree
             }
         }
         
-        protected virtual void applyHaste()
-        {
+        protected virtual void applyHaste() {
             gcd = gcdBeforeHaste / (speed * NGspeed);
-            if (gcd < 1.0f)
-                gcd = 1.0f;
+            if (gcd < 1f) { gcd = 1f; }
             castTime = (float)Math.Round(castTimeBeforeHaste / (speed * NGspeed), 4);
-            if (castTime < 1.0f)
-                castTime = 1.0f;
+            if (castTime < 1f) { castTime = 1f; }
         }
 
-        protected float OmenProc(float chance, float maxReduction)
-        {
-            if (manaCost < maxReduction)
-                return manaCost * (1.0f - chance);
-            else
-            {
-                return manaCost * (1.0f - chance) + chance * (manaCost - maxReduction);
-            }
-        }
+        protected float OmenProc(float chance, float maxReduction) { return manaCost * (1.0f - chance) + (manaCost < maxReduction ? 0f : chance * (manaCost - maxReduction)); }
 
-        protected float checkOmenlikeProcs() 
-        {
+        protected float checkOmenlikeProcs() {
             float newManaCost = manaCost;
 
             //Attempt to handle new SpecialEffect for this
-            foreach (Rawr.SpecialEffect effect in cachedStats.SpecialEffects())
-            {
-                if (effect.Trigger == Trigger.SpellCast && (effect.Stats.HealingOmenProc > 0))
-                   newManaCost = OmenProc(effect.Chance, effect.Stats.HealingOmenProc);
+            foreach (Rawr.SpecialEffect effect in cachedStats.SpecialEffects()) {
+                if (effect.Trigger == Trigger.SpellCast && (effect.Stats.HealingOmenProc > 0)) {
+                    newManaCost = OmenProc(effect.Chance, effect.Stats.HealingOmenProc);
+                }
             }
 
-//            // Handle case of stat not being created as a SpecialEffect
-//            if (cachedStats.ManacostReduceWithin15OnHealingCast > 0)
-//                newManaCost = OmenProc(0.02f, cachedStats.ManacostReduceWithin15OnHealingCast);
+            // Handle case of stat not being created as a SpecialEffect
+            //if (cachedStats.ManacostReduceWithin15OnHealingCast > 0) {newManaCost = OmenProc(0.02f, cachedStats.ManacostReduceWithin15OnHealingCast);}
 
             return newManaCost;
         }
     }
-
-    /*
-     * Healing Touch updated Jan 12th 2009 by Trolando
-     * Using Resto Spreadsheet v1.21L, WoWHead.com, WoWWiki.com
-     */
-    public class HealingTouch : Spell
-    {
-        public HealingTouch(CharacterCalculationsTree calcs, Stats calculatedStats)
-        {
+    public class HealingTouch : Spell {
+        public HealingTouch(CharacterCalculationsTree calcs, Stats calculatedStats) {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
             base.Initialize(calcs, calculatedStats);
@@ -234,8 +172,7 @@ namespace Rawr.Tree
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Glyph of Healing Touch
-            if (calcs.LocalCharacter.DruidTalents.GlyphOfHealingTouch) //(calcOpts.glyphOfHealingTouch)
-            {
+            if (calcs.LocalCharacter.DruidTalents.GlyphOfHealingTouch) {//(calcOpts.glyphOfHealingTouch)
                 castTimeBeforeHaste -= 1.5f;
                 manaCost *= 1 - 0.25f;
                 minHeal *= 1 - 0.5f;
@@ -253,13 +190,9 @@ namespace Rawr.Tree
             manaCost -= calculatedStats.ReduceHealingTouchCost;
             #endregion
 
-            
-
             applyHaste();
         }
-
-        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
-        {
+        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
             manaCost *= 1 - (druidTalents.Moonglow * 0.03f + druidTalents.TranquilSpirit * 0.02f);
 
             castTimeBeforeHaste -= 0.1f * druidTalents.Naturalist;
@@ -273,41 +206,29 @@ namespace Rawr.Tree
             manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
 
             minHeal *=
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             maxHeal *=
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             coefDH += (0.2f * druidTalents.EmpoweredTouch);     // ET is additive from http://elitistjerks.com/f73/t37038-restoration_glyphs/p8/#post1240879 
 
             coefDH *=
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
         }
     }
-
-    /*
-     * Regrowth updated Jan 12th 2009 by Trolando
-     * Using Resto Spreadsheet v1.21L, WoWHead.com, WoWWiki.com
-     */
-    public class Regrowth : Spell
-    {
-        public Regrowth(CharacterCalculationsTree calcs, Stats calculatedStats)
-        {
-            InitializeRegrowth(calcs, calculatedStats);
-        }
-
-        public Regrowth(CharacterCalculationsTree calcs, Stats calculatedStats, bool withRegrowthActive) 
-        {
+    public class Regrowth : Spell {
+        public Regrowth(CharacterCalculationsTree calcs, Stats calculatedStats) { InitializeRegrowth(calcs, calculatedStats); }
+        public Regrowth(CharacterCalculationsTree calcs, Stats calculatedStats, bool withRegrowthActive) {
             InitializeRegrowth(calcs, calculatedStats);
 
-            if (withRegrowthActive && calcs.LocalCharacter.DruidTalents.GlyphOfRegrowth) //(CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions).glyphOfRegrowth)
-            {
+            if (withRegrowthActive && calcs.LocalCharacter.DruidTalents.GlyphOfRegrowth) {//(CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions).glyphOfRegrowth)
                 minHeal *= 1.2f;
                 maxHeal *= 1.2f;
                 periodicTick *= 1.2f;
@@ -315,9 +236,7 @@ namespace Rawr.Tree
                 coefHoT *= 1.2f;
             }
         }
-
-        private void InitializeRegrowth(CharacterCalculationsTree calcs, Stats calculatedStats)
-        {
+        private void InitializeRegrowth(CharacterCalculationsTree calcs, Stats calculatedStats) {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
             base.Initialize(calcs, calculatedStats);
@@ -330,10 +249,10 @@ namespace Rawr.Tree
             healingBonus = calculatedStats.SpellPower;
             critPercent = calculatedStats.SpellCrit;
 
-            minHeal = 2234;
-            maxHeal = 2494;
-            periodicTick = 335; // 2345 / 7
-            periodicTicks = 7;
+            minHeal = 2234f;
+            maxHeal = 2494f;
+            periodicTick = 335f; // 2345 / 7
+            periodicTicks = 7f;
             #endregion
 
             // Seems to apply before talents
@@ -349,9 +268,7 @@ namespace Rawr.Tree
             /* Glyph of Regrowth is modelled in the constructor */
             applyHaste();
         }
-
-        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
-        {
+        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
             periodicTicks += 2 * druidTalents.NaturesSplendor;
 
             manaCost -=
@@ -363,45 +280,38 @@ namespace Rawr.Tree
             critModifier += 0.1f * druidTalents.LivingSeed;
 
             // 6% chance to get Omen of Clarity...
-            manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
+            manaCost *= 1f - 0.06f * druidTalents.OmenOfClarity;
 
             minHeal *=
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             maxHeal *=
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             coefDH *=
-                (1 + 0.04f * druidTalents.EmpoweredRejuvenation) *
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             periodicTick *=
-                (1 + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             coefHoT *= 
-                (1 + 0.04f * druidTalents.EmpoweredRejuvenation) *
-                (1 + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
+                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
         }
     }
-
-    /*
-     * Rejuvenation updated Jan 12th 2009 by Trolando
-     * Using Resto Spreadsheet v1.21L, WoWHead.com, WoWWiki.com
-     */
-    public class Rejuvenation : Spell
-    {
-        public Rejuvenation(CharacterCalculationsTree calcs, Stats calculatedStats)
-        {
+    public class Rejuvenation : Spell {
+        public Rejuvenation(CharacterCalculationsTree calcs, Stats calculatedStats) {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
             base.Initialize(calcs, calculatedStats);
@@ -413,7 +323,7 @@ namespace Rawr.Tree
             healingBonus = calculatedStats.SpellPower;
 
             periodicTick = 338f; //1690 / 5 ... newest Rank got 15 seconds.. i hope it's not involed with another coef ..
-            periodicTicks = 5;
+            periodicTicks = 5f;
             #endregion
 
             // Seems to apply before talents
@@ -432,26 +342,23 @@ namespace Rawr.Tree
             #endregion
 
             #region Tier 8 (4) SetBonus
-            if (calculatedStats.RejuvenationInstantTick > 0.0f )
-            {
+            if (calculatedStats.RejuvenationInstantTick > 0.0f) {
                 // Set AverageHealingwithCrit = PeriodicTick
-                minHeal = PeriodicTick;
-                maxHeal = PeriodicTick;
-                coefDH = 0.0f;              // PeriodicTick already scaled by SpellPower, so don't scale again
+                minHeal     = PeriodicTick;
+                maxHeal     = PeriodicTick;
+                coefDH      = 0.0f; // PeriodicTick already scaled by SpellPower, so don't scale again
                 critPercent = 0.0f;
             }
             #endregion
 
             #region Tier 9 (4) SetBonus
             critHoTPercent = calculatedStats.SpellCrit * calculatedStats.RejuvenationCrit;
-//          Should set  critPercent = critHoTPercent;   to allow instantTick to also be crittable, but cannot have 4 piece setbonus simultanuously
+            //Should set  critPercent = critHoTPercent;   to allow instantTick to also be crittable, but cannot have 4 piece setbonus simultanuously
             #endregion
 
             applyHaste();
         }
-
-        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
-        {
+        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
             periodicTicks += 1 * druidTalents.NaturesSplendor;
 
             //gcd *= 1 - 0.04f * druidTalents.GiftOfTheEarthmother;
@@ -479,70 +386,42 @@ namespace Rawr.Tree
                 (1 + 0.06f * druidTalents.TreeOfLife);
         }
     }
-
-    /*
-     * Lifebloom updated Jan 12th 2009 by Trolando
-     * Using Resto Spreadsheet v1.21L, WoWHead.com, WoWWiki.com
-     */
-    public class Lifebloom : Spell
-    {
+    public class Lifebloom : Spell {
         protected float idolHoTBonus = 0f;
         protected float idolDHBonus = 0f;
-
         private float stackScaling = 1.0f;
         private float stackSize = 1.0f;
-
         protected float manaRefund = 0.0f;
-
-        public override float PeriodicTick
-        { get { return stackScaling * (periodicTick + (idolHoTBonus + healingBonus) * coefHoT); } }
-
-        public override float AverageHealing
-        {  get { return stackSize * (extraHealing + (minHeal + maxHeal) / 2 + HealingBonus * coefDH); } }
-
-
-        public override float HealingBonus
-        { 
-            get { return healingBonus + idolDHBonus; }
-            set { healingBonus = value; }
-        }
-
-        public override float ManaCost
-        {
-            get { return (base.ManaCost - manaRefund); }
-            //            set { manaCost = value; }
-        }
-
-        public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats)
-        {
+        public override float PeriodicTick { get { return stackScaling * (periodicTick + (idolHoTBonus + healingBonus) * coefHoT); } }
+        public override float AverageHealing {  get { return stackSize * (extraHealing + (minHeal + maxHeal) / 2 + HealingBonus * coefDH); } }
+        public override float HealingBonus { get { return healingBonus + idolDHBonus; } set { healingBonus = value; } }
+        public override float ManaCost {get { return (base.ManaCost - manaRefund); }/*set { manaCost = value; }*/}
+        public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats) {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
             base.Initialize(calcs, calculatedStats);
 
             #region Base Values
             castTimeBeforeHaste = 0f;
-            periodicTickTime = 1f;
-            coefHoT = 0.6684f / 7f;
-            manaCost = 0.28f * TreeConstants.BaseMana;      // manaCost without refund
-            manaRefund = 0.14f * TreeConstants.BaseMana;    // 
-            healingBonus = calculatedStats.SpellPower;
-            critPercent = calculatedStats.SpellCrit;
+            periodicTickTime    = 1f;
+            coefHoT             = 0.6684f / 7f;
+            manaCost            = 0.28f * TreeConstants.BaseMana; // manaCost without refund
+            manaRefund          = 0.14f * TreeConstants.BaseMana;
+            healingBonus        = calculatedStats.SpellPower;
+            critPercent         = calculatedStats.SpellCrit;
 
-//            if (calcOpts.Patch3_2)
-            {
-                minHeal = 776f;                             // Patch 3.2 nerfs bloom value
+            //if (calcOpts.Patch3_2) {
+                minHeal = 776f;         // Patch 3.2 nerfs bloom value
                 maxHeal = 776f;
-                coefDH = 0.645f * 0.8f;                     // 20 % Nerf
-            }
-            /*else  // patch 3.1
-            {
+                coefDH = 0.645f * 0.8f; // 20 % Nerf
+            /*} else { // patch 3.1
                 minHeal = 970f;
                 maxHeal = 970f;
                 coefDH = 0.645f;
             }*/
 
             periodicTick = 53f;
-            periodicTicks = 7;
+            periodicTicks = 7f;
             #endregion
 
             // Seems to apply before talents
@@ -558,38 +437,28 @@ namespace Rawr.Tree
             idolDHBonus = calculatedStats.LifebloomFinalHealBonus;
             #endregion
 
-            if (calcs.LocalCharacter.DruidTalents.GlyphOfLifebloom) //(calcOpts.glyphOfLifebloom)
-                periodicTicks += 1;
-
-            manaCost *= (1-calculatedStats.LifebloomCostReduction);
+            if (calcs.LocalCharacter.DruidTalents.GlyphOfLifebloom) { periodicTicks += 1f; } //(calcOpts.glyphOfLifebloom)
+            
+            manaCost *= (1f-calculatedStats.LifebloomCostReduction);
 
             applyHaste();
         }
-
-        public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats, int numStacks, bool fastStack) : this(calcs, calculatedStats) 
-        {
+        public Lifebloom(CharacterCalculationsTree calcs, Stats calculatedStats, int numStacks, bool fastStack) : this(calcs, calculatedStats) {
             float newPeriodicTicks = periodicTicks;
 
-            if (numStacks == 1)
-            {
+            if (numStacks == 1) {
                 // Do nothing, already setup
-            }
-            else if (numStacks == 2)
-            {
+            } else if (numStacks == 2) {
                 manaCost *= 2;
                 manaRefund *= 2;
 
-                if (!fastStack)
-                {
+                if (!fastStack) {
                     #region Slow LB stacking
                     newPeriodicTicks = periodicTicks * 2 - 1;  // Double number of ticks, but lose 1
                     // N-1 ticks of 1 stack + N ticks of 2 stacks, averaged over total ticks
                     stackScaling = ((periodicTicks - 1) + 2 * periodicTicks) / newPeriodicTicks;
                     #endregion
-                }
-                else
-                {
-
+                } else {
                     #region Fast LB stacking
                     newPeriodicTicks = periodicTicks + 1;  // Stack every tick 
                     // 1 ticks of 1 stack + N ticks of 2 stacks, averaged over total ticks
@@ -602,22 +471,17 @@ namespace Rawr.Tree
                 periodicTicks = newPeriodicTicks;
 
                 castTime = 2.0f * gcd;
-            }
-            else if (numStacks == 3)
-            {
+            } else if (numStacks == 3) {
                 manaCost *= 3;
                 manaRefund *= 3;
 
-                if (!fastStack)
-                {
+                if (!fastStack) {
                     #region Slow LB stacking
                     newPeriodicTicks = periodicTicks * 3 - 2;  // Triple number of ticks, but lose 1 each time
                     // N-1 ticks of 1 stack + N -1 ticks of 2 stacks, averaged over total ticks
                     stackScaling = ((periodicTicks - 1) + 2 * (periodicTicks - 1) + 3 * periodicTicks) / newPeriodicTicks;
                     #endregion
-                }
-                else
-                {
+                } else {
                     #region Fast LB stacking
                     newPeriodicTicks = periodicTicks + 2;  // Stack every tick 
                     // 1 ticks of 1 stack + 1 ticks of 2 stacks, averaged over total ticks
@@ -632,92 +496,69 @@ namespace Rawr.Tree
                 castTime = 3.0f * gcd;
             }
         }
+        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
+            periodicTicks += 2f * druidTalents.NaturesSplendor;
 
-
-
-        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
-        {
-            periodicTicks += 2 * druidTalents.NaturesSplendor;
-
-            //gcd *= (1 - 0.04f * druidTalents.GiftOfTheEarthmother);
+            //gcd *= (1f - 0.04f * druidTalents.GiftOfTheEarthmother);
             // use base gcd
             gcdBeforeHaste -= 1.5f * 0.04f * druidTalents.GiftOfTheEarthmother;
 
-            manaCost *= (1 - 0.2f * druidTalents.TreeOfLife);
+            manaCost *= (1f - 0.2f * druidTalents.TreeOfLife);
 
             // 6% chance to get Omen of Clarity...
-            manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
+            manaCost *= 1f - 0.06f * druidTalents.OmenOfClarity;
 
             periodicTick *=
-                (1 + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             coefHoT *= 
-                (1 + 0.04f * druidTalents.EmpoweredRejuvenation) *
-                (1 + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
+                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             minHeal *=
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             maxHeal *=
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             coefDH *=
-                (1 + 0.04f * druidTalents.EmpoweredRejuvenation) *
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
         }
     }
-
-    public class LifebloomStack : Lifebloom
-    {
-        public LifebloomStack(CharacterCalculationsTree calcs, Stats calculatedStats) : base(calcs, calculatedStats)
-        {
-            periodicTick *= 3;
-            periodicTicks -= 1; // Keep a stack alive
-            coefHoT *= 3;
-            minHeal = 0f;
-            maxHeal = 0f;
-            coefDH = 0f;
-            critPercent = 0f;
-
-//            CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
-            manaRefund = 0;       // manaCost is now without refund   
-
+    public class LifebloomStack : Lifebloom {
+        public LifebloomStack(CharacterCalculationsTree calcs, Stats calculatedStats) : base(calcs, calculatedStats) {
+            periodicTick  *= 3f;
+            periodicTicks -= 1f; // Keep a stack alive
+            coefHoT       *= 3f;
+            minHeal        = 0f;
+            maxHeal        = 0f;
+            coefDH         = 0f;
+            critPercent    = 0f;
+            //CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
+            manaRefund     = 0f; // manaCost is now without refund   
         }
     }
-
-    /*
-     * Wild Growth updated Jan 12th 2009 by Trolando
-     * Using Resto Spreadsheet v1.21L, WoWHead.com, WoWWiki.com
-     */
-    public class WildGrowth : Spell
-    {
-        float[][] tickRanks = new float[][]
-        { 
+    public class WildGrowth : Spell {
+        float[][] tickRanks = new float[][] { 
              new float[] {176f, 157f, 140f, 123f, 105f, 88f, 70f}, //mostly observation
              //quessed..
              new float[] {295f, 263f, 234f, 206f, 176f, 147f, 117f} //Rank 4
         };
-
         public int maxTargets;
-
-        /// <summary>
-        /// returns the Tick of WG, Ranks: 0 = Rank 2, 1 = Rank 4, valid index - 0 to 6
-        /// </summary>
-        public float getTick(int rank, int index)
-        { return healingBonus * coefHoT + tickRanks[rank][index];  }
-
-        public WildGrowth(CharacterCalculationsTree calcs, Stats calculatedStats)
-        {
+        /// <summary>returns the Tick of WG, Ranks: 0 = Rank 2, 1 = Rank 4, valid index - 0 to 6</summary>
+        public float getTick(int rank, int index) { return healingBonus * coefHoT + tickRanks[rank][index];  }
+        public WildGrowth(CharacterCalculationsTree calcs, Stats calculatedStats) {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
             base.Initialize(calcs, calculatedStats);
@@ -728,10 +569,10 @@ namespace Rawr.Tree
             manaCost = 0.23f * TreeConstants.BaseMana;
             healingBonus = calculatedStats.SpellPower;
 
-            periodicTick = 206f; // 1442 / 7
-            periodicTicks = 7;
-            periodicTickTime = 1f;
-            maxTargets = 5;
+            periodicTick     = 206f; // 1442 / 7
+            periodicTicks    =   7f;
+            periodicTickTime =   1f;
+            maxTargets       =   5;
             #endregion
 
             // Seems to apply before talents
@@ -741,67 +582,49 @@ namespace Rawr.Tree
 
             applyHaste();
         }
-
-        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
-        {
-            //gcd *= (1 - 0.04f * druidTalents.GiftOfTheEarthmother);
+        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
+            //gcd *= (1f - 0.04f * druidTalents.GiftOfTheEarthmother);
             // use base gcd
             gcdBeforeHaste -= 1.5f * 0.04f * druidTalents.GiftOfTheEarthmother;
 
-            manaCost *= (1 - 0.2f * druidTalents.TreeOfLife);
+            manaCost *= (1f - 0.2f * druidTalents.TreeOfLife);
 
             // 6% chance to get Omen of Clarity...
-            manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
+            manaCost *= 1f - 0.06f * druidTalents.OmenOfClarity;
 
             // Glyph of Wild Growth
             if (druidTalents.GlyphOfWildGrowth)
               maxTargets += 1;
 
             coefHoT *=
-                (1 + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.06f * druidTalents.TreeOfLife) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife);
+                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.06f * druidTalents.TreeOfLife) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife);
 
             float basecoef = 
-                (1 + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.06f * druidTalents.TreeOfLife) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter);
+                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.06f * druidTalents.TreeOfLife) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter);
 
             periodicTick *= basecoef;
-            for (int i = 0; i < 7; i++)
-            { 
+            for (int i = 0; i < 7; i++) { 
                 tickRanks[0][i] *= basecoef;
                 tickRanks[1][i] *= basecoef;
             }
         }
     }
-
-    /*
-     * Nourish updated Jan 12th 2009 by Trolando
-     * Using Resto Spreadsheet v1.21L, WoWHead.com, WoWWiki.com
-     */
-    public class Nourish : Spell
-    {
+    public class Nourish : Spell {
         float NourishBonusPerHoTGlyphs;
-
-        public Nourish(CharacterCalculationsTree calcs, Stats calculatedStats)
-        {
+        public Nourish(CharacterCalculationsTree calcs, Stats calculatedStats) { InitializeNourish(calcs, calculatedStats); }
+        public Nourish(CharacterCalculationsTree calcs, Stats calculatedStats, int hotsActive) {
             InitializeNourish(calcs, calculatedStats);
-        }
-
-        public Nourish(CharacterCalculationsTree calcs, Stats calculatedStats, int hotsActive)
-        {
-            InitializeNourish(calcs, calculatedStats);
-            if (hotsActive>0)
-            {
+            if (hotsActive>0) {
                 minHeal *= 1.2f + (calculatedStats.NourishBonusPerHoT + NourishBonusPerHoTGlyphs) * hotsActive;
                 maxHeal *= 1.2f + (calculatedStats.NourishBonusPerHoT + NourishBonusPerHoTGlyphs) * hotsActive;
                 coefDH  *= 1.2f + (calculatedStats.NourishBonusPerHoT + NourishBonusPerHoTGlyphs) * hotsActive;
             }
         }
-
-        private void InitializeNourish(CharacterCalculationsTree calcs, Stats calculatedStats)
-        {
+        private void InitializeNourish(CharacterCalculationsTree calcs, Stats calculatedStats) {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
             base.Initialize(calcs, calculatedStats);
@@ -827,17 +650,15 @@ namespace Rawr.Tree
             #endregion
 
             #region Tier 9 2 piece Set Bonus
-            critPercent += (calculatedStats.NourishCritBonus * 100.0f);     // Percent is range 0-100
+            critPercent += (calculatedStats.NourishCritBonus * 100.0f); // Percent is range 0-100
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             applyHaste();
         }
-
-        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
-        {
-            manaCost *= (1 - druidTalents.TranquilSpirit * 0.02f);
+        private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
+            manaCost *= (1f - druidTalents.TranquilSpirit * 0.02f);
 
 			critPercent += 2f * druidTalents.NaturesMajesty;
             critPercent += 5f * druidTalents.NaturesBounty;
@@ -847,48 +668,39 @@ namespace Rawr.Tree
             critModifier += 0.1f * druidTalents.LivingSeed;
 
             // 6% chance to get Omen of Clarity...
-            manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
+            manaCost *= 1f - 0.06f * druidTalents.OmenOfClarity;
                 
             minHeal *=
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
             maxHeal *=
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
-//            if (calcOpts.Patch3_2)
+            //if (calcOpts.Patch3_2)
                 coefDH += (0.1f * druidTalents.EmpoweredTouch);     // From 3.2 Empowered Touch also boosts Nourish
             //  Assume also additive, also see http://elitistjerks.com/f73/t37038-restoration_glyphs/p8/#post1240879 
 
             coefDH *=
-                (1 + 0.02f * druidTalents.GiftOfNature) *
-                (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
-                (1 + 0.06f * druidTalents.TreeOfLife);
+                (1f + 0.02f * druidTalents.GiftOfNature) *
+                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+                (1f + 0.06f * druidTalents.TreeOfLife);
 
-            if (druidTalents.GlyphOfNourish)
-                NourishBonusPerHoTGlyphs = 0.06f;
+            if (druidTalents.GlyphOfNourish) { NourishBonusPerHoTGlyphs = 0.06f; }
         }
     }
-
-    public class Swiftmend : Spell
-    {
+    public class Swiftmend : Spell {
         public float regrowthUseChance = 0.0f;
         public float rejuvUseChance = 0.0f;
         public float regrowthTicksLost = 0.0f;
         public float rejuvTicksLost = 0.0f;
-
-        public Swiftmend(CharacterCalculationsTree calcs, Stats calculatedStats, Spell Rejuv, Spell Regrowth)
-        {
-
+        public Swiftmend(CharacterCalculationsTree calcs, Stats calculatedStats, Spell Rejuv, Spell Regrowth) {
             base.Initialize(calcs, calculatedStats);
 
-            regrowthUseChance = 0.0f;
-            rejuvUseChance = 0.0f;
-            regrowthTicksLost = 0.0f;
-            rejuvTicksLost = 0.0f;
+            regrowthUseChance = rejuvUseChance = regrowthTicksLost = rejuvTicksLost = 0.0f;
 
             #region Base Values
             castTimeBeforeHaste = gcd;
@@ -901,46 +713,31 @@ namespace Rawr.Tree
             maxHeal = 0f;
             #endregion
 
-
-            if (Rejuv == null)
-            {
-                if (Regrowth == null)
-                {
+            if (Rejuv == null) {
+                if (Regrowth == null) {
                     // No HoTs, so Swiftmend not possible
-                }
-                else
-                {
+                }else{
                     // Case of only Regrowth
                     minHeal = 6 * Regrowth.PeriodicTick;
                     maxHeal = minHeal;
                     regrowthUseChance = 1.0f;
-                    if (!calcs.LocalCharacter.DruidTalents.GlyphOfSwiftmend)
-                    {
-                        regrowthTicksLost = (Regrowth.PeriodicTicks +1f) / 2.0f;      // If cast randomly, consume half of the ticks
+                    if (!calcs.LocalCharacter.DruidTalents.GlyphOfSwiftmend){
+                        regrowthTicksLost = (Regrowth.PeriodicTicks + 1f) / 2.0f;      // If cast randomly, consume half of the ticks
                     }
                 }
-
-            }
-            else if (Regrowth == null)
-            {
+            }else if (Regrowth == null){
                 // Case of only Rejuv
-                minHeal = 4 * Rejuv.PeriodicTick;
+                minHeal = 4f * Rejuv.PeriodicTick;
                 maxHeal = minHeal;
-                rejuvUseChance = 1.0f;
-                if (!calcs.LocalCharacter.DruidTalents.GlyphOfSwiftmend)
-                {
-                    rejuvTicksLost = (Rejuv.PeriodicTicks + 1)/ 2.0f;      // If cast randomly, consume half of the ticks
+                rejuvUseChance = 1f;
+                if (!calcs.LocalCharacter.DruidTalents.GlyphOfSwiftmend){
+                    rejuvTicksLost = (Rejuv.PeriodicTicks + 1f)/ 2.0f;      // If cast randomly, consume half of the ticks
                 }
-            }
-            else
-            {
+            }else{
                 // Case of both active
 
                 //TODO: Find a formula to calculate this, instead of "numerical integration"
-                float selectedRejuv = 0;
-                float selectedRegrowth = 0;
-                float lostRejuvTicks = 0;
-                float lostRegrowthTicks = 0;
+                float selectedRejuv,selectedRegrowth,lostRejuvTicks,lostRegrowthTicks = 0;
 
                 /* Numeric integration to estimate this, considering haste
                 float regrowthTimeLeft, rejuvTimeLeft;
@@ -994,32 +791,25 @@ namespace Rawr.Tree
                             lostRejuvTicks += (float) Math.Ceiling(rejuvTimeLeft / 3.0f);
                         }
                     }
-
-
-
                 regrowthUseChance = selectedRegrowth / validScenario * (Rejuv.Duration/Regrowth.Duration);
                 rejuvUseChance = selectedRejuv / validScenario * (Rejuv.Duration / Regrowth.Duration) + (Regrowth.Duration - Rejuv.Duration) / Regrowth.Duration;
-
-                 *                 */
+                */
 
                 regrowthUseChance = Rejuv.Duration / Regrowth.Duration * 0.5f;
                 rejuvUseChance = (Regrowth.Duration - Rejuv.Duration) / Regrowth.Duration + Rejuv.Duration / Regrowth.Duration * 0.5f;
-                lostRejuvTicks = (0.5f * (Rejuv.PeriodicTicks + 1) * (Regrowth.Duration - Rejuv.Duration) / Regrowth.Duration) + (Rejuv.PeriodicTicks * 10 / 24f) * 0.5f * (Rejuv.Duration / Regrowth.Duration);
+                lostRejuvTicks = (0.5f * (Rejuv.PeriodicTicks + 1f) * (Regrowth.Duration - Rejuv.Duration) / Regrowth.Duration) + (Rejuv.PeriodicTicks * 10f / 24f) * 0.5f * (Rejuv.Duration / Regrowth.Duration);
                 selectedRejuv = rejuvUseChance;
-                lostRegrowthTicks = ((Rejuv.PeriodicTicks - 1)/ 2f);
-                selectedRegrowth = 1.0f;
+                lostRegrowthTicks = ((Rejuv.PeriodicTicks - 1f)/ 2f);
+                selectedRegrowth = 1f;
 
-                minHeal = (6 * regrowthUseChance * Regrowth.PeriodicTick + 4 * rejuvUseChance * Rejuv.PeriodicTick);
+                minHeal = (6f * regrowthUseChance * Regrowth.PeriodicTick + 4f * rejuvUseChance * Rejuv.PeriodicTick);
                 maxHeal = minHeal;
 
-                if (!calcs.LocalCharacter.DruidTalents.GlyphOfSwiftmend)
-                {
+                if (!calcs.LocalCharacter.DruidTalents.GlyphOfSwiftmend) {
                     rejuvTicksLost = lostRejuvTicks / selectedRejuv;
                     regrowthTicksLost = lostRegrowthTicks / selectedRegrowth;
                 }
-
             }
-
             #region Nightsong (Tier 8) 2 item set bonus
             minHeal *= (1.0f + calculatedStats.SwiftmendBonus);
             maxHeal *= (1.0f + calculatedStats.SwiftmendBonus);
@@ -1027,6 +817,5 @@ namespace Rawr.Tree
 
             applyHaste();
         }
-
     }
 }

@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.IO;
+using System.Xml.Serialization;
 using Rawr;
 
-namespace Rawr.Warlock
-{
+namespace Rawr.Warlock {
     [Rawr.Calculations.RawrModelInfo("Warlock", "Spell_Nature_FaerieFire", CharacterClass.Warlock)]
-    public class CalculationsWarlock : CalculationsBase
-    {
-        public override List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get
-            {
+    public class CalculationsWarlock : CalculationsBase {
+        public override List<GemmingTemplate> DefaultGemmingTemplates {
+            get {
 				////Relevant Gem IDs for Warlocks
 				//Red
 				int[] runed = { 39911, 39998, 40113, 42144 };
@@ -27,8 +24,7 @@ namespace Rawr.Warlock
 				int ember = 41333;
 				int chaotic = 41285;
 
-				return new List<GemmingTemplate>()
-				{
+				return new List<GemmingTemplate>() {
 				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //Max SP - Ember
 				        RedId = runed[0], YellowId = runed[0], BlueId = runed[0], PrismaticId = runed[0], MetaId = ember },
 				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //SP/Hit - Ember
@@ -86,25 +82,14 @@ namespace Rawr.Warlock
         private float _currentChartTotal = 0;
 
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
-        {
-            get
-            {
+        public override Dictionary<string, System.Drawing.Color> SubPointNameColors {
+            get {
                 _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                switch (_currentChartName)
-                {
-                    case "Mana Sources":
-                        _subPointNameColors.Add(string.Format("Mana Sources ({0} Total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
-                        break;
-                    case "DPS Sources":
-                        _subPointNameColors.Add(string.Format("DPS Sources ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Red);
-                        break;
-                    case "Mana Usage":
-                        _subPointNameColors.Add(string.Format("Mana Usage ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
-                        break;
-                    case "Haste Rating Gain":
-                        _subPointNameColors.Add(string.Format("DPS"), System.Drawing.Color.Red);
-                        break;
+                switch (_currentChartName) {
+                    case "Mana Sources": _subPointNameColors.Add(string.Format("Mana Sources ({0} Total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue); break;
+                    case "DPS Sources": _subPointNameColors.Add(string.Format("DPS Sources ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Red); break;
+                    case "Mana Usage": _subPointNameColors.Add(string.Format("Mana Usage ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue); break;
+                    case "Haste Rating Gain": _subPointNameColors.Add(string.Format("DPS"), System.Drawing.Color.Red); break;
                     default:
                         _subPointNameColors.Add("DPS", System.Drawing.Color.Red);
                         _subPointNameColors.Add("Pet DPS", System.Drawing.Color.Blue);
@@ -116,10 +101,8 @@ namespace Rawr.Warlock
         }
 
         private string[] _characterDisplayCalculationLabels = null;
-        public override string[] CharacterDisplayCalculationLabels
-        {
-            get
-            {
+        public override string[] CharacterDisplayCalculationLabels {
+            get {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
                     "Simulation:Rotation",
@@ -163,11 +146,9 @@ namespace Rawr.Warlock
         }
 
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-        {
+        public override CalculationOptionsPanelBase CalculationOptionsPanel {
             get {
-                if (_calculationOptionsPanel == null)
-                {
+                if (_calculationOptionsPanel == null) {
                     _calculationOptionsPanel = new CalculationOptionsPanelWarlock();
                 }
                 return _calculationOptionsPanel;
@@ -175,26 +156,23 @@ namespace Rawr.Warlock
         }
 
         private string[] _optimizableCalculationLabels = null;
-	/// <summary>
-	/// Labels of the stats available to the Optimizer
-	/// </summary>
-	public override string[]  OptimizableCalculationLabels
-	{
-            get
-	    {
-                if (_optimizableCalculationLabels == null)
-                    _optimizableCalculationLabels = new string[] {"Miss chance",};
-                return _optimizableCalculationLabels;
-            }
-	}
+	    /// <summary>
+	    /// Labels of the stats available to the Optimizer
+	    /// </summary>
+	    public override string[] OptimizableCalculationLabels {
+                get {
+                    if (_optimizableCalculationLabels == null)
+                        _optimizableCalculationLabels = new string[] {"Miss chance",};
+                    return _optimizableCalculationLabels;
+                }
+	    }
 
         private string[] _customChartNames = null;
-        public override string[] CustomChartNames
-        {
-            get
-            {
-                if (_customChartNames == null)
+        public override string[] CustomChartNames {
+            get {
+                if (_customChartNames == null) {
                     _customChartNames = new string[] { "DPS Sources", "Mana Sources", "Mana Usage", /*"Glyphs", */"Haste Rating Gain" };
+                }
                 return _customChartNames;
             }
         }
@@ -203,8 +181,7 @@ namespace Rawr.Warlock
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsWarlock(); }
 
         private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
+        public override List<ItemType> RelevantItemTypes {
             get {
                 if (_relevantItemTypes == null) {
                     _relevantItemTypes = new List<ItemType>(new ItemType[]{
@@ -220,25 +197,22 @@ namespace Rawr.Warlock
             }
         }
 
-//        private static string[] GlyphList = { "GlyphChaosBolt", "GlyphConflag", "GlyphCorruption", "GlyphCoA", "GlyphFelguard", "GlyphHaunt", "GlyphImmolate", "GlyphImp", "GlyphIncinerate", "GlyphLifeTap", "GlyphMetamorphosis", "GlyphSearingPain", "GlyphSB", "GlyphShadowburn", "GlyphSiphonLife", "GlyphUA" };
-//        private static string[] GlyphListFriendly = { "Glyph of Chaos Bolt", "Glyph of Conflagrate", "Glyph of Corruption", "Glyph of Curse of Agony", "Glyph of Felguard", "Glyph of Haunt", "Glyph of Immolate", "Glyph of Imp", "Glyph of Incinerate", "Glyph of Life Tap", "Glyph of Metamorphosis", "Glyph of Searing Pain", "Glyph of Shadowbolt", "Glyph of Shadowburn", "Glyph of Siphon Life", "Glyph of Unstable Affliction" };
+        //private static string[] GlyphList = { "GlyphChaosBolt", "GlyphConflag", "GlyphCorruption", "GlyphCoA", "GlyphFelguard", "GlyphHaunt", "GlyphImmolate", "GlyphImp", "GlyphIncinerate", "GlyphLifeTap", "GlyphMetamorphosis", "GlyphSearingPain", "GlyphSB", "GlyphShadowburn", "GlyphSiphonLife", "GlyphUA" };
+        //private static string[] GlyphListFriendly = { "Glyph of Chaos Bolt", "Glyph of Conflagrate", "Glyph of Corruption", "Glyph of Curse of Agony", "Glyph of Felguard", "Glyph of Haunt", "Glyph of Immolate", "Glyph of Imp", "Glyph of Incinerate", "Glyph of Life Tap", "Glyph of Metamorphosis", "Glyph of Searing Pain", "Glyph of Shadowbolt", "Glyph of Shadowburn", "Glyph of Siphon Life", "Glyph of Unstable Affliction" };
 
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-        {
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) {
             List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
             ComparisonCalculationBase comparison;
 
             _currentChartTotal = 0;
             _currentChartName = chartName;
 
-            switch (chartName)
-            {
+            switch (chartName) {
                 case "Mana Sources":
                     CharacterCalculationsWarlock mscalcs = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
                     Solver mssolver = mscalcs.GetSolver(character, mscalcs.BasicStats);
                     mssolver.Calculate(mscalcs);
-                    foreach (Solver.ManaSource Source in mssolver.ManaSources)
-                    {
+                    foreach (Solver.ManaSource Source in mssolver.ManaSources) {
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = Source.Name;
                         comparison.SubPoints[0] = (float)Source.Value;
@@ -319,8 +293,7 @@ namespace Rawr.Warlock
             }
         }
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
-        {
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = GetRaceStats(character);
             CharacterCalculationsWarlock calculatedStats = new CharacterCalculationsWarlock();
@@ -340,23 +313,18 @@ namespace Rawr.Warlock
             return calculatedStats;
         }
 
-        public static Stats GetRaceStats(Character character)
-        {
+        public static Stats GetRaceStats(Character character) {
             Stats stats = new Stats();
-            if (character.Level >= 70 && character.Level <= 80)
-            {
+            if (character.Level >= 70 && character.Level <= 80) {
                 stats.Health = 3471f + (character.Level - 70) * (7164 - 3471) / 10;
                 stats.Mana = 2871 + (character.Level - 70) * (3856 - 2871) / 10;
-            }
-            else
-            {
+            } else {
                 stats.Mana = 2871;
                 stats.Health = 3471f;
             }
 
-//fix all. Undead should be correct
-            switch (character.Race)
-            {
+            //fix all. Undead should be correct
+            switch (character.Race) {
                 case CharacterRace.NightElf:
                     if (character.Level == 80)
                     {
@@ -460,75 +428,64 @@ namespace Rawr.Warlock
             return stats;
         }
 
-        public Stats GetBuffStats(Character character)
-        {
-            return GetBuffsStats(character.ActiveBuffs);
-        }
+        public Stats GetBuffStats(Character character) { return GetBuffsStats(character.ActiveBuffs); }
 
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-        {
+        public override Stats GetCharacterStats(Character character, Item additionalItem) {
+            WarlockTalents talents = character.WarlockTalents;
+
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            Stats statsTalents = new Stats()
-            {
-                BonusStaminaMultiplier = character.WarlockTalents.DemonicEmbrace * 0.02f,
-                BonusHealthMultiplier = character.WarlockTalents.FelVitality * 0.01f,
-                BonusManaMultiplier = character.WarlockTalents.FelVitality * 0.01f,
-                BonusSpellPowerMultiplier = character.WarlockTalents.Malediction * 0.03f,
-                BonusCritChance = character.WarlockTalents.DemonicTactics * 0.02f + character.WarlockTalents.Backlash * 0.01f,
+            Stats statsTalents = new Stats() {
+                BonusStaminaMultiplier      = talents.DemonicEmbrace * 0.02f,
+                BonusHealthMultiplier       = talents.FelVitality    * 0.01f,
+                BonusManaMultiplier         = talents.FelVitality    * 0.01f,
+                BonusSpellPowerMultiplier   = talents.Malediction    * 0.03f,
+                BonusCritChance             = talents.DemonicTactics * 0.02f
+                                            + talents.Backlash       * 0.01f,
             };
 
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
-            statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
-            statsTotal.Health += statsTotal.Stamina * 10f;
-            statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
-                                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating + (statsTotal.WarlockGrandFirestone * 49) * (1 + character.WarlockTalents.MasterConjuror * 1.5f))
-                                 + 0.01701f;
-            statsTotal.HasteRating += (statsTotal.WarlockGrandSpellstone * 60) * (1 + character.WarlockTalents.MasterConjuror * 1.5f);
-            statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
-            statsTotal.SpellHit += (StatConversion.GetSpellHitFromRating(statsTotal.HitRating) + character.WarlockTalents.Suppression * 0.01f);
-            if (statsTotal.WarlockFelArmor > 0)
-            {
+            statsTotal.Stamina      = (float)Math.Floor(statsTotal.Stamina   * (1f + statsTotal.BonusStaminaMultiplier  ));
+            statsTotal.Intellect    = (float)Math.Floor(statsTotal.Intellect * (1f + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Spirit       = (float)Math.Floor(statsTotal.Spirit    * (1f + statsTotal.BonusSpiritMultiplier   ));
+            statsTotal.Mana        += (statsTotal.Intellect - 20f) * 15f + 20f;
+            statsTotal.Health      += statsTotal.Stamina * 10f;
+            statsTotal.SpellCrit   += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
+                                   +  StatConversion.GetSpellCritFromRating(statsTotal.CritRating + (statsTotal.WarlockGrandFirestone * 49f) * (1f + talents.MasterConjuror * 1.5f))
+                                   +  0.01701f;
+            statsTotal.HasteRating += (statsTotal.WarlockGrandSpellstone * 60f) * (1f + talents.MasterConjuror * 1.5f);
+            statsTotal.SpellHaste  +=  StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
+            statsTotal.SpellHit    += (StatConversion.GetSpellHitFromRating(statsTotal.HitRating) + talents.Suppression * 0.01f);
+            if (statsTotal.WarlockFelArmor > 0) {
                 statsTotal.SpellDamageFromSpiritPercentage += 0.3f;
-                statsTotal.SpellPower += 180;
+                statsTotal.SpellPower += 180f;
                 statsTotal.Hp5 += statsTotal.Health * 0.02f;
-                if (character.WarlockTalents.DemonicAegis > 0)
-                {
+                if (talents.DemonicAegis > 0) {
                     statsTotal.SpellDamageFromSpiritPercentage += 0.09f;
-                    statsTotal.SpellPower += 54;
+                    statsTotal.SpellPower += 54f;
                     statsTotal.Hp5 += statsTotal.Health * 0.006f;
                 }
-            }
-            else if (statsTotal.WarlockDemonArmor > 0)
-            {
-                statsTotal.Armor += 950;
+            } else if (statsTotal.WarlockDemonArmor > 0) {
+                statsTotal.Armor += 950f;
                 statsTotal.HealingReceivedMultiplier += 0.2f;
-                if (character.WarlockTalents.DemonicAegis > 0)
-                {
-                    statsTotal.Armor += 285;
+                if (talents.DemonicAegis > 0) {
+                    statsTotal.Armor += 285f;
                     statsTotal.HealingReceivedMultiplier += 0.06f;
                 }
             }
             statsTotal.SpellPower += (float)Math.Round(statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit);
-            if (character.WarlockTalents.DemonicKnowledge > 0)
-            {
+            if (talents.DemonicKnowledge > 0) {
                 PetCalculations pet = new PetCalculations(statsTotal, character);
-                statsTotal.SpellPower += (pet.petStats.Intellect + pet.petStats.Stamina) * character.WarlockTalents.DemonicKnowledge * 0.04f;
+                statsTotal.SpellPower += (pet.petStats.Intellect + pet.petStats.Stamina) * talents.DemonicKnowledge * 0.04f;
             }
 
             return statsTotal;
         }
-
-        public override Stats GetRelevantStats(Stats stats)
-        {
-            Stats s = new Stats()
-            {
+        public override Stats GetRelevantStats(Stats stats) {
+            Stats s = new Stats() {
                 Stamina = stats.Stamina,
                 Health = stats.Health,
                 Intellect = stats.Intellect,
@@ -575,8 +532,7 @@ namespace Rawr.Warlock
                 Warlock2T8 = stats.Warlock2T8,
                 Warlock4T8 = stats.Warlock4T8
             };
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use ||
                     effect.Trigger == Trigger.DamageSpellCast ||
                     effect.Trigger == Trigger.DamageSpellCrit ||
@@ -602,11 +558,8 @@ namespace Rawr.Warlock
             }
             return s;
         }
-
-        public override bool HasRelevantStats(Stats stats)
-        {
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
+        public override bool HasRelevantStats(Stats stats) {
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use ||
                     effect.Trigger == Trigger.DamageSpellCast ||
                     effect.Trigger == Trigger.DamageSpellCrit ||
@@ -631,7 +584,7 @@ namespace Rawr.Warlock
                 }
             }
             return (
-//                  stats.Stamina
+                //stats.Stamina
                 stats.Health
                 + stats.Intellect
                 + stats.Mana
@@ -685,10 +638,8 @@ namespace Rawr.Warlock
 
         #region RelevantGlyphs
         private static List<string> _relevantGlyphs;
-        public override List<string> GetRelevantGlyphs()
-        {
-            if (_relevantGlyphs == null)
-            {
+        public override List<string> GetRelevantGlyphs() {
+            if (_relevantGlyphs == null) {
                 _relevantGlyphs = new List<string>();
                 _relevantGlyphs.Add("Glyph of Chaos Bolt");
                 _relevantGlyphs.Add("Glyph of Conflagrate");
@@ -711,23 +662,19 @@ namespace Rawr.Warlock
         }
         #endregion
 
-        public override ICalculationOptionBase DeserializeDataObject(string xml)
-        {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsWarlock));
-            System.IO.StringReader reader = new System.IO.StringReader(xml);
+        public override ICalculationOptionBase DeserializeDataObject(string xml) {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsWarlock));
+            StringReader reader = new StringReader(xml);
             CalculationOptionsWarlock calcOpts = serializer.Deserialize(reader) as CalculationOptionsWarlock;
             return calcOpts;
         }
 
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
-        {
-            if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) return false;
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
+            if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) { return false; }
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
-        {
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
             if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.TankDK
-{
-    public class Rotation
-    {
+namespace Rawr.TankDK {
+    public class Rotation {
         // I need FullCharacterStats
         public Stats m_FullStats = new Stats();
         
@@ -52,30 +50,21 @@ namespace Rawr.TankDK
         public float GCDTime;
         public float RP;
 
-        public enum Type
-        {            
-            Custom, Blood, Frost, Unholy
-        }
+        public enum Type { Custom, Blood, Frost, Unholy }
 
-        public float getMeleeSpecialsPerSecond()
-        {
+        public float getMeleeSpecialsPerSecond() {
             float temp;
             temp = PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike + BloodStrike + HeartStrike;
             temp = temp / curRotationDuration;
             return temp;
         }
-
-        public float getSpellSpecialsPerSecond()
-        {
+        public float getSpellSpecialsPerSecond() {
             float temp;
             temp = DeathCoil + IcyTouch + HowlingBlast + DeathNDecay + BloodBoil;
             temp = temp / curRotationDuration;
             return temp;
         }
-
-
-        public float getRP(DeathKnightTalents talents, Character character)
-        {
+        public float getRP(DeathKnightTalents talents, Character character) {
             fourT7 = character.ActiveBuffsContains("Scourgeborne Battlegear 4 Piece Bonus");
             this.GlyphofIT = talents.GlyphofIcyTouch;
             this.GlyphofFS = talents.GlyphofFrostStrike;
@@ -90,12 +79,9 @@ namespace Rawr.TankDK
                   (10 * (BloodStrike + HeartStrike + BloodBoil + Horn)) +
                  ((curRotationDuration / 5f) * talents.Butchery);
 
-            if (managedRP)
-            {
+            if (managedRP) {
                 RP = manageRPDumping(talents, RP);
-            }
-            else
-            {
+            } else {
                 RP -= ((40 * DeathCoil) +
                     ((GlyphofFS ? 32 : 40) * FrostStrike) 
                     + (40 * UnholyBlight)
@@ -103,33 +89,24 @@ namespace Rawr.TankDK
             }
             return RP;
         }
-
-        public float manageRPDumping(DeathKnightTalents talents, float RP)
-        {
-/*
-            RuneStrike = RP / 20f;
+        public float manageRPDumping(DeathKnightTalents talents, float RP) {
+            /*RuneStrike = RP / 20f;
             // RuneStrikes count is also based on Dodge & Parry chance:
             RuneStrike *= (m_FullStats.Dodge + m_FullStats.Parry);
             // Remove the RS shots from the pool of available RP.
-            RP -= (RuneStrike * 20f);
-*/            
-            if (talents.FrostStrike > 0f)
-            {
+            RP -= (RuneStrike * 20f);*/            
+            if (talents.FrostStrike > 0f) {
                 FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
                 DeathCoil = 0f;
                 UnholyBlight = 0f;
                 RP = 0f;
-            }
-            else if (talents.UnholyBlight > 0f)
-            {
+            } else if (talents.UnholyBlight > 0f) {
                 UnholyBlight = curRotationDuration / (talents.GlyphofUnholyBlight ? 30f : 20f);
                 RP -= UnholyBlight * 40f;
                 DeathCoil = RP / 40f;
                 FrostStrike = 0f;
                 RP = 0f;
-            }
-            else
-            {
+            } else {
                 DeathCoil = RP / 40f;
                 FrostStrike = 0f;
                 UnholyBlight = 0f;
@@ -140,8 +117,7 @@ namespace Rawr.TankDK
         }
 
         public float getRotationDuration() { return getGCDTime(); }
-        public float getGCDTime()
-        {
+        public float getGCDTime() {
             GCDTime = GetGCDHasted() * (PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike +
                 BloodStrike + HeartStrike);
             GCDTime += GetGCDHasted() * (DeathCoil + IcyTouch + UnholyBlight + HowlingBlast + Horn + DeathNDecay + BloodBoil + Pestilence);
@@ -152,13 +128,11 @@ namespace Rawr.TankDK
         /// </summary>
         /// <param name="s">Total Stats for the character.</param>
         /// <returns>Duration of the GCD in seconds.</returns>
-        public float GetGCDHasted()
-        {
+        public float GetGCDHasted() {
             float fHR = m_FullStats.HasteRating;
             float fPH = m_FullStats.PhysicalHaste;
             float fNormalGCD = 1.5f;
-            if (null == m_FullStats) 
-            {
+            if (null == m_FullStats) {
                 fHR = 0f;
                 fPH = 0f;
             }
@@ -166,17 +140,11 @@ namespace Rawr.TankDK
             float fHastedGCD = Math.Max( 1f, fNormalGCD/(1f + fPercHaste) );
             return fHastedGCD;
         }
+        public Rotation() { this.setRotation(this.curRotationType); }
 
-        public Rotation()
-        {
-            this.setRotation(this.curRotationType);
-        }
-
-        public void setRotation(Type t)
-        {
+        public void setRotation(Type t) {
             curRotationType = t;
-            switch (curRotationType)
-            {
+            switch (curRotationType) {
                 case Type.Blood:
                     numDisease = 2f;
                     diseaseUptime = 100f;

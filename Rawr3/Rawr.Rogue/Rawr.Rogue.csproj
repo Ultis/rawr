@@ -51,15 +51,6 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Rogue\BasicStats\BaseRogueStats.cs">
-      <Link>BasicStats\BaseRogueStats.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\BasicStats\RelevantItems.cs">
-      <Link>BasicStats\RelevantItems.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\BasicStats\RogueGemmingTemplates.cs">
-      <Link>BasicStats\RogueGemmingTemplates.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Rogue\CalculationsRogue.cs">
       <Link>CalculationsRogue.cs</Link>
     </Compile>
@@ -149,9 +140,6 @@
     </Compile>
     <Compile Include="..\..\Rawr.Rogue\Poisons\WoundPoison.cs">
       <Link>Poisons\WoundPoison.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\RogueConversions.cs">
-      <Link>RogueConversions.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Rogue\SpecialAbilities\Feint.cs">
       <Link>SpecialAbilities\Feint.cs</Link>

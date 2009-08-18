@@ -28,7 +28,7 @@ namespace Rawr.Enhance
         public bool Magma { get; set; }
 
         public int TargetLevel = 83;
-        public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+        public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
         public int AverageLag = 250;
         public string MainhandImbue = "Windfury";
         public string OffhandImbue = "Flametongue";

@@ -507,8 +507,7 @@ namespace Rawr {
     }
 
     // Pulling this from ProtWar/ProtPally so that it can be used in other common areas.
-    public enum HitResult
-    {
+    public enum HitResult {
         AnyMiss,
         AnyHit,
         Miss,
@@ -522,6 +521,16 @@ namespace Rawr {
 
         NUM_HitResult, // Always the last entry in the enum.
     }
+    public enum MagicSchool {
+        Fire = 2,
+        Nature,
+        Frost,
+        Shadow,
+        Arcane,
+
+        NUM_MagicSchool, // Always the last entry in the enum.
+    }
+
 
 #if SILVERLIGHT
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]

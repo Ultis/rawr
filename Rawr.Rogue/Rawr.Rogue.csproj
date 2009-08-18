@@ -85,9 +85,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicStats\BaseRogueStats.cs" />
-    <Compile Include="BasicStats\RogueGemmingTemplates.cs" />
-    <Compile Include="BasicStats\RelevantItems.cs" />
     <Compile Include="CalculationOptionsPanelRogue.cs">
       <SubType>UserControl</SubType>
     </Compile>

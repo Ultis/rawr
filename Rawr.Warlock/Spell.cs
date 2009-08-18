@@ -3,138 +3,63 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace Rawr.Warlock
-{
-    public enum MagicSchool
-    {
-        Fire = 2,
-        Nature,
-        Frost,
-        Shadow,
-        Arcane
-    }
-
-    public enum SpellTree
-    {
-        Affliction,
-        Demonology,
-        Destruction
-        
-    }
-
-    public static class SpellFactory
-    {
-        public static Spell CreateSpell(string name, Stats stats, Character character)
-        {
+namespace Rawr.Warlock {
+    public enum SpellTree { Affliction, Demonology, Destruction }
+    public static class SpellFactory {
+        public static Spell CreateSpell(string name, Stats stats, Character character) {
             CalculationOptionsWarlock CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
+            WarlockTalents talents = character.WarlockTalents;
             
-            switch (name)
-            {
-                case "Shadow Bolt":
-                    return new ShadowBolt(stats, character);
-                case "Incinerate":
-                    return new Incinerate(stats, character);
-                case "Immolate":
-                    return new Immolate(stats, character);
-                case "Curse of Agony":
-                    return new CurseOfAgony(stats, character);
-                case "Curse of Doom":
-                    return new CurseOfDoom(stats, character);
-                case "Corruption":
-                    return new Corruption(stats, character);
-                case "Siphon Life":
-                    if (character.WarlockTalents.SiphonLife > 0)
-                        return new SiphonLife(stats, character);
-                    else
-                        return null;
-                case "Unstable Affliction":
-                    if (character.WarlockTalents.UnstableAffliction > 0)
-                        return new UnstableAffliction(stats, character);
-                    else
-                        return null;
-                case "Life Tap":
-                    return new LifeTap(stats, character);
-                /*case "Dark Pact":
-                      if (character.WarlockTalents.DarkPact > 0)
-                          return new DarkPact(stats, character);
-                      else
-                          return null;*/
-                case "Death Coil":
-                    return new DeathCoil(stats, character);
-                case "Drain Life":
-                    return new DrainLife(stats, character);
-                case "Drain Soul":
-                    return new DrainSoul(stats, character);
-                case "Haunt":
-                    if (character.WarlockTalents.Haunt > 0)
-                        return new Haunt(stats, character);
-                    else
-                        return null;
-                case "Seed of Corruption":
-                    return new SeedOfCorruption(stats, character);
-                case "Rain of Fire":
-                    return new RainOfFire(stats, character);
-                case "Hellfire":
-                    return new Hellfire(stats, character);
-                case "Searing Pain":
-                    return new SearingPain(stats, character);
-                case "Shadowflame":
-                    return new Shadowflame(stats, character);
-                case "Soul Fire":
-                    return new SoulFire(stats, character);
-                case "Shadowburn":
-                    if (character.WarlockTalents.Shadowburn > 0)
-                        return new Shadowburn(stats, character);
-                    else
-                        return null;
-                case "Conflagrate":
-                    if (character.WarlockTalents.Conflagrate > 0)
-                        return new Conflagrate(stats, character);
-                    else
-                        return null;
-                case "Shadowfury":
-                    if (character.WarlockTalents.Shadowfury > 0)
-                        return new Shadowfury(stats, character);
-                    else
-                        return null;
-                case "Chaos Bolt":
-                    if (character.WarlockTalents.ChaosBolt > 0)
-                        return new ChaosBolt(stats, character);
-                    else
-                        return null;
-                default:
-                    return null;
+            switch (name) {
+                case "Shadow Bolt":         return new ShadowBolt(stats, character);
+                case "Incinerate":          return new Incinerate(stats, character);
+                case "Immolate":            return new Immolate(stats, character);
+                case "Curse of Agony":      return new CurseOfAgony(stats, character);
+                case "Curse of Doom":       return new CurseOfDoom(stats, character);
+                case "Corruption":          return new Corruption(stats, character);
+                case "Siphon Life":         return (talents.SiphonLife         > 0 ? new SiphonLife(        stats, character) : null);
+                case "Unstable Affliction": return (talents.UnstableAffliction > 0 ? new UnstableAffliction(stats, character) : null);
+                case "Life Tap":            return new LifeTap(stats, character);
+                //case "Dark Pact":         return (talents.DarkPact           > 0 ? new DarkPact(          stats, character) : null);
+                case "Death Coil":          return new DeathCoil(stats, character);
+                case "Drain Life":          return new DrainLife(stats, character);
+                case "Drain Soul":          return new DrainSoul(stats, character);
+                case "Haunt":               return (talents.Haunt              > 0 ? new Haunt(             stats, character) : null);
+                case "Seed of Corruption":  return new SeedOfCorruption(stats, character);
+                case "Rain of Fire":        return new RainOfFire(stats, character);
+                case "Hellfire":            return new Hellfire(stats, character);
+                case "Searing Pain":        return new SearingPain(stats, character);
+                case "Shadowflame":         return new Shadowflame(stats, character);
+                case "Soul Fire":           return new SoulFire(stats, character);
+                case "Shadowburn":          return (talents.Shadowburn         > 0 ? new Shadowburn(        stats, character) : null);
+                case "Conflagrate":         return (talents.Conflagrate        > 0 ? new Conflagrate(       stats, character) : null);
+                case "Shadowfury":          return (talents.Shadowfury         > 0 ? new Shadowfury(        stats, character) : null);
+                case "Chaos Bolt":          return (talents.ChaosBolt          > 0 ? new ChaosBolt(         stats, character) : null);
+                default:                    return null;
             }
         }
     }
-
-    public class SpellStatistics
-    {
+    public class SpellStatistics {
         public float CritCount { get; set; }
         public float MissCount { get; set; }
         public float HitCount { get; set; }
         public float TickCount { get; set; }
         public float HitChance { get; set; }
-        public double CooldownReset { get; set; }
+        public float CooldownReset { get; set; }
         public float DamageDone { get; set; }
         public float ManaUsed { get; set; }
     }
-
-
-    public class Spell
-    {
+    public class Spell {
         public CalculationOptionsWarlock CalculationOptions;
 
-        public class SpellData
-        {
+        public class SpellData {
             public int Rank { get; protected set; }
             public int Level { get; protected set; }
             public int MinDamage { get; protected set; }
             public int MaxDamage { get; protected set; }
             public int DotDamage { get; protected set; }
 
-            public SpellData(int rank, int level, int minDamage, int maxDamage, int dotDamage)
-            {
+            public SpellData(int rank, int level, int minDamage, int maxDamage, int dotDamage) {
                 Rank = rank;
                 Level = level;
                 MinDamage = minDamage;
@@ -185,116 +110,31 @@ namespace Rawr.Warlock
         public int BaseMana;
 
         #region Properties
-        public float AvgHit
-        {
-            get
-            {
-                return (MinDamage + MaxDamage) / 2;
-            }
-        }
-
-        public virtual float AvgDirectDamage
-        {
-            get
-            {
-                return AvgHit * (1f - CritChance) + AvgCrit * CritChance;
-            }
-        }
-
-        public virtual float AvgBuffedDamage
-        {
-            get
-            {
-                return ((MinBuffedDamage + MaxBuffedDamage) / 2) * (1f - CritChance) + ((MinBuffedDamage * CritCoef + MaxBuffedDamage * CritCoef) / 2) * CritChance;
-            }
-        }
-
-        public virtual float AvgDotDamage
-        {
-            get
-            {
-                return DotDamage / (DebuffDuration / TimeBetweenTicks) * (1 - CritChance) + DotDamage / (DebuffDuration / TimeBetweenTicks) * CritChance * CritCoef;
-            }
-        }
-
-        public virtual float AvgDamage
-        {
-            get
-            {
-                return AvgHit * (1f - CritChance) + AvgCrit * CritChance + DotDamage;
-            }
-        }
-
-        public virtual float DpCT
-        {
-            get
-            {
-                if (CastTime > 0)
-                    return AvgDamage / CastTime;
-                else
-                    return AvgDamage / GlobalCooldown;
-            }
-        }
-
-        public virtual float DpS
-        {
-            get
-            {
-                if (DebuffDuration > 0)
-                    return AvgDamage / (DebuffDuration + CastTime);
-                else if (CastTime > 0)
-                    return AvgDamage / CastTime;
-                else return AvgDamage / GlobalCooldown;
-
-            }
-        }
-
-        public virtual float DpM
-        {
-            get
-            {
-                return AvgDamage / ManaCost;
-            }
-        }
-
-        public float AvgCrit
-        {
-            get
-            {
-                return (MinCrit + MaxCrit) / 2;
-            }
-        }
-
-        public float MaxCrit
-        {
-            get
-            {
-                return MaxDamage * CritCoef;
-            }
-        }
-
-        public float MinCrit
-        {
-            get
-            {
-                return MinDamage * CritCoef;
-            }
-        }
+        public float AvgHit { get { return (MinDamage + MaxDamage) / 2; } }
+        public virtual float AvgDirectDamage { get { return AvgHit * (1f - CritChance) + AvgCrit * CritChance; } }
+        public virtual float AvgBuffedDamage { get { return ((MinBuffedDamage + MaxBuffedDamage) / 2) * (1f - CritChance) + ((MinBuffedDamage * CritCoef + MaxBuffedDamage * CritCoef) / 2) * CritChance; } }
+        public virtual float AvgDotDamage { get { return DotDamage / (DebuffDuration / TimeBetweenTicks) * (1 - CritChance) + DotDamage / (DebuffDuration / TimeBetweenTicks) * CritChance * CritCoef; } }
+        public virtual float AvgDamage { get { return AvgHit * (1f - CritChance) + AvgCrit * CritChance + DotDamage; } }
+        public virtual float DpCT { get { return AvgDamage / (CastTime > 0 ? CastTime : GlobalCooldown); } }
+        public virtual float DpS { get { return AvgDamage / (DebuffDuration > 0 ? DebuffDuration + CastTime : (CastTime > 0 ? CastTime : GlobalCooldown)); } }
+        public virtual float DpM { get { return AvgDamage / ManaCost; } }
+        public float AvgCrit { get { return (MinCrit + MaxCrit) / 2; } }
+        public float MaxCrit { get { return MaxDamage * CritCoef; } }
+        public float MinCrit { get { return MinDamage * CritCoef; } }
         #endregion
 
-        public Spell(string name, Stats stats, Character character, List<SpellData> SpellRankTable, int manaCost, float castTime, float critCoef, float dotDuration, float damageCoef, int range, float cooldown, Color col, MagicSchool magicSchool, SpellTree spelltree)
-        {
+        public Spell(string name, Stats stats, Character character, List<SpellData> SpellRankTable, int manaCost, float castTime, float critCoef, float dotDuration, float damageCoef, int range, float cooldown, Color col, MagicSchool magicSchool, SpellTree spelltree) {
             DamageCoef = damageCoef;
             DebuffDuration = dotDuration;
             GraphColor = col;
-            foreach (SpellData sd in SpellRankTable)
-                if (character.Level >= sd.Level)
-                {
+            foreach (SpellData sd in SpellRankTable) {
+                if (character.Level >= sd.Level) {
                     Rank = sd.Rank;
                     BaseMinDamage = MinDamage = sd.MinDamage;
                     BaseMaxDamage = MaxDamage = sd.MaxDamage;
                     BaseDotDamage = DotDamage = sd.DotDamage;
                 }
+            }
             //Name = string.Format("{0}, Rank {1}", name, Rank);
             Name = name;
             BaseManaCost = ManaCost = manaCost;
@@ -307,22 +147,20 @@ namespace Rawr.Warlock
             Cooldown = cooldown;
             RealCastTime = (CastTime / (1 + stats.SpellHaste));
             SpellStatistics = new SpellStatistics();
-            if (character.WarlockTalents.AmplifyCurse > 0 && Name.StartsWith("Curse of"))
-            {
+            if (character.WarlockTalents.AmplifyCurse > 0 && Name.StartsWith("Curse of")) {
                 GlobalCooldown = (float)Math.Max(0.5f, 1.0f / (1 + stats.SpellHaste));
                 BaseGlobalCooldown = 1.0f;
-            }
-            else
-            {
+            } else {
                 GlobalCooldown = (float)Math.Max(1.0f, 1.5f / (1 + stats.SpellHaste));
                 BaseGlobalCooldown = 1.5f;
             }
             MagicSchool = magicSchool;
             SpellTree = spelltree;
-            if (character.Level >= 70 && character.Level <= 80)
+            if (character.Level >= 70 && character.Level <= 80){
                 BaseMana = 2871 + (character.Level - 70) * (3856 - 2871) / 10;
-            else
+            }else{
                 BaseMana = 2871;
+            }
         }
 
         public Spell(string name, Stats stats, Character character, List<SpellData> SpellRankTable, int manaCost, float castTime, float critCoef, float dotDuration, float damageCoef, int range, float cooldown, Color col) :
@@ -330,12 +168,9 @@ namespace Rawr.Warlock
         {
         }
 
-        public virtual void Calculate(Stats stats, Character character)
-        {
-        }
+        public virtual void Calculate(Stats stats, Character character) { }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             if (DebuffDuration > 0f && CritChance > 0f)
                 return String.Format("{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCrit: {7}-{8}, Avg {9}\r\nTick: {10}-{11}\r\nCrit Chance: {12}%\r\nCast: {13}\r\nRealCast: {14}\r\nCost: {15}\r\n{16}",
                     AvgDamage.ToString("0"),
@@ -420,11 +255,8 @@ namespace Rawr.Warlock
         }
     }
 
-    public class ShadowBolt : Spell
-    {
-        static readonly List<SpellData> SpellRankTable = new List<SpellData>() {
-            new SpellData(13, 79, 690, 770, 0)
-        };
+    public class ShadowBolt : Spell {
+        static readonly List<SpellData> SpellRankTable = new List<SpellData>() { new SpellData(13, 79, 690, 770, 0) };
 
         public ShadowBolt(Stats stats, Character character)
             : base("Shadow Bolt", stats, character, SpellRankTable, 17, 3f, 1.5f, 0f, 3f / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Destruction)

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Xml.Serialization;
 
-
-namespace Rawr.TankDK
-{
+namespace Rawr.TankDK {
     [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", CharacterClass.DeathKnight)]
-    class CalculationsTankDK : CalculationsBase
-    {
-        enum Quality
-        {
+    class CalculationsTankDK : CalculationsBase {
+        enum Quality {
             Uncommon,
             Rare, 
             Epic,
@@ -17,25 +15,21 @@ namespace Rawr.TankDK
 
             NUM_Quality
         }
-
-
-        public override List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get
-            {
+        public override List<GemmingTemplate> DefaultGemmingTemplates {
+            get {
 				////Relevant Gem IDs for TankDKs
 				//Red
                 //                    UC     Rare   Epic   JC
 				int[] subtle =      { 39907, 40000, 40115, 42151 }; // +Dodge
-//                int[] bold =        { 39900, 39996, 40111, 42142 }; // +Str
-//                int[] bright =      { 39906, 39999, 40114, 36766 }; // +AP
-//                int[] delicate =    { 39905, 39997, 40112, 42143 }; // +Agi
-//                int[] flashing =    { 39908, 40001, 40116, 42152 }; // +Parry
+                //int[] bold =        { 39900, 39996, 40111, 42142 }; // +Str
+                //int[] bright =      { 39906, 39999, 40114, 36766 }; // +AP
+                //int[] delicate =    { 39905, 39997, 40112, 42143 }; // +Agi
+                //int[] flashing =    { 39908, 40001, 40116, 42152 }; // +Parry
 
 				//Purple
 				int[] regal =       { 39938, 40031, 40138, }; // +dodge, Stam
-                //                int[] balanced =    { 39937, 40029, 40136, }; // +AP +Stam
-                //                int[] defenders =   { 39939, 40032, 40139, }; // +Parry +Stam
+                //int[] balanced =    { 39937, 40029, 40136, }; // +AP +Stam
+                //int[] defenders =   { 39939, 40032, 40139, }; // +Parry +Stam
 
 				//Blue
 				int[] solid =       { 39919, 40008, 40119, 36767 }; // +Stam
@@ -45,25 +39,22 @@ namespace Rawr.TankDK
 
 				//Yellow
 				int[] thick =       { 39916, 40015, 40126, 42157 }; // +def
-                //                int[] gleaming =    { }; // +Crit.
+                //int[] gleaming =    { }; // +Crit.
 
 				//Orange
 				int[] stalwart =    { 39964, 40056, 40160 };
-                //                int[] accurate =    { }; // +Hit +Expertise
-                //               int[] deadly =      { }; // +agi +crit
-                //                int[] deft =        { }; // +Agi +Haste
-                //                int[] etched =      { }; // +hit +Str
-                //                int[] glimmering =  { }; // +parry +def
-                //               int[] glinting =    { }; // +Agi +Hit
-
-
+                //int[] accurate =    { }; // +Hit +Expertise
+                //int[] deadly =      { }; // +agi +crit
+                //int[] deft =        { }; // +Agi +Haste
+                //int[] etched =      { }; // +hit +Str
+                //int[] glimmering =  { }; // +parry +def
+                //int[] glinting =    { }; // +Agi +Hit
 
 				//Meta
 				int austere = 41380;
 
                 // TODO: Update template to handle new gems.
-				return new List<GemmingTemplate>()
-				{
+				return new List<GemmingTemplate>() {
 				    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Max Defense
 				        RedId = thick[0], YellowId = thick[0], BlueId = thick[0], PrismaticId = thick[0], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Defense 
@@ -118,7 +109,6 @@ namespace Rawr.TankDK
 				};
             }
         }
-
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
@@ -129,12 +119,9 @@ namespace Rawr.TankDK
         /// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
         /// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
         /// </summary>
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
-        {
-            get
-            {
-                if (_subPointNameColors == null)
-                {
+        public override Dictionary<string, System.Drawing.Color> SubPointNameColors {
+            get {
+                if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("Survival", System.Drawing.Color.Blue);
                     _subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
@@ -143,7 +130,6 @@ namespace Rawr.TankDK
                 return _subPointNameColors;
             }
         }
-
         private string[] _characterDisplayCalculationLabels = null;
         /// <summary>
         /// An array of strings which will be used to build the calculation display.
@@ -162,15 +148,10 @@ namespace Rawr.TankDK
         ///		"Advanced Stats:Miss*Chance to be missed"
         /// };
         /// </summary>
-        public override string[] CharacterDisplayCalculationLabels
-        {
-            get
-            {
-                if (_characterDisplayCalculationLabels == null)
-                {
-                    List<string> labels = new List<string>(new string[]
-                    {
-
+        public override string[] CharacterDisplayCalculationLabels {
+            get {
+                if (_characterDisplayCalculationLabels == null) {
+                    List<string> labels = new List<string>(new string[] {
 					    @"Summary:Survival Points*Survival Points represents the total raw damage 
 (pre-Mitigation) you can take before dying. Unlike 
 Mitigation Points, you should not attempt to maximize this, 
@@ -238,37 +219,27 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 return _characterDisplayCalculationLabels;
             }
         }
-
-
         private string[] _customChartNames = null;
         /// <summary>
         /// The names of all custom charts provided by the model, if any.
         /// </summary>
-        public override string[] CustomChartNames
-        {
-            get
-            {
-                if (_customChartNames == null)
-                {
+        public override string[] CustomChartNames {
+            get {
+                if (_customChartNames == null) {
                     _customChartNames = new string[] { };
                 }
                 return _customChartNames;
             }
         }
-
-
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         /// <summary>
         /// A custom panel inheriting from CalculationOptionsPanelBase which contains controls for
         /// setting CalculationOptions for the model. CalculationOptions are stored in the Character,
         /// and can be used by multiple models. See comments on CalculationOptionsPanelBase for more details.
         /// </summary>
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-        {
+        public override CalculationOptionsPanelBase CalculationOptionsPanel {
             get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTankDK()); }
         }
-
-
         private List<ItemType> _relevantItemTypes = null;
         /// <summary>
         /// List<ItemType> containing all of the ItemTypes relevant to this model. Typically this
@@ -287,10 +258,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         ///     ItemType.TwoHandMace
         /// });
         /// </summary>
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
+        public override List<ItemType> RelevantItemTypes {
+            get {
                 return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
 						ItemType.None,
@@ -308,36 +277,29 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 					}));
             }
         }
-
-
         /// <summary>
         /// Character class that this model is for.
         /// </summary>
         public override CharacterClass TargetClass { get { return CharacterClass.DeathKnight; } }
-
         /// <summary>
         /// Method to get a new instance of the model's custom ComparisonCalculation class.
         /// </summary>
         /// <returns>A new instance of the model's custom ComparisonCalculation class, 
         /// which inherits from ComparisonCalculationBase</returns>
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationTankDK(); }
-
         /// <summary>
         /// Method to get a new instance of the model's custom CharacterCalculations class.
         /// </summary>
         /// <returns>A new instance of the model's custom CharacterCalculations class, 
         /// which inherits from CharacterCalculationsBase</returns>
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsTankDK(); }
-
         /// <summary>
         /// An array of strings which define what calculations (in addition to the subpoint ratings)
         /// will be available to the optimizer
         /// </summary>
-        public override string[] OptimizableCalculationLabels 
-        { 
-            get 
-            { return new string[] 
-                {
+        public override string[] OptimizableCalculationLabels { 
+            get {
+                return new string[] {
                     "Chance to be Crit",
                     "Avoidance %",
                     "Damage Reduction %",
@@ -350,7 +312,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 }; 
             } 
         }
-
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
         /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
@@ -366,47 +327,39 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
         /// CharacterCalculationsBase comments for more details.</returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
-        {
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             #region Setup what we need and validate.
             // Since calcs is what we return at the end.  And the caller can't handle null value returns - 
             // Lets only return null if calcs is null, otherwise, let's return an empty calcs on other fails.
             CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
-            if (null == calcs)
-                return null;
+            if (null == calcs) { return null; }
 
             Stats stats = GetCharacterStats(character, additionalItem);
             // validate that we get a stats object;
-            if (null == stats)
-                return calcs;
+            if (null == stats) { return calcs; }
 
             calcs.BasicStrength = stats.Strength;
             calcs.BasicStats = stats.Clone() as Stats;
 
-
             // Import the option values from the options tab on the UI.
             CalculationOptionsTankDK opts = character.CalculationOptions as CalculationOptionsTankDK;
             // Validate opts 
-            if (null == opts) 
-                return calcs;
-
+            if (null == opts) { return calcs; }
 
             // Level differences.
             int iTargetLevel = opts.TargetLevel;
             // The full character data.
             calcs.TargetLevel = iTargetLevel;
             float fLevelDiffModifier = (iTargetLevel - character.Level) * 0.2f;
-
             #endregion
 
             #region Avoidance Numbers
-            float fChanceToGetHit = 100.0f;
+            float fChanceToGetHit = 100f;
 
             // Get all the character avoidance numbers including deminishing returns.
             // Iterate through each hit type. and use fAvoidance array w/ the hitresult enum.
             float[] fAvoidance = new float[(uint)HitResult.NUM_HitResult];
-            for (uint i = 0; i < (uint)HitResult.NUM_HitResult; i++)
-            {
+            for (uint i = 0; i < (uint)HitResult.NUM_HitResult; i++) {
                 // GetDRAvoidanceChance returns a dec. percentage.
                 // Since CurrentAvoidance is a percent, need to multiply by 100.
                 fAvoidance[i] = (StatConversion.GetDRAvoidanceChance(character, stats, (HitResult)i, iTargetLevel));
@@ -435,10 +388,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #endregion 
 
             // Get the shotrotation/combat model here.
-            if (opts.m_Rotation == null)
-            {
-                return calcs;
-            }
+            if (opts.m_Rotation == null) { return calcs; }
 
             #region TargetDodge/Parry/Miss & Expertise - finish populating totalstats.
             bool bDualWielding = false;
@@ -447,54 +397,40 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float chanceTargetParry = 0f;
             float chanceTargetDodge = 0f;
             float chanceTargetMiss = 0f;
-            if (character.MainHand != null)
-            {
+            if (character.MainHand != null) {
                 // 2-hander weapon specialization.
-                if (character.MainHand.Slot == ItemSlot.TwoHand)
-                {
-                    f2hWeaponDamageMultiplier = (.02f * character.DeathKnightTalents.TwoHandedWeaponSpecialization);
-                }
-                else
-                {
+                if (character.MainHand.Slot == ItemSlot.TwoHand) {
+                    f2hWeaponDamageMultiplier = (0.02f * character.DeathKnightTalents.TwoHandedWeaponSpecialization);
+                }else{
                     // Toon is not using a 2h, meaning that he's DW if he's got something in his off hand.
                     bDualWielding = (character.OffHand != null);
                 }
-
                 float hitBonus = StatConversion.GetHitFromRating(stats.HitRating, character.Class) + stats.PhysicalHit;
                 // 8% default miss rate vs lvl 83
-                chanceTargetMiss = Math.Max(0f, 0.08f - hitBonus);
-                if ((opts.TargetLevel - 80f) < 3)
-                {
-                    chanceTargetMiss = Math.Max(0f, 0.05f + 0.005f * (opts.TargetLevel - 80f) - hitBonus);
-                }
-                if (bDualWielding)
-                {
-                    // Talent: Nerves of Cold Steel. .////////////////////////////////////////////
+                chanceTargetMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[opts.TargetLevel - character.Level] - hitBonus);
+                if (bDualWielding) {
+                    // Talent: Nerves of Cold Steel
                     // +hit changes only.  See damage buff change further down.
-                    chanceTargetMiss += (0.19f - (.01f * character.DeathKnightTalents.NervesOfColdSteel));
+                    chanceTargetMiss = (StatConversion.WHITE_MISS_CHANCE_CAP_DW[opts.TargetLevel - character.Level]
+                                     - (0.01f * character.DeathKnightTalents.NervesOfColdSteel));
                 }
-
                 if (character.Race == CharacterRace.Dwarf &&
-                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace))
-                {
+                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace)) {
                     stats.Expertise += 5;
                 }
                 if (character.Race == CharacterRace.Human &&
                     (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace ||
-                    character.MainHand.Type == ItemType.TwoHandSword || character.MainHand.Type == ItemType.OneHandSword))
-                {
+                    character.MainHand.Type == ItemType.TwoHandSword || character.MainHand.Type == ItemType.OneHandSword)) {
                     stats.Expertise += 3;
                 }
                 if (character.Race == CharacterRace.Orc &&
-                    (character.MainHand.Type == ItemType.TwoHandAxe || character.MainHand.Type == ItemType.OneHandAxe))
-                {
+                    (character.MainHand.Type == ItemType.TwoHandAxe || character.MainHand.Type == ItemType.OneHandAxe)) {
                     stats.Expertise += 5;
                 }
-
                 // 6.5 % for a boss mob to dodge.
                 // 15% for a boss mob to parry.
-                chanceTargetParry = Math.Max(0.0f, 0.15f - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
-                chanceTargetDodge = Math.Max(0.0f, 0.065f - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
+                chanceTargetParry = Math.Max(0.0f, StatConversion.WHITE_PARRY_CHANCE_CAP[opts.TargetLevel - character.Level] - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
+                chanceTargetDodge = Math.Max(0.0f, StatConversion.WHITE_DODGE_CHANCE_CAP[opts.TargetLevel - character.Level] - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
                 hitChance = 1.0f - (chanceTargetMiss + chanceTargetDodge + chanceTargetParry);
                 // Can't have more than 100% hit chance.
                 hitChance = Math.Min(1f, hitChance);
@@ -509,32 +445,24 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // need to calculate the rotation after we have the DR values for Dodge/Parry/Miss.
             opts.m_Rotation.m_FullStats = stats.Clone() as Stats;
 
-
             CombatTable ct = new CombatTable(character, stats, opts);
 
-
             #region Talents with general reach that aren't already in stats.
-
-            // Talent: Bone Shield ////////////////////////////////////////////////////////
+            // Talent: Bone Shield 
             float bsDR = 0.0f;
             float bsUptime = 0f;
-            if (character.DeathKnightTalents.BoneShield > 0)
-            {
+            if (character.DeathKnightTalents.BoneShield > 0) {
                 uint BSStacks = 4;  // The number of bones by default.
-                if (character.DeathKnightTalents.GlyphofBoneShield == true)
-                {
-                    BSStacks += 2;
-                }
+                if (character.DeathKnightTalents.GlyphofBoneShield == true) { BSStacks += 2; }
 
                 bsUptime = Math.Min(1f,                         // Can't be up for longer than 100% of the time. 
                             (BSStacks * 2f) /                   // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death. 
-                            ((100f - fChanceToGetHit) / 100)   // Loose a bone every time we get hit.
+                            ((100f - fChanceToGetHit) / 100f)   // Loose a bone every time we get hit.
                             / 120.0f);                          // 120 sec cooldown.
                 // 20% damage reduction while active.
                 bsDR = 0.2f * bsUptime;
             }
             stats.DamageTakenMultiplier -= bsDR;
-
             #endregion
 
             // Assuming the Boss has no ArPen
@@ -543,9 +471,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // I'll do more research and see if it needs to go into the general function.
             calcs.ArmorDamageReduction = (float)Math.Min(0.75f, StatConversion.GetArmorDamageReduction(iTargetLevel, stats.Armor, 0f, 0f, 0f));
 
-
             #region ***** Survival Rating *****
-
             // The extra 10% health for Frost presence is now include in the character by default.
             float hp = calcs.BasicStats.Health;
             float fPhysicalSurvival = hp;
@@ -567,14 +493,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             fMagicalSurvival = hp / (1f - StatConversion.GetAverageResistance(iTargetLevel, character.Level, fMaxResist, 0f) * opts.PercentIncomingFromMagic);
 
-            calcs.Survival = (fPhysicalSurvival * (1 - opts.PercentIncomingFromMagic)) + (fMagicalSurvival * opts.PercentIncomingFromMagic);
+            calcs.Survival = (fPhysicalSurvival * (1f - opts.PercentIncomingFromMagic)) + (fMagicalSurvival * opts.PercentIncomingFromMagic);
             float fEffectiveHealth = calcs.Survival;
             calcs.SurvivalWeight = opts.SurvivalWeight;
-
             #endregion
 
             #region ***** THREAT *****
-
             float fRotDuration = ct.calcOpts.m_Rotation.getRotationDuration();
             float fThreatTotal = 0f;
             float fThreatPS = 0f;
@@ -585,18 +509,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             calcs.Threat = fThreatPS;
 
             // Threat buffs.
-            calcs.Threat *= 1.0f + (stats.ThreatIncreaseMultiplier - stats.ThreatReductionMultiplier);
+            calcs.Threat *= 1f + (stats.ThreatIncreaseMultiplier - stats.ThreatReductionMultiplier);
             calcs.ThreatWeight = opts.ThreatWeight;
-
             #endregion
 
             #region ***** Mitigation Rating *****
-
             float fFightDuration = opts.FightLength;
-            if (fFightDuration == 0f)
-            {
-                opts.FightLength = fFightDuration = 10f;
-            }
+            if (fFightDuration == 0f) { opts.FightLength = fFightDuration = 10f; }
             float fNumRotations = 0f;
             float fIncMagicalDamage = (opts.IncomingDamage * opts.PercentIncomingFromMagic);
             float fIncPhysicalDamage = (opts.IncomingDamage - fIncMagicalDamage);
@@ -608,22 +527,19 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
             // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
             // Figure out how many shots there are.  Right now, just calculating white damage.
-            float fBossParryHastedSpeed = opts.BossAttackSpeed * (1f - .24f);
+            float fBossParryHastedSpeed = opts.BossAttackSpeed * (1f - 0.24f);
             float fBossAverageAttackSpeed = opts.BossAttackSpeed;
             float fShotsParried = 0f;
             float fBossShotCountPerRot = 0f;
-            if (fRotDuration > 0)
-            {
+            if (fRotDuration > 0) {
                 fNumRotations = (fFightDuration * 60f) / fRotDuration;
                 // How many shots does the boss take over a given rotation period.
                 fBossShotCountPerRot = fRotDuration / opts.BossAttackSpeed;
                 // How fast is a hasted shot? 40% faster.
                 // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
                 float fCharacterShotCount = 0f;
-                if (character.MainHand != null && ct.MH.hastedSpeed > 0)
-                    fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed);
-                if (character.OffHand != null && ct.OH.hastedSpeed > 0)
-                    fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed);
+                if (character.MainHand != null && ct.MH.hastedSpeed > 0f) { fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed); }
+                if (character.OffHand  != null && ct.OH.hastedSpeed > 0f) { fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed); }
                 fCharacterShotCount += ct.totalParryableAbilities;
                 // The number of shots taken * the chance to be parried.
                 // Ensure that this value doesn't go over 100%
@@ -638,11 +554,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
             }
 
-            if (character.DeathKnightTalents.SpellDeflection > 0)
-            {
+            if (character.DeathKnightTalents.SpellDeflection > 0) {
                 Stats newStats = new Stats();
-                newStats.SpellDamageTakenMultiplier -= .15f * character.DeathKnightTalents.SpellDeflection;
-                stats += new SpecialEffect(Trigger.DamageSpellHit, newStats, 0, 0).GetAverageStats(3.0f, stats.Parry);
+                newStats.SpellDamageTakenMultiplier -= 0.15f * character.DeathKnightTalents.SpellDeflection;
+                stats += new SpecialEffect(Trigger.DamageSpellHit, newStats, 0f, 0f).GetAverageStats(3f, stats.Parry);
             }
 
             #region Anti-Magic Shell
@@ -650,16 +565,16 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Talent: MagicSuppression increases AMS by 8/16/25% per point.
             // Glyph: GlyphofAntiMagicShell increases AMS by 2 sec.
             // AMS has a 45 sec CD.
-            float amsUptime = (5.0f + (character.DeathKnightTalents.GlyphofAntiMagicShell == true ? 2.0f : 0.0f)) / 45.0f;
+            float amsUptime = (5f + (character.DeathKnightTalents.GlyphofAntiMagicShell == true ? 2f : 0f)) / 45f;
             // AMS reduces damage taken by 75% up to a max of 50% health.
-            float amsReduction = 0.75f * (1.0f + character.DeathKnightTalents.MagicSuppression * 0.08f + (character.DeathKnightTalents.MagicSuppression == 3 ? 0.01f : 0f));
+            float amsReduction = 0.75f * (1f + character.DeathKnightTalents.MagicSuppression * 0.08f + (character.DeathKnightTalents.MagicSuppression == 3 ? 0.01f : 0f));
             float amsReductionMax = stats.Health * 0.5f;
             // up to 50% of health means that the amdDRvalue equates to the raw damage points removed.  
             // This means that toon health and INC damage values from the options pane are going to affect this quite a bit.
             float amsDRvalue = (Math.Min(amsReductionMax, fIncMagicalDamage * amsReduction) * amsUptime);
             #endregion 
 
-            float uaDR = (stats.Armor * 5f * .01f);
+            float uaDR = (stats.Armor * 5f * 0.01f);
             // Glyph increases DR by 20%
             if (character.DeathKnightTalents.GlyphofUnbreakableArmor)
                 uaDR *= 1.2f;
@@ -695,8 +610,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Get the raw per-swing Reaction & Burst Time
             float fAvoidanceTotal = stats.Dodge + stats.Miss;
             // If the character has no weapon, his Parry chance == 0
-            if (character.MainHand != null || character.OffHand != null)
-                fAvoidanceTotal += stats.Parry;
+            if (character.MainHand != null || character.OffHand != null) { fAvoidanceTotal += stats.Parry; }
 
             // The next 2 returns are in swing count.
             float fReactionSwingCount = GetReactionTime(fAvoidanceTotal);
@@ -706,8 +620,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             calcs.ReactionTime = fReactionSwingCount * fBossAverageAttackSpeed;
             calcs.BurstTime = fBurstSwingCount * fBossAverageAttackSpeed;
 
-//            calcs.Mitigation = (opts.IncomingDamage * 60f * fFightDuration) - (fIncMagicalDamage + fIncPhysicalDamage);
-//            calcs.Mitigation = calcs.Mitigation / (60f * fFightDuration);
+            //calcs.Mitigation = (opts.IncomingDamage * 60f * fFightDuration) - (fIncMagicalDamage + fIncPhysicalDamage);
+            //calcs.Mitigation = calcs.Mitigation / (60f * fFightDuration);
 
             // Total damage avoided between bursts.
             float fBurstDamage = fBurstSwingCount * fPerShotPhysical;
@@ -715,11 +629,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float fReactionDamage = fReactionSwingCount * fPerShotPhysical;
 
             calcs.Mitigation = fReactionSwingCount * fBossAverageAttackSpeed * fIncPhysicalDamage;
-
             #endregion
 
             #region Key Data Validation
-
             if (float.IsNaN(calcs.Threat) ||
                 float.IsNaN(calcs.Survival) ||
                 float.IsNaN(calcs.Mitigation) ||
@@ -727,12 +639,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             {
                 throw new Exception("One of the Subpoints are Invalid.");
             }
-
             #endregion
 
             return calcs;
         }
-
         /// <summary>
         /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
         /// combine all of the information about the character, including race, gear, enchants, buffs,
@@ -746,11 +656,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// This is used for gems, which don't have a slot on the character to fit in, so are just
         /// added onto the character, in order to get gem calculations.</param>
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-        {
+        public override Stats GetCharacterStats(Character character, Item additionalItem) {
             // Validate that character.CalculationOptions != NULL
-            if (null == character.CalculationOptions)
-            {
+            if (null == character.CalculationOptions) {
                 // Possibly put some error text here.
                 return new Stats();
             }
@@ -758,7 +666,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Basic racial & class baseline.
             Stats statsRace = GetRaceStats(character);
-            statsRace.Defense = 400; // Adding in the base 400 Defense skill all tanks are expected to have.  There are too many places where this just kinda stuck in.  It should be attached to the toon.
+            statsRace.Defense = 400f; // Adding in the base 400 Defense skill all tanks are expected to have.  There are too many places where this just kinda stuck in.  It should be attached to the toon.
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
@@ -774,37 +682,35 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             Stats statsTalents = GetTalents(statsTotal, character);
             statsTotal += statsTalents;
             // Adding in Special Effects. 
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
-            {
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 statsTotal += effect.GetAverageStats();
             }
 
             // Apply Stat modifiers
             statsTotal.Strength = StatConversion.ApplyMultiplier(statsTotal.Strength, statsTotal.BonusStrengthMultiplier);
-            statsTotal.Agility = StatConversion.ApplyMultiplier(statsTotal.Agility, statsTotal.BonusAgilityMultiplier);
-            statsTotal.Stamina = StatConversion.ApplyMultiplier(statsTotal.Stamina, statsTotal.BonusStaminaMultiplier);
-            statsTotal.Armor = StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier);
-            statsTotal.Armor += StatConversion.GetArmorFromAgility(statsTotal.Agility); // Don't multiply the armor from agility.
-            statsTotal.Armor += StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier);
+            statsTotal.Agility  = StatConversion.ApplyMultiplier(statsTotal.Agility, statsTotal.BonusAgilityMultiplier);
+            statsTotal.Stamina  = StatConversion.ApplyMultiplier(statsTotal.Stamina, statsTotal.BonusStaminaMultiplier);
+            statsTotal.Armor    = StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier);
+            statsTotal.Armor   += StatConversion.GetArmorFromAgility(statsTotal.Agility); // Don't multiply the armor from agility.
+            statsTotal.Armor   += StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier);
 
             statsTotal.Health = StatConversion.ApplyMultiplier((statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina)), statsTotal.BonusHealthMultiplier);
 
             // Talent: BladedArmor //////////////////////////////////////////////////////////////
-            if (character.DeathKnightTalents.BladedArmor > 0)
-            {
+            if (character.DeathKnightTalents.BladedArmor > 0) {
                 statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)character.DeathKnightTalents.BladedArmor;
             }
             // AP, crit, etc.  already being factored in w/ multiplier.
-            statsTotal.AttackPower = StatConversion.ApplyMultiplier((statsTotal.AttackPower + (statsTotal.Strength * 2)), statsTotal.BonusAttackPowerMultiplier);
-            statsTotal.CritRating = StatConversion.ApplyMultiplier((statsTotal.CritRating + statsTotal.CritMeleeRating), statsTotal.BonusCritMultiplier);
+            statsTotal.AttackPower  = StatConversion.ApplyMultiplier((statsTotal.AttackPower + (statsTotal.Strength * 2)), statsTotal.BonusAttackPowerMultiplier);
+            statsTotal.CritRating   = StatConversion.ApplyMultiplier((statsTotal.CritRating + statsTotal.CritMeleeRating), statsTotal.BonusCritMultiplier);
             statsTotal.PhysicalCrit = StatConversion.ApplyMultiplier(statsTotal.PhysicalCrit 
-                                        + StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class)
-                                        + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusCritMultiplier);
-            statsTotal.SpellCrit = StatConversion.ApplyMultiplier(statsTotal.SpellCrit
-                                        + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusCritMultiplier);
+                                    + StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class)
+                                    + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusCritMultiplier);
+            statsTotal.SpellCrit    = StatConversion.ApplyMultiplier(statsTotal.SpellCrit
+                                    + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusCritMultiplier);
 
             statsTotal.PhysicalCrit += statsTotal.LotPCritRating;
-            statsTotal.SpellCrit += statsTotal.LotPCritRating;
+            statsTotal.SpellCrit    += statsTotal.LotPCritRating;
 
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
 
@@ -816,35 +722,25 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             return (statsTotal);
         }
-
         /// <summary>
         /// Gets data to fill a custom chart, based on the chart name, as defined in CustomChartNames.
         /// </summary>
         /// <param name="character">The character to build the chart for.</param>
         /// <param name="chartName">The name of the custom chart to get data for.</param>
         /// <returns>The data for the custom chart.</returns>
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-        {
-            return new ComparisonCalculationBase[0];
-        }
-
-
-        private Stats GetRaceStats(Character character)
-        {
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) { return new ComparisonCalculationBase[0]; }
+        private Stats GetRaceStats(Character character) {
             Stats Base = new Stats();
             Base = BaseStats.GetBaseStats(character);
             return Base;
         }
-
         /// <summary>
         /// Filters a Stats object to just the stats relevant to the model.
         /// </summary>
         /// <param name="stats">A complete Stats object containing all stats.</param>
         /// <returns>A filtered Stats object containing only the stats relevant to the model.</returns>
-        public override Stats GetRelevantStats(Stats stats)
-        {
-            Stats s = new Stats()
-            {
+        public override Stats GetRelevantStats(Stats stats) {
+            Stats s = new Stats() {
                 Strength = stats.Strength,
                 Agility = stats.Agility,
                 Stamina = stats.Stamina,
@@ -892,7 +788,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
  
-               // Defect 13301: Integrate 2% Threat increase for Armsmen enchant.
+                // Defect 13301: Integrate 2% Threat increase for Armsmen enchant.
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 
@@ -933,29 +829,22 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Since I'm going to move the +Def bonus for the Sigil of the Unfaltering Knight
             // To a special effect.  Also there are alot of OnUse and OnEquip special effects
             // That probably aren't being taken into effect.
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (HasRelevantStats(effect.Stats))
-                {
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if (HasRelevantStats(effect.Stats)) {
                     s.AddSpecialEffect(effect);
                 }
             }
             return s;
         }
-
-
         /// <summary>
         /// Tests whether there are positive relevant stats in the Stats object.
         /// </summary>
         /// <param name="stats">The complete Stats object containing all stats.</param>
         /// <returns>True if any of the non-Zero stats in the Stats are relevant.  
         /// I realize that there aren't many stats that have negative values, but for completeness.</returns>
-        public override bool HasRelevantStats(Stats stats)
-        {
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (relevantStats(effect.Stats))
-                {
+        public override bool HasRelevantStats(Stats stats) {
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if (relevantStats(effect.Stats)) {
                     if (effect.Trigger == Trigger.DamageDone ||
                         effect.Trigger == Trigger.DamageSpellCast ||
                         effect.Trigger == Trigger.DamageSpellCrit ||
@@ -982,9 +871,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
             return relevantStats(stats);
         }
-
-        private bool relevantStats(Stats stats)
-        {
+        private bool relevantStats(Stats stats) {
             bool bResults = false;
             bResults |= (stats.Health != 0);
             bResults |= (stats.Strength != 0);
@@ -1059,53 +946,40 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             return bResults;
         }
-
-        public override bool IsItemRelevant(Item item)
-        {
-            if (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Sigil)
-                return false;
+        public override bool IsItemRelevant(Item item) {
+            if (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Sigil) { return false; }
             return base.IsItemRelevant(item);
         }
-
-        private Stats GetFrostPresence()
-        {
+        private Stats GetFrostPresence() {
             Stats FrostyStats = new Stats();
-            FrostyStats.BaseArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
-            FrostyStats.BonusHealthMultiplier += .1f; // Bonus 10% health for Frost Presence.
-            FrostyStats.DamageTakenMultiplier -= .05f;// Bonus of 5% damage reduced for frost presence.
-            FrostyStats.ThreatIncreaseMultiplier += .45f; // Bonus 45% threat for frost Presence.
+            FrostyStats.BaseArmorMultiplier      += 0.60f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
+            FrostyStats.BonusHealthMultiplier    += 0.10f; // Bonus 10% health for Frost Presence.
+            FrostyStats.DamageTakenMultiplier    -= 0.05f; // Bonus of 5% damage reduced for frost presence.
+            FrostyStats.ThreatIncreaseMultiplier += 0.45f; // Bonus 45% threat for frost Presence.
             return FrostyStats;
         }
-
-        /// <summary>
-        /// Build the talent special effects.
-        /// </summary>
-        private Stats GetTalents(Stats FullCharacterStats, Character character)
-        {
+        /// <summary>Build the talent special effects.</summary>
+        private Stats GetTalents(Stats FullCharacterStats, Character character) {
             Stats sReturn = new Stats();
             Stats newStats = new Stats();
             float fDamageDone = 0f;
             float fHealth = StatConversion.ApplyMultiplier((FullCharacterStats.Health + StatConversion.GetHealthFromStamina(FullCharacterStats.Stamina)), FullCharacterStats.BonusHealthMultiplier);
 
-            #region Blood Talents.
+            #region Blood Talents
             // Butchery
             // 1RPp5 per Point
             // TODO: Implement Runic Regen info.
-            if (character.DeathKnightTalents.Butchery > 0)
-            {
+            if (character.DeathKnightTalents.Butchery > 0) {
                 sReturn.RPp5 += 1 * character.DeathKnightTalents.Butchery;
             }
 
             // Subversion
             // Increase crit 3% per point of BS, HS, Oblit
-            if (character.DeathKnightTalents.Subversion > 0)
-            {
-            }
+            if (character.DeathKnightTalents.Subversion > 0) { }
 
             // Blade Barrier
             // Reduce damage by 1% per point for 10 sec.
-            if (character.DeathKnightTalents.BladeBarrier > 0)
-            {
+            if (character.DeathKnightTalents.BladeBarrier > 0) {
                 // for now having the functionality that currently exists is better than nothing.
                 // TODO: Implement SpecialEffect for Rune CD.
                 sReturn.DamageTakenMultiplier -= (.01f * character.DeathKnightTalents.BladeBarrier);
@@ -1123,31 +997,25 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Rune Tap
             // Convert 1 BR to 10% health.
-            if (character.DeathKnightTalents.RuneTap > 0)
-            {
+            if (character.DeathKnightTalents.RuneTap > 0) {
                 newStats = new Stats();
                 float fCD = 60f;
                 newStats.Healed = (fHealth * .1f);
-                if (character.DeathKnightTalents.ImprovedRuneTap == 0)
-                {
+                if (character.DeathKnightTalents.ImprovedRuneTap == 0) {
                     sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
-                }
-                else
-                {
+                }else{
                     // Improved Rune Tap.
                     // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
                     fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
-                    newStats.Healed *= 1f + (.33f * character.DeathKnightTalents.ImprovedRuneTap);
+                    newStats.Healed *= 1f + (0.33f * character.DeathKnightTalents.ImprovedRuneTap);
                     sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
                 }
             }
-
             // Dark Conviction 
             // Increase Crit w/ weapons, spells, and abilities by 1% per point.
-            if (character.DeathKnightTalents.DarkConviction > 0)
-            {
-                sReturn.PhysicalCrit += (.01f * character.DeathKnightTalents.DarkConviction);
-                sReturn.SpellCrit += (.01f * character.DeathKnightTalents.DarkConviction);
+            if (character.DeathKnightTalents.DarkConviction > 0) {
+                sReturn.PhysicalCrit += (0.01f * character.DeathKnightTalents.DarkConviction);
+                sReturn.SpellCrit    += (0.01f * character.DeathKnightTalents.DarkConviction);
             }
 
             // Death Rune Mastery
@@ -1166,29 +1034,26 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Veteran of the 3rd War
             // increases Str and Stam by 2% per point
             // increases expertise by 2 per point.
-            if (character.DeathKnightTalents.VeteranOfTheThirdWar > 0)
-            {
-                sReturn.BonusStrengthMultiplier += (.02f * character.DeathKnightTalents.VeteranOfTheThirdWar);
-                sReturn.BonusStaminaMultiplier += (.02f * character.DeathKnightTalents.VeteranOfTheThirdWar);
-                sReturn.Expertise += (2f * character.DeathKnightTalents.VeteranOfTheThirdWar);
+            if (character.DeathKnightTalents.VeteranOfTheThirdWar > 0) {
+                sReturn.BonusStrengthMultiplier += (0.02f * character.DeathKnightTalents.VeteranOfTheThirdWar);
+                sReturn.BonusStaminaMultiplier  += (0.02f * character.DeathKnightTalents.VeteranOfTheThirdWar);
+                sReturn.Expertise               += (2f    * character.DeathKnightTalents.VeteranOfTheThirdWar);
             }
 
             // Mark of blood
             // buff that lasts 20 secs or 20 hits
             // heals the target for 4% of max health for each hit.
-            if (character.DeathKnightTalents.MarkOfBlood > 0)
-            {
+            if (character.DeathKnightTalents.MarkOfBlood > 0) {
                 // TODO: Need to know how many hits are incoming.
                 // for now assuming 10 hits.
                 newStats = new Stats();
-                newStats.Healed = (fHealth * .04f * 10f);
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, newStats, 20, 3f * 60f));
+                newStats.Healed = (fHealth * 0.04f * 10f);
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, newStats, 20f, 3f * 60f));
             }
 
             // Bloody Vengence
             // 1% per point bonus to physical damage for 30 secs after a crit w/ up to 3 stacks.
-            if (character.DeathKnightTalents.BloodyVengeance > 0)
-            {
+            if (character.DeathKnightTalents.BloodyVengeance > 0) {
                 newStats = new Stats();
                 newStats.BonusPhysicalDamageMultiplier = .01f * character.DeathKnightTalents.BloodyVengeance;
                 sReturn.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit, newStats, 30, 0, 1, 3));
@@ -1200,13 +1065,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // DS and Oblit have 50% chance per point
             // increase AP by 10% of raid for 10 sec.
             // 1% per point increase to str.
-            if (character.DeathKnightTalents.AbominationsMight > 0)
-            {
-                sReturn.BonusStrengthMultiplier += (.01f * character.DeathKnightTalents.AbominationsMight);
+            if (character.DeathKnightTalents.AbominationsMight > 0) {
+                sReturn.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
                 newStats = new Stats();
-                newStats.BonusAttackPowerMultiplier = .1f;
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, newStats, 10, 0));
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, newStats, 10, 0));
+                newStats.BonusAttackPowerMultiplier = 0.1f;
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, newStats, 10f, 0f));
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, newStats, 10f, 0f));
                 // TODO: Add DS & Oblit hit.
                 //                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.DeathStrikeHit, newStats, 10, 0);
                 //                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.ObliterateHit, newStats, 10, 0);
@@ -1215,8 +1079,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Bloodworms
             // 3% chance per point per hit to cause the target to spawn 2-4 blood worms
             // Healing you 150% of the damage they do for 20 sec.
-            if (character.DeathKnightTalents.Bloodworms > 0)
-            {
+            if (character.DeathKnightTalents.Bloodworms > 0) {
                 newStats = new Stats();
                 // TODO: figure out how much damage the worms do.
                 fDamageDone = 30f;
@@ -1228,23 +1091,21 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Killy frenzy for 30 sec.
             // Increase physical damage by 20%
             // take damage 1% of max every sec.
-            if (character.DeathKnightTalents.Hysteria > 0)
-            {
+            if (character.DeathKnightTalents.Hysteria > 0) {
                 float fDur = 30f;
                 newStats = new Stats();
-                newStats.BonusPhysicalDamageMultiplier += .2f;
-                newStats.Healed -= (fHealth * .01f * fDur);
+                newStats.BonusPhysicalDamageMultiplier += 0.2f;
+                newStats.Healed -= (fHealth * 0.01f * fDur);
                 sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fDur, 3f * 60f));
             }
 
             // Improved Blood Presence
             // while in frost or unholy, you retain the 2% per point healing from blood presence
             // Healing done to you is increased by 5% per point
-            if (character.DeathKnightTalents.ImprovedBloodPresence > 0)
-            {
+            if (character.DeathKnightTalents.ImprovedBloodPresence > 0) {
                 fDamageDone = 100f; // This needs to be factored in from threat - so may have to pull it out of here.
-                sReturn.HealingReceivedMultiplier += .5f * character.DeathKnightTalents.ImprovedBloodPresence;
-                sReturn.Healed += (fDamageDone * .02f * character.DeathKnightTalents.ImprovedBloodPresence);
+                sReturn.HealingReceivedMultiplier += 0.5f * character.DeathKnightTalents.ImprovedBloodPresence;
+                sReturn.Healed += (fDamageDone * 0.02f * character.DeathKnightTalents.ImprovedBloodPresence);
             }
 
             // Improved Death Strike
@@ -1253,34 +1114,30 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Sudden Doom
             // BS & HS have a 5% per point chance to launch a DC at target
-            if (character.DeathKnightTalents.SuddenDoom > 0)
-            {
-            }
+            if (character.DeathKnightTalents.SuddenDoom > 0) { }
 
             // Vampiric Blood
             // temp 15% of max health and
             // increases health generated by 35% for 20 sec.
             // 2 min CD.
-            if (character.DeathKnightTalents.VampiricBlood > 0)
-            {
+            if (character.DeathKnightTalents.VampiricBlood > 0) {
                 newStats = new Stats();
-                newStats.Health += (fHealth * .15f);
-                newStats.HealingReceivedMultiplier += .35f;
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20, 2f * 60f));
+                newStats.Health += (fHealth * 0.15f);
+                newStats.HealingReceivedMultiplier += 0.35f;
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20f, 2f * 60f));
             }
 
             // Will of the Necropolis
             // Damage that takes you below 35% health or while at less than 35% is reduced by 5% per point.  
             // CD 15 sec.
             // Incoming damage must be >= than 5% of total health.
-            if (character.DeathKnightTalents.WillOfTheNecropolis > 0)
-            {
+            if (character.DeathKnightTalents.WillOfTheNecropolis > 0) {
                 newStats = new Stats();
-                newStats.DamageTakenMultiplier -= (.05f * character.DeathKnightTalents.WillOfTheNecropolis);
+                newStats.DamageTakenMultiplier -= (0.05f * character.DeathKnightTalents.WillOfTheNecropolis);
                 // Need to factor in the damage taken aspect of the trigger.
                 // Using the assumption that the tank will be at < 35% health about that % of the time.
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 0, 15f, .35f));
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, 0, 15f, .35f));
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit   , newStats, 0, 15f, 0.35f));
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, 0, 15f, 0.35f));
             }
 
             // Heart Strike
@@ -1291,11 +1148,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Blood Gorged
             // when above 75% health, you deal 2% more damage per point
             // when above 75% health, you receive 2% Armor Pen
-            if (character.DeathKnightTalents.BloodGorged > 0)
-            {
+            if (character.DeathKnightTalents.BloodGorged > 0) {
                 // Damage done increase has to be in shot rotation.
                 // Assuming a 50% up time 
-                sReturn.ArmorPenetration += (.02f * character.DeathKnightTalents.BloodGorged * .5f);
+                sReturn.ArmorPenetration += (0.02f * character.DeathKnightTalents.BloodGorged * 0.5f);
             }
 
             // Dancing Rune Weapon
@@ -1305,27 +1161,24 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Improved Icy Touch
             // 5% per point additional IT damage
             // 2% per point target haste reduction 
-            if (character.DeathKnightTalents.ImprovedIcyTouch > 0)
-            {
-                sReturn.BonusIcyTouchDamage += (.05f * character.DeathKnightTalents.ImprovedIcyTouch);
+            if (character.DeathKnightTalents.ImprovedIcyTouch > 0) {
+                sReturn.BonusIcyTouchDamage += (0.05f * character.DeathKnightTalents.ImprovedIcyTouch);
                 // TODO: Need to factor in the correct haste adjustment for target.
                 // For now assuming a straight 2% damage reduction per point.
-                sReturn.DamageTakenMultiplier -= .02f * character.DeathKnightTalents.ImprovedIcyTouch;
+                sReturn.DamageTakenMultiplier -= 0.02f * character.DeathKnightTalents.ImprovedIcyTouch;
             }
 
             // Runic Power Mastery
             // Increases Max RP by 15 per point
-            if (character.DeathKnightTalents.RunicPowerMastery > 0)
-            {
+            if (character.DeathKnightTalents.RunicPowerMastery > 0) {
                 sReturn.BonusMaxRunicPower += 5 * character.DeathKnightTalents.RunicPowerMastery;
             }
 
             // Toughness
             // Increases Armor Value from items by 3% per point.
             // Reducing duration of all slowing effects by 6% per point.  
-            if (character.DeathKnightTalents.Toughness > 0)
-            {
-                sReturn.BaseArmorMultiplier += (.03f * character.DeathKnightTalents.Toughness);
+            if (character.DeathKnightTalents.Toughness > 0) {
+                sReturn.BaseArmorMultiplier += (0.03f * character.DeathKnightTalents.Toughness);
             }
 
             // Icy Reach
@@ -1333,10 +1186,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Black Ice
             // Increase Frost & shadow damage by 2% per point
-            if (character.DeathKnightTalents.BlackIce > 0)
-            {
-                sReturn.BonusFrostDamageMultiplier += .02f * character.DeathKnightTalents.BlackIce;
-                sReturn.BonusShadowDamageMultiplier += .02f * character.DeathKnightTalents.BlackIce;
+            if (character.DeathKnightTalents.BlackIce > 0) {
+                sReturn.BonusFrostDamageMultiplier  += 0.02f * character.DeathKnightTalents.BlackIce;
+                sReturn.BonusShadowDamageMultiplier += 0.02f * character.DeathKnightTalents.BlackIce;
             }
 
             // Nerves of Cold Steel
@@ -1346,11 +1198,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Icy Talons
             // Increase melee attack speed by 4% per point for the next 20 sec.
-            if (character.DeathKnightTalents.IcyTalons > 0)
-            {
+            if (character.DeathKnightTalents.IcyTalons > 0) {
                 newStats = new Stats();
-                newStats.PhysicalHaste += (.04f * character.DeathKnightTalents.IcyTalons);
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 20, 0));
+                newStats.PhysicalHaste += (0.04f * character.DeathKnightTalents.IcyTalons);
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 20f, 0f));
             }
 
             // Lichborne
@@ -1359,9 +1210,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Annihilation
             // +1 % per point melee Crit chance 
             // 33% per point that oblit will not consume diseases
-            if (character.DeathKnightTalents.Annihilation > 0)
-            {
-                sReturn.PhysicalCrit += (.01f * character.DeathKnightTalents.Annihilation);
+            if (character.DeathKnightTalents.Annihilation > 0) {
+                sReturn.PhysicalCrit += (0.01f * character.DeathKnightTalents.Annihilation);
             }
 
             // Killing Machine
@@ -1377,27 +1227,18 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Frigid Dreadplate
             // Melee attacks against you will miss by +1% per point
-            if (character.DeathKnightTalents.FrigidDreadplate > 0)
-            {
-                sReturn.Miss += .01f * character.DeathKnightTalents.FrigidDreadplate;
+            if (character.DeathKnightTalents.FrigidDreadplate > 0) {
+                sReturn.Miss += 0.01f * character.DeathKnightTalents.FrigidDreadplate;
             }
 
             // Glacier Rot
             // Diseased enemies take 7%, 13% , 20% more damage from IT, HB, FS.
-            if (character.DeathKnightTalents.GlacierRot > 0)
-            {
+            if (character.DeathKnightTalents.GlacierRot > 0) {
                 float fBonus = 0f;
-                switch (character.DeathKnightTalents.GlacierRot)
-                {
-                    case 1:
-                        fBonus = 0.07f;
-                        break;
-                    case 2:
-                        fBonus = 0.13f;
-                        break;
-                    case 3:
-                        fBonus = 0.2f;
-                        break;
+                switch (character.DeathKnightTalents.GlacierRot) {
+                    case 1: fBonus = 0.07f; break;
+                    case 2: fBonus = 0.13f; break;
+                    case 3: fBonus = 0.20f; break;
                 }
                 sReturn.BonusIcyTouchDamage += fBonus;
                 sReturn.BonusFrostStrikeDamage += fBonus;
@@ -1411,9 +1252,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Improved Icy Talons
             // increases the melee hast of the group/raid by 20%
             // increases your haste by 5% all the time.
-            if (character.DeathKnightTalents.ImprovedIcyTalons > 0)
-            {
-                sReturn.PhysicalHaste += .05f;
+            if (character.DeathKnightTalents.ImprovedIcyTalons > 0) {
+                sReturn.PhysicalHaste += 0.05f;
             }
 
             // Merciless Combat
@@ -1433,9 +1273,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Improved Frost Presence
             // retain the health bonus 5% per point when in non-Frost presence
             // Decrease damage done to you by 1% per point.
-            if (character.DeathKnightTalents.ImprovedFrostPresence > 0)
-            {
-                sReturn.DamageTakenMultiplier -= (.01f * character.DeathKnightTalents.ImprovedFrostPresence);
+            if (character.DeathKnightTalents.ImprovedFrostPresence > 0) {
+                sReturn.DamageTakenMultiplier -= (0.01f * character.DeathKnightTalents.ImprovedFrostPresence);
             }
 
             // Blood of the North
@@ -1443,32 +1282,30 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // BS & Pest create DeathRune from Blood 20% per point.
             if (character.DeathKnightTalents.BloodOfTheNorth > 0)
             {
-                sReturn.BonusFrostStrikeDamage += (.05f * character.DeathKnightTalents.BloodOfTheNorth);
-                sReturn.BonusBloodStrikeDamage += (.05f * character.DeathKnightTalents.BloodOfTheNorth);
+                sReturn.BonusFrostStrikeDamage += (0.05f * character.DeathKnightTalents.BloodOfTheNorth);
+                sReturn.BonusBloodStrikeDamage += (0.05f * character.DeathKnightTalents.BloodOfTheNorth);
             }
 
             // Unbreakable Armor
             // Reinforces your armor with a thick coat of ice, reducing damage from all attacks by [5 * AR * 0.01] and increasing your Strength by 25% for 20 sec.  The amount of damage reduced increases as your armor increases.
-            if (character.DeathKnightTalents.UnbreakableArmor > 0)
-            {
+            if (character.DeathKnightTalents.UnbreakableArmor > 0) {
                 newStats = new Stats();
-                newStats.BonusStrengthMultiplier += .25f;
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20, 2 * 60f));
+                newStats.BonusStrengthMultiplier += 0.25f;
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20f, 2f * 60f));
             }
 
             // Acclimation
             // When hit by a spell, 10% chance per point to boost resistance to that type of magic for 18 sec.  
             // up to 3 stacks.
-            if (character.DeathKnightTalents.Acclimation > 0)
-            {
+            if (character.DeathKnightTalents.Acclimation > 0) {
                 newStats = new Stats();
                 float chance = (.1f * character.DeathKnightTalents.Acclimation);
-                newStats.FireResistance += 50f;
-                newStats.FrostResistance += 50f;
+                newStats.FireResistance   += 50f;
+                newStats.FrostResistance  += 50f;
                 newStats.ArcaneResistance += 50f;
                 newStats.ShadowResistance += 50f;
                 newStats.NatureResistance += 50f;
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 18, 0, chance, 3));
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 18f, 0f, chance, 3));
             }
 
             // Frost Strike
@@ -1484,8 +1321,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // IBF reduces damage taken by 20% + 3% for each 28 defense over 400.
             float ibfDefense = StatConversion.GetDefenseFromRating(FullCharacterStats.DefenseRating, character.Class);
             float ibfReduction = 0.2f + (ibfDefense * 0.03f / 28.0f);
-            if (character.DeathKnightTalents.GlyphofIceboundFortitude)
-            {
+            if (character.DeathKnightTalents.GlyphofIceboundFortitude) {
                 // Glyphed to 30% + def value.
                 ibfReduction += 0.1f;
                 // Since 3.1 the glyph is capped to 30%.
@@ -1496,16 +1332,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             newStats = new Stats();
             newStats.DamageTakenMultiplier -= ibfReduction;
             sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fIBFDur, 60));
-            if (character.DeathKnightTalents.GuileOfGorefiend > 0)
-            {
+            if (character.DeathKnightTalents.GuileOfGorefiend > 0) {
                 // TODO: Crit Damage multiplier
             }
 
             // Tundra Stalker
             // Your spells & abilities deal 3% per point more damage to targets w/ FF
             // Increases Expertise by 1 per point
-            if (character.DeathKnightTalents.TundraStalker > 0)
-            {
+            if (character.DeathKnightTalents.TundraStalker > 0) {
                 // Assuming FF is always up.
                 sReturn.BonusDamageMultiplier += .03f * character.DeathKnightTalents.TundraStalker;
                 sReturn.Expertise += 1f * character.DeathKnightTalents.TundraStalker;
@@ -1516,22 +1350,20 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #endregion
 
             #region UnHoly Talents
-            // Vicious Strikes 
+            // Vicious Strikes
             // Increases Crit chance by 3% per point of PS and SS
             // Increases Crit Strike Damage by 15% per point of PS and SS
 
             // Virulence
             // Increases Spell hit +1% per point
-            if (character.DeathKnightTalents.Virulence > 0)
-            {
-                sReturn.SpellHit += .01f * character.DeathKnightTalents.Virulence;
+            if (character.DeathKnightTalents.Virulence > 0) {
+                sReturn.SpellHit += 0.01f * character.DeathKnightTalents.Virulence;
             }
 
             // Anticipation
             // Increases dodge by 1% per point
-            if (character.DeathKnightTalents.Anticipation > 0)
-            {
-                sReturn.Dodge += .01f * character.DeathKnightTalents.Anticipation;
+            if (character.DeathKnightTalents.Anticipation > 0) {
+                sReturn.Dodge += 0.01f * character.DeathKnightTalents.Anticipation;
             }
 
             // Epidemic
@@ -1547,9 +1379,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Ravenous Dead
             // Increases Str +1% per point.
             // Increases contribution of your str & stam to ghoul by 20% per point
-            if (character.DeathKnightTalents.RavenousDead > 0)
-            {
-                sReturn.BonusStrengthMultiplier += (.01f * character.DeathKnightTalents.RavenousDead);
+            if (character.DeathKnightTalents.RavenousDead > 0) {
+                sReturn.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.RavenousDead);
                 // Ghouls don't help tank here.
             }
 
@@ -1586,9 +1417,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Magic Suppression
             // 2% per point less damage from all magic.
             // AMS absorbs additional 8, 16, 25% of spell damage.
-            if (character.DeathKnightTalents.MagicSuppression > 0)
-            {
-                sReturn.SpellDamageTakenMultiplier -= .02f * character.DeathKnightTalents.MagicSuppression;
+            if (character.DeathKnightTalents.MagicSuppression > 0) {
+                sReturn.SpellDamageTakenMultiplier -= 0.02f * character.DeathKnightTalents.MagicSuppression;
                 // TODO: factor in AMS
             }
 
@@ -1604,22 +1434,20 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Targets are slowed by 10% per point
             // You cause 1% more damage 
             // Lasts 12 sec.
-            if (character.DeathKnightTalents.Desecration > 0)
-            {
+            if (character.DeathKnightTalents.Desecration > 0) {
                 newStats = new Stats();
-                newStats.BonusDamageMultiplier += .01f * character.DeathKnightTalents.Desecration;
+                newStats.BonusDamageMultiplier += 0.01f * character.DeathKnightTalents.Desecration;
                 // Gonna use an average CD of a rune at 10sec per rune divided by 2 runes == 5 sec.
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 12, 5));
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 12f, 5f));
             }
 
             // AntiMagic Zone
             // Creates a zone where party/raid members take 75% less spell damage
             // Lasts 10 secs or X damage.  
-            if (character.DeathKnightTalents.AntiMagicZone > 0)
-            {
+            if (character.DeathKnightTalents.AntiMagicZone > 0) {
                 newStats = new Stats();
                 newStats.SpellDamageTakenMultiplier -= .75f * character.DeathKnightTalents.AntiMagicZone;
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 10, 2 * 60));
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 10f, 2f*60f));
             }
 
             // Improved Unholy Presence
@@ -1642,10 +1470,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Ebon Plaguebringer
             // CF becomes EP - increases magic damage taken by targets 4, 9, 13% in addition to disease damage
             // Increases crit strike chance by 1% per point
-            if (character.DeathKnightTalents.EbonPlaguebringer > 0)
-            {
+            if (character.DeathKnightTalents.EbonPlaguebringer > 0) {
                 // TODO: implment magic damage bonus.
-                sReturn.BonusCritChance += .01f * character.DeathKnightTalents.EbonPlaguebringer;
+                sReturn.BonusCritChance += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
             }
 
             // Sourge Strike
@@ -1653,11 +1480,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Rage of Rivendare
             // 2% per point more damage to targets w/ BP
             // Expertise +1 per point
-            if (character.DeathKnightTalents.RageOfRivendare > 0)
-            {
+            if (character.DeathKnightTalents.RageOfRivendare > 0) {
                 sReturn.Expertise += character.DeathKnightTalents.RageOfRivendare;
                 // Assuming BP is always on.
-                sReturn.BonusDamageMultiplier += .02f * character.DeathKnightTalents.RageOfRivendare;
+                sReturn.BonusDamageMultiplier += 0.02f * character.DeathKnightTalents.RageOfRivendare;
             }
 
             // Summon Gargoyle
@@ -1666,53 +1492,35 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             return sReturn;
         }
-
-        /// <summary>
-        /// Evaluate how many swings until the tank is next hit.
-        /// </summary>
+        /// <summary>Evaluate how many swings until the tank is next hit.</summary>
         /// <param name="PercAvoidance">a float that is a 0-1 value for % of total avoidance (Dodge + Parry + Miss)</param>
         /// <returns>Float of how many swings until the next hit. Should be > 1</returns>
-        private float GetReactionTime(float PercAvoidance)
-        {
+        private float GetReactionTime(float PercAvoidance) {
             float fReactionTime = 0f;
             // check args.
-            if (PercAvoidance < 0 || PercAvoidance > 1)
-                // error
-                return 0f;
-
-            fReactionTime = 1 / (1 - PercAvoidance);
-
+            if (PercAvoidance < 0f || PercAvoidance > 1f) { return 0f; }// error
+            fReactionTime = 1f / (1f - PercAvoidance);
             return fReactionTime;
         }
-
-        private float GetBurstTime(float PercAvoidance, float EffectiveHealth, float RawPerHit)
-        {
+        private float GetBurstTime(float PercAvoidance, float EffectiveHealth, float RawPerHit) {
             float fBurstTime = 0f;
             // check args.
-            if (PercAvoidance < 0 || PercAvoidance > 1)
-                // error
-                return 0f;
+            if (PercAvoidance < 0 || PercAvoidance > 1) { return 0f; } // error
 
             float fHvH = (EffectiveHealth / RawPerHit);
 
-            fBurstTime = (1 / PercAvoidance) * ((1 / (float)Math.Pow((1 - PercAvoidance), fHvH)) - 1f);
+            fBurstTime = (1f / PercAvoidance) * ((1f / (float)Math.Pow((1f - PercAvoidance), fHvH)) - 1f);
 
             return fBurstTime;
         }
-
-        /// <summary>
-        /// Deserializes the model's CalculationOptions data object from xml
-        /// </summary>
+        /// <summary>Deserializes the model's CalculationOptions data object from xml</summary>
         /// <param name="xml">The serialized xml representing the model's CalculationOptions data object.</param>
         /// <returns>The model's CalculationOptions data object.</returns>
-        public override ICalculationOptionBase DeserializeDataObject(string xml)
-        {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsTankDK));
-            System.IO.StringReader reader = new System.IO.StringReader(xml);
+        public override ICalculationOptionBase DeserializeDataObject(string xml) {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTankDK));
+            StringReader reader = new StringReader(xml);
             CalculationOptionsTankDK calcOpts = serializer.Deserialize(reader) as CalculationOptionsTankDK;
             return calcOpts;
         }
-
     }
 }

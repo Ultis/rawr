@@ -55,31 +55,11 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbInnervate = new System.Windows.Forms.CheckBox();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
-            this.cbPatch3_2 = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.trkTimeInFSR = new System.Windows.Forms.TrackBar();
             this.lblFSR = new System.Windows.Forms.Label();
             this.tkReplenishment = new System.Windows.Forms.TrackBar();
             this.lblReplenishment = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.chbGlyphWG = new System.Windows.Forms.CheckBox();
-            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.chbGlyphNourish = new System.Windows.Forms.CheckBox();
-            this.extendedToolTipLabel11 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.chbGlyphInnervate = new System.Windows.Forms.CheckBox();
-            this.extendedToolTipLabel10 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.chbGlyphSwiftmend = new Rawr.CustomControls.ExtendedToolTipCheckBox();
-            this.chbGlyphRejuvenation = new System.Windows.Forms.CheckBox();
-            this.chbGlyphRegrowth = new System.Windows.Forms.CheckBox();
-            this.chbGlyphLifebloom = new System.Windows.Forms.CheckBox();
-            this.chbGlyphHT = new System.Windows.Forms.CheckBox();
-            this.extendedToolTipLabel8 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel9 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel7 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel6 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
@@ -98,8 +78,6 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkTimeInFSR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).BeginInit();
-            this.tabPage3.SuspendLayout();
-            this.groupBox10.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -108,7 +86,6 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
@@ -406,7 +383,6 @@
             // 
             this.groupBox3.Controls.Add(this.cbInnervate);
             this.groupBox3.Controls.Add(this.cmbManaAmt);
-            this.groupBox3.Controls.Add(this.cbPatch3_2);
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Controls.Add(this.trkTimeInFSR);
             this.groupBox3.Controls.Add(this.lblFSR);
@@ -414,7 +390,7 @@
             this.groupBox3.Controls.Add(this.lblReplenishment);
             this.groupBox3.Location = new System.Drawing.Point(3, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(283, 221);
+            this.groupBox3.Size = new System.Drawing.Size(283, 201);
             this.groupBox3.TabIndex = 56;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Mana Regeneration";
@@ -422,7 +398,7 @@
             // cbInnervate
             // 
             this.cbInnervate.AutoSize = true;
-            this.cbInnervate.Location = new System.Drawing.Point(6, 198);
+            this.cbInnervate.Location = new System.Drawing.Point(6, 174);
             this.cbInnervate.Name = "cbInnervate";
             this.cbInnervate.Size = new System.Drawing.Size(115, 17);
             this.cbInnervate.TabIndex = 56;
@@ -446,20 +422,6 @@
             this.cmbManaAmt.TabIndex = 53;
             this.cmbManaAmt.ValueMember = "2400";
             this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
-            // 
-            // cbPatch3_2
-            // 
-            this.cbPatch3_2.Visible = false;
-            this.cbPatch3_2.AutoSize = true;
-            this.cbPatch3_2.Checked = true;
-            this.cbPatch3_2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbPatch3_2.Location = new System.Drawing.Point(6, 174);
-            this.cbPatch3_2.Name = "cbPatch3_2";
-            this.cbPatch3_2.Size = new System.Drawing.Size(122, 17);
-            this.cbPatch3_2.TabIndex = 51;
-            this.cbPatch3_2.Text = "Use 3.2 calculations";
-            this.cbPatch3_2.UseVisualStyleBackColor = true;
-            this.cbPatch3_2.CheckedChanged += new System.EventHandler(this.cbPatch3_2_CheckedChanged);
             // 
             // label10
             // 
@@ -510,242 +472,6 @@
             this.lblReplenishment.TabIndex = 55;
             this.lblReplenishment.Text = "Replenishment:";
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.label2);
-            this.tabPage3.Controls.Add(this.groupBox10);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(289, 519);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Glyphs";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.AutoEllipsis = true;
-            this.label2.Location = new System.Drawing.Point(6, 13);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(262, 43);
-            this.label2.TabIndex = 56;
-            this.label2.Text = "Select Glyphs from the Talents Tab.                              Modelled Glyphs:" +
-                "";
-            // 
-            // groupBox10
-            // 
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel2);
-            this.groupBox10.Controls.Add(this.chbGlyphWG);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel1);
-            this.groupBox10.Controls.Add(this.chbGlyphNourish);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel11);
-            this.groupBox10.Controls.Add(this.chbGlyphInnervate);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel10);
-            this.groupBox10.Controls.Add(this.chbGlyphSwiftmend);
-            this.groupBox10.Controls.Add(this.chbGlyphRejuvenation);
-            this.groupBox10.Controls.Add(this.chbGlyphRegrowth);
-            this.groupBox10.Controls.Add(this.chbGlyphLifebloom);
-            this.groupBox10.Controls.Add(this.chbGlyphHT);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel8);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel9);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel7);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel6);
-            this.groupBox10.Location = new System.Drawing.Point(6, 99);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(277, 177);
-            this.groupBox10.TabIndex = 0;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Glyphes";
-            // 
-            // extendedToolTipLabel2
-            // 
-            this.extendedToolTipLabel2.AutoSize = true;
-            this.extendedToolTipLabel2.Location = new System.Drawing.Point(6, 161);
-            this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
-            this.extendedToolTipLabel2.Size = new System.Drawing.Size(107, 13);
-            this.extendedToolTipLabel2.TabIndex = 11;
-            this.extendedToolTipLabel2.Text = "Glyph of Wild Growth";
-            this.extendedToolTipLabel2.ToolTipText = "Wild Growth can affect 1 additional target.";
-            // 
-            // chbGlyphWG
-            // 
-            this.chbGlyphWG.AutoSize = true;
-            this.chbGlyphWG.Checked = true;
-            this.chbGlyphWG.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbGlyphWG.Enabled = false;
-            this.chbGlyphWG.Location = new System.Drawing.Point(256, 160);
-            this.chbGlyphWG.Name = "chbGlyphWG";
-            this.chbGlyphWG.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphWG.TabIndex = 12;
-            this.chbGlyphWG.Tag = "Glyph of Wild Growth";
-            this.chbGlyphWG.UseVisualStyleBackColor = true;
-            // 
-            // extendedToolTipLabel1
-            // 
-            this.extendedToolTipLabel1.AutoSize = true;
-            this.extendedToolTipLabel1.Location = new System.Drawing.Point(6, 138);
-            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
-            this.extendedToolTipLabel1.Size = new System.Drawing.Size(85, 13);
-            this.extendedToolTipLabel1.TabIndex = 9;
-            this.extendedToolTipLabel1.Text = "Glyph of Nourish";
-            this.extendedToolTipLabel1.ToolTipText = "Your Nourish heals an additional 6% for each of your heal over time effects prese" +
-                "nt on the target.";
-            // 
-            // chbGlyphNourish
-            // 
-            this.chbGlyphNourish.AutoSize = true;
-            this.chbGlyphNourish.Checked = true;
-            this.chbGlyphNourish.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbGlyphNourish.Enabled = false;
-            this.chbGlyphNourish.Location = new System.Drawing.Point(256, 137);
-            this.chbGlyphNourish.Name = "chbGlyphNourish";
-            this.chbGlyphNourish.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphNourish.TabIndex = 10;
-            this.chbGlyphNourish.Tag = "Glyph of Nourish";
-            this.chbGlyphNourish.UseVisualStyleBackColor = true;
-            // 
-            // extendedToolTipLabel11
-            // 
-            this.extendedToolTipLabel11.AutoSize = true;
-            this.extendedToolTipLabel11.Location = new System.Drawing.Point(6, 116);
-            this.extendedToolTipLabel11.Name = "extendedToolTipLabel11";
-            this.extendedToolTipLabel11.Size = new System.Drawing.Size(94, 13);
-            this.extendedToolTipLabel11.TabIndex = 5;
-            this.extendedToolTipLabel11.Text = "Glyph of Innervate";
-            this.extendedToolTipLabel11.ToolTipText = "20% additional Manaregen for you, if you use Innervate";
-            // 
-            // chbGlyphInnervate
-            // 
-            this.chbGlyphInnervate.AutoSize = true;
-            this.chbGlyphInnervate.Checked = true;
-            this.chbGlyphInnervate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbGlyphInnervate.Enabled = false;
-            this.chbGlyphInnervate.Location = new System.Drawing.Point(256, 115);
-            this.chbGlyphInnervate.Name = "chbGlyphInnervate";
-            this.chbGlyphInnervate.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphInnervate.TabIndex = 8;
-            this.chbGlyphInnervate.Tag = "Glyph of Innervate";
-            this.chbGlyphInnervate.UseVisualStyleBackColor = true;
-            this.chbGlyphInnervate.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // extendedToolTipLabel10
-            // 
-            this.extendedToolTipLabel10.AutoSize = true;
-            this.extendedToolTipLabel10.Location = new System.Drawing.Point(6, 96);
-            this.extendedToolTipLabel10.Name = "extendedToolTipLabel10";
-            this.extendedToolTipLabel10.Size = new System.Drawing.Size(98, 13);
-            this.extendedToolTipLabel10.TabIndex = 4;
-            this.extendedToolTipLabel10.Text = "Glyph of Swiftmend";
-            this.extendedToolTipLabel10.ToolTipText = "Swiftmend no longer consumes the HoT";
-            // 
-            // chbGlyphSwiftmend
-            // 
-            this.chbGlyphSwiftmend.AutoSize = true;
-            this.chbGlyphSwiftmend.Checked = true;
-            this.chbGlyphSwiftmend.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbGlyphSwiftmend.Enabled = false;
-            this.chbGlyphSwiftmend.Location = new System.Drawing.Point(256, 95);
-            this.chbGlyphSwiftmend.Name = "chbGlyphSwiftmend";
-            this.chbGlyphSwiftmend.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphSwiftmend.TabIndex = 2;
-            this.chbGlyphSwiftmend.ToolTipText = "";
-            this.chbGlyphSwiftmend.UseVisualStyleBackColor = true;
-            this.chbGlyphSwiftmend.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // chbGlyphRejuvenation
-            // 
-            this.chbGlyphRejuvenation.AutoSize = true;
-            this.chbGlyphRejuvenation.Enabled = false;
-            this.chbGlyphRejuvenation.Location = new System.Drawing.Point(256, 55);
-            this.chbGlyphRejuvenation.Name = "chbGlyphRejuvenation";
-            this.chbGlyphRejuvenation.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphRejuvenation.TabIndex = 5;
-            this.chbGlyphRejuvenation.Tag = "Glyph of Rejuvenation";
-            this.chbGlyphRejuvenation.UseVisualStyleBackColor = true;
-            this.chbGlyphRejuvenation.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // chbGlyphRegrowth
-            // 
-            this.chbGlyphRegrowth.AutoSize = true;
-            this.chbGlyphRegrowth.Checked = true;
-            this.chbGlyphRegrowth.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbGlyphRegrowth.Enabled = false;
-            this.chbGlyphRegrowth.Location = new System.Drawing.Point(256, 35);
-            this.chbGlyphRegrowth.Name = "chbGlyphRegrowth";
-            this.chbGlyphRegrowth.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphRegrowth.TabIndex = 4;
-            this.chbGlyphRegrowth.Tag = "Glyph of Regrowth";
-            this.chbGlyphRegrowth.UseVisualStyleBackColor = true;
-            this.chbGlyphRegrowth.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // chbGlyphLifebloom
-            // 
-            this.chbGlyphLifebloom.AutoSize = true;
-            this.chbGlyphLifebloom.Checked = true;
-            this.chbGlyphLifebloom.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbGlyphLifebloom.Enabled = false;
-            this.chbGlyphLifebloom.Location = new System.Drawing.Point(256, 75);
-            this.chbGlyphLifebloom.Name = "chbGlyphLifebloom";
-            this.chbGlyphLifebloom.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphLifebloom.TabIndex = 6;
-            this.chbGlyphLifebloom.Tag = "Glyph of Lifebloom";
-            this.chbGlyphLifebloom.UseVisualStyleBackColor = true;
-            this.chbGlyphLifebloom.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // chbGlyphHT
-            // 
-            this.chbGlyphHT.AutoSize = true;
-            this.chbGlyphHT.Checked = true;
-            this.chbGlyphHT.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbGlyphHT.Enabled = false;
-            this.chbGlyphHT.Location = new System.Drawing.Point(256, 15);
-            this.chbGlyphHT.Name = "chbGlyphHT";
-            this.chbGlyphHT.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphHT.TabIndex = 3;
-            this.chbGlyphHT.Tag = "Glyph of Healing Touch";
-            this.chbGlyphHT.UseVisualStyleBackColor = true;
-            this.chbGlyphHT.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // extendedToolTipLabel8
-            // 
-            this.extendedToolTipLabel8.AutoSize = true;
-            this.extendedToolTipLabel8.Location = new System.Drawing.Point(6, 55);
-            this.extendedToolTipLabel8.Name = "extendedToolTipLabel8";
-            this.extendedToolTipLabel8.Size = new System.Drawing.Size(112, 13);
-            this.extendedToolTipLabel8.TabIndex = 2;
-            this.extendedToolTipLabel8.Text = "Glyph of Rejuvenation";
-            this.extendedToolTipLabel8.ToolTipText = "Heals an additional 50% per Tick, if the target is under 50% life";
-            // 
-            // extendedToolTipLabel9
-            // 
-            this.extendedToolTipLabel9.AutoSize = true;
-            this.extendedToolTipLabel9.Location = new System.Drawing.Point(6, 76);
-            this.extendedToolTipLabel9.Name = "extendedToolTipLabel9";
-            this.extendedToolTipLabel9.Size = new System.Drawing.Size(94, 13);
-            this.extendedToolTipLabel9.TabIndex = 3;
-            this.extendedToolTipLabel9.Text = "Glyph of Lifebloom";
-            this.extendedToolTipLabel9.ToolTipText = "+1sec Duration";
-            // 
-            // extendedToolTipLabel7
-            // 
-            this.extendedToolTipLabel7.AutoSize = true;
-            this.extendedToolTipLabel7.Location = new System.Drawing.Point(6, 35);
-            this.extendedToolTipLabel7.Name = "extendedToolTipLabel7";
-            this.extendedToolTipLabel7.Size = new System.Drawing.Size(95, 13);
-            this.extendedToolTipLabel7.TabIndex = 1;
-            this.extendedToolTipLabel7.Text = "Glyph of Regrowth";
-            this.extendedToolTipLabel7.ToolTipText = "20% more Healing if Regrowth is already active";
-            // 
-            // extendedToolTipLabel6
-            // 
-            this.extendedToolTipLabel6.AutoSize = true;
-            this.extendedToolTipLabel6.Location = new System.Drawing.Point(6, 16);
-            this.extendedToolTipLabel6.Name = "extendedToolTipLabel6";
-            this.extendedToolTipLabel6.Size = new System.Drawing.Size(119, 13);
-            this.extendedToolTipLabel6.TabIndex = 0;
-            this.extendedToolTipLabel6.Text = "Glyph of Healing Touch";
-            this.extendedToolTipLabel6.ToolTipText = "-50% Healing -1.5sec Casttime -25% Manacost";
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.tbModuleNotes);
@@ -761,12 +487,13 @@
             // 
             this.tbModuleNotes.AcceptsReturn = true;
             this.tbModuleNotes.AcceptsTab = true;
-            this.tbModuleNotes.Location = new System.Drawing.Point(7, 7);
+            this.tbModuleNotes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbModuleNotes.Location = new System.Drawing.Point(3, 3);
             this.tbModuleNotes.Multiline = true;
             this.tbModuleNotes.Name = "tbModuleNotes";
             this.tbModuleNotes.ReadOnly = true;
             this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbModuleNotes.Size = new System.Drawing.Size(276, 537);
+            this.tbModuleNotes.Size = new System.Drawing.Size(283, 513);
             this.tbModuleNotes.TabIndex = 0;
             // 
             // CalculationOptionsPanelTree
@@ -797,9 +524,6 @@
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkTimeInFSR)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).EndInit();
-            this.tabPage3.ResumeLayout(false);
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox10.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
@@ -812,20 +536,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.GroupBox groupBox10;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel9;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel8;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel7;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel6;
-        private System.Windows.Forms.CheckBox chbGlyphInnervate;
-        private System.Windows.Forms.CheckBox chbGlyphLifebloom;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel11;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel10;
-        private System.Windows.Forms.CheckBox chbGlyphRejuvenation;
-        private System.Windows.Forms.CheckBox chbGlyphRegrowth;
-        private System.Windows.Forms.CheckBox chbGlyphHT;
-        private Rawr.CustomControls.ExtendedToolTipCheckBox chbGlyphSwiftmend;
         private System.Windows.Forms.Label lblFightLength;
         private System.Windows.Forms.TrackBar trkFightLength;
         private System.Windows.Forms.Label label11;
@@ -841,7 +551,6 @@
         private System.Windows.Forms.TrackBar tbPrimaryHealFrac;
         private System.Windows.Forms.Label lblPrimaryHeal;
         private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.CheckBox cbPatch3_2;
         private System.Windows.Forms.TrackBar tkReplenishment;
         private System.Windows.Forms.Label lblReplenishment;
         private System.Windows.Forms.Label label10;
@@ -854,11 +563,6 @@
         private System.Windows.Forms.TrackBar tbSwiftmendPerMin;
         private System.Windows.Forms.Label lblSwiftMend;
         private System.Windows.Forms.CheckBox cbApplyMore;
-        private System.Windows.Forms.Label label2;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel2;
-        private System.Windows.Forms.CheckBox chbGlyphWG;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
-        private System.Windows.Forms.CheckBox chbGlyphNourish;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lblSurvMulti;
         private System.Windows.Forms.TrackBar tbSurvMulti;

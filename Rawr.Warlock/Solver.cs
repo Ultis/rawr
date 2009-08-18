@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.Warlock
-{
-    public class Solver
-    {
+namespace Rawr.Warlock {
+    public class Solver {
+        #region Variables
         public EventList events { get; protected set; }
-        public double time = 0f;
-        public double petManaGain = 0;
+        public float time = 0f;
+        public float petManaGain = 0;
         Spell lifeTap;
         TimeSpan calcTime;
         public List<Spell> SpellPriority { get; protected set; }
@@ -19,7 +18,7 @@ namespace Rawr.Warlock
         public Character character { get; set; }
         public float HitChance { get; set; }
         public float critCount { get; set; }
-        public double timeTillNextSpell { get; set; }
+        public float timeTillNextSpell { get; set; }
         public float DPS { get; protected set; }
         public float PetDPS { get; protected set; }
         public float TotalDPS { get; protected set; }
@@ -32,10 +31,10 @@ namespace Rawr.Warlock
         public bool UseDSBelow35 { get; protected set; }
         public bool UseDSBelow25 { get; protected set; }
         public int BackdraftCounter { get; protected set; }
-        public double maxTime { get; protected set; }
-        public double currentMana { get; protected set; }
-        public double DSCastEnd { get; protected set; }
-        public double ImmolateEnd { get; protected set; }
+        public float maxTime { get; protected set; }
+        public float currentMana { get; protected set; }
+        public float DSCastEnd { get; protected set; }
+        public float ImmolateEnd { get; protected set; }
         public Stats simStats { get; protected set; }
         public Spell fillerSpell { get; protected set; }
         public Spell drainSoul { get; protected set; }
@@ -43,142 +42,126 @@ namespace Rawr.Warlock
         public Spell haunt { get; protected set; }
         public Spell immolate { get; protected set; }
         public Spell shadowBolt { get; protected set; }
+        #endregion
 
-        public class ManaSource
-        {
+        public class ManaSource {
             public string Name { get; set; }
-            public double Value { get; set; }
+            public float Value { get; set; }
 
-            public ManaSource(string name, double value)
-            {
-                Name = name; Value = value;
+            public ManaSource(string name, float value) {
+                Name = name;
+                Value = value;
             }
         }
 
-        public class EventList : SortedList<double, Event>
-        {
-            public new void Add(double _key, Event _Value)
-            {
-                double key = _key;
-                foreach (double basekey in base.Keys)
-                {
-                    if (key == basekey) key += 0.00001f;
-                    else if (key < basekey) break;
+        public class EventList : SortedList<float, Event> {
+            public new void Add(float _key, Event _Value) {
+                float key = _key;
+                foreach (float basekey in base.Keys) {
+                    if      (key == basekey) { key += 0.00001f; }
+                    else if (key <  basekey) { break; }
                 }
-                base.Add(key, _Value);
+                base.Add((float)key, _Value);
             }
         }
 
-        public class Event
-        {
+        public class Event {
             public Spell Spell { get; protected set; }
             public String Name { get; protected set; }
-            public double RealTime { get; protected set; }
+            public float RealTime { get; protected set; }
 
             public Event() { }
 
-            public Event(Spell _spell, String _name)
-            {
+            public Event(Spell _spell, String _name) {
                 Spell = _spell;
                 Name = _name;
             }
         }
 
-        public Spell GetCastSpellNew(double time, Stats simStats)
-        {
+        public Spell GetCastSpellNew(float time, Stats simStats) {
             timeTillNextSpell = 100;
-            foreach (Spell spell in SpellPriority)
-            {
+            foreach (Spell spell in SpellPriority) {
                 if (timeTillNextSpell < GetCastTime(spell) + lag) continue;
-                double realcasttime = GetRealCastTime(spell);
-                double casttime = GetCastTime(spell);
-                switch (spell.Name)
-                {
-                    case "Haunt":
-                        {
-                            if (spell.SpellStatistics.CooldownReset <= time)
-                            {
-                                if (Math.Round(time + GetGlobalCooldown(spell) + lag + casttime, 4) > Math.Round(spell.SpellStatistics.CooldownReset + 4, 4) || spell.SpellStatistics.CooldownReset == 0)
-                                {
-                                    return spell;
-                                }
-                                else foreach (Spell tempspell in SpellPriority)
-                                    {
-                                        if (tempspell.Name == "Haunt") continue;
-                                        double realcasttimetemp = GetRealCastTime(tempspell);
-                                        double casttimetemp = GetCastTime(tempspell);
-                                        if (Math.Round(time + realcasttimetemp + lag, 4) >= Math.Round(tempspell.SpellStatistics.CooldownReset, 4) && Math.Round(time + casttimetemp + lag + casttime + lag, 4) <= Math.Round(spell.SpellStatistics.CooldownReset + 4, 4))
-                                            return tempspell;
+                float realcasttime = GetRealCastTime(spell);
+                float casttime = GetCastTime(spell);
+                switch (spell.Name) {
+                    case "Haunt": {
+                        if (spell.SpellStatistics.CooldownReset <= time) {
+                            if (Math.Round(time + GetGlobalCooldown(spell) + lag + casttime, 4) > Math.Round(spell.SpellStatistics.CooldownReset + 4, 4) || spell.SpellStatistics.CooldownReset == 0) {
+                                return spell;
+                            } else {
+                                foreach (Spell tempspell in SpellPriority) {
+                                    if (tempspell.Name == "Haunt") continue;
+                                    float realcasttimetemp = GetRealCastTime(tempspell);
+                                    float casttimetemp = GetCastTime(tempspell);
+                                    if (Math.Round(time + realcasttimetemp + lag, 4) >= Math.Round(tempspell.SpellStatistics.CooldownReset, 4) && Math.Round(time + casttimetemp + lag + casttime + lag, 4) <= Math.Round(spell.SpellStatistics.CooldownReset + 4, 4)) {
+                                        return tempspell;
                                     }
-                                return spell;
-                            }
-                            timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset + 4 - time - realcasttime - lag) : timeTillNextSpell);
-                            break;
-                        }
-                    case "Conflagrate":
-                        {
-                            if (Math.Round(spell.SpellStatistics.CooldownReset, 4) <= Math.Round(time, 4))
-                            {
-                                for (int index = 0; index < events.Count; index++)
-                                    if (events.Values[index].Name == "Immolate")
-                                        return spell;
-                                if (spell.Cooldown > 0)
-                                    timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset) : timeTillNextSpell);
-                                else timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - time - realcasttime - lag) : timeTillNextSpell);
-                            }
-                            break;
-                        }
-                    default:
-                        {
-                            if (spell.Name == fillerSpell.Name)
-                            {
-                                if (UseDSBelow25 || UseDSBelow35)
-                                {
-                                    if (Math.Round(time, 4) < Math.Round(DSCastEnd, 4)
-                                     && Math.Round(time, 4) <= Math.Round(timeTillNextSpell - GetCastTime(drainSoul), 4)
-                                     )
-                                        return null;
-                                    if (((Math.Round(time, 4) >= Math.Round(maxTime * 0.65f, 4) && UseDSBelow35)
-                                      || (Math.Round(time, 4) >= Math.Round(maxTime * 0.75f, 4) && UseDSBelow25)
-                                      && (Math.Round(time, 4) <= Math.Round(timeTillNextSpell - GetGlobalCooldown(drainSoul), 4)))
-                                       )
-                                        return drainSoul;
                                 }
                             }
-                            if (Math.Round(time + realcasttime + lag, 4) >= Math.Round(spell.SpellStatistics.CooldownReset, 4))
-                                return spell;
-                            if (spell.Cooldown > 0)
-                                timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset) : timeTillNextSpell);
-                            else timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - time - realcasttime - lag) : timeTillNextSpell);
-                            break;
+                            return spell;
                         }
+                        timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset + 4f - time - realcasttime - lag) : timeTillNextSpell);
+                        break;
+                    }
+                    case "Conflagrate": {
+                        if (Math.Round(spell.SpellStatistics.CooldownReset, 4) <= Math.Round(time, 4)) {
+                            for (int index = 0; index < events.Count; index++) {
+                                if (events.Values[index].Name == "Immolate") { return spell; }
+                            }
+                            if (spell.Cooldown > 0) {
+                                timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset) : timeTillNextSpell);
+                            } else {
+                                timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - time - realcasttime - lag) : timeTillNextSpell);
+                            }
+                        }
+                        break;
+                    }
+                    default: {
+                        if (spell.Name == fillerSpell.Name) {
+                            if (UseDSBelow25 || UseDSBelow35) {
+                                if (Math.Round(time, 4) < Math.Round(DSCastEnd, 4)
+                                 && Math.Round(time, 4) <= Math.Round(timeTillNextSpell - GetCastTime(drainSoul), 4)
+                                 )
+                                    return null;
+                                if (((Math.Round(time, 4) >= Math.Round(maxTime * 0.65f, 4) && UseDSBelow35)
+                                  || (Math.Round(time, 4) >= Math.Round(maxTime * 0.75f, 4) && UseDSBelow25)
+                                  && (Math.Round(time, 4) <= Math.Round(timeTillNextSpell - GetGlobalCooldown(drainSoul), 4)))
+                                   )
+                                    return drainSoul;
+                            }
+                        }
+                        if (Math.Round(time + realcasttime + lag, 4) >= Math.Round(spell.SpellStatistics.CooldownReset, 4)) {
+                            return spell;
+                        }
+                        if (spell.Cooldown > 0) {
+                            timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset) : timeTillNextSpell);
+                        } else {
+                            timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - time - realcasttime - lag) : timeTillNextSpell);
+                        }
+                        break;
+                    }
                 }
             }
             return null;
         }
 
-        public Solver(Stats playerStats, Character _char)
-        {
+        public Solver(Stats playerStats, Character _char) {
             character = _char;
             Name = "Base";
             Rotation = "None";
 
             PlayerStats = playerStats.Clone();
-            if (playerStats.HasteRatingFor20SecOnUse2Min > 0.0f)
-                PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
-            if (playerStats.HasteRatingFor20SecOnUse5Min > 0.0f)
-                PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse5Min * 20f / 300f;
-            if (playerStats.SpellHasteFor10SecOnCast_10_45 > 0.0f)
-                PlayerStats.HasteRating += playerStats.SpellHasteFor10SecOnCast_10_45 * 10f / 75f;
+            if (playerStats.HasteRatingFor20SecOnUse2Min   > 0f) PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
+            if (playerStats.HasteRatingFor20SecOnUse5Min   > 0f) PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse5Min * 20f / 300f;
+            if (playerStats.SpellHasteFor10SecOnCast_10_45 > 0f) PlayerStats.HasteRating += playerStats.SpellHasteFor10SecOnCast_10_45 * 10f / 75f;
             //PlayerStats.SpellHaste = StatConversion.GetSpellHasteFromRating(PlayerStats.HasteRating);
-
 
             CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
             lag = CalculationOptions.Delay / 1000f;
 
             HitChance = PlayerStats.SpellHit * 100f + CalculationOptions.TargetHit;
-            if (character.Race == CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence"))
-                HitChance += 1;
+            if (character.Race == CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence")) { HitChance += 1; }
 
             ManaSources = new List<ManaSource>();
             SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
@@ -186,21 +169,15 @@ namespace Rawr.Warlock
             lifeTap = SpellFactory.CreateSpell("Life Tap", PlayerStats, character);
             bool UAImmoChosen = false;
             bool CurseChosen = false;
-            foreach (string spellname in CalculationOptions.SpellPriority)
-            {
+            foreach (string spellname in CalculationOptions.SpellPriority) {
                 Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character);
-                if (spelltmp != null)
-                {
-                    if ((spelltmp.Name == "Unstable Affliction" || spelltmp.Name == "Immolate") && UAImmoChosen)
-                        continue;
-                    if (spelltmp.Name.Contains("Curse") && CurseChosen)
-                        continue;
+                if (spelltmp != null) {
+                    if ((spelltmp.Name == "Unstable Affliction" || spelltmp.Name == "Immolate") && UAImmoChosen) { continue; }
+                    if (spelltmp.Name.Contains("Curse") && CurseChosen) { continue; }
                     SpellPriority.Add(spelltmp);
                     spelltmp.SpellStatistics.HitChance = (float)Math.Min(1f, HitChance / 100f);
-                    if (spelltmp.Name == "Unstable Affliction" || spelltmp.Name == "Immolate")
-                        UAImmoChosen = true;
-                    if (spelltmp.Name.Contains("Curse"))
-                        CurseChosen = true;
+                    if (spelltmp.Name == "Unstable Affliction" || spelltmp.Name == "Immolate") { UAImmoChosen = true; }
+                    if (spelltmp.Name.Contains("Curse")) { CurseChosen = true; }
                 }
             }
             if (SpellPriority.Count == 0) SpellPriority.Add(shadowBolt);
@@ -209,8 +186,7 @@ namespace Rawr.Warlock
             //            UseBSBelow25 = CalculationOptions.UseBSBelow25;
             UseDSBelow35 = false;
             UseDSBelow25 = false;
-            if (UseDSBelow35 || UseDSBelow25)
-            {
+            if (UseDSBelow35 || UseDSBelow25) {
                 drainSoul = SpellFactory.CreateSpell("Drain Soul", PlayerStats, character);
                 SpellPriority.Add(drainSoul);
             }
@@ -222,17 +198,16 @@ namespace Rawr.Warlock
 
             Name = "User defined";
             Rotation = "Priority Based:";
-            foreach (Spell spell in SpellPriority)
+            foreach (Spell spell in SpellPriority) {
                 Rotation += "\r\n- " + spell.Name;
+            }
         }
-
-        public void Calculate(CharacterCalculationsWarlock calculatedStats)
-        {
+        public void Calculate(CharacterCalculationsWarlock calculatedStats) {
             DateTime startTime = DateTime.Now;
 
-            if (SpellPriority.Count == 0) return;
+            if (SpellPriority.Count == 0) { return; }
             simStats = PlayerStats.Clone();
-            SortedList<double, Spell> CastList = new SortedList<double, Spell>();
+            SortedList<float, Spell> CastList = new SortedList<float, Spell>();
             events = new EventList();
             maxTime = CalculationOptions.FightLength * 60f;
             currentMana = 0;
@@ -252,27 +227,23 @@ namespace Rawr.Warlock
             int CounterAffEffects = 0;
             int CounterDrainTicks = 0;
             float Procs2T7 = 0;
-            double elapsedTime = 0;
-            double newtime = 0;
-            double lastUsedTime = 0;
+            float elapsedTime = 0;
+            float newtime = 0;
+            float lastUsedTime = 0;
 
             #region Calculate cast rotation
             Event currentEvent = new Event(null, "Done casting");
             CalculationOptions.castseq = "";
             StringBuilder builder = new StringBuilder();
-            while (newtime < maxTime)
-            {
+            while (newtime < maxTime) {
                 time = newtime;
-                if (currentEvent.Spell != null)
-                {
+                if (currentEvent.Spell != null) {
                     lastUsedTime = time;
                     builder.Append(Math.Round(time, 2) + "\t" + currentEvent.Spell.Name + "\t" + currentEvent.Name + "\r\n");
                 }
-                switch (currentEvent.Name)
-                {
+                switch (currentEvent.Name) {
                     #region Done Casting Event
-                    case "Done casting":
-                        {
+                    case "Done casting": {
                             Spell spell = GetCastSpellNew(time, simStats);
                             if (spell == null)
                             {
@@ -301,8 +272,8 @@ namespace Rawr.Warlock
                             {
                                 if (spell.DebuffDuration > 0f)
                                 {
-                                    double debuff = spell.TimeBetweenTicks + (spell.CastTime > 0 ? GetRealCastTime(spell) : 0) + lag;
-                                    double bla = GetRealCastTime(spell);
+                                    float debuff = spell.TimeBetweenTicks + (spell.CastTime > 0 ? GetRealCastTime(spell) : 0) + lag;
+                                    float bla = GetRealCastTime(spell);
                                     while (Math.Round(debuff, 4) <= Math.Round(spell.DebuffDuration + (spell.CastTime > 0 ? bla : 0) + lag + (spell.Name == "Curse of Agony" && character.WarlockTalents.GlyphCoA ? 4 : 0), 4))
                                     {
                                         events.Add(time + debuff, new Event(spell, "Dot tick"));
@@ -339,7 +310,7 @@ namespace Rawr.Warlock
                                             if (!removeEvent("Shadow Embrace debuff")) AffEffectsNumber++;
                                             events.Add(time + GetRealCastTime(spell) + 12, new Event(spell, "Shadow Embrace debuff"));
                                         }
-                                        double nextCorTick = 0;
+                                        float nextCorTick = 0;
                                         Event nextCorTickEvent = null;
                                         for (int index = 0; index < events.Count; index++)
                                             if (events.Values[index].Spell.Name == "Corruption")
@@ -352,8 +323,8 @@ namespace Rawr.Warlock
                                         {
                                             removeEvent(nextCorTickEvent.Spell, "Dot tick");
                                             removeEvent(nextCorTickEvent.Spell, "Aff effect");
-                                            double debuff = nextCorTick;
-                                            double lastDebuff = debuff;
+                                            float debuff = nextCorTick;
+                                            float lastDebuff = debuff;
                                             while (debuff <= time + GetRealCastTime(spell) + nextCorTickEvent.Spell.DebuffDuration)
                                             {
                                                 lastDebuff = debuff;
@@ -568,7 +539,7 @@ namespace Rawr.Warlock
                 currentMana += corDrops * fillerSpell.ManaCost * GetCastTime(corruption) / GetCastTime(fillerSpell);
             }
 
-            double manaGain = simStats.Mana;
+            float manaGain = simStats.Mana;
             currentMana += manaGain;
             ManaSources.Add(new ManaSource("Intellect", manaGain));
             if (simStats.Mp5 > 0)
@@ -656,11 +627,11 @@ namespace Rawr.Warlock
             #endregion
 
             #region Damage buffs
-            double CastsPerSecond = 0;
-            double HitsPerSecond = 0;
-            double DotTicksPerSecond = 0;
-            double PossibleCrits = 0;
-            foreach (KeyValuePair<double, Spell> cast in CastList)
+            float CastsPerSecond = 0;
+            float HitsPerSecond = 0;
+            float DotTicksPerSecond = 0;
+            float PossibleCrits = 0;
+            foreach (KeyValuePair<float, Spell> cast in CastList)
             {
                 Spell spell = cast.Value;
                 CastsPerSecond++;
@@ -989,14 +960,14 @@ namespace Rawr.Warlock
             return atLeastOneRemoved;
         }
 
-        public double GetGlobalCooldown(Spell spell)
+        public float GetGlobalCooldown(Spell spell)
         {
             return Math.Max(1.0f, spell.BaseGlobalCooldown / (1 + simStats.SpellHaste));
         }
 
-        public double GetCastTime(Spell spell)
+        public float GetCastTime(Spell spell)
         {
-            double castTime = Math.Max(spell.CastTime / (1 + simStats.SpellHaste), Math.Max(1.0f, spell.BaseGlobalCooldown / (1 + simStats.SpellHaste)));
+            float castTime = Math.Max(spell.CastTime / (1 + simStats.SpellHaste), Math.Max(1.0f, spell.BaseGlobalCooldown / (1 + simStats.SpellHaste)));
             if (BackdraftCounter > 0 && spell.SpellTree == SpellTree.Destruction)
             {
                 castTime *= 1 - character.WarlockTalents.Backdraft * 0.1f;
@@ -1007,9 +978,9 @@ namespace Rawr.Warlock
             return castTime;
         }
 
-        public double GetRealCastTime(Spell spell)
+        public float GetRealCastTime(Spell spell)
         {
-            double realCastTime = spell.CastTime / (1 + simStats.SpellHaste);
+            float realCastTime = spell.CastTime / (1 + simStats.SpellHaste);
             if (BackdraftCounter > 0 && spell.SpellTree == SpellTree.Destruction)
             {
                 realCastTime *= 1 - character.WarlockTalents.Backdraft * 0.1f;

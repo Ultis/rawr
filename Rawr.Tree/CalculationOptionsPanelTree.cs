@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.Tree
-{
-    public partial class CalculationOptionsPanelTree : CalculationOptionsPanelBase
-    {
+namespace Rawr.Tree {
+    public partial class CalculationOptionsPanelTree : CalculationOptionsPanelBase {
         private bool loading = false;
-
-        public CalculationOptionsPanelTree()
-        {
+        public CalculationOptionsPanelTree() {
             InitializeComponent();
 
             // Set about text
@@ -35,20 +31,17 @@ namespace Rawr.Tree
                 "HealSustained is the HPS from your current rotation for the entire fight.\r\n" +
                 "Survival is scaled based on the physical damage you can take based on your health and armor.\r\n";
         }
-
-        protected override void LoadCalculationOptions()
-        {
+        protected override void LoadCalculationOptions() {
             loading = true;
 
             CalculationOptionsTree calcOpts;
 
-            if (Character.CalculationOptions == null)
-            {
+            if (Character.CalculationOptions == null){
                 calcOpts = new CalculationOptionsTree();
                 Character.CalculationOptions = calcOpts;
-            }
-            else
+            }else{
                 calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
+            }
 
             tbBSRatio.Value = calcOpts.BSRatio;
             int burst = 100 - tbBSRatio.Value;
@@ -71,17 +64,6 @@ namespace Rawr.Tree
             tbWildGrowth.Value = calcOpts.WildGrowthPerMinute;
             lblWG.Text = tbWildGrowth.Value + " Wild Growth casts per minute.";
 
-            /*
-            chbGlyphHT.Checked = calcOpts.glyphOfHealingTouch;
-            chbGlyphRegrowth.Checked = calcOpts.glyphOfRegrowth;
-            chbGlyphRejuvenation.Checked = calcOpts.glyphOfRejuvenation;
-            chbGlyphSwiftmend.Checked = calcOpts.glyphOfSwiftmend;
-            chbGlyphLifebloom.Checked = calcOpts.glyphOfLifebloom;
-            chbGlyphInnervate.Checked = calcOpts.glyphOfInnervate;
-
-             */
-             
-            cbPatch3_2.Checked = calcOpts.Patch3_2;
             cbInnervate.Checked = calcOpts.Innervates > 0;
             //tbPrimaryHealFrac.Value = calcOpts.MainSpellFraction;
             lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
@@ -90,52 +72,28 @@ namespace Rawr.Tree
             lblSwiftMend.Text = "Swiftmends per Minute: " + tbSwiftmendPerMin.Value;
 
             loading = false;
-
-            //Enable/Disable Glyph Checkboxes
-//            chbSomeGlyph_CheckedChanged(null, null);
         }
-
-        private void chbSomeGlyph_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsTree calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
-
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private float parseFloat(string s)
-        {
+        private float parseFloat(string s) {
             float tmp;
             float.TryParse(s, out tmp);
-
-            if (tmp > 0)
-                return tmp;
-            
-            return 0;
+            if (tmp > 0f) { return tmp; }
+            return 0f;
         }
-
-        private void cbRotation_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void cbRotation_SelectedIndexChanged(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.Rotation = cbRotation.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
-
-        private void trkTimeInFSR_Scroll(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void trkTimeInFSR_Scroll(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             lblFSR.Text = trkTimeInFSR.Value + "% of fight spent in FSR.";
             calcOpts.FSRRatio = trkTimeInFSR.Value;
             Character.OnCalculationsInvalidated();
         }
-
-        private void trkFightLength_Scroll(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void trkFightLength_Scroll(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.FightDuration = trkFightLength.Value * 15;
             int m = trkFightLength.Value / 4;
@@ -143,35 +101,27 @@ namespace Rawr.Tree
             lblFightLength.Text = "Fight duration: "+m+":"+s;
             Character.OnCalculationsInvalidated();
         }
-
-        private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.ManaPot = cmbManaAmt.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
-
-        private void tkReplenishment_Scroll(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void tkReplenishment_Scroll(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.ReplenishmentUptime = tkReplenishment.Value;
             lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
             Character.OnCalculationsInvalidated();
         }
-
-        private void tbWildGrowth_Scroll(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void tbWildGrowth_Scroll(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.WildGrowthPerMinute = tbWildGrowth.Value;
             lblWG.Text = tbWildGrowth.Value + " Wild Growth casts per minute.";
             Character.OnCalculationsInvalidated();
         }
-
-        private void tbBSRatio_Scroll(object sender, EventArgs e)
-        {
+        private void tbBSRatio_Scroll(object sender, EventArgs e) {
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.BSRatio = tbBSRatio.Value;
@@ -180,61 +130,38 @@ namespace Rawr.Tree
             lblBSRatio.Text = "Ratio: "+burst + "% Burst, "+sust + "% Sustained.";
             Character.OnCalculationsInvalidated();
         }
-
-        private void tbSurvMulti_Scroll(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void tbSurvMulti_Scroll(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.SurvValuePer100 = tbSurvMulti.Value;
             lblSurvMulti.Text = calcOpts.SurvValuePer100.ToString() + " points per 100 survival (effective) health";
             Character.OnCalculationsInvalidated();
         }
-
-
-        private void cbPatch3_2_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.Patch3_2 = cbPatch3_2.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbInnervate_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void cbInnervate_CheckedChanged(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.Innervates = cbInnervate.Checked?1:0;
             Character.OnCalculationsInvalidated();
         }
-
-        private void tbPrimaryHealFrac_Scroll(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void tbPrimaryHealFrac_Scroll(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             //calcOpts.MainSpellFraction = tbPrimaryHealFrac.Value;
             lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
             Character.OnCalculationsInvalidated();
         }
-
-        private void tbSwiftmend_Scroll(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void tbSwiftmend_Scroll(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.SwiftmendPerMinute = tbSwiftmendPerMin.Value;
             lblSwiftMend.Text = "Swiftmends per minute: " + tbSwiftmendPerMin.Value;
             Character.OnCalculationsInvalidated();
         }
-
-        private void cbApplyMore_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
+        private void cbApplyMore_CheckedChanged(object sender, EventArgs e) {
+            if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-//            calcOpts.PenalizeEverything = cbApplyMore.Checked;
+            //calcOpts.PenalizeEverything = cbApplyMore.Checked;
             Character.OnCalculationsInvalidated();
         }
-
-       
     }
-
- 
 }

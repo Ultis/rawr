@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rawr.Warlock
-{
-
-    public class CharacterCalculationsWarlock : CharacterCalculationsBase
-    {
+namespace Rawr.Warlock {
+    public class CharacterCalculationsWarlock : CharacterCalculationsBase {
+        #region Variables
         private Stats basicStats;
         private Character character;
 
@@ -14,56 +12,45 @@ namespace Rawr.Warlock
         public float RegenOutFSR { get; set; }
         public CharacterRace Race { get; set; }
 
-        public Character Character
-        {
+        public Character Character {
             get { return character; }
             set { character = value; }
         }
         
-        public Stats BasicStats
-        {
+        public Stats BasicStats {
             get { return basicStats; }
             set { basicStats = value; }
         }
 
-        public override float OverallPoints
-        {
-            get
-            {
+        public override float OverallPoints {
+            get {
                 float f = 0f;
-                foreach (float f2 in _subPoints)
-                    f += f2;
+                foreach (float f2 in _subPoints) { f += f2; }
                 return f;
             }
             set { }
         }
 
         private float[] _subPoints = new float[] { 0f, 0f };
-        public override float[] SubPoints
-        {
+        public override float[] SubPoints {
             get { return _subPoints; }
             set { _subPoints = value; }
         }
 
-        public float DpsPoints
-        {
+        public float DpsPoints {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float PetDPSPoints
-        {
+        public float PetDPSPoints {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
         }
+        #endregion
 
-        public Solver GetSolver(Character character, Stats stats)
-        {
-                return new Solver(stats, character);
-        }
+        public Solver GetSolver(Character character, Stats stats) { return new Solver(stats, character); }
 
-        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
-        {
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             CalculationOptionsWarlock calcOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
@@ -89,12 +76,10 @@ namespace Rawr.Warlock
             float BonusHit = BasicStats.SpellHit * 100f;
             float RacialHit = 0;
             string RacialText = "";
-            if (character.Race == CharacterRace.Draenei)
-            {
+            if (character.Race == CharacterRace.Draenei) {
                 RacialHit = 1;
                 RacialText = "1% from Draenei Racial\r\n";
-                if (!character.ActiveBuffsContains("Heroic Presence"))
-                    BonusHit += 1;
+                if (!character.ActiveBuffsContains("Heroic Presence")) { BonusHit += 1; }
             }
             float RHitRating = 0.01f / StatConversion.GetSpellHitFromRating(1);
             float TalentHit = character.WarlockTalents.Suppression * 1f;

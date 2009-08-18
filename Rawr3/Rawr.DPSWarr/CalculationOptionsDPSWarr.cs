@@ -13,7 +13,7 @@ using System.Text;
 namespace Rawr.DPSWarr {
     public class CalculationOptionsDPSWarr : ICalculationOptionBase {
         public int TargetLevel = 83;
-        public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+        public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
         public float Duration = 300f;
         public bool FuryStance = true;
 		public bool _3pt2Mode = false;

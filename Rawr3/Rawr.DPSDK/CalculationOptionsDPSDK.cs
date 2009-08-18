@@ -30,7 +30,7 @@ namespace Rawr.DPSDK
         }
 
         public int TargetLevel = 83;
-		public int BossArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+        public int BossArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
 		public int FightLength = 10;
 		public bool EnforceMetagemRequirements = false;
         public bool Bloodlust = false;

@@ -29,7 +29,7 @@ namespace Rawr.Bear
 		{
 			TargetLevel = 83;
 			ThreatScale = 10f;
-			TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+            TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
 			SurvivalSoftCap = 140000;
 			TargetDamage = 50000;
 			TargetAttackSpeed = 2.0f;

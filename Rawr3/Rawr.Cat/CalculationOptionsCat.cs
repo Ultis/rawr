@@ -27,7 +27,7 @@ namespace Rawr.Cat
 		public CalculationOptionsCat()
 		{
 			TargetLevel = 83;
-			TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+            TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
 			CustomUseShred = false;
 			CustomUseRip = false;
 			CustomUseRake = false;
@@ -37,7 +37,7 @@ namespace Rawr.Cat
 		}
 
 		public int TargetLevel = 83;
-		public int TargetArmor = (int)StatConversion.NPC_BOSS_ARMOR;
+        public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
 		public bool CustomUseShred = false;
 		public bool CustomUseRip = false;
 		public bool CustomUseRake = false;

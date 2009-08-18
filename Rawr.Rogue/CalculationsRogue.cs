@@ -2,86 +2,162 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
-using Rawr.Rogue.BasicStats;
 using Rawr.Rogue.ClassAbilities;
 using Rawr.Rogue.FinishingMoves;
 using Rawr.Rogue.Poisons;
 using Rawr.Rogue.SpecialAbilities;
-
 #if RAWR3
     using System.Windows.Media;
 #else
     using System.Drawing;
 #endif
 
-namespace Rawr.Rogue
-{
+namespace Rawr.Rogue {
     [Calculations.RawrModelInfoAttribute("Rogue", "Ability_Rogue_SliceDice", CharacterClass.Rogue)]
-    public class CalculationsRogue : CalculationsBase
-    {
-        public CalculationsRogue(){}
+    public class CalculationsRogue : CalculationsBase {
+        public override List<GemmingTemplate> DefaultGemmingTemplates {
+            get {
+                ////Relevant Gem IDs for Rogues
+                //Red
+                int[] bold = { 39900, 39996, 40111, 42142 };
+                int[] delicate = { 39905, 39997, 40112, 42143 };
+
+                //Purple
+                int[] shifting = { 39935, 40023, 40130 };
+                int[] sovereign = { 39934, 40022, 40129 };
+
+                //Blue
+                int[] solid = { 39919, 40008, 40119, 36767 };
+
+                //Green
+                int[] enduring = { 39976, 40089, 40167 };
+
+                //Yellow
+                int[] thick = { 39916, 40015, 40126, 42157 };
+
+                //Orange
+                int[] etched = { 39948, 40038, 40143 };
+                int[] fierce = { 39951, 40041, 40146 };
+                int[] glinting = { 39953, 40044, 40148 };
+                int[] stalwart = { 39964, 40056, 40160 };
+                int[] deadly = { 39952, 40043, 40147 };
+
+                //Meta
+                // int austere = 41380;
+                int relentless = 41398;
+
+                return new List<GemmingTemplate> {
+				    new GemmingTemplate { Model = "Rogue", Group = "Uncommon", //Max Agility
+					    RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
+				    new GemmingTemplate { Model = "Rogue", Group = "Uncommon", //Agi/Crit
+					    RedId = delicate[0], YellowId = deadly[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
+				    new GemmingTemplate { Model = "Rogue", Group = "Rare", Enabled = true, //Max Agility
+					    RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
+				    new GemmingTemplate { Model = "Rogue", Group = "Rare", Enabled = true, //Agi/Crit 
+					    RedId = delicate[1], YellowId = deadly[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
+				    new GemmingTemplate { Model = "Rogue", Group = "Epic", //Max Agility
+					    RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
+				    new GemmingTemplate { Model = "Rogue", Group = "Epic", //Agi/Crit 
+					    RedId = delicate[2], YellowId = deadly[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
+				    new GemmingTemplate { Model = "Rogue", Group = "Jeweler", //Max Agility
+					    RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
+				    new GemmingTemplate { Model = "Rogue", Group = "Jeweler", //Agility Heavy
+					    RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless },
+			    };
+            }
+        }
+
+        #region Variables and Properties
 
         private CalculationOptionsPanelRogue _calculationOptionsPanel = null;
-#if RAWR3
+        #if RAWR3
         public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
+        #else
         public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
+        #endif
         {
-            get
-            {
-                if (_calculationOptionsPanel == null)
-                {
-                    _calculationOptionsPanel = new CalculationOptionsPanelRogue();
-                }
+            get {
+                if (_calculationOptionsPanel == null) { _calculationOptionsPanel = new CalculationOptionsPanelRogue(); }
                 return _calculationOptionsPanel;
             }
         }
 
-        private readonly Dictionary<string, Color> _subPointNameColors = new Dictionary<string, Color> {{"DPS", Color.FromArgb(255, 200, 0,0)}};
-        public override Dictionary<string, Color> SubPointNameColors
-        {
-            get { return _subPointNameColors; }
+        //private string[] _characterDisplayCalculationLabels = null;
+        public override string[] CharacterDisplayCalculationLabels { get { return DisplayValue.GroupedList(); } }
+
+        private string[] _optimizableCalculationLabels = null;
+        public override string[] OptimizableCalculationLabels {
+            get {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+                        "Health",
+                        "Armor",
+                        "Strength",
+                        "Attack Power",
+                        "Agility",
+                        "Crit %",
+                        "Haste %",
+					    "Armor Penetration %",
+                        "% Chance to Miss (White)",
+                        "% Chance to Miss (Yellow)",
+                        "% Chance to be Dodged",
+                        "% Chance to be Parried",
+                        "% Chance to be Avoided (Yellow/Dodge)",
+					};
+                return _optimizableCalculationLabels;
+            }
         }
 
-        public override string[] CharacterDisplayCalculationLabels
-        {
-            get { return DisplayValue.GroupedList(); }
+        private string[] _customChartNames = null;
+        public override string[] CustomChartNames {
+            get {
+                if (_customChartNames == null) {
+                    _customChartNames = new string[] {
+                        "Combat Table",
+                        /*""/*,
+                        /*""/*,
+                        /*""*/
+                    };
+                }
+                return _customChartNames;
+            }
         }
 
-        private readonly string[] _customChartNames = new[] { "Combat Table" };
-        public override string[] CustomChartNames
-        {
-            get { return _customChartNames; }
+        private readonly Dictionary<string, Color> _subPointNameColors = new Dictionary<string, Color> { { "DPS", Color.FromArgb(255, 200, 0, 0) } };
+        public override Dictionary<string, Color> SubPointNameColors { get { return _subPointNameColors; } }
+
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes {
+            get {
+                if (_relevantItemTypes == null) {
+                    _relevantItemTypes = new List<ItemType>(new[] {
+                        ItemType.None,
+                        ItemType.Leather,
+                        ItemType.Bow,
+                        ItemType.Crossbow,
+                        ItemType.Gun,
+                        ItemType.Thrown,
+                        ItemType.Dagger,
+                        ItemType.FistWeapon,
+                        ItemType.OneHandMace,
+                        ItemType.OneHandSword
+                    });
+                }
+                return _relevantItemTypes;
+            }
         }
 
-        public override List<ItemType> RelevantItemTypes
-        {
-            get { return RelevantItems.List; }
-        }
+        public override CharacterClass TargetClass { get { return CharacterClass.Rogue; } }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationsRogue(); }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsRogue(); }
 
-        public override CharacterClass TargetClass
-        {
-            get { return CharacterClass.Rogue; }
-        }
-
-        public override ComparisonCalculationBase CreateNewComparisonCalculation()
-        {
-            return new ComparisonCalculationsRogue();
-        }
-
-        public override CharacterCalculationsBase CreateNewCharacterCalculations()
-        {
-            return new CharacterCalculationsRogue();
-        }
-
-        public override ICalculationOptionBase DeserializeDataObject(string xml)
-        {
-            var s = new XmlSerializer(typeof (CalculationOptionsRogue));
-            var sr = new StringReader(xml);
-            var calcOpts = s.Deserialize(sr) as CalculationOptionsRogue;
+        public override ICalculationOptionBase DeserializeDataObject(string xml) {
+            XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsRogue));
+            StringReader sr = new StringReader(xml);
+            CalculationOptionsRogue calcOpts = s.Deserialize(sr) as CalculationOptionsRogue;
             return calcOpts;
         }
+        #endregion
 
         /// <summary>
         /// Calculate damage output
@@ -94,25 +170,20 @@ namespace Rawr.Rogue
         /// <returns></returns>
         /// Much of this code is based on Aldriana's RogueCalc
         /// 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
-        {
-            TalentsAndGlyphs.Initialize(character.RogueTalents); 
-            var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+            TalentsAndGlyphs.Initialize(character.RogueTalents);
+            CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             Talents.InitializeMurder(calcOpts);
-            var stats = GetCharacterStats(character, additionalItem);
-            var combatFactors = new CombatFactors(character, stats);
-            return GetCalculations(calcOpts, combatFactors, stats, needsDisplayCalculations);
-        }
+            Stats stats = GetCharacterStats(character, additionalItem);
+            CombatFactors combatFactors = new CombatFactors(character, stats);
 
-        public static CharacterCalculationsBase GetCalculations(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, bool needsDisplayCalculations)
-        {
             //------------------------------------------------------------------------------------
             // CALCULATE OUTPUTS
             //------------------------------------------------------------------------------------
-            var displayedValues = new CharacterCalculationsRogue(stats);
-            
-            var whiteAttacks = new WhiteAttacks(combatFactors);
-            var cycleTime = new CycleTime(calcOpts, combatFactors, whiteAttacks);
+            CharacterCalculationsRogue displayedValues = new CharacterCalculationsRogue(stats);
+
+            WhiteAttacks whiteAttacks = new WhiteAttacks(combatFactors);
+            CycleTime cycleTime = new CycleTime(calcOpts, combatFactors, whiteAttacks);
 
             //Now that we have the basics, reset for any SnD bonus
             stats.PhysicalHaste += SnD.CalcHasteBonus(calcOpts, cycleTime);
@@ -123,8 +194,7 @@ namespace Rawr.Rogue
 
             var totalFinisherDps = 0f;
             
-            foreach (var component in calcOpts.DpsCycle.Components)
-            {
+            foreach (var component in calcOpts.DpsCycle.Components) {
                 var finisherDps = component.CalcFinisherDps(calcOpts, combatFactors, stats, whiteAttacks, cycleTime, displayedValues);
                 displayedValues.AddToolTip(DisplayValue.FinisherDps, component + ": " + finisherDps);
                 totalFinisherDps += finisherDps;
@@ -137,10 +207,7 @@ namespace Rawr.Rogue
             displayedValues.TotalDPS = whiteAttacks.CalcMhWhiteDps() + whiteAttacks.CalcOhWhiteDps() + swordSpecDps + cpgDps + totalFinisherDps + poisonDps;
             displayedValues.OverallPoints = displayedValues.TotalDPS;
 
-            if (!needsDisplayCalculations)
-            {
-                return displayedValues;
-            }
+            if (!needsDisplayCalculations) { return displayedValues; }
 
             //------------------------------------------------------------------------------------
             // ADD CALCULATED OUTPUTS TO DISPLAY
@@ -198,23 +265,22 @@ namespace Rawr.Rogue
             return displayedValues;
         }
 
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-        {
-            var statsRace = new BaseRogueStats(character.Race);
-            var statsBaseGear = GetItemStats(character, additionalItem);
-            var statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            var statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
+        public override Stats GetCharacterStats(Character character, Item additionalItem) {
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Rogue, character.Race);
+            Stats statsBaseGear = GetItemStats(character, additionalItem);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
             //TalentTree tree = character.AllTalents;
 
-            var agiBase = (float) Math.Floor(statsRace.Agility*(1 + statsRace.BonusAgilityMultiplier));
+            var agiBase  = (float) Math.Floor(statsRace.Agility *(1f + statsRace.BonusAgilityMultiplier));
             var agiBonus = (float) Math.Floor(statsGearEnchantsBuffs.Agility*(1 + statsRace.BonusAgilityMultiplier));
-            var strBase = (float) Math.Floor(statsRace.Strength*(1 + statsRace.BonusStrengthMultiplier));
+            var strBase  = (float) Math.Floor(statsRace.Strength*(1f + statsRace.BonusStrengthMultiplier));
             var strBonus = (float) Math.Floor(statsGearEnchantsBuffs.Strength*(1 + statsRace.BonusStrengthMultiplier));
-            var staBase = (float) Math.Floor(statsRace.Stamina*(1 + statsRace.BonusStaminaMultiplier));
+            var staBase  = (float) Math.Floor(statsRace.Stamina *(1f + statsRace.BonusStaminaMultiplier));
             var staBonus = (float) Math.Floor(statsGearEnchantsBuffs.Stamina*(1 + statsRace.BonusStaminaMultiplier));
 
-            var statsTotal = new Stats();
+            Stats statsTotal = new Stats();
             statsTotal.BonusDamageMultiplier = statsGearEnchantsBuffs.BonusDamageMultiplier; //TODO:  actually use in the model!!
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier)*(1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)*(Talents.Deadliness.Multiplier)*(Talents.SavageCombat.AttackPower.Multiplier)) - 1;
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier)*(1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)*(Talents.SinisterCalling.Agility.Multiplier)) - 1;
@@ -248,8 +314,7 @@ namespace Rawr.Rogue
             statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility,CharacterClass.Rogue);
             statsTotal.PhysicalCrit += Talents.Malice.Bonus;
 
-            if (character.ActiveBuffs.FindAll(buff => buff.Group == "Critical Strike Chance Taken").Count == 0)
-            {
+            if (character.ActiveBuffs.FindAll(buff => buff.Group == "Critical Strike Chance Taken").Count == 0) {
                 statsTotal.PhysicalCrit += Talents.MasterPoisoner.Crit.Bonus;
             }
 
@@ -297,10 +362,8 @@ namespace Rawr.Rogue
             return statsTotal;
         }
 
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-        {
-            switch (chartName)
-            {
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) {
+            switch (chartName) {
                 case "Combat Table":
                     var currentCalculationsRogue = GetCharacterCalculations(character) as CharacterCalculationsRogue;
                     var calcMiss = new ComparisonCalculationsRogue();
@@ -334,10 +397,8 @@ namespace Rawr.Rogue
             }
         }
 
-        public override Stats GetRelevantStats(Stats stats)
-        {
-            var relevantStats = new Stats
-                       {
+        public override Stats GetRelevantStats(Stats stats) {
+            Stats relevantStats = new Stats {
                            Agility = stats.Agility,
                            Strength = stats.Strength,
                            AttackPower = stats.AttackPower,
@@ -405,28 +466,8 @@ namespace Rawr.Rogue
 
             return relevantStats;
         }
-
-        public override bool IsEnchantRelevant(Enchant enchant)
-        {
-        	try
-			{
-				return IsEnchantWithSpecialProc(enchant) || HasRelevantStats(enchant.Stats);
-			}
-			catch (Exception)
-			{
-				return false;
-			}
-		}
-
-        private static bool IsEnchantWithSpecialProc( Enchant enchant )
-        {
-            return enchant.Id == 3789;  //Berserking
-        }
-
-        public override bool HasRelevantStats(Stats stats)
-        {
-            var relevant = 
-                (
+        public override bool HasRelevantStats(Stats stats) {
+            bool relevant = (
                     stats.Agility +
                     stats.Strength +
                     stats.AttackPower +
@@ -479,30 +520,51 @@ namespace Rawr.Rogue
                     stats.RogueT8FourPieceBonus
                 ) != 0;
 
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
                     || effect.Trigger == Trigger.DamageDone)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
-                    if (relevant)
-                    {
-                        break;
-                    }
+                    if (relevant) { break; }
                 }
             }
             return relevant;
         }
 
-        public override List<string> GetRelevantGlyphs()
-        {
-            return ModeledGlyphs.List;
+        public override bool IsEnchantRelevant(Enchant enchant) {
+        	try {
+				return IsEnchantWithSpecialProc(enchant) || HasRelevantStats(enchant.Stats);
+			} catch (Exception) {
+				return false;
+			}
+		}
+
+        private static bool IsEnchantWithSpecialProc( Enchant enchant ) {
+            return enchant.Id == 3789;  //Berserking
         }
 
-        public override List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get { return RogueGemmingTemplates.List; }
+        private static List<string> _relevantGlyphs = null;
+        public override List<string> GetRelevantGlyphs() {
+            if (_relevantGlyphs == null) {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Backstab");
+                _relevantGlyphs.Add("Glyph of Eviscerate");
+                _relevantGlyphs.Add("Glyph of Mutilate");
+                _relevantGlyphs.Add("Glyph of Hunger for Blood");
+                _relevantGlyphs.Add("Glyph of Sinister Strike");
+                _relevantGlyphs.Add("Glyph of Slice and Dice");
+                _relevantGlyphs.Add("Glyph of Feint");
+                _relevantGlyphs.Add("Glyph of Rupture");
+                _relevantGlyphs.Add("Glyph of Blade Flurry");
+                _relevantGlyphs.Add("Glyph of Adrenaline Rush");
+                /*_relevantGlyphs.Add("Glyph of Killing Spree");
+                _relevantGlyphs.Add("Glyph of Vigor");
+                _relevantGlyphs.Add("Glyph of Fan of Knives");
+                _relevantGlyphs.Add("Glyph of Expose Armor");
+                _relevantGlyphs.Add("Glyph of Ghostly Strike");*/
+            }
+            return _relevantGlyphs;
         }
     }
 }

@@ -2,37 +2,26 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.TankDK
-{
-    class StatsSpecialEffects
-    {
+namespace Rawr.TankDK {
+    class StatsSpecialEffects {
         public Character character;
         public Stats stats;
         public CombatTable combatTable;
-
-        public StatsSpecialEffects(Character c, Stats s, CombatTable t)
-        {
+        public StatsSpecialEffects(Character c, Stats s, CombatTable t) {
             character = c;
             stats = s;
             combatTable = t;
         }
-
-
-        public Stats getSpecialEffects(CalculationOptionsTankDK calcOpts, SpecialEffect effect)
-        {
+        public Stats getSpecialEffects(CalculationOptionsTankDK calcOpts, SpecialEffect effect) {
             Stats statsAverage = new Stats();
             Rotation rRotation = calcOpts.m_Rotation;
-            if (effect.Trigger == Trigger.Use)
-            {
+            if (effect.Trigger == Trigger.Use) {
                 statsAverage += effect.GetAverageStats();
-            }
-            else
-            {
+            }else{
                 float trigger = 0f;
                 float chance = 0f;
                 float unhastedAttackSpeed = 2f;
-                switch (effect.Trigger)
-                {
+                switch (effect.Trigger) {
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
                         trigger = (1f /  rRotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
@@ -76,13 +65,10 @@ namespace Rawr.TankDK
                         break;
 
                 }
-                if (effect.MaxStack > 1)
-                {
+                if (effect.MaxStack > 1) {
                     float timeToMax = (float)Math.Min(calcOpts.FightLength * 60, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
                     statsAverage += effect.Stats * (effect.MaxStack * (((calcOpts.FightLength * 60) - .5f * timeToMax) / (calcOpts.FightLength * 60)));
-                }
-                else
-                {
+                } else {
                     statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
                 }
             }

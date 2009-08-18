@@ -2,84 +2,60 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.TankDK
-{
+namespace Rawr.TankDK {
     // Reminder: this is for an individual item.  Do not apply weighting to this class.  
-    class ComparisonCalculationTankDK : ComparisonCalculationBase
-    {
+    class ComparisonCalculationTankDK : ComparisonCalculationBase {
         private string _name = string.Empty;
-        public override string Name
-        {
+        public override string Name {
             get { return _name; }
             set { _name = value; }
         }
 
-        public float Survival 
-        {
+        public float Survival {
             get { return _subPoints[0]; }
-            set { _subPoints[0] = value;
-                _overallPoints = Survival + Mitigation + Threat;
-            }
+            set { _subPoints[0] = value; _overallPoints = Survival + Mitigation + Threat; }
         }
 
-        public float Mitigation
-        {
+        public float Mitigation {
             get { return _subPoints[1]; }
-            set { _subPoints[1] = value;
-                _overallPoints = Survival + Mitigation + Threat;
-            }
+            set { _subPoints[1] = value; _overallPoints = Survival + Mitigation + Threat; }
         }
 
-        public float Threat
-        {
+        public float Threat {
             get { return _subPoints[2]; }
-            set { _subPoints[2] = value;
-                _overallPoints = Survival + Mitigation + Threat;
-            }
+            set { _subPoints[2] = value; _overallPoints = Survival + Mitigation + Threat; }
         }
 
         private float _overallPoints = 0f;
-        public override float OverallPoints
-        {
+        public override float OverallPoints {
             // Reminder: this is for an individual item.  Do not apply weighting to this class.  
-            get
-            {
-                if (_overallPoints == 0f )
-                    _overallPoints = Survival + Mitigation + Threat;
+            get {
+                if (_overallPoints == 0f) { _overallPoints = Survival + Mitigation + Threat; }
                 return _overallPoints;
             }
-            set
-            {
-                _overallPoints = value;
-            }
+            set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] {0.0f, 0.0f, 0.0f};
-        public override float[] SubPoints
-        {
+        private float[] _subPoints = new float[] {0f, 0f, 0f};
+        public override float[] SubPoints {
             get { return _subPoints; }
-            set { _subPoints = value;
-                _overallPoints = Survival + Mitigation + Threat;
-            }
+            set { _subPoints = value; _overallPoints = Survival + Mitigation + Threat; }
         }
 
         private Item _item = null;
-        public override Item Item
-        {
+        public override Item Item {
             get { return _item; }
             set { _item = value; }
         }
 
         private ItemInstance _itemInstance = null;
-        public override ItemInstance ItemInstance
-        {
+        public override ItemInstance ItemInstance {
             get { return _itemInstance; }
             set { _itemInstance = value; }
         }
 
         private bool _equipped = false;
-        public override bool Equipped
-        {
+        public override bool Equipped {
             get { return _equipped; }
             set { _equipped = value; }
         }
@@ -94,8 +70,7 @@ namespace Rawr.TankDK
         /// </summary>
         public override bool getBaseStatOption(Character character) { return false; }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             // So that the ToString() function can be used as a base-line comparison if all else fails.
             return string.Format("{0}: ({1}O = {2}M {3}S {4}T)", Name, Math.Round(OverallPoints), Math.Round(Mitigation), Math.Round(Survival), Math.Round(Threat));
         }

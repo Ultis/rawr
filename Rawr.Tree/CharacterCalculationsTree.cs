@@ -1,102 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rawr.Tree
-{
-    public class CharacterCalculationsTree : CharacterCalculationsBase
-    {
+namespace Rawr.Tree {
+    public class CharacterCalculationsTree : CharacterCalculationsBase {
         public Stats BasicStats { get; set; }
 
         private float[] subPoints = new float[] { 0f, 0f, 0f };
-        public override float[] SubPoints
-        {
+        public override float[] SubPoints {
             get { return subPoints; }
             set { subPoints = value; }
         }
-
-        public float BurstPoints
-        {
+        public float BurstPoints {
             get { return subPoints[0]; }
             set { subPoints[0] = value; }
         }
-
-        public float SustainedPoints
-        {
+        public float SustainedPoints {
             get { return subPoints[1]; }
             set { subPoints[1] = value; }
         }
-
-        public float SurvivalPoints
-        {
+        public float SurvivalPoints {
             get { return subPoints[2]; }
             set { subPoints[2] = value; }
         } 
-
         public override float OverallPoints { get; set; }
-
         public Rotation Simulation;
-
         public Character LocalCharacter { get; set; }
-
         public float haste { get; set; }
         float spellhaste { get; set; }
         float haste_until_hard_cap { get; set; }
         float haste_until_soft_cap { get; set; }
 
-        public void doHasteCalcs()
-        {
-            haste = (1 + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating));
-            spellhaste = 1 + BasicStats.SpellHaste;
-            float hard = (1.5f / (1f * spellhaste) - 1) * StatConversion.RATING_PER_SPELLHASTE;
-            float soft = (1.5f * (1.0f - 0.04f * LocalCharacter.DruidTalents.GiftOfTheEarthmother) / (1.0f * spellhaste) - 1) * StatConversion.RATING_PER_SPELLHASTE;
+        public void doHasteCalcs() {
+            haste       = 1f + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating);
+            spellhaste  = 1f + BasicStats.SpellHaste;
+            float hard  = (1.5f / (1f * spellhaste) - 1) * StatConversion.RATING_PER_SPELLHASTE;
+            float soft  = (1.5f * (1.0f - 0.04f * LocalCharacter.DruidTalents.GiftOfTheEarthmother) / (1.0f * spellhaste) - 1) * StatConversion.RATING_PER_SPELLHASTE;
             haste_until_hard_cap = hard - BasicStats.HasteRating;
             haste_until_soft_cap = soft - BasicStats.HasteRating;
         }
 
-        string LifebloomMethod_ToString(int lbStack, bool LifebloomFastStacking)
-        {
+        string LifebloomMethod_ToString(int lbStack, bool LifebloomFastStacking) {
             string result;
-            if (LifebloomFastStacking)
-            {
-                switch (lbStack)
-                {
-                    case 0: result = "Unused";
-                        break;
-                    case 1: result = "Single blooms";
-                        break;
-                    case 2: result = "Fast Double blooms";
-                        break;
-                    case 3: result = "Fast Triple blooms";
-                        break;
+            if (LifebloomFastStacking) {
+                switch (lbStack) {
+                    case 0: result = "Unused";              break;
+                    case 1: result = "Single blooms";       break;
+                    case 2: result = "Fast Double blooms";  break;
+                    case 3: result = "Fast Triple blooms";  break;
                     case 4:
-                    default: result = "Stack";
-                        break;
+                    default: result = "Stack";              break;
                 }
-            }
-            else
-            {
-                switch (lbStack)
-                {
-                    case 0: result = "Unused";
-                        break;
-                    case 1: result = "Single blooms";
-                        break;
-                    case 2: result = "Slow Double blooms";
-                        break;
-                    case 3: result = "Slow Triple blooms";
-                        break;
+            } else {
+                switch (lbStack) {
+                    case 0: result = "Unused";              break;
+                    case 1: result = "Single blooms";       break;
+                    case 2: result = "Slow Double blooms";  break;
+                    case 3: result = "Slow Triple blooms";  break;
                     case 4:
-                    default: result = "Stack";
-                        break;
+                    default: result = "Stack";              break;
                 }
             }
 
             return result;
         }
 
-
-        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
-        {
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
 
             dictValues.Add("HealBurst", BurstPoints.ToString());
@@ -127,22 +95,17 @@ namespace Rawr.Tree
 
             dictValues.Add("Armor", Math.Round(BasicStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(83, BasicStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
 
-            if (Simulation.TotalTime - Simulation.TimeToOOM > 1.0)
-            {
+            if (Simulation.TotalTime - Simulation.TimeToOOM > 1.0) {
                 dictValues.Add("Result", "OOM from tank HoTs");
                 dictValues.Add("Time until OOM", Math.Round(Simulation.TimeToOOM,1).ToString() + " sec*" + "Keeping HoTs on the tank(s) will cause you to go OOM");
                 dictValues.Add("Unused Mana Remaining", Math.Round(Simulation.UnusedMana, 0).ToString());
                 dictValues.Add("Unused cast time percentage", Math.Round(Simulation.UnusedCastTimeFrac*100.0f, 0).ToString()+"%");
-            }
-            else if (Simulation.UnusedMana == 0)
-            {
+            } else if (Simulation.UnusedMana == 0) {
                 dictValues.Add("Result", "Mana limited*This isn't neccesarily a problem, but means you cannot cast every available second, your mana needs to be managed to last");
                 dictValues.Add("Time until OOM", "End of Fight*" + Simulation.TimeToOOM.ToString() + " sec");
                 dictValues.Add("Unused Mana Remaining", Math.Round(Simulation.UnusedMana, 0).ToString());
                 dictValues.Add("Unused cast time percentage", Math.Round(Simulation.UnusedCastTimeFrac*100.0f, 0).ToString()+"%* This indicates what percentage of the total fight time, you cannot cast your primary heals in order to avoid going out of mana");
-            }
-            else
-            {
+            } else {
                 dictValues.Add("Result", "Cast time limited*Mana shouldn't be a problem. You can cast as much as possible");
                 dictValues.Add("Time until OOM", "Not during fight*" + Simulation.TimeToOOM.ToString() + " sec");
                 dictValues.Add("Unused Mana Remaining", Math.Round(Simulation.UnusedMana, 0).ToString()+"* Indicates wasted mana you couldn't get time to spend");
@@ -150,25 +113,24 @@ namespace Rawr.Tree
             }
             dictValues.Add("Total healing done", Simulation.TotalHealing.ToString());
 
+            dictValues.Add("Number of tanks",           Simulation.rotSettings.noTanks.ToString());
+            dictValues.Add("Lifebloom method",          LifebloomMethod_ToString(Simulation.rotSettings.lifeBloomStackSize, Simulation.rotSettings.lifeBloomFastStack));
+            dictValues.Add("Extra Tank HoTs",           (Simulation.rotSettings.rgOnTank ? "Regrowth" : "") + (Simulation.rotSettings.rejuvOnTank ? " Rejuv" : ""));
+            dictValues.Add("HPS for primary heal",      Math.Round(Simulation.HPSFromPrimary,2).ToString());
+            dictValues.Add("HPS for tank HoTs",         Math.Round(Simulation.HPSFromHots, 2).ToString() + "*" + Math.Round(Simulation.HPSFromTrueHots, 2).ToString() + " from true HoTs\n" + Math.Round(Simulation.HPSFromHots - Simulation.HPSFromTrueHots, 2).ToString()+" in the form of bursts from Regrowth and LB Blooms");
+            dictValues.Add("MPS for primary heal",      Math.Round(Simulation.MPSFromPrimary,2).ToString());
+            dictValues.Add("MPS for tank HoTs",         Math.Round(Simulation.MPSFromHots,2).ToString());
+            dictValues.Add("MPS for Wild Growth",       Math.Round(Simulation.MPSFromWildGrowth, 2).ToString());
+            dictValues.Add("HPS for Wild Growth",       Math.Round(Simulation.HPSFromWildGrowth, 2).ToString());
+            dictValues.Add("MPS for Swiftmend",         Math.Round(Simulation.MPSFromSwiftmend, 2).ToString()+"* Doesn't include possible extra MPS to refresh HoTs, if Glyph of Swiftmend not used");
+            dictValues.Add("HPS for Swiftmend",         Math.Round(Simulation.HPSFromSwiftmend, 2).ToString());
+            dictValues.Add("Spell for primary heal",    Simulation.rotSettings.primaryHeal.ToString());
+            dictValues.Add("Mana regen per second",     Math.Round(Simulation.ManaPer5InRotation / 5, 2).ToString());
+            dictValues.Add("HoT refresh fraction",      Math.Round(Simulation.HotsFraction, 2).ToString());
+            dictValues.Add("Casts per minute until OOM",Math.Round(Simulation.CastsPerMinute, 2).ToString());
+            dictValues.Add("Crits per minute until OOM",Math.Round(Simulation.CritsPerMinute, 2).ToString());
 
-            dictValues.Add("Number of tanks", Simulation.rotSettings.noTanks.ToString());
-            dictValues.Add("Lifebloom method", LifebloomMethod_ToString(Simulation.rotSettings.lifeBloomStackSize, Simulation.rotSettings.lifeBloomFastStack));
-            dictValues.Add("Extra Tank HoTs", (Simulation.rotSettings.rgOnTank ? "Regrowth" : "") + (Simulation.rotSettings.rejuvOnTank ? " Rejuv" : ""));
-            dictValues.Add("HPS for primary heal", Math.Round(Simulation.HPSFromPrimary,2).ToString());
-            dictValues.Add("HPS for tank HoTs", Math.Round(Simulation.HPSFromHots, 2).ToString() + "*" + Math.Round(Simulation.HPSFromTrueHots, 2).ToString() + " from true HoTs\n" + Math.Round(Simulation.HPSFromHots - Simulation.HPSFromTrueHots, 2).ToString()+" in the form of bursts from Regrowth and LB Blooms");
-            dictValues.Add("MPS for primary heal", Math.Round(Simulation.MPSFromPrimary,2).ToString());
-            dictValues.Add("MPS for tank HoTs", Math.Round(Simulation.MPSFromHots,2).ToString());
-            dictValues.Add("MPS for Wild Growth", Math.Round(Simulation.MPSFromWildGrowth, 2).ToString());
-            dictValues.Add("HPS for Wild Growth", Math.Round(Simulation.HPSFromWildGrowth, 2).ToString());
-            dictValues.Add("MPS for Swiftmend", Math.Round(Simulation.MPSFromSwiftmend, 2).ToString()+"* Doesn't include possible extra MPS to refresh HoTs, if Glyph of Swiftmend not used");
-            dictValues.Add("HPS for Swiftmend", Math.Round(Simulation.HPSFromSwiftmend, 2).ToString());
-            dictValues.Add("Spell for primary heal", Simulation.rotSettings.primaryHeal.ToString());
-            dictValues.Add("Mana regen per second", Math.Round(Simulation.ManaPer5InRotation / 5, 2).ToString());
-            dictValues.Add("HoT refresh fraction", Math.Round(Simulation.HotsFraction, 2).ToString());
-            dictValues.Add("Casts per minute until OOM", Math.Round(Simulation.CastsPerMinute, 2).ToString());
-            dictValues.Add("Crits per minute until OOM", Math.Round(Simulation.CritsPerMinute, 2).ToString());
-
-             spell = new Regrowth(this, BasicStats, true);
+            spell = new Regrowth(this, BasicStats, true);
             dictValues.Add("RG Heal", Math.Round(spell.AverageHealing, 2) + "*" + 
                 "Base: " + Math.Round(spell.BaseMinHeal, 2) + " - " + Math.Round(spell.BaseMaxHeal, 2) + "\n" +
                 Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + 
@@ -260,13 +222,10 @@ namespace Rawr.Tree
 
             return dictValues;
         }
-
-        public override float GetOptimizableCalculationValue(string calculation)
-        {
+        public override float GetOptimizableCalculationValue(string calculation) {
             doHasteCalcs();
 
-            switch (calculation)
-            {
+            switch (calculation) {
                 case "Mana": return BasicStats.Mana;
                 case "MP5": return Simulation.ManaPer5In5SR;
                 case "Spell Haste Percentage": return (spellhaste -1.0f) * 100.0f;

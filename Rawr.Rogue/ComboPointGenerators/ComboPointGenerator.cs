@@ -2,8 +2,7 @@
 using System.Xml.Serialization;
 using Rawr.Rogue.ClassAbilities;
 
-namespace Rawr.Rogue.ComboPointGenerators
-{
+namespace Rawr.Rogue.ComboPointGenerators {
 #if (SILVERLIGHT == false)
     [Serializable]
     [XmlInclude(typeof(Mutilate))]
@@ -12,39 +11,26 @@ namespace Rawr.Rogue.ComboPointGenerators
     [XmlInclude(typeof(Hemo))]
     [XmlInclude(typeof(HonorAmongThieves))]
 #endif
-    public abstract class ComboPointGenerator 
-    {
+    public abstract class ComboPointGenerator {
         public abstract string Name { get; }
         public abstract float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime);
         public abstract float Crit( CombatFactors combatFactors, CalculationOptionsRogue calcOpts );
         public abstract float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts);
 
-        public virtual float CalcDuration(CalculationOptionsRogue calcOpts, float regen, CombatFactors combatFactors)
-        {
+        public virtual float CalcDuration(CalculationOptionsRogue calcOpts, float regen, CombatFactors combatFactors) {
             return MhHitsNeeded(combatFactors, calcOpts) * EnergyCost(combatFactors, calcOpts) / regen;
         }
-
-        public virtual float MhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
-        {
+        public virtual float MhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts) {
             return calcOpts.ComboPointsNeededForCycle() / ComboPointsGeneratedPerAttack(combatFactors, calcOpts);    
         }
-
-        public virtual float OhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
-        {
+        public virtual float OhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts) {
             return 0f;
         }
-
-        protected virtual float ComboPointsGeneratedPerAttack( CombatFactors combatFactors, CalculationOptionsRogue calcOpts )
-        {
+        protected virtual float ComboPointsGeneratedPerAttack( CombatFactors combatFactors, CalculationOptionsRogue calcOpts ) {
             return 1 + (Talents.SealFate.Bonus * Crit(combatFactors, calcOpts)); 
         }
-
-        protected float CritBonusFromTurnTheTables(CalculationOptionsRogue calcOpts)
-        {
+        protected float CritBonusFromTurnTheTables(CalculationOptionsRogue calcOpts) {
             return calcOpts.TurnTheTablesUptime * Talents.TurnTheTables.Bonus;
         }
-
-        
-        
     }
 }
