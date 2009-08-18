@@ -92,7 +92,7 @@ namespace Rawr.ProtPaladin {
                     break;
                 case Ability.HolyShield:
                     if (Talents.HolyShield > 0) {
-                        baseDamage = (211f + (.056f * AP) + (.09f * SP)) * 1.3f;
+                        baseDamage = (211f + (0.056f * AP) + (0.09f * SP)) * 1.3f;
                         DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
                         critMultiplier = 0.0f;
                     }

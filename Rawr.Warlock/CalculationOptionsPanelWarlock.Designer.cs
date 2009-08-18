@@ -252,19 +252,19 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(6, 14);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(99, 13);
+            this.label15.Size = new System.Drawing.Size(67, 13);
             this.label15.TabIndex = 61;
-            this.label15.Text = "Relative Mob Level";
+            this.label15.Text = "Target Level";
             // 
             // cbTargetLevel
             // 
             this.cbTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbTargetLevel.FormattingEnabled = true;
             this.cbTargetLevel.Items.AddRange(new object[] {
-            "+0",
-            "+1",
-            "+2 (PvP)",
-            "+3 (Boss)"});
+            "80",
+            "81",
+            "82",
+            "83"});
             this.cbTargetLevel.Location = new System.Drawing.Point(128, 14);
             this.cbTargetLevel.Name = "cbTargetLevel";
             this.cbTargetLevel.Size = new System.Drawing.Size(151, 21);

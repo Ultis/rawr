@@ -858,8 +858,9 @@ namespace Rawr.Warlock {
                 }
 
                 spell.SpellStatistics.DamageDone = ((directDamage > 0 ? directDamage : 0) + (dotDamage > 0 ? dotDamage : 0)) * spell.SpellStatistics.HitChance;
-                if (spell.Name != "Chaos Bolt")
-                    spell.SpellStatistics.DamageDone *= (1f - CalculationOptions.TargetLevel * 0.02f);
+                if (spell.Name != "Chaos Bolt") {
+                    spell.SpellStatistics.DamageDone *= (1f - (CalculationOptions.TargetLevel-character.Level) * 0.02f);
+                }
 
                 OverallDamage += spell.SpellStatistics.DamageDone;
             }

@@ -60,7 +60,7 @@ namespace Rawr.Warlock {
             else if (Pet == "Felguard")  specialCost = 439;
             //Crit
             petStats.PhysicalCrit = 0.0320f + petStats.Agility * 0.00019f;
-            petStats.PhysicalCrit -= ((CalculationOptions.TargetLevel * 5f) * 0.0004f);
+            petStats.PhysicalCrit -= ((CalculationOptions.TargetLevel * 5f) * 0.0004f);// TODO Replace with STatConvers.NPC_CRIT_MOD[CalculationOptions.TargetLevel-character.Level] but need to verify first
             if (talents.ImprovedDemonicTactics > 0) { petStats.PhysicalCrit += charStats.PhysicalCrit * talents.ImprovedDemonicTactics * 0.1f; }
             petStats.SpellCrit = 0.05f + petStats.Intellect / 460 * 0.061f;//??
             if (talents.ImprovedDemonicTactics > 0) {petStats.SpellCrit += charStats.SpellCrit * talents.ImprovedDemonicTactics * 0.1f;}
