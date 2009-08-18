@@ -14,14 +14,17 @@ namespace Rawr.Retribution
             {
                 ////Relevant Gem IDs
 
-                //hit
+                //Prismatic
+                int[] tear = { 42701, 42702, 49110 }; //+stats
+
+                //Yellow
                 int[] rigid = { 39915, 40014, 40125, 42156 };  // +hit
 
-                //red
+                //Red
                 int[] bold = { 39900, 39996, 40111, 42142 };  // +str
 
                 //Orange
-                //int[] inscribed = { 39947, 40037, 40142 };  // +str,+crit
+                int[] inscribed = { 39947, 40037, 40142 };  // +str,+crit
                 int[] etched = { 39948, 40038, 40143 };  // +str,+hit
 
                 //Purple
@@ -32,7 +35,7 @@ namespace Rawr.Retribution
 
                 //Meta
                 int relentless = 41398;
-                int chaotic = 41285;
+                //int chaotic = 41285;
 
                 List<GemmingTemplate> retval = new List<GemmingTemplate>();
 
@@ -48,7 +51,7 @@ namespace Rawr.Retribution
                         BlueId = bold[i],
                         PrismaticId = bold[i],
                         MetaId = relentless,
-                        Enabled = i == 1
+                        Enabled = i == 2
                     });
                     retval.Add(new GemmingTemplate()
                     {
@@ -59,18 +62,29 @@ namespace Rawr.Retribution
                         BlueId = vivid[i],
                         PrismaticId = rigid[i],
                         MetaId = relentless,
-                        Enabled = i == 1
+                        Enabled = i == 2
                     });
                     retval.Add(new GemmingTemplate()
                     {
                         Model = "Retribution",
                         Group = groupName[i],
                         RedId = bold[i],
-                        YellowId = etched[i],
+                        YellowId = inscribed[i],
                         BlueId = sovereign[i],
                         PrismaticId = bold[i],
                         MetaId = relentless,
-                        Enabled = i == 1
+                        Enabled = i == 2
+                    });
+                    retval.Add(new GemmingTemplate()
+                    {
+                        Model = "Retribution",
+                        Group = groupName[i],
+                        RedId = bold[i],
+                        YellowId = tear[i],
+                        BlueId = tear[i],
+                        PrismaticId = bold[i],
+                        MetaId = relentless,
+                        Enabled = i == 2
                     });
                 }
 
@@ -78,11 +92,11 @@ namespace Rawr.Retribution
                 {
                     Model = "Retribution",
                     Group = "Jeweler",
-                    RedId = bold[1],
-                    YellowId = bold[3],
-                    BlueId = bold[3],
-                    PrismaticId = bold[1],
-                    MetaId = chaotic
+                    RedId = bold[3],
+                    YellowId = bold[2],
+                    BlueId = bold[2],
+                    PrismaticId = bold[3],
+                    MetaId = relentless
                 });
                 retval.Add(new GemmingTemplate()
                 {
@@ -92,7 +106,7 @@ namespace Rawr.Retribution
                     YellowId = bold[3],
                     BlueId = bold[3],
                     PrismaticId = bold[3],
-                    MetaId = chaotic
+                    MetaId = relentless
                 });
 
 
