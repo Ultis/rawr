@@ -1004,9 +1004,9 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SealOfVengeanceTick, new Stats() { Strength = 200 }, 16f, 10f, .7f));
             }
             #region Added by Rawr.ProtPaladin
-            else if ((match = new Regex(@"Your Judgement ability also increases your shield block value by (?<amount>\d\d*) for 5 sec(s?).").Match(line)).Success)
+            else if ((match = new Regex(@"Your Judgement ability also increases your shield block value by (?<amount>\d\d*) for 10 sec(s?).").Match(line)).Success)
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { JudgementBlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 5f, 0f, 1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { JudgementBlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 0f, 1f));
             }
             else if ((match = new Regex(@"Your Judgement ability also grants you (?<amount>\d\d*) resilience rating for 6 sec.").Match(line)).Success)
             {
@@ -1016,7 +1016,7 @@ namespace Rawr {
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShield, new Stats() { Resilience = (float)int.Parse(match.Groups["amount"].Value) }, 6f, 0f, 1f));
             }
-            else if (line == "Increases your block value by 272 while Holy Shield is active.")
+            else if (line == "Increases your block value by 272 for 20 sec sec each time you use Holy Shield.")
             {
                 stats.ShieldOfRighteousnessBlockValue = 272;
             }

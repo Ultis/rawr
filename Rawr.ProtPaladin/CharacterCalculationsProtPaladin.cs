@@ -135,14 +135,14 @@ namespace Rawr.ProtPaladin
                                                   "Armor Damage Reduction depends on Attacker Level.",
                                                   BasicStats.Armor, ArmorReduction));
             dictValues.Add("Defense", Defense.ToString() + string.Format("*Defense Rating {0}", BasicStats.DefenseRating));
-            dictValues.Add("Dodge", string.Format("{0:0.00%}*Dodge Rating {1}", Dodge, BasicStats.DodgeRating));
-            dictValues.Add("Parry", string.Format("{0:0.00%}*Parry Rating {1}", Parry, BasicStats.ParryRating));
-            dictValues.Add("Block", string.Format("{0:0.00%}*Block Rating {1}", Block, BasicStats.BlockRating));
-            dictValues.Add("Miss", string.Format("{0:0.00%}", Miss));
+            dictValues.Add("Dodge", string.Format("{0:0.0000%}*Dodge Rating {1}", Dodge, BasicStats.DodgeRating));
+            dictValues.Add("Parry", string.Format("{0:0.0000%}*Parry Rating {1}", Parry, BasicStats.ParryRating));
+            dictValues.Add("Block", string.Format("{0:0.0000%}*Block Rating {1}", Block, BasicStats.BlockRating));
+            dictValues.Add("Miss", string.Format("{0:0.0000%}", Miss));
             dictValues.Add("Block Value", string.Format("{0}*{1} Active Block Balue (Libram etc)", StaticBlockValue, ActiveBlockValue));
             dictValues.Add("Guaranteed Reduction", string.Format("{0:0.00%}", GuaranteedReduction));
-            dictValues.Add("Avoidance", string.Format("{0:0.00%}", DodgePlusMissPlusParry));
-            dictValues.Add("Avoidance + Block", string.Format("{0:0.00%}", DodgePlusMissPlusParryPlusBlock));
+            dictValues.Add("Avoidance", string.Format("{0:0.0000%}*Avoidance Points {1}", DodgePlusMissPlusParry, (DodgePlusMissPlusParry * 10000f)));
+            dictValues.Add("Avoidance + Block", string.Format("{0:0.0000%}", DodgePlusMissPlusParryPlusBlock));
             dictValues.Add("Total Mitigation", string.Format("{0:0.00%}", TotalMitigation));
 
             if (AttackerSpeed == BaseAttackerSpeed)
@@ -279,8 +279,8 @@ namespace Rawr.ProtPaladin
                 case "Health": return BasicStats.Health;
                 case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
                 case "% Total Mitigation": return TotalMitigation * 100.0f;
-                case "% Chance to Avoid Attacks": return DodgePlusMissPlusParry * 100.0f;
-                case "% chance to Avoid + Block Attacks": return DodgePlusMissPlusParryPlusBlock * 100.0f;
+                case "Avoidance Points": return DodgePlusMissPlusParry * 10000.0f;
+                case "% Avoid + Block Attacks": return DodgePlusMissPlusParryPlusBlock * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 case "Defense Skill": return Defense;
                 case "Block Value": return StaticBlockValue;

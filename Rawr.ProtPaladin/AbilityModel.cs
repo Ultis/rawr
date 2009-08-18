@@ -41,7 +41,7 @@ namespace Rawr.ProtPaladin {
                     break;               
                 case Ability.ShieldOfRighteousness:
                     
-                    baseDamage = (Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + 1f / 3f * Stats.JudgementBlockValue) * 1.3f + 520f;
+                    baseDamage = (Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + 1f / 3f * Stats.JudgementBlockValue) + 520f;
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
                     critMultiplier = 2.0f;
                     break;

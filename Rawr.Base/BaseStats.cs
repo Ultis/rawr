@@ -322,11 +322,11 @@ namespace Rawr
                     S.Mana = 4394;
                     S.Health = 6934;
                     S.Armor = 0;
-                    S.AttackPower = 220;
+                    S.AttackPower = 240;
                     S.PhysicalCrit = 0.0327f;
                     S.SpellPower = 0;
-                    S.SpellCrit = 0.0345f;
-                    S.Dodge = 0.0349430f;
+                    S.SpellCrit = 0.03336f;
+                    S.Dodge = 0.0345430f;
                     S.Parry = 0.05f;
                     S.Block = 0.05f;
                     switch (characterRace)
