@@ -2455,6 +2455,60 @@ namespace Rawr
                 SetName = "Siegebreaker Plate",
                 SetThreshold = 2
             });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Hellscream's Battlegear 2 Piece Fury Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior2PT9Crit = 0.02f },
+                SetName = "Hellscream's Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Hellscream's Battlegear 2 Piece Arms Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior2PT9ArP = 0.06f },
+                SetName = "Hellscream's Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Hellscream's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SlamHeroicstrikeCritIncrease = 0.05f },
+                SetName = "Hellscream's Battlegear",
+                SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Wrynn's Battlegear 2 Piece Fury Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior2PT9Crit = 0.02f },
+                SetName = "Hellscream's Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Wrynn's Battlegear 2 Piece Arms Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior2PT9ArP = 0.06f },
+                SetName = "Wrynn's Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Wrynn's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SlamHeroicstrikeCritIncrease = 0.05f },
+                SetName = "Wrynn's Battlegear",
+                SetThreshold = 4
+            });
             #endregion
 
             #region Resto Shammy set bonuses: Removed BC sets as we push to Ulduar

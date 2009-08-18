@@ -1118,6 +1118,7 @@ namespace Rawr.DPSWarr {
                 StanceOkArms = StanceOkDef = true;
                 DamageBase = combatFactors.AvgMhWeaponDmgUnhasted + 250f;
                 DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusSlamDamage);
+                BonusCritChance = StatS.SlamHeroicstrikeCritIncrease;
             }
             public override float Activates { get { if (!Validated) { return 0f; } return 0f; } }
         }
@@ -1268,7 +1269,7 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
                 DamageBase = Whiteattacks.MhDamage + 495f;
-                BonusCritChance = Talents.Incite * 0.05f;
+                BonusCritChance = Talents.Incite * 0.05f + StatS.SlamHeroicstrikeCritIncrease;
             }
             // Variables
             // Get/Set

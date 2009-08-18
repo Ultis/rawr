@@ -82,7 +82,7 @@ namespace Rawr.DPSWarr {
                 float armorReduction;
                 float arpenBuffs =
                     ((_c_mhItemType == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f) +
-                    (!CalcOpts.FuryStance ? 0.1f : 0.0f);
+                    (!CalcOpts.FuryStance ? (0.1f + StatS.BonusWarrior2PT9ArP) : 0.0f);
                 if (CalcOpts == null) {
                     // you're supposed to pass the character level, not the target level.  GC misspoke.
 				    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,(int)StatConversion.NPC_ARMOR[83-80],StatS.ArmorPenetration,arpenBuffs,StatS.ArmorPenetrationRating)); // default is vs raid boss
@@ -240,6 +240,7 @@ namespace Rawr.DPSWarr {
                 if (MH == null || MH.MaxDamage == 0f) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
                 crit += (_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
+                crit += StatS.BonusWarrior2PT9Crit;
                 return crit;
             }
         }
@@ -248,6 +249,7 @@ namespace Rawr.DPSWarr {
                 if (MH == null || MH.MaxDamage == 0f) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
                 crit += (_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
+                crit += StatS.BonusWarrior2PT9Crit;
                 crit *= (1f - _c_ymiss - _c_mhdodge);
                 return crit;
             }
@@ -257,6 +259,7 @@ namespace Rawr.DPSWarr {
                 if (OH == null || OH.MaxDamage == 0f) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
                 crit += (_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
+                crit += StatS.BonusWarrior2PT9Crit;
                 return crit;
             }
         }
@@ -265,6 +268,7 @@ namespace Rawr.DPSWarr {
                 if (OH == null || OH.MaxDamage == 0f) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
                 crit += (_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
+                crit += StatS.BonusWarrior2PT9Crit;
                 crit *= (1f - _c_ymiss - _c_ohdodge);
                 return crit;
             }

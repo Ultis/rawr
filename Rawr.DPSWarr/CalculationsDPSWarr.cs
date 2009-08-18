@@ -278,7 +278,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             teethbonus /= 108f;
             calculatedStats.TeethBonus = (int)teethbonus;
             calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && combatFactors._c_mhItemType == ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
-            calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? 0.10f : 0.00f);
+            calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? (0.10f + stats.BonusWarrior2PT9ArP) : 0.00f);
             calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
             calculatedStats.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
             calculatedStats.ArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
@@ -334,7 +334,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsOptionsPanel = new Stats() {
                 BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
-                PhysicalCrit = (calcOpts.FuryStance ? 0.03f : 0f)
+                PhysicalCrit = (calcOpts.FuryStance ? 0.03f + statsBuffs.BonusWarrior2PT9Crit : 0f)
                             // handle boss level difference
                             + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - 80],
             };
@@ -631,6 +631,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.DreadnaughtBonusRageProc +
                 stats.BonusWarrior2PT8Haste +
                 stats.MortalstrikeBloodthirstCritIncrease +
+                stats.BonusWarrior2PT9Crit +
+                stats.BonusWarrior2PT9ArP +
+                stats.SlamHeroicstrikeCritIncrease + 
                 stats.BonusSlamDamage +
                 stats.DarkmoonCardDeathProc + 
                 stats.HighestStat
