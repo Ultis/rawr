@@ -1504,6 +1504,8 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseCritRate = calculations.BaseCritRate;
         }
     }
 
@@ -1514,6 +1516,8 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseCritRate = calculations.BaseCritRate;
         }
     }
 
@@ -1524,6 +1528,8 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseCritRate = calculations.BaseCritRate;
         }
     }
 
@@ -1534,6 +1540,8 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseCritRate = calculations.BaseCritRate;
         }
     }
 
@@ -1544,6 +1552,8 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseCritRate = calculations.BaseCritRate;
         }
     }
 
@@ -1554,6 +1564,8 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
+            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseCritRate = calculations.BaseCritRate;
         }
     }
 }

@@ -593,6 +593,7 @@ namespace Rawr.Mage
             calculationResult.HolyThreatMultiplier = threatFactor;
 
             float baseSpellModifier = (1 + 0.01f * talents.ArcaneInstability) * (1 + 0.01f * talents.PlayingWithFire) * (1 + baseStats.BonusDamageMultiplier) * calculationOptions.EffectDamageMultiplier;
+            calculationResult.BaseSpellModifier = baseSpellModifier;
             calculationResult.BaseArcaneSpellModifier = baseSpellModifier * (1 + baseStats.BonusArcaneDamageMultiplier);
             calculationResult.BaseFireSpellModifier = baseSpellModifier * (1 + 0.02f * talents.FirePower) * (1 + baseStats.BonusFireDamageMultiplier);
             calculationResult.BaseFrostSpellModifier = baseSpellModifier * (1 + 0.02f * talents.PiercingIce) * (1 + 0.01f * talents.ArcticWinds) * (1 + baseStats.BonusFrostDamageMultiplier);

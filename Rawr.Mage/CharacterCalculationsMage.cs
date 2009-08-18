@@ -202,6 +202,7 @@ namespace Rawr.Mage
         public float FrostFireThreatMultiplier { get; set; }
         public float HolyThreatMultiplier { get; set; }
 
+        public float BaseSpellModifier { get; set; }
         public float BaseArcaneSpellModifier { get; set; }
         public float BaseFireSpellModifier { get; set; }
         public float BaseFrostSpellModifier { get; set; }
