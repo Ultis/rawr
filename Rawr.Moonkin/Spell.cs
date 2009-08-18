@@ -1553,10 +1553,10 @@ namespace Rawr.Moonkin
             float moonfireDotGlyph = character.DruidTalents.GlyphOfMoonfire ? 0.75f : 0.0f;
             float insectSwarmGlyph = character.DruidTalents.GlyphOfInsectSwarm ? 0.3f : 0.0f;
             // Add spell-specific damage
-            // Starfire, Moonfire, Wrath: Damage +(0.03 * Moonfury)
+            // Starfire, Moonfire, Wrath: Damage +(0.03 * Moonfury) (Additive with 4T9?)
             // Moonfire: Damage +(0.05 * Imp Moonfire) (Additive with Moonfury/Genesis/Glyph)
             // Moonfire, Insect Swarm: Dot Damage +(0.01 * Genesis) (Additive with Moonfury/Imp. Moonfire/Glyph/Set bonus)
-            Wrath.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
+            Wrath.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f + stats.BonusMoonkinNukeDamage;
             Moonfire.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f
                                             + 0.05f * character.DruidTalents.ImprovedMoonfire
                                             + moonfireDDGlyph;
@@ -1564,7 +1564,7 @@ namespace Rawr.Moonkin
                                                       + 0.01f * character.DruidTalents.Genesis
                                                       + 0.05f * character.DruidTalents.ImprovedMoonfire
                                                       + moonfireDotGlyph;
-            Starfire.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
+            Starfire.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f + stats.BonusMoonkinNukeDamage;
             InsectSwarm.DotEffect.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.Genesis
                                                          + insectSwarmGlyph
                                                          + stats.BonusInsectSwarmDamage;
@@ -1622,8 +1622,8 @@ namespace Rawr.Moonkin
             // 2T9
             Moonfire.DotEffect.CanCrit = stats.MoonfireDotCrit == 1;
             // 4T9
-            Starfire.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
-            Wrath.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
+            /*Starfire.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
+            Wrath.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;*/
 
             // Nature's Grace
             NaturesGrace = character.DruidTalents.NaturesGrace;
