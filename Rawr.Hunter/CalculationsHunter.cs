@@ -2115,9 +2115,15 @@ namespace Rawr.Hunter
                                                 chimeraShotDamageAdjust
                                            );
 
+            // chimera shot serpent sting damage uses subtely different rounding
+            double serpentStingDamageRealChimera = serpentStingDamageReal;
+            if (options.emulateSpreadsheetBugs) // 91c bug
+            {
+                serpentStingDamageRealChimera = Math.Round(serpentStingDamageBase * serpentStingDamageAdjust, 1) / 5 * serpentStingTicks;
+            }
 
             // calculate damage from serpent sting
-            double chimeraShotSerpentDamage = serpentStingDamageReal * 0.4;
+            double chimeraShotSerpentDamage = serpentStingDamageRealChimera * 0.4;
             double chimeraShotSerpentCritAdjust = (1 + mortalShotsCritDamage) * metaGemCritDamage;
             double chimeraShotSerpentDamageAdjust = talentDamageAdjust * (1 + targetDebuffsNature);
 

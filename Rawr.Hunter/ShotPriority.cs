@@ -179,7 +179,7 @@ namespace Rawr.Hunter
                 if (priorities[i] == null) continue;
                 ShotData s = priorities[i];
 
-                if (s.freq > 0) specialShotsPerSecond += 1 / s.freq;
+                if (s.final_freq > 0) specialShotsPerSecond += 1 / s.final_freq;
                 critSpecialShotsPerSecond += s.crits_per_sec;
                 critsRatioSum += s.crits_ratio;
             }
@@ -666,6 +666,12 @@ namespace Rawr.Hunter
                 ret += "Rotation Freqency: " + freq.ToString("F2") + "\n";
                 ret += "Rotation DPS: " + dps.ToString("F2") + "\n";
                 ret += "Rotation MPS: " + mps.ToString("F2");
+            }
+            else if (is_refreshed)
+            {
+                ret += "Rotation Freqency: " + freq.ToString("F2") + " (Refreshed by Chimera)\n";
+                ret += "Rotation DPS: " + dps.ToString("F2") + "\n";
+                ret += "Rotation MPS: " + mps.ToString("F2") + " (Refreshed by Chimera)";
             }
             else
             {
