@@ -864,9 +864,12 @@ namespace Rawr.Moonkin
             Spell solarEclipseCast = new Spell(LocateSpell(solver.SpellData, "W"));
 
             // Eclipse bonus and improved Insect Swarm
-            solarEclipseCast.AllDamageModifier *= 1.0f + eclipseMultiplier;
+			// NOTE: Eclipse bonus additive with Moonfury and 4T9; multiplicative with everything else
+            solarEclipseCast.AllDamageModifier = 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f + calcs.BasicStats.BonusMoonkinNukeDamage + eclipseMultiplier;
+            solarEclipseCast.AllDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
             if (insectSwarm != null)
                 solarEclipseCast.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+            solarEclipseCast.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             Spell preSolarCast = LocateSpell(solver.SpellData, "SF");
             if (moonfire != null)
