@@ -2488,7 +2488,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusWarrior2PT9Crit = 0.02f },
-                SetName = "Hellscream's Battlegear",
+                SetName = "Wrynn's Battlegear",
                 SetThreshold = 2
             });
             defaultBuffs.Add(new Buff()

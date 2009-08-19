@@ -4017,7 +4017,7 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
-        [DisplayName("Increased haste on Warrior 2-Piece T8 proc")]
+        [DisplayName("bonus haste on Warrior 2-Piece T8 proc")]
         public float BonusWarrior2PT8Haste
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT8Haste]; }
@@ -4037,7 +4037,7 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
-        [DisplayName("Increased fury crit on Warrior 2-Piece T9")]
+        [DisplayName("% increased Fury Crit on Warrior 2-Piece T9")]
         public float BonusWarrior2PT9Crit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT9Crit]; }
@@ -4047,7 +4047,7 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
-        [DisplayName("Increased ArP on Warrior 2-Piece T9")]
+        [DisplayName("% increased Arms ArP on Warrior 2-Piece T9")]
         public float BonusWarrior2PT9ArP
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT9ArP]; }
