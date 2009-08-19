@@ -106,32 +106,11 @@ namespace Rawr.Moonkin
             set { treantLifespan = value; OnPropertyChanged("TreantLifespan"); }
         }
 
-        private bool lunarEclipse = true;
-        public bool LunarEclipse
-        {
-            get { return lunarEclipse; }
-            set { lunarEclipse = value; OnPropertyChanged("LunarEclipse"); }
-        }
-
-        private bool moonfireAlways = true;
-        public bool MoonfireAlways
-        {
-            get { return moonfireAlways; }
-            set { moonfireAlways = value; OnPropertyChanged("MoonfireAlways"); }
-        }
-
         private string userRotation = "None";
         public string UserRotation
         {
             get { return userRotation; }
             set { userRotation = value; OnPropertyChanged("UserRotation"); }
-        }
-
-        private bool use32Mode = false;
-        public bool Use32Mode
-        {
-            get { return use32Mode; }
-            set { use32Mode = value; OnPropertyChanged("Use32Mode"); }
         }
 
 

@@ -35,26 +35,6 @@ namespace Rawr.Moonkin
             trkReplenishmentUptime.Value = (int)(calcOpts.ReplenishmentUptime * 100);
             trkTreantLifespan.Value = (int)(calcOpts.TreantLifespan * 100);
             cmbUserRotation.SelectedItem = calcOpts.UserRotation;
-            if (calcOpts.LunarEclipse)
-                cmbEclipseType.SelectedItem = "Lunar";
-            else
-                cmbEclipseType.SelectedItem = "Solar";
-            chkMoonfireAlways.Checked = calcOpts.MoonfireAlways;
-            chk32Mode.Checked = true;
-            if (!calcOpts.Use32Mode)
-                calcOpts.Use32Mode = true;
-            cmbEclipseType.Enabled = false;
-            chkMoonfireAlways.Enabled = false;
-            /*if (!calcOpts.Use32Mode)
-            {
-                cmbEclipseType.Enabled = true;
-                chkMoonfireAlways.Enabled = true;
-            }
-            else
-            {
-                cmbEclipseType.Enabled = false;
-                chkMoonfireAlways.Enabled = false;
-            }*/
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -130,28 +110,6 @@ namespace Rawr.Moonkin
             calcOpts.UserRotation = cmbUserRotation.SelectedItem.ToString();
             Character.OnCalculationsInvalidated();
         }
-
-        private void cmbEclipseType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-            calcOpts.LunarEclipse = cmbEclipseType.SelectedItem.ToString() == "Lunar";
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void chkMoonfireAlways_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-            calcOpts.MoonfireAlways = chkMoonfireAlways.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void chk32Mode_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-            calcOpts.Use32Mode = chk32Mode.Checked;
-            chkMoonfireAlways.Enabled = cmbEclipseType.Enabled = !chk32Mode.Checked;
-            Character.OnCalculationsInvalidated();
-        }
     }
 
 	[Serializable]
@@ -184,9 +142,6 @@ namespace Rawr.Moonkin
 		public string ManaPotType = "Runic Mana Potion";
         public float ReplenishmentUptime = 1.0f;
         public float TreantLifespan = 1.0f;
-        public bool LunarEclipse = true;
-        public bool MoonfireAlways = true;
         public string UserRotation = "None";
-        public bool Use32Mode = true;
 	}
 }

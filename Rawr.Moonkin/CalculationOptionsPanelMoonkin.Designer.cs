@@ -48,10 +48,6 @@
             this.lblLifespanValue = new System.Windows.Forms.Label();
             this.lblUserRotation = new System.Windows.Forms.Label();
             this.cmbUserRotation = new System.Windows.Forms.ComboBox();
-            this.lblEclipseType = new System.Windows.Forms.Label();
-            this.cmbEclipseType = new System.Windows.Forms.ComboBox();
-            this.chkMoonfireAlways = new System.Windows.Forms.CheckBox();
-            this.chk32Mode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).BeginInit();
             this.SuspendLayout();
@@ -234,7 +230,7 @@
             // lblUserRotation
             // 
             this.lblUserRotation.AutoSize = true;
-            this.lblUserRotation.Location = new System.Drawing.Point(3, 331);
+            this.lblUserRotation.Location = new System.Drawing.Point(3, 281);
             this.lblUserRotation.Name = "lblUserRotation";
             this.lblUserRotation.Size = new System.Drawing.Size(75, 13);
             this.lblUserRotation.TabIndex = 44;
@@ -253,64 +249,16 @@
             "IS/MF/SF",
             "SF Spam",
             "W Spam"});
-            this.cmbUserRotation.Location = new System.Drawing.Point(108, 328);
+            this.cmbUserRotation.Location = new System.Drawing.Point(108, 278);
             this.cmbUserRotation.Name = "cmbUserRotation";
             this.cmbUserRotation.Size = new System.Drawing.Size(93, 21);
             this.cmbUserRotation.TabIndex = 21;
             this.cmbUserRotation.SelectedIndexChanged += new System.EventHandler(this.cmbUserRotation_SelectedIndexChanged);
             // 
-            // lblEclipseType
-            // 
-            this.lblEclipseType.AutoSize = true;
-            this.lblEclipseType.Location = new System.Drawing.Point(3, 281);
-            this.lblEclipseType.Name = "lblEclipseType";
-            this.lblEclipseType.Size = new System.Drawing.Size(68, 13);
-            this.lblEclipseType.TabIndex = 46;
-            this.lblEclipseType.Text = "Eclipse Type";
-            // 
-            // cmbEclipseType
-            // 
-            this.cmbEclipseType.FormattingEnabled = true;
-            this.cmbEclipseType.Items.AddRange(new object[] {
-            "Lunar",
-            "Solar"});
-            this.cmbEclipseType.Location = new System.Drawing.Point(108, 278);
-            this.cmbEclipseType.Name = "cmbEclipseType";
-            this.cmbEclipseType.Size = new System.Drawing.Size(93, 21);
-            this.cmbEclipseType.TabIndex = 19;
-            this.cmbEclipseType.SelectedIndexChanged += new System.EventHandler(this.cmbEclipseType_SelectedIndexChanged);
-            // 
-            // chkMoonfireAlways
-            // 
-            this.chkMoonfireAlways.AutoSize = true;
-            this.chkMoonfireAlways.Location = new System.Drawing.Point(6, 305);
-            this.chkMoonfireAlways.Name = "chkMoonfireAlways";
-            this.chkMoonfireAlways.Size = new System.Drawing.Size(138, 17);
-            this.chkMoonfireAlways.TabIndex = 20;
-            this.chkMoonfireAlways.Text = "100% Moonfire Uptime?";
-            this.chkMoonfireAlways.UseVisualStyleBackColor = true;
-            this.chkMoonfireAlways.CheckedChanged += new System.EventHandler(this.chkMoonfireAlways_CheckedChanged);
-            // 
-            // chk32Mode
-            // 
-            this.chk32Mode.AutoSize = true;
-            this.chk32Mode.Enabled = false;
-            this.chk32Mode.Location = new System.Drawing.Point(6, 357);
-            this.chk32Mode.Name = "chk32Mode";
-            this.chk32Mode.Size = new System.Drawing.Size(71, 17);
-            this.chk32Mode.TabIndex = 47;
-            this.chk32Mode.Text = "3.2 Mode";
-            this.chk32Mode.UseVisualStyleBackColor = true;
-            this.chk32Mode.CheckedChanged += new System.EventHandler(this.chk32Mode_CheckedChanged);
-            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.chk32Mode);
-            this.Controls.Add(this.chkMoonfireAlways);
-            this.Controls.Add(this.cmbEclipseType);
-            this.Controls.Add(this.lblEclipseType);
             this.Controls.Add(this.cmbUserRotation);
             this.Controls.Add(this.lblUserRotation);
             this.Controls.Add(this.lblLifespanValue);
@@ -332,7 +280,7 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
-            this.Size = new System.Drawing.Size(204, 387);
+            this.Size = new System.Drawing.Size(204, 321);
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).EndInit();
             this.ResumeLayout(false);
@@ -362,10 +310,6 @@
         private System.Windows.Forms.Label lblLifespanValue;
         private System.Windows.Forms.Label lblUserRotation;
         private System.Windows.Forms.ComboBox cmbUserRotation;
-        private System.Windows.Forms.Label lblEclipseType;
-        private System.Windows.Forms.ComboBox cmbEclipseType;
-        private System.Windows.Forms.CheckBox chkMoonfireAlways;
-        private System.Windows.Forms.CheckBox chk32Mode;
 
     }
 }
