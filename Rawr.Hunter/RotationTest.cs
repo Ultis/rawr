@@ -236,6 +236,7 @@ namespace Rawr.Hunter
                         // If We're interleaving, make sure the last ES was at least 2 seconds before this
                         else if (InterleaveLAL && LALShots < 3 && LALShots > 0 && LALDuration - currentTime > -2 && LALDuration - currentTime <= 0 && s.type == Shots.ExplosiveShot)
                         {
+                            currentTime += 0.5;
                             s.time_until_off_cd = 0;
                             haveShot = true;
                             thisShot = s.type;
@@ -310,7 +311,11 @@ namespace Rawr.Hunter
                             }
                         }
 
-                        if (!haveShot && s.time_until_off_cd <= currentTime)
+                        // this is a horrible round hack, i know. the issue probably comes
+                        // somewhere from a float->double cast.
+                        // the issue is that we have currentTime at (e.g.) 65.35 and steady shot CD is at 65.3500000001
+                        // so we skip forward by 0.1 seconds when we didn;t really need to.
+                        if (!haveShot && s.time_until_off_cd <= currentTime+0.00001)
                         {
                             // do nothing for refreshed Serpent Sting except the first time
                             if (s.type == Shots.SerpentSting && chimeraRefreshesSerpent && SerpentUsed)
@@ -366,6 +371,7 @@ namespace Rawr.Hunter
                     // If no shot, advance 100 ms
                     // This case should almost never happen unless Steady Shot isn't in the rotation
                     currentTime += 0.1;
+                    //Debug.WriteLine("no shot found - advancing time to "+currentTime);
                 }
                 else
                 {
@@ -441,9 +447,6 @@ namespace Rawr.Hunter
                     // advance row on the test page
                     //row++
 
-                    // Note down shot current time and shot used
-                    // Cells(row, col).value = currentTime
-                    // Cells(row, col + 1).value = thisShot
                     thisShotInfo.countUsed++;
 
                     // Determine Steady Shot haste
@@ -472,29 +475,39 @@ namespace Rawr.Hunter
                     }
 
 
-                    // Note down cast time used, cast end time and time till CD
-                    if (!checkGCD(thisShot))
+                    // Note down shot current time and shot used
+                    if (options.debugShotRotation)
                     {
-                        // These do not cost time
-                        //Cells(row, col + 2).value = 0
-                        //Cells(row, col + 3).value = currentTime
-                        //Cells(row, col + 4).value = currentTime + thisShotInfo.cooldown
-                    }
-                    else
-                    {
-                        // Steady Shot can fire faster than GCD so check
-                        if (thisShot == Shots.SteadyShot)
+                        // currentTime
+                        // thisShot
+                        double timeUsed = 0;
+                        double castEnd = currentTime;
+                        double onCDUntil = currentTime + thisShotInfo.cooldown;
+
+                        // Note down cast time used, cast end time and time till CD
+                        if (!checkGCD(thisShot))
                         {
-                            // Cells(row, col + 2).value = thisShotInfo.castTime * (1 / SShaste) + Latency
-                            // Cells(row, col + 3).value = currentTime + thisShotInfo.castTime * (1 / SShaste) + Latency
+                            // These do not cost time
+                            // (we set these values just above)
                         }
                         else
                         {
-                            // Other shots fire at GCD + Latency
-                            //Cells(row, col + 2).value = GCD + Latency
-                            //Cells(row, col + 3).value = currentTime + GCD + Latency
+                            // Steady Shot can fire faster than GCD so check
+                            if (thisShot == Shots.SteadyShot)
+                            {
+                                timeUsed = thisShotInfo.castTime * (1 / SShaste) + Latency;
+                                castEnd = currentTime + thisShotInfo.castTime * (1 / SShaste) + Latency;
+                            }
+                            else
+                            {
+                                // Other shots fire at GCD + Latency
+                                timeUsed = GCD + Latency;
+                                castEnd = currentTime + GCD + Latency;
+                            }
+                            onCDUntil = thisShotInfo.time_until_off_cd;
                         }
-                        // Cells(row, col + 4).value = thisShotInfo.time_until_off_cd
+
+                        Debug.WriteLine(currentTime + ": " + thisShot + " (" +timeUsed+"/"+castEnd+"/"+onCDUntil + ")");
                     }
 
 

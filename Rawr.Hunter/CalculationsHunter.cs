@@ -644,21 +644,8 @@ namespace Rawr.Hunter
             //    Debug.WriteLine(buff);
             //}
 
-            #region Spreadsheet bugs
-
-            if (statsBuffs.PhysicalCrit > 0 && options.emulateSpreadsheetBugs) // still an issue in 91c
-            {
-                // Leader of the Pack should give 5%, but instead gives 4.98845627020046000000%
-                // (same as 229 crit rating)
-                // BUT, *only* LotP/Rampage - other PhysicalCrit buffs (target debuffs like Heart of the Crusader) remain in place
-                if (character.ActiveBuffsContains("Leader of the Pack") || character.ActiveBuffsContains("Rampage"))
-                {
-                    statsBuffs.CritRating += 229;
-                    statsBuffs.PhysicalCrit -= 0.05f;
-                }
-            }
-
-            #endregion
+            double levelDifference = options.TargetLevel - character.Level;
+            int levelDifferenceInt = options.TargetLevel - character.Level;
 
             // shot basics
             #region August 2009 Priority Rotation Setup
@@ -966,8 +953,9 @@ namespace Rawr.Hunter
             calculatedStats.hitFromBase = 1.0 - HunterRatings.BASE_MISS_PERCENT;
 
             // level adjustment
-            double levelDifference = options.TargetLevel - HunterRatings.CHAR_LEVEL;
-            calculatedStats.hitFromLevelAdjustment = 0 - (levelDifference / 100);
+            // we round because this is stored as a float, not a double
+            double missCap = Math.Round(StatConversion.WHITE_MISS_CHANCE_CAP[levelDifferenceInt], 4);
+            calculatedStats.hitFromLevelAdjustment = 0 - (missCap - HunterRatings.BASE_MISS_PERCENT);
 
             // gear +hit rating
             calculatedStats.hitFromRating = (calculatedStats.BasicStats.HitRating / HunterRatings.HIT_RATING_PER_PERCENT) / 100;
@@ -1667,14 +1655,10 @@ namespace Rawr.Hunter
                     
             calculatedStats.apFromProc = 0;
 
-            double crittingTriggersPerSecond = options.emulateSpreadsheetBugs // still an issue in 91c
-                                             ? crittingShotsPerSecond * critHitPercent
-                                             : crittingShotsPerSecond * critHitPercent * hitChance;
-
             // Mirror of Truth
             if (IsWearingTrinket(character, 40684))
             {
-                calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, crittingTriggersPerSecond);
+                calculatedStats.apFromProc += 1000 * CalcTrinketUptime(10, 45, 0.1, crittingShotsPerSecond * critHitPercent * hitChance);
             }
 
             // Anvil of Titans
@@ -1692,13 +1676,13 @@ namespace Rawr.Hunter
             // Pyrite Infuser
             if (IsWearingTrinket(character, 45286))
             {
-                calculatedStats.apFromProc += 1234 * CalcTrinketUptime(10, 45, 0.1, crittingTriggersPerSecond);
+                calculatedStats.apFromProc += 1234 * CalcTrinketUptime(10, 45, 0.1, crittingShotsPerSecond * critHitPercent * hitChance);
             }
 
             // Blood of the Old God
             if (IsWearingTrinket(character, 45522))
             {
-                calculatedStats.apFromProc += 1284 * CalcTrinketUptime(10, 45, 0.1, crittingTriggersPerSecond);
+                calculatedStats.apFromProc += 1284 * CalcTrinketUptime(10, 45, 0.1, crittingShotsPerSecond * critHitPercent * hitChance);
             }
 
             // Fury of the Five Flights            
@@ -1807,7 +1791,7 @@ namespace Rawr.Hunter
             double averageResist = (options.TargetLevel - 80) * 0.02;
             double resist10 = 5 * averageResist;
             double resist20 = 2.5 * averageResist;
-            double partialResistDamageAdjust = 1 - (resist10 * 0.1 + resist20 * 0.1);
+            double partialResistDamageAdjust = 1 - (resist10 * 0.1 + resist20 * 0.2);
 
             //Beast Within
             double beastWithinDamageAdjust = 1;
@@ -2115,15 +2099,8 @@ namespace Rawr.Hunter
                                                 chimeraShotDamageAdjust
                                            );
 
-            // chimera shot serpent sting damage uses subtely different rounding
-            double serpentStingDamageRealChimera = serpentStingDamageReal;
-            if (options.emulateSpreadsheetBugs) // 91c bug
-            {
-                serpentStingDamageRealChimera = Math.Round(serpentStingDamageBase * serpentStingDamageAdjust, 1) / 5 * serpentStingTicks;
-            }
-
             // calculate damage from serpent sting
-            double chimeraShotSerpentDamage = serpentStingDamageRealChimera * 0.4;
+            double chimeraShotSerpentDamage = serpentStingDamageReal * 0.4;
             double chimeraShotSerpentCritAdjust = (1 + mortalShotsCritDamage) * metaGemCritDamage;
             double chimeraShotSerpentDamageAdjust = talentDamageAdjust * (1 + targetDebuffsNature);
 
@@ -2346,7 +2323,7 @@ namespace Rawr.Hunter
 
             calculatedStats.HunterDpsPoints = (float)(
                                                     calculatedStats.AutoshotDPS
-                                                  + calculatedStats.WildQuiverDPS 
+                                                  + calculatedStats.WildQuiverDPS
                                                   + calculatedStats.CustomDPS
                                                   + calculatedStats.OnProcDPS
                                                   + calculatedStats.killShotSub20FinalGain

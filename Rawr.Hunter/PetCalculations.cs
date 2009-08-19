@@ -138,15 +138,6 @@ namespace Rawr.Hunter
             #endregion
             #region Crit Chance
 
-            if (statsBuffs.PhysicalCrit > 0 && options.emulateSpreadsheetBugs) // still an issue in 91c
-            {
-                // Leader of the Pack should give 5%, but instead gives 4.98845627020046000000%
-                // (same as 229 crit rating)
-                // TODO: check that we have LotP/Rampage in the buffs list, incase there are other %crit buffs
-                statsBuffs.CritRating += 229;
-                statsBuffs.PhysicalCrit -= 0.05f;
-            }
-
             isWearingBeastTamersShoulders = character.Shoulders != null && character.Shoulders.Id == 30892;
 
             double critAgilityBase = petStats.Agility;
