@@ -54,7 +54,7 @@ namespace Rawr.ProtWarr {
                     ArmorReduction = 0f;
                     break;
                 }
-                case Ability.Devastate:     { baseDamage = (weapDamage2 * 0.5f) + (101f * 5f); break;} // Assumes 5 stacks of Sunder Armor debuff
+                case Ability.Devastate:     { baseDamage = (weapDamage2) + (202f * 5f); break;} // Assumes 5 stacks of Sunder Armor debuff
                 case Ability.HeroicStrike:  { baseDamage = weapDamage + 495f; break; }
                 case Ability.HeroicThrow:   { baseDamage = 12f + (Stats.AttackPower * 0.5f); break;}
                 case Ability.Rend: {
