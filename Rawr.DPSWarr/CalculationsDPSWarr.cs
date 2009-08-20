@@ -188,6 +188,22 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
         }
 
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationsDPSWarr(); }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSWarr(); }
+
+        public override ICalculationOptionBase DeserializeDataObject(string xml) {
+            XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsDPSWarr));
+            StringReader sr = new StringReader(xml);
+            CalculationOptionsDPSWarr calcOpts = s.Deserialize(sr) as CalculationOptionsDPSWarr;
+            return calcOpts;
+        }
+
+        #endregion
+
+        #region Relavancy
+
+        public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
+
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes {
             get {
@@ -216,16 +232,186 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
         }
 
-        public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
-        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationsDPSWarr(); }
-        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSWarr(); }
-
-        public override ICalculationOptionBase DeserializeDataObject(string xml) {
-            XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsDPSWarr));
-            StringReader sr = new StringReader(xml);
-            CalculationOptionsDPSWarr calcOpts = s.Deserialize(sr) as CalculationOptionsDPSWarr;
-            return calcOpts;
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
+            //Hide the ranged weapon enchants. None of them apply to melee damage at all.
+            if (character != null && (character.WarriorTalents != null && enchant != null)) {
+                return enchant.Slot == ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant,character,slot) || (character.WarriorTalents.TitansGrip == 1 && enchant.Slot == ItemSlot.TwoHand && slot == ItemSlot.OffHand);
+            }
+            return enchant.Slot == ItemSlot.Ranged ? false : enchant.FitsInSlot(slot);
         }
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
+            // We need specilized handling due to Titan's Grip
+            if (item == null || character == null) {
+                return false;
+            } else if (character.WarriorTalents.TitansGrip == 1 && item.Type == ItemType.Polearm && slot == CharacterSlot.OffHand) {
+                return false;
+            } else if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.TwoHand && character.WarriorTalents.TitansGrip == 1) {
+                return true;
+            } else if (slot == CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == ItemSlot.TwoHand) {
+                return false;
+            } else if (item.Type == ItemType.Polearm && slot == CharacterSlot.MainHand) {
+                return true;
+            } else {
+                return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
+            }
+        }
+
+        private static List<string> _relevantGlyphs = null;
+        public override List<string> GetRelevantGlyphs() {
+            if (_relevantGlyphs == null) {
+                _relevantGlyphs = new List<string>() {
+                    // ===== MAJOR GLYPHS =====
+                    "Glyph of Bladestorm",
+                    "Glyph of Bloodthirst",
+                    "Glyph of Cleaving",
+                    "Glyph of Enraged Regeneration",
+                    "Glyph of Execution",
+                    "Glyph of Hamstring",
+                    "Glyph of Heroic Strike",
+                    "Glyph of Mortal Strike",
+                    "Glyph of Overpower",
+                    "Glyph of Rapid Charge",
+                    "Glyph of Rending",
+                    "Glyph of Resonating Power",
+                    "Glyph of Sweeping Strikes",
+                    "Glyph of Victory Rush",
+                    "Glyph of Vigilance",
+                    "Glyph of Whirlwind",
+                    /* The following Glyphs have been disabled as they are solely Defensive in nature.
+                    "Glyph of Barbaric Insults",
+                    "Glyph of Blocking",
+                    "Glyph of Devastate",
+                    "Glyph of Intervene",
+                    "Glyph of Last Stand",
+                    "Glyph of Revenge",
+                    "Glyph of Shield Wall",
+                    "Glyph of Shockwave",
+                    "Glyph of Spell Reflection",
+                    "Glyph of Sunder Armor",
+                    "Glyph of Taunt",*/
+                    // ===== MINOR GLYPHS =====
+                    "Glyph of Battle",
+                    "Glyph of Bloodrage",
+                    "Glyph of Charge",
+                    "Glyph of Enduring Victory",
+                    "Glyph of Thunder Clap",
+                    /* The following Glyphs have been disabled as they are solely Defensive in nature.
+                    //"Glyph of Mocking Blow",*/
+                };
+            }
+            return _relevantGlyphs;
+        }
+
+        public override Stats GetRelevantStats(Stats stats) {
+            Stats relevantStats = new Stats() {
+                // Stats
+                Stamina = stats.Stamina,
+                Agility = stats.Agility,
+                Strength = stats.Strength,
+                AttackPower = stats.AttackPower,
+                Health = stats.Health,
+                CritRating = stats.CritRating,
+                HitRating = stats.HitRating,
+                PhysicalHit = stats.PhysicalHit,
+                HasteRating = stats.HasteRating,
+                ExpertiseRating = stats.ExpertiseRating,
+				ArmorPenetration = stats.ArmorPenetration,
+				ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                WeaponDamage = stats.WeaponDamage,
+                BonusCritMultiplier = stats.BonusCritMultiplier,
+                Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
+                BonusArmorMultiplier = stats.BonusArmorMultiplier,
+                PhysicalCrit = stats.PhysicalCrit,
+                PhysicalHaste = stats.PhysicalHaste,
+                ArcaneDamage = stats.ArcaneDamage,
+                // Normal Multipliers
+                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+                BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
+                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
+                BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                // Special Multipliers
+                BonusWarrior_T7_4P_RageProc = stats.BonusWarrior_T7_4P_RageProc,
+                BonusWarrior_T8_2P_HasteProc = stats.BonusWarrior_T8_2P_HasteProc,
+                BonusWarrior_T8_4P_MSBTCritIncrease = stats.BonusWarrior_T8_4P_MSBTCritIncrease,
+                BonusWarrior_T9_2P_Crit = stats.BonusWarrior_T9_2P_Crit,
+                BonusWarrior_T9_2P_ArP = stats.BonusWarrior_T9_2P_ArP,
+                BonusWarrior_T9_4P_SLHSCritIncrease = stats.BonusWarrior_T9_4P_SLHSCritIncrease,
+                BonusWarrior_T7_2P_SlamDamage = stats.BonusWarrior_T7_2P_SlamDamage,
+            };
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if ((effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.MeleeCrit ||
+                    effect.Trigger == Trigger.MeleeHit ||
+                    effect.Trigger == Trigger.PhysicalCrit ||
+                    effect.Trigger == Trigger.PhysicalHit ||
+                    effect.Trigger == Trigger.DoTTick
+                    || effect.Trigger == Trigger.DamageDone) && HasRelevantStats(effect.Stats))
+                {
+                    relevantStats.AddSpecialEffect(effect);
+                }
+            }
+            return relevantStats;
+        }
+        public override bool HasRelevantStats(Stats stats) {
+            bool relevant = (
+                stats.Stamina +
+                stats.Health +
+                stats.Agility +
+                stats.Strength +
+                stats.BonusAgilityMultiplier +
+                stats.BonusStrengthMultiplier +
+                stats.AttackPower +
+                stats.BonusAttackPowerMultiplier +
+                stats.CritRating +
+                stats.HitRating +
+                stats.PhysicalHit +
+                stats.HasteRating +
+                stats.ExpertiseRating +
+                stats.ArmorPenetration +
+                stats.ArmorPenetrationRating +
+                stats.WeaponDamage +
+                stats.BonusCritMultiplier +
+                stats.BonusDamageMultiplier +
+                stats.BonusBleedDamageMultiplier +
+                stats.BonusCritChance +
+                stats.Armor +
+                stats.BonusArmor +
+                stats.BonusArmorMultiplier + 
+                stats.PhysicalHaste +
+                stats.PhysicalCrit +
+                stats.ArcaneDamage +
+                stats.BonusPhysicalDamageMultiplier +
+                stats.DarkmoonCardDeathProc + 
+                stats.HighestStat +
+                // Set Bonuses
+                stats.BonusWarrior_T7_4P_RageProc +
+                stats.BonusWarrior_T7_2P_SlamDamage +
+                stats.BonusWarrior_T8_2P_HasteProc +
+                stats.BonusWarrior_T8_4P_MSBTCritIncrease +
+                stats.BonusWarrior_T9_2P_Crit +
+                stats.BonusWarrior_T9_2P_ArP +
+                stats.BonusWarrior_T9_4P_SLHSCritIncrease
+                ) != 0;
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.MeleeCrit ||
+                    effect.Trigger == Trigger.MeleeHit ||
+                    effect.Trigger == Trigger.PhysicalCrit ||
+                    effect.Trigger == Trigger.PhysicalHit ||
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone)
+                {
+                    relevant |= HasRelevantStats(effect.Stats);
+                    if (relevant) break;
+                }
+            }
+            return relevant;
+        }
+
         #endregion
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
@@ -549,140 +735,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
         }
 
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
-            //Hide the ranged weapon enchants. None of them apply to melee damage at all.
-            if (character != null && (character.WarriorTalents != null && enchant != null)) {
-                return enchant.Slot == ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant,character,slot) || (character.WarriorTalents.TitansGrip == 1 && enchant.Slot == ItemSlot.TwoHand && slot == ItemSlot.OffHand);
-            }
-            return enchant.Slot == ItemSlot.Ranged ? false : enchant.FitsInSlot(slot);
-        }
-
-        public override Stats GetRelevantStats(Stats stats) {
-            Stats relevantStats = new Stats() {
-                // Stats
-                Stamina = stats.Stamina,
-                Agility = stats.Agility,
-                Strength = stats.Strength,
-                AttackPower = stats.AttackPower,
-                Health = stats.Health,
-                CritRating = stats.CritRating,
-                HitRating = stats.HitRating,
-                PhysicalHit = stats.PhysicalHit,
-                HasteRating = stats.HasteRating,
-                ExpertiseRating = stats.ExpertiseRating,
-				ArmorPenetration = stats.ArmorPenetration,
-				ArmorPenetrationRating = stats.ArmorPenetrationRating,
-                WeaponDamage = stats.WeaponDamage,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
-                Armor = stats.Armor,
-                BonusArmor = stats.BonusArmor,
-                BonusArmorMultiplier = stats.BonusArmorMultiplier,
-                PhysicalCrit = stats.PhysicalCrit,
-                PhysicalHaste = stats.PhysicalHaste,
-                ArcaneDamage = stats.ArcaneDamage,
-                // Normal Multipliers
-                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
-                BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
-                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
-                BonusDamageMultiplier = stats.BonusDamageMultiplier,
-                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-                // Special Multipliers
-                BonusWarrior_T7_4P_RageProc = stats.BonusWarrior_T7_4P_RageProc,
-                BonusWarrior_T8_2P_HasteProc = stats.BonusWarrior_T8_2P_HasteProc,
-                BonusWarrior_T8_4P_MSBTCritIncrease = stats.BonusWarrior_T8_4P_MSBTCritIncrease,
-                BonusWarrior_T9_2P_Crit = stats.BonusWarrior_T9_2P_Crit,
-                BonusWarrior_T9_2P_ArP = stats.BonusWarrior_T9_2P_ArP,
-                BonusWarrior_T9_4P_SLHSCritIncrease = stats.BonusWarrior_T9_4P_SLHSCritIncrease,
-                BonusWarrior_T7_2P_SlamDamage = stats.BonusWarrior_T7_2P_SlamDamage,
-            };
-            foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if ((effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.MeleeCrit ||
-                    effect.Trigger == Trigger.MeleeHit ||
-                    effect.Trigger == Trigger.PhysicalCrit ||
-                    effect.Trigger == Trigger.PhysicalHit ||
-                    effect.Trigger == Trigger.DoTTick
-                    || effect.Trigger == Trigger.DamageDone) && HasRelevantStats(effect.Stats))
-                {
-                    relevantStats.AddSpecialEffect(effect);
-                }
-            }
-            return relevantStats;
-        }
-        public override bool HasRelevantStats(Stats stats) {
-            bool relevant = (
-                stats.Stamina +
-                stats.Health +
-                stats.Agility +
-                stats.Strength +
-                stats.BonusAgilityMultiplier +
-                stats.BonusStrengthMultiplier +
-                stats.AttackPower +
-                stats.BonusAttackPowerMultiplier +
-                stats.CritRating +
-                stats.HitRating +
-                stats.PhysicalHit +
-                stats.HasteRating +
-                stats.ExpertiseRating +
-                stats.ArmorPenetration +
-                stats.ArmorPenetrationRating +
-                stats.WeaponDamage +
-                stats.BonusCritMultiplier +
-                stats.BonusDamageMultiplier +
-                stats.BonusBleedDamageMultiplier +
-                stats.BonusCritChance +
-                stats.Armor +
-                stats.BonusArmor +
-                stats.BonusArmorMultiplier + 
-                stats.PhysicalHaste +
-                stats.PhysicalCrit +
-                stats.ArcaneDamage +
-                stats.BonusPhysicalDamageMultiplier +
-                stats.DarkmoonCardDeathProc + 
-                stats.HighestStat +
-                // Set Bonuses
-                stats.BonusWarrior_T7_4P_RageProc +
-                stats.BonusWarrior_T7_2P_SlamDamage +
-                stats.BonusWarrior_T8_2P_HasteProc +
-                stats.BonusWarrior_T8_4P_MSBTCritIncrease +
-                stats.BonusWarrior_T9_2P_Crit +
-                stats.BonusWarrior_T9_2P_ArP +
-                stats.BonusWarrior_T9_4P_SLHSCritIncrease
-                ) != 0;
-            foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.MeleeCrit ||
-                    effect.Trigger == Trigger.MeleeHit ||
-                    effect.Trigger == Trigger.PhysicalCrit ||
-                    effect.Trigger == Trigger.PhysicalHit ||
-                    effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone)
-                {
-                    relevant |= HasRelevantStats(effect.Stats);
-                    if (relevant) break;
-                }
-            }
-            return relevant;
-        }
-
-        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
-            // We need specilized handling due to Titan's Grip
-            if (item == null || character == null) {
-                return false;
-            } else if (character.WarriorTalents.TitansGrip == 1 && item.Type == ItemType.Polearm && slot == CharacterSlot.OffHand) {
-                return false;
-            } else if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.TwoHand && character.WarriorTalents.TitansGrip == 1) {
-                return true;
-            } else if (slot == CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == ItemSlot.TwoHand) {
-                return false;
-            } else if (item.Type == ItemType.Polearm && slot == CharacterSlot.MainHand) {
-                return true;
-            } else {
-                return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
-            }
-        }
         public override bool IncludeOffHandInCalculations(Character character) {
             if (character.OffHand == null) { return false; }
             if (character.CurrentTalents is WarriorTalents) {
@@ -695,7 +747,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
             return false;
         }
-        
+
         public Stats GetBuffsStats(Character character) {
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
 
@@ -798,51 +850,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 }
             }
             if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor")); }*/
-        }
-
-        private static List<string> _relevantGlyphs = null;
-        public override List<string> GetRelevantGlyphs() {
-            if (_relevantGlyphs == null) {
-                _relevantGlyphs = new List<string>();
-                // ===== MAJOR GLYPHS =====
-                _relevantGlyphs.Add("Glyph of Bladestorm");
-                _relevantGlyphs.Add("Glyph of Bloodthirst");
-                _relevantGlyphs.Add("Glyph of Cleaving");
-                _relevantGlyphs.Add("Glyph of Enraged Regeneration");
-                _relevantGlyphs.Add("Glyph of Execution");
-                _relevantGlyphs.Add("Glyph of Hamstring");
-                _relevantGlyphs.Add("Glyph of Heroic Strike");
-                _relevantGlyphs.Add("Glyph of Mortal Strike");
-                _relevantGlyphs.Add("Glyph of Overpower");
-                _relevantGlyphs.Add("Glyph of Rapid Charge");
-                _relevantGlyphs.Add("Glyph of Rending");
-                _relevantGlyphs.Add("Glyph of Resonating Power");
-                _relevantGlyphs.Add("Glyph of Sweeping Strikes");
-                _relevantGlyphs.Add("Glyph of Victory Rush");
-                _relevantGlyphs.Add("Glyph of Vigilance");
-                _relevantGlyphs.Add("Glyph of Whirlwind");
-                /* The following Glyphs have been disabled as they are solely Defensive in nature.
-                _relevantGlyphs.Add("Glyph of Barbaric Insults");
-                _relevantGlyphs.Add("Glyph of Blocking");
-                _relevantGlyphs.Add("Glyph of Devastate");
-                _relevantGlyphs.Add("Glyph of Intervene");
-                _relevantGlyphs.Add("Glyph of Last Stand");
-                _relevantGlyphs.Add("Glyph of Revenge");
-                _relevantGlyphs.Add("Glyph of Shield Wall");
-                _relevantGlyphs.Add("Glyph of Shockwave");
-                _relevantGlyphs.Add("Glyph of Spell Reflection");
-                _relevantGlyphs.Add("Glyph of Sunder Armor");
-                _relevantGlyphs.Add("Glyph of Taunt");*/
-                // ===== MINOR GLYPHS =====
-                _relevantGlyphs.Add("Glyph of Battle");
-                _relevantGlyphs.Add("Glyph of Bloodrage");
-                _relevantGlyphs.Add("Glyph of Charge");
-                _relevantGlyphs.Add("Glyph of Enduring Victory");
-                _relevantGlyphs.Add("Glyph of Thunder Clap");
-                /* The following Glyphs have been disabled as they are solely Defensive in nature.
-                //_relevantGlyphs.Add("Glyph of Mocking Blow");*/
-            }
-            return _relevantGlyphs;
         }
     }
 }
