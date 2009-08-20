@@ -2403,48 +2403,12 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Dreadnaught Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusSlamDamage = 0.1f },
-                SetName = "Dreadnaught Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dreadnaught Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { DreadnaughtBonusRageProc = 0.05f },
-                SetName = "Dreadnaught Battlegear",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
                 Name = "Dreadnaught Plate 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusShieldSlamDamage = 0.1f },
                 SetName = "Dreadnaught Plate",
                 SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Siegebreaker Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior2PT8Haste = 150f },
-                SetName = "Siegebreaker Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Siegebreaker Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MortalstrikeBloodthirstCritIncrease = 0.1f },
-                SetName = "Siegebreaker Battlegear",
-                SetThreshold = 4
             });
             defaultBuffs.Add(new Buff()
             {
@@ -2457,55 +2421,91 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Hellscream's Battlegear 2 Piece Fury Bonus",
+                Name = "Dreadnaught Battlegear (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior2PT9Crit = 0.02f },
+                Stats = { BonusWarrior_T7_2P_SlamDamage = 0.1f },
+                SetName = "Dreadnaught Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreadnaught Battlegear (T7) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T7_4P_RageProc = 5f },
+                SetName = "Dreadnaught Battlegear",
+                SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Siegebreaker Battlegear (T8) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T8_2P_HasteProc = 150f },
+                SetName = "Siegebreaker Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Siegebreaker Battlegear (T8) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T8_4P_MSBTCritIncrease = 0.1f },
+                SetName = "Siegebreaker Battlegear",
+                SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Hellscream's Battlegear (T9) 2 Piece Fury Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T9_2P_Crit = 0.02f },
                 SetName = "Hellscream's Battlegear",
                 SetThreshold = 2
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Hellscream's Battlegear 2 Piece Arms Bonus",
+                Name = "Hellscream's Battlegear (T9) 2 Piece Arms Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior2PT9ArP = 0.06f },
+                Stats = { BonusWarrior_T9_2P_ArP = 0.06f },
                 SetName = "Hellscream's Battlegear",
                 SetThreshold = 2
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Hellscream's Battlegear 4 Piece Bonus",
+                Name = "Hellscream's Battlegear (T9) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SlamHeroicstrikeCritIncrease = 0.05f },
+                Stats = { BonusWarrior_T9_4P_SLHSCritIncrease = 0.05f },
                 SetName = "Hellscream's Battlegear",
                 SetThreshold = 4
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Wrynn's Battlegear 2 Piece Fury Bonus",
+                Name = "Wrynn's Battlegear (T9) 2 Piece Fury Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior2PT9Crit = 0.02f },
+                Stats = { BonusWarrior_T9_2P_Crit = 0.02f },
                 SetName = "Wrynn's Battlegear",
                 SetThreshold = 2
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Wrynn's Battlegear 2 Piece Arms Bonus",
+                Name = "Wrynn's Battlegear (T9) 2 Piece Arms Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior2PT9ArP = 0.06f },
+                Stats = { BonusWarrior_T9_2P_ArP = 0.06f },
                 SetName = "Wrynn's Battlegear",
                 SetThreshold = 2
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Wrynn's Battlegear 4 Piece Bonus",
+                Name = "Wrynn's Battlegear (T9) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SlamHeroicstrikeCritIncrease = 0.05f },
+                Stats = { BonusWarrior_T9_4P_SLHSCritIncrease = 0.05f },
                 SetName = "Wrynn's Battlegear",
                 SetThreshold = 4
             });

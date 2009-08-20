@@ -278,7 +278,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             teethbonus /= 108f;
             calculatedStats.TeethBonus = (int)teethbonus;
             calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && combatFactors._c_mhItemType == ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
-            calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? (0.10f + stats.BonusWarrior2PT9ArP) : 0.00f);
+            calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? (0.10f + stats.BonusWarrior_T9_2P_ArP) : 0.00f);
             calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
             calculatedStats.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
             calculatedStats.ArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
@@ -334,7 +334,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsOptionsPanel = new Stats() {
                 BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
-                PhysicalCrit = (calcOpts.FuryStance ? 0.03f + statsBuffs.BonusWarrior2PT9Crit : 0f)
+                PhysicalCrit = (calcOpts.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f)
                             // handle boss level difference
                             + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - 80],
             };
@@ -476,13 +476,14 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     }
                 }
             }
-            if (statsTotal.BonusWarrior2PT8Haste > 0f) {
+            if (statsTotal.BonusWarrior_T8_2P_HasteProc > 0f) {
                 SpecialEffect hasteBonusEffect = new SpecialEffect(Trigger.MeleeHit,
-                    new Stats() { HasteRating = statsTotal.BonusWarrior2PT8Haste },
+                    new Stats() { HasteRating = statsTotal.BonusWarrior_T8_2P_HasteProc, },
                     5f, // duration
                     0f // cooldown
                 );
-                statsProcs += hasteBonusEffect.GetAverageStats(1f / Rot.CritHsSlamPerSec, 1f, combatFactors.MH.Speed, fightDuration);
+                Stats hasteproc = hasteBonusEffect.GetAverageStats(1f / Rot.CritHsSlamPerSec);
+                statsProcs += hasteproc;
             }
             // Warrior Abilities as SpecialEffects
             Stats avgstats = new Stats() { AttackPower = 0f, };
@@ -515,20 +516,23 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsProcs.Armor       += statsProcs.BonusArmor;
             statsProcs.Armor       += 2f * statsProcs.Agility;
             statsProcs.Armor       *= (float)Math.Floor(1f + statsTotal.BonusArmorMultiplier);
+            statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
+                                     * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, CharacterClass.Warrior))
+                                     - 1f;
 
             statsTotal             += statsProcs;
 
             // Haste
-            statsTotal.HasteRating = (float)Math.Floor(statsTotal.HasteRating);
+            statsTotal.HasteRating   = (float)Math.Floor(statsTotal.HasteRating);
+            float ratingHasteBonus   = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Warrior);
             statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
                                        (1f + statsItems.PhysicalHaste) *
                                        (1f + statsBuffs.PhysicalHaste) *
                                        (1f + statsTalents.PhysicalHaste) *
                                        (1f + statsOptionsPanel.PhysicalHaste) *
-                                       (1f + statsProcs.PhysicalHaste)
+                                       (1f + statsProcs.PhysicalHaste) *
+                                       (1f + ratingHasteBonus)
                                        - 1f;
-            float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Warrior);
-            statsTotal.PhysicalHaste = (float)Math.Floor((1f + statsTotal.PhysicalHaste) * (1f + ratingHasteBonus) - 1f);
 
             return statsTotal;
         }
@@ -555,14 +559,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats() {
+                // Stats
                 Stamina = stats.Stamina,
                 Agility = stats.Agility,
                 Strength = stats.Strength,
                 AttackPower = stats.AttackPower,
-                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
-                BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
-                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 Health = stats.Health,
                 CritRating = stats.CritRating,
                 HitRating = stats.HitRating,
@@ -573,17 +574,28 @@ Don't forget your weapons used matched with races can affect these numbers.",
 				ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
-                BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
+                ArcaneDamage = stats.ArcaneDamage,
+                // Normal Multipliers
+                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+                BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
+                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
+                BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-                BonusSlamDamage = stats.BonusSlamDamage,
-                ArcaneDamage = stats.ArcaneDamage,
-                DreadnaughtBonusRageProc = stats.DreadnaughtBonusRageProc,
+                // Special Multipliers
+                BonusWarrior_T7_4P_RageProc = stats.BonusWarrior_T7_4P_RageProc,
+                BonusWarrior_T8_2P_HasteProc = stats.BonusWarrior_T8_2P_HasteProc,
+                BonusWarrior_T8_4P_MSBTCritIncrease = stats.BonusWarrior_T8_4P_MSBTCritIncrease,
+                BonusWarrior_T9_2P_Crit = stats.BonusWarrior_T9_2P_Crit,
+                BonusWarrior_T9_2P_ArP = stats.BonusWarrior_T9_2P_ArP,
+                BonusWarrior_T9_4P_SLHSCritIncrease = stats.BonusWarrior_T9_4P_SLHSCritIncrease,
+                BonusWarrior_T7_2P_SlamDamage = stats.BonusWarrior_T7_2P_SlamDamage,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if ((effect.Trigger == Trigger.Use ||
@@ -628,15 +640,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.PhysicalCrit +
                 stats.ArcaneDamage +
                 stats.BonusPhysicalDamageMultiplier +
-                stats.DreadnaughtBonusRageProc +
-                stats.BonusWarrior2PT8Haste +
-                stats.MortalstrikeBloodthirstCritIncrease +
-                stats.BonusWarrior2PT9Crit +
-                stats.BonusWarrior2PT9ArP +
-                stats.SlamHeroicstrikeCritIncrease + 
-                stats.BonusSlamDamage +
                 stats.DarkmoonCardDeathProc + 
-                stats.HighestStat
+                stats.HighestStat +
+                // Set Bonuses
+                stats.BonusWarrior_T7_4P_RageProc +
+                stats.BonusWarrior_T7_2P_SlamDamage +
+                stats.BonusWarrior_T8_2P_HasteProc +
+                stats.BonusWarrior_T8_4P_MSBTCritIncrease +
+                stats.BonusWarrior_T9_2P_Crit +
+                stats.BonusWarrior_T9_2P_ArP +
+                stats.BonusWarrior_T9_4P_SLHSCritIncrease
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use ||

@@ -551,7 +551,7 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = true;
                 DamageBase = StatS.AttackPower * 50f / 100f;
                 DamageBonus = 1f + Talents.UnendingFury * 0.02f;
-                BonusCritChance = StatS.MortalstrikeBloodthirstCritIncrease;
+                BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease;
             }
             public override float GetHealing() {
                 // ToDo: Bloodthirst healing effect, also adding in GlyphOfBloodthirst (+100% healing)
@@ -762,7 +762,7 @@ namespace Rawr.DPSWarr {
                 DamageBase = combatFactors.NormalizedMhWeaponDmg + 380f;
                 DamageBonus = (1f + Talents.ImprovedMortalStrike / 3f * 0.1f)
                             * (1f + (Talents.GlyphOfMortalStrike ? 0.1f : 0f));
-                BonusCritChance = StatS.MortalstrikeBloodthirstCritIncrease;
+                BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease;
             }
         }
         public class Suddendeath : Ability {
@@ -1117,8 +1117,8 @@ namespace Rawr.DPSWarr {
                 CastTime = (1.5f - (Talents.ImprovedSlam * 0.5f)); // In Seconds
                 StanceOkArms = StanceOkDef = true;
                 DamageBase = combatFactors.AvgMhWeaponDmgUnhasted + 250f;
-                DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusSlamDamage);
-                BonusCritChance = StatS.SlamHeroicstrikeCritIncrease;
+                DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusWarrior_T7_2P_SlamDamage);
+                BonusCritChance = StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
             }
             public override float Activates { get { if (!Validated) { return 0f; } return 0f; } }
         }
@@ -1269,7 +1269,7 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
                 DamageBase = Whiteattacks.MhDamage + 495f;
-                BonusCritChance = Talents.Incite * 0.05f + StatS.SlamHeroicstrikeCritIncrease;
+                BonusCritChance = Talents.Incite * 0.05f + StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
             }
             // Variables
             // Get/Set

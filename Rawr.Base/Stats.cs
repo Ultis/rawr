@@ -343,12 +343,12 @@ namespace Rawr {
         #endregion
         #region Set Bonuses: Warrior
 		DevastateCritIncrease,
-		DreadnaughtBonusRageProc,
-        BonusWarrior2PT8Haste,
-        MortalstrikeBloodthirstCritIncrease,
-        BonusWarrior2PT9Crit,
-        BonusWarrior2PT9ArP,
-        SlamHeroicstrikeCritIncrease,
+        BonusWarrior_T7_4P_RageProc,
+        BonusWarrior_T8_2P_HasteProc,
+        BonusWarrior_T8_4P_MSBTCritIncrease,
+        BonusWarrior_T9_2P_Crit,
+        BonusWarrior_T9_2P_ArP,
+        BonusWarrior_T9_4P_SLHSCritIncrease,
         #endregion
         #region Set Bonuses: Rogue
         BonusSnDDuration,
@@ -476,7 +476,7 @@ namespace Rawr {
         #endregion
         #region Warrior set bonuses
         BonusShieldSlamDamage,
-        BonusSlamDamage,
+        BonusWarrior_T7_2P_SlamDamage,
         #endregion
         #region Boss Stats
         BossAttackSpeedMultiplier,
@@ -4017,56 +4017,6 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
-        [DisplayName("bonus haste on Warrior 2-Piece T8 proc")]
-        public float BonusWarrior2PT8Haste
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT8Haste]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT8Haste] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% increased critical strike chance on Mortal Strike and Bloodthirst")]
-        public float MortalstrikeBloodthirstCritIncrease
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MortalstrikeBloodthirstCritIncrease]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MortalstrikeBloodthirstCritIncrease] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% increased Fury Crit on Warrior 2-Piece T9")]
-        public float BonusWarrior2PT9Crit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT9Crit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT9Crit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% increased Arms ArP on Warrior 2-Piece T9")]
-        public float BonusWarrior2PT9ArP
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT9ArP]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior2PT9ArP] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% increased critical strike chance on Slam and Heroic Strike")]
-        public float SlamHeroicstrikeCritIncrease
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SlamHeroicstrikeCritIncrease]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SlamHeroicstrikeCritIncrease] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
         [DisplayName("% increased critical strike chance on Devastate")]
         public float DevastateCritIncrease
         {
@@ -4078,21 +4028,70 @@ namespace Rawr {
         [Percentage]
         [Category("Warrior")]
         [DisplayName("% Slam Damage")]
-        public float BonusSlamDamage
+        public float BonusWarrior_T7_2P_SlamDamage
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSlamDamage]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSlamDamage] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T7_2P_SlamDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T7_2P_SlamDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warrior")]
+        [DisplayName("Rage Cost Reduction Proc")]
+        public float BonusWarrior_T7_4P_RageProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T7_4P_RageProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T7_4P_RageProc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warrior")]
+        [DisplayName("bonus haste rating chance on Heroic Strike and Slam crits")]
+        public float BonusWarrior_T8_2P_HasteProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_2P_HasteProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_2P_HasteProc] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
-        [DisplayName("% Extra Rage Proc")]
-        public float DreadnaughtBonusRageProc
+        [DisplayName("% increased critical strike chance on Mortal Strike and Bloodthirst")]
+        public float BonusWarrior_T8_4P_MSBTCritIncrease
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.DreadnaughtBonusRageProc]; }
-			set { _rawAdditiveData[(int)AdditiveStat.DreadnaughtBonusRageProc] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_4P_MSBTCritIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_4P_MSBTCritIncrease] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% increased Fury Crit on Warrior 2-Piece T9")]
+        public float BonusWarrior_T9_2P_Crit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_Crit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_Crit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% increased Arms ArP on Warrior 2-Piece T9")]
+        public float BonusWarrior_T9_2P_ArP
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_ArP]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_ArP] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% increased critical strike chance on Slam and Heroic Strike")]
+        public float BonusWarrior_T9_4P_SLHSCritIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_4P_SLHSCritIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_4P_SLHSCritIncrease] = value; }
+        }
+
         #endregion
         #region Added by Rawr.Feral
         [System.ComponentModel.DefaultValueAttribute(0f)]

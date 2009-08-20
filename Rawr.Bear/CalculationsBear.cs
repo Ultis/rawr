@@ -442,7 +442,7 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
 			calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
             calculatedStats.CritReduction = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER)
-                                          + StatConversion.GetResilienceFromRating(stats.Resilience, CharacterClass.Druid)
+                                          + StatConversion.CRITREDUC_PER_RESILIENCE * StatConversion.GetResilienceFromRating(stats.Resilience, CharacterClass.Druid)
                                           + stats.CritChanceReduction;
 			calculatedStats.CappedCritReduction = Math.Min(0.05f + levelDifference, calculatedStats.CritReduction);
 

@@ -275,13 +275,27 @@ namespace Rawr.DPSWarr {
                     return critsPerRot / CalcOpts.Duration;
                 }else{
                     Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
-                    float MS_Acts = MS.Activates;
-                    float OP_Acts = OP.Activates;
-                    float TB_Acts = TB.Activates;
-                    float SD_Acts = SD.Activates;
-                    float HS_Acts = Which.Activates;
+
+                    float UsedGCDs = BZ.Activates
+                                   + Trinket1.Activates
+                                   + Trinket2.Activates
+                                   + BTS.Activates
+                                   + DS.Activates
+                                   + SN.Activates
+                                   + TH.Activates
+                                   + HMS.Activates
+                                   + ST.Activates
+                                   + SW.Activates
+                                   + Death.Activates
+                                   + BLS.Activates * 4f
+                                   + MS.Activates
+                                   + RD.Activates
+                                   + OP.Activates
+                                   + TB.Activates
+                                   + SD.Activates;
+                    float HS_Acts = (CalcOpts.MultipleTargets ? 0f : Which.Activates);
                     float LatentGCD = 1.5f + CalcOpts.GetLatency();
-                    float SL_Acts = Math.Max(0f, CalcOpts.Duration / LatentGCD - MS_Acts - OP_Acts - SD_Acts);
+                    float SL_Acts = Math.Max(0f, CalcOpts.Duration / LatentGCD - UsedGCDs);
 
                     float result = (SL.BonusCritChance + CombatFactors._c_mhycrit) * (SL_Acts / CalcOpts.Duration) +
                                    (HS.BonusCritChance + CombatFactors._c_mhycrit) * (HS_Acts / CalcOpts.Duration);
@@ -335,8 +349,8 @@ namespace Rawr.DPSWarr {
                             + RageGenWrathPerSec;
 
                 // 4pcT7
-                if (StatS.DreadnaughtBonusRageProc != 0f) {
-                    rage += 5.0f * 0.1f * ((Talents.DeepWounds > 0f ? 1f : 0f) + (!CalcOpts.FuryStance ? 1f / 3f : 0f));
+                if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
+                    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * ((Talents.DeepWounds > 0f ? 1f : 0f) + (!CalcOpts.FuryStance ? 1f / 3f : 0f));
                 }
 
                 return rage;
@@ -406,9 +420,9 @@ namespace Rawr.DPSWarr {
 
             // ==== Rage Generation Priorities ========
             RageGenOther = RageGenAngerPerSec + RageGenWrathPerSec;
-            if (StatS.DreadnaughtBonusRageProc != 0f) {
-                RageGenOther += 0.5f * (Talents.DeepWounds > 0f ? 1f : 0f);
-                RageGenOther += 0.5f * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f);
+            if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
+                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f);
+                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f);
             }
             availRage += RageGenOther;
 
@@ -643,9 +657,10 @@ namespace Rawr.DPSWarr {
 
             // ==== Rage Generation Priorities ========
             RageGenOther = RageGenAngerPerSec + RageGenWrathPerSec;
-            if (StatS.DreadnaughtBonusRageProc != 0f) {
-                RageGenOther += 0.5f * (Talents.DeepWounds > 0f ? 1f : 0f);
-                RageGenOther += 0.5f * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f);
+            if (StatS.BonusWarrior_T7_4P_RageProc != 0f)
+            {
+                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc*0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f);
+                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc*0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f);
             }
             availRage += RageGenOther;
 
