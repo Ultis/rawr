@@ -276,23 +276,28 @@ namespace Rawr.Mage
             {
                 foreach (SpecialEffect effect in CastingState.Calculations.DamageProcEffects)
                 {
-                    float avgTriggersPerTick = 0;
+                    float chance = 0;
                     switch (effect.Trigger)
                     {
                         case Trigger.SpellCrit:
                         case Trigger.DamageSpellCrit:
-                            avgTriggersPerTick = CritProcs / Ticks * TargetProcs / HitProcs;
+                            chance = CritProcs / Ticks;
                             break;
                         case Trigger.SpellHit:
                         case Trigger.DamageSpellHit:
-                            avgTriggersPerTick = TargetProcs / Ticks;
+                            chance = HitProcs / Ticks;
                             break;
+                    }
+                    // aoe modifier
+                    if (TargetProcs > HitProcs)
+                    {
+                        chance = 1f - (float)Math.Pow(1 - chance, TargetProcs / HitProcs);
                     }
                     /*int hitsInsideCooldown = (int)(effect.Cooldown / (CastTime / Ticks));
                     float avgHitsToDischarge = 1f / (avgTriggersPerTick * effect.Chance);
                     if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
                     float effectsPerSecond = 1f / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));*/
-                    float effectsPerSecond = effect.GetAverageProcsPerSecond(CastTime / Ticks, avgTriggersPerTick, 3f, CastingState.CalculationOptions.FightDuration);
+                    float effectsPerSecond = effect.GetAverageProcsPerSecond(CastTime / Ticks, chance, 3f, CastingState.CalculationOptions.FightDuration);
                     if (effect.Stats.ArcaneDamage > 0)
                     {
                         float boltDps = CastingState.ArcaneAverageDamage * effect.Stats.ArcaneDamage * effectsPerSecond;
@@ -558,7 +563,69 @@ namespace Rawr.Mage
                 contrib.Hits += duration / waterbolt.CastTime;
                 contrib.Damage += waterbolt.DamagePerSecond * duration;
             }
-            if (CastingState.BaseStats.LightningCapacitorProc > 0)
+            if (Ticks > 0)
+            {
+                foreach (SpecialEffect effect in CastingState.Calculations.DamageProcEffects)
+                {
+                    float avgTriggersPerTick = 0;
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.SpellCrit:
+                        case Trigger.DamageSpellCrit:
+                            avgTriggersPerTick = CritProcs / Ticks * TargetProcs / HitProcs;
+                            break;
+                        case Trigger.SpellHit:
+                        case Trigger.DamageSpellHit:
+                            avgTriggersPerTick = TargetProcs / Ticks;
+                            break;
+                    }
+                    string name = null;
+                    /*int hitsInsideCooldown = (int)(effect.Cooldown / (CastTime / Ticks));
+                    float avgHitsToDischarge = 1f / (avgTriggersPerTick * effect.Chance);
+                    if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
+                    float effectsPerSecond = 1f / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));*/
+                    float effectsPerSecond = effect.GetAverageProcsPerSecond(CastTime / Ticks, avgTriggersPerTick, 3f, CastingState.CalculationOptions.FightDuration);
+                    float boltDps = 0f;
+                    if (effect.Stats.ArcaneDamage > 0)
+                    {
+                        boltDps = CastingState.ArcaneAverageDamage * effect.Stats.ArcaneDamage * effectsPerSecond;
+                        name = "Arcane Damage Proc";
+                    }
+                    if (effect.Stats.FireDamage > 0)
+                    {
+                        boltDps = CastingState.FireAverageDamage * effect.Stats.FireDamage * effectsPerSecond;
+                        name = "Fire Damage Proc";
+                    }
+                    /*if (effect.Stats.FrostDamage > 0)
+                    {
+                        boltDps = CastingState.FrostAverageDamage * effect.Stats.FrostDamage * effectsPerSecond;
+                        name = "Frost Damage Proc";
+                    }*/
+                    if (effect.Stats.ShadowDamage > 0)
+                    {
+                        boltDps = CastingState.ShadowAverageDamage * effect.Stats.ShadowDamage * effectsPerSecond;
+                        name = "Shadow Damage Proc";
+                    }
+                    if (effect.Stats.NatureDamage > 0)
+                    {
+                        boltDps = CastingState.NatureAverageDamage * effect.Stats.NatureDamage * effectsPerSecond;
+                        name = "Nature Damage Proc";
+                    }
+                    /*if (effect.Stats.HolyDamage > 0)
+                    {
+                        boltDps = CastingState.HolyAverageDamage * effect.Stats.HolyDamage * effectsPerSecond;
+                        name = "Holy Damage Proc";
+                    }*/
+                    if (!dict.TryGetValue(name, out contrib))
+                    {
+                        contrib = new SpellContribution() { Name = name };
+                        dict[name] = contrib;
+                        contrib.Hits += effectsPerSecond * duration;
+                        contrib.Damage += boltDps * duration;
+                    }
+                }
+            }
+            /*if (CastingState.BaseStats.LightningCapacitorProc > 0)
             {
                 if (!dict.TryGetValue("Lightning Bolt", out contrib))
                 {
@@ -589,7 +656,7 @@ namespace Rawr.Mage
                 float boltDps = CastingState.ThunderBoltAverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
                 contrib.Hits += duration / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
                 contrib.Damage += boltDps * duration;
-            }
+            }*/
             if (CastingState.BaseStats.ShatteredSunAcumenProc > 0 && !CastingState.CalculationOptions.Aldor)
             {
                 if (!dict.TryGetValue("Arcane Bolt", out contrib))
@@ -601,7 +668,7 @@ namespace Rawr.Mage
                 contrib.Hits += duration / (45f + CastTime / HitProcs / 0.1f);
                 contrib.Damage += boltDps * duration;
             }
-            if (CastingState.BaseStats.PendulumOfTelluricCurrentsProc > 0)
+            /*if (CastingState.BaseStats.PendulumOfTelluricCurrentsProc > 0)
             {
                 if (!dict.TryGetValue("Pendulum of Telluric Currents", out contrib))
                 {
@@ -611,7 +678,7 @@ namespace Rawr.Mage
                 float boltDps = CastingState.PendulumOfTelluricCurrentsAverageDamage / (45f + CastTime / HitProcs / 0.15f);
                 contrib.Hits += duration / (45f + CastTime / HitProcs / 0.15f);
                 contrib.Damage += boltDps * duration;
-            }
+            }*/
             if (IgniteProcs > 0 && dict.TryGetValue("Ignite", out contrib))
             {
                 double rate = IgniteProcs / CastTime;

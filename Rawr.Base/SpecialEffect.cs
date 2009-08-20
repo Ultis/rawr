@@ -73,11 +73,13 @@ namespace Rawr
             protected const int intervalN = 100;
             protected float fightDuration;
             protected SpecialEffect effect;
+            protected bool discretizationCorrection;
 
-            public Interpolator(SpecialEffect effect, float fightDuration)
+            public Interpolator(SpecialEffect effect, float fightDuration, bool discretizationCorrection)
             {
                 this.effect = effect;
                 this.fightDuration = fightDuration;
+                this.discretizationCorrection = discretizationCorrection;
             }
 
             public float this[float procChance, float interval]
@@ -156,7 +158,7 @@ namespace Rawr
 
         private class UptimeInterpolator : Interpolator
         {
-            public UptimeInterpolator(SpecialEffect effect, float fightDuration) : base(effect, fightDuration) { }
+            public UptimeInterpolator(SpecialEffect effect, float fightDuration) : base(effect, fightDuration, true) { }
 
             protected override float Evaluate(float procChance, float interval)
             {
@@ -184,6 +186,10 @@ namespace Rawr
                     double p = procChance;
 
                     double c = effect.Cooldown / interval;
+                    if (discretizationCorrection)
+                    {
+                        c += 0.5;
+                    }
                     if (c < 1.0) c = 1.0;
                     double x = n;
 
@@ -203,11 +209,15 @@ namespace Rawr
 
         private class ProcsPerSecondInterpolator : Interpolator
         {
-            public ProcsPerSecondInterpolator(SpecialEffect effect, float fightDuration) : base(effect, fightDuration) { }
+            public ProcsPerSecondInterpolator(SpecialEffect effect, float fightDuration) : base(effect, fightDuration, true) { }
 
             protected override float Evaluate(float procChance, float interval)
             {
                 double c = effect.Cooldown / interval;
+                if (discretizationCorrection)
+                {
+                    c += 0.5;
+                }
                 if (c < 1.0) c = 1.0;
                 double n = fightDuration / interval;
                 double x = n;
@@ -464,6 +474,7 @@ namespace Rawr
         /// <param name="fightDuration">Duration of fight in seconds.</param>
         public float GetAverageUptime(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
         {
+            bool discretizationCorrection = true;
             if (triggerChance == 0f || float.IsPositiveInfinity(triggerInterval))
             {
                 return 0f;
@@ -474,7 +485,14 @@ namespace Rawr
                 // fight duration is used only in this case, for the cooldown < duration case the other approximations are good enough
                 if (fightDuration == 0f)
                 {
-                    return Duration / (Cooldown + triggerInterval / triggerChance / GetChance(attackSpeed));
+                    if (discretizationCorrection)
+                    {
+                        return Duration / (Cooldown - triggerInterval / 2 + triggerInterval / triggerChance / GetChance(attackSpeed));
+                    }
+                    else
+                    {
+                        return Duration / (Cooldown - triggerInterval + triggerInterval / triggerChance / GetChance(attackSpeed));
+                    }
                 }
                 else
                 {
@@ -569,7 +587,8 @@ namespace Rawr
 
                     // activeTime[2*C+n] = p * (D + activeTime[C+n]) + (1 - p) * activeTime[2*C+n-1]
                     //                   = p * D + p * (p * D * K[n] + S[n] + (1 - p) ^ n * activeTime[C])
-                    if (triggerInterval > 0 && Mode == CalculationMode.Advanced)
+                    bool needsBeta = fightDuration < 10 * Cooldown;
+                    if (triggerInterval > 0 && Mode == CalculationMode.Advanced && needsBeta)
                     {
                         if (fightDuration <= Duration)
                         {
@@ -595,6 +614,10 @@ namespace Rawr
                             double p = triggerChance * GetChance(attackSpeed);
 
                             double c = Cooldown / triggerInterval;
+                            if (discretizationCorrection)
+                            {
+                                c += 0.5;
+                            }
                             if (c < 1.0) c = 1.0;
                             double x = n;
 
@@ -609,7 +632,7 @@ namespace Rawr
                             return (float)(averageUptime / n);
                         }
                     }
-                    else if (triggerInterval > 0 && Mode == CalculationMode.Interpolation)
+                    else if (triggerInterval > 0 && Mode == CalculationMode.Interpolation && needsBeta)
                     {
                         lock (interpolator)
                         {
@@ -622,16 +645,32 @@ namespace Rawr
                             return i[triggerChance * GetChance(attackSpeed), triggerInterval];
                         }
                     }
-                    else
+                    else if (triggerInterval == 0.0f)
                     {
-                        float p = triggerChance * GetChance(attackSpeed);
-                        // simple approximation
-                        float t = fightDuration - triggerInterval / p;
-                        float cc = Cooldown + triggerInterval / p;
+                        // this is a special case, meaning that it basically auto triggers on cooldown
+                        float t = fightDuration;
+                        float cc = Cooldown;
                         float total = (float)Math.Floor(t / cc) * Duration;
                         t -= (float)Math.Floor(t / cc) * cc;
                         total += Math.Min(t, Duration);
                         return total / fightDuration;
+                    }
+                    else
+                    {
+                        double d = Duration / triggerInterval;
+                        double n = fightDuration / triggerInterval;
+                        double p = triggerChance * GetChance(attackSpeed);
+
+                        double c = Cooldown / triggerInterval;
+                        if (discretizationCorrection)
+                        {
+                            c += 0.5;
+                        }
+                        if (c < 1.0) c = 1.0;
+                        // (1+cooldown/fightDuration*(cooldown-1)/(2*K)) * 1/K
+                        double K = 1.0 / p + c - 1.0;
+                        double ppt = (1 + c / n * (c - 1) / (2 * K)) / K;
+                        return (float)(ppt * d);
                     }
                 }
             }
@@ -872,20 +911,34 @@ namespace Rawr
                 return 0f;
             }
 
+            bool discretizationCorrection = true;
+
             if (fightDuration == 0.0f) {
                 // this is special case, meaning that we have infinite fight duration, so we have
                 // a proc on average every Cooldown + triggerInterval / p
                 float pp = triggerChance * GetChance(attackSpeed);
                 if (pp == 0.0) return 0.0f;
-                return 1.0f / (Cooldown + triggerInterval / pp);
+                if (discretizationCorrection)
+                {
+                    return 1.0f / (Cooldown - triggerInterval / 2 + triggerInterval / pp);
+                }
+                else
+                {
+                    return 1.0f / (Cooldown - triggerInterval + triggerInterval / pp);
+                }
             }
             if (triggerInterval == 0.0f) {
                 // this is a special case, meaning that it basically auto triggers on cooldown
                 return (1.0f + (float)Math.Floor(fightDuration / Cooldown)) / fightDuration;
             }
 
-            if (Mode == CalculationMode.Advanced && triggerInterval > 0) {
+            bool needsBeta = fightDuration < Cooldown * 10;
+            if (Mode == CalculationMode.Advanced && triggerInterval > 0 && needsBeta) {
                 double c = Cooldown / triggerInterval;
+                if (discretizationCorrection)
+                {
+                    c += 0.5;
+                }
                 if (c < 1.0) c = 1.0;
                 double n = fightDuration / triggerInterval;
                 double x = n;
@@ -899,7 +952,7 @@ namespace Rawr
                     x -= c;
                 }
                 return (float)(averageProcs / fightDuration);
-            } else if (Mode == CalculationMode.Interpolation && triggerInterval > 0) {
+            } else if (Mode == CalculationMode.Interpolation && triggerInterval > 0 && needsBeta) {
                 lock (interpolator) {
                     Interpolator i;
                     if (!interpolator.TryGetValue(fightDuration, out i))
@@ -910,11 +963,20 @@ namespace Rawr
                     return i[triggerChance * GetChance(attackSpeed), triggerInterval];
                 }
             } else {
-                float p = triggerChance * GetChance(attackSpeed);
-                // simple approximation
-                float t = fightDuration - triggerInterval / p;
-                float cc = Cooldown + triggerInterval / p;
-                return (1 + (float)Math.Floor(t / cc)) / fightDuration;
+                double d = Duration / triggerInterval;
+                double n = fightDuration / triggerInterval;
+                double p = triggerChance * GetChance(attackSpeed);
+
+                double c = Cooldown / triggerInterval;
+                if (discretizationCorrection)
+                {
+                    c += 0.5;
+                }
+                if (c < 1.0) c = 1.0;
+                // (1+cooldown/fightDuration*(cooldown-1)/(2*K)) * 1/K
+                double K = 1.0 / p + c - 1.0;
+                double ppt = (1 + c / n * (c - 1) / (2 * K)) / K;
+                return (float)(ppt / triggerInterval);
             }
         }
 
