@@ -1068,6 +1068,7 @@ namespace Rawr.Mage
                 cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.00f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 4.00f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 6.00f)));
             }
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
+            cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
             float multiplier = weight * baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3);
             cycle.DpsPerSpellPower += multiplier * rawSpell.CastTime * rawSpell.DpsPerSpellPower;
@@ -1097,6 +1098,7 @@ namespace Rawr.Mage
                 cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.00f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 4.00f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 6.00f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 8.00f)));
             }
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
+            cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
             float multiplier = weight * baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4);
             cycle.DpsPerSpellPower += multiplier * rawSpell.CastTime * rawSpell.DpsPerSpellPower;
