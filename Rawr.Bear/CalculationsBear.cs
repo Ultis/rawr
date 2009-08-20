@@ -429,8 +429,8 @@ the Threat Scale defined on the Options tab.",
 			float missNonDR = stats.Miss - levelDifference;
 			float dodgePreDR = StatConversion.GetDodgeFromAgility(stats.Agility - baseAgi, CharacterClass.Druid)
                                + StatConversion.GetDodgeFromRating(stats.DodgeRating, CharacterClass.Druid)
-                               + defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER;
-            float missPreDR   = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER);
+                               + defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f;
+            float missPreDR   = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f);
 			float dodgePostDR = 0.01f / (1f / 116.890707f + 0.00972f / dodgePreDR);
 			float missPostDR  = 0.01f / (1f / 16f + 0.00972f / missPreDR);
 			float dodgeTotal  = dodgeNonDR + dodgePostDR;
@@ -441,7 +441,7 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.ConstantDamageReduction = 1f - ((1f - Math.Min(0.75f, stats.Armor / (stats.Armor - 22167.5f + 467.5f * targetLevel))) * (1f + stats.DamageTakenMultiplier));
 			calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
 			calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
-            calculatedStats.CritReduction = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER)
+            calculatedStats.CritReduction = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f)
                                           + StatConversion.CRITREDUC_PER_RESILIENCE * StatConversion.GetResilienceFromRating(stats.Resilience, CharacterClass.Druid)
                                           + stats.CritChanceReduction;
 			calculatedStats.CappedCritReduction = Math.Min(0.05f + levelDifference, calculatedStats.CritReduction);
@@ -866,8 +866,8 @@ the Threat Scale defined on the Options tab.",
 			float missNonDR = statsTotal.Miss - levelDifference;
             float dodgePreDR = StatConversion.GetDodgeFromAgility(statsTotal.Agility - baseAgi, CharacterClass.Druid)
                              + StatConversion.GetDodgeFromRating(statsTotal.DodgeRating, CharacterClass.Druid)
-                             + defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER;
-            float missPreDR = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER);
+                             + defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f;
+            float missPreDR = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f);
 			float dodgePostDR = 0.01f / (1f / 116.890707f + 0.00972f / dodgePreDR);
 			float missPostDR = 0.01f / (1f / 16f + 0.00972f / missPreDR);
 			float dodgeTotal = dodgeNonDR + dodgePostDR;
