@@ -22,7 +22,7 @@ namespace Rawr.Retribution {
         public float HandOfReckoningDPS { get; set; }
         public float HammerOfWrathDPS { get; set; }
         public float OtherDPS { get; set; }
-
+        
         public Skill WhiteSkill { get; set; }
         public Skill SealSkill { get; set; }
         public Skill CrusaderStrikeSkill { get; set; }
@@ -32,12 +32,10 @@ namespace Rawr.Retribution {
         public Skill ExorcismSkill { get; set; }
         public Skill HandOfReckoningSkill { get; set; }
         public Skill HammerOfWrathSkill { get; set; }
-        
+
         public float ToMiss { get; set; }
         public float ToDodge { get; set; }
-        public float ToParry { get; set; }
         public float ToResist { get; set; }
-        public float TimeBehind { get; set; }
 
         public float AverageSoVStack { get; set; }
         public float SoVOvertake { get; set; }
@@ -54,13 +52,7 @@ namespace Rawr.Retribution {
 			dictValues["Attack Power"] = BasicStats.AttackPower.ToString("N0");
             dictValues["Crit Chance"] = string.Format("{0:P}*{1:0} crit rating", BasicStats.PhysicalCrit, BasicStats.CritRating);
 			dictValues["Miss Chance"] = string.Format("{0:P}*{1:P} hit ({2:0} rating)\n", ToMiss, BasicStats.PhysicalHit, BasicStats.HitRating);
-            dictValues["Dodge Chance"] = string.Format("{0:P}*{1:P} expertise ({2:0} rating)", ToDodge, StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise, CharacterClass.Paladin), BasicStats.ExpertiseRating);
-            dictValues["Parry Chance"] = string.Format("{0:P}*{1:P} expertise ({2:0} rating)\n"
-                                                     + "This number is reduced by Time Behind Mob (Value x {3:0%})",
-                                                     ToParry * TimeBehind,
-                                                     StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise, CharacterClass.Paladin),
-                                                     BasicStats.ExpertiseRating,
-                                                     TimeBehind);
+			dictValues["Dodge Chance"] = string.Format("{0:P}*{1:P} expertise ({2:0} rating)", ToDodge, BasicStats.Expertise * .0025f, BasicStats.ExpertiseRating);
             dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} haste rating", BasicStats.PhysicalHaste, BasicStats.HasteRating);
 
             dictValues["Weapon Damage"] = WeaponDamage.ToString("N2");
@@ -93,18 +85,7 @@ namespace Rawr.Retribution {
         public override float GetOptimizableCalculationValue(string calculation) {
             switch (calculation) {
                 case "Health": return BasicStats.Health;
-                case "Armor": return BasicStats.Armor + BasicStats.BonusArmor;
-                case "Strength": return BasicStats.Strength;
-                case "Attack Power": return BasicStats.AttackPower;
-                case "Agility": return BasicStats.Agility;
-                case "Crit %": return BasicStats.PhysicalCrit*100f;
-                case "Haste %": return BasicStats.PhysicalHaste*100f;
-                case "Armor Penetration %": return BasicStats.ArmorPenetration*100f;
-                case "% Chance to Miss (White)": return ToMiss * 100f;
-                case "% Chance to Miss (Yellow)": return ToMiss * 100f;
-                case "% Chance to be Dodged": return ToDodge * 100f;
-                case "% Chance to be Parried": return ToParry * 100f;
-                case "% Chance to be Avoided (Yellow/Dodge)": return ToMiss*100f + ToDodge*100f;
+                case "Melee Avoid %": return (WhiteSkill.Combats.GetMeleeAvoid() * 100f);
             }
             return 0f;
         }
