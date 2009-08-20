@@ -576,7 +576,7 @@ focus on Survival Points.",
                 PhysicalCrit = 0.032685f,   // Base PhysicalCrit for paladins
                 SpellCrit = 0.03336f,       // Base SpellCrit for paladins
                 Miss = 0.05f,               // Base Miss for a character with maxed out defense skill
-                Dodge = 0.0349430f,          // Base Dodge for a paladin
+                Dodge = 0.0349430f,         // Base Dodge for a paladin
                 Parry = 0.05f,              // Base Parry for a chracter with maxed out defense skill
                 Block = 0.05f,              // Base Block for character with maxed out defense skill
             };

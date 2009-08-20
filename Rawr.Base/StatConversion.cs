@@ -689,8 +689,8 @@ namespace Rawr
                     modifiedAvoid = Math.Min(CAP_MISSED[iClass], modifiedAvoid);
                     break;
                 case HitResult.Block:
-                    // The 5% base block should be moved into stats.Block as a base value like the others
-                    baseAvoid = 5.0f + stats.Block;
+                    // Base Block is 5%
+                    baseAvoid += stats.Block * 100f;
                     modifiedAvoid += (GetBlockFromRating(stats.BlockRating) * 100f);
                     break;
                 case HitResult.Crit:

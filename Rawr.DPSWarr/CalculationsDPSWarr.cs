@@ -525,11 +525,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
                             + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - 80],
             };
             Stats statsTalents = new Stats() {
-                Parry = talents.Deflection * 1.0f,
+                //Parry = talents.Deflection * 1.0f,
                 PhysicalCrit = talents.Cruelty * 0.01f,
-                Dodge = talents.Anticipation * 1.0f,
-                Block = talents.ShieldSpecialization * 1.0f,
-                BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
+                //Dodge = talents.Anticipation * 1.0f,
+                //Block = talents.ShieldSpecialization * 1.0f,
+                //BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
                 BonusDamageMultiplier = (character.MainHand == null ? 0f :
                                             /* One Handed Weapon Spec  Not using this to prevent any misconceptions
                                             ((character.MainHand.Slot == ItemSlot.OneHand) ? 1f + talents.OneHandedWeaponSpecialization * 0.02f : 1f)
