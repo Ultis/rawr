@@ -575,8 +575,8 @@ namespace Rawr.DPSWarr {
                 ReqMeleeRange = true;
                 MaxRange = 8f; // In Yards
                 Cd = 10f - (Talents.GlyphOfWhirlwind ? 2f : 0f); // In Seconds
-                Targets *= (1f + StatS.BonusTargets);
-                Targets *= (CalcOpts.MultipleTargets?4f:1f);
+                Targets += StatS.BonusTargets;
+                Targets *= 1f + (CalcOpts.MultipleTargets ? 3f * (CalcOpts.MultipleTargetsPerc / 100f) : 0f);
                 RageCost = 25f - (Talents.FocusedRage * 1f);
                 StanceOkFury = true;
                 DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
@@ -601,7 +601,7 @@ namespace Rawr.DPSWarr {
                     }else{ Damage = 0f; }
                 }else{ Damage = combatFactors.NormalizedMhWeaponDmg; }
 
-                return (float)Math.Max(0f, Damage * (DamageBonus) * Targets);
+                return (float)Math.Max(0f, Damage * DamageBonus);
             }
             public override float DamageOnUse {
                 get {
@@ -654,6 +654,7 @@ namespace Rawr.DPSWarr {
                 AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_;
                 ReqTalent = true;
                 Talent2ChksValue = Talents.Bloodsurge;
+                Targets += StatS.BonusTargets;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 Duration = 5f; // In Seconds
@@ -787,6 +788,7 @@ namespace Rawr.DPSWarr {
                 Talent2ChksValue = Talents.SuddenDeath;
                 ReqMeleeWeap = Exec.ReqMeleeWeap;
                 ReqMeleeRange = Exec.ReqMeleeRange;
+                Targets += StatS.BonusTargets;
                 Cd = Exec.Cd;
                 StanceOkArms = true;
             }
@@ -955,7 +957,7 @@ namespace Rawr.DPSWarr {
                 CanBeBlocked = false;
                 Cd = 5f - (2f * Talents.UnrelentingAssault); // In Seconds
                 RageCost = 5f - (Talents.FocusedRage * 1f);
-                Targets += StatS.BonusTargets;
+                Targets += StatS.BonusTargets; // should be handled in an OP subitem like Sudden Death does to Execute but we'll wait on that
                 StanceOkArms = true;
                 DamageBase = combatFactors.NormalizedMhWeaponDmg;
                 DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
@@ -1009,7 +1011,8 @@ namespace Rawr.DPSWarr {
                 Talent2ChksValue = Talents.Bladestorm;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = WW.MaxRange; // In Yards 
+                MaxRange = WW.MaxRange; // In Yards
+                //Targets += StatS.BonusTargets; // Handled in WW
                 Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
                 RageCost = 25f - (Talents.FocusedRage * 1f);
                 CastTime = 6f; // In Seconds // Channeled
@@ -1040,6 +1043,7 @@ namespace Rawr.DPSWarr {
                 Name = "Sword Specialization";
                 ReqTalent = true;
                 Talent2ChksValue = Talents.SwordSpecialization;
+                Targets += StatS.BonusTargets;
                 Cd = 6f; // In Seconds
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
@@ -1297,8 +1301,8 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 RageCost = 20f - (Talents.FocusedRage * 1f);
-                Targets += (Talents.GlyphOfCleaving?1f:0f);
-                Targets *= StatS.BonusTargets;
+                Targets += (CalcOpts.MultipleTargets ? 1f + (Talents.GlyphOfCleaving ? 1f : 0f) : 0f);
+                Targets += StatS.BonusTargets;
                 CastTime = 0f; // In Seconds // Replaces a white hit
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 bloodsurgeRPS = 0.0f;
@@ -1691,12 +1695,16 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = StanceOkArms = true;
                 Effect = new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f * CalcOpts.MultipleTargetsPerc / 100f, }, Duration, Cd);
             }
+            // reduce the numer of time activated by MultiTargsPerc
+            public override float ActivatesOverride { get { return base.ActivatesOverride * (CalcOpts.MultipleTargetsPerc / 100f); } }
             public override Stats AverageStats {
                 get {
                     if (!Validated) { return new Stats(); }
                     Stats bonus = Effect.GetAverageStats(
                         0f,
-                        1f - combatFactors._c_ymiss - combatFactors._c_mhdodge, // The additional hit also has the attack table to deal with
+                        (1f - combatFactors._c_ymiss - combatFactors._c_mhdodge) // The additional hit also has the attack table to deal with
+                        * (CalcOpts.MultipleTargetsPerc / 100f),                 // And we need to reduce the number of activates by the % of
+                                                                                 // time where there are multiple mobs in the fight
                         Whiteattacks.MhEffectiveSpeed,
                         CalcOpts.Duration);
                     return bonus;
@@ -1727,7 +1735,8 @@ namespace Rawr.DPSWarr {
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                Targets = (CalcOpts.MultipleTargets ? 4f : 1f) + StatS.BonusTargets;
+                Targets += StatS.BonusTargets;
+                Targets *= 1f + (CalcOpts.MultipleTargets ? 3f * (CalcOpts.MultipleTargetsPerc / 100f) : 0f);
                 MaxRange = 5f + (Talents.GlyphOfThunderClap ? 2f : 0f); // In Yards 
                 Cd = 6f; // In Seconds
                 Duration = 30f; // In Seconds
