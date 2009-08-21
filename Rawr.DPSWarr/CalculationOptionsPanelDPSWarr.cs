@@ -13,7 +13,6 @@ using System.Xml;
  * Threat Value/Weight
  * Pot Usage (Needs to pull GCDs)
  * Healing Recieved
- * Max # of Targets
  * % of fight with mob under 20% HP (activates Execute Spamming)
  * Vigilance Threat pulling
  */
@@ -65,11 +64,12 @@ namespace Rawr.DPSWarr {
                 CB_Duration.Value = (decimal)calcOpts.Duration;
                 RB_StanceArms.Checked    = !calcOpts.FuryStance;
                 // Rotational Changes
-                CK_MultiTargs.Checked    = calcOpts.MultipleTargets;   CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;
+                CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
+                CK_MultiTargs.Checked    = calcOpts.MultipleTargets;   CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;CB_MultiTargsMax.Value     = (int)calcOpts.MultipleTargetsMax;
+                // nonfunctional
                 CK_MovingTargs.Checked   = calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
                 CK_StunningTargs.Checked = calcOpts.StunningTargets;   CB_StunningTargsPerc.Value  = calcOpts.StunningTargetsPerc;
                 CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
-                CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
                 // Abilities to Maintain
                 CK_Flooring.Checked = calcOpts.AllowFlooring;
                 LoadAbilBools(calcOpts);
@@ -119,22 +119,25 @@ namespace Rawr.DPSWarr {
         private void RotChanges_ChecksChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             //
-            calcOpts.MultipleTargets = CK_MultiTargs.Checked; CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
+            calcOpts.InBack = CK_InBack.Checked; CB_InBackPerc.Enabled = calcOpts.InBack;
+            calcOpts.MultipleTargets = CK_MultiTargs.Checked; LB_Max.Enabled = calcOpts.MultipleTargets; CB_MultiTargsMax.Enabled = calcOpts.MultipleTargets; CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
+            // Nonfunctional
             calcOpts.MovingTargets = CK_MovingTargs.Checked; CB_MoveTargsPerc.Enabled = calcOpts.MovingTargets;
             calcOpts.StunningTargets = CK_StunningTargs.Checked; CB_StunningTargsPerc.Enabled = calcOpts.StunningTargets;
             calcOpts.DisarmingTargets = CK_DisarmTargs.Checked; CB_DisarmingTargsPerc.Enabled = calcOpts.DisarmingTargets;
-            calcOpts.InBack = CK_InBack.Checked; CB_InBackPerc.Enabled = calcOpts.InBack;
             //
             Character.OnCalculationsInvalidated();
         }
         private void RotChanges_ValuesChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             //
+            calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
             calcOpts.MultipleTargetsPerc = (int)CB_MultiTargsPerc.Value;
+            calcOpts.MultipleTargetsMax = (float)CB_MultiTargsMax.Value;
+            // Nonfunctional
             calcOpts.MovingTargetsPerc = (int)CB_MoveTargsPerc.Value;
             calcOpts.StunningTargetsPerc = (int)CB_StunningTargsPerc.Value;
             calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
-            calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
             //
             Character.OnCalculationsInvalidated();
         }
@@ -806,11 +809,12 @@ namespace Rawr.DPSWarr {
         public bool FuryStance = true;
         public bool AllowFlooring = true;
         // Rotational Changes
-        public bool MultipleTargets  = false; public int MultipleTargetsPerc  = 100;
-        public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
-        public bool StunningTargets  = false; public int StunningTargetsPerc  = 100;
-        public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
-        public bool InBack           = true ; public int InBackPerc           = 100;
+        public bool InBack             = true ; public int InBackPerc           = 100;
+        public bool MultipleTargets    = false; public int MultipleTargetsPerc  = 100;public float MultipleTargetsMax = 4;
+            // nonfunctional
+            public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
+            public bool StunningTargets  = false; public int StunningTargetsPerc  = 100;
+            public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
         // Abilities to Maintain
         public bool[] Maintenance = new bool[] {
             true,  // == Rage Gen ==

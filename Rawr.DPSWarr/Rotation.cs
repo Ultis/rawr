@@ -702,7 +702,7 @@ namespace Rawr.DPSWarr {
                     (float)Math.Abs(_OP_GCDs - oldOPGCDs) > 0.1f ||
                     (float)Math.Abs(_SD_GCDs - oldSDGCDs) > 0.1f ||
                     (float)Math.Abs(_SL_GCDs - oldSLGCDs) > 0.1f ||
-                    (float)Math.Abs(_SS_Acts - oldSSActs) > 0.1f
+                    (Talents.SwordSpecialization > 0 && (float)Math.Abs(_SS_Acts - oldSSActs) > 0.1f)
                   )
             {
                 // Reset a couple of items so we can keep iterating
@@ -733,12 +733,14 @@ namespace Rawr.DPSWarr {
                 GCDsused += (float)Math.Min(NumGCDs, _SL_GCDs);
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
 
-                //Sword Spec, Doesn't eat GCDs
-                float SS_Acts = SS.GetActivates(NumGCDs, _Thunder_GCDs + _Ham_GCDs
-                                                       + _Shatt_GCDs
-                                                       + _BLS_GCDs * 6f + _MS_GCDs + _OP_GCDs + _TB_GCDs + _SD_GCDs + _SL_GCDs);
-                _SS_Acts = SS_Acts;
-                // TODO: Add Rage since it's a white hit
+                if (Talents.SwordSpecialization > 0) {
+                    //Sword Spec, Doesn't eat GCDs
+                    float SS_Acts = SS.GetActivates(NumGCDs, _Thunder_GCDs + _Ham_GCDs
+                                                           + _Shatt_GCDs
+                                                           + _BLS_GCDs * 6f + _MS_GCDs + _OP_GCDs + _TB_GCDs + _SD_GCDs + _SL_GCDs);
+                    _SS_Acts = SS_Acts;
+                    // TODO: Add Rage since it's a white hit
+                }
             }
             rageadd = SL.GetRageUsePerSecond(_SL_GCDs) + OP.GetRageUsePerSecond(_OP_GCDs) + SD.GetRageUsePerSecond(_SD_GCDs);
             availRage -= rageadd;

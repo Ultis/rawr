@@ -310,7 +310,7 @@ namespace Rawr.DPSWarr {
             public bool ReqMeleeWeap { get { return REQMELEEWEAP; } set { REQMELEEWEAP = value; } }
             public bool ReqMeleeRange { get { return REQMELEERRANGE; } set { REQMELEERRANGE = value; } }
             public bool ReqMultiTargs { get { return REQMULTITARGS; } set { REQMULTITARGS = value; } }
-            public float Targets { get { return TARGETS; } set { TARGETS = value; } }
+            public float Targets { get { return (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS); } set { TARGETS = value; } }
             public bool CanBeDodged { get { return CANBEDODGED; } set { CANBEDODGED = value; } }
             public bool CanBeParried { get { return CANBEPARRIED; } set { CANBEPARRIED = value; } }
             public bool CanBeBlocked { get { return CANBEBLOCKED; } set { CANBEBLOCKED = value; } }
@@ -1736,7 +1736,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 Targets += StatS.BonusTargets;
-                Targets *= 1f + (CalcOpts.MultipleTargets ? 3f * (CalcOpts.MultipleTargetsPerc / 100f) : 0f);
+                Targets *= 1f + (CalcOpts.MultipleTargets ? (CalcOpts.MultipleTargetsMax-1f) * (CalcOpts.MultipleTargetsPerc / 100f) : 0f);
                 MaxRange = 5f + (Talents.GlyphOfThunderClap ? 2f : 0f); // In Yards 
                 Cd = 6f; // In Seconds
                 Duration = 30f; // In Seconds

@@ -117,12 +117,96 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="RTB_Welcome.Text" xml:space="preserve">
+    <value>Welcome to Rawr.DPSWarr!
+
+This module is designed for Warriors hoping to fulfill the DPS role in a raid, either as Fury or Arms Specialized.
+
+To begin, assuming you have already imported your character from either the profiler or WoW Armory, select your talent specialization above as either Fury or Arms.
+
+Next, jump over to the Fight Info Tab to set some background rules for the fight.
+- Target Level can be changed from 80 to 83. 83 is the numeric representation of all Raid Bosses (who show themselves as Level '??')
+- Target Armor is currently defaulted to 10,643 for all Level 83 Bosses. This is the currently accepted rule of thumb and there is little reason to change off of this.
+- Duration is the length of the fight in seconds. A value of 600 is 10 minutes. Most boss fights take 6 minutes or less but we left a high upper value for those wanting to see total damage for a greater period of time.
+- Lag is the average Latency reported in your WoW client. Many with broadband connections usually see a value between 100 ms and 200 ms. Those with slower connection types such as dial-up will see much larger numbers.
+- Reaction is the average amout of time it takes for you (the player) to react to a button that becomes available. For example, when an oponent dodges and the Overpower ability procs, how long does it take you to process this mentally and command your finger to push the hotkey for Overpower. The WoW client gives 250 ms (1/4 second) allowance for this before your reactions count against you. Most players fall under this 250 ms rule.
+NOTE: Lag and Reaction are combined into a single calculable value. Small adjustments to these numbers yield *very* small adjustments in your dps.
+- The Situational boxes provide the basic situation you will normally be fighting in. The default setting should be all disabled except 'Standing in Back' at 100%.
+
+Finally, go to the Ability Maintenance Tab and choose the abilities you will be maintaining during your battles. Note that changing one or the other can have serious effects on your total dps output, and some abilities act differently if you are in different situations. For example, Bladestorm will have a much larger DPS number if there are multiple targets throughout the fight.</value>
+  </data>
+  <data name="RTB_Advanced.Text" xml:space="preserve">
+    <value>This section is for advanced users only, most players do not need to concern themselves with these settings.
+
+Since you have gotten your feet wet, looked at your gear, maybe even run an optimization or two, now you must be hungry for more. Fear not, there's plenty more you can tweak with your character.
+
+The Fight Info Tab
+
+Nothing more to go over here in teh first part. We will be adding functionality to maintain damage taken, for survivability and for the additional rage generated from damage taken.
+
+The Situational Boxes on The Fight Info Tab
+
+This tab holds information regarding how often in a fight your toon is in that particular situation. Presently, there are five options with Percentages (0-100) on each:
+- Multiple Targets: Your encounter has additional mobs within melee striking distance for x% amount of time. This provides usefulness for abilities such as Cleave, Bladestorm, Whirlwind, Sweeping Strikes to start 'doing their thing' and allowing you to hit the additional targets for a greater overall DPS. Boss fights like Patchwerk however, do not have additional targets.
+- Moving Targets: Your encounter has a target that moves out of melee striking distance for x% amount of time. This provide usefulness for abilities such as Charge and Intercept and talents which enable these abilities. A good example of this situation is 'Archavon the Stone Watcher' in the 'Vault of Archavon (VoA)'. [Currently, this functionality has not been implemented, though it will be coming soon.]
+- Stunning Targets: Your encounter has a target that either stuns just yourself or your entire raid for x% of the time. This provides usefulness for abilities such as Every man for Himself (Humas) and the talent Iron Will. [Currently, this functionality has not been implemented, though it will be coming soon.]
+- Disarming Targets: Your encounter has a target that disarms your characters' weapon periodically in combat. This provides usefulness for things like Titanium Weapon Chain and the talent Weapon Mastery. Most bosses do not do this, but there are several groups of trash (namely in Karazhan) that will disarm players. [Currently, this functionality has not been implemented, though it will be coming soon.]
+- Standing in Back: You spend at least x% of the fight standing behind the target. Mobs are unable to parry attacks from behind so the ~13% of attacks that could normally be parried are no longer on the table. If you are not standing behind the mob during for any portion of the fight, Expertise will have additional value.
+Additional Situations to manage will be coming soon.
+
+The Ability Maintenance Tab
+
+Select additional abilities to watch how they affect your dps. Thunder clap appies a debuff to bosses as do Sunder Armor, Demoralizing Shout, Shattering Throw, etc.</value>
+  </data>
+  <data name="RTB_FAQ.Text" xml:space="preserve">
+    <value>Got a question about Rawr.DPSWarr? The answer may be here...
+
+== CONTENTS ==
+01Q. Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x dps.
+02Q. Why does X talent/glyph not show any value in the comparison lists?
+03Q. Why does X ability lower my DPS when I check it in the Ability Maintenance Tab?
+04Q. Why is it when I run the Optimizer I dont end up hit capped and/or expertise capped? Shouldn't that be automatic?
+
+== READ ON ==
+01Q. Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x dps.
+01A. When The standard rotation abilities for Arms are active (including Slam and Heroic Strike) the large rage consumption of the Mortal Strike Ability tends to overshadow the rage left-over for Heroic Strikes. Basically, if you here to Slam instead of Mortal Strike on every time you would have otherwise, there would be more rage left over to Heroic Strike. Currently, Rawr sees this as a DPS gain and wants you to drop Mortal Strike. We are still researching whether this is a fluke or actually true.
+
+02Q. Why does X talent/glyph not show any value in the comparison lists?
+02A. Many talents cannot be valued by DPS gain, whic his all that Rawr.DPSWarr currently models. In the future, we will add value to things that increase survivability and the like.
+
+03Q. Why does X ability lower my DPS when I check it in the Ability Maintenance Tab?
+03A. Abilities may not provide additional DPS, but they do absorb Global Cooldowns (GCDs). If the ability is replacing something that would otherwise cause damage and isn't providing at least a temporary buff, the total DPS will go down.
+
+04Q. Why is it when I run the Optimizer I dont end up hit capped and/or expertise capped? Shouldn't that be automatic?
+04A. The optimizer, when run without any requirements, will attempt to fing the highest possible Total DPS number. In many cases, this does not include being hit/expertise capped. This is an unfortunate calculational error that has been persistent throughhout Rawr.DPSWarr's history. We have made great strides to correct this issue but a few points are still off. To ensure these caps are enforced, add the 'Chance to be Avoided % &lt;= 0' requirement before optimizing.</value>
+  </data>
   <data name="RTB_Version.Text" xml:space="preserve">
     <value>Below are the raw patch notes for each build.
 
-v2.2.13 (Unreleased)
+v2.2.14 (Unreleased)
+
+- Fixed a couple of stat roundings
+- Fix for issue 13873 "Target level does not affect yellow hit cap". Hit cap is now affected by target level in the Options Pane. This is reflected both in calculations and in the Hit can free/more hit needed tooltip.
+- Added a Bounds Check to ensure character files created pre-v2.2.12 can be loaded into current version
+- Modified CombatFactors to use the new StatConversion for target level adjustment handling
+- Applied patch 3631 (T9 set bonuses)
+- Applied patch to fix Warrior T9 set bonuses
+- Fix for Issue 13901, Bloodrage no longer pulls GCDs
+- Reworked the Tier Set bonuses (7,8,9). This fixes the Haste proc, and the double-dipping for the T9 bonuses created by last commit.
+- Little bit of code reorganizing
+- Changed the perc optimizer requirements to translate percentages
+- Fixed Armor calculations, was not properly using the difference between Base Armor and Bonus Armor and their respective multipliers.
+- Fixed MultiTargs Handling: It was double-dipping in some places and not being consistently handled. Now if you have MultiTargs checked but at 0% you will see same numbers as if it were unchecked and it scales up to 100% correctly.
+- Added Max Targets to MultiTargs Handling: This places a limit on how much extra damage goes out for hitting additional targets, otherwise it will use max (up to 8).
+
+v2.2.13 (Aug 12, 2009 02:28)
 
 - Updated the Tooltips for Warrior Abilities
+- Updated Talent and Glyph trees for 3.2
+- Updated Base Stats for Warriors
+- Reworked the Optimizer fields to a smaller set that is more functional and reads more to what they actually do
+- Fixed a Tooltip issue with Armored to the Teeth
+- Fixed a bug with new Agility Calc 
 
 v2.2.12 (Aug 6, 2009 05:01)
 
@@ -319,78 +403,5 @@ v2.2.5 (May 25, 2009 16:25)
 - Corrected white-damage glance/miss issue
 - Enforced activation of buffs Trauma, Rampage and Blood Frenzy if you have the talents
 - Formulaic fixes and some Talent/Glyph improvements</value>
-  </data>
-  <data name="RTB_Welcome.Text" xml:space="preserve">
-    <value>Welcome to Rawr.DPSWarr!
-
-This module is designed for Warriors hoping to fulfill the DPS role in a raid, either as Fury or Arms Specialized.
-
-To begin, assuming you have already imported your character from either the profiler or WoW Armory, select your talent specialization above as either Fury or Arms.
-
-Next, proceed to the Situational Tab and provide the basic situation you will normally be fight in. The default setting should be all disabled except 'Standing in Back' at 100%.
-
-Now, jump over to the Fight Info Tab to set some background rules for the fight.
-- Target Level can be changed from 80 to 83. 83 is the numeric representation of all Raid Bosses (who show themselves as Level '??')
-- Target Armor is currently defaulted to 10,643 for all Level 83 Bosses. This is the currently accepted rule of thumb and there is little reason to change off of this.
-- Duration is the length of the fight in seconds. A value of 600 is 10 minutes. Most boss fights take 6 minutes or less but we left a high upper value for those wanting to see total damage for a greater period of time.
-- Lag is the average Latency reported in your WoW client. Many with broadband connections usually see a value between 100 ms and 200 ms. Those with slower connection types such as dial-up will see much larger numbers.
-- Reaction is the average amout of time it takes for you (the player) to react to a button that becomes available. For example, when an oponent dodges and the Overpower ability procs, how long does it take you to process this mentally and command your finger to push the hotkey for Overpower. The WoW client gives 250 ms (1/4 second) allowance for this before your reactions count against you. Most players fall under this 250 ms rule.
-NOTE: Lag and Reaction are combined into a single calculable value. Small adjustments to these numbers yield *very* small adjustments in your dps.
-
-Finally, if you are Arms Spec, go to Ability Maintenance and choose the abilities you will be maintaining during your battles. A good start would be the following list:
-- Battle Shout
-- Shattering Throw
-- Bladestorm
-- Mortal Strike
-- Rend
-- Overpower
-- Sudden Death
-- Slam
-- Heroic Strike</value>
-  </data>
-  <data name="RTB_Advanced.Text" xml:space="preserve">
-    <value>This section is for advanced users only, most players do not need to concern themselves with these settings.
-
-Since you have gotten your feet wet, looked at your gear, maybe even run an optimization or two, now you must be hungry for more. Fear not, there's plenty more you can tweak with your character.
-
-The Situational Tab
-
-This tab holds information regarding how often in a fight your toon is in that particular situation. Presently, there are five options with Percentages (0-100) on each:
-- Multiple Targets: Your encounter has additional mobs within melee striking distance for x% amount of time. This provides usefulness for abilities such as Cleave, Bladestorm, Whirlwind, Sweeping Strikes to start 'doing their thing' and allowing you to hit the additional targets for a greater overall DPS. Boss fights like Patchwerk however, do not have additional targets.
-- Moving Targets: Your encounter has a target that moves out of melee striking distance for x% amount of time. This provide usefulness for abilities such as Charge and Intercept and talents which enable these abilities. A good example of this situation is 'Archavon the Stone Watcher' in the 'Vault of Archavon (VoA)'. [Currently, this functionality has not been implemented, though it will be coming soon.]
-- Stunning Targets: Your encounter has a target that either stuns just yourself or your entire raid for x% of the time. This provides usefulness for abilities such as Every man for Himself (Humas) and the talent Iron Will. [Currently, this functionality has not been implemented, though it will be coming soon.]
-- Disarming Targets: Your encounter has a target that disarms your characters' weapon periodically in combat. This provides usefulness for things like Titanium Weapon Chain and the talent Weapon Mastery. Most bosses do not do this, but there are several groups of trash (namely in Karazhan) that will disarm players. [Currently, this functionality has not been implemented, though it will be coming soon.]
-- Standing in Back: You spend at least x% of the fight standing behind the target. Mobs are unable to parry attacks from behind so the ~13% of attacks that could normally be parried are no longer on the table. If you are not standing behind the mob during for any portion of the fight, Expertise will have additional value.
-Additional Situations to manage will be coming soon.
-
-The Fight Info Tab
-
-Nothing more to go over here. We will be adding functionality to maintain damage taken, for survivability and for the additional rage generated from damage taken.
-
-The Ability Maintenance Tab
-
-Select additional abilities to watch how they affect your dps. Thunder clap appies a debuff to bosses as do Sunder Armor, Demoralizing Shout, Shattering Throw, etc.</value>
-  </data>
-  <data name="RTB_FAQ.Text" xml:space="preserve">
-    <value>Got a question about Rawr.DPSWarr? The answer may be here...
-
-== CONTENTS ==
-01Q. Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x dps.
-02Q. Why does X talent/glyph not show any value in the comparison lists?
-03Q. Why does X ability lower my DPS when I check it in the Ability Maintenance Tab?
-04Q. Why is it when I run the Optimizer I dont end up hit capped and/or expertise capped? Shouldn't that be automatic?
-
-== READ ON ==
-01Q. Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x dps.
-01A. When The standard rotation abilities for Arms are active (including Slam and Heroic Strike) the large rage consumption of the Mortal Strike Ability tends to overshadow the rage left-over for Heroic Strikes. Basically, if you here to Slam instead of Mortal Strike on every time you would have otherwise, there would be more rage left over to Heroic Strike. Currently, Rawr sees this as a DPS gain and wants you to drop Mortal Strike. We are still researching whether this is a fluke or actually true.
-
-02Q. Why does X talent/glyph not show any value in the comparison lists?
-02A. Many talents cannot be valued by DPS gain, whic his all that Rawr.DPSWarr currently models. In the future, we will add value to things that increase survivability and the like.
-
-03Q. Why does X ability lower my DPS when I check it in the Ability Maintenance Tab?
-03A. Abilities may not provide additional DPS, but they do absorb Global Cooldowns (GCDs). If the ability is replacing something that would otherwise cause damage and isn't providing at least a temporary buff, the total DPS will go down.
-
-04Q. Why is it when I run the Optimizer I dont end up hit capped and/or expertise capped? Shouldn't that be automatic?
-04A.  The optimizer, when run without any requirements, will attempt to fing the highest possible Total DPS number. In many cases, this does not include being hit/expertise capped. This is an unfortunate calculational error that has been persistent throughhout Rawr.DPSWarr's history. We have made great strides to correct this issue but a few points are still off. To ensure these caps are enforced, add the 'Chance to be Avoided % &lt;= 0' requirement before optimizing.</value>
   </data>
 </root>
