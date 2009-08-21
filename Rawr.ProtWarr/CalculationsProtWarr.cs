@@ -305,12 +305,9 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.combatFactors = combatFactors;
 
             AttackModelMode amm = AttackModelMode.Basic;
-            if (character.WarriorTalents.UnrelentingAssault > 0)
-                amm = AttackModelMode.UnrelentingAssault;
-            else if (character.WarriorTalents.Shockwave > 0)
-                amm = AttackModelMode.FullProtection;
-            else if (character.WarriorTalents.Devastate > 0)
-                amm = AttackModelMode.Devastate;
+            if (character.WarriorTalents.UnrelentingAssault > 0) amm = AttackModelMode.UnrelentingAssault;
+            else if (character.WarriorTalents.Shockwave > 0)     amm = AttackModelMode.FullProtection;
+            else if (character.WarriorTalents.Devastate > 0)     amm = AttackModelMode.Devastate;
 
             DefendModel dm = new DefendModel(character, stats);
             AttackModel am = new AttackModel(character, stats, amm);
@@ -345,25 +342,25 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
 
             calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane));
-            calculatedStats.FireReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire));
-            calculatedStats.FrostReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost));
+            calculatedStats.FireReduction   = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire));
+            calculatedStats.FrostReduction  = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost));
             calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature));
             calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow));
             calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane);
-            calculatedStats.FireSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire);
-            calculatedStats.FrostSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost);
+            calculatedStats.FireSurvivalPoints   = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire);
+            calculatedStats.FrostSurvivalPoints  = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost);
             calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Nature);
             calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow);
 
             calculatedStats.HitRating = stats.HitRating;
-            calculatedStats.HitPercent = StatConversion.GetHitFromRating(stats.HitRating);
+            calculatedStats.HitPercent = StatConversion.GetHitFromRating(stats.HitRating, CharacterClass.Warrior);
             calculatedStats.HitPercBonus = stats.PhysicalHit;
             calculatedStats.HitPercentTtl = calculatedStats.HitPercent + calculatedStats.HitPercBonus;
             calculatedStats.HitCanFree =
                 StatConversion.GetRatingFromHit(
                     StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel-80]
                     - calculatedStats.HitPercBonus
-                    - StatConversion.GetHitFromRating(calculatedStats.HitRating)
+                    - StatConversion.GetHitFromRating(calculatedStats.HitRating,CharacterClass.Warrior)
                 )
                 * -1f;
             calculatedStats.ExpertiseRating = stats.ExpertiseRating;
@@ -380,10 +377,10 @@ threat and limited threat scaled by the threat scale.",
                 //talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
             calculatedStats.ArmorPenetration = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
             calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyNotLand;
-            calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
+            calculatedStats.DodgedAttacks  = am.Abilities[Ability.None].AttackTable.Dodge;
             calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
-            calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
-            calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
+            calculatedStats.MissedAttacks  = am.Abilities[Ability.None].AttackTable.Miss;
+            calculatedStats.WeaponSpeed    = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
             float teethbonus = stats.Armor;
             teethbonus *= (float)character.WarriorTalents.ArmoredToTheTeeth;
@@ -440,7 +437,6 @@ threat and limited threat scaled by the threat scale.",
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsOptionsPanel = new Stats() {
-                //BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 // handle boss level difference
                 PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel-80],
             };
@@ -488,14 +484,15 @@ threat and limited threat scaled by the threat scale.",
 
             // Agility
             float totalBAM = statsTotal.BonusAgilityMultiplier;
-            float agiBase = (float)Math.Floor((1f + totalBAM) * statsRace.Agility);
+            float agiBase  = (float)Math.Floor((1f + totalBAM) * statsRace.Agility);
             float agiBonus = (float)Math.Floor((1f + totalBAM) * statsGearEnchantsBuffs.Agility);
             statsTotal.Strength = strBase + strBonus;
 
             // Armor
-            statsTotal.Armor += statsTotal.BonusArmor;
-            statsTotal.Armor += statsTotal.Agility * 2f;
-            statsTotal.Armor *= (1f + statsTotal.BonusArmorMultiplier);
+            statsTotal.Armor       = (float)Math.Floor(statsTotal.Armor      * (1f + statsTotal.BaseArmorMultiplier ));
+            statsTotal.BonusArmor += statsTotal.Agility * 2f;
+            statsTotal.BonusArmor  = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
+            statsTotal.Armor      += statsTotal.BonusArmor;
 
             // Attack Power
             float totalBAPM = statsTotal.BonusAttackPowerMultiplier;
@@ -569,9 +566,12 @@ threat and limited threat scaled by the threat scale.",
             statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina  * (1f + totalBSTAM + statsProcs.BonusStaminaMultiplier));
             statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength * (1f + totalBSM + statsProcs.BonusStrengthMultiplier));
             statsProcs.Agility      = (float)Math.Floor(statsProcs.Agility  * (1f + totalBAM + statsProcs.BonusAgilityMultiplier));
+
+            statsProcs.Armor        = (float)Math.Floor(statsProcs.Armor      * (1f + statsTotal.BaseArmorMultiplier  + statsProcs.BaseArmorMultiplier ));
+            statsProcs.BonusArmor  += statsProcs.Agility * 2f;
+            statsProcs.BonusArmor   = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
             statsProcs.Armor       += statsProcs.BonusArmor;
-            statsProcs.Armor       += statsProcs.Agility * 2f;
-            statsProcs.Armor        = (float)Math.Floor(statsProcs.Armor    * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
+
             statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina  * 10f);
             statsProcs.AttackPower += statsProcs.Strength * 2f;
             statsProcs.AttackPower += (float)Math.Floor(talents.ArmoredToTheTeeth * statsProcs.Armor / 108f);
@@ -941,7 +941,7 @@ threat and limited threat scaled by the threat scale.",
             bool relevant = 
                 (stats.Agility + stats.Armor + stats.AverageArmor + stats.BonusArmor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier +
-                    stats.BonusAttackPowerMultiplier + stats.BonusArmorMultiplier +
+                    stats.BonusAttackPowerMultiplier + stats.BonusArmorMultiplier + stats.BaseArmorMultiplier +
 				    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
                     stats.BlockRating + stats.BlockValue + stats.Health + stats.BonusHealthMultiplier +
                     stats.DamageTakenMultiplier + stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +

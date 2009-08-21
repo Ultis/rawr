@@ -321,6 +321,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
+                BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
@@ -380,6 +381,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.BonusCritChance +
                 stats.Armor +
                 stats.BonusArmor +
+                stats.BaseArmorMultiplier + 
                 stats.BonusArmorMultiplier + 
                 stats.PhysicalHaste +
                 stats.PhysicalCrit +
@@ -547,7 +549,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
                 BonusShieldSlamDamage = talents.GagOrder * 0.05f,
                 DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
-                BonusArmorMultiplier = talents.Toughness * 0.02f,
+                BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalHaste = talents.BloodFrenzy * 0.05f,
                 PhysicalHit = talents.Precision * 0.01f,
             };
@@ -578,9 +580,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsTotal.Agility = agiBase + agiBonus;
             
             // Armor
-            statsTotal.Armor += statsTotal.BonusArmor;
-            statsTotal.Armor += statsTotal.Agility * 2f;
-            statsTotal.Armor *= (1f + statsTotal.BonusArmorMultiplier);
+            statsTotal.Armor       = (float)Math.Floor(statsTotal.Armor      * (1f + statsTotal.BaseArmorMultiplier ));
+            statsTotal.BonusArmor += statsTotal.Agility * 2f;
+            statsTotal.BonusArmor  = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
+            statsTotal.Armor      += statsTotal.BonusArmor;
 
             // Attack Power
             float totalBAPM = statsTotal.BonusAttackPowerMultiplier;
@@ -699,9 +702,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsProcs.AttackPower += statsProcs.Strength * 2f;
             statsProcs.AttackPower  = (float)Math.Floor(statsProcs.AttackPower * (1f + totalBAPM)  * (1f + statsProcs.BonusAttackPowerMultiplier));
             statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina     * 10f);
+            
+            statsProcs.Armor        = (float)Math.Floor(statsProcs.Armor      * (1f + statsTotal.BaseArmorMultiplier  + statsProcs.BaseArmorMultiplier ));
+            statsProcs.BonusArmor  += statsProcs.Agility * 2f;
+            statsProcs.BonusArmor   = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
             statsProcs.Armor       += statsProcs.BonusArmor;
-            statsProcs.Armor       += 2f * statsProcs.Agility;
-            statsProcs.Armor       *= (float)Math.Floor(1f + statsTotal.BonusArmorMultiplier);
+            
             statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
                                      * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, CharacterClass.Warrior))
                                      - 1f;
