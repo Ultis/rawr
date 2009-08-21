@@ -499,7 +499,7 @@
             0,
             0,
             0});
-            this.CB_MultiTargsMax.ValueChanged += new System.EventHandler(this.RotChanges_ValuesChanged);
+            this.CB_MultiTargsMax.ValueChanged += new System.EventHandler(this.RotChanges_MultiMax_ValueChanged);
             // 
             // LB_Perc5
             // 
@@ -519,7 +519,7 @@
             this.CK_MultiTargs.TabIndex = 13;
             this.CK_MultiTargs.Text = "Multiple Targets";
             this.CK_MultiTargs.UseVisualStyleBackColor = true;
-            this.CK_MultiTargs.CheckedChanged += new System.EventHandler(this.RotChanges_ChecksChanged);
+            this.CK_MultiTargs.CheckedChanged += new System.EventHandler(this.RotChanges_Multi_ChecksChanged);
             // 
             // CB_InBackPerc
             // 
@@ -533,19 +533,19 @@
             0,
             0,
             0});
-            this.CB_InBackPerc.ValueChanged += new System.EventHandler(this.RotChanges_ValuesChanged);
+            this.CB_InBackPerc.ValueChanged += new System.EventHandler(this.RotChanges_InBack_ValueChanged);
             // 
             // CK_MovingTargs
             // 
             this.CK_MovingTargs.AutoSize = true;
             this.CK_MovingTargs.Enabled = false;
-            this.CK_MovingTargs.Location = new System.Drawing.Point(8, 191);
+            this.CK_MovingTargs.Location = new System.Drawing.Point(8, 217);
             this.CK_MovingTargs.Name = "CK_MovingTargs";
             this.CK_MovingTargs.Size = new System.Drawing.Size(100, 17);
             this.CK_MovingTargs.TabIndex = 18;
             this.CK_MovingTargs.Text = "Moving Targets";
             this.CK_MovingTargs.UseVisualStyleBackColor = true;
-            this.CK_MovingTargs.CheckedChanged += new System.EventHandler(this.RotChanges_ChecksChanged);
+            this.CK_MovingTargs.CheckedChanged += new System.EventHandler(this.RotChanges_Move_ChecksChanged);
             // 
             // CK_InBack
             // 
@@ -558,7 +558,7 @@
             this.CK_InBack.TabIndex = 10;
             this.CK_InBack.Text = "Standing in Back";
             this.CK_InBack.UseVisualStyleBackColor = true;
-            this.CK_InBack.CheckedChanged += new System.EventHandler(this.RotChanges_ChecksChanged);
+            this.CK_InBack.CheckedChanged += new System.EventHandler(this.RotChanges_InBack_ChecksChanged);
             // 
             // CB_MultiTargsPerc
             // 
@@ -573,7 +573,7 @@
             0,
             0,
             0});
-            this.CB_MultiTargsPerc.ValueChanged += new System.EventHandler(this.RotChanges_ValuesChanged);
+            this.CB_MultiTargsPerc.ValueChanged += new System.EventHandler(this.RotChanges_Multi_ValueChanged);
             // 
             // LB_Perc4
             // 
@@ -588,7 +588,7 @@
             // CB_MoveTargsPerc
             // 
             this.CB_MoveTargsPerc.Enabled = false;
-            this.CB_MoveTargsPerc.Location = new System.Drawing.Point(163, 190);
+            this.CB_MoveTargsPerc.Location = new System.Drawing.Point(163, 216);
             this.CB_MoveTargsPerc.Name = "CB_MoveTargsPerc";
             this.CB_MoveTargsPerc.Size = new System.Drawing.Size(103, 20);
             this.CB_MoveTargsPerc.TabIndex = 19;
@@ -598,7 +598,7 @@
             0,
             0,
             0});
-            this.CB_MoveTargsPerc.ValueChanged += new System.EventHandler(this.RotChanges_ValuesChanged);
+            this.CB_MoveTargsPerc.ValueChanged += new System.EventHandler(this.RotChanges_Move_ValueChanged);
             // 
             // CB_DisarmingTargsPerc
             // 
@@ -613,7 +613,7 @@
             0,
             0,
             0});
-            this.CB_DisarmingTargsPerc.ValueChanged += new System.EventHandler(this.RotChanges_ValuesChanged);
+            this.CB_DisarmingTargsPerc.ValueChanged += new System.EventHandler(this.RotChanges_Disarm_ValueChanged);
             // 
             // LB_Perc1
             // 
@@ -634,13 +634,13 @@
             this.CK_DisarmTargs.TabIndex = 24;
             this.CK_DisarmTargs.Text = "Disarming Targets";
             this.CK_DisarmTargs.UseVisualStyleBackColor = true;
-            this.CK_DisarmTargs.CheckedChanged += new System.EventHandler(this.RotChanges_ChecksChanged);
+            this.CK_DisarmTargs.CheckedChanged += new System.EventHandler(this.RotChanges_Disarm_ChecksChanged);
             // 
             // LB_Perc2
             // 
             this.LB_Perc2.AutoSize = true;
             this.LB_Perc2.Enabled = false;
-            this.LB_Perc2.Location = new System.Drawing.Point(268, 192);
+            this.LB_Perc2.Location = new System.Drawing.Point(268, 218);
             this.LB_Perc2.Name = "LB_Perc2";
             this.LB_Perc2.Size = new System.Drawing.Size(15, 13);
             this.LB_Perc2.TabIndex = 20;
@@ -650,7 +650,7 @@
             // 
             this.LB_Perc3.AutoSize = true;
             this.LB_Perc3.Enabled = false;
-            this.LB_Perc3.Location = new System.Drawing.Point(268, 218);
+            this.LB_Perc3.Location = new System.Drawing.Point(268, 192);
             this.LB_Perc3.Name = "LB_Perc3";
             this.LB_Perc3.Size = new System.Drawing.Size(15, 13);
             this.LB_Perc3.TabIndex = 23;
@@ -659,19 +659,18 @@
             // CK_StunningTargs
             // 
             this.CK_StunningTargs.AutoSize = true;
-            this.CK_StunningTargs.Enabled = false;
-            this.CK_StunningTargs.Location = new System.Drawing.Point(8, 217);
+            this.CK_StunningTargs.Location = new System.Drawing.Point(8, 191);
             this.CK_StunningTargs.Name = "CK_StunningTargs";
             this.CK_StunningTargs.Size = new System.Drawing.Size(107, 17);
             this.CK_StunningTargs.TabIndex = 21;
             this.CK_StunningTargs.Text = "Stunning Targets";
             this.CK_StunningTargs.UseVisualStyleBackColor = true;
-            this.CK_StunningTargs.CheckedChanged += new System.EventHandler(this.RotChanges_ChecksChanged);
+            this.CK_StunningTargs.CheckedChanged += new System.EventHandler(this.RotChanges_Stun_ChecksChanged);
             // 
             // CB_StunningTargsPerc
             // 
             this.CB_StunningTargsPerc.Enabled = false;
-            this.CB_StunningTargsPerc.Location = new System.Drawing.Point(163, 216);
+            this.CB_StunningTargsPerc.Location = new System.Drawing.Point(163, 190);
             this.CB_StunningTargsPerc.Name = "CB_StunningTargsPerc";
             this.CB_StunningTargsPerc.Size = new System.Drawing.Size(103, 20);
             this.CB_StunningTargsPerc.TabIndex = 22;
@@ -681,7 +680,7 @@
             0,
             0,
             0});
-            this.CB_StunningTargsPerc.ValueChanged += new System.EventHandler(this.RotChanges_ValuesChanged);
+            this.CB_StunningTargsPerc.ValueChanged += new System.EventHandler(this.RotChanges_Stun_ValueChanged);
             // 
             // Page_02_Maintenance
             // 

@@ -295,6 +295,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     "Glyph of Charge",
                     "Glyph of Enduring Victory",
                     "Glyph of Thunder Clap",
+                    "Glyph of Command",
                     /* The following Glyphs have been disabled as they are solely Defensive in nature.
                     //"Glyph of Mocking Blow",*/
                 };

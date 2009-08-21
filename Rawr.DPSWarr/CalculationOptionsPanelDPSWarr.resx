@@ -198,6 +198,15 @@ v2.2.14 (Unreleased)
 - Fixed Armor calculations, was not properly using the difference between Base Armor and Bonus Armor and their respective multipliers.
 - Fixed MultiTargs Handling: It was double-dipping in some places and not being consistently handled. Now if you have MultiTargs checked but at 0% you will see same numbers as if it were unchecked and it scales up to 100% correctly.
 - Added Max Targets to MultiTargs Handling: This places a limit on how much extra damage goes out for hitting additional targets, otherwise it will use max (up to 8).
+- Updated Glyph bonuses for Battle and Commanding Shout to 3.2
+- Added Glyph of Command as Relevant for DPSWarr, it affects the GCD usage of Comm Shout
+- Fixed Commanding Shout's naming, etc and it now pulls GCDs properly when maintained
+- Added Stun Handling (Arms Only). The Selector on the Options Panel is now active and can be used as a percentage of the fight while stunned (recommend using low numbers as very few fights have more than a couple of stuns over the entire fight).
+- Added Iron Will Handling (Reduces number of GCDs lost to a stun)
+- Added Second Wind Handling (Arms Only) (pops when getting Stunned)
+- Added Every Man for Himself Handling (Humans Only) (Arms Only). Recovers GCDs lost to Stuns.
+- Added Heroic Fury Handling (Talent Only) (Arms Only). Recovers GCDs lost to Stuns.
+- Fixed Reloading of Saved options from the Options Panel, grouped function calls was causing it to set the first item or two, then an event would trigger and break the rest of the settings.
 
 v2.2.13 (Aug 12, 2009 02:28)
 

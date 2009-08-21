@@ -21,7 +21,11 @@ namespace Rawr.DPSWarr {
         private Skills.WhiteAttacks WHITEATTACKS;
         private CalculationOptionsDPSWarr CALCOPTS;
 
+        // Anti-DeBuff
+        public Skills.HeroicFury HF;
+        public Skills.EveryManForHimself EM;
         // Rage Generators
+        public Skills.SecondWind SndW;
         public Skills.BerserkerRage BZ;
         public Skills.Bloodrage BR;
         // Maintenance
@@ -82,7 +86,11 @@ namespace Rawr.DPSWarr {
 
             WHITEATTACKS.Ovd_Freq = 0;
 
+            // Anti-Debuff
+            calcs.HF = HF;
+            calcs.EM = EM;
             // Rage Generators
+            calcs.SndW = SndW;
             calcs.BZ = BZ;
             calcs.BR = BR;
             // Maintenance
@@ -120,7 +128,11 @@ namespace Rawr.DPSWarr {
         public void Initialize() { initAbilities(); doIterations(); }
 
         private void initAbilities() {
+            // Anti-Debuff
+            HF  = new Skills.HeroicFury(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            EM  = new Skills.EveryManForHimself(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             // Rage Generators
+            SndW= new Skills.SecondWind(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             BZ  = new Skills.BerserkerRage(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             BR  = new Skills.Bloodrage(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             // Maintenance
@@ -329,6 +341,7 @@ namespace Rawr.DPSWarr {
         }
         public virtual float RageGenAngerPerSec { get { return Talents.AngerManagement / 3.0f; } }
         public virtual float RageGenWrathPerSec { get { return Talents.UnbridledWrath * 3.0f / 60.0f; } }
+        //public virtual float RageGen2dWindPerSec { get { return Talents.UnbridledWrath * 3.0f / 60.0f; } }
         public virtual float RageGenZerkrPerSec {
             get {
                 float result = 0f;
@@ -435,6 +448,7 @@ namespace Rawr.DPSWarr {
 
             // ==== Maintenance Priorities ============
             /*Battle Shout      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Battle_GCDs, BTS);
+            /*Commanding Shout  */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Comm_GCDs,   CS);
             /*Demoralizing Shout*/AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Demo_GCDs,   DS);
             /*Sunder Armor      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Sunder_GCDs, SN);
             /*Thunder Clap      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Thunder_GCDs,ref DPS_TTL,ref _TH_DPS,TH);
@@ -565,13 +579,19 @@ namespace Rawr.DPSWarr {
         public float _Thunder_GCDs= 0f; public float _TH_DPS       = 0f;
         public float _Blood_GCDs  = 0f;
         public float _ZRage_GCDs  = 0f;
+        public float _Second_Acts = 0f;
         public float _Battle_GCDs = 0f;
+        public float _Comm_GCDs   = 0f;
         public float _Demo_GCDs   = 0f;
         public float _Sunder_GCDs = 0f;
         public float _Ham_GCDs    = 0f;
         public float _Shatt_GCDs  = 0f; public float _Shatt_DPS    = 0f;
         public float _Death_GCDs  = 0f;
         public float _Reck_GCDs   = 0f;
+        // GCD Losses
+        public float _Stunned_GCDs = 0f;
+        public float _HF_Acts      = 0f;
+        public float _EM_Acts      = 0f;
         //
         public float _OVD_PerHit  = 0f; public float _OVD_DPS      = 0f;
         public float _WhiteDPSMH  = 0f; public float _WhiteDPSOH   = 0f;
@@ -655,39 +675,85 @@ namespace Rawr.DPSWarr {
 
             if (Char.MainHand == null) { return 0f; }
 
+            // ==== Reasons GCDs would be lost ========
+            float IronWillBonus = (float)Math.Round(20f/3f*Talents.IronWill) / 100f;
+            // Being Stunned or Charmed
+            if(CalcOpts.StunningTargets){
+                // Assume you are Stunned for 3 GCDs (1.5+latency)*3 = ~1.6*3 = ~4.8 seconds per stun
+                // Iron Will reduces the Duration of the stun by 7%,14%,20%
+                // 100% perc means you are stunned the entire fight, the boss is stunning you every third GCD, basically only refreshing his stun
+                //  50% perc means you are stunned half the fight, The boss is stunning you every sixth GCD
+                float stunnedGCDs = (float)Math.Max(0f, FightDuration / (LatentGCD * 3f) * (CalcOpts.StunningTargetsPerc / 100f));
+                float acts = (float)Math.Min(availGCDs, stunnedGCDs);
+                float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                _Stunned_GCDs = Abil_GCDs;
+                GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs * (3f * (1f - IronWillBonus)));
+                GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x3-IronWillBonus : Stunned\n" : "");
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                // Now let's try and get some of those GCDs back
+                if (Talents.HeroicFury > 0 && _Stunned_GCDs > 0f) {
+                    float hfacts = HF.Activates;
+                    _HF_Acts = (float)Math.Min(_Stunned_GCDs, hfacts);
+                    GCDsused -= (float)Math.Min(NumGCDs, _HF_Acts * 2f);
+                    GCDUsage += (_HF_Acts > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x2 : " + HF.Name + " (adds back to GCDs when stunned)\n" : "");
+                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                }
+                if (CHARACTER.Race == CharacterRace.Human && (_Stunned_GCDs-_HF_Acts > 0)) {
+                    float emacts = EM.Activates;
+                    _EM_Acts = (float)Math.Min(_Stunned_GCDs - _HF_Acts, emacts);
+                    GCDsused -= (float)Math.Min(NumGCDs, _EM_Acts * 2f);
+                    GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x2 : " + EM.Name + " (adds back to GCDs when stunned)\n" : "");
+                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                }
+            }
+            // Getting Incapacitated (E.g.- Igneous Pot)
+            if(CalcOpts.StunningTargets){
+                /*float acts = (float)Math.Min(availGCDs, abil.Activates);
+                float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                _Abil_GCDs = Abil_GCDs;
+                GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
+                GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + "\n" : "");
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
+                availRage -= rageadd;
+                RageNeeded += rageadd;*/
+            }
+
             // ==== Rage Generation Priorities ========
             RageGenOther = RageGenAngerPerSec + RageGenWrathPerSec;
-            if (StatS.BonusWarrior_T7_4P_RageProc != 0f)
-            {
-                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc*0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f);
-                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc*0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f);
+            if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
+                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f);
+                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f);
             }
             availRage += RageGenOther;
 
-            /*Bloodrage         */AddAnItem(                                       ref availRage,ref _Blood_GCDs,  BR);
-            /*Berserker Rage    */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _ZRage_GCDs,  BZ,false);
+            SndW.NumStunsOverDur = _Stunned_GCDs;
+            /*Second Wind       */AddAnItem(ref availRage, ref _Second_Acts, SndW);
+            /*Bloodrage         */AddAnItem(ref availRage, ref _Blood_GCDs , BR  );
+            /*Berserker Rage    */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _ZRage_GCDs, BZ, false);
 
             // ==== Trinket Priorites =================
-            /*Trinket 1         */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Trink1_GCDs, Trinket1);
-            /*Trinket 2         */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Trink2_GCDs, Trinket2);
+            /*Trinket 1         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink1_GCDs, Trinket1);
+            /*Trinket 2         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink2_GCDs, Trinket2);
 
             // ==== Maintenance Priorities ============
-            /*Battle Shout      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Battle_GCDs, BTS);
-            /*Demoralizing Shout*/AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Demo_GCDs,   DS);
-            /*Sunder Armor      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Sunder_GCDs, SN);
-            /*Thunder Clap      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Thunder_GCDs,ref DPS_TTL,ref _TH_DPS,TH);
-            /*Hamstring         */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Ham_GCDs,    HMS);
-            /*Shattering Throw  */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Shatt_GCDs,  ref DPS_TTL,ref _Shatt_DPS,ST);
-            /*Sweeping Strikes  */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _SW_GCDs,     SW);
-            /*Death Wish        */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Death_GCDs,  Death);
+            /*Battle Shout      */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Battle_GCDs, BTS);
+            /*Commanding Shout  */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Comm_GCDs, CS);
+            /*Demoralizing Shout*/AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Demo_GCDs, DS);
+            /*Sunder Armor      */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Sunder_GCDs, SN);
+            /*Thunder Clap      */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Thunder_GCDs, ref DPS_TTL, ref _TH_DPS, TH);
+            /*Hamstring         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Ham_GCDs, HMS);
+            /*Shattering Throw  */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Shatt_GCDs, ref DPS_TTL, ref _Shatt_DPS, ST);
+            /*Sweeping Strikes  */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _SW_GCDs, SW);
+            /*Death Wish        */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Death_GCDs, Death);
 
             // ==== Standard Priorities ===============
 
             // These are solid and not dependant on other attacks
-            /*Bladestorm        */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _BLS_GCDs,    ref DPS_TTL,ref _BLS_DPS,BLS,4f);
-            /*Mortal Strike     */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _MS_GCDs,     ref DPS_TTL,ref _MS_DPS ,MS);
-            /*Rend              */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _RD_GCDs,     ref DPS_TTL,ref _RD_DPS ,RD);
-            /*Taste for Blood   */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _TB_GCDs,     ref DPS_TTL,ref _TB_DPS ,TB);
+            /*Bladestorm        */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _BLS_GCDs, ref DPS_TTL, ref _BLS_DPS, BLS, 4f);
+            /*Mortal Strike     */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _MS_GCDs, ref DPS_TTL, ref _MS_DPS, MS);
+            /*Rend              */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _RD_GCDs, ref DPS_TTL, ref _RD_DPS, RD);
+            /*Taste for Blood   */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _TB_GCDs, ref DPS_TTL, ref _TB_DPS, TB);
 
             // The following are dependant on other attacks as they are proccing abilities or are the fallback item
             // We need to loop these until the activates are relatively unchanged
@@ -698,7 +764,7 @@ namespace Rawr.DPSWarr {
             _SD_GCDs = 0f;
             _SL_GCDs = origavailGCDs;
             _SS_Acts = 0f;
-            while(
+            while (
                     (float)Math.Abs(_OP_GCDs - oldOPGCDs) > 0.1f ||
                     (float)Math.Abs(_SD_GCDs - oldSDGCDs) > 0.1f ||
                     (float)Math.Abs(_SL_GCDs - oldSLGCDs) > 0.1f ||
@@ -745,7 +811,7 @@ namespace Rawr.DPSWarr {
             rageadd = SL.GetRageUsePerSecond(_SL_GCDs) + OP.GetRageUsePerSecond(_OP_GCDs) + SD.GetRageUsePerSecond(_SD_GCDs);
             availRage -= rageadd;
             RageNeeded += rageadd;
-            GCDUsage += (_OP_GCDs > 0 ? _OP_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") +"x2 : "+ OP.Name + "\n" : "");
+            GCDUsage += (_OP_GCDs > 0 ? _OP_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x2 : " + OP.Name + "\n" : "");
             GCDUsage += (_SD_GCDs > 0 ? _SD_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + SD.Name + "\n" : "");
             GCDUsage += (_SL_GCDs > 0 ? _SL_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + SL.Name + "\n" : "");
             _OP_DPS = OP.GetDPS(_OP_GCDs);
@@ -760,18 +826,19 @@ namespace Rawr.DPSWarr {
             Skills.OnAttack Which = null;
             bool ok = false;
             if (CalcOpts.MultipleTargets) {
-                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_      ]) { ok = true; Which = CL; }
+                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_]) { ok = true; Which = CL; }
             }else{
                 if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]) { ok = true; Which = HS; }
             }
 
             WhiteAtks.Slam_Freq = _SL_GCDs;
+            float timelostwhilestunned = ((_Stunned_GCDs * 3f * (1f - IronWillBonus)) - _HF_Acts * 2f - _EM_Acts * 2f) * LatentGCD;
             if (ok) {
-                availRage += FightDuration / WhiteAtks.MhEffectiveSpeed * WhiteAtks.MHSwingRage / FightDuration;
+                availRage += (FightDuration - timelostwhilestunned) / WhiteAtks.MhEffectiveSpeed * WhiteAtks.MHSwingRage / (FightDuration);
                 float numHSPerSec = availRage / Which.FullRageCost;
                 Which.OverridesPerSec = numHSPerSec;
                 WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
-                _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
+                _WhiteDPSMH = WhiteAtks.MhDPS * (1f - (CalcOpts.StunningTargets ? (timelostwhilestunned / FightDuration) * CalcOpts.StunningTargetsPerc / 100f : 0f)); // MhWhiteDPS with loss of time in stun
                 _WhiteDPS = _WhiteDPSMH;
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
                 _OVD_DPS = Which.DPS;
@@ -782,7 +849,7 @@ namespace Rawr.DPSWarr {
                 RageGenWhite = WHITEATTACKS.whiteRageGenPerSec;
                 availRage += RageGenWhite;
                 WhiteAtks.Ovd_Freq = 0f;
-                _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
+                _WhiteDPSMH = WhiteAtks.MhDPS * (1f - (CalcOpts.StunningTargets ? (timelostwhilestunned / FightDuration) * CalcOpts.StunningTargetsPerc / 100f : 0f)); // MhWhiteDPS with loss of time in stun
                 _WhiteDPS = _WhiteDPSMH;
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
                 _OVD_DPS = 0f;

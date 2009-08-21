@@ -1564,7 +1564,7 @@ namespace Rawr.DPSWarr {
                 Name = "Battle Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
                 MaxRange = 30f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
-                Duration = (2f+(Talents.GlyphOfBattle?1f:0f))* 60f * (1f + Talents.BoomingVoice * 0.25f);
+                Duration = (2f+(Talents.GlyphOfBattle?2f:0f))* 60f * (1f + Talents.BoomingVoice * 0.25f);
                 Cd = Duration;
                 RageCost = 10f;
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
@@ -1593,10 +1593,10 @@ namespace Rawr.DPSWarr {
             public CommandingShout(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
                 Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
-                Name = "Battle Shout";
+                Name = "Commanding Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_;
                 MaxRange = 30f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
-                Duration = (2f+(Talents.GlyphOfBattle?1f:0f))* 60f * (1f + Talents.BoomingVoice * 0.25f);
+                Duration = (2f+(Talents.GlyphOfCommand?2f:0f))* 60f * (1f + Talents.BoomingVoice * 0.25f);
                 Cd = Duration;
                 RageCost = 10f;
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
@@ -1708,6 +1708,41 @@ namespace Rawr.DPSWarr {
                         Whiteattacks.MhEffectiveSpeed,
                         CalcOpts.Duration);
                     return bonus;
+                }
+            }
+        }
+        public class SecondWind : BuffEffect {
+            // Constructors
+            /// <summary>
+            /// Whenever you are struck by a Stun of Immoblize effect you will generate
+            /// 10*Pts Rage and (5*Pts)% of your total health over 10 sec.
+            /// </summary>
+            /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Sweeping Strikes [-100% Rage cost]</GlyphsAffecting>
+            public SecondWind(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
+                Char = c;Talents = c.WarriorTalents;StatS = s;combatFactors = cf;Whiteattacks = wa;CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Second Wind";
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
+                ReqTalent = true;
+                Talent2ChksValue = Talents.SecondWind;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                ReqMultiTargs = true;
+                NumStunsOverDur = 1f;
+                Duration = 10f; // Using 4 seconds to sim consume time
+                Cd = 1.5f + CalcOpts.GetLatency();
+                RageCost = 10f * Talents.SecondWind;
+                StanceOkDef = StanceOkFury = StanceOkArms = true;
+                //Effect = new SpecialEffect(Trigger.Use, new Stats() { BonusRageGen = 10f * Talents.SecondWind, }, Duration, Cd);
+            }
+            private float NUMSTUNSOVERDUR;
+            public float NumStunsOverDur {
+                get { return NUMSTUNSOVERDUR; }
+                set {
+                    NUMSTUNSOVERDUR = value;
+                    Cd = (FightDuration / NUMSTUNSOVERDUR);
+                    if (Effect != null) { Effect.Cooldown = Cd; }
                 }
             }
         }
@@ -1862,8 +1897,26 @@ namespace Rawr.DPSWarr {
             public EveryManForHimself(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
+                Name = "Every Man for Himself";
                 if(c.Race != CharacterRace.Human){return;}
                 Cd = 2f * 60f;
+                StanceOkArms = StanceOkFury = StanceOkDef = true;
+            }
+        }
+        public class HeroicFury : Ability {
+            /// <summary>
+            /// Instant, 45 sec Cooldown, 0 Rage, Self (Any)
+            /// Removes any Immobilization effects and refreshes the cooldown of your Intercept ability.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            public HeroicFury(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                Name = "Heroic Fury";
+                ReqTalent = true;
+                Talent2ChksValue = Talents.HeroicFury;
+                Cd = 45f;
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
             }
         }
@@ -1887,7 +1940,7 @@ namespace Rawr.DPSWarr {
                 Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 MaxRange = 25f + (Talents.GlyphOfCharge ? 5f: 0f); // In Yards 
-                Cd = 20f * (1f - (Talents.GlyphOfRapidCharge ? 0.20f : 0f)); // In Seconds
+                Cd = (20f + Talents.Juggernaut * 5f) * (1f - (Talents.GlyphOfRapidCharge ? 0.20f : 0f)); // In Seconds
                 Duration = 1.5f;
                 RageCost = 25f + (Talents.ImprovedCharge * 5f);
                 if (Talents.Warbringer == 1) {

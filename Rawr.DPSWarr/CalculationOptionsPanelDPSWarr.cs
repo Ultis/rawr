@@ -66,9 +66,9 @@ namespace Rawr.DPSWarr {
                 // Rotational Changes
                 CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
                 CK_MultiTargs.Checked    = calcOpts.MultipleTargets;   CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;CB_MultiTargsMax.Value     = (int)calcOpts.MultipleTargetsMax;
+                CK_StunningTargs.Checked = calcOpts.StunningTargets;   CB_StunningTargsPerc.Value  = calcOpts.StunningTargetsPerc;
                 // nonfunctional
                 CK_MovingTargs.Checked   = calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
-                CK_StunningTargs.Checked = calcOpts.StunningTargets;   CB_StunningTargsPerc.Value  = calcOpts.StunningTargetsPerc;
                 CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
                 // Abilities to Maintain
                 CK_Flooring.Checked = calcOpts.AllowFlooring;
@@ -77,12 +77,10 @@ namespace Rawr.DPSWarr {
                 CB_Lag.Value   = (int)calcOpts.Lag;
                 CB_React.Value = (int)calcOpts.React;
                 //
-                if (Character != null) {
-                    calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
-                    RB_StanceFury.Checked = calcOpts.FuryStance;
-                    RB_StanceArms.Checked = !RB_StanceFury.Checked;
-                    Character.OnCalculationsInvalidated();
-                }
+                calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
+                RB_StanceFury.Checked = calcOpts.FuryStance;
+                RB_StanceArms.Checked = !RB_StanceFury.Checked;
+                Character.OnCalculationsInvalidated();
             }
         }
         // Basics
@@ -116,27 +114,79 @@ namespace Rawr.DPSWarr {
             Character.OnCalculationsInvalidated();
         }
         // Rotational Changes
-        private void RotChanges_ChecksChanged(object sender, EventArgs e) {
+        private void RotChanges_InBack_ChecksChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             //
             calcOpts.InBack = CK_InBack.Checked; CB_InBackPerc.Enabled = calcOpts.InBack;
+            //
+            Character.OnCalculationsInvalidated();
+        }
+        private void RotChanges_Multi_ChecksChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            //
             calcOpts.MultipleTargets = CK_MultiTargs.Checked; LB_Max.Enabled = calcOpts.MultipleTargets; CB_MultiTargsMax.Enabled = calcOpts.MultipleTargets; CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
-            // Nonfunctional
-            calcOpts.MovingTargets = CK_MovingTargs.Checked; CB_MoveTargsPerc.Enabled = calcOpts.MovingTargets;
+            //
+            Character.OnCalculationsInvalidated();
+        }
+        private void RotChanges_Stun_ChecksChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            //
             calcOpts.StunningTargets = CK_StunningTargs.Checked; CB_StunningTargsPerc.Enabled = calcOpts.StunningTargets;
+            //
+            Character.OnCalculationsInvalidated();
+        }
+        private void RotChanges_Move_ChecksChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            //
+            calcOpts.MovingTargets = CK_MovingTargs.Checked; CB_MoveTargsPerc.Enabled = calcOpts.MovingTargets;
+            //
+            Character.OnCalculationsInvalidated();
+        }
+        private void RotChanges_Disarm_ChecksChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            //
             calcOpts.DisarmingTargets = CK_DisarmTargs.Checked; CB_DisarmingTargsPerc.Enabled = calcOpts.DisarmingTargets;
             //
             Character.OnCalculationsInvalidated();
         }
-        private void RotChanges_ValuesChanged(object sender, EventArgs e) {
+        private void RotChanges_InBack_ValueChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             //
             calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
+            //
+            Character.OnCalculationsInvalidated();
+        }
+        private void RotChanges_Multi_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            //
             calcOpts.MultipleTargetsPerc = (int)CB_MultiTargsPerc.Value;
+            //
+            Character.OnCalculationsInvalidated();
+        }
+        private void RotChanges_MultiMax_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            //
             calcOpts.MultipleTargetsMax = (float)CB_MultiTargsMax.Value;
-            // Nonfunctional
-            calcOpts.MovingTargetsPerc = (int)CB_MoveTargsPerc.Value;
+            //
+            Character.OnCalculationsInvalidated();
+        }
+        private void RotChanges_Stun_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            //
             calcOpts.StunningTargetsPerc = (int)CB_StunningTargsPerc.Value;
+            //
+            Character.OnCalculationsInvalidated();
+        }
+        private void RotChanges_Move_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            //
+            calcOpts.MovingTargetsPerc = (int)CB_MoveTargsPerc.Value;
+            //
+            Character.OnCalculationsInvalidated();
+        }
+        private void RotChanges_Disarm_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            //
             calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
             //
             Character.OnCalculationsInvalidated();
@@ -712,7 +762,7 @@ namespace Rawr.DPSWarr {
             setAbilBools();
             // Run a new dps calc
             Character.OnCalculationsInvalidated();
-            this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);
+            CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
         }
         private void setAbilBools() {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -809,11 +859,11 @@ namespace Rawr.DPSWarr {
         public bool FuryStance = true;
         public bool AllowFlooring = true;
         // Rotational Changes
-        public bool InBack             = true ; public int InBackPerc           = 100;
-        public bool MultipleTargets    = false; public int MultipleTargetsPerc  = 100;public float MultipleTargetsMax = 4;
+        public bool InBack             = true ; public int InBackPerc           = 75;
+        public bool MultipleTargets    = true; public int MultipleTargetsPerc  = 25;public float MultipleTargetsMax = 3;
+        public bool StunningTargets    = true; public int StunningTargetsPerc   = 5;
             // nonfunctional
             public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
-            public bool StunningTargets  = false; public int StunningTargetsPerc  = 100;
             public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
         // Abilities to Maintain
         public bool[] Maintenance = new bool[] {

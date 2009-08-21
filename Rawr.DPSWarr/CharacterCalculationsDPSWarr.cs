@@ -63,7 +63,11 @@ namespace Rawr.DPSWarr {
         public float TotalDamagePerSecond { get; set; }
         #endregion
         #region Abilities
+        // Anti-Debuff
+        public Skills.HeroicFury HF { get; set; }
+        public Skills.EveryManForHimself EM { get; set; }
         // Rage Generators
+        public Skills.SecondWind SndW { get; set; }
         public Skills.BerserkerRage BZ { get; set; }
         public Skills.Bloodrage BR { get; set; }
         // Maintenance
