@@ -19,11 +19,12 @@ namespace Rawr.DPSWarr {
 		public bool _3pt2Mode = false;
 		public bool AllowFlooring = true;
         // Rotational Changes
-        public bool MultipleTargets  = false; public int MultipleTargetsPerc  = 100;
-        public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
-        public bool StunningTargets  = false; public int StunningTargetsPerc  = 100;
-		public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
         public bool InBack           = true ; public int InBackPerc           = 100;
+        public bool MultipleTargets  = false; public int MultipleTargetsPerc  = 100;public float MultipleTargetsMax  = 4f;
+            // nonfunctional
+            public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
+            public bool StunningTargets  = false; public int StunningTargetsPerc  = 100;
+		    public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
         // Abilities to Maintain
         public bool[] Maintenance = new bool[] {
             true,  // == Rage Gen ==
