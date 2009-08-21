@@ -566,6 +566,7 @@ namespace Rawr.Hunter
         public void setFrequency(ShotPriority Priority, double new_freq)
         {
             // called by the RotationTest after it calculates real frequencies
+            start_freq = new_freq;
             final_freq = new_freq;
             finishCalculateTimings(Priority);
         }

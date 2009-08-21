@@ -114,7 +114,6 @@ namespace Rawr.Hunter
 				"Basic Stats:Armor Penetration",
 				"Basic Stats:Static Haste",
 				"Basic Stats:Dynamic Haste",
-				"Basic Stats:Mana Regen Per Second",				
 
 				"Basic Calculated Stats:Health",
 				"Basic Calculated Stats:Mana",
@@ -149,6 +148,17 @@ namespace Rawr.Hunter
                 "Shot Stats:Beastial Wrath",
                 "Shot Stats:Blood Fury",
                 "Shot Stats:Berserk",
+
+                "Mana:Mana Usage Per Second",
+                "Mana:Mana Regen Per Second",
+                "Mana:Potion Regen Per Second",
+                "Mana:Viper Regen Per Second",
+                "Mana:Normal Change",
+                "Mana:Change during Viper",
+                "Mana:Time to OOM",
+                "Mana:Time to Full",
+                "Mana:Viper Damage Penalty",
+                "Mana:Viper Uptime",
 
                 "Hunter DPS:Autoshot DPS",
                 "Hunter DPS:Priority Rotation DPS",
@@ -1398,13 +1408,13 @@ namespace Rawr.Hunter
             calculatedStats.manaRegenGearBuffs = mp5FromBuffs / 5;
 
             // Viper Regen if viper is up 100%
-            calculatedStats.manaRegenViper = 0;
+            calculatedStats.manaRegenConstantViper = 0;
             if (options.selectedAspect == Aspect.Viper)
             {
                 double viperGlyphAdjust = character.HunterTalents.GlyphOfAspectOfTheViper ? 1.1 : 1;
                 double viperRegenShots = calculatedStats.BasicStats.Mana * rangedWeaponSpeed / 100 * totalShotsPerSecond * viperGlyphAdjust;
                 double viperRegenPassive = calculatedStats.BasicStats.Mana * 0.04 / 3;
-                calculatedStats.manaRegenViper = viperRegenShots + viperRegenPassive;
+                calculatedStats.manaRegenConstantViper = viperRegenShots + viperRegenPassive;
             }
 
             // Roar of Recovery - calculated in the pet model
@@ -1464,7 +1474,7 @@ namespace Rawr.Hunter
             // Total
             calculatedStats.manaRegenTotal =
                 calculatedStats.manaRegenGearBuffs +
-                calculatedStats.manaRegenViper +
+                calculatedStats.manaRegenConstantViper +
                 calculatedStats.manaRegenRoarOfRecovery +
                 calculatedStats.manaRegenRapidRecuperation +
                 calculatedStats.manaRegenChimeraViperProc +
@@ -1480,7 +1490,7 @@ namespace Rawr.Hunter
 
             double glpyhOfAspectOfTheViperBonus = character.HunterTalents.GlyphOfAspectOfTheViper ? 1.1 : 1;
 
-            double manaRegenFromViper = calculatedStats.BasicStats.Mana * Math.Round(rangedWeaponSpeed, 1) / 100 * shotsPerSecondWithoutHawk
+            calculatedStats.manaRegenViper = calculatedStats.BasicStats.Mana * Math.Round(rangedWeaponSpeed, 1) / 100 * shotsPerSecondWithoutHawk
                                         * manaRegenTier7ViperBonus * glpyhOfAspectOfTheViperBonus
                                         + calculatedStats.BasicStats.Mana * 0.04 / 3;
 
@@ -1492,35 +1502,38 @@ namespace Rawr.Hunter
             if (IsWearingTrinket(character, 35751)) manaHasAlchemistStone = true; // Assassin's Alchemist Stone
             if (IsWearingTrinket(character, 44324)) manaHasAlchemistStone = true; // Mighty Alchemist's Stone
 
-            double manaRegenFromPotion = manaFromPotion / options.duration * (manaHasAlchemistStone ? 1.4 : 1.0);
+            calculatedStats.manaRegenPotion = manaFromPotion / options.duration * (manaHasAlchemistStone ? 1.4 : 1.0);
 
             double beastialWrathUptime = calculatedStats.beastialWrath.freq > 0 ? calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq : 0;
 
             double beastWithinManaBenefit = beastialWrathUptime * 0.2;
-            double manaExpenditureSpecial = calculatedStats.petKillCommandMPS * (1 - beastWithinManaBenefit);
 
-            double manaExpenditure = calculatedStats.priorityRotation.MPS + manaExpenditureSpecial;
+            calculatedStats.manaUsageKillCommand = calculatedStats.petKillCommandMPS * (1 - beastWithinManaBenefit);
+            calculatedStats.manaUsageRotation = calculatedStats.priorityRotation.MPS;
 
-            double manaChangeDuringViper = manaRegenFromViper + manaRegenFromPotion + calculatedStats.manaRegenTotal - manaExpenditure;
-            double manaChangeDuringNormal = manaExpenditure - calculatedStats.manaRegenTotal - manaRegenFromPotion;
+            calculatedStats.manaUsageTotal = calculatedStats.manaUsageRotation
+                                           + calculatedStats.manaUsageKillCommand;
 
-            double timeToFull = manaChangeDuringViper > 0 ? calculatedStats.BasicStats.Mana / manaChangeDuringViper : -1;
-            double timeToOOM = manaChangeDuringNormal > 0 ? calculatedStats.BasicStats.Mana / manaChangeDuringNormal : -1;
+            calculatedStats.manaChangeDuringViper = calculatedStats.manaRegenViper + calculatedStats.manaRegenPotion + calculatedStats.manaRegenTotal - calculatedStats.manaUsageTotal;
+            calculatedStats.manaChangeDuringNormal = calculatedStats.manaRegenTotal + calculatedStats.manaRegenPotion - calculatedStats.manaUsageTotal;
+
+            calculatedStats.manaTimeToFull = calculatedStats.manaChangeDuringViper > 0 ? calculatedStats.BasicStats.Mana / calculatedStats.manaChangeDuringViper : -1;
+            calculatedStats.manaTimeToOOM = calculatedStats.manaChangeDuringNormal < 0 ? calculatedStats.BasicStats.Mana / (0-calculatedStats.manaChangeDuringNormal) : -1;
 
             double viperTimeNeededToLastFight = 0;
-            if (timeToOOM >= 0 && timeToOOM < options.duration && manaRegenFromViper > 0)
+            if (calculatedStats.manaTimeToOOM >= 0 && calculatedStats.manaTimeToOOM < options.duration && calculatedStats.manaRegenViper > 0)
             {
-                viperTimeNeededToLastFight = ((manaChangeDuringNormal * options.duration) - calculatedStats.BasicStats.Mana) / manaRegenFromViper;
+                viperTimeNeededToLastFight = (((0 - calculatedStats.manaChangeDuringNormal) * options.duration) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
             }
 
             double aspectUptimeHawk = 0;
 
             double aspectUptimeViper = 0;
-            if (timeToOOM >= 0 && options.aspectUsage != AspectUsage.AlwaysOn)
+            if (calculatedStats.manaTimeToOOM >= 0 && options.aspectUsage != AspectUsage.AlwaysOn)
             {
                 if (options.aspectUsage == AspectUsage.ViperRegen)
                 {
-                    aspectUptimeViper = timeToFull / (timeToFull + timeToOOM);
+                    aspectUptimeViper = calculatedStats.manaTimeToFull / (calculatedStats.manaTimeToFull + calculatedStats.manaTimeToOOM);
                 }
                 else
                 {
