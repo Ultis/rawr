@@ -39,6 +39,8 @@ namespace Rawr
         ShamanStormStrike,
         BloodStrikeHit,
         HeartStrikeHit,
+        ObliterateHit,
+        ScourgeStrikeHit,
         BloodStrikeOrHeartStrikeHit, // Deprecated.
         PlagueStrikeHit,
         IcyTouchHit,

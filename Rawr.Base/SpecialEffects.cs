@@ -1236,6 +1236,26 @@ namespace Rawr {
                         stats.AddSpecialEffect(SE2);
                     }
                 }
+
+                regex = new Regex(@"Each time you use your (?<ability>\w+\s*\w*) or (?<ability2>\w+\s*\w*) ability, you have a chance to gain (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec.");
+                match = regex.Match(line);
+                if (match.Success)
+                {
+                    string statName = match.Groups["stat"].Value;
+                    float amount = int.Parse(match.Groups["amount"].Value);
+                    float duration = int.Parse(match.Groups["duration"].Value);
+                    string ability = match.Groups["ability"].Value;
+                    string ability2 = match.Groups["ability2"].Value;
+
+                    SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 10f, 0.8f);
+                    stats.AddSpecialEffect(SE1);
+                    SpecialEffect SE2 = EvalRegex(statName, amount, duration, ability2, 10f, 0.8f);
+                    if (SE1.ToString() != SE2.ToString())
+                    {
+                        stats.AddSpecialEffect(SE2);
+                    }
+                }
+
                 // Single Ability damage increase.
                 regex = new Regex(@"Increases the damage dealt by your (?<ability>\w+\s*\w*) (ability )?by (?<amount>\d+[.]*\d*).");
                 match = regex.Match(line);
@@ -1603,7 +1623,7 @@ namespace Rawr {
             else if (statName.Equals("parry rating", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
             else if (statName.Equals("spell power", StringComparison.InvariantCultureIgnoreCase)) { s.SpellPower = amount; }
             else if (statName.Equals("spirit", StringComparison.InvariantCultureIgnoreCase)) { s.Spirit = amount; }
-
+            else if (statName.Equals("strength", StringComparison.InvariantCultureIgnoreCase)) { s.Strength = amount; }
             Trigger trigger = new Trigger();
 
             switch (ability)
@@ -1623,6 +1643,12 @@ namespace Rawr {
                 case "Heart Strike":
                 case "Heart Strikes":
                     trigger = Trigger.HeartStrikeHit;
+                    break;
+                case "Obliterate":
+                    trigger = Trigger.ObliterateHit;
+                    break;
+                case "Scourge Strike":
+                    trigger = Trigger.ScourgeStrikeHit;
                     break;
                 default:
                     trigger = Trigger.SpellHit;
