@@ -322,14 +322,14 @@ namespace Rawr.DPSDK
 
             {
                 calcOpts.presence = calcOpts.rotation.presence;
-				bool TAT = calcOpts.rotation.TAT;	// Threat of Thassarian makes me sad :(
-											        // Because now we need two code blocks
-											        // For like every single strike
-                                                    // also disregard that I'm an idiot
-                                                    // for abbreviating "Threat of Thassarian" as TAT
+                bool TAT = calcOpts.rotation.TAT;	// Threat of Thassarian makes me sad :(
+                // Because now we need two code blocks
+                // For like every single strike
+                // also disregard that I'm an idiot
+                // for abbreviating "Threat of Thassarian" as TAT
 
-				float OHMult = 0.5f * (1f + (float)talents.NervesOfColdSteel * 0.05f);	//an OH multiplier that is useful sometimes
-				
+                float OHMult = 0.5f * (1f + (float)talents.NervesOfColdSteel * 0.05f);	//an OH multiplier that is useful sometimes
+
                 if (calcOpts.rotation.managedRP)
                 {
                     calcOpts.rotation.getRP(talents, character);
@@ -398,8 +398,8 @@ namespace Rawr.DPSDK
                     float MHDPS = 0f, OHDPS = 0f;
                     #region Main Hand
                     {
-                        float dpsMHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80] * combatTable.MH.DPS) * 0.7f;
-                        float dpsMHBeforeArmor = ((combatTable.MH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80])) * (1f + combatTable.physCrits)) + dpsMHglancing;
+                        float dpsMHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80] * combatTable.MH.DPS) * 0.7f;
+                        float dpsMHBeforeArmor = ((combatTable.MH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80])) * (1f + combatTable.physCrits)) + dpsMHglancing;
                         dpsWhiteMinusGlancing = dpsMHBeforeArmor - dpsMHglancing;
                         dpsWhiteBeforeArmor = dpsMHBeforeArmor;
                         MHDPS = dpsMHBeforeArmor * mitigation;
@@ -409,13 +409,13 @@ namespace Rawr.DPSDK
                     #region Off Hand
                     if (DW || (character.MainHand == null && character.OffHand != null))
                     {
-                        float dpsOHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80] * combatTable.OH.DPS) * 0.7f;
-                        float dpsOHBeforeArmor = ((combatTable.OH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80])) * (1f + combatTable.physCrits)) + dpsOHglancing;
-						dpsOHBeforeArmor *= OHMult;
+                        float dpsOHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80] * combatTable.OH.DPS) * 0.7f;
+                        float dpsOHBeforeArmor = ((combatTable.OH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80])) * (1f + combatTable.physCrits)) + dpsOHglancing;
+                        dpsOHBeforeArmor *= OHMult;
                         dpsWhiteMinusGlancing += dpsOHBeforeArmor - dpsOHglancing;
                         dpsWhiteBeforeArmor += dpsOHBeforeArmor;
                         OHDPS = dpsOHBeforeArmor * mitigation;
-						
+
                     }
                     #endregion
 
@@ -437,7 +437,7 @@ namespace Rawr.DPSDK
                     {
                         float OHBCBDmg = combatTable.OH.damage * (.25f + .125f * calcOpts.rotation.avgDiseaseMult);
                         dpsOHBCB = OHBCBDmg / combatTable.OH.hastedSpeed;
-						dpsOHBCB *= OHMult;
+                        dpsOHBCB *= OHMult;
                     }
                     if (combatTable.MH.damage != 0)
                     {
@@ -492,45 +492,48 @@ namespace Rawr.DPSDK
 
                 #region Plague Strike
                 {
-					if (calcOpts.rotation.PlagueStrike > 0f)
-					{
-						float PSCD = combatTable.realDuration / calcOpts.rotation.PlagueStrike;
-						float PSDmg = (combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * 
-										combatTable.normalizationFactor)) * 0.5f + 189f;
-						float PSDmgOH = 0f;
-						if (DW) PSDmgOH = (combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
-										combatTable.normalizationFactor)) * 0.5f + 189f;
-						PSDmgOH *= (talents.ThreatOfThassarian * 0.333333333f);
-						PSDmgOH *= OHMult;
-						dpsPlagueStrike = (PSDmg + PSDmgOH) / PSCD;
-						float PSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier;
-						float PSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.ViciousStrikes) + 
-											stats.BonusPlagueStrikeCrit) * PSCritDmgMult);
-											
-						dpsPlagueStrike *= PSCrit;
-						dpsPlagueStrike *= (talents.GlyphofPlagueStrike ? 1.2f : 1f);
-						dpsPlagueStrike *= 1f + (.1f * (float)talents.Outbreak);
-					}
-				
+                    if (calcOpts.rotation.PlagueStrike > 0f)
+                    {
+                        float PSCD = combatTable.realDuration / calcOpts.rotation.PlagueStrike;
+                        float PSDmg = (combatTable.MH.baseDamage + ((stats.AttackPower / 14f) *
+                                        combatTable.normalizationFactor)) * 0.5f + 189f;
+                        float PSDmgOH = 0f;
+                        if (DW) PSDmgOH = (combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
+                                        combatTable.normalizationFactor)) * 0.5f + 189f;
+                        PSDmgOH *= (talents.ThreatOfThassarian * 0.333333333f);
+                        PSDmgOH *= OHMult;
+                        dpsPlagueStrike = (PSDmg + PSDmgOH) / PSCD;
+                        float PSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier;
+                        float PSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.ViciousStrikes) +
+                                            stats.BonusPlagueStrikeCrit) * PSCritDmgMult);
+
+                        dpsPlagueStrike *= PSCrit;
+                        dpsPlagueStrike *= (talents.GlyphofPlagueStrike ? 1.2f : 1f);
+                        dpsPlagueStrike *= 1f + (.1f * (float)talents.Outbreak);
+                    }
+
                 }
                 #endregion
 
                 #region Frost Fever
                 {
-                    if (calcOpts.rotation.IcyTouch > 0f || 
-					(talents.GlyphofHowlingBlast && calcOpts.rotation.HowlingBlast > 0f) || 
-					(talents.GlyphofDisease && calcOpts.rotation.Pestilence > 0f))
+                    if (calcOpts.rotation.IcyTouch > 0f ||
+                    (talents.GlyphofHowlingBlast && calcOpts.rotation.HowlingBlast > 0f) ||
+                    (talents.GlyphofDisease && calcOpts.rotation.Pestilence > 0f))
                     {
                         // Frost Fever is renewed with every Icy Touch and starts a new cd
-                        float ITCD = calcOpts.rotation.curRotationDuration / 
-						(calcOpts.rotation.IcyTouch + 
-						(talents.GlyphofHowlingBlast ? calcOpts.rotation.HowlingBlast : 0f));
-						float PestRefresh = (15f + talents.Epidemic * 3f);
+                        float ITCD = calcOpts.rotation.curRotationDuration /
+                        (calcOpts.rotation.IcyTouch +
+                        (talents.GlyphofHowlingBlast ? calcOpts.rotation.HowlingBlast : 0f));
+                        float PestRefresh = (15f + talents.Epidemic * 3f);
                         float FFCD = 0f;
-                        if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f){
+                        if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f)
+                        {
                             ITCD = calcOpts.rotation.curRotationDuration;
                             FFCD = 3f;
-                        }else{
+                        }
+                        else
+                        {
                             FFCD = 3f / (calcOpts.rotation.diseaseUptime / 100);
                             int tempF = (int)Math.Floor(ITCD / FFCD);
                             FFCD = ((ITCD - ((float)tempF * FFCD)) / ((float)tempF + 1f)) + FFCD;
@@ -549,7 +552,7 @@ namespace Rawr.DPSDK
                     {
                         // Blood Plague is renewed with every Plague Strike and starts a new cd
                         float PSCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.PlagueStrike;
-						float PestRefresh = (15f + talents.Epidemic * 3f);
+                        float PestRefresh = (15f + talents.Epidemic * 3f);
                         float BPCD = 0f;
                         if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f)
                         {
@@ -565,10 +568,19 @@ namespace Rawr.DPSDK
                         float BPDmg = BloodPlagueAPMult * stats.AttackPower + 31.1f;
                         dpsBloodPlague = BPDmg / BPCD;
                         dpsBloodPlague *= 1.15f; // Patch 3.2: Diseases hit 15% harder.
-                        //dpsBloodPlague *= 1f + combatTable.spellCrits;                           // Blood Plague can't crit
-
-                        //dpsWPFromBP = BPDmg / (BPCD / combatTable.physCrits);
                         dpsWPFromBP = dpsBloodPlague * combatTable.physCrits;
+                    }
+                }
+                #endregion
+
+                #region 4T9
+                {
+                    if (stats.DiseasesCanCrit > 0f)
+                    {
+                        float DiseaseCritDmgMult = 0.5f * (2f + stats.BonusCritMultiplier);
+                        float DiseaseCrit = 1f + combatTable.spellCrits;
+                        dpsFrostFever *= DiseaseCrit;
+                        dpsBloodPlague *= DiseaseCrit;
                     }
                 }
                 #endregion
@@ -592,7 +604,7 @@ namespace Rawr.DPSDK
                         float SSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier;
                         float SSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.ViciousStrikes) + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
                         dpsScourgeStrike = dpsScourgeStrike * SSCrit;
-                        dpsScourgeStrike *= 1f + (2f/3f*.01f /*0.0666666666666666666f*/ * (float)talents.Outbreak);
+                        dpsScourgeStrike *= 1f + (2f / 3f * .01f /*0.0666666666666666666f*/ * (float)talents.Outbreak);
                     }
                 }
                 #endregion
@@ -600,7 +612,7 @@ namespace Rawr.DPSDK
                 #region Unholy Blight
                 {
                     // now does 20% damage of each death coil over 10 seconds, with glyph increasing
-					// damage by 40%. It rolls like deep wounds, but luckily, we don't care.
+                    // damage by 40%. It rolls like deep wounds, but luckily, we don't care.
                     if (talents.UnholyBlight > 0f && calcOpts.rotation.DeathCoil > 0f)
                         dpsUnholyBlight = dpsDeathCoil * (0.2f * (1f + (talents.GlyphofUnholyBlight ? 0.4f : 0f)));
                     else dpsUnholyBlight = 0f;
@@ -611,26 +623,26 @@ namespace Rawr.DPSDK
                 {
                     if (talents.FrostStrike > 0 && calcOpts.rotation.FrostStrike > 0f)
                     {
-						float addedCritFromKM = KMRatio;
-						float FSCD = combatTable.realDuration / calcOpts.rotation.FrostStrike;
-						float FSDmg = (combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * 
-								combatTable.normalizationFactor)) * .55f +
-								110.55f + stats.BonusFrostStrikeDamage;
-						dpsFrostStrike = FSDmg / FSCD;
-						
-						float FSDmgOH = 0f;
-						if (DW) FSDmgOH = (((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
-								combatTable.normalizationFactor)) * 0.55f + 110.55f) * 0.5f) + stats.BonusFrostStrikeDamage;
-						FSDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
-						FSDmgOH *= (talents.ThreatOfThassarian * 0.33333333f);
+                        float addedCritFromKM = KMRatio;
+                        float FSCD = combatTable.realDuration / calcOpts.rotation.FrostStrike;
+                        float FSDmg = (combatTable.MH.baseDamage + ((stats.AttackPower / 14f) *
+                                combatTable.normalizationFactor)) * .55f +
+                                110.55f + stats.BonusFrostStrikeDamage;
+                        dpsFrostStrike = FSDmg / FSCD;
+
+                        float FSDmgOH = 0f;
+                        if (DW) FSDmgOH = (((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
+                                combatTable.normalizationFactor)) * 0.55f + 110.55f) * 0.5f) + stats.BonusFrostStrikeDamage;
+                        FSDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
+                        FSDmgOH *= (talents.ThreatOfThassarian * 0.33333333f);
 
                         float FSCritDmgMult = 1f + (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
-						float FSCrit = 1f + ((combatTable.physCrits + addedCritFromKM + stats.BonusFrostStrikeCrit) * FSCritDmgMult);
-						dpsFrostStrike *= FSCrit;
-						float dpsFrostStrikeOH = FSDmgOH / FSCD;
-						dpsFrostStrikeOH *= 1f + ((combatTable.physCrits + stats.BonusFrostStrikeCrit) * FSCritDmgMult); // OH FS hits don't get KM
-						dpsFrostStrike += dpsFrostStrikeOH;
-						dpsFrostStrike *= 1f + (1f/3f*0.01f /*0.0333333333333333f*/) * talents.BloodOfTheNorth;
+                        float FSCrit = 1f + ((combatTable.physCrits + addedCritFromKM + stats.BonusFrostStrikeCrit) * FSCritDmgMult);
+                        dpsFrostStrike *= FSCrit;
+                        float dpsFrostStrikeOH = FSDmgOH / FSCD;
+                        dpsFrostStrikeOH *= 1f + ((combatTable.physCrits + stats.BonusFrostStrikeCrit) * FSCritDmgMult); // OH FS hits don't get KM
+                        dpsFrostStrike += dpsFrostStrikeOH;
+                        dpsFrostStrike *= 1f + (1f / 3f * 0.01f /*0.0333333333333333f*/) * talents.BloodOfTheNorth;
                     }
                 }
                 #endregion
@@ -653,23 +665,23 @@ namespace Rawr.DPSDK
                 {
                     dpsOtherArcane = stats.ArcaneDamage;
                     dpsOtherShadow = stats.ShadowDamage;
-					
-					// TODO: Differentiate between MH razorice and OH razorice
+
+                    // TODO: Differentiate between MH razorice and OH razorice
                     if (combatTable.MH != null)
                     {
-                        float dpsMHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80] * combatTable.MH.DPS) * 0.7f;
-                        float dpsMHBeforeArmor = ((combatTable.MH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80])) * (1f + combatTable.physCrits)) + dpsMHglancing;
+                        float dpsMHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80] * combatTable.MH.DPS) * 0.7f;
+                        float dpsMHBeforeArmor = ((combatTable.MH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80])) * (1f + combatTable.physCrits)) + dpsMHglancing;
                         dpsOtherFrost += (dpsMHBeforeArmor - dpsMHglancing) * stats.BonusFrostWeaponDamage;   // presumably doesn't proc off of glancings, like necrosis
                     }
 
                     if (combatTable.OH != null)
                     {
-                        float dpsOHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80] * combatTable.OH.DPS) * 0.7f;
-                        float dpsOHBeforeArmor = ((combatTable.OH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80])) * (1f + combatTable.physCrits)) + dpsOHglancing;
-						dpsOHBeforeArmor *= OHMult;
+                        float dpsOHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80] * combatTable.OH.DPS) * 0.7f;
+                        float dpsOHBeforeArmor = ((combatTable.OH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80])) * (1f + combatTable.physCrits)) + dpsOHglancing;
+                        dpsOHBeforeArmor *= OHMult;
                         dpsOtherFrost += (dpsOHBeforeArmor - dpsOHglancing) * stats.BonusFrostWeaponDamage;
                     }
-					if (DW) dpsOtherFrost /= 2f; //razorice only actually effects the weapon its on, not both. this is closer than it would be otherwise.
+                    if (DW) dpsOtherFrost /= 2f; //razorice only actually effects the weapon its on, not both. this is closer than it would be otherwise.
 
                     float OtherCritDmgMult = .5f * (1f + stats.BonusCritMultiplier);
                     float OtherCrit = 1f + ((combatTable.spellCrits) * OtherCritDmgMult);
@@ -682,7 +694,7 @@ namespace Rawr.DPSDK
                 {
                     float bonusHB = talents.Rime * calcOpts.rotation.Obliterate * 0.05f;
                     if (talents.HowlingBlast > 0 && (calcOpts.rotation.HowlingBlast + bonusHB) > 0f)
-                    {						
+                    {
                         float addedCritFromKM = KMRatio;
                         float HBCD = combatTable.realDuration / (calcOpts.rotation.HowlingBlast + bonusHB);
                         float HBDmg = 540 + HowlingBlastAPMult * stats.AttackPower;
@@ -698,25 +710,25 @@ namespace Rawr.DPSDK
                 {
                     if (calcOpts.rotation.Obliterate > 0f)
                     {
-						float OblitCD = combatTable.realDuration / calcOpts.rotation.Obliterate;
-						float OblitDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
-							0.8f) + stats.BonusObliterateDamage + 467.2f;
-						
-						float OblitDmgOH = 0f;
-						if (DW) OblitDmgOH = ((((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
-							0.8f) + 467.2f) * 0.5f) + stats.BonusObliterateDamage;
-						OblitDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
-						OblitDmgOH *= (talents.ThreatOfThassarian * (1f/3f/*0.33333333333f*/));
-						
-						dpsObliterate = (OblitDmg + OblitDmgOH) / OblitCD;
-						dpsObliterate *= 1f + 0.125f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
+                        float OblitCD = combatTable.realDuration / calcOpts.rotation.Obliterate;
+                        float OblitDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
+                            0.8f) + stats.BonusObliterateDamage + 467.2f;
+
+                        float OblitDmgOH = 0f;
+                        if (DW) OblitDmgOH = ((((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
+                            0.8f) + 467.2f) * 0.5f) + stats.BonusObliterateDamage;
+                        OblitDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
+                        OblitDmgOH *= (talents.ThreatOfThassarian * (1f / 3f/*0.33333333333f*/));
+
+                        dpsObliterate = (OblitDmg + OblitDmgOH) / OblitCD;
+                        dpsObliterate *= 1f + 0.125f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
                         float OblitCritDmgMult = 1f + (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
-						float OblitCrit = 1f + ((combatTable.physCrits +
-							(0.03f * (float)talents.Subversion) +
-							(0.05f * (float)talents.Rime) +
-							stats.BonusObliterateCrit) * OblitCritDmgMult);
-						dpsObliterate *= OblitCrit;
-						dpsObliterate *= (talents.GlyphofObliterate ? 1.2f : 1f);
+                        float OblitCrit = 1f + ((combatTable.physCrits +
+                            (0.03f * (float)talents.Subversion) +
+                            (0.05f * (float)talents.Rime) +
+                            stats.BonusObliterateCrit) * OblitCritDmgMult);
+                        dpsObliterate *= OblitCrit;
+                        dpsObliterate *= (talents.GlyphofObliterate ? 1.2f : 1f);
                     }
                 }
                 #endregion
@@ -728,15 +740,16 @@ namespace Rawr.DPSDK
                         float DSCD = combatTable.realDuration / calcOpts.rotation.DeathStrike;
                         // TODO: This should be changed to make use of the new glyph stats:
                         float DSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) * 0.75f) + 222.75f + stats.BonusDeathStrikeDamage;
-						if(DW) {
-							float DSDmgOH = ((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) * 
-							combatTable.normalizationFactor)) * 0.75f) + 222.75f;
-							DSDmgOH *= 0.5f;
-							DSDmgOH += stats.BonusDeathStrikeDamage;
-							DSDmgOH *= 1f + 0.05f * talents.NervesOfColdSteel;
-							DSDmgOH *= (talents.ThreatOfThassarian * (1f/3f/*0.33333333333333f*/));
-							DSDmg += DSDmgOH;
-						}
+                        if (DW)
+                        {
+                            float DSDmgOH = ((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
+                            combatTable.normalizationFactor)) * 0.75f) + 222.75f;
+                            DSDmgOH *= 0.5f;
+                            DSDmgOH += stats.BonusDeathStrikeDamage;
+                            DSDmgOH *= 1f + 0.05f * talents.NervesOfColdSteel;
+                            DSDmgOH *= (talents.ThreatOfThassarian * (1f / 3f/*0.33333333333333f*/));
+                            DSDmg += DSDmgOH;
+                        }
                         DSDmg *= 1f + 0.15f * (float)talents.ImprovedDeathStrike;
                         DSDmg *= (talents.GlyphofDeathStrike ? 1.25f : 1f);
                         dpsDeathStrike = DSDmg / DSCD;
@@ -756,23 +769,23 @@ namespace Rawr.DPSDK
                         float BSCD = combatTable.realDuration / calcOpts.rotation.BloodStrike;
                         float BSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
                             0.4f) + 305.6f + stats.BonusBloodStrikeDamage;
-						if(DW)
-						{
-							float BSDmgOH = ((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) * 
-							combatTable.normalizationFactor)) * 0.4f) + 305.6f;
-							BSDmgOH *= 0.5f;
-							BSDmgOH += stats.BonusBloodStrikeDamage;
-							BSDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
-							BSDmgOH *= (talents.ThreatOfThassarian * (1f/3f/*0.3333333333333333f*/));
-							BSDmg += BSDmgOH;
-						}
+                        if (DW)
+                        {
+                            float BSDmgOH = ((combatTable.OH.baseDamage + ((stats.AttackPower / 14f) *
+                            combatTable.normalizationFactor)) * 0.4f) + 305.6f;
+                            BSDmgOH *= 0.5f;
+                            BSDmgOH += stats.BonusBloodStrikeDamage;
+                            BSDmgOH *= 1f + 0.05f * (float)talents.NervesOfColdSteel;
+                            BSDmgOH *= (talents.ThreatOfThassarian * (1f / 3f/*0.3333333333333333f*/));
+                            BSDmg += BSDmgOH;
+                        }
                         BSDmg *= 1f + 0.12f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage);
                         dpsBloodStrike = BSDmg / BSCD;
                         float BSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
                         BSCritDmgMult += (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
                         float BSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.Subversion)) * BSCritDmgMult);
                         dpsBloodStrike = (dpsBloodStrike) * BSCrit;
-                        dpsBloodStrike *= 1f + ((1f/3f/*0.3333333333333333f*/) * (float)talents.BloodOfTheNorth);
+                        dpsBloodStrike *= 1f + ((1f / 3f/*0.3333333333333333f*/) * (float)talents.BloodOfTheNorth);
                         dpsBloodStrike *= 1f + (.05f * (float)talents.BloodyStrikes);
                     }
                 }
@@ -801,9 +814,9 @@ namespace Rawr.DPSDK
                     if (calcOpts.rotation.GargoyleDuration > 0f && talents.SummonGargoyle > 0f)
                     {
                         float GargoyleCastTime = 2.0f;  //2.0 second base cast time
-						GargoyleCastTime *= combatTable.MH.baseSpeed / combatTable.MH.hastedSpeed;
+                        GargoyleCastTime *= combatTable.MH.baseSpeed / combatTable.MH.hastedSpeed;
                         // benefits from all haste effects
-						
+
                         float GargoyleStrike = 120f + GargoyleAPMult * stats.AttackPower;
                         float GargoyleStrikeCount = 30f / GargoyleCastTime;
                         float GargoyleDmg = GargoyleStrike * GargoyleStrikeCount;
@@ -872,12 +885,12 @@ namespace Rawr.DPSDK
                             GhoulhastedSpeed = ((combatTable.MH.hastedSpeed == 0 ? 1.0f : combatTable.MH.hastedSpeed) / (combatTable.MH.baseSpeed == 0 ? 1.0f : combatTable.MH.baseSpeed)) * GhoulBaseSpeed;
                         else
                             GhoulhastedSpeed = GhoulBaseSpeed;
-						
-						if(talents.GhoulFrenzy > 0f)
-						{
-							float GhoulFrenzyHaste = 0.25f * (calcOpts.rotation.GhoulFrenzy / combatTable.realDuration) * 30f;
-							GhoulhastedSpeed /= 1f + GhoulFrenzyHaste;
-						}
+
+                        if (talents.GhoulFrenzy > 0f)
+                        {
+                            float GhoulFrenzyHaste = 0.25f * (calcOpts.rotation.GhoulFrenzy / combatTable.realDuration) * 30f;
+                            GhoulhastedSpeed /= 1f + GhoulFrenzyHaste;
+                        }
                         GhoulhastedSpeed /= 1f + statsBuffs.PhysicalHaste;
 
                         float dmgSwing = GhoulWeaponBaseDamage + (GhoulAP / GhoulAPdivisor) * GhoulBaseSpeed;
@@ -1048,7 +1061,7 @@ namespace Rawr.DPSDK
                     IcyTouchMult *= 1 + MercilessCombatMult;
                     FrostStrikeMult *= 1 + MercilessCombatMult;
 
-                    float GlacierRot = (2f/3f/*0.66666666666666666*/) * (float)talents.GlacierRot;
+                    float GlacierRot = (2f / 3f/*0.66666666666666666*/) * (float)talents.GlacierRot;
                     HowlingBlastMult *= 1 + GlacierRot;
                     IcyTouchMult *= 1 + GlacierRot;
                     FrostStrikeMult *= 1 + GlacierRot;
@@ -1430,6 +1443,7 @@ namespace Rawr.DPSDK
                 BonusIcyTouchDamage = stats.BonusIcyTouchDamage,
                 BonusObliterateDamage = stats.BonusObliterateDamage,
                 BonusScourgeStrikeDamage = stats.BonusScourgeStrikeDamage,
+                DiseasesCanCrit = stats.DiseasesCanCrit,
 
                 BonusDeathCoilCrit = stats.BonusDeathCoilCrit,
                 BonusDeathStrikeCrit = stats.BonusDeathStrikeCrit,
@@ -1530,7 +1544,7 @@ namespace Rawr.DPSDK
                 + stats.BonusPerDiseaseBloodStrikeDamage + stats.BonusPerDiseaseHeartStrikeDamage + stats.BonusPerDiseaseObliterateDamage
                 + stats.BonusPerDiseaseScourgeStrikeDamage + stats.BonusPlagueStrikeCrit + stats.BonusRPFromDeathStrike
                 + stats.BonusRPFromObliterate + stats.BonusRPFromScourgeStrike + stats.BonusRuneStrikeMultiplier + stats.BonusScourgeStrikeCrit
-                + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage + stats.HighestStat + stats.BonusCritMultiplier) != 0;
+                + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage + stats.DiseasesCanCrit + stats.HighestStat + stats.BonusCritMultiplier) != 0;
         }
 
 

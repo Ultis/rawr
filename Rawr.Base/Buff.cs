@@ -3525,7 +3525,7 @@ namespace Rawr
             });
             #endregion
 
-            #region DK DPS T7
+            #region Death Knight Set Bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scourgeborne Battlegear 2 Piece Bonus",
@@ -3583,6 +3583,53 @@ namespace Rawr
                     BonusPerDiseaseScourgeStrikeDamage = 0.20f
                 },
                 SetName = "Darkruned Battlegear",
+                SetThreshold = 4
+            });
+
+            // DK DPS T9
+            Stats DK2T9 = new Stats();
+            DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeOrHeartStrikeHit, new Stats() { Strength = 180f }, 15f, 0f, .5f));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Koltira's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = DK2T9,
+                SetName = "Koltira's Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Koltira's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    DiseasesCanCrit = 1f
+                },
+                SetName = "Koltira's Battlegear",
+                SetThreshold = 4
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thassarian's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = DK2T9,
+                SetName = "Thassarian's Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thassarian's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    DiseasesCanCrit = 1f
+                },
+                SetName = "Thassarian's Battlegear",
                 SetThreshold = 4
             });
 
