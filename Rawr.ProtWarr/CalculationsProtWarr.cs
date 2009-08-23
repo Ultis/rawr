@@ -462,8 +462,11 @@ threat and limited threat scaled by the threat scale.",
                 PhysicalHaste = talents.BloodFrenzy * 0.03f,
                 PhysicalHit = talents.Precision * 0.01f,
             };
+            Stats statsGlyphs = new Stats() {
+                BonusBlockValueMultiplier = (talents.GlyphOfBlocking ? 0.10f : 0f),// Glyph of Blocking has 100% uptime for any normal fight
+            };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
-            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
+            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsGlyphs + statsOptionsPanel;
             Stats statsProcs = new Stats();
 
             // Stamina
@@ -507,17 +510,12 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.PhysicalCrit = (float)Math.Max(0f, statsTotal.PhysicalCrit); // puts a minimum of 0 on it
 
             // ===== YOUR DEFENSE AGAINST ATTACKERS =====
-            // Dodge
-            statsTotal.Dodge = statsTotal.Dodge;
-
-            // Block
-            //statsTotal.Block += 5f;
-
             // Block Value
-            // Glyph of Blocking has 100% uptime for any normal fight
-            statsTotal.BonusBlockValueMultiplier += talents.GlyphOfBlocking ? 0.1f : 0f;
-            statsTotal.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsTotal.Strength) - 10f);
-            statsTotal.BlockValue  = (float)Math.Floor(statsTotal.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
+            float totalBBVM = statsTotal.BonusBlockValueMultiplier;
+            float bvBase     = (float)Math.Floor((1f + totalBBVM) * (statsRace.BlockValue));
+            float bvBonusSTR = (float)Math.Floor((1f + totalBBVM) * (StatConversion.GetBlockValueFromStrength(statsTotal.Strength) - 10f));
+            float bvOther    = (float)Math.Floor((1f + totalBBVM) * (statsGearEnchantsBuffs.BlockValue));
+            statsTotal.BlockValue = bvBase + bvBonusSTR + bvOther;
 
             // Resistances
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
@@ -573,11 +571,17 @@ threat and limited threat scaled by the threat scale.",
             statsProcs.Armor       += statsProcs.BonusArmor;
 
             statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina  * 10f);
+
             statsProcs.AttackPower += statsProcs.Strength * 2f;
             statsProcs.AttackPower += (float)Math.Floor(talents.ArmoredToTheTeeth * statsProcs.Armor / 108f);
             statsProcs.AttackPower  = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsProcs.BlockValue  += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsProcs.Strength));
-            statsProcs.BlockValue   = (float)Math.Floor(statsProcs.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
+
+            float bvBonusSTRprocs  = (float)Math.Floor((1f + totalBBVM + statsProcs.BonusBlockValueMultiplier) * (StatConversion.GetBlockValueFromStrength(statsProcs.Strength)));
+            float bvOtherprocs     = (float)Math.Floor((1f + totalBBVM + statsProcs.BonusBlockValueMultiplier) * (statsProcs.BlockValue));
+            statsProcs.BlockValue  = bvBonusSTRprocs + bvOtherprocs;
+
+            statsProcs.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsProcs.Strength));
+            statsProcs.BlockValue  = (float)Math.Floor(statsProcs.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
 
             statsTotal += statsProcs;
 

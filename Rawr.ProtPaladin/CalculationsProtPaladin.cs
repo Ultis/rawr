@@ -791,10 +791,18 @@ focus on Survival Points.",
             statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Mana *= 1f + statsTotal.BonusManaMultiplier;
+
+            // Armor
+            statsTotal.Armor       = (float)Math.Floor(statsTotal.Armor      * (1f + statsTotal.BaseArmorMultiplier));
+            statsTotal.BonusArmor += statsTotal.Agility * 2f;
+            statsTotal.BonusArmor  = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
+            statsTotal.Armor      += statsTotal.BonusArmor;
+
             statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
             statsTotal.BonusArmor += 2f * (float)Math.Floor(statsTotal.Agility);
             statsTotal.Armor += statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
+
             statsTotal.AttackPower += (statsTotal.Strength - 20f) * 2f + 20f;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsTotal.SpellPower += (float)Math.Floor(statsTotal.Stamina * talents.TouchedByTheLight * 0.1f);
@@ -910,8 +918,14 @@ focus on Survival Points.",
                     }
                 }
             }
-            
-            if ((calcOpts.UseHolyShield)&&character.OffHand != null &&(character.OffHand.Type == ItemType.Shield)) {
+
+            //statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier));
+            //statsProcs.BonusArmor += statsProcs.Agility * 2f;
+            //statsProcs.BonusArmor = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
+            //statsProcs.Armor += statsProcs.BonusArmor;
+
+            if ((calcOpts.UseHolyShield) && character.OffHand != null && (character.OffHand.Type == ItemType.Shield))
+            {
                 statsTotal.JudgementBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
                 statsTotal.JudgementBlockValue = (float)Math.Floor(statsTotal.JudgementBlockValue);
                 statsTotal.ShieldOfRighteousnessBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
@@ -1404,8 +1418,12 @@ focus on Survival Points.",
                 stats.ParryRating +
                 stats.BlockValue +
                 stats.BlockRating +
+                stats.Armor +
                 stats.BonusArmor +
                 stats.Resilience +
+
+                stats.BaseArmorMultiplier +
+                stats.BonusArmorMultiplier +
 
                 //Threat Stats
                 stats.ArmorPenetrationRating +
@@ -1441,7 +1459,11 @@ focus on Survival Points.",
                 stats.Strength +
                 stats.Stamina +
 
+                stats.Armor +
+                stats.BonusArmor +
+
                 //Gem Stats
+                stats.BaseArmorMultiplier +
                 stats.BonusArmorMultiplier +
                 stats.BonusBlockValueMultiplier +
 
@@ -1463,7 +1485,7 @@ focus on Survival Points.",
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-//                if (effect.Trigger != null)
+                //if (effect.Trigger != null)
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
@@ -1491,7 +1513,11 @@ focus on Survival Points.",
                 stats.ParryRating +
                 stats.BlockValue +
                 stats.BlockRating +
+                stats.Armor +
                 stats.BonusArmor +
+
+                stats.BaseArmorMultiplier +
+                stats.BonusArmorMultiplier +
 
                 //Threat Stats
                 stats.ArmorPenetrationRating +
@@ -1524,13 +1550,13 @@ focus on Survival Points.",
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-//                if (effect.Trigger != null)
+                //if (effect.Trigger != null)
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
                     effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
                 {
-//                    if (effect.Stats != null)
+                    //if (effect.Stats != null)
                     if (hasRelevantSpecialEffect(effect.Stats)) 
                     {
                         return true;
@@ -1559,6 +1585,7 @@ focus on Survival Points.",
                 stats.Miss +
                 stats.Block +
                 stats.BlockRating +
+                stats.Armor +
                 stats.BonusArmor +
                 stats.BlockValue +
 
@@ -1586,12 +1613,12 @@ focus on Survival Points.",
                 stats.BonusHealthMultiplier +
                 stats.BossAttackSpeedMultiplier +
                 stats.ThreatIncreaseMultiplier +
+                stats.BaseArmorMultiplier +
                 stats.BonusArmorMultiplier +
                 stats.BonusAttackPowerMultiplier +
                 stats.BonusDamageMultiplier +
                 stats.BonusPhysicalDamageMultiplier +
                 stats.BonusHolyDamageMultiplier +
-                stats.BaseArmorMultiplier +
                 stats.DamageTakenMultiplier +
 
                 //Resistances
@@ -1621,7 +1648,7 @@ focus on Survival Points.",
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-//                if (effect.Trigger != null)
+                //if (effect.Trigger != null)
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
@@ -1666,14 +1693,11 @@ focus on Survival Points.",
                 stats.HitRating +
                 stats.ExpertiseRating
 
-                //Old Enchant Procs
-                //stats.MongooseProc +
-                //stats.ExecutionerProc
                 ) != 0;
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-//                if (effect.Trigger != null)
+                //if (effect.Trigger != null)
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
@@ -1690,12 +1714,6 @@ focus on Survival Points.",
         }
         #endregion
 
- //       public bool debugMode(Character character)
- //       {
- //           CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
- //           return calcOpts.debugMode;
- //       }
-
         /// <summary>
         /// Saves the talents for the character
         /// </summary>
@@ -1706,36 +1724,4 @@ focus on Survival Points.",
             calcOpts.talents = character.PaladinTalents;
         }
     }
-
-/*    public class ProtPaladin {
-        //Percentage = Rating / RatingBase / H
-        //lvl 80 base taken from LibStatLogic-1.1, Author: Whitetooth, hotdogee [at] gmail [dot] com
-        static readonly float H = 100.0f * (82.0f / 52.0f) * (131.0f / 63.0f);
-        public static readonly float AgilityToDodge = 1.0f / 59.88023952f / 100.0f;
-        public static readonly float DodgeRatingToDodge = 1.0f / 13.8f / H;                 // 45.25018692
-        public static readonly float StrengthToAP = 2.0f;
-        public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
-        public static readonly float AgilityToArmor = 2.0f;
-        public static readonly float AgilityToCrit = 1.0f / 52.08333333f / 100.0f;
-        public static readonly float IntellectToCrit = 1.0f / 166.6666709f / 100.0f;
-        public static readonly float StaminaToHP = 10.0f;
-        public static readonly float HitRatingToHit = 1.0f / 10.0f / H;                     // 32.78998779
-        public static readonly float HitRatingToSpellHit = 1.0f / 8.0f / H;                 // 26.23199023
-        public static readonly float CritRatingToCrit = 1.0f / 14.0f / H;                   // 45.90598291
-        public static readonly float HasteRatingToSpellHaste = 1.0f / 10.0f / H;            // 32.78998779
-        public static readonly float HasteRatingToPhysicalHaste = 1.3f / 10.0f / H;         // 25.22306753 3.1 Hybrid haste buff
-        public static readonly float ExpertiseRatingToExpertise = 100.0f / 2.5f / H;          // 8.197496947
-        public static readonly float ExpertiseToDodgeParryReduction = 0.25f / 100.0f;
-        public static readonly float DefenseRatingToDefense = 100.0f / 1.5f / H;              // 4.918498168
-        public static readonly float DefenseToDodge = 0.0004f;
-        public static readonly float DefenseToBlock = 0.0004f;
-        public static readonly float DefenseToParry = 0.0004f;
-        public static readonly float DefenseToMiss = 0.0004f;
-        public static readonly float DefenseToCritReduction = 0.0004f;
-        public static readonly float DefenseToDazeReduction = 0.0004f;
-        public static readonly float ParryRatingToParry = 1.0f / 13.8f / H;                 // 45.25018692
-        public static readonly float BlockRatingToBlock = 1.0f / 5.0f / H;                  // 16.39499389
-        public static readonly float ResilienceRatingToCritReduction = 1.0f / 25.0f / H;    // 81.97496947
-        public static readonly float ArPToArmorPenetration = 1.25f / 4.69512176513672f / H; // 12.31623883
-    }*/
 }
