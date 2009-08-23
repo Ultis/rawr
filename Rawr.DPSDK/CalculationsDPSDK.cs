@@ -318,7 +318,7 @@ namespace Rawr.DPSDK
 
             calcOpts.rotation.avgDiseaseMult = calcOpts.rotation.numDisease * (calcOpts.rotation.diseaseUptime / 100);
             float commandMult = 0f;
-
+            float bonusHB = talents.Rime * calcOpts.rotation.Obliterate * 0.05f;
 
             {
                 calcOpts.presence = calcOpts.rotation.presence;
@@ -358,14 +358,12 @@ namespace Rawr.DPSDK
                 #region Killing Machine
                 {
                     float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.PhysicalHaste); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
-                    float addHastePercent = 1f;
-
-                    addHastePercent += stats.PhysicalHaste;
-
+                    float addHastePercent = 1f + stats.PhysicalHaste;
                     KMPpM *= addHastePercent;
+                    KMPpM *= calcOpts.KMProcUsage;
 
                     float KMPpR = KMPpM / (60f / calcOpts.rotation.curRotationDuration);
-                    float totalAbilities = calcOpts.rotation.FrostStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast;
+                    float totalAbilities = bonusHB + calcOpts.rotation.FrostStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast;
                     KMRatio = KMPpR / totalAbilities;
                 }
                 #endregion
@@ -484,7 +482,7 @@ namespace Rawr.DPSDK
                         ITDmg *= 1f + .1f * (float)talents.ImprovedIcyTouch;
                         dpsIcyTouch = ITDmg / ITCD;
                         float ITCritDmgMult = .5f * (2f + stats.CritBonusDamage + stats.BonusCritMultiplier);
-                        float ITCrit = 1f + ((combatTable.spellCrits + addedCritFromKM + (.05f * (float)talents.Rime)) * ITCritDmgMult);
+                        float ITCrit = 1f + (Math.Min((combatTable.spellCrits + addedCritFromKM + (.05f * (float)talents.Rime)), 1f) * ITCritDmgMult);
                         dpsIcyTouch *= ITCrit;
                     }
                 }
@@ -637,7 +635,7 @@ namespace Rawr.DPSDK
                         FSDmgOH *= (talents.ThreatOfThassarian * 0.33333333f);
 
                         float FSCritDmgMult = 1f + (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
-                        float FSCrit = 1f + ((combatTable.physCrits + addedCritFromKM + stats.BonusFrostStrikeCrit) * FSCritDmgMult);
+                        float FSCrit = 1f + (Math.Min((combatTable.physCrits + addedCritFromKM + stats.BonusFrostStrikeCrit), 1f) * FSCritDmgMult);
                         dpsFrostStrike *= FSCrit;
                         float dpsFrostStrikeOH = FSDmgOH / FSCD;
                         dpsFrostStrikeOH *= 1f + ((combatTable.physCrits + stats.BonusFrostStrikeCrit) * FSCritDmgMult); // OH FS hits don't get KM
@@ -692,7 +690,6 @@ namespace Rawr.DPSDK
 
                 #region Howling Blast
                 {
-                    float bonusHB = talents.Rime * calcOpts.rotation.Obliterate * 0.05f;
                     if (talents.HowlingBlast > 0 && (calcOpts.rotation.HowlingBlast + bonusHB) > 0f)
                     {
                         float addedCritFromKM = KMRatio;
@@ -700,7 +697,7 @@ namespace Rawr.DPSDK
                         float HBDmg = 540 + HowlingBlastAPMult * stats.AttackPower;
                         dpsHowlingBlast = HBDmg / HBCD;
                         float HBCritDmgMult = .5f * (2f + (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier);
-                        float HBCrit = 1f + ((combatTable.spellCrits + addedCritFromKM) * HBCritDmgMult);
+                        float HBCrit = 1f + (Math.Min((combatTable.spellCrits + addedCritFromKM), 1f) * HBCritDmgMult);
                         dpsHowlingBlast *= HBCrit;
                     }
                 }

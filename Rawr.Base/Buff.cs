@@ -3588,8 +3588,8 @@ namespace Rawr
 
             // DK DPS T9
             Stats DK2T9 = new Stats();
-            DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, new Stats() { Strength = 180f }, 15f, 0f, .5f));
-            DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, new Stats() { Strength = 180f }, 15f, 0f, .5f));
+            DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, new Stats() { Strength = 180f }, 15f, 45f, .5f));
+            DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, new Stats() { Strength = 180f }, 15f, 45f, .5f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Koltira's Battlegear 2 Piece Bonus",

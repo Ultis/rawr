@@ -32,6 +32,9 @@
             this.cbTargetLevel = new System.Windows.Forms.ComboBox();
             this.tbFightLength = new System.Windows.Forms.TrackBar();
             this.gbFightInfo = new System.Windows.Forms.GroupBox();
+            this.lbKMProcUsage = new System.Windows.Forms.Label();
+            this.KMProcUsage = new System.Windows.Forms.TrackBar();
+            this.label2 = new System.Windows.Forms.Label();
             this.lbGhoulTime = new System.Windows.Forms.Label();
             this.GhoulUptime = new System.Windows.Forms.TrackBar();
             this.label3 = new System.Windows.Forms.Label();
@@ -47,6 +50,7 @@
             this.cbGhoul = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
             this.gbFightInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KMProcUsage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GhoulUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BloodwormUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).BeginInit();
@@ -90,6 +94,9 @@
             // 
             // gbFightInfo
             // 
+            this.gbFightInfo.Controls.Add(this.lbKMProcUsage);
+            this.gbFightInfo.Controls.Add(this.KMProcUsage);
+            this.gbFightInfo.Controls.Add(this.label2);
             this.gbFightInfo.Controls.Add(this.lbGhoulTime);
             this.gbFightInfo.Controls.Add(this.GhoulUptime);
             this.gbFightInfo.Controls.Add(this.label3);
@@ -106,10 +113,41 @@
             this.gbFightInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbFightInfo.Location = new System.Drawing.Point(13, 3);
             this.gbFightInfo.Name = "gbFightInfo";
-            this.gbFightInfo.Size = new System.Drawing.Size(227, 245);
+            this.gbFightInfo.Size = new System.Drawing.Size(227, 278);
             this.gbFightInfo.TabIndex = 4;
             this.gbFightInfo.TabStop = false;
             this.gbFightInfo.Text = "Fight Info";
+            // 
+            // lbKMProcUsage
+            // 
+            this.lbKMProcUsage.AutoSize = true;
+            this.lbKMProcUsage.Location = new System.Drawing.Point(173, 255);
+            this.lbKMProcUsage.Name = "lbKMProcUsage";
+            this.lbKMProcUsage.Size = new System.Drawing.Size(48, 13);
+            this.lbKMProcUsage.TabIndex = 37;
+            this.lbKMProcUsage.Text = "100.00%";
+            // 
+            // KMProcUsage
+            // 
+            this.KMProcUsage.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.KMProcUsage.Location = new System.Drawing.Point(135, 223);
+            this.KMProcUsage.Maximum = 100;
+            this.KMProcUsage.Name = "KMProcUsage";
+            this.KMProcUsage.Size = new System.Drawing.Size(86, 45);
+            this.KMProcUsage.TabIndex = 36;
+            this.KMProcUsage.TickFrequency = 10;
+            this.KMProcUsage.Value = 100;
+            this.KMProcUsage.Scroll += new System.EventHandler(this.KMProcUsage_Scroll);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(6, 223);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(90, 13);
+            this.label2.TabIndex = 35;
+            this.label2.Text = "% KM Procs used";
             // 
             // lbGhoulTime
             // 
@@ -222,7 +260,7 @@
             // btnGraph
             // 
             this.btnGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGraph.Location = new System.Drawing.Point(56, 312);
+            this.btnGraph.Location = new System.Drawing.Point(56, 345);
             this.btnGraph.Name = "btnGraph";
             this.btnGraph.Size = new System.Drawing.Size(75, 23);
             this.btnGraph.TabIndex = 5;
@@ -233,7 +271,7 @@
             // btnRotation
             // 
             this.btnRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRotation.Location = new System.Drawing.Point(39, 254);
+            this.btnRotation.Location = new System.Drawing.Point(39, 287);
             this.btnRotation.Name = "btnRotation";
             this.btnRotation.Size = new System.Drawing.Size(125, 23);
             this.btnRotation.TabIndex = 36;
@@ -245,7 +283,7 @@
             // 
             this.cbGhoul.AutoSize = true;
             this.cbGhoul.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbGhoul.Location = new System.Drawing.Point(13, 289);
+            this.cbGhoul.Location = new System.Drawing.Point(13, 322);
             this.cbGhoul.Name = "cbGhoul";
             this.cbGhoul.Size = new System.Drawing.Size(93, 17);
             this.cbGhoul.TabIndex = 41;
@@ -267,6 +305,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).EndInit();
             this.gbFightInfo.ResumeLayout(false);
             this.gbFightInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KMProcUsage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.GhoulUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BloodwormUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).EndInit();
@@ -294,5 +333,8 @@
         private System.Windows.Forms.Label lbGhoulTime;
         private System.Windows.Forms.TrackBar GhoulUptime;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lbKMProcUsage;
+        private System.Windows.Forms.TrackBar KMProcUsage;
+        private System.Windows.Forms.Label label2;
     }
 }

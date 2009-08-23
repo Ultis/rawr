@@ -223,6 +223,14 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
+        private void KMProcUsage_Scroll(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            calcOpts.KMProcUsage = KMProcUsage.Value / 100f;
+            lbKMProcUsage.Text = (KMProcUsage.Value / 100f).ToString("P");
+            Character.OnCalculationsInvalidated();
+        }
+
 
 
     }
@@ -255,6 +263,7 @@ namespace Rawr.DPSDK
         public int FerociousInspiration = 1;
         public bool Ghoul = false;
         public float BloodwormsUptime = 0.25f;
+        public float KMProcUsage = 1f;
         public float GhoulUptime = 1f;
         public Presence presence = Presence.Blood;
 
