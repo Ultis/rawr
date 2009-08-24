@@ -2191,6 +2191,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double nextPot = 0;
             double nextEvo = 0;
             double maxTps = 50000.0;
+            double evocationFactor = 1.0;
             if (SequenceItem.Calculations.CalculationOptions.TpsLimit > 0.0)
             {
                 maxTps = SequenceItem.Calculations.CalculationOptions.TpsLimit;
@@ -2205,6 +2206,19 @@ namespace Rawr.Mage.SequenceReconstruction
             DoStart:
                 double mana = Evaluate(null, EvaluationMode.ManaAtTime, time);
                 double maxMps = double.PositiveInfinity;
+                if (evoTime > 0)
+                {
+                    int numTicks = 4;
+                    int ticksLeft = (int)Math.Round(evoTime / (EvocationDuration / numTicks));
+                    if (ticksLeft % numTicks != 0)
+                    {
+                        evocationFactor = (ticksLeft % numTicks) / (double)numTicks;
+                    }
+                    else
+                    {
+                        evocationFactor = 1.0;
+                    }
+                }
                 if (!((potTime > 0 && nextPot == 0) || (gemTime > 0 && nextGem == 0) || (evoTime > 0 && nextEvo == 0)))
                 {
                     double m = mana + ghostMana;
@@ -2225,7 +2239,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     double m = mana;
                     if (potTime > 0 && nextPot < nextGem) m += (1 + BaseStats.BonusManaPotion) * potValue;
-                    if (evoTime > 0 && nextEvo < nextGem) m += EvocationRegen * Math.Min(evoTime, EvocationDuration);
+                    if (evoTime > 0 && nextEvo < nextGem) m += EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor);
                     double mps = m / (nextGem - time);
                     if (mps < maxMps)
                     {
@@ -2237,7 +2251,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     double m = mana;
                     if (gemTime > 0 && nextGem < nextPot) m += (1 + BaseStats.BonusManaGem) * gemValue;
-                    if (evoTime > 0 && nextEvo < nextPot) m += EvocationRegen * Math.Min(evoTime, EvocationDuration);
+                    if (evoTime > 0 && nextEvo < nextPot) m += EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor);
                     double mps = m / (nextPot - time);
                     if (mps < maxMps)
                     {
@@ -2290,7 +2304,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     else
                     {
                         targetTime = nextEvo;
-                        minMps = (EvocationRegen * Math.Min(evoTime, EvocationDuration) - (BaseStats.Mana - mana)) / (targetTime - time);
+                        minMps = (EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor) - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }
                 if (potTime <= 0 && gemTime <= 0 && evoTime <= 0)
@@ -2369,7 +2383,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         // account for to be used consumables (don't assume evo during super group unless we haven't placed the first one, in that case it will actually be placed before the super group)
                         if (evoTime > 0 && nextEvo == 0.0)
                         {
-                            targetmana += EvocationRegen * Math.Min(evoTime, EvocationDuration);
+                            targetmana += EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor);
                         }
                         if (sequence[sequence.Count - 1].SuperGroup == super) targetmana += ghostMana;
                         double _potTime = potTime;
@@ -2550,7 +2564,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (potTime > 0) pot = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaPotion) * potMaxValue, Math.Max(time, nextPot), 3);
                 if (evoTime > 0)
                 {
-                    evo = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration), Math.Max(time, nextEvo), 2);
+                    evo = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration * evocationFactor), Math.Max(time, nextEvo), 2);
                     double breakpoint = Evaluate(null, EvaluationMode.CooldownBreak, evo);
                     if (breakpoint < fight && breakpoint > evo)
                     {
@@ -2727,11 +2741,11 @@ namespace Rawr.Mage.SequenceReconstruction
                         oomtime = double.PositiveInfinity;
                         goto Retry;
                     }
-                    InsertIndex(SequenceItem.Calculations.ColumnEvocation, Math.Min(EvocationDuration, evoTime), evo);
+                    InsertIndex(SequenceItem.Calculations.ColumnEvocation, Math.Min(EvocationDuration * evocationFactor, evoTime), evo);
                     ComputeTimestamps();
-                    time = evo + Math.Min(EvocationDuration, evoTime);
+                    time = evo + Math.Min(EvocationDuration * evocationFactor, evoTime);
                     nextEvo = evo + SequenceItem.Calculations.EvocationCooldown;
-                    evoTime -= EvocationDuration;
+                    evoTime -= EvocationDuration * evocationFactor;
                     if (evoTime <= eps || nextEvo > fight)
                     {
                         evoTime = 0.0;

@@ -997,7 +997,7 @@ namespace Rawr.Mage
             }
             if (minimizeTime) needsTimeExtension = true;
 
-            if (segmentCooldowns && manaGemEffectAvailable) restrictManaUse = true;
+            if (segmentCooldowns) restrictManaUse = true;
             if (calculationOptions.UnlimitedMana)
             {
                 restrictManaUse = false;
@@ -1577,13 +1577,13 @@ namespace Rawr.Mage
                         //lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
                         lp.SetCostUnsafe(column, 0.0);
                         if (needsDisplayCalculations) tpsList.Add(tps);
-                        /*if (segmentCooldowns && flameCapAvailable)
+                        if (segmentCooldowns)
                         {
                             foreach (SegmentConstraint constraint in rowSegmentManaGem)
                             {
-                                if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 60.0);
+                                if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                             }
-                        }*/
+                        }
                         if (restrictManaUse)
                         {
                             for (int ss = segment; ss < segmentList.Count - 1; ss++)
@@ -1719,10 +1719,6 @@ namespace Rawr.Mage
                                 if (state.FlameCap)
                                 {
                                     foreach (SegmentConstraint constraint in rowSegmentFlameCap)
-                                    {
-                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                                    }
-                                    foreach (SegmentConstraint constraint in rowSegmentManaGem)
                                     {
                                         if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                                     }
@@ -2233,9 +2229,12 @@ namespace Rawr.Mage
                     {
                         lp.SetRHSUnsafe(constraint.Row, 60.0);
                     }
+                }
+                if (calculationOptions.ManaGemEnabled)
+                {
                     foreach (SegmentConstraint constraint in rowSegmentManaGem)
                     {
-                        lp.SetRHSUnsafe(constraint.Row, 60.0);
+                        lp.SetRHSUnsafe(constraint.Row, 1.0);
                     }
                 }
                 // effect potion
@@ -2524,8 +2523,11 @@ namespace Rawr.Mage
                             list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                         }
                     }
-                    list = rowSegmentManaGem;
-                    cool = 120;
+                }
+                if (calculationOptions.ManaGemEnabled)
+                {
+                    List<SegmentConstraint> list = rowSegmentManaGem;
+                    double cool = 120;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
                         int maxs = segmentList.FindIndex(s => s.TimeEnd > segmentList[seg].TimeStart + cool + 0.00001) - 1;
@@ -2770,10 +2772,6 @@ namespace Rawr.Mage
                 if (state.FlameCap)
                 {
                     foreach (SegmentConstraint constraint in rowSegmentFlameCap)
-                    {
-                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                    }
-                    foreach (SegmentConstraint constraint in rowSegmentManaGem)
                     {
                         if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                     }
