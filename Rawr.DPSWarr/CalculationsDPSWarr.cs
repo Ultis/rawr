@@ -612,8 +612,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 mhHitsPerSecond = (bt.Activates + ww.Activates) / fightDuration * combatFactors.ProbMhYellowLand;
                 ohHitsPerSecond = (               ww.Activates) / fightDuration * combatFactors.ProbOhYellowLand;
             }else{mhHitsPerSecond = 1f / (1.5f + calcOpts.GetLatency()) * 0.9f * combatFactors.ProbMhYellowLand;}
-            if (combatFactors._c_mhItemSpeed > 0f) { mhHitsPerSecond += (1f / combatFactors.MH.Speed) * combatFactors.ProbMhWhiteLand; }
-            if (combatFactors._c_ohItemSpeed > 0f) { ohHitsPerSecond += (1f / combatFactors.OH.Speed) * combatFactors.ProbOhWhiteLand; }
+            // White Hits per second uses hasted numbers, not un-hasted
+            if (combatFactors._c_mhItemSpeed > 0f) { mhHitsPerSecond += (1f / combatFactors.MHSpeed) * combatFactors.ProbMhWhiteLand; }
+            if (combatFactors._c_ohItemSpeed > 0f) { ohHitsPerSecond += (1f / combatFactors.OHSpeed) * combatFactors.ProbOhWhiteLand; }
             
             float mhHitInterval    = 1f /  mhHitsPerSecond;
             float ohHitInterval    = 1f /  ohHitsPerSecond;
