@@ -114,7 +114,7 @@ namespace Rawr.Mage
         private int rowMoltenFuryManaGemEffect = -1;
         //private int rowHeroismDestructionPotion = -1;
         //private int rowIcyVeinsDestructionPotion = -1;
-        private int rowManaGemFlameCap = -1;
+        private int rowFlameCap = -1;
         private int rowMoltenFuryFlameCap = -1;
         //private int rowFlameCapDestructionPotion = -1;
         private int rowTrinket1 = -1;
@@ -870,7 +870,7 @@ namespace Rawr.Mage
                     }
                     if (combustionAvailable) AddSegmentTicks(ticks, 300.0);
                     if (drumsOfBattleAvailable) AddSegmentTicks(ticks, 120.0);
-                    if (flameCapAvailable || calculationOptions.ManaGemEnabled || manaGemEffectAvailable)
+                    if (calculationOptions.ManaGemEnabled || manaGemEffectAvailable)
                     {
                         ticks.Add(15.0); // get a better grasp on mana overflow
                         AddSegmentTicks(ticks, 60.0);
@@ -997,7 +997,7 @@ namespace Rawr.Mage
             }
             if (minimizeTime) needsTimeExtension = true;
 
-            if (segmentCooldowns && (flameCapAvailable || manaGemEffectAvailable)) restrictManaUse = true;
+            if (segmentCooldowns && manaGemEffectAvailable) restrictManaUse = true;
             if (calculationOptions.UnlimitedMana)
             {
                 restrictManaUse = false;
@@ -1041,7 +1041,7 @@ namespace Rawr.Mage
                 lp.SetRowScaleUnsafe(rowPotion, 40.0);
                 lp.SetRowScaleUnsafe(rowManaGemMax, 40.0);
                 lp.SetRowScaleUnsafe(rowManaPotion, 40.0);
-                lp.SetRowScaleUnsafe(rowManaGemFlameCap, 40.0);
+                lp.SetRowScaleUnsafe(rowFlameCap, 40.0);
                 lp.SetRowScaleUnsafe(rowCombustion, 10.0);
                 lp.SetRowScaleUnsafe(rowHeroismCombustion, 10.0);
                 lp.SetRowScaleUnsafe(rowMoltenFuryCombustion, 10.0);
@@ -1549,7 +1549,7 @@ namespace Rawr.Mage
                 #region Mana Gem
                 if (calculationOptions.ManaGemEnabled)
                 {
-                    int manaGemSegments = (segmentCooldowns && (flameCapAvailable || restrictManaUse)) ? segmentList.Count : 1;
+                    int manaGemSegments = (segmentCooldowns && restrictManaUse) ? segmentList.Count : 1;
                     if (segmentCooldowns && advancedConstraintsLevel >= 3)
                     {
                         calculationResult.MaxManaGem = 1 + (int)((calculationOptions.FightDuration - 1f) / 120f);
@@ -1570,20 +1570,20 @@ namespace Rawr.Mage
                         lp.SetElementUnsafe(rowManaRegen, column, manaGemRegen);
                         lp.SetElementUnsafe(rowManaGem, column, 1.0);
                         lp.SetElementUnsafe(rowManaGemMax, column, 1.0);
-                        lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0);
+                        //lp.SetElementUnsafe(rowFlameCap, column, 1.0);
                         lp.SetElementUnsafe(rowManaGemEffectActivation, column, -1.0);
                         lp.SetElementUnsafe(rowThreat, column, tps = -manaGemRegen * 0.5f * threatFactor);
                         calculationResult.ManaGemTps = tps;
                         //lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
                         lp.SetCostUnsafe(column, 0.0);
                         if (needsDisplayCalculations) tpsList.Add(tps);
-                        if (segmentCooldowns && flameCapAvailable)
+                        /*if (segmentCooldowns && flameCapAvailable)
                         {
                             foreach (SegmentConstraint constraint in rowSegmentManaGem)
                             {
                                 if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 60.0);
                             }
-                        }
+                        }*/
                         if (restrictManaUse)
                         {
                             for (int ss = segment; ss < segmentList.Count - 1; ss++)
@@ -1694,7 +1694,7 @@ namespace Rawr.Mage
                             lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
                             lp.SetElementUnsafe(rowDrumsOfBattleActivation, column, -1 / calculationResult.BaseGlobalCooldown);
                             lp.SetElementUnsafe(rowDrumsOfBattle, column, 1.0);
-                            if (state.FlameCap) lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0 / 40.0);
+                            if (state.FlameCap) lp.SetElementUnsafe(rowFlameCap, column, 1.0 / 40.0);
                             lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
                             if (needsDisplayCalculations) tpsList.Add(0.0);
                             if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
@@ -1834,7 +1834,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowArcanePower, column, calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown);
                     lp.SetElementUnsafe(rowIcyVeins, column, 20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0));
                     lp.SetElementUnsafe(rowMoltenFury, column, calculationOptions.MoltenFuryPercentage);
-                    lp.SetElementUnsafe(rowManaGemFlameCap, column, 1f / 120f);
+                    lp.SetElementUnsafe(rowFlameCap, column, 1f / 120f);
                     lp.SetElementUnsafe(rowTrinket1, column, trinket1Duration / trinket1Cooldown);
                     lp.SetElementUnsafe(rowTrinket2, column, trinket2Duration / trinket2Cooldown);
                     lp.SetElementUnsafe(rowManaGemEffect, column, manaGemEffectDuration / 120f);
@@ -2123,17 +2123,9 @@ namespace Rawr.Mage
             if (moltenFuryAvailable && manaGemEffectAvailable) lp.SetRHSUnsafe(rowMoltenFuryManaGemEffect, manaGemEffectDuration);
             //if (heroismAvailable) lp.SetRHSUnsafe(rowHeroismDestructionPotion, 15);
             //if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeinsDestructionPotion, dpivlength);
-            if (segmentCooldowns)
+            if (flameCapAvailable)
             {
-                lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : Math.Max(((int)((calculationOptions.FightDuration - 60.0) / 60.0)) * 0.5 + 1.5, calculationResult.MaxManaGem));
-            }
-            else if (flameCapAvailable && !(!useGlobalOptimizations && talents.SpellPower > 0))
-            {
-                lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : ((int)(calculationOptions.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0);
-            }
-            else
-            {
-                lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
+                lp.SetRHSUnsafe(rowFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : ((int)(calculationOptions.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0);
             }
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryFlameCap, 60);
             //lp.SetRHSUnsafe(rowFlameCapDestructionPotion, dpflamelength);
@@ -2361,7 +2353,7 @@ namespace Rawr.Mage
             if (moltenFuryAvailable && manaGemEffectAvailable) rowMoltenFuryManaGemEffect = rowCount++;
             //if (heroismAvailable && effectPotionAvailable) rowHeroismDestructionPotion = rowCount++;
             //if (icyVeinsAvailable && effectPotionAvailable) rowIcyVeinsDestructionPotion = rowCount++;
-            if (flameCapAvailable) rowManaGemFlameCap = rowCount++;
+            if (flameCapAvailable) rowFlameCap = rowCount++;
             if (moltenFuryAvailable && flameCapAvailable) rowMoltenFuryFlameCap = rowCount++;
             //if (flameCapAvailable && destructionPotionAvailable) rowFlameCapDestructionPotion = rowCount++;
             if (trinket1Available) rowTrinket1 = rowCount++;
@@ -2659,7 +2651,7 @@ namespace Rawr.Mage
             if (state.MoltenFury && state.ManaGemEffect) lp.SetElementUnsafe(rowMoltenFuryManaGemEffect, column, 1.0);
             //if (state.PotionOfWildMagic && state.Heroism) lp.SetElementUnsafe(rowHeroismDestructionPotion, column, 1.0);
             //if (state.PotionOfWildMagic && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsDestructionPotion, column, 1.0);
-            if (state.FlameCap) lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0 / 40.0);
+            if (state.FlameCap) lp.SetElementUnsafe(rowFlameCap, column, 1.0 / 40.0);
             if (state.MoltenFury && state.FlameCap) lp.SetElementUnsafe(rowMoltenFuryFlameCap, column, 1.0);
             //if (state.PotionOfWildMagic && state.FlameCap) lp.SetElementUnsafe(rowFlameCapDestructionPotion, column, 1.0);
             if (state.Trinket1) lp.SetElementUnsafe(rowTrinket1, column, 1.0);

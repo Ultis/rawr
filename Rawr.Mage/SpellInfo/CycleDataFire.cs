@@ -1333,7 +1333,7 @@ namespace Rawr.Mage
         private float HS;
         private float T8;
 
-        private bool maintainScorch;
+        private bool maintainScorch = false;
         private bool livingBombGlyph;
 
         private float LBDotCritRate;

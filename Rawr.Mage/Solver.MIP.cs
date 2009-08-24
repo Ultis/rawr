@@ -825,7 +825,7 @@ namespace Rawr.Mage
 
             if (segmentCooldowns && advancedConstraintsLevel >= 3)
             {
-                if (flameCapAvailable && !ValidateFlamecap()) return false;
+                //if (flameCapAvailable && !ValidateFlamecap()) return false;
                 if (!ValidateCycling()) return false;
                 if (!ValidateSupergroupCycles()) return false;
                 if (!ValidateSupergroupFragmentation()) return false;

@@ -2564,22 +2564,22 @@ namespace Rawr.Mage.SequenceReconstruction
                 bool forceGem = false;
                 bool forcePot = false;
                 t = 0;
-                double nextFlameCap = double.PositiveInfinity;
-                double nextFlameCapMin = double.PositiveInfinity;
+                //double nextFlameCap = double.PositiveInfinity;
+                //double nextFlameCapMin = double.PositiveInfinity;
                 double nextEffectPotion = double.PositiveInfinity;
                 double nextEffectPotionMin = double.PositiveInfinity;
                 for (i = 0; i < sequence.Count; i++)
                 {
                     double d = sequence[i].Duration;
                     if (sequence[i].IsManaPotionOrGem) d = 0;
-                    if (d > 0 && t >= gem)
+                    /*if (d > 0 && t >= gem)
                     {
                         if (sequence[i].CastingState != null && sequence[i].CastingState.FlameCap)
                         {
                             nextFlameCap = Math.Min(nextFlameCap, sequence[i].MaxTime);
                             nextFlameCapMin = Math.Min(nextFlameCapMin, sequence[i].MinTime);
                         }
-                    }
+                    }*/
                     if (d > 0 && t >= pot)
                     {
                         if (sequence[i].CastingState != null && (sequence[i].CastingState.PotionOfWildMagic || sequence[i].CastingState.PotionOfSpeed))
@@ -2590,7 +2590,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                     t += d;
                 }
-                if (gemTime > 0 && !double.IsPositiveInfinity(nextFlameCap))
+                /*if (gemTime > 0 && !double.IsPositiveInfinity(nextFlameCap))
                 {
                     if (gem > nextFlameCap - 120.0 + eps && gem < nextFlameCap)
                     {
@@ -2602,7 +2602,7 @@ namespace Rawr.Mage.SequenceReconstruction
                             potTime = 0.0;
                         }
                     }
-                }
+                }*/
                 if (potTime > 0 && !double.IsPositiveInfinity(nextEffectPotion))
                 {
                     if (pot > nextEffectPotion - 120.0 + eps && pot < nextEffectPotion)
@@ -2619,13 +2619,13 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (potTime > 0 && gemTime > 0)
                 {
                     // very special case for now, revisit later
-                    if (!double.IsPositiveInfinity(nextFlameCap))
+                    /*if (!double.IsPositiveInfinity(nextFlameCap))
                     {
                         if (gem <= nextFlameCap - 120.0 + eps && pot > gem - 30.0 && double.IsPositiveInfinity(nextEffectPotion)) forceGem = true;
-                    }
+                    }*/
                     if (!double.IsPositiveInfinity(nextEffectPotion))
                     {
-                        if (pot <= nextEffectPotion - 120.0 + eps && gem > pot - 30.0 && double.IsPositiveInfinity(nextFlameCap)) forcePot = true;
+                        if (pot <= nextEffectPotion - 120.0 + eps && gem > pot - 30.0/* && double.IsPositiveInfinity(nextFlameCap)*/) forcePot = true;
                     }
                 }
                 // if gem is activated then check for activations
@@ -2807,6 +2807,7 @@ namespace Rawr.Mage.SequenceReconstruction
             int gemCount = 0;
             double potionCooldown = 0;
             double gemCooldown = 0;
+            double flameCapCooldown = 0;
             double trinket1Cooldown = 0;
             double trinket2Cooldown = 0;
             bool heroismUsed = false;
@@ -2852,7 +2853,8 @@ namespace Rawr.Mage.SequenceReconstruction
             double coldsnapTimeMax = double.NegativeInfinity;
 
             bool potionWarning = false;
-            bool gemWarning = false;
+            //bool gemWarning = false;
+            bool flameCapWarning = false;
             bool trinket1warning = false;
             bool trinket2warning = false;
             bool apWarning = false;
@@ -2990,7 +2992,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         mana += (1 + BaseStats.BonusManaGem) * SequenceItem.Calculations.ManaGemValue;
                         gemCount++;
                         gemCooldown = 120;
-                        gemWarning = false;
+                        //gemWarning = false;
                         if (gemActivated)
                         {
                             manaGemEffectActive = true;
@@ -3188,18 +3190,18 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (state != null && state.FlameCap)
                     {
-                        if (gemCooldown > eps)
+                        if (flameCapCooldown > eps)
                         {
                             unexplained += duration;
-                            if (timing != null && !gemWarning) timing.AppendLine("WARNING: Flame Cap cooldown not ready!");
-                            gemWarning = true;
+                            if (timing != null && !flameCapWarning) timing.AppendLine("WARNING: Flame Cap cooldown not ready!");
+                            flameCapWarning = true;
                         }
                         else
                         {
                             if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Flame Cap (" + Math.Round(manabefore).ToString() + " mana)");
-                            gemCooldown = 180;
+                            flameCapCooldown = 180;
                             flameCapTime = time;
-                            gemWarning = false;
+                            flameCapWarning = false;
                             flameCapActive = true;
                         }
                     }
@@ -3784,6 +3786,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 weCooldown -= duration;
                 potionCooldown -= duration;
                 gemCooldown -= duration;
+                flameCapCooldown -= duration;
                 trinket1Cooldown -= duration;
                 trinket2Cooldown -= duration;
                 combustionCooldown -= duration;
