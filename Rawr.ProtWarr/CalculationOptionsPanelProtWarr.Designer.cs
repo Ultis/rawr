@@ -28,623 +28,613 @@ namespace Rawr.ProtWarr
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
-            this.labelTargetArmorDescription = new System.Windows.Forms.Label();
-            this.groupBoxWarriorSkills = new System.Windows.Forms.GroupBox();
-            this.checkBoxUseShieldBlock = new System.Windows.Forms.CheckBox();
-            this.labelShieldBlockUptime = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.trackBarShieldBlockUptime = new System.Windows.Forms.TrackBar();
-            this.labelBossAttack = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.trackBarBossAttackValue = new System.Windows.Forms.TrackBar();
-            this.labelBossAttackValue = new System.Windows.Forms.Label();
-            this.labelThreatScaleText = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.trackBarThreatScale = new System.Windows.Forms.TrackBar();
-            this.labelThreatScale = new System.Windows.Forms.Label();
-            this.trackBarMitigationScale = new System.Windows.Forms.TrackBar();
-            this.labelMitigationScale = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipDamageOutput = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.radioButtonDamageOutput = new System.Windows.Forms.RadioButton();
-            this.extendedToolTipBurstTime = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipMitigtionScale = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipTankPoints = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.radioButtonBurstTime = new System.Windows.Forms.RadioButton();
-            this.radioButtonTankPoints = new System.Windows.Forms.RadioButton();
-            this.radioButtonMitigationScale = new System.Windows.Forms.RadioButton();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipUseParryHaste = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.labelBossSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.checkBoxUseParryHaste = new System.Windows.Forms.CheckBox();
-            this.labelBossAttackSpeed = new System.Windows.Forms.Label();
-            this.trackBarBossAttackSpeed = new System.Windows.Forms.TrackBar();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.labelVigilanceThreat = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.labelVigilanceValue = new System.Windows.Forms.Label();
-            this.trackBarVigilanceValue = new System.Windows.Forms.TrackBar();
-            this.extendedToolTipUseVigilance = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.checkBoxUseVigilance = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
-            this.groupBoxWarriorSkills.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarShieldBlockUptime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarThreatScale)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).BeginInit();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarVigilanceValue)).BeginInit();
+            this.LB_TargetLevel = new System.Windows.Forms.Label();
+            this.CB_TargetLevel = new System.Windows.Forms.ComboBox();
+            this.GB_WarriorSkills = new System.Windows.Forms.GroupBox();
+            this.CB_UseShieldBlock = new System.Windows.Forms.CheckBox();
+            this.LB_ShieldBlockUptimeValue = new System.Windows.Forms.Label();
+            this.LB_ShieldBlockUptime = new System.Windows.Forms.Label();
+            this.Bar_ShieldBlockUptime = new System.Windows.Forms.TrackBar();
+            this.LB_BossAttack = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.Bar_BossAttackValue = new System.Windows.Forms.TrackBar();
+            this.LB_BossAttackValue = new System.Windows.Forms.Label();
+            this.LB_ThreatScaleText = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.Bar_ThreatScale = new System.Windows.Forms.TrackBar();
+            this.LB_ThreatScale = new System.Windows.Forms.Label();
+            this.Bar_MitigationScale = new System.Windows.Forms.TrackBar();
+            this.LB_MitigationScaleValue = new System.Windows.Forms.Label();
+            this.GB_Ranking = new System.Windows.Forms.GroupBox();
+            this.LB_DamageOutput = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.RB_DamageOutput = new System.Windows.Forms.RadioButton();
+            this.LB_BurstTime = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_MitigtionScale = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_TankPoints = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.RB_BurstTime = new System.Windows.Forms.RadioButton();
+            this.RB_TankPoints = new System.Windows.Forms.RadioButton();
+            this.RB_MitigationScale = new System.Windows.Forms.RadioButton();
+            this.GB_AttackerStats = new System.Windows.Forms.GroupBox();
+            this.LB_TargArmor = new System.Windows.Forms.Label();
+            this.CB_TargetArmor = new System.Windows.Forms.ComboBox();
+            this.LB_UseParryHaste = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_BossSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_UseParryHaste = new System.Windows.Forms.CheckBox();
+            this.LB_BossAttackSpeedValue = new System.Windows.Forms.Label();
+            this.Bar_BossAttackSpeed = new System.Windows.Forms.TrackBar();
+            this.GB_Vigilance = new System.Windows.Forms.GroupBox();
+            this.LB_VigilanceThreat = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_VigilanceValue = new System.Windows.Forms.Label();
+            this.Bar_VigilanceValue = new System.Windows.Forms.TrackBar();
+            this.LB_UseVigilance = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.CB_UseVigilance = new System.Windows.Forms.CheckBox();
+            this.GB_WarriorSkills.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_ShieldBlockUptime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_BossAttackValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_ThreatScale)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_MitigationScale)).BeginInit();
+            this.GB_Ranking.SuspendLayout();
+            this.GB_AttackerStats.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_BossAttackSpeed)).BeginInit();
+            this.GB_Vigilance.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_VigilanceValue)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
+            // LB_TargetLevel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(73, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Target Level: ";
+            this.LB_TargetLevel.AutoSize = true;
+            this.LB_TargetLevel.Location = new System.Drawing.Point(6, 16);
+            this.LB_TargetLevel.Name = "LB_TargetLevel";
+            this.LB_TargetLevel.Size = new System.Drawing.Size(73, 13);
+            this.LB_TargetLevel.TabIndex = 0;
+            this.LB_TargetLevel.Text = "Target Level: ";
             // 
-            // comboBoxTargetLevel
+            // CB_TargetLevel
             // 
-            this.comboBoxTargetLevel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.CB_TargetLevel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTargetLevel.FormattingEnabled = true;
-            this.comboBoxTargetLevel.Items.AddRange(new object[] {
+            this.CB_TargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TargetLevel.FormattingEnabled = true;
+            this.CB_TargetLevel.Items.AddRange(new object[] {
             "80",
             "81",
             "82",
             "83"});
-            this.comboBoxTargetLevel.Location = new System.Drawing.Point(86, 13);
-            this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-            this.comboBoxTargetLevel.Size = new System.Drawing.Size(272, 21);
-            this.comboBoxTargetLevel.TabIndex = 1;
-            this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            this.CB_TargetLevel.Location = new System.Drawing.Point(86, 13);
+            this.CB_TargetLevel.Name = "CB_TargetLevel";
+            this.CB_TargetLevel.Size = new System.Drawing.Size(161, 21);
+            this.CB_TargetLevel.TabIndex = 1;
+            this.CB_TargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // label2
+            // GB_WarriorSkills
             // 
-            this.label2.Location = new System.Drawing.Point(3, 165);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(83, 45);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Target Armor:  (Default: " + StatConversion.NPC_ARMOR[83-80].ToString() + ")";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // trackBarTargetArmor
-            // 
-            this.trackBarTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.GB_WarriorSkills.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarTargetArmor.LargeChange = 1000;
-            this.trackBarTargetArmor.Location = new System.Drawing.Point(86, 165);
-            this.trackBarTargetArmor.Maximum = 20000;
-            this.trackBarTargetArmor.Name = "trackBarTargetArmor";
-            this.trackBarTargetArmor.Size = new System.Drawing.Size(272, 45);
-            this.trackBarTargetArmor.SmallChange = 100;
-            this.trackBarTargetArmor.TabIndex = 2;
-            this.trackBarTargetArmor.TickFrequency = 1000;
-            this.trackBarTargetArmor.Value = 13100;
-            this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            this.GB_WarriorSkills.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.GB_WarriorSkills.Controls.Add(this.CB_UseShieldBlock);
+            this.GB_WarriorSkills.Controls.Add(this.LB_ShieldBlockUptimeValue);
+            this.GB_WarriorSkills.Controls.Add(this.LB_ShieldBlockUptime);
+            this.GB_WarriorSkills.Controls.Add(this.Bar_ShieldBlockUptime);
+            this.GB_WarriorSkills.Location = new System.Drawing.Point(3, 502);
+            this.GB_WarriorSkills.Name = "GB_WarriorSkills";
+            this.GB_WarriorSkills.Size = new System.Drawing.Size(254, 91);
+            this.GB_WarriorSkills.TabIndex = 4;
+            this.GB_WarriorSkills.TabStop = false;
+            this.GB_WarriorSkills.Text = "Warrior Skills";
+            this.GB_WarriorSkills.Visible = false;
             // 
-            // labelTargetArmorDescription
+            // CB_UseShieldBlock
             // 
-            this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.CB_UseShieldBlock.AutoSize = true;
+            this.CB_UseShieldBlock.Enabled = false;
+            this.CB_UseShieldBlock.Location = new System.Drawing.Point(86, 68);
+            this.CB_UseShieldBlock.Name = "CB_UseShieldBlock";
+            this.CB_UseShieldBlock.Size = new System.Drawing.Size(107, 17);
+            this.CB_UseShieldBlock.TabIndex = 5;
+            this.CB_UseShieldBlock.Text = "Use Shield Block";
+            this.CB_UseShieldBlock.UseVisualStyleBackColor = true;
+            this.CB_UseShieldBlock.CheckedChanged += new System.EventHandler(this.checkBoxUseShieldBlock_CheckedChanged);
+            // 
+            // LB_ShieldBlockUptimeValue
+            // 
+            this.LB_ShieldBlockUptimeValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTargetArmorDescription.Location = new System.Drawing.Point(92, 202);
-            this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
-            this.labelTargetArmorDescription.Size = new System.Drawing.Size(266, 34);
-            this.labelTargetArmorDescription.TabIndex = 0;
-            this.labelTargetArmorDescription.Text = "7700 Armor: Hydross, Lurker, Leotheras, Tidewalker, Al\'ar, Naj\'entus, Supremus, A" +
-                "kama, Gurtogg";
+            this.LB_ShieldBlockUptimeValue.AutoSize = true;
+            this.LB_ShieldBlockUptimeValue.Location = new System.Drawing.Point(92, 49);
+            this.LB_ShieldBlockUptimeValue.Name = "LB_ShieldBlockUptimeValue";
+            this.LB_ShieldBlockUptimeValue.Size = new System.Drawing.Size(33, 13);
+            this.LB_ShieldBlockUptimeValue.TabIndex = 0;
+            this.LB_ShieldBlockUptimeValue.Text = "100%";
             // 
-            // groupBoxWarriorSkills
+            // LB_ShieldBlockUptime
             // 
-            this.groupBoxWarriorSkills.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.LB_ShieldBlockUptime.Location = new System.Drawing.Point(3, 17);
+            this.LB_ShieldBlockUptime.Name = "LB_ShieldBlockUptime";
+            this.LB_ShieldBlockUptime.Size = new System.Drawing.Size(83, 45);
+            this.LB_ShieldBlockUptime.TabIndex = 0;
+            this.LB_ShieldBlockUptime.Text = "Shield Block Uptime %:";
+            this.LB_ShieldBlockUptime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // Bar_ShieldBlockUptime
+            // 
+            this.Bar_ShieldBlockUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxWarriorSkills.Controls.Add(this.checkBoxUseShieldBlock);
-            this.groupBoxWarriorSkills.Controls.Add(this.labelShieldBlockUptime);
-            this.groupBoxWarriorSkills.Controls.Add(this.label9);
-            this.groupBoxWarriorSkills.Controls.Add(this.trackBarShieldBlockUptime);
-            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 544);
-            this.groupBoxWarriorSkills.Name = "groupBoxWarriorSkills";
-            this.groupBoxWarriorSkills.Size = new System.Drawing.Size(364, 91);
-            this.groupBoxWarriorSkills.TabIndex = 4;
-            this.groupBoxWarriorSkills.TabStop = false;
-            this.groupBoxWarriorSkills.Text = "Warrior Skills";
-            this.groupBoxWarriorSkills.Visible = false;
+            this.Bar_ShieldBlockUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Bar_ShieldBlockUptime.Enabled = false;
+            this.Bar_ShieldBlockUptime.LargeChange = 10;
+            this.Bar_ShieldBlockUptime.Location = new System.Drawing.Point(86, 17);
+            this.Bar_ShieldBlockUptime.Maximum = 100;
+            this.Bar_ShieldBlockUptime.Name = "Bar_ShieldBlockUptime";
+            this.Bar_ShieldBlockUptime.Size = new System.Drawing.Size(161, 45);
+            this.Bar_ShieldBlockUptime.TabIndex = 2;
+            this.Bar_ShieldBlockUptime.TickFrequency = 10;
+            this.Bar_ShieldBlockUptime.Value = 100;
+            this.Bar_ShieldBlockUptime.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // checkBoxUseShieldBlock
+            // LB_BossAttack
             // 
-            this.checkBoxUseShieldBlock.AutoSize = true;
-            this.checkBoxUseShieldBlock.Enabled = false;
-            this.checkBoxUseShieldBlock.Location = new System.Drawing.Point(86, 68);
-            this.checkBoxUseShieldBlock.Name = "checkBoxUseShieldBlock";
-            this.checkBoxUseShieldBlock.Size = new System.Drawing.Size(107, 17);
-            this.checkBoxUseShieldBlock.TabIndex = 5;
-            this.checkBoxUseShieldBlock.Text = "Use Shield Block";
-            this.checkBoxUseShieldBlock.UseVisualStyleBackColor = true;
-            this.checkBoxUseShieldBlock.CheckedChanged += new System.EventHandler(this.checkBoxUseShieldBlock_CheckedChanged);
+            this.LB_BossAttack.Location = new System.Drawing.Point(3, 67);
+            this.LB_BossAttack.Name = "LB_BossAttack";
+            this.LB_BossAttack.Size = new System.Drawing.Size(83, 45);
+            this.LB_BossAttack.TabIndex = 0;
+            this.LB_BossAttack.Text = "Base Attack: * (Default: 60000)";
+            this.LB_BossAttack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LB_BossAttack.ToolTipText = "Base attacker damage before armor.";
             // 
-            // labelShieldBlockUptime
+            // Bar_BossAttackValue
             // 
-            this.labelShieldBlockUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.Bar_BossAttackValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelShieldBlockUptime.AutoSize = true;
-            this.labelShieldBlockUptime.Location = new System.Drawing.Point(92, 49);
-            this.labelShieldBlockUptime.Name = "labelShieldBlockUptime";
-            this.labelShieldBlockUptime.Size = new System.Drawing.Size(33, 13);
-            this.labelShieldBlockUptime.TabIndex = 0;
-            this.labelShieldBlockUptime.Text = "100%";
+            this.Bar_BossAttackValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Bar_BossAttackValue.LargeChange = 5000;
+            this.Bar_BossAttackValue.Location = new System.Drawing.Point(86, 67);
+            this.Bar_BossAttackValue.Maximum = 100000;
+            this.Bar_BossAttackValue.Minimum = 500;
+            this.Bar_BossAttackValue.Name = "Bar_BossAttackValue";
+            this.Bar_BossAttackValue.Size = new System.Drawing.Size(161, 45);
+            this.Bar_BossAttackValue.SmallChange = 500;
+            this.Bar_BossAttackValue.TabIndex = 2;
+            this.Bar_BossAttackValue.TickFrequency = 5000;
+            this.Bar_BossAttackValue.Value = 60000;
+            this.Bar_BossAttackValue.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // label9
+            // LB_BossAttackValue
             // 
-            this.label9.Location = new System.Drawing.Point(3, 17);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(83, 45);
-            this.label9.TabIndex = 0;
-            this.label9.Text = "Shield Block Uptime %:";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // trackBarShieldBlockUptime
-            // 
-            this.trackBarShieldBlockUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.LB_BossAttackValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarShieldBlockUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarShieldBlockUptime.Enabled = false;
-            this.trackBarShieldBlockUptime.LargeChange = 10;
-            this.trackBarShieldBlockUptime.Location = new System.Drawing.Point(86, 17);
-            this.trackBarShieldBlockUptime.Maximum = 100;
-            this.trackBarShieldBlockUptime.Name = "trackBarShieldBlockUptime";
-            this.trackBarShieldBlockUptime.Size = new System.Drawing.Size(272, 45);
-            this.trackBarShieldBlockUptime.TabIndex = 2;
-            this.trackBarShieldBlockUptime.TickFrequency = 10;
-            this.trackBarShieldBlockUptime.Value = 100;
-            this.trackBarShieldBlockUptime.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            this.LB_BossAttackValue.AutoSize = true;
+            this.LB_BossAttackValue.Location = new System.Drawing.Point(92, 99);
+            this.LB_BossAttackValue.Name = "LB_BossAttackValue";
+            this.LB_BossAttackValue.Size = new System.Drawing.Size(37, 13);
+            this.LB_BossAttackValue.TabIndex = 0;
+            this.LB_BossAttackValue.Text = "60000";
             // 
-            // labelBossAttack
+            // LB_ThreatScaleText
             // 
-            this.labelBossAttack.Location = new System.Drawing.Point(3, 43);
-            this.labelBossAttack.Name = "labelBossAttack";
-            this.labelBossAttack.Size = new System.Drawing.Size(83, 45);
-            this.labelBossAttack.TabIndex = 0;
-            this.labelBossAttack.Text = "Base Attack: * (Default: 60000)";
-            this.labelBossAttack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelBossAttack.ToolTipText = "Base attacker damage before armor.";
-            // 
-            // trackBarBossAttackValue
-            // 
-            this.trackBarBossAttackValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarBossAttackValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarBossAttackValue.LargeChange = 5000;
-            this.trackBarBossAttackValue.Location = new System.Drawing.Point(86, 43);
-            this.trackBarBossAttackValue.Maximum = 100000;
-            this.trackBarBossAttackValue.Minimum = 500;
-            this.trackBarBossAttackValue.Name = "trackBarBossAttackValue";
-            this.trackBarBossAttackValue.Size = new System.Drawing.Size(272, 45);
-            this.trackBarBossAttackValue.SmallChange = 500;
-            this.trackBarBossAttackValue.TabIndex = 2;
-            this.trackBarBossAttackValue.TickFrequency = 5000;
-            this.trackBarBossAttackValue.Value = 60000;
-            this.trackBarBossAttackValue.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-            // 
-            // labelBossAttackValue
-            // 
-            this.labelBossAttackValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelBossAttackValue.AutoSize = true;
-            this.labelBossAttackValue.Location = new System.Drawing.Point(92, 75);
-            this.labelBossAttackValue.Name = "labelBossAttackValue";
-            this.labelBossAttackValue.Size = new System.Drawing.Size(37, 13);
-            this.labelBossAttackValue.TabIndex = 0;
-            this.labelBossAttackValue.Text = "60000";
-            // 
-            // labelThreatScaleText
-            // 
-            this.labelThreatScaleText.Location = new System.Drawing.Point(6, 16);
-            this.labelThreatScaleText.Name = "labelThreatScaleText";
-            this.labelThreatScaleText.Size = new System.Drawing.Size(80, 45);
-            this.labelThreatScaleText.TabIndex = 0;
-            this.labelThreatScaleText.Text = "Threat Scale: * (Default: 1.0)";
-            this.labelThreatScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelThreatScaleText.ToolTipText = "Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurat" +
+            this.LB_ThreatScaleText.Location = new System.Drawing.Point(6, 16);
+            this.LB_ThreatScaleText.Name = "LB_ThreatScaleText";
+            this.LB_ThreatScaleText.Size = new System.Drawing.Size(80, 45);
+            this.LB_ThreatScaleText.TabIndex = 0;
+            this.LB_ThreatScaleText.Text = "Threat Scale: * (Default: 1.0)";
+            this.LB_ThreatScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LB_ThreatScaleText.ToolTipText = "Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurat" +
                 "e changes";
             // 
-            // trackBarThreatScale
+            // Bar_ThreatScale
             // 
-            this.trackBarThreatScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.Bar_ThreatScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarThreatScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarThreatScale.Location = new System.Drawing.Point(86, 16);
-            this.trackBarThreatScale.Maximum = 30;
-            this.trackBarThreatScale.Name = "trackBarThreatScale";
-            this.trackBarThreatScale.Size = new System.Drawing.Size(272, 45);
-            this.trackBarThreatScale.TabIndex = 2;
-            this.trackBarThreatScale.Value = 10;
-            this.trackBarThreatScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            this.Bar_ThreatScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Bar_ThreatScale.Location = new System.Drawing.Point(86, 16);
+            this.Bar_ThreatScale.Maximum = 30;
+            this.Bar_ThreatScale.Name = "Bar_ThreatScale";
+            this.Bar_ThreatScale.Size = new System.Drawing.Size(161, 45);
+            this.Bar_ThreatScale.TabIndex = 2;
+            this.Bar_ThreatScale.Value = 10;
+            this.Bar_ThreatScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // labelThreatScale
+            // LB_ThreatScale
             // 
-            this.labelThreatScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.LB_ThreatScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelThreatScale.AutoSize = true;
-            this.labelThreatScale.Location = new System.Drawing.Point(92, 48);
-            this.labelThreatScale.Name = "labelThreatScale";
-            this.labelThreatScale.Size = new System.Drawing.Size(22, 13);
-            this.labelThreatScale.TabIndex = 0;
-            this.labelThreatScale.Text = "1.0";
+            this.LB_ThreatScale.AutoSize = true;
+            this.LB_ThreatScale.Location = new System.Drawing.Point(92, 48);
+            this.LB_ThreatScale.Name = "LB_ThreatScale";
+            this.LB_ThreatScale.Size = new System.Drawing.Size(22, 13);
+            this.LB_ThreatScale.TabIndex = 0;
+            this.LB_ThreatScale.Text = "1.0";
             // 
-            // trackBarMitigationScale
+            // Bar_MitigationScale
             // 
-            this.trackBarMitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.Bar_MitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarMitigationScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarMitigationScale.Location = new System.Drawing.Point(86, 67);
-            this.trackBarMitigationScale.Maximum = 30;
-            this.trackBarMitigationScale.Name = "trackBarMitigationScale";
-            this.trackBarMitigationScale.Size = new System.Drawing.Size(272, 45);
-            this.trackBarMitigationScale.TabIndex = 2;
-            this.trackBarMitigationScale.Value = 10;
-            this.trackBarMitigationScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            this.Bar_MitigationScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Bar_MitigationScale.Location = new System.Drawing.Point(86, 67);
+            this.Bar_MitigationScale.Maximum = 30;
+            this.Bar_MitigationScale.Name = "Bar_MitigationScale";
+            this.Bar_MitigationScale.Size = new System.Drawing.Size(161, 45);
+            this.Bar_MitigationScale.TabIndex = 2;
+            this.Bar_MitigationScale.Value = 10;
+            this.Bar_MitigationScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // labelMitigationScale
+            // LB_MitigationScaleValue
             // 
-            this.labelMitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.LB_MitigationScaleValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelMitigationScale.AutoSize = true;
-            this.labelMitigationScale.Location = new System.Drawing.Point(92, 99);
-            this.labelMitigationScale.Name = "labelMitigationScale";
-            this.labelMitigationScale.Size = new System.Drawing.Size(22, 13);
-            this.labelMitigationScale.TabIndex = 0;
-            this.labelMitigationScale.Text = "1.0";
+            this.LB_MitigationScaleValue.AutoSize = true;
+            this.LB_MitigationScaleValue.Location = new System.Drawing.Point(92, 99);
+            this.LB_MitigationScaleValue.Name = "LB_MitigationScaleValue";
+            this.LB_MitigationScaleValue.Size = new System.Drawing.Size(22, 13);
+            this.LB_MitigationScaleValue.TabIndex = 0;
+            this.LB_MitigationScaleValue.Text = "1.0";
             // 
-            // groupBox1
+            // GB_Ranking
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.GB_Ranking.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.extendedToolTipDamageOutput);
-            this.groupBox1.Controls.Add(this.radioButtonDamageOutput);
-            this.groupBox1.Controls.Add(this.extendedToolTipBurstTime);
-            this.groupBox1.Controls.Add(this.extendedToolTipMitigtionScale);
-            this.groupBox1.Controls.Add(this.extendedToolTipTankPoints);
-            this.groupBox1.Controls.Add(this.radioButtonBurstTime);
-            this.groupBox1.Controls.Add(this.radioButtonTankPoints);
-            this.groupBox1.Controls.Add(this.labelThreatScale);
-            this.groupBox1.Controls.Add(this.trackBarThreatScale);
-            this.groupBox1.Controls.Add(this.labelMitigationScale);
-            this.groupBox1.Controls.Add(this.labelThreatScaleText);
-            this.groupBox1.Controls.Add(this.trackBarMitigationScale);
-            this.groupBox1.Controls.Add(this.radioButtonMitigationScale);
-            this.groupBox1.Location = new System.Drawing.Point(3, 245);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(364, 199);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Ranking System";
+            this.GB_Ranking.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.GB_Ranking.Controls.Add(this.LB_DamageOutput);
+            this.GB_Ranking.Controls.Add(this.RB_DamageOutput);
+            this.GB_Ranking.Controls.Add(this.LB_BurstTime);
+            this.GB_Ranking.Controls.Add(this.LB_MitigtionScale);
+            this.GB_Ranking.Controls.Add(this.LB_TankPoints);
+            this.GB_Ranking.Controls.Add(this.RB_BurstTime);
+            this.GB_Ranking.Controls.Add(this.RB_TankPoints);
+            this.GB_Ranking.Controls.Add(this.LB_ThreatScale);
+            this.GB_Ranking.Controls.Add(this.Bar_ThreatScale);
+            this.GB_Ranking.Controls.Add(this.LB_MitigationScaleValue);
+            this.GB_Ranking.Controls.Add(this.LB_ThreatScaleText);
+            this.GB_Ranking.Controls.Add(this.Bar_MitigationScale);
+            this.GB_Ranking.Controls.Add(this.RB_MitigationScale);
+            this.GB_Ranking.Location = new System.Drawing.Point(3, 203);
+            this.GB_Ranking.Name = "GB_Ranking";
+            this.GB_Ranking.Size = new System.Drawing.Size(254, 199);
+            this.GB_Ranking.TabIndex = 5;
+            this.GB_Ranking.TabStop = false;
+            this.GB_Ranking.Text = "Ranking System";
             // 
-            // extendedToolTipDamageOutput
+            // LB_DamageOutput
             // 
-            this.extendedToolTipDamageOutput.Location = new System.Drawing.Point(108, 176);
-            this.extendedToolTipDamageOutput.Name = "extendedToolTipDamageOutput";
-            this.extendedToolTipDamageOutput.Size = new System.Drawing.Size(96, 18);
-            this.extendedToolTipDamageOutput.TabIndex = 14;
-            this.extendedToolTipDamageOutput.Text = "Damage Output *";
-            this.extendedToolTipDamageOutput.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipDamageOutput.ToolTipText = "Scale based only on potential DPS output.";
-            this.extendedToolTipDamageOutput.Click += new System.EventHandler(this.extendedToolTipDamageOutput_Click);
+            this.LB_DamageOutput.Location = new System.Drawing.Point(108, 176);
+            this.LB_DamageOutput.Name = "LB_DamageOutput";
+            this.LB_DamageOutput.Size = new System.Drawing.Size(96, 18);
+            this.LB_DamageOutput.TabIndex = 14;
+            this.LB_DamageOutput.Text = "Damage Output *";
+            this.LB_DamageOutput.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_DamageOutput.ToolTipText = "Scale based only on potential DPS output.";
+            this.LB_DamageOutput.Click += new System.EventHandler(this.extendedToolTipDamageOutput_Click);
             // 
-            // radioButtonDamageOutput
+            // RB_DamageOutput
             // 
-            this.radioButtonDamageOutput.AutoSize = true;
-            this.radioButtonDamageOutput.Location = new System.Drawing.Point(95, 179);
-            this.radioButtonDamageOutput.Name = "radioButtonDamageOutput";
-            this.radioButtonDamageOutput.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonDamageOutput.TabIndex = 13;
-            this.radioButtonDamageOutput.UseVisualStyleBackColor = true;
+            this.RB_DamageOutput.AutoSize = true;
+            this.RB_DamageOutput.Location = new System.Drawing.Point(95, 179);
+            this.RB_DamageOutput.Name = "RB_DamageOutput";
+            this.RB_DamageOutput.Size = new System.Drawing.Size(14, 13);
+            this.RB_DamageOutput.TabIndex = 13;
+            this.RB_DamageOutput.UseVisualStyleBackColor = true;
             // 
-            // extendedToolTipBurstTime
+            // LB_BurstTime
             // 
-            this.extendedToolTipBurstTime.Location = new System.Drawing.Point(108, 158);
-            this.extendedToolTipBurstTime.Name = "extendedToolTipBurstTime";
-            this.extendedToolTipBurstTime.Size = new System.Drawing.Size(96, 16);
-            this.extendedToolTipBurstTime.TabIndex = 12;
-            this.extendedToolTipBurstTime.Text = "Burst Time *";
-            this.extendedToolTipBurstTime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipBurstTime.ToolTipText = "Scale based on the average time an event will occur which has a chance to burst d" +
+            this.LB_BurstTime.Location = new System.Drawing.Point(108, 158);
+            this.LB_BurstTime.Name = "LB_BurstTime";
+            this.LB_BurstTime.Size = new System.Drawing.Size(96, 16);
+            this.LB_BurstTime.TabIndex = 12;
+            this.LB_BurstTime.Text = "Burst Time *";
+            this.LB_BurstTime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_BurstTime.ToolTipText = "Scale based on the average time an event will occur which has a chance to burst d" +
                 "own the player.";
-            this.extendedToolTipBurstTime.Click += new System.EventHandler(this.extendedToolTipBurstTime_Click);
+            this.LB_BurstTime.Click += new System.EventHandler(this.extendedToolTipBurstTime_Click);
             // 
-            // extendedToolTipMitigtionScale
+            // LB_MitigtionScale
             // 
-            this.extendedToolTipMitigtionScale.Location = new System.Drawing.Point(108, 120);
-            this.extendedToolTipMitigtionScale.Name = "extendedToolTipMitigtionScale";
-            this.extendedToolTipMitigtionScale.Size = new System.Drawing.Size(96, 15);
-            this.extendedToolTipMitigtionScale.TabIndex = 11;
-            this.extendedToolTipMitigtionScale.Text = "Mitigation Scale *";
-            this.extendedToolTipMitigtionScale.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipMitigtionScale.ToolTipText = "Customizable scale that allows you to weight mitigation vs. effective health. (De" +
+            this.LB_MitigtionScale.Location = new System.Drawing.Point(108, 120);
+            this.LB_MitigtionScale.Name = "LB_MitigtionScale";
+            this.LB_MitigtionScale.Size = new System.Drawing.Size(96, 15);
+            this.LB_MitigtionScale.TabIndex = 11;
+            this.LB_MitigtionScale.Text = "Mitigation Scale *";
+            this.LB_MitigtionScale.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_MitigtionScale.ToolTipText = "Customizable scale that allows you to weight mitigation vs. effective health. (De" +
                 "fault)";
-            this.extendedToolTipMitigtionScale.Click += new System.EventHandler(this.extendedToolTipMitigtionScale_Click);
+            this.LB_MitigtionScale.Click += new System.EventHandler(this.extendedToolTipMitigtionScale_Click);
             // 
-            // extendedToolTipTankPoints
+            // LB_TankPoints
             // 
-            this.extendedToolTipTankPoints.Location = new System.Drawing.Point(108, 141);
-            this.extendedToolTipTankPoints.Name = "extendedToolTipTankPoints";
-            this.extendedToolTipTankPoints.Size = new System.Drawing.Size(96, 13);
-            this.extendedToolTipTankPoints.TabIndex = 9;
-            this.extendedToolTipTankPoints.Text = "TankPoints *";
-            this.extendedToolTipTankPoints.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipTankPoints.ToolTipText = "Scale based on the average amount of unmitigated base damage needed to kill the p" +
+            this.LB_TankPoints.Location = new System.Drawing.Point(108, 141);
+            this.LB_TankPoints.Name = "LB_TankPoints";
+            this.LB_TankPoints.Size = new System.Drawing.Size(96, 13);
+            this.LB_TankPoints.TabIndex = 9;
+            this.LB_TankPoints.Text = "TankPoints *";
+            this.LB_TankPoints.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_TankPoints.ToolTipText = "Scale based on the average amount of unmitigated base damage needed to kill the p" +
                 "layer.";
-            this.extendedToolTipTankPoints.Click += new System.EventHandler(this.extendedToolTipTankPoints_Click);
+            this.LB_TankPoints.Click += new System.EventHandler(this.extendedToolTipTankPoints_Click);
             // 
-            // radioButtonBurstTime
+            // RB_BurstTime
             // 
-            this.radioButtonBurstTime.AutoSize = true;
-            this.radioButtonBurstTime.Location = new System.Drawing.Point(95, 160);
-            this.radioButtonBurstTime.Name = "radioButtonBurstTime";
-            this.radioButtonBurstTime.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonBurstTime.TabIndex = 10;
-            this.radioButtonBurstTime.UseVisualStyleBackColor = true;
-            this.radioButtonBurstTime.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
+            this.RB_BurstTime.AutoSize = true;
+            this.RB_BurstTime.Location = new System.Drawing.Point(95, 160);
+            this.RB_BurstTime.Name = "RB_BurstTime";
+            this.RB_BurstTime.Size = new System.Drawing.Size(14, 13);
+            this.RB_BurstTime.TabIndex = 10;
+            this.RB_BurstTime.UseVisualStyleBackColor = true;
+            this.RB_BurstTime.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
-            // radioButtonTankPoints
+            // RB_TankPoints
             // 
-            this.radioButtonTankPoints.AutoSize = true;
-            this.radioButtonTankPoints.Location = new System.Drawing.Point(95, 141);
-            this.radioButtonTankPoints.Name = "radioButtonTankPoints";
-            this.radioButtonTankPoints.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonTankPoints.TabIndex = 9;
-            this.radioButtonTankPoints.UseVisualStyleBackColor = true;
-            this.radioButtonTankPoints.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
+            this.RB_TankPoints.AutoSize = true;
+            this.RB_TankPoints.Location = new System.Drawing.Point(95, 141);
+            this.RB_TankPoints.Name = "RB_TankPoints";
+            this.RB_TankPoints.Size = new System.Drawing.Size(14, 13);
+            this.RB_TankPoints.TabIndex = 9;
+            this.RB_TankPoints.UseVisualStyleBackColor = true;
+            this.RB_TankPoints.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
-            // radioButtonMitigationScale
+            // RB_MitigationScale
             // 
-            this.radioButtonMitigationScale.AutoSize = true;
-            this.radioButtonMitigationScale.Checked = true;
-            this.radioButtonMitigationScale.Location = new System.Drawing.Point(95, 122);
-            this.radioButtonMitigationScale.Name = "radioButtonMitigationScale";
-            this.radioButtonMitigationScale.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonMitigationScale.TabIndex = 8;
-            this.radioButtonMitigationScale.TabStop = true;
-            this.radioButtonMitigationScale.UseVisualStyleBackColor = true;
-            this.radioButtonMitigationScale.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
+            this.RB_MitigationScale.AutoSize = true;
+            this.RB_MitigationScale.Checked = true;
+            this.RB_MitigationScale.Location = new System.Drawing.Point(95, 122);
+            this.RB_MitigationScale.Name = "RB_MitigationScale";
+            this.RB_MitigationScale.Size = new System.Drawing.Size(14, 13);
+            this.RB_MitigationScale.TabIndex = 8;
+            this.RB_MitigationScale.TabStop = true;
+            this.RB_MitigationScale.UseVisualStyleBackColor = true;
+            this.RB_MitigationScale.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
-            // groupBox2
+            // GB_AttackerStats
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.GB_AttackerStats.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.extendedToolTipUseParryHaste);
-            this.groupBox2.Controls.Add(this.labelBossSpeed);
-            this.groupBox2.Controls.Add(this.checkBoxUseParryHaste);
-            this.groupBox2.Controls.Add(this.labelBossAttackSpeed);
-            this.groupBox2.Controls.Add(this.trackBarBossAttackSpeed);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.comboBoxTargetLevel);
-            this.groupBox2.Controls.Add(this.labelBossAttack);
-            this.groupBox2.Controls.Add(this.labelTargetArmorDescription);
-            this.groupBox2.Controls.Add(this.labelBossAttackValue);
-            this.groupBox2.Controls.Add(this.trackBarTargetArmor);
-            this.groupBox2.Controls.Add(this.trackBarBossAttackValue);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Location = new System.Drawing.Point(3, 3);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(364, 236);
-            this.groupBox2.TabIndex = 7;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Attacker Stats";
+            this.GB_AttackerStats.Controls.Add(this.LB_TargArmor);
+            this.GB_AttackerStats.Controls.Add(this.CB_TargetArmor);
+            this.GB_AttackerStats.Controls.Add(this.LB_UseParryHaste);
+            this.GB_AttackerStats.Controls.Add(this.LB_BossSpeed);
+            this.GB_AttackerStats.Controls.Add(this.CB_UseParryHaste);
+            this.GB_AttackerStats.Controls.Add(this.LB_BossAttackSpeedValue);
+            this.GB_AttackerStats.Controls.Add(this.Bar_BossAttackSpeed);
+            this.GB_AttackerStats.Controls.Add(this.LB_TargetLevel);
+            this.GB_AttackerStats.Controls.Add(this.CB_TargetLevel);
+            this.GB_AttackerStats.Controls.Add(this.LB_BossAttack);
+            this.GB_AttackerStats.Controls.Add(this.LB_BossAttackValue);
+            this.GB_AttackerStats.Controls.Add(this.Bar_BossAttackValue);
+            this.GB_AttackerStats.Location = new System.Drawing.Point(3, 3);
+            this.GB_AttackerStats.Name = "GB_AttackerStats";
+            this.GB_AttackerStats.Size = new System.Drawing.Size(254, 194);
+            this.GB_AttackerStats.TabIndex = 7;
+            this.GB_AttackerStats.TabStop = false;
+            this.GB_AttackerStats.Text = "Attacker Stats";
             // 
-            // extendedToolTipUseParryHaste
+            // LB_TargArmor
             // 
-            this.extendedToolTipUseParryHaste.Location = new System.Drawing.Point(111, 144);
-            this.extendedToolTipUseParryHaste.Name = "extendedToolTipUseParryHaste";
-            this.extendedToolTipUseParryHaste.Size = new System.Drawing.Size(134, 14);
-            this.extendedToolTipUseParryHaste.TabIndex = 8;
-            this.extendedToolTipUseParryHaste.Text = "Use Parry Haste *";
-            this.extendedToolTipUseParryHaste.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipUseParryHaste.ToolTipText = "Calculates the adjusted attacker speed based on parry hasting. May not be applica" +
+            this.LB_TargArmor.AutoSize = true;
+            this.LB_TargArmor.Location = new System.Drawing.Point(5, 43);
+            this.LB_TargArmor.Name = "LB_TargArmor";
+            this.LB_TargArmor.Size = new System.Drawing.Size(71, 13);
+            this.LB_TargArmor.TabIndex = 9;
+            this.LB_TargArmor.Text = "Target Armor:";
+            this.LB_TargArmor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // CB_TargetArmor
+            // 
+            this.CB_TargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_TargetArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_TargetArmor.FormattingEnabled = true;
+            this.CB_TargetArmor.Items.AddRange(new object[] {
+            "10643",
+            "10338",
+            "10034",
+            "9729"});
+            this.CB_TargetArmor.Location = new System.Drawing.Point(86, 40);
+            this.CB_TargetArmor.Name = "CB_TargetArmor";
+            this.CB_TargetArmor.Size = new System.Drawing.Size(161, 21);
+            this.CB_TargetArmor.TabIndex = 10;
+            this.CB_TargetArmor.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // LB_UseParryHaste
+            // 
+            this.LB_UseParryHaste.Location = new System.Drawing.Point(101, 168);
+            this.LB_UseParryHaste.Name = "LB_UseParryHaste";
+            this.LB_UseParryHaste.Size = new System.Drawing.Size(93, 14);
+            this.LB_UseParryHaste.TabIndex = 8;
+            this.LB_UseParryHaste.Text = "Use Parry Haste *";
+            this.LB_UseParryHaste.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_UseParryHaste.ToolTipText = "Calculates the adjusted attacker speed based on parry hasting. May not be applica" +
                 "ble on all bosses. (e.g. Patchwerk does not parry haste.)";
             // 
-            // labelBossSpeed
+            // LB_BossSpeed
             // 
-            this.labelBossSpeed.Location = new System.Drawing.Point(3, 94);
-            this.labelBossSpeed.Name = "labelBossSpeed";
-            this.labelBossSpeed.Size = new System.Drawing.Size(83, 45);
-            this.labelBossSpeed.TabIndex = 4;
-            this.labelBossSpeed.Text = "Attack Speed: * (Default: 2.00s)";
-            this.labelBossSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelBossSpeed.ToolTipText = "How often (in seconds) the boss attacks with the damage above.";
+            this.LB_BossSpeed.Location = new System.Drawing.Point(3, 118);
+            this.LB_BossSpeed.Name = "LB_BossSpeed";
+            this.LB_BossSpeed.Size = new System.Drawing.Size(83, 45);
+            this.LB_BossSpeed.TabIndex = 4;
+            this.LB_BossSpeed.Text = "Attack Speed: * (Default: 2.00s)";
+            this.LB_BossSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LB_BossSpeed.ToolTipText = "How often (in seconds) the boss attacks with the damage above.";
             // 
-            // checkBoxUseParryHaste
+            // CB_UseParryHaste
             // 
-            this.checkBoxUseParryHaste.AutoSize = true;
-            this.checkBoxUseParryHaste.Location = new System.Drawing.Point(95, 145);
-            this.checkBoxUseParryHaste.Name = "checkBoxUseParryHaste";
-            this.checkBoxUseParryHaste.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.checkBoxUseParryHaste.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxUseParryHaste.TabIndex = 7;
-            this.checkBoxUseParryHaste.UseVisualStyleBackColor = true;
-            this.checkBoxUseParryHaste.CheckedChanged += new System.EventHandler(this.checkBoxUseParryHaste_CheckedChanged);
+            this.CB_UseParryHaste.AutoSize = true;
+            this.CB_UseParryHaste.Location = new System.Drawing.Point(86, 169);
+            this.CB_UseParryHaste.Name = "CB_UseParryHaste";
+            this.CB_UseParryHaste.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.CB_UseParryHaste.Size = new System.Drawing.Size(15, 14);
+            this.CB_UseParryHaste.TabIndex = 7;
+            this.CB_UseParryHaste.UseVisualStyleBackColor = true;
+            this.CB_UseParryHaste.CheckedChanged += new System.EventHandler(this.checkBoxUseParryHaste_CheckedChanged);
             // 
-            // labelBossAttackSpeed
+            // LB_BossAttackSpeedValue
             // 
-            this.labelBossAttackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.LB_BossAttackSpeedValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelBossAttackSpeed.AutoSize = true;
-            this.labelBossAttackSpeed.Location = new System.Drawing.Point(92, 126);
-            this.labelBossAttackSpeed.Name = "labelBossAttackSpeed";
-            this.labelBossAttackSpeed.Size = new System.Drawing.Size(28, 13);
-            this.labelBossAttackSpeed.TabIndex = 3;
-            this.labelBossAttackSpeed.Text = "2.00";
+            this.LB_BossAttackSpeedValue.AutoSize = true;
+            this.LB_BossAttackSpeedValue.Location = new System.Drawing.Point(92, 150);
+            this.LB_BossAttackSpeedValue.Name = "LB_BossAttackSpeedValue";
+            this.LB_BossAttackSpeedValue.Size = new System.Drawing.Size(28, 13);
+            this.LB_BossAttackSpeedValue.TabIndex = 3;
+            this.LB_BossAttackSpeedValue.Text = "2.00";
             // 
-            // trackBarBossAttackSpeed
+            // Bar_BossAttackSpeed
             // 
-            this.trackBarBossAttackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.Bar_BossAttackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarBossAttackSpeed.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarBossAttackSpeed.LargeChange = 4;
-            this.trackBarBossAttackSpeed.Location = new System.Drawing.Point(86, 94);
-            this.trackBarBossAttackSpeed.Maximum = 20;
-            this.trackBarBossAttackSpeed.Minimum = 1;
-            this.trackBarBossAttackSpeed.Name = "trackBarBossAttackSpeed";
-            this.trackBarBossAttackSpeed.Size = new System.Drawing.Size(272, 45);
-            this.trackBarBossAttackSpeed.TabIndex = 5;
-            this.trackBarBossAttackSpeed.Value = 8;
-            this.trackBarBossAttackSpeed.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            this.Bar_BossAttackSpeed.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Bar_BossAttackSpeed.LargeChange = 4;
+            this.Bar_BossAttackSpeed.Location = new System.Drawing.Point(86, 118);
+            this.Bar_BossAttackSpeed.Maximum = 20;
+            this.Bar_BossAttackSpeed.Minimum = 1;
+            this.Bar_BossAttackSpeed.Name = "Bar_BossAttackSpeed";
+            this.Bar_BossAttackSpeed.Size = new System.Drawing.Size(161, 45);
+            this.Bar_BossAttackSpeed.TabIndex = 5;
+            this.Bar_BossAttackSpeed.Value = 8;
+            this.Bar_BossAttackSpeed.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // groupBox3
+            // GB_Vigilance
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.GB_Vigilance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Controls.Add(this.labelVigilanceThreat);
-            this.groupBox3.Controls.Add(this.labelVigilanceValue);
-            this.groupBox3.Controls.Add(this.trackBarVigilanceValue);
-            this.groupBox3.Controls.Add(this.extendedToolTipUseVigilance);
-            this.groupBox3.Controls.Add(this.checkBoxUseVigilance);
-            this.groupBox3.Location = new System.Drawing.Point(3, 450);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(364, 88);
-            this.groupBox3.TabIndex = 6;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Vigilance";
-            this.groupBox3.UseCompatibleTextRendering = true;
+            this.GB_Vigilance.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.GB_Vigilance.Controls.Add(this.LB_VigilanceThreat);
+            this.GB_Vigilance.Controls.Add(this.LB_VigilanceValue);
+            this.GB_Vigilance.Controls.Add(this.Bar_VigilanceValue);
+            this.GB_Vigilance.Controls.Add(this.LB_UseVigilance);
+            this.GB_Vigilance.Controls.Add(this.CB_UseVigilance);
+            this.GB_Vigilance.Location = new System.Drawing.Point(3, 408);
+            this.GB_Vigilance.MinimumSize = new System.Drawing.Size(244, 88);
+            this.GB_Vigilance.Name = "GB_Vigilance";
+            this.GB_Vigilance.Size = new System.Drawing.Size(254, 88);
+            this.GB_Vigilance.TabIndex = 6;
+            this.GB_Vigilance.TabStop = false;
+            this.GB_Vigilance.Text = "Vigilance";
+            this.GB_Vigilance.UseCompatibleTextRendering = true;
             // 
-            // labelVigilanceThreat
+            // LB_VigilanceThreat
             // 
-            this.labelVigilanceThreat.Location = new System.Drawing.Point(6, 34);
-            this.labelVigilanceThreat.Name = "labelVigilanceThreat";
-            this.labelVigilanceThreat.Size = new System.Drawing.Size(83, 45);
-            this.labelVigilanceThreat.TabIndex = 12;
-            this.labelVigilanceThreat.Text = "Target TPS: * (Default: 5000)";
-            this.labelVigilanceThreat.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelVigilanceThreat.ToolTipText = "Base friendly target TPS to use.";
+            this.LB_VigilanceThreat.Location = new System.Drawing.Point(6, 34);
+            this.LB_VigilanceThreat.Name = "LB_VigilanceThreat";
+            this.LB_VigilanceThreat.Size = new System.Drawing.Size(83, 45);
+            this.LB_VigilanceThreat.TabIndex = 12;
+            this.LB_VigilanceThreat.Text = "Target TPS: * (Default: 5000)";
+            this.LB_VigilanceThreat.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LB_VigilanceThreat.ToolTipText = "Base friendly target TPS to use.";
             // 
-            // labelVigilanceValue
+            // LB_VigilanceValue
             // 
-            this.labelVigilanceValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.LB_VigilanceValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelVigilanceValue.AutoSize = true;
-            this.labelVigilanceValue.Location = new System.Drawing.Point(95, 66);
-            this.labelVigilanceValue.Name = "labelVigilanceValue";
-            this.labelVigilanceValue.Size = new System.Drawing.Size(31, 13);
-            this.labelVigilanceValue.TabIndex = 11;
-            this.labelVigilanceValue.Text = "5000";
+            this.LB_VigilanceValue.AutoSize = true;
+            this.LB_VigilanceValue.Location = new System.Drawing.Point(95, 66);
+            this.LB_VigilanceValue.Name = "LB_VigilanceValue";
+            this.LB_VigilanceValue.Size = new System.Drawing.Size(31, 13);
+            this.LB_VigilanceValue.TabIndex = 11;
+            this.LB_VigilanceValue.Text = "5000";
             // 
-            // trackBarVigilanceValue
+            // Bar_VigilanceValue
             // 
-            this.trackBarVigilanceValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.Bar_VigilanceValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarVigilanceValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarVigilanceValue.LargeChange = 5000;
-            this.trackBarVigilanceValue.Location = new System.Drawing.Point(89, 34);
-            this.trackBarVigilanceValue.Maximum = 15000;
-            this.trackBarVigilanceValue.Minimum = 1000;
-            this.trackBarVigilanceValue.Name = "trackBarVigilanceValue";
-            this.trackBarVigilanceValue.Size = new System.Drawing.Size(272, 45);
-            this.trackBarVigilanceValue.SmallChange = 500;
-            this.trackBarVigilanceValue.TabIndex = 13;
-            this.trackBarVigilanceValue.TickFrequency = 500;
-            this.trackBarVigilanceValue.Value = 5000;
-            this.trackBarVigilanceValue.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            this.Bar_VigilanceValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Bar_VigilanceValue.LargeChange = 5000;
+            this.Bar_VigilanceValue.Location = new System.Drawing.Point(86, 34);
+            this.Bar_VigilanceValue.Maximum = 15000;
+            this.Bar_VigilanceValue.Minimum = 1000;
+            this.Bar_VigilanceValue.Name = "Bar_VigilanceValue";
+            this.Bar_VigilanceValue.Size = new System.Drawing.Size(161, 45);
+            this.Bar_VigilanceValue.SmallChange = 500;
+            this.Bar_VigilanceValue.TabIndex = 13;
+            this.Bar_VigilanceValue.TickFrequency = 500;
+            this.Bar_VigilanceValue.Value = 5000;
+            this.Bar_VigilanceValue.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // extendedToolTipUseVigilance
+            // LB_UseVigilance
             // 
-            this.extendedToolTipUseVigilance.Location = new System.Drawing.Point(111, 16);
-            this.extendedToolTipUseVigilance.Name = "extendedToolTipUseVigilance";
-            this.extendedToolTipUseVigilance.Size = new System.Drawing.Size(134, 14);
-            this.extendedToolTipUseVigilance.TabIndex = 10;
-            this.extendedToolTipUseVigilance.Text = "Use Vigilance Threat *";
-            this.extendedToolTipUseVigilance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipUseVigilance.ToolTipText = "Adds Vigilance threat to the total threat generation statistics if available.";
+            this.LB_UseVigilance.Location = new System.Drawing.Point(101, 16);
+            this.LB_UseVigilance.Name = "LB_UseVigilance";
+            this.LB_UseVigilance.Size = new System.Drawing.Size(127, 14);
+            this.LB_UseVigilance.TabIndex = 10;
+            this.LB_UseVigilance.Text = "Use Vigilance Threat *";
+            this.LB_UseVigilance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LB_UseVigilance.ToolTipText = "Adds Vigilance threat to the total threat generation statistics if available.";
             // 
-            // checkBoxUseVigilance
+            // CB_UseVigilance
             // 
-            this.checkBoxUseVigilance.AutoSize = true;
-            this.checkBoxUseVigilance.Checked = true;
-            this.checkBoxUseVigilance.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxUseVigilance.Location = new System.Drawing.Point(95, 17);
-            this.checkBoxUseVigilance.Name = "checkBoxUseVigilance";
-            this.checkBoxUseVigilance.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.checkBoxUseVigilance.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxUseVigilance.TabIndex = 9;
-            this.checkBoxUseVigilance.UseVisualStyleBackColor = true;
-            this.checkBoxUseVigilance.CheckedChanged += new System.EventHandler(this.checkBoxUseVigilance_CheckedChanged);
+            this.CB_UseVigilance.AutoSize = true;
+            this.CB_UseVigilance.Checked = true;
+            this.CB_UseVigilance.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CB_UseVigilance.Location = new System.Drawing.Point(86, 17);
+            this.CB_UseVigilance.Name = "CB_UseVigilance";
+            this.CB_UseVigilance.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.CB_UseVigilance.Size = new System.Drawing.Size(15, 14);
+            this.CB_UseVigilance.TabIndex = 9;
+            this.CB_UseVigilance.UseVisualStyleBackColor = true;
+            this.CB_UseVigilance.CheckedChanged += new System.EventHandler(this.checkBoxUseVigilance_CheckedChanged);
             // 
             // CalculationOptionsPanelProtWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.groupBoxWarriorSkills);
+            this.Controls.Add(this.GB_WarriorSkills);
+            this.Controls.Add(this.GB_Vigilance);
+            this.Controls.Add(this.GB_Ranking);
+            this.Controls.Add(this.GB_AttackerStats);
             this.Name = "CalculationOptionsPanelProtWarr";
-            this.Size = new System.Drawing.Size(370, 639);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
-            this.groupBoxWarriorSkills.ResumeLayout(false);
-            this.groupBoxWarriorSkills.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarShieldBlockUptime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarThreatScale)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarVigilanceValue)).EndInit();
+            this.Size = new System.Drawing.Size(260, 631);
+            this.GB_WarriorSkills.ResumeLayout(false);
+            this.GB_WarriorSkills.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_ShieldBlockUptime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_BossAttackValue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_ThreatScale)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_MitigationScale)).EndInit();
+            this.GB_Ranking.ResumeLayout(false);
+            this.GB_Ranking.PerformLayout();
+            this.GB_AttackerStats.ResumeLayout(false);
+            this.GB_AttackerStats.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_BossAttackSpeed)).EndInit();
+            this.GB_Vigilance.ResumeLayout(false);
+            this.GB_Vigilance.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_VigilanceValue)).EndInit();
             this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.ComboBox comboBoxTargetLevel;
-        private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.TrackBar trackBarTargetArmor;
-        private System.Windows.Forms.Label labelTargetArmorDescription;
-		private System.Windows.Forms.GroupBox groupBoxWarriorSkills;
-        private Rawr.CustomControls.ExtendedToolTipLabel labelBossAttack;
-		private System.Windows.Forms.TrackBar trackBarBossAttackValue;
-		private System.Windows.Forms.Label labelBossAttackValue;
-        private Rawr.CustomControls.ExtendedToolTipLabel labelThreatScaleText;
-		private System.Windows.Forms.TrackBar trackBarThreatScale;
-        private System.Windows.Forms.Label labelThreatScale;
-		private System.Windows.Forms.TrackBar trackBarMitigationScale;
-		private System.Windows.Forms.Label labelMitigationScale;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label labelShieldBlockUptime;
-        private System.Windows.Forms.TrackBar trackBarShieldBlockUptime;
-        private System.Windows.Forms.CheckBox checkBoxUseShieldBlock;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private Rawr.CustomControls.ExtendedToolTipLabel labelBossSpeed;
-        private System.Windows.Forms.Label labelBossAttackSpeed;
-        private System.Windows.Forms.TrackBar trackBarBossAttackSpeed;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipUseParryHaste;
-        private System.Windows.Forms.CheckBox checkBoxUseParryHaste;
-        private System.Windows.Forms.RadioButton radioButtonMitigationScale;
-        private System.Windows.Forms.RadioButton radioButtonBurstTime;
-        private System.Windows.Forms.RadioButton radioButtonTankPoints;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipTankPoints;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipBurstTime;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipMitigtionScale;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipDamageOutput;
-        private System.Windows.Forms.RadioButton radioButtonDamageOutput;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipUseVigilance;
-        private System.Windows.Forms.CheckBox checkBoxUseVigilance;
-        private Rawr.CustomControls.ExtendedToolTipLabel labelVigilanceThreat;
-        private System.Windows.Forms.Label labelVigilanceValue;
-        private System.Windows.Forms.TrackBar trackBarVigilanceValue;
+		private System.Windows.Forms.Label LB_TargetLevel;
+        private System.Windows.Forms.ComboBox CB_TargetLevel;
+		private System.Windows.Forms.GroupBox GB_WarriorSkills;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_BossAttack;
+		private System.Windows.Forms.TrackBar Bar_BossAttackValue;
+		private System.Windows.Forms.Label LB_BossAttackValue;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_ThreatScaleText;
+		private System.Windows.Forms.TrackBar Bar_ThreatScale;
+        private System.Windows.Forms.Label LB_ThreatScale;
+		private System.Windows.Forms.TrackBar Bar_MitigationScale;
+		private System.Windows.Forms.Label LB_MitigationScaleValue;
+        private System.Windows.Forms.Label LB_ShieldBlockUptime;
+        private System.Windows.Forms.Label LB_ShieldBlockUptimeValue;
+        private System.Windows.Forms.TrackBar Bar_ShieldBlockUptime;
+        private System.Windows.Forms.CheckBox CB_UseShieldBlock;
+        private System.Windows.Forms.GroupBox GB_Ranking;
+        private System.Windows.Forms.GroupBox GB_AttackerStats;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_BossSpeed;
+        private System.Windows.Forms.Label LB_BossAttackSpeedValue;
+        private System.Windows.Forms.TrackBar Bar_BossAttackSpeed;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_UseParryHaste;
+        private System.Windows.Forms.CheckBox CB_UseParryHaste;
+        private System.Windows.Forms.RadioButton RB_MitigationScale;
+        private System.Windows.Forms.RadioButton RB_BurstTime;
+        private System.Windows.Forms.RadioButton RB_TankPoints;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_TankPoints;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_BurstTime;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_MitigtionScale;
+        private System.Windows.Forms.GroupBox GB_Vigilance;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_DamageOutput;
+        private System.Windows.Forms.RadioButton RB_DamageOutput;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_UseVigilance;
+        private System.Windows.Forms.CheckBox CB_UseVigilance;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_VigilanceThreat;
+        private System.Windows.Forms.Label LB_VigilanceValue;
+        private System.Windows.Forms.TrackBar Bar_VigilanceValue;
+        public System.Windows.Forms.Label LB_TargArmor;
+        public System.Windows.Forms.ComboBox CB_TargetArmor;
 	}
 }
