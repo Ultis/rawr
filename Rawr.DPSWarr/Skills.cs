@@ -496,28 +496,34 @@ namespace Rawr.DPSWarr {
                 return retVal;
             }
             public virtual string GenTooltip(float acts, float ttldpsperc) {
-                float misses = GetXActs(AttackTableSelector.Missed , acts), missesPerc = misses/acts ;
-                float dodges = GetXActs(AttackTableSelector.Dodged , acts), dodgesPerc = dodges/acts ;
-                float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = parrys/acts ;
-                float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = blocks/acts ;
-                float crits  = GetXActs(AttackTableSelector.Crit   , acts), critsPerc  = crits /acts ;
-                float hits   = GetXActs(AttackTableSelector.Hit    , acts), hitsPerc   = hits  /acts ;
+                float misses = GetXActs(AttackTableSelector.Missed , acts), missesPerc = (acts == 0f ? 0f : misses/acts);
+                float dodges = GetXActs(AttackTableSelector.Dodged , acts), dodgesPerc = (acts == 0f ? 0f : dodges/acts);
+                float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys/acts);
+                float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = (acts == 0f ? 0f : blocks/acts);
+                float crits  = GetXActs(AttackTableSelector.Crit   , acts), critsPerc  = (acts == 0f ? 0f : crits /acts);
+                float hits   = GetXActs(AttackTableSelector.Hit    , acts), hitsPerc   = (acts == 0f ? 0f : hits  /acts);
+
+                bool showmisss =                 misses > 0f;
+                bool showdodge = CanBeDodged  && dodges > 0f;
+                bool showparry = CanBeParried && parrys > 0f;
+                bool showblock = CanBeBlocked && blocks > 0f;
                 
                 string tooltip = "*" + Name +
                     Environment.NewLine +   "Cast Time: "   + (CastTime != -1 ? CastTime.ToString() : "Instant")
                                         + ", CD: "          + (Cd       != -1 ? Cd.ToString()       : "None"   )
                                         + ", RageCost: "    + (RageCost != -1 ? RageCost.ToString() : "None"   ) +
-                    Environment.NewLine + Environment.NewLine + acts.ToString("000.0") + " Activates over Attack Table:" +
-                    Environment.NewLine + "- " + misses.ToString("000.0") + " : " + missesPerc.ToString("00.00%") + " : Missed " +
-    (CanBeDodged  ? Environment.NewLine + "- " + dodges.ToString("000.0") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged "  : "") +
-    (CanBeParried ? Environment.NewLine + "- " + parrys.ToString("000.0") + " : " + parrysPerc.ToString("00.00%") + " : Parried " : "") +
-    (CanBeBlocked ? Environment.NewLine + "- " + blocks.ToString("000.0") + " : " + blocksPerc.ToString("00.00%") + " : Blocked " : "") +
-                    Environment.NewLine + "- " + crits.ToString( "000.0") + " : " + critsPerc.ToString( "00.00%") + " : Crit " +
-                    Environment.NewLine + "- " + hits.ToString(  "000.0") + " : " + hitsPerc.ToString(  "00.00%") + " : Hit " +
-                    Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
-                    Environment.NewLine + "Targets Hit: " + (Targets != -1 ? Targets.ToString() : "None") +
-                    Environment.NewLine + "DPS: " + (GetDPS(acts) > 0 ? GetDPS(acts).ToString() : "None") +
-                    Environment.NewLine + "Percentage of Total DPS: " + (ttldpsperc > 0 ? ttldpsperc.ToString() : "None");
+                Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
+                (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed "  : "") +
+                (showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged "  : "") +
+                (showparry ? Environment.NewLine + "- " + parrys.ToString("000.00") + " : " + parrysPerc.ToString("00.00%") + " : Parried " : "") +
+                (showblock ? Environment.NewLine + "- " + blocks.ToString("000.00") + " : " + blocksPerc.ToString("00.00%") + " : Blocked " : "") +
+                             Environment.NewLine + "- " + crits.ToString( "000.00") + " : " + critsPerc.ToString( "00.00%") + " : Crit " +
+                             Environment.NewLine + "- " + hits.ToString(  "000.00") + " : " + hitsPerc.ToString(  "00.00%") + " : Hit " +
+                    Environment.NewLine +
+                    //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
+                    Environment.NewLine + "Targets Hit: " + (Targets != -1 ? Targets.ToString("0.00") : "None") +
+                    Environment.NewLine + "DPS: " + (GetDPS(acts) > 0 ? GetDPS(acts).ToString("0.00") : "None") +
+                    Environment.NewLine + "Percentage of Total DPS: " + (ttldpsperc > 0 ? ttldpsperc.ToString("00.00%") : "None");
 
                 return tooltip;
             }
@@ -871,6 +877,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeRange = true;
                 CanBeDodged = false;
                 CanBeParried = false;
+                CanBeBlocked = false;
                 Cd = 5f - (2f * Talents.UnrelentingAssault); // In Seconds
                 RageCost = 5f - (Talents.FocusedRage * 1f);
                 Targets += StatS.BonusTargets;
@@ -1012,7 +1019,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 MaxRange = WW.MaxRange; // In Yards
-                //Targets += StatS.BonusTargets; // Handled in WW
+                Targets = WW.Targets; // Handled in WW
                 Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
                 RageCost = 25f - (Talents.FocusedRage * 1f);
                 CastTime = 6f; // In Seconds // Channeled
@@ -1823,7 +1830,8 @@ namespace Rawr.DPSWarr {
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = false;
-                MaxRange = 30f; // In Yards 
+                MaxRange = 30f; // In Yards
+                Targets += StatS.BonusTargets;
                 Cd = 5f * 60f; // In Seconds
                 Duration = 10f;
                 CastTime = 1.5f; // In Seconds
@@ -1874,6 +1882,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeRange = true;
                 Duration = 15f; // In Seconds
                 RageCost = 10f - (Talents.FocusedRage * 1f);
+                Targets += StatS.BonusTargets;
                 StanceOkFury = StanceOkArms = true;
                 Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { AttackPower = 0f, /*TargetMoveSpeedReducPerc = 0.50f,*/ },
@@ -2008,6 +2017,7 @@ namespace Rawr.DPSWarr {
                 StanceOkArms = true;
                 ReqMeleeRange = true;
                 ReqMeleeWeap = true;
+                Targets += StatS.BonusTargets;
                 Cd = 5f*60f - Talents.ImprovedDisciplines * 30f;
                 Duration = 12f;
                 StackCap = 20f;
