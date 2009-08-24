@@ -230,7 +230,9 @@ namespace Rawr.DPSWarr {
         public float GlanceChance { get { return StatConversion.WHITE_GLANCE_CHANCE_CAP[CalcOpts.TargetLevel-80]; } }
         #endregion
         #region Block
-        public float BlockChanceCap { get { return StatConversion.WHITE_BLOCK_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
+        // DPSWarr Dev Team has decided to remove Block from the Attack Table
+        // until evidence can show specific bosses that do block
+        public float BlockChanceCap { get { return 0f/*StatConversion.WHITE_BLOCK_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]*/; } }
         private float MhBlockChance { get { return (float)Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap); } }
         private float OhBlockChance { get { return (float)Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap); } }
         #endregion

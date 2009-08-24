@@ -186,9 +186,9 @@
             this.CB_TargArmor.FormattingEnabled = true;
             this.CB_TargArmor.Items.AddRange(new object[] {
             "10643",
-            "10900",
-            "12000",
-            "13083"});
+            "10338",
+            "10034",
+            "9729"});
             this.CB_TargArmor.Location = new System.Drawing.Point(137, 33);
             this.CB_TargArmor.Name = "CB_TargArmor";
             this.CB_TargArmor.Size = new System.Drawing.Size(148, 21);

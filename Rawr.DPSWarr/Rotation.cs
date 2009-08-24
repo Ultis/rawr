@@ -768,7 +768,9 @@ namespace Rawr.DPSWarr {
                     (float)Math.Abs(_OP_GCDs - oldOPGCDs) > 0.1f ||
                     (float)Math.Abs(_SD_GCDs - oldSDGCDs) > 0.1f ||
                     (float)Math.Abs(_SL_GCDs - oldSLGCDs) > 0.1f ||
-                    (Talents.SwordSpecialization > 0 && (float)Math.Abs(_SS_Acts - oldSSActs) > 0.1f)
+                    (Talents.SwordSpecialization > 0
+                        && CombatFactors.MH.Type == ItemType.TwoHandSword
+                        && (float)Math.Abs(_SS_Acts - oldSSActs) > 0.1f)
                   )
             {
                 // Reset a couple of items so we can keep iterating
@@ -799,7 +801,7 @@ namespace Rawr.DPSWarr {
                 GCDsused += (float)Math.Min(NumGCDs, _SL_GCDs);
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
 
-                if (Talents.SwordSpecialization > 0) {
+                if (Talents.SwordSpecialization > 0 && CombatFactors.MH.Type == ItemType.TwoHandSword) {
                     //Sword Spec, Doesn't eat GCDs
                     float SS_Acts = SS.GetActivates(NumGCDs, _Thunder_GCDs + _Ham_GCDs
                                                            + _Shatt_GCDs
@@ -817,7 +819,7 @@ namespace Rawr.DPSWarr {
             _OP_DPS = OP.GetDPS(_OP_GCDs);
             _SD_DPS = SD.GetDPS(_SD_GCDs);
             _SL_DPS = SL.GetDPS(_SL_GCDs);
-            _SS_DPS = SS.GetDPS(_SS_Acts);
+            if (Talents.SwordSpecialization > 0 && CombatFactors.MH.Type == ItemType.TwoHandSword) { _SS_DPS = SS.GetDPS(_SS_Acts); } else { _SS_DPS = 0f; }
             DPS_TTL += _OP_DPS + _SD_DPS + _SL_DPS + _SS_DPS;
 
             // Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
@@ -825,10 +827,9 @@ namespace Rawr.DPSWarr {
             // After iterating how many Overrides can be done and still do other abilities, then do the white dps
             Skills.OnAttack Which = null;
             bool ok = false;
+            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]) { ok = true; Which = HS; }
             if (CalcOpts.MultipleTargets) {
                 if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_]) { ok = true; Which = CL; }
-            }else{
-                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]) { ok = true; Which = HS; }
             }
 
             WhiteAtks.Slam_Freq = _SL_GCDs;
