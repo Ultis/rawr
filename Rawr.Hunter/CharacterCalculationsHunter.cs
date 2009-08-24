@@ -124,6 +124,7 @@ namespace Rawr.Hunter
         #region Crit Stats
         public double critRateOverall {get; set;}
         public double critBase {get; set;}
+        public double critFromRacial { get; set; }
         public double critFromAgi {get; set;}
         public double critFromRating {get; set;}
         public double critFromProcRating { get; set; }
@@ -315,6 +316,7 @@ namespace Rawr.Hunter
 			               critBase.ToString("P2") + " base crit \n" +
 			               critFromAgi.ToString("P2") + " from agility \n" +
 			               critFromRating.ToString("P2") + " from rating \n" +
+                           critFromRacial.ToString("P2") + " from racial \n" +
                            critFromProcRating.ToString("P2") + " from proc rating \n" +
                            critFromLethalShots.ToString("P2") + " from Lethal Shots\n" +
                            critFromKillerInstincts.ToString("P2") + " from Killer Instincts\n" +

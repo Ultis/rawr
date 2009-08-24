@@ -202,6 +202,13 @@ namespace Rawr.Hunter
 
         public double getSkillFrequency(PetAttacks skill)
         {
+            // if we're asking for the frequency of one of the 'always on' skills,
+            // and we have the talent for it, just return the cooldown.
+            if (skill == PetAttacks.Rabid) return (options.petRabid > 0) ? skillLibrary[PetAttacks.Rabid].cooldown : 0;
+            if (skill == PetAttacks.CallOfTheWild) return (options.petCallOfTheWild > 0) ? skillLibrary[PetAttacks.CallOfTheWild].cooldown : 0;
+            if (skill == PetAttacks.Bullheaded) return (options.petBullheaded > 0) ? skillLibrary[PetAttacks.Bullheaded].cooldown : 0;
+            if (skill == PetAttacks.RoarOfRecovery) return (options.petRoarOfRecovery > 0) ? skillLibrary[PetAttacks.RoarOfRecovery].cooldown : 0;
+
             foreach (PetSkillInstance S in skills)
             {
                 if (S.skillType == skill) return S.frequency;

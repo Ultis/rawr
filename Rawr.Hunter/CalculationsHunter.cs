@@ -829,7 +829,7 @@ namespace Rawr.Hunter
             calculatedStats.hasteFromRacial = 0;
             if (character.Race == CharacterRace.Troll && calculatedStats.berserk.freq > 0)
             {
-                double berserkingUseFreq = options.emulateSpreadsheetBugs ? calculatedStats.berserk.cooldown : calculatedStats.berserk.freq; // still an issue in 91c
+                double berserkingUseFreq = calculatedStats.berserk.freq;
                 calculatedStats.hasteFromRacial = 0.2 * CalcUptime(calculatedStats.berserk.duration, berserkingUseFreq, options);
             }
 
@@ -1123,6 +1123,21 @@ namespace Rawr.Hunter
             calculatedStats.BasicStats.CritRating = statsBaseGear.CritRating + statsBuffs.CritRating + statsBaseGear.RangedCritRating;
             calculatedStats.critFromRating = (calculatedStats.BasicStats.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT) / 100;
 
+            calculatedStats.critFromRacial = 0;
+            if (character.Ranged != null &&
+                ((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
+                (character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow)))
+            {
+                if (options.emulateSpreadsheetBugs)
+                {
+                    calculatedStats.critFromRacial = (Math.Floor(HunterRatings.CRIT_RATING_PER_PERCENT) / HunterRatings.CRIT_RATING_PER_PERCENT) / 100;
+                }
+                else
+                {
+                    calculatedStats.critFromRacial = 0.01;
+                }
+            }
+
             double critProcRating = 0;
 
             // DK Anguish
@@ -1174,6 +1189,7 @@ namespace Rawr.Hunter
 
             double critHitPercent = 0 // FinalCrit
                 + calculatedStats.critBase
+                + calculatedStats.critFromRacial
                 + calculatedStats.critFromAgi
                 + calculatedStats.critFromRating
                 + calculatedStats.critFromProcRating
@@ -1255,6 +1271,19 @@ namespace Rawr.Hunter
 
             #endregion
 
+            // pet - part 1
+            #region Pet MPS/Timing Calculations
+
+            // this first block needs to run before the mana adjustments code,
+            // since kill command effects mana usage.
+
+            float baseMana = statsRace.Mana;
+            calculatedStats.baseMana = statsRace.Mana;
+
+            calculatedStats.pet.calculateTimings();
+
+            #endregion
+
             // target debuffs
             #region Target Debuffs
 
@@ -1288,19 +1317,6 @@ namespace Rawr.Hunter
             calculatedStats.targetDebuffsArmor = 1 - targetDebuffsArmor;
             calculatedStats.targetDebuffsNature = 1 + targetDebuffsNature;
             calculatedStats.targetDebuffsPetDamage = 1 + targetDebuffsPetDamage;
-
-            #endregion
-
-            // pet - part 1
-            #region Pet MPS/Timing Calculations
-
-            // this first block needs to run before the mana adjustments code,
-            // since kill command effects mana usage.
-
-            float baseMana = statsRace.Mana;
-            calculatedStats.baseMana = statsRace.Mana;
-
-            calculatedStats.pet.calculateTimings();
 
             #endregion
 
@@ -2015,7 +2031,7 @@ namespace Rawr.Hunter
             double serpentStingT9CritAdjust = 1;
             if (character.ActiveBuffsContains("Windrunner's Pursuit 2 Piece Bonus"))
             {
-                serpentStingT9CritAdjust = 1 + baseCritDamage * critHitPercent;
+                serpentStingT9CritAdjust = 1.0 + (0.5 * metaGemCritDamage) * critHitPercent;
             }
 
             // damage_adjust = (sting_talent_adjusts ~ noxious stings) * improved_stings * improved_tracking
@@ -2312,21 +2328,23 @@ namespace Rawr.Hunter
             }
 
             double oldKillShotDPS = calculatedStats.killShot.dps;
-            double newKillDhotDPS = killShotPossibleFreq > 0 ? calculatedStats.killShot.damage / killShotPossibleFreq : 0;
+            double newKillShotDPS = killShotPossibleFreq > 0 ? calculatedStats.killShot.damage / killShotPossibleFreq : 0;
+            newKillShotDPS *= (1 - viperDamagePenalty);
 
             double oldSteadyShotDPS = calculatedStats.steadyShot.dps;
             double newSteadyShotDPS = steadyShotNewFreq > 0 ? calculatedStats.steadyShot.damage / steadyShotNewFreq : 0;
+            newSteadyShotDPS *= (1 - viperDamagePenalty);
 
-            double killShotDPSGain = newKillDhotDPS > 0 ? (newKillDhotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0;
+            double killShotDPSGain = newKillShotDPS > 0 ? (newKillShotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0;
 
             double timeSpentSubTwenty = 0;
             if (options.duration > 0 && options.timeSpentSub20 > 0) timeSpentSubTwenty = (double)options.timeSpentSub20 / (double)options.duration;
             if (options.bossHPPercentage < 0.2) timeSpentSubTwenty = 1;
 
-            double killShotSubGain = timeSpentSubTwenty * killShotDPSGain * (1 - viperDamagePenalty);
+            double killShotSubGain = timeSpentSubTwenty * killShotDPSGain;
 
             calculatedStats.killShotSub20NewSteadyFreq = steadyShotNewFreq;
-            calculatedStats.killShotSub20NewDPS = newKillDhotDPS;
+            calculatedStats.killShotSub20NewDPS = newKillShotDPS;
             calculatedStats.killShotSub20NewSteadyDPS = newSteadyShotDPS;
             calculatedStats.killShotSub20Gain = killShotDPSGain;
             calculatedStats.killShotSub20TimeSpent = timeSpentSubTwenty;
@@ -2455,13 +2473,6 @@ namespace Rawr.Hunter
                 chanceMiss = Math.Max(0f, 0.05f + 0.005f * (options.TargetLevel - 80f) - hitBonus);
 
             statsTotal.PhysicalHit = 1.0f - chanceMiss;
-
- 			if (character.Ranged != null &&
-				((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
-				(character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow)))
-			{
-                statsTotal.CritRating += (float)Math.Floor(HunterRatings.CRIT_RATING_PER_PERCENT);
-			}
 
             statsTotal.PhysicalCrit = (float)(HunterRatings.BASE_CRIT_PERCENT + (statsTotal.Agility / HunterRatings.AGILITY_PER_CRIT / 100.0f)
                                 + (statsTotal.CritRating / HunterRatings.CRIT_RATING_PER_PERCENT / 100.0f)

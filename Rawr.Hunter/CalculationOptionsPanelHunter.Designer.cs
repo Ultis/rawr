@@ -1630,7 +1630,7 @@
             this.chkEmulateBugs.Name = "chkEmulateBugs";
             this.chkEmulateBugs.Size = new System.Drawing.Size(218, 17);
             this.chkEmulateBugs.TabIndex = 10;
-            this.chkEmulateBugs.Text = "Emulate known bugs in spreadsheet 91c";
+            this.chkEmulateBugs.Text = "Emulate known bugs in spreadsheet 91e";
             this.chkEmulateBugs.UseVisualStyleBackColor = true;
             this.chkEmulateBugs.CheckedChanged += new System.EventHandler(this.chkEmulateBugs_CheckedChanged);
             // 

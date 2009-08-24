@@ -279,7 +279,7 @@ namespace Rawr.Hunter
                             {
                                 // do nothing if we don't want to prioritise Aimed/Arcane or Multi-Shot
                             }
-                            else
+                            else if (s.check_gcd)
                             {
                                 bool result = true;
 

@@ -385,17 +385,17 @@ namespace Rawr.Hunter
 
                 if (family == PetFamilyTree.Cunning)
                 {
-                    comboBoxPet1.Items.Add(PetAttacks.RoarOfRecovery);
+                    //comboBoxPet1.Items.Add(PetAttacks.RoarOfRecovery);
                     comboBoxPet1.Items.Add(PetAttacks.RoarOfSacrifice);
                     comboBoxPet1.Items.Add(PetAttacks.WolverineBite);
-                    comboBoxPet1.Items.Add(PetAttacks.Bullheaded);
+                    //comboBoxPet1.Items.Add(PetAttacks.Bullheaded);
                 }
 
                 if (family == PetFamilyTree.Ferocity)
                 {
                     comboBoxPet1.Items.Add(PetAttacks.LickYourWounds);
-                    comboBoxPet1.Items.Add(PetAttacks.CallOfTheWild);
-                    comboBoxPet1.Items.Add(PetAttacks.Rabid);
+                    //comboBoxPet1.Items.Add(PetAttacks.CallOfTheWild);
+                    //comboBoxPet1.Items.Add(PetAttacks.Rabid);
                 }
 
                 if (family == PetFamilyTree.Tenacity)
