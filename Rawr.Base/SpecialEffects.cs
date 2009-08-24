@@ -858,7 +858,7 @@ namespace Rawr {
                 int spellPower = int.Parse(match.Groups["spellPower"].Value);
                 // Sundial of the Exiled (NOT FOR HEALERS) / Flare of the Heavens
                 stats.SpellPowerFor10SecOnHit_10_45 += spellPower;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 45, 0.1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 45, 0.1f));
             }
             else if (line.StartsWith("Your spells have a chance to increase your spell power by 765 for 10 sec."))
             {
