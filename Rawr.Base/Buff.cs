@@ -1373,7 +1373,7 @@ namespace Rawr
                 Stats = { Stamina = 20, Intellect = 20, Spirit = 20, Strength = 20, Agility = 20 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
                 Improvements = { new Buff { Name = "Guru's Elixir (Mixology)", Stats = { 
-					Stamina = 6, Intellect = 6, Spirit = 6, Strength = 6, Agility = 6} } }
+					Stamina = 8, Intellect = 8, Spirit = 8, Strength = 8, Agility = 8} } }
             });
             defaultBuffs.Add(new Buff()
             {
