@@ -823,7 +823,7 @@ namespace Rawr.DPSWarr {
                     float GCDHitsPerSecond = 1f / LatentGCD * 0.9f; // 0.9 as a dummy method of saying some GCDs aren't melee attacks
                     float WhtHitsPerSecond = 1f / Whiteattacks.MhEffectiveSpeed
                         + (combatFactors.OH != null ? 1f / Whiteattacks.OhEffectiveSpeed : 0f)
-                        + 1f / (FightDuration / SS.Activates);
+                        + 1f / (FightDuration / SS.GetActivates(FightDuration/LatentGCD, FightDuration/(LatentGCD*0.9f)));
 
                     GCDHitsPerSecond *= combatFactors.ProbMhYellowLand;
                     WhtHitsPerSecond *= combatFactors.ProbMhWhiteLand;
