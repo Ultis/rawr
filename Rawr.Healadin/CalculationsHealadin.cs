@@ -33,20 +33,20 @@ namespace Rawr.Healadin
 					new GemmingTemplate() { Model = "Healadin", Group = "Uncommon",
 						RedId = luminous[0], YellowId = brilliant[0], BlueId = dazzling[0], PrismaticId = brilliant[0], MetaId = insightful },
 
-					new GemmingTemplate() { Model = "Healadin", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "Healadin", Group = "Rare",
 						RedId = brilliant[1], YellowId = brilliant[1], BlueId = brilliant[1], PrismaticId = brilliant[1], MetaId = insightful },
-					new GemmingTemplate() { Model = "Healadin", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "Healadin", Group = "Rare",
 						RedId = luminous[1], YellowId = brilliant[1], BlueId = dazzling[1], PrismaticId = brilliant[1], MetaId = insightful },
 						
-					new GemmingTemplate() { Model = "Healadin", Group = "Epic",
+					new GemmingTemplate() { Model = "Healadin", Group = "Epic", Enabled = true,
 						RedId = brilliant[2], YellowId = brilliant[2], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
-					new GemmingTemplate() { Model = "Healadin", Group = "Epic",
+					new GemmingTemplate() { Model = "Healadin", Group = "Epic", Enabled = true,
 						RedId = luminous[2], YellowId = brilliant[2], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
 						
 					new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
-						RedId = brilliant[3], YellowId = brilliant[1], BlueId = brilliant[3], PrismaticId = brilliant[1], MetaId = insightful },
+						RedId = brilliant[2], YellowId = brilliant[3], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
 					new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
-						RedId = brilliant[3], YellowId = brilliant[3], BlueId = brilliant[3], PrismaticId = brilliant[3], MetaId = insightful },
+						RedId = luminous[2], YellowId = brilliant[3], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
 				};
             }
         }

@@ -76,6 +76,9 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Healadin\CalculationOptionsHealadin.cs">
+      <Link>CalculationOptionsHealadin.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Healadin\CalculationsHealadin.cs">
       <Link>CalculationsHealadin.cs</Link>
     </Compile>
@@ -91,7 +94,6 @@
     <Compile Include="..\..\Rawr.Healadin\Spell.cs">
       <Link>Spell.cs</Link>
     </Compile>
-    <Compile Include="CalculationOptionsHealadin.cs" />
     <Compile Include="CalculationOptionsPanelHealadin.xaml.cs">
       <DependentUpon>CalculationOptionsPanelHealadin.xaml</DependentUpon>
     </Compile>
