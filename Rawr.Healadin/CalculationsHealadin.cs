@@ -575,7 +575,30 @@ namespace Rawr.Healadin
                 + stats.ExpertiseRating + stats.Expertise + stats.BlockRating + stats.Block) > 0
                 || (stats.HitRating > 0 && isHitIrrelevant)
                 || (stats.Spirit > 0 && isSpiritIrrelevant);
-        } 
+        }
+
+        public override bool IsItemRelevant(Item item)
+        {
+            if (item.Slot == ItemSlot.Prismatic)
+            {
+                Stats stats = item.Stats;
+                bool wantedStats = HasWantedStats(stats);
+                bool maybeStats = HasMaybeStats(stats);
+                bool ignoreStats = HasIgnoreStats(stats);
+                bool survivalStats = HasSurvivalStats(stats);
+                bool specialEffect = false;
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (HasRelevantSpecialEffect(effect))
+                    {
+                        specialEffect = true;
+                        break;
+                    }
+                }
+                return wantedStats || specialEffect || maybeStats || survivalStats;
+            }
+            else return base.IsItemRelevant(item);
+        }
 
         public override bool IsBuffRelevant(Buff buff)
         {
