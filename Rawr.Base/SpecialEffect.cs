@@ -164,7 +164,7 @@ namespace Rawr
 
             protected override float Evaluate(float procChance, float interval)
             {
-                if (fightDuration <= effect.Duration)
+                /*if (fightDuration <= effect.Duration)
                 {
                     double n = fightDuration / interval;
                     double p = procChance;
@@ -205,7 +205,46 @@ namespace Rawr
                         x -= c;
                     }
                     return (float)(averageUptime / n);
+                }*/
+
+                double d = effect.Duration / interval;
+                double d2 = d * 0.5;
+                double n = fightDuration / interval;
+                double p = procChance;
+
+                double c = effect.Cooldown / interval;
+                if (discretizationCorrection)
+                {
+                    c += 0.5;
                 }
+                if (c < 1.0) c = 1.0;
+                double x = n;
+
+                const double w1 = 5.0 / 9.0;
+                const double w2 = 8.0 / 9.0;
+                const double k = 0.77459666924148337703585307995648;  //Math.Sqrt(3.0 / 5.0);
+                double dx = k * d2;
+
+                double averageUptime = 0.0;
+                int r = 1;
+                while (x > 0)
+                {
+                    // integrate_t=(x-duration)..x Ibeta(r, t, p) dt
+                    if (x - d > 0)
+                    {
+                        double tmid = x - d2;
+                        averageUptime += (w1 * SpecialFunction.Ibeta(r, tmid - dx, p) + w2 * SpecialFunction.Ibeta(r, tmid, p) + w1 * SpecialFunction.Ibeta(r, tmid + dx, p)) * d2;
+                    }
+                    else //if (x > 0)
+                    {
+                        double tmid = x * 0.5;
+                        double dt = k * tmid;
+                        averageUptime += (w1 * SpecialFunction.Ibeta(r, tmid - dt, p) + w2 * SpecialFunction.Ibeta(r, tmid, p) + w1 * SpecialFunction.Ibeta(r, tmid + dt, p)) * tmid;
+                    }
+                    r++;
+                    x -= c;
+                }
+                return (float)(averageUptime / n);
             }
         }
 
@@ -589,10 +628,26 @@ namespace Rawr
 
                     // activeTime[2*C+n] = p * (D + activeTime[C+n]) + (1 - p) * activeTime[2*C+n-1]
                     //                   = p * D + p * (p * D * K[n] + S[n] + (1 - p) ^ n * activeTime[C])
+
+
+                    // advanced calcs based on findings from average procs
+
+                    // Uptime(x) = sum_r=0..inf probability that (r+1)st proc happens between time x-duration and x
+                    // Uptime(x) = sum_r=0..inf Pr(NegBin(p,r+1) <= x - r * cooldown - 1) - Pr(NegBin(p,r+1) <= x - duration - r * cooldown - 1)
+                    // Uptime(x) = sum_r=0..inf Ibeta(r+1, x - r * cooldown, p) - Ibeta(r+1, x - duration - r * cooldown, p)
+
+                    // AvgTotalUptime(x) = integrate_t=0..x Uptime(t) dt
+                    // AvgTotalUptime(x) = integrate_t=0..x sum_r=0..inf Ibeta(r+1, t - r * cooldown, p) - Ibeta(r+1, t - duration - r * cooldown, p) dt
+                    // AvgTotalUptime(x) = sum_r=0..inf [integrate_t=0..x Ibeta(r+1, t - r * cooldown, p) - Ibeta(r+1, t - duration - r * cooldown, p)] dt
+                    // AvgTotalUptime(x) = sum_r=0..inf [integrate_w=0..(x-r * cooldown) Ibeta(r+1, w, p) dw - integrate_t=0..(x-duration - r * cooldown) Ibeta(r+1, w, p) dw]
+                    // AvgTotalUptime(x) = sum_r=0..inf integrate_w=(x-duration - r * cooldown)..(x-r * cooldown) Ibeta(r+1, w, p) dw
+                    // AvgTotalUptime(x) = sum_r=0..inf integrate_t=(x-duration)..x Ibeta(r+1, t - r*cooldown, p) dt
+
                     bool needsBeta = fightDuration < 10 * Cooldown;
                     if (triggerInterval > 0 && Mode == CalculationMode.Advanced && needsBeta)
                     {
-                        if (fightDuration <= Duration)
+                        // old calcs based on approximation from procs per second
+                        /*if (fightDuration <= Duration)
                         {
                             double n = fightDuration / triggerInterval;
                             double p = triggerChance * GetChance(attackSpeed);
@@ -632,7 +687,48 @@ namespace Rawr
                                 x -= c;
                             }
                             return (float)(averageUptime / n);
+                        }*/
+
+                        // new calcs based on gaussian integrator
+
+                        double d = Duration / triggerInterval;
+                        double d2 = d * 0.5;
+                        double n = fightDuration / triggerInterval;
+                        double p = triggerChance * GetChance(attackSpeed);
+
+                        double c = Cooldown / triggerInterval;
+                        if (discretizationCorrection)
+                        {
+                            c += 0.5;
                         }
+                        if (c < 1.0) c = 1.0;
+                        double x = n;
+
+                        const double w1 = 5.0 / 9.0;
+                        const double w2 = 8.0 / 9.0;
+                        const double k = 0.77459666924148337703585307995648;  //Math.Sqrt(3.0 / 5.0);
+                        double dx = k * d2;
+
+                        double averageUptime = 0.0;
+                        int r = 1;
+                        while (x > 0)
+                        {
+                            // integrate_t=(x-duration)..x Ibeta(r, t, p) dt
+                            if (x - d > 0)
+                            {
+                                double tmid = x - d2;
+                                averageUptime += (w1 * SpecialFunction.Ibeta(r, tmid - dx, p) + w2 * SpecialFunction.Ibeta(r, tmid, p) + w1 * SpecialFunction.Ibeta(r, tmid + dx, p)) * d2;
+                            }
+                            else //if (x > 0)
+                            {
+                                double tmid = x * 0.5;
+                                double dt = k * tmid;
+                                averageUptime += (w1 * SpecialFunction.Ibeta(r, tmid - dt, p) + w2 * SpecialFunction.Ibeta(r, tmid, p) + w1 * SpecialFunction.Ibeta(r, tmid + dt, p)) * tmid;
+                            }
+                            r++;
+                            x -= c;
+                        }
+                        return (float)(averageUptime / n);
                     }
                     else if (triggerInterval > 0 && Mode == CalculationMode.Interpolation && needsBeta)
                     {
