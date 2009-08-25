@@ -67,8 +67,8 @@ namespace Rawr.ProtPaladin
 
         public static float TargetCritChance(Character character, Stats stats)
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            return Math.Max(0.0f, (0.05f + CombatRatingModifier(character, stats)) - AvoidanceChance(character, stats, HitResult.Crit));
+            //CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            return Math.Max(0.0f, (0.05f /*+ CombatRatingModifier(character, stats)*/) - AvoidanceChance(character, stats, HitResult.Crit));
         }
 
         public static float TargetAvoidanceChance(Character character, Stats stats, HitResult avoidanceType)
