@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -36,6 +35,8 @@ namespace Rawr.Healadin
             judgement = true;
             loHSelf = false;
             sSUptime = 1f;
+            hitIrrelevant = true;
+            spiritIrrelevant = true;
         }
 
         private float length;
@@ -53,7 +54,7 @@ namespace Rawr.Healadin
         }
 
         private float activity;
-        public float Activity 
+        public float Activity
         {
             get { return activity; }
             set { activity = value; OnPropertyChanged("Activity"); }
@@ -148,6 +149,20 @@ namespace Rawr.Healadin
         {
             get { return sSUptime; }
             set { sSUptime = value; OnPropertyChanged("SSUptime"); }
+        }
+
+        private bool spiritIrrelevant;
+        public bool SpiritIrrelevant
+        {
+            get { return spiritIrrelevant; }
+            set { spiritIrrelevant = value; OnPropertyChanged("SpiritIrrelevant"); }
+        }
+
+        private bool hitIrrelevant;
+        public bool HitIrrelevant
+        {
+            get { return hitIrrelevant; }
+            set { hitIrrelevant = value; OnPropertyChanged("HitIrrelevant"); }
         }
 
         #region INotifyPropertyChanged Members

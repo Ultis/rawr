@@ -32,6 +32,15 @@ namespace Rawr.Healadin
 			trkActivity.Value = (int)(calcOpts.Activity * 100);
             lblActivity.Text = trkActivity.Value + "%";
 
+            chkSpiritIrrelevant.Checked = calcOpts.HitIrrelevant;
+            chkHitIrrelevant.Checked = calcOpts.SpiritIrrelevant;
+            if (CalculationsHealadin.IsHitIrrelevant != calcOpts.HitIrrelevant || CalculationsHealadin.IsSpiritIrrelevant != calcOpts.SpiritIrrelevant)
+            {
+                CalculationsHealadin.IsSpiritIrrelevant = calcOpts.SpiritIrrelevant;
+                CalculationsHealadin.IsHitIrrelevant = calcOpts.HitIrrelevant;
+                ItemCache.OnItemsChanged();
+            }
+
             chkJotP.Checked = calcOpts.JotP;
             chkJudgement.Checked = calcOpts.Judgement;
             chkLoHSelf.Checked = calcOpts.LoHSelf;
@@ -257,39 +266,28 @@ namespace Rawr.Healadin
             }
         }
 
+        private void chkHitIrrelevant_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.HitIrrelevant = chkHitIrrelevant.Checked;
+                CalculationsHealadin.IsHitIrrelevant = chkHitIrrelevant.Checked;
+                ItemCache.OnItemsChanged();
+            }
+        }
+
+        private void chkSpiritIrrelevant_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.SpiritIrrelevant = chkSpiritIrrelevant.Checked;
+                CalculationsHealadin.IsSpiritIrrelevant = chkSpiritIrrelevant.Checked;
+                ItemCache.OnItemsChanged();
+            }
+        }
+
     }
 
-	[Serializable]
-	public class CalculationOptionsHealadin : ICalculationOptionBase
-	{
-		public string GetXml()
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHealadin));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
-
-		public float Length = 7;
-		public float ManaAmt = 4300;
-		public float Activity = .85f;
-        public float Replenishment = .9f;
-        public float DivinePlea = 2f;
-        public float BoLUp = 1f;
-        public float BoLEff = .2f;
-        public float HolyShock = .15f;
-        public float BurstScale = .4f;
-        public float GHL_Targets = 1f;
-
-        public bool InfusionOfLight = false;
-        public float IoLHolyLight = .9f;
-
-        public bool JotP = true;
-        public bool Judgement = true;
-        public bool LoHSelf = false;
-        public float SSUptime = 1f;
-
-	}
 }

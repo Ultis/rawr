@@ -70,6 +70,8 @@
             this.lblIoLFoL = new System.Windows.Forms.Label();
             this.lblIoLHL = new System.Windows.Forms.Label();
             this.chkJudgement = new System.Windows.Forms.CheckBox();
+            this.chkSpiritIrrelevant = new System.Windows.Forms.CheckBox();
+            this.chkHitIrrelevant = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
@@ -560,10 +562,34 @@
             this.chkJudgement.UseVisualStyleBackColor = true;
             this.chkJudgement.CheckedChanged += new System.EventHandler(this.chkJudgement_CheckedChanged);
             // 
+            // chkSpiritIrrelevant
+            // 
+            this.chkSpiritIrrelevant.AutoSize = true;
+            this.chkSpiritIrrelevant.Location = new System.Drawing.Point(6, 448);
+            this.chkSpiritIrrelevant.Name = "chkSpiritIrrelevant";
+            this.chkSpiritIrrelevant.Size = new System.Drawing.Size(110, 17);
+            this.chkSpiritIrrelevant.TabIndex = 56;
+            this.chkSpiritIrrelevant.Text = "Ignore Spirit Items";
+            this.chkSpiritIrrelevant.UseVisualStyleBackColor = true;
+            this.chkSpiritIrrelevant.CheckedChanged += new System.EventHandler(this.chkSpiritIrrelevant_CheckedChanged);
+            // 
+            // chkHitIrrelevant
+            // 
+            this.chkHitIrrelevant.AutoSize = true;
+            this.chkHitIrrelevant.Location = new System.Drawing.Point(151, 448);
+            this.chkHitIrrelevant.Name = "chkHitIrrelevant";
+            this.chkHitIrrelevant.Size = new System.Drawing.Size(100, 17);
+            this.chkHitIrrelevant.TabIndex = 57;
+            this.chkHitIrrelevant.Text = "Ignore Hit Items";
+            this.chkHitIrrelevant.UseVisualStyleBackColor = true;
+            this.chkHitIrrelevant.CheckedChanged += new System.EventHandler(this.chkHitIrrelevant_CheckedChanged);
+            // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkHitIrrelevant);
+            this.Controls.Add(this.chkSpiritIrrelevant);
             this.Controls.Add(this.chkJudgement);
             this.Controls.Add(this.lblIoLHL);
             this.Controls.Add(this.lblIoLFoL);
@@ -589,7 +615,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbLength);
             this.Name = "CalculationOptionsPanelHealadin";
-            this.Size = new System.Drawing.Size(300, 463);
+            this.Size = new System.Drawing.Size(300, 475);
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -653,5 +679,7 @@
         private System.Windows.Forms.Label lblIoLFoL;
         private System.Windows.Forms.Label lblIoLHL;
         private System.Windows.Forms.CheckBox chkJudgement;
+        private System.Windows.Forms.CheckBox chkSpiritIrrelevant;
+        private System.Windows.Forms.CheckBox chkHitIrrelevant;
     }
 }

@@ -534,6 +534,20 @@ namespace Rawr.Healadin
             return false;
         }
 
+        private static bool isSpiritIrrelevant = true;
+        internal static bool IsSpiritIrrelevant
+        {
+            get { return isSpiritIrrelevant; }
+            set { isSpiritIrrelevant = value; }
+        }
+
+        private static bool isHitIrrelevant = true;
+        internal static bool IsHitIrrelevant
+        {
+            get { return isHitIrrelevant; }
+            set { isHitIrrelevant = value; }
+        }
+
         private bool HasWantedStats(Stats stats)
         {
             return (stats.SpellCrit + stats.SpellHaste  + stats.PhysicalHit + stats.Mana
@@ -557,10 +571,11 @@ namespace Rawr.Healadin
         private bool HasIgnoreStats(Stats stats)
         {
             return (stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
-                + stats.HitRating + stats.ArmorPenetrationRating + stats.Spirit + stats.DodgeRating + stats.ParryRating
-                + stats.ExpertiseRating + stats.Expertise + stats.BlockRating + stats.Block) > 0;
-        }
-    
+                + stats.ArmorPenetrationRating + stats.DodgeRating + stats.ParryRating
+                + stats.ExpertiseRating + stats.Expertise + stats.BlockRating + stats.Block) > 0
+                || (stats.HitRating > 0 && isHitIrrelevant)
+                || (stats.Spirit > 0 && isSpiritIrrelevant);
+        } 
 
         public override bool IsBuffRelevant(Buff buff)
         {
