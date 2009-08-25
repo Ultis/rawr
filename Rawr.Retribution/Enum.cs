@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.Retribution {
-    public enum SealOf {
+namespace Rawr.Retribution
+{
+
+    public enum SealOf
+    {
         Blood = 0,
         Command,
         Righteousness,
         Vengeance,
         None
     }
-    public enum Ability {
+
+    public enum Ability
+    {
         Judgement = 0,
         CrusaderStrike,
         DivineStorm,
@@ -18,20 +23,27 @@ namespace Rawr.Retribution {
         HammerOfWrath,
         Exorcism
     }
-    public enum AbilityType {
+
+    public enum AbilityType
+    {
         Melee = 0,
         Range,
         Spell
     }
-    public enum DamageType {
+
+    public enum DamageType
+    {
         Physical = 0,
         Holy
     }
-    public enum MobType {
+
+    public enum MobType
+    {
         Undead = 0,
         Demon,
         Humanoid,
         Elemental,
         Other
     }
+
 }

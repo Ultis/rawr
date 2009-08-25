@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.Retribution {
-    public class CharacterCalculationsRetribution : CharacterCalculationsBase {
+namespace Rawr.Retribution
+{
+    public class CharacterCalculationsRetribution : CharacterCalculationsBase
+    {
         private float _overallPoints = 0f;
         public override float OverallPoints { get { return _overallPoints; } set { _overallPoints = value; } }
         private float[] _subPoints = new float[] { 0f };
@@ -22,7 +24,7 @@ namespace Rawr.Retribution {
         public float HandOfReckoningDPS { get; set; }
         public float HammerOfWrathDPS { get; set; }
         public float OtherDPS { get; set; }
-        
+
         public Skill WhiteSkill { get; set; }
         public Skill SealSkill { get; set; }
         public Skill CrusaderStrikeSkill { get; set; }
@@ -43,16 +45,17 @@ namespace Rawr.Retribution {
         public float AttackSpeed { get; set; }
         public Stats BasicStats { get; set; }
 
-        public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
+        {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues["Status"] = string.Format("{0} dps", DPSPoints.ToString("N0"));
             dictValues["Health"] = BasicStats.Health.ToString("N0");
             dictValues["Strength"] = BasicStats.Strength.ToString("N0");
             dictValues["Agility"] = string.Format("{0:0}", BasicStats.Agility);
-			dictValues["Attack Power"] = BasicStats.AttackPower.ToString("N0");
+            dictValues["Attack Power"] = BasicStats.AttackPower.ToString("N0");
             dictValues["Crit Chance"] = string.Format("{0:P}*{1:0} crit rating", BasicStats.PhysicalCrit, BasicStats.CritRating);
-			dictValues["Miss Chance"] = string.Format("{0:P}*{1:P} hit ({2:0} rating)\n", ToMiss, BasicStats.PhysicalHit, BasicStats.HitRating);
-			dictValues["Dodge Chance"] = string.Format("{0:P}*{1:P} expertise ({2:0} rating)", ToDodge, BasicStats.Expertise * .0025f, BasicStats.ExpertiseRating);
+            dictValues["Miss Chance"] = string.Format("{0:P}*{1:P} hit ({2:0} rating)\n", ToMiss, BasicStats.PhysicalHit, BasicStats.HitRating);
+            dictValues["Dodge Chance"] = string.Format("{0:P}*{1:P} expertise ({2:0} rating)", ToDodge, BasicStats.Expertise * .0025f, BasicStats.ExpertiseRating);
             dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} haste rating", BasicStats.PhysicalHaste, BasicStats.HasteRating);
 
             dictValues["Weapon Damage"] = WeaponDamage.ToString("N2");
@@ -82,8 +85,10 @@ namespace Rawr.Retribution {
             return dictValues;
         }
 
-        public override float GetOptimizableCalculationValue(string calculation) {
-            switch (calculation) {
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
                 case "Health": return BasicStats.Health;
                 case "Melee Avoid %": return (WhiteSkill.Combats.GetMeleeAvoid() * 100f);
             }
