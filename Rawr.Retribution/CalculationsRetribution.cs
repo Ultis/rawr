@@ -655,6 +655,7 @@ namespace Rawr.Retribution
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
                 stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier +
+                stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier +  stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.HitRating + stats.CritRating + stats.HasteRating + stats.SpellHit + stats.SpellPower +
                 stats.BonusStaminaMultiplier + stats.BonusSpellCritMultiplier) > 0;
             return wantedStats;
@@ -695,6 +696,9 @@ namespace Rawr.Retribution
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 DivineStormMultiplier = stats.DivineStormMultiplier,
+                BonusSealOfCorruptionDamageMultiplier = stats.BonusSealOfCorruptionDamageMultiplier,
+                BonusSealOfRighteousnessDamageMultiplier = stats.BonusSealOfRighteousnessDamageMultiplier,
+                BonusSealOfVengeanceDamageMultiplier = stats.BonusSealOfVengeanceDamageMultiplier,
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
                 ConsecrationSpellPower = stats.ConsecrationSpellPower,
                 JudgementCDReduction = stats.JudgementCDReduction,
@@ -733,6 +737,7 @@ namespace Rawr.Retribution
                 stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier +
+                stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier + stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +

@@ -320,8 +320,10 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return Combats.BaseWeaponSpeed * (0.022f * Stats.AttackPower + 0.044f * Stats.SpellPower)
-                * (1f + .03f * Talents.SealsOfThePure + (Talents.GlyphOfSealOfRighteousness ? 0.1f : 0f));
+            return Combats.BaseWeaponSpeed * (0.022f * Stats.AttackPower + 0.044f * Stats.SpellPower) * (1f
+                + .03f * Talents.SealsOfThePure
+                + (Talents.GlyphOfSealOfRighteousness ? 0.1f : 0f)
+                + Stats.BonusSealOfRighteousnessDamageMultiplier);
         }
 
         public override float AbilityCritChance() { return -1f; }
@@ -342,8 +344,9 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return AverageStackSize * (Stats.SpellPower * 0.065f + Stats.AttackPower * 0.13f) / 5f
-                * (1f + .03f * Talents.SealsOfThePure);
+            return AverageStackSize * (Stats.SpellPower * 0.065f + Stats.AttackPower * 0.13f) / 5f * (1f
+                + .03f * Talents.SealsOfThePure
+                + Stats.BonusSealOfVengeanceDamageMultiplier);
         }
 
         public override float AbilityCritChance() { return -1f; }
@@ -364,7 +367,9 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (Combats.WeaponDamage * 0.066f * AverageStackSize) * (1f + Talents.SealsOfThePure * .03f);
+            return (Combats.WeaponDamage * 0.066f * AverageStackSize) * (1f
+                + Talents.SealsOfThePure * .03f
+                + Stats.BonusSealOfVengeanceDamageMultiplier);
         }
 
         public override float ChanceToLand() { return 1f; }
@@ -383,7 +388,7 @@ namespace Rawr.Retribution
         public override float AverageDamage()
         {
             const float glanceChance = .24f;
-            const float glancingAmount = 1f - 0.35f;
+            const float glancingAmount = 1f - 0.25f;
             return HitDamage() *
                 (glanceChance * glancingAmount +
                 CritChance() * CritBonus() +
