@@ -499,7 +499,10 @@ namespace Rawr.Retribution
                 }
 
                 stats = statsBaseGear + statsBuffs + statsRace + statsAverage;
-                stats.Strength += stats.HighestStat;
+
+                if (stats.Strength > stats.Agility)  stats.Strength += stats.HighestStat + stats.Paragon;
+                else stats.Agility += stats.HighestStat + stats.Paragon;
+                
                 stats.Expertise += (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance) ? 10f : 0;
 
                 ConvertRatings(stats, talents, calcOpts.TargetLevel);
@@ -651,7 +654,7 @@ namespace Rawr.Retribution
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Bloodlust +
                 stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
-                stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit +
+                stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.Paragon +
                 stats.CrusaderStrikeCrit + stats.ExorcismMultiplier + stats.CrusaderStrikeMultiplier + stats.SpellCrit +
                 stats.HammerOfWrathMultiplier + stats.SpellPower + stats.BonusIntellectMultiplier + stats.Intellect +
                 stats.Health + stats.Stamina + stats.SpellCrit + stats.BonusCritMultiplier +
@@ -684,6 +687,7 @@ namespace Rawr.Retribution
                 SpellHit = stats.SpellHit,
                 Bloodlust = stats.Bloodlust,
                 Expertise = stats.Expertise,
+                Paragon = stats.Paragon,
                 SpellPower = stats.SpellPower,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
@@ -725,8 +729,9 @@ namespace Rawr.Retribution
                 || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit)
             {
                 Stats stats = effect.Stats;
-                return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating + stats.ArmorPenetrationRating
-                + stats.HasteRating + stats.ArcaneDamage + stats.HighestStat + stats.FireDamage + stats.ShadowDamage) > 0;
+                return (stats.Strength + stats.Agility + stats.AttackPower + stats.CritRating
+                    + stats.ArmorPenetrationRating + stats.Paragon + stats.HasteRating
+                    + stats.ArcaneDamage + stats.HighestStat + stats.FireDamage + stats.ShadowDamage) > 0;
             }
             return false;
         }
@@ -736,7 +741,7 @@ namespace Rawr.Retribution
             bool wantedStats = (stats.AttackPower + stats.DivineStormMultiplier + stats.ArmorPenetration +
                 stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.PhysicalCrit +
                 stats.BonusStrengthMultiplier + stats.BonusAgilityMultiplier + stats.BonusDamageMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier +
+                stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.Paragon +
                 stats.BonusSealOfCorruptionDamageMultiplier + stats.BonusSealOfRighteousnessDamageMultiplier + stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.CrusaderStrikeDamage + stats.ConsecrationSpellPower + stats.JudgementCrit + stats.RighteousVengeanceCanCrit +
                 stats.JudgementCDReduction + stats.DivineStormDamage + stats.DivineStormCrit + stats.BonusCritMultiplier +

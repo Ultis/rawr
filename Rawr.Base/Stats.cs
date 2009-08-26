@@ -503,6 +503,7 @@ namespace Rawr {
         MovementSpeed,
         GreatnessProc,
         HighestStat,
+        Paragon,
         ManacostReduceWithin15OnUse1Min,
         ShieldFromHealed,
         RighteousVengeanceCanCrit,
@@ -2126,6 +2127,15 @@ namespace Rawr {
         {
             get { return _rawNoStackData[(int)NonStackingStat.HighestStat]; }
             set { _rawNoStackData[(int)NonStackingStat.HighestStat] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Strength or Agility")]
+        [Category("Equipment Effects")]
+        public float Paragon
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.Paragon]; }
+            set { _rawNoStackData[(int)NonStackingStat.Paragon] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
