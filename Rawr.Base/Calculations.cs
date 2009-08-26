@@ -222,9 +222,9 @@ namespace Rawr
 		{
 			return Instance.GetEnchantCalculations(slot, character, currentCalcs);
 		}
-		public static List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, bool activeOnly)
+		public static List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, string filter)
 		{
-			return Instance.GetBuffCalculations(character, currentCalcs, activeOnly);
+			return Instance.GetBuffCalculations(character, currentCalcs, filter);
 		}
 		public static CharacterCalculationsBase GetCharacterCalculations(Character character)
 		{
@@ -768,7 +768,7 @@ namespace Rawr
 			}
         }
 
-		public virtual List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, bool activeOnly)
+		public virtual List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, string filter)
 		{
 			ClearCache();
 			List<ComparisonCalculationBase> buffCalcs = new List<ComparisonCalculationBase>();
@@ -788,13 +788,16 @@ namespace Rawr
 			List<Buff> relevantBuffs = new List<Buff>();
 			foreach (Buff buff in Buff.RelevantBuffs)
 			{
-				relevantBuffs.Add(buff);
-				relevantBuffs.AddRange(buff.Improvements);
+                if (filter == null || filter == "All" || filter == "Current" || buff.Group.Equals(filter, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    relevantBuffs.Add(buff);
+                    relevantBuffs.AddRange(buff.Improvements);
+                }
 			}
 
 			foreach (Buff buff in relevantBuffs)
 			{
-                if (!activeOnly || charAutoActivated.ActiveBuffs.Contains(buff))
+                if (!"Current".Equals(filter,StringComparison.CurrentCultureIgnoreCase) || charAutoActivated.ActiveBuffs.Contains(buff))
 				{
                     Character charUnequipped = charAutoActivated.Clone();
                     Character charEquipped = charAutoActivated.Clone();

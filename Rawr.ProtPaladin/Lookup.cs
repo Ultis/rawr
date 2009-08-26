@@ -38,14 +38,15 @@ namespace Rawr.ProtPaladin
         /// Each point of AR exceeding the target's Defense will increase chance to crit by 0.04%.
         /// </summary>
         /// <returns>Returns the modifier of chance for two combatants. (0.006 = 0.6%)</returns>
-        public static float CombatRatingModifier(Character character, Stats stats)
+        /// <remarks>This is being handled in the Diminishing Returns avoidance function.</remarks>
+        /*public static float CombatRatingModifier(Character character, Stats stats)
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             float AttackerAttackRating = calcOpts.TargetLevel * 5.0f;
             float DefenderDefenseSkill = stats.Defense;
             float Modifier = (AttackerAttackRating - DefenderDefenseSkill) * 0.0004f;
             return Modifier;
-        }
+        }*/
 
         public static float TargetArmorReduction(Character character, Stats stats)
         {

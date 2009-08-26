@@ -174,13 +174,13 @@ namespace Rawr
             }
         }
 
-        public void LoadBuffs(CharacterCalculationsBase currentCalculations, bool activeOnly)
+        public void LoadBuffs(CharacterCalculationsBase currentCalculations, string filter)
         {
             if (Character != null)
             {
                 comparisonGraph1.RoundValues = true;
                 comparisonGraph1.CustomRendered = false;
-                comparisonGraph1.ItemCalculations = Calculations.GetBuffCalculations(Character, currentCalculations, activeOnly).ToArray();
+                comparisonGraph1.ItemCalculations = Calculations.GetBuffCalculations(Character, currentCalculations, filter).ToArray();
 				comparisonGraph1.EquipSlot = CharacterSlot.None;
 				_characterSlot = CharacterSlot.None;
             }
@@ -347,7 +347,7 @@ namespace Rawr
                     if (calc.Equipped)
                         itemCalculations.Add(calc);
 
-                foreach (ComparisonCalculationBase calc in Calculations.GetBuffCalculations(Character, currentCalculations, true))
+                foreach (ComparisonCalculationBase calc in Calculations.GetBuffCalculations(Character, currentCalculations, "Current"))
                     itemCalculations.Add(calc);
             }
 

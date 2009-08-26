@@ -1327,7 +1327,7 @@ namespace Rawr
 					break;
 
 				case "Buffs":
-					itemComparison1.LoadBuffs(_calculatedStats, tag[1] == "Current");
+					itemComparison1.LoadBuffs(_calculatedStats, tag[1]);
 					break;
 
 				case "Current Gear/Enchants/Buffs":
