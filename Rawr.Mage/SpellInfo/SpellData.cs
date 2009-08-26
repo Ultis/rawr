@@ -989,7 +989,7 @@ namespace Rawr.Mage
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (castingState.CalculationOptions.Mode322)
             {
-                spell.CostModifier += 1.30f * debuff;
+                spell.CostModifier += 1.75f * debuff;
             }
             else
             {
@@ -1008,7 +1008,7 @@ namespace Rawr.Mage
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (castingState.CalculationOptions.Mode322)
             {
-                spell.CostModifier += 1.30f * debuff;
+                spell.CostModifier += 1.75f * debuff;
             }
             else
             {
@@ -1026,7 +1026,7 @@ namespace Rawr.Mage
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (castingState.CalculationOptions.Mode322)
             {
-                spell.CostModifier += 1.30f * debuff;
+                spell.CostModifier += 1.75f * debuff;
             }
             else
             {
@@ -1061,7 +1061,7 @@ namespace Rawr.Mage
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
             if (calculations.CalculationOptions.Mode322)
             {
-                cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.30f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.60f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.90f)));
+                cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)));
             }
             else
             {
@@ -1091,7 +1091,7 @@ namespace Rawr.Mage
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
             if (calculations.CalculationOptions.Mode322)
             {
-                cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.30f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.60f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.90f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.20f)));
+                cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 7.00f)));
             }
             else
             {
