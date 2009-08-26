@@ -443,8 +443,8 @@ namespace Rawr.DPSWarr {
             /*Berserker Rage    */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _ZRage_GCDs,  BZ,false);
 
             // ==== Trinket Priorites =================
-            /*Trinket 1         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink1_GCDs, Trinket1);
-            /*Trinket 2         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink2_GCDs, Trinket2);
+            // /*Trinket 1         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink1_GCDs, Trinket1);
+            // /*Trinket 2         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink2_GCDs, Trinket2);
 
             // ==== Maintenance Priorities ============
             /*Battle Shout      */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,ref _Battle_GCDs, BTS);
@@ -733,8 +733,8 @@ namespace Rawr.DPSWarr {
             /*Berserker Rage    */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _ZRage_GCDs, BZ, false);
 
             // ==== Trinket Priorites =================
-            /*Trinket 1         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink1_GCDs, Trinket1);
-            /*Trinket 2         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink2_GCDs, Trinket2);
+            // /*Trinket 1         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink1_GCDs, Trinket1);
+            // /*Trinket 2         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Trink2_GCDs, Trinket2);
 
             // ==== Maintenance Priorities ============
             /*Battle Shout      */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Battle_GCDs, BTS);
