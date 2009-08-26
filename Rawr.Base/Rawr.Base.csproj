@@ -153,6 +153,8 @@
     <Compile Include="SavedVariablesParser.cs" />
     <Compile Include="SerializableDictionary.cs" />
     <Compile Include="SpecialEffect.cs" />
+    <Compile Include="SpecialEffectCombination.cs" />
+    <Compile Include="SpecialEffectInterpolator.cs" />
     <Compile Include="SpecialEffects.cs" />
     <Compile Include="SpecialFunction.cs" />
     <Compile Include="StatConversion.cs" />
