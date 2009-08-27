@@ -13,8 +13,8 @@ namespace Rawr.DPSWarr {
                 Talents = Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
                 combatFactors = cf;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-                MHAtkTable = new AttackTable(Char, StatS, true );
-                OHAtkTable = new AttackTable(Char, StatS, false);
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, true);
+                OHAtkTable = new AttackTable(Char, StatS, combatFactors, false);
                 //
                 Targets = 1f;
                 Ovd_Freq = 0f;
@@ -62,7 +62,7 @@ namespace Rawr.DPSWarr {
 
                     float dmgGlance = dmg * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg ;//Partial Damage when glancing
                     float dmgBlock  = dmg * MHAtkTable.Block * combatFactors.ReducWhBlockedDmg ;//Partial damage when blocked
-                    float dmgCrit   = dmg * MHAtkTable.Crit * (/*1f+*/combatFactors.BonusWhiteCritDmg);//Bonus Damage when critting
+                    float dmgCrit   = dmg * MHAtkTable.Crit * (1f+combatFactors.BonusWhiteCritDmg);//Bonus Damage when critting
 
                     dmg *= dmgDrop;
 
@@ -538,7 +538,7 @@ namespace Rawr.DPSWarr {
 
                     float dmgGlance = dmg * MHAtkTable.Glance *     combatFactors.ReducWhGlancedDmg ;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                     float dmgBlock  = dmg * MHAtkTable.Block  *     combatFactors.ReducYwBlockedDmg ;//Partial damage when blocked
-                    float dmgCrit   = dmg * MHAtkTable.Crit   * (/*1f+*/combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                    float dmgCrit   = dmg * MHAtkTable.Crit   * (1f+combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                     dmg *= dmgDrop;
 
@@ -551,23 +551,15 @@ namespace Rawr.DPSWarr {
             public virtual float DPS { get { return AvgDamageOnUse / FightDuration; } }
             #endregion
             #region Functions
-            /*protected void Initialize() {
-                Talents = /*Char == null || Char.WarriorTalents == null ? new WarriorTalents() : *//*Char.WarriorTalents;
-                combatFactors = new CombatFactors(Char, StatS);
-                CalcOpts = /*Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() :*//* Char.CalculationOptions as CalculationOptionsDPSWarr;
-                MHAtkTable = new AttackTable(Char, StatS, this, true);
-                OHAtkTable = new AttackTable(Char, StatS, this, false);
-                Whiteattacks = new WhiteAttacks(Char, StatS);
-            }*/
             protected void InitializeA() {
                 Talents = /*Char == null || Char.WarriorTalents == null ? new WarriorTalents() : */Char.WarriorTalents;
                 //combatFactors = new CombatFactors(Char, StatS);
                 CalcOpts = /*Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() :*/ Char.CalculationOptions as CalculationOptionsDPSWarr;
-                Whiteattacks = new WhiteAttacks(Char, StatS, combatFactors);
+                //Whiteattacks = new WhiteAttacks(Char, StatS, combatFactors);
             }
             protected void InitializeB() {
-                MHAtkTable = new AttackTable(Char, StatS, this, true);
-                OHAtkTable = new AttackTable(Char, StatS, this, false);
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, this, true);
+                OHAtkTable = new AttackTable(Char, StatS, combatFactors, this, false);
             }
             public virtual float GetRageUsePerSecond(float acts) {
                 if (!Validated) { return 0f; }
@@ -647,8 +639,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Bloodthirst [+100% from healing effect]</GlyphsAffecting>
-            public BloodThirst(Character c, Stats s,CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public BloodThirst(Character c, Stats s,CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Bloodthirst";
                 AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_;
@@ -680,8 +672,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Whirlwind [-2 sec Cooldown]</GlyphsAffecting>
-            public WhirlWind(Character c, Stats s,CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public WhirlWind(Character c, Stats s,CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "WhirlWind";
                 AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_;
@@ -737,7 +729,7 @@ namespace Rawr.DPSWarr {
 
                     float dmgGlance = DamageMH * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                     float dmgBlock = DamageMH * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                    float dmgCrit = DamageMH * MHAtkTable.Crit * (/*1f +*/ combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                    float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                     DamageMH *= dmgDrop;
 
@@ -759,7 +751,7 @@ namespace Rawr.DPSWarr {
 
                     dmgGlance = DamageOH * OHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                     dmgBlock = DamageOH * OHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                    dmgCrit = DamageOH * OHAtkTable.Crit * (/*1f +*/ combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                    dmgCrit = DamageOH * OHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                     DamageOH *= dmgDrop;
 
@@ -788,7 +780,7 @@ namespace Rawr.DPSWarr {
 
                     float dmgGlance = DamageMH * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                     float dmgBlock = DamageMH * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                    float dmgCrit = DamageMH * MHAtkTable.Crit * (/*1f +*/ combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                    float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                     DamageMH *= dmgDrop;
 
@@ -810,7 +802,7 @@ namespace Rawr.DPSWarr {
 
                     dmgGlance = DamageOH * OHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                     dmgBlock = DamageOH * OHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                    dmgCrit = DamageOH * OHAtkTable.Crit * (/*1f +*/ combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                    dmgCrit = DamageOH * OHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                     DamageOH *= dmgDrop;
 
@@ -830,8 +822,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Bloodsurge (Requires Talent) [(7%/13%/20%) chance]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public BloodSurge(Character c, Stats s,CombatFactors cf, Slam sl, WhirlWind ww, BloodThirst bt) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public BloodSurge(Character c, Stats s,CombatFactors cf, WhiteAttacks wa, Slam sl, WhirlWind ww, BloodThirst bt) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Bloodsurge";
                 AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_;
@@ -932,8 +924,8 @@ namespace Rawr.DPSWarr {
             /// Improved Mortal Strike [+(10-ROUNDUP(10/3*Pts))% damage, -(1/3*Pts) sec cooldown]
             /// </TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Mortal Strike [+10% damage]</GlyphsAffecting>
-            public MortalStrike(Character c, Stats s,CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public MortalStrike(Character c, Stats s,CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Mortal Strike";
                 AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
@@ -963,12 +955,12 @@ namespace Rawr.DPSWarr {
             /// <TalentsAffecting>Sudden Death (Requires Talent) [(3*Pts)% chance to proc and (3/7/10) rage kept after],
             /// Improved Execute [-(2.5*Pts) rage cost]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Execute [Execute acts as if it had 10 additional rage]</GlyphsAffecting>
-            public Suddendeath(Character c, Stats s,CombatFactors cf, Swordspec ss) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Suddendeath(Character c, Stats s,CombatFactors cf, WhiteAttacks wa, Swordspec ss) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Sudden Death";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_;
-                Exec = new Execute(c, s, cf);
+                Exec = new Execute(c, s, cf, wa);
                 SS = ss;
                 RageCost = Exec.RageCost;
                 ReqTalent = true;
@@ -1052,8 +1044,8 @@ namespace Rawr.DPSWarr {
             /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
             /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Overpower [Can proc when parried]</GlyphsAffecting>
-            public OverPower(Character c, Stats s,CombatFactors cf, Swordspec ss) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, Swordspec ss) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Overpower";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
@@ -1141,8 +1133,8 @@ namespace Rawr.DPSWarr {
             /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
             /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public TasteForBlood(Character c, Stats s,CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public TasteForBlood(Character c, Stats s,CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Taste for Blood";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
@@ -1199,8 +1191,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Bladestorm [Requires Talent]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Bladestorm [-15 sec Cd]</GlyphsAffecting>
-            public Bladestorm(Character c, Stats s,CombatFactors cf,WhirlWind ww) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Bladestorm(Character c, Stats s,CombatFactors cf,WhiteAttacks wa,WhirlWind ww) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa;InitializeA();
                 //
                 WW = ww;
                 Name = "Bladestorm";
@@ -1237,8 +1229,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Sword Specialization (Requires Talent)</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Swordspec(Character c, Stats s,CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Swordspec(Character c, Stats s,CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Sword Specialization";
                 ReqTalent = true;
@@ -1272,8 +1264,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5).]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Execute [Your Execute ability acts as if it has 10 additional rage.]</GlyphsAffecting>
-            public Execute(Character c, Stats s,CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Execute(Character c, Stats s,CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf;Whiteattacks = wa; InitializeA();
                 //
                 Name = "Execute";
                 //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Execute_;
@@ -1313,8 +1305,8 @@ namespace Rawr.DPSWarr {
             /// <summary>Slams the opponent, causing weapon damage plus 250.</summary>
             /// <TalentsAffecting>Improved Slam [Reduces cast time of your Slam ability by (0.5/1) sec.]</TalentsAffecting>
             /// <SetsAffecting>T7 Deadnaught Battlegear 2 Pc [+10% Damage]</SetsAffecting>
-            public Slam(Character c, Stats s,CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Slam(Character c, Stats s,CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf;Whiteattacks = wa; InitializeA();
                 //
                 Name = "Slam";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_;
@@ -1465,8 +1457,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Heroic Strike [+10 rage on crits]</GlyphsAffecting>
-            public HeroicStrike(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Heroic Strike";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_;
@@ -1501,8 +1493,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Cleave [+(40*Pts)% Damage], Incite [+(5*Pts)% Crit Perc]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Cleaving [+1 targets hit]</GlyphsAffecting>
-            public Cleave(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Cleave(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Cleave";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_;
@@ -1557,8 +1549,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Rend [+(10*Pts)% Bleed Damage], Trauma [+(15*Pts)% Bleed Damage]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Rending [+2 damage ticks]</GlyphsAffecting>
-            public Rend(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Rend(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Rend";
                 AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Rend_;
@@ -1625,8 +1617,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Deep Wounds (Requires Talent) [(16*Pts)% damage dealt]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public DeepWounds(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public DeepWounds(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf;Whiteattacks = wa; InitializeA();
                 //
                 Name = "Deep Wounds";
                 ReqTalent = true;
@@ -1702,8 +1694,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Trauma (Requires Talent)</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Trauma(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Trauma(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Trauma";
                 ReqMeleeWeap = false;
@@ -1738,8 +1730,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Berserker Rage [+(10*Pts) Rage Generated]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public BerserkerRage(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public BerserkerRage(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Berserker Rage";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
@@ -1758,8 +1750,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Enraged Regeneration [+10% to effect]</GlyphsAffecting>
-            public EnragedRegeneration(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public EnragedRegeneration(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Enraged Regeneration";
                 //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_;
@@ -1785,8 +1777,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Bloodrge [+(25*Pts)% Rage Generated], Intensify Rage [-(1/9*Pts]% Cooldown]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Bloodrage [-100% Health Cost]</GlyphsAffecting>
-            public Bloodrage(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Bloodrage(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Bloodrage";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_;
@@ -1811,8 +1803,8 @@ namespace Rawr.DPSWarr {
             /// Commanding Presence [+(5*Pts)% to the AP Bonus]
             /// </TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Battle [+1 min duration]</GlyphsAffecting>
-            public BattleShout(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public BattleShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Battle Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
@@ -1845,8 +1837,8 @@ namespace Rawr.DPSWarr {
             /// Commanding Presence [+(5*Pts)% to the Health Bonus]
             /// </TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public CommandingShout(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public CommandingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Commanding Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_;
@@ -1877,8 +1869,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Death Wish [Requires Talent], Intensify Rage [-(1/9*Pts)% Cooldown]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public DeathWish(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public DeathWish(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Death Wish";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_;
@@ -1903,8 +1895,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Recklessness(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Recklessness(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Recklessness";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Recklessness_;
@@ -1937,8 +1929,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Sweeping Strikes [-100% Rage cost]</GlyphsAffecting>
-            public SweepingStrikes(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public SweepingStrikes(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Sweeping Strikes";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
@@ -1981,8 +1973,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Sweeping Strikes [-100% Rage cost]</GlyphsAffecting>
-            public SecondWind(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public SecondWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Second Wind";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
@@ -2026,8 +2018,8 @@ namespace Rawr.DPSWarr {
             /// Glyph of Thunder Clap [+2 yds MaxRange]
             /// Glyph of Resonating Power [-5 RageCost]
             /// </GlyphsAffecting>
-            public ThunderClap(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public ThunderClap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Thunder Clap";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_;
@@ -2059,8 +2051,8 @@ namespace Rawr.DPSWarr {
             /// <summary></summary>
             /// <TalentsAffecting>Focused Rage [-(Pts) Rage Cost], Puncture [-(Pts) Rage Cost], </TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Sunder Armor [+1 Targets]</GlyphsAffecting>
-            public SunderArmor(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public SunderArmor(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Sunder Armor";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_;
@@ -2085,8 +2077,8 @@ namespace Rawr.DPSWarr {
             /// Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power),
             /// reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.
             /// </summary>
-            public ShatteringThrow(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public ShatteringThrow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Shattering Throw";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_;
@@ -2116,8 +2108,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public DemoralizingShout(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public DemoralizingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Demoralizing Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_;
@@ -2143,8 +2135,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Hamstring [Gives a [5*Pts]% chance to immobilize the target for 5 sec.]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Hamstring [Gives a 10% chance to immobilize the target for 5 sec.]</GlyphsAffecting>
-            public Hamstring(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Hamstring(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Hamstring";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Hamstring_;
@@ -2175,8 +2167,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public EveryManForHimself(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public EveryManForHimself(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Every Man for Himself";
                 if(c.Race != CharacterRace.Human){return;}
@@ -2193,8 +2185,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public HeroicFury(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public HeroicFury(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Heroic Fury";
                 ReqTalent = true;
@@ -2221,8 +2213,8 @@ namespace Rawr.DPSWarr {
             /// Glyph of Rapid Charge [-20% Cd]
             /// Glyph of Charge [+5 yds MaxRange]
             /// </GlyphsAffecting>
-            public Charge(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Charge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 MaxRange = 25f + (Talents.GlyphOfCharge ? 5f: 0f); // In Yards 
                 Cd = (20f + Talents.Juggernaut * 5f) * (1f - (Talents.GlyphOfRapidCharge ? 0.20f : 0f)); // In Seconds
@@ -2247,8 +2239,8 @@ namespace Rawr.DPSWarr {
             /// Improved Intercept [-[5*Pts] sec Cd]
             /// </TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Intercept(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Intercept(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 MaxRange = 25f; // In Yards 
                 Cd = 30f * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
@@ -2271,8 +2263,8 @@ namespace Rawr.DPSWarr {
             /// <GlyphsAffecting>
             /// Glyph of Intervene [Increases the number of attacks you intercept for your intervene target by 1.]
             /// </GlyphsAffecting>
-            public Intervene(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Intervene(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 MaxRange = 25f; // In Yards 
                 Cd = 30f * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
@@ -2292,8 +2284,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Retaliation(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Retaliation(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Retaliation";
                 StanceOkArms = true;
@@ -2309,8 +2301,8 @@ namespace Rawr.DPSWarr {
             public float StackCap;
         }
         public class Trinket1 : Ability {
-            public Trinket1(Character c, Stats s, CombatFactors  cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Trinket1(Character c, Stats s, CombatFactors  cf, WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Trinket 1";
                 bool check = Char.Trinket1 != null && Char.Trinket1.Item.Stats._rawSpecialEffectData != null;
@@ -2333,8 +2325,8 @@ namespace Rawr.DPSWarr {
             }
         }
         public class Trinket2 : Ability {
-            public Trinket2(Character c, Stats s, CombatFactors cf) {
-                Char = c; StatS = s; combatFactors = cf; InitializeA();
+            public Trinket2(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Trinket 2";
                 bool check = Char.Trinket2 != null && Char.Trinket2.Item.Stats._rawSpecialEffectData != null;

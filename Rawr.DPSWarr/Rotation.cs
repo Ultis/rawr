@@ -134,43 +134,43 @@ namespace Rawr.DPSWarr {
             // Whites
             WhiteAtks = new Skills.WhiteAttacks(CHARACTER, STATS, COMBATFACTORS);
             // Anti-Debuff
-            HF  = new Skills.HeroicFury(        CHARACTER, STATS, COMBATFACTORS);
-            EM  = new Skills.EveryManForHimself(CHARACTER, STATS, COMBATFACTORS);
+            HF  = new Skills.HeroicFury(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            EM  = new Skills.EveryManForHimself(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             // Rage Generators
-            SndW= new Skills.SecondWind(        CHARACTER, STATS, COMBATFACTORS);
-            BZ  = new Skills.BerserkerRage(     CHARACTER, STATS, COMBATFACTORS);
-            BR  = new Skills.Bloodrage(         CHARACTER, STATS, COMBATFACTORS);
+            SndW= new Skills.SecondWind(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            BZ  = new Skills.BerserkerRage(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            BR  = new Skills.Bloodrage(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             // Maintenance
-            BTS = new Skills.BattleShout(       CHARACTER, STATS, COMBATFACTORS);
-            CS  = new Skills.CommandingShout(   CHARACTER, STATS, COMBATFACTORS);
-            DS  = new Skills.DemoralizingShout( CHARACTER, STATS, COMBATFACTORS);
-            SN  = new Skills.SunderArmor(       CHARACTER, STATS, COMBATFACTORS);
-            TH  = new Skills.ThunderClap(       CHARACTER, STATS, COMBATFACTORS);
-            HMS = new Skills.Hamstring(         CHARACTER, STATS, COMBATFACTORS);
+            BTS = new Skills.BattleShout(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            CS  = new Skills.CommandingShout(   CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            DS  = new Skills.DemoralizingShout( CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SN  = new Skills.SunderArmor(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            TH  = new Skills.ThunderClap(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            HMS = new Skills.Hamstring(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             // Periodics
-            ST = new Skills.ShatteringThrow(    CHARACTER, STATS, COMBATFACTORS);
-            SW = new Skills.SweepingStrikes(    CHARACTER, STATS, COMBATFACTORS);
-            Death = new Skills.DeathWish(       CHARACTER, STATS, COMBATFACTORS);
-            RK = new Skills.Recklessness(       CHARACTER, STATS, COMBATFACTORS);
-            Trinket1 = new Skills.Trinket1(     CHARACTER, STATS, COMBATFACTORS);
-            Trinket2 = new Skills.Trinket2(     CHARACTER, STATS, COMBATFACTORS);
+            ST = new Skills.ShatteringThrow(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SW = new Skills.SweepingStrikes(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            Death = new Skills.DeathWish(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            RK = new Skills.Recklessness(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            Trinket1 = new Skills.Trinket1(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            Trinket2 = new Skills.Trinket2(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             // Fury
-            WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS);
-            BT = new Skills.BloodThirst(        CHARACTER, STATS, COMBATFACTORS);
-            SL = new Skills.Slam(               CHARACTER, STATS, COMBATFACTORS); // actually arms but BS needs it
-            BS = new Skills.BloodSurge(         CHARACTER, STATS, COMBATFACTORS,SL,WW,BT);
+            WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            BT = new Skills.BloodThirst(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SL = new Skills.Slam(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS); // actually arms but BS needs it
+            BS = new Skills.BloodSurge(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,SL,WW,BT);
             // Arms
-            BLS= new Skills.Bladestorm(         CHARACTER, STATS, COMBATFACTORS,WW);
-            MS = new Skills.MortalStrike(       CHARACTER, STATS, COMBATFACTORS);
-            RD = new Skills.Rend(               CHARACTER, STATS, COMBATFACTORS);
-            SS = new Skills.Swordspec(          CHARACTER, STATS, COMBATFACTORS);
-            OP = new Skills.OverPower(          CHARACTER, STATS, COMBATFACTORS,SS);
-            TB = new Skills.TasteForBlood(      CHARACTER, STATS, COMBATFACTORS);
-            SD = new Skills.Suddendeath(        CHARACTER, STATS, COMBATFACTORS,SS);
+            BLS= new Skills.Bladestorm(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,WW);
+            MS = new Skills.MortalStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            RD = new Skills.Rend(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SS = new Skills.Swordspec(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            OP = new Skills.OverPower(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,SS);
+            TB = new Skills.TasteForBlood(      CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SD = new Skills.Suddendeath(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,SS);
             // Generic DPS
-            DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS);
-            CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS);
-            HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS);
+            DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
 
             SD.FreeRage = freeRage;
         }

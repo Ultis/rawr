@@ -333,11 +333,11 @@ namespace Rawr.DPSWarr {
 
         protected virtual void Calculate() { }
 
-        protected void Initialize(Character character, Stats stats, Skills.Ability ability, bool ismh) {
+        protected void Initialize(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh) {
             Char = character;
             StatS = stats;
             calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-            combatFactors = new CombatFactors(Char, StatS);
+            combatFactors = cf;
             Abil = ability;
             isWhite = (Abil == null);
             isMH = ismh;
@@ -384,7 +384,7 @@ namespace Rawr.DPSWarr {
             Hit = Math.Max(0f, 1f - tableSize);
         }
 
-        public DefendTable(Character character, Stats stats) { Initialize(character, stats, null, true); }
+        public DefendTable(Character character, Stats stats, CombatFactors cf) { Initialize(character, stats, cf, null, true); }
     }
 
     public class AttackTable : CombatTable {
@@ -428,9 +428,9 @@ namespace Rawr.DPSWarr {
             Hit = Math.Max(0f, 1f - tableSize);
         }
 
-        public AttackTable(Character character, Stats stats, bool ismh) { Initialize(character, stats, null, ismh); }
+        public AttackTable(Character character, Stats stats, CombatFactors cf, bool ismh) { Initialize(character, stats, cf, null, ismh); }
 
-        public AttackTable(Character character, Stats stats, Skills.Ability ability, bool ismh) { Initialize(character, stats, ability, ismh); }
+        public AttackTable(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh) { Initialize(character, stats, cf, ability, ismh); }
     }
 
 }

@@ -609,8 +609,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             float mhHitsPerSecond = 0f; float ohHitsPerSecond = 0f;
             if (calcOpts.FuryStance) {
-                Skills.Ability bt = new Skills.BloodThirst(character, statsTotal, combatFactors);
-                Skills.Ability ww = new Skills.WhirlWind(  character, statsTotal, combatFactors);
+                Skills.Ability bt = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
+                Skills.Ability ww = new Skills.WhirlWind(character, statsTotal, combatFactors, whiteAttacks);
                 mhHitsPerSecond = (bt.Activates + ww.Activates) / fightDuration * combatFactors.ProbMhYellowLand;
                 ohHitsPerSecond = (               ww.Activates) / fightDuration * combatFactors.ProbOhYellowLand;
             }else{mhHitsPerSecond = 1f / (1.5f + calcOpts.GetLatency()) * 0.9f * combatFactors.ProbMhYellowLand;}
@@ -692,29 +692,29 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // Warrior Abilities as SpecialEffects
             Stats avgstats = new Stats() { AttackPower = 0f, };
             //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.DeathWish Death = new Skills.DeathWish(character, statsTotal, combatFactors);
+            Skills.DeathWish Death = new Skills.DeathWish(character, statsTotal, combatFactors, whiteAttacks);
             avgstats += Death.AverageStats;
             //Recklessness is highly inaccurate right now
             //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
             //Skills.Recklessness  Reck  = new Skills.Recklessness(   character,statsTotal);
             //avgstats += Reck.AverageStats ;
             //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.ShatteringThrow Shatt = new Skills.ShatteringThrow(character, statsTotal, combatFactors);
+            Skills.ShatteringThrow Shatt = new Skills.ShatteringThrow(character, statsTotal, combatFactors, whiteAttacks);
             avgstats += Shatt.AverageStats;
             //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.SweepingStrikes Sweep = new Skills.SweepingStrikes(character, statsTotal, combatFactors);
+            Skills.SweepingStrikes Sweep = new Skills.SweepingStrikes(character, statsTotal, combatFactors, whiteAttacks);
             avgstats += Sweep.AverageStats;
             //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.Bloodrage Blood = new Skills.Bloodrage(character, statsTotal, combatFactors);
+            Skills.Bloodrage Blood = new Skills.Bloodrage(character, statsTotal, combatFactors, whiteAttacks);
             avgstats += Blood.AverageStats;
             //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
             //Skills.Hamstring     Hammy = new Skills.Hamstring(      character,statsTotal);
             //avgstats += Hammy.AverageStats;
             //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.BattleShout Battle = new Skills.BattleShout(character, statsTotal, combatFactors);
+            Skills.BattleShout Battle = new Skills.BattleShout(character, statsTotal, combatFactors, whiteAttacks);
             avgstats += Battle.AverageStats;
             //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.CommandingShout CS = new Skills.CommandingShout(character, statsTotal, combatFactors);
+            Skills.CommandingShout CS = new Skills.CommandingShout(character, statsTotal, combatFactors, whiteAttacks);
             avgstats += CS.AverageStats;
 
             statsProcs += avgstats;
