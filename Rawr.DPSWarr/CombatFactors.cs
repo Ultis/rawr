@@ -3,12 +3,12 @@ using System;
 namespace Rawr.DPSWarr {
     public class CombatFactors {
         public CombatFactors(Character character, Stats stats) {
-			StatS = stats;
-			MH = character.MainHand == null ? new Knuckles() : character.MainHand.Item;
-			OH = character.OffHand == null ? null : character.OffHand.Item ;
-            Talents = character.WarriorTalents;
-            CalcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             Char = character;
+            StatS = stats;
+            MH = Char == null || Char.MainHand == null ? new Knuckles() : Char.MainHand.Item;
+            OH = Char == null || Char.OffHand  == null ? null           : Char.OffHand.Item;
+            Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
+            CalcOpts = Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() : Char.CalculationOptions as CalculationOptionsDPSWarr;
             
             // Optimizations
             _c_mhItemType = MH.Type;
@@ -300,5 +300,137 @@ namespace Rawr.DPSWarr {
                 MinDamage = 0;
             }
         }
+        #region Attackers Stats against you
+        public float LevelModifier() { return (CalcOpts.TargetLevel - Char.Level) * 0.002f; }
+        public float NPC_CritChance() {
+            return Math.Max(0f, 0.05f + LevelModifier()
+                                    - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, CalcOpts.TargetLevel)
+                            );
+        }
+        #endregion
     }
+
+    public abstract class CombatTable {
+        protected Character Char;
+        protected CalculationOptionsDPSWarr calcOpts;
+        protected CombatFactors combatFactors;
+        protected Stats StatS;
+        protected Skills.Ability Abil;
+
+        public bool isWhite;
+        public bool isMH;
+
+        public float Miss { get; protected set; }
+        public float Dodge { get; protected set; }
+        public float Parry { get; protected set; }
+        public float Block { get; protected set; }
+        public float Glance { get; protected set; }
+        public float Crit { get; protected set; }
+        public float Hit { get; protected set; }
+
+        public float AnyLand { get { return (1f - (Miss + Dodge + Parry)); } }
+        public float AnyNotLand { get { return (Miss + Dodge + Parry); } }
+
+        protected virtual void Calculate() { }
+
+        protected void Initialize(Character character, Stats stats, Skills.Ability ability, bool ismh) {
+            Char = character;
+            StatS = stats;
+            calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+            combatFactors = new CombatFactors(Char, StatS);
+            Abil = ability;
+            isWhite = (Abil == null);
+            isMH = ismh;
+            /*// Defaults
+            Miss 
+            Dodge
+            Parry
+            Block
+            Glance
+            Critical
+            Hit*/
+            // Start a calc
+            Calculate();
+        }
+    }
+
+    public class DefendTable : CombatTable {
+        protected override void Calculate() {
+            float tableSize = 0f;
+            float tempVal = 0f;
+
+            // Miss
+            tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Miss, calcOpts.TargetLevel);
+            Miss = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
+            tableSize += Miss;
+            // Dodge
+            tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Dodge, calcOpts.TargetLevel);
+            Dodge = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
+            tableSize += Dodge;
+            // Parry
+            tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Parry, calcOpts.TargetLevel);
+            Parry = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
+            tableSize += Parry;
+            // Block
+            if (combatFactors.OH != null && combatFactors.OH.Type == ItemType.Shield) {
+                tempVal = StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Block, calcOpts.TargetLevel);
+                Block = Math.Max(0f, Math.Min(1f - tableSize, tempVal));
+                tableSize += Block;
+            }
+            // Critical Hit
+            Crit = Math.Max(0f, Math.Min(1f - tableSize, combatFactors.NPC_CritChance()));
+            tableSize += Crit;
+            // Normal Hit
+            Hit = Math.Max(0f, 1f - tableSize);
+        }
+
+        public DefendTable(Character character, Stats stats) { Initialize(character, stats, null, true); }
+    }
+
+    public class AttackTable : CombatTable {
+        protected override void Calculate() {
+            float tableSize = 0f;
+
+            // Miss
+            Miss = Math.Min(1f - tableSize, isWhite ? combatFactors._c_wmiss : combatFactors._c_ymiss);
+            tableSize += Miss;
+            // Dodge
+            if (isWhite || Abil.CanBeDodged) {
+                Dodge = Math.Min(1f - tableSize, isMH ? combatFactors._c_mhdodge : combatFactors._c_ohdodge);
+                tableSize += Dodge;
+            } else { Dodge = 0f; }
+            // Parry
+            if (isWhite || Abil.CanBeParried) {
+                Parry = Math.Min(1f - tableSize, isMH ? combatFactors._c_mhparry : combatFactors._c_ohparry);
+                tableSize += Parry;
+            } else { Parry = 0f; }
+            // Block
+            if (isWhite || Abil.CanBeBlocked) {
+                Block = Math.Min(1f - tableSize,isMH ?  combatFactors._c_mhblock : combatFactors._c_ohblock);
+                tableSize += Block;
+            } else { Block = 0f; }
+            // Glancing Blow
+            if (isWhite) {
+                Glance = Math.Min(1f - tableSize, combatFactors.GlanceChance );
+                tableSize += Glance;
+            } else { Glance = 0f; }
+            // Critical Hit
+            if (isWhite) {
+                Crit = Math.Min(1f - tableSize, isMH ?  combatFactors._c_mhycrit : combatFactors._c_ohycrit);
+                tableSize += Crit;
+            } else if (Abil.CanCrit) {
+                Crit = Math.Min(1f - tableSize, Abil.ContainCritValue(isMH));
+                tableSize += Crit;
+            } else {
+                Crit = 0f;
+            }
+            // Normal Hit
+            Hit = Math.Max(0f, 1f - tableSize);
+        }
+
+        public AttackTable(Character character, Stats stats, bool ismh) { Initialize(character, stats, null, ismh); }
+
+        public AttackTable(Character character, Stats stats, Skills.Ability ability, bool ismh) { Initialize(character, stats, ability, ismh); }
+    }
+
 }

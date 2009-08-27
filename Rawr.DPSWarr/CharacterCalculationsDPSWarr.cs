@@ -6,7 +6,6 @@ namespace Rawr.DPSWarr {
     public class CharacterCalculationsDPSWarr : CharacterCalculationsBase {
         #region Variables
         public Stats BasicStats { get; set; }
-        public Skills SkillAttacks { get; set; }
         public CombatFactors combatFactors { get; set; }
         public Rotation Rot { get; set; }
         public List<Buff> ActiveBuffs { get; set; }
@@ -56,6 +55,8 @@ namespace Rawr.DPSWarr {
         public float TeethBonus { get; set; }
         #endregion
         #region DPS
+        // White
+        public Skills.WhiteAttacks Whites { get; set; }
         public float WhiteDPS { get; set; }
         public float WhiteDmg { get; set; }
         public float WhiteDPSMH { get; set; }
@@ -248,10 +249,7 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Deep Wounds",       string.Format("{0:0000}*{1:00.0%} of DPS",Rot._DW_DPS     ,Rot._DW_DPS/TotalDPS));
             dictValues.Add("Heroic Strike",     string.Format(format, HS.DPS, HS.DamageOnUse, HS.Activates, HS.DPS / TotalDPS));
             dictValues.Add("Cleave",            string.Format(format, CL.DPS, CL.DamageOnUse, CL.Activates, CL.DPS / TotalDPS));
-            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000}*{2:0000.00} : MH" +
-                                                            Environment.NewLine + "{3:0000.00} : OH" + 
-                                                            Environment.NewLine + "{4:00.0%} of DPS",
-                                                            WhiteDPS,WhiteDmg,WhiteDPSMH,WhiteDPSOH,WhiteDPS/TotalDPS));
+            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000}", WhiteDPS, WhiteDmg)+Whites.GenTooltip(WhiteDPSMH / TotalDPS, WhiteDPSOH / TotalDPS));
             dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));
             // Rage
             format = "{0:00.000}";

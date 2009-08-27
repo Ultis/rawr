@@ -424,14 +424,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             WarriorTalents talents = character.WarriorTalents;
 
             CombatFactors combatFactors = new CombatFactors(character, stats);
-            Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character.WarriorTalents, stats, combatFactors, character);
-            Skills skillAttacks = new Skills(character, character.WarriorTalents, stats, combatFactors, whiteAttacks);
-            Rotation Rot = new Rotation(character, character.WarriorTalents, stats, combatFactors, whiteAttacks);
+            Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors);
+            Rotation Rot = new Rotation(character, stats);
             Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
 
             calculatedStats.Duration = calcOpts.Duration;
             calculatedStats.BasicStats = stats;
-            calculatedStats.SkillAttacks = skillAttacks;
             calculatedStats.combatFactors = combatFactors;
             calculatedStats.Rot = Rot;
             calculatedStats.TargetLevel = calcOpts.TargetLevel;
@@ -474,7 +472,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 + calculatedStats.ArmorPenetrationStance
                 + calculatedStats.ArmorPenetrationRating2Perc;
             calculatedStats.HasteRating = stats.HasteRating;
-            calculatedStats.HastePercent = talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
+            calculatedStats.HastePercent = stats.PhysicalHaste; //talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
             // DPS
 
             Rot.Initialize(calculatedStats);
@@ -545,6 +543,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                             // Convert it back a simple mod number
                                             - 1f
                                          ),
+                BonusPhysicalDamageMultiplier = (
+                                                    calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] // Have Rend up
+                                                    || talents.DeepWounds > 0 // Have Deep Wounds
+                                                ? talents.BloodFrenzy * 0.02f : 0f),
                 BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
@@ -599,16 +601,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
-            Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(talents, statsTotal, combatFactors, character);
-            Rotation Rot = new Rotation(character, talents, statsTotal, combatFactors, whiteAttacks);
+            Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors);
+            Rotation Rot = new Rotation(character, statsTotal);
             Rot.Initialize();
 
             float fightDuration = calcOpts.Duration;
 
             float mhHitsPerSecond = 0f; float ohHitsPerSecond = 0f;
             if (calcOpts.FuryStance) {
-                Skills.Ability bt = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
-                Skills.Ability ww = new Skills.WhirlWind(  character, statsTotal, combatFactors, whiteAttacks);
+                Skills.Ability bt = new Skills.BloodThirst(character, statsTotal, combatFactors);
+                Skills.Ability ww = new Skills.WhirlWind(  character, statsTotal, combatFactors);
                 mhHitsPerSecond = (bt.Activates + ww.Activates) / fightDuration * combatFactors.ProbMhYellowLand;
                 ohHitsPerSecond = (               ww.Activates) / fightDuration * combatFactors.ProbOhYellowLand;
             }else{mhHitsPerSecond = 1f / (1.5f + calcOpts.GetLatency()) * 0.9f * combatFactors.ProbMhYellowLand;}
@@ -678,23 +680,32 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
             // Warrior Abilities as SpecialEffects
             Stats avgstats = new Stats() { AttackPower = 0f, };
-            Skills.DeathWish       Death = new Skills.DeathWish(      character,statsTotal,combatFactors,whiteAttacks);
+            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
+            Skills.DeathWish Death = new Skills.DeathWish(character, statsTotal, combatFactors);
             avgstats += Death.AverageStats;
             //Recklessness is highly inaccurate right now
-            //Skills.Recklessness  Reck  = new Skills.Recklessness(   character,statsTotal,combatFactors,whiteAttacks);
+            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
+            //Skills.Recklessness  Reck  = new Skills.Recklessness(   character,statsTotal);
             //avgstats += Reck.AverageStats ;
-            Skills.ShatteringThrow Shatt = new Skills.ShatteringThrow(character,statsTotal,combatFactors,whiteAttacks);
+            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
+            Skills.ShatteringThrow Shatt = new Skills.ShatteringThrow(character, statsTotal, combatFactors);
             avgstats += Shatt.AverageStats;
-            Skills.SweepingStrikes Sweep = new Skills.SweepingStrikes(character,statsTotal,combatFactors,whiteAttacks);
+            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
+            Skills.SweepingStrikes Sweep = new Skills.SweepingStrikes(character, statsTotal, combatFactors);
             avgstats += Sweep.AverageStats;
-            Skills.Bloodrage       Blood = new Skills.Bloodrage(      character,statsTotal,combatFactors,whiteAttacks);
+            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
+            Skills.Bloodrage Blood = new Skills.Bloodrage(character, statsTotal, combatFactors);
             avgstats += Blood.AverageStats;
-            //Skills.Hamstring     Hammy = new Skills.Hamstring(      character,statsTotal,combatFactors,whiteAttacks);
+            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
+            //Skills.Hamstring     Hammy = new Skills.Hamstring(      character,statsTotal);
             //avgstats += Hammy.AverageStats;
-            Skills.BattleShout     Battle = new Skills.BattleShout(   character,statsTotal,combatFactors,whiteAttacks);
+            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
+            Skills.BattleShout Battle = new Skills.BattleShout(character, statsTotal, combatFactors);
             avgstats += Battle.AverageStats;
-            Skills.CommandingShout CS = new Skills.CommandingShout( character,statsTotal,combatFactors,whiteAttacks);
+            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
+            Skills.CommandingShout CS = new Skills.CommandingShout(character, statsTotal, combatFactors);
             avgstats += CS.AverageStats;
+
             statsProcs += avgstats;
 
             statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier    ));
