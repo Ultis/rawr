@@ -770,13 +770,16 @@ namespace Rawr.DPSWarr {
             _SD_GCDs = 0f;
             _SL_GCDs = origavailGCDs;
             _SS_Acts = 0f;
+            int loopCounter = 0;
             while (
-                    (float)Math.Abs(_OP_GCDs - oldOPGCDs) > 0.1f ||
-                    (float)Math.Abs(_SD_GCDs - oldSDGCDs) > 0.1f ||
-                    (float)Math.Abs(_SL_GCDs - oldSLGCDs) > 0.1f ||
-                    (Talents.SwordSpecialization > 0
+                    loopCounter < 100 &&
+                    ((float)Math.Abs(_OP_GCDs - oldOPGCDs) > 0.1f ||
+                     (float)Math.Abs(_SD_GCDs - oldSDGCDs) > 0.1f ||
+                     (float)Math.Abs(_SL_GCDs - oldSLGCDs) > 0.1f ||
+                     (Talents.SwordSpecialization > 0
                         && CombatFactors.MH.Type == ItemType.TwoHandSword
                         && (float)Math.Abs(_SS_Acts - oldSSActs) > 0.1f)
+                    )
                   )
             {
                 // Reset a couple of items so we can keep iterating
@@ -815,6 +818,7 @@ namespace Rawr.DPSWarr {
                     _SS_Acts = SS_Acts;
                     // TODO: Add Rage since it's a white hit
                 }
+                loopCounter++;
             }
             rageadd = SL.GetRageUsePerSecond(_SL_GCDs) + OP.GetRageUsePerSecond(_OP_GCDs) + SD.GetRageUsePerSecond(_SD_GCDs);
             availRage -= rageadd;
