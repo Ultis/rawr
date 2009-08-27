@@ -959,6 +959,12 @@ namespace Rawr {
                 line = line.Substring("Increases the damage dealt by your Lava Burst by ".Length);
                 stats.LavaBurstBonus = float.Parse(line);
             }
+            else if (line.StartsWith("Increases the base damage of your Lava Burst by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases the base damage of your Lava Burst by ".Length);
+                stats.LavaBurstBonus = float.Parse(line);
+            }
             else if ((match = new Regex("Your Crusader Strike ability also grants you (?<amount>\\d\\d*) attack power for 10 sec.").Match(line)).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.CrusaderStrikeHit, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 0f));

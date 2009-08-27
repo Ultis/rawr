@@ -3420,6 +3420,7 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Lava Burst Bonus Base Damage")]
         [Category("Elemental")]
         public float LavaBurstBonus
         {
