@@ -647,6 +647,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 if (effect != bersMainHand && effect != bersOffHand) // bersStats is null if the char doesn't have berserking enchant
                 {
+                    float oldArp = effect.Stats.ArmorPenetrationRating;
+                    if (effect.Stats.ArmorPenetrationRating > 0)
+                    {
+                        float arpenBuffs =
+                            ((combatFactors._c_mhItemType == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f) +
+                            (!calcOpts.FuryStance ? (0.10f + statsTotal.BonusWarrior_T9_2P_ArP) : 0.0f);
+                        float currentArp = arpenBuffs + StatConversion.GetArmorPenetrationFromRating(statsTotal.ArmorPenetrationRating);
+                        float arpToHardCap = (1f - currentArp) * StatConversion.RATING_PER_ARMORPENETRATION;
+                        if (arpToHardCap < effect.Stats.ArmorPenetrationRating) effect.Stats.ArmorPenetrationRating = arpToHardCap;
+                    }
                     switch (effect.Trigger)
                     {
                         case Trigger.Use: 
@@ -667,6 +677,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                             statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); 
                             break;
                     }
+                    effect.Stats.ArmorPenetrationRating = oldArp;
                 }
             }
             if (statsTotal.BonusWarrior_T8_2P_HasteProc > 0f) {
