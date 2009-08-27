@@ -40,6 +40,7 @@ namespace Rawr
         BloodStrikeHit,
         HeartStrikeHit,
         ObliterateHit,
+        DeathStrikeHit,
         ScourgeStrikeHit,
         BloodStrikeOrHeartStrikeHit, // Deprecated.
         PlagueStrikeHit,

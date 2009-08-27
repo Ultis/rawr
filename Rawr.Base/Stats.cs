@@ -367,6 +367,7 @@ namespace Rawr {
         BonusFrostStrikeDamage,
         BonusHeartStrikeDamage,
         BonusIcyTouchDamage,
+        BonusHowlingBlastDamage,
         #endregion
         #region DK set bonuses
         DiseasesCanCrit,
@@ -1608,6 +1609,14 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        public float BonusHowlingBlastDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHowlingBlastDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHowlingBlastDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

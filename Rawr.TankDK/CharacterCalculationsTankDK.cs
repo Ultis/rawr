@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Rawr.TankDK {
     // Reminder: This is the character totals based on all gear and talents.  Apply the weights here.
@@ -8,7 +7,6 @@ namespace Rawr.TankDK {
         public override float OverallPoints { get { return ((Survival * SurvivalWeight) + Mitigation + (Threat * ThreatWeight)); } set { } }
 
         public Stats BasicStats { get; set; }
-        public float BasicStrength { get; set; }
         public int TargetLevel { get; set; }
 
         public float Dodge { get; set; }
@@ -240,6 +238,7 @@ namespace Rawr.TankDK {
                 case "Target Dodge %": return TargetDodge * 100.0f; // Expertise related.
                 case "Damage Reduction %": return ArmorDamageReduction * 100.0f; // % Damage reduction by Armor
                 case "Armor": return Armor; // Raw Armor
+                case "Health": return BasicStats.Health;
                 case "Burst Time": return BurstTime;
                 case "Reaction Time": return ReactionTime;
                 default: return 0.0f;
@@ -259,7 +258,7 @@ namespace Rawr.TankDK {
 
             dict["Health"] = BasicStats.Health.ToString("F0");
             dict["Armor"] = BasicStats.Armor.ToString("F0");
-            dict["Strength"] = BasicStrength.ToString("F0");
+            dict["Strength"] = BasicStats.Strength.ToString("F0");
             dict["Agility"] = BasicStats.Agility.ToString("F0");
             dict["Stamina"] = BasicStats.Stamina.ToString("F0");
             dict["Hit Rating"] = BasicStats.HitRating.ToString("F0");

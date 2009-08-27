@@ -307,6 +307,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     "Target Parry %",
                     "Target Dodge %",
                     "Armor",
+                    "Health",
                     "Reaction Time",
                     "Burst Time"
                 }; 
@@ -338,7 +339,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // validate that we get a stats object;
             if (null == stats) { return calcs; }
 
-            calcs.BasicStrength = stats.Strength;
             calcs.BasicStats = stats.Clone() as Stats;
 
             // Import the option values from the options tab on the UI.
@@ -688,13 +688,15 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Apply Stat modifiers
             statsTotal.Strength = StatConversion.ApplyMultiplier(statsTotal.Strength, statsTotal.BonusStrengthMultiplier);
-            statsTotal.Agility  = StatConversion.ApplyMultiplier(statsTotal.Agility, statsTotal.BonusAgilityMultiplier);
-            statsTotal.Stamina  = StatConversion.ApplyMultiplier(statsTotal.Stamina, statsTotal.BonusStaminaMultiplier);
-            statsTotal.Armor    = StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier);
-            statsTotal.Armor   += StatConversion.GetArmorFromAgility(statsTotal.Agility); // Don't multiply the armor from agility.
-            statsTotal.Armor   += StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier);
-
+            statsTotal.Agility = StatConversion.ApplyMultiplier(statsTotal.Agility, statsTotal.BonusAgilityMultiplier);
+            // The stamina value is floor in game for the calcul.
+            // statsTotal.Stamina = StatConversion.ApplyMultiplier(statsTotal.Stamina, statsTotal.BonusStaminaMultiplier);
+            statsTotal.Stamina = (float)Math.Floor(StatConversion.ApplyMultiplier(statsTotal.Stamina, statsTotal.BonusStaminaMultiplier));
+            statsTotal.Armor = StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier);
+            statsTotal.Armor += StatConversion.GetArmorFromAgility(statsTotal.Agility); // Don't multiply the armor from agility.
+            statsTotal.Armor += StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier);
             statsTotal.Health = StatConversion.ApplyMultiplier((statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina)), statsTotal.BonusHealthMultiplier);
+            //statsTotal.BasicHealth = StatConversion.ApplyMultiplier((statsTotal.BasicHealth + StatConversion.GetHealthFromStamina(statsTotal.Stamina)), statsTotal.BonusHealthMultiplier);
 
             // Talent: BladedArmor //////////////////////////////////////////////////////////////
             if (character.DeathKnightTalents.BladedArmor > 0) {
@@ -704,10 +706,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             statsTotal.AttackPower  = StatConversion.ApplyMultiplier((statsTotal.AttackPower + (statsTotal.Strength * 2)), statsTotal.BonusAttackPowerMultiplier);
             statsTotal.CritRating   = StatConversion.ApplyMultiplier((statsTotal.CritRating + statsTotal.CritMeleeRating), statsTotal.BonusCritMultiplier);
             statsTotal.PhysicalCrit = StatConversion.ApplyMultiplier(statsTotal.PhysicalCrit 
-                                    + StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class)
-                                    + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusCritMultiplier);
-            statsTotal.SpellCrit    = StatConversion.ApplyMultiplier(statsTotal.SpellCrit
-                                    + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusCritMultiplier);
+                                        + StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class)
+                                        + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusCritMultiplier);
+            statsTotal.SpellCrit = StatConversion.ApplyMultiplier(statsTotal.SpellCrit
+                                        + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusSpellCritMultiplier);
 
             statsTotal.PhysicalCrit += statsTotal.LotPCritRating;
             statsTotal.SpellCrit    += statsTotal.LotPCritRating;
@@ -722,6 +724,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             return (statsTotal);
         }
+
         /// <summary>
         /// Gets data to fill a custom chart, based on the chart name, as defined in CustomChartNames.
         /// </summary>
@@ -734,6 +737,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             Base = BaseStats.GetBaseStats(character);
             return Base;
         }
+  
         /// <summary>
         /// Filters a Stats object to just the stats relevant to the model.
         /// </summary>
@@ -781,6 +785,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
@@ -836,6 +841,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
             return s;
         }
+ 
         /// <summary>
         /// Tests whether there are positive relevant stats in the Stats object.
         /// </summary>
@@ -863,6 +869,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                         effect.Trigger == Trigger.IcyTouchHit ||
                         effect.Trigger == Trigger.PlagueStrikeHit ||
                         effect.Trigger == Trigger.RuneStrikeHit ||
+                        effect.Trigger == Trigger.ObliterateHit ||
+                        effect.Trigger == Trigger.ScourgeStrikeHit ||
                         effect.Trigger == Trigger.Use)
                     {
                         return true;
@@ -908,6 +916,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.BonusStaminaMultiplier != 0);
             bResults |= (stats.BonusAgilityMultiplier != 0);
             bResults |= (stats.BonusCritMultiplier != 0);
+            bResults |= (stats.BonusSpellCritMultiplier != 0);
             bResults |= (stats.BonusAttackPowerMultiplier != 0);
             bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
             bResults |= (stats.BonusSpellPowerMultiplier != 0);
@@ -952,10 +961,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         }
         private Stats GetFrostPresence() {
             Stats FrostyStats = new Stats();
-            FrostyStats.BaseArmorMultiplier      += 0.60f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
-            FrostyStats.BonusHealthMultiplier    += 0.10f; // Bonus 10% health for Frost Presence.
-            FrostyStats.DamageTakenMultiplier    -= 0.05f; // Bonus of 5% damage reduced for frost presence.
-            FrostyStats.ThreatIncreaseMultiplier += 0.45f; // Bonus 45% threat for frost Presence.
+            FrostyStats.BaseArmorMultiplier += .6f; // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
+            // Patch 3.2: Replace 10% Health w/ 6% Stamina
+            FrostyStats.BonusStaminaMultiplier += .06f; // Bonus 6% Stamina
+//            FrostyStats.BonusHealthMultiplier += .1f; // Bonus 10% health for Frost Presence.
+            FrostyStats.DamageTakenMultiplier -= .05f;// Bonus of 5% damage reduced for frost presence.
+            FrostyStats.ThreatIncreaseMultiplier += .45f; // Bonus 45% threat for frost Presence.
             return FrostyStats;
         }
         /// <summary>Build the talent special effects.</summary>
@@ -1032,12 +1043,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // increases damage of BB by 10% per point
 
             // Veteran of the 3rd War
-            // increases Str and Stam by 2% per point
+            // Patch 3.2 from 2% to 1% per point.
+            // increases Str and Stam by 1% per point
             // increases expertise by 2 per point.
-            if (character.DeathKnightTalents.VeteranOfTheThirdWar > 0) {
-                sReturn.BonusStrengthMultiplier += (0.02f * character.DeathKnightTalents.VeteranOfTheThirdWar);
-                sReturn.BonusStaminaMultiplier  += (0.02f * character.DeathKnightTalents.VeteranOfTheThirdWar);
-                sReturn.Expertise               += (2f    * character.DeathKnightTalents.VeteranOfTheThirdWar);
+            if (character.DeathKnightTalents.VeteranOfTheThirdWar > 0)
+            {
+                sReturn.BonusStrengthMultiplier += (.02f * character.DeathKnightTalents.VeteranOfTheThirdWar);
+                sReturn.BonusStaminaMultiplier += (.01f * character.DeathKnightTalents.VeteranOfTheThirdWar);
+                sReturn.Expertise += (2f * character.DeathKnightTalents.VeteranOfTheThirdWar);
             }
 
             // Mark of blood
@@ -1045,7 +1058,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // heals the target for 4% of max health for each hit.
             if (character.DeathKnightTalents.MarkOfBlood > 0) {
                 // TODO: Need to know how many hits are incoming.
-                // for now assuming 10 hits.
+                // for now assuming 10 hits.  This should be adjusted by the Threat section for Boss hit rate.
                 newStats = new Stats();
                 newStats.Healed = (fHealth * 0.04f * 10f);
                 sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, newStats, 20f, 3f * 60f));
@@ -1068,12 +1081,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (character.DeathKnightTalents.AbominationsMight > 0) {
                 sReturn.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
                 newStats = new Stats();
-                newStats.BonusAttackPowerMultiplier = 0.1f;
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, newStats, 10f, 0f));
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, newStats, 10f, 0f));
-                // TODO: Add DS & Oblit hit.
-                //                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.DeathStrikeHit, newStats, 10, 0);
-                //                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.ObliterateHit, newStats, 10, 0);
+                newStats.BonusAttackPowerMultiplier = .1f;
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, newStats, 10, 0, .25f * character.DeathKnightTalents.AbominationsMight));
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, newStats, 10, 0, .25f * character.DeathKnightTalents.AbominationsMight));
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.ObliterateHit, newStats, 10, 0, .5f * character.DeathKnightTalents.AbominationsMight));
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.DeathStrikeHit, newStats, 10, 0, .5f * character.DeathKnightTalents.AbominationsMight));
             }
 
             // Bloodworms
@@ -1082,7 +1094,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (character.DeathKnightTalents.Bloodworms > 0) {
                 newStats = new Stats();
                 // TODO: figure out how much damage the worms do.
-                fDamageDone = 30f;
+                fDamageDone = 100f;
                 newStats.Healed = (fDamageDone * 1.5f);
                 sReturn.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, 20, 0, .03f * character.DeathKnightTalents.Bloodworms));
             }
@@ -1175,10 +1187,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // Toughness
-            // Increases Armor Value from items by 3% per point.
+            // Patch 3.2: Increases Armor Value from items by 2% per point.
             // Reducing duration of all slowing effects by 6% per point.  
-            if (character.DeathKnightTalents.Toughness > 0) {
-                sReturn.BaseArmorMultiplier += (0.03f * character.DeathKnightTalents.Toughness);
+            if (character.DeathKnightTalents.Toughness > 0)
+            {
+                sReturn.BaseArmorMultiplier += (.02f * character.DeathKnightTalents.Toughness); // Patch 3.2
+
             }
 
             // Icy Reach
@@ -1205,7 +1219,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // Lichborne
-            // for 15 sec, immune to charm, fear, sleep
+            // for 10 sec, immune to charm, fear, sleep
+            // CD 2 Mins
+
+            // Threat of Thassarian: 
+            // New 3-point talent. When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, 
+            // Blood Strikes and Frost Strikes have a 30/60/100% chance to also deal damage with your 
+            // off-hand weapon. Off-hand strikes are roughly one half the effect of the original strike. 
 
             // Annihilation
             // +1 % per point melee Crit chance 
@@ -1242,8 +1262,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 }
                 sReturn.BonusIcyTouchDamage += fBonus;
                 sReturn.BonusFrostStrikeDamage += fBonus;
-                // TODO:
-                //sReturn.BonusHowlingBlastDamage += fBonus;
+                sReturn.BonusHowlingBlastDamage += fBonus;
             }
 
             // Deathchill
@@ -1278,12 +1297,25 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // Blood of the North
-            // BS & FS damage +5% per point
-            // BS & Pest create DeathRune from Blood 20% per point.
+            // Patch 3.2: BS & FS damage +3% per point
+            // Patch 3.2: BS & Pest create DeathRune from Blood 33% per point.
             if (character.DeathKnightTalents.BloodOfTheNorth > 0)
             {
-                sReturn.BonusFrostStrikeDamage += (0.05f * character.DeathKnightTalents.BloodOfTheNorth);
-                sReturn.BonusBloodStrikeDamage += (0.05f * character.DeathKnightTalents.BloodOfTheNorth);
+                float fBonus = 0f;
+                switch (character.DeathKnightTalents.BloodOfTheNorth)
+                {
+                    case 1:
+                        fBonus = 0.03f;
+                        break;
+                    case 2:
+                        fBonus = 0.06f;
+                        break;
+                    case 3:
+                        fBonus = 0.1f;
+                        break;
+                }
+                sReturn.BonusFrostStrikeDamage += fBonus;
+                sReturn.BonusBloodStrikeDamage += fBonus;
             }
 
             // Unbreakable Armor
@@ -1316,7 +1348,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // HACK: Implenting IceBound Fortitude. ////////////////////////////////////////////////////////
             // Implmenting IBF here because it's affected by GoGF
             // Four T7 increases IBF by 3 sec.
-            // IBF has a 60 sec CD.
+            // Patch 3.2: IBF has a 120 sec CD. 
             float fIBFDur = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f + FullCharacterStats.BonusIceboundFortitudeDuration);
             // IBF reduces damage taken by 20% + 3% for each 28 defense over 400.
             float ibfDefense = StatConversion.GetDefenseFromRating(FullCharacterStats.DefenseRating, character.Class);
@@ -1331,10 +1363,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             ibfReduction = Math.Min(0.3f, ibfReduction);
             newStats = new Stats();
             newStats.DamageTakenMultiplier -= ibfReduction;
-            sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fIBFDur, 60));
-            if (character.DeathKnightTalents.GuileOfGorefiend > 0) {
-                // TODO: Crit Damage multiplier
-            }
+            sReturn.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fIBFDur, 120)); // Patch 3.2
 
             // Tundra Stalker
             // Your spells & abilities deal 3% per point more damage to targets w/ FF
@@ -1432,14 +1461,17 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Desecration
             // PS and SS cause Desecrated Ground effect.
             // Targets are slowed by 10% per point
-            // You cause 1% more damage 
+            // Patch 3.2: You don't cause 1% more damage 
             // Lasts 12 sec.
-            if (character.DeathKnightTalents.Desecration > 0) {
+            /* Patch 3.2
+            if (character.DeathKnightTalents.Desecration > 0)
+            {
                 newStats = new Stats();
                 newStats.BonusDamageMultiplier += 0.01f * character.DeathKnightTalents.Desecration;
                 // Gonna use an average CD of a rune at 10sec per rune divided by 2 runes == 5 sec.
                 sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 12f, 5f));
             }
+            */
 
             // AntiMagic Zone
             // Creates a zone where party/raid members take 75% less spell damage
@@ -1471,8 +1503,28 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // CF becomes EP - increases magic damage taken by targets 4, 9, 13% in addition to disease damage
             // Increases crit strike chance by 1% per point
             if (character.DeathKnightTalents.EbonPlaguebringer > 0) {
-                // TODO: implment magic damage bonus.
                 sReturn.BonusCritChance += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
+                float fBonus = 0f;
+                switch (character.DeathKnightTalents.EbonPlaguebringer)
+                {
+                    case 1:
+                        fBonus = .04f;
+                        break;
+                    case 2:
+                        fBonus = .09f;
+                        break;
+                    case 3:
+                        fBonus = .13f;
+                        break;
+                    default:
+                        break;
+                }
+                sReturn.BonusArcaneDamageMultiplier += fBonus;
+                sReturn.BonusFireDamageMultiplier += fBonus;
+                sReturn.BonusFrostDamageMultiplier += fBonus;
+                sReturn.BonusHolyDamageMultiplier += fBonus;
+                sReturn.BonusNatureDamageMultiplier += fBonus;
+                sReturn.BonusShadowDamageMultiplier += fBonus;
             }
 
             // Sourge Strike
