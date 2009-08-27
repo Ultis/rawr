@@ -1468,40 +1468,60 @@ namespace Rawr
 
             #region Potion
             // potions set to be 1 hr cooldown to ensure its treated as once per combat.
+            // Jothay: Changed to 20 Minutes to give a higher value for the fight while
+            // keeping it outside the chance of using it twice during same fight
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Potion of Speed",
                 Group = "Potion",
                 Stats = new Stats(),
+                Improvements = { new Buff { Name = "Potion of Speed (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f, 3600f));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f, 20f * 60f));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f - 1f, 20f * 60f));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Potion of Wild Magic",
                 Group = "Potion",
                 Stats = new Stats(),
+                Improvements = { new Buff { Name = "Potion of Wild Magic (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f, 3600f));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f, 20f * 60f));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f - 1f, 20f * 60f));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Heroic Potion",
                 Group = "Potion",
                 Stats = new Stats(),
+                Improvements = { new Buff { Name = "Heroic Potion (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 70f, Health = 700f }, 15f, 3600f));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 70f, Health = 700f }, 15f, 20f * 60f));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 70f, Health = 700f }, 15f - 1f, 20f * 60f));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Insane Strength Potion",
                 Group = "Potion",
                 Stats = new Stats(),
+                Improvements = { new Buff { Name = "Insane Strength Potion (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DefenseRating = -75f }, 15f, 3600f));
-            defaultBuffs.Add(new Buff()
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DefenseRating = -75f }, 15f, 20f * 60f));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DefenseRating = -75 }, 15f - 1f, 20f * 60f));
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Indestructible Potion",
                 Group = "Potion",
-                Stats = { BonusArmor = 3500 },
+                Stats = new Stats(),
+                Improvements = { new Buff { Name = "Indestructible Potion (Double Pot Trick)", Stats = new Stats() } }
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 2f * 60f, 20f * 60f));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 2f * 60f - 1f, 20f * 60f));
+            //defaultBuffs.Add(buff = new Buff()
+            //{
+            //    Name = "Indestructible Potion (Double Pot Trick)",
+            //    Group = "Potion",
+            //    Stats = new Stats(),
+            //});
+            //buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 4f * 60f, 20f * 60f));
             //defaultBuffs.Add(new Buff()
             //{
             //    Name = "Haste Potion",

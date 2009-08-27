@@ -27,10 +27,10 @@ namespace Rawr.DPSWarr {
         #region Attack Table
         public float Miss { get; set; }
         public float HitRating { get; set; }
-        public float HitPercent { get; set; }
-        public float HitPercBonus { get; set; }
-        public float HitPercentTtl { get; set; }
-        public float HitCanFree { get; set; }
+        //public float HitPercent { get; set; }
+        //public float HitPercBonus { get; set; }
+        //public float HitPercentTtl { get; set; }
+        //public float HitCanFree { get; set; }
         public float ExpertiseRating { get; set; }
         public float Expertise { get; set; }
         public float MhExpertise { get; set; }
@@ -165,65 +165,75 @@ namespace Rawr.DPSWarr {
                                 BasicStats.ArmorPenetrationRating, ArmorPenetrationRating2Perc,
                                 ArmorPenetrationStance,
                                 ArmorPenetrationMaceSpec));
+            // old
+            float HitPercent = StatConversion.GetHitFromRating(HitRating);
+            float HitPercBonus = BasicStats.PhysicalHit;
+            //HitPercentTtl = HitPercent + HitPercBonus;
+            /*HitCanFree =
+                StatConversion.GetRatingFromHit(
+                    combatFactors.WhMissCap //StatConversion.WHITE_MISS_CHANCE_CAP
+                    - HitPercBonus
+                    - StatConversion.GetHitFromRating(HitRating)
+                )
+                * -1f;*/
+            // Hit Soft Cap ratings check, how far from it
+            float capA1         = StatConversion.WHITE_MISS_CHANCE_CAP[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level];
+            float convcapA1     = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA1));
+            float sec2lastNumA1 = (convcapA1 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
+            //float lastNumA1    = StatConversion.GetRatingFromExpertise((convcapA1 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
+            // Hit Hard Cap ratings check, how far from it
+            float capA2         = StatConversion.WHITE_MISS_CHANCE_CAP_DW[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level];
+            float convcapA2     = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA2));
+            float sec2lastNumA2 = (convcapA2 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
+            //float lastNumA2   = StatConversion.GetRatingFromExpertise((sec2lastNumA2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
             dictValues.Add("Hit",
                 string.Format("{0:00.00%} : {1}*" + "{2:0.00%} : From Other Bonuses" +
                                 Environment.NewLine + "{3:0.00%} : Total Hit % Bonus" +
-                                Environment.NewLine + Environment.NewLine +
-                                (HitCanFree > 0 ? "You can free {4:0} Rating (from yellow cap)"
-                                                : "You need {4:0} more Rating (to yellow cap)"),
+                                Environment.NewLine + Environment.NewLine + "White Two-Hander Cap: " +
+                                (sec2lastNumA1 > 0 ? "You can free {4:0} Rating"
+                                                   : "You need {4:0} more Rating") +
+                                Environment.NewLine + "White Dual Wield Cap: " +
+                                (sec2lastNumA2 > 0 ? "You can free {5:0} Rating"
+                                                   : "You need {5:0} more Rating"),
                                 StatConversion.GetHitFromRating(BasicStats.HitRating),
                                 BasicStats.HitRating,
                                 HitPercBonus,
-                                HitPercentTtl,
-                                (HitCanFree > 0 ? HitCanFree : HitCanFree*-1 )));
-            float sec2lastNum = (StatConversion.GetExpertiseFromDodgeParryReduc(0.065f)-Math.Min(MhExpertise,(OhExpertise!=0?OhExpertise:MhExpertise)))*-1;
-            float lastNum = StatConversion.GetRatingFromExpertise((StatConversion.GetExpertiseFromDodgeParryReduc(0.065f) - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
+                                HitPercent + HitPercBonus,
+                                (sec2lastNumA1 > 0 ? sec2lastNumA1 : sec2lastNumA1 * -1),
+                                (sec2lastNumA2 > 0 ? sec2lastNumA2 : sec2lastNumA2 * -1)
+                            ));
+            // Dodge Cap ratings check, how far from it, uses lesser of MH and OH
+            // Also factors in Weapon Mastery
+            float capB1         = StatConversion.YELLOW_DODGE_CHANCE_CAP[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level] - WeapMastPerc;
+            float convcapB1     = (float)Math.Ceiling(StatConversion.GetExpertiseFromDodgeParryReduc(capB1));
+            float sec2lastNumB1 = (convcapB1 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1;
+            float lastNumB1     = StatConversion.GetRatingFromExpertise((convcapB1 - WeapMastPerc - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
+            // Parry Cap ratings check, how far from it, uses lesser of MH and OH
+            float capB2         = StatConversion.YELLOW_PARRY_CHANCE_CAP[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level];
+            float convcapB2     = (float)Math.Ceiling(StatConversion.GetExpertiseFromDodgeParryReduc(capB2));
+            float sec2lastNumB2 = (convcapB2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1;
+            float lastNumB2     = StatConversion.GetRatingFromExpertise((convcapB2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
             dictValues.Add("Expertise",
                 string.Format("{0:00.00%} : {1:00.00} : {2}*" +
                                                       "Following includes Racial bonus and Strength of Arms" +
-                                Environment.NewLine + "{3:00.00%} : {4:00.00} : MH" +
-                                Environment.NewLine + "{5:00.00%} : {6:00.00} : OH" +
-                                Environment.NewLine + "{7:00.00%} Weapon Mastery (Dodge Only)" +
-                                Environment.NewLine + Environment.NewLine +
-                                (lastNum > 0 ? "You can free {8:0} Expertise ({9:0} Rating)"
-                                             : "You need {8:0} more Expertise ({9:0} Rating)"),
+                                Environment.NewLine + "{3:00.00%} Weapon Mastery (Dodge Only)" +
+                                Environment.NewLine + "{4:00.00%} : {5:00.00} : MH" +
+                                Environment.NewLine + "{6:00.00%} : {7:00.00} : OH" +
+                                Environment.NewLine + Environment.NewLine + "Dodge Cap: " +
+                                (lastNumB1 > 0 ? "You can free {8:0} Expertise ({9:0} Rating)"
+                                             : "You need {8:0} more Expertise ({9:0} Rating)") +
+                                Environment.NewLine + "Parry Cap: " +
+                                (lastNumB2 > 0 ? "You can free {10:0} Expertise ({11:0} Rating)"
+                                             : "You need {10:0} more Expertise ({11:0} Rating)"),
                                 StatConversion.GetDodgeParryReducFromExpertise(Expertise),
                                 Expertise,
                                 BasicStats.ExpertiseRating,
+                                WeapMastPerc,
                                 StatConversion.GetDodgeParryReducFromExpertise(MhExpertise), MhExpertise,
                                 StatConversion.GetDodgeParryReducFromExpertise(OhExpertise), OhExpertise,
-                                WeapMastPerc,
-                                (sec2lastNum > 0 ? sec2lastNum : sec2lastNum * -1),
-                                (lastNum > 0 ? lastNum : lastNum*-1)));
-            /*
-             * What is the breakdown of the things we want to know?
-             * 
-             * Ability:
-             * - Damage per Second
-             * - Damage per Hit (mitgated, etc)
-             * - Number of Times Activated over Duration
-             * - Percentage of DPS vs Total DPS
-             * - Breakdown of Main-hand vs Off-hand
-             * - Number of Targets hit
-             * - Notes regarding other hidden benefits (eg- MS anti-healing effect)
-             * 
-             * === Dummy tooltip ===
-             * Mortal Strike, Instant, CD: 5, RageCost: 30
-             * A vicious strike that deals weapon damage plus 380 and wounds the target, reducing
-             * the effectiveness of any healing by 50% for 10 sec.
-             * 
-             * Attack Table:
-             * - 00.0: Missed (00.00%)
-             * - 00.0: Dodged (00.00%)
-             * - 00.0: Parried (00.00%)
-             * - 00.0: Blocked (00.00%)
-             * - 00.0: Crit (00.00%)
-             * - 00.0: Hit (00.00%)
-             * Damage per Blocked|Hit|Crit: x|x|x
-             * Targets Hit: 1
-             * DPS: x
-             * Percentage of Total DPS: x
-            */
+                                (sec2lastNumB1 > 0 ? sec2lastNumB1 : sec2lastNumB1 * -1), (lastNumB1 > 0 ? lastNumB1 : lastNumB1 * -1),
+                                (sec2lastNumB2 > 0 ? sec2lastNumB2 : sec2lastNumB2 * -1), (lastNumB2 > 0 ? lastNumB2 : lastNumB2 * -1)
+                            ));
 
             // DPS Fury
             format = "{0:0000} : {1:0000} : {2:000.00}";

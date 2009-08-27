@@ -32,56 +32,38 @@ namespace Rawr.DPSWarr {
             CB_TargArmor.DisplayMember = "Key";
             CB_TargArmor.DataSource = new BindingSource(armorBosses, null);
 
-            CB_TargLvl.DataSource = new[] {83, 82, 81, 80};
+            //CB_TargLvl.DataSource = new[] {83, 82, 81, 80};
             CB_Duration.Minimum = 0;
             CB_Duration.Maximum = 60*20; // 20 minutes
-
-            RB_StanceFury.Checked = true;
-            CK_Flooring.Checked   = true;
         }
         protected override void LoadCalculationOptions() {
             if (Character != null && Character.CalculationOptions == null) { 
+                // If it's broke, make a new one with the defaults
                 Character.CalculationOptions = new CalculationOptionsDPSWarr();
-                CalculationOptionsDPSWarr newcalcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                newcalcOpts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
-                // Rotational Changes
-                RB_StanceFury.Checked = newcalcOpts.FuryStance;
-                RB_StanceArms.Checked = !RB_StanceFury.Checked;
-                // Abilities to Maintain
-                CK_Flooring.Checked = newcalcOpts.AllowFlooring;
-                LoadAbilBools(newcalcOpts);
-                // Latency
-                CB_Lag.Value = (int)newcalcOpts.Lag;
-                CB_React.Value = (int)newcalcOpts.React;
-                //
-                Character.OnCalculationsInvalidated();
-                return; 
             }
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            if (calcOpts != null) {
-                CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
-                CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
-                CB_Duration.Value = (decimal)calcOpts.Duration;
-                RB_StanceArms.Checked    = !calcOpts.FuryStance;
-                // Rotational Changes
-                CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
-                CK_MultiTargs.Checked    = calcOpts.MultipleTargets;   CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;CB_MultiTargsMax.Value     = (int)calcOpts.MultipleTargetsMax;
-                CK_StunningTargs.Checked = calcOpts.StunningTargets;   CB_StunningTargsPerc.Value  = calcOpts.StunningTargetsPerc;
-                // nonfunctional
-                CK_MovingTargs.Checked   = calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
-                CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
-                // Abilities to Maintain
-                CK_Flooring.Checked = calcOpts.AllowFlooring;
-                LoadAbilBools(calcOpts);
-                // Latency
-                CB_Lag.Value   = (int)calcOpts.Lag;
-                CB_React.Value = (int)calcOpts.React;
-                //
-                calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
-                RB_StanceFury.Checked = calcOpts.FuryStance;
-                RB_StanceArms.Checked = !RB_StanceFury.Checked;
-                Character.OnCalculationsInvalidated();
-            }
+            CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
+            CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
+            CB_Duration.Value = (decimal)calcOpts.Duration;
+            RB_StanceArms.Checked    = !calcOpts.FuryStance;
+            // Rotational Changes
+            CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
+            CK_MultiTargs.Checked    = calcOpts.MultipleTargets;   CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;CB_MultiTargsMax.Value     = (int)calcOpts.MultipleTargetsMax;
+            CK_StunningTargs.Checked = calcOpts.StunningTargets;   CB_StunningTargsPerc.Value  = calcOpts.StunningTargetsPerc;
+            // nonfunctional
+            CK_MovingTargs.Checked   = calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
+            CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
+            // Abilities to Maintain
+            CK_Flooring.Checked = calcOpts.AllowFlooring;
+            LoadAbilBools(calcOpts);
+            // Latency
+            CB_Lag.Value   = (int)calcOpts.Lag;
+            CB_React.Value = (int)calcOpts.React;
+            //
+            calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
+            RB_StanceFury.Checked = calcOpts.FuryStance;
+            RB_StanceArms.Checked = !RB_StanceFury.Checked;
+            Character.OnCalculationsInvalidated();
         }
         // Basics
         private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
@@ -857,7 +839,7 @@ namespace Rawr.DPSWarr {
         public int TargetArmor = (int)StatConversion.NPC_ARMOR[83-80];
         public float Duration = 300f;
         public bool FuryStance = true;
-        public bool AllowFlooring = true;
+        public bool AllowFlooring = false;
         // Rotational Changes
         public bool InBack             = true ; public int InBackPerc           = 75;
         public bool MultipleTargets    = true; public int MultipleTargetsPerc  = 25;public float MultipleTargetsMax = 3;

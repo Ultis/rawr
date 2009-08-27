@@ -96,7 +96,7 @@ namespace Rawr.DPSWarr {
                         - OHAtkTable.Parry  // no damage when being parried
                         - OHAtkTable.Glance // glancing handled below
                         - OHAtkTable.Block  // blocked handled below
-                        - OHAtkTable.Crit); // crits   handled below
+                        - OHAtkTable.Crit); // crits handled below
 
                     float dmgGlance = dmg * OHAtkTable.Glance *     combatFactors.ReducWhGlancedDmg ;//Partial Damage when glancing
                     float dmgBlock  = dmg * OHAtkTable.Block  *     combatFactors.ReducWhBlockedDmg ;//Partial damage when blocked

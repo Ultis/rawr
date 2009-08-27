@@ -438,16 +438,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 // Miss
                 calculatedStats.Miss = stats.Miss;
                 calculatedStats.HitRating = stats.HitRating;
-                calculatedStats.HitPercent = StatConversion.GetHitFromRating(stats.HitRating);
-                calculatedStats.HitPercBonus = stats.PhysicalHit;
-                calculatedStats.HitPercentTtl = calculatedStats.HitPercent + calculatedStats.HitPercBonus;
-                calculatedStats.HitCanFree =
-                    StatConversion.GetRatingFromHit(
-                        combatFactors.WhMissCap //StatConversion.WHITE_MISS_CHANCE_CAP
-                        - calculatedStats.HitPercBonus
-                        - StatConversion.GetHitFromRating(calculatedStats.HitRating)
-                    )
-                    * -1f;
                 calculatedStats.ExpertiseRating = stats.ExpertiseRating;
                 calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Warrior);
                 calculatedStats.MhExpertise = combatFactors._c_mhexpertise;
@@ -723,15 +713,26 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
             statsProcs.Strength    += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
             statsProcs.Agility      = (float)Math.Floor(statsProcs.Agility     * (1f + totalBAM)   * (1f + statsProcs.BonusAgilityMultiplier    ));
-            statsProcs.AttackPower += statsProcs.Strength * 2f;
-            statsProcs.AttackPower  = (float)Math.Floor(statsProcs.AttackPower * (1f + totalBAPM)  * (1f + statsProcs.BonusAttackPowerMultiplier));
             statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina     * 10f);
             
+            // Armor
             statsProcs.Armor        = (float)Math.Floor(statsProcs.Armor      * (1f + statsTotal.BaseArmorMultiplier  + statsProcs.BaseArmorMultiplier ));
             statsProcs.BonusArmor  += statsProcs.Agility * 2f;
             statsProcs.BonusArmor   = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
             statsProcs.Armor       += statsProcs.BonusArmor;
-            
+
+            // Attack Power
+            /*statsProcs.AttackPower += statsProcs.Strength * 2f;
+            statsProcs.AttackPower  = (float)Math.Floor(statsProcs.AttackPower *
+                                                                (1f + totalBAPM) *
+                                                                (1f + statsProcs.BonusAttackPowerMultiplier));*/
+            float totalBAPMProcs    = (1f + statsTotal.BonusAttackPowerMultiplier) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
+            float apBonusSTRProcs   = (1f + totalBAPM) * (statsProcs.Strength * 2f);
+            float apBonusAttTProcs  = (1f + totalBAPM) * ((statsProcs.Armor / 108f) * talents.ArmoredToTheTeeth);
+            float apBonusOtherProcs = (1f + totalBAPM) * (statsProcs.AttackPower);
+            statsProcs.AttackPower  = (float)Math.Floor(apBonusSTRProcs + apBonusAttTProcs + apBonusOtherProcs);
+
+            // Haste
             statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
                                      * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, CharacterClass.Warrior))
                                      - 1f;

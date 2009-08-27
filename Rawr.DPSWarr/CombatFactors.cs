@@ -48,8 +48,8 @@ namespace Rawr.DPSWarr {
         #region Global Variables
         private Stats StatS;
         private WarriorTalents Talents;
-        private CalculationOptionsDPSWarr CalcOpts;
-        private Character Char;
+        public CalculationOptionsDPSWarr CalcOpts;
+        public Character Char;
         public Item MH;
         public Item OH;
         // Optimizations
@@ -193,7 +193,7 @@ namespace Rawr.DPSWarr {
                 float twoHandCheck = (Talents.TitansGrip == 1f && OH != null
                         && MH.Slot == ItemSlot.TwoHand
                         && OH.Slot == ItemSlot.TwoHand ?
-                       StatConversion.WHITE_MISS_CHANCE_CAP_DW[CalcOpts.TargetLevel - 80] : StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - 80]);
+                       StatConversion.WHITE_MISS_CHANCE_CAP_DW[CalcOpts.TargetLevel - Char.Level] : StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]);
                 return twoHandCheck;
             }
         }
@@ -203,7 +203,7 @@ namespace Rawr.DPSWarr {
                 return (float)Math.Max(0f, missChance); 
             }
         }
-        public float YwMissCap {get {return StatConversion.YELLOW_MISS_CHANCE_CAP[CalcOpts.TargetLevel - 80];}}
+        public float YwMissCap {get {return StatConversion.YELLOW_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level];}}
         public float YwMissChance { get { return (float)Math.Max(0f, YwMissCap - MissPrevBonuses); } }
         #endregion
         #region Dodge
