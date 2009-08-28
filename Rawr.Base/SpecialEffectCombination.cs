@@ -67,14 +67,28 @@ namespace Rawr
             public double[] d;
             public double[] p;
             public double[] c;
+            public double[] o;
+            public bool[] a;
             public float[] triggerInterval;
 
-            public Parameters(SpecialEffectCombination e, float[] triggerInterval, float[] triggerChance, float attackSpeed)
+            public Parameters(SpecialEffectCombination e, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed) : this(e, triggerInterval, triggerChance, offset, null, attackSpeed)
+            {
+                a = new bool[e.effects.Count];
+
+                for (int i = 0; i < e.effects.Count; i++)
+                {
+                    a[i] = true;
+                }
+            }
+
+            public Parameters(SpecialEffectCombination e, float[] triggerInterval, float[] triggerChance, float[] offset, bool[] active, float attackSpeed)
             {
                 this.triggerInterval = triggerInterval;
                 d = new double[e.effects.Count];
                 p = new double[e.effects.Count];
                 c = new double[e.effects.Count];
+                o = new double[e.effects.Count];
+                a = active;
 
                 bool discretizationCorrection = true;
 
@@ -88,6 +102,7 @@ namespace Rawr
                         c[i] += 0.5;
                     }
                     if (c[i] < 1.0) c[i] = 1.0;
+                    o[i] = offset[i] / triggerInterval[i];
                 }
             }
         }
@@ -97,12 +112,42 @@ namespace Rawr
             this.effects = effects;
         }
 
-        public float GetAverageCombinedUptime(float[] triggerInterval, float[] triggerChance, float attackSpeed, float fightDuration)
+        /// <summary>
+        /// Computes the average uptime of all effects being active.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds for each effect.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced for each effect.</param>
+        /// <param name="offset">Initial cooldown for each effect.</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public float GetAverageCombinedUptime(float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed, float fightDuration)
         {
             // CombinedAverageUptime = integrate_0..fightDuration prod_i Uptime[i](t) dt
 
             // initialize data, translate into interval time
-            Parameters p = new Parameters(this, triggerInterval, triggerChance, attackSpeed);
+            Parameters p = new Parameters(this, triggerInterval, triggerChance, offset, attackSpeed);
+
+            // integrate using adaptive Simspon's method
+            double totalCombinedUptime = AdaptiveSimpsonsMethod(p, fightDuration, 0.000001, 20);
+
+            return (float)(totalCombinedUptime / fightDuration);
+        }
+
+        /// <summary>
+        /// Computes the average uptime of specific effects being active/inactive.
+        /// </summary>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds for each effect.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced for each effect.</param>
+        /// <param name="active">Determines if specific effects are being active/inactive for the uptime calculation.</param>
+        /// <param name="offset">Initial cooldown for each effect.</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public float GetAverageCombinedUptime(float[] triggerInterval, float[] triggerChance, float[] offset, bool[] active, float attackSpeed, float fightDuration)
+        {
+            // CombinedAverageUptime = integrate_0..fightDuration prod_i Uptime[i](t) dt
+
+            // initialize data, translate into interval time
+            Parameters p = new Parameters(this, triggerInterval, triggerChance, offset, active, attackSpeed);
 
             // integrate using adaptive Simspon's method
             double totalCombinedUptime = AdaptiveSimpsonsMethod(p, fightDuration, 0.000001, 20);
@@ -152,7 +197,7 @@ namespace Rawr
 
             for (int i = 0; i < effects.Count; i++)
             {
-                double x = t / p.triggerInterval[i];
+                double x = t / p.triggerInterval[i] - p.o[i];
 
                 double uptime = 0.0;
                 int r = 1;
@@ -167,7 +212,14 @@ namespace Rawr
                     r++;
                     x -= p.c[i];
                 }
-                combinedUptime *= uptime;
+                if (p.a[i])
+                {
+                    combinedUptime *= uptime;
+                }
+                else
+                {
+                    combinedUptime *= (1.0 - uptime);
+                }
             }
 
             return combinedUptime;
