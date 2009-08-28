@@ -397,7 +397,7 @@ namespace Rawr.Mage
                         }
                         if (procs == 0.0f) continue;
                         // until they put in some good trinkets with such effects just do a quick dirty calculation
-                        float effectHasteRating = effect.GetAverageStackSize(castTime / Ticks, procs / Ticks, 3.0f, (float)castingState.Calculations.Trinket1Duration) * effect.Stats.HasteRating;
+                        float effectHasteRating = effect.GetAverageStackSize(castTime / Ticks, procs / Ticks, 3.0f, (float)castingState.Calculations.Trinket2Duration) * effect.Stats.HasteRating;
 
                         castingSpeed /= (1 + spellHasteRating / 995f * levelScalingFactor);
                         spellHasteRating += effectHasteRating;
