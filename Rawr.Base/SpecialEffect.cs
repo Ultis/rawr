@@ -376,10 +376,19 @@ namespace Rawr
                         // For now, assume it stacks to max, if it can stack at all
                         float buildTime = triggerInterval / triggerChance * MaxStack * stackReset;
                         float value;
-                        if (fightDuration > buildTime)
+                        if (fightDuration >= buildTime)
+                        {
                             value = buildTime * (MaxStack - 1) / 2 + (fightDuration - buildTime) * MaxStack;
+                        }
                         else
-                            value = buildTime * (MaxStack - 1) / 2;
+                        {
+                            float singleBuild = buildTime / stackReset;
+                            int fullBuilds = (int)(fightDuration / singleBuild);
+                            value = fullBuilds * singleBuild * (MaxStack - 1) / 2;
+                            float remaining = fightDuration - fullBuilds * singleBuild;
+                            float remainingStacks = remaining / (triggerInterval / triggerChance);
+                            value += remaining * Math.Max(0, remainingStacks - 1) / 2;
+                        }
 
                         averageStack = value / fightDuration;
                     }
@@ -1137,7 +1146,7 @@ namespace Rawr
             s.Append(" (");
 
             bool needsSpace = false;
-            if (Duration > 0)
+            if (Duration > 0 && !float.IsInfinity(Duration))
             {
                 s.Append(DurationString);
                 needsSpace = true;

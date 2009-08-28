@@ -180,8 +180,10 @@ namespace Rawr.Mage
         public SpecialEffect[] Mp5Effects { get; set; }
         public float Trinket1SpellPower { get; set; }
         public float Trinket1HasteRating { get; set; }
+        public List<SpecialEffect> Trinket1SpecialEffects { get; set; }
         public float Trinket2SpellPower { get; set; }
         public float Trinket2HasteRating { get; set; }
+        public List<SpecialEffect> Trinket2SpecialEffects { get; set; }
         public float ManaGemEffectSpellPower { get; set; }
 
         #region Base State Stats

@@ -1527,6 +1527,19 @@ namespace Rawr {
                 // Old entry in case some models still use it
                 stats.Mp5OnCastFor20SecOnUse2Min += int.Parse(match.Groups["mp5"].Value);
             }
+            else if ((match = Regex.Match(line, @"Each time you cast a harmful spell, you gain (?<hasteRating>\d+) haste rating\. .*Stacks up to (?<stacks>\d+) times\. .*Entire effect lasts (?<duration>\d+) sec\.( \((?<cooldown>\d+) Min Cooldown\))?")).Success)
+            {
+                // Fetish of Volatile Power
+                // armory doesn't give cooldown info
+                int cooldown = 120;
+                if (match.Groups["cooldown"].Success)
+                {
+                    cooldown = int.Parse(match.Groups["cooldown"].Value) * 60;
+                }
+                Stats childEffect = new Stats();
+                childEffect.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = int.Parse(match.Groups["hasteRating"].Value) }, float.PositiveInfinity, 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, childEffect, int.Parse(match.Groups["duration"].Value), cooldown, 1f));
+            }
             // Figurine - Talasite Owl, 5 min cooldown
             else if (line.StartsWith("Restores 900 mana over 12 sec."))
             {

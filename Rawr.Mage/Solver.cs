@@ -457,6 +457,7 @@ namespace Rawr.Mage
                     trinket1Cooldown = effect.Cooldown;
                     calculationResult.Trinket1SpellPower += effect.Stats.SpellPower;
                     calculationResult.Trinket1HasteRating += effect.Stats.HasteRating;
+                    calculationResult.Trinket1SpecialEffects = new List<SpecialEffect>(effect.Stats.SpecialEffects());
                 }
                 calculationResult.Trinket1Duration = trinket1Duration;
                 calculationResult.Trinket1Cooldown = trinket1Cooldown;
@@ -471,6 +472,7 @@ namespace Rawr.Mage
                     trinket2Cooldown = effect.Cooldown;
                     calculationResult.Trinket2SpellPower += effect.Stats.SpellPower;
                     calculationResult.Trinket2HasteRating += effect.Stats.HasteRating;
+                    calculationResult.Trinket2SpecialEffects = new List<SpecialEffect>(effect.Stats.SpecialEffects());
                 }
                 calculationResult.Trinket2Duration = trinket2Duration;
                 calculationResult.Trinket2Cooldown = trinket2Cooldown;

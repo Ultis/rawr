@@ -239,8 +239,13 @@ namespace Rawr.Mage
                 return 1 - (float)Math.Pow(1 - procChance, buffDuration / triggerInterval);
         }
 
-        public float CalculateCastTime(SpecialEffect[] hasteEffects, CalculationOptionsMage calculationOptions, float castingSpeed, float spellHasteRating, float interruptProtection, float critRate, bool pom, float baseCastTime, out float channelReduction)
+        public float CalculateCastTime(CastingState castingState, float interruptProtection, float critRate, bool pom, float baseCastTime, out float channelReduction)
         {
+            SpecialEffect[] hasteEffects = castingState.Calculations.HasteRatingEffects;
+            CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
+            float castingSpeed = castingState.CastingSpeed;
+            float spellHasteRating = castingState.SpellHasteRating;
+
             // interrupt factors of more than once per spell are not supported, so put a limit on it (up to twice is probably approximately correct)
             float InterruptFactor = Math.Min(calculationOptions.InterruptFrequency, 2 * castingSpeed / baseCastTime);
 
@@ -328,6 +333,81 @@ namespace Rawr.Mage
                     castTime = baseCastTime / castingSpeed + latency;
                     castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
                     if (castTime < globalCooldown + calculationOptions.LatencyGCD) castTime = globalCooldown + calculationOptions.LatencyGCD;
+                }
+            }
+            // on use stacking trinkets
+            if (castingState.Trinket1 && castingState.Calculations.Trinket1SpecialEffects.Count > 0)
+            {
+                foreach (SpecialEffect effect in castingState.Calculations.Trinket1SpecialEffects)
+                {
+                    if (effect.Stats.HasteRating > 0)
+                    {
+                        float procs = 0.0f;
+                        switch (effect.Trigger)
+                        {
+                            case Trigger.DamageSpellCast:
+                            case Trigger.SpellCast:
+                                procs = CastProcs;
+                                break;
+                            case Trigger.DamageSpellCrit:
+                            case Trigger.SpellCrit:
+                                procs = critRate * Ticks;
+                                break;
+                            case Trigger.DamageSpellHit:
+                            case Trigger.SpellHit:
+                                procs = HitRate * Ticks;
+                                break;
+                        }
+                        if (procs == 0.0f) continue;
+                        // until they put in some good trinkets with such effects just do a quick dirty calculation
+                        float effectHasteRating = effect.GetAverageStackSize(castTime / Ticks, procs / Ticks, 3.0f, (float)castingState.Calculations.Trinket1Duration) * effect.Stats.HasteRating;
+
+                        castingSpeed /= (1 + spellHasteRating / 995f * levelScalingFactor);
+                        spellHasteRating += effectHasteRating;
+                        castingSpeed *= (1 + spellHasteRating / 995f * levelScalingFactor);
+
+                        globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
+                        castTime = baseCastTime / castingSpeed + latency;
+                        castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                        if (castTime < globalCooldown + calculationOptions.LatencyGCD) castTime = globalCooldown + calculationOptions.LatencyGCD;
+                    }
+                }
+            }
+            if (castingState.Trinket2 && castingState.Calculations.Trinket2SpecialEffects.Count > 0)
+            {
+                foreach (SpecialEffect effect in castingState.Calculations.Trinket2SpecialEffects)
+                {
+                    if (effect.Stats.HasteRating > 0)
+                    {
+                        float procs = 0.0f;
+                        switch (effect.Trigger)
+                        {
+                            case Trigger.DamageSpellCast:
+                            case Trigger.SpellCast:
+                                procs = CastProcs;
+                                break;
+                            case Trigger.DamageSpellCrit:
+                            case Trigger.SpellCrit:
+                                procs = critRate * Ticks;
+                                break;
+                            case Trigger.DamageSpellHit:
+                            case Trigger.SpellHit:
+                                procs = HitRate * Ticks;
+                                break;
+                        }
+                        if (procs == 0.0f) continue;
+                        // until they put in some good trinkets with such effects just do a quick dirty calculation
+                        float effectHasteRating = effect.GetAverageStackSize(castTime / Ticks, procs / Ticks, 3.0f, (float)castingState.Calculations.Trinket1Duration) * effect.Stats.HasteRating;
+
+                        castingSpeed /= (1 + spellHasteRating / 995f * levelScalingFactor);
+                        spellHasteRating += effectHasteRating;
+                        castingSpeed *= (1 + spellHasteRating / 995f * levelScalingFactor);
+
+                        globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
+                        castTime = baseCastTime / castingSpeed + latency;
+                        castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                        if (castTime < globalCooldown + calculationOptions.LatencyGCD) castTime = globalCooldown + calculationOptions.LatencyGCD;
+                    }
                 }
             }
 

@@ -2106,6 +2106,27 @@ namespace Rawr.Mage
                         s.AddSpecialEffect(effect);
                         continue;
                     }
+                    if (effect.Trigger == Trigger.Use)
+                    {
+                        // check if it is a stacking use effect
+                        bool hasStackingEffect = false;
+                        foreach (SpecialEffect e in effect.Stats.SpecialEffects())
+                        {
+                            if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
+                            {
+                                if (e.Stats.HasteRating > 0)
+                                {
+                                    hasStackingEffect = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (hasStackingEffect)
+                        {
+                            s.AddSpecialEffect(effect);
+                            continue;
+                        }
+                    }
                 }
                 else if (effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
                 {
@@ -2179,6 +2200,26 @@ namespace Rawr.Mage
                     if (effect.Trigger == Trigger.ManaGem)
                     {
                         return true;
+                    }
+                    if (effect.Trigger == Trigger.Use)
+                    {
+                        // check if it is a stacking use effect
+                        bool hasStackingEffect = false;
+                        foreach (SpecialEffect e in effect.Stats.SpecialEffects())
+                        {
+                            if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
+                            {
+                                if (e.Stats.HasteRating > 0)
+                                {
+                                    hasStackingEffect = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (hasStackingEffect)
+                        {
+                            return true;
+                        }
                     }
                 }
                 else if (effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))

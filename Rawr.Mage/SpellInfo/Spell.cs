@@ -129,7 +129,7 @@ namespace Rawr.Mage
             if (castingState.IcyVeins) InterruptProtection = 1;
 
             float channelReduction;
-            CastTime = SpellTemplate.CalculateCastTime(castingState.Calculations.HasteRatingEffects, calculationOptions, castingState.CastingSpeed, castingState.SpellHasteRating, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
+            CastTime = SpellTemplate.CalculateCastTime(castingState, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
 
             if (Ticks > 0)
             {
@@ -468,7 +468,7 @@ namespace Rawr.Mage
             if (castingState.IcyVeins) InterruptProtection = 1;
 
             float channelReduction;
-            CastTime = template.CalculateCastTime(castingState.Calculations.HasteRatingEffects, calculationOptions, castingState.CastingSpeed, castingState.SpellHasteRating, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
+            CastTime = template.CalculateCastTime(castingState, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
 
             if (Ticks > 0)
             {
