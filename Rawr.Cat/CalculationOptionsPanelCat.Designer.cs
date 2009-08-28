@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelCat));
 			this.label1 = new System.Windows.Forms.Label();
 			this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -42,6 +43,8 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
+			this.checkBoxOffsetTrinkets = new System.Windows.Forms.CheckBox();
+			this.label6 = new System.Windows.Forms.Label();
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
@@ -244,15 +247,36 @@
             0});
 			this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
+			// checkBoxOffsetTrinkets
+			// 
+			this.checkBoxOffsetTrinkets.AutoSize = true;
+			this.checkBoxOffsetTrinkets.Location = new System.Drawing.Point(6, 163);
+			this.checkBoxOffsetTrinkets.Name = "checkBoxOffsetTrinkets";
+			this.checkBoxOffsetTrinkets.Size = new System.Drawing.Size(95, 17);
+			this.checkBoxOffsetTrinkets.TabIndex = 1;
+			this.checkBoxOffsetTrinkets.Text = "Offset Trinkets";
+			this.checkBoxOffsetTrinkets.UseVisualStyleBackColor = true;
+			this.checkBoxOffsetTrinkets.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// label6
+			// 
+			this.label6.Location = new System.Drawing.Point(8, 181);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(254, 98);
+			this.label6.TabIndex = 5;
+			this.label6.Text = resources.GetString("label6.Text");
+			// 
 			// CalculationOptionsPanelCat
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoScroll = true;
+			this.Controls.Add(this.checkBoxOffsetTrinkets);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.numericUpDownDuration);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.numericUpDownTargetArmor);
+			this.Controls.Add(this.label6);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.comboBoxTargetLevel);
 			this.Controls.Add(this.label1);
@@ -283,5 +307,7 @@
 		private System.Windows.Forms.CheckBox checkBoxRake;
 		private System.Windows.Forms.ComboBox comboBoxFerociousBite;
 		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.CheckBox checkBoxOffsetTrinkets;
+		private System.Windows.Forms.Label label6;
 	}
 }

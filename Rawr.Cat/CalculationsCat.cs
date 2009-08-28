@@ -252,8 +252,8 @@ namespace Rawr.Cat
 			if (calcOpts == null) calcOpts = new CalculationOptionsCat();
 			int targetLevel = calcOpts.TargetLevel;
 			float targetArmor = calcOpts.TargetArmor;
-			float tempArPenRating, tempArPenRatingUptime;
-			Stats stats = GetCharacterStatsWithTemporaryArPen(character, additionalItem, out tempArPenRating, out tempArPenRatingUptime);
+			List<float> tempArPenRatings, tempArPenRatingUptimes;
+			Stats stats = GetCharacterStatsWithTemporaryArPen(character, additionalItem, out tempArPenRatings, out tempArPenRatingUptimes);
 			float levelDifference = (targetLevel - 80f) * 0.2f;
 			CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
 			calculatedStats.BasicStats = stats;
@@ -262,11 +262,16 @@ namespace Rawr.Cat
 			stats.BonusBleedDamageMultiplier = 0.3f;
 
 			#region Basic Chances and Constants
-			float modArmorStatic    = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
-			float modArmorTemporary = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + tempArPenRating);
+			//float modArmorStatic    = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+			//float modArmorTemporary = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + tempArPenRatings);
+			//float modArmor = modArmorStatic + (modArmorTemporary - modArmorStatic) * tempArPenRatingUptimes;
+			float modArmor = 0f;
+			for (int i = 0; i < tempArPenRatings.Count; i++)
+			{
+				modArmor += tempArPenRatingUptimes[i] * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + tempArPenRatings[i]);
+			}
 
-			float modArmor = modArmorStatic + (modArmorTemporary - modArmorStatic) * tempArPenRatingUptime;
-
+			modArmor = 1f - modArmor;
 			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
 			float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
 			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);
@@ -278,7 +283,7 @@ namespace Rawr.Cat
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Druid) + stats.Expertise, CharacterClass.Druid);
 
 			float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel-80] - expertiseBonus);
-            float chanceParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel-80] - expertiseBonus);
+			float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
             float chanceMiss  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[ targetLevel-80] - hitBonus);
 			
 			float glanceMultiplier = 0.7f;
@@ -410,11 +415,11 @@ namespace Rawr.Cat
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-			float arPenRating, arPenRatingUptime;
+			List<float> arPenRating, arPenRatingUptime;
 			return GetCharacterStatsWithTemporaryArPen(character, additionalItem, out arPenRating, out arPenRatingUptime);
 		}
 
-		private Stats GetCharacterStatsWithTemporaryArPen(Character character, Item additionalItem, out float tempArPenRating, out float tempArPenRatingUptime)
+		private Stats GetCharacterStatsWithTemporaryArPen(Character character, Item additionalItem, out List<float> tempArPenRatings, out List<float> tempArPenRatingUptimes)
 		{
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
             int targetLevel = calcOpts.TargetLevel;
@@ -511,10 +516,8 @@ namespace Rawr.Cat
             // Handle Trinket procs
 			Stats statsProcs = new Stats();
 
-			tempArPenRating = 0f;
-			tempArPenRatingUptime = 0f;
-			List<float> tempArPenRatings = new List<float>();
-			List<float> tempArPenRatingUptimes = new List<float>();
+			tempArPenRatings = new List<float>();
+			tempArPenRatingUptimes = new List<float>();
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
 			{
 				if (effect.Stats.ArmorPenetrationRating == 0)
@@ -577,17 +580,33 @@ namespace Rawr.Cat
 				}
 			}
 			float totalTempArPenRating = 0f, totalTempArPenRatingUptime = 0f;
-			for (int i = 0; i < tempArPenRatings.Count; i++)
+			if (calcOpts.OffsetTrinkets)
 			{
-				totalTempArPenRating += tempArPenRatings[i];
-				totalTempArPenRatingUptime += tempArPenRatingUptimes[i];
+				for (int i = 0; i < tempArPenRatings.Count; i++)
+					totalTempArPenRatingUptime += tempArPenRatingUptimes[i];
 			}
-			tempArPenRating = totalTempArPenRating;
-			for (int i = 0; i < tempArPenRatings.Count; i++)
+			else
 			{
-				tempArPenRatingUptime += tempArPenRatingUptimes[i] * (tempArPenRatings[i] / totalTempArPenRating);
+				for (int i = 0; i < tempArPenRatings.Count; i++)
+				{
+					totalTempArPenRating += tempArPenRatings[i];
+					totalTempArPenRatingUptime += tempArPenRatingUptimes[i];
+				}
+				float tempArPenRating = totalTempArPenRating;
+				float tempArPenRatingUptime = 0f;
+				for (int i = 0; i < tempArPenRatings.Count; i++)
+				{
+					tempArPenRatingUptime += tempArPenRatingUptimes[i] * (tempArPenRatings[i] / totalTempArPenRating);
+				}
+				tempArPenRatings.Clear();
+				tempArPenRatingUptimes.Clear();
+				tempArPenRatings.Add(tempArPenRating);
+				tempArPenRatingUptimes.Add(tempArPenRatingUptime);
+				totalTempArPenRatingUptime = tempArPenRatingUptime;
 			}
-
+			tempArPenRatings.Add(0f);
+			tempArPenRatingUptimes.Add(1f - totalTempArPenRatingUptime);
+			
 			statsProcs.Agility += statsProcs.HighestStat;
 			statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));

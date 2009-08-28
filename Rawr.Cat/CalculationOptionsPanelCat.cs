@@ -31,6 +31,7 @@ namespace Rawr
 			checkBoxRake.Checked = calcOpts.CustomUseRake;
 			checkBoxShred.Checked = calcOpts.CustomUseShred;
 			comboBoxSavageRoar.SelectedItem = calcOpts.CustomCPSavageRoar.ToString();
+			checkBoxOffsetTrinkets.Checked = calcOpts.OffsetTrinkets;
 			numericUpDownDuration.Value = calcOpts.Duration;
 			
 			_loadingCalculationOptions = false;
@@ -49,6 +50,7 @@ namespace Rawr
 				calcOpts.CustomUseRake = checkBoxRake.Checked;
 				calcOpts.CustomUseShred = checkBoxShred.Checked;
 				calcOpts.CustomCPSavageRoar = int.Parse(comboBoxSavageRoar.SelectedItem.ToString());
+				calcOpts.OffsetTrinkets = checkBoxOffsetTrinkets.Checked;
 				calcOpts.Duration = (int)numericUpDownDuration.Value;
 				
 				Character.OnCalculationsInvalidated();
@@ -78,5 +80,6 @@ namespace Rawr
 		public int CustomCPFerociousBite = 0;
 		public int CustomCPSavageRoar = 2;
 		public int Duration = 300;
+		public bool OffsetTrinkets = false;
 	}
 }
