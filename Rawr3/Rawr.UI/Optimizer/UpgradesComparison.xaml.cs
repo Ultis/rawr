@@ -51,7 +51,7 @@ namespace Rawr.UI
 
                 SlotCombo.SelectedIndex = 0;
             }
-            catch (Exception e)
+            catch (Exception /*e*/)
             {
                 Close();
                 MessageBox.Show("The chosen file is not a Rawr Upgrade List.", "Unable to Load Upgrade List", MessageBoxButton.OK);

@@ -219,4 +219,15 @@ namespace Rawr
 		//Purple = 107,
 		//Blue = 108
 	}
+
+    public enum BuffSelector
+    {
+        All=0,
+        Current,
+        Food,
+        ElixirsAndFlasks,
+        Scrolls,
+        Potions,
+        RaidBuffs
+    }
 }

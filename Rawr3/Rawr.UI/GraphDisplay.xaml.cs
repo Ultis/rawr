@@ -76,8 +76,8 @@ namespace Rawr.UI
             }
         }
 
-        private bool allBuffs;
-        public bool AllBuffs
+        private BuffSelector allBuffs;
+        public BuffSelector AllBuffs
         {
             get { return allBuffs; }
             set
@@ -140,6 +140,18 @@ namespace Rawr.UI
             CustomCombo.SelectedIndex = -1;
             loading = false;
             UpdateGraph();
+        }
+
+        private string ConvertBuffSelector(BuffSelector sel) {
+            switch (sel) {
+                case BuffSelector.Current:          { return "Current";            }
+                case BuffSelector.ElixirsAndFlasks: { return "Elixirs and Flasks"; }
+                case BuffSelector.Food:             { return "Food";               }
+                case BuffSelector.Potions:          { return "Potion";             }
+                case BuffSelector.Scrolls:          { return "Scrolls";            }
+                case BuffSelector.RaidBuffs:        { return "Agility and Strength|Armor|Damage Reduction (Major %)|Damage Reduction (Minor %)|Healing Received (%)|Attack Power|Attack Power (%)|Spell Power|Spell Sensitivity|Spirit|Damage (%)|Haste (%)|Health|Resistance|Physical Critical Strike Chance|Spell Critical Strike Chance|Focus Magic, Spell Critical Strike Chance|Spell Haste|Physical Haste|Stamina|Stat Add|Stat Multiplier|Melee Hit Chance Reduction|Racial Buffs|Armor (Major)|Armor (Minor)|Bleed Damage|Critical Strike Chance Taken|Spell Critical Strike Taken|Physical Vulnerability|Special Mobs|Intellect|Replenishment|Mana Regeneration|Ranged Attack Power|Mana Restore|Spell Damage Taken|Spell Hit Taken|Boss Attack Speed|Class Buffs|Disease Damage Taken"; }
+                default:                            { return "All";                }
+            }
         }
 
         public void UpdateGraph()
@@ -205,7 +217,7 @@ namespace Rawr.UI
             {
                 BuffCombo.Visibility = Visibility.Visible;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
-                ComparisonGraph.DisplayCalcs(Calculations.GetBuffCalculations(Character, Calculations.GetCharacterCalculations(Character), !AllBuffs).ToArray());
+                ComparisonGraph.DisplayCalcs(Calculations.GetBuffCalculations(Character, Calculations.GetCharacterCalculations(Character), ConvertBuffSelector(AllBuffs)).ToArray());
             }
             else if (CurrentGraph == Graph.Talents)
             {
@@ -365,7 +377,7 @@ namespace Rawr.UI
 
         private void BuffChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            AllBuffs = BuffCombo.SelectedIndex == 0;
+            AllBuffs = (BuffSelector)BuffCombo.SelectedIndex;
         }
 
         private void CustomChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

@@ -748,8 +748,7 @@ namespace Rawr.DPSWarr {
             /*Sunder Armor      */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Sunder_GCDs, SN);
             /*Thunder Clap      */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Thunder_GCDs, ref DPS_TTL, ref _TH_DPS, TH);
             /*Hamstring         */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Ham_GCDs, HMS);
-            /*Shattering Throw  */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Shatt_GCDs, ref DPS_TTL, ref _Shatt_DPS, ST);
+            /*Shattering Throw  */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Shatt_GCDs, ref DPS_TTL, ref _Shatt_DPS, ST);
             /*Sweeping Strikes  */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _SW_GCDs, SW);
             /*Death Wish        */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref _Death_GCDs, Death);
 

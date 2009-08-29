@@ -47,5 +47,6 @@ namespace Rawr.DPSDK
 	    public Rotation rotation;
 
 		public bool TalentsSaved = false;
+        public float KMProcUsage = 0f;
 	}
 }

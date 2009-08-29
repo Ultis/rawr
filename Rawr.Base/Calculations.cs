@@ -785,10 +785,23 @@ namespace Rawr
             }
             charAutoActivated.DisableBuffAutoActivation = true;
 
+            string[] multiFilter = filter.Split('|');
+
 			List<Buff> relevantBuffs = new List<Buff>();
 			foreach (Buff buff in Buff.RelevantBuffs)
 			{
-                if (filter == null || filter == "All" || filter == "Current" || buff.Group.Equals(filter, StringComparison.CurrentCultureIgnoreCase))
+                bool isinMultiFilter = false;
+                if (multiFilter.Length > 0) {
+                    foreach (string mFilter in multiFilter) {
+                        if (buff.Group.Equals(mFilter, StringComparison.CurrentCultureIgnoreCase)) {
+                            isinMultiFilter = true;
+                            break;
+                        }
+                    }
+                }
+                if (filter == null || filter == "All" || filter == "Current"
+                    || buff.Group.Equals(filter, StringComparison.CurrentCultureIgnoreCase)
+                    || isinMultiFilter)
                 {
                     relevantBuffs.Add(buff);
                     relevantBuffs.AddRange(buff.Improvements);
