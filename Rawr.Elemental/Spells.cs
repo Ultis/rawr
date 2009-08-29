@@ -216,6 +216,7 @@ namespace Rawr.Elemental
             missChance -= stats.SpellHit;
             totalCoef *= 1 + stats.BonusDamageMultiplier; //ret + bm buff
             if (missChance < 0) missChance = 0;
+            manaCost = (float)Math.Floor(manaCost);
         }
 
         public void ApplyEM(float modifier)
