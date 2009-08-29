@@ -1205,7 +1205,11 @@ namespace Rawr.Mage
                         calculationResult.EvocationDurationHero = baseStats.Mana / calculationResult.EvocationRegenHero;
                         calculationResult.EvocationDurationIVHero = baseStats.Mana / calculationResult.EvocationRegenIVHero;
                     }
-                    if (segmentCooldowns && advancedConstraintsLevel >= 3)
+                    if (calculationOptions.AverageCooldowns)
+                    {
+                        calculationResult.MaxEvocation = calculationOptions.FightDuration / calculationResult.EvocationCooldown;
+                    }
+                    else if (segmentCooldowns && advancedConstraintsLevel >= 3)
                     {
                         calculationResult.MaxEvocation = Math.Max(1, 1 + Math.Floor((calculationOptions.FightDuration - evocationDuration) / calculationResult.EvocationCooldown));
                     }
