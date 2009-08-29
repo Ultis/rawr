@@ -1607,7 +1607,7 @@ namespace Rawr
             {
                 Name = "Mp5 Food",
                 Group = "Food",
-                Stats = { Mp5 = 16, Stamina = 40 }
+                Stats = { Mp5 = 20, Stamina = 40 }
             });
             defaultBuffs.Add(new Buff()
             {
