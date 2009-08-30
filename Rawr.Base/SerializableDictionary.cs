@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace Rawr
 {
     /// <summary>
-    /// Subclass of the standard Dictionary<TKey, TValue> which supports xml serialization
+    /// Subclass of the standard Dictionary&lt;TKey, TValue&gt; which supports xml serialization
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>

@@ -78,30 +78,30 @@
   </Buff>
   <Buff>
     <Name>Ancestral Healing</Name>
-    <Group>Armor (%)</Group>
+    <Group>Damage Reduction (Major %)</Group>
     <Stats>
-      <BonusArmorMultiplier>0.25</BonusArmorMultiplier>
+      <DamageTakenMultiplier>-0.1</DamageTakenMultiplier>
     </Stats>
     <Source>Resto Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsCustom>false</IsCustom>
     <ConflictingBuffs>
-      <string>Armor (%)</string>
+      <string>Damage Reduction (Major %)</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
     <Name>Inspiration</Name>
-    <Group>Armor (%)</Group>
+    <Group>Damage Reduction (Major %)</Group>
     <Stats>
-      <BonusArmorMultiplier>0.25</BonusArmorMultiplier>
+      <DamageTakenMultiplier>-0.1</DamageTakenMultiplier>
     </Stats>
     <Source>Priest</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsCustom>false</IsCustom>
     <ConflictingBuffs>
-      <string>Armor (%)</string>
+      <string>Damage Reduction (Major %)</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
@@ -230,7 +230,7 @@
   </Buff>
   <Buff>
     <Name>Blessing of Sanctuary</Name>
-    <Group>Damage Reduction (%)</Group>
+    <Group>Damage Reduction (Minor %)</Group>
     <Stats>
       <DamageTakenMultiplier>-0.03</DamageTakenMultiplier>
     </Stats>
@@ -239,12 +239,12 @@
     <Improvements />
     <IsCustom>false</IsCustom>
     <ConflictingBuffs>
-      <string>Damage Reduction (%)</string>
+      <string>Damage Reduction (Minor %)</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
     <Name>Grace</Name>
-    <Group>Damage Reduction (%)</Group>
+    <Group>Damage Reduction (Minor %)</Group>
     <Stats>
       <DamageTakenMultiplier>-0.03</DamageTakenMultiplier>
     </Stats>
@@ -253,7 +253,7 @@
     <Improvements />
     <IsCustom>false</IsCustom>
     <ConflictingBuffs>
-      <string>Damage Reduction (%)</string>
+      <string>Damage Reduction (Minor %)</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
@@ -486,7 +486,7 @@
     <Name>Hunting Party</Name>
     <Group>Replenishment</Group>
     <Stats>
-      <ManaRestoreFromMaxManaPerSecond>0.0025</ManaRestoreFromMaxManaPerSecond>
+      <ManaRestoreFromMaxManaPerSecond>0.002</ManaRestoreFromMaxManaPerSecond>
     </Stats>
     <Source>Survival Hunter</Source>
     <SetThreshold>0</SetThreshold>
@@ -500,7 +500,7 @@
     <Name>Judgements of the Wise</Name>
     <Group>Replenishment</Group>
     <Stats>
-      <ManaRestoreFromMaxManaPerSecond>0.0025</ManaRestoreFromMaxManaPerSecond>
+      <ManaRestoreFromMaxManaPerSecond>0.002</ManaRestoreFromMaxManaPerSecond>
     </Stats>
     <Source>Ret Paladin</Source>
     <SetThreshold>0</SetThreshold>
@@ -514,7 +514,7 @@
     <Name>Vampiric Touch</Name>
     <Group>Replenishment</Group>
     <Stats>
-      <ManaRestoreFromMaxManaPerSecond>0.0025</ManaRestoreFromMaxManaPerSecond>
+      <ManaRestoreFromMaxManaPerSecond>0.002</ManaRestoreFromMaxManaPerSecond>
     </Stats>
     <Source>Shadow Priest</Source>
     <SetThreshold>0</SetThreshold>
@@ -528,9 +528,23 @@
     <Name>Improved Soul Leech</Name>
     <Group>Replenishment</Group>
     <Stats>
-      <ManaRestoreFromMaxManaPerSecond>0.0025</ManaRestoreFromMaxManaPerSecond>
+      <ManaRestoreFromMaxManaPerSecond>0.002</ManaRestoreFromMaxManaPerSecond>
     </Stats>
     <Source>Dest Warlock</Source>
+    <SetThreshold>0</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs>
+      <string>Replenishment</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Enduring Winter</Name>
+    <Group>Replenishment</Group>
+    <Stats>
+      <ManaRestoreFromMaxManaPerSecond>0.002</ManaRestoreFromMaxManaPerSecond>
+    </Stats>
+    <Source>Frost Mage</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsCustom>false</IsCustom>
@@ -1166,7 +1180,7 @@
     </ConflictingBuffs>
   </Buff>
   <Buff>
-    <Name>Curse of Recklessness</Name>
+    <Name>Curse of Weakness</Name>
     <Group>Armor (Minor)</Group>
     <Stats>
       <ArmorPenetration>0.05</ArmorPenetration>
@@ -1211,21 +1225,48 @@
     <Name>Hunter's Mark</Name>
     <Group>Ranged Attack Power</Group>
     <Stats>
-      <RangedAttackPower>300</RangedAttackPower>
+      <RangedAttackPower>500</RangedAttackPower>
     </Stats>
     <Source>Hunter</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
-        <Name>Improved Hunter's Mark</Name>
+        <Name>Glyphed Hunter's Mark</Name>
         <Stats>
-          <RangedAttackPower>90</RangedAttackPower>
+          <RangedAttackPower>100</RangedAttackPower>
         </Stats>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsCustom>false</IsCustom>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Hunter's Mark Improvements</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Improved Hunter's Mark</Name>
+        <Stats>
+          <RangedAttackPower>150</RangedAttackPower>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+          <string>Hunter's Mark Improvements</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Improved and Glyphed Hunter's Mark</Name>
+        <Stats>
+          <RangedAttackPower>250</RangedAttackPower>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+          <string>Hunter's Mark Improvements</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -1311,7 +1352,7 @@
     <Name>Judgement of Wisdom</Name>
     <Group>Mana Restore</Group>
     <Stats>
-      <ManaRestoreFromBaseManaPerHit>0.01</ManaRestoreFromBaseManaPerHit>
+      <ManaRestoreFromBaseManaPPM>0.24</ManaRestoreFromBaseManaPPM>
     </Stats>
     <Source>Paladin</Source>
     <SetThreshold>0</SetThreshold>
@@ -1721,7 +1762,7 @@
       <Buff>
         <Name>Flask of Endless Rage (Mixology)</Name>
         <Stats>
-          <AttackPower>64</AttackPower>
+          <AttackPower>80</AttackPower>
         </Stats>
         <SetThreshold>0</SetThreshold>
         <Improvements />
@@ -1741,14 +1782,14 @@
     <Name>Flask of Pure Mojo</Name>
     <Group>Elixirs and Flasks</Group>
     <Stats>
-      <Mp5>38</Mp5>
+      <Mp5>45</Mp5>
     </Stats>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
         <Name>Flask of Pure Mojo (Mixology)</Name>
         <Stats>
-          <Mp5>13</Mp5>
+          <Mp5>20</Mp5>
         </Stats>
         <SetThreshold>0</SetThreshold>
         <Improvements />
@@ -1775,7 +1816,7 @@
       <Buff>
         <Name>Flask of Stoneblood (Mixology)</Name>
         <Stats>
-          <Health>320</Health>
+          <Health>650</Health>
         </Stats>
         <SetThreshold>0</SetThreshold>
         <Improvements />
@@ -1802,7 +1843,7 @@
       <Buff>
         <Name>Flask of the Frost Wyrm (Mixology)</Name>
         <Stats>
-          <SpellPower>37</SpellPower>
+          <SpellPower>47</SpellPower>
         </Stats>
         <SetThreshold>0</SetThreshold>
         <Improvements />
@@ -2125,11 +2166,11 @@
       <Buff>
         <Name>Guru's Elixir (Mixology)</Name>
         <Stats>
-          <Agility>6</Agility>
-          <Stamina>6</Stamina>
-          <Strength>6</Strength>
-          <Intellect>6</Intellect>
-          <Spirit>6</Spirit>
+          <Agility>8</Agility>
+          <Stamina>8</Stamina>
+          <Strength>8</Strength>
+          <Intellect>8</Intellect>
+          <Spirit>8</Spirit>
         </Stats>
         <SetThreshold>0</SetThreshold>
         <Improvements />
@@ -2445,7 +2486,7 @@
             <HasteRating>500</HasteRating>
           </Stats>
           <Duration>15</Duration>
-          <Cooldown>3600</Cooldown>
+          <Cooldown>1200</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
@@ -2453,7 +2494,32 @@
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
     <SetThreshold>0</SetThreshold>
-    <Improvements />
+    <Improvements>
+      <Buff>
+        <Name>Potion of Speed (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <HasteRating>500</HasteRating>
+              </Stats>
+              <Duration>14</Duration>
+              <Cooldown>1200</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
     <IsCustom>false</IsCustom>
     <ConflictingBuffs>
       <string>Potion</string>
@@ -2471,7 +2537,7 @@
             <CritRating>200</CritRating>
           </Stats>
           <Duration>15</Duration>
-          <Cooldown>3600</Cooldown>
+          <Cooldown>1200</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
@@ -2479,7 +2545,33 @@
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
     <SetThreshold>0</SetThreshold>
-    <Improvements />
+    <Improvements>
+      <Buff>
+        <Name>Potion of Wild Magic (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <SpellPower>200</SpellPower>
+                <CritRating>200</CritRating>
+              </Stats>
+              <Duration>14</Duration>
+              <Cooldown>1200</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
     <IsCustom>false</IsCustom>
     <ConflictingBuffs>
       <string>Potion</string>
@@ -2497,7 +2589,7 @@
             <Strength>70</Strength>
           </Stats>
           <Duration>15</Duration>
-          <Cooldown>3600</Cooldown>
+          <Cooldown>1200</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
@@ -2505,7 +2597,33 @@
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
     <SetThreshold>0</SetThreshold>
-    <Improvements />
+    <Improvements>
+      <Buff>
+        <Name>Heroic Potion (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <Health>700</Health>
+                <Strength>70</Strength>
+              </Stats>
+              <Duration>14</Duration>
+              <Cooldown>1200</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
     <IsCustom>false</IsCustom>
     <ConflictingBuffs>
       <string>Potion</string>
@@ -2523,7 +2641,7 @@
             <DefenseRating>-75</DefenseRating>
           </Stats>
           <Duration>15</Duration>
-          <Cooldown>3600</Cooldown>
+          <Cooldown>1200</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
@@ -2531,7 +2649,33 @@
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
     <SetThreshold>0</SetThreshold>
-    <Improvements />
+    <Improvements>
+      <Buff>
+        <Name>Insane Strength Potion (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <Strength>120</Strength>
+                <DefenseRating>-75</DefenseRating>
+              </Stats>
+              <Duration>14</Duration>
+              <Cooldown>1200</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
     <IsCustom>false</IsCustom>
     <ConflictingBuffs>
       <string>Potion</string>
@@ -2541,10 +2685,47 @@
     <Name>Indestructible Potion</Name>
     <Group>Potion</Group>
     <Stats>
-      <BonusArmor>3500</BonusArmor>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <BonusArmor>3500</BonusArmor>
+          </Stats>
+          <Duration>120</Duration>
+          <Cooldown>1200</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
     <SetThreshold>0</SetThreshold>
-    <Improvements />
+    <Improvements>
+      <Buff>
+        <Name>Indestructible Potion (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <BonusArmor>3500</BonusArmor>
+              </Stats>
+              <Duration>119</Duration>
+              <Cooldown>1200</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
     <IsCustom>false</IsCustom>
     <ConflictingBuffs>
       <string>Potion</string>
@@ -2681,7 +2862,7 @@
     <Group>Food</Group>
     <Stats>
       <Stamina>40</Stamina>
-      <Mp5>16</Mp5>
+      <Mp5>20</Mp5>
     </Stats>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2717,6 +2898,48 @@
     <IsCustom>false</IsCustom>
     <ConflictingBuffs>
       <string>Food</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Kibler's Bits</Name>
+    <Group>Pet Food</Group>
+    <Stats>
+      <PetStamina>20</PetStamina>
+      <PetStrength>20</PetStrength>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs>
+      <string>Pet Food</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Spiced Mammoth Treats</Name>
+    <Group>Pet Food</Group>
+    <Stats>
+      <PetStamina>30</PetStamina>
+      <PetStrength>30</PetStrength>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs>
+      <string>Pet Food</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Sporeling Snack</Name>
+    <Group>Pet Food</Group>
+    <Stats>
+      <PetStamina>20</PetStamina>
+      <PetSpirit>20</PetSpirit>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs>
+      <string>Pet Food</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
@@ -3210,7 +3433,7 @@
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
-      <BonusManaGem>0.4</BonusManaGem>
+      <BonusManaGem>0.25</BonusManaGem>
     </Stats>
     <SetName>Frostfire Garb</SetName>
     <SetThreshold>2</SetThreshold>
@@ -3267,6 +3490,30 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Khadgar's Regalia 2 Piece</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Mage2T9>1</Mage2T9>
+    </Stats>
+    <SetName>Khadgar's Regalia</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Khadgar's Regalia 4 Piece</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Mage4T9>1</Mage4T9>
+    </Stats>
+    <SetName>Khadgar's Regalia</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Duskweaver 2 Piece</Name>
     <Group>Set Bonuses</Group>
     <Stats>
@@ -3286,6 +3533,42 @@
     </Stats>
     <SetName>Duskweaver</SetName>
     <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Primalstrike 3 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <AttackPower>40</AttackPower>
+    </Stats>
+    <SetName>Primal Intent</SetName>
+    <SetThreshold>3</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Fel Leather 3 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <DodgeRating>20</DodgeRating>
+    </Stats>
+    <SetName>Fel Skin</SetName>
+    <SetThreshold>3</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Heavy Clefthoof 3 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Strength>20</Strength>
+    </Stats>
+    <SetName>Strength of the Clefthoof</SetName>
+    <SetThreshold>3</SetThreshold>
     <Improvements />
     <IsCustom>false</IsCustom>
     <ConflictingBuffs />
@@ -3425,6 +3708,58 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Malfurion's Battlegear 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusLacerateDamageMultiplier>0.05</BonusLacerateDamageMultiplier>
+      <BonusRakeDuration>3</BonusRakeDuration>
+    </Stats>
+    <SetName>Malfurion's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Malfurion's Battlegear 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusRipCrit>0.05</BonusRipCrit>
+      <BonusFerociousBiteCrit>0.05</BonusFerociousBiteCrit>
+    </Stats>
+    <SetName>Malfurion's Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Runetotem's Battlegear 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusLacerateDamageMultiplier>0.05</BonusLacerateDamageMultiplier>
+      <BonusRakeDuration>3</BonusRakeDuration>
+    </Stats>
+    <SetName>Runetotem's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Runetotem's Battlegear 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusRipCrit>0.05</BonusRipCrit>
+      <BonusFerociousBiteCrit>0.05</BonusFerociousBiteCrit>
+    </Stats>
+    <SetName>Runetotem's Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Dreamwalker Garb 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
@@ -3485,6 +3820,54 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Malfurion's Regaila 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <MoonfireDotCrit>1</MoonfireDotCrit>
+    </Stats>
+    <SetName>Malfurion's Regaila</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Malfurion's Regaila 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusMoonkinNukeDamage>0.04</BonusMoonkinNukeDamage>
+    </Stats>
+    <SetName>Malfurion's Regaila</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Runetotem's Regalia 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <MoonfireDotCrit>1</MoonfireDotCrit>
+    </Stats>
+    <SetName>Runetotem's Regalia</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Runetotem's Regalia 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusMoonkinNukeDamage>0.04</BonusMoonkinNukeDamage>
+    </Stats>
+    <SetName>Runetotem's Regalia</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Dreamwalker Regalia 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
@@ -3527,6 +3910,30 @@
       <RejuvenationInstantTick>1</RejuvenationInstantTick>
     </Stats>
     <SetName>Nightsong Regalia</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Stormrage's Regalia 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <NourishCritBonus>0.05</NourishCritBonus>
+    </Stats>
+    <SetName>Stormrage Regalia</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Stormrage's Regalia 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <RejuvenationCrit>1</RejuvenationCrit>
+    </Stats>
+    <SetName>Stormrage Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsCustom>false</IsCustom>
@@ -3581,30 +3988,6 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Dreadnaught Battlegear 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusSlamDamage>0.1</BonusSlamDamage>
-    </Stats>
-    <SetName>Dreadnaught Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsCustom>false</IsCustom>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Dreadnaught Battlegear 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <DreadnaughtBonusRageProc>0.05</DreadnaughtBonusRageProc>
-    </Stats>
-    <SetName>Dreadnaught Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsCustom>false</IsCustom>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
     <Name>Dreadnaught Plate 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
@@ -3612,30 +3995,6 @@
     </Stats>
     <SetName>Dreadnaught Plate</SetName>
     <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsCustom>false</IsCustom>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Siegebreaker Battlegear 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusWarrior2PT8Haste>150</BonusWarrior2PT8Haste>
-    </Stats>
-    <SetName>Siegebreaker Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsCustom>false</IsCustom>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Siegebreaker Battlegear 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <MortalstrikeBloodthirstCritIncrease>0.1</MortalstrikeBloodthirstCritIncrease>
-    </Stats>
-    <SetName>Siegebreaker Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsCustom>false</IsCustom>
     <ConflictingBuffs />
@@ -3653,37 +4012,121 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Primalstrike 3 Piece Bonus</Name>
+    <Name>Dreadnaught Battlegear (T7) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <AttackPower>40</AttackPower>
+      <BonusWarrior_T7_2P_SlamDamage>0.1</BonusWarrior_T7_2P_SlamDamage>
     </Stats>
-    <SetName>Primal Intent</SetName>
-    <SetThreshold>3</SetThreshold>
+    <SetName>Dreadnaught Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsCustom>false</IsCustom>
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Fel Leather 3 Piece Bonus</Name>
+    <Name>Dreadnaught Battlegear (T7) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <DodgeRating>20</DodgeRating>
+      <BonusWarrior_T7_4P_RageProc>5</BonusWarrior_T7_4P_RageProc>
     </Stats>
-    <SetName>Fel Skin</SetName>
-    <SetThreshold>3</SetThreshold>
+    <SetName>Dreadnaught Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsCustom>false</IsCustom>
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Heavy Clefthoof 3 Piece Bonus</Name>
+    <Name>Siegebreaker Battlegear (T8) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Strength>20</Strength>
+      <BonusWarrior_T8_2P_HasteProc>150</BonusWarrior_T8_2P_HasteProc>
     </Stats>
-    <SetName>Strength of the Clefthoof</SetName>
-    <SetThreshold>3</SetThreshold>
+    <SetName>Siegebreaker Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Siegebreaker Battlegear (T8) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusWarrior_T8_4P_MSBTCritIncrease>0.1</BonusWarrior_T8_4P_MSBTCritIncrease>
+    </Stats>
+    <SetName>Siegebreaker Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Hellscream's Battlegear (T9) 2 Piece Fury Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusWarrior_T9_2P_Crit>0.02</BonusWarrior_T9_2P_Crit>
+    </Stats>
+    <SetName>Hellscream's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Hellscream's Battlegear (T9) 2 Piece Arms Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusWarrior_T9_2P_ArP>0.06</BonusWarrior_T9_2P_ArP>
+    </Stats>
+    <SetName>Hellscream's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Hellscream's Battlegear (T9) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusWarrior_T9_4P_SLHSCritIncrease>0.05</BonusWarrior_T9_4P_SLHSCritIncrease>
+    </Stats>
+    <SetName>Hellscream's Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Wrynn's Battlegear (T9) 2 Piece Fury Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusWarrior_T9_2P_Crit>0.02</BonusWarrior_T9_2P_Crit>
+    </Stats>
+    <SetName>Wrynn's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Wrynn's Battlegear (T9) 2 Piece Arms Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusWarrior_T9_2P_ArP>0.06</BonusWarrior_T9_2P_ArP>
+    </Stats>
+    <SetName>Wrynn's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Wrynn's Battlegear (T9) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusWarrior_T9_4P_SLHSCritIncrease>0.05</BonusWarrior_T9_4P_SLHSCritIncrease>
+    </Stats>
+    <SetName>Wrynn's Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsCustom>false</IsCustom>
     <ConflictingBuffs />
@@ -3787,6 +4230,54 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Worldbreaker Garb 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <FlameShockDoTCanCrit>1</FlameShockDoTCanCrit>
+    </Stats>
+    <SetName>Worldbreaker Garb</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Worldbreaker Garb 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <LightningBoltCritDamageModifier>0.08</LightningBoltCritDamageModifier>
+    </Stats>
+    <SetName>Worldbreaker Garb</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Thrall's/Nobundo's Regalia 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusFlameShockDuration>9</BonusFlameShockDuration>
+    </Stats>
+    <SetName>Thrall's Regalia</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Thrall's/Nobundo's Regalia 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusLavaBurstDamageMultiplier>0.2</BonusLavaBurstDamageMultiplier>
+    </Stats>
+    <SetName>Thrall's Regalia</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Earthshatter Battlegear 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
@@ -3835,6 +4326,42 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Enhance T9 2 Piece</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Enhance2T9>1</Enhance2T9>
+    </Stats>
+    <SetName>Thrall's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Enhance T9 4 Piece</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Enhance4T9>1</Enhance4T9>
+    </Stats>
+    <SetName>Thrall's Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Demon Stalker Armor 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <MultiShotManaDiscount>0.1</MultiShotManaDiscount>
+    </Stats>
+    <SetName>Demon Stalker Armor</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Rift Stalker Armor 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
@@ -3847,12 +4374,312 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Gronnstalker's Armor 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusAspectOfTheViperGain>0.25</BonusAspectOfTheViperGain>
+    </Stats>
+    <SetName>Gronnstalker's Armor</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Gronnstalker's Armor 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
       <BonusSteadyShotDamageMultiplier>0.1</BonusSteadyShotDamageMultiplier>
     </Stats>
     <SetName>Gronnstalker's Armor</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Cryptstalker Battlegear 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusPetDamageMultiplier>0.05</BonusPetDamageMultiplier>
+    </Stats>
+    <SetName>Cryptstalker Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Cryptstalker Battlegear 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusAspectOfTheViperAttackSpeed>0.2</BonusAspectOfTheViperAttackSpeed>
+    </Stats>
+    <SetName>Cryptstalker Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Scourgestalker Battlegear 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusSerpentStingDamage>0.1</BonusSerpentStingDamage>
+    </Stats>
+    <SetName>Scourgestalker Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Scourgestalker Battlegear 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusSteadyShotAttackPowerBuff>1</BonusSteadyShotAttackPowerBuff>
+    </Stats>
+    <SetName>Scourgestalker Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Windrunner's Pursuit 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusSerpentStingCanCrit>1</BonusSerpentStingCanCrit>
+    </Stats>
+    <SetName>Windrunner's Pursuit</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Windrunner's Battlegear 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusSerpentStingCanCrit>1</BonusSerpentStingCanCrit>
+    </Stats>
+    <SetName>Windrunner's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Windrunner's Pursuit 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusSteadyShotPetAttackPowerBuff>1</BonusSteadyShotPetAttackPowerBuff>
+    </Stats>
+    <SetName>Windrunner's Pursuit</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Windrunner's Battlegear 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusSteadyShotPetAttackPowerBuff>1</BonusSteadyShotPetAttackPowerBuff>
+    </Stats>
+    <SetName>Windrunner's Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Gladiator's Pursuit 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Resilience>35</Resilience>
+    </Stats>
+    <SetName>Gladiator's Pursuit</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Gladiator's Pursuit 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <MultiShotCooldownReduction>1</MultiShotCooldownReduction>
+    </Stats>
+    <SetName>Gladiator's Pursuit</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Merciless Gladiator's Pursuit 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Resilience>35</Resilience>
+    </Stats>
+    <SetName>Merciless Gladiator's Pursuit</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Merciless Gladiator's Pursuit 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <MultiShotCooldownReduction>1</MultiShotCooldownReduction>
+    </Stats>
+    <SetName>Merciless Gladiator's Pursuit</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Vengeful Gladiator's Pursuit 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Resilience>35</Resilience>
+    </Stats>
+    <SetName>Vengeful Gladiator's Pursuit</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Vengeful Gladiator's Pursuit 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <MultiShotCooldownReduction>1</MultiShotCooldownReduction>
+    </Stats>
+    <SetName>Vengeful Gladiator's Pursuit</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Brutal Gladiator's Pursuit 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Resilience>35</Resilience>
+    </Stats>
+    <SetName>Brutal Gladiator's Pursuit</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Brutal Gladiator's Pursuit 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <MultiShotCooldownReduction>1</MultiShotCooldownReduction>
+    </Stats>
+    <SetName>Brutal Gladiator's Pursuit</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Savage Gladiator's Pursuit 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Resilience>50</Resilience>
+    </Stats>
+    <SetName>Savage Gladiator's Pursuit</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Savage Gladiator's Pursuit 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <TrapCooldownReduction>2</TrapCooldownReduction>
+    </Stats>
+    <SetName>Savage Gladiator's Pursuit</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Hateful Gladiator's Pursuit 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Resilience>50</Resilience>
+    </Stats>
+    <SetName>Hateful Gladiator's Pursuit</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Hateful Gladiator's Pursuit 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <TrapCooldownReduction>2</TrapCooldownReduction>
+    </Stats>
+    <SetName>Hateful Gladiator's Pursuit</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Deadly Gladiator's Pursuit 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Resilience>50</Resilience>
+    </Stats>
+    <SetName>Deadly Gladiator's Pursuit</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Deadly Gladiator's Pursuit 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <TrapCooldownReduction>2</TrapCooldownReduction>
+    </Stats>
+    <SetName>Deadly Gladiator's Pursuit</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Furious Gladiator's Pursuit 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Resilience>50</Resilience>
+    </Stats>
+    <SetName>Furious Gladiator's Pursuit</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Furious Gladiator's Pursuit 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <TrapCooldownReduction>2</TrapCooldownReduction>
+    </Stats>
+    <SetName>Furious Gladiator's Pursuit</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsCustom>false</IsCustom>
@@ -4347,6 +5174,54 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Turalyon's Battlegear 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <RighteousVengeanceCanCrit>1</RighteousVengeanceCanCrit>
+    </Stats>
+    <SetName>Turalyon's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Liadrin's Battlegear 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <RighteousVengeanceCanCrit>1</RighteousVengeanceCanCrit>
+    </Stats>
+    <SetName>Liadrin's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Turalyon's Battlegear 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <JudgementCrit>0.05</JudgementCrit>
+    </Stats>
+    <SetName>Turalyon's Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Liadrin's Battlegear 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <JudgementCrit>0.05</JudgementCrit>
+    </Stats>
+    <SetName>Liadrin's Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Aegis Regalia 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
@@ -4427,6 +5302,98 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Koltira's Battlegear 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>BloodStrikeHit</Trigger>
+          <Stats>
+            <Strength>180</Strength>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.5</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>HeartStrikeHit</Trigger>
+          <Stats>
+            <Strength>180</Strength>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.5</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>2</SpecialEffectCount>
+    </Stats>
+    <SetName>Koltira's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Koltira's Battlegear 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <DiseasesCanCrit>1</DiseasesCanCrit>
+    </Stats>
+    <SetName>Koltira's Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Thassarian's Battlegear 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>BloodStrikeHit</Trigger>
+          <Stats>
+            <Strength>180</Strength>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.5</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>HeartStrikeHit</Trigger>
+          <Stats>
+            <Strength>180</Strength>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.5</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>2</SpecialEffectCount>
+    </Stats>
+    <SetName>Thassarian's Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Thassarian's Battlegear 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <DiseasesCanCrit>1</DiseasesCanCrit>
+    </Stats>
+    <SetName>Thassarian's Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsCustom>false</IsCustom>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Scourgeborne Plate 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
@@ -4478,7 +5445,7 @@
     <Name>Toughness</Name>
     <Group>Profession Buffs</Group>
     <Stats>
-      <Stamina>50</Stamina>
+      <Stamina>60</Stamina>
     </Stats>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4489,7 +5456,7 @@
     <Name>Master of Anatomy</Name>
     <Group>Profession Buffs</Group>
     <Stats>
-      <CritRating>32</CritRating>
+      <CritRating>40</CritRating>
     </Stats>
     <SetThreshold>0</SetThreshold>
     <Improvements />

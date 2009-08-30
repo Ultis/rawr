@@ -20,10 +20,10 @@
 
 		<Grid x:Name="NameGrid" Grid.Column="0" Margin="2,2,6,2" Background="#FFFFFFFF">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="15"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
-			<Image x:Name="AvailableImage" Source="Images/DiamondOutline.png" Stretch="None" Margin="2,2,2,2" MouseLeftButtonDown="AvailableClicked"/>
+			<Image x:Name="AvailableImage" Source="Images/DiamondOutline.png" Margin="2,2,2,2" MouseLeftButtonDown="AvailableClicked"/>
 			<Rectangle x:Name="EquippedRect" Grid.Column="1" Fill="#402AFF00" Visibility="Collapsed" />
 			<TextBlock x:Name="TextLabel" Grid.Column="1" TextWrapping="Wrap" MaxHeight="30" TextAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,6,0" Text="test"/>
 		</Grid>

@@ -128,6 +128,9 @@
     <Compile Include="..\..\Rawr.Base\SpecialEffect.cs">
       <Link>SpecialEffect.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\SpecialEffectCombination.cs">
+      <Link>SpecialEffectCombination.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\SpecialEffectInterpolator.cs">
       <Link>SpecialEffectInterpolator.cs</Link>
     </Compile>

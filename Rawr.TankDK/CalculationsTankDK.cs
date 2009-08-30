@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
+#if RAWR3
+using System.Windows.Media;
+#endif
 
 namespace Rawr.TankDK {
     [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", CharacterClass.DeathKnight)]
@@ -109,16 +112,25 @@ namespace Rawr.TankDK {
 				};
             }
         }
+
+#if RAWR3
+        private Dictionary<string, Color> _subPointNameColors = null;
+		public override Dictionary<string, Color> SubPointNameColors
+		{
+			get
+			{
+				if (_subPointNameColors == null)
+				{
+					_subPointNameColors = new Dictionary<string, Color>();
+					_subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 255));
+					_subPointNameColors.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
+					_subPointNameColors.Add("Threat", Color.FromArgb(255, 0, 255, 0));
+				}
+				return _subPointNameColors;
+			}
+		}
+#else
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        /// <summary>
-        /// Dictionary<string, Color> that includes the names of each rating which your model will use,
-        /// and a color for each. These colors will be used in the charts.
-        /// 
-        /// EXAMPLE: 
-        /// subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-        /// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
-        /// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
-        /// </summary>
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors {
             get {
                 if (_subPointNameColors == null) {
@@ -130,6 +142,8 @@ namespace Rawr.TankDK {
                 return _subPointNameColors;
             }
         }
+#endif
+
         private string[] _characterDisplayCalculationLabels = null;
         /// <summary>
         /// An array of strings which will be used to build the calculation display.
@@ -231,6 +245,15 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 return _customChartNames;
             }
         }
+		
+
+#if RAWR3
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+		public override ICalculationOptionsPanel CalculationOptionsPanel
+		{
+			get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTankDK()); }
+		}
+#else
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         /// <summary>
         /// A custom panel inheriting from CalculationOptionsPanelBase which contains controls for
@@ -240,6 +263,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         public override CalculationOptionsPanelBase CalculationOptionsPanel {
             get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTankDK()); }
         }
+#endif
+
         private List<ItemType> _relevantItemTypes = null;
         /// <summary>
         /// List<ItemType> containing all of the ItemTypes relevant to this model. Typically this

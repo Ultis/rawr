@@ -414,7 +414,7 @@
     <Name>Stamina</Name>
     <Slot>Finger</Slot>
     <Stats>
-      <Stamina>24</Stamina>
+      <Stamina>30</Stamina>
     </Stats>
   </Enchant>
   <Enchant>
@@ -839,7 +839,7 @@
     <Name>Assault</Name>
     <Slot>Finger</Slot>
     <Stats>
-      <AttackPower>32</AttackPower>
+      <AttackPower>40</AttackPower>
     </Stats>
   </Enchant>
   <Enchant>
@@ -900,7 +900,7 @@
   </Enchant>
   <Enchant>
     <Id>3829</Id>
-    <Name>Assault</Name>
+    <Name>Greater Assault</Name>
     <Slot>Hands</Slot>
     <Stats>
       <AttackPower>35</AttackPower>
@@ -908,7 +908,7 @@
   </Enchant>
   <Enchant>
     <Id>1594</Id>
-    <Name>Greater Assault</Name>
+    <Name>Assault</Name>
     <Slot>Hands</Slot>
     <Stats>
       <AttackPower>26</AttackPower>
@@ -1137,7 +1137,7 @@
     <Name>Greater Spellpower</Name>
     <Slot>Finger</Slot>
     <Stats>
-      <SpellPower>19</SpellPower>
+      <SpellPower>23</SpellPower>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1194,7 +1194,7 @@
     <Name>Restore Mana Prime</Name>
     <Slot>Wrist</Slot>
     <Stats>
-      <Mp5>6</Mp5>
+      <Mp5>8</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1203,6 +1203,15 @@
     <Slot>Wrist</Slot>
     <Stats>
       <Spirit>18</Spirit>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3872</Id>
+    <Name>Sanctified Spellthread</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Spirit>20</Spirit>
+      <SpellPower>50</SpellPower>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1359,8 +1368,8 @@
     <Name>Greater Vitality</Name>
     <Slot>Feet</Slot>
     <Stats>
-      <Mp5>6</Mp5>
-      <Hp5>6</Hp5>
+      <Mp5>7</Mp5>
+      <Hp5>7</Hp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1368,8 +1377,8 @@
     <Name>Vitality</Name>
     <Slot>Feet</Slot>
     <Stats>
-      <Mp5>4</Mp5>
-      <Hp5>4</Hp5>
+      <Mp5>5</Mp5>
+      <Hp5>5</Hp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1418,7 +1427,7 @@
     <Slot>Head</Slot>
     <Stats>
       <SpellPower>19</SpellPower>
-      <Mp5>7</Mp5>
+      <Mp5>9</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1427,7 +1436,7 @@
     <Slot>Head</Slot>
     <Stats>
       <SpellPower>30</SpellPower>
-      <Mp5>8</Mp5>
+      <Mp5>10</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1435,7 +1444,7 @@
     <Name>Restore Mana Prime</Name>
     <Slot>Chest</Slot>
     <Stats>
-      <Mp5>6</Mp5>
+      <Mp5>7</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1443,7 +1452,7 @@
     <Name>Greater Mana Restoration</Name>
     <Slot>Chest</Slot>
     <Stats>
-      <Mp5>8</Mp5>
+      <Mp5>10</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1460,7 +1469,7 @@
     <Slot>Shoulders</Slot>
     <Stats>
       <SpellPower>18</SpellPower>
-      <Mp5>4</Mp5>
+      <Mp5>5</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1469,7 +1478,7 @@
     <Slot>Shoulders</Slot>
     <Stats>
       <SpellPower>12</SpellPower>
-      <Mp5>6</Mp5>
+      <Mp5>8</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1485,7 +1494,7 @@
     <Name>Inscription of the Oracle</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <Mp5>5</Mp5>
+      <Mp5>6</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1543,7 +1552,7 @@
     <Name>Magister's Armor Kit</Name>
     <Slot>Chest</Slot>
     <Stats>
-      <Mp5>3</Mp5>
+      <Mp5>4</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1551,7 +1560,7 @@
     <Name>Magister's Armor Kit</Name>
     <Slot>Feet</Slot>
     <Stats>
-      <Mp5>3</Mp5>
+      <Mp5>4</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1559,7 +1568,7 @@
     <Name>Magister's Armor Kit</Name>
     <Slot>Legs</Slot>
     <Stats>
-      <Mp5>3</Mp5>
+      <Mp5>4</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1567,7 +1576,7 @@
     <Name>Magister's Armor Kit</Name>
     <Slot>Hands</Slot>
     <Stats>
-      <Mp5>3</Mp5>
+      <Mp5>4</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1672,18 +1681,17 @@
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>2673</Id>
-    <Name>Mongoose</Name>
+    <Id>3869</Id>
+    <Name>Blade Ward</Name>
     <Slot>OneHand</Slot>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
           <Trigger>MeleeHit</Trigger>
           <Stats>
-            <Agility>120</Agility>
-            <PhysicalHaste>0.02</PhysicalHaste>
+            <ParryRating>200</ParryRating>
           </Stats>
-          <Duration>15</Duration>
+          <Duration>10</Duration>
           <Cooldown>0</Cooldown>
           <Chance>-1</Chance>
           <MaxStack>1</MaxStack>
@@ -1727,6 +1735,27 @@
           <Duration>15</Duration>
           <Cooldown>0</Cooldown>
           <Chance>-1.25</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>2673</Id>
+    <Name>Mongoose</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <Agility>120</Agility>
+            <PhysicalHaste>0.02</PhysicalHaste>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>-1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -2087,7 +2116,7 @@
     <Name>Tough Shield</Name>
     <Slot>OffHand</Slot>
     <Stats>
-      <BlockValue>18</BlockValue>
+      <BlockValue>36</BlockValue>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2096,6 +2125,14 @@
     <Slot>OffHand</Slot>
     <Stats>
       <DefenseRating>20</DefenseRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3229</Id>
+    <Name>Resilience</Name>
+    <Slot>OffHand</Slot>
+    <Stats>
+      <Resilience>12</Resilience>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2148,7 +2185,7 @@
     <Slot>Shoulders</Slot>
     <Stats>
       <SpellPower>24</SpellPower>
-      <Mp5>6</Mp5>
+      <Mp5>8</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2157,7 +2194,7 @@
     <Slot>Shoulders</Slot>
     <Stats>
       <SpellPower>18</SpellPower>
-      <Mp5>4</Mp5>
+      <Mp5>5</Mp5>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2201,7 +2238,7 @@
     <Name>Master's Inscription of the Axe</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <AttackPower>104</AttackPower>
+      <AttackPower>120</AttackPower>
       <CritRating>15</CritRating>
     </Stats>
   </Enchant>
@@ -2210,7 +2247,7 @@
     <Name>Master's Inscription of the Crag</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <SpellPower>61</SpellPower>
+      <SpellPower>70</SpellPower>
       <Mp5>6</Mp5>
     </Stats>
   </Enchant>
@@ -2219,7 +2256,7 @@
     <Name>Master's Inscription of the Pinnacle</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <DodgeRating>52</DodgeRating>
+      <DodgeRating>60</DodgeRating>
       <DefenseRating>15</DefenseRating>
     </Stats>
   </Enchant>
@@ -2228,7 +2265,7 @@
     <Name>Master's Inscription of the Storm</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <SpellPower>61</SpellPower>
+      <SpellPower>70</SpellPower>
       <CritRating>15</CritRating>
     </Stats>
   </Enchant>
@@ -2237,7 +2274,7 @@
     <Name>Fur Lining - Attack Power</Name>
     <Slot>Wrist</Slot>
     <Stats>
-      <AttackPower>114</AttackPower>
+      <AttackPower>130</AttackPower>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2245,7 +2282,7 @@
     <Name>Fur Lining - Stamina</Name>
     <Slot>Wrist</Slot>
     <Stats>
-      <Stamina>90</Stamina>
+      <Stamina>102</Stamina>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2253,7 +2290,7 @@
     <Name>Fur Lining - Spell Power</Name>
     <Slot>Wrist</Slot>
     <Stats>
-      <SpellPower>67</SpellPower>
+      <SpellPower>76</SpellPower>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2261,7 +2298,7 @@
     <Name>Fur Lining - Fire Resist</Name>
     <Slot>Wrist</Slot>
     <Stats>
-      <FireResistance>60</FireResistance>
+      <FireResistance>70</FireResistance>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2269,7 +2306,7 @@
     <Name>Fur Lining - Frost Resist</Name>
     <Slot>Wrist</Slot>
     <Stats>
-      <FrostResistance>60</FrostResistance>
+      <FrostResistance>70</FrostResistance>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2277,7 +2314,7 @@
     <Name>Fur Lining - Shadow Resist</Name>
     <Slot>Wrist</Slot>
     <Stats>
-      <ShadowResistance>60</ShadowResistance>
+      <ShadowResistance>70</ShadowResistance>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2285,7 +2322,7 @@
     <Name>Fur Lining - Nature Resist</Name>
     <Slot>Wrist</Slot>
     <Stats>
-      <NatureResistance>60</NatureResistance>
+      <NatureResistance>70</NatureResistance>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2293,7 +2330,7 @@
     <Name>Fur Lining - Arcane Resist</Name>
     <Slot>Wrist</Slot>
     <Stats>
-      <ArcaneResistance>60</ArcaneResistance>
+      <ArcaneResistance>70</ArcaneResistance>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2328,6 +2365,47 @@
           <Duration>15</Duration>
           <Cooldown>0</Cooldown>
           <Chance>-2</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3370</Id>
+    <Name>Rune of Razorice</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <BonusFrostDamageMultiplier>0.01</BonusFrostDamageMultiplier>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>10</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <BonusFrostWeaponDamage>0.02</BonusFrostWeaponDamage>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3369</Id>
+    <Name>Rune of Cinderglacier</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <CinderglacierProc>2</CinderglacierProc>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>-1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -2370,13 +2448,37 @@
           <Stats>
             <HasteRating>340</HasteRating>
           </Stats>
-          <Duration>10</Duration>
+          <Duration>12</Duration>
           <Cooldown>60</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3860</Id>
+    <Name>Reticulated Armor Webbing</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <BonusArmor>885</BonusArmor>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3606</Id>
+    <Name>Nitro Boosts</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <CritRating>24</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3859</Id>
+    <Name>Springy Arachnoweave</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <SpellPower>27</SpellPower>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2388,16 +2490,36 @@
         <SpecialEffect>
           <Trigger>SpellCast</Trigger>
           <Stats>
-            <SpellPower>250</SpellPower>
+            <SpellPower>295</SpellPower>
           </Stats>
           <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.5</Chance>
+          <Cooldown>60</Cooldown>
+          <Chance>0.35</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
       <Spirit>1</Spirit>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3730</Id>
+    <Name>Swordguard Embroidery</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PhysicalHit</Trigger>
+          <Stats>
+            <AttackPower>400</AttackPower>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.25</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2409,7 +2531,7 @@
         <SpecialEffect>
           <Trigger>SpellCast</Trigger>
           <Stats>
-            <ManaRestore>300</ManaRestore>
+            <ManaRestore>400</ManaRestore>
           </Stats>
           <Duration>1</Duration>
           <Cooldown>60</Cooldown>
@@ -2433,7 +2555,7 @@
     <Name>Titanium Plating</Name>
     <Slot>OffHand</Slot>
     <Stats>
-      <BlockValue>40</BlockValue>
+      <BlockValue>81</BlockValue>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2470,7 +2592,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <FireDamage>1600</FireDamage>
+            <FireDamage>1837</FireDamage>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>45</Cooldown>
@@ -2482,141 +2604,37 @@
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>3730</Id>
-    <Name>Swordguard Embroidery</Name>
+    <Id>3878</Id>
+    <Name>Mind Amplification Dish</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Stamina>45</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3605</Id>
+    <Name>Flexweave Underlay</Name>
     <Slot>Back</Slot>
     <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>PhysicalHit</Trigger>
-          <Stats>
-            <AttackPower>300</AttackPower>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.25</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
+      <Agility>23</Agility>
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>3872</Id>
-    <Name>Sanctified Spellthread</Name>
-    <Slot>Legs</Slot>
+    <Id>3875</Id>
+    <Name>Lesser Inscription of the Axe</Name>
+    <Slot>Shoulders</Slot>
     <Stats>
-      <Spirit>20</Spirit>
-      <SpellPower>50</SpellPower>
+      <AttackPower>30</AttackPower>
+      <CritRating>10</CritRating>
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>3859</Id>
-    <Name>Springy Arachnoweave</Name>
-    <Slot>Back</Slot>
+    <Id>3876</Id>
+    <Name>Lesser Inscription of the Pinnacle</Name>
+    <Slot>Shoulders</Slot>
     <Stats>
-      <SpellPower>18</SpellPower>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3860</Id>
-    <Name>Reticulated Armor Webbing</Name>
-    <Slot>Hands</Slot>
-    <Stats>
-      <BonusArmor>800</BonusArmor>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3869</Id>
-    <Name>Blade Ward</Name>
-    <Slot>OneHand</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>MeleeHit</Trigger>
-          <Stats>
-            <ParryRating>200</ParryRating>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>-1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3229</Id>
-    <Name>Resilience</Name>
-    <Slot>OffHand</Slot>
-    <Stats>
-      <Resilience>12</Resilience>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3370</Id>
-    <Name>Rune of Razorice</Name>
-    <Slot>OneHand</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>MeleeHit</Trigger>
-          <Stats>
-            <BonusFrostDamageMultiplier>0.01</BonusFrostDamageMultiplier>
-          </Stats>
-          <Duration>20</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>5</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-      <BonusFrostWeaponDamage>0.02</BonusFrostWeaponDamage>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3369</Id>
-    <Name>Rune of Cinderglacier</Name>
-    <Slot>OneHand</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>MeleeHit</Trigger>
-          <Stats>
-            <CinderglacierProc>2</CinderglacierProc>
-          </Stats>
-          <Duration>0</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>-1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3829</Id>
-    <Name>Greater Assault</Name>
-    <Slot>Hands</Slot>
-    <Stats>
-      <AttackPower>35</AttackPower>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>1594</Id>
-    <Name>Assault</Name>
-    <Slot>Hands</Slot>
-    <Stats>
-      <AttackPower>26</AttackPower>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3606</Id>
-    <Name>Nitro Boosts</Name>
-    <Slot>Feet</Slot>
-    <Stats>
-      <CritRating>16</CritRating>
+      <DodgeRating>15</DodgeRating>
+      <DefenseRating>10</DefenseRating>
     </Stats>
   </Enchant>
 </ArrayOfEnchant>

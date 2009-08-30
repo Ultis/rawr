@@ -44,6 +44,6 @@ namespace Rawr.Cat
 		public int CustomCPFerociousBite = 0;
 		public int CustomCPSavageRoar = 2;
 		public int Duration = 300;
-        public bool OffsetTrinkets = false;
+        public float TrinketOffset = 0f;
 	}
 }

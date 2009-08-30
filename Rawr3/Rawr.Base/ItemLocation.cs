@@ -778,7 +778,17 @@ namespace Rawr
             XElement subNode = itemInfo.SelectSingleNode("/page/itemInfo/item/containerObjects/object");
 
             Area = subNode.Attribute("area").Value;
-            Container = subNode.Attribute("name").Value;
+			if (Area.Contains("(25)") && !Area.StartsWith("Heroic "))
+			{
+				if (itemInfo.SelectSingleNode("/page/itemInfo/item").Attribute("level").Value == "258")
+					Area = "Heroic " + Area;
+			}
+			else if (Area.Contains("(10)") && !Area.StartsWith("Heroic "))
+			{
+				if (itemInfo.SelectSingleNode("/page/itemInfo/item").Attribute("level").Value == "245")
+					Area = "Heroic " + Area;
+			}
+			Container = subNode.Attribute("name").Value;
             return this;
         }
         public static new ItemLocation Construct()

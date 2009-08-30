@@ -543,7 +543,7 @@ namespace Rawr.Cat
 				statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration);
 			}
 
-			statsProcs.Agility += statsProcs.HighestStat;
+			statsProcs.Agility += statsProcs.HighestStat + statsProcs.Paragon;
 			statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
 			statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
@@ -894,6 +894,7 @@ namespace Rawr.Cat
 					ShadowDamage = stats.ShadowDamage,
 					TerrorProc = stats.TerrorProc,
 					HighestStat = stats.HighestStat,
+					Paragon = stats.Paragon,
 					BonusRakeDuration = stats.BonusRakeDuration,
 					BonusRipCrit = stats.BonusRipCrit,
 
@@ -938,7 +939,7 @@ namespace Rawr.Cat
 				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.TerrorProc + stats.BonusRipCrit +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BonusRakeDuration +
 				stats.ThreatReductionMultiplier + stats.AllResist + stats.ArcaneDamage + stats.ShadowDamage +
-				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier +
+				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier + stats.Paragon +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.TigersFuryCooldownReduction + stats.HighestStat +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusShredDamageMultiplier + stats.BonusPhysicalDamageMultiplier +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);

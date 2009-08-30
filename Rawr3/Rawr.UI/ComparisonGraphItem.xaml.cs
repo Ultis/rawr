@@ -66,19 +66,19 @@ namespace Rawr.UI
                 switch (itemAvailability)
                 {
                     case ItemAvailability.RegemmingAllowed:
-                        AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond.png", UriKind.Relative));
+                        AvailableImage.Source = new BitmapImage(new Uri("Images/Diamond.png", UriKind.Relative));
                         break;
                     case ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
-                        AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond3.png", UriKind.Relative));
+                        AvailableImage.Source = new BitmapImage(new Uri("Images/Diamond3.png", UriKind.Relative));
                         break;
                     case ItemAvailability.Available:
-                        AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond2.png", UriKind.Relative));
+                        AvailableImage.Source = new BitmapImage(new Uri("Images/Diamond2.png", UriKind.Relative));
                         break;
                     case ItemAvailability.AvailableWithEnchantRestrictions:
-                        AvailableImage.Source = new BitmapImage(new Uri("../Images/Diamond4.png", UriKind.Relative));
+                        AvailableImage.Source = new BitmapImage(new Uri("Images/Diamond4.png", UriKind.Relative));
                         break;
                     case ItemAvailability.NotAvailable:
-                        AvailableImage.Source = new BitmapImage(new Uri("../Images/DiamondOutline.png", UriKind.Relative));
+                        AvailableImage.Source = new BitmapImage(new Uri("Images/DiamondOutline.png", UriKind.Relative));
                         break;
                 }
 

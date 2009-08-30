@@ -9,6 +9,30 @@
     <Tree3>0</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
+    <Name>Mutilate</Name>
+    <Class>Rogue</Class>
+    <Spec>00532300535010052010333105100500500300000000000000000005020000000000000000000000000</Spec>
+    <Tree1>51</Tree1>
+    <Tree2>13</Tree2>
+    <Tree3>7</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Combat</Name>
+    <Class>Rogue</Class>
+    <Spec>00532000500000000000000000002520510000350152231005012515000000000000000000000000000</Spec>
+    <Tree1>15</Tree1>
+    <Tree2>51</Tree2>
+    <Tree3>5</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>HAT</Name>
+    <Class>Rogue</Class>
+    <Spec>30230000000000000000000000000520300500320000000000000005020122033300121350115030000</Spec>
+    <Tree1>8</Tree1>
+    <Tree2>20</Tree2>
+    <Tree3>43</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
     <Name>Untalented</Name>
     <Class>Rogue</Class>
     <Spec>00000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
@@ -183,5 +207,37 @@
     <Tree1>0</Tree1>
     <Tree2>17</Tree2>
     <Tree3>54</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Holy</Name>
+    <Class>Priest</Class>
+    <Spec>0503203100000000000000000000235051002302152530005301351000000000000000000000000000.000000000000000000000000000000000</Spec>
+    <Tree1>14</Tree1>
+    <Tree2>57</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Disc</Name>
+    <Class>Priest</Class>
+    <Spec>0503203130300512331323231251005051030000000000000000000000000000000000000000000000.000000000000000000000000000000000</Spec>
+    <Tree1>57</Tree1>
+    <Tree2>14</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Shadow</Name>
+    <Class>Priest</Class>
+    <Spec>0503203000000000000000000000000000000000000000000000000325023051223012323150301351.000000000000000000000000000000000</Spec>
+    <Tree1>13</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>58</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Holy AoE</Name>
+    <Class>Priest</Class>
+    <Spec>0503203100000000000000000000235401032002152530320311351000000000000000000000000000.000000000000000000000000000000000</Spec>
+    <Tree1>14</Tree1>
+    <Tree2>57</Tree2>
+    <Tree3>0</Tree3>
   </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>
