@@ -1016,6 +1016,184 @@ namespace Rawr
             return q;
         }
 
+        private struct InterpolationData
+        {
+            public float[/*b*/] Y;
+            public float Bmin;
+            public float Bmax;
+        }
+
+        private static readonly InterpolationData[/*a*/][/*x*/] ibetaCache;
+        private static readonly int ibetaCacheSize = 100;
+        private static readonly int ibetaBResolution = 100;
+        private static readonly int ibetaXResolution = 100;            
+
+        static SpecialFunction()
+        {
+
+            ibetaCache = new InterpolationData[ibetaCacheSize][];
+
+            for (int a = 0; a < ibetaCacheSize; a++)
+            {
+                ibetaCache[a] = new InterpolationData[ibetaXResolution + 1];
+                for (int i = 1; i < ibetaXResolution; i++)
+                {
+                    ibetaCache[a][i].Y = new float[ibetaBResolution + 1];
+
+                    double x = i / (double)ibetaXResolution;
+                    double bmin = BisectIbeta(a + 1, x, 0.0001, 0.00001);
+                    double bmax = BisectIbeta(a + 1, x, 0.9999, 0.00001);
+
+                    ibetaCache[a][i].Bmin = (float)bmin;
+                    ibetaCache[a][i].Bmax = (float)bmax;
+                    for (int j = 0; j <= ibetaBResolution; j++)
+                    {
+                        ibetaCache[a][i].Y[j] = (float)Ibeta(a + 1, bmin + (bmax - bmin) * j / (double)ibetaBResolution, x);
+                    }
+                }
+            }
+        }
+
+        private static double BisectIbeta(double a, double x, double y, double epsilon)
+        {
+            // find b such that Ibeta(a,b,x)=y
+            double low = 0;
+            double lowy = 0;
+            double high = 100;
+            double highy = Ibeta(a, high, x);
+
+            while (highy < y)
+            {
+                high += 100;
+                highy = Ibeta(a, high, x);
+            }
+
+            while (highy - lowy > epsilon)
+            {
+                double mid = (low + high) / 2.0;
+                double midy = Ibeta(a, mid, x);
+
+                if (midy > y)
+                {
+                    high = mid;
+                    highy = midy;
+                }
+                else
+                {
+                    low = mid;
+                    lowy = midy;
+                }
+            }
+
+            return (low + high) / 2.0;
+        }
+
+        public static float IbetaInterpolated(int a, float b, float x)
+        {
+            if (a > ibetaCacheSize)
+            {
+                // not in cache, regen cache for values up to here?
+                return (float)Ibeta(a, b, x);
+            }
+            a -= 1;
+
+            int i = (int)(x * ibetaXResolution);
+            if (i == ibetaXResolution) return 1.0f;
+
+            // interpolate at 4 control x values on grid along b
+
+            // i - 1
+            float y0;
+            if (i <= 1)
+            {
+                y0 = 0.0f;
+            }
+            else
+            {
+                y0 = InterpolateAux(ibetaCache[a][i - 1], b);
+            }
+            float y1;
+            if (i == 0)
+            {
+                y1 = 0.0f;
+            }
+            else
+            {
+                y1 = InterpolateAux(ibetaCache[a][i], b);
+            }
+            float y2;
+            if (i + 1 >= ibetaXResolution)
+            {
+                y2 = 1.0f;
+            }
+            else
+            {
+                y2 = InterpolateAux(ibetaCache[a][i + 1], b);
+            }
+            float y3;
+            if (i + 2 >= ibetaXResolution)
+            {
+                y3 = 1.0f;
+            }
+            else
+            {
+                y3 = InterpolateAux(ibetaCache[a][i + 2], b);
+            }
+            float xx = x * ibetaXResolution - i;
+            // Catmull–Rom spline
+            float y = 0.5f * (y0 * (xx * ((2 - xx) * xx - 1)) + y1 * (xx * xx * (3 * xx - 5) + 2) + y2 * (xx * ((4 - 3 * xx) * xx + 1)) + y3 * ((xx - 1) * xx * xx));
+            //System.Diagnostics.Trace.WriteLine("Interp: " + y + "   Exact: " + Ibeta(a + 1, b, x));
+            return Math.Min(1.0f, y);
+        }
+
+        private static float InterpolateAux(InterpolationData data, float b)
+        {
+            if (b < data.Bmin)
+            {
+                return data.Y[0] * b / data.Bmin;
+            }
+            else if (b > data.Bmax)
+            {
+                float d = b - data.Bmax;
+                return data.Y[ibetaBResolution] + (1.0f - data.Y[ibetaBResolution]) * d / (1 + d);
+            }
+            else
+            {
+                int j = (int)((b - data.Bmin) / (data.Bmax - data.Bmin) * ibetaBResolution);
+                // hermite interpolation
+                float y0;
+                if (j == 0)
+                {
+                    y0 = 0f;
+                }
+                else
+                {
+                    y0 = data.Y[j - 1];
+                }
+                float y1 = data.Y[j];
+                float y2;
+                if (j + 1 > ibetaBResolution)
+                {
+                    y2 = 1f;
+                }
+                else
+                {
+                    y2 = data.Y[j + 1];
+                }
+                float y3;
+                if (j + 2 > ibetaBResolution)
+                {
+                    y3 = 1f;
+                }
+                else
+                {
+                    y3 = data.Y[j + 2];
+                }
+                float d = (b - data.Bmin) * ibetaBResolution / (data.Bmax - data.Bmin) - j;
+                // Catmull–Rom spline
+                return 0.5f * (y0 * (d * ((2 - d) * d - 1)) + y1 * (d * d * (3 * d - 5) + 2) + y2 * (d * ((4 - 3 * d) * d + 1)) + y3 * ((d - 1) * d * d));
+            }
+        }
 
         /// <summary>
         /// Returns the incomplete beta function evaluated from zero to xx.

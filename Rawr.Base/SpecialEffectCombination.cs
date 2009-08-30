@@ -64,10 +64,10 @@ namespace Rawr
 
         private class Parameters
         {
-            public double[] d;
-            public double[] p;
-            public double[] c;
-            public double[] o;
+            public float[] d;
+            public float[] p;
+            public float[] c;
+            public float[] o;
             public bool[] a;
             public float[] triggerInterval;
 
@@ -84,10 +84,10 @@ namespace Rawr
             public Parameters(SpecialEffectCombination e, float[] triggerInterval, float[] triggerChance, float[] offset, bool[] active, float attackSpeed)
             {
                 this.triggerInterval = triggerInterval;
-                d = new double[e.effects.Count];
-                p = new double[e.effects.Count];
-                c = new double[e.effects.Count];
-                o = new double[e.effects.Count];
+                d = new float[e.effects.Count];
+                p = new float[e.effects.Count];
+                c = new float[e.effects.Count];
+                o = new float[e.effects.Count];
                 a = active;
 
                 bool discretizationCorrection = true;
@@ -99,9 +99,9 @@ namespace Rawr
                     c[i] = e.effects[i].Cooldown / triggerInterval[i];
                     if (discretizationCorrection)
                     {
-                        c[i] += 0.5;
+                        c[i] += 0.5f;
                     }
-                    if (c[i] < 1.0) c[i] = 1.0;
+                    if (c[i] < 1.0f) c[i] = 1.0f;
                     o[i] = offset[i] / triggerInterval[i];
                 }
             }
@@ -150,22 +150,22 @@ namespace Rawr
             Parameters p = new Parameters(this, triggerInterval, triggerChance, offset, active, attackSpeed);
 
             // integrate using adaptive Simspon's method
-            double totalCombinedUptime = AdaptiveSimpsonsMethod(p, fightDuration, 0.001f, 20);
+            float totalCombinedUptime = AdaptiveSimpsonsMethod(p, fightDuration, 0.001f, 20);
 
-            return (float)(totalCombinedUptime / fightDuration);
+            return (totalCombinedUptime / fightDuration);
         }
 
-        private double AdaptiveSimpsonsAux(Parameters p, double a, double b, double epsilon, double S, double fa, double fb, double fc, int bottom)
+        private float AdaptiveSimpsonsAux(Parameters p, float a, float b, float epsilon, float S, float fa, float fb, float fc, int bottom)
         {
-            double c = (a + b) / 2;
-            double h = b - a;
-            double d = (a + c) / 2;
-            double e = (c + b) / 2;
-            double fd = GetCombinedUptime(p, d);
-            double fe = GetCombinedUptime(p, e);
-            double Sleft = (h / 12) * (fa + 4 * fd + fc);
-            double Sright = (h / 12) * (fc + 4 * fe + fb);
-            double S2 = Sleft + Sright;
+            float c = (a + b) / 2;
+            float h = b - a;
+            float d = (a + c) / 2;
+            float e = (c + b) / 2;
+            float fd = GetCombinedUptime(p, d);
+            float fe = GetCombinedUptime(p, e);
+            float Sleft = (h / 12) * (fa + 4 * fd + fc);
+            float Sright = (h / 12) * (fc + 4 * fe + fb);
+            float S2 = Sleft + Sright;
 			if (bottom <= 0 || (h < 10 && Math.Abs(S2 - S) <= 15 * epsilon))
             {
                 return S2 + (S2 - S) / 15;
@@ -174,40 +174,40 @@ namespace Rawr
                    AdaptiveSimpsonsAux(p, c, b, epsilon / 2, Sright, fc, fb, fe, bottom - 1);
         }
 
-        private double AdaptiveSimpsonsMethod(Parameters p, double fightDuration, double epsilon, int maxRecursionDepth)
+        private float AdaptiveSimpsonsMethod(Parameters p, float fightDuration, float epsilon, int maxRecursionDepth)
         {
-            double a = 0.0;
-            double b = fightDuration;
-            double c = (a + b) / 2;
-            double h = b - a;
-            double fa = GetCombinedUptime(p, a);
-            double fb = GetCombinedUptime(p, b);
-            double fc = GetCombinedUptime(p, c);
-            double S = (h / 6) * (fa + 4 * fc + fb);
+            float a = 0.0f;
+            float b = fightDuration;
+            float c = (a + b) / 2;
+            float h = b - a;
+            float fa = GetCombinedUptime(p, a);
+            float fb = GetCombinedUptime(p, b);
+            float fc = GetCombinedUptime(p, c);
+            float S = (h / 6) * (fa + 4 * fc + fb);
             return AdaptiveSimpsonsAux(p, a, b, epsilon, S, fa, fb, fc, maxRecursionDepth); 
         }
 
-        private double GetCombinedUptime(Parameters p, double t)
+        private float GetCombinedUptime(Parameters p, float t)
         {
             // Uptime(x) = sum_r=0..inf Ibeta(r+1, x - r * cooldown, p) - Ibeta(r+1, x - duration - r * cooldown, p)
             // t := x * interval
             // Uptime(t) = sum_r=0..inf Ibeta(r+1, t / interval - r * cooldown / interval, p) - Ibeta(r+1, t / interval - duration / interval - r * cooldown / interval, p)
 
-            double combinedUptime = 1.0;
+            float combinedUptime = 1.0f;
 
             for (int i = 0; i < effects.Count; i++)
             {
-                double x = t / p.triggerInterval[i] - p.o[i];
+                float x = t / p.triggerInterval[i] - p.o[i];
 
-                double uptime = 0.0;
+                float uptime = 0.0f;
                 int r = 1;
                 while (x > 0)
                 {
-                    uptime += SpecialFunction.Ibeta(r, x, p.p[i]);
-                    double xd = x - p.d[i];
+                    uptime += SpecialFunction.IbetaInterpolated(r, x, p.p[i]);
+                    float xd = x - p.d[i];
                     if (xd > 0)
                     {
-                        uptime -= SpecialFunction.Ibeta(r, xd, p.p[i]);
+                        uptime -= SpecialFunction.IbetaInterpolated(r, xd, p.p[i]);
                     }
                     r++;
                     x -= p.c[i];
@@ -218,7 +218,7 @@ namespace Rawr
                 }
                 else
                 {
-                    combinedUptime *= (1.0 - uptime);
+                    combinedUptime *= (1.0f - uptime);
                 }
             }
 
