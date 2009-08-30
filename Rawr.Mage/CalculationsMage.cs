@@ -334,7 +334,7 @@ namespace Rawr.Mage
         {
             CharacterCalculationsBase ret;
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            bool useIncrementalOptimizations = calculationOptions.IncrementalOptimizations && !ignoreIncrementalSet;
+            bool useIncrementalOptimizations = calculationOptions.IncrementalOptimizations && (!ignoreIncrementalSet || calculationOptions.ForceIncrementalOptimizations);
             if (useIncrementalOptimizations && calculationOptions.IncrementalSetStateIndexes == null) computeIncrementalSet = true;
             if (computeIncrementalSet) useIncrementalOptimizations = false;
             if (useIncrementalOptimizations && !character.DisableBuffAutoActivation)

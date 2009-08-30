@@ -266,6 +266,13 @@ namespace Rawr.Mage
             set { _AutomaticArmor = value; OnPropertyChanged("AutomaticArmor"); }
         }
 
+        private bool _ForceIncrementalOptimizations;
+        public bool ForceIncrementalOptimizations
+        {
+            get { return _ForceIncrementalOptimizations; }
+            set { _ForceIncrementalOptimizations = value; OnPropertyChanged("ForceIncrementalOptimizations"); }
+        }
+
         private bool _IncrementalOptimizations;
         public bool IncrementalOptimizations
         {
