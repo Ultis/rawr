@@ -24,9 +24,9 @@ namespace Rawr.Rogue.FinishingMoves
 
         public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues )
         {
-            var evisMod = stats.AttackPower*rank*.03f;
-            var evisMin = 245f + (rank - 1f)*185f + evisMod;
-            var evisMax = 365f + (rank - 1f)*185f + evisMod;
+            var evisMod = stats.AttackPower * rank * 0.03f;
+            var evisMin = 245f + (rank-1f)*185f + evisMod;
+            var evisMax = 365f + (rank-1f)*185f + evisMod;
 
             var baseFinisherDmg = (evisMin + evisMax)/2f;
             baseFinisherDmg *= Talents.Add(Talents.ImprovedEviscerate, Talents.FindWeakness, Talents.Murder, Talents.Aggression, Talents.HungerForBlood.Damage).Multiplier;
@@ -35,23 +35,18 @@ namespace Rawr.Rogue.FinishingMoves
             var nonCritDamage = baseFinisherDmg * ( 1f - CritChance(combatFactors, calcOpts) );
 
             var finisherDmg = critDamage + nonCritDamage;
-            finisherDmg *= (1f - (combatFactors.WhiteMissChance / 100f));
+            finisherDmg *= (1f - (combatFactors.WhiteMissChance));
 
-            if (!Talents.SurpriseAttacks.HasPoints)
-                finisherDmg *= (1f - (combatFactors.MhDodgeChance / 100f));
+            if (!Talents.SurpriseAttacks.HasPoints) {
+                finisherDmg *= (1f - (combatFactors.MhDodgeChance));
+            }
 
             finisherDmg *= combatFactors.DamageReduction;
             return finisherDmg / cycleTime.Duration;
         }
 
-        private float CritChance(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
-        {
-            return combatFactors.ProbMhCrit + GlyphOfEviscerateBonus + CritBonusFromTurnTheTables(calcOpts);
-        }
-
-        private static float GlyphOfEviscerateBonus
-        {
-            get { return Glyphs.GlyphOfEviscerate ? .1f : 0f; }
+        private float CritChance(CombatFactors combatFactors, CalculationOptionsRogue calcOpts) {
+            return (float)Math.Max(0f,Math.Min(1f,combatFactors.ProbMhCrit + (Glyphs.GlyphOfEviscerate ? 0.1f : 0f) + CritBonusFromTurnTheTables(calcOpts)));
         }
     }
 }

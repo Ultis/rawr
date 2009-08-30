@@ -221,13 +221,13 @@ namespace Rawr.Rogue {
             displayedValues.AddDisplayValue(DisplayValue.EnergyRegen, combatFactors.BaseEnergyRegen.ToString());
 
             displayedValues.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
-            displayedValues.AddPercentageToolTip(DisplayValue.HitRating, "Total % Hit: ", combatFactors.HitPercent);
-            displayedValues.AddPercentageToolTip(DisplayValue.HitRating, "Poison % Hit: ", combatFactors.PoisonHitPercent);
+            displayedValues.AddToolTip(DisplayValue.HitRating, string.Format("Total % Hit: {0:0.00%}", combatFactors.HitPercent));
+            displayedValues.AddToolTip(DisplayValue.HitRating, string.Format("Poison % Hit: {0:0.00%}", combatFactors.PoisonHitPercent));
 
             displayedValues.AddRoundedDisplayValue(DisplayValue.CritRating, stats.CritRating);
-            displayedValues.AddToolTip(DisplayValue.CritRating, "Crit % from Rating: " + combatFactors.CritFromCritRating);
-            displayedValues.AddPercentageToolTip(DisplayValue.CritRating, "MH Crit %: ", combatFactors.ProbMhCrit);
-            displayedValues.AddPercentageToolTip(DisplayValue.CritRating, "OH Crit%: ", combatFactors.ProbOhCrit);
+            displayedValues.AddToolTip(DisplayValue.CritRating, string.Format("Crit % from Rating: {0:00.00%}",combatFactors.CritFromCritRating));
+            displayedValues.AddToolTip(DisplayValue.CritRating, string.Format("MH Crit: {0:00.00%}", combatFactors.ProbMhCrit));
+            displayedValues.AddToolTip(DisplayValue.CritRating, string.Format("OH Crit: {0:00.00%}", combatFactors.ProbOhCrit));
             displayedValues.AddToolTip(DisplayValue.CritRating, "Crit Multiplier: " + combatFactors.BaseCritMultiplier);
 
             displayedValues.AddDisplayValue(DisplayValue.ArmorDamageReduction, Math.Round(combatFactors.ArmorDamageReduction, 2) * 100 + "%");
@@ -266,99 +266,210 @@ namespace Rawr.Rogue {
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
+            CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
+            RogueTalents talents = character.RogueTalents;
+
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Rogue, character.Race);
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
+            Stats statsItems = GetItemStats(character, additionalItem);
+            Stats statsOptionsPanel = new Stats() {
+                // handle boss level difference
+                PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
+            };
+            Stats statsTalents = new Stats() {
+                BonusAgilityMultiplier = Talents.SinisterCalling.Agility.Multiplier,
+                PhysicalHit = Talents.Precision.Bonus,
+                BonusAttackPowerMultiplier = Talents.Deadliness.Multiplier
+                                           + Talents.SavageCombat.AttackPower.Multiplier,
+                PhysicalCrit = Talents.Malice.Bonus +
+                                ((character.ActiveBuffs.FindAll(buff => buff.Group == "Critical Strike Chance Taken").Count == 0)
+                                    ? Talents.MasterPoisoner.Crit.Bonus : 0f),
+                Dodge = Talents.LightningReflexes.Dodge.Bonus,
+                Parry = Talents.Deflection.Bonus,
+                PhysicalHaste = (1f + Talents.BladeFlurry.Haste.Bonus)
+                              * (1f + Talents.LightningReflexes.Haste.Bonus)
+                              - 1f,
+            };
+            Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
+            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
+            Stats statsProcs = new Stats();
 
-            //TalentTree tree = character.AllTalents;
+            // Stamina
+            float totalBSTAM = statsTotal.BonusStaminaMultiplier;
+            float staBase = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina);
+            float staBonus = (float)Math.Floor((1f + totalBSTAM) * statsGearEnchantsBuffs.Stamina);
+            statsTotal.Stamina = staBase + staBonus;
 
-            var agiBase  = (float) Math.Floor(statsRace.Agility *(1f + statsRace.BonusAgilityMultiplier));
-            var agiBonus = (float) Math.Floor(statsGearEnchantsBuffs.Agility*(1 + statsRace.BonusAgilityMultiplier));
-            var strBase  = (float) Math.Floor(statsRace.Strength*(1f + statsRace.BonusStrengthMultiplier));
-            var strBonus = (float) Math.Floor(statsGearEnchantsBuffs.Strength*(1 + statsRace.BonusStrengthMultiplier));
-            var staBase  = (float) Math.Floor(statsRace.Stamina *(1f + statsRace.BonusStaminaMultiplier));
-            var staBonus = (float) Math.Floor(statsGearEnchantsBuffs.Stamina*(1 + statsRace.BonusStaminaMultiplier));
+            // Health
+            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+            statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
 
-            Stats statsTotal = new Stats();
-            statsTotal.BonusDamageMultiplier = statsGearEnchantsBuffs.BonusDamageMultiplier; //TODO:  actually use in the model!!
-            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier)*(1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)*(Talents.Deadliness.Multiplier)*(Talents.SavageCombat.AttackPower.Multiplier)) - 1;
-            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier)*(1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)*(Talents.SinisterCalling.Agility.Multiplier)) - 1;
-            statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier)*(1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
-            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier)*(1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
+            // Strength
+            float totalBSM = statsTotal.BonusStrengthMultiplier;
+            float strBase  = (float)Math.Floor((1f + totalBSM) * statsRace.Strength);
+            float strBonus = (float)Math.Floor((1f + totalBSM) * statsGearEnchantsBuffs.Strength);
+            statsTotal.Strength = strBase + strBonus;
 
-            statsTotal.Agility = (float) Math.Floor(agiBase*(1f + statsTotal.BonusAgilityMultiplier)) + (float) Math.Floor(agiBonus*(1 + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Strength = (float) Math.Floor(strBase*(1f + statsTotal.BonusStrengthMultiplier)) + (float) Math.Floor(strBonus*(1 + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Stamina = (float) Math.Floor(staBase*(1f + statsTotal.BonusStaminaMultiplier)) + (float) Math.Floor(staBonus*(1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Health = (float) Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - staBase)*10f))));
+            // Agility
+            float totalBAM = statsTotal.BonusAgilityMultiplier;
+            float agiBase  = (float)Math.Floor((1f + totalBAM) * statsRace.Agility);
+            float agiBonus = (float)Math.Floor((1f + totalBAM) * statsGearEnchantsBuffs.Agility);
+            statsTotal.Agility = agiBase + agiBonus;
 
-            statsTotal.AttackPower = (float)Math.Floor((statsTotal.Agility + statsTotal.Strength + statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower) * (1+statsTotal.BonusAttackPowerMultiplier));
+            // Attack Power
+            float totalBAPM        = statsTotal.BonusAttackPowerMultiplier;
+            float apBase           = (1f + totalBAPM) * (statsRace.AttackPower);
+            float apBonusAGI       = (1f + totalBAPM) * (statsTotal.Agility);
+            float apBonusSTR       = (1f + totalBAPM) * (statsTotal.Strength);
+            float apBonusOther     = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower);
+            statsTotal.AttackPower = (float)Math.Floor(apBase + apBonusAGI + apBonusSTR + apBonusOther);
 
-            statsTotal.PhysicalHit = Talents.Precision.Bonus;
-            statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
+            // Armor (Not currently being used in Rogue)
+            /*statsTotal.Armor       = (float)Math.Floor(statsTotal.Armor      * (1f + statsTotal.BaseArmorMultiplier ));
+            statsTotal.BonusArmor += statsTotal.Agility * 2f;
+            statsTotal.BonusArmor  = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
+            statsTotal.Armor      += statsTotal.BonusArmor;*/
 
-            statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
+            /*statsTotal.PhysicalHaste *= (1f + StatConversion.GetHasteFromRating(statsTotal.HasteRating,CharacterClass.Rogue))
+                                     *  (1f + Talents.BladeFlurry.Haste.Bonus)
+                                     *  (1f + Talents.LightningReflexes.Haste.Bonus);*/
+            statsTotal.HasteRating = (float)Math.Floor(statsTotal.HasteRating);
+            float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
+            statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
+                                       (1f + statsItems.PhysicalHaste) *
+                                       (1f + statsBuffs.PhysicalHaste) *
+                                       (1f + statsTalents.PhysicalHaste) *
+                                       (1f + statsOptionsPanel.PhysicalHaste) *
+                                       (1f + statsProcs.PhysicalHaste) *
+                                       (1f + ratingHasteBonus)
+                                       - 1f;
 
-            statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
+            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, CharacterClass.Rogue);
 
-            statsTotal.PhysicalHaste = (1f + StatConversion.GetHasteFromRating(statsTotal.HasteRating,CharacterClass.Rogue));
-            statsTotal.PhysicalHaste += Talents.BladeFlurry.Haste.Bonus;
-            statsTotal.PhysicalHaste += Talents.LightningReflexes.Haste.Bonus;
+            // Defensive Stats
+            statsTotal.Dodge += StatConversion.GetDodgeFromAgility(statsTotal.Agility, CharacterClass.Rogue);
+            statsTotal.Parry += 5f;
 
-            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
-            statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
-
-            statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
-
-            statsTotal.PhysicalCrit = -0.295f + (statsGearEnchantsBuffs.PhysicalCrit*100); //TODO: Change crit from whole numbers (e.g. 11) to percentages (e.g.  .11);
-            statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility,CharacterClass.Rogue);
-            statsTotal.PhysicalCrit += Talents.Malice.Bonus;
-
-            if (character.ActiveBuffs.FindAll(buff => buff.Group == "Critical Strike Chance Taken").Count == 0) {
-                statsTotal.PhysicalCrit += Talents.MasterPoisoner.Crit.Bonus;
-            }
-
-            statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
-            statsTotal.Dodge += Talents.LightningReflexes.Dodge.Bonus + StatConversion.GetDodgeFromAgility(statsTotal.Agility, CharacterClass.Rogue);
-            statsTotal.Parry += 5f + Talents.Deflection.Bonus;  //base rogue parry is 5%
-            statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
-
-            statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;
-
-            // T4 bonuses
-            statsTotal.BonusSnDDuration = statsGearEnchantsBuffs.BonusSnDDuration;
-            statsTotal.CPOnFinisher = statsGearEnchantsBuffs.CPOnFinisher;
-
-            // T5 bonuses
-            statsTotal.BonusEvisEnvenomDamage = statsGearEnchantsBuffs.BonusEvisEnvenomDamage;
-            statsTotal.BonusFreeFinisher = statsGearEnchantsBuffs.BonusFreeFinisher;
-
-            // T6 bonuses
-            statsTotal.BonusCPGDamage = statsGearEnchantsBuffs.BonusCPGDamage;
-            statsTotal.BonusSnDHaste = statsGearEnchantsBuffs.BonusSnDHaste;
-
-            //Berserking
+            /*//Berserking
             if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789) {
                 statsTotal.AttackPower += 135f;  //taken straight from Elitist Jerks  
             }
             if (character.OffHand != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789) {
                 statsTotal.AttackPower += 135f;  //taken straight from Elitist Jerks  
+            }*/
+
+            // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
+            CombatFactors combatFactors = new CombatFactors(character, statsTotal);
+            WhiteAttacks whiteAttacks = new WhiteAttacks(combatFactors);
+
+            float fightDuration = 600f;//calcOpts.Duration;
+
+            float mhHitsPerSecond = 0f; float ohHitsPerSecond = 0f;
+            mhHitsPerSecond = 1f / (1.5f/* + calcOpts.GetLatency()*/) * 0.9f * combatFactors.ProbYellowHit;
+            // White Hits per second uses hasted numbers, not un-hasted
+            if (combatFactors.MH.Speed > 0f) { mhHitsPerSecond += whiteAttacks.MhHits; }
+            if (combatFactors.OH.Speed > 0f) { ohHitsPerSecond += whiteAttacks.OhHits; }
+
+            float mhHitInterval = 1f / mhHitsPerSecond;
+            float ohHitInterval = 1f / ohHitsPerSecond;
+            float bothHitInterval = 1f / (mhHitsPerSecond + ohHitsPerSecond);
+            //float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
+            float dmgDoneInterval = 1f / (mhHitsPerSecond + ohHitsPerSecond /*+ (calcOpts.FuryStance ? 1f : 4f / 3f)*/);
+
+            SpecialEffect bersMainHand = null;
+            SpecialEffect bersOffHand = null;
+
+            // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
+            if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789) { // berserker enchant id
+                Stats.SpecialEffectEnumerator mhEffects = character.MainHandEnchant.Stats.SpecialEffects();
+
+                if (mhEffects.MoveNext()) {
+                    bersMainHand = mhEffects.Current;
+                    statsProcs += bersMainHand.GetAverageStats(mhHitInterval, 1f, combatFactors.MH.Speed, fightDuration);
+                }
+            }
+            if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789) {
+                Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
+
+                if (ohEffects.MoveNext()) {
+                    bersOffHand = ohEffects.Current;
+                    statsProcs += bersOffHand.GetAverageStats(ohHitInterval, 1f, combatFactors.OH.Speed, fightDuration);
+                }
+            }
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
+            {
+                if (effect != bersMainHand && effect != bersOffHand) // bersStats is null if the char doesn't have berserking enchant
+                {
+                    float oldArp = effect.Stats.ArmorPenetrationRating;
+                    if (effect.Stats.ArmorPenetrationRating > 0)
+                    {
+                        float arpenBuffs = 0;
+                        float currentArp = arpenBuffs + StatConversion.GetArmorPenetrationFromRating(statsTotal.ArmorPenetrationRating);
+                        float arpToHardCap = (1f - currentArp) * StatConversion.RATING_PER_ARMORPENETRATION;
+                        if (arpToHardCap < effect.Stats.ArmorPenetrationRating) effect.Stats.ArmorPenetrationRating = arpToHardCap;
+                    }
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.Use:
+                            statsProcs += effect.GetAverageStats(0f, 1f, combatFactors.MHSpeed, fightDuration);
+                            break;
+                        case Trigger.MeleeHit:
+                        case Trigger.PhysicalHit:
+                            statsProcs += effect.GetAverageStats(bothHitInterval, 1f, combatFactors.MHSpeed, fightDuration);
+                            break;
+                        case Trigger.MeleeCrit:
+                        case Trigger.PhysicalCrit:
+                            statsProcs += effect.GetAverageStats(bothHitInterval, combatFactors.ProbMhCrit, combatFactors.MHSpeed, fightDuration);
+                            break;
+                        /*case Trigger.DoTTick:
+                            statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, combatFactors.MHSpeed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend
+                            break;*/
+                        case Trigger.DamageDone: // physical and dots
+                            statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors.MHSpeed, fightDuration);
+                            break;
+                    }
+                    effect.Stats.ArmorPenetrationRating = oldArp;
+                }
             }
 
-            //-----------------------------------------------------------------
-            // FYI:  T7 and T8 are pulled from the base RAWR as true/false, 
-            //       not as the actual buff values.  The actual benefit is
-            //       defined/calculated in the CombatFactors class
-            //-----------------------------------------------------------------
+            statsProcs.Stamina   = (float)Math.Floor(statsProcs.Stamina * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier));
+            statsProcs.Strength  = (float)Math.Floor(statsProcs.Strength * (1f + totalBSM) * (1f + statsProcs.BonusStrengthMultiplier));
+            statsProcs.Agility   = (float)Math.Floor(statsProcs.Agility * (1f + totalBAM) * (1f + statsProcs.BonusAgilityMultiplier));
+            statsProcs.Agility  += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBAM) * (1f + statsProcs.BonusAgilityMultiplier));
+            statsProcs.Health   += (float)Math.Floor(statsProcs.Stamina * 10f);
 
-            //T7 bonuses
-            statsTotal.RogueT7TwoPieceBonus = statsGearEnchantsBuffs.RogueT7TwoPieceBonus;
-            statsTotal.RogueT7FourPieceBonus = statsGearEnchantsBuffs.RogueT7FourPieceBonus;
+            // Armor
+            statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier));
+            statsProcs.BonusArmor += statsProcs.Agility * 2f;
+            statsProcs.BonusArmor = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
+            statsProcs.Armor += statsProcs.BonusArmor;
 
-            //T8 bonuses
-            statsTotal.RogueT8TwoPieceBonus = statsGearEnchantsBuffs.RogueT8TwoPieceBonus;
-            statsTotal.RogueT8FourPieceBonus = statsGearEnchantsBuffs.RogueT8FourPieceBonus;
+            // Attack Power
+            float totalBAPMProcs    = (1f + statsTotal.BonusAttackPowerMultiplier) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
+            float apBonusAGIProcs   = (1f + totalBAPM) * (statsProcs.Agility);
+            float apBonusSTRProcs   = (1f + totalBAPM) * (statsProcs.Strength);
+            float apBonusOtherProcs = (1f + totalBAPM) * (statsProcs.AttackPower);
+            statsProcs.AttackPower  = (float)Math.Floor(apBonusSTRProcs + apBonusAGIProcs + apBonusOtherProcs);
 
+            // Haste
+            statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
+                                     * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, CharacterClass.Rogue))
+                                     - 1f;
+
+            statsTotal += statsProcs;
+
+            // Haste
+            statsTotal.HasteRating = (float)Math.Floor(statsTotal.HasteRating);
+            ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
+            statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
+                                       (1f + statsItems.PhysicalHaste) *
+                                       (1f + statsBuffs.PhysicalHaste) *
+                                       (1f + statsTalents.PhysicalHaste) *
+                                       (1f + statsOptionsPanel.PhysicalHaste) *
+                                       (1f + statsProcs.PhysicalHaste) *
+                                       (1f + ratingHasteBonus)
+                                       - 1f;
+            
             return statsTotal;
         }
 
@@ -426,7 +537,7 @@ namespace Rawr.Rogue {
                            PhysicalCrit = stats.PhysicalCrit,
                            HighestStat = stats.HighestStat,
                            
-                           AllResist = stats.AllResist,
+                           /*AllResist = stats.AllResist,
                            ArcaneResistance = stats.ArcaneResistance,
                            NatureResistance = stats.NatureResistance,
                            FireResistance = stats.FireResistance,
@@ -436,7 +547,7 @@ namespace Rawr.Rogue {
                            NatureResistanceBuff = stats.NatureResistanceBuff,
                            FireResistanceBuff = stats.FireResistanceBuff,
                            FrostResistanceBuff = stats.FrostResistanceBuff,
-                           ShadowResistanceBuff = stats.ShadowResistanceBuff,
+                           ShadowResistanceBuff = stats.ShadowResistanceBuff,*/
                            
                            BonusSnDDuration = stats.BonusSnDDuration,
                            CPOnFinisher = stats.CPOnFinisher,
@@ -473,7 +584,7 @@ namespace Rawr.Rogue {
                     stats.AttackPower +
                     stats.CritRating +
                     stats.HitRating +
-                    stats.Stamina +
+                    //stats.Stamina +
                     stats.HasteRating +
                     stats.ExpertiseRating +
                     stats.ArmorPenetration +
@@ -495,7 +606,7 @@ namespace Rawr.Rogue {
                     stats.PhysicalCrit +
                     stats.HighestStat +
 
-                    stats.AllResist +
+                    /*stats.AllResist +
                     stats.ArcaneResistance +
                     stats.NatureResistance +
                     stats.FireResistance +
@@ -505,7 +616,7 @@ namespace Rawr.Rogue {
                     stats.NatureResistanceBuff +
                     stats.FireResistanceBuff +
                     stats.FrostResistanceBuff +
-                    stats.ShadowResistanceBuff +
+                    stats.ShadowResistanceBuff +*/
 
                     stats.BonusSnDDuration +
                     stats.CPOnFinisher +
