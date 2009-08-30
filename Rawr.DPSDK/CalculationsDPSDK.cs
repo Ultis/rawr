@@ -166,7 +166,7 @@ namespace Rawr.DPSDK
         private string[] _customChartNames = null;
         public override string[] CustomChartNames {
             get {
-                if (_customChartNames == null) { _customChartNames = new string[] { "Item Budget"}; }
+                if (_customChartNames == null) { _customChartNames = new string[] { "Item Budget"/*, "MH Weapon Speed", "OH Weapon Speed"*/ }; }
                 return _customChartNames;
             }
         }
@@ -250,7 +250,7 @@ namespace Rawr.DPSDK
             calcs.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calcs.Talents = calcOpts.talents;
 
-            CombatTable combatTable = new CombatTable(character, calcs, stats, calcOpts);
+            CombatTable combatTable = new CombatTable(character, calcs, stats, calcOpts/*, additionalItem*/);
             
             //DPS Subgroups
             float dpsWhite = 0f;
@@ -1375,6 +1375,86 @@ namespace Rawr.DPSDK
                         comparisonList.Add(comparison);
                     }
                     return comparisonList.ToArray();
+ /*               case "MH Weapon Speed":
+                    string[] speedList = new String[] {"1.4", "1.6", "1.8", "2.0", "2.2", "2.4", "2.6", "2.8"};
+                    Item MH = character.MainHand.Item;
+                    Item MH14 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
+                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 1.4f), (int)((MH.MaxDamage / MH.Speed) * 1.4f), MH.DamageType, 1.4f, MH.RequiredClasses);
+                    Item MH16 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
+                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 1.6f), (int)((MH.MaxDamage / MH.Speed) * 1.6f), MH.DamageType, 1.6f, MH.RequiredClasses);
+                    Item MH18 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
+                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 1.8f), (int)((MH.MaxDamage / MH.Speed) * 1.8f), MH.DamageType, 1.8f, MH.RequiredClasses);
+                    Item MH20 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
+                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 2f), (int)((MH.MaxDamage / MH.Speed) * 2f), MH.DamageType, 2f, MH.RequiredClasses);
+                    Item MH22 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
+                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 2.2f), (int)((MH.MaxDamage / MH.Speed) * 2.2f), MH.DamageType, 2.2f, MH.RequiredClasses);
+                    Item MH24 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
+                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 2.4f), (int)((MH.MaxDamage / MH.Speed) * 2.4f), MH.DamageType, 2.4f, MH.RequiredClasses);
+                    Item MH26 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
+                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 2.6f), (int)((MH.MaxDamage / MH.Speed) * 2.6f), MH.DamageType, 2.6f, MH.RequiredClasses);
+                    Item MH28 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
+                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 2.8f), (int)((MH.MaxDamage / MH.Speed) * 2.8f), MH.DamageType, 2.8f, MH.RequiredClasses);
+                    Item[] MHitemList = new Item[] {MH14, MH16, MH18, MH20, MH22, MH24, MH26, MH28};
+
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
+
+                    for (int index = 0; index < MHitemList.Length; index++)
+                    {
+                        calc = GetCharacterCalculations(character, MHitemList[index]) as CharacterCalculationsDPSDK;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = speedList[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
+                case "OH Weapon Speed":
+                    string[] OHspeedList = new String[] { "1.4", "1.6", "1.8", "2.0", "2.2", "2.4", "2.6", "2.8" };
+                    Item OH = character.OffHand.Item;
+                    Item OH14 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
+                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 1.4f), (int)((OH.MaxDamage / OH.Speed) * 1.4f), OH.DamageType, 1.4f, OH.RequiredClasses);
+                    Item OH16 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
+                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 1.6f), (int)((OH.MaxDamage / OH.Speed) * 1.6f), OH.DamageType, 1.6f, OH.RequiredClasses);
+                    Item OH18 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
+                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 1.8f), (int)((OH.MaxDamage / OH.Speed) * 1.8f), OH.DamageType, 1.8f, OH.RequiredClasses);
+                    Item OH20 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
+                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 2f), (int)((OH.MaxDamage / OH.Speed) * 2f), OH.DamageType, 2f, OH.RequiredClasses);
+                    Item OH22 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
+                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 2.2f), (int)((OH.MaxDamage / OH.Speed) * 2.2f), OH.DamageType, 2.2f, OH.RequiredClasses);
+                    Item OH24 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
+                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 2.4f), (int)((OH.MaxDamage / OH.Speed) * 2.4f), OH.DamageType, 2.4f, OH.RequiredClasses);
+                    Item OH26 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
+                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 2.6f), (int)((OH.MaxDamage / OH.Speed) * 2.6f), OH.DamageType, 2.6f, OH.RequiredClasses);
+                    Item OH28 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
+                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 2.8f), (int)((OH.MaxDamage / OH.Speed) * 2.8f), OH.DamageType, 2.8f, OH.RequiredClasses);
+                    Item[] OHitemList = new Item[] { OH14, OH16, OH18, OH20, OH22, OH24, OH26, OH28 };
+
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
+
+                    for (int index = 0; index < OHitemList.Length; index++)
+                    {
+                        calc = GetCharacterCalculations(character, OHitemList[index]) as CharacterCalculationsDPSDK;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = OHspeedList[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();*/
                 default:
                     return new ComparisonCalculationBase[0];
             }

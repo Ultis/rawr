@@ -24,18 +24,21 @@ namespace Rawr.DPSDK
             realDuration, totalMeleeAbilities,
         totalSpellAbilities, normalizationFactor;
 
+        public Item additionalItem;
+
         public CombatTable(Character c, Stats stats, CalculationOptionsDPSDK calcOpts) :
             this(c, new CharacterCalculationsDPSDK(), stats, calcOpts)
         {
         }
 
-        public CombatTable(Character c, CharacterCalculationsDPSDK calcs, Stats stats, CalculationOptionsDPSDK calcOpts)
+        public CombatTable(Character c, CharacterCalculationsDPSDK calcs, Stats stats, CalculationOptionsDPSDK calcOpts/*, Item additionalItem*/)
         {
             character = c;
             this.calcs = calcs;
             talents = character.DeathKnightTalents;
             this.calcOpts = calcOpts;
             this.stats = stats;
+            this.additionalItem = null;
             totalMeleeAbilities = 0f;
             totalSpellAbilities = 0f;
 
@@ -221,6 +224,22 @@ namespace Rawr.DPSDK
                 calcs.OHWeaponDamage = OH.damage;
                 calcs.OHExpertise = OH.effectiveExpertise;
             }
+
+            if (additionalItem != null && ((additionalItem.Slot == ItemSlot.MainHand) || (additionalItem.Slot == ItemSlot.TwoHand) || additionalItem.Slot == ItemSlot.OneHand))
+            {
+                MH = new Weapon(additionalItem, stats, calcOpts, MHExpertise);
+                calcs.MHAttackSpeed = MH.hastedSpeed;
+                calcs.MHWeaponDamage = MH.damage;
+                calcs.MHExpertise = MH.effectiveExpertise;
+            }
+            else if (additionalItem != null && (additionalItem.Slot == ItemSlot.OffHand || additionalItem.Slot == ItemSlot.OneHand))
+            {
+                OH = new Weapon(additionalItem, stats, calcOpts, OHExpertise);
+                calcs.OHAttackSpeed = OH.hastedSpeed;
+                calcs.OHWeaponDamage = OH.damage;
+                calcs.OHExpertise = OH.effectiveExpertise;
+            }
+
 
             // MH-only
             if ((character.MainHand != null) && (! DW))
