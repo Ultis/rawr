@@ -128,7 +128,7 @@ namespace Rawr
             Parameters p = new Parameters(this, triggerInterval, triggerChance, offset, attackSpeed);
 
             // integrate using adaptive Simspon's method
-            double totalCombinedUptime = AdaptiveSimpsonsMethod(p, fightDuration, 0.000001, 20);
+            double totalCombinedUptime = AdaptiveSimpsonsMethod(p, fightDuration, 0.001f, 20);
 
             return (float)(totalCombinedUptime / fightDuration);
         }
@@ -150,7 +150,7 @@ namespace Rawr
             Parameters p = new Parameters(this, triggerInterval, triggerChance, offset, active, attackSpeed);
 
             // integrate using adaptive Simspon's method
-            double totalCombinedUptime = AdaptiveSimpsonsMethod(p, fightDuration, 0.000001, 20);
+            double totalCombinedUptime = AdaptiveSimpsonsMethod(p, fightDuration, 0.001f, 20);
 
             return (float)(totalCombinedUptime / fightDuration);
         }
@@ -166,7 +166,7 @@ namespace Rawr
             double Sleft = (h / 12) * (fa + 4 * fd + fc);
             double Sright = (h / 12) * (fc + 4 * fe + fb);
             double S2 = Sleft + Sright;
-            if (bottom <= 0 || Math.Abs(S2 - S) <= 15 * epsilon)
+			if (bottom <= 0 || (h < 10 && Math.Abs(S2 - S) <= 15 * epsilon))
             {
                 return S2 + (S2 - S) / 15;
             }

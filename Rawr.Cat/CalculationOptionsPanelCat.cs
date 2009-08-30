@@ -31,8 +31,10 @@ namespace Rawr
 			checkBoxRake.Checked = calcOpts.CustomUseRake;
 			checkBoxShred.Checked = calcOpts.CustomUseShred;
 			comboBoxSavageRoar.SelectedItem = calcOpts.CustomCPSavageRoar.ToString();
-			checkBoxOffsetTrinkets.Checked = calcOpts.OffsetTrinkets;
+			trackBarTrinketOffset.Value = (int)(calcOpts.TrinketOffset * 2);
 			numericUpDownDuration.Value = calcOpts.Duration;
+
+			labelTrinketOffset.Text = string.Format(labelTrinketOffset.Tag.ToString(), calcOpts.TrinketOffset);
 			
 			_loadingCalculationOptions = false;
 		}
@@ -50,9 +52,11 @@ namespace Rawr
 				calcOpts.CustomUseRake = checkBoxRake.Checked;
 				calcOpts.CustomUseShred = checkBoxShred.Checked;
 				calcOpts.CustomCPSavageRoar = int.Parse(comboBoxSavageRoar.SelectedItem.ToString());
-				calcOpts.OffsetTrinkets = checkBoxOffsetTrinkets.Checked;
+				calcOpts.TrinketOffset = (float)trackBarTrinketOffset.Value / 2f;
 				calcOpts.Duration = (int)numericUpDownDuration.Value;
-				
+
+				labelTrinketOffset.Text = string.Format(labelTrinketOffset.Tag.ToString(), calcOpts.TrinketOffset);
+
 				Character.OnCalculationsInvalidated();
 			}
 		}
@@ -80,6 +84,6 @@ namespace Rawr
 		public int CustomCPFerociousBite = 0;
 		public int CustomCPSavageRoar = 2;
 		public int Duration = 300;
-		public bool OffsetTrinkets = false;
+		public float TrinketOffset = 0f;
 	}
 }

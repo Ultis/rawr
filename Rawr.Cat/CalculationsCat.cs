@@ -502,7 +502,7 @@ namespace Rawr.Cat
 			float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Druid) + statsTotal.Expertise, CharacterClass.Druid);
             float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel-80] - expertiseBonus);
-            float chanceParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel-80] - expertiseBonus);
+			float chanceParry = 0f;// Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
             float chanceMiss  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[ targetLevel-80] - hitBonus);
 			float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
@@ -513,100 +513,36 @@ namespace Rawr.Cat
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			float chanceHit = 1f - chanceAvoided;
 
+			Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
+			Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
+			triggerIntervals[Trigger.Use] = 0f;
+			triggerIntervals[Trigger.MeleeHit] = meleeHitInterval;
+			triggerIntervals[Trigger.PhysicalHit] = meleeHitInterval;
+			triggerIntervals[Trigger.MeleeCrit] = meleeHitInterval;
+			triggerIntervals[Trigger.PhysicalCrit] = meleeHitInterval;
+			triggerIntervals[Trigger.DoTTick] = 1.5f;
+			triggerIntervals[Trigger.DamageDone] = meleeHitInterval / 2f;
+			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
+				triggerIntervals[Trigger.MangleCatHit] = talents.GlyphOfMangle ? 18f : 12f;
+			triggerIntervals[Trigger.MangleCatOrShredHit] = 4f;
+			triggerChances[Trigger.Use] = 1f;
+			triggerChances[Trigger.MeleeHit] = chanceHit;
+			triggerChances[Trigger.PhysicalHit] = chanceHit;
+			triggerChances[Trigger.MeleeCrit] = chanceCrit;
+			triggerChances[Trigger.PhysicalCrit] = chanceCrit;
+			triggerChances[Trigger.DoTTick] = 1f;
+			triggerChances[Trigger.DamageDone] = 1f - chanceAvoided / 2f;
+			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
+				triggerChances[Trigger.MangleCatHit] = 1f;
+			triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
+
             // Handle Trinket procs
 			Stats statsProcs = new Stats();
+			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating == 0))
+			{ //Calculate all non-ArPen procs first.
+				statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration);
+			}
 
-			tempArPenRatings = new List<float>();
-			tempArPenRatingUptimes = new List<float>();
-			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
-			{
-				if (effect.Stats.ArmorPenetrationRating == 0)
-				{
-					switch (effect.Trigger)
-					{
-						case Trigger.Use:
-							statsProcs += effect.GetAverageStats(0f, 1f, 1f, calcOpts.Duration);
-							break;
-						case Trigger.MeleeHit:
-						case Trigger.PhysicalHit:
-							statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 1f, calcOpts.Duration);
-							break;
-						case Trigger.MeleeCrit:
-						case Trigger.PhysicalCrit:
-							statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration);
-							break;
-						case Trigger.DoTTick:
-							statsProcs += effect.GetAverageStats(1.5f, 1f, 1f, calcOpts.Duration);
-							break;
-						case Trigger.DamageDone:
-							statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration);
-							break;
-						case Trigger.MangleCatHit:
-							if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
-								statsProcs += effect.GetAverageStats(talents.GlyphOfMangle ? 18f : 12f, 1f, 1f, calcOpts.Duration);
-							break;
-						case Trigger.MangleCatOrShredHit:
-							statsProcs += effect.GetAverageStats(4f, chanceHit, 1f, calcOpts.Duration);
-							break;
-					}
-				}
-				else
-				{
-					switch (effect.Trigger)
-					{
-						case Trigger.Use:
-							tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
-							tempArPenRatingUptimes.Add(effect.GetAverageUptime(0f, 1f, 1f, calcOpts.Duration));
-							break;
-						case Trigger.MeleeHit:
-						case Trigger.PhysicalHit:
-							tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
-							tempArPenRatingUptimes.Add(effect.GetAverageUptime(meleeHitInterval, 1f, 1f, calcOpts.Duration));
-							break;
-						case Trigger.MeleeCrit:
-						case Trigger.PhysicalCrit:
-							tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
-							tempArPenRatingUptimes.Add(effect.GetAverageUptime(meleeHitInterval, chanceCrit, 1f, calcOpts.Duration));
-							break;
-						case Trigger.DoTTick:
-							tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
-							tempArPenRatingUptimes.Add(effect.GetAverageUptime(1.5f, 1f, 1f, calcOpts.Duration));
-							break;
-						case Trigger.DamageDone:
-							tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
-							tempArPenRatingUptimes.Add(effect.GetAverageUptime(meleeHitInterval / 2f, 1f, 1f, calcOpts.Duration));
-							break;
-					}
-				}
-			}
-			float totalTempArPenRating = 0f, totalTempArPenRatingUptime = 0f;
-			if (calcOpts.OffsetTrinkets)
-			{
-				for (int i = 0; i < tempArPenRatings.Count; i++)
-					totalTempArPenRatingUptime += tempArPenRatingUptimes[i];
-			}
-			else
-			{
-				for (int i = 0; i < tempArPenRatings.Count; i++)
-				{
-					totalTempArPenRating += tempArPenRatings[i];
-					totalTempArPenRatingUptime += tempArPenRatingUptimes[i];
-				}
-				float tempArPenRating = totalTempArPenRating;
-				float tempArPenRatingUptime = 0f;
-				for (int i = 0; i < tempArPenRatings.Count; i++)
-				{
-					tempArPenRatingUptime += tempArPenRatingUptimes[i] * (tempArPenRatings[i] / totalTempArPenRating);
-				}
-				tempArPenRatings.Clear();
-				tempArPenRatingUptimes.Clear();
-				tempArPenRatings.Add(tempArPenRating);
-				tempArPenRatingUptimes.Add(tempArPenRatingUptime);
-				totalTempArPenRatingUptime = tempArPenRatingUptime;
-			}
-			tempArPenRatings.Add(0f);
-			tempArPenRatingUptimes.Add(1f - totalTempArPenRatingUptime);
-			
 			statsProcs.Agility += statsProcs.HighestStat;
 			statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
@@ -618,6 +554,88 @@ namespace Rawr.Cat
 			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
 			statsTotal += statsProcs;
 
+			//Handle ArPen procs
+			tempArPenRatings = new List<float>();
+			tempArPenRatingUptimes = new List<float>();
+			List<SpecialEffect> tempArPenEffects = new List<SpecialEffect>();
+			List<float> tempArPenEffectIntervals = new List<float>();
+			List<float> tempArPenEffectChances = new List<float>();
+
+			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating > 0))
+			{
+				tempArPenEffects.Add(effect);
+				tempArPenEffectIntervals.Add(triggerIntervals[effect.Trigger]);
+				tempArPenEffectChances.Add(triggerChances[effect.Trigger]);
+			}
+
+			//TODO: Probably could generalize this somehow
+			if (tempArPenEffects.Count == 1)
+			{ //Only one, add it to
+				SpecialEffect effect = tempArPenEffects[0];
+				tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration));
+			}
+			else if (tempArPenEffects.Count == 2)
+			{
+				SpecialEffect effectA = tempArPenEffects[0];
+				SpecialEffect effectB = tempArPenEffects[1];
+				//float offset = 22.5f;
+				float uptimeAB = new SpecialEffectCombination(tempArPenEffects).GetAverageCombinedUptime(
+					new float[] { triggerIntervals[effectA.Trigger], triggerIntervals[effectB.Trigger] },
+					new float[] { triggerChances[effectA.Trigger], triggerChances[effectB.Trigger] },
+					new float[] { calcOpts.TrinketOffset, 0f }, 1f, calcOpts.Duration);
+				tempArPenRatings.Add(effectA.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(effectA.GetAverageUptime(triggerIntervals[effectA.Trigger], triggerChances[effectA.Trigger], 1f, calcOpts.Duration) - uptimeAB);
+				tempArPenRatings.Add(effectB.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(effectB.GetAverageUptime(triggerIntervals[effectB.Trigger], triggerChances[effectB.Trigger], 1f, calcOpts.Duration) - uptimeAB);
+				tempArPenRatings.Add(effectA.Stats.ArmorPenetrationRating + effectB.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(uptimeAB);
+			}
+			else if (tempArPenEffects.Count == 3)
+			{
+				SpecialEffect effectA = tempArPenEffects[0];
+				SpecialEffect effectB = tempArPenEffects[1];
+				SpecialEffect effectC = tempArPenEffects[2];
+				float uptimeABC = new SpecialEffectCombination(tempArPenEffects).GetAverageCombinedUptime(
+					new float[] { triggerIntervals[effectA.Trigger], triggerIntervals[effectB.Trigger], triggerIntervals[effectC.Trigger] },
+					new float[] { triggerChances[effectA.Trigger], triggerChances[effectB.Trigger], triggerChances[effectC.Trigger] },
+					new float[] { 0f, 0f, 0f }, 1f, calcOpts.Duration);
+				float uptimeAB = new SpecialEffectCombination(new List<SpecialEffect>(new SpecialEffect[] { effectA, effectB })).GetAverageCombinedUptime(
+					new float[] { triggerIntervals[effectA.Trigger], triggerIntervals[effectB.Trigger] },
+					new float[] { triggerChances[effectA.Trigger], triggerChances[effectB.Trigger] },
+					new float[] { 0f, 0f }, 1f, calcOpts.Duration) - uptimeABC;
+				float uptimeBC = new SpecialEffectCombination(new List<SpecialEffect>(new SpecialEffect[] { effectB, effectC })).GetAverageCombinedUptime(
+					new float[] { triggerIntervals[effectB.Trigger], triggerIntervals[effectC.Trigger] },
+					new float[] { triggerChances[effectB.Trigger], triggerChances[effectC.Trigger] },
+					new float[] { 0f, 0f }, 1f, calcOpts.Duration) - uptimeABC;
+				float uptimeAC = new SpecialEffectCombination(new List<SpecialEffect>(new SpecialEffect[] { effectA, effectC })).GetAverageCombinedUptime(
+					new float[] { triggerIntervals[effectA.Trigger], triggerIntervals[effectC.Trigger] },
+					new float[] { triggerChances[effectA.Trigger], triggerChances[effectC.Trigger] },
+					new float[] { 0f, 0f }, 1f, calcOpts.Duration) - uptimeABC;
+				
+				tempArPenRatings.Add(effectA.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(effectA.GetAverageUptime(triggerIntervals[effectA.Trigger], triggerChances[effectA.Trigger], 1f, calcOpts.Duration) - uptimeAB - uptimeAC - uptimeABC);
+				tempArPenRatings.Add(effectB.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(effectB.GetAverageUptime(triggerIntervals[effectB.Trigger], triggerChances[effectB.Trigger], 1f, calcOpts.Duration) - uptimeAB - uptimeBC - uptimeABC);
+				tempArPenRatings.Add(effectC.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(effectC.GetAverageUptime(triggerIntervals[effectC.Trigger], triggerChances[effectC.Trigger], 1f, calcOpts.Duration) - uptimeAC - uptimeBC - uptimeABC );
+				tempArPenRatings.Add(effectA.Stats.ArmorPenetrationRating + effectB.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(uptimeAB);
+				tempArPenRatings.Add(effectB.Stats.ArmorPenetrationRating + effectC.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(uptimeBC);
+				tempArPenRatings.Add(effectA.Stats.ArmorPenetrationRating + effectC.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(uptimeAC);
+				tempArPenRatings.Add(effectA.Stats.ArmorPenetrationRating + effectB.Stats.ArmorPenetrationRating + effectC.Stats.ArmorPenetrationRating);
+				tempArPenRatingUptimes.Add(uptimeABC);
+			}
+			
+			//Add a 0 rating uptime for the remaining % of the time
+			float totalTempArPenRatingUptime = 0f;
+			for (int i = 0; i < tempArPenRatings.Count; i++)
+				totalTempArPenRatingUptime += tempArPenRatingUptimes[i];
+			tempArPenRatings.Add(0f);
+			tempArPenRatingUptimes.Add(1f - totalTempArPenRatingUptime);
+			
 			return statsTotal;
 		}
 
@@ -1044,7 +1062,7 @@ namespace Rawr.Cat
 
 			float baseMiss  = StatConversion.WHITE_MISS_CHANCE_CAP[ TargetLevel-80] - BasicStats.PhysicalHit;
             float baseDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel-80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
-            float baseParry = StatConversion.WHITE_PARRY_CHANCE_CAP[TargetLevel-80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
+			float baseParry = 0f;// StatConversion.WHITE_PARRY_CHANCE_CAP[TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
 			float capMiss   = (float)Math.Ceiling(baseMiss  * 100f * 32.78998947f);
 			float capDodge  = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
             float capParry  = (float)Math.Ceiling(baseParry * 100f * 32.78998947f); // TODO: Check this value

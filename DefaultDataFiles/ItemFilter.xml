@@ -296,6 +296,24 @@
         </ArrayOfItemType>
       </value>
     </item>
+    <item>
+      <key>
+        <string>Moonkin</string>
+      </key>
+      <value>
+        <ArrayOfItemType>
+          <ItemType>None</ItemType>
+          <ItemType>Cloth</ItemType>
+          <ItemType>Leather</ItemType>
+          <ItemType>Dagger</ItemType>
+          <ItemType>Staff</ItemType>
+          <ItemType>FistWeapon</ItemType>
+          <ItemType>OneHandMace</ItemType>
+          <ItemType>TwoHandMace</ItemType>
+          <ItemType>Idol</ItemType>
+        </ArrayOfItemType>
+      </value>
+    </item>
   </RelevantItemTypes>
   <RegexList>
     <ItemFilterRegex>
@@ -1010,7 +1028,7 @@
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Tier 7 Raids</Name>
+      <Name>Tier 7 Raids (10)</Name>
       <Pattern>(?&lt;! Heroic )Naxxramas|(?&lt;! Heroic.*)Eye of Eternity|(?&lt;! Heroic (The )?)Obsidian Sanctum|(?&lt;! Heroic )Vault of Archavon</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
@@ -1367,7 +1385,7 @@
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Tier 7 Raids (Heroic)</Name>
+      <Name>Tier 7 Raids (25)</Name>
       <Pattern>Heroic Naxxramas|Heroic.*Eye of Eternity|Heroic (The )?Obsidian Sanctum|Heroic Archavon</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
@@ -1804,7 +1822,7 @@
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Tier 8 Raids</Name>
+      <Name>Tier 8 Raids (10)</Name>
       <Pattern>(?&lt;! Heroic )Ulduar|Bragund Brightlink</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
@@ -2241,7 +2259,7 @@
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Tier 8 Raids (Heroic)</Name>
+      <Name>Tier 8 Raids (25)</Name>
       <Pattern>Heroic Ulduar|Bragund Brightlink</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
@@ -2288,7 +2306,7 @@
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Faction Champions</Name>
-              <Pattern>Faction Champions</Pattern>
+              <Pattern>Champions' Cache</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2302,7 +2320,7 @@
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Twin Val'kyr</Name>
-              <Pattern>Twin Val'kyr</Pattern>
+              <Pattern>Fjola Lightbane|Eydis Darkbane</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2328,8 +2346,8 @@
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Normal Alliance Trial</Name>
-          <Pattern />
+          <Name>Normal Trial of the Crusader</Name>
+          <Pattern>(?&lt;! Heroic )Trial of the Crusader \(10\)</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>232</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -2373,7 +2391,7 @@
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Faction Champions</Name>
-              <Pattern>Faction Champions</Pattern>
+              <Pattern>Champions' Cache</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2387,7 +2405,7 @@
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Twin Val'kyr</Name>
-              <Pattern>Twin Val'kyr</Pattern>
+              <Pattern>Fjola Lightbane|Eydis Darkbane</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2411,82 +2429,11 @@
               <AppliesToGems>true</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
-          </RegexList>
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Hard Alliance Trial</Name>
-          <Pattern />
-          <MinItemLevel>245</MinItemLevel>
-          <MaxItemLevel>1000</MaxItemLevel>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
-        </ItemFilterRegex>
-        <ItemFilterRegex>
-          <RegexList>
             <ItemFilterRegex>
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Northrend Beasts</Name>
-              <Pattern>Icehowl</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Lord Jaraxxus</Name>
-              <Pattern>Lord Jaraxxus</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Faction Champions</Name>
-              <Pattern>Faction Champions</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Twin Val'kyr</Name>
-              <Pattern>Twin Val'kyr</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Anub'arak</Name>
-              <Pattern>Anub'arak</Pattern>
+              <Name>Tribute Chest</Name>
+              <Pattern>Argent Crusade Tribute Chest</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2498,93 +2445,8 @@
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Normal Horde Trial</Name>
-          <Pattern />
-          <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>232</MaxItemLevel>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
-        </ItemFilterRegex>
-        <ItemFilterRegex>
-          <RegexList>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Northrend Beasts</Name>
-              <Pattern>Icehowl</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Lord Jaraxxus</Name>
-              <Pattern>Lord Jaraxxus</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Faction Champions</Name>
-              <Pattern>Faction Champions</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Twin Val'kyr</Name>
-              <Pattern>Twin Val'kyr</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Anub'arak</Name>
-              <Pattern>Anub'arak</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-          </RegexList>
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Hard Horde Trial</Name>
-          <Pattern />
+          <Name>Heroic Trial of the Crusader</Name>
+          <Pattern>Heroic Trial of the Crusader \(10\)</Pattern>
           <MinItemLevel>245</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -2596,8 +2458,8 @@
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Tier 9 Raids</Name>
-      <Pattern>(?&lt;! Heroic )Trial of the Crusader</Pattern>
+      <Name>Tier 9 Raids (10)</Name>
+      <Pattern>Trial of the Crusader \(10\)</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -2643,7 +2505,7 @@
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Faction Champions</Name>
-              <Pattern>Faction Champions</Pattern>
+              <Pattern>Champions' Cache</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2657,7 +2519,7 @@
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Twin Val'kyr</Name>
-              <Pattern>Twin Val'kyr</Pattern>
+              <Pattern>Fjola Lightbane|Eydis Darkbane</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2683,8 +2545,8 @@
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Normal Alliance Trial</Name>
-          <Pattern />
+          <Name>Normal Trial of the Crusader</Name>
+          <Pattern>(?&lt;! Heroic )Trial of the Crusader \(25\)</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>245</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -2728,7 +2590,7 @@
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Faction Champions</Name>
-              <Pattern>Faction Champions</Pattern>
+              <Pattern>Champions' Cache</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2742,7 +2604,7 @@
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Twin Val'kyr</Name>
-              <Pattern>Twin Val'kyr</Pattern>
+              <Pattern>Fjola Lightbane|Eydis Darkbane</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2766,82 +2628,11 @@
               <AppliesToGems>true</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
-          </RegexList>
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Hard Alliance Trial</Name>
-          <Pattern />
-          <MinItemLevel>258</MinItemLevel>
-          <MaxItemLevel>1000</MaxItemLevel>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
-        </ItemFilterRegex>
-        <ItemFilterRegex>
-          <RegexList>
             <ItemFilterRegex>
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Northrend Beasts</Name>
-              <Pattern>Icehowl</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Lord Jaraxxus</Name>
-              <Pattern>Lord Jaraxxus</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Faction Champions</Name>
-              <Pattern>Faction Champions</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Twin Val'kyr</Name>
-              <Pattern>Twin Val'kyr</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Anub'arak</Name>
-              <Pattern>Anub'arak</Pattern>
+              <Name>Tribute Chest</Name>
+              <Pattern>Argent Crusade Tribute Chest</Pattern>
               <MinItemLevel>0</MinItemLevel>
               <MaxItemLevel>1000</MaxItemLevel>
               <MinItemQuality>Temp</MinItemQuality>
@@ -2853,93 +2644,8 @@
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Normal Horde Trial</Name>
-          <Pattern />
-          <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>245</MaxItemLevel>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
-        </ItemFilterRegex>
-        <ItemFilterRegex>
-          <RegexList>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Northrend Beasts</Name>
-              <Pattern>Icehowl</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Lord Jaraxxus</Name>
-              <Pattern>Lord Jaraxxus</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Faction Champions</Name>
-              <Pattern>Faction Champions</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Twin Val'kyr</Name>
-              <Pattern>Twin Val'kyr</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Anub'arak</Name>
-              <Pattern>Anub'arak</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-          </RegexList>
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Hard Horde Trial</Name>
-          <Pattern />
+          <Name>Heroic Trial of the Crusader</Name>
+          <Pattern>Heroic Trial of the Crusader \(25\)</Pattern>
           <MinItemLevel>258</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -2951,8 +2657,8 @@
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Tier 9 Raids (Heroic)</Name>
-      <Pattern>Heroic Trial of the Crusader</Pattern>
+      <Name>Tier 9 Raids (25)</Name>
+      <Pattern>Trial of the Crusader \(25\)</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -3229,20 +2935,6 @@
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
       <Enabled>true</Enabled>
-    </ItemFilterRegex>
-    <ItemFilterRegex>
-      <RegexList />
-      <OtherRegexEnabled>false</OtherRegexEnabled>
-      <Name>Hide Unavailable Gems</Name>
-      <Pattern>Unknown Location</Pattern>
-      <MinItemLevel>80</MinItemLevel>
-      <MaxItemLevel>80</MaxItemLevel>
-      <MinItemQuality>Epic</MinItemQuality>
-      <MaxItemQuality>Epic</MaxItemQuality>
-      <AdditiveFilter>false</AdditiveFilter>
-      <AppliesToItems>false</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
     </ItemFilterRegex>
   </RegexList>
   <OtherRegexEnabled>true</OtherRegexEnabled>
