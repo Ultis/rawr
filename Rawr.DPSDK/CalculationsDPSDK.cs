@@ -1300,7 +1300,7 @@ namespace Rawr.DPSDK
                 }
             }
 
-            statsTotal.Strength += statsTotal.HighestStat;
+            statsTotal.Strength += statsTotal.HighestStat + statsTotal.Paragon;
 
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
@@ -1490,6 +1490,7 @@ namespace Rawr.DPSDK
                 Stamina = stats.Stamina,
                 Armor = stats.Armor,
                 HighestStat = stats.HighestStat,
+                Paragon = stats.Paragon,
 
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
@@ -1637,7 +1638,8 @@ namespace Rawr.DPSDK
                 + stats.BonusPerDiseaseBloodStrikeDamage + stats.BonusPerDiseaseHeartStrikeDamage + stats.BonusPerDiseaseObliterateDamage
                 + stats.BonusPerDiseaseScourgeStrikeDamage + stats.BonusPlagueStrikeCrit + stats.BonusRPFromDeathStrike
                 + stats.BonusRPFromObliterate + stats.BonusRPFromScourgeStrike + stats.BonusRuneStrikeMultiplier + stats.BonusScourgeStrikeCrit
-                + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage + stats.DiseasesCanCrit + stats.HighestStat + stats.BonusCritMultiplier) != 0;
+                + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage + stats.DiseasesCanCrit + stats.HighestStat
+                + stats.BonusCritMultiplier + stats.Paragon) != 0;
         }
 
 
