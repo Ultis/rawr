@@ -375,12 +375,17 @@
 			this.comboBoxTargetDamage.FormattingEnabled = true;
 			this.comboBoxTargetDamage.Items.AddRange(new object[] {
             "Normal Dungeons",
-            "Heroic Dugeons",
-            "Normal T7 Raids",
-            "Heroic T7 Raids",
-            "Normal T8 Raids",
-            "Heroic T8 Raids",
-            "Hard Mode Heroic T8 Raids",
+            "Heroic Dungeons",
+            "T7 Raids (10)",
+            "T7 Raids\r (25)",
+            "T8 Raids (10)",
+            "T8 Raids (10, Hard)",
+            "T8 Raids (25)",
+            "T8 Raids (25, Hard)",
+            "T9 Raids (10)",
+            "T9 Raids (10, Heroic)",
+            "T9 Raids (25)",
+            "T9 Raids (25, Heroic)",
             "Custom..."});
 			this.comboBoxTargetDamage.Location = new System.Drawing.Point(146, 257);
 			this.comboBoxTargetDamage.Name = "comboBoxTargetDamage";
@@ -396,12 +401,17 @@
 			this.comboBoxSurvivalSoftCap.FormattingEnabled = true;
 			this.comboBoxSurvivalSoftCap.Items.AddRange(new object[] {
             "Normal Dungeons",
-            "Heroic Dugeons",
-            "Normal T7 Raids",
-            "Heroic T7 Raids",
-            "Normal T8 Raids",
-            "Heroic T8 Raids",
-            "Hard Mode Heroic T8 Raids",
+            "Heroic Dungeons",
+            "T7 Raids (10)",
+            "T7 Raids\r (25)",
+            "T8 Raids (10)",
+            "T8 Raids (10, Hard)",
+            "T8 Raids (25)",
+            "T8 Raids (25, Hard)",
+            "T9 Raids (10)",
+            "T9 Raids (10, Heroic)",
+            "T9 Raids (25)",
+            "T9 Raids (25, Heroic)",
             "Custom..."});
 			this.comboBoxSurvivalSoftCap.Location = new System.Drawing.Point(146, 84);
 			this.comboBoxSurvivalSoftCap.Name = "comboBoxSurvivalSoftCap";
