@@ -84,8 +84,7 @@ namespace Rawr.DPSWarr {
                     ((_c_mhItemType == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f) +
                     (!CalcOpts.FuryStance ? (0.10f + StatS.BonusWarrior_T9_2P_ArP) : 0.0f);
                 if (CalcOpts == null) {
-                    // you're supposed to pass the character level, not the target level.  GC misspoke.
-				    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,(int)StatConversion.NPC_ARMOR[83-80],StatS.ArmorPenetration,arpenBuffs,StatS.ArmorPenetrationRating)); // default is vs raid boss
+                    armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[83 - Char.Level], StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
                 }else{
                     armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,CalcOpts.TargetArmor,StatS.ArmorPenetration,arpenBuffs,StatS.ArmorPenetrationRating));
                 }

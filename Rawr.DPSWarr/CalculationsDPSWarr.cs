@@ -513,7 +513,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 PhysicalCrit = (calcOpts.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f)
                             // handle boss level difference
-                            + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - 80],
+                            + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
             };
             Stats statsTalents = new Stats() {
                 //Parry = talents.Deflection * 1.0f,

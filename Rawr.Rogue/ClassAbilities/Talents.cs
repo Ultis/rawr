@@ -18,7 +18,7 @@ namespace Rawr.Rogue.ClassAbilities
         //Assassination Talents
         //---------------------------------------------------------------------
         public static readonly Talents ImprovedEviscerate = new TalentBonusPulledFromList(() => _talents.ImprovedEviscerate, .07f, .14f, .20f);
-        public static readonly Talents Malice = new TalentBonusPulledFromList(() => _talents.Malice, 0.01f, 0.02f, 0.03f, 0.04f, 0.05f);
+        //public static readonly Talents Malice = new TalentBonusPulledFromList(() => _talents.Malice, 0.01f, 0.02f, 0.03f, 0.04f, 0.05f);
         public static readonly Talents Ruthlessness = new TalentBonusPulledFromList(() => _talents.Ruthlessness, .2f, .4f, .6f);
         public static readonly Talents BloodSpatter = new TalentBonusPulledFromList(() => _talents.BloodSpatter, 0.15f, 0.30f);
 
@@ -50,7 +50,7 @@ namespace Rawr.Rogue.ClassAbilities
 
         public class MasterPoisoner
         {
-            public static readonly Talents Crit = new TalentBonusPulledFromList(() => _talents.MasterPoisoner, 0.01f, 0.02f, 0.03f);
+            //public static readonly Talents Crit = new TalentBonusPulledFromList(() => _talents.MasterPoisoner, 0.01f, 0.02f, 0.03f);
             public static readonly Talents DeadlyPoisonApplication = new TalentBonusPulledFromList(() => _talents.MasterPoisoner, .15f, .30f, .45f);
         }
 
@@ -81,17 +81,17 @@ namespace Rawr.Rogue.ClassAbilities
         public static readonly Talents CloseQuartersCombat = new TalentBonusPulledFromList(() => _talents.CloseQuartersCombat, 0.01f, 0.02f, 0.03f, 0.04f, 0.05f);
         public static readonly Talents Aggression = new TalentBonusPulledFromList(() => _talents.Aggression, 0.03f, 0.06f, 0.09f, 0.12f, 0.15f);
         
-        public class LightningReflexes
-        {
-            public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.LightningReflexes, 0.04f, 0.07f, 0.10f);
-            public static readonly Talents Dodge = new TalentBonusPulledFromList(() => _talents.LightningReflexes, 0.02f, 0.04f, 0.06f);
-        }
+        //public class LightningReflexes
+        //{
+            //public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.LightningReflexes, 0.04f, 0.07f, 0.10f);
+            //public static readonly Talents Dodge = new TalentBonusPulledFromList(() => _talents.LightningReflexes, 0.02f, 0.04f, 0.06f);
+        //}
 
         public static readonly Talents MaceSpecialization = new TalentBonusPulledFromList(() => _talents.MaceSpecialization, .03f, .06f, .9f, .12f, .15f);
 		
         public class BladeFlurry
         {
-            public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.BladeFlurry, 0.20f);
+            //public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.BladeFlurry, 0.20f);
             public static readonly Talents EnergyCost = new TalentBonusCalculatedFromMethod(() => _talents.BladeFlurry, EnergyCostWithGlyph);   
 
             public static float EnergyCostWithGlyph(int points)
@@ -122,7 +122,7 @@ namespace Rawr.Rogue.ClassAbilities
 
         public class SavageCombat
         {
-            public static readonly Talents AttackPower = new TalentBonusPulledFromList(() => _talents.SavageCombat, .02f, .04f);
+            //public static readonly Talents AttackPower = new TalentBonusPulledFromList(() => _talents.SavageCombat, .02f, .04f);
             public static readonly Talents Damage = new TalentBonusPulledFromList(() => _talents.SavageCombat, .02f, .04f);
         }
 
@@ -144,12 +144,12 @@ namespace Rawr.Rogue.ClassAbilities
         }
 
         public static readonly Talents DirtyDeeds = new TalentBonusPulledFromList(() => _talents.DirtyDeeds, 0.035f, 0.07f);
-        public static readonly Talents Deadliness = new TalentBonusPulledFromList(() => _talents.Deadliness, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
+        //public static readonly Talents Deadliness = new TalentBonusPulledFromList(() => _talents.Deadliness, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
 
         //NEED Premeditation
         public class SinisterCalling
         {
-            public static readonly Talents Agility = new TalentBonusPulledFromList(() => _talents.SinisterCalling, 0.03f, 0.06f, 0.09f, 0.12f, 0.15f);
+            //public static readonly Talents Agility = new TalentBonusPulledFromList(() => _talents.SinisterCalling, 0.03f, 0.06f, 0.09f, 0.12f, 0.15f);
             public static readonly Talents HemoAndBackstab = new TalentBonusPulledFromList(() => _talents.SinisterCalling, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
         }
 

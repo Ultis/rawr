@@ -25,7 +25,7 @@ namespace Rawr.Rogue {
             float ohDps = dps * OhSwingsPerSecond * _combatFactors.DamageReduction;
             return ohDps * Talents.Add(Talents.FindWeakness, Talents.Murder, Talents.HungerForBlood.Damage).Multiplier;
         }
-        public float MhSwingsPerSecond { get { return _combatFactors.MH.Speed == 0 ? 0 : (1f / _combatFactors.MH.Speed) * _combatFactors.Haste; } }
-        public float OhSwingsPerSecond { get { return _combatFactors.OH.Speed == 0 ? 0 : (1f / _combatFactors.OH.Speed) * _combatFactors.Haste; } }
+        public float MhSwingsPerSecond { get { return _combatFactors.MH.Speed == 0 ? 0 : (1f / _combatFactors.MHSpeed); } }
+        public float OhSwingsPerSecond { get { return _combatFactors.OH.Speed == 0 ? 0 : (1f / _combatFactors.OHSpeed); } }
     }
 }

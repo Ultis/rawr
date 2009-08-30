@@ -236,8 +236,8 @@ namespace Rawr.Rogue {
             displayedValues.AddRoundedDisplayValue(DisplayValue.BaseExpertise, combatFactors.BaseExpertise);
             displayedValues.AddToolTip(DisplayValue.BaseExpertise, "MH Expertise: " + combatFactors.MhExpertise);
             displayedValues.AddToolTip(DisplayValue.BaseExpertise, "OH Expertise: " + combatFactors.OhExpertise);
-            
-            displayedValues.AddRoundedDisplayValue(DisplayValue.Haste, (combatFactors.Haste <= 0 ? 0 : combatFactors.Haste - 1)*100);
+
+            displayedValues.AddRoundedDisplayValue(DisplayValue.Haste, (combatFactors.TotalHaste <= 0 ? 0 : combatFactors.TotalHaste - 1f) * 100);
             displayedValues.AddToolTip(DisplayValue.Haste, "Haste Rating: " + stats.HasteRating);
             
             displayedValues.AddRoundedDisplayValue(DisplayValue.SndUptime, sndUpTime*100f);
@@ -277,17 +277,17 @@ namespace Rawr.Rogue {
                 PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
             };
             Stats statsTalents = new Stats() {
-                BonusAgilityMultiplier = Talents.SinisterCalling.Agility.Multiplier,
-                PhysicalHit = Talents.Precision.Bonus,
-                BonusAttackPowerMultiplier = Talents.Deadliness.Multiplier
-                                           + Talents.SavageCombat.AttackPower.Multiplier,
-                PhysicalCrit = Talents.Malice.Bonus +
+                BonusAgilityMultiplier = talents.SinisterCalling * 0.03f,
+                PhysicalHit = talents.Precision * 0.01f,
+                BonusAttackPowerMultiplier = talents.Deadliness * 0.02f
+                                           + talents.SavageCombat * 0.02f,
+                PhysicalCrit = talents.Malice * 0.01f +
                                 ((character.ActiveBuffs.FindAll(buff => buff.Group == "Critical Strike Chance Taken").Count == 0)
-                                    ? Talents.MasterPoisoner.Crit.Bonus : 0f),
-                Dodge = Talents.LightningReflexes.Dodge.Bonus,
-                Parry = Talents.Deflection.Bonus,
-                PhysicalHaste = (1f + Talents.BladeFlurry.Haste.Bonus)
-                              * (1f + Talents.LightningReflexes.Haste.Bonus)
+                                    ? talents.MasterPoisoner * 0.01f : 0f),
+                Dodge = talents.LightningReflexes * 0.02f,
+                Parry = talents.Deflection * 0.02f,
+                PhysicalHaste = (1f + talents.BladeFlurry * 0.20f)
+                              * (1f + (float)Math.Round(0.10f / 3f * talents.LightningReflexes, 2, MidpointRounding.AwayFromZero))
                               - 1f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
@@ -597,7 +597,7 @@ namespace Rawr.Rogue {
                     stats.BonusDamageMultiplier +
                     stats.BonusStaminaMultiplier +
                     stats.BonusStrengthMultiplier +
-                    stats.Health +
+                    //stats.Health +
                     stats.ExposeWeakness +
                     stats.Bloodlust +
                     stats.ThreatReductionMultiplier +
@@ -645,15 +645,11 @@ namespace Rawr.Rogue {
 
         public override bool IsEnchantRelevant(Enchant enchant) {
         	try {
-				return IsEnchantWithSpecialProc(enchant) || HasRelevantStats(enchant.Stats);
+				return HasRelevantStats(enchant.Stats);
 			} catch (Exception) {
 				return false;
 			}
 		}
-
-        private static bool IsEnchantWithSpecialProc( Enchant enchant ) {
-            return enchant.Id == 3789;  //Berserking
-        }
 
         private static List<string> _relevantGlyphs = null;
         public override List<string> GetRelevantGlyphs() {

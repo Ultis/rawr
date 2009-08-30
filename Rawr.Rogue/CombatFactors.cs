@@ -120,7 +120,7 @@ namespace Rawr.Rogue {
             }
         }
         //Need to Add 30% SnD   formerly:  totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));  //TODO:  change from assuming SnD has a 100% uptime
-        public float Haste { get { return _stats.PhysicalHaste; } set { _stats.PhysicalHaste = value; } }
+        //public float Haste { get { return _stats.PhysicalHaste; } set { _stats.PhysicalHaste = value; } }
         public float Tier7TwoPieceRuptureBonusDamage { get { return 1f + _stats.RogueT7TwoPieceBonus * 0.1f; } }
         public float Tier7FourPieceEnergyCostReduction { get{ return ( 1f - _stats.RogueT7FourPieceBonus * 0.05f);} }
         //1 energy per Deadly Poison tick, 1 tick every 3 seconds
