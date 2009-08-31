@@ -189,6 +189,40 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>163</ItemLevel>
+    <IconPath>inv_mace_59</IconPath>
+    <Stats>
+      <Agility>18</Agility>
+      <HasteRating>39</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>116</MinDamage>
+    <MaxDamage>217</MaxDamage>
+    <Speed>1.6</Speed>
+    <SocketBonus />
+    <Name>Unknown Archaeologist's Hammer</Name>
+    <Id>35664</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>163</ItemLevel>
+    <IconPath>inv_bracer_08</IconPath>
+    <Stats>
+      <Armor>203</Armor>
+      <Stamina>25</Stamina>
+      <Intellect>33</Intellect>
+      <Spirit>22</Spirit>
+      <SpellPower>27</SpellPower>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Leather</Type>
+    <SocketBonus />
+    <Name>Soothing Lichen Wraps</Name>
+    <Id>35665</Id>
+    <Slot>Wrist</Slot>
+  </Item>
+  <Item>
     <ItemLevel>183</ItemLevel>
     <IconPath>inv_helmet_123</IconPath>
     <Stats>
@@ -454,6 +488,28 @@
     <SocketBonus />
     <Name>Cardinal Ruby</Name>
     <Id>36919</Id>
+    <Slot>None</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>80</ItemLevel>
+    <IconPath>inv_jewelcrafting_gem_36</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>King's Amber</Name>
+    <Id>36922</Id>
+    <Slot>None</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>80</ItemLevel>
+    <IconPath>inv_jewelcrafting_gem_35</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Majestic Zircon</Name>
+    <Id>36925</Id>
     <Slot>None</Slot>
   </Item>
   <Item>
@@ -15632,7 +15688,7 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <IconPath>INV_Boots_Plate_03</IconPath>
+    <IconPath>inv_boots_plate_03</IconPath>
     <Stats>
       <Armor>1580</Armor>
       <Stamina>57</Stamina>
@@ -15653,7 +15709,7 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <IconPath>INV_Gauntlets_62</IconPath>
+    <IconPath>inv_gauntlets_62</IconPath>
     <Stats>
       <Armor>1436</Armor>
       <Stamina>112</Stamina>
@@ -15691,7 +15747,7 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <IconPath>INV_ThrowingKnife_08</IconPath>
+    <IconPath>inv_throwingknife_08</IconPath>
     <Stats>
       <Agility>16</Agility>
       <Stamina>24</Stamina>
@@ -38025,7 +38081,7 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <IconPath>INV_Weapon_Halberd_29</IconPath>
+    <IconPath>inv_weapon_halberd_29</IconPath>
     <Stats>
       <Stamina>151</Stamina>
       <AttackPower>200</AttackPower>
@@ -38282,7 +38338,7 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <IconPath>INV_Hammer_29</IconPath>
+    <IconPath>inv_hammer_29</IconPath>
     <Stats>
       <Stamina>55</Stamina>
       <Intellect>36</Intellect>
@@ -38293,7 +38349,7 @@
     <Quality>Epic</Quality>
     <Type>OneHandMace</Type>
     <MinDamage>69</MinDamage>
-    <MaxDamage>220</MaxDamage>
+    <MaxDamage>221</MaxDamage>
     <Speed>1.6</Speed>
     <SocketBonus />
     <Name>Deadly Gladiator's Gavel</Name>
@@ -40835,6 +40891,31 @@
     <SocketBonus />
     <Name>Furious Gladiator's Libram of Fortitude</Name>
     <Id>42853</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>251</ItemLevel>
+    <IconPath>INV_Relics_LibramofHope</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>CrusaderStrikeHit</Trigger>
+          <Stats>
+            <AttackPower>172</AttackPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Libram</Type>
+    <SocketBonus />
+    <Name>Relentless Gladiator's Libram of Fortitude</Name>
+    <Id>42854</Id>
     <Slot>Ranged</Slot>
   </Item>
   <Item>
@@ -48231,7 +48312,7 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <IconPath>INV_Weapon_Shortblade_98</IconPath>
+    <IconPath>inv_weapon_shortblade_98</IconPath>
     <Stats>
       <Stamina>104</Stamina>
       <Strength>101</Strength>
@@ -48282,7 +48363,7 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <IconPath>INV_Sword_61</IconPath>
+    <IconPath>inv_sword_61</IconPath>
     <Stats>
       <Stamina>45</Stamina>
       <Intellect>43</Intellect>
@@ -48293,7 +48374,7 @@
     <Quality>Epic</Quality>
     <Type>OneHandSword</Type>
     <MinDamage>70</MinDamage>
-    <MaxDamage>226</MaxDamage>
+    <MaxDamage>227</MaxDamage>
     <Speed>1.8</Speed>
     <Unique>true</Unique>
     <SocketBonus />
@@ -48303,7 +48384,7 @@
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
-    <IconPath>INV_Belt_38C</IconPath>
+    <IconPath>inv_belt_38c</IconPath>
     <Stats>
       <Armor>163</Armor>
       <Stamina>38</Stamina>
@@ -58376,7 +58457,7 @@
   </Item>
   <Item>
     <ItemLevel>239</ItemLevel>
-    <IconPath>INV_Sword_58</IconPath>
+    <IconPath>inv_sword_58</IconPath>
     <Stats>
       <Stamina>82</Stamina>
       <AttackPower>94</AttackPower>
@@ -58642,7 +58723,7 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <IconPath>INV_Mace_90</IconPath>
+    <IconPath>inv_mace_90</IconPath>
     <Stats>
       <Stamina>44</Stamina>
       <Intellect>36</Intellect>
@@ -58653,7 +58734,7 @@
     <Quality>Epic</Quality>
     <Type>OneHandMace</Type>
     <MinDamage>80</MinDamage>
-    <MaxDamage>257</MaxDamage>
+    <MaxDamage>258</MaxDamage>
     <Speed>1.8</Speed>
     <SocketBonus />
     <Name>Pulse Baton</Name>
@@ -63054,6 +63135,17 @@
     <Name>Furious Gladiator's Pendant of Sundering</Name>
     <Id>46373</Id>
     <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_shirt_guildtabard_01</IconPath>
+    <Stats />
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Argent Crusader's Tabard</Name>
+    <Id>46874</Id>
+    <Slot>Tabard</Slot>
   </Item>
   <Item>
     <ItemLevel>245</ItemLevel>
@@ -71444,9 +71536,9 @@
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
-    <IconPath>INV_Helmet_141</IconPath>
+    <IconPath>inv_helmet_141</IconPath>
     <Stats>
-      <Armor>475</Armor>
+      <Armor>470</Armor>
       <Agility>98</Agility>
       <Stamina>74</Stamina>
       <AttackPower>142</AttackPower>
@@ -75475,6 +75567,242 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_110</IconPath>
+    <Stats>
+      <Armor>260</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Khadgar's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Khadgar's Shoulderpads of Triumph</Name>
+    <Id>47758</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_cloth_75</IconPath>
+    <Stats>
+      <Armor>347</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>102</Spirit>
+      <SpellPower>160</SpellPower>
+      <HitRating>86</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Khadgar's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Khadgar's Robe of Triumph</Name>
+    <Id>47759</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_cloth_33</IconPath>
+    <Stats>
+      <Armor>303</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>86</Spirit>
+      <SpellPower>160</SpellPower>
+      <CritRating>102</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Khadgar's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Khadgar's Leggings of Triumph</Name>
+    <Id>47760</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_146</IconPath>
+    <Stats>
+      <Armor>282</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>151</SpellPower>
+      <HitRating>86</HitRating>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Khadgar's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Khadgar's Hood of Triumph</Name>
+    <Id>47761</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_79</IconPath>
+    <Stats>
+      <Armor>217</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>76</CritRating>
+      <HasteRating>68</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Khadgar's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Khadgar's Gauntlets of Triumph</Name>
+    <Id>47762</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_56</IconPath>
+    <Stats>
+      <Armor>217</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>76</CritRating>
+      <HasteRating>68</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Khadgar's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Sunstrider's Gauntlets of Triumph</Name>
+    <Id>47763</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_102</IconPath>
+    <Stats>
+      <Armor>282</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>151</SpellPower>
+      <HitRating>86</HitRating>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Khadgar's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Sunstrider's Hood of Triumph</Name>
+    <Id>47764</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_cloth_20</IconPath>
+    <Stats>
+      <Armor>303</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>86</Spirit>
+      <SpellPower>160</SpellPower>
+      <CritRating>102</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Khadgar's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Sunstrider's Leggings of Triumph</Name>
+    <Id>47765</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_cloth_68</IconPath>
+    <Stats>
+      <Armor>347</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>102</Spirit>
+      <SpellPower>160</SpellPower>
+      <HitRating>86</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Khadgar's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Sunstrider's Robe of Triumph</Name>
+    <Id>47766</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_35</IconPath>
+    <Stats>
+      <Armor>260</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Khadgar's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Mage</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Sunstrider's Shoulderpads of Triumph</Name>
+    <Id>47767</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <IconPath>inv_shoulder_35</IconPath>
     <Stats>
@@ -75944,6 +76272,124 @@
     </SocketBonus>
     <Name>Kel'Thuzad's Shoulderpads of Conquest</Name>
     <Id>47787</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_79</IconPath>
+    <Stats>
+      <Armor>217</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kel'Thuzad's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Warlock</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <CritRating>4</CritRating>
+    </SocketBonus>
+    <Name>Kel'Thuzad's Gloves of Triumph</Name>
+    <Id>47788</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_146</IconPath>
+    <Stats>
+      <Armor>282</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>86</Spirit>
+      <SpellPower>151</SpellPower>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kel'Thuzad's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Warlock</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Kel'Thuzad's Hood of Triumph</Name>
+    <Id>47789</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_cloth_33</IconPath>
+    <Stats>
+      <Armor>303</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>102</CritRating>
+      <HasteRating>86</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kel'Thuzad's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Warlock</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Kel'Thuzad's Leggings of Triumph</Name>
+    <Id>47790</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_cloth_75</IconPath>
+    <Stats>
+      <Armor>347</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <HitRating>94</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kel'Thuzad's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Warlock</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Kel'Thuzad's Robe of Triumph</Name>
+    <Id>47791</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_110</IconPath>
+    <Stats>
+      <Armor>260</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>68</Spirit>
+      <SpellPower>124</SpellPower>
+      <CritRating>76</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kel'Thuzad's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Warlock</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Kel'Thuzad's Shoulderpads of Triumph</Name>
+    <Id>47792</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -80499,6 +80945,29 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_110</IconPath>
+    <Stats>
+      <Armor>260</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>76</Spirit>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Velen's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Velen's Shoulderpads of Triumph</Name>
+    <Id>48029</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <IconPath>inv_jewelry_necklace_46</IconPath>
     <Stats>
@@ -80517,6 +80986,30 @@
     <Name>Darkbane Amulet</Name>
     <Id>48030</Id>
     <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_cloth_75</IconPath>
+    <Stats>
+      <Armor>347</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Velen's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Velen's Robe of Triumph</Name>
+    <Id>48031</Id>
+    <Slot>Chest</Slot>
   </Item>
   <Item>
     <ItemLevel>245</ItemLevel>
@@ -80539,6 +81032,30 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_cloth_33</IconPath>
+    <Stats>
+      <Armor>303</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Velen's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Velen's Leggings of Triumph</Name>
+    <Id>48033</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <IconPath>inv_helmet_145b</IconPath>
     <Stats>
@@ -80558,6 +81075,30 @@
     </SocketBonus>
     <Name>Helm of the High Mesa</Name>
     <Id>48034</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_146</IconPath>
+    <Stats>
+      <Armor>282</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>151</SpellPower>
+      <CritRating>86</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Velen's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Velen's Cowl of Triumph</Name>
+    <Id>48035</Id>
     <Slot>Head</Slot>
   </Item>
   <Item>
@@ -80584,6 +81125,29 @@
     <Name>Illumination</Name>
     <Id>48036</Id>
     <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_79</IconPath>
+    <Stats>
+      <Armor>217</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>68</Spirit>
+      <SpellPower>124</SpellPower>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Velen's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Velen's Gloves of Triumph</Name>
+    <Id>48037</Id>
+    <Slot>Hands</Slot>
   </Item>
   <Item>
     <ItemLevel>245</ItemLevel>
@@ -81010,6 +81574,124 @@
     <Name>Anguish</Name>
     <Id>48056</Id>
     <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_55</IconPath>
+    <Stats>
+      <Armor>217</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>68</Spirit>
+      <SpellPower>124</SpellPower>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Zabra's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Zabra's Gloves of Triumph</Name>
+    <Id>48057</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_87</IconPath>
+    <Stats>
+      <Armor>282</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>151</SpellPower>
+      <CritRating>86</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Zabra's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Zabra's Cowl of Triumph</Name>
+    <Id>48058</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_cloth_06</IconPath>
+    <Stats>
+      <Armor>303</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Zabra's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Zabra's Leggings of Triumph</Name>
+    <Id>48059</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_cloth_73</IconPath>
+    <Stats>
+      <Armor>347</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Zabra's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Zabra's Robe of Triumph</Name>
+    <Id>48060</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_90</IconPath>
+    <Stats>
+      <Armor>260</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>76</Spirit>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Zabra's Raiment</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Zabra's Shoulderpads of Triumph</Name>
+    <Id>48061</Id>
+    <Slot>Shoulders</Slot>
   </Item>
   <Item>
     <ItemLevel>245</ItemLevel>
@@ -81481,6 +82163,242 @@
     </SocketBonus>
     <Name>Velen's Mantle of Triumph</Name>
     <Id>48081</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_110</IconPath>
+    <Stats>
+      <Armor>260</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>76</Spirit>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Velen's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Velen's Mantle of Triumph</Name>
+    <Id>48082</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_cloth_75</IconPath>
+    <Stats>
+      <Armor>347</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Velen's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Velen's Raiments of Triumph</Name>
+    <Id>48083</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_cloth_33</IconPath>
+    <Stats>
+      <Armor>303</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <HitRating>102</HitRating>
+      <HasteRating>86</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Velen's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Velen's Pants of Triumph</Name>
+    <Id>48084</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_146</IconPath>
+    <Stats>
+      <Armor>282</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>86</Spirit>
+      <SpellPower>151</SpellPower>
+      <HitRating>94</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Velen's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Velen's Circlet of Triumph</Name>
+    <Id>48085</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_79</IconPath>
+    <Stats>
+      <Armor>217</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Velen's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Velen's Handwraps of Triumph</Name>
+    <Id>48086</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_55</IconPath>
+    <Stats>
+      <Armor>217</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Zabra's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Zabra's Handwraps of Triumph</Name>
+    <Id>48087</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_87</IconPath>
+    <Stats>
+      <Armor>282</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>86</Spirit>
+      <SpellPower>151</SpellPower>
+      <HitRating>94</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Zabra's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Zabra's Circlet of Triumph</Name>
+    <Id>48088</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_cloth_06</IconPath>
+    <Stats>
+      <Armor>303</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <HitRating>102</HitRating>
+      <HasteRating>86</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Zabra's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Zabra's Pants of Triumph</Name>
+    <Id>48089</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_cloth_73</IconPath>
+    <Stats>
+      <Armor>347</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Zabra's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Zabra's Raiments of Triumph</Name>
+    <Id>48090</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_90</IconPath>
+    <Stats>
+      <Armor>260</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>76</Spirit>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Zabra's Regalia</SetName>
+    <Type>Cloth</Type>
+    <RequiredClasses>Priest</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Zabra's Mantle of Triumph</Name>
+    <Id>48091</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -81956,6 +82874,242 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_89</IconPath>
+    <Stats>
+      <Armor>489</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>68</Spirit>
+      <SpellPower>124</SpellPower>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Malfurion's Spaulders of Triumph</Name>
+    <Id>48138</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_Chest_Leather_12</IconPath>
+    <Stats>
+      <Armor>652</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Malfurion's Robe of Triumph</Name>
+    <Id>48139</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_Pants_Leather_28</IconPath>
+    <Stats>
+      <Armor>570</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Malfurion's Leggings of Triumph</Name>
+    <Id>48140</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_139</IconPath>
+    <Stats>
+      <Armor>529</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>86</Spirit>
+      <SpellPower>151</SpellPower>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Malfurion's Headpiece of Triumph</Name>
+    <Id>48141</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_77b</IconPath>
+    <Stats>
+      <Armor>407</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>76</Spirit>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Malfurion's Handguards of Triumph</Name>
+    <Id>48142</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_78b</IconPath>
+    <Stats>
+      <Armor>407</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>76</Spirit>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Runetotem's Handguards of Triumph</Name>
+    <Id>48143</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_145b</IconPath>
+    <Stats>
+      <Armor>529</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>86</Spirit>
+      <SpellPower>151</SpellPower>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Runetotem's Headpiece of Triumph</Name>
+    <Id>48144</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_leather_30b</IconPath>
+    <Stats>
+      <Armor>570</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Runetotem's Leggings of Triumph</Name>
+    <Id>48145</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_leather_18b</IconPath>
+    <Stats>
+      <Armor>652</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>94</Spirit>
+      <SpellPower>160</SpellPower>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Runetotem's Robe of Triumph</Name>
+    <Id>48146</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_109b</IconPath>
+    <Stats>
+      <Armor>489</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>68</Spirit>
+      <SpellPower>124</SpellPower>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Garb</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Runetotem's Spaulders of Triumph</Name>
+    <Id>48147</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <IconPath>inv_shoulder_109b</IconPath>
     <Stats>
@@ -82425,6 +83579,242 @@
     </SocketBonus>
     <Name>Malfurion's Mantle of Triumph</Name>
     <Id>48167</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_89</IconPath>
+    <Stats>
+      <Armor>489</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>76</Spirit>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Regaila</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Malfurion's Mantle of Triumph</Name>
+    <Id>48168</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_Chest_Leather_12</IconPath>
+    <Stats>
+      <Armor>652</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>86</CritRating>
+      <HasteRating>102</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Regaila</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Malfurion's Vestments of Triumph</Name>
+    <Id>48169</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_Pants_Leather_28</IconPath>
+    <Stats>
+      <Armor>570</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>86</Spirit>
+      <SpellPower>160</SpellPower>
+      <HitRating>102</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Regaila</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Malfurion's Trousers of Triumph</Name>
+    <Id>48170</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_139</IconPath>
+    <Stats>
+      <Armor>529</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>151</SpellPower>
+      <CritRating>86</CritRating>
+      <HitRating>94</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Regaila</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Malfurion's Cover of Triumph</Name>
+    <Id>48171</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_77b</IconPath>
+    <Stats>
+      <Armor>407</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>68</Spirit>
+      <SpellPower>124</SpellPower>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Regaila</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Malfurion's Gloves of Triumph</Name>
+    <Id>48172</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_78b</IconPath>
+    <Stats>
+      <Armor>407</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>68</Spirit>
+      <SpellPower>124</SpellPower>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Regalia</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Runetotem's Gloves of Triumph</Name>
+    <Id>48173</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_145b</IconPath>
+    <Stats>
+      <Armor>529</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>151</SpellPower>
+      <CritRating>86</CritRating>
+      <HitRating>94</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Regalia</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Runetotem's Cover of Triumph</Name>
+    <Id>48174</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_leather_30b</IconPath>
+    <Stats>
+      <Armor>570</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <Spirit>86</Spirit>
+      <SpellPower>160</SpellPower>
+      <HitRating>102</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Regalia</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Runetotem's Trousers of Triumph</Name>
+    <Id>48175</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_leather_18b</IconPath>
+    <Stats>
+      <Armor>652</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>86</CritRating>
+      <HasteRating>102</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Regalia</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Runetotem's Vestments of Triumph</Name>
+    <Id>48176</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_109b</IconPath>
+    <Stats>
+      <Armor>489</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <Spirit>76</Spirit>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Regalia</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Runetotem's Mantle of Triumph</Name>
+    <Id>48177</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -82900,6 +84290,242 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_109b</IconPath>
+    <Stats>
+      <Armor>489</Armor>
+      <Agility>106</Agility>
+      <Stamina>114</Stamina>
+      <AttackPower>151</AttackPower>
+      <ArmorPenetrationRating>68</ArmorPenetrationRating>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Runetotem's Shoulderpads of Triumph</Name>
+    <Id>48198</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_leather_18b</IconPath>
+    <Stats>
+      <Armor>652</Armor>
+      <Agility>137</Agility>
+      <Stamina>153</Stamina>
+      <AttackPower>204</AttackPower>
+      <CritRating>96</CritRating>
+      <HasteRating>92</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Runetotem's Raiments of Triumph</Name>
+    <Id>48199</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_leather_30b</IconPath>
+    <Stats>
+      <Armor>570</Armor>
+      <Agility>137</Agility>
+      <Stamina>153</Stamina>
+      <AttackPower>172</AttackPower>
+      <CritRating>102</CritRating>
+      <HitRating>86</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Runetotem's Legguards of Triumph</Name>
+    <Id>48200</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_145b</IconPath>
+    <Stats>
+      <Armor>529</Armor>
+      <Agility>137</Agility>
+      <Stamina>153</Stamina>
+      <AttackPower>172</AttackPower>
+      <CritRating>102</CritRating>
+      <ExpertiseRating>86</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Agility>8</Agility>
+    </SocketBonus>
+    <Name>Runetotem's Headguard of Triumph</Name>
+    <Id>48201</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_78b</IconPath>
+    <Stats>
+      <Armor>407</Armor>
+      <Agility>106</Agility>
+      <Stamina>114</Stamina>
+      <AttackPower>151</AttackPower>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Runetotem's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Runetotem's Handgrips of Triumph</Name>
+    <Id>48202</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_77b</IconPath>
+    <Stats>
+      <Armor>407</Armor>
+      <Agility>106</Agility>
+      <Stamina>114</Stamina>
+      <AttackPower>151</AttackPower>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Malfurion's Handgrips of Triumph</Name>
+    <Id>48203</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_139</IconPath>
+    <Stats>
+      <Armor>529</Armor>
+      <Agility>137</Agility>
+      <Stamina>153</Stamina>
+      <AttackPower>172</AttackPower>
+      <CritRating>102</CritRating>
+      <ExpertiseRating>86</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Agility>8</Agility>
+    </SocketBonus>
+    <Name>Malfurion's Headguard of Triumph</Name>
+    <Id>48204</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_Pants_Leather_28</IconPath>
+    <Stats>
+      <Armor>570</Armor>
+      <Agility>137</Agility>
+      <Stamina>153</Stamina>
+      <AttackPower>172</AttackPower>
+      <CritRating>102</CritRating>
+      <HitRating>86</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Malfurion's Legguards of Triumph</Name>
+    <Id>48205</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_Chest_Leather_12</IconPath>
+    <Stats>
+      <Armor>652</Armor>
+      <Agility>137</Agility>
+      <Stamina>153</Stamina>
+      <AttackPower>204</AttackPower>
+      <CritRating>96</CritRating>
+      <HasteRating>92</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Malfurion's Raiments of Triumph</Name>
+    <Id>48206</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_89</IconPath>
+    <Stats>
+      <Armor>489</Armor>
+      <Agility>106</Agility>
+      <Stamina>114</Stamina>
+      <AttackPower>151</AttackPower>
+      <ArmorPenetrationRating>68</ArmorPenetrationRating>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Malfurion's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Druid</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Malfurion's Shoulderpads of Triumph</Name>
+    <Id>48207</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <IconPath>inv_shoulder_89</IconPath>
     <Stats>
@@ -83370,6 +84996,124 @@
     <Name>VanCleef's Pauldrons of Triumph</Name>
     <Id>48227</Id>
     <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_89</IconPath>
+    <Stats>
+      <Armor>489</Armor>
+      <Agility>114</Agility>
+      <Stamina>114</Stamina>
+      <AttackPower>135</AttackPower>
+      <ArmorPenetrationRating>76</ArmorPenetrationRating>
+      <ExpertiseRating>68</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>VanCleef's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>VanCleef's Pauldrons of Triumph</Name>
+    <Id>48228</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_leather_28</IconPath>
+    <Stats>
+      <Armor>570</Armor>
+      <Agility>137</Agility>
+      <Stamina>153</Stamina>
+      <AttackPower>188</AttackPower>
+      <ArmorPenetrationRating>94</ArmorPenetrationRating>
+      <HitRating>86</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>VanCleef's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>VanCleef's Legplates of Triumph</Name>
+    <Id>48229</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_139</IconPath>
+    <Stats>
+      <Armor>529</Armor>
+      <Agility>137</Agility>
+      <Stamina>153</Stamina>
+      <AttackPower>172</AttackPower>
+      <CritRating>102</CritRating>
+      <ExpertiseRating>86</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>VanCleef's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>8</Agility>
+    </SocketBonus>
+    <Name>VanCleef's Helmet of Triumph</Name>
+    <Id>48230</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_77a</IconPath>
+    <Stats>
+      <Armor>407</Armor>
+      <Agility>114</Agility>
+      <Stamina>114</Stamina>
+      <AttackPower>135</AttackPower>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>VanCleef's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>VanCleef's Gauntlets of Triumph</Name>
+    <Id>48231</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_leather_14</IconPath>
+    <Stats>
+      <Armor>652</Armor>
+      <Agility>137</Agility>
+      <Stamina>153</Stamina>
+      <AttackPower>188</AttackPower>
+      <CritRating>102</CritRating>
+      <HitRating>94</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>VanCleef's Battlegear</SetName>
+    <Type>Leather</Type>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>VanCleef's Breastplate of Triumph</Name>
+    <Id>48232</Id>
+    <Slot>Chest</Slot>
   </Item>
   <Item>
     <ItemLevel>258</ItemLevel>
@@ -83972,6 +85716,248 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_107</IconPath>
+    <Stats>
+      <Armor>1086</Armor>
+      <Agility>106</Agility>
+      <Stamina>90</Stamina>
+      <AttackPower>135</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>76</CritRating>
+      <HitRating>60</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Windrunner's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Windrunner's Spaulders of Triumph</Name>
+    <Id>48260</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_mail_25</IconPath>
+    <Stats>
+      <Armor>1267</Armor>
+      <Agility>137</Agility>
+      <Stamina>80</Stamina>
+      <AttackPower>172</AttackPower>
+      <ArmorPenetrationRating>80</ArmorPenetrationRating>
+      <Intellect>121</Intellect>
+      <CritRating>102</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Windrunner's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Windrunner's Legguards of Triumph</Name>
+    <Id>48261</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_HELMET_95</IconPath>
+    <Stats>
+      <Armor>1176</Armor>
+      <Agility>137</Agility>
+      <Stamina>121</Stamina>
+      <AttackPower>172</AttackPower>
+      <ArmorPenetrationRating>64</ArmorPenetrationRating>
+      <Intellect>80</Intellect>
+      <CritRating>102</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Windrunner's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus />
+    <Name>Windrunner's Headpiece of Triumph</Name>
+    <Id>48262</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_56</IconPath>
+    <Stats>
+      <Armor>905</Armor>
+      <Agility>106</Agility>
+      <Stamina>90</Stamina>
+      <AttackPower>151</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>68</CritRating>
+      <HasteRating>60</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Windrunner's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Windrunner's Handguards of Triumph</Name>
+    <Id>48263</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_mail_07</IconPath>
+    <Stats>
+      <Armor>1448</Armor>
+      <Agility>86</Agility>
+      <Stamina>121</Stamina>
+      <AttackPower>306</AttackPower>
+      <Intellect>80</Intellect>
+      <CritRating>94</CritRating>
+      <HitRating>72</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Windrunner's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Windrunner's Tunic of Triumph</Name>
+    <Id>48264</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_CHEST_MAIL_03</IconPath>
+    <Stats>
+      <Armor>1448</Armor>
+      <Agility>86</Agility>
+      <Stamina>121</Stamina>
+      <AttackPower>306</AttackPower>
+      <Intellect>80</Intellect>
+      <CritRating>94</CritRating>
+      <HitRating>72</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Windrunner's Pursuit</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Windrunner's Tunic of Triumph</Name>
+    <Id>48265</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_80</IconPath>
+    <Stats>
+      <Armor>905</Armor>
+      <Agility>106</Agility>
+      <Stamina>90</Stamina>
+      <AttackPower>151</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>68</CritRating>
+      <HasteRating>60</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Windrunner's Pursuit</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Windrunner's Handguards of Triumph</Name>
+    <Id>48266</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_100</IconPath>
+    <Stats>
+      <Armor>1176</Armor>
+      <Agility>137</Agility>
+      <Stamina>121</Stamina>
+      <AttackPower>172</AttackPower>
+      <ArmorPenetrationRating>64</ArmorPenetrationRating>
+      <Intellect>80</Intellect>
+      <CritRating>102</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Windrunner's Pursuit</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus />
+    <Name>Windrunner's Headpiece of Triumph</Name>
+    <Id>48267</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_mail_24</IconPath>
+    <Stats>
+      <Armor>1267</Armor>
+      <Agility>137</Agility>
+      <Stamina>80</Stamina>
+      <AttackPower>172</AttackPower>
+      <ArmorPenetrationRating>80</ArmorPenetrationRating>
+      <Intellect>121</Intellect>
+      <CritRating>102</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Windrunner's Pursuit</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Windrunner's Legguards of Triumph</Name>
+    <Id>48268</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_100</IconPath>
+    <Stats>
+      <Armor>1086</Armor>
+      <Agility>106</Agility>
+      <Stamina>90</Stamina>
+      <AttackPower>135</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>76</CritRating>
+      <HitRating>60</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Windrunner's Pursuit</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Hunter</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Windrunner's Spaulders of Triumph</Name>
+    <Id>48269</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <IconPath>inv_shoulder_100</IconPath>
     <Stats>
@@ -84454,6 +86440,124 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_107</IconPath>
+    <Stats>
+      <Armor>1086</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <HasteRating>68</HasteRating>
+      <Mp5>38</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Garb</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Nobundo's Spaulders of Triumph</Name>
+    <Id>48290</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_mail_25</IconPath>
+    <Stats>
+      <Armor>1267</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>96</CritRating>
+      <Mp5>46</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Garb</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Nobundo's Legguards of Triumph</Name>
+    <Id>48291</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_95</IconPath>
+    <Stats>
+      <Armor>1176</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>151</SpellPower>
+      <CritRating>88</CritRating>
+      <Mp5>46</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Garb</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Nobundo's Headpiece of Triumph</Name>
+    <Id>48292</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_73</IconPath>
+    <Stats>
+      <Armor>905</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <HasteRating>68</HasteRating>
+      <Mp5>38</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Garb</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Nobundo's Handguards of Triumph</Name>
+    <Id>48293</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_mail_07</IconPath>
+    <Stats>
+      <Armor>1448</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>94</CritRating>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Garb</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Nobundo's Tunic of Triumph</Name>
+    <Id>48294</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>232</ItemLevel>
     <IconPath>inv_chest_mail_07</IconPath>
     <Stats>
@@ -84690,6 +86794,124 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_mail_07</IconPath>
+    <Stats>
+      <Armor>1448</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>94</CritRating>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Garb</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Thrall's Tunic of Triumph</Name>
+    <Id>48305</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_53</IconPath>
+    <Stats>
+      <Armor>905</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <HasteRating>68</HasteRating>
+      <Mp5>38</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Garb</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Thrall's Handguards of Triumph</Name>
+    <Id>48306</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_100</IconPath>
+    <Stats>
+      <Armor>1176</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>151</SpellPower>
+      <CritRating>88</CritRating>
+      <Mp5>46</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Garb</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Thrall's Headpiece of Triumph</Name>
+    <Id>48307</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_mail_28</IconPath>
+    <Stats>
+      <Armor>1267</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>96</CritRating>
+      <Mp5>46</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Garb</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Thrall's Legguards of Triumph</Name>
+    <Id>48308</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_SHOULDER_67</IconPath>
+    <Stats>
+      <Armor>1086</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <HasteRating>68</HasteRating>
+      <Mp5>38</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Garb</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Thrall's Spaulders of Triumph</Name>
+    <Id>48309</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>232</ItemLevel>
     <IconPath>inv_chest_mail_07</IconPath>
     <Stats>
@@ -84923,6 +87145,242 @@
     </SocketBonus>
     <Name>Nobundo's Shoulderpads of Triumph</Name>
     <Id>48320</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_107</IconPath>
+    <Stats>
+      <Armor>1086</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Nobundo's Shoulderpads of Triumph</Name>
+    <Id>48321</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_mail_25</IconPath>
+    <Stats>
+      <Armor>1267</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>86</CritRating>
+      <HitRating>102</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Nobundo's Kilt of Triumph</Name>
+    <Id>48322</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_95</IconPath>
+    <Stats>
+      <Armor>1176</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>151</SpellPower>
+      <CritRating>92</CritRating>
+      <HasteRating>96</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Nobundo's Helm of Triumph</Name>
+    <Id>48323</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_73</IconPath>
+    <Stats>
+      <Armor>905</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <HitRating>76</HitRating>
+      <HasteRating>68</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Nobundo's Gloves of Triumph</Name>
+    <Id>48324</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_mail_07</IconPath>
+    <Stats>
+      <Armor>1448</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <HitRating>94</HitRating>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Nobundo's Hauberk of Triumph</Name>
+    <Id>48325</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_mail_07</IconPath>
+    <Stats>
+      <Armor>1448</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <HitRating>94</HitRating>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Thrall's Hauberk of Triumph</Name>
+    <Id>48326</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_53</IconPath>
+    <Stats>
+      <Armor>905</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <HitRating>76</HitRating>
+      <HasteRating>68</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Thrall's Gloves of Triumph</Name>
+    <Id>48327</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_100</IconPath>
+    <Stats>
+      <Armor>1176</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>151</SpellPower>
+      <CritRating>92</CritRating>
+      <HasteRating>96</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Thrall's Helm of Triumph</Name>
+    <Id>48328</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_mail_28</IconPath>
+    <Stats>
+      <Armor>1267</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>86</CritRating>
+      <HitRating>102</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Thrall's Kilt of Triumph</Name>
+    <Id>48329</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_SHOULDER_67</IconPath>
+    <Stats>
+      <Armor>1086</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>68</CritRating>
+      <HasteRating>76</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Regalia</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Thrall's Shoulderpads of Triumph</Name>
+    <Id>48330</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -85408,6 +87866,248 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_107</IconPath>
+    <Stats>
+      <Armor>1086</Armor>
+      <Agility>68</Agility>
+      <Stamina>90</Stamina>
+      <AttackPower>211</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>76</CritRating>
+      <HitRating>60</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Nobundo's Shoulderguards of Triumph</Name>
+    <Id>48351</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_mail_25</IconPath>
+    <Stats>
+      <Armor>1267</Armor>
+      <Agility>137</Agility>
+      <Stamina>80</Stamina>
+      <AttackPower>172</AttackPower>
+      <Intellect>121</Intellect>
+      <CritRating>102</CritRating>
+      <HitRating>80</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Nobundo's War-Kilt of Triumph</Name>
+    <Id>48352</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_95</IconPath>
+    <Stats>
+      <Armor>1176</Armor>
+      <Agility>137</Agility>
+      <Stamina>121</Stamina>
+      <AttackPower>172</AttackPower>
+      <Intellect>80</Intellect>
+      <CritRating>80</CritRating>
+      <HitRating>86</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus />
+    <Name>Nobundo's Faceguard of Triumph</Name>
+    <Id>48353</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_73</IconPath>
+    <Stats>
+      <Armor>905</Armor>
+      <Agility>76</Agility>
+      <Stamina>90</Stamina>
+      <AttackPower>211</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>60</CritRating>
+      <ExpertiseRating>68</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Nobundo's Grips of Triumph</Name>
+    <Id>48354</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_mail_07</IconPath>
+    <Stats>
+      <Armor>1448</Armor>
+      <Agility>86</Agility>
+      <Stamina>121</Stamina>
+      <AttackPower>306</AttackPower>
+      <Intellect>80</Intellect>
+      <CritRating>94</CritRating>
+      <HasteRating>72</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Nobundo's Chestguard of Triumph</Name>
+    <Id>48355</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_mail_07</IconPath>
+    <Stats>
+      <Armor>1448</Armor>
+      <Agility>86</Agility>
+      <Stamina>121</Stamina>
+      <AttackPower>306</AttackPower>
+      <Intellect>80</Intellect>
+      <CritRating>94</CritRating>
+      <HasteRating>72</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Thrall's Chestguard of Triumph</Name>
+    <Id>48356</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_53</IconPath>
+    <Stats>
+      <Armor>905</Armor>
+      <Agility>76</Agility>
+      <Stamina>90</Stamina>
+      <AttackPower>211</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>60</CritRating>
+      <ExpertiseRating>68</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Thrall's Grips of Triumph</Name>
+    <Id>48357</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_100</IconPath>
+    <Stats>
+      <Armor>1176</Armor>
+      <Agility>137</Agility>
+      <Stamina>121</Stamina>
+      <AttackPower>172</AttackPower>
+      <Intellect>80</Intellect>
+      <CritRating>80</CritRating>
+      <HitRating>86</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus />
+    <Name>Thrall's Faceguard of Triumph</Name>
+    <Id>48358</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_mail_28</IconPath>
+    <Stats>
+      <Armor>1267</Armor>
+      <Agility>137</Agility>
+      <Stamina>80</Stamina>
+      <AttackPower>172</AttackPower>
+      <Intellect>121</Intellect>
+      <CritRating>102</CritRating>
+      <HitRating>80</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Agility>6</Agility>
+    </SocketBonus>
+    <Name>Thrall's War-Kilt of Triumph</Name>
+    <Id>48359</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_SHOULDER_67</IconPath>
+    <Stats>
+      <Armor>1086</Armor>
+      <Agility>68</Agility>
+      <Stamina>90</Stamina>
+      <AttackPower>211</AttackPower>
+      <Intellect>60</Intellect>
+      <CritRating>76</CritRating>
+      <HitRating>60</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thrall's Battlegear</SetName>
+    <Type>Mail</Type>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Agility>4</Agility>
+    </SocketBonus>
+    <Name>Thrall's Shoulderguards of Triumph</Name>
+    <Id>48360</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <IconPath>inv_shoulder_67</IconPath>
     <Stats>
@@ -85880,6 +88580,119 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_20</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <ArmorPenetrationRating>68</ArmorPenetrationRating>
+      <CritRating>76</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wrynn's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Wrynn's Shoulderplates of Triumph</Name>
+    <Id>48381</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_Pants_Plate_24</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <CritRating>94</CritRating>
+      <ExpertiseRating>94</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wrynn's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Wrynn's Legplates of Triumph</Name>
+    <Id>48382</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_23</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>174</Stamina>
+      <Strength>150</Strength>
+      <CritRating>86</CritRating>
+      <HitRating>94</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wrynn's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Strength>8</Strength>
+    </SocketBonus>
+    <Name>Wrynn's Helmet of Triumph</Name>
+    <Id>48383</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_62</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wrynn's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Wrynn's Gauntlets of Triumph</Name>
+    <Id>48384</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_25</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <ArmorPenetrationRating>94</ArmorPenetrationRating>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wrynn's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Wrynn's Battleplate of Triumph</Name>
+    <Id>48385</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>232</ItemLevel>
     <IconPath>inv_chest_plate_23</IconPath>
     <Stats>
@@ -86106,6 +88919,283 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_23</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <ArmorPenetrationRating>94</ArmorPenetrationRating>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Hellscream's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Hellscream's Battleplate of Triumph</Name>
+    <Id>48396</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_53</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Hellscream's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Hellscream's Gauntlets of Triumph</Name>
+    <Id>48397</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_98</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>174</Stamina>
+      <Strength>150</Strength>
+      <CritRating>86</CritRating>
+      <HitRating>94</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Hellscream's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Strength>8</Strength>
+    </SocketBonus>
+    <Name>Hellscream's Helmet of Triumph</Name>
+    <Id>48398</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_30</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <CritRating>94</CritRating>
+      <ExpertiseRating>94</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Hellscream's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Hellscream's Legplates of Triumph</Name>
+    <Id>48399</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_73</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <ArmorPenetrationRating>68</ArmorPenetrationRating>
+      <CritRating>76</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Hellscream's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Hellscream's Shoulderplates of Triumph</Name>
+    <Id>48400</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_axe_111</IconPath>
+    <Stats>
+      <Stamina>230</Stamina>
+      <AttackPower>274</AttackPower>
+      <CritRating>86</CritRating>
+      <Resilience>102</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandAxe</Type>
+    <MinDamage>811</MinDamage>
+    <MaxDamage>1217</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Sunderer</Name>
+    <Id>48402</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_mace_112</IconPath>
+    <Stats>
+      <Stamina>230</Stamina>
+      <AttackPower>274</AttackPower>
+      <CritRating>86</CritRating>
+      <Resilience>102</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandMace</Type>
+    <MinDamage>811</MinDamage>
+    <MaxDamage>1217</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Crusher</Name>
+    <Id>48404</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_sword_149</IconPath>
+    <Stats>
+      <Stamina>230</Stamina>
+      <AttackPower>274</AttackPower>
+      <CritRating>86</CritRating>
+      <Resilience>102</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>TwoHandSword</Type>
+    <MinDamage>811</MinDamage>
+    <MaxDamage>1217</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Claymore</Name>
+    <Id>48406</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_knife_1h_pvp320_c_02</IconPath>
+    <Stats>
+      <Stamina>83</Stamina>
+      <Intellect>56</Intellect>
+      <SpellPower>701</SpellPower>
+      <CritRating>48</CritRating>
+      <Resilience>48</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>95</MinDamage>
+    <MaxDamage>304</MaxDamage>
+    <Speed>1.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Mageblade</Name>
+    <Id>48408</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_staff_103</IconPath>
+    <Stats>
+      <Stamina>221</Stamina>
+      <Intellect>98</Intellect>
+      <SpellPower>701</SpellPower>
+      <CritRating>113</CritRating>
+      <Resilience>113</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>266</MinDamage>
+    <MaxDamage>492</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Skirmish Staff</Name>
+    <Id>48410</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_staff_105</IconPath>
+    <Stats>
+      <Stamina>221</Stamina>
+      <Intellect>98</Intellect>
+      <SpellPower>701</SpellPower>
+      <HitRating>113</HitRating>
+      <Resilience>113</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>266</MinDamage>
+    <MaxDamage>492</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Acute Staff</Name>
+    <Id>48412</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_staff_103</IconPath>
+    <Stats>
+      <Stamina>221</Stamina>
+      <Intellect>98</Intellect>
+      <SpellPower>701</SpellPower>
+      <Resilience>129</Resilience>
+      <HasteRating>129</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>267</MinDamage>
+    <MaxDamage>493</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Combat Staff</Name>
+    <Id>48414</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>1</ItemLevel>
     <IconPath>inv_inscription_pigment_ebon</IconPath>
     <Stats />
@@ -86116,6 +89206,113 @@
     <Name>Fragment of the Black Knight's Soul</Name>
     <Id>48418</Id>
     <Slot>None</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_weapon_bow_54</IconPath>
+    <Stats>
+      <Armor>-45</Armor>
+      <BonusArmor>45</BonusArmor>
+      <Stamina>73</Stamina>
+      <AttackPower>97</AttackPower>
+      <CritRating>32</CritRating>
+      <Resilience>32</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Bow</Type>
+    <MinDamage>604</MinDamage>
+    <MaxDamage>840</MaxDamage>
+    <Speed>3</Speed>
+    <SocketBonus />
+    <Name>Relentless Gladiator's Recurve</Name>
+    <Id>48420</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_weapon_crossbow_36</IconPath>
+    <Stats>
+      <Armor>-45</Armor>
+      <BonusArmor>45</BonusArmor>
+      <Stamina>73</Stamina>
+      <AttackPower>97</AttackPower>
+      <CritRating>32</CritRating>
+      <Resilience>32</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Crossbow</Type>
+    <MinDamage>604</MinDamage>
+    <MaxDamage>840</MaxDamage>
+    <Speed>3</Speed>
+    <SocketBonus />
+    <Name>Relentless Gladiator's Repeater</Name>
+    <Id>48422</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_weapon_rifle_37</IconPath>
+    <Stats>
+      <Armor>-45</Armor>
+      <BonusArmor>45</BonusArmor>
+      <Stamina>73</Stamina>
+      <AttackPower>97</AttackPower>
+      <CritRating>32</CritRating>
+      <Resilience>32</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Gun</Type>
+    <MinDamage>604</MinDamage>
+    <MaxDamage>840</MaxDamage>
+    <Speed>3</Speed>
+    <SocketBonus />
+    <Name>Relentless Gladiator's Shotgun</Name>
+    <Id>48424</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_axe_110</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>227</MinDamage>
+    <MaxDamage>423</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Dicer</Name>
+    <Id>48426</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_weapon_shortblade_100</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>212</MinDamage>
+    <MaxDamage>394</MaxDamage>
+    <Speed>1.4</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Dirk</Name>
+    <Id>48428</Id>
+    <Slot>OffHand</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -86166,6 +89363,74 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_weapon_hand_31</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>227</MinDamage>
+    <MaxDamage>423</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Left Razor</Name>
+    <Id>48432</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_23</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>194</Stamina>
+      <Strength>153</Strength>
+      <DodgeRating>64</DodgeRating>
+      <BlockValue>240</BlockValue>
+      <DefenseRating>72</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wrynn's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Stamina>12</Stamina>
+    </SocketBonus>
+    <Name>Wrynn's Greathelm of Triumph</Name>
+    <Id>48433</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_mace_111</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>227</MinDamage>
+    <MaxDamage>423</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Punisher</Name>
+    <Id>48435</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>232</ItemLevel>
     <IconPath>inv_chest_plate_25</IconPath>
     <Stats>
@@ -86188,6 +89453,94 @@
     <Name>Wrynn's Breastplate of Conquest</Name>
     <Id>48436</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_sword_146</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandSword</Type>
+    <MinDamage>227</MinDamage>
+    <MaxDamage>423</MaxDamage>
+    <Speed>1.5</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Swiftblade</Name>
+    <Id>48438</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_axe_110</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>394</MinDamage>
+    <MaxDamage>732</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Splitter</Name>
+    <Id>48440</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_knife_1h_pvp320_c_02</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>273</MinDamage>
+    <MaxDamage>507</MaxDamage>
+    <Speed>1.8</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Eviscerator</Name>
+    <Id>48442</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_weapon_hand_31</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>394</MinDamage>
+    <MaxDamage>732</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Left Claw</Name>
+    <Id>48444</Id>
+    <Slot>OffHand</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -86235,6 +89588,30 @@
     </SocketBonus>
     <Name>Wrynn's Legguards of Triumph</Name>
     <Id>48446</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_24</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>206</Stamina>
+      <Strength>116</Strength>
+      <HitRating>62</HitRating>
+      <BlockValue>270</BlockValue>
+      <DefenseRating>102</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wrynn's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Wrynn's Legguards of Triumph</Name>
+    <Id>48447</Id>
     <Slot>Legs</Slot>
   </Item>
   <Item>
@@ -86308,6 +89685,30 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_25</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>206</Stamina>
+      <Strength>153</Strength>
+      <DodgeRating>72</DodgeRating>
+      <ParryRating>72</ParryRating>
+      <DefenseRating>80</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wrynn's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Wrynn's Breastplate of Triumph</Name>
+    <Id>48451</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <IconPath>inv_gauntlets_62</IconPath>
     <Stats>
@@ -86331,6 +89732,29 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_62</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>158</Stamina>
+      <Strength>114</Strength>
+      <DodgeRating>52</DodgeRating>
+      <ParryRating>60</ParryRating>
+      <DefenseRating>60</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wrynn's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Wrynn's Handguards of Triumph</Name>
+    <Id>48453</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <IconPath>inv_shoulder_20</IconPath>
     <Stats>
@@ -86351,6 +89775,29 @@
     </SocketBonus>
     <Name>Wrynn's Pauldrons of Triumph</Name>
     <Id>48454</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_20</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>158</Stamina>
+      <Strength>86</Strength>
+      <DodgeRating>76</DodgeRating>
+      <DefenseRating>76</DefenseRating>
+      <ExpertiseRating>50</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wrynn's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <DodgeRating>4</DodgeRating>
+    </SocketBonus>
+    <Name>Wrynn's Pauldrons of Triumph</Name>
+    <Id>48455</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -86590,6 +90037,124 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_23</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>206</Stamina>
+      <Strength>153</Strength>
+      <DodgeRating>72</DodgeRating>
+      <ParryRating>72</ParryRating>
+      <DefenseRating>80</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Hellscream's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Hellscream's Breastplate of Triumph</Name>
+    <Id>48466</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_53</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>158</Stamina>
+      <Strength>114</Strength>
+      <DodgeRating>52</DodgeRating>
+      <ParryRating>60</ParryRating>
+      <DefenseRating>60</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Hellscream's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Hellscream's Handguards of Triumph</Name>
+    <Id>48467</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_98</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>194</Stamina>
+      <Strength>153</Strength>
+      <DodgeRating>64</DodgeRating>
+      <BlockValue>240</BlockValue>
+      <DefenseRating>72</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Hellscream's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Stamina>12</Stamina>
+    </SocketBonus>
+    <Name>Hellscream's Greathelm of Triumph</Name>
+    <Id>48468</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_30</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>206</Stamina>
+      <Strength>116</Strength>
+      <HitRating>62</HitRating>
+      <BlockValue>270</BlockValue>
+      <DefenseRating>102</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Hellscream's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Hellscream's Legguards of Triumph</Name>
+    <Id>48469</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_73</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>158</Stamina>
+      <Strength>86</Strength>
+      <DodgeRating>76</DodgeRating>
+      <DefenseRating>76</DefenseRating>
+      <ExpertiseRating>50</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Hellscream's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Warrior</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <DodgeRating>4</DodgeRating>
+    </SocketBonus>
+    <Name>Hellscream's Pauldrons of Triumph</Name>
+    <Id>48470</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
     <ItemLevel>232</ItemLevel>
     <IconPath>inv_helmet_08</IconPath>
     <Stats>
@@ -86813,6 +90378,232 @@
     </SocketBonus>
     <Name>Thassarian's Shoulderplates of Triumph</Name>
     <Id>48485</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_04</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thassarian's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Thassarian's Shoulderplates of Triumph</Name>
+    <Id>48486</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_27</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <ArmorPenetrationRating>94</ArmorPenetrationRating>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thassarian's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Thassarian's Legplates of Triumph</Name>
+    <Id>48487</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_08</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>174</Stamina>
+      <Strength>150</Strength>
+      <CritRating>94</CritRating>
+      <ExpertiseRating>86</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thassarian's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Strength>8</Strength>
+    </SocketBonus>
+    <Name>Thassarian's Helmet of Triumph</Name>
+    <Id>48488</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_75</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thassarian's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Thassarian's Gauntlets of Triumph</Name>
+    <Id>48489</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_24</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <CritRating>94</CritRating>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thassarian's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Thassarian's Battleplate of Triumph</Name>
+    <Id>48490</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_24</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <CritRating>94</CritRating>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kolitra's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Koltira's Battleplate of Triumph</Name>
+    <Id>48491</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_62</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kolitra's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Koltira's Gauntlets of Triumph</Name>
+    <Id>48492</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_130</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>174</Stamina>
+      <Strength>150</Strength>
+      <CritRating>94</CritRating>
+      <ExpertiseRating>86</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kolitra's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Strength>8</Strength>
+    </SocketBonus>
+    <Name>Koltira's Helmet of Triumph</Name>
+    <Id>48493</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_25</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <ArmorPenetrationRating>94</ArmorPenetrationRating>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kolitra's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Koltira's Legplates of Triumph</Name>
+    <Id>48494</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_73</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kolitra's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Koltira's Shoulderplates of Triumph</Name>
+    <Id>48495</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -87040,6 +90831,186 @@
     <Name>Koltira's Shoulderplates of Conquest</Name>
     <Id>48505</Id>
     <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_axe_110</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandAxe</Type>
+    <MinDamage>394</MinDamage>
+    <MaxDamage>732</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Handaxe</Name>
+    <Id>48507</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_knife_1h_pvp320_c_02</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>312</MinDamage>
+    <MaxDamage>468</MaxDamage>
+    <Speed>1.8</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Spike</Name>
+    <Id>48509</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_mace_110</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>394</MinDamage>
+    <MaxDamage>732</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Truncheon</Name>
+    <Id>48511</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_sword_146</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandSword</Type>
+    <MinDamage>450</MinDamage>
+    <MaxDamage>676</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Longblade</Name>
+    <Id>48513</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_weapon_hand_31</IconPath>
+    <Stats>
+      <Stamina>99</Stamina>
+      <AttackPower>115</AttackPower>
+      <CritRating>36</CritRating>
+      <Resilience>44</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>FistWeapon</Type>
+    <MinDamage>394</MinDamage>
+    <MaxDamage>732</MaxDamage>
+    <Speed>2.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <AttackPower>8</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Grasp</Name>
+    <Id>48515</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_staff_104</IconPath>
+    <Stats>
+      <Stamina>230</Stamina>
+      <AttackPower>274</AttackPower>
+      <CritRating>86</CritRating>
+      <Resilience>102</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Polearm</Type>
+    <MinDamage>811</MinDamage>
+    <MaxDamage>1217</MaxDamage>
+    <Speed>3.6</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <AttackPower>12</AttackPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Halberd</Name>
+    <Id>48517</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_mace_111</IconPath>
+    <Stats>
+      <Stamina>83</Stamina>
+      <Intellect>56</Intellect>
+      <SpellPower>701</SpellPower>
+      <Resilience>48</Resilience>
+      <Mp5>24</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>95</MinDamage>
+    <MaxDamage>304</MaxDamage>
+    <Speed>1.6</Speed>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Salvation</Name>
+    <Id>48519</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_staff_103</IconPath>
+    <Stats>
+      <Stamina>221</Stamina>
+      <Intellect>98</Intellect>
+      <Spirit>113</Spirit>
+      <SpellPower>701</SpellPower>
+      <Resilience>113</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <MinDamage>266</MinDamage>
+    <MaxDamage>492</MaxDamage>
+    <Speed>2</Speed>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Relentless Gladiator's Light Staff</Name>
+    <Id>48521</Id>
+    <Slot>TwoHand</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -87275,6 +91246,242 @@
     </SocketBonus>
     <Name>Thassarian's Pauldrons of Triumph</Name>
     <Id>48542</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_04</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>158</Stamina>
+      <Strength>86</Strength>
+      <HitRating>50</HitRating>
+      <ParryRating>76</ParryRating>
+      <DefenseRating>76</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thassarian's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Thassarian's Pauldrons of Triumph</Name>
+    <Id>48543</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_27</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>206</Stamina>
+      <Strength>116</Strength>
+      <DodgeRating>80</DodgeRating>
+      <ParryRating>70</ParryRating>
+      <DefenseRating>74</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thassarian's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Thassarian's Legguards of Triumph</Name>
+    <Id>48544</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_08</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>194</Stamina>
+      <Strength>116</Strength>
+      <HitRating>62</HitRating>
+      <DodgeRating>102</DodgeRating>
+      <DefenseRating>94</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thassarian's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Stamina>12</Stamina>
+    </SocketBonus>
+    <Name>Thassarian's Faceguard of Triumph</Name>
+    <Id>48545</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_75</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>158</Stamina>
+      <Strength>114</Strength>
+      <DodgeRating>60</DodgeRating>
+      <ParryRating>52</ParryRating>
+      <DefenseRating>60</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thassarian's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Thassarian's Handguards of Triumph</Name>
+    <Id>48546</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_24</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>206</Stamina>
+      <Strength>116</Strength>
+      <DodgeRating>70</DodgeRating>
+      <ParryRating>74</ParryRating>
+      <DefenseRating>80</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Thassarian's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Thassarian's Chestguard of Triumph</Name>
+    <Id>48547</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_24</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>206</Stamina>
+      <Strength>116</Strength>
+      <DodgeRating>70</DodgeRating>
+      <ParryRating>74</ParryRating>
+      <DefenseRating>80</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kolitra's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Koltira's Chestguard of Triumph</Name>
+    <Id>48548</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>INV_Gauntlets_62</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>158</Stamina>
+      <Strength>114</Strength>
+      <DodgeRating>60</DodgeRating>
+      <ParryRating>52</ParryRating>
+      <DefenseRating>60</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kolitra's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Koltira's Handguards of Triumph</Name>
+    <Id>48549</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_130</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>194</Stamina>
+      <Strength>116</Strength>
+      <HitRating>62</HitRating>
+      <DodgeRating>102</DodgeRating>
+      <DefenseRating>94</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kolitra's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Stamina>12</Stamina>
+    </SocketBonus>
+    <Name>Koltira's Faceguard of Triumph</Name>
+    <Id>48550</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_25</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>206</Stamina>
+      <Strength>116</Strength>
+      <DodgeRating>80</DodgeRating>
+      <ParryRating>70</ParryRating>
+      <DefenseRating>74</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kolitra's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Koltira's Legguards of Triumph</Name>
+    <Id>48551</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_73</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>158</Stamina>
+      <Strength>86</Strength>
+      <HitRating>50</HitRating>
+      <ParryRating>76</ParryRating>
+      <DefenseRating>76</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Kolitra's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Koltira's Pauldrons of Triumph</Name>
+    <Id>48552</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -87750,6 +91957,242 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_30</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>76</CritRating>
+      <HasteRating>68</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Garb</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Turalyon's Spaulders of Triumph</Name>
+    <Id>48580</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_29</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>86</CritRating>
+      <Mp5>51</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Garb</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Turalyon's Greaves of Triumph</Name>
+    <Id>48581</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_25</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>151</SpellPower>
+      <CritRating>86</CritRating>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Garb</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Turalyon's Headpiece of Triumph</Name>
+    <Id>48582</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_79</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <HasteRating>76</HasteRating>
+      <Mp5>34</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Garb</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Turalyon's Gloves of Triumph</Name>
+    <Id>48583</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_22</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>86</CritRating>
+      <Mp5>51</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Garb</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Turalyon's Tunic of Triumph</Name>
+    <Id>48584</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_62</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <CritRating>76</CritRating>
+      <HasteRating>68</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Garb</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Liadrin's Spaulders of Triumph</Name>
+    <Id>48585</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_30</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>86</CritRating>
+      <Mp5>51</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Garb</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Liadrin's Greaves of Triumph</Name>
+    <Id>48586</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_98</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>151</SpellPower>
+      <CritRating>86</CritRating>
+      <HasteRating>94</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Garb</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <SpellPower>9</SpellPower>
+    </SocketBonus>
+    <Name>Liadrin's Headpiece of Triumph</Name>
+    <Id>48587</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_65</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>86</Stamina>
+      <Intellect>86</Intellect>
+      <SpellPower>124</SpellPower>
+      <HasteRating>76</HasteRating>
+      <Mp5>34</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Garb</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
+    <Name>Liadrin's Gloves of Triumph</Name>
+    <Id>48588</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_23</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>116</Stamina>
+      <Intellect>116</Intellect>
+      <SpellPower>160</SpellPower>
+      <CritRating>86</CritRating>
+      <Mp5>51</Mp5>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Garb</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
+    <Name>Liadrin's Tunic of Triumph</Name>
+    <Id>48589</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <IconPath>inv_shoulder_62</IconPath>
     <Stats>
@@ -88209,6 +92652,232 @@
     </SocketBonus>
     <Name>Turalyon's Shoulderplates of Triumph</Name>
     <Id>48611</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_30</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Turalyon's Shoulderplates of Triumph</Name>
+    <Id>48612</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_29</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <CritRating>94</CritRating>
+      <ExpertiseRating>94</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Turalyon's Legplates of Triumph</Name>
+    <Id>48613</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_25</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>174</Stamina>
+      <Strength>150</Strength>
+      <CritRating>94</CritRating>
+      <HasteRating>86</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Strength>8</Strength>
+    </SocketBonus>
+    <Name>Turalyon's Helm of Triumph</Name>
+    <Id>48614</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_79</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Turalyon's Gauntlets of Triumph</Name>
+    <Id>48615</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_22</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <ArmorPenetrationRating>94</ArmorPenetrationRating>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Turalyon's Battleplate of Triumph</Name>
+    <Id>48616</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_23</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <ArmorPenetrationRating>94</ArmorPenetrationRating>
+      <CritRating>94</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Liadrin's Battleplate of Triumph</Name>
+    <Id>48617</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_65</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Liadrin's Gauntlets of Triumph</Name>
+    <Id>48618</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_98</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>174</Stamina>
+      <Strength>150</Strength>
+      <CritRating>94</CritRating>
+      <HasteRating>86</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Strength>8</Strength>
+    </SocketBonus>
+    <Name>Liadrin's Helm of Triumph</Name>
+    <Id>48619</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_30</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>174</Stamina>
+      <Strength>158</Strength>
+      <CritRating>94</CritRating>
+      <ExpertiseRating>94</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Strength>6</Strength>
+    </SocketBonus>
+    <Name>Liadrin's Legplates of Triumph</Name>
+    <Id>48620</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_62</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>130</Stamina>
+      <Strength>122</Strength>
+      <CritRating>76</CritRating>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Battlegear</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <Strength>4</Strength>
+    </SocketBonus>
+    <Name>Liadrin's Shoulderplates of Triumph</Name>
+    <Id>48621</Id>
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
@@ -88674,6 +93343,242 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_22</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>206</Stamina>
+      <Strength>153</Strength>
+      <DodgeRating>72</DodgeRating>
+      <ParryRating>72</ParryRating>
+      <DefenseRating>80</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Turalyon's Breastplate of Triumph</Name>
+    <Id>48642</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_79</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>158</Stamina>
+      <Strength>114</Strength>
+      <DodgeRating>52</DodgeRating>
+      <ParryRating>60</ParryRating>
+      <DefenseRating>60</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Turalyon's Handguards of Triumph</Name>
+    <Id>48643</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_25</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>194</Stamina>
+      <Strength>153</Strength>
+      <DodgeRating>64</DodgeRating>
+      <BlockValue>189</BlockValue>
+      <DefenseRating>72</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Stamina>12</Stamina>
+    </SocketBonus>
+    <Name>Turalyon's Faceguard of Triumph</Name>
+    <Id>48644</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_29</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>206</Stamina>
+      <Strength>116</Strength>
+      <HitRating>62</HitRating>
+      <BlockValue>240</BlockValue>
+      <DefenseRating>102</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Turalyon's Legguards of Triumph</Name>
+    <Id>48645</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_30</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>158</Stamina>
+      <Strength>86</Strength>
+      <DodgeRating>76</DodgeRating>
+      <DefenseRating>76</DefenseRating>
+      <ExpertiseRating>50</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Turalyon's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <DodgeRating>4</DodgeRating>
+    </SocketBonus>
+    <Name>Turalyon's Shoulderguards of Triumph</Name>
+    <Id>48646</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_shoulder_62</IconPath>
+    <Stats>
+      <Armor>1941</Armor>
+      <Stamina>158</Stamina>
+      <Strength>86</Strength>
+      <DodgeRating>76</DodgeRating>
+      <DefenseRating>76</DefenseRating>
+      <ExpertiseRating>50</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <DodgeRating>4</DodgeRating>
+    </SocketBonus>
+    <Name>Liadrin's Shoulderguards of Triumph</Name>
+    <Id>48647</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_pants_plate_30</IconPath>
+    <Stats>
+      <Armor>2264</Armor>
+      <Stamina>206</Stamina>
+      <Strength>116</Strength>
+      <HitRating>62</HitRating>
+      <BlockValue>240</BlockValue>
+      <DefenseRating>102</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Liadrin's Legguards of Triumph</Name>
+    <Id>48648</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_helmet_98</IconPath>
+    <Stats>
+      <Armor>2102</Armor>
+      <Stamina>194</Stamina>
+      <Strength>153</Strength>
+      <DodgeRating>64</DodgeRating>
+      <BlockValue>189</BlockValue>
+      <DefenseRating>72</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Stamina>12</Stamina>
+    </SocketBonus>
+    <Name>Liadrin's Faceguard of Triumph</Name>
+    <Id>48649</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_gauntlets_65</IconPath>
+    <Stats>
+      <Armor>1617</Armor>
+      <Stamina>158</Stamina>
+      <Strength>114</Strength>
+      <DodgeRating>52</DodgeRating>
+      <ParryRating>60</ParryRating>
+      <DefenseRating>60</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Stamina>6</Stamina>
+    </SocketBonus>
+    <Name>Liadrin's Handguards of Triumph</Name>
+    <Id>48650</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>258</ItemLevel>
+    <IconPath>inv_chest_plate_23</IconPath>
+    <Stats>
+      <Armor>2588</Armor>
+      <Stamina>206</Stamina>
+      <Strength>153</Strength>
+      <DodgeRating>72</DodgeRating>
+      <ParryRating>72</ParryRating>
+      <DefenseRating>80</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Liadrin's Plate</SetName>
+    <Type>Plate</Type>
+    <RequiredClasses>Paladin</RequiredClasses>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>9</Stamina>
+    </SocketBonus>
+    <Name>Liadrin's Breastplate of Triumph</Name>
+    <Id>48651</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
     <ItemLevel>232</ItemLevel>
     <IconPath>inv_chest_plate_23</IconPath>
     <Stats>
@@ -89126,6 +94031,138 @@
     <Name>Cloak of the Unmoving Guardian</Name>
     <Id>48675</Id>
     <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_chest_chain_07</IconPath>
+    <Stats>
+      <Agility>68</Agility>
+      <Stamina>68</Stamina>
+      <AttackPower>137</AttackPower>
+      <Intellect>45</Intellect>
+    </Stats>
+    <Quality>Heirloom</Quality>
+    <Type>Mail</Type>
+    <SocketBonus />
+    <Name>Champion's Deathdealer Breastplate</Name>
+    <Id>48677</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_chest_chain_11</IconPath>
+    <Stats>
+      <Stamina>52</Stamina>
+      <Intellect>52</Intellect>
+      <SpellPower>80</SpellPower>
+      <Mp5>172</Mp5>
+    </Stats>
+    <Quality>Heirloom</Quality>
+    <Type>Mail</Type>
+    <SocketBonus />
+    <Name>Mystical Vest of Elements</Name>
+    <Id>48683</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_chest_plate03</IconPath>
+    <Stats>
+      <Stamina>78</Stamina>
+      <Strength>78</Strength>
+      <CritRating>68</CritRating>
+    </Stats>
+    <Quality>Heirloom</Quality>
+    <Type>Plate</Type>
+    <SocketBonus />
+    <Name>Polished Breastplate of Valor</Name>
+    <Id>48685</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_chest_leather_06</IconPath>
+    <Stats>
+      <Stamina>52</Stamina>
+      <Intellect>52</Intellect>
+      <Spirit>68</Spirit>
+      <SpellPower>80</SpellPower>
+    </Stats>
+    <Quality>Heirloom</Quality>
+    <Type>Leather</Type>
+    <SocketBonus />
+    <Name>Preened Ironfeather Breastplate</Name>
+    <Id>48687</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_chest_leather_07</IconPath>
+    <Stats>
+      <Stamina>103</Stamina>
+      <AttackPower>137</AttackPower>
+      <HitRating>68</HitRating>
+    </Stats>
+    <Quality>Heirloom</Quality>
+    <Type>Leather</Type>
+    <SocketBonus />
+    <Name>Stained Shadowcraft Tunic</Name>
+    <Id>48689</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_chest_cloth_49</IconPath>
+    <Stats>
+      <Stamina>52</Stamina>
+      <Intellect>52</Intellect>
+      <Spirit>68</Spirit>
+      <SpellPower>80</SpellPower>
+    </Stats>
+    <Quality>Heirloom</Quality>
+    <Type>Cloth</Type>
+    <SocketBonus />
+    <Name>Tattered Dreadmist Robe</Name>
+    <Id>48691</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_hammer_17</IconPath>
+    <Stats>
+      <Agility>29</Agility>
+      <Stamina>44</Stamina>
+      <AttackPower>39</AttackPower>
+      <CritRating>19</CritRating>
+    </Stats>
+    <Quality>Heirloom</Quality>
+    <Type>OneHandMace</Type>
+    <MinDamage>235</MinDamage>
+    <MaxDamage>436</MaxDamage>
+    <Speed>2.8</Speed>
+    <SocketBonus />
+    <Name>Venerable Mass of McGowan</Name>
+    <Id>48716</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_gizmo_02</IconPath>
+    <Stats>
+      <Agility>68</Agility>
+      <Stamina>103</Stamina>
+      <AttackPower>91</AttackPower>
+      <ArmorPenetrationRating>45</ArmorPenetrationRating>
+    </Stats>
+    <Quality>Heirloom</Quality>
+    <Type>TwoHandMace</Type>
+    <MinDamage>361</MinDamage>
+    <MaxDamage>542</MaxDamage>
+    <Speed>2.9</Speed>
+    <SocketBonus />
+    <Name>Repurposed Lava Dredger</Name>
+    <Id>48718</Id>
+    <Slot>TwoHand</Slot>
   </Item>
   <Item>
     <ItemLevel>245</ItemLevel>
@@ -89677,6 +94714,39 @@
     <Slot>Finger</Slot>
   </Item>
   <Item>
+    <ItemLevel>75</ItemLevel>
+    <IconPath>inv_shirt_guildtabard_01</IconPath>
+    <Stats />
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Tabard of Conquest</Name>
+    <Id>49052</Id>
+    <Slot>Tabard</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>75</ItemLevel>
+    <IconPath>inv_shirt_guildtabard_01</IconPath>
+    <Stats />
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Tabard of Conquest</Name>
+    <Id>49054</Id>
+    <Slot>Tabard</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>80</ItemLevel>
+    <IconPath>INV_Shirt_GuildTabard_01</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <SocketBonus />
+    <Name>Relentless Gladiator's Tabard</Name>
+    <Id>49086</Id>
+    <Slot>Tabard</Slot>
+  </Item>
+  <Item>
     <ItemLevel>80</ItemLevel>
     <IconPath>inv_misc_gem_pearl_12</IconPath>
     <Stats>
@@ -89693,6 +94763,22 @@
     <Name>Nightmare Tear</Name>
     <Id>49110</Id>
     <Slot>Prismatic</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>187</ItemLevel>
+    <IconPath>inv_weapon_shortblade_70</IconPath>
+    <Stats>
+      <SpellPower>315</SpellPower>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Dagger</Type>
+    <MinDamage>55</MinDamage>
+    <MaxDamage>179</MaxDamage>
+    <Speed>1.7</Speed>
+    <SocketBonus />
+    <Name>Skoll's Fang</Name>
+    <Id>49227</Id>
+    <Slot>MainHand</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>

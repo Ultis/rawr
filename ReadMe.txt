@@ -1,21 +1,33 @@
-Rawr v2.2.13.0
+Rawr v2.2.14.0
 ------------
-Welcome to Rawr 2.2.13.0.
+Welcome to Rawr 2.2.14.0.
    
 Recent Changes:
- - Adjusted base stats for shamans to match 3.2.
- - Tweaks to CharacterProfiler import.
- - Updated the stats of several more buffs and enchants to match 3.2.
- - Rawr.Retribution: Fixed T9 set bonuses. Added Hand of Reckoning modeling. Added info about switching targets and SoV stacking. Adjustment to JoR procing 2x SoR, since that was hotfixed.
- - Rawr.Hunter: Tons and tons of more improvements and additions.
- - Rawr.Moonkin: Fixed T9 set bonuses.
- - Rawr.TankDK: Added BurstTime and ReactionTime values. Fixes for expertise rating, and for parry rating on weapons. Added support for more trinkets and sigils.
- - Rawr.Enhance: Fix for fist weapons in export to EnhSim. Added support for Totem of the Elemental Winds
- - Rawr.DPSDK: Fixes for Night of the Dead, Greatness procs, and Unholy Blight damage.
- - Rawr.DPSWarr: Updated base stats, talents, and glyphs for 3.2.
- - Rawr.Healadin: Support for a few more trinkets and librams.
- - Rawr.ProtWarr: Significant updates for 3.2.
- - Rawr.Elemental: Further tweaks to how haste affects rotations.
+ - Improved Optimizer performance.
+ - Improved parsing of Wowhead/Armory data (especially for Trial of Crusader items and item sources)
+ - Improved Judgement of Wisdom calculations
+ - Added feature to be able to manually remove an item from a built upgrade list.
+ - Updated several more buffs/enchants for 3.2 changes.
+ - Improved handling of several procs, especially new ones from ToC.
+ - There are several more charts in the Buffs chart group, for subsets of buffs.
+ - Improved the default set of ItemFilters. Note that the Alliance/Horde ToC filters are gone for the moment, but we will add them back as soon as we get data to support them (coming soon from Wowhead).
+ - Rawr.Cat: Added support for offsetting trinkets (such as Grim Toll + Mjolnir Runestone).
+ - Rawr.Bear: Updated presets on Options tab.
+ - Rawr.Mage: Fixes to Flamestrike calculations/rotations. Added 3.2.2 mode.
+ - Rawr.ProtPaladin: Updates to dodge/parry calculations for 3.2. Fixed Seal of Vengeance and Shield of Righteousness calculations. Fixed crit chance calculations.
+ - Rawr.Hunter: Tons, and tons, and tons, of changes. Should be almost identical calculation logic to the spreadsheet now. 
+ - Rawr.Tree: Updated Innervates calculations and talents for 3.2 changes. 
+ - Rawr.DPSWarr: Slight tweaks to stat calculations to reflect WoW's rounding oddities. Fixes for several damage calculation issues. Added T9 set bonuses. Fixes to MultiTarget modes. Several glyph/talent updates for 3.2.
+ - Rawr.Elemental: Improved Flameshock dot damage calculations. Improved handling of haste in rotations.
+ - Rawr.Rogue: Lots of improvements to calculations, especially in talents.
+ - Rawr.Moonkin: Fixed interaction of 4T9, Moonfury, Solar Eclipse, Earth and Moon, and Improved Insect Swarm (multiplicative vs additive).
+ - Rawr.ProtWarr: Updated Devestate damage for 3.2. Slight fix to armor calculations.
+ - Rawr.DPSDK: Added T9 set bonuses, and support for new Sigils. Fix for some crit chance calculations.
+ - Rawr.Healadin: Updated default gemming tempaltes and gem handling for 3.2. Added option to not ignore items with spirit/hit.
+ - Rawr.TankDK: Updated all calculations for 3.2. Fixed a few slight inaccuracies with health calculations.
+ - Rawr.Warlock: Updated several calcultions for 3.2.
+ - Rawr.Retribution: Improved support for new Librams and set bonuses.
+ 
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -86,6 +98,21 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.13.0
+ - Adjusted base stats for shamans to match 3.2.
+ - Tweaks to CharacterProfiler import.
+ - Updated the stats of several more buffs and enchants to match 3.2.
+ - Rawr.Retribution: Fixed T9 set bonuses. Added Hand of Reckoning modeling. Added info about switching targets and SoV stacking. Adjustment to JoR procing 2x SoR, since that was hotfixed.
+ - Rawr.Hunter: Tons and tons of more improvements and additions.
+ - Rawr.Moonkin: Fixed T9 set bonuses.
+ - Rawr.TankDK: Added BurstTime and ReactionTime values. Fixes for expertise rating, and for parry rating on weapons. Added support for more trinkets and sigils.
+ - Rawr.Enhance: Fix for fist weapons in export to EnhSim. Added support for Totem of the Elemental Winds
+ - Rawr.DPSDK: Fixes for Night of the Dead, Greatness procs, and Unholy Blight damage.
+ - Rawr.DPSWarr: Updated base stats, talents, and glyphs for 3.2.
+ - Rawr.Healadin: Support for a few more trinkets and librams.
+ - Rawr.ProtWarr: Significant updates for 3.2.
+ - Rawr.Elemental: Further tweaks to how haste affects rotations.
+
 v2.2.12.0
  - NOTE! Everyone, please do NOT reuse your GemmingTemplates.xml file from a previous version of Rawr, due to all the changes in gems in 3.2.
  - Updated the default item cache with more 3.2 items, and updated data about existing items in 3.2. More data is still showing up on Wowhead/Armory daily, so be sure to try refreshing from Wowhead/Armory if you see any data that looks old/wrong. Also updated some of the enchants changed in 3.2.
