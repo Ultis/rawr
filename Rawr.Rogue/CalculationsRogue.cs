@@ -276,20 +276,21 @@ namespace Rawr.Rogue {
                 // handle boss level difference
                 PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
             };
-            Stats statsTalents = new Stats() {
-                BonusAgilityMultiplier = talents.SinisterCalling * 0.03f,
-                PhysicalHit = talents.Precision * 0.01f,
-                BonusAttackPowerMultiplier = talents.Deadliness * 0.02f
-                                           + talents.SavageCombat * 0.02f,
-                PhysicalCrit = talents.Malice * 0.01f +
-                                ((character.ActiveBuffs.FindAll(buff => buff.Group == "Critical Strike Chance Taken").Count == 0)
-                                    ? talents.MasterPoisoner * 0.01f : 0f),
-                Dodge = talents.LightningReflexes * 0.02f,
-                Parry = talents.Deflection * 0.02f,
-                PhysicalHaste = (1f + talents.BladeFlurry * 0.20f)
-                              * (1f + (float)Math.Round(0.10f / 3f * talents.LightningReflexes, 2, MidpointRounding.AwayFromZero))
-                              - 1f,
-            };
+			Stats statsTalents = new Stats()
+			{
+				BonusAgilityMultiplier = talents.SinisterCalling * 0.03f,
+				PhysicalHit = talents.Precision * 0.01f,
+				BonusAttackPowerMultiplier = talents.Deadliness * 0.02f
+										   + talents.SavageCombat * 0.02f,
+				PhysicalCrit = talents.Malice * 0.01f +
+								((character.ActiveBuffs.FindAll(buff => buff.Group == "Critical Strike Chance Taken").Count == 0)
+									? talents.MasterPoisoner * 0.01f : 0f),
+				Dodge = talents.LightningReflexes * 0.02f,
+				Parry = talents.Deflection * 0.02f,
+				PhysicalHaste = (1f + talents.BladeFlurry * 0.20f)
+							  * (1f + new float[] { 0.04f, 0.07f, 0.10f }[talents.LightningReflexes])
+							  - 1f,
+			};
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
             Stats statsProcs = new Stats();
