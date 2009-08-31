@@ -4,10 +4,16 @@ using System.Text;
 
 namespace Rawr
 {
-    public class SpecialEffectCombination
+    public struct WeightedStat
     {
-        private Dictionary<float, Interpolator> interpolator = new Dictionary<float, Interpolator>();
-        private List<SpecialEffect> effects;
+        public float Chance;
+        public float Value;
+    }
+
+    public partial class SpecialEffect
+    {
+        //private Dictionary<float, Interpolator> interpolator = new Dictionary<float, Interpolator>();
+        //private List<SpecialEffect> effects;
 
         /*private class UptimeInterpolator : Interpolator
         {
@@ -64,39 +70,32 @@ namespace Rawr
 
         private class Parameters
         {
-            public float[] d;
-            public float[] p;
-            public float[] c;
-            public float[] o;
-            public bool[] a;
-            public float[] triggerInterval;
+            public SpecialEffect[] effects; /*in*/
+            public float[] d; /*in*/
+            public float[] p; /*in*/
+            public float[] c; /*in*/
+            public float[] o; /*in*/
+            public float[] triggerInterval; /*in*/
+            public float[] uptime; /*out*/
+            public float[,] combinedUptime; /*out*/
+            public float[,] partialIntegral; /*out*/
 
-            public Parameters(SpecialEffectCombination e, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed) : this(e, triggerInterval, triggerChance, offset, null, attackSpeed)
+            public Parameters(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed)
             {
-                a = new bool[e.effects.Count];
-
-                for (int i = 0; i < e.effects.Count; i++)
-                {
-                    a[i] = true;
-                }
-            }
-
-            public Parameters(SpecialEffectCombination e, float[] triggerInterval, float[] triggerChance, float[] offset, bool[] active, float attackSpeed)
-            {
+                this.effects = effects;
                 this.triggerInterval = triggerInterval;
-                d = new float[e.effects.Count];
-                p = new float[e.effects.Count];
-                c = new float[e.effects.Count];
-                o = new float[e.effects.Count];
-                a = active;
+                d = new float[effects.Length];
+                p = new float[effects.Length];
+                c = new float[effects.Length];
+                o = new float[effects.Length];
 
                 bool discretizationCorrection = true;
 
-                for (int i = 0; i < e.effects.Count; i++)
+                for (int i = 0; i < effects.Length; i++)
                 {
-                    d[i] = e.effects[i].Duration / triggerInterval[i];
-                    p[i] = triggerChance[i] * e.effects[i].GetChance(attackSpeed);
-                    c[i] = e.effects[i].Cooldown / triggerInterval[i];
+                    d[i] = effects[i].Duration / triggerInterval[i];
+                    p[i] = triggerChance[i] * effects[i].GetChance(attackSpeed);
+                    c[i] = effects[i].Cooldown / triggerInterval[i];
                     if (discretizationCorrection)
                     {
                         c[i] += 0.5f;
@@ -107,11 +106,6 @@ namespace Rawr
             }
         }
 
-        public SpecialEffectCombination(List<SpecialEffect> effects)
-        {
-            this.effects = effects;
-        }
-
         /// <summary>
         /// Computes the average uptime of all effects being active.
         /// </summary>
@@ -120,12 +114,12 @@ namespace Rawr
         /// <param name="offset">Initial cooldown for each effect.</param>
         /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
         /// <param name="fightDuration">Duration of fight in seconds.</param>
-        public float GetAverageCombinedUptime(float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed, float fightDuration)
+        public static float GetAverageCombinedUptime(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed, float fightDuration)
         {
             // CombinedAverageUptime = integrate_0..fightDuration prod_i Uptime[i](t) dt
 
             // initialize data, translate into interval time
-            Parameters p = new Parameters(this, triggerInterval, triggerChance, offset, attackSpeed);
+            Parameters p = new Parameters(effects, triggerInterval, triggerChance, offset, attackSpeed);
 
             // integrate using adaptive Simspon's method
             double totalCombinedUptime = AdaptiveSimpsonsMethod(p, fightDuration, 0.001f, 20);
@@ -142,20 +136,38 @@ namespace Rawr
         /// <param name="offset">Initial cooldown for each effect.</param>
         /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
         /// <param name="fightDuration">Duration of fight in seconds.</param>
-        public float GetAverageCombinedUptime(float[] triggerInterval, float[] triggerChance, float[] offset, bool[] active, float attackSpeed, float fightDuration)
+        public static WeightedStat[] GetAverageCombinedUptimeCombinations(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed, float fightDuration, AdditiveStat stat)
         {
             // CombinedAverageUptime = integrate_0..fightDuration prod_i Uptime[i](t) dt
 
             // initialize data, translate into interval time
-            Parameters p = new Parameters(this, triggerInterval, triggerChance, offset, active, attackSpeed);
+            Parameters p = new Parameters(effects, triggerInterval, triggerChance, offset, attackSpeed);
+            p.uptime = new float[effects.Length];
+            const int maxRecursionDepth = 20;
+            p.combinedUptime = new float[1 + 2 * maxRecursionDepth, 1 << effects.Length];
+            p.partialIntegral = new float[1 + 2 * maxRecursionDepth, 1 << effects.Length];
 
             // integrate using adaptive Simspon's method
-            float totalCombinedUptime = AdaptiveSimpsonsMethod(p, fightDuration, 0.001f, 20);
+            AdaptiveSimpsonsMethodCombinations(p, fightDuration, 0.001f, 20);
 
-            return (totalCombinedUptime / fightDuration);
+            WeightedStat[] result = new WeightedStat[1 << effects.Length];
+
+            for (int i = 0; i < (1 << effects.Length); i++)
+            {
+                result[i].Chance = p.partialIntegral[0, i] / fightDuration;
+                for (int j = 0; j < effects.Length; j++)
+                {
+                    if ((i & (1 << j)) != 0)
+                    {
+                        result[i].Value += effects[j].Stats._rawAdditiveData[(int)stat];
+                    }
+                }
+            }
+
+            return result;
         }
 
-        private float AdaptiveSimpsonsAux(Parameters p, float a, float b, float epsilon, float S, float fa, float fb, float fc, int bottom)
+        private static float AdaptiveSimpsonsAux(Parameters p, float a, float b, float epsilon, float S, float fa, float fb, float fc, int bottom)
         {
             float c = (a + b) / 2;
             float h = b - a;
@@ -174,7 +186,48 @@ namespace Rawr
                    AdaptiveSimpsonsAux(p, c, b, epsilon / 2, Sright, fc, fb, fe, bottom - 1);
         }
 
-        private float AdaptiveSimpsonsMethod(Parameters p, float fightDuration, float epsilon, int maxRecursionDepth)
+        private static void AdaptiveSimpsonsAuxCombinations(Parameters p, float a, float b, float epsilon, int S, int fa, int fb, int fc, int bottom, int level)
+        {
+            float c = (a + b) / 2;
+            float h = b - a;
+            float d = (a + c) / 2;
+            float e = (c + b) / 2;
+            int fd = 1 + 2 * level;
+            GetCombinedUptimeCombinations(p, d, fd);
+            int fe = 2 + 2 * level;
+            GetCombinedUptimeCombinations(p, e, fe);
+            int Sleft = 2 * level - 1;
+            int Sright = 2 * level;
+            bool terminate = true;
+            for (int i = 0; i < (1 << p.effects.Length); i++)
+            {
+                p.partialIntegral[Sleft, i] = (h / 12) * (p.combinedUptime[fa, i] + 4 * p.combinedUptime[fd, i] + p.combinedUptime[fc, i]);
+                p.partialIntegral[Sright, i] = (h / 12) * (p.combinedUptime[fc, i] + 4 * p.combinedUptime[fe, i] + p.combinedUptime[fb, i]);
+                if (!(bottom <= 0 || (h < 10 && Math.Abs(p.partialIntegral[Sleft, i] + p.partialIntegral[Sright, i] - p.partialIntegral[S, i]) <= 15 * epsilon)))
+                {
+                    terminate = false;
+                }
+            }
+            float S2 = Sleft + Sright;
+            if (terminate)
+            {
+                for (int i = 0; i < (1 << p.effects.Length); i++)
+                {
+                    p.partialIntegral[S, i] = (p.partialIntegral[Sleft, i] + p.partialIntegral[Sright, i]) * 16.0f / 15.0f - p.partialIntegral[S, i] / 15.0f;
+                }
+            }
+            else
+            {
+                AdaptiveSimpsonsAuxCombinations(p, a, c, epsilon / 2, Sleft, fa, fc, fd, bottom - 1, level + 1);
+                AdaptiveSimpsonsAuxCombinations(p, c, b, epsilon / 2, Sright, fc, fb, fe, bottom - 1, level + 1);
+                for (int i = 0; i < (1 << p.effects.Length); i++)
+                {
+                    p.partialIntegral[S, i] = p.partialIntegral[Sleft, i] + p.partialIntegral[Sright, i];
+                }
+            }
+        }
+
+        private static float AdaptiveSimpsonsMethod(Parameters p, float fightDuration, float epsilon, int maxRecursionDepth)
         {
             float a = 0.0f;
             float b = fightDuration;
@@ -187,7 +240,27 @@ namespace Rawr
             return AdaptiveSimpsonsAux(p, a, b, epsilon, S, fa, fb, fc, maxRecursionDepth); 
         }
 
-        private float GetCombinedUptime(Parameters p, float t)
+        private static void AdaptiveSimpsonsMethodCombinations(Parameters p, float fightDuration, float epsilon, int maxRecursionDepth)
+        {
+            float a = 0.0f;
+            float b = fightDuration;
+            float c = (a + b) / 2;
+            float h = b - a;
+            int fa = 0;
+            GetCombinedUptimeCombinations(p, a, fa);
+            int fb = 1;
+            GetCombinedUptimeCombinations(p, b, fb);
+            int fc = 2;
+            GetCombinedUptimeCombinations(p, c, fc);
+            int S = 0;
+            for (int i = 0; i < (1 << p.effects.Length); i++)
+            {
+                p.partialIntegral[0, i] = (h / 6) * (p.combinedUptime[fa, i] + 4 * p.combinedUptime[fc, i] + p.combinedUptime[fb, i]);
+            }
+            AdaptiveSimpsonsAuxCombinations(p, a, b, epsilon, S, fa, fb, fc, maxRecursionDepth, 1);
+        }
+
+        private static float GetCombinedUptime(Parameters p, float t)
         {
             // Uptime(x) = sum_r=0..inf Ibeta(r+1, x - r * cooldown, p) - Ibeta(r+1, x - duration - r * cooldown, p)
             // t := x * interval
@@ -195,7 +268,7 @@ namespace Rawr
 
             float combinedUptime = 1.0f;
 
-            for (int i = 0; i < effects.Count; i++)
+            for (int i = 0; i < p.effects.Length; i++)
             {
                 float x = t / p.triggerInterval[i] - p.o[i];
 
@@ -212,17 +285,52 @@ namespace Rawr
                     r++;
                     x -= p.c[i];
                 }
-                if (p.a[i])
-                {
-                    combinedUptime *= uptime;
-                }
-                else
-                {
-                    combinedUptime *= (1.0f - uptime);
-                }
+                combinedUptime *= uptime;
             }
 
             return combinedUptime;
+        }
+
+        private static void GetCombinedUptimeCombinations(Parameters p, float t, int index)
+        {
+            // Uptime(x) = sum_r=0..inf Ibeta(r+1, x - r * cooldown, p) - Ibeta(r+1, x - duration - r * cooldown, p)
+            // t := x * interval
+            // Uptime(t) = sum_r=0..inf Ibeta(r+1, t / interval - r * cooldown / interval, p) - Ibeta(r+1, t / interval - duration / interval - r * cooldown / interval, p)
+
+            for (int i = 0; i < p.effects.Length; i++)
+            {
+                float x = t / p.triggerInterval[i] - p.o[i];
+
+                p.uptime[i] = 0.0f;
+                int r = 1;
+                while (x > 0)
+                {
+                    p.uptime[i] += SpecialFunction.IbetaInterpolated(r, x, p.p[i]);
+                    float xd = x - p.d[i];
+                    if (xd > 0)
+                    {
+                        p.uptime[i] -= SpecialFunction.IbetaInterpolated(r, xd, p.p[i]);
+                    }
+                    r++;
+                    x -= p.c[i];
+                }
+            }
+
+            for (int i = 0; i < (1 << p.effects.Length); i++)
+            {
+                p.combinedUptime[index, i] = 1.0f;
+                for (int j = 0; j < p.effects.Length; j++)
+                {
+                    if ((i & (1 << j)) == 0)
+                    {
+                        p.combinedUptime[index, i] *= (1.0f - p.uptime[i]);
+                    }
+                    else
+                    {
+                        p.combinedUptime[index, i] *= p.uptime[i];
+                    }
+                }
+            }
         }
     }
 }

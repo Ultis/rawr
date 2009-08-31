@@ -1024,9 +1024,9 @@ namespace Rawr
         }
 
         private static readonly InterpolationData[/*a*/][/*x*/] ibetaCache;
-        private static readonly int ibetaCacheSize = 100;
-        private static readonly int ibetaBResolution = 100;
-        private static readonly int ibetaXResolution = 100;            
+        private const int ibetaCacheSize = 100;
+        private const int ibetaBResolution = 100;
+        private const int ibetaXResolution = 100;            
 
         static SpecialFunction()
         {

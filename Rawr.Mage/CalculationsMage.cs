@@ -1947,8 +1947,8 @@ namespace Rawr.Mage
                     "Haste Rating",
                     "PVP Trinket",
                     "Movement Speed",
-                    "Minimum Range",
-                    "Threat Reduction",
+                    /*"Minimum Range",*/
+                    /*"Threat Reduction",*/
                     "Arcane Nondps Talents",
                     "Fire Nondps Talents",
                     "Frost Nondps Talents",

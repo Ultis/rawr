@@ -10,7 +10,7 @@ using System.Linq;
 #endif
 
 namespace Rawr {
-    enum AdditiveStat : int {
+    public enum AdditiveStat : int {
         Agility,
         AllResist,
         ArcaneResistance,
@@ -400,7 +400,7 @@ namespace Rawr {
         NUM_AdditiveStat // This should always be the last entry.
     }
 
-    enum MultiplicativeStat : int {
+    public enum MultiplicativeStat : int {
 		BonusMangleBearThreat,
         BonusAgilityMultiplier,
         BonusArcaneDamageMultiplier,
@@ -487,14 +487,14 @@ namespace Rawr {
         NUM_MultiplicativeStat // This should always be the last entry.
     }
 
-    enum InverseMultiplicativeStat : int {
+    public enum InverseMultiplicativeStat : int {
 		ArmorPenetration,
 		ThreatReductionMultiplier,
 
         NUM_InverseMultiplicativeStat // This should always be the last entry.
     }
 
-    enum NonStackingStat : int {
+    public enum NonStackingStat : int {
         BonusManaPotion,
         ArcaneResistanceBuff,
         FireResistanceBuff,
@@ -554,11 +554,16 @@ namespace Rawr {
 #endif
 
     [System.AttributeUsage(System.AttributeTargets.Property)]
-    public class CommonStat : System.Attribute {
+    public sealed class CommonStat : System.Attribute {
         public static float GetCommonStatMinimumRange(PropertyInfo property) {
             foreach (System.Attribute attribute in property.GetCustomAttributes(false))
-                if (attribute is CommonStat)
-                    return (attribute as CommonStat).MinRange;
+            {
+                CommonStat commonStat = attribute as CommonStat;
+                if (commonStat != null)
+                {
+                    return commonStat.MinRange;
+                }
+            }
             return -1f;
         }
 
@@ -5617,7 +5622,7 @@ namespace Rawr {
     public delegate bool StatFilter(float value);
 
     [AttributeUsage(AttributeTargets.Property)]
-    public class PercentageAttribute : Attribute
+    public sealed class PercentageAttribute : Attribute
     {
     }
 

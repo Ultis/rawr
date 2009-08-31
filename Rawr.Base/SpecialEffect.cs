@@ -56,7 +56,7 @@ namespace Rawr
     }
 
     
-    public class SpecialEffect
+    public partial class SpecialEffect
     {
         public Trigger Trigger { get; set; }
         public Stats Stats { get; set; }

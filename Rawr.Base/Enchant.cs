@@ -83,7 +83,7 @@ namespace Rawr
         /// </summary>
         public Stats Stats = new Stats();
 
-        private static EnchantList _allEnchants = null;
+        private static EnchantList _allEnchants;
         private static readonly string _SaveFilePath;
 
 #if !RAWR3
