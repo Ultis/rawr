@@ -58,7 +58,7 @@ namespace Rawr.Warlock {
             public new void Add(float _key, Event _Value) {
                 float key = _key;
                 foreach (float basekey in base.Keys) {
-                    if      (key == basekey) { key += 0.00001f; }
+                    if      (key == basekey) { key += 0.0001f; }
                     else if (key <  basekey) { break; }
                 }
                 base.Add((float)key, _Value);
