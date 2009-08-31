@@ -1283,12 +1283,12 @@ namespace Rawr.DPSDK
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    if (effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating + 12.31623993f * 2f * talents.BloodGorged > 1232f)
+                    if (effect.Stats.ArmorPenetrationRating > 0f && effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating + 12.31623993f * 2f * talents.BloodGorged > 1232f)
                     {
                         Stats tempStats = new Stats();
                         tempStats += effect.Stats;
                         SpecialEffect tempEffect = new SpecialEffect(effect.Trigger, tempStats, effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);
-                        tempEffect.Stats.ArmorPenetrationRating = 1232f - statsTotal.ArmorPenetrationRating - 12.31623993f * 2f * talents.BloodGorged;
+                        tempEffect.Stats.ArmorPenetrationRating = (1232f - statsTotal.ArmorPenetrationRating - 12.31623993f * 2f * talents.BloodGorged > 0f ? 1232f - statsTotal.ArmorPenetrationRating - 12.31623993f * 2f * talents.BloodGorged : 0f);
                         se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
                         statsTotal += se.getSpecialEffects(calcOpts, tempEffect);
                     }
