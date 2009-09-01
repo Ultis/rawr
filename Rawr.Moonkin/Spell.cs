@@ -404,10 +404,15 @@ namespace Rawr.Moonkin
         {
             float latency = calcs.Latency;
 
+            float gcd = 1.5f / (1.0f + spellHaste);
+            float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
+            float ngGCD = (float)Math.Max(gcd / 1.2f, 1.0f);
+            float instantCastNG = ngGCD + latency;
+
             mainNuke.CastTime = mainNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
             float totalCritChance = spellCrit + mainNuke.CriticalChanceModifier;
-            float normalCastTime = (float)Math.Max(1.0f, mainNuke.CastTime / (1 + spellHaste)) + latency;
-            mainNuke.NGCastTime = (float)Math.Max(1.0f, mainNuke.CastTime / (1 + spellHaste) / (1 + 0.2f * character.DruidTalents.NaturesGrace / 3.0f)) + latency;
+            float normalCastTime = (float)Math.Max(mainNuke.CastTime / (1 + spellHaste), instantCast);
+            mainNuke.NGCastTime = (float)Math.Max(mainNuke.CastTime / (1 + spellHaste) / (1 + 0.2f * character.DruidTalents.NaturesGrace / 3.0f), instantCastNG);
             float NGProcChance = totalCritChance * character.DruidTalents.NaturesGrace / 3.0f;
             float NGUptime = 1.0f - (float)Math.Pow(1.0f - NGProcChance, Math.Floor(3.0f / normalCastTime) + 1.0f);
             mainNuke.CastTime = (1 - NGUptime) * normalCastTime + NGUptime * mainNuke.NGCastTime;
@@ -1096,10 +1101,6 @@ namespace Rawr.Moonkin
                             newSign = -newSign;
                         }
 
-                        /*if (vals.TrueForAll(delegate(int val)
-                        {
-                            return innerVals.Contains(val);
-                        }))*/
                         bool containsAll = true;
                         foreach (int val in vals)
                         {
@@ -1118,9 +1119,15 @@ namespace Rawr.Moonkin
                 // Apply the above-calculated probabilities to the previously stored damage calculations and add to the result.
                 foreach (KeyValuePair<List<int>, float> kvp in cachedUptimes)
                 {
-                    accumulatedDamage += kvp.Value * cachedDamages[kvp.Key];
+                    if (kvp.Value > 0)
+                        accumulatedDamage += kvp.Value * cachedDamages[kvp.Key];
                 }
-                accumulatedDamage += (1 - totalUpTime) * rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                float damageDone = 0.0f;
+                if ((1 - totalUpTime) > 0)
+                {
+                    damageDone = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                    accumulatedDamage += (1 - totalUpTime) * damageDone;
+                }
                 float burstDPS = accumulatedDamage / rot.Duration * percentTimeInRotation;
                 float sustainedDPS = burstDPS;
                 float timeToOOM = (manaPool / rot.RotationData.ManaUsed) * rot.Duration;
