@@ -775,10 +775,10 @@ focus on Survival Points.",
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1.0f + statsBuffs.BonusStaminaMultiplier) * (1.0f + statsItems.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor((statsBase.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
-//            if (statsTotal.GreatnessProc > 0)
-//            {
-//                statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15.0f / 48.0f);
-//            }
+            //if (statsTotal.GreatnessProc > 0)
+            //{
+            //    statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15.0f / 48.0f);
+            //}
             if (talents.GlyphOfSealOfVengeance && calcOpts.SealChoice == "Seal of Vengeance") 
             {
                 statsTotal.Expertise += 10.0f;
@@ -797,11 +797,6 @@ focus on Survival Points.",
             statsTotal.BonusArmor += statsTotal.Agility * 2f;
             statsTotal.BonusArmor  = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
             statsTotal.Armor      += statsTotal.BonusArmor;
-
-            statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
-            statsTotal.BonusArmor += 2f * (float)Math.Floor(statsTotal.Agility);
-            statsTotal.Armor += statsTotal.BonusArmor;
-            statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
 
             statsTotal.AttackPower += (statsTotal.Strength - 20f) * 2f + 20f;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
