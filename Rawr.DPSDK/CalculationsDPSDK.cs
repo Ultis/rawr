@@ -1058,7 +1058,7 @@ namespace Rawr.DPSDK
                     IcyTouchMult *= 1 + MercilessCombatMult;
                     FrostStrikeMult *= 1 + MercilessCombatMult;
 
-                    float GlacierRot = (2f / 3f/*0.66666666666666666*/) * (float)talents.GlacierRot;
+                    float GlacierRot = (.2f / 3f/*0.66666666666666666*/) * (float)talents.GlacierRot;
                     HowlingBlastMult *= 1 + GlacierRot;
                     IcyTouchMult *= 1 + GlacierRot;
                     FrostStrikeMult *= 1 + GlacierRot;
