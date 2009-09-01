@@ -751,15 +751,6 @@ namespace Rawr.Moonkin
                 ((spellCrit + solarEclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
                 (solarEclipseCast.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana);
 
-
-            /*if (moonfire != null && insectSwarm != null)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format("Pre-solar: Time spent {0}, DPH {1}, DPS {2}", preSolarTime, preSolarCast.DamagePerHit, preSolarDPS));
-                System.Diagnostics.Debug.WriteLine(String.Format("solar: Time spent {0}, DPH {1}, DPS {2}", solarTime, solarEclipseCast.DamagePerHit, solarDPS));
-                System.Diagnostics.Debug.WriteLine(String.Format("Pre-lunar: Time spent {0}, DPH {1}, DPS {2}", preLunarTime, preLunarCast.DamagePerHit, preLunarDPS));
-                System.Diagnostics.Debug.WriteLine(String.Format("lunar: Time spent {0}, DPH {1}, DPS {2}", lunarTime, lunarEclipseCast.DamagePerHit, lunarDPS));
-                System.Diagnostics.Debug.WriteLine("");
-            }*/
             // Moonfire tick calculation:
             // Min(rotationLength, SFglyph + regMF + regMF) / tickLength if 100% uptime specified
             float preSolarMfTicks = moonfire != null ? (float)Math.Min(moonfire.CastTime + ((insectSwarm != null ? insectSwarm.CastTime : 0.0f) + preSolarTime + solarTime) / 3, moonfire.DotEffect.NumberOfTicks) : 0.0f;
@@ -1074,13 +1065,10 @@ namespace Rawr.Moonkin
                     {
                         float tempUpTime = 1.0f;
                         int[] vals = gen.GetNext();
-                        System.Diagnostics.Debug.Write("Active procs: ");
                         foreach (int idx in vals)
                         {
-                            System.Diagnostics.Debug.Write(activatedEffects[idx].Effect.ToString() + ", ");
                             activatedEffects[idx].Activate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
-                        System.Diagnostics.Debug.WriteLine("");
                         float tempDPS = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
                         foreach (int idx in vals)
                         {
