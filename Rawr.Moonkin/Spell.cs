@@ -751,6 +751,15 @@ namespace Rawr.Moonkin
                 ((spellCrit + solarEclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
                 (solarEclipseCast.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana);
 
+
+            /*if (moonfire != null && insectSwarm != null)
+            {
+                System.Diagnostics.Debug.WriteLine(String.Format("Pre-solar: Time spent {0}, DPH {1}, DPS {2}", preSolarTime, preSolarCast.DamagePerHit, preSolarDPS));
+                System.Diagnostics.Debug.WriteLine(String.Format("solar: Time spent {0}, DPH {1}, DPS {2}", solarTime, solarEclipseCast.DamagePerHit, solarDPS));
+                System.Diagnostics.Debug.WriteLine(String.Format("Pre-lunar: Time spent {0}, DPH {1}, DPS {2}", preLunarTime, preLunarCast.DamagePerHit, preLunarDPS));
+                System.Diagnostics.Debug.WriteLine(String.Format("lunar: Time spent {0}, DPH {1}, DPS {2}", lunarTime, lunarEclipseCast.DamagePerHit, lunarDPS));
+                System.Diagnostics.Debug.WriteLine("");
+            }*/
             // Moonfire tick calculation:
             // Min(rotationLength, SFglyph + regMF + regMF) / tickLength if 100% uptime specified
             float preSolarMfTicks = moonfire != null ? (float)Math.Min(moonfire.CastTime + ((insectSwarm != null ? insectSwarm.CastTime : 0.0f) + preSolarTime + solarTime) / 3, moonfire.DotEffect.NumberOfTicks) : 0.0f;
@@ -1024,8 +1033,6 @@ namespace Rawr.Moonkin
 
             float totalTimeInRotation = calcs.FightLength * 60.0f - (treantTime + starfallTime + faerieFireTime);
             float percentTimeInRotation = totalTimeInRotation / (calcs.FightLength * 60.0f);
-
-            //calcs.Latency += totalAverageLatency;
             
             float manaGained = manaPool - calcs.BasicStats.Mana;
 
@@ -1067,11 +1074,14 @@ namespace Rawr.Moonkin
                     {
                         float tempUpTime = 1.0f;
                         int[] vals = gen.GetNext();
+                        System.Diagnostics.Debug.Write("Active procs: ");
                         foreach (int idx in vals)
                         {
+                            System.Diagnostics.Debug.Write(activatedEffects[idx].Effect.ToString() + ", ");
                             activatedEffects[idx].Activate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
-                        float tempDamage = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                        System.Diagnostics.Debug.WriteLine("");
+                        float tempDPS = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
@@ -1079,7 +1089,7 @@ namespace Rawr.Moonkin
                         }
                         List<int> pairs = new List<int>(vals);
                         cachedUptimes[pairs] = tempUpTime;
-                        cachedDamages[pairs] = tempDamage;
+                        cachedDamages[pairs] = tempDPS;
                         totalUpTime += sign * tempUpTime;
                     }
                     sign = -sign;
@@ -1116,18 +1126,17 @@ namespace Rawr.Moonkin
                         }
                     }
                 }
+                float accumulatedDPS = 0.0f;
                 // Apply the above-calculated probabilities to the previously stored damage calculations and add to the result.
                 foreach (KeyValuePair<List<int>, float> kvp in cachedUptimes)
                 {
-                    if (kvp.Value > 0)
-                        accumulatedDamage += kvp.Value * cachedDamages[kvp.Key];
+                    accumulatedDPS += kvp.Value * cachedDamages[kvp.Key];
                 }
-                float damageDone = 0.0f;
-                if ((1 - totalUpTime) > 0)
-                {
-                    damageDone = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
-                    accumulatedDamage += (1 - totalUpTime) * damageDone;
-                }
+                float damageDone = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                accumulatedDPS += (1 - totalUpTime) * damageDone / rot.Duration;
+
+                accumulatedDamage += accumulatedDPS * rot.Duration;
+
                 float burstDPS = accumulatedDamage / rot.Duration * percentTimeInRotation;
                 float sustainedDPS = burstDPS;
                 float timeToOOM = (manaPool / rot.RotationData.ManaUsed) * rot.Duration;
@@ -1160,8 +1169,6 @@ namespace Rawr.Moonkin
             calcs.SubPoints = new float[] { maxDamageDone, maxBurstDamageDone };
             calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
             calcs.Rotations = cachedResults;
-
-            //calcs.Latency -= totalAverageLatency;
         }
 
         // Create proc effect calculations for proc-based trinkets.
@@ -1243,7 +1250,7 @@ namespace Rawr.Moonkin
             float damagePerHit = (398.8f + attackPower / 14.0f) * 1.7f;
             float critRate = 0.05f + meleeCrit;
             float glancingRate = 0.2f;
-            float bossArmor = StatConversion.NPC_ARMOR[83/*calcOpts.TargetLevel*/-80] * (1.0f - armorPen);
+            float bossArmor = StatConversion.NPC_ARMOR[83-80] * (1.0f - armorPen);
             float damageReduction = bossArmor / (bossArmor + 15232.5f);
             damagePerHit *= 1.0f - damageReduction;
             damagePerHit = (critRate * damagePerHit * 2.0f) + (glancingRate * damagePerHit * 0.75f) + ((1 - critRate - glancingRate) * damagePerHit);
@@ -1262,45 +1269,6 @@ namespace Rawr.Moonkin
 			float damagePerCrit = damagePerNormalHit * critDamageModifier;
 			return (spellCrit * damagePerCrit + (1 - spellCrit) * damagePerNormalHit) * spellHit;
 		}
-
-        // Clicky trinket calculations
-/*        private void DoOnUseTrinketCalcs(CharacterCalculationsMoonkin calcs, float hitRate, ref float spellPower, ref float effectiveSpellCrit, ref float effectiveSpellHaste, ref float trinketExtraDPS)
-        {
-            // Shatterered Sun Pendant (45s internal CD)
-            if (calcs.BasicStats.ShatteredSunAcumenProc > 0)
-            {
-                if (calcs.Scryer)
-                {
-                    float AllDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
-                    float baseDamage = (333 + 367) / 2.0f;
-                    float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * AllDamageModifier;
-                    trinketExtraDPS += averageDamage / 45.0f;
-                }
-                else
-                {
-                    spellPower += 120.0f * 10.0f / 45.0f;
-                }
-            }
-            // Haste trinkets
-            if (calcs.BasicStats.HasteRatingFor20SecOnUse2Min > 0)
-            {
-				effectiveSpellHaste += StatConversion.GetSpellHasteFromRating(calcs.BasicStats.HasteRatingFor20SecOnUse2Min * 20.0f / 120.0f);
-                //effectiveSpellHaste += calcs.BasicStats.HasteRatingFor20SecOnUse2Min * 20.0f / 120.0f / CalculationsMoonkin.hasteRatingConversionFactor;
-            }
-            // Spell damage trinkets
-            if (calcs.BasicStats.SpellPowerFor15SecOnUse90Sec > 0)
-            {
-                spellPower += calcs.BasicStats.SpellPowerFor15SecOnUse90Sec * 15.0f / 90.0f;
-            }
-            if (calcs.BasicStats.SpellPowerFor20SecOnUse2Min > 0)
-            {
-                spellPower += calcs.BasicStats.SpellPowerFor20SecOnUse2Min * 20.0f / 120.0f;
-            }
-            if (calcs.BasicStats.SpellPowerFor20SecOnUse5Min > 0)
-            {
-                spellPower += calcs.BasicStats.SpellPowerFor20SecOnUse5Min * 20.0f / 300.0f;
-            }
-        }*/
 
         // Redo the spell calculations
         private void RecreateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
@@ -1446,9 +1414,6 @@ namespace Rawr.Moonkin
             Wrath.CriticalChanceModifier += stats.BonusNukeCritChance;
             // 2T9
             Moonfire.DotEffect.CanCrit = stats.MoonfireDotCrit == 1;
-            // 4T9
-            /*Starfire.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
-            Wrath.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;*/
 
             // Nature's Grace
             NaturesGrace = character.DruidTalents.NaturesGrace;
