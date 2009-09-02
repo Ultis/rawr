@@ -48,9 +48,14 @@ namespace Rawr.DPSWarr {
             RB_StanceArms.Checked    = !calcOpts.FuryStance;
             CK_PTRMode.Checked       = calcOpts.PTRMode;
             // Rotational Changes
-            CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
-            CK_MultiTargs.Checked    = calcOpts.MultipleTargets;   CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;CB_MultiTargsMax.Value     = (int)calcOpts.MultipleTargetsMax;
-            CK_StunningTargs.Checked = calcOpts.StunningTargets;   CB_StunningTargsPerc.Value  = calcOpts.StunningTargetsPerc;
+            CK_InBack.Checked               = calcOpts.InBack;
+                CB_InBackPerc.Value         = calcOpts.InBackPerc;
+            CK_MultiTargs.Checked           = calcOpts.MultipleTargets;
+                CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;
+                CB_MultiTargsMax.Value      = (int)calcOpts.MultipleTargetsMax;
+            CK_StunningTargs.Checked        = calcOpts.StunningTargets;
+                NUD_StunFreq.Value          = (int)calcOpts.StunningTargetsFreq;
+                NUD_StunDur.Value           = (int)calcOpts.StunningTargetsDur;
             // nonfunctional
             CK_MovingTargs.Checked   = calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
             CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
@@ -72,8 +77,7 @@ namespace Rawr.DPSWarr {
             calcOpts.PTRMode = CK_PTRMode.Checked;
             Character.OnCalculationsInvalidated();
         }
-        private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
             int targetArmor = int.Parse(CB_TargArmor.Text);
             //LB_TargArmorDesc.Text = armorBosses[targetArmor];
 
@@ -120,7 +124,13 @@ namespace Rawr.DPSWarr {
         private void RotChanges_Stun_ChecksChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             //
-            calcOpts.StunningTargets = CK_StunningTargs.Checked; CB_StunningTargsPerc.Enabled = calcOpts.StunningTargets;
+            bool Checked = CK_StunningTargs.Checked;
+            calcOpts.StunningTargets = Checked;
+            LB_Stun0.Enabled = Checked;
+            NUD_StunFreq.Enabled = Checked;
+            LB_Stun1.Enabled = Checked;
+            NUD_StunDur.Enabled = Checked;
+            LB_Stun2.Enabled = Checked;
             //
             Character.OnCalculationsInvalidated();
         }
@@ -159,11 +169,14 @@ namespace Rawr.DPSWarr {
             //
             Character.OnCalculationsInvalidated();
         }
-        private void RotChanges_Stun_ValueChanged(object sender, EventArgs e) {
+        private void NUD_StunFreq_ValueChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            calcOpts.StunningTargetsPerc = (int)CB_StunningTargsPerc.Value;
-            //
+            calcOpts.StunningTargetsFreq = (int)NUD_StunFreq.Value;
+            Character.OnCalculationsInvalidated();
+        }
+        private void NUD_StunDur_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.StunningTargetsDur = (float)NUD_StunDur.Value;
             Character.OnCalculationsInvalidated();
         }
         private void RotChanges_Move_ValueChanged(object sender, EventArgs e) {
@@ -849,9 +862,9 @@ namespace Rawr.DPSWarr {
         public bool AllowFlooring = false;
         public bool PTRMode = false;
         // Rotational Changes
-        public bool InBack             = true ; public int InBackPerc           = 75;
-        public bool MultipleTargets    = true; public int MultipleTargetsPerc  = 25;public float MultipleTargetsMax = 3;
-        public bool StunningTargets    = true; public int StunningTargetsPerc   = 5;
+        public bool InBack             = true; public int InBackPerc           =  75;
+        public bool MultipleTargets    = true; public int MultipleTargetsPerc  =  25; public float MultipleTargetsMax = 3;
+        public bool StunningTargets    = true; public int StunningTargetsFreq  = 120; public float StunningTargetsDur = 5000;
             // nonfunctional
             public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
             public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;

@@ -325,47 +325,6 @@ namespace Rawr.ProtPaladin
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             return StatConversion.GetDRAvoidanceChance(character,stats,avoidanceType,calcOpts.TargetLevel);
-            
-            /*float defSkillFomRating = (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating,CharacterClass.Paladin));
-            float baseAvoid = 0.0f;
-            float modifiedAvoid = 0.0f;
-            float modifier = CombatRatingModifier(character, stats);
-
-            switch (avoidanceType)
-            {
-                case HitResult.Dodge:
-                    baseAvoid = stats.Dodge + StatConversion.GetDodgeFromAgility(stats.BaseAgility,CharacterClass.Paladin) - modifier;
-                    modifiedAvoid = StatConversion.GetDodgeFromAgility(stats.Agility - stats.BaseAgility,CharacterClass.Paladin)
-                                    + StatConversion.GetDodgeFromRating(stats.DodgeRating,CharacterClass.Paladin)
-                                    + StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER * defSkillFomRating;
-                    modifiedAvoid *= 100.0f;
-                    modifiedAvoid = 0.01f / (1.0f / 88.1290208866f + 0.9560f / modifiedAvoid);
-                    break;
-                case HitResult.Parry:
-                    baseAvoid = stats.Parry - modifier;
-                    modifiedAvoid = StatConversion.GetParryFromRating(stats.ParryRating,CharacterClass.Paladin)
-                                    + StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER * defSkillFomRating;
-                    modifiedAvoid *= 100.0f;
-                    modifiedAvoid = 0.01f / (1.0f / 47.003525644f + 0.9560f / modifiedAvoid);
-                    break;
-                case HitResult.Miss:
-                    baseAvoid = stats.Miss - modifier;
-                    modifiedAvoid = StatConversion.Get(defSkillFomRating * ProtPaladin.DefenseToMiss,CharacterClass.Paladin);
-                    modifiedAvoid *= 100.0f;
-                    modifiedAvoid = 0.01f / (1.0f / 16.0f + 0.9560f / modifiedAvoid);
-                    break;
-                case HitResult.Block:
-                    baseAvoid = stats.Block - modifier;
-                    modifiedAvoid = StatConversion.(stats.BlockRating * ProtPaladin.BlockRatingToBlock,CharacterClass.Paladin)
-                                    + StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER * defSkillFomRating;
-                    break;
-                case HitResult.Crit:
-                    modifiedAvoid = StatConversion.(defSkillFomRating * ProtPaladin.DefenseToCritReduction,CharacterClass.Paladin)
-                                    + StatConversion.(stats.Resilience * ProtPaladin.ResilienceRatingToCritReduction,CharacterClass.Paladin);
-                    break;
-            }
-            float avoidanceChance = baseAvoid + modifiedAvoid;
-            return avoidanceChance;*/
         }
 
         // Combination nCk
