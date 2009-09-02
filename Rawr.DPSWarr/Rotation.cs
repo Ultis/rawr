@@ -596,7 +596,7 @@ namespace Rawr.DPSWarr {
         public float _Death_GCDs  = 0f;
         public float _Reck_GCDs   = 0f;
         // GCD Losses
-        public float _Stunned_GCDs = 0f;
+        public float _Stunned_Acts = 0f;
         public float _HF_Acts      = 0f;
         public float _EM_Acts      = 0f;
         //
@@ -693,28 +693,28 @@ namespace Rawr.DPSWarr {
                 // Iron Will reduces the Duration of the stun by 7%,14%,20%
                 // 100% perc means you are stunned the entire fight, the boss is stunning you every third GCD, basically only refreshing his stun
                 //  50% perc means you are stunned half the fight, the boss is stunning you every sixth GCD
-                float stunnedGCDs = (float)Math.Max(0f, FightDuration / CalcOpts.StunningTargetsFreq);
+                float stunnedActs = (float)Math.Max(0f, FightDuration / CalcOpts.StunningTargetsFreq);
                 //float acts = (float)Math.Min(availGCDs, stunnedGCDs);
-                float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(stunnedGCDs) : stunnedGCDs;
-                _Stunned_GCDs = Abil_GCDs;
-                float reduc = BaseStunDur;
-                GCDsused += (float)Math.Min(NumGCDs, (reduc * Abil_GCDs)/LatentGCD);
-                GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs-IronWillBonus : Stunned\n" : "");
+                float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Floor(stunnedActs) : stunnedActs;
+                _Stunned_Acts = Abil_Acts;
+                float reduc = Math.Max(0f,BaseStunDur);
+                GCDsused += (float)Math.Min(NumGCDs, (reduc * Abil_Acts) / LatentGCD);
+                GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs-IronWillBonus : Stunned\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 // Now let's try and get some of those GCDs back
-                if (Talents.HeroicFury > 0 && _Stunned_GCDs > 0f) {
+                if (Talents.HeroicFury > 0 && _Stunned_Acts > 0f) {
                     float hfacts = HF.Activates;
-                    _HF_Acts = (float)Math.Min(_Stunned_GCDs, hfacts);
-                    reduc = (BaseStunDur - LatentGCD);
-                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * hfacts)/LatentGCD);
+                    _HF_Acts = (float)Math.Min(_Stunned_Acts, hfacts);
+                    reduc =  Math.Max(0f,(BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)/1000f*/)));
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * hfacts) / LatentGCD);
                     GCDUsage += (_HF_Acts > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + HF.Name + " (adds back to GCDs when stunned)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 }
-                if (CHARACTER.Race == CharacterRace.Human && (_Stunned_GCDs-_HF_Acts > 0)) {
+                if (CHARACTER.Race == CharacterRace.Human && (_Stunned_Acts - _HF_Acts > 0)) {
                     float emacts = EM.Activates;
-                    _EM_Acts = (float)Math.Min(_Stunned_GCDs - _HF_Acts, emacts);
-                    reduc = (BaseStunDur - LatentGCD);
-                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * emacts)/LatentGCD);
+                    _EM_Acts = (float)Math.Min(_Stunned_Acts - _HF_Acts, emacts);
+                    reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)/1000f*/)));
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * emacts) / LatentGCD);
                     GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + EM.Name + " (adds back to GCDs when stunned)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 }
@@ -723,9 +723,9 @@ namespace Rawr.DPSWarr {
                 // of time lost to stuns to affect each ability equally
                 // othwerwise we are only seriously affecting things at
                 // the bottom of priorities, which isn't fair (poor Slam)
-                GCDsused -= _Stunned_GCDs * BaseStunDur;
+                GCDsused -= (_Stunned_Acts * BaseStunDur) / LatentGCD;
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                timelostwhilestunned = _Stunned_GCDs * BaseStunDur
+                timelostwhilestunned = _Stunned_Acts * BaseStunDur
                                        - (BaseStunDur - LatentGCD) * _HF_Acts
                                        - (BaseStunDur - LatentGCD) * _EM_Acts;
                 percTimeInStun = timelostwhilestunned / FightDuration;
@@ -739,7 +739,7 @@ namespace Rawr.DPSWarr {
             }
             availRage += RageGenOther;
 
-            SndW.NumStunsOverDur = _Stunned_GCDs;
+            SndW.NumStunsOverDur = _Stunned_Acts;
             /*Second Wind       */AddAnItem(percTimeInStun,ref availRage, ref _Second_Acts, SndW);
             /*Bloodrage         */AddAnItem(percTimeInStun,ref availRage, ref _Blood_GCDs , BR  );
             /*Berserker Rage    */AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _ZRage_GCDs, BZ, false);
