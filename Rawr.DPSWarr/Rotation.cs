@@ -685,7 +685,7 @@ namespace Rawr.DPSWarr {
             if (Char.MainHand == null) { return 0f; }
 
             // ==== Reasons GCDs would be lost ========
-            float IronWillBonus = (float)Math.Round(20f/3f*Talents.IronWill) / 100f;
+            float IronWillBonus = (float)Math.Round(20f/3f*Talents.IronWill,MidpointRounding.AwayFromZero) / 100f;
             float BaseStunDur = (float)Math.Max(0f, (CalcOpts.StunningTargetsDur/1000f * (1f - IronWillBonus)));
             // Being Stunned or Charmed
             if(CalcOpts.StunningTargets){
@@ -694,19 +694,19 @@ namespace Rawr.DPSWarr {
                 // 100% perc means you are stunned the entire fight, the boss is stunning you every third GCD, basically only refreshing his stun
                 //  50% perc means you are stunned half the fight, the boss is stunning you every sixth GCD
                 float stunnedGCDs = (float)Math.Max(0f, FightDuration / CalcOpts.StunningTargetsFreq);
-                float acts = (float)Math.Min(availGCDs, stunnedGCDs);
-                float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                //float acts = (float)Math.Min(availGCDs, stunnedGCDs);
+                float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(stunnedGCDs) : stunnedGCDs;
                 _Stunned_GCDs = Abil_GCDs;
-                float reduc = Abil_GCDs * BaseStunDur;
-                GCDsused += (float)Math.Min(NumGCDs, reduc);
-                GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x"+BaseStunDur.ToString()+"secs-IronWillBonus : Stunned\n" : "");
+                float reduc = BaseStunDur;
+                GCDsused += (float)Math.Min(NumGCDs, (reduc * Abil_GCDs)/LatentGCD);
+                GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs-IronWillBonus : Stunned\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 // Now let's try and get some of those GCDs back
                 if (Talents.HeroicFury > 0 && _Stunned_GCDs > 0f) {
                     float hfacts = HF.Activates;
                     _HF_Acts = (float)Math.Min(_Stunned_GCDs, hfacts);
                     reduc = (BaseStunDur - LatentGCD);
-                    GCDsused -= (float)Math.Min(NumGCDs, reduc * hfacts);
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * hfacts)/LatentGCD);
                     GCDUsage += (_HF_Acts > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + HF.Name + " (adds back to GCDs when stunned)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 }
@@ -714,7 +714,7 @@ namespace Rawr.DPSWarr {
                     float emacts = EM.Activates;
                     _EM_Acts = (float)Math.Min(_Stunned_GCDs - _HF_Acts, emacts);
                     reduc = (BaseStunDur - LatentGCD);
-                    GCDsused -= (float)Math.Min(NumGCDs, reduc * emacts);
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * emacts)/LatentGCD);
                     GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + EM.Name + " (adds back to GCDs when stunned)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 }
