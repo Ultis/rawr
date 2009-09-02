@@ -791,8 +791,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
-                ArmorPenetration = stats.ArmorPenetration,
-                ExpertiseRating = stats.ExpertiseRating,
+				ArmorPenetration = stats.ArmorPenetration,
+				ArmorPenetrationRating = stats.ArmorPenetrationRating,
+				ExpertiseRating = stats.ExpertiseRating,
                 Expertise = stats.Expertise,
                 HasteRating = stats.HasteRating,
                 WeaponDamage = stats.WeaponDamage,
@@ -919,6 +920,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.PhysicalHaste != 0);
             bResults |= (stats.PhysicalHit != 0);
             bResults |= (stats.ArmorPenetration != 0);
+			bResults |= (stats.ArmorPenetrationRating != 0);
             bResults |= (stats.ExpertiseRating != 0);
             bResults |= (stats.Expertise != 0);
             bResults |= (stats.HasteRating != 0);
