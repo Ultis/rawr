@@ -42,7 +42,7 @@ namespace Rawr.Rogue.ClassAbilities
         public static readonly Talents QuickRecovery = new TalentBonusPulledFromList(() => _talents.QuickRecovery, 0.4f, .8f);
         public static readonly Talents SealFate = new TalentBonusPulledFromList(() => _talents.SealFate, .2f, .4f, .6f, .8f, 1f);
         public static readonly Talents Murder = new TalentBonusPulledFromList(() => _talents.Murder, .2f, .4f);
-        public static readonly Talents DeadlyBrew = new TalentBonusPulledFromList(() => _talents.DeadlyBrew, 0, 0);
+        public static readonly Talents DeadlyBrew = new TalentBonusPulledFromList(() => _talents.DeadlyBrew, 0.5f, 1.0f);
 
         public static readonly Talents FocusedAttacks = new TalentBonusPulledFromList(() => _talents.FocusedAttacks, .66f, 1.32f, 2f);//energy per rank (e.g. .33*2, .66*2, 1*2)
 
@@ -100,7 +100,7 @@ namespace Rawr.Rogue.ClassAbilities
             }
         }
 
-        public static readonly Talents SwordSpecialization = new TalentBonusPulledFromList(() => _talents.SwordSpecialization, 0.01f, 0.02f, 0.03f, 0.04f, 0.05f);
+        public static readonly Talents HackAndSlash = new TalentBonusPulledFromList(() => _talents.HackAndSlash, 0.01f, 0.02f, 0.03f, 0.04f, 0.05f);
         public static readonly Talents WeaponExpertise = new TalentBonusPulledFromList(() => _talents.WeaponExpertise, 5, 10);
         public static readonly Talents BladeTwisting = new TalentBonusPulledFromList(() => _talents.BladeTwisting, 0.05f, 0.1f);
         public static readonly Talents Vitality = new TalentBonusPulledFromList(() => _talents.Vitality, .8f, 1.6f, 2.5f);
@@ -126,7 +126,7 @@ namespace Rawr.Rogue.ClassAbilities
             public static readonly Talents Damage = new TalentBonusPulledFromList(() => _talents.SavageCombat, .02f, .04f);
         }
 
-        public static readonly Talents PreyOnTheWeak = new TalentBonusPulledFromList(() => _talents.PreyOnTheWeak, .2f, .4f, .6f, .8f, 1f);
+        public static readonly Talents PreyOnTheWeak = new TalentBonusPulledFromList(() => _talents.PreyOnTheWeak, 0.04f, 0.08f, 0.12f, 0.16f, 0.20f);
 
         //NEED  Killing Spree (might be another CPG class, but generates 0 CPs).
 
@@ -143,8 +143,12 @@ namespace Rawr.Rogue.ClassAbilities
             public static readonly Talents Rupture = new TalentBonusPulledFromList(() => _talents.SerratedBlades, 0.1f, 0.2f, 0.3f);  //NEEDS UPDATING:  Armor Pen bonus is 0 on Rawr and the website
         }
 
-        public static readonly Talents DirtyDeeds = new TalentBonusPulledFromList(() => _talents.DirtyDeeds, 0.035f, 0.07f);
-        //public static readonly Talents Deadliness = new TalentBonusPulledFromList(() => _talents.Deadliness, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
+        public class DirtyDeeds {
+            public static readonly Talents EnergyCost = new TalentBonusPulledFromList(() => _talents.DirtyDeeds, 0.1f, 0.2f);
+            public static readonly Talents DamageSpecialAbilities = new TalentBonusPulledFromList(() => _talents.DirtyDeeds, 0.1f, 0.2f);
+        }
+ 
+        public static readonly Talents Deadliness = new TalentBonusPulledFromList(() => _talents.Deadliness, 0.02f, 0.04f, 0.06f, 0.08f, 0.10f);
 
         //NEED Premeditation
         public class SinisterCalling

@@ -46,6 +46,7 @@ namespace Rawr.DPSWarr {
             CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
             CB_Duration.Value = (decimal)calcOpts.Duration;
             RB_StanceArms.Checked    = !calcOpts.FuryStance;
+            CK_PTRMode.Checked       = calcOpts.PTRMode;
             // Rotational Changes
             CK_InBack.Checked        = calcOpts.InBack;            CB_InBackPerc.Value         = calcOpts.InBackPerc;
             CK_MultiTargs.Checked    = calcOpts.MultipleTargets;   CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;CB_MultiTargsMax.Value     = (int)calcOpts.MultipleTargetsMax;
@@ -66,7 +67,13 @@ namespace Rawr.DPSWarr {
             Character.OnCalculationsInvalidated();
         }
         // Basics
-        private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
+        private void CK_PTRMode_CheckedChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.PTRMode = CK_PTRMode.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e)
+        {
             int targetArmor = int.Parse(CB_TargArmor.Text);
             //LB_TargArmorDesc.Text = armorBosses[targetArmor];
 
@@ -840,6 +847,7 @@ namespace Rawr.DPSWarr {
         public float Duration = 300f;
         public bool FuryStance = true;
         public bool AllowFlooring = false;
+        public bool PTRMode = false;
         // Rotational Changes
         public bool InBack             = true ; public int InBackPerc           = 75;
         public bool MultipleTargets    = true; public int MultipleTargetsPerc  = 25;public float MultipleTargetsMax = 3;

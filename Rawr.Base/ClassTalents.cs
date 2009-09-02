@@ -1102,7 +1102,7 @@ namespace Rawr
         public int EnlightenedJudgements { get { return _data[24]; } set { _data[24] = value; } }
 
         [TalentData(25, "Beacon of Light", 1, 0, 2, 11, -1, new string[] {
-@"The target becomes a Beacon of Light to all targets within a 40 yard radius.  Any heals you cast on those targets will also heal the Beacon for 100% of the amount healed.  Only one target can be the Beacon of Light at a time. Lasts 1 min.",}, "ability_paladin_beaconoflight")]
+@"The target becomes a Beacon of Light to all targets within a 60 yard radius.  Any heals you cast on those targets will also heal the Beacon for 100% of the amount healed.  Only one target can be the Beacon of Light at a time. Lasts 1 min.",}, "ability_paladin_beaconoflight")]
         public int BeaconOfLight { get { return _data[25]; } set { _data[25] = value; } }
 
         [TalentData(26, "Divinity", 5, 1, 2, 1, -1, new string[] {
@@ -1175,7 +1175,7 @@ namespace Rawr
         public int ImprovedDevotionAura { get { return _data[36]; } set { _data[36] = value; } }
 
         [TalentData(37, "Blessing of Sanctuary", 1, 1, 2, 5, -1, new string[] {
-@"Places a Blessing on the friendly target, reducing damage taken from all sources by 3% for 10 min.  In addition, when the target blocks, parries, or dodges a melee attack the target will gain 2% of maximum displayed mana.  Players may only have one Blessing on them per Paladin at any one time.",}, "spell_nature_lightningshield")]
+@"Places a Blessing on the friendly target, reducing damage taken from all sources by 3% for 10 min and increasing stamina by 10%. In addition, when the target blocks, parries, or dodges a melee attack the target will gain 2% of maximum displayed mana. Players may only have one Blessing on them per Paladin at any one time.",}, "spell_nature_lightningshield")]
         public int BlessingOfSanctuary { get { return _data[37]; } set { _data[37] = value; } }
 
         [TalentData(38, "Reckoning", 5, 1, 3, 5, -1, new string[] {
@@ -1207,9 +1207,9 @@ namespace Rawr
         public int HolyShield { get { return _data[42]; } set { _data[42] = value; } }
 
         [TalentData(43, "Ardent Defender", 3, 1, 3, 7, -1, new string[] {
-@"When you have less than 35% health, all damage taken is reduced by 10%.",
-@"When you have less than 35% health, all damage taken is reduced by 20%.",
-@"When you have less than 35% health, all damage taken is reduced by 30%.",}, "spell_holy_ardentdefender")]
+@"Damage that takes you below 35% health is reduced by 10%. In addition, attacks which would otherwise kill you cause you to be healed by up to 10% of your maximum health (amount healed based on defense). This healing effect cannot occur more often than once every 2 min.",
+@"Damage that takes you below 35% health is reduced by 20%. In addition, attacks which would otherwise kill you cause you to be healed by up to 20% of your maximum health (amount healed based on defense). This healing effect cannot occur more often than once every 2 min.",
+@"Damage that takes you below 35% health is reduced by 30%. In addition, attacks which would otherwise kill you cause you to be healed by up to 30% of your maximum health (amount healed based on defense). This healing effect cannot occur more often than once every 2 min.",}, "spell_holy_ardentdefender")]
         public int ArdentDefender { get { return _data[43]; } set { _data[43] = value; } }
 
         [TalentData(44, "Redoubt", 3, 1, 1, 8, -1, new string[] {
@@ -1287,8 +1287,8 @@ namespace Rawr
         public int ImprovedBlessingOfMight { get { return _data[56]; } set { _data[56] = value; } }
 
         [TalentData(57, "Vindication", 2, 2, 1, 3, -1, new string[] {
-@"Gives the Paladin's damaging attacks a chance to reduce the target's attributes by 10% for 15 sec.",
-@"Gives the Paladin's damaging attacks a chance to reduce the target's attributes by 20% for 15 sec.",}, "spell_holy_vindication")]
+@"Gives the Paladin's damaging attacks a chance to reduce the target's attack power by 23 for 10 sec.",
+@"Gives the Paladin's damaging attacks a chance to reduce the target's attack power by 46 for 10 sec.",}, "spell_holy_vindication")]
         public int Vindication { get { return _data[57]; } set { _data[57] = value; } }
 
         [TalentData(58, "Conviction", 5, 2, 2, 3, -1, new string[] {
@@ -1300,7 +1300,7 @@ namespace Rawr
         public int Conviction { get { return _data[58]; } set { _data[58] = value; } }
 
         [TalentData(59, "Seal of Command", 1, 2, 3, 3, -1, new string[] {
-@"Gives the Paladin a chance to deal 153 to 230 additional Holy damage.  Only one Seal can be active on the Paladin at any one time.  Lasts 30 min.<br/><br/>Unleashing this Seal's energy will judge an enemy, instantly causing 305 to 346 Holy damage.  This attack will always be a critical strike if the target is stunned or incapacitated.",}, "ability_warrior_innerrage")]
+@"All melee attacks deal 3 to 4 additional Holy damage. Lasts 30 min.<br/><br/>Unleashing this Seal's energy will judge an enemy, instantly causing 305 to 346 Holy damage.",}, "ability_warrior_innerrage")]
         public int SealOfCommand { get { return _data[59]; } set { _data[59] = value; } }
 
         [TalentData(60, "Pursuit of Justice", 2, 2, 4, 3, -1, new string[] {
@@ -1309,8 +1309,8 @@ namespace Rawr
         public int PursuitOfJustice { get { return _data[60]; } set { _data[60] = value; } }
 
         [TalentData(61, "Eye for an Eye", 2, 2, 1, 4, -1, new string[] {
-@"All criticals against you cause 10% of the damage taken to the attacker as well.  The damage caused by Eye for an Eye will not exceed 50% of the Paladin's total health.",
-@"All criticals against you cause 20% of the damage taken to the attacker as well.  The damage caused by Eye for an Eye will not exceed 50% of the Paladin's total health.",}, "spell_holy_eyeforaneye")]
+@"All criticals against you cause 5% of the damage taken to the attacker as well. The damage caused by Eye for an Eye will not exceed 50% of the Paladin's total health.",
+@"All criticals against you cause 10% of the damage taken to the attacker as well. The damage caused by Eye for an Eye will not exceed 50% of the Paladin's total health.",}, "spell_holy_eyeforaneye")]
         public int EyeForAnEye { get { return _data[61]; } set { _data[61] = value; } }
 
         [TalentData(62, "Sanctity of Battle", 3, 2, 3, 4, -1, new string[] {
@@ -1356,9 +1356,9 @@ namespace Rawr
         public int Repentance { get { return _data[69]; } set { _data[69] = value; } }
 
         [TalentData(70, "Judgements of the Wise", 3, 2, 3, 7, -1, new string[] {
-@"Your Judgement spells have a 33% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 0.25% of their maximum mana per second for 15 sec, and to immediately grant you 25% of your base mana.",
-@"Your Judgement spells have a 66% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 0.25% of their maximum mana per second for 15 sec, and to immediately grant you 25% of your base mana.",
-@"Your Judgement spells have a 100% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 0.25% of their maximum mana per second for 15 sec, and to immediately grant you 25% of your base mana.",}, "ability_paladin_judgementofthewise")]
+@"Your damaging Judgement spells have a 33% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 5 sec for 15 sec, and to immediately grant you 25% of your base mana.",
+@"Your damaging Judgement spells have a 66% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 5 sec for 15 sec, and to immediately grant you 25% of your base mana.",
+@"Your damaging Judgement spells have a 100% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 5 sec for 15 sec, and to immediately grant you 25% of your base mana.",}, "ability_paladin_judgementofthewise")]
         public int JudgementsOfTheWise { get { return _data[70]; } set { _data[70] = value; } }
 
         [TalentData(71, "Fanaticism", 3, 2, 2, 8, 69, new string[] {
@@ -1395,7 +1395,7 @@ namespace Rawr
         public int RighteousVengeance { get { return _data[76]; } set { _data[76] = value; } }
 
         [TalentData(77, "Divine Storm", 1, 2, 2, 11, -1, new string[] {
-@"An instant weapon attack that causes 110% of weapon damage to up to 4 enemies within 0 yards.  The Divine Storm heals up to 3 party or raid members totaling 25% of the damage caused.",}, "ability_paladin_divinestorm")]
+@"An instant weapon attack that causes 110% of weapon damage to up to 4 enemies within 8 yards.  The Divine Storm heals up to 3 party or raid members totaling 25% of the damage caused.",}, "ability_paladin_divinestorm")]
         public int DivineStorm { get { return _data[77]; } set { _data[77] = value; } }
     }
 
@@ -2087,7 +2087,7 @@ namespace Rawr
         public int DeadlyBrew { get { return _data[17]; } set { _data[17] = value; } }
 
         [TalentData(18, "Overkill", 1, 0, 2, 7, -1, new string[] {
-@"Abilities used while stealthed and for 6 seconds after breaking stealth cost 10 less energy.",}, "ability_hunter_rapidkilling")]
+@"While stealthed, and for 20 seconds after breaking stealth, you regenerate 30% additional energy.",}, "ability_hunter_rapidkilling")]
         public int Overkill { get { return _data[18]; } set { _data[18] = value; } }
 
         [TalentData(19, "Deadened Nerves", 3, 0, 3, 7, -1, new string[] {
@@ -2226,15 +2226,19 @@ namespace Rawr
         [TalentData(41, "Blade Flurry", 1, 1, 2, 5, -1, new string[] {
 @"Increases your attack speed by 20%.  In addition, attacks strike an additional nearby opponent.  Lasts 15 sec.",}, "ability_warrior_punishingblow")]
         public int BladeFlurry { get { return _data[41]; } set { _data[41] = value; } }
-
-        [TalentData(42, "Sword Specialization", 5, 1, 3, 5, -1, new string[] {
-@"Gives you a 1% chance to get an extra attack on the same target after hitting your target with your Sword.",
-@"Gives you a 2% chance to get an extra attack on the same target after hitting your target with your Sword.",
-@"Gives you a 3% chance to get an extra attack on the same target after hitting your target with your Sword.",
-@"Gives you a 4% chance to get an extra attack on the same target after hitting your target with your Sword.",
-@"Gives you a 5% chance to get an extra attack on the same target after hitting your target with your Sword.",}, "inv_sword_27")]
-        public int SwordSpecialization { get { return _data[42]; } set { _data[42] = value; } }
-
+        /// <summary>
+        /// Gives you a [Pts]% chance to get an extra attack on the same target after hitting your target with your Sword or Axe.
+        /// </summary>
+        [TalentData(42, "Hack and Slash", 5, 1, 3, 5, -1, new string[] {
+@"Gives you a 1% chance to get an extra attack on the same target after hitting your target with your Sword or Axe.",
+@"Gives you a 2% chance to get an extra attack on the same target after hitting your target with your Sword or Axe.",
+@"Gives you a 3% chance to get an extra attack on the same target after hitting your target with your Sword or Axe.",
+@"Gives you a 4% chance to get an extra attack on the same target after hitting your target with your Sword or Axe.",
+@"Gives you a 5% chance to get an extra attack on the same target after hitting your target with your Sword or Axe.",}, "inv_sword_27")]
+        public int HackAndSlash { get { return _data[42]; } set { _data[42] = value; } }
+        /// <summary>
+        /// Increases your expertise by 10.
+        /// </summary>
         [TalentData(43, "Weapon Expertise", 2, 1, 2, 6, 41, new string[] {
 @"Increases your expertise by 5.",
 @"Increases your expertise by 10.",}, "spell_holy_blessingofstrength")]
@@ -2451,7 +2455,7 @@ namespace Rawr
         public int SlaughterFromTheShadows { get { return _data[81]; } set { _data[81] = value; } }
 
         [TalentData(82, "Shadow Dance", 1, 2, 2, 11, -1, new string[] {
-@"Enter the Shadow Dance, allowing the use of Sap, Garrote, Ambush, Cheap Shot, Premeditation, Pickpocket and Disarm Trap regardless of being stealthed.",}, "ability_rogue_shadowdance")]
+@"Enter the Shadow Dance for 6 sec, allowing the use of Sap, Garrote, Ambush, Cheap Shot, Premeditation, Pickpocket and Disarm Trap regardless of being stealthed.",}, "ability_rogue_shadowdance")]
         public int ShadowDance { get { return _data[82]; } set { _data[82] = value; } }
     }
 
@@ -4665,7 +4669,7 @@ namespace Rawr
         public int UnstableAffliction { get { return _data[24]; } set { _data[24] = value; } }
 
         [TalentData(25, "Pandemic", 1, 0, 3, 9, 24, new string[] {
-@"Grants the periodic damage from your Corruption and Unstable Affliction spells the ability to critically hit for 100% increased damage.",}, "spell_shadow_unstableaffliction_2")]
+@"Grants the periodic damage from your Corruption and Unstable Affliction spells the ability to critically hit for 100% increased damage, and increases the critical strike damage bonus of your Haunt spell by 100%.",}, "spell_shadow_unstableaffliction_2")]
         public int Pandemic { get { return _data[25]; } set { _data[25] = value; } }
 
         [TalentData(26, "Everlasting Affliction", 5, 0, 2, 10, -1, new string[] {
@@ -4698,8 +4702,8 @@ namespace Rawr
         public int DemonicEmbrace { get { return _data[30]; } set { _data[30] = value; } }
 
         [TalentData(31, "Fel Synergy", 2, 1, 4, 1, -1, new string[] {
-@"You have a 50% chance to heal your pet for 50% of the amount of spell damage done by you.",
-@"You have a 100% chance to heal your pet for 30% of the amount of spell damage done by you.",}, "spell_shadow_felmending")]
+@"You have a 50% chance to heal your pet for 15% of the amount of spell damage done by you.",
+@"You have a 100% chance to heal your pet for 15% of the amount of spell damage done by you.",}, "spell_shadow_felmending")]
         public int FelSynergy { get { return _data[31]; } set { _data[31] = value; } }
 
         [TalentData(32, "Improved Health Funnel", 2, 1, 1, 2, -1, new string[] {
@@ -4800,7 +4804,7 @@ namespace Rawr
         public int DemonicTactics { get { return _data[48]; } set { _data[48] = value; } }
 
         [TalentData(49, "Decimation", 2, 1, 3, 8, -1, new string[] {
-@"When you Shadowbolt or Incinerate a target that is at or below 35% health, the cast time of your next Soulfire is reduced by 35%. Soulfires cast under the effect of Decimation cost no shard. Lasts 10 sec.",
+@"When you Shadowbolt or Incinerate a target that is at or below 35% health, the cast time of your next Soulfire is reduced by 30%. Soulfires cast under the effect of Decimation cost no shard. Lasts 10 sec.",
 @"When you Shadowbolt or Incinerate a target that is at or below 35% health, the cast time of your next Soulfire is reduced by 60%. Soulfires cast under the effect of Decimation cost no shard. Lasts 10 sec.",}, "spell_fire_fireball02")]
         public int Decimation { get { return _data[49]; } set { _data[49] = value; } }
 

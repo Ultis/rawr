@@ -110,10 +110,10 @@ namespace Rawr.Rogue {
         public float ProbOhWhiteHit { get { return 1f - WhiteMissChance - OhDodgeChance - ProbGlancingHit - ProbOhCrit; } }
         public float BaseEnergyRegen {
             get {
-                var energyRegen = 10f;
+                float energyRegen = 10f;
                 energyRegen += Talents.Vitality.Bonus;
                 energyRegen += Talents.AdrenalineRush.Energy.Bonus;
-                energyRegen += Talents.HungerForBlood.EnergyPerSecond.Bonus;
+                //energyRegen += Talents.HungerForBlood.EnergyPerSecond.Bonus;
                 energyRegen -= Talents.BladeFlurry.EnergyCost.Bonus;
                 energyRegen -= _calcOpts.Feint.EnergyCost();
                 return energyRegen;

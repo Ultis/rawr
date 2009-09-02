@@ -16,7 +16,7 @@ namespace Rawr.DPSWarr {
         public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
         public float Duration = 300f;
         public bool FuryStance = true;
-		public bool _3pt2Mode = false;
+		public bool PTRMode = false;
 		public bool AllowFlooring = true;
         // Rotational Changes
         public bool InBack           = true ; public int InBackPerc           = 100;

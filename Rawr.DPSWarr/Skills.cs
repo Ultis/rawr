@@ -1247,7 +1247,8 @@ namespace Rawr.DPSWarr {
                 if (combatFactors._c_mhItemType != ItemType.TwoHandSword && combatFactors._c_mhItemType != ItemType.OneHandSword) { return 0.0f; }
 
                 // This attack doesnt consume GCDs and doesn't affect the swing timer
-                float rawActs = (((GCDsUsedToHit * MHAtkTable.AnyLand) + WhiteAttacksThatLand) * 0.01f * Talents.SwordSpecialization);
+                float rawActs = (((GCDsUsedToHit * MHAtkTable.AnyLand) + WhiteAttacksThatLand)
+                    * (CalcOpts.PTRMode ? 0.02f : 0.01f) * Talents.SwordSpecialization);
 
                 // There is an internal cd of 6 seconds so AttacksThatCouldLandPerSec is capped by once every 6 sec.
                 float capActs = base.ActivatesOverride;

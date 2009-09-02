@@ -771,7 +771,7 @@ namespace Rawr.DPSWarr {
             _SS_Acts = 0f;
             int loopCounter = 0;
             while (
-                    loopCounter < 100 &&
+                    loopCounter < 500 &&
                     ((float)Math.Abs(_OP_GCDs - oldOPGCDs) > 0.1f ||
                      (float)Math.Abs(_SD_GCDs - oldSDGCDs) > 0.1f ||
                      (float)Math.Abs(_SL_GCDs - oldSLGCDs) > 0.1f ||

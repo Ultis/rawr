@@ -58,7 +58,7 @@ namespace Rawr.Rogue.FinishingMoves
             var actualDuration = Math.Min(duration, cycleTime.Duration);
 
             var finisherDmg = baseDamagePerSecond * actualDuration;
-            finisherDmg *= Talents.Add(Talents.SerratedBlades.Rupture, Talents.BloodSpatter, Talents.FindWeakness, Talents.Murder, Talents.DirtyDeeds, Talents.HungerForBlood.Damage).Multiplier;
+            finisherDmg *= Talents.Add(Talents.SerratedBlades.Rupture, Talents.BloodSpatter, Talents.FindWeakness, Talents.Murder, Talents.DirtyDeeds.DamageSpecialAbilities, Talents.HungerForBlood.Damage).Multiplier;
             finisherDmg *= ( 1f + stats.BonusBleedDamageMultiplier );
             finisherDmg *= ( 1f - combatFactors.YellowMissChance );
             finisherDmg *= combatFactors.Tier7TwoPieceRuptureBonusDamage;

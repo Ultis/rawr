@@ -125,6 +125,7 @@
             this.Page_02_Maintenance = new System.Windows.Forms.TabPage();
             this.CK_Flooring = new System.Windows.Forms.CheckBox();
             this.CTL_Maints = new System.Windows.Forms.TreeView();
+            this.CK_PTRMode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_React)).BeginInit();
@@ -789,11 +790,23 @@
             this.CTL_Maints.TabIndex = 1;
             this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);
             // 
+            // CK_PTRMode
+            // 
+            this.CK_PTRMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CK_PTRMode.AutoSize = true;
+            this.CK_PTRMode.Location = new System.Drawing.Point(216, 4);
+            this.CK_PTRMode.Name = "CK_PTRMode";
+            this.CK_PTRMode.Size = new System.Drawing.Size(78, 17);
+            this.CK_PTRMode.TabIndex = 3;
+            this.CK_PTRMode.Text = "PTR Mode";
+            this.CK_PTRMode.CheckedChanged += new System.EventHandler(this.CK_PTRMode_CheckedChanged);
+            // 
             // CalculationOptionsPanelDPSWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.CK_PTRMode);
             this.Controls.Add(this.Tabs);
             this.Controls.Add(this.RB_StanceFury);
             this.Controls.Add(this.RB_StanceArms);
@@ -870,5 +883,6 @@
         private System.Windows.Forms.NumericUpDown CB_StunningTargsPerc;
         private System.Windows.Forms.NumericUpDown CB_MultiTargsMax;
         private System.Windows.Forms.Label LB_Max;
+        private System.Windows.Forms.CheckBox CK_PTRMode;
     }
 }
