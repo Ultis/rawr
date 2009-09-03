@@ -426,7 +426,7 @@ namespace Rawr.DPSWarr {
                 get
                 {
                     float extraTargetsHit = (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
-                    return 1f + extraTargetsHit * CalcOpts.MultipleTargetsPerc;
+                    return 1f + extraTargetsHit * CalcOpts.MultipleTargetsPerc/100f;
                 }
             }
             public float Targets { get { return TARGETS; } set { TARGETS = value; } }
@@ -1242,7 +1242,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 MaxRange = WW.MaxRange; // In Yards
-                Targets = 4f; // Handled in WW
+                Targets = WW.Targets; // Handled in WW
                 Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
                 RageCost = 25f - (Talents.FocusedRage * 1f);
                 CastTime = 6f; // In Seconds // Channeled
