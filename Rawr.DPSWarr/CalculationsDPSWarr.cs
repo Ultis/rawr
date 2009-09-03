@@ -653,6 +653,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                             // handle boss level difference
                             + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
             };
+            SpecialEffect rampage = new SpecialEffect(Trigger.PhysicalCrit, new Stats() { PhysicalCrit = 0.05f,},10,0);
             Stats statsTalents = new Stats() {
                 //Parry = talents.Deflection * 1.0f,
                 PhysicalCrit = talents.Cruelty * 0.01f,
@@ -684,6 +685,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 PhysicalHaste = talents.BloodFrenzy * 0.05f,
                 PhysicalHit = talents.Precision * 0.01f,
             };
+            if (talents.Rampage > 0) { statsTalents.AddSpecialEffect(rampage); }
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
             Stats statsProcs = new Stats();
