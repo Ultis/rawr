@@ -638,7 +638,7 @@ namespace Rawr.DPSDK
                         float FSCrit = 1f + (Math.Min((combatTable.physCrits + addedCritFromKM + stats.BonusFrostStrikeCrit), 1f) * FSCritDmgMult);
                         dpsFrostStrike *= FSCrit;
                         float dpsFrostStrikeOH = FSDmgOH / FSCD;
-                        dpsFrostStrikeOH *= 1f + ((combatTable.physCrits + stats.BonusFrostStrikeCrit) * FSCritDmgMult); // OH FS hits don't get KM
+                        dpsFrostStrikeOH *= FSCrit;
                         dpsFrostStrike += dpsFrostStrikeOH;
                         dpsFrostStrike *= 1f + (1f / 3f * 0.01f /*0.0333333333333333f*/) * talents.BloodOfTheNorth;
                     }
@@ -1180,54 +1180,6 @@ namespace Rawr.DPSDK
 
         private Stats GetRaceStats(Character character) {
             return BaseStats.GetBaseStats(character.Level, CharacterClass.DeathKnight, character.Race);
-            /*Stats statsRace;
-            switch (character.Race) {
-                case CharacterRace.Human:
-                    statsRace = new Stats() { Strength = 108f, Agility = 73f, Stamina = 99f, Intellect = 29f, Spirit = 46f, Armor = 146f, Health = 2169f };
-                    break;
-                case CharacterRace.Dwarf:
-                    statsRace = new Stats() { Strength = 110f, Agility = 69f, Stamina = 102f, Intellect = 28f, Spirit = 41f, Armor = 138f, Health = 2199f };
-                    break;
-                case CharacterRace.NightElf:
-                    statsRace = new Stats() { Strength = 105f, Agility = 78f, Stamina = 98f, Intellect = 29f, Spirit = 42f, Armor = 156f, Health = 2159f };
-                    break;
-                case CharacterRace.Gnome:
-                    statsRace = new Stats() { Strength = 103f, Agility = 76f, Stamina = 98f, Intellect = 33f, Spirit = 42f, Armor = 152f, Health = 2159f };
-                    break;
-                case CharacterRace.Draenei:
-                    statsRace = new Stats() { Strength = 109f, Agility = 70f, Stamina = 98f, Intellect = 30f, Spirit = 44f, Armor = 140f, Health = 2159f };
-                    break;
-                case CharacterRace.Orc:
-                    statsRace = new Stats() { Strength = 111f, Agility = 70f, Stamina = 101f, Intellect = 26f, Spirit = 45f, Armor = 140f, Health = 2189f };
-                    break;
-                case CharacterRace.Troll:
-                    statsRace = new Stats() { Strength = 109f, Agility = 75f, Stamina = 100f, Intellect = 25f, Spirit = 43f, Armor = 150f, Health = 2179f };
-                    break;
-                case CharacterRace.Undead:
-                    statsRace = new Stats() { Strength = 107f, Agility = 71f, Stamina = 100f, Intellect = 27f, Spirit = 47f, Armor = 142f, Health = 2179f };
-                    break;
-                case CharacterRace.BloodElf:
-                    statsRace = new Stats() { Strength = 105f, Agility = 75f, Stamina = 97f, Intellect = 33f, Spirit = 41f, Armor = 150f, Health = 2149f };
-                    break;
-                case CharacterRace.Tauren:
-                    statsRace = new Stats() { Strength = 113f, Agility = 68f, Stamina = 101f, Intellect = 24f, Spirit = 34f, Armor = 136f, Health = 2298f };
-                    break;
-
-                default:
-                    statsRace = new Stats();
-                    break;
-            }
-            // Derived stats base amount, common to all races
-            statsRace.Strength += 67f;
-            statsRace.Agility += 39f;
-            statsRace.Stamina += 61f;
-            statsRace.Intellect += 6f;
-            statsRace.Spirit += 17f;
-            // armor doesn't matter, its always 2x agility + items, then modifiers
-            statsRace.Health += 8328f;
-            statsRace.AttackPower = 202f + (67f * 2);
-
-            return statsRace;*/
         }
 
         /// <summary>
@@ -1336,6 +1288,7 @@ namespace Rawr.DPSDK
             return (statsTotal);
         }
 
+        #region custom charts
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
@@ -1471,7 +1424,8 @@ namespace Rawr.DPSDK
                     return new ComparisonCalculationBase[0];
             }
         }
-
+        #endregion
+        
         public override bool IsItemRelevant(Item item)
         {
             if (item.Slot == ItemSlot.OffHand /*  ||
@@ -1504,7 +1458,7 @@ namespace Rawr.DPSDK
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
-
+                
                 SpellHit = stats.SpellHit,
                 SpellCrit = stats.SpellCrit,
                 SpellHaste = stats.SpellHaste,
@@ -1616,7 +1570,7 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.RuneStrikeHit ||
                         effect.Trigger == Trigger.Use)
                     {
-                        return true;
+                        return relevantStats(effect.Stats);
                     }
                 }
             }
@@ -1624,7 +1578,7 @@ namespace Rawr.DPSDK
         }
         private bool relevantStats(Stats stats)
         {
-            return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.AttackPower +
+            return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.AttackPower + stats.Bloodlust +
                 stats.HitRating + stats.CritRating + stats.ArmorPenetrationRating + stats.ArmorPenetration +
                 stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
