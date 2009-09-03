@@ -392,6 +392,7 @@ namespace Rawr.DPSWarr {
             private bool REQMELEERRANGE;
             private bool REQMULTITARGS;
             private float TARGETS;
+            private float AVGTARGETS;
             private float MAXRANGE; // In Yards 
             private float CD; // In Seconds
             private float DURATION; // In Seconds
@@ -420,7 +421,15 @@ namespace Rawr.DPSWarr {
             public bool ReqMeleeWeap { get { return REQMELEEWEAP; } set { REQMELEEWEAP = value; } }
             public bool ReqMeleeRange { get { return REQMELEERRANGE; } set { REQMELEERRANGE = value; } }
             public bool ReqMultiTargs { get { return REQMULTITARGS; } set { REQMULTITARGS = value; } }
-            public float Targets { get { return (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS); } set { TARGETS = value; } }
+            public float AvgTargets
+            {
+                get
+                {
+                    float extraTargetsHit = (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
+                    return 1f + extraTargetsHit * CalcOpts.MultipleTargetsPerc;
+                }
+            }
+            public float Targets { get { return TARGETS; } set { TARGETS = value; } }
             public bool CanBeDodged { get { return CANBEDODGED; } set { CANBEDODGED = value; } }
             public bool CanBeParried { get { return CANBEPARRIED; } set { CANBEPARRIED = value; } }
             public bool CanBeBlocked { get { return CANBEBLOCKED; } set { CANBEBLOCKED = value; } }
@@ -545,8 +554,8 @@ namespace Rawr.DPSWarr {
             }
             public virtual float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
             public virtual float HPS { get { return AvgHealingOnUse / FightDuration; } }
-            public virtual float Damage { get { return !Validated ? 0f : (float)Math.Max(0f, DamageBase * DamageBonus * Targets); } }
-            public virtual float DamageOverride { get { return (float)Math.Max(0f, DamageBase * DamageBonus * Targets); } }
+            public virtual float Damage { get { return !Validated ? 0f : (float)Math.Max(0f, DamageBase * DamageBonus * AvgTargets); } }
+            public virtual float DamageOverride { get { return (float)Math.Max(0f, DamageBase * DamageBonus * AvgTargets); } }
             public virtual float DamageOnUse {
                 get {
                     float dmg = Damage; // Base Damage
@@ -713,7 +722,7 @@ namespace Rawr.DPSWarr {
                 MaxRange = 8f; // In Yards
                 Cd = 10f - (Talents.GlyphOfWhirlwind ? 2f : 0f); // In Seconds
                 Targets += StatS.BonusTargets;
-                Targets *= 1f + (CalcOpts.MultipleTargets ? 3f * (CalcOpts.MultipleTargetsPerc / 100f) : 0f);
+                Targets += (CalcOpts.MultipleTargets ? 3f : 0f);
                 RageCost = 25f - (Talents.FocusedRage * 1f);
                 StanceOkFury = true;
                 DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
@@ -790,7 +799,7 @@ namespace Rawr.DPSWarr {
 
                     // ==== RESULT ====
                     float Damage = DamageMH + DamageOH;
-                    return (float)Math.Max(0f, Damage * Targets);
+                    return (float)Math.Max(0f, Damage * AvgTargets);
                 }
             }
             public float DamageOnUseOverride {
@@ -841,7 +850,7 @@ namespace Rawr.DPSWarr {
 
                     // ==== RESULT ====
                     float Damage = DamageMH + DamageOH;
-                    return (float)Math.Max(0f, Damage * Targets);
+                    return (float)Math.Max(0f, Damage * AvgTargets);
                 }
             }
         }
@@ -1233,7 +1242,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 MaxRange = WW.MaxRange; // In Yards
-                Targets = WW.Targets; // Handled in WW
+                Targets = 4f; // Handled in WW
                 Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
                 RageCost = 25f - (Talents.FocusedRage * 1f);
                 CastTime = 6f; // In Seconds // Channeled
@@ -1329,7 +1338,7 @@ namespace Rawr.DPSWarr {
 
                 float Damage = 1456f + StatS.AttackPower * 0.2f + executeRage * 38f;
 
-                return (float)Math.Max(0f,Damage * Targets);
+                return (float)Math.Max(0f,Damage * AvgTargets);
             }
         }
         public class Slam : Ability {
@@ -2060,7 +2069,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 Targets += StatS.BonusTargets;
-                Targets *= 1f + (CalcOpts.MultipleTargets ? (CalcOpts.MultipleTargetsMax-1f) * (CalcOpts.MultipleTargetsPerc / 100f) : 0f);
+                Targets += (CalcOpts.MultipleTargets ? (CalcOpts.MultipleTargetsMax-1f) : 0f);
                 MaxRange = 5f + (Talents.GlyphOfThunderClap ? 2f : 0f); // In Yards 
                 Cd = 6f; // In Seconds
                 Duration = 30f; // In Seconds

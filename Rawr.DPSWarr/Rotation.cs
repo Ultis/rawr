@@ -185,26 +185,42 @@ namespace Rawr.DPSWarr {
             bool clok = CalcOpts.MultipleTargets
                      && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
-            WhiteAtks.Ovd_Freq = 0f;
-            float RageForCL = clok ? (!hsok ? freeRage : freeRage * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
-            float RageForHS = hsok ? freeRage - RageForCL : 0f;
-            float numHSPerSec = RageForHS / HS.FullRageCost;
-            float numCLPerSec = RageForCL / CL.FullRageCost;
-            HS.OverridesPerSec = numHSPerSec;
-            CL.OverridesPerSec = numCLPerSec;
-            WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
-            WhiteAtks.Ovd_Freq += numCLPerSec / WhiteAtks.MhEffectiveSpeed;
+            float hsPercOvd, clPercOvd; // what percentage of overrides are cleave and hs
+            hsPercOvd = (hsok?1f:0f);
+            if (CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_])
+                hsPercOvd -= CalcOpts.MultipleTargetsPerc / 100f;
+            clPercOvd = (clok ? 1f-hsPercOvd : 0f);
+
+            float hsRageUsed = freeRage * hsPercOvd;
+            float clRageUsed = freeRage * clPercOvd;
+            
+            HS.OverridesPerSec = hsRageUsed / HS.FullRageCost;
+            CL.OverridesPerSec = clRageUsed / CL.FullRageCost;
+            WhiteAtks.Ovd_Freq = (CL.OverridesPerSec + HS.OverridesPerSec) / WhiteAtks.MhEffectiveSpeed;
+
             float oldHSActivates = 0f, newHSActivates = HS.Activates;
             float oldCLActivates = 0f, newCLActivates = CL.Activates;
             BS.maintainActs = MaintainCDs;
-            int loopIterator = 0;
-            while (CalcOpts.FuryStance
+            for (int loopIterator = 0; 
+                 CalcOpts.FuryStance
                     && loopIterator < 50
-                    && Math.Abs(newHSActivates - oldHSActivates) > 0.01f
-                    && Math.Abs(newCLActivates - oldCLActivates) > 0.01f)
+                    &&    (Math.Abs(newHSActivates - oldHSActivates) > 0.01f
+                        || Math.Abs(newCLActivates - oldCLActivates) > 0.01f);
+                  loopIterator++)
             {
                 oldHSActivates = HS.Activates;
                 oldCLActivates = CL.Activates;
+
+                BS.hsActivates = oldHSActivates; // bloodsurge only cares about HSes, not Cleaves
+                _bloodsurgeRPS = HS.bloodsurgeRPS = CL.bloodsurgeRPS = BS.RageUsePerSecond;
+                hsRageUsed = freeRage * hsPercOvd;
+                clRageUsed = freeRage * clPercOvd;
+                HS.OverridesPerSec = hsRageUsed / HS.FullRageCost;
+                CL.OverridesPerSec = clRageUsed / CL.FullRageCost;
+                newHSActivates = HS.Activates;
+                newCLActivates = CL.Activates;
+                WhiteAtks.Ovd_Freq = (HS.OverridesPerSec + CL.OverridesPerSec) / WhiteAtks.MhEffectiveSpeed;
+                /*
 
                 numHSPerSec = RageForHS / HS.FullRageCost;
                 HS.OverridesPerSec = numHSPerSec;
@@ -223,15 +239,14 @@ namespace Rawr.DPSWarr {
                 HS.OverridesPerSec = freeRage / HS.FullRageCost;
                 CL.OverridesPerSec = freeRage / CL.FullRageCost;
                 newHSActivates = HS.Activates;
-                newCLActivates = CL.Activates;
-                loopIterator++;
+                newCLActivates = CL.Activates;*/
             }
             BS.hsActivates  = newHSActivates;
             BS.hsActivates += newCLActivates;
             if (CalcOpts.FuryStance) {
                 _OVD_DPS  = HS.DPS;
                 _OVD_DPS += CL.DPS;
-                _OVD_PerHit = HS.DamageOnUse;
+                _OVD_PerHit = (HS.DamageOnUse * hsPercOvd + CL.DamageOnUse * clPercOvd);
                 //_OVD_PerHit = CL.DamageOnUse; // this isn't gonna work
             }
         }
@@ -909,6 +924,13 @@ namespace Rawr.DPSWarr {
                 availRage += RageGenWhite;
                 // Assign Rage to each ability
                 WhiteAtks.Ovd_Freq = 0f;
+                
+                float hsPercOvd, clPercOvd; // what percentage of overrides are cleave and hs
+                hsPercOvd = (hsok ? 1f : 0f);
+                if (CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_])
+                    hsPercOvd -= CalcOpts.MultipleTargetsPerc / 100f;
+                clPercOvd = (clok ? 1f - hsPercOvd : 0f);
+                
                 float RageForCL     = clok ? (!hsok ? availRage : availRage * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
                 float RageForHS     = hsok ? availRage - RageForCL : 0f;
                 float numHSPerSec   = RageForHS / HS.FullRageCost;
@@ -921,7 +943,7 @@ namespace Rawr.DPSWarr {
                 float oldCLActivates = 0f, newCLActivates = CL.Activates;
                 while (/*loopCounter < 50
                         &&*/ Math.Abs(newHSActivates - oldHSActivates) > 0.01f
-                        && Math.Abs(newCLActivates - oldCLActivates) > 0.01f)
+                        || Math.Abs(newCLActivates - oldCLActivates) > 0.01f)
                 {
                     oldHSActivates = HS.Activates;
                     oldCLActivates = CL.Activates;
@@ -946,11 +968,11 @@ namespace Rawr.DPSWarr {
                 }
                 // Add HS dps
                 _OVD_DPS = HS.DPS;
-                _OVD_PerHit = HS.DamageOnUse;
+                _OVD_PerHit = HS.DamageOnUse * hsPercOvd;
                 DPS_TTL += _OVD_DPS;
                 // Add CL dps
                 _OVD_DPS = CL.DPS;
-                _OVD_PerHit += CL.DamageOnUse;
+                _OVD_PerHit += CL.DamageOnUse * clPercOvd;
                 DPS_TTL += _OVD_DPS;
                 // White
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
