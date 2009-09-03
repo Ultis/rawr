@@ -236,7 +236,7 @@ namespace Rawr.ProtPaladin {
             //    case (AttackType.DOT):
             //        critMultiplier = 0.0f;
             //}
-            baseDamage *= (critMultiplier * AttackTable.Critical);
+				baseDamage += baseDamage * critMultiplier * AttackTable.Critical;
             }
             //else
             //    baseDamage *= 1.0f;
