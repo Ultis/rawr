@@ -892,9 +892,9 @@ namespace Rawr.DPSWarr {
         public bool PTRMode = false;
         public float SurvScale = 1.0f;
         // Rotational Changes
-        public bool InBack             = true; public int InBackPerc           =  75;
-        public bool MultipleTargets    = true; public int MultipleTargetsPerc  =  25; public float MultipleTargetsMax = 3;
-        public bool StunningTargets    = true; public int StunningTargetsFreq  = 120; public float StunningTargetsDur = 5000;
+        public bool InBack             = true ; public int InBackPerc           =  100;
+        public bool MultipleTargets    = false; public int MultipleTargetsPerc  =  25; public float MultipleTargetsMax = 3;
+        public bool StunningTargets    = false; public int StunningTargetsFreq  = 120; public float StunningTargetsDur = 5000;
             // nonfunctional
             public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
             public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;

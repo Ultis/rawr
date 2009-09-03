@@ -235,12 +235,29 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
-            //Hide the ranged weapon enchants. None of them apply to melee damage at all.
-            if (character != null && (character.WarriorTalents != null && enchant != null)) {
-                return enchant.Slot == ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant,character,slot) || (character.WarriorTalents.TitansGrip == 1 && enchant.Slot == ItemSlot.TwoHand && slot == ItemSlot.OffHand);
+            // Hide the ranged weapon enchants. None of them apply to melee damage at all.
+            if (enchant.Slot == ItemSlot.Ranged) { return false; }
+            // Disallow Shield enchants, all shield enchants are ItemSlot.OffHand and nothing else is according to Astry
+            if (enchant.Slot == ItemSlot.OffHand) { return false; }
+            // Allow offhand Enchants for two-handers if toon has Titan's Grip
+            // If not, turn off all enchants for the offhand
+            if (character != null
+                && character.WarriorTalents.TitansGrip > 0
+                && enchant.Slot == ItemSlot.TwoHand
+                && slot == ItemSlot.OffHand)
+            {
+                    return true;
+            }else if (character != null
+                && character.WarriorTalents.TitansGrip == 0
+                && (enchant.Slot == ItemSlot.TwoHand || enchant.Slot == ItemSlot.OneHand)
+                && slot == ItemSlot.OffHand)
+            {
+                return false;
             }
-            return enchant.Slot == ItemSlot.Ranged ? false : enchant.FitsInSlot(slot);
+            // If all the above is ok, return base version
+            return enchant.FitsInSlot(slot);
         }
+
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
             // We need specilized handling due to Titan's Grip
             if (item == null || character == null) {
@@ -415,6 +432,123 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 }
             }
             return relevant;
+        }
+
+        public Stats GetBuffsStats(Character character) {
+            CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
+
+            // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
+            // Also removes their equivalent of Blessing of Might (+Improved)
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
+                float hasRelevantBuff = character.WarriorTalents.BoomingVoice +
+                                        character.WarriorTalents.CommandingPresence;
+                Buff a = Buff.GetBuffByName("Commanding Presence (Attack Power)");
+                Buff b = Buff.GetBuffByName("Battle Shout");
+                Buff c = Buff.GetBuffByName("Improved Blessing of Might");
+                Buff d = Buff.GetBuffByName("Blessing of Might");
+                if(hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); }
+                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); }
+                }
+            }
+
+            // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
+            // Also removes their equivalent of Blood Pact (+Improved Imp)
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_]) {
+                float hasRelevantBuff = character.WarriorTalents.BoomingVoice +
+                                        character.WarriorTalents.CommandingPresence;
+                Buff a = Buff.GetBuffByName("Commanding Presence (Health)");
+                Buff b = Buff.GetBuffByName("Commanding Shout");
+                Buff c = Buff.GetBuffByName("Improved Imp");
+                Buff d = Buff.GetBuffByName("Blood Pact");
+                if(hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); }
+                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); }
+                }
+            }
+
+            // Removes the Trauma Buff and it's equivalent Mangle if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            {
+                float hasRelevantBuff = character.WarriorTalents.Trauma;
+                Buff a = Buff.GetBuffByName("Trauma");
+                Buff b = Buff.GetBuffByName("Mangle");
+                if(hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                }
+            }
+
+            // Removes the Blood Frenzy Buff and it's equivalent of Savage Combat if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            {
+                float hasRelevantBuff = character.WarriorTalents.BloodFrenzy;
+                Buff a = Buff.GetBuffByName("Blood Frenzy");
+                Buff b = Buff.GetBuffByName("Savage Combat");
+                if (hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                }
+            }
+
+            // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if(calcOpts.FuryStance){
+                float hasRelevantBuff = character.WarriorTalents.Rampage;
+                Buff a = Buff.GetBuffByName("Rampage");
+                Buff b = Buff.GetBuffByName("Leader of the Pack");
+                if (hasRelevantBuff == 1) {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                }
+            }
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            return statsBuffs;
+        }
+        public override void SetDefaults(Character character) {
+            //CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
+            //WarriorTalents  talents = character.WarriorTalents;
+
+            //if (calcOpts == null) { calcOpts = new CalculationOptionsDPSWarr(); }
+            //calcOpts.FuryStance = talents.TitansGrip == 1; // automatically set arms stance if you don't have TG talent by default
+            //bool doit = false;
+            //bool removeother = false;
+            
+            // == SUNDER ARMOR ==
+            // The benefits from both Sunder Armor, Acid Spit and Expose Armor are identical
+            // But the other buffs don't stay up like Sunder
+            // If we are maintaining Sunder Armor ourselves, then we should reap the benefits
+            /*doit = calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_] && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor"));
+            removeother = doit;
+            if (removeother) {
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit"))) {
+                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Acid Spit"));
+                }
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor"))) {
+                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Expose Armor"));
+                }
+            }
+            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor")); }*/
+        }
+
+        public override bool IncludeOffHandInCalculations(Character character) {
+            if (character.OffHand == null) { return false; }
+            if (character.CurrentTalents is WarriorTalents) {
+                WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
+                if (talents.TitansGrip > 0) {
+                    return true;
+                } else {// if (character.MainHand.Slot != ItemSlot.TwoHand)
+                    return base.IncludeOffHandInCalculations(character);
+                }
+            }
+            return false;
         }
 
         #endregion
@@ -765,123 +899,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 default:
                     return new ComparisonCalculationBase[0];
             }
-        }
-
-        public override bool IncludeOffHandInCalculations(Character character) {
-            if (character.OffHand == null) { return false; }
-            if (character.CurrentTalents is WarriorTalents) {
-                WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
-                if (talents.TitansGrip > 0) {
-                    return true;
-                } else {// if (character.MainHand.Slot != ItemSlot.TwoHand)
-                    return base.IncludeOffHandInCalculations(character);
-                }
-            }
-            return false;
-        }
-
-        public Stats GetBuffsStats(Character character) {
-            CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
-
-            // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
-            // Also removes their equivalent of Blessing of Might (+Improved)
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
-                float hasRelevantBuff = character.WarriorTalents.BoomingVoice +
-                                        character.WarriorTalents.CommandingPresence;
-                Buff a = Buff.GetBuffByName("Commanding Presence (Attack Power)");
-                Buff b = Buff.GetBuffByName("Battle Shout");
-                Buff c = Buff.GetBuffByName("Improved Blessing of Might");
-                Buff d = Buff.GetBuffByName("Blessing of Might");
-                if(hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); }
-                }
-            }
-
-            // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
-            // Also removes their equivalent of Blood Pact (+Improved Imp)
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_]) {
-                float hasRelevantBuff = character.WarriorTalents.BoomingVoice +
-                                        character.WarriorTalents.CommandingPresence;
-                Buff a = Buff.GetBuffByName("Commanding Presence (Health)");
-                Buff b = Buff.GetBuffByName("Commanding Shout");
-                Buff c = Buff.GetBuffByName("Improved Imp");
-                Buff d = Buff.GetBuffByName("Blood Pact");
-                if(hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); }
-                }
-            }
-
-            // Removes the Trauma Buff and it's equivalent Mangle if you are maintaining it yourself
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            {
-                float hasRelevantBuff = character.WarriorTalents.Trauma;
-                Buff a = Buff.GetBuffByName("Trauma");
-                Buff b = Buff.GetBuffByName("Mangle");
-                if(hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
-                }
-            }
-
-            // Removes the Blood Frenzy Buff and it's equivalent of Savage Combat if you are maintaining it yourself
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            {
-                float hasRelevantBuff = character.WarriorTalents.BloodFrenzy;
-                Buff a = Buff.GetBuffByName("Blood Frenzy");
-                Buff b = Buff.GetBuffByName("Savage Combat");
-                if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
-                }
-            }
-
-            // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if(calcOpts.FuryStance){
-                float hasRelevantBuff = character.WarriorTalents.Rampage;
-                Buff a = Buff.GetBuffByName("Rampage");
-                Buff b = Buff.GetBuffByName("Leader of the Pack");
-                if (hasRelevantBuff == 1) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
-                }
-            }
-
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            return statsBuffs;
-        }
-        public override void SetDefaults(Character character) {
-            //CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
-            //WarriorTalents  talents = character.WarriorTalents;
-
-            //if (calcOpts == null) { calcOpts = new CalculationOptionsDPSWarr(); }
-            //calcOpts.FuryStance = talents.TitansGrip == 1; // automatically set arms stance if you don't have TG talent by default
-            //bool doit = false;
-            //bool removeother = false;
-            
-            // == SUNDER ARMOR ==
-            // The benefits from both Sunder Armor, Acid Spit and Expose Armor are identical
-            // But the other buffs don't stay up like Sunder
-            // If we are maintaining Sunder Armor ourselves, then we should reap the benefits
-            /*doit = calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_] && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor"));
-            removeother = doit;
-            if (removeother) {
-                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit"))) {
-                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Acid Spit"));
-                }
-                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor"))) {
-                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Expose Armor"));
-                }
-            }
-            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor")); }*/
         }
     }
 }
