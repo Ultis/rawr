@@ -372,9 +372,8 @@ namespace Rawr.DPSWarr {
                 DamageBase = 0f;
                 DamageBonus = 1f;
                 HealingBase = 0f;
-                HealingBonus = 0f;
+                HealingBonus = 1f;
                 BonusCritChance = 0.00f;
-                // Initialize();
             }
             #region Variables
             private string NAME;
@@ -544,6 +543,8 @@ namespace Rawr.DPSWarr {
                     return (float)Math.Max(0f, hp);
                 }
             }
+            public virtual float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
+            public virtual float HPS { get { return AvgHealingOnUse / FightDuration; } }
             public virtual float Damage { get { return !Validated ? 0f : (float)Math.Max(0f, DamageBase * DamageBonus * Targets); } }
             public virtual float DamageOverride { get { return (float)Math.Max(0f, DamageBase * DamageBonus * Targets); } }
             public virtual float DamageOnUse {
@@ -577,13 +578,11 @@ namespace Rawr.DPSWarr {
             #endregion
             #region Functions
             protected void InitializeA() {
-                Talents = /*Char == null || Char.WarriorTalents == null ? new WarriorTalents() : */Char.WarriorTalents;
-                //combatFactors = new CombatFactors(Char, StatS);
-                CalcOpts = /*Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() :*/ Char.CalculationOptions as CalculationOptionsDPSWarr;
-                //Whiteattacks = new WhiteAttacks(Char, StatS, combatFactors);
+                Talents = Char.WarriorTalents;
+                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
             }
             protected void InitializeB() {
-                MHAtkTable = new AttackTable(Char, StatS, combatFactors, this, true);
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, this, true );
                 OHAtkTable = new AttackTable(Char, StatS, combatFactors, this, false);
             }
             public virtual float GetRageUsePerSecond(float acts) {
@@ -598,6 +597,15 @@ namespace Rawr.DPSWarr {
             public virtual float GetDPS(float acts) {
                 if (!Validated) { return 0f; }
                 float adou = GetAvgDamageOnUse(acts);
+                return adou / FightDuration;
+            }
+            public virtual float GetAvgHealingOnUse(float acts) {
+                if (!Validated) { return 0f; }
+                return HealingOnUse * acts;
+            }
+            public virtual float GetHPS(float acts) {
+                if (!Validated) { return 0f; }
+                float adou = GetAvgHealingOnUse(acts);
                 return adou / FightDuration;
             }
             public virtual float ContainCritValue(bool IsMH) {
@@ -681,12 +689,10 @@ namespace Rawr.DPSWarr {
                 DamageBase = StatS.AttackPower * 50f / 100f;
                 DamageBonus = 1f + Talents.UnendingFury * 0.02f;
                 BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease;
+                HealingBase = StatS.Health / 100.0f * 3f * (Talents.GlyphOfBloodthirst ? 2f : 1f);
+                //HealingBonus = 1f;
                 //
                 InitializeB();
-            }
-            public override float GetHealing() {
-                // ToDo: Bloodthirst healing effect, also adding in GlyphOfBloodthirst (+100% healing)
-                return StatS.Health / 100.0f * (Talents.GlyphOfBloodthirst?2f:1f);
             }
         }
         public class WhirlWind : Ability {
@@ -903,7 +909,7 @@ namespace Rawr.DPSWarr {
                     }
                     if (timeStamp % GCD == 0) {
                         if (WWtimer <= 0) {
-                            chanceWeDontProc *= (1f - procChance*chanceMHhit) * (1f - procChance*chanceOHhit);
+                            chanceWeDontProc *= (1f - procChance * chanceMHhit) * (1f - procChance*chanceOHhit);
                             WWtimer = 80;
                             numWW++;
                         } else if (BTtimer <= 0) {
@@ -1780,10 +1786,11 @@ namespace Rawr.DPSWarr {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Enraged Regeneration";
-                //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_;
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_;
                 Cd = 3f * 60f; // In Seconds
                 RageCost = 15f;
                 StanceOkArms = StanceOkDef = StanceOkFury = true;
+                HealingBase = StatS.Health * (0.30f + (Talents.GlyphOfEnragedRegeneration ? 0.10f : 0f));
                 //
                 InitializeB();
             }
@@ -2015,6 +2022,7 @@ namespace Rawr.DPSWarr {
                 RageCost = 10f * Talents.SecondWind;
                 StanceOkDef = StanceOkFury = StanceOkArms = true;
                 //Effect = new SpecialEffect(Trigger.Use, new Stats() { BonusRageGen = 10f * Talents.SecondWind, }, Duration, Cd);
+                HealingBase = StatS.Health * 0.05f * Talents.SecondWind;
                 //
                 InitializeB();
             }

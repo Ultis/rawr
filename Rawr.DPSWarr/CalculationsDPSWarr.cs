@@ -179,9 +179,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
 #if RAWR3
                     _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
                     _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255,255,0,0));
+                    _subPointNameColors.Add("Survivability", System.Windows.Media.Color.FromArgb(255, 64, 128, 32));
 #else
                     _subPointNameColors = new Dictionary<string, Color>();
                     _subPointNameColors.Add("DPS", Color.Red);
+                    _subPointNameColors.Add("Survivability", Color.Green);
 #endif
                 }
                 return _subPointNameColors;
@@ -477,15 +479,14 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if (calcOpts.FuryStance) {
                 calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Fury() + calculatedStats.Rot._DW_DPS;
                 calculatedStats.WhiteDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
-                //calculatedStats.TotalDPS += calculatedStats.WhiteDPS;
-                /*calculatedStats.TotalDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH
-                    + calculatedStats.BT.DPS + calculatedStats.WW.DPS + calculatedStats.BS.DPS
-                    + calculatedStats.DW.DPS + calculatedStats.HS.DPS;*/
             }else{
                 calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Arms() + calculatedStats.Rot._DW_DPS;
                 calculatedStats.WhiteDPS = Rot._WhiteDPS;
             }
-            calculatedStats.OverallPoints = calculatedStats.TotalDPS;
+            float Health2Surv = stats.Health / 100f;
+            calculatedStats.TotalHPS = Rot._HPS_TTL;
+            calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv) * calcOpts.SurvScale;
+            calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability;
 
             if (calcOpts.FuryStance) {
                 calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec;
@@ -623,15 +624,15 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
                 if (mhEffects.MoveNext()) {
                     bersMainHand = mhEffects.Current;
-                    statsProcs += bersMainHand.GetAverageStats(mhHitInterval, 1f, combatFactors.MH.Speed, fightDuration);
+                    statsProcs += bersMainHand.GetAverageStats(mhHitInterval, 1f, combatFactors.MHSpeed, fightDuration);
                 }
             }
-            if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789){
+            if (talents.TitansGrip > 0 && combatFactors.OH != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789){
                 Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
 
                 if (ohEffects.MoveNext()) {
                     bersOffHand = ohEffects.Current;
-                    statsProcs += bersOffHand.GetAverageStats(ohHitInterval, 1f, combatFactors.OH.Speed, fightDuration);
+                    statsProcs += bersOffHand.GetAverageStats(ohHitInterval, 1f, combatFactors.OHSpeed, fightDuration);
                 }
             }
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {

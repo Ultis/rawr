@@ -48,39 +48,41 @@
             System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Sweeping Strikes");
             System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Death Wish");
             System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Recklessness");
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Periodics", new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Enraged Regeneration");
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Periodics", new System.Windows.Forms.TreeNode[] {
             treeNode12,
             treeNode13,
             treeNode14,
-            treeNode15});
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("Whirlwind");
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Bloodthirst");
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Bloodsurge");
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Fury", new System.Windows.Forms.TreeNode[] {
-            treeNode17,
+            treeNode15,
+            treeNode16});
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Whirlwind");
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Bloodthirst");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Bloodsurge");
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Fury", new System.Windows.Forms.TreeNode[] {
             treeNode18,
-            treeNode19});
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Bladestorm");
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Mortal Strike");
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Rend");
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Overpower");
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Sudden Death");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Slam");
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Arms", new System.Windows.Forms.TreeNode[] {
-            treeNode21,
+            treeNode19,
+            treeNode20});
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Bladestorm");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Mortal Strike");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Rend");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Overpower");
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Sudden Death");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Slam");
+            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Arms", new System.Windows.Forms.TreeNode[] {
             treeNode22,
             treeNode23,
             treeNode24,
             treeNode25,
-            treeNode26});
-            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Damage Dealers", new System.Windows.Forms.TreeNode[] {
-            treeNode20,
+            treeNode26,
             treeNode27});
-            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Cleave");
-            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Heroic Strike");
-            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Rage Dumps", new System.Windows.Forms.TreeNode[] {
-            treeNode29,
-            treeNode30});
+            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Damage Dealers", new System.Windows.Forms.TreeNode[] {
+            treeNode21,
+            treeNode28});
+            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Cleave");
+            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Heroic Strike");
+            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Rage Dumps", new System.Windows.Forms.TreeNode[] {
+            treeNode30,
+            treeNode31});
             this.CB_TargLvl = new System.Windows.Forms.ComboBox();
             this.LB_TargLvl = new System.Windows.Forms.Label();
             this.LB_TargArmor = new System.Windows.Forms.Label();
@@ -105,6 +107,8 @@
             this.Tab_Version = new System.Windows.Forms.TabPage();
             this.RTB_Version = new System.Windows.Forms.RichTextBox();
             this.Page_03_FightInfo = new System.Windows.Forms.TabPage();
+            this.LB_SurvScale = new System.Windows.Forms.Label();
+            this.NUD_SurvScale = new System.Windows.Forms.NumericUpDown();
             this.LB_Stun0 = new System.Windows.Forms.Label();
             this.NUD_StunDur = new System.Windows.Forms.NumericUpDown();
             this.NUD_StunFreq = new System.Windows.Forms.NumericUpDown();
@@ -140,6 +144,7 @@
             this.Tab_FAQ.SuspendLayout();
             this.Tab_Version.SuspendLayout();
             this.Page_03_FightInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_SurvScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_StunDur)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_StunFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsMax)).BeginInit();
@@ -436,6 +441,8 @@
             // 
             // Page_03_FightInfo
             // 
+            this.Page_03_FightInfo.Controls.Add(this.LB_SurvScale);
+            this.Page_03_FightInfo.Controls.Add(this.NUD_SurvScale);
             this.Page_03_FightInfo.Controls.Add(this.LB_Stun0);
             this.Page_03_FightInfo.Controls.Add(this.NUD_StunDur);
             this.Page_03_FightInfo.Controls.Add(this.NUD_StunFreq);
@@ -473,6 +480,42 @@
             this.Page_03_FightInfo.TabIndex = 2;
             this.Page_03_FightInfo.Text = "Fight Info";
             this.Page_03_FightInfo.UseVisualStyleBackColor = true;
+            // 
+            // LB_SurvScale
+            // 
+            this.LB_SurvScale.AutoSize = true;
+            this.LB_SurvScale.Location = new System.Drawing.Point(6, 312);
+            this.LB_SurvScale.Name = "LB_SurvScale";
+            this.LB_SurvScale.Size = new System.Drawing.Size(96, 13);
+            this.LB_SurvScale.TabIndex = 33;
+            this.LB_SurvScale.Text = "Survivability Scale:";
+            // 
+            // NUD_SurvScale
+            // 
+            this.NUD_SurvScale.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.NUD_SurvScale.DecimalPlaces = 1;
+            this.NUD_SurvScale.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.NUD_SurvScale.Location = new System.Drawing.Point(137, 310);
+            this.NUD_SurvScale.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.NUD_SurvScale.Name = "NUD_SurvScale";
+            this.NUD_SurvScale.Size = new System.Drawing.Size(148, 20);
+            this.NUD_SurvScale.TabIndex = 32;
+            this.NUD_SurvScale.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NUD_SurvScale.ValueChanged += new System.EventHandler(this.NUD_SurvScale_ValueChanged);
             // 
             // LB_Stun0
             // 
@@ -809,44 +852,46 @@
             treeNode14.Text = "Death Wish";
             treeNode15.Name = "Node17";
             treeNode15.Text = "Recklessness";
-            treeNode16.Name = "Node2";
-            treeNode16.Text = "Periodics";
-            treeNode17.Name = "Node24";
-            treeNode17.Text = "Whirlwind";
-            treeNode18.Name = "Node25";
-            treeNode18.Text = "Bloodthirst";
-            treeNode19.Name = "Node26";
-            treeNode19.Text = "Bloodsurge";
-            treeNode20.Name = "Node30";
-            treeNode20.Text = "Fury";
-            treeNode21.Name = "Node18";
-            treeNode21.Text = "Bladestorm";
-            treeNode22.Name = "Node19";
-            treeNode22.Text = "Mortal Strike";
-            treeNode23.Name = "Node20";
-            treeNode23.Text = "Rend";
-            treeNode24.Name = "Node21";
-            treeNode24.Text = "Overpower";
-            treeNode25.Name = "Node22";
-            treeNode25.Text = "Sudden Death";
-            treeNode26.Name = "Node23";
-            treeNode26.Text = "Slam";
-            treeNode27.Name = "Node3";
-            treeNode27.Text = "Arms";
-            treeNode28.Name = "Node4";
-            treeNode28.Text = "Damage Dealers";
-            treeNode29.Name = "Node27";
-            treeNode29.Text = "Cleave";
-            treeNode30.Name = "Node28";
-            treeNode30.Text = "Heroic Strike";
-            treeNode31.Name = "Node5";
-            treeNode31.Text = "Rage Dumps";
+            treeNode16.Name = "Node0";
+            treeNode16.Text = "Enraged Regeneration";
+            treeNode17.Name = "Node2";
+            treeNode17.Text = "Periodics";
+            treeNode18.Name = "Node24";
+            treeNode18.Text = "Whirlwind";
+            treeNode19.Name = "Node25";
+            treeNode19.Text = "Bloodthirst";
+            treeNode20.Name = "Node26";
+            treeNode20.Text = "Bloodsurge";
+            treeNode21.Name = "Node30";
+            treeNode21.Text = "Fury";
+            treeNode22.Name = "Node18";
+            treeNode22.Text = "Bladestorm";
+            treeNode23.Name = "Node19";
+            treeNode23.Text = "Mortal Strike";
+            treeNode24.Name = "Node20";
+            treeNode24.Text = "Rend";
+            treeNode25.Name = "Node21";
+            treeNode25.Text = "Overpower";
+            treeNode26.Name = "Node22";
+            treeNode26.Text = "Sudden Death";
+            treeNode27.Name = "Node23";
+            treeNode27.Text = "Slam";
+            treeNode28.Name = "Node3";
+            treeNode28.Text = "Arms";
+            treeNode29.Name = "Node4";
+            treeNode29.Text = "Damage Dealers";
+            treeNode30.Name = "Node27";
+            treeNode30.Text = "Cleave";
+            treeNode31.Name = "Node28";
+            treeNode31.Text = "Heroic Strike";
+            treeNode32.Name = "Node5";
+            treeNode32.Text = "Rage Dumps";
             this.CTL_Maints.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode3,
             treeNode11,
-            treeNode16,
-            treeNode28,
-            treeNode31});
+            treeNode17,
+            treeNode29,
+            treeNode32});
             this.CTL_Maints.Size = new System.Drawing.Size(285, 521);
             this.CTL_Maints.TabIndex = 1;
             this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);
@@ -885,6 +930,7 @@
             this.Tab_Version.ResumeLayout(false);
             this.Page_03_FightInfo.ResumeLayout(false);
             this.Page_03_FightInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_SurvScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_StunDur)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_StunFreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsMax)).EndInit();
@@ -949,5 +995,7 @@
         private System.Windows.Forms.Label LB_Stun0;
         private System.Windows.Forms.NumericUpDown NUD_StunFreq;
         private System.Windows.Forms.Label LB_Stun1;
+        private System.Windows.Forms.NumericUpDown NUD_SurvScale;
+        private System.Windows.Forms.Label LB_SurvScale;
     }
 }

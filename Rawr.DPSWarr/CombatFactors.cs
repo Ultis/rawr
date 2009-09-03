@@ -6,7 +6,7 @@ namespace Rawr.DPSWarr {
             Char = character;
             StatS = stats;
             MH = Char == null || Char.MainHand == null ? new Knuckles() : Char.MainHand.Item;
-            OH = Char == null || Char.OffHand  == null ? null           : Char.OffHand.Item;
+            OH = Char == null || Char.OffHand  == null || Char.WarriorTalents.TitansGrip == 0 ? null : Char.OffHand.Item;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CalcOpts = Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() : Char.CalculationOptions as CalculationOptionsDPSWarr;
             
@@ -101,16 +101,16 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Weapon Damage
         public float NormalizedMhWeaponDmg { get { return CalcNormalizedWeaponDamage(MH); } }
-        public float NormalizedOhWeaponDmg { get { return CalcNormalizedWeaponDamage(OH); } }
+        public float NormalizedOhWeaponDmg { get { return OH == null || Talents.TitansGrip == 0 ? 0f : CalcNormalizedWeaponDamage(OH); } }
         private float CalcNormalizedWeaponDamage(Item weapon) {
             float baseDamage  = weapon.Speed * weapon.DPS;
                   baseDamage += StatS.AttackPower / 14f * 3.3f;
             return baseDamage;
         }
         public float AvgMhWeaponDmgUnhasted              { get { return (MH == null ? 0f : (StatS.AttackPower / 14f + MH.DPS) * MH.Speed); } }
-        public float AvgOhWeaponDmgUnhasted              { get { return (OH == null ? 0f : (StatS.AttackPower / 14f + OH.DPS) * OH.Speed * (0.5f + Talents.DualWieldSpecialization * 0.025f)); } }
+        public float AvgOhWeaponDmgUnhasted              { get { return (OH == null || Talents.TitansGrip == 0 ? 0f : (StatS.AttackPower / 14f + OH.DPS) * OH.Speed * (0.5f + Talents.DualWieldSpecialization * 0.025f)); } }
         public float AvgMhWeaponDmg(        float speed) {       return (MH == null ? 0f : (StatS.AttackPower / 14f + MH.DPS) * speed   ); }
-        public float AvgOhWeaponDmg(        float speed) {       return (OH == null ? 0f : (StatS.AttackPower / 14f + OH.DPS) * speed    * (0.5f + Talents.DualWieldSpecialization * 0.025f)); }
+        public float AvgOhWeaponDmg(        float speed) {       return (OH == null || Talents.TitansGrip == 0 ? 0f : (StatS.AttackPower / 14f + OH.DPS) * speed    * (0.5f + Talents.DualWieldSpecialization * 0.025f)); }
         #endregion
         #region Weapon Crit Damage
         public float BonusWhiteCritDmg {
@@ -148,7 +148,7 @@ namespace Rawr.DPSWarr {
             }
         }
         public float MHSpeed { get { return (MH == null ? 0f : MH.Speed / TotalHaste); } }
-        public float OHSpeed { get { return (OH == null ? 0f : OH.Speed / TotalHaste); } }
+        public float OHSpeed { get { return (OH == null || Talents.TitansGrip == 0 ? 0f : OH.Speed / TotalHaste); } }
         #endregion
         #endregion
         #region Attack Table
@@ -255,7 +255,7 @@ namespace Rawr.DPSWarr {
         }
         private float OhWhCritChance {
             get {
-                if (OH == null || OH.MaxDamage == 0f) { return 0f; }
+                if (OH == null || OH.MaxDamage == 0f || Talents.TitansGrip == 0) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
                 crit += (_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
                 return crit;
@@ -263,7 +263,7 @@ namespace Rawr.DPSWarr {
         }
         private float OhYwCritChance {
             get {
-                if (OH == null || OH.MaxDamage == 0f) { return 0f; }
+                if (OH == null || OH.MaxDamage == 0f || Talents.TitansGrip == 0) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
                 crit += (_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
                 crit *= (1f - _c_ymiss - _c_ohdodge);
@@ -274,14 +274,14 @@ namespace Rawr.DPSWarr {
         #region Chance of Hitting
         // White
         public float ProbMhWhiteHit   { get { return 1f - _c_wmiss - _c_mhdodge - _c_mhparry - _c_mhwcrit; } }
-        public float ProbOhWhiteHit   { get { return 1f - _c_wmiss - _c_ohdodge - _c_ohparry - _c_ohwcrit; } }
+        public float ProbOhWhiteHit   { get { return Talents.TitansGrip > 0 ? 1f - _c_wmiss - _c_ohdodge - _c_ohparry - _c_ohwcrit : 0; } }
         public float ProbMhWhiteLand  { get { return 1f - _c_wmiss - _c_mhdodge - _c_mhparry; } }
-        public float ProbOhWhiteLand  { get { return 1f - _c_wmiss - _c_ohdodge - _c_ohparry; } }
+        public float ProbOhWhiteLand  { get { return Talents.TitansGrip > 0 ? 1f - _c_wmiss - _c_ohdodge - _c_ohparry : 0; } }
         // Yellow (Doesn't Glance and has different MissChance Cap)
-        public float ProbMhYellowHit  { get { return 1f - _c_ymiss - _c_mhdodge - _c_mhparry - _c_mhblock - _c_mhycrit; } }
-        public float ProbOhYellowHit  { get { return 1f - _c_ymiss - _c_ohdodge - _c_ohparry - _c_ohblock - _c_ohycrit; } }
-        public float ProbMhYellowLand { get { return 1f - _c_ymiss - _c_mhdodge - _c_mhparry - _c_mhblock; } }
-        public float ProbOhYellowLand { get { return 1f - _c_ymiss - _c_ohdodge - _c_ohparry - _c_ohblock; } }
+        public float ProbMhYellowHit  { get { return                          1f - _c_ymiss - _c_mhdodge - _c_mhparry - _c_mhblock - _c_mhycrit; } }
+        public float ProbOhYellowHit  { get { return Talents.TitansGrip > 0 ? 1f - _c_ymiss - _c_ohdodge - _c_ohparry - _c_ohblock - _c_ohycrit : 0; } }
+        public float ProbMhYellowLand { get { return                          1f - _c_ymiss - _c_mhdodge - _c_mhparry - _c_mhblock; } }
+        public float ProbOhYellowLand { get { return Talents.TitansGrip > 0 ? 1f - _c_ymiss - _c_ohdodge - _c_ohparry - _c_ohblock : 0; } }
         #endregion
         #endregion
         #region Other

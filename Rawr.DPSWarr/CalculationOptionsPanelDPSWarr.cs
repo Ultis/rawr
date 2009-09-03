@@ -42,11 +42,12 @@ namespace Rawr.DPSWarr {
                 Character.CalculationOptions = new CalculationOptionsDPSWarr();
             }
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
-            CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
-            CB_Duration.Value = (decimal)calcOpts.Duration;
-            RB_StanceArms.Checked    = !calcOpts.FuryStance;
-            CK_PTRMode.Checked       = calcOpts.PTRMode;
+            CB_TargLvl.Text         = calcOpts.TargetLevel.ToString();
+            CB_TargArmor.Text       = calcOpts.TargetArmor.ToString();
+            CB_Duration.Value       = (decimal)calcOpts.Duration;
+            RB_StanceArms.Checked   = !calcOpts.FuryStance;
+            CK_PTRMode.Checked      =  calcOpts.PTRMode;
+            NUD_SurvScale.Value     = (decimal)calcOpts.SurvScale;
             // Rotational Changes
             CK_InBack.Checked               = calcOpts.InBack;
                 CB_InBackPerc.Value         = calcOpts.InBackPerc;
@@ -378,6 +379,7 @@ namespace Rawr.DPSWarr {
                     CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
                     CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
                     CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
+                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
                     CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
                     break;
                 }
@@ -388,7 +390,8 @@ namespace Rawr.DPSWarr {
                     }else{
                         if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
                             !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked
+                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
                             ) {
                             CTL_Maints.Nodes[currentNode].Checked = false;
                         }
@@ -402,7 +405,8 @@ namespace Rawr.DPSWarr {
                     }else{
                         if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
                             !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked
+                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
                             ) {
                             CTL_Maints.Nodes[currentNode].Checked = false;
                         }
@@ -416,7 +420,8 @@ namespace Rawr.DPSWarr {
                     }else{
                         if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
                             !CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked
+                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
                             ) {
                             CTL_Maints.Nodes[currentNode].Checked = false;
                         }
@@ -430,6 +435,22 @@ namespace Rawr.DPSWarr {
                     }else{
                         if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
                             !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
+                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked &&
+                            !CTL_Maints.Nodes[currentNode].Nodes[0].Checked
+                            ) {
+                            CTL_Maints.Nodes[currentNode].Checked = false;
+                        }
+                    }
+                    break;
+                }
+                case "Enraged Regeneration": {
+                    int currentNode = 2;
+                    if (CTL_Maints.Nodes[currentNode].Nodes[4].Checked) {
+                        CTL_Maints.Nodes[currentNode].Checked = true;
+                    }else{
+                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
+                            !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
+                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
                             !CTL_Maints.Nodes[currentNode].Nodes[0].Checked
                             ) {
                             CTL_Maints.Nodes[currentNode].Checked = false;
@@ -785,6 +806,7 @@ namespace Rawr.DPSWarr {
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_]  = CTL_Maints.Nodes[2].Nodes[1].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DeathWish_]        = CTL_Maints.Nodes[2].Nodes[2].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Recklessness_]     = CTL_Maints.Nodes[2].Nodes[3].Checked;
+            calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_]=CTL_Maints.Nodes[2].Nodes[4].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._DamageDealers__]  = CTL_Maints.Nodes[3].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Fury_]             = CTL_Maints.Nodes[3].Nodes[0].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_]        = CTL_Maints.Nodes[3].Nodes[0].Nodes[0].Checked;
@@ -805,7 +827,7 @@ namespace Rawr.DPSWarr {
             CTL_Maints.AfterCheck -= new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
             // Bounds Check
             if (calcOpts.Maintenance.GetUpperBound(0) != (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_) {
-                bool[] newArray = new bool[] {true, true, true, false, false, false, false, false, false, false, false, true,
+                bool[] newArray = new bool[] {true, true, true, false, false, false, false, false, false, false, false, false, true,
                                               true, true, true, true, true, true, true, true, true, true, true, true, true,
                                               true, true, true, true,  true, true };
                 calcOpts.Maintenance = newArray;
@@ -827,6 +849,7 @@ namespace Rawr.DPSWarr {
             CTL_Maints.Nodes[2].Nodes[1].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_];
             CTL_Maints.Nodes[2].Nodes[2].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DeathWish_];
             CTL_Maints.Nodes[2].Nodes[3].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Recklessness_];
+            CTL_Maints.Nodes[2].Nodes[4].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_];
             CTL_Maints.Nodes[3].Checked                     = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._DamageDealers__];
             CTL_Maints.Nodes[3].Nodes[0].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Fury_];
             CTL_Maints.Nodes[3].Nodes[0].Nodes[0].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_];
@@ -852,6 +875,12 @@ namespace Rawr.DPSWarr {
             calcOpts.React = (int)CB_React.Value;
             Character.OnCalculationsInvalidated();
         }
+
+        private void NUD_SurvScale_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.SurvScale = (float)NUD_SurvScale.Value;
+            Character.OnCalculationsInvalidated();
+        }
     }
     [Serializable]
     public class CalculationOptionsDPSWarr : ICalculationOptionBase {
@@ -861,6 +890,7 @@ namespace Rawr.DPSWarr {
         public bool FuryStance = true;
         public bool AllowFlooring = false;
         public bool PTRMode = false;
+        public float SurvScale = 1.0f;
         // Rotational Changes
         public bool InBack             = true; public int InBackPerc           =  75;
         public bool MultipleTargets    = true; public int MultipleTargetsPerc  =  25; public float MultipleTargetsMax = 3;
@@ -886,6 +916,7 @@ namespace Rawr.DPSWarr {
                 true,  // Sweeping Strikes
                 true,  // DeathWish
                 true,  // Recklessness
+                true,  // Enraged Regeneration
             true,  // == Damage Dealers ==
                 true,  // Fury
                     true,  // Whirlwind
@@ -905,7 +936,7 @@ namespace Rawr.DPSWarr {
         public enum Maintenances : int {
             _RageGen__ = 0,   BerserkerRage_,   Bloodrage_,
             _Maintenance__, ShoutChoice_, BattleShout_, CommandingShout_, DemoralizingShout_, SunderArmor_, ThunderClap_, Hamstring_,
-            _Periodics__,     ShatteringThrow_, SweepingStrikes_,   DeathWish_,   Recklessness_,
+            _Periodics__,     ShatteringThrow_, SweepingStrikes_,   DeathWish_,   Recklessness_, EnragedRegeneration_,
             _DamageDealers__, Fury_, Whirlwind_, Bloodthirst_, Bloodsurge_, Arms_, Bladestorm_, MortalStrike_, Rend_, Overpower_, SuddenDeath_, Slam_,
             _RageDumps__,     Cleave_,          HeroicStrike_
         };

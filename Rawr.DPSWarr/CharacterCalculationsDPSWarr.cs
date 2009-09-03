@@ -14,10 +14,11 @@ namespace Rawr.DPSWarr {
         #region Points
         private float _overallPoints = 0f;
         public override float OverallPoints { get { return _overallPoints; } set { _overallPoints = value; } }
-        private float[] _subPoints = new float[] { 0f };
+        private float[] _subPoints = new float[] { 0f, 0f };
         public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
         public float TotalDPS { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
-        public float TotalDPS2 { get; set; }
+        public float TotalHPS;
+        public float Survivability { get { return _subPoints[1]; } set { _subPoints[1] = value; } }
         #endregion
 
         #region display values
@@ -78,6 +79,7 @@ namespace Rawr.DPSWarr {
         public Skills.SunderArmor SN { get; set; }
         public Skills.ThunderClap TH { get; set; }
         public Skills.Hamstring HMS { get; set; }
+        public Skills.EnragedRegeneration ER { get; set; }
         // Periodics
         public Skills.ShatteringThrow ST { get; set; }
         public Skills.SweepingStrikes SW { get; set; }
@@ -168,14 +170,6 @@ namespace Rawr.DPSWarr {
             // old
             float HitPercent = StatConversion.GetHitFromRating(HitRating);
             float HitPercBonus = BasicStats.PhysicalHit;
-            //HitPercentTtl = HitPercent + HitPercBonus;
-            /*HitCanFree =
-                StatConversion.GetRatingFromHit(
-                    combatFactors.WhMissCap //StatConversion.WHITE_MISS_CHANCE_CAP
-                    - HitPercBonus
-                    - StatConversion.GetHitFromRating(HitRating)
-                )
-                * -1f;*/
             // Hit Soft Cap ratings check, how far from it
             float capA1         = StatConversion.WHITE_MISS_CHANCE_CAP[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level];
             float convcapA1     = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA1));
