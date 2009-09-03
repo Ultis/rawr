@@ -839,28 +839,70 @@ namespace Rawr.DPSWarr {
             DPS_TTL += _OP_DPS + _SD_DPS + _SL_DPS + _SS_DPS;
 
             // Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
-            // Alternate to Cleave is MultiTargs is active
+            // Alternate to Cleave is MultiTargs is active, but only to the perc of time where Targs is active
             // After iterating how many Overrides can be done and still do other abilities, then do the white dps
-            Skills.OnAttack Which = null;
-            bool ok = false;
-            if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]) { ok = true; Which = HS; }
-            if (CalcOpts.MultipleTargets) {
-                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_]) { ok = true; Which = CL; }
-            }
-
             WhiteAtks.Slam_Freq = _SL_GCDs;
-            if (ok) {
-                availRage += (FightDuration - timelostwhilestunned) / WhiteAtks.MhEffectiveSpeed * WhiteAtks.MHSwingRage / (FightDuration);
-                float numHSPerSec = availRage / Which.FullRageCost;
-                Which.OverridesPerSec = numHSPerSec;
-                WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
+            float oldDPS_White = WhiteAtks.MhDPS * (1f - (CalcOpts.StunningTargets ? percTimeInStun : 0f));
+            float origAvailRage = availRage;
+            loopCounter = 0;
+
+            bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            bool clok = CalcOpts.MultipleTargets
+                     && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+
+            if (hsok || clok) {
+                RageGenWhite = WhiteAtks.whiteRageGenPerSec * (1f - percTimeInStun);
+                availRage += RageGenWhite;
+                // Assign Rage to each ability
+                WhiteAtks.Ovd_Freq = 0f;
+                float RageForCL     = clok ? (!hsok ? availRage : availRage * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
+                float RageForHS     = hsok ? availRage - RageForCL : 0f;
+                float numHSPerSec   = RageForHS / HS.FullRageCost;
+                float numCLPerSec   = RageForCL / CL.FullRageCost;
+                HS.OverridesPerSec  = numHSPerSec;
+                CL.OverridesPerSec  = numCLPerSec;
+                WhiteAtks.Ovd_Freq  = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
+                WhiteAtks.Ovd_Freq += numCLPerSec / WhiteAtks.MhEffectiveSpeed;
+                float oldHSActivates = 0f, newHSActivates = HS.Activates;
+                float oldCLActivates = 0f, newCLActivates = CL.Activates;
+                while (/*loopCounter < 50
+                        &&*/ Math.Abs(newHSActivates - oldHSActivates) > 0.01f
+                        && Math.Abs(newCLActivates - oldCLActivates) > 0.01f)
+                {
+                    oldHSActivates = HS.Activates;
+                    oldCLActivates = CL.Activates;
+                    // Reset the rage
+                    availRage = origAvailRage;
+                    RageGenWhite = WhiteAtks.whiteRageGenPerSec * (1f - percTimeInStun);
+                    availRage += RageGenWhite;
+                    // Assign Rage to each ability
+                    RageForCL = clok ? (!hsok ? availRage : availRage * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
+                    RageForHS = hsok ? availRage - RageForCL : 0f;
+                    //
+                    numHSPerSec = RageForHS / HS.FullRageCost;
+                    HS.OverridesPerSec = numHSPerSec;
+                    WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
+                    numCLPerSec = RageForCL / CL.FullRageCost;
+                    CL.OverridesPerSec = numCLPerSec;
+                    WhiteAtks.Ovd_Freq += numCLPerSec / WhiteAtks.MhEffectiveSpeed;
+                    newHSActivates = HS.Activates;
+                    newCLActivates = CL.Activates;
+                    // Iterate
+                    loopCounter++;
+                }
+                // Add HS dps
+                _OVD_DPS = HS.DPS;
+                _OVD_PerHit = HS.DamageOnUse;
+                DPS_TTL += _OVD_DPS;
+                // Add CL dps
+                _OVD_DPS = CL.DPS;
+                _OVD_PerHit += CL.DamageOnUse;
+                DPS_TTL += _OVD_DPS;
+                // White
+                _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
                 _WhiteDPSMH = WhiteAtks.MhDPS * (1f - (CalcOpts.StunningTargets ? percTimeInStun : 0f)); // MhWhiteDPS with loss of time in stun
                 _WhiteDPS = _WhiteDPSMH;
-                _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
-                _OVD_DPS = Which.DPS;
-                _OVD_PerHit = Which.DamageOnUse;
                 DPS_TTL += _WhiteDPS;
-                DPS_TTL += _OVD_DPS;
             }else{
                 RageGenWhite = WHITEATTACKS.whiteRageGenPerSec;
                 availRage += RageGenWhite;

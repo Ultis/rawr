@@ -72,7 +72,7 @@ namespace Rawr.DPSWarr {
                 }
             }
             public float AvgMhDamageOnUse { get { return MhDamageOnUse * MhActivates; } }
-            public float MhActivates { get { return (float)Math.Max(0f, CalcOpts.Duration / MhEffectiveSpeed); } }
+            public float MhActivates { get { return (float)Math.Max(0f, CalcOpts.Duration / MhEffectiveSpeed * (1f - Ovd_Freq)); } }
             public float MhDPS { get { return AvgMhDamageOnUse / CalcOpts.Duration; } }
             // Off Hand
             public float OhEffectiveSpeed { get { return combatFactors.OHSpeed + SlamFreqSpdMod; } }
@@ -175,12 +175,37 @@ namespace Rawr.DPSWarr {
                     return rage;
                 }
             }
-            public float MHRageGenPerSec { get { return (combatFactors.MH != null && combatFactors.MH.MaxDamage > 0 ? MHSwingRage / MhEffectiveSpeed : 0f); } }
-            public float OHRageGenPerSec { get { return (combatFactors.OH != null && combatFactors.OH.MaxDamage > 0 ? OHSwingRage / OhEffectiveSpeed : 0f); } }
+            public float MHRageGenPerSec {
+                get {
+                    float result = 0f;
+                    if (combatFactors.MH != null && combatFactors.MH.MaxDamage > 0) {
+                        float FightDur = CalcOpts.Duration;
+                        float cd = MhEffectiveSpeed;
+                        float ragePer = MHSwingRage;
+                        float acts = FightDur / cd;
+                        float ovdMod = (1f - Ovd_Freq);
+                        result = (acts * ragePer) / FightDur * ovdMod;
+                    }
+                    return result;
+                }
+            }
+            public float OHRageGenPerSec {
+                get {
+                    float result = 0f;
+                    if (combatFactors.OH != null && combatFactors.OH.MaxDamage > 0) {
+                        float FightDur = CalcOpts.Duration;
+                        float cd = OhEffectiveSpeed;
+                        float ragePer = OHSwingRage;
+                        float acts = FightDur / cd;
+                        result = (acts * ragePer) / FightDur;
+                    }
+                    return result;
+                }
+            }
             // Rage generated per second
             public float MHRageRatio {
                 get {
-                    float realMHRage = MHRageGenPerSec * (1f - Ovd_Freq);
+                    float realMHRage = MHRageGenPerSec;
                     float realOverallRage = realMHRage + OHRageGenPerSec;
                     return realMHRage / realOverallRage;
                 }
@@ -1502,7 +1527,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 RageCost = 20f - (Talents.FocusedRage * 1f);
-                Targets += (CalcOpts.MultipleTargets ? 1f + (Talents.GlyphOfCleaving ? 1f : 0f) : 0f);
+                Targets += (CalcOpts.MultipleTargets ? 1f + (Talents.GlyphOfCleaving ? 1f /* * (CalcOpts.MultipleTargetsPerc / 100f)*/ : 0f) : 0f);
                 Targets += StatS.BonusTargets;
                 CastTime = 0f; // In Seconds // Replaces a white hit
                 StanceOkFury = StanceOkArms = StanceOkDef = true;

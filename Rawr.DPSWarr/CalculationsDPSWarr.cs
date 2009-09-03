@@ -493,7 +493,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.NeedyRage = Rot.RageNeededPerSec;
                 calculatedStats.FreeRage  = Rot.freeRage;
             }else{
-                calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec;
+                calculatedStats.WhiteRage = Rot.RageGenWhite;
                 calculatedStats.OtherRage = Rot.RageGenOther;
                 calculatedStats.NeedyRage = Rot.RageNeeded;
                 calculatedStats.FreeRage  = Rot.RageGenWhite + Rot.RageGenOther - Rot.RageNeeded;
