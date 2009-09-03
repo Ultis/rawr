@@ -85,8 +85,6 @@ namespace Rawr.DPSWarr {
         public Skills.SweepingStrikes SW { get; set; }
         public Skills.DeathWish Death { get; set; }
         public Skills.Recklessness RK { get; set; }
-        public Skills.Trinket1 Trinket1 { get; set; }
-        public Skills.Trinket2 Trinket2 { get; set; }
         // Fury
         public Skills.WhirlWind WW { get; set; }
         public Skills.BloodThirst BT { get; set; }

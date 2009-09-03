@@ -346,6 +346,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
                 ArcaneDamage = stats.ArcaneDamage,
+                HighestStat = stats.HighestStat,
+                Paragon = stats.Paragon,
                 // Normal Multipliers
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -409,6 +411,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.BonusPhysicalDamageMultiplier +
                 stats.DarkmoonCardDeathProc + 
                 stats.HighestStat +
+                stats.Paragon +
                 // Set Bonuses
                 stats.BonusWarrior_T7_4P_RageProc +
                 stats.BonusWarrior_T7_2P_SlamDamage +
@@ -847,6 +850,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier    ));
             statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
             statsProcs.Strength    += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
+            statsProcs.Strength    += (float)Math.Floor(statsProcs.Paragon     * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
             statsProcs.Agility      = (float)Math.Floor(statsProcs.Agility     * (1f + totalBAM)   * (1f + statsProcs.BonusAgilityMultiplier    ));
             statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina     * 10f);
             

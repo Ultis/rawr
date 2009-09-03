@@ -2002,7 +2002,7 @@ namespace Rawr.DPSWarr {
                     if (!Validated) { return new Stats(); }
                     Stats bonus = Effect.GetAverageStats(
                         0f,
-                        (1f - MHAtkTable.Miss - MHAtkTable.Dodge) // The additional hit also has the attack table to deal with
+                        (1f * MHAtkTable.AnyLand) // The additional hit also has the attack table to deal with
                         * (CalcOpts.MultipleTargetsPerc / 100f),                 // And we need to reduce the number of activates by the % of
                                                                                  // time where there are multiple mobs in the fight
                         Whiteattacks.MhEffectiveSpeed,
@@ -2346,54 +2346,6 @@ namespace Rawr.DPSWarr {
                 InitializeB();
             }
             public float StackCap;
-        }
-        public class Trinket1 : Ability {
-            public Trinket1(Character c, Stats s, CombatFactors  cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
-                //
-                Name = "Trinket 1";
-                bool check = Char.Trinket1 != null && Char.Trinket1.Item.Stats._rawSpecialEffectData != null;
-                Effect = check ? Char.Trinket1.Item.Stats._rawSpecialEffectData[0] : null;
-                Cd = check && Effect.Trigger == Trigger.Use ? Effect.Cooldown : -1f;
-                StanceOkFury = StanceOkArms = StanceOkDef = true;
-                //
-                InitializeB();
-            }
-            private SpecialEffect Effect { get; set; }
-            public override float Activates {
-                get {
-                    if (Char.Trinket1 == null || Effect == null) { return 0f; }
-                    //
-                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
-                    float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.GetLatency());
-                    float Every = LatentGCD / GCDPerc;
-                    return (float)Math.Max(0f, FightDuration / Every);
-                }
-            }
-        }
-        public class Trinket2 : Ability {
-            public Trinket2(Character c, Stats s, CombatFactors cf,WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
-                //
-                Name = "Trinket 2";
-                bool check = Char.Trinket2 != null && Char.Trinket2.Item.Stats._rawSpecialEffectData != null;
-                Effect = check ? Char.Trinket2.Item.Stats._rawSpecialEffectData[0] : null;
-                Cd = check && Effect.Trigger == Trigger.Use ? Effect.Cooldown : -1f;
-                StanceOkFury = StanceOkArms = StanceOkDef = true;
-                //
-                InitializeB();
-            }
-            private SpecialEffect Effect { get; set; }
-            public override float Activates {
-                get {
-                    if (Char.Trinket2 == null || Effect == null) { return 0f; }
-                    //
-                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
-                    float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.GetLatency());
-                    float Every = LatentGCD / GCDPerc;
-                    return (float)Math.Max(0f, FightDuration / Every);
-                }
-            }
         }
         #endregion
     }

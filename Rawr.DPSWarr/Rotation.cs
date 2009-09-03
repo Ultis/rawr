@@ -44,8 +44,6 @@ namespace Rawr.DPSWarr {
         public Skills.SweepingStrikes SW;
         public Skills.DeathWish Death;
         public Skills.Recklessness RK;
-        public Skills.Trinket1 Trinket1;
-        public Skills.Trinket2 Trinket2;
         // Fury
         public Skills.WhirlWind WW;
         public Skills.BloodThirst BT;
@@ -112,8 +110,6 @@ namespace Rawr.DPSWarr {
             calcs.SW = SW;
             calcs.Death = Death;
             calcs.RK = RK;
-            calcs.Trinket1 = Trinket1;
-            calcs.Trinket2 = Trinket2;
             // Fury
             calcs.WW = WW;
             calcs.BT = BT;
@@ -157,8 +153,6 @@ namespace Rawr.DPSWarr {
             SW = new Skills.SweepingStrikes(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             Death = new Skills.DeathWish(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             RK = new Skills.Recklessness(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            Trinket1 = new Skills.Trinket1(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            Trinket2 = new Skills.Trinket2(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             // Fury
             WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             BT = new Skills.BloodThirst(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
@@ -346,8 +340,6 @@ namespace Rawr.DPSWarr {
                     Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
 
                     float UsedGCDs = BZ.Activates
-                                   + Trinket1.Activates
-                                   + Trinket2.Activates
                                    + BTS.Activates
                                    + DS.Activates
                                    + SN.Activates
