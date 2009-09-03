@@ -36,21 +36,21 @@ namespace Rawr.ProtPaladin {
                     // Glancing blow reduction
                     DamageMultiplier *= (1.0f + Stats.BonusPhysicalDamageMultiplier);
                     DamageMultiplier *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Glance));
-                    critMultiplier = 2.0f;
+                    critMultiplier = 1.0f;
                     DamageMultiplier *= (1.0f - ArmorReduction);
                     break;               
                 case Ability.ShieldOfRighteousness:
                     
                     baseDamage = (Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + 1f / 3f * Stats.JudgementBlockValue) + 520f;
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
-                    critMultiplier = 2.0f;
+                    critMultiplier = 1.0f;
                     break;
                 case Ability.HammerOfTheRighteous:
                     if (Talents.HammerOfTheRighteous > 0 && Character.MainHand != null)
                     {
                         baseDamage = (AP / 14 + (Character.MainHand.MinDamage + Character.MainHand.MaxDamage) / 2 / Character.MainHand.Speed) * 4f;
                         DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + Stats.BonusHammerOfTheRighteousMultiplier);
-                        critMultiplier = 2.0f;
+                        critMultiplier = 1.0f;
                     }
                     break;
                 // Seal of Vengeance is the tiny damage that applies on each swing; Holy Vengeance is the DoT
@@ -59,14 +59,14 @@ namespace Rawr.ProtPaladin {
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false) * 0.33f;
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure) *
                         (1f + Stats.BonusSealOfVengeanceDamageMultiplier);
-                    critMultiplier = 2.0f;
+                    critMultiplier = 1.0f;
                     break;
                 // Judgement of Vengeance assumes 5 stacks of Holy Vengeance
                 case Ability.JudgementOfVengeance:
                     baseDamage = (0.22f * SP + 0.14f * AP) * (1.0f + 0.5f);
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
                     if (Talents.GlyphOfJudgement) { DamageMultiplier *= (1.0f + 0.10f); }                    
-                    critMultiplier = 2.0f;
+                    critMultiplier = 1.0f;
                     break;
                 case Ability.SealOfRighteousness:
                     baseDamage = (Lookup.WeaponSpeed(Character, Stats) * 0.022f * AP) + 
@@ -80,7 +80,7 @@ namespace Rawr.ProtPaladin {
                     baseDamage = (1.0f + 0.2f * AP + 0.32f * SP);
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
                     if (Talents.GlyphOfJudgement) { DamageMultiplier *= (1.0f + 0.10f); }
-                    critMultiplier = 2.0f;
+                    critMultiplier = 1.0f;
                     break;
                 // 5 stacks of Holy Vengeance are assumed
                 // TODO: implement stacking mechanic for beginning-of-fight TPS
@@ -108,25 +108,25 @@ namespace Rawr.ProtPaladin {
                     baseDamage = (1028f + 0.15f * SP + 0.15f * AP);
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1f + Talents.SanctityOfBattle * 0.05f);
                     if (Talents.GlyphOfExorcism) { DamageMultiplier *= (1.0f + 0.20f); }
-                    critMultiplier = 1.5f;
+                    critMultiplier = 0.5f;
                     break;
                 case Ability.AvengersShield:
                     baseDamage = (846f + 0.07f * SP + 0.07f * AP) * 1.3f;// it has a range though: 846.14-1034.14
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
-                    critMultiplier = 2.0f;
+                    critMultiplier = 1.0f;
                     break;
                 case Ability.HolyWrath:// what about aoe cap of max 10 targets ?
                     baseDamage = 1050f;//1050 - 1234
                     // holy *= Lookup.CreatureTypeDamageMultiplier(Character);//, holy);
                     baseDamage += (AP * 0.07f) + (SP * 0.07f); 
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);//any other ?
-                    critMultiplier = 1.5f;
+                    critMultiplier = 0.5f;
                     break;
                 case Ability.HammerOfWrath:
                     baseDamage = 1139f;//1139.3 to 1257.3
                     baseDamage += (AP * 0.15f) + (SP * 0.15f);
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
-                    critMultiplier = 2.0f;
+                    critMultiplier = 1.0f;
                     break;
                 case Ability.RetributionAura:
                     baseDamage = 112f;
@@ -228,11 +228,11 @@ namespace Rawr.ProtPaladin {
             //switch (AttackType)
             //{
             //    case (AttackType.Melee):
-            //        critMultiplier = 2.0f;
+            //        critMultiplier = 1.0f;
             //    case (AttackType.Spell):
-            //        critMultiplier = 1.5f;
+            //        critMultiplier = 0.5f;
             //    case (AttackType.Ranged):
-            //        critMultiplier = 1.5f;
+            //        critMultiplier = 0.5f;
             //    case (AttackType.DOT):
             //        critMultiplier = 0.0f;
             //}
