@@ -195,11 +195,11 @@ namespace Rawr.DPSDK
                     DeathCoil = 1f;
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
-                    ScourgeStrike = 4f;
+                    ScourgeStrike = 0f;
                     
                     FrostStrike = 0f;
                     HowlingBlast = 0f;
-                    Obliterate = 0f;
+                    Obliterate = 4f;
                     BloodStrike = 2f;
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
