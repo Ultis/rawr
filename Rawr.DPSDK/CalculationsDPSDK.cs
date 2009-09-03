@@ -1529,6 +1529,7 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
                         effect.Trigger == Trigger.ScourgeStrikeHit ||
                         effect.Trigger == Trigger.ObliterateHit ||
+                        effect.Trigger == Trigger.DeathStrikeHit ||
                         effect.Trigger == Trigger.IcyTouchHit ||
                         effect.Trigger == Trigger.PlagueStrikeHit ||
                         effect.Trigger == Trigger.RuneStrikeHit ||
@@ -1565,6 +1566,7 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
                         effect.Trigger == Trigger.ScourgeStrikeHit ||
                         effect.Trigger == Trigger.ObliterateHit ||
+                        effect.Trigger == Trigger.DeathStrikeHit ||
                         effect.Trigger == Trigger.IcyTouchHit ||
                         effect.Trigger == Trigger.PlagueStrikeHit ||
                         effect.Trigger == Trigger.RuneStrikeHit ||

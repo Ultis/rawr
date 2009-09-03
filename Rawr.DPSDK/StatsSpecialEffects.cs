@@ -76,6 +76,11 @@ namespace Rawr.DPSDK
                         break;
                     case Trigger.ScourgeStrikeHit:
                         trigger = rotation.curRotationDuration / rotation.ScourgeStrike;
+                        chance = 1f;
+                        break;
+                    case Trigger.DeathStrikeHit:
+                        trigger = rotation.curRotationDuration / rotation.DeathStrike;
+                        chance = 1f;
                         break;
                     case Trigger.PlagueStrikeHit:
                         trigger = rotation.curRotationDuration / rotation.PlagueStrike;
