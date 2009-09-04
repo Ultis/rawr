@@ -704,11 +704,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 SpecialEffect trauma = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = value, }, 15, 0);
                 statsTalents.AddSpecialEffect(trauma);
             }
-            if (talents.Flurry > 0) {
+            /*if (talents.Flurry > 0) {
                 float value = talents.Flurry * 0.05f;
                 SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalHaste = value, }, 2, 0);
                 statsTalents.AddSpecialEffect(flurry);
-            }
+            }*/
             if (talents.DeathWish > 0 && calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) {
                 SpecialEffect death = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },

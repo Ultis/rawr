@@ -143,7 +143,7 @@ namespace Rawr.DPSWarr {
         public float TotalHaste {
             get {
                 float totalHaste = 1f + StatS.PhysicalHaste; // All haste is calc'd into PhysicalHaste in GetCharacterStats
-                //totalHaste      *= 1f + Talents.Flurry * 0.05f * FlurryUptime;
+                totalHaste      *= 1f + Talents.Flurry * 0.05f * FlurryUptime;
                 return totalHaste;
             }
         }
@@ -285,12 +285,12 @@ namespace Rawr.DPSWarr {
         #endregion
         #endregion
         #region Other
-        /*private float FlurryUptime {
+        private float FlurryUptime {
             get {
                 float uptime = 1f - (1f - _c_mhycrit) * (1f - _c_mhycrit) * (1f - _c_mhycrit);
                 return uptime;
             }
-        }*/
+        }
         #endregion
         public class Knuckles : Item {
             public Knuckles() {
