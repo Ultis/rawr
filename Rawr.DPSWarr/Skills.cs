@@ -227,6 +227,44 @@ namespace Rawr.DPSWarr {
                 R *= (1.0f + 0.25f * Talents.EndlessRage);
                 return R;
             }
+            // Attacks Over Fight Duration
+            public float LandedAtksOverDur {
+                get {
+                    float whiteLands = LandedAtksOverDurMH + LandedAtksOverDurOH;
+                    return whiteLands;
+                }
+            }
+            public float LandedAtksOverDurMH {
+                get {
+                    float whiteLands = MhActivates * MHAtkTable.AnyLand;
+                    return whiteLands;
+                }
+            }
+            public float LandedAtksOverDurOH {
+                get {
+                    float whiteLands = (combatFactors.OH != null ? OhActivates * OHAtkTable.AnyLand : 0f);
+                    return whiteLands;
+                }
+            }
+            public float CriticalAtksOverDur {
+                get {
+                    float whiteLands = CriticalAtksOverDurMH + CriticalAtksOverDurOH;
+                    return whiteLands;
+                }
+            }
+            public float CriticalAtksOverDurMH {
+                get {
+                    float whiteLands = MhActivates * MHAtkTable.Crit;
+                    return whiteLands;
+                }
+            }
+            public float CriticalAtksOverDurOH {
+                get {
+                    float whiteLands = (combatFactors.OH != null ? OhActivates * OHAtkTable.Crit : 0f);
+                    return whiteLands;
+                }
+            }
+            // Other
             public float AvoidanceStreak {
                 get {
                     float mhRagePercent = MHRageRatio;
@@ -392,7 +430,6 @@ namespace Rawr.DPSWarr {
             private bool REQMELEERRANGE;
             private bool REQMULTITARGS;
             private float TARGETS;
-            private float AVGTARGETS;
             private float MAXRANGE; // In Yards 
             private float CD; // In Seconds
             private float DURATION; // In Seconds
@@ -421,16 +458,12 @@ namespace Rawr.DPSWarr {
             public bool ReqMeleeWeap { get { return REQMELEEWEAP; } set { REQMELEEWEAP = value; } }
             public bool ReqMeleeRange { get { return REQMELEERRANGE; } set { REQMELEERRANGE = value; } }
             public bool ReqMultiTargs { get { return REQMULTITARGS; } set { REQMULTITARGS = value; } }
-            public float AvgTargets
-            {
-                get
-                {
-                    if (CalcOpts.MultipleTargets)
-                    {
+            public float AvgTargets {
+                get {
+                    if (CalcOpts.MultipleTargets) {
                         float extraTargetsHit = (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                         return 1f + extraTargetsHit * CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets;
-                    }
-                    else return 1f;
+                    } else {return 1f;}
                 }
             }
             public float Targets { get { return TARGETS; } set { TARGETS = value; } }
@@ -496,24 +529,6 @@ namespace Rawr.DPSWarr {
             public CalculationOptionsDPSWarr CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
             public virtual float RageUsePerSecond { get { return (!Validated ? 0f : Activates * RageCost / FightDuration); } }
             public float FightDuration { get { return CalcOpts.Duration; } }
-            public float WhiteAttacksThatLand {
-                get {
-                    float whitepersec = FightDuration / Whiteattacks.MhEffectiveSpeed * Whiteattacks.MHAtkTable.AnyLand
-          + (combatFactors.OH != null ? FightDuration / Whiteattacks.OhEffectiveSpeed * Whiteattacks.OHAtkTable.AnyLand : 0f);
-                    return whitepersec;
-                }
-            }
-            public float YellowAttacksThatLandPerSec {
-                get {
-                    float LatentGCD = (1.5f + CalcOpts.GetLatency());
-
-                    float yellowpersec = (FightDuration / LatentGCD) * 0.9f * MHAtkTable.AnyLand;
-                    // TODO: 0.9 is an arbitrary number, make this work off actual results of GCDs used to hit vs not hit
-
-                    return yellowpersec;
-                }
-            }
-            public float AttacksThatCouldLand { get { return (WhiteAttacksThatLand + YellowAttacksThatLandPerSec); } }
             public virtual bool Validated {
                 get {
                     // Null crap is bad
@@ -749,7 +764,7 @@ namespace Rawr.DPSWarr {
                 float Damage;
                 if (isOffHand) {
                     if (this.Char.OffHand != null && this.Char.OffHand.Item != null) {
-                        Damage = combatFactors.NormalizedOhWeaponDmg * (0.50f + Talents.DualWieldSpecialization * 0.025f);
+                        Damage = combatFactors.NormalizedOhWeaponDmg;
                     }else{ Damage = 0f; }
                 }else{ Damage = combatFactors.NormalizedMhWeaponDmg; }
 
@@ -1022,54 +1037,14 @@ namespace Rawr.DPSWarr {
             public Swordspec SS;
             public float FreeRage;
             // Functions
-            public float GetActivates(float yellowattacksratio, float ssActs) {
+            public float GetActivates(float landedatksoverdur) {
                 if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
 
-                float LatentGCD = 1.5f + CalcOpts.GetLatency();
-                float talent = 3f * Talents.SuddenDeath / 100f;
+                float rate = Talents.SuddenDeath * 0.03f;
 
-                float WhtHitsPerSecond = 1f / Whiteattacks.MhEffectiveSpeed
-                                        + (combatFactors.OH != null ? 1f / Whiteattacks.OhEffectiveSpeed : 0f)
-                                        + 1f / (FightDuration / ssActs);
-                float GCDHitsPerSecond = 1f / LatentGCD * yellowattacksratio;
+                float acts = rate * landedatksoverdur;
 
-                WhtHitsPerSecond *= Whiteattacks.MHAtkTable.AnyLand;
-                GCDHitsPerSecond *= MHAtkTable.AnyLand;
-
-                float Landedatkspersec = WhtHitsPerSecond + GCDHitsPerSecond;
-
-                float acts = talent * Landedatkspersec * LatentGCD;
-                float Every = LatentGCD / acts * (1f - Whiteattacks.AvoidanceStreak);
-
-                return (float)Math.Max(0f, FightDuration / Every);
-            }
-            public float LandedAtksPerSec {
-                get {
-                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
-
-                    float GCDHitsPerSecond = 1f / LatentGCD * 0.9f; // 0.9 as a dummy method of saying some GCDs aren't melee attacks
-                    float WhtHitsPerSecond = 1f / Whiteattacks.MhEffectiveSpeed
-                        + (combatFactors.OH != null ? 1f / Whiteattacks.OhEffectiveSpeed : 0f)
-                        + 1f / (FightDuration / SS.GetActivates(FightDuration/LatentGCD, FightDuration/(LatentGCD*0.9f)));
-
-                    WhtHitsPerSecond *= Whiteattacks.MHAtkTable.AnyLand;
-                    GCDHitsPerSecond *= MHAtkTable.AnyLand;
-
-                    float Landedatkspersec = GCDHitsPerSecond + WhtHitsPerSecond;
-
-                    return (float)Math.Max(0f, Landedatkspersec);
-                }
-            }
-            public override float ActivatesOverride {
-                get {
-                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
-                    float talent = 3f * Talents.SuddenDeath / 100f;
-
-                    float acts = talent * LandedAtksPerSec * LatentGCD;
-                    float Every = LatentGCD / acts * (1f - Whiteattacks.AvoidanceStreak);
-
-                    return (float)Math.Max(0f, FightDuration / Every);
-                }
+                return (float)Math.Max(0f, acts * (1f - Whiteattacks.AvoidanceStreak));
             }
             public override float Damage {
                 get {
@@ -1110,14 +1085,11 @@ namespace Rawr.DPSWarr {
                 InitializeB();
             }
             public Swordspec SS;
-            public float GetActivates(float yellowattacksratio, float ssActs) {
+            public float GetActivates(float YellowAttacksThatDodgeOverDur, float YellowAttacksThatParryOverDur, float ssActs) {
                 if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
 
                 float acts = 0f;
                 float LatentGCD = (1.5f + CalcOpts.GetLatency());
-                //float cd = (float)Math.Max(Cd, LatentGCD);
-                //float Every = 0f;
-                //float GCDPerc = 0f;
 
                 float dodge = SS.MHAtkTable.Dodge;
                 float parry = (Talents.GlyphOfOverpower ? SS.MHAtkTable.Parry : 0f);
@@ -1127,45 +1099,16 @@ namespace Rawr.DPSWarr {
                     float WhtHitsOverDur = FightDuration / Whiteattacks.MhEffectiveSpeed
              + (combatFactors.OH != null ? FightDuration / Whiteattacks.OhEffectiveSpeed : 0f)
                                            + ssActs;
-                    float GCDHitsOverDur = (FightDuration / LatentGCD) * yellowattacksratio;
 
-                    float dodgesoverDur = (WhtHitsOverDur + GCDHitsOverDur) * (dodge + parry);
+                    float dodgesoverDur = 0f +
+                          WhtHitsOverDur * (dodge + parry)
+                        + dodge > 0 ? YellowAttacksThatDodgeOverDur : 0
+                        + parry > 0 ? YellowAttacksThatParryOverDur : 0;
 
-                    //GCDPerc = LatentGCD / (cd + CalcOpts.GetLatency());
-                    //Every = LatentGCD / GCDPerc;
-                    acts += (float)Math.Max(0f, dodgesoverDur);
+                    acts += (float)Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.AvoidanceStreak));
                 }
 
                 return acts;
-            }
-            public override float ActivatesOverride {
-                get {
-                    float acts = 0f;/*
-                    float LatentGCD = (1.5f + CalcOpts.GetLatency());
-                    float cd = (float)Math.Max(Cd, LatentGCD);
-                    float Every = 0f;
-                    float GCDPerc = 0f;
-
-                    float dodge = SS.MHAtkTable.Dodge;
-                    float parry = (Talents.GlyphOfOverpower ? SS.MHAtkTable.Parry : 0f);
-
-                    // Chance to activate: Dodges + (if glyphed) Parries
-                    if (dodge + parry > 0f) {
-                        float whitepersec  = 1f / Whiteattacks.MhEffectiveSpeed
-               + (combatFactors.OH != null ? 1f / Whiteattacks.OhEffectiveSpeed : 0f)
-                                           + 1f / (FightDuration / SS.Activates)
-                            ; // hitspersec
-                        float yellowpersec = FightDuration / LatentGCD * 0.9f; //0.9 is an arbitrary number, will make this work off actual results of GCDs used to hit vs not hit later
-
-                        float dodgespersec = (whitepersec + yellowpersec) * (dodge + parry);
-
-                        GCDPerc = LatentGCD / (cd + CalcOpts.GetLatency());
-                        Every = LatentGCD / GCDPerc;
-                        acts += (float)Math.Max(0f, dodgespersec);
-                    }
-                    */
-                    return acts;
-                }
             }
         }
         public class TasteForBlood : Ability {
@@ -1218,7 +1161,7 @@ namespace Rawr.DPSWarr {
                         
                         GCDPerc = LatentGCD / (cd + CalcOpts.GetLatency());
                         Every = LatentGCD / GCDPerc;
-                        acts += (float)Math.Max(0f, FightDuration / Every);
+                        acts += (float)Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));
                     }
 
                     return acts;
@@ -1283,16 +1226,17 @@ namespace Rawr.DPSWarr {
                 Cd = 6f; // In Seconds
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
+                RageCost = Whiteattacks.MHSwingRage;
                 //
                 InitializeB();
             }
             // Functions
-            public float GetActivates(float TotalGCDs, float GCDsUsedToHit) {
+            public float GetActivates(float YellowsThatLandOverDur) {
                 if (combatFactors._c_mhItemType != ItemType.TwoHandSword && combatFactors._c_mhItemType != ItemType.OneHandSword) { return 0.0f; }
 
+                float rate = Talents.SwordSpecialization * (CalcOpts.PTRMode ? 0.02f : 0.01f);
                 // This attack doesnt consume GCDs and doesn't affect the swing timer
-                float rawActs = (((GCDsUsedToHit * MHAtkTable.AnyLand) + WhiteAttacksThatLand)
-                    * (CalcOpts.PTRMode ? 0.02f : 0.01f) * Talents.SwordSpecialization);
+                float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) * rate;
 
                 // There is an internal cd of 6 seconds so AttacksThatCouldLandPerSec is capped by once every 6 sec.
                 float capActs = base.ActivatesOverride;
@@ -1607,7 +1551,7 @@ namespace Rawr.DPSWarr {
                 RageCost = 10f - (Talents.FocusedRage * 1f);
                 StanceOkArms = StanceOkDef = true;
                 DamageBase = 380f;
-                DamageBonus = (1f + 0.10f * Talents.ImprovedRend) * (1f + 0.15f * Talents.Trauma);
+                DamageBonus = (1f + 0.10f * Talents.ImprovedRend);// *(1f + 0.15f * Talents.Trauma);
                 //
                 InitializeB();
             }
@@ -1731,7 +1675,7 @@ namespace Rawr.DPSWarr {
                 }
             }
         }
-        public class Trauma : BuffEffect {
+        /*public class Trauma : BuffEffect {
             // Constructors
             /// <summary>
             /// Your melee critical strikes increase the effectiveness of Bleed Effects on the
@@ -1749,7 +1693,7 @@ namespace Rawr.DPSWarr {
                 Talent2ChksValue = Talents.Trauma;
                 Duration = 15f; // In Seconds
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
-                Effect = new SpecialEffect(Trigger.MeleeCrit, StatS, Duration, 0f/*, MHAtkTable.Crit*/);
+                Effect = new SpecialEffect(Trigger.MeleeCrit, StatS, Duration, 0f);//, MHAtkTable.Crit
                 //
                 InitializeB();
             }
@@ -1766,7 +1710,7 @@ namespace Rawr.DPSWarr {
                     // Jothay (a note to self): This is so very, very wrong... redo this you moron
                 }
             }
-        }
+        }*/
         public class BerserkerRage : BuffEffect {
             /// <summary>
             /// Instant, 30 sec Cd, Self, (Any)

@@ -653,13 +653,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                             // handle boss level difference
                             + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
             };
-            SpecialEffect rampage = new SpecialEffect(Trigger.PhysicalCrit, new Stats() { PhysicalCrit = 0.05f,},10,0);
             Stats statsTalents = new Stats() {
-                //Parry = talents.Deflection * 1.0f,
-                PhysicalCrit = talents.Cruelty * 0.01f,
-                //Dodge = talents.Anticipation * 1.0f,
-                //Block = talents.ShieldSpecialization * 1.0f,
-                //BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
+                // Offensive
                 BonusDamageMultiplier = (character.MainHand == null ? 0f :
                                             /* One Handed Weapon Spec  Not using this to prevent any misconceptions
                                             ((character.MainHand.Slot == ItemSlot.OneHand) ? 1f + talents.OneHandedWeaponSpecialization * 0.02f : 1f)
@@ -676,16 +671,41 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                                     calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] // Have Rend up
                                                     || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.02f : 0f),
+                PhysicalCrit = talents.Cruelty * 0.01f,
                 BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
+                PhysicalHit = talents.Precision * 0.01f,
+                PhysicalHaste = talents.BloodFrenzy * 0.05f,
+                // Defensive
+                Parry = talents.Deflection * 0.01f,
+                Dodge = talents.Anticipation * 0.01f,
+                Block = talents.ShieldSpecialization * 0.01f,
+                BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
                 BonusShieldSlamDamage = talents.GagOrder * 0.05f,
                 DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
-                PhysicalHaste = talents.BloodFrenzy * 0.05f,
-                PhysicalHit = talents.Precision * 0.01f,
             };
-            if (talents.Rampage > 0) { statsTalents.AddSpecialEffect(rampage); }
+            if (talents.Rampage > 0) {
+                SpecialEffect rampage = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalCrit = 0.05f, }, 10, 0);
+                statsTalents.AddSpecialEffect(rampage);
+            }
+            if (talents.WreckingCrew > 0) {
+                float value = talents.WreckingCrew * 0.02f;
+                SpecialEffect wrecking = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = value, }, 12, 0);
+                statsTalents.AddSpecialEffect(wrecking);
+            }
+            if (talents.Trauma > 0) {
+                float value = talents.Trauma * 0.15f;
+                SpecialEffect trauma = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = value, }, 15, 0);
+                statsTalents.AddSpecialEffect(trauma);
+            }
+            if (talents.Flurry > 0) {
+                float value = talents.Flurry * 0.05f;
+                SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalHaste = value, }, 2, 0);
+                statsTalents.AddSpecialEffect(flurry);
+            }
+
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
             Stats statsProcs = new Stats();
@@ -737,22 +757,19 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             float fightDuration = calcOpts.Duration;
 
-            float mhHitsPerSecond = 0f; float ohHitsPerSecond = 0f;
-            if (calcOpts.FuryStance) {
-                Skills.Ability bt = new Skills.BloodThirst(character, statsTotal, combatFactors, whiteAttacks);
-                Skills.Ability ww = new Skills.WhirlWind(character, statsTotal, combatFactors, whiteAttacks);
-                mhHitsPerSecond = (bt.Activates + ww.Activates) / fightDuration * combatFactors.ProbMhYellowLand;
-                ohHitsPerSecond = (               ww.Activates) / fightDuration * combatFactors.ProbOhYellowLand;
-            }else{mhHitsPerSecond = 1f / (1.5f + calcOpts.GetLatency()) * 0.9f * combatFactors.ProbMhYellowLand;}
-            // White Hits per second uses hasted numbers, not un-hasted
-            if (combatFactors._c_mhItemSpeed > 0f) { mhHitsPerSecond += (1f / combatFactors.MHSpeed) * combatFactors.ProbMhWhiteLand; }
-            if (combatFactors._c_ohItemSpeed > 0f) { ohHitsPerSecond += (1f / combatFactors.OHSpeed) * combatFactors.ProbOhWhiteLand; }
-            
-            float mhHitInterval    = 1f /  mhHitsPerSecond;
-            float ohHitInterval    = 1f /  ohHitsPerSecond;
-            float bothHitInterval  = 1f / (mhHitsPerSecond + ohHitsPerSecond);
+            bool useOH = talents.TitansGrip > 0 && combatFactors.OH != null && combatFactors.OHSpeed > 0;
+
+            float mhLandsPerSecond = 1f / Rot.GetLandedAtksOverDurMH()  , ohLandsPerSecond = useOH ? 1f / Rot.GetLandedAtksOverDurOH()   : 0 ;
+            float mhCritsPerSecond = 1f / Rot.GetCriticalAtksOverDurMH(), ohCritsPerSecond = useOH ? 1f / Rot.GetCriticalAtksOverDurOH() : 0;
+
             float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
-            float dmgDoneInterval  = 1f / (mhHitsPerSecond + ohHitsPerSecond + (calcOpts.FuryStance ? 1f : 4f / 3f));
+            float mhLandInterval = mhLandsPerSecond,
+                  ohLandInterval = ohLandsPerSecond,
+                  bothLandInterval = mhLandInterval + ohLandInterval;
+            float mhCritInterval = mhCritsPerSecond,
+                  ohCritInterval = ohCritsPerSecond,
+                  bothCritInterval = mhCritInterval + ohCritInterval;
+            float dmgDoneInterval = bothLandInterval + bleedHitInterval;
 
             SpecialEffect bersMainHand = null;
             SpecialEffect bersOffHand = null;
@@ -763,7 +780,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
                 if (mhEffects.MoveNext()) {
                     bersMainHand = mhEffects.Current;
-                    statsProcs += bersMainHand.GetAverageStats(mhHitInterval, 1f, combatFactors.MHSpeed, fightDuration);
+                    statsProcs += bersMainHand.GetAverageStats(mhLandInterval, 1f, combatFactors.MHSpeed, fightDuration);
                 }
             }
             if (talents.TitansGrip > 0 && combatFactors.OH != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789){
@@ -771,7 +788,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
                 if (ohEffects.MoveNext()) {
                     bersOffHand = ohEffects.Current;
-                    statsProcs += bersOffHand.GetAverageStats(ohHitInterval, 1f, combatFactors.OHSpeed, fightDuration);
+                    statsProcs += bersOffHand.GetAverageStats(ohLandInterval, 1f, combatFactors.OHSpeed, fightDuration);
                 }
             }
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
@@ -793,12 +810,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
                             statsProcs += effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration); 
                             break;
                         case Trigger.MeleeHit:
-                        case Trigger.PhysicalHit: 
-                            statsProcs += effect.GetAverageStats(bothHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                        case Trigger.PhysicalHit:
+                            statsProcs += effect.GetAverageStats(bothLandInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
                             break;
                         case Trigger.MeleeCrit:
                         case Trigger.PhysicalCrit:
-                            statsProcs += effect.GetAverageStats(bothHitInterval, combatFactors._c_mhycrit, combatFactors._c_mhItemSpeed, fightDuration);
+                            statsProcs += effect.GetAverageStats(bothCritInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
                             break;
                         case Trigger.DoTTick:
                             statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend

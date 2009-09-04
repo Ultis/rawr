@@ -73,7 +73,7 @@ namespace Rawr.DPSWarr {
                 float bonus  = 1f + StatS.BonusDamageMultiplier;
                       bonus *= 1f + StatS.BonusPhysicalDamageMultiplier;
                                // Talents
-                      bonus *= 1f + Talents.WreckingCrew * 0.02f;
+                      //bonus *= 1f + Talents.WreckingCrew * 0.02f;
                 return bonus;
             }
         }
@@ -101,16 +101,16 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Weapon Damage
         public float NormalizedMhWeaponDmg { get { return CalcNormalizedWeaponDamage(MH); } }
-        public float NormalizedOhWeaponDmg { get { return OH == null || Talents.TitansGrip == 0 ? 0f : CalcNormalizedWeaponDamage(OH); } }
+        public float NormalizedOhWeaponDmg { get { return OH == null || Talents.TitansGrip == 0 ? 0f : CalcNormalizedWeaponDamage(OH) * 0.5f * (1 + Talents.DualWieldSpecialization * 0.05f); } }
         private float CalcNormalizedWeaponDamage(Item weapon) {
             float baseDamage  = weapon.Speed * weapon.DPS;
                   baseDamage += StatS.AttackPower / 14f * 3.3f;
             return baseDamage;
         }
         public float AvgMhWeaponDmgUnhasted              { get { return (MH == null ? 0f : (StatS.AttackPower / 14f + MH.DPS) * MH.Speed); } }
-        public float AvgOhWeaponDmgUnhasted              { get { return (OH == null || Talents.TitansGrip == 0 ? 0f : (StatS.AttackPower / 14f + OH.DPS) * OH.Speed * (0.5f + Talents.DualWieldSpecialization * 0.025f)); } }
+        public float AvgOhWeaponDmgUnhasted              { get { return (OH == null || Talents.TitansGrip == 0 ? 0f : (StatS.AttackPower / 14f + OH.DPS) * OH.Speed * 0.5f * (1 + Talents.DualWieldSpecialization * 0.05f)); } }
         public float AvgMhWeaponDmg(        float speed) {       return (MH == null ? 0f : (StatS.AttackPower / 14f + MH.DPS) * speed   ); }
-        public float AvgOhWeaponDmg(        float speed) {       return (OH == null || Talents.TitansGrip == 0 ? 0f : (StatS.AttackPower / 14f + OH.DPS) * speed    * (0.5f + Talents.DualWieldSpecialization * 0.025f)); }
+        public float AvgOhWeaponDmg(        float speed) {       return (OH == null || Talents.TitansGrip == 0 ? 0f : (StatS.AttackPower / 14f + OH.DPS) * speed    * 0.5f * (1 + Talents.DualWieldSpecialization * 0.05f)); }
         #endregion
         #region Weapon Crit Damage
         public float BonusWhiteCritDmg {
@@ -143,7 +143,7 @@ namespace Rawr.DPSWarr {
         public float TotalHaste {
             get {
                 float totalHaste = 1f + StatS.PhysicalHaste; // All haste is calc'd into PhysicalHaste in GetCharacterStats
-                totalHaste      *= 1f + Talents.Flurry * 0.05f * FlurryUptime;
+                //totalHaste      *= 1f + Talents.Flurry * 0.05f * FlurryUptime;
                 return totalHaste;
             }
         }
@@ -285,12 +285,12 @@ namespace Rawr.DPSWarr {
         #endregion
         #endregion
         #region Other
-        private float FlurryUptime {
+        /*private float FlurryUptime {
             get {
                 float uptime = 1f - (1f - _c_mhycrit) * (1f - _c_mhycrit) * (1f - _c_mhycrit);
                 return uptime;
             }
-        }
+        }*/
         #endregion
         public class Knuckles : Item {
             public Knuckles() {
