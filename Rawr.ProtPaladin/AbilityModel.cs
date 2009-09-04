@@ -40,8 +40,16 @@ namespace Rawr.ProtPaladin {
                     DamageMultiplier *= (1.0f - ArmorReduction);
                     break;               
                 case Ability.ShieldOfRighteousness:
-                    
-                    baseDamage = (Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + 1f / 3f * Stats.JudgementBlockValue) + 520f;
+                    float blockValue = Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + Stats.JudgementBlockValue;
+
+                    if (blockValue < 30 * Character.Level) {
+                        baseDamage = blockValue + 520;
+                    } else if (blockValue < 39.5 * Character.Level) {
+                        baseDamage = 30 * Character.Level + (0.95f * (blockValue - 30 * Character.Level)) - (0.000625f * (float)Math.Pow(blockValue - 30 * Character.Level, 2)) + 520;
+                    } else {
+                        baseDamage = 30 * Character.Level + (0.95f * 9.5f * Character.Level) - (0.000625f * (float)Math.Pow(9.5 * Character.Level, 2)) + 520;
+                    }
+
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
                     critMultiplier = 1.0f;
                     break;

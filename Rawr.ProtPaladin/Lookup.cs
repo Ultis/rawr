@@ -216,9 +216,10 @@ namespace Rawr.ProtPaladin
                 case Ability.HolyWrath:
                 case Ability.SealOfVengeance:
                 case Ability.HandOfReckoning:
+                    abilityCritChance = spellCritChance;// crit chance = spell
+                    break;
                 case Ability.Exorcism:
-                    if (calcOpts.TargetType == "Undead" || calcOpts.TargetType == "Demon")
-                    {
+                    if (calcOpts.TargetType == "Undead" || calcOpts.TargetType == "Demon") {
                         // 100% chance the spell will crit, if it hits.
                         abilityCritChance = SpellHitChance(character, stats);
                         break;

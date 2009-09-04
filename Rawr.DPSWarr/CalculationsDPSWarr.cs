@@ -774,14 +774,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     Rot.ST.MHAtkTable.AnyLand);
                 statsTotal.AddSpecialEffect(shatt);
             }
-            if (statsTotal.BonusWarrior_T8_2P_HasteProc > 0f && Rot.CritHsSlamOverDur > 0) {
-                /*SpecialEffect hasteBonusEffect = new SpecialEffect(Trigger.HSorSLHit,
-                    new Stats() { HasteRating = statsTotal.BonusWarrior_T8_2P_HasteProc, },
-                    5f, // duration
-                    0f // cooldown
-                );
-                statsTotal.AddSpecialEffect(hasteBonusEffect);*/
-            }
             if (calcOpts.MultipleTargets && calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_]) {
                 SpecialEffect sweep = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusTargets = 1f * calcOpts.MultipleTargetsPerc / 100f, },
