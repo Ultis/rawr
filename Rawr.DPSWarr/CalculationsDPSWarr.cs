@@ -764,7 +764,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors);
             Rotation Rot = new Rotation(character, statsTotal);
             Rot.Initialize();
-            if (calcOpts.FuryStance) { Rot.MakeRotationandDoDPS_Fury(); } else { Rot.MakeRotationandDoDPS_Fury(); }
+            if (calcOpts.FuryStance) { Rot.MakeRotationandDoDPS_Fury(); } else { Rot.MakeRotationandDoDPS_Arms(); }
 
             // Add some last minute SpecialEffects
             if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_]) {
