@@ -77,16 +77,16 @@ namespace Rawr.DPSWarr {
             initAbilities();
             doIterations();
 
-            Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; }
-
-            WHITEATTACKS.Ovd_Freq = Which.Activates * WHITEATTACKS.MhEffectiveSpeed / CalcOpts.Duration;
+            /*WHITEATTACKS.OvdFreqHS = HS.Activates * WHITEATTACKS.MhEffectiveSpeed / CalcOpts.Duration;
+            WHITEATTACKS.OvdFreqCL = CL.Activates * WHITEATTACKS.MhEffectiveSpeed / CalcOpts.Duration;
 
             calcs.WhiteDPSMH = (CHARACTER.MainHand == null ? 0f : WHITEATTACKS.MhDPS); // MhWhiteDPS
             calcs.WhiteDPSOH = (CHARACTER.OffHand  == null ? 0f : WHITEATTACKS.OhDPS);
             calcs.WhiteDPS = calcs.WhiteDPSMH + calcs.WhiteDPSOH;
             calcs.WhiteDmg = (CHARACTER.MainHand == null ? 0f : WHITEATTACKS.MhDamageOnUse); //MhAvgSwingDmg
 
-            WHITEATTACKS.Ovd_Freq = 0;
+            WHITEATTACKS.OvdFreqHS = 0;
+            WHITEATTACKS.OvdFreqCL = 0;*/
 
             // Whites
             calcs.Whites = WhiteAtks;
@@ -165,13 +165,11 @@ namespace Rawr.DPSWarr {
             SS = new Skills.Swordspec(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             OP = new Skills.OverPower(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,SS);
             TB = new Skills.TasteForBlood(      CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SD = new Skills.Suddendeath(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS,SS);
+            SD = new Skills.Suddendeath(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             // Generic DPS
             DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-
-            SD.FreeRage = freeRage;
         }
         private void doIterations() {
             // Fury Iteration
@@ -185,12 +183,11 @@ namespace Rawr.DPSWarr {
                 hsPercOvd -= CalcOpts.MultipleTargetsPerc / 100f;
             clPercOvd = (clok ? 1f-hsPercOvd : 0f);
 
-            float hsRageUsed = freeRage * hsPercOvd;
-            float clRageUsed = freeRage * clPercOvd;
-            
-            HS.OverridesPerSec = hsRageUsed / HS.FullRageCost;
-            CL.OverridesPerSec = clRageUsed / CL.FullRageCost;
-            WhiteAtks.Ovd_Freq = (CL.OverridesPerSec + HS.OverridesPerSec) / WhiteAtks.MhEffectiveSpeed;
+            float hsRageUsed = FreeRageOverDur * hsPercOvd;
+            float clRageUsed = FreeRageOverDur * clPercOvd;
+
+            WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = hsRageUsed / HS.FullRageCost;
+            WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = clRageUsed / CL.FullRageCost;
 
             float oldHSActivates = 0f, newHSActivates = HS.Activates;
             float oldCLActivates = 0f, newCLActivates = CL.Activates;
@@ -204,54 +201,32 @@ namespace Rawr.DPSWarr {
             {
                 oldHSActivates = HS.Activates;
                 oldCLActivates = CL.Activates;
-
+                //
                 BS.hsActivates = oldHSActivates; // bloodsurge only cares about HSes, not Cleaves
-                _bloodsurgeRPS = HS.bloodsurgeRPS = CL.bloodsurgeRPS = BS.RageUsePerSecond;
-                hsRageUsed = freeRage * hsPercOvd;
-                clRageUsed = freeRage * clPercOvd;
-                HS.OverridesPerSec = hsRageUsed / HS.FullRageCost;
-                CL.OverridesPerSec = clRageUsed / CL.FullRageCost;
+                _bloodsurgeRPS = HS.bloodsurgeRPS = CL.bloodsurgeRPS = (BS.RageUseOverDur);
+                hsRageUsed = FreeRageOverDur * hsPercOvd;
+                clRageUsed = FreeRageOverDur * clPercOvd;
+                WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = hsRageUsed / HS.FullRageCost;
+                WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = clRageUsed / CL.FullRageCost;
+                //
                 newHSActivates = HS.Activates;
                 newCLActivates = CL.Activates;
-                WhiteAtks.Ovd_Freq = (HS.OverridesPerSec + CL.OverridesPerSec) / WhiteAtks.MhEffectiveSpeed;
-                /*
-
-                numHSPerSec = RageForHS / HS.FullRageCost;
-                HS.OverridesPerSec = numHSPerSec;
-                WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
-
-                numCLPerSec = RageForCL / CL.FullRageCost;
-                CL.OverridesPerSec = numCLPerSec;
-                WhiteAtks.Ovd_Freq += numCLPerSec / WhiteAtks.MhEffectiveSpeed;
-                
-                //WhiteAtks.Ovd_Freq  = (WhiteAtks.MhEffectiveSpeed * HS.OverridesPerSec);
-                //WhiteAtks.Ovd_Freq += (WhiteAtks.MhEffectiveSpeed * CL.OverridesPerSec);
-                BS.hsActivates  = oldHSActivates;
-                BS.hsActivates += oldCLActivates;
-                _bloodsurgeRPS = HS.bloodsurgeRPS = HS.RageUsePerSecond;
-                _bloodsurgeRPS = CL.bloodsurgeRPS = CL.RageUsePerSecond;
-                HS.OverridesPerSec = freeRage / HS.FullRageCost;
-                CL.OverridesPerSec = freeRage / CL.FullRageCost;
-                newHSActivates = HS.Activates;
-                newCLActivates = CL.Activates;*/
             }
             BS.hsActivates  = newHSActivates;
             BS.hsActivates += newCLActivates;
             if (CalcOpts.FuryStance) {
-                _OVD_DPS  = HS.DPS;
-                _OVD_DPS += CL.DPS;
-                _OVD_PerHit = (HS.DamageOnUse * hsPercOvd + CL.DamageOnUse * clPercOvd);
-                //_OVD_PerHit = CL.DamageOnUse; // this isn't gonna work
+                _HS_DPS  = HS.DPS;
+                _CL_DPS += CL.DPS;
+                _HS_PerHit = HS.DamageOnUse * hsPercOvd;
+                _CL_PerHit = CL.DamageOnUse * clPercOvd;
             }
         }
 
         private void calcDeepWounds() {
-            Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
-            float numWhichActivates = Which.OverridesPerSec * CalcOpts.Duration;
-
             // Main Hand
             float mhActivates =
-                /*OnAttack*/numWhichActivates * Which.MHAtkTable.Crit +
+                /*OnAttack*/_HS_Acts * HS.MHAtkTable.Crit +
+                /*OnAttack*/_CL_Acts * CL.MHAtkTable.Crit +
                 /*Yellow  */GetCriticalYellowsOverDurMH() + 
                 /*White   */WhiteAtks.MhActivates * WhiteAtks.MHAtkTable.Crit;
 
@@ -270,12 +245,13 @@ namespace Rawr.DPSWarr {
 
         /// <summary>This is used by Deep Wounds</summary>
         /// <returns>Total Critical attacks over fight duration for Maintenance, Fury and Arms abilities. Does not include Heroic Strikes or Cleaves</returns>
-        public float GetCriticalYellowsOverDur() {
-            float yellow = GetCriticalYellowsOverDurMH() + GetCriticalYellowsOverDurOH();
-            return yellow;
-        }
+        public float GetCriticalYellowsOverDur() { return GetCriticalYellowsOverDurMH() + GetCriticalYellowsOverDurOH(); }
         public float GetCriticalYellowsOverDurMH() {
             bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+
+            float onAttack = WhiteAtks.HSOverridesOverDur * HS.MHAtkTable.Crit * HS.AvgTargets
+                           + WhiteAtks.CLOverridesOverDur * CL.MHAtkTable.Crit * CL.AvgTargets;
+
             float yellow = 0f
                 // Maintenance
                 + _Thunder_GCDs * TH.MHAtkTable.Crit * TH.AvgTargets
@@ -294,10 +270,10 @@ namespace Rawr.DPSWarr {
                 + _SL_GCDs * SL.MHAtkTable.Crit * SL.AvgTargets
             ;
 
-            return yellow;
+            return yellow + onAttack;
         }
         public float GetCriticalYellowsOverDurOH() {
-            bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
             if (!useOH) { return 0; }
             float yellow = 0f
                 // Maintenance
@@ -316,6 +292,8 @@ namespace Rawr.DPSWarr {
             return yellows + whites;
         }
         public float GetCriticalAtksOverDurOH() {
+            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            if (!useOH) { return 0; }
             float yellows = GetCriticalYellowsOverDurOH();
             float whites = WhiteAtks.CriticalAtksOverDurOH;
             return yellows + whites;
@@ -324,6 +302,10 @@ namespace Rawr.DPSWarr {
         /// <returns>Total Parried attacks over fight duration for Maintenance, Fury and Arms abilities</returns>
         public float GetParriedYellowsOverDur() {
             bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+
+            float onAttack = WhiteAtks.HSOverridesOverDur * HS.MHAtkTable.Parry * HS.AvgTargets
+                           + WhiteAtks.CLOverridesOverDur * CL.MHAtkTable.Parry * CL.AvgTargets;
+
             float yellow = 0f
                 // Maintenance
                 + _Thunder_GCDs * TH.MHAtkTable.Parry * TH.AvgTargets
@@ -342,12 +324,16 @@ namespace Rawr.DPSWarr {
                 + _SL_GCDs * SL.MHAtkTable.Parry * SL.AvgTargets
             ;
 
-            return yellow;
+            return yellow + onAttack;
         }
         /// <summary>This is used by Overpower</summary>
         /// <returns>Total Dodged attacks over fight duration for Maintenance, Fury and Arms abilities</returns>
         public float GetDodgedYellowsOverDur() {
             bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+
+            float onAttack = WhiteAtks.HSOverridesOverDur * HS.MHAtkTable.Dodge * HS.AvgTargets
+                           + WhiteAtks.CLOverridesOverDur * CL.MHAtkTable.Dodge * CL.AvgTargets;
+            
             float yellow = 0f
                 // Maintenance
                 + _Thunder_GCDs * TH.MHAtkTable.Dodge * TH.AvgTargets
@@ -366,12 +352,16 @@ namespace Rawr.DPSWarr {
                 + _SL_GCDs * SL.MHAtkTable.Dodge * SL.AvgTargets
             ;
 
-            return yellow;
+            return yellow + onAttack;
         }
         // Yellow Only Landed Attacks Over Dur
         public float GetLandedYellowsOverDur() { return GetLandedYellowsOverDurMH() + GetLandedYellowsOverDurOH(); }
         public float GetLandedYellowsOverDurMH() {
             bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+
+            float onAttack = WhiteAtks.HSOverridesOverDur * HS.MHAtkTable.AnyLand * HS.AvgTargets
+                           + WhiteAtks.CLOverridesOverDur * CL.MHAtkTable.AnyLand * CL.AvgTargets;
+
             float yellow = 0f
                 // Maintenance
                 + _Thunder_GCDs * TH.MHAtkTable.AnyLand * TH.AvgTargets
@@ -390,10 +380,10 @@ namespace Rawr.DPSWarr {
                 + _SL_GCDs * SL.MHAtkTable.AnyLand * SL.AvgTargets
             ;
 
-            return yellow;
+            return yellow + onAttack;
         }
         public float GetLandedYellowsOverDurOH() {
-            bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
             if (!useOH) { return 0; }
             float yellow = 0f
                 // Maintenance
@@ -416,7 +406,9 @@ namespace Rawr.DPSWarr {
             return result;
         }
         public float GetLandedAtksOverDurNoSSOH() {
-            float white  = WhiteAtks.LandedAtksOverDurOH;
+            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            if (!useOH) { return 0; }
+            float white = WhiteAtks.LandedAtksOverDurOH;
             float yellow = GetLandedYellowsOverDurOH();
 
             float result = white + yellow;
@@ -433,6 +425,8 @@ namespace Rawr.DPSWarr {
             return landednoss + (float)Math.Max(0f, ssActs);
         }
         public float GetLandedAtksOverDurOH() {
+            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            if (!useOH) { return 0; }
             float landednoss = GetLandedAtksOverDurNoSSOH();
             float ssActs = SS.GetActivates(GetLandedYellowsOverDurOH());
 
@@ -441,83 +435,61 @@ namespace Rawr.DPSWarr {
             return landednoss + (float)Math.Max(0f, ssActs);
         }
         // Stuff for Fury
-        public float CritHsSlamPerSec {
+        public float CritHsSlamOverDur {
             get {
+                float critsPerRot = 0;
                 if (CalcOpts.FuryStance) {
-                    float critsPerRot = HS.Activates * (CombatFactors._c_mhycrit + HS.BonusCritChance) +
-                                        SL.Activates * (CombatFactors._c_mhycrit + SL.BonusCritChance);
-                    return critsPerRot / CalcOpts.Duration;
+                    critsPerRot = HS.Activates * HS.MHAtkTable.Crit +
+                                  SL.Activates * SL.MHAtkTable.Crit;
                 }else{
-                    Skills.OnAttack Which; if (CalcOpts.MultipleTargets) { Which = CL; } else { Which = HS; };
-
-                    float UsedGCDs = BZ.Activates
-                                   + BTS.Activates
-                                   + DS.Activates
-                                   + SN.Activates
-                                   + TH.Activates
-                                   + HMS.Activates
-                                   + ER.Activates
-                                   + ST.Activates
-                                   + SW.Activates
-                                   + Death.Activates
-                                   + BLS.Activates * 4f
-                                   + MS.Activates
-                                   + RD.Activates
-                                   + OP.Activates
-                                   + TB.Activates
-                                   + SD.Activates;
-                    float HS_Acts = (CalcOpts.MultipleTargets ? 0f : Which.Activates);
-                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
-                    float SL_Acts = Math.Max(0f, CalcOpts.Duration / LatentGCD - UsedGCDs);
-
-                    float result = (SL.BonusCritChance + CombatFactors._c_mhycrit) * (SL_Acts / CalcOpts.Duration) +
-                                   (HS.BonusCritChance + CombatFactors._c_mhycrit) * (HS_Acts / CalcOpts.Duration);
-
-                    return result;
+                    critsPerRot = _HS_Acts     * HS.MHAtkTable.Crit +
+                                  _SL_GCDs     * SL.MHAtkTable.Crit;
                 }
+                return critsPerRot;
             }
         }
         public float MaintainCDs { get { return _Thunder_GCDs + _Sunder_GCDs + _Demo_GCDs + _Ham_GCDs + _Battle_GCDs + _Comm_GCDs + _ER_GCDs; } }
         #endregion
         #region Rage Calcs
-        public virtual float RageGenAngerPerSec { get { return Talents.AngerManagement / 3.0f; } }
-        public virtual float RageGenWrathPerSec { get { return Talents.UnbridledWrath * 3.0f / 60.0f; } }
-        public virtual float RageGenOtherPerSec {
+        public virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
+        public virtual float RageGenOverDur_Wrath { get { return (Talents.UnbridledWrath * 3.0f / 60.0f) * CalcOpts.Duration; } }
+        public virtual float RageGenOverDur_Other {
             get {
                 if (Char.MainHand == null) { return 0f; }
-                float rage  = RageGenAngerPerSec
-                            + RageGenWrathPerSec;
+                float rage = RageGenOverDur_Anger
+                           + RageGenOverDur_Wrath;
 
                 // 4pcT7
                 if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
-                    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * ((Talents.DeepWounds > 0f ? 1f : 0f) + (!CalcOpts.FuryStance ? 1f / 3f : 0f));
+                    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * CalcOpts.Duration;
+                    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f) * CalcOpts.Duration;
                 }
 
                 return rage;
             }
         }
-        public virtual float RageNeededPerSec {
+        public virtual float RageNeededOverDur {
             get {
                 if (Char.MainHand == null) { return 0f; }
                 // Fury
-                float BTRage = BT.RageUsePerSecond;
-                float WWRage = WW.RageUsePerSecond;
+                float BTRage         = BT.GetRageUseOverDur(_BT_GCDs);
+                float WWRage         = WW.GetRageUseOverDur(_WW_GCDs);
                 float BloodSurgeRage = _bloodsurgeRPS;// BS.RageUsePerSecond;
                 // Arms
-                float SweepingRage   = _SW_GCDs     != 0 ? SW.GetRageUsePerSecond( _SW_GCDs    ) : 0f;
-                float BladestormRage = _BLS_GCDs    != 0 ?BLS.GetRageUsePerSecond( _BLS_GCDs   ) : 0f;
-                float MSRage         = _MS_GCDs     != 0 ? MS.GetRageUsePerSecond( _MS_GCDs    ) : 0f;
-                float RendRage       = _RD_GCDs     != 0 ? RD.GetRageUsePerSecond( _RD_GCDs    ) : 0f;
-                float OPRage         = _OP_GCDs     != 0 ? OP.GetRageUsePerSecond( _OP_GCDs    ) : 0f;
-                float TBRage         = _TB_GCDs     != 0 ? TB.GetRageUsePerSecond( _TB_GCDs    ) : 0f;
-                float SDRage         = _SD_GCDs     != 0 ? SD.GetRageUsePerSecond( _SD_GCDs    ) : 0f;
-                float SlamRage       = _SL_GCDs     != 0 ? SL.GetRageUsePerSecond( _SL_GCDs    ) : 0f;
+                float SweepingRage   = SW.GetRageUseOverDur( _SW_GCDs    );
+                float BladestormRage = BLS.GetRageUseOverDur(_BLS_GCDs   );
+                float MSRage         = MS.GetRageUseOverDur( _MS_GCDs    );
+                float RendRage       = RD.GetRageUseOverDur( _RD_GCDs    );
+                float OPRage         = OP.GetRageUseOverDur( _OP_GCDs    );
+                float TBRage         = TB.GetRageUseOverDur( _TB_GCDs    );
+                float SDRage         = SD.GetRageUseOverDur( _SD_GCDs    );
+                float SlamRage       = SL.GetRageUseOverDur( _SL_GCDs    );
                 // Maintenance
-                float ThunderRage    = _TH_DPS      != 0 ? TH.GetRageUsePerSecond( _TH_DPS     ) : 0f;
-                float SunderRage     = _Sunder_GCDs != 0 ? SN.GetRageUsePerSecond( _Sunder_GCDs) : 0f;
-                float DemoRage       = _Demo_GCDs   != 0 ? DS.GetRageUsePerSecond( _Demo_GCDs  ) : 0f;
-                float HamstringRage  = _Ham_GCDs    != 0 ? HMS.GetRageUsePerSecond(_Ham_GCDs   ) : 0f;
-                float BattleRage     = _Battle_GCDs != 0 ? BTS.GetRageUsePerSecond(_Battle_GCDs) : 0f;
+                float ThunderRage    = TH.GetRageUseOverDur( _TH_DPS     );
+                float SunderRage     = SN.GetRageUseOverDur( _Sunder_GCDs);
+                float DemoRage       = DS.GetRageUseOverDur( _Demo_GCDs  );
+                float HamstringRage  = HMS.GetRageUseOverDur(_Ham_GCDs   );
+                float BattleRage     = BTS.GetRageUseOverDur(_Battle_GCDs);
                 // Total
                 float rage = BTRage + WWRage + MSRage + OPRage + TBRage + SDRage + SlamRage +
                     BloodSurgeRage + SweepingRage + BladestormRage + RendRage +
@@ -525,13 +497,13 @@ namespace Rawr.DPSWarr {
                 return rage;
             }
         }
-        public virtual float freeRage {
+        public virtual float FreeRageOverDur {
             get {
                 if (Char.MainHand == null) { return 0f; }
-                float white = WHITEATTACKS.whiteRageGenPerSec;
-                float sword = SS.GetRageUsePerSecond(_SS_Acts);
-                float other = RageGenOtherPerSec;
-                float needy = RageNeededPerSec;
+                float white = WHITEATTACKS.whiteRageGenOverDur;
+                float sword = SS.GetRageUseOverDur(_SS_Acts);
+                float other = RageGenOverDur_Other;
+                float needy = RageNeededOverDur;
                 return white + sword + other - needy;
             }
         }
@@ -550,7 +522,7 @@ namespace Rawr.DPSWarr {
             _Abil_HPS = abil.GetHPS(Abil_GCDs);
             DPS_TTL += _Abil_DPS;
             HPS_TTL += _Abil_HPS;
-            float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
+            float rageadd = abil.GetRageUseOverDur(Abil_GCDs);
             availRage -= rageadd;
             RageNeeded += rageadd;
         }
@@ -566,7 +538,7 @@ namespace Rawr.DPSWarr {
             _Abil_HPS = abil.GetHPS(Abil_GCDs);
             DPS_TTL += _Abil_DPS;
             HPS_TTL += _Abil_HPS;
-            float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
+            float rageadd = abil.GetRageUseOverDur(Abil_GCDs);
             availRage -= rageadd;
             RageNeeded += rageadd;
         }
@@ -580,7 +552,7 @@ namespace Rawr.DPSWarr {
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             _Abil_HPS = abil.GetHPS(Abil_GCDs);
             HPS_TTL += _Abil_HPS;
-            float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
+            float rageadd = abil.GetRageUseOverDur(Abil_GCDs);
             availRage -= rageadd;
             RageNeeded += rageadd;
         }
@@ -594,7 +566,7 @@ namespace Rawr.DPSWarr {
             availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             _Abil_HPS = abil.GetHPS(Abil_GCDs);
             HPS_TTL += _Abil_HPS;
-            float rageadd = abil.GetRageUsePerSecond(Abil_GCDs);
+            float rageadd = abil.GetRageUseOverDur(Abil_GCDs);
             RageGenOther += rageadd;
             availRage += rageadd;
         }
@@ -606,7 +578,7 @@ namespace Rawr.DPSWarr {
             GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + " (Doesn't use GCDs)\n" : "");
             _Abil_HPS = abil.GetHPS(Abil_Acts);
             HPS_TTL += _Abil_HPS;
-            float rageadd = abil.GetRageUsePerSecond(Abil_Acts);
+            float rageadd = abil.GetRageUseOverDur(Abil_Acts);
             RageGenOther += rageadd;
             availRage += rageadd;
         }
@@ -637,12 +609,7 @@ namespace Rawr.DPSWarr {
             doIterations();
 
             // ==== Rage Generation Priorities ========
-            RageGenOther = RageGenAngerPerSec + RageGenWrathPerSec;
-            if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
-                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f);
-                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f);
-            }
-            availRage += RageGenOther;
+            availRage += RageGenOverDur_Other;
 
             /*Bloodrage         */AddAnItem(                                       ref availRage,percTimeInStun,ref _Blood_GCDs,              ref HPS_TTL,               ref _Blood_HPS,  BR);
             /*Berserker Rage    */AddAnItem(ref NumGCDs,ref availGCDs,ref GCDsused,ref availRage,percTimeInStun,ref _ZRage_GCDs,              ref HPS_TTL,               ref _ZRage_HPS,  BZ,false);
@@ -680,7 +647,7 @@ namespace Rawr.DPSWarr {
             _WW_HPS = WW.GetHPS(WW_GCDs);
             DPS_TTL += _WW_DPS;
             HPS_TTL += _WW_HPS;
-            rageadd = WW.GetRageUsePerSecond(WW_GCDs);
+            rageadd = WW.GetRageUseOverDur(WW_GCDs);
             availRage -= rageadd;
             RageNeeded += rageadd;
 
@@ -694,7 +661,7 @@ namespace Rawr.DPSWarr {
             _BT_HPS = BT.GetHPS(BT_GCDs);
             DPS_TTL += _BT_DPS;
             HPS_TTL += _BT_HPS;
-            rageadd = BT.GetRageUsePerSecond(BT_GCDs);
+            rageadd = BT.GetRageUseOverDur(BT_GCDs);
             availRage -= rageadd;
             RageNeeded += rageadd;
 
@@ -709,7 +676,7 @@ namespace Rawr.DPSWarr {
             _BS_HPS = BS.GetHPS(BS_GCDs);
             DPS_TTL += _BS_DPS;
             HPS_TTL += _BS_HPS;
-            rageadd = BS.GetRageUsePerSecond(BS_GCDs);
+            rageadd = BS.GetRageUseOverDur(BS_GCDs);
             availRage -= rageadd;
             RageNeeded += rageadd;
 
@@ -725,39 +692,38 @@ namespace Rawr.DPSWarr {
             // Alternate to Cleave is MultiTargs is active
             // After iterating how many Overrides can be done and still do other abilities, then do the white dps
 
-            availRage += WhiteAtks.MHRageGenPerSec + WhiteAtks.OHRageGenPerSec;
+            availRage += WhiteAtks.MHRageGenOverDur + WhiteAtks.OHRageGenOverDur;
 
-            Skills.OnAttack Which = null;
-            bool ok = false;
-            if (CalcOpts.MultipleTargets) {
-                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_      ]) { ok = true; Which = CL; }
-            }else{
-                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]) { ok = true; Which = HS; }
-            }
+            bool HSok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            bool CLok = CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
             WhiteAtks.Slam_Freq = _SL_GCDs;
-            if (ok) {
-                float numHSPerSec = availRage / Which.FullRageCost;
-                Which.OverridesPerSec = numHSPerSec;
-                WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
+            if (HSok || CLok) {
+                float numHSOverDur = availRage / HS.FullRageCost;
+                HS.OverridesOverDur = numHSOverDur;
+                WhiteAtks.HSOverridesOverDur = numHSOverDur;
+                WhiteAtks.CLOverridesOverDur = 0f;
                 _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
                 _WhiteDPS = _WhiteDPSMH;
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
-                _OVD_DPS = Which.DPS;
-                _OVD_PerHit = Which.DamageOnUse;
+                _HS_DPS = HS.DPS;
+                _HS_PerHit = HS.DamageOnUse;
+                _CL_DPS = CL.DPS;
+                _CL_PerHit = CL.DamageOnUse;
                 DPS_TTL += _WhiteDPS;
-                DPS_TTL += _OVD_DPS;
-            }else{
-                RageGenWhite = WHITEATTACKS.whiteRageGenPerSec;
+                DPS_TTL += _HS_DPS;
+                //DPS_TTL += _CL_DPS;
+            } else {
+                RageGenWhite = WHITEATTACKS.whiteRageGenOverDur;
                 availRage += RageGenWhite;
-                WhiteAtks.Ovd_Freq = 0f;
+                WhiteAtks.HSOverridesOverDur = 0f;
+                WhiteAtks.CLOverridesOverDur = 0f;
                 _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
                 _WhiteDPS = _WhiteDPSMH;
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
-                _OVD_DPS = 0f;
-                _OVD_PerHit = 0f;
+                _HS_DPS = _HS_PerHit = _HS_Acts = 0;
+                _CL_DPS = _CL_PerHit = _CL_Acts = 0;
                 DPS_TTL += _WhiteDPS;
-                DPS_TTL += _OVD_DPS;
             }
             calcDeepWounds();
 
@@ -800,7 +766,8 @@ namespace Rawr.DPSWarr {
         public float _HF_Acts      = 0f;
         public float _EM_Acts      = 0f;
         //
-        public float _OVD_PerHit  = 0f; public float _OVD_DPS      = 0f;
+        public float _HS_PerHit = 0f, _HS_DPS = 0f, _HS_Acts = 0f;
+        public float _CL_PerHit = 0f, _CL_DPS = 0f, _CL_Acts = 0f;
         public float _WhiteDPSMH  = 0f; public float _WhiteDPSOH   = 0f;
         public float _WhiteDPS    = 0f; public float _WhitePerHit  = 0f;
         public float RageGenWhite = 0f; public float RageGenOther  = 0f; public float RageNeeded = 0f;
@@ -870,12 +837,7 @@ namespace Rawr.DPSWarr {
             }
 
             // ==== Rage Generation Priorities ========
-            RageGenOther = RageGenAngerPerSec + RageGenWrathPerSec;
-            if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
-                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f);
-                RageGenOther += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f);
-            }
-            availRage += RageGenOther;
+            availRage += RageGenOverDur_Other;
 
             SndW.NumStunsOverDur = _Stunned_Acts;
             /*Second Wind       */AddAnItem(                                       ref availRage,percTimeInStun,ref _Second_Acts,             ref HPS_TTL,               ref _Second_HPS, SndW);
@@ -952,12 +914,18 @@ namespace Rawr.DPSWarr {
                 _SS_Acts = SS_Acts;
                 loopCounter++;
             }
-            rageadd = SL.GetRageUsePerSecond(_SL_GCDs)
-                    + OP.GetRageUsePerSecond(_OP_GCDs)
-                    + SD.GetRageUsePerSecond(_SD_GCDs)
-                    - SS.GetRageUsePerSecond(_SS_Acts);
+            // Can't manage FreeRage for SD yet
+            rageadd = SL.GetRageUseOverDur(_SL_GCDs)
+                    + OP.GetRageUseOverDur(_OP_GCDs)
+                    - SS.GetRageUseOverDur(_SS_Acts);
             availRage -= rageadd;
             RageNeeded += rageadd;
+            // manage it now
+            SD.FreeRage = availRage;
+            rageadd = SD.GetRageUseOverDur(_SD_GCDs);
+            availRage -= rageadd;
+            RageNeeded += rageadd;
+            // move on
             GCDUsage += (_OP_GCDs > 0 ? _OP_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x2 : " + OP.Name + "\n" : "");
             GCDUsage += (_SD_GCDs > 0 ? _SD_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + SD.Name + "\n" : "");
             GCDUsage += (_SL_GCDs > 0 ? _SL_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + SL.Name + "\n" : "");
@@ -981,27 +949,29 @@ namespace Rawr.DPSWarr {
                      && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
             if (hsok || clok) {
-                RageGenWhite = WhiteAtks.whiteRageGenPerSec * (1f - percTimeInStun);
+                WhiteAtks.HSOverridesOverDur = 0f;
+                WhiteAtks.CLOverridesOverDur = 0f;
+                RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - percTimeInStun);
                 availRage += RageGenWhite;
+
                 // Assign Rage to each ability
-                WhiteAtks.Ovd_Freq = 0f;
-                
                 float hsPercOvd, clPercOvd; // what percentage of overrides are cleave and hs
-                hsPercOvd = (hsok ? 1f : 0f);
-                if (CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_])
-                    hsPercOvd -= CalcOpts.MultipleTargetsPerc / 100f;
-                clPercOvd = (clok ? 1f - hsPercOvd : 0f);
-                
-                float RageForCL     = clok ? (!hsok ? availRage : availRage * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
-                float RageForHS     = hsok ? availRage - RageForCL : 0f;
-                float numHSPerSec   = RageForHS / HS.FullRageCost;
-                float numCLPerSec   = RageForCL / CL.FullRageCost;
-                HS.OverridesPerSec  = numHSPerSec;
-                CL.OverridesPerSec  = numCLPerSec;
-                WhiteAtks.Ovd_Freq  = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
-                WhiteAtks.Ovd_Freq += numCLPerSec / WhiteAtks.MhEffectiveSpeed;
-                float oldHSActivates = 0f, newHSActivates = HS.Activates;
-                float oldCLActivates = 0f, newCLActivates = CL.Activates;
+                hsPercOvd = (hsok ? 1 : 0);
+                if (clok) { hsPercOvd -= CalcOpts.MultipleTargetsPerc / 100f; }
+                clPercOvd = (clok ? 1f - hsPercOvd : 0);
+
+                float RageForCL      = clok ? (!hsok ? availRage : availRage * clPercOvd) : 0f;
+                float RageForHS      = hsok ? availRage - RageForCL : 0f;
+                float numHSOverDur   = RageForHS / HS.FullRageCost;
+                float numCLOverDur   = RageForCL / CL.FullRageCost;
+                HS.OverridesOverDur  = numHSOverDur;
+                CL.OverridesOverDur  = numCLOverDur;
+                WhiteAtks.HSOverridesOverDur = numHSOverDur / WhiteAtks.MhEffectiveSpeed;
+                WhiteAtks.CLOverridesOverDur = numCLOverDur / WhiteAtks.MhEffectiveSpeed;
+                float oldHSActivates = 0f,
+                    newHSActivates = HS.Activates;
+                float oldCLActivates = 0f,
+                    newCLActivates = CL.Activates;
                 while (/*loopCounter < 50
                         &&*/ Math.Abs(newHSActivates - oldHSActivates) > 0.01f
                         || Math.Abs(newCLActivates - oldCLActivates) > 0.01f)
@@ -1010,47 +980,46 @@ namespace Rawr.DPSWarr {
                     oldCLActivates = CL.Activates;
                     // Reset the rage
                     availRage = origAvailRage;
-                    RageGenWhite = WhiteAtks.whiteRageGenPerSec * (1f - percTimeInStun);
+                    RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - percTimeInStun);
                     availRage += RageGenWhite;
                     // Assign Rage to each ability
                     RageForCL = clok ? (!hsok ? availRage : availRage * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
                     RageForHS = hsok ? availRage - RageForCL : 0f;
                     //
-                    numHSPerSec = RageForHS / HS.FullRageCost;
-                    HS.OverridesPerSec = numHSPerSec;
-                    WhiteAtks.Ovd_Freq = numHSPerSec / WhiteAtks.MhEffectiveSpeed;
-                    numCLPerSec = RageForCL / CL.FullRageCost;
-                    CL.OverridesPerSec = numCLPerSec;
-                    WhiteAtks.Ovd_Freq += numCLPerSec / WhiteAtks.MhEffectiveSpeed;
+                    HS.OverridesOverDur = WhiteAtks.HSOverridesOverDur = (RageForHS / HS.FullRageCost);
+                    CL.OverridesOverDur = WhiteAtks.CLOverridesOverDur = (RageForCL / CL.FullRageCost);
+                    //
                     newHSActivates = HS.Activates;
                     newCLActivates = CL.Activates;
                     // Iterate
-                    loopCounter++;
+                    //loopCounter++;
                 }
                 // Add HS dps
-                _OVD_DPS = HS.DPS;
-                _OVD_PerHit = HS.DamageOnUse * hsPercOvd;
-                DPS_TTL += _OVD_DPS;
+                _HS_Acts = numHSOverDur;
+                _HS_DPS = HS.DPS;
+                _HS_PerHit = HS.DamageOnUse;
+                DPS_TTL += _HS_DPS;
                 // Add CL dps
-                _OVD_DPS = CL.DPS;
-                _OVD_PerHit += CL.DamageOnUse * clPercOvd;
-                DPS_TTL += _OVD_DPS;
+                _CL_Acts = numCLOverDur;
+                _CL_DPS = CL.DPS;
+                _CL_PerHit = CL.DamageOnUse;
+                DPS_TTL += _CL_DPS;
                 // White
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
                 _WhiteDPSMH = WhiteAtks.MhDPS * (1f - (CalcOpts.StunningTargets ? percTimeInStun : 0f)); // MhWhiteDPS with loss of time in stun
                 _WhiteDPS = _WhiteDPSMH;
                 DPS_TTL += _WhiteDPS;
             }else{
-                RageGenWhite = WHITEATTACKS.whiteRageGenPerSec;
+                RageGenWhite = WHITEATTACKS.whiteRageGenOverDur;
                 availRage += RageGenWhite;
-                WhiteAtks.Ovd_Freq = 0f;
+                WhiteAtks.HSOverridesOverDur = 0f;
+                WhiteAtks.CLOverridesOverDur = 0f;
                 _WhiteDPSMH = WhiteAtks.MhDPS * (1f - (CalcOpts.StunningTargets ? percTimeInStun : 0f)); // MhWhiteDPS with loss of time in stun
                 _WhiteDPS = _WhiteDPSMH;
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
-                _OVD_DPS = 0f;
-                _OVD_PerHit = 0f;
+                _HS_Acts = 0f; _HS_DPS = 0f; _HS_PerHit = 0f;
+                _CL_Acts = 0f; _CL_DPS = 0f; _CL_PerHit = 0f;
                 DPS_TTL += _WhiteDPS;
-                DPS_TTL += _OVD_DPS;
             }
             calcDeepWounds();
 

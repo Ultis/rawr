@@ -2457,15 +2457,16 @@ namespace Rawr
                 SetName = "Dreadnaught Battlegear",
                 SetThreshold = 4
             });
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Siegebreaker Battlegear (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T8_2P_HasteProc = 150f },
+                Stats = new Stats() { BonusWarrior_T8_2P_HasteProc = 1, },
                 SetName = "Siegebreaker Battlegear",
                 SetThreshold = 2
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HSorSLHit, new Stats() { HasteRating = 150f, }, 5f, 0f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Siegebreaker Battlegear (T8) 4 Piece Bonus",

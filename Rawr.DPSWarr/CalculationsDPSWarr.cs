@@ -126,7 +126,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                       
                         "Rage Details:Total Generated Rage",
                         "Rage Details:Needed Rage for Abilities",
-                        "Rage Details:Available Free Rage",
+                        "Rage Details:Available Free Rage*For Heroic Strikes and Cleaves",
                     };
                 }
                 return _characterDisplayCalculationLabels;
@@ -371,8 +371,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     effect.Trigger == Trigger.MeleeHit ||
                     effect.Trigger == Trigger.PhysicalCrit ||
                     effect.Trigger == Trigger.PhysicalHit ||
-                    effect.Trigger == Trigger.DoTTick
-                    || effect.Trigger == Trigger.DamageDone) && HasRelevantStats(effect.Stats))
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.HSorSLHit)
+                    && HasRelevantStats(effect.Stats))
                 {
                     relevantStats.AddSpecialEffect(effect);
                 }
@@ -428,7 +430,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     effect.Trigger == Trigger.PhysicalCrit ||
                     effect.Trigger == Trigger.PhysicalHit ||
                     effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone)
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.HSorSLHit)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                     if (relevant) break;
@@ -626,10 +629,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability;
 
             if (calcOpts.FuryStance) {
-                calculatedStats.WhiteRage = whiteAttacks.whiteRageGenPerSec;
-                calculatedStats.OtherRage = Rot.RageGenOtherPerSec;
-                calculatedStats.NeedyRage = Rot.RageNeededPerSec;
-                calculatedStats.FreeRage  = Rot.freeRage;
+                calculatedStats.WhiteRage = whiteAttacks.whiteRageGenOverDur / calcOpts.Duration;
+                calculatedStats.OtherRage = Rot.RageGenOverDur_Other / calcOpts.Duration;
+                calculatedStats.NeedyRage = Rot.RageNeededOverDur / calcOpts.Duration;
+                calculatedStats.FreeRage  = Rot.FreeRageOverDur / calcOpts.Duration;
             }else{
                 calculatedStats.WhiteRage = Rot.RageGenWhite;
                 calculatedStats.OtherRage = Rot.RageGenOther;
@@ -686,6 +689,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
             };
+            // Add Talents that give SpecialEffects
             if (talents.Rampage > 0) {
                 SpecialEffect rampage = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalCrit = 0.05f, }, 10, 0);
                 statsTalents.AddSpecialEffect(rampage);
@@ -704,6 +708,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 float value = talents.Flurry * 0.05f;
                 SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalHaste = value, }, 2, 0);
                 statsTalents.AddSpecialEffect(flurry);
+            }
+            if (talents.DeathWish > 0 && calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) {
+                SpecialEffect death = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
+                    30f, 3f * 60f * (1f - 1f / 9f * talents.IntensifyRage));
+                statsTalents.AddSpecialEffect(death);
             }
 
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
@@ -754,6 +764,55 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors);
             Rotation Rot = new Rotation(character, statsTotal);
             Rot.Initialize();
+            if (calcOpts.FuryStance) { Rot.MakeRotationandDoDPS_Fury(); } else { Rot.MakeRotationandDoDPS_Fury(); }
+
+            // Add some last minute SpecialEffects
+            if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_]) {
+                SpecialEffect shatt = new SpecialEffect(Trigger.Use,
+                    new Stats() { ArmorPenetration = 0.20f, },
+                    Rot.ST.Duration, Rot.ST.Cd,
+                    Rot.ST.MHAtkTable.AnyLand);
+                statsTotal.AddSpecialEffect(shatt);
+            }
+            if (statsTotal.BonusWarrior_T8_2P_HasteProc > 0f && Rot.CritHsSlamOverDur > 0) {
+                /*SpecialEffect hasteBonusEffect = new SpecialEffect(Trigger.HSorSLHit,
+                    new Stats() { HasteRating = statsTotal.BonusWarrior_T8_2P_HasteProc, },
+                    5f, // duration
+                    0f // cooldown
+                );
+                statsTotal.AddSpecialEffect(hasteBonusEffect);*/
+            }
+            if (calcOpts.MultipleTargets && calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_]) {
+                SpecialEffect sweep = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusTargets = 1f * calcOpts.MultipleTargetsPerc / 100f, },
+                    Rot.SW.Duration, Rot.SW.Cd);
+                statsTotal.AddSpecialEffect(sweep);
+            }
+            if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_]) {
+                SpecialEffect blood = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusRageGen = 1f * (1f + talents.ImprovedBloodrage * 0.25f), },
+                    Rot.BR.Duration, Rot.BR.Cd);
+                statsTotal.AddSpecialEffect(blood);
+            }
+            /*if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Hamstring_]) {
+                SpecialEffect hammy = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusTargets = 1f * calcOpts.MultipleTargetsPerc / 100f, },
+                    Rot.SW.Duration, Rot.SW.Cd);
+                statsTotal.AddSpecialEffect(hammy);
+            }*/
+            if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
+                SpecialEffect bs = new SpecialEffect(Trigger.Use,
+                    new Stats() { AttackPower = (548f * (1f + talents.CommandingPresence * 0.05f)), },
+                    Rot.BTS.Duration, Rot.BTS.Cd+0.01f);
+                statsTotal.AddSpecialEffect(bs);
+            }
+            if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_]) {
+                float value = (2255f * (1f + talents.CommandingPresence * 0.05f));
+                SpecialEffect cs = new SpecialEffect(Trigger.Use,
+                    new Stats() { Health = value, },
+                    Rot.CS.Duration, Rot.CS.Cd+0.01f);
+                statsTotal.AddSpecialEffect(cs);
+            }
 
             float fightDuration = calcOpts.Duration;
 
@@ -806,7 +865,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     }
                     switch (effect.Trigger)
                     {
-                        case Trigger.Use: 
+                        case Trigger.Use:
                             statsProcs += effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration); 
                             break;
                         case Trigger.MeleeHit:
@@ -823,48 +882,15 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         case Trigger.DamageDone: // physical and dots
                             statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); 
                             break;
+                        case Trigger.HSorSLHit: // Set bonus handler
+                            //Rot._SL_GCDs = Rot._SL_GCDs;
+                            //Rot._HS_Acts = Rot._HS_Acts;
+                            statsProcs += effect.GetAverageStats(1f / Rot.CritHsSlamOverDur);
+                            break;
                     }
                     effect.Stats.ArmorPenetrationRating = oldArp;
                 }
             }
-            if (statsTotal.BonusWarrior_T8_2P_HasteProc > 0f) {
-                SpecialEffect hasteBonusEffect = new SpecialEffect(Trigger.MeleeHit,
-                    new Stats() { HasteRating = statsTotal.BonusWarrior_T8_2P_HasteProc, },
-                    5f, // duration
-                    0f // cooldown
-                );
-                Stats hasteproc = hasteBonusEffect.GetAverageStats(1f / Rot.CritHsSlamPerSec);
-                statsProcs += hasteproc;
-            }
-            // Warrior Abilities as SpecialEffects
-            Stats avgstats = new Stats() { AttackPower = 0f, };
-            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.DeathWish Death = new Skills.DeathWish(character, statsTotal, combatFactors, whiteAttacks);
-            avgstats += Death.AverageStats;
-            //Recklessness is highly inaccurate right now
-            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            //Skills.Recklessness  Reck  = new Skills.Recklessness(   character,statsTotal);
-            //avgstats += Reck.AverageStats ;
-            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.ShatteringThrow Shatt = new Skills.ShatteringThrow(character, statsTotal, combatFactors, whiteAttacks);
-            avgstats += Shatt.AverageStats;
-            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.SweepingStrikes Sweep = new Skills.SweepingStrikes(character, statsTotal, combatFactors, whiteAttacks);
-            avgstats += Sweep.AverageStats;
-            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.Bloodrage Blood = new Skills.Bloodrage(character, statsTotal, combatFactors, whiteAttacks);
-            avgstats += Blood.AverageStats;
-            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            //Skills.Hamstring     Hammy = new Skills.Hamstring(      character,statsTotal);
-            //avgstats += Hammy.AverageStats;
-            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.BattleShout Battle = new Skills.BattleShout(character, statsTotal, combatFactors, whiteAttacks);
-            avgstats += Battle.AverageStats;
-            //Rot = new Rotation(character, statsTotal + statsProcs + avgstats); Rot.Initialize();
-            Skills.CommandingShout CS = new Skills.CommandingShout(character, statsTotal, combatFactors, whiteAttacks);
-            avgstats += CS.AverageStats;
-
-            statsProcs += avgstats;
 
             statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier    ));
             statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
@@ -878,12 +904,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
             statsProcs.BonusArmor  += statsProcs.Agility * 2f;
             statsProcs.BonusArmor   = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
             statsProcs.Armor       += statsProcs.BonusArmor;
+            statsProcs.BonusArmor  = 0; //it's been added to Armor so kill it
 
             // Attack Power
-            /*statsProcs.AttackPower += statsProcs.Strength * 2f;
-            statsProcs.AttackPower  = (float)Math.Floor(statsProcs.AttackPower *
-                                                                (1f + totalBAPM) *
-                                                                (1f + statsProcs.BonusAttackPowerMultiplier));*/
             float totalBAPMProcs    = (1f + statsTotal.BonusAttackPowerMultiplier) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
             float apBonusSTRProcs   = (1f + totalBAPM) * (statsProcs.Strength * 2f);
             float apBonusAttTProcs  = (1f + totalBAPM) * ((statsProcs.Armor / 108f) * talents.ArmoredToTheTeeth);
