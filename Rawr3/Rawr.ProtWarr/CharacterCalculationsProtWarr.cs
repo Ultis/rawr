@@ -54,6 +54,7 @@ namespace Rawr.ProtWarr
         public float Miss { get; set; }
         public float CritReduction { get; set; }
         public float CritVulnerability { get; set; }
+        public float DefenseRatingNeeded { get; set; }
         public float ArmorReduction { get; set; }
         public float GuaranteedReduction { get; set; }
         public float DodgePlusMissPlusParry { get; set; }
@@ -113,8 +114,7 @@ namespace Rawr.ProtWarr
             dictValues.Add("Miss", string.Format("{0:0.00%}", Miss));
             dictValues.Add("Block Value", string.Format("{0}", BlockValue));
             dictValues.Add("Guaranteed Reduction", string.Format("{0:0.00%}", GuaranteedReduction));
-            dictValues.Add("Avoidance", string.Format("{0:0.00%}", DodgePlusMissPlusParry));
-            dictValues.Add("Avoidance + Block", string.Format("{0:0.00%}", DodgePlusMissPlusParryPlusBlock));
+            dictValues.Add("Avoidance", string.Format("{0:0.00%} (+Block {1:0.00%})", DodgePlusMissPlusParry, DodgePlusMissPlusParryPlusBlock));
             dictValues.Add("Total Mitigation", string.Format("{0:0.00%}", TotalMitigation));
             
             if(AttackerSpeed == BaseAttackerSpeed)
@@ -128,19 +128,16 @@ namespace Rawr.ProtWarr
                                 "{3:0} damage per critical attack", DamageTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCrit));
             
             dictValues.Add("Resilience",
-                string.Format(@"{0}*Reduces periodic damage and chance to be critically hit by {1}%." + Environment.NewLine +
-                                "Reduces the effect of mana-drains and the damage of critical strikes by {2}%.",
+                string.Format(@"{0}*Reduces the damage of critical strikes and chance to be critically hit by {1}%.",
                                 BasicStats.Resilience,
-                                BasicStats.Resilience * ProtWarr.ResilienceRatingToCritReduction,
-                                BasicStats.Resilience * ProtWarr.ResilienceRatingToCritReduction * 2));
+                                StatConversion.GetResilienceCritReduction(BasicStats.Resilience, CharacterClass.Warrior)));
             
             if (CritVulnerability > 0.0001f)
             {
-                double defenseNeeded = Math.Ceiling((CritVulnerability / (ProtWarr.DefenseToCritReduction / 100.0f)) / ProtWarr.DefenseRatingToDefense);
-                double resilienceNeeded = Math.Ceiling(CritVulnerability / (ProtWarr.ResilienceRatingToCritReduction / 100.0f));
+                float resilienceNeeded = (float)Math.Ceiling((StatConversion.CRITREDUC_PER_RESILIENCE * (CritVulnerability * 100.0f)));
                 dictValues.Add("Chance to be Crit",
                     string.Format("{0:0.00%}*CRITTABLE! Short by {1:0} defense or {2:0} resilience to be uncrittable.",
-                                    CritVulnerability, defenseNeeded, resilienceNeeded));
+                                    CritVulnerability, DefenseRatingNeeded, resilienceNeeded));
             }
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
@@ -161,14 +158,15 @@ namespace Rawr.ProtWarr
             dictValues.Add("Hit", string.Format("{0:0.00%}*Hit Rating {1}", Hit, BasicStats.HitRating));
             dictValues.Add("Expertise", 
                 string.Format("{0}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}.", 
-                                Math.Round(BasicStats.ExpertiseRating * ProtWarr.ExpertiseRatingToExpertise + BasicStats.Expertise),
+                                Math.Round(StatConversion.GetExpertiseFromRating(BasicStats.ExpertiseRating, CharacterClass.Warrior) + BasicStats.Expertise),
                                 BasicStats.ExpertiseRating, Expertise));
             dictValues.Add("Haste", string.Format("{0:0.00%}*Haste Rating {1:0.00}", Haste, BasicStats.HasteRating));
             dictValues.Add("Armor Penetration", 
                 string.Format("{0:0.00%}*Armor Penetration Rating {1}" + Environment.NewLine + "Armor Reduction {2}", 
                                 ArmorPenetration, BasicStats.ArmorPenetrationRating, BasicStats.ArmorPenetration));
             dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}", Crit, BasicStats.CritRating));
-            dictValues.Add("Weapon Damage", string.Format("{0}", BasicStats.WeaponDamage));
+            // Never really used in current WoW itemization, just taking up space
+            // dictValues.Add("Weapon Damage", string.Format("{0}", BasicStats.WeaponDamage));
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine + 
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
@@ -209,14 +207,18 @@ namespace Rawr.ProtWarr
                 case "Health": return BasicStats.Health;
                 case "Unlimited TPS": return UnlimitedThreat;
                 case "Limited TPS": return LimitedThreat;
+                case "Hit %": return Hit * 100.0f;
+                case "Expertise %": return Expertise * 100.0f;
+
                 case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
                 case "% Total Mitigation": return TotalMitigation * 100.0f;
                 case "% Chance to Avoid Attacks": return DodgePlusMissPlusParry * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
+                
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
-                case "% Chance to be Dodged": return 6.5f - Expertise * 100.0f;
-                case "Hit %": return Hit * 100.0f;
-                case "Expertise %": return Expertise * 100.0f;
+                case "% Chance to be Dodged": return DodgedAttacks * 100.0f;
+                case "% Chance to Miss": return MissedAttacks * 100.0f;
+                
                 case "Burst Time": return BurstTime;
                 case "TankPoints": return TankPoints;
                 case "Nature Survival": return NatureSurvivalPoints;

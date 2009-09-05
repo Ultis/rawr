@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.ProtWarr {
-    public enum Ability {
+namespace Rawr.ProtWarr
+{
+    public enum Ability
+    {
         None,
         Cleave,
         ConcussionBlow,
@@ -22,18 +24,24 @@ namespace Rawr.ProtWarr {
         ThunderClap,
         Vigilance,
     }
-    public enum AttackModelMode {
+
+    public enum AttackModelMode
+    {
         Basic,
         Devastate,
         SwordAndBoard,
         FullProtection,
         UnrelentingAssault,
     }
-    public enum RageModelMode {
+
+    public enum RageModelMode
+    {
         Limited,
         Infinite,
     }
-    public enum DamageType {
+
+    public enum DamageType
+    {
         Physical,
         Holy,
         Fire,

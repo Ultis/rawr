@@ -35,6 +35,7 @@ namespace Rawr.ProtWarr
         public float DamagePerSecond { get; private set; }
         public float AttacksPerSecond { get; private set; }
         public float CritsPerSecond { get; private set; }
+        public float AttackerHitsPerSecond { get; private set; }
 
         private void Calculate()
         {
@@ -244,6 +245,7 @@ namespace Rawr.ProtWarr
             DamagePerSecond = modelDamage / modelLength;
             AttacksPerSecond = modelHits / modelLength;
             CritsPerSecond = modelCrits / modelLength;
+            AttackerHitsPerSecond = attackerHits / modelLength;
         }
 
         public AttackModel(Character character, Stats stats, AttackModelMode attackModelMode)

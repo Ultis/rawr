@@ -326,7 +326,7 @@ namespace Rawr
                     S.PhysicalCrit = 0.0327f;
                     S.SpellPower = 0;
                     S.SpellCrit = 0.03336f;
-                    S.Dodge = 0.0345430f;
+                    S.Dodge = 0.0349430f;
                     S.Parry = 0.05f;
                     S.Block = 0.05f;
                     switch (characterRace)
@@ -614,7 +614,7 @@ namespace Rawr
                     S.Armor = 0f;
                     S.AttackPower = 220f;
                     S.PhysicalCrit = 0.03192f; // This + the base agi makes 4.88%
-                    S.Dodge = 0.05f; // ?? 0.0366400f;
+                    S.Dodge = 0.03664f;
                     S.Parry = 0.05f;
                     S.Block = 0.05f;
                     S.SpellPower = 0f;
@@ -646,14 +646,14 @@ namespace Rawr
                         case CharacterRace.Human:
                             S.Strength = 174f;
                             S.Agility = 113f;
-                            S.Stamina = 161f;
+                            S.Stamina = 159f;
                             S.Intellect = 36f;
                             S.Spirit = 58f;  // 60/1.03 = 58.25 ~58
                             break;
                         case CharacterRace.NightElf:
-                            S.Strength = 177;
+                            S.Strength = 171;
                             S.Agility = 118;
-                            S.Stamina = 164;
+                            S.Stamina = 158;
                             S.Intellect = 36;
                             S.Spirit = 59;
                             break;

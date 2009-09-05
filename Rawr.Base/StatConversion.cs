@@ -112,17 +112,17 @@ namespace Rawr
         };
 
         public static float[] AGI_PER_DODGE = { 0.0f, // Starts at 0
-            84.558823524f, // Warrior 1
-            59.8958333295f, // Paladin 2
-            86.466165408f, // Hunter 3
-            47.7178423195f, // Rogue 4
-            59.8958333295f, // Priest 5
-            84.558823524f, // Death Knight 6
-            59.8958333295f, // Shaman 7
-            58.974358972f, // Mage 8
-            59.8958333295f, // Warlock 9
+            84.74576271f, // Warrior 1
+            59.88023952f, // Paladin 2
+            86.20689655f, // Hunter 3
+            47.84688995f, // Rogue 4
+            59.88023952f, // Priest 5
+            84.74576271f, // Death Knight 6
+            59.88023952f, // Shaman 7
+            58.82352941f, // Mage 8
+            59.88023952f, // Warlock 9
             0.0f,         // Empty 10
-            47.9166666705f, // Druid 11
+            47.84688995f, // Druid 11
         };
 
         public static float[] DR_COEFFIENT = { 0.0f, // Starts at 0

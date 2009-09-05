@@ -25,19 +25,6 @@ namespace Rawr.ProtWarr
         Vigilance,
     }
 
-    public enum HitResult
-    {
-        AnyMiss,
-        AnyHit,
-        Miss,
-        Dodge,
-        Parry,
-        Block,
-        Glance,
-        Crit,
-        Hit,
-    }
-
     public enum AttackModelMode
     {
         Basic,

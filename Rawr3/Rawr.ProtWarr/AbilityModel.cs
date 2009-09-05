@@ -57,10 +57,7 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.Devastate:
                     // Assumes 5 stacks of Sunder Armor debuff
-                    if (Options.UsePTR)
-                        baseDamage = Lookup.WeaponDamage(Character, Stats, true) + (202.0f * 5.0f);
-                    else
-                        baseDamage = (Lookup.WeaponDamage(Character, Stats, true) * 0.5f) + (101.0f * 5.0f);
+                    baseDamage = Lookup.WeaponDamage(Character, Stats, true) + (202.0f * 5.0f);
                     break;
                 case Ability.HeroicStrike:
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false) + 495.0f;
@@ -78,17 +75,12 @@ namespace Rawr.ProtWarr
                     DamageMultiplier *= (1.0f + Talents.ImprovedRevenge * 0.1f) * (1.0f + Talents.UnrelentingAssault * 0.1f);
                     break;
                 case Ability.ShieldSlam:
-                    if (Options.UsePTR)
-                    {
-                        if (Stats.BlockValue < 2400.0f)
-                            baseDamage = 1015.0f + Stats.BlockValue;
-                        else if (Stats.BlockValue < 3160.0f)
-                            baseDamage = 1015.0f + 2400.0f + (0.95f * (Stats.BlockValue - 2400.0f)) - (0.000625f * (float)Math.Pow((double)(Stats.BlockValue - 2400.0f), 2.0d));
-                        else
-                            baseDamage = 1015.0f + 2400.0f + 361.0f;
-                    }
-                    else
+                    if (Stats.BlockValue < 2400.0f)
                         baseDamage = 1015.0f + Stats.BlockValue;
+                    else if (Stats.BlockValue < 3160.0f)
+                        baseDamage = 1015.0f + 2400.0f + (0.95f * (Stats.BlockValue - 2400.0f)) - (0.000625f * (float)Math.Pow((double)(Stats.BlockValue - 2400.0f), 2.0d));
+                    else
+                        baseDamage = 1015.0f + 2400.0f + 361.0f;
                     DamageMultiplier *= (1.0f + Stats.BonusShieldSlamDamage);
                     break;
                 case Ability.Shockwave:

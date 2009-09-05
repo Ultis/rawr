@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbilityModel.cs" />
+    <Compile Include="AttackModel.cs" />
     <Compile Include="CalculationOptionsPanelProtWarr.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -95,10 +96,10 @@
     <Compile Include="CalculationsProtWarr.cs" />
     <Compile Include="CharacterCalculationsProtWarr.cs" />
     <Compile Include="CombatTable.cs" />
-    <Compile Include="AttackModel.cs" />
     <Compile Include="ComparisonCalculationsProtWarr.cs" />
     <Compile Include="DefendModel.cs" />
     <Compile Include="Enum.cs" />
+    <Compile Include="Lookup.cs" />
     <Compile Include="ParryModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
