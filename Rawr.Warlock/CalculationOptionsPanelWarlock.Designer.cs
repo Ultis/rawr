@@ -36,30 +36,32 @@
             this.trkDelay = new System.Windows.Forms.TrackBar();
             this.chbUseInfernal = new System.Windows.Forms.CheckBox();
             this.tbAffEffects = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblAfflictionEffects = new System.Windows.Forms.Label();
             this.chbImmoAura = new System.Windows.Forms.CheckBox();
+            this.tabEvents = new System.Windows.Forms.TabPage();
+            this.textEvents = new System.Windows.Forms.TextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabFight = new System.Windows.Forms.TabPage();
             this.lblDelay = new System.Windows.Forms.Label();
             this.lblJoW = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.lblManaPotions = new System.Windows.Forms.Label();
             this.cbManaAmt = new System.Windows.Forms.ComboBox();
             this.lblReplenishment = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
+            this.lblTargetLevel = new System.Windows.Forms.Label();
             this.cbTargetLevel = new System.Windows.Forms.ComboBox();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.tabChar = new System.Windows.Forms.TabPage();
             this.gbSpellPriority = new System.Windows.Forms.GroupBox();
             this.bChangePriority = new System.Windows.Forms.Button();
-            this.lsSpellPriopity = new System.Windows.Forms.ListBox();
+            this.lsSpellPriority = new System.Windows.Forms.ListBox();
             this.tabPet = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbPet = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkJoW)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkDelay)).BeginInit();
+            this.tabEvents.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabFight.SuspendLayout();
             this.tabChar.SuspendLayout();
@@ -128,7 +130,7 @@
             // 
             // tbAffEffects
             // 
-            this.tbAffEffects.Location = new System.Drawing.Point(179, 69);
+            this.tbAffEffects.Location = new System.Drawing.Point(179, 65);
             this.tbAffEffects.Name = "tbAffEffects";
             this.tbAffEffects.Size = new System.Drawing.Size(100, 20);
             this.tbAffEffects.TabIndex = 74;
@@ -137,15 +139,15 @@
             this.tbAffEffects.TextChanged += new System.EventHandler(this.tbAffEffects_Changed);
             this.tbAffEffects.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAffEffects_KeyPress);
             // 
-            // label2
+            // lblAfflictionEffects
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 69);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(130, 13);
-            this.label2.TabIndex = 73;
-            this.label2.Text = "Affliction effects on target:";
-            this.toolTip1.SetToolTip(this.label2, "Excluding your own Affliction effects");
+            this.lblAfflictionEffects.AutoSize = true;
+            this.lblAfflictionEffects.Location = new System.Drawing.Point(6, 69);
+            this.lblAfflictionEffects.Name = "lblAfflictionEffects";
+            this.lblAfflictionEffects.Size = new System.Drawing.Size(148, 13);
+            this.lblAfflictionEffects.TabIndex = 73;
+            this.lblAfflictionEffects.Text = "Affliction effects on the target:";
+            this.toolTip1.SetToolTip(this.lblAfflictionEffects, "Excluding your own Affliction effects");
             // 
             // chbImmoAura
             // 
@@ -159,37 +161,63 @@
             this.chbImmoAura.UseVisualStyleBackColor = true;
             this.chbImmoAura.CheckedChanged += new System.EventHandler(this.chbImmoAura_CheckedChanged);
             // 
+            // tabEvents
+            // 
+            this.tabEvents.Controls.Add(this.textEvents);
+            this.tabEvents.Location = new System.Drawing.Point(4, 22);
+            this.tabEvents.Name = "tabEvents";
+            this.tabEvents.Padding = new System.Windows.Forms.Padding(3);
+            this.tabEvents.Size = new System.Drawing.Size(292, 579);
+            this.tabEvents.TabIndex = 4;
+            this.tabEvents.Text = "Events:";
+            this.tabEvents.UseVisualStyleBackColor = true;
+            // 
+            // textEvents
+            // 
+            this.textEvents.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textEvents.Location = new System.Drawing.Point(3, 3);
+            this.textEvents.Multiline = true;
+            this.textEvents.Name = "textEvents";
+            this.textEvents.ReadOnly = true;
+            this.textEvents.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textEvents.Size = new System.Drawing.Size(286, 573);
+            this.textEvents.TabIndex = 70;
+            this.textEvents.Text = "An overview of the events during combat.\r\n\r\nDouble-Click to refresh.";
+            this.textEvents.DoubleClick += new System.EventHandler(this.textEvents_DoubleClick);
+            // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tabFight);
             this.tabControl.Controls.Add(this.tabChar);
             this.tabControl.Controls.Add(this.tabPet);
+            this.tabControl.Controls.Add(this.tabEvents);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(297, 605);
+            this.tabControl.Size = new System.Drawing.Size(300, 605);
             this.tabControl.TabIndex = 57;
             // 
             // tabFight
             // 
             this.tabFight.Controls.Add(this.tbAffEffects);
-            this.tabFight.Controls.Add(this.label2);
+            this.tabFight.Controls.Add(this.lblAfflictionEffects);
             this.tabFight.Controls.Add(this.lblDelay);
             this.tabFight.Controls.Add(this.trkJoW);
             this.tabFight.Controls.Add(this.lblJoW);
-            this.tabFight.Controls.Add(this.label4);
+            this.tabFight.Controls.Add(this.lblManaPotions);
             this.tabFight.Controls.Add(this.trkReplenishment);
             this.tabFight.Controls.Add(this.cbManaAmt);
             this.tabFight.Controls.Add(this.lblReplenishment);
             this.tabFight.Controls.Add(this.trkFightLength);
-            this.tabFight.Controls.Add(this.label15);
+            this.tabFight.Controls.Add(this.lblTargetLevel);
             this.tabFight.Controls.Add(this.cbTargetLevel);
             this.tabFight.Controls.Add(this.lblFightLength);
             this.tabFight.Controls.Add(this.trkDelay);
             this.tabFight.Location = new System.Drawing.Point(4, 22);
             this.tabFight.Name = "tabFight";
             this.tabFight.Padding = new System.Windows.Forms.Padding(3);
-            this.tabFight.Size = new System.Drawing.Size(289, 579);
+            this.tabFight.Size = new System.Drawing.Size(292, 579);
             this.tabFight.TabIndex = 1;
             this.tabFight.Text = "Fight";
             this.tabFight.UseVisualStyleBackColor = true;
@@ -199,27 +227,27 @@
             this.lblDelay.AutoSize = true;
             this.lblDelay.Location = new System.Drawing.Point(6, 195);
             this.lblDelay.Name = "lblDelay";
-            this.lblDelay.Size = new System.Drawing.Size(34, 13);
+            this.lblDelay.Size = new System.Drawing.Size(37, 13);
             this.lblDelay.TabIndex = 70;
-            this.lblDelay.Text = "Delay";
+            this.lblDelay.Text = "Delay:";
             // 
             // lblJoW
             // 
             this.lblJoW.AutoSize = true;
             this.lblJoW.Location = new System.Drawing.Point(6, 292);
             this.lblJoW.Name = "lblJoW";
-            this.lblJoW.Size = new System.Drawing.Size(123, 13);
+            this.lblJoW.Size = new System.Drawing.Size(126, 13);
             this.lblJoW.TabIndex = 65;
-            this.lblJoW.Text = "% Judgement of Wisdom";
+            this.lblJoW.Text = "% Judgement of Wisdom:";
             // 
-            // label4
+            // lblManaPotions
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 41);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(75, 13);
-            this.label4.TabIndex = 58;
-            this.label4.Text = "Mana Potions:";
+            this.lblManaPotions.AutoSize = true;
+            this.lblManaPotions.Location = new System.Drawing.Point(6, 41);
+            this.lblManaPotions.Name = "lblManaPotions";
+            this.lblManaPotions.Size = new System.Drawing.Size(75, 13);
+            this.lblManaPotions.TabIndex = 58;
+            this.lblManaPotions.Text = "Mana Potions:";
             // 
             // cbManaAmt
             // 
@@ -231,7 +259,7 @@
             "(Mad) 1650-2750, Avg 2200",
             "(Super) 1800-3000, Avg 2400",
             "(Runic) 4200-4400, Avg 4300"});
-            this.cbManaAmt.Location = new System.Drawing.Point(87, 41);
+            this.cbManaAmt.Location = new System.Drawing.Point(87, 37);
             this.cbManaAmt.Name = "cbManaAmt";
             this.cbManaAmt.Size = new System.Drawing.Size(192, 21);
             this.cbManaAmt.TabIndex = 57;
@@ -243,18 +271,18 @@
             this.lblReplenishment.AutoSize = true;
             this.lblReplenishment.Location = new System.Drawing.Point(6, 244);
             this.lblReplenishment.Name = "lblReplenishment";
-            this.lblReplenishment.Size = new System.Drawing.Size(88, 13);
+            this.lblReplenishment.Size = new System.Drawing.Size(91, 13);
             this.lblReplenishment.TabIndex = 63;
-            this.lblReplenishment.Text = "% Replenishment";
+            this.lblReplenishment.Text = "% Replenishment:";
             // 
-            // label15
+            // lblTargetLevel
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(6, 14);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(67, 13);
-            this.label15.TabIndex = 61;
-            this.label15.Text = "Target Level";
+            this.lblTargetLevel.AutoSize = true;
+            this.lblTargetLevel.Location = new System.Drawing.Point(6, 14);
+            this.lblTargetLevel.Name = "lblTargetLevel";
+            this.lblTargetLevel.Size = new System.Drawing.Size(70, 13);
+            this.lblTargetLevel.TabIndex = 61;
+            this.lblTargetLevel.Text = "Target Level:";
             // 
             // cbTargetLevel
             // 
@@ -265,7 +293,7 @@
             "81",
             "82",
             "83"});
-            this.cbTargetLevel.Location = new System.Drawing.Point(128, 14);
+            this.cbTargetLevel.Location = new System.Drawing.Point(128, 10);
             this.cbTargetLevel.Name = "cbTargetLevel";
             this.cbTargetLevel.Size = new System.Drawing.Size(151, 21);
             this.cbTargetLevel.TabIndex = 60;
@@ -276,9 +304,9 @@
             this.lblFightLength.AutoSize = true;
             this.lblFightLength.Location = new System.Drawing.Point(6, 146);
             this.lblFightLength.Name = "lblFightLength";
-            this.lblFightLength.Size = new System.Drawing.Size(66, 13);
+            this.lblFightLength.Size = new System.Drawing.Size(69, 13);
             this.lblFightLength.TabIndex = 59;
-            this.lblFightLength.Text = "Fight Length";
+            this.lblFightLength.Text = "Fight Length:";
             // 
             // tabChar
             // 
@@ -288,7 +316,7 @@
             this.tabChar.Location = new System.Drawing.Point(4, 22);
             this.tabChar.Name = "tabChar";
             this.tabChar.Padding = new System.Windows.Forms.Padding(3);
-            this.tabChar.Size = new System.Drawing.Size(289, 579);
+            this.tabChar.Size = new System.Drawing.Size(292, 579);
             this.tabChar.TabIndex = 2;
             this.tabChar.Text = "Character";
             this.tabChar.UseVisualStyleBackColor = true;
@@ -296,13 +324,13 @@
             // gbSpellPriority
             // 
             this.gbSpellPriority.Controls.Add(this.bChangePriority);
-            this.gbSpellPriority.Controls.Add(this.lsSpellPriopity);
-            this.gbSpellPriority.Location = new System.Drawing.Point(18, 16);
+            this.gbSpellPriority.Controls.Add(this.lsSpellPriority);
+            this.gbSpellPriority.Location = new System.Drawing.Point(6, 16);
             this.gbSpellPriority.Name = "gbSpellPriority";
-            this.gbSpellPriority.Size = new System.Drawing.Size(244, 184);
+            this.gbSpellPriority.Size = new System.Drawing.Size(277, 184);
             this.gbSpellPriority.TabIndex = 53;
             this.gbSpellPriority.TabStop = false;
-            this.gbSpellPriority.Text = "Spell Priority";
+            this.gbSpellPriority.Text = "Spell Priority:";
             // 
             // bChangePriority
             // 
@@ -314,37 +342,26 @@
             this.bChangePriority.UseVisualStyleBackColor = true;
             this.bChangePriority.Click += new System.EventHandler(this.bChangePriority_Click);
             // 
-            // lsSpellPriopity
+            // lsSpellPriority
             // 
-            this.lsSpellPriopity.FormattingEnabled = true;
-            this.lsSpellPriopity.Location = new System.Drawing.Point(5, 20);
-            this.lsSpellPriopity.Name = "lsSpellPriopity";
-            this.lsSpellPriopity.Size = new System.Drawing.Size(259, 121);
-            this.lsSpellPriopity.TabIndex = 10;
+            this.lsSpellPriority.FormattingEnabled = true;
+            this.lsSpellPriority.Location = new System.Drawing.Point(5, 20);
+            this.lsSpellPriority.Name = "lsSpellPriority";
+            this.lsSpellPriority.Size = new System.Drawing.Size(266, 121);
+            this.lsSpellPriority.TabIndex = 10;
             // 
             // tabPet
             // 
-            this.tabPet.Controls.Add(this.textBox1);
             this.tabPet.Controls.Add(this.chbUseInfernal);
             this.tabPet.Controls.Add(this.label1);
             this.tabPet.Controls.Add(this.cbPet);
             this.tabPet.Location = new System.Drawing.Point(4, 22);
             this.tabPet.Name = "tabPet";
             this.tabPet.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPet.Size = new System.Drawing.Size(289, 579);
+            this.tabPet.Size = new System.Drawing.Size(292, 579);
             this.tabPet.TabIndex = 3;
             this.tabPet.Text = "Pet";
             this.tabPet.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(9, 64);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(274, 388);
-            this.textBox1.TabIndex = 67;
-            this.textBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tbox1_dclick);
             // 
             // label1
             // 
@@ -384,6 +401,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkDelay)).EndInit();
+            this.tabEvents.ResumeLayout(false);
+            this.tabEvents.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tabFight.ResumeLayout(false);
             this.tabFight.PerformLayout();
@@ -404,12 +423,12 @@
         private System.Windows.Forms.Label lblDelay;
         private System.Windows.Forms.TrackBar trkJoW;
         private System.Windows.Forms.Label lblJoW;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblManaPotions;
         private System.Windows.Forms.TrackBar trkReplenishment;
         private System.Windows.Forms.ComboBox cbManaAmt;
         private System.Windows.Forms.Label lblReplenishment;
         private System.Windows.Forms.TrackBar trkFightLength;
-        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label lblTargetLevel;
         private System.Windows.Forms.ComboBox cbTargetLevel;
         private System.Windows.Forms.Label lblFightLength;
         private System.Windows.Forms.TrackBar trkDelay;
@@ -417,13 +436,14 @@
         private System.Windows.Forms.TabPage tabPet;
         private System.Windows.Forms.GroupBox gbSpellPriority;
         private System.Windows.Forms.Button bChangePriority;
-        private System.Windows.Forms.ListBox lsSpellPriopity;
+        private System.Windows.Forms.ListBox lsSpellPriority;
         private System.Windows.Forms.ComboBox cbPet;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chbUseInfernal;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblAfflictionEffects;
         private System.Windows.Forms.TextBox tbAffEffects;
         private System.Windows.Forms.CheckBox chbImmoAura;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TabPage tabEvents;
+        private System.Windows.Forms.TextBox textEvents;
     }
 }

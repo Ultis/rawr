@@ -42,8 +42,8 @@ namespace Rawr.Warlock {
             cbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
             if (calcOpts.SpellPriority == null) { calcOpts.SpellPriority = new List<string>() { "Shadow Bolt" }; }
-            lsSpellPriopity.Items.Clear();
-            lsSpellPriopity.Items.AddRange(calcOpts.SpellPriority.ToArray());
+            lsSpellPriority.Items.Clear();
+            lsSpellPriority.Items.AddRange(calcOpts.SpellPriority.ToArray());
 
             tbAffEffects.Text = calcOpts.AffEffectsNumber.ToString();
 
@@ -63,8 +63,8 @@ namespace Rawr.Warlock {
         }
         private void bChangePriority_Click(object sender, EventArgs e) {
             CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-            SpellPriorityForm priority = new SpellPriorityForm(calcOpts.SpellPriority, lsSpellPriopity, Character);
-            priority.Show();
+            SpellPriorityForm priority = new SpellPriorityForm(calcOpts.SpellPriority, lsSpellPriority, Character);
+            priority.ShowDialog();
         }
         private void cbTargetLevel_SelectedIndexChanged(object sender, EventArgs e) {
             if (!loading) {
@@ -140,10 +140,13 @@ namespace Rawr.Warlock {
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void tbox1_dclick(object sender, MouseEventArgs e) {
-            if (!loading) {
+
+        private void textEvents_DoubleClick(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
                 CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                textBox1.Text = calcOpts.castseq;
+                textEvents.Text = calcOpts.castseq;
             }
         }
     }
