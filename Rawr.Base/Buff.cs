@@ -1887,6 +1887,7 @@ namespace Rawr
                 SetName = "Malefic Raiment",
                 SetThreshold = 4
             });
+            #region Warlock T7 set bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Plagueheart Garb 2 Piece Bonus",
@@ -1905,6 +1906,8 @@ namespace Rawr
                 SetName = "Plagueheart Garb",
                 SetThreshold = 4
             });
+            #endregion
+            #region Warlock T8 set bonuses
             defaultBuffs.Add(new Buff()
             {
                 Name = "Deathbringer Garb 2 Piece Bonus",
@@ -1923,6 +1926,48 @@ namespace Rawr
                 SetName = "Deathbringer Garb",
                 SetThreshold = 4
             });
+            #endregion
+            #region Warlock T9 set bonuses
+            //alliance [<3] set
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Kel'Thuzad's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock2T9 = 0.10f },
+                SetName = "Kel'Thuzad's Regalia",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Kel'Thuzad's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock4T9 = 0.10f },
+                SetName = "Kel'Thuzad's Regalia",
+                SetThreshold = 4
+            });
+            //horde [/spit] set
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gul'dan's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock2T9 = 0.10f },
+                SetName = "Gul'dan's Regalia",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gul'dan's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock4T9 = 0.10f },
+                SetName = "Gul'dan's Regalia",
+                SetThreshold = 4
+            });
+            #endregion
+
             defaultBuffs.Add(new Buff()
             {
                 Name = "Spellfire 3 Piece Bonus",

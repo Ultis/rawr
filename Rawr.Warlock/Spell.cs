@@ -417,7 +417,8 @@ namespace Rawr.Warlock {
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * (DamageCoef + character.WarlockTalents.EmpoweredCorruption * 0.12f + character.WarlockTalents.EverlastingAffliction * 0.01f * 6))
                       * (1 + (character.WarlockTalents.ImprovedCorruption * 0.02f + character.WarlockTalents.ShadowMastery * 0.03f + character.WarlockTalents.Contagion * 0.01f))
                       * (1 + character.WarlockTalents.Malediction * 0.01f)
-                      * (1 + character.WarlockTalents.SiphonLife * 0.05f);
+                      * (1 + character.WarlockTalents.SiphonLife * 0.05f)
+                      * (1 + stats.Warlock4T9);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
@@ -478,7 +479,8 @@ namespace Rawr.Warlock {
                        * (1 + character.WarlockTalents.ShadowMastery * 0.03f)
                        * (1 + character.WarlockTalents.Malediction * 0.01f)
                        * (1 + character.WarlockTalents.SiphonLife * 0.05f)
-                       * (1 + stats.Warlock2T8);
+                       * (1 + stats.Warlock2T8)
+                       * (1 + stats.Warlock4T9);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
@@ -770,20 +772,23 @@ namespace Rawr.Warlock {
                       * (1 + character.WarlockTalents.Emberstorm * 0.03f)
                       * (1 + character.WarlockTalents.ImprovedImmolate * 0.1f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f)
-                      * (1 + stats.Warlock2T8 / 2);
+                      * (1 + stats.Warlock2T8 / 2)
+                      * (1 + stats.Warlock4T9);
 
             MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DirDamageCoef)
                       * (1 + character.WarlockTalents.Emberstorm * 0.03f)
                       * (1 + character.WarlockTalents.ImprovedImmolate * 0.1f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f)
-                      * (1 + stats.Warlock2T8 / 2);
+                      * (1 + stats.Warlock2T8 / 2)
+                      * (1 + stats.Warlock4T9);
 
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DotDamageCoef)
                       * (1 + character.WarlockTalents.Emberstorm * 0.03f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f)
                       * (1 + character.WarlockTalents.Aftermath * 0.03f)
                       * (1 + character.WarlockTalents.ImprovedImmolate * 0.1f)
-                      * (1 + stats.Warlock2T8 / 2);
+                      * (1 + stats.Warlock2T8 / 2)
+                      * (1 + stats.Warlock4T9);
 
             CritCoef = (BaseCritCoef - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 

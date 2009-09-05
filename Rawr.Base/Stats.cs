@@ -475,6 +475,8 @@ namespace Rawr {
         CorruptionTriggersCrit,
         Warlock2T8,
         Warlock4T8,
+        Warlock2T9,
+        Warlock4T9,
         #endregion
         #region Warrior set bonuses
         BonusShieldSlamDamage,
@@ -3947,6 +3949,26 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T8]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T8] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0.10f)]
+        [Percentage]
+        [DisplayName("% increase to your pet's critical strike chance with its abilities")]
+        [Category("Warlock")]
+        public float Warlock2T9
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T9]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T9] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0.10f)]
+        [Percentage]
+        [DisplayName("% increase to damage done by your Immolate, Corruption and Unstable Affliction spells")]
+        [Category("Warlock")]
+        public float Warlock4T9
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T9]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T9] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

@@ -415,7 +415,9 @@ namespace Rawr.Warlock {
                 CorruptionTriggersCrit = stats.CorruptionTriggersCrit,
                 LifeTapBonusSpirit = stats.LifeTapBonusSpirit,
                 Warlock2T8 = stats.Warlock2T8,
-                Warlock4T8 = stats.Warlock4T8
+                Warlock4T8 = stats.Warlock4T8,
+                Warlock2T9 = stats.Warlock2T9,
+                Warlock4T9 = stats.Warlock4T9
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use ||
@@ -518,6 +520,8 @@ namespace Rawr.Warlock {
                 + stats.LifeTapBonusSpirit
                 + stats.Warlock2T8
                 + stats.Warlock4T8
+                + stats.Warlock2T9
+                + stats.Warlock4T9
                 ) > 0;
         }
 

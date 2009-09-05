@@ -59,10 +59,10 @@ namespace Rawr.Warlock {
             else if (Pet == "Succubus")  specialCost = 250;
             else if (Pet == "Felguard")  specialCost = 439;
             //Crit
-            petStats.PhysicalCrit = 0.0320f + petStats.Agility * 0.00019f;
+            petStats.PhysicalCrit = 0.0320f + (petStats.Agility * 0.00019f) * (1 + charStats.Warlock2T9);//TODO: seems ok but need to verify
             petStats.PhysicalCrit -= ((CalculationOptions.TargetLevel * 5f) * 0.0004f);// TODO Replace with STatConvers.NPC_CRIT_MOD[CalculationOptions.TargetLevel-character.Level] but need to verify first
             if (talents.ImprovedDemonicTactics > 0) { petStats.PhysicalCrit += charStats.PhysicalCrit * talents.ImprovedDemonicTactics * 0.1f; }
-            petStats.SpellCrit = 0.05f + petStats.Intellect / 460 * 0.061f;//??
+            petStats.SpellCrit = 0.05f + (petStats.Intellect / 460 * 0.061f) * (1 + charStats.Warlock2T9);//TODO: need to verify
             if (talents.ImprovedDemonicTactics > 0) {petStats.SpellCrit += charStats.SpellCrit * talents.ImprovedDemonicTactics * 0.1f;}
             if (Pet == "Imp" && talents.MasterDemonologist > 0) { petStats.SpellCrit += talents.MasterDemonologist * 0.01f; }
             if (Pet == "Imp" && talents.DemonicEmpowerment > 0) { petStats.SpellCrit += talents.DemonicEmpowerment * 0.2f * 30f / (60f * (1 - talents.Nemesis * 0.1f));}
