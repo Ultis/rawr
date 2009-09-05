@@ -273,14 +273,14 @@ namespace Rawr.DPSWarr {
             }
             public float CriticalAtksOverDurOH {
                 get {
-                    float whiteLands = (combatFactors.OH != null ? OhActivates * OHAtkTable.Crit : 0f);
+                    float whiteLands = (combatFactors.useOH ? OhActivates * OHAtkTable.Crit : 0f);
                     return whiteLands;
                 }
             }
             // Other
             public float AvoidanceStreak {
                 get {
-                    bool useOH = Talents.TitansGrip > 0 && combatFactors.OH != null && combatFactors.OHSpeed > 0;
+                    bool useOH = combatFactors.useOH;
 
                     float mhRagePercent = MHRageRatio;
                     float ohRagePercent = 1f - mhRagePercent;

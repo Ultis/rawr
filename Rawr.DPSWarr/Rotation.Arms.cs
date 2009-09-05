@@ -112,8 +112,7 @@ namespace Rawr.DPSWarr
         }
         public override float GetLandedAtksOverDurOH()
         {
-            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
-            if (!useOH) { return 0; }
+            if (!CombatFactors.useOH) { return 0; }
             float landednoss = GetLandedAtksOverDurNoSSOH();
             float ssActs = SS.GetActivates(GetLandedYellowsOverDurOH());
 

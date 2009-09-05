@@ -9,7 +9,10 @@ namespace Rawr.DPSWarr {
             OH = Char == null || Char.OffHand  == null || Char.WarriorTalents.TitansGrip == 0 ? null : Char.OffHand.Item;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CalcOpts = Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() : Char.CalculationOptions as CalculationOptionsDPSWarr;
-            
+
+            useMH = _useMH; // public variable gets set once
+            useOH = _useOH; // public variable gets set once
+
             // Optimizations
             _c_mhItemType = MH.Type;
             _c_mhItemSpeed = MH.Speed;
@@ -21,7 +24,7 @@ namespace Rawr.DPSWarr {
             _c_mhwcrit = MhWhCritChance;
             _c_mhycrit = MhYwCritChance;
 
-            if (OH != null) {
+            if (useOH) {
                 _c_ohItemType = OH.Type;
                 _c_ohItemSpeed = OH.Speed;
                 _c_ohRacialExpertise = GetRacialExpertiseFromWeaponType(_c_ohItemType);
@@ -65,6 +68,9 @@ namespace Rawr.DPSWarr {
         public readonly float    _c_mhycrit,           _c_ohycrit;
         #endregion
 
+        public bool useMH; private bool _useMH { get { return MH != null && MHSpeed > 0; } }
+        public bool useOH; private bool _useOH { get { return Talents.TitansGrip > 0 && OH != null && OHSpeed > 0; } }
+
         #region Weapon Damage Calcs
         #region Major Damage Factors
         public float DamageBonus {
@@ -73,7 +79,7 @@ namespace Rawr.DPSWarr {
                 float bonus  = 1f + StatS.BonusDamageMultiplier;
                       bonus *= 1f + StatS.BonusPhysicalDamageMultiplier;
                                // Talents
-                      //bonus *= 1f + Talents.WreckingCrew * 0.02f;
+                      //bonus *= 1f + Talents.WreckingCrew * 0.02f; // Wrecking Crew is now a SpecialEffect in GetCharacterStats
                 return bonus;
             }
         }
@@ -100,17 +106,18 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Weapon Damage
-        public float NormalizedMhWeaponDmg { get { return CalcNormalizedWeaponDamage(MH); } }
-        public float NormalizedOhWeaponDmg { get { return OH == null || Talents.TitansGrip == 0 ? 0f : CalcNormalizedWeaponDamage(OH) * 0.5f * (1 + Talents.DualWieldSpecialization * 0.05f); } }
+        public float OHDamageReduc { get { return 0.5f * (1f + Talents.DualWieldSpecialization * 0.05f); } }
+        public float NormalizedMhWeaponDmg { get { return useMH ? CalcNormalizedWeaponDamage(MH)                 : 0f; } }
+        public float NormalizedOhWeaponDmg { get { return useOH ? CalcNormalizedWeaponDamage(OH) * OHDamageReduc : 0f; } }
         private float CalcNormalizedWeaponDamage(Item weapon) {
             float baseDamage  = weapon.Speed * weapon.DPS;
                   baseDamage += StatS.AttackPower / 14f * 3.3f;
-            return baseDamage;
+            return baseDamage + StatS.WeaponDamage;
         }
-        public float AvgMhWeaponDmgUnhasted              { get { return (MH == null ? 0f : (StatS.AttackPower / 14f + MH.DPS) * MH.Speed); } }
-        public float AvgOhWeaponDmgUnhasted              { get { return (OH == null || Talents.TitansGrip == 0 ? 0f : (StatS.AttackPower / 14f + OH.DPS) * OH.Speed * 0.5f * (1 + Talents.DualWieldSpecialization * 0.05f)); } }
-        public float AvgMhWeaponDmg(        float speed) {       return (MH == null ? 0f : (StatS.AttackPower / 14f + MH.DPS) * speed   ); }
-        public float AvgOhWeaponDmg(        float speed) {       return (OH == null || Talents.TitansGrip == 0 ? 0f : (StatS.AttackPower / 14f + OH.DPS) * speed    * 0.5f * (1 + Talents.DualWieldSpecialization * 0.05f)); }
+        public float AvgMhWeaponDmgUnhasted              { get { return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * MH.Speed                 + StatS.WeaponDamage : 0f); } }
+        public float AvgOhWeaponDmgUnhasted              { get { return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * OH.Speed * OHDamageReduc + StatS.WeaponDamage : 0f); } }
+        public float AvgMhWeaponDmg(        float speed) {       return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * speed                    + StatS.WeaponDamage : 0f); }
+        public float AvgOhWeaponDmg(        float speed) {       return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * speed    * OHDamageReduc + StatS.WeaponDamage : 0f); }
         #endregion
         #region Weapon Crit Damage
         public float BonusWhiteCritDmg {
@@ -147,8 +154,8 @@ namespace Rawr.DPSWarr {
                 return totalHaste;
             }
         }
-        public float MHSpeed { get { return (MH == null ? 0f : MH.Speed / TotalHaste); } }
-        public float OHSpeed { get { return (OH == null || Talents.TitansGrip == 0 ? 0f : OH.Speed / TotalHaste); } }
+        public float MHSpeed { get { return useMH ? MH.Speed / TotalHaste : 0f; } }
+        public float OHSpeed { get { return useOH ? OH.Speed / TotalHaste : 0f; } }
         #endregion
         #endregion
         #region Attack Table
@@ -189,7 +196,7 @@ namespace Rawr.DPSWarr {
         }
         public float WhMissCap {
             get {
-                float twoHandCheck = (Talents.TitansGrip == 1f && OH != null
+                float twoHandCheck = (useOH
                         && MH.Slot == ItemSlot.TwoHand
                         && OH.Slot == ItemSlot.TwoHand ?
                        StatConversion.WHITE_MISS_CHANCE_CAP_DW[CalcOpts.TargetLevel - Char.Level] : StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]);
@@ -238,7 +245,7 @@ namespace Rawr.DPSWarr {
         #region Crit
         private float MhWhCritChance {
             get {
-                if (MH == null || MH.MaxDamage == 0f) { return 0f; }
+                if (!useMH) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
                 crit += (_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
                 return crit;
@@ -246,7 +253,7 @@ namespace Rawr.DPSWarr {
         }
         private float MhYwCritChance {
             get {
-                if (MH == null || MH.MaxDamage == 0f) { return 0f; }
+                if (!useMH) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
                 crit += (_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
                 crit *= (1f - _c_ymiss - _c_mhdodge);
@@ -255,7 +262,7 @@ namespace Rawr.DPSWarr {
         }
         private float OhWhCritChance {
             get {
-                if (OH == null || OH.MaxDamage == 0f || Talents.TitansGrip == 0) { return 0f; }
+                if (!useOH) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
                 crit += (_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
                 return crit;
@@ -263,7 +270,7 @@ namespace Rawr.DPSWarr {
         }
         private float OhYwCritChance {
             get {
-                if (OH == null || OH.MaxDamage == 0f || Talents.TitansGrip == 0) { return 0f; }
+                if (!useOH) { return 0f; }
                 float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
                 crit += (_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
                 crit *= (1f - _c_ymiss - _c_ohdodge);
@@ -273,15 +280,15 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Chance of Hitting
         // White
-        public float ProbMhWhiteHit   { get { return 1f - _c_wmiss - _c_mhdodge - _c_mhparry - _c_mhwcrit; } }
-        public float ProbOhWhiteHit   { get { return Talents.TitansGrip > 0 ? 1f - _c_wmiss - _c_ohdodge - _c_ohparry - _c_ohwcrit : 0; } }
-        public float ProbMhWhiteLand  { get { return 1f - _c_wmiss - _c_mhdodge - _c_mhparry; } }
-        public float ProbOhWhiteLand  { get { return Talents.TitansGrip > 0 ? 1f - _c_wmiss - _c_ohdodge - _c_ohparry : 0; } }
+        public float ProbMhWhiteHit   { get { return         1f - _c_wmiss - _c_mhdodge - _c_mhparry - _c_mhwcrit; } }
+        public float ProbOhWhiteHit   { get { return useOH ? 1f - _c_wmiss - _c_ohdodge - _c_ohparry - _c_ohwcrit : 0; } }
+        public float ProbMhWhiteLand  { get { return         1f - _c_wmiss - _c_mhdodge - _c_mhparry; } }
+        public float ProbOhWhiteLand  { get { return useOH ? 1f - _c_wmiss - _c_ohdodge - _c_ohparry : 0; } }
         // Yellow (Doesn't Glance and has different MissChance Cap)
-        public float ProbMhYellowHit  { get { return                          1f - _c_ymiss - _c_mhdodge - _c_mhparry - _c_mhblock - _c_mhycrit; } }
-        public float ProbOhYellowHit  { get { return Talents.TitansGrip > 0 ? 1f - _c_ymiss - _c_ohdodge - _c_ohparry - _c_ohblock - _c_ohycrit : 0; } }
-        public float ProbMhYellowLand { get { return                          1f - _c_ymiss - _c_mhdodge - _c_mhparry - _c_mhblock; } }
-        public float ProbOhYellowLand { get { return Talents.TitansGrip > 0 ? 1f - _c_ymiss - _c_ohdodge - _c_ohparry - _c_ohblock : 0; } }
+        public float ProbMhYellowHit  { get { return         1f - _c_ymiss - _c_mhdodge - _c_mhparry - _c_mhblock - _c_mhycrit; } }
+        public float ProbOhYellowHit  { get { return useOH ? 1f - _c_ymiss - _c_ohdodge - _c_ohparry - _c_ohblock - _c_ohycrit : 0; } }
+        public float ProbMhYellowLand { get { return         1f - _c_ymiss - _c_mhdodge - _c_mhparry - _c_mhblock; } }
+        public float ProbOhYellowLand { get { return useOH ? 1f - _c_ymiss - _c_ohdodge - _c_ohparry - _c_ohblock : 0; } }
         #endregion
         #endregion
         #region Other
@@ -431,5 +438,4 @@ namespace Rawr.DPSWarr {
 
         public AttackTable(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh) { Initialize(character, stats, cf, ability, ismh); }
     }
-
 }

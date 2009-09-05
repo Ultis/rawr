@@ -262,9 +262,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // We need specilized handling due to Titan's Grip
             if (item == null || character == null) {
                 return false;
-            } else if (character.WarriorTalents.TitansGrip == 1 && item.Type == ItemType.Polearm && slot == CharacterSlot.OffHand) {
+            } else if (character.WarriorTalents.TitansGrip > 0 && item.Type == ItemType.Polearm && slot == CharacterSlot.OffHand) {
                 return false;
-            } else if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.TwoHand && character.WarriorTalents.TitansGrip == 1) {
+            } else if (character.WarriorTalents.TitansGrip > 0 && item.Slot == ItemSlot.TwoHand && slot == CharacterSlot.OffHand) {
                 return true;
             } else if (slot == CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == ItemSlot.TwoHand) {
                 return false;
@@ -345,6 +345,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
+                MovementSpeed = stats.MovementSpeed,
                 // Procs
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
                 HighestStat = stats.HighestStat,
@@ -410,6 +411,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.PhysicalCrit +
                 stats.PhysicalHaste +
                 stats.PhysicalHit +
+                stats.MovementSpeed +
                 // Procs
                 stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
@@ -681,7 +683,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                             ((character.MainHand.Slot == ItemSlot.TwoHand) ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 1f)
                                             *
                                             // Titan's Grip Penalty
-                                            ((talents.TitansGrip == 1 && character.OffHand != null && (character.OffHand.Slot  == ItemSlot.TwoHand || character.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
+                                            ((talents.TitansGrip > 0 && character.OffHand != null && (character.OffHand.Slot  == ItemSlot.TwoHand || character.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
                                             // Convert it back a simple mod number
                                             - 1f
                                          ),
@@ -825,7 +827,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             float fightDuration = calcOpts.Duration;
 
-            bool useOH = talents.TitansGrip > 0 && combatFactors.OH != null && combatFactors.OHSpeed > 0;
+            bool useOH = combatFactors.useOH;
 
             float mhLandsPerSecond = 1f / Rot.GetLandedAtksOverDurMH()  , ohLandsPerSecond = useOH ? 1f / Rot.GetLandedAtksOverDurOH()   : 0 ;
             float mhCritsPerSecond = 1f / Rot.GetCriticalAtksOverDurMH(), ohCritsPerSecond = useOH ? 1f / Rot.GetCriticalAtksOverDurOH() : 0;
@@ -851,7 +853,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     statsProcs += bersMainHand.GetAverageStats(mhLandInterval, 1f, combatFactors.MHSpeed, fightDuration);
                 }
             }
-            if (talents.TitansGrip > 0 && combatFactors.OH != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789){
+            if (combatFactors.useOH && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789){
                 Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
 
                 if (ohEffects.MoveNext()) {

@@ -67,7 +67,7 @@ namespace Rawr.DPSWarr {
             CB_Lag.Value   = (int)calcOpts.Lag;
             CB_React.Value = (int)calcOpts.React;
             //
-            calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip == 1);
+            calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
             RB_StanceFury.Checked = calcOpts.FuryStance;
             RB_StanceArms.Checked = !RB_StanceFury.Checked;
             Character.OnCalculationsInvalidated();

@@ -228,14 +228,12 @@ namespace Rawr.DPSWarr {
             return yellow + onAttack;
         }
         public virtual float GetCriticalYellowsOverDurOH() {
-            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
-            if (!useOH) { return 0; }
+            if (!CombatFactors.useOH) { return 0; }
             float yellow = 0f
                 // Maintenance
                 // Fury Abilities
                 + (_WW_GCDs * WW.OHAtkTable.Crit * WW.AvgTargets) / 2
                 // Arms Abilities
-                
             ;
 
             return yellow;
@@ -247,8 +245,7 @@ namespace Rawr.DPSWarr {
             return yellows + whites;
         }
         public float GetCriticalAtksOverDurOH() {
-            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
-            if (!useOH) { return 0; }
+            if (!CombatFactors.useOH) { return 0; }
             float yellows = GetCriticalYellowsOverDurOH();
             float whites = WhiteAtks.CriticalAtksOverDurOH;
             return yellows + whites;
@@ -320,8 +317,7 @@ namespace Rawr.DPSWarr {
             return yellow + onAttack;
         }
         public virtual float GetLandedYellowsOverDurOH() {
-            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
-            if (!useOH) { return 0; }
+            if (!CombatFactors.useOH) { return 0; }
             float yellow = 0f
                 // Maintenance
                 // Fury Abilities
@@ -343,8 +339,7 @@ namespace Rawr.DPSWarr {
             return result;
         }
         public float GetLandedAtksOverDurNoSSOH() {
-            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
-            if (!useOH) { return 0; }
+            if (!CombatFactors.useOH) { return 0; }
             float white = WhiteAtks.LandedAtksOverDurOH;
             float yellow = GetLandedYellowsOverDurOH();
 
@@ -361,18 +356,13 @@ namespace Rawr.DPSWarr {
             if (!useOH) { return 0; }
             return GetLandedAtksOverDurNoSSOH();
         }
-        public float CritHsSlamOverDur
-        {
-            get
-            {
+        public float CritHsSlamOverDur {
+            get {
                 float critsPerRot = 0;
-                if (CalcOpts.FuryStance)
-                {
+                if (CalcOpts.FuryStance) {
                     critsPerRot = HS.Activates * HS.MHAtkTable.Crit +
                                   SL.Activates * SL.MHAtkTable.Crit;
-                }
-                else
-                {
+                } else {
                     critsPerRot = _HS_Acts * HS.MHAtkTable.Crit +
                                   _SL_GCDs * SL.MHAtkTable.Crit;
                 }
