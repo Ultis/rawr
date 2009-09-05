@@ -39,8 +39,8 @@ namespace Rawr.DPSWarr {
                 _c_ohItemSpeed = 0f;
                 _c_ohRacialExpertise = 0f;
                 _c_ohexpertise = 0f;
-                _c_ohdodge = 0.065f;
-                _c_ohparry = 0.120f;
+                _c_ohdodge = StatConversion.WHITE_DODGE_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level];
+                _c_ohparry = StatConversion.WHITE_PARRY_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level];
                 _c_ohblock = 0.0f;
                 _c_ohwcrit = 0.0f;
                 _c_ohycrit = 0.0f;
@@ -68,8 +68,8 @@ namespace Rawr.DPSWarr {
         public readonly float    _c_mhycrit,           _c_ohycrit;
         #endregion
 
-        public bool useMH; private bool _useMH { get { return MH != null && MHSpeed > 0; } }
-        public bool useOH; private bool _useOH { get { return Talents.TitansGrip > 0 && OH != null && OHSpeed > 0; } }
+        public bool useMH; private bool _useMH { get { return MH != null && MH.Speed > 0; } }
+        public bool useOH; private bool _useOH { get { return Talents.TitansGrip > 0 && OH != null && OH.Speed > 0; } }
 
         #region Weapon Damage Calcs
         #region Major Damage Factors
