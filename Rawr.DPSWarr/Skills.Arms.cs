@@ -1,0 +1,460 @@
+﻿/**********
+ * Owner: Jothay
+ **********/
+using System;
+
+namespace Rawr.DPSWarr
+{
+    public partial class Skills
+    {
+        #region Instants
+        public class MortalStrike : Ability
+        {
+            /// <summary>
+            /// A vicious strike that deals weapon damage plus 380 and wounds the target, reducing
+            /// the effectiveness of any healing by 50% for 10 sec.
+            /// </summary>
+            /// <TalentsAffecting>
+            /// Mortal Strike (Requires Talent),
+            /// Improved Mortal Strike [+(10-ROUNDUP(10/3*Pts))% damage, -(1/3*Pts) sec cooldown]
+            /// </TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Mortal Strike [+10% damage]</GlyphsAffecting>
+            public MortalStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Mortal Strike";
+                AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
+                ReqTalent = true;
+                Talent2ChksValue = Talents.MortalStrike;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                //Targets += StatS.BonusTargets;
+                Cd = 6f - (Talents.ImprovedMortalStrike / 3f); // In Seconds
+                RageCost = 30f - (Talents.FocusedRage * 1f);
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+                DamageBase = combatFactors.NormalizedMhWeaponDmg + 380f;
+                DamageBonus = (1f + Talents.ImprovedMortalStrike / 3f * 0.1f)
+                            * (1f + (Talents.GlyphOfMortalStrike ? 0.1f : 0f));
+                BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease;
+                //
+                InitializeB();
+            }
+        }
+        public class Suddendeath : Ability
+        {
+            // Constructors
+            /// <summary>
+            /// Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of
+            /// the target's Health state. This Execute only uses up to 30 total rage. In addition,
+            /// you keep at least (3/7/10) rage after using Execute.
+            /// </summary>
+            /// <TalentsAffecting>Sudden Death (Requires Talent) [(3*Pts)% chance to proc and (3/7/10) rage kept after],
+            /// Improved Execute [-(2.5*Pts) rage cost]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Execute [Execute acts as if it had 10 additional rage]</GlyphsAffecting>
+            public Suddendeath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Sudden Death";
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_;
+                Exec = new Execute(c, s, cf, wa);
+                RageCost = Exec.RageCost;
+                ReqTalent = true;
+                Talent2ChksValue = Talents.SuddenDeath;
+                ReqMeleeWeap = Exec.ReqMeleeWeap;
+                ReqMeleeRange = Exec.ReqMeleeRange;
+                //Targets += StatS.BonusTargets;
+                Cd = Exec.Cd;
+                StanceOkArms = true;
+                //
+                InitializeB();
+            }
+            // Variables
+            public Execute Exec;
+            public float FreeRage { get { return Exec.FreeRage; } set { Exec.FreeRage = value; } }
+            // Functions
+            public float GetActivates(float landedatksoverdur)
+            {
+                if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
+
+                float rate = Talents.SuddenDeath * 0.03f;
+
+                float acts = rate * landedatksoverdur;
+
+                return (float)Math.Max(0f, acts * (1f - Whiteattacks.AvoidanceStreak));
+            }
+            public override float Damage
+            {
+                get
+                {
+                    if (!Validated) { return 0f; }
+                    float Damage = Exec.DamageOverride;
+                    return (float)Math.Max(0f, Damage);
+                }
+            }
+        }
+        public class OverPower : Ability
+        {
+            // Constructors
+            /// <summary>
+            /// Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target dodges.
+            /// The Overpower cannot be blocked, dodged or parried.
+            /// </summary>
+            /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
+            /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Overpower [Can proc when parried]</GlyphsAffecting>
+            public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, Swordspec ss)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Overpower";
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
+                SS = ss;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                CanBeDodged = false;
+                CanBeParried = false;
+                CanBeBlocked = false;
+                Cd = 5f - (2f * Talents.UnrelentingAssault); // In Seconds
+                RageCost = 5f - (Talents.FocusedRage * 1f);
+                //Targets += StatS.BonusTargets;
+                StanceOkArms = true;
+                DamageBase = combatFactors.NormalizedMhWeaponDmg;
+                DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
+                BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+                //
+                InitializeB();
+            }
+            private Swordspec SS;
+            public float GetActivates(float YellowAttacksThatDodgeOverDur, float YellowAttacksThatParryOverDur, float ssActs)
+            {
+                if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
+
+                float acts = 0f;
+                float LatentGCD = (1.5f + CalcOpts.GetLatency());
+
+                float dodge = SS.MHAtkTable.Dodge;
+                float parry = (Talents.GlyphOfOverpower ? SS.MHAtkTable.Parry : 0f);
+
+                // Chance to activate: Dodges + (if glyphed) Parries
+                if (dodge + parry > 0f)
+                {
+                    float WhtHitsOverDur = FightDuration / Whiteattacks.MhEffectiveSpeed
+             + (combatFactors.OH != null ? FightDuration / Whiteattacks.OhEffectiveSpeed : 0f)
+                                           + ssActs;
+
+                    float dodgesoverDur = 0f +
+                          WhtHitsOverDur * (dodge + parry)
+                        + dodge > 0 ? YellowAttacksThatDodgeOverDur : 0
+                        + parry > 0 ? YellowAttacksThatParryOverDur : 0;
+
+                    acts += (float)Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.AvoidanceStreak));
+                }
+
+                return acts;
+            }
+        }
+        public class TasteForBlood : Ability
+        {
+            // Constructors
+            /// <summary>
+            /// Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target takes Rend Damage.
+            /// The Overpower cannot be blocked, dodged or parried.
+            /// </summary>
+            /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
+            /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            public TasteForBlood(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Taste for Blood";
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                CanBeDodged = false;
+                CanBeParried = false;
+                CanBeBlocked = false;
+                Cd = 5f - (2f * Talents.UnrelentingAssault); // In Seconds
+                RageCost = 5f - (Talents.FocusedRage * 1f);
+                //Targets += StatS.BonusTargets; // should be handled in an OP subitem like Sudden Death does to Execute but we'll wait on that
+                StanceOkArms = true;
+                DamageBase = combatFactors.NormalizedMhWeaponDmg;
+                DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
+                BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+                //
+                InitializeB();
+            }
+            public override float ActivatesOverride
+            {
+                get
+                {
+                    float acts = 0f;
+                    float LatentGCD = (1.5f + CalcOpts.GetLatency());
+                    float cd = (float)Math.Max(Cd, LatentGCD);
+                    float Every = 0f;
+                    float GCDPerc = 0f;
+
+                    // Chance to activate: Taste for Blood (Requires Rend)
+                    if (Talents.TasteForBlood > 0f && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_])
+                    {
+                        // Not more than once every 6 seconds
+                        cd = 6f;
+                        // Percent chance to proc, if it's not at 3/3 then the cd grows
+                        switch (Talents.TasteForBlood)
+                        {
+                            case 1: { cd += 6f; break; }
+                            case 2: { cd += 3f; break; }
+                            case 3: { cd += 0f; break; }
+                        }
+
+                        GCDPerc = LatentGCD / (cd + CalcOpts.GetLatency());
+                        Every = LatentGCD / GCDPerc;
+                        acts += (float)Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));
+                    }
+
+                    return acts;
+                }
+            }
+        }
+        public class Bladestorm : Ability
+        {
+            // Constructors
+            /// <summary>
+            /// Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will
+            /// perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot
+            /// perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped
+            /// unless killed.
+            /// </summary>
+            /// <TalentsAffecting>Bladestorm [Requires Talent]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Bladestorm [-15 sec Cd]</GlyphsAffecting>
+            public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, Ability ww)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                WW = ww;
+                Name = "Bladestorm";
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bladestorm_;
+                ReqTalent = true;
+                Talent2ChksValue = Talents.Bladestorm;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                MaxRange = WW.MaxRange; // In Yards
+                Targets = WW.Targets; // Handled in WW
+                Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
+                RageCost = 25f - (Talents.FocusedRage * 1f);
+                CastTime = 6f; // In Seconds // Channeled
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+                //
+                InitializeB();
+            }
+            // Variables
+            public Ability WW;
+            // Functions
+            public override float DamageOnUse
+            {
+                get
+                {
+                    if (!Validated) { return 0f; }
+                    float Damage = WW.DamageOnUse; // WW.DamageOnUseOverride;
+                    return (float)Math.Max(0f, Damage * 6f); // it WW's 6 times
+                }
+            }
+        }
+        public class Swordspec : Ability
+        {
+            // Constructors
+            /// <summary>
+            /// Gives a (1*Pts)% chance to get an extra attack on the same target after hitting
+            /// your target with your Sword. This effect cannot occur more than once every 6 seconds.
+            /// </summary>
+            /// <TalentsAffecting>Sword Specialization (Requires Talent)</TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            public Swordspec(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Sword Specialization";
+                ReqTalent = true;
+                Talent2ChksValue = Talents.SwordSpecialization;
+                //Targets += StatS.BonusTargets;
+                Cd = 6f; // In Seconds
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+                DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
+                RageCost = Whiteattacks.MHSwingRage;
+                //
+                InitializeB();
+            }
+            // Functions
+            public float GetActivates(float YellowsThatLandOverDur)
+            {
+                if (combatFactors._c_mhItemType != ItemType.TwoHandSword && combatFactors._c_mhItemType != ItemType.OneHandSword) { return 0.0f; }
+
+                float rate = Talents.SwordSpecialization * (CalcOpts.PTRMode ? 0.02f : 0.01f);
+                // This attack doesnt consume GCDs and doesn't affect the swing timer
+                float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) * rate;
+
+                // There is an internal cd of 6 seconds so AttacksThatCouldLandPerSec is capped by once every 6 sec.
+                float capActs = base.ActivatesOverride;
+
+                return (float)Math.Max(0f, Math.Min(rawActs, capActs));
+            }
+        }
+        public class Execute : Ability
+        {
+            // Constructors
+            /// <summary>
+            /// Attempt to finish off a wounded foe, causing (1456+AP*0.2) damage and converting each
+            /// extra point of rage into 38 additional damage. Only usable on enemies that have less
+            /// than 20% health.
+            /// </summary>
+            /// <TalentsAffecting>Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5).]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Execute [Your Execute ability acts as if it has 10 additional rage.]</GlyphsAffecting>
+            public Execute(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Execute";
+                //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Execute_;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                //Targets += StatS.BonusTargets;
+                RageCost = 15f - (Talents.ImprovedExecute * 2.5f) - (Talents.FocusedRage * 1f);
+                StanceOkFury = StanceOkArms = true;
+                //
+                InitializeB();
+            }
+            public float FreeRage;
+            public override float Activates { get { if (!Validated) { return 0f; } return 0f; } }
+            public override float Damage { get { return GetDamage(false); } }
+            public override float DamageOverride { get { return GetDamage(true); } }
+            private float GetDamage(bool Override)
+            {
+                if (!Override && !Validated) { return 0f; }
+
+                float freerage = (float)System.Math.Max(0f, FreeRage);
+                if (Override && freerage <= (RageCost - (Talents.ImprovedExecute * 2.5f)))
+                {
+                    freerage = RageCost - (Talents.ImprovedExecute * 2.5f);
+                }
+                else if (freerage <= 0f)
+                {
+                    return 0.0f; // No Free Rage = 0 damage
+                }
+                float executeRage = freerage * FightDuration;
+                executeRage = (float)Math.Min(30f, executeRage);
+                executeRage += (Talents.GlyphOfExecution ? 10.00f : 0.00f);
+                executeRage -= RageCost;
+
+                float Damage = 1456f + StatS.AttackPower * 0.2f + executeRage * 38f;
+
+                return (float)Math.Max(0f, Damage * AvgTargets);
+            }
+        }
+        public class Slam : Ability
+        {
+            // Constructors
+            /// <summary>Slams the opponent, causing weapon damage plus 250.</summary>
+            /// <TalentsAffecting>Improved Slam [Reduces cast time of your Slam ability by (0.5/1) sec.]</TalentsAffecting>
+            /// <SetsAffecting>T7 Deadnaught Battlegear 2 Pc [+10% Damage]</SetsAffecting>
+            public Slam(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Slam";
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                //Targets += StatS.BonusTargets;
+                RageCost = 15f - (Talents.FocusedRage * 1f);
+                CastTime = (1.5f - (Talents.ImprovedSlam * 0.5f)); // In Seconds
+                StanceOkArms = StanceOkDef = true;
+                DamageBase = combatFactors.AvgMhWeaponDmgUnhasted + 250f;
+                DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusWarrior_T7_2P_SlamDamage);
+                BonusCritChance = StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
+                //
+                InitializeB();
+            }
+            public override float Activates { get { if (!Validated) { return 0f; } return 0f; } }
+        }
+        #endregion
+
+        public class Rend : DoT
+        {
+            // Constructors
+            /// <summary>
+            /// Wounds the target causing them to bleed for 380 damage plus an additional
+            /// (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your
+            /// target is above 75% health, Rend does 35% more damage.
+            /// </summary>
+            /// <TalentsAffecting>Improved Rend [+(10*Pts)% Bleed Damage], Trauma [+(15*Pts)% Bleed Damage]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Rending [+2 damage ticks]</GlyphsAffecting>
+            public Rend(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Rend";
+                AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Rend_;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                CanCrit = false;
+                Duration = 15f + (Talents.GlyphOfRending ? 6f : 0f); // In Seconds
+                TimeBtwnTicks = 3f; // In Seconds
+                RageCost = 10f - (Talents.FocusedRage * 1f);
+                StanceOkArms = StanceOkDef = true;
+                DamageBase = 380f;
+                DamageBonus = (1f + 0.10f * Talents.ImprovedRend);// *(1f + 0.15f * Talents.Trauma);
+                //
+                InitializeB();
+            }
+            public float addMisses;
+            public float addDodges;
+            public float addParrys;
+            public override float ActivatesOverride
+            {
+                get
+                {
+                    // Since Rend has to be up in order to Taste for Blood
+                    // this override has the intention of taking the baseline
+                    // activates and forcing the char to use Rend again to ensure it's up
+                    // in the event that the attemtped activate didn't land (it Missed, was dodged or parried)
+                    // We're only doing the additional check once so it will at most Rend
+                    // twice in a row, may consider doing a settler
+                    float result = 0f;
+                    float Base = base.ActivatesOverride;
+                    addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
+                    addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
+                    addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
+
+                    result = Base + addMisses + addDodges + addParrys;
+
+                    return result;
+
+                }
+            }
+            public override float TickSize
+            {
+                get
+                {
+                    if (!Validated) { return 0f; }
+
+                    float DmgBonusBase = ((StatS.AttackPower * Whiteattacks.MhEffectiveSpeed) / 14f + (combatFactors.MH.MaxDamage + combatFactors.MH.MinDamage) / 2f) * (743f / 300000f);
+                    float DmgBonusO75 = 0.25f * 1.35f * DmgBonusBase;
+                    float DmgBonusU75 = 0.75f * 1.00f * DmgBonusBase;
+                    float DmgMod = (1f + StatS.BonusBleedDamageMultiplier) * DamageBonus;
+
+                    float TickSize = (DamageBase + DmgBonusO75 + DmgBonusU75) * DmgMod;
+                    return TickSize;
+                }
+            }
+            public override float GetDPS(float acts)
+            {
+                float dmgonuse = TickSize;
+                float numticks = NumTicks * (acts - addMisses - addDodges - addParrys);
+                float result = GetDmgOverTickingTime(acts) / FightDuration;
+                return result;
+            }
+        }
+    }
+}

@@ -45,6 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Rotation.Arms.cs" />
+    <Compile Include="Rotation.Fury.cs" />
+    <Compile Include="Skills.Shared.cs" />
+    <Compile Include="Skills.Arms.cs" />
     <Compile Include="CalculationOptionsPanelDPSWarr.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -55,9 +59,11 @@
     <Compile Include="CharacterCalculationsDPSWarr.cs" />
     <Compile Include="CombatFactors.cs" />
     <Compile Include="ComparisonCalculationsDPSWarr.cs" />
+    <Compile Include="Skills.Fury.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rotation.cs" />
-    <Compile Include="Skills.cs" />
+    <Compile Include="Skills.Base.cs" />
+    <Compile Include="Skills.Prot.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

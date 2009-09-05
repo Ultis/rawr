@@ -1,0 +1,400 @@
+﻿/**********
+ * Owner: Ebs
+ **********/
+using System;
+
+namespace Rawr.DPSWarr
+{
+    public partial class Skills
+    {
+        #region Instants
+        public class BloodThirst : Ability
+        {
+            // Constructors
+            /// <summary>
+            /// Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee
+            /// attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.
+            /// </summary>
+            /// <TalentsAffecting>Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Bloodthirst [+100% from healing effect]</GlyphsAffecting>
+            public BloodThirst(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Bloodthirst";
+                AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_;
+                ReqTalent = true;
+                Talent2ChksValue = Talents.Bloodthirst;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                //Targets += StatS.BonusTargets;
+                Cd = 4f; // In Seconds
+                //Duration = 8f;
+                RageCost = 20f - (Talents.FocusedRage * 1f);
+                StanceOkFury = true;
+                DamageBase = StatS.AttackPower * 50f / 100f;
+                DamageBonus = 1f + Talents.UnendingFury * 0.02f;
+                BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease;
+                HealingBase = StatS.Health / 100.0f * 3f * (Talents.GlyphOfBloodthirst ? 2f : 1f);
+                //HealingBonus = 1f;
+                //
+                InitializeB();
+            }
+        }
+        public class WhirlWind : Ability
+        {
+            // Constructors
+            /// <summary>
+            /// In a whirlwind of steel you attack up to 4 enemies in 8 yards,    
+            /// causing weapon damage from both melee weapons to each enemy.
+            /// </summary>
+            /// <TalentsAffecting>Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Whirlwind [-2 sec Cooldown]</GlyphsAffecting>
+            public WhirlWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "WhirlWind";
+                AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                MaxRange = 8f; // In Yards
+                Cd = 10f - (Talents.GlyphOfWhirlwind ? 2f : 0f); // In Seconds
+                //Targets += StatS.BonusTargets;
+                Targets += (CalcOpts.MultipleTargets ? 3f : 0f);
+                RageCost = 25f - (Talents.FocusedRage * 1f);
+                StanceOkFury = true;
+                DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
+                //
+                InitializeB();
+            }
+            // Variables
+            // Get/Set
+            // Functions
+            // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
+            public override float Damage { get { return GetDamage(false, false) + GetDamage(false, true); } }
+            public override float DamageOverride { get { return GetDamage(true, false) + GetDamage(true, true); } }
+            /// <summary></summary>
+            /// <param name="Override">When true, do not check for Bers Stance</param>
+            /// <param name="isOffHand">When true, do calculations for off-hand damage instead of main-hand</param>
+            /// <returns>Unmitigated damage of a single hit</returns>
+            private float GetDamage(bool Override, bool isOffHand)
+            {
+                if (!Validated && !Override) { return 0f; }
+
+                float Damage;
+                if (isOffHand)
+                {
+                    if (this.Char.OffHand != null && this.Char.OffHand.Item != null)
+                    {
+                        Damage = combatFactors.NormalizedOhWeaponDmg;
+                    }
+                    else { Damage = 0f; }
+                }
+                else { Damage = combatFactors.NormalizedMhWeaponDmg; }
+
+                return (float)Math.Max(0f, Damage * DamageBonus);
+            }
+            public override float DamageOnUse
+            {
+                get
+                {
+                    // ==== MAIN HAND ====
+                    float DamageMH = GetDamage(false, false); // Base Damage
+                    DamageMH *= combatFactors.DamageBonus; // Global Damage Bonuses
+                    DamageMH *= combatFactors.DamageReduction; // Global Damage Penalties
+
+                    // Work the Attack Table
+                    float dmgDrop = (1f
+                        - MHAtkTable.Miss   // no damage when being missed
+                        - MHAtkTable.Dodge  // no damage when being dodged
+                        - MHAtkTable.Parry  // no damage when being parried
+                        - MHAtkTable.Glance // glancing handled below
+                        - MHAtkTable.Block  // blocked handled below
+                        - MHAtkTable.Crit); // crits   handled below
+
+                    float dmgGlance = DamageMH * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                    float dmgBlock = DamageMH * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
+                    float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+
+                    DamageMH *= dmgDrop;
+
+                    DamageMH += dmgGlance + dmgBlock + dmgCrit;
+
+                    // ==== OFF HAND ====
+                    float DamageOH = GetDamage(false, true); // Base Damage
+                    DamageOH *= combatFactors.DamageBonus; // Global Damage Bonuses
+                    DamageOH *= combatFactors.DamageReduction; // Global Damage Penalties
+
+                    // Work the Attack Table
+                    dmgDrop = (1f
+                        - OHAtkTable.Miss   // no damage when being missed
+                        - OHAtkTable.Dodge  // no damage when being dodged
+                        - OHAtkTable.Parry  // no damage when being parried
+                        - OHAtkTable.Glance // glancing handled below
+                        - OHAtkTable.Block  // blocked handled below
+                        - OHAtkTable.Crit); // crits   handled below
+
+                    dmgGlance = DamageOH * OHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                    dmgBlock = DamageOH * OHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
+                    dmgCrit = DamageOH * OHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+
+                    DamageOH *= dmgDrop;
+
+                    DamageOH += dmgGlance + dmgBlock + dmgCrit;
+
+                    // ==== RESULT ====
+                    float Damage = DamageMH + DamageOH;
+                    return (float)Math.Max(0f, Damage * AvgTargets);
+                }
+            }
+            public override float DamageOnUseOverride
+            {
+                get
+                {
+                    // ==== MAIN HAND ====
+                    float DamageMH = GetDamage(true, false); // Base Damage
+                    DamageMH *= combatFactors.DamageBonus; // Global Damage Bonuses
+                    DamageMH *= combatFactors.DamageReduction; // Global Damage Penalties
+
+                    // Work the Attack Table
+                    float dmgDrop = (1f
+                        - MHAtkTable.Miss   // no damage when being missed
+                        - MHAtkTable.Dodge  // no damage when being dodged
+                        - MHAtkTable.Parry  // no damage when being parried
+                        - MHAtkTable.Glance // glancing handled below
+                        - MHAtkTable.Block  // blocked handled below
+                        - MHAtkTable.Crit); // crits   handled below
+
+                    float dmgGlance = DamageMH * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                    float dmgBlock = DamageMH * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
+                    float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+
+                    DamageMH *= dmgDrop;
+
+                    DamageMH += dmgGlance + dmgBlock + dmgCrit;
+
+                    // ==== OFF HAND ====
+                    float DamageOH = GetDamage(true, true); // Base Damage
+                    DamageOH *= combatFactors.DamageBonus; // Global Damage Bonuses
+                    DamageOH *= combatFactors.DamageReduction; // Global Damage Penalties
+
+                    // Work the Attack Table
+                    dmgDrop = (1f
+                        - OHAtkTable.Miss   // no damage when being missed
+                        - OHAtkTable.Dodge  // no damage when being dodged
+                        - OHAtkTable.Parry  // no damage when being parried
+                        - OHAtkTable.Glance // glancing handled below
+                        - OHAtkTable.Block  // blocked handled below
+                        - OHAtkTable.Crit); // crits   handled below
+
+                    dmgGlance = DamageOH * OHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                    dmgBlock = DamageOH * OHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
+                    dmgCrit = DamageOH * OHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+
+                    DamageOH *= dmgDrop;
+
+                    DamageOH += dmgGlance + dmgBlock + dmgCrit;
+
+                    // ==== RESULT ====
+                    float Damage = DamageMH + DamageOH;
+                    return (float)Math.Max(0f, Damage * AvgTargets);
+                }
+            }
+        }
+        public class BloodSurge : Ability
+        {
+            // Constructors
+            /// <summary>
+            /// Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%)
+            /// chance of making your next Slam instant for 5 sec.
+            /// </summary>
+            /// <TalentsAffecting>Bloodsurge (Requires Talent) [(7%/13%/20%) chance]</TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            public BloodSurge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, Ability slam, Ability whirlwind, Ability bloodthirst)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Bloodsurge";
+                AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_;
+                ReqTalent = true;
+                Talent2ChksValue = Talents.Bloodsurge;
+                //Targets += StatS.BonusTargets;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                Duration = 5f; // In Seconds
+                RageCost = 15f - (Talents.FocusedRage * 1f);
+                StanceOkFury = true;
+                hsActivates = 0.0f;
+                SL = slam;
+                WW = whirlwind;
+                BT = bloodthirst;
+                //
+                InitializeB();
+            }
+            #region Variables
+            public float hsActivates;
+            public float maintainActs;
+            public Ability SL;
+            public Ability WW;
+            public Ability BT;
+            #endregion
+            #region Functions
+            private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
+            {
+                // Assumes one slot to slam every 8 seconds: WW/BT/Slam/BT repeat. Not optimal, but easy to do
+                float chanceWeDontProc = 1f;
+                float actMod = 8f / FightDuration; // since we're assuming an 8sec rotation
+
+                chanceWeDontProc *= (1f - actMod * hsActivates * procChance * chanceMHhit);
+                chanceWeDontProc *= (1f - actMod * WW.Activates * procChance * chanceMHhit)
+                                 * (1f - actMod * WW.Activates * procChance * chanceOHhit);
+                chanceWeDontProc *= (1f - actMod * BT.Activates * procChance * chanceMHhit);
+                return (1f - chanceWeDontProc) / actMod;
+            }
+            private float CalcSlamProcs(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
+            {
+                float hsPercent = (hsActivates) / (FightDuration / Whiteattacks.MhEffectiveSpeed);
+                float numProcs = 0.0f;
+                int whiteTimer = 0;
+                int WWtimer = 0;
+                int BTtimer = 0;
+                const int GCD = 15;
+                float chanceWeDontProc = 1f; // temp value that keeps track of what the odds are we got a proc by SLAM time
+                int numWW = 0;
+                int numBT = 0;
+                for (int timeStamp = 0; timeStamp < FightDuration * 10f; timeStamp++)
+                {
+                    if (whiteTimer <= 0)
+                    {
+                        chanceWeDontProc *= (1f - hsPercent * procChance * chanceMHhit);
+                        whiteTimer = (int)Math.Ceiling(Whiteattacks.MhEffectiveSpeed * 10);
+                    }
+                    if (timeStamp % GCD == 0)
+                    {
+                        if (WWtimer <= 0)
+                        {
+                            chanceWeDontProc *= (1f - procChance * chanceMHhit) * (1f - procChance * chanceOHhit);
+                            WWtimer = 80;
+                            numWW++;
+                        }
+                        else if (BTtimer <= 0)
+                        {
+                            chanceWeDontProc *= (1f - procChance * chanceMHhit);
+                            BTtimer = 40;
+                            numBT++;
+                        }
+                        else
+                        {
+                            // We slam
+                            numProcs += (1f - chanceWeDontProc);
+                            chanceWeDontProc = 1f;
+                        }
+                    }
+                    whiteTimer--;
+                    WWtimer--;
+                    BTtimer--;
+                }
+                return numProcs;
+            }
+            public override float ActivatesOverride
+            {
+                get
+                {
+                    float chance = Talents.Bloodsurge * 0.20f / 3f;
+                    float chanceMhHitLands = (1f - MHAtkTable.Miss - MHAtkTable.Dodge);
+                    float chanceOhHitLands = (1f - OHAtkTable.Miss - OHAtkTable.Dodge);
+
+                    float procs3 = BasicFuryRotation(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
+
+                    procs3 = (maintainActs > procs3) ? 0f : procs3 - maintainActs;
+
+                    return procs3 * (1f - Whiteattacks.AvoidanceStreak);
+                }
+            }
+            public override float Damage { get { return !Validated ? 0f : (float)Math.Max(0f, SL.DamageOverride); } }
+            #endregion
+        }
+        #endregion
+        #region OnAttacks
+        public class HeroicStrike : OnAttack
+        {
+            /// <summary>
+            /// A strong attack that increases melee damage by 495 and causes a high amount of
+            /// threat. Causes 173.25 additional damage against Dazed targets.
+            /// </summary>
+            /// <TalentsAffecting>Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Heroic Strike [+10 rage on crits]</GlyphsAffecting>
+            public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Heroic Strike";
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                Cd = /*0f*/(Char.MainHand != null ? Whiteattacks.MhEffectiveSpeed : 0f); // In Seconds
+                //Targets += StatS.BonusTargets;
+                RageCost = 15f - (Talents.ImprovedHeroicStrike * 1f) - (Talents.FocusedRage * 1f);
+                CastTime = 0f; // In Seconds // Replaces a white hit
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+                bloodsurgeRPS = 0.0f;
+                DamageBase = Whiteattacks.MhDamage + 495f;
+                BonusCritChance = Talents.Incite * 0.05f + StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
+                //
+                InitializeB();
+            }
+            public override float FullRageCost
+            {
+                get
+                {
+                    float swingrage = Whiteattacks.MHSwingRage;
+                    float glyphback = (Talents.GlyphOfHeroicStrike ? 10.0f * ContainCritValue(true) : 0f);
+                    return RageCost + swingrage - glyphback;
+                }
+            }
+        }
+        public class Cleave : OnAttack
+        {
+            /// <summary>
+            /// A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.
+            /// </summary>
+            /// <TalentsAffecting>Improved Cleave [+(40*Pts)% Damage], Incite [+(5*Pts)% Crit Perc]</TalentsAffecting>
+            /// <GlyphsAffecting>Glyph of Cleaving [+1 targets hit]</GlyphsAffecting>
+            public Cleave(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                //
+                Name = "Cleave";
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_;
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                RageCost = 20f - (Talents.FocusedRage * 1f);
+                Targets += (CalcOpts.MultipleTargets ? 1f + (Talents.GlyphOfCleaving ? 1f : 0f) : 0f);
+                CastTime = 0f; // In Seconds // Replaces a white hit
+                StanceOkFury = StanceOkArms = StanceOkDef = true;
+                bloodsurgeRPS = 0.0f;
+                DamageBase = Whiteattacks.MhDamage + 222f;
+                DamageBonus = 1f + Talents.ImprovedCleave * 0.40f;
+                BonusCritChance = Talents.Incite * 0.05f;
+                //
+                InitializeB();
+            }
+        }
+        #endregion
+        #region Unused
+        public class Pummel : Ability
+        {
+            /// <summary>
+            /// Instant, 10 sec Cd, 10 Rage, Melee Range, (Zerker)
+            /// Pummel the target, interupting spellcasting and preventing any spell in that school
+            /// from being cast for 4 sec.
+            /// </summary>
+            /// <TalentsAffecting></TalentsAffecting>
+            /// <GlyphsAffecting></GlyphsAffecting>
+            ///  - (Talents.FocusedRage * 1f)
+        }
+        
+        #endregion
+    }
+}
