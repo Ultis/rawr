@@ -19,8 +19,10 @@ using System.Xml;
 
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase {
+        private bool isLoading = false;
         private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
         public CalculationOptionsPanelDPSWarr() {
+            isLoading = true;
             InitializeComponent();
             CTL_Maints.ExpandAll();
 
@@ -36,11 +38,14 @@ namespace Rawr.DPSWarr {
             CB_Duration.Minimum = 0;
             CB_Duration.Maximum = 60 * 20; // 20 minutes
             CB_MoveTargsTime.Maximum = 60 * 20; // 20 minutes
+            isLoading = false;
         }
         protected override void LoadCalculationOptions() {
+            isLoading = true;
             if (Character != null && Character.CalculationOptions == null) { 
                 // If it's broke, make a new one with the defaults
                 Character.CalculationOptions = new CalculationOptionsDPSWarr();
+                isLoading = true;
             }
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             CB_TargLvl.Text                 = calcOpts.TargetLevel.ToString();
@@ -52,14 +57,27 @@ namespace Rawr.DPSWarr {
             NUD_SurvScale.Value             = (decimal)calcOpts.SurvScale;
             // Rotational Changes
             CK_InBack.Checked               = calcOpts.InBack;
+                LB_Perc5.Enabled            = calcOpts.InBack;
+                CB_InBackPerc.Enabled       = calcOpts.InBack;
                 CB_InBackPerc.Value         = calcOpts.InBackPerc;
             CK_MultiTargs.Checked           = calcOpts.MultipleTargets;
+                LB_Max.Enabled              = calcOpts.MultipleTargets;
+                LB_Perc1.Enabled            = calcOpts.MultipleTargets;
+                CB_MultiTargsPerc.Enabled   = calcOpts.MultipleTargets;
+                CB_MultiTargsMax.Enabled    = calcOpts.MultipleTargets;
                 CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;
                 CB_MultiTargsMax.Value      = (int)calcOpts.MultipleTargetsMax;
-            CK_StunningTargs.Checked        = calcOpts.StunningTargets;
+            CK_StunningTargs.Checked = calcOpts.StunningTargets;
+                NUD_StunFreq.Enabled        = calcOpts.StunningTargets;
+                NUD_StunDur.Enabled         = calcOpts.StunningTargets;
+                LB_Stun0.Enabled            = calcOpts.StunningTargets;
+                LB_Stun1.Enabled            = calcOpts.StunningTargets;
+                LB_Stun2.Enabled            = calcOpts.StunningTargets;
                 NUD_StunFreq.Value          = (int)calcOpts.StunningTargetsFreq;
                 NUD_StunDur.Value           = (int)calcOpts.StunningTargetsDur;
             CK_MovingTargs.Checked          = calcOpts.MovingTargets;
+                CB_MoveTargsTime.Enabled    = calcOpts.MovingTargets;
+                LB_Perc2.Enabled            = calcOpts.MovingTargets;
                 CB_MoveTargsTime.Value      = (int)calcOpts.MovingTargetsTime;
             // nonfunctional
             CK_DisarmTargs.Checked          = calcOpts.DisarmingTargets;
@@ -75,724 +93,780 @@ namespace Rawr.DPSWarr {
             RB_StanceFury.Checked = calcOpts.FuryStance;
             RB_StanceArms.Checked = !RB_StanceFury.Checked;
             Character.OnCalculationsInvalidated();
+            isLoading = false;
         }
         // Basics
         private void CK_PTRMode_CheckedChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.PTRMode = CK_PTRMode.Checked;
-            Character.OnCalculationsInvalidated();
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.PTRMode = CK_PTRMode.Checked;
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
-            int targetArmor = int.Parse(CB_TargArmor.Text);
-            //LB_TargArmorDesc.Text = armorBosses[targetArmor];
+            if (!isLoading) {
+                int targetArmor = int.Parse(CB_TargArmor.Text);
 
-            if (Character != null && Character.CalculationOptions != null) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.TargetArmor = targetArmor;
-                Character.OnCalculationsInvalidated();
+                if (Character != null && Character.CalculationOptions != null) {
+                    CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                    calcOpts.TargetArmor = targetArmor;
+                    Character.OnCalculationsInvalidated();
+                }
             }
         }
         private void CB_TargetLevel_SelectedIndexChanged(object sender, EventArgs e) {
-            if (Character != null && Character.CalculationOptions != null) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.TargetLevel = int.Parse(CB_TargLvl.Text);
-                Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                if (Character != null && Character.CalculationOptions != null)
+                {
+                    CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                    calcOpts.TargetLevel = int.Parse(CB_TargLvl.Text);
+                    Character.OnCalculationsInvalidated();
+                }
             }
         }
         private void RB_StanceFury_CheckedChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.FuryStance = RB_StanceFury.Checked;
-            CTL_Maints.Nodes[3].Nodes[0].Checked =  calcOpts.FuryStance;
-            CTL_Maints.Nodes[3].Nodes[1].Checked = !calcOpts.FuryStance;
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.FuryStance = RB_StanceFury.Checked;
+                CTL_Maints.Nodes[3].Nodes[0].Checked = calcOpts.FuryStance;
+                CTL_Maints.Nodes[3].Nodes[1].Checked = !calcOpts.FuryStance;
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void CB_Duration_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.Duration = (float)CB_Duration.Value;
-            CB_MoveTargsTime.Maximum = CB_Duration.Value;
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.Duration = (float)CB_Duration.Value;
+                CB_MoveTargsTime.Maximum = CB_Duration.Value;
+                Character.OnCalculationsInvalidated();
+            }
         }
         // Rotational Changes
         private void RotChanges_InBack_ChecksChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            calcOpts.InBack = CK_InBack.Checked; CB_InBackPerc.Enabled = calcOpts.InBack;
-            //
-            Character.OnCalculationsInvalidated();
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.InBack = CK_InBack.Checked;
+                CB_InBackPerc.Enabled = calcOpts.InBack;
+                LB_Perc5.Enabled = calcOpts.InBack;
+                //
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void RotChanges_Multi_ChecksChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            calcOpts.MultipleTargets = CK_MultiTargs.Checked; LB_Max.Enabled = calcOpts.MultipleTargets; CB_MultiTargsMax.Enabled = calcOpts.MultipleTargets; CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
-            //
-            Character.OnCalculationsInvalidated();
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.MultipleTargets = CK_MultiTargs.Checked;
+                CB_MultiTargsMax.Enabled = calcOpts.MultipleTargets;
+                CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
+                LB_Max.Enabled = calcOpts.MultipleTargets;
+                LB_Perc1.Enabled = calcOpts.MultipleTargets;
+                //
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void RotChanges_Stun_ChecksChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            bool Checked = CK_StunningTargs.Checked;
-            calcOpts.StunningTargets = Checked;
-            LB_Stun0.Enabled = Checked;
-            NUD_StunFreq.Enabled = Checked;
-            LB_Stun1.Enabled = Checked;
-            NUD_StunDur.Enabled = Checked;
-            LB_Stun2.Enabled = Checked;
-            //
-            Character.OnCalculationsInvalidated();
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                bool Checked             = CK_StunningTargs.Checked;
+                calcOpts.StunningTargets = Checked;
+                LB_Stun0.Enabled         = Checked;
+                NUD_StunFreq.Enabled     = Checked;
+                LB_Stun1.Enabled         = Checked;
+                NUD_StunDur.Enabled      = Checked;
+                LB_Stun2.Enabled         = Checked;
+                //
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void RotChanges_Move_ChecksChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            calcOpts.MovingTargets = CK_MovingTargs.Checked;
-            CB_MoveTargsTime.Enabled = calcOpts.MovingTargets;
-            LB_Perc2.Enabled = calcOpts.MovingTargets;
-            //
-            Character.OnCalculationsInvalidated();
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.MovingTargets = CK_MovingTargs.Checked;
+                CB_MoveTargsTime.Enabled = calcOpts.MovingTargets;
+                LB_Perc2.Enabled = calcOpts.MovingTargets;
+                //
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void RotChanges_Disarm_ChecksChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            calcOpts.DisarmingTargets = CK_DisarmTargs.Checked; CB_DisarmingTargsPerc.Enabled = calcOpts.DisarmingTargets;
-            //
-            Character.OnCalculationsInvalidated();
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.DisarmingTargets = CK_DisarmTargs.Checked;
+                CB_DisarmingTargsPerc.Enabled = calcOpts.DisarmingTargets;
+                //
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void RotChanges_InBack_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
-            //
-            Character.OnCalculationsInvalidated();
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
+                //
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void RotChanges_Multi_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            calcOpts.MultipleTargetsPerc = (int)CB_MultiTargsPerc.Value;
-            //
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.MultipleTargetsPerc = (int)CB_MultiTargsPerc.Value;
+                //
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void RotChanges_MultiMax_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            calcOpts.MultipleTargetsMax = (float)CB_MultiTargsMax.Value;
-            //
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.MultipleTargetsMax = (float)CB_MultiTargsMax.Value;
+                //
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void NUD_StunFreq_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.StunningTargetsFreq = (int)NUD_StunFreq.Value;
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.StunningTargetsFreq = (int)NUD_StunFreq.Value;
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void NUD_StunDur_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.StunningTargetsDur = (float)NUD_StunDur.Value;
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.StunningTargetsDur = (float)NUD_StunDur.Value;
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void RotChanges_Move_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            calcOpts.MovingTargetsTime = (float)CB_MoveTargsTime.Value;
-            //
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.MovingTargetsTime = (float)CB_MoveTargsTime.Value;
+                //
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void RotChanges_Disarm_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            //
-            calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
-            //
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
+                //
+                Character.OnCalculationsInvalidated();
+            }
         }
         // Abilities to Maintain Changes
         private void CK_Flooring_CheckedChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.AllowFlooring = CK_Flooring.Checked;
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.AllowFlooring = CK_Flooring.Checked;
+                Character.OnCalculationsInvalidated();
+            }
         }
         private void CTL_Maints_AfterCheck(object sender, TreeViewEventArgs e) {
-            CTL_Maints.AfterCheck -= new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            // Work special changes for the tree
-            switch (e.Node.Text) {
-                #region Rage Generators
-                case "Rage Generators": {
-                    int currentNode = 0, subNode = 0;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                    break;
-                }
-                case "Berserker Rage": {
-                    int currentNode = 0;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Bloodrage": {
-                    int currentNode = 0;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                #endregion
-                #region Maintenance
-                case "Maintenance": {
-                    int currentNode = 1, subNode = 0;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[1].Checked = false; subNode++;// only one of these two can be active at a time
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                    break;
-                }
-                case "Shout Selection": {
-                    int currentNode = 1;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    // Handle it's children, Only one of these should ever be active since you can only maintain one shout
-                    CTL_Maints.Nodes[currentNode].Nodes[0].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Nodes[0].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[0].Nodes[1].Checked = false;
-                    break;
-                }
-                case "Battle Shout": {
-                    int currentNode = 1, currentSubNode = 0;
-                    // Can't have more than one of these two checked, so set the other as false
-                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked = false;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked) {   // is BS checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked // is CS checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Commanding Shout": {
-                    int currentNode = 1, currentSubNode = 0;
-                    // Can't have more than one of these two checked, so set the other as false
-                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked = false;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked) {   // is CS checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked // is BS checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Demoralizing Shout": {
-                    int currentNode = 1;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Sunder Armor": {
-                    int currentNode = 1;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[2].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Thunder Clap": {
-                    int currentNode = 1;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[3].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Hamstring": {
-                    int currentNode = 1;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[4].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[0].Checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                #endregion
-                #region Periodics
-                case "Periodics": {
-                    int currentNode = 2, subNode = 0;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                    break;
-                }
-                case "Shattering Throw": {
-                    int currentNode = 2;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Sweeping Strikes": {
-                    int currentNode = 2;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Death Wish": {
-                    int currentNode = 2;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[2].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Recklessness": {
-                    int currentNode = 2;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[3].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[4].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[0].Checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Enraged Regeneration": {
-                    int currentNode = 2;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[4].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
-                            !CTL_Maints.Nodes[currentNode].Nodes[0].Checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                #endregion
-                #region Damage Dealers
-                case "Damage Dealers": {
-                    int currentNode = 3, subNode = 0;
-                    if (calcOpts.FuryStance) {
+            if (!isLoading) {
+                CTL_Maints.AfterCheck -= new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                // Work special changes for the tree
+                switch (e.Node.Text) {
+                    #region Rage Generators
+                    case "Rage Generators": {
+                        int currentNode = 0, subNode = 0;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
                         CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[1].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[2].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = false;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = false;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[1].Checked = false;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[2].Checked = false;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[3].Checked = false;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[4].Checked = false;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[5].Checked = false;
-                    }else{
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = false;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = false;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[1].Checked = false;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[2].Checked = false; subNode++;
+                        break;
+                    }
+                    case "Berserker Rage": {
+                        int currentNode = 0;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Bloodrage": {
+                        int currentNode = 0;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    #endregion
+                    #region Maintenance
+                    case "Maintenance": {
+                        int currentNode = 1, subNode = 0;
                         CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[1].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[2].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[3].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[4].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[5].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[1].Checked = false; subNode++;// only one of these two can be active at a time
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                        break;
                     }
-                    break;
+                    case "Shout Selection": {
+                        int currentNode = 1;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        // Handle it's children, Only one of these should ever be active since you can only maintain one shout
+                        CTL_Maints.Nodes[currentNode].Nodes[0].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Nodes[0].Checked;
+                        CTL_Maints.Nodes[currentNode].Nodes[0].Nodes[1].Checked = false;
+                        break;
+                    }
+                    case "Battle Shout": {
+                        int currentNode = 1, currentSubNode = 0;
+                        // Can't have more than one of these two checked, so set the other as false
+                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked = false;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked) {   // is BS checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked // is CS checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Commanding Shout": {
+                        int currentNode = 1, currentSubNode = 0;
+                        // Can't have more than one of these two checked, so set the other as false
+                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked = false;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked) {   // is CS checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked // is BS checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Demoralizing Shout": {
+                        int currentNode = 1;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Sunder Armor": {
+                        int currentNode = 1;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[2].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Thunder Clap": {
+                        int currentNode = 1;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[3].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Hamstring": {
+                        int currentNode = 1;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[4].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[0].Checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    #endregion
+                    #region Periodics
+                    case "Periodics": {
+                        int currentNode = 2, subNode = 0;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                        break;
+                    }
+                    case "Shattering Throw": {
+                        int currentNode = 2;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Sweeping Strikes": {
+                        int currentNode = 2;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Death Wish": {
+                        int currentNode = 2;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[2].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[0].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[4].Checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Recklessness": {
+                        int currentNode = 2;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[3].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[4].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[0].Checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Enraged Regeneration": {
+                        int currentNode = 2;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[4].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[2].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[3].Checked &&
+                                !CTL_Maints.Nodes[currentNode].Nodes[0].Checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    #endregion
+                    #region Damage Dealers
+                    case "Damage Dealers": {
+                        int currentNode = 3, subNode = 0;
+                        if (calcOpts.FuryStance) {
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[1].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[2].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = false;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = false;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[1].Checked = false;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[2].Checked = false;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[3].Checked = false;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[4].Checked = false;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[5].Checked = false;
+                        }else{
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = false;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = false;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[1].Checked = false;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[2].Checked = false; subNode++;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[1].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[2].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[3].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[4].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[5].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                        }
+                        break;
+                    }
+                    #region Fury
+                    case "Fury": {
+                        int currentNode = 3;
+                        // Can't have fury active if you are arms
+                        if (!calcOpts.FuryStance) { CTL_Maints.Nodes[currentNode].Nodes[0].Checked = false; }
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        // Handle it's children
+                        CTL_Maints.Nodes[currentNode].Nodes[0].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Nodes[0].Checked;
+                        CTL_Maints.Nodes[currentNode].Nodes[0].Nodes[1].Checked = CTL_Maints.Nodes[currentNode].Nodes[0].Checked;
+                        CTL_Maints.Nodes[currentNode].Nodes[0].Nodes[2].Checked = CTL_Maints.Nodes[currentNode].Nodes[0].Checked;
+                        break;
+                    }
+                    case "Whirlwind": {
+                        int currentNode = 3, currentSubNode = 0;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked) {     // is WW checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is BT checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked    // is BS checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Bloodthirst": {
+                        int currentNode = 3, currentSubNode = 0;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked) {     // is BT checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is WW checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked    // is BS checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Bloodsurge": {
+                        int currentNode = 3, currentSubNode = 0;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked) {     // is BS checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is BT checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked    // is WW checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    #endregion
+                    #region Arms
+                    case "Arms": {
+                        int currentNode = 3, currentSubNode = 1;
+                        // Can't have arms active if you are fury
+                        if (calcOpts.FuryStance) { CTL_Maints.Nodes[currentNode].Nodes[1].Checked = false; }
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        // Handle it's children
+                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                        break;
+                    }
+                    case "Bladestorm": {
+                        int currentNode = 3, currentSubNode = 1;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked) {      // is BLS checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Mortal Strike": {
+                        int currentNode = 3, currentSubNode = 1;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked) {      // is MS checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Rend": {
+                        int currentNode = 3, currentSubNode = 1;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked) {      // is RD checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Overpower": {
+                        int currentNode = 3, currentSubNode = 1;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked) {      // is OP checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Sudden Death": {
+                        int currentNode = 3, currentSubNode = 1;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked) {      // is SD checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Slam": {
+                        int currentNode = 3, currentSubNode = 1;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked) {      // is SL checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked    // is BLS checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    #endregion
+                    #endregion
+                    #region Rage Dumps
+                    case "Rage Dumps": {
+                        int currentNode = 4, subNode = 0;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
+                        CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                        break;
+                    }
+                    case "Cleave": {
+                        int currentNode = 4;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Heroic Strike": {
+                        int currentNode = 4;
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    #endregion
+                    default: { break; }
                 }
-                #region Fury
-                case "Fury": {
-                    int currentNode = 3;
-                    // Can't have fury active if you are arms
-                    if (!calcOpts.FuryStance) { CTL_Maints.Nodes[currentNode].Nodes[0].Checked = false; }
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    // Handle it's children
-                    CTL_Maints.Nodes[currentNode].Nodes[0].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Nodes[0].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[0].Nodes[1].Checked = CTL_Maints.Nodes[currentNode].Nodes[0].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[0].Nodes[2].Checked = CTL_Maints.Nodes[currentNode].Nodes[0].Checked;
-                    break;
-                }
-                case "Whirlwind": {
-                    int currentNode = 3, currentSubNode = 0;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked) {     // is WW checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is BT checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked    // is BS checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Bloodthirst": {
-                    int currentNode = 3, currentSubNode = 0;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked) {     // is BT checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is WW checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked    // is BS checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Bloodsurge": {
-                    int currentNode = 3, currentSubNode = 0;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked) {     // is BS checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is BT checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked    // is WW checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                #endregion
-                #region Arms
-                case "Arms": {
-                    int currentNode = 3, currentSubNode = 1;
-                    // Can't have arms active if you are fury
-                    if (calcOpts.FuryStance) { CTL_Maints.Nodes[currentNode].Nodes[1].Checked = false; }
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    // Handle it's children
-                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
-                    CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
-                    break;
-                }
-                case "Bladestorm": {
-                    int currentNode = 3, currentSubNode = 1;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked) {      // is BLS checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Mortal Strike": {
-                    int currentNode = 3, currentSubNode = 1;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked) {      // is MS checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Rend": {
-                    int currentNode = 3, currentSubNode = 1;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked) {      // is RD checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Overpower": {
-                    int currentNode = 3, currentSubNode = 1;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked) {      // is OP checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Sudden Death": {
-                    int currentNode = 3, currentSubNode = 1;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked) {      // is SD checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Slam": {
-                    int currentNode = 3, currentSubNode = 1;
-                    // Handle the parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked) {      // is SL checked
-                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
-                            !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked    // is BLS checked
-                            ) {
-                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
-                        }
-                    }
-                    // Handle the parent's parent
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                #endregion
-                #endregion
-                #region Rage Dumps
-                case "Rage Dumps": {
-                    int currentNode = 4, subNode = 0;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked; subNode++;
-                    CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = CTL_Maints.Nodes[currentNode].Checked;
-                    break;
-                }
-                case "Cleave": {
-                    int currentNode = 4;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                case "Heroic Strike": {
-                    int currentNode = 4;
-                    if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
-                        CTL_Maints.Nodes[currentNode].Checked = true;
-                    }else{
-                        if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
-                            CTL_Maints.Nodes[currentNode].Checked = false;
-                        }
-                    }
-                    break;
-                }
-                #endregion
-                default: { break; }
+                // Assign the new values to the program
+                setAbilBools();
+                // Run a new dps calc
+                Character.OnCalculationsInvalidated();
+                CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
             }
-            // Assign the new values to the program
-            setAbilBools();
-            // Run a new dps calc
-            Character.OnCalculationsInvalidated();
-            CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
         }
         private void setAbilBools() {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -877,16 +951,22 @@ namespace Rawr.DPSWarr {
         }
         // Latency
         private void CB_Latency_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.Lag   = (int)CB_Lag.Value;
-            calcOpts.React = (int)CB_React.Value;
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.Lag = (int)CB_Lag.Value;
+                calcOpts.React = (int)CB_React.Value;
+                Character.OnCalculationsInvalidated();
+            }
         }
         // Survival
         private void NUD_SurvScale_ValueChanged(object sender, EventArgs e) {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.SurvScale = (float)NUD_SurvScale.Value;
-            Character.OnCalculationsInvalidated();
+            if (!isLoading)
+            {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.SurvScale = (float)NUD_SurvScale.Value;
+                Character.OnCalculationsInvalidated();
+            }
         }
     }
     [Serializable]
