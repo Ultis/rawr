@@ -34,7 +34,8 @@ namespace Rawr.DPSWarr {
 
             //CB_TargLvl.DataSource = new[] {83, 82, 81, 80};
             CB_Duration.Minimum = 0;
-            CB_Duration.Maximum = 60*20; // 20 minutes
+            CB_Duration.Maximum = 60 * 20; // 20 minutes
+            CB_MoveTargsTime.Maximum = 60 * 20; // 20 minutes
         }
         protected override void LoadCalculationOptions() {
             if (Character != null && Character.CalculationOptions == null) { 
@@ -42,12 +43,13 @@ namespace Rawr.DPSWarr {
                 Character.CalculationOptions = new CalculationOptionsDPSWarr();
             }
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            CB_TargLvl.Text         = calcOpts.TargetLevel.ToString();
-            CB_TargArmor.Text       = calcOpts.TargetArmor.ToString();
-            CB_Duration.Value       = (decimal)calcOpts.Duration;
-            RB_StanceArms.Checked   = !calcOpts.FuryStance;
-            CK_PTRMode.Checked      =  calcOpts.PTRMode;
-            NUD_SurvScale.Value     = (decimal)calcOpts.SurvScale;
+            CB_TargLvl.Text                 = calcOpts.TargetLevel.ToString();
+            CB_TargArmor.Text               = calcOpts.TargetArmor.ToString();
+            CB_Duration.Value               = (decimal)calcOpts.Duration;
+                CB_MoveTargsTime.Maximum    = CB_Duration.Value;
+            RB_StanceArms.Checked           = !calcOpts.FuryStance;
+            CK_PTRMode.Checked              =  calcOpts.PTRMode;
+            NUD_SurvScale.Value             = (decimal)calcOpts.SurvScale;
             // Rotational Changes
             CK_InBack.Checked               = calcOpts.InBack;
                 CB_InBackPerc.Value         = calcOpts.InBackPerc;
@@ -57,9 +59,11 @@ namespace Rawr.DPSWarr {
             CK_StunningTargs.Checked        = calcOpts.StunningTargets;
                 NUD_StunFreq.Value          = (int)calcOpts.StunningTargetsFreq;
                 NUD_StunDur.Value           = (int)calcOpts.StunningTargetsDur;
+            CK_MovingTargs.Checked          = calcOpts.MovingTargets;
+                CB_MoveTargsTime.Value      = (int)calcOpts.MovingTargetsTime;
             // nonfunctional
-            CK_MovingTargs.Checked   = calcOpts.MovingTargets;     CB_MoveTargsPerc.Value      = calcOpts.MovingTargetsPerc;
-            CK_DisarmTargs.Checked   = calcOpts.DisarmingTargets;  CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
+            CK_DisarmTargs.Checked          = calcOpts.DisarmingTargets;
+                CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
             // Abilities to Maintain
             CK_Flooring.Checked = calcOpts.AllowFlooring;
             LoadAbilBools(calcOpts);
@@ -105,6 +109,7 @@ namespace Rawr.DPSWarr {
         private void CB_Duration_ValueChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.Duration = (float)CB_Duration.Value;
+            CB_MoveTargsTime.Maximum = CB_Duration.Value;
             Character.OnCalculationsInvalidated();
         }
         // Rotational Changes
@@ -138,7 +143,9 @@ namespace Rawr.DPSWarr {
         private void RotChanges_Move_ChecksChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             //
-            calcOpts.MovingTargets = CK_MovingTargs.Checked; CB_MoveTargsPerc.Enabled = calcOpts.MovingTargets;
+            calcOpts.MovingTargets = CK_MovingTargs.Checked;
+            CB_MoveTargsTime.Enabled = calcOpts.MovingTargets;
+            LB_Perc2.Enabled = calcOpts.MovingTargets;
             //
             Character.OnCalculationsInvalidated();
         }
@@ -183,7 +190,7 @@ namespace Rawr.DPSWarr {
         private void RotChanges_Move_ValueChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             //
-            calcOpts.MovingTargetsPerc = (int)CB_MoveTargsPerc.Value;
+            calcOpts.MovingTargetsTime = (float)CB_MoveTargsTime.Value;
             //
             Character.OnCalculationsInvalidated();
         }
@@ -875,7 +882,7 @@ namespace Rawr.DPSWarr {
             calcOpts.React = (int)CB_React.Value;
             Character.OnCalculationsInvalidated();
         }
-
+        // Survival
         private void NUD_SurvScale_ValueChanged(object sender, EventArgs e) {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             calcOpts.SurvScale = (float)NUD_SurvScale.Value;
@@ -895,8 +902,8 @@ namespace Rawr.DPSWarr {
         public bool InBack             = true ; public int InBackPerc           =  100;
         public bool MultipleTargets    = false; public int MultipleTargetsPerc  =  25; public float MultipleTargetsMax = 3;
         public bool StunningTargets    = false; public int StunningTargetsFreq  = 120; public float StunningTargetsDur = 5000;
+        public bool MovingTargets      = false; public float MovingTargetsTime  = 0;
             // nonfunctional
-            public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
             public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
         // Abilities to Maintain
         public bool[] Maintenance = new bool[] {

@@ -499,8 +499,5 @@ namespace Rawr.DPSWarr {
             availRage += rageadd;
         }
         #endregion
-
-        
-        
     }
 }
