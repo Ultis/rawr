@@ -1451,7 +1451,7 @@ namespace Rawr {
                     {
                         cd = 3.0f * 60.0f;
                     }
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = speed }, dur, cd));
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = speed/100f }, dur, cd));
                 }
             }
             else if (line.StartsWith("Increases maximum health by "))

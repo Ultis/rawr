@@ -4662,6 +4662,8 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Misc")]
+        [DisplayName("% Increased Movement Speed")]
+        [Percentage]
         public float MovementSpeed
         {
             get { return _rawNoStackData[(int)NonStackingStat.MovementSpeed]; }

@@ -396,9 +396,9 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3013, "Nethercleft Leg Armor", ItemSlot.Legs, new Stats() { Agility = 12, Stamina = 40 }));
             defaultEnchants.Add(new Enchant(3325, "Jormungar Leg Armor", ItemSlot.Legs, new Stats() { Agility = 15, Stamina = 45 }));
             defaultEnchants.Add(new Enchant(3822, "Frosthide Leg Armor", ItemSlot.Legs, new Stats() { Agility = 22, Stamina = 55 }));
-            defaultEnchants.Add(new Enchant(2939, "Cat's Swiftness", ItemSlot.Feet, new Stats() { Agility = 6, MovementSpeed = 8 }));
-            defaultEnchants.Add(new Enchant(2940, "Boar's Speed", ItemSlot.Feet, new Stats() { Stamina = 9, MovementSpeed = 8 }));
-            defaultEnchants.Add(new Enchant(3232, "Tuskarr's Vitality", ItemSlot.Feet, new Stats() { Stamina = 15, MovementSpeed = 8 }));
+            defaultEnchants.Add(new Enchant(2939, "Cat's Swiftness", ItemSlot.Feet, new Stats() { Agility = 6, MovementSpeed = 0.08f }));
+            defaultEnchants.Add(new Enchant(2940, "Boar's Speed", ItemSlot.Feet, new Stats() { Stamina = 9, MovementSpeed = 0.08f }));
+            defaultEnchants.Add(new Enchant(3232, "Tuskarr's Vitality", ItemSlot.Feet, new Stats() { Stamina = 15, MovementSpeed = 0.08f }));
             defaultEnchants.Add(new Enchant(2657, "Dexterity", ItemSlot.Feet, new Stats() { Agility = 12 }));
             defaultEnchants.Add(new Enchant(983, "Superior Agility", ItemSlot.Feet, new Stats() { Agility = 16 }));
             defaultEnchants.Add(new Enchant(3824, "Assault", ItemSlot.Feet, new Stats() { AttackPower = 24 }));

@@ -1322,7 +1322,7 @@ namespace Rawr.Mage
                 case "Hit Rating": return BaseStats.HitRating;
                 case "Haste Rating": return BaseStats.HasteRating;
                 case "PVP Trinket": return BaseStats.PVPTrinket;
-                case "Movement Speed": return BaseStats.MovementSpeed;
+                case "Movement Speed": return BaseStats.MovementSpeed * 100f;
                 case "Minimum Range": return MinimumRange;
                 case "Threat Reduction": return ThreatReduction;
                 case "Arcane Nondps Talents": return ArcaneNondpsTalents;
