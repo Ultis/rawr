@@ -489,6 +489,15 @@ namespace Rawr //O O . .
 			}
 		}
 
+        [XmlIgnore]
+        public CalculationsBase CurrentCalculations
+        {
+            get
+            {
+                return Calculations.GetModel(CurrentModel);
+            }
+        }
+
 		[XmlIgnore]
 		public bool EnforceGemRequirements
 		{
@@ -1254,30 +1263,33 @@ namespace Rawr //O O . .
                 Dictionary<int, bool> uniqueMap = new Dictionary<int, bool>();
                 gemRequirementsInvalid = 0;
                 nonjewelerGemRequirementsInvalid = 0;
-                for (int slot = 0; slot < 19; slot++)
+                for (int slot = 0; slot < OptimizableSlotCount; slot++)
                 {
-                    ItemInstance item = _item[slot];
-                    if (item == null) continue;
-                    for (int gemIndex = 1; gemIndex <= 3; gemIndex++)
+                    if (slot != (int)CharacterSlot.OffHand || CurrentCalculations.IncludeOffHandInCalculations(this))
                     {
-                        Item gem = item.GetGem(gemIndex);
-                        if (gem != null)
+                        ItemInstance item = _item[slot];
+                        if (item == null) continue;
+                        for (int gemIndex = 1; gemIndex <= 3; gemIndex++)
                         {
-                            if (gem.IsRedGem) redGemCount++;
-                            if (gem.IsYellowGem) yellowGemCount++;
-                            if (gem.IsBlueGem) blueGemCount++;
-                            if (gem.IsJewelersGem) jewelersGemCount++;
-                            else if (gem.IsStormjewel) stormjewelCount++;
-                            else if (gem.Unique) // needs else, it seems jewelers gems are marked as unique
+                            Item gem = item.GetGem(gemIndex);
+                            if (gem != null)
                             {
-                                if (uniqueMap.ContainsKey(gem.Id))
+                                if (gem.IsRedGem) redGemCount++;
+                                if (gem.IsYellowGem) yellowGemCount++;
+                                if (gem.IsBlueGem) blueGemCount++;
+                                if (gem.IsJewelersGem) jewelersGemCount++;
+                                else if (gem.IsStormjewel) stormjewelCount++;
+                                else if (gem.Unique) // needs else, it seems jewelers gems are marked as unique
                                 {
-                                    gemRequirementsInvalid++;
-                                    nonjewelerGemRequirementsInvalid++;
-                                }
-                                else
-                                {
-                                    uniqueMap[gem.Id] = true;
+                                    if (uniqueMap.ContainsKey(gem.Id))
+                                    {
+                                        gemRequirementsInvalid++;
+                                        nonjewelerGemRequirementsInvalid++;
+                                    }
+                                    else
+                                    {
+                                        uniqueMap[gem.Id] = true;
+                                    }
                                 }
                             }
                         }
