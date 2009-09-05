@@ -126,11 +126,11 @@ namespace Rawr.UI
             GemPopup.VerticalOffset = offset.Y;
             GemPopup.HorizontalOffset = offset.X;
 
-            ComparisonGemList.Measure(Application.Current.RootVisual.RenderSize);
+            ComparisonGemList.Measure(App.Current.RootVisual.RenderSize);
 
-            GeneralTransform transform = relativeTo.TransformToVisual(Application.Current.RootVisual);
+            GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
             double distBetweenBottomOfPopupAndBottomOfWindow =
-                Application.Current.RootVisual.DesiredSize.Height -
+                App.Current.RootVisual.DesiredSize.Height -
                 transform.Transform(new Point(0, ComparisonGemList.DesiredSize.Height)).Y;
             if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
             {
@@ -153,11 +153,11 @@ namespace Rawr.UI
             MetaPopup.VerticalOffset = offset.Y;
             MetaPopup.HorizontalOffset = offset.X;
 
-            ComparisonMetaList.Measure(Application.Current.RootVisual.RenderSize);
+            ComparisonMetaList.Measure(App.Current.RootVisual.RenderSize);
 
-            GeneralTransform transform = relativeTo.TransformToVisual(Application.Current.RootVisual);
+            GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
             double distBetweenBottomOfPopupAndBottomOfWindow =
-                Application.Current.RootVisual.DesiredSize.Height -
+                App.Current.RootVisual.DesiredSize.Height -
                 transform.Transform(new Point(0, ComparisonMetaList.DesiredSize.Height)).Y;
             if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
             {

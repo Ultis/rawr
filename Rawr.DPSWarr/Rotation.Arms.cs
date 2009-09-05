@@ -182,7 +182,11 @@ namespace Rawr.DPSWarr
             if (Char.MainHand == null) { return 0f; }
 
             // ==== Reasons GCDs would be lost ========
+#if SILVERLIGHT
+            float IronWillBonus = (float)Math.Round(20f / 3f * Talents.IronWill) / 100f;
+#else
             float IronWillBonus = (float)Math.Round(20f / 3f * Talents.IronWill, MidpointRounding.AwayFromZero) / 100f;
+#endif
             float BaseStunDur = (float)Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - IronWillBonus)));
             // Being Stunned or Charmed
             if (CalcOpts.StunningTargets)

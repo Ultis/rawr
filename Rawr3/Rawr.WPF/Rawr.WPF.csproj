@@ -18,6 +18,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <StartupObject>Rawr.WPF.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -89,6 +90,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -99,54 +101,6 @@
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
       <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
       <Name>Rawr.Base.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Bear\Rawr.Bear.WPF.csproj">
-      <Project>{41D24B8B-EAD2-46BF-BBF2-79E814F51D69}</Project>
-      <Name>Rawr.Bear.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Cat\Rawr.Cat.WPF.csproj">
-      <Project>{6B7551FD-FCAA-4D09-A217-0F35250F78D4}</Project>
-      <Name>Rawr.Cat.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.DPSDK\Rawr.DPSDK.WPF.csproj">
-      <Project>{1913F0E5-9F4A-41E2-AFD3-842CF2708173}</Project>
-      <Name>Rawr.DPSDK.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.DPSWarr\Rawr.DPSWarr.WPF.csproj">
-      <Project>{5CB75C8B-6144-4B13-A2EA-00190C0A6D9D}</Project>
-      <Name>Rawr.DPSWarr.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Enhance\Rawr.Enhance.WPF.csproj">
-      <Project>{A4D7BC16-018B-4C0E-9C8B-6D766557D926}</Project>
-      <Name>Rawr.Enhance.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.WPF.csproj">
-      <Project>{E9AE8EB0-ABC4-41A4-AEDA-735A272887C1}</Project>
-      <Name>Rawr.Healadin.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Mage\Rawr.Mage.WPF.csproj">
-      <Project>{C61A1D1A-21F8-4234-9085-5ECD33978DEF}</Project>
-      <Name>Rawr.Mage.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Moonkin\Rawr.Moonkin.WPF.csproj">
-      <Project>{9334FFDE-D900-4164-BB15-FADB5A67E73F}</Project>
-      <Name>Rawr.Moonkin.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.ProtWarr\Rawr.ProtWarr.WPF.csproj">
-      <Project>{031BCFCE-8351-4187-8D7E-62999832AC22}</Project>
-      <Name>Rawr.ProtWarr.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Retribution\Rawr.Retribution.WPF.csproj">
-      <Project>{C302699A-E850-44B2-BF09-5E696E106735}</Project>
-      <Name>Rawr.Retribution.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Rogue\Rawr.Rogue.WPF.csproj">
-      <Project>{542D6AC9-0436-4347-B737-714F20E73EB7}</Project>
-      <Name>Rawr.Rogue.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Tree\Rawr.Tree.WPF.csproj">
-      <Project>{23BD5E7F-6195-4819-911B-B78578D71802}</Project>
-      <Name>Rawr.Tree.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rawr.UI\Rawr.UI.WPF.csproj">
       <Project>{5FD09748-1430-4CEF-A09A-492962A7D010}</Project>

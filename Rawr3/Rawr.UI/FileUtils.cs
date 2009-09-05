@@ -19,8 +19,13 @@ namespace Rawr.UI
         public EventHandler StreamReady;
         public string Filename { get; private set; }
 
+#if SILVERLIGHT
         public IsolatedStorageFileStream Reader { get { return FileStream(false); } }
         public IsolatedStorageFileStream Writer { get { return FileStream(true); } }
+#else
+        public FileStream Reader { get { return FileStream(); } }
+        public FileStream Writer { get { return FileStream(); } }
+#endif
 
         public FileUtils(string filename)
         {
@@ -30,20 +35,23 @@ namespace Rawr.UI
         public void DownloadIfNotExists(EventHandler callback)
         {
             StreamReady += callback;
-#if WPF
+#if !SILVERLIGHT
             if (File.Exists(Filename))
             {
                 if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
             }
+            else
+            {
+                Uri url = new Uri(@"http://wowrawr.com/ClientBin/" + Filename, UriKind.Absolute);
 #else
             if (IsolatedStorageFile.GetUserStoreForApplication().FileExists(Filename))
             {
                 if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
             }
-#endif
             else
             {
                 Uri url = new Uri(Filename, UriKind.Relative);
+#endif
                 WebClient client = new WebClient();
                 client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(client_DownloadStringCompleted);
                 client.DownloadStringAsync(url);
@@ -52,7 +60,7 @@ namespace Rawr.UI
 
 		public void Delete()
 		{
-#if WPF
+#if !SILVERLIGHT
             if (File.Exists(Filename))
             {
                 File.Delete(Filename);
@@ -71,7 +79,7 @@ namespace Rawr.UI
             {
                 using (StringReader sr = new StringReader(e.Result))
                 {
-#if WPF
+#if !SILVERLIGHT
                     StreamWriter sw = new StreamWriter(Filename);
 #else
                     IsolatedStorageFileStream isfs = FileStream(true);
@@ -85,7 +93,7 @@ namespace Rawr.UI
             if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
         }
 
-#if WPF
+#if !SILVERLIGHT
         private FileStream FileStream()
         {
             return new FileStream(Filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
@@ -101,7 +109,7 @@ namespace Rawr.UI
 
         public static bool HasQuota(int kilobytes)
         {
-#if WPF 
+#if !SILVERLIGHT 
             return true;
 #else
             using (IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication())
@@ -113,7 +121,7 @@ namespace Rawr.UI
 
         public static bool EnsureQuota(int kilobytes)
         {
-#if WPF
+#if !SILVERLIGHT
             return true;
 #else
             using (IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication())

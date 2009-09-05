@@ -12,6 +12,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Rawr;
+#if !SILVERLIGHT
+using Microsoft.Win32;
+#endif
 
 namespace Rawr.UI
 {
@@ -111,7 +114,7 @@ namespace Rawr.UI
         {
             Instance = this;
             InitializeComponent();
-			if (Application.Current.IsRunningOutOfBrowser) OfflineInstallButton.Visibility = Visibility.Collapsed;
+			if (App.Current.IsRunningOutOfBrowser) OfflineInstallButton.Visibility = Visibility.Collapsed;
 
             Tooltip = ItemTooltip;
 
@@ -189,10 +192,12 @@ namespace Rawr.UI
 
         private void InstallOffline(object sender, System.Windows.RoutedEventArgs e)
         {
+#if SILVERLIGHT
             if (Application.Current.InstallState == InstallState.NotInstalled)
             {
                 Application.Current.Install();
             }
+#endif
         }
 
         private void NewCharacter()
@@ -210,7 +215,11 @@ namespace Rawr.UI
             ofd.Filter = "character file (*.xml)|*.xml";
             if (ofd.ShowDialog().GetValueOrDefault(false))
             {
+#if SILVERLIGHT
                 using (StreamReader reader = ofd.File.OpenText())
+#else
+                using (StreamReader reader = new StreamReader(ofd.OpenFile()))
+#endif
                 {
                     Character = Character.LoadFromXml(reader.ReadToEnd());
                 }
@@ -305,7 +314,11 @@ namespace Rawr.UI
             ofd.Filter = "Rawr Upgrade List Files|*.xml";
             if (ofd.ShowDialog().GetValueOrDefault())
             {
+#if SILVERLIGHT
                 new UpgradesComparison(ofd.File.OpenText()).Show();
+#else
+                new UpgradesComparison(new StreamReader(ofd.OpenFile())).Show();
+#endif
             }
         }
 
@@ -355,7 +368,11 @@ namespace Rawr.UI
 
         private void ShowHelp(string uri)
         {
+#if SILVERLIGHT
             System.Windows.Browser.HtmlPage.Window.Navigate(new Uri(uri, UriKind.Absolute), "_blank");
+#else
+            // TODO browser in wpf
+#endif
         }
 
         private void HelpMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -421,7 +438,7 @@ namespace Rawr.UI
 				new FileUtils("ItemFilter.xml").Delete();
 				new FileUtils("Settings.xml").Delete();
 				LoadScreen ls = new LoadScreen();
-				(App.CurrentApplication.RootVisual as Grid).Children.Add(ls);
+				(App.Current.RootVisual as Grid).Children.Add(ls);
 				this.Visibility = Visibility.Collapsed;
 				ls.StartLoading(new EventHandler(ResetCaches_Finished));
 				Character = new Character();
@@ -441,7 +458,7 @@ namespace Rawr.UI
 				Character = new Character();
 				new FileUtils("ItemCache.xml").Delete();
 				LoadScreen ls = new LoadScreen();
-				(App.CurrentApplication.RootVisual as Grid).Children.Add(ls);
+				(App.Current.RootVisual as Grid).Children.Add(ls);
 				this.Visibility = Visibility.Collapsed;
 				ls.StartLoading(new EventHandler(ResetCaches_Finished));
 				Character = new Character();
@@ -450,7 +467,7 @@ namespace Rawr.UI
 
 		private void ResetCaches_Finished(object sender, EventArgs e)
 		{
-			(App.CurrentApplication.RootVisual as Grid).Children.Remove(sender as LoadScreen);
+			(App.Current.RootVisual as Grid).Children.Remove(sender as LoadScreen);
 			this.Visibility = Visibility.Visible;
 		}
 

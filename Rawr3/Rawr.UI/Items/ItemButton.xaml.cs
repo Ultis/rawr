@@ -67,9 +67,9 @@ namespace Rawr.UI
 
 		private void EnsurePopupsVisible()
 		{
-			GeneralTransform transform = TransformToVisual(Application.Current.RootVisual);
+			GeneralTransform transform = TransformToVisual(App.Current.RootVisual);
 			double distBetweenBottomOfPopupAndBottomOfWindow =
-                Application.Current.RootVisual.RenderSize.Height -
+                App.Current.RootVisual.RenderSize.Height -
 				transform.Transform(new Point(0, ComparisonItemList.Height)).Y;
 			if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
 			{

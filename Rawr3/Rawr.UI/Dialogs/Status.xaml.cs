@@ -28,7 +28,11 @@ namespace Rawr.UI
             StatusMessaging.StatusUpdate += new StatusMessaging.StatusUpdateDelegate(StatusMessaging_StatusUpdate);
             StatusMessaging.StatusError += new StatusMessaging.StatusErrorDelegate(StatusMessaging_StatusError);
 
+#if SILVERLIGHT
             Closing += new EventHandler<System.ComponentModel.CancelEventArgs>(Status_Closing);
+#else
+            Closing += new System.ComponentModel.CancelEventHandler(Status_Closing);
+#endif
             Closed += new EventHandler(Status_Closed);
 
             TasksData.ItemsSource = statusUpdates;

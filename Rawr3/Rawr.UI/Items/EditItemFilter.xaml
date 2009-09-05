@@ -1,18 +1,25 @@
-﻿<basics:ChildWindow
+﻿<basics2:ChildWindow
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
-	xmlns:common="clr-namespace:System.Windows;assembly=System.Windows.Controls"
+	xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+#if SILVERLIGHT    
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+	xmlns:common="clr-namespace:System.Windows;assembly=System.Windows.Controls"
 	xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
+#else
+	xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:common="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base.WPF"
+#endif
 	x:Class="Rawr.UI.EditItemFilter"
 	Title="Edit Item Filters..."
 	Height="563" Width="316">
-	<basics:ChildWindow.DataContext>
+	<basics2:ChildWindow.DataContext>
 		<Rawr:ItemFilterRegex/>
-	</basics:ChildWindow.DataContext>
+	</basics2:ChildWindow.DataContext>
 
 	<Grid x:Name="LayoutRoot" Background="White">
 		<Grid.Resources>
@@ -96,4 +103,4 @@
 			<Button x:Name="DeleteButton" Content="X" Margin="2,2,0,2" Grid.ColumnSpan="1" Grid.Column="4" Width="25" HorizontalAlignment="Left" Click="DeleteFilter"/>
 		</Grid>
 	</Grid>
-</basics:ChildWindow>
+</basics2:ChildWindow>

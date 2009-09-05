@@ -31,7 +31,7 @@ namespace Rawr.UI
 
         private void FocusLost(object sender, RoutedEventArgs e)
         {
-            FrameworkElement focus = (FocusManager.GetFocusedElement() as FrameworkElement);
+            FrameworkElement focus = (App.GetFocusedElement() as FrameworkElement);
             DependencyObject parent = VisualTreeHelper.GetParent(focus);
             while (parent != null && parent != FilterTree) parent = VisualTreeHelper.GetParent(parent);
             if (parent == null)

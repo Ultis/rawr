@@ -1,11 +1,17 @@
-﻿<basics:ChildWindow
+﻿<basics2:ChildWindow
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
+	xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+#if SILVERLIGHT    
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
+#else
+	xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:data="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit"
+#endif    
 	x:Class="Rawr.UI.Status"
 	Title="Status">
 	<Grid x:Name="LayoutRoot" Background="White">
@@ -37,4 +43,4 @@
 			</basics:TabItem>
 		</basics:TabControl>
 	</Grid>
-</basics:ChildWindow>
+</basics2:ChildWindow>

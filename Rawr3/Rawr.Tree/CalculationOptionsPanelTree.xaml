@@ -5,7 +5,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     mc:Ignorable="d" 
     xmlns:System="clr-namespace:System;assembly=mscorlib" 
-    xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls" 
+#if SILVERLIGHT    
+    xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+#else
+    xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+#endif
     x:Class="Rawr.Tree.CalculationOptionsPanelTree" 
     d:DesignWidth="400" d:DesignHeight="300"
 	xmlns:local="clr-namespace:Rawr.Tree">

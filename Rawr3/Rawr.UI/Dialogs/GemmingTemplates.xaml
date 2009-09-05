@@ -5,7 +5,11 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+#if SILVERLIGHT    
 	xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+#else
+	xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+#endif
     xmlns:local="clr-namespace:Rawr.UI"
 	xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
 	xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"

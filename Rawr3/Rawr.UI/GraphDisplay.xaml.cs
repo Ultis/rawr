@@ -130,8 +130,9 @@ namespace Rawr.UI
             loading = true;
             // Required to initialize variables
             InitializeComponent();
+#if SILVERLIGHT
             GraphScroll.SetIsMouseWheelScrollingEnabled(true);
-
+#endif
             GraphCombo.SelectedIndex = (int)Graph.RelativeStatValue;
             GearCombo.SelectedIndex = (int)CharacterSlot.Head;
             EnchantCombo.SelectedIndex = (int)CharacterSlot.Head;

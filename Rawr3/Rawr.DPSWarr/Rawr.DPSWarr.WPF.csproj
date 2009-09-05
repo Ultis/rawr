@@ -41,6 +41,10 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\WpfControls\System.Windows.Controls.Input.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -52,6 +56,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Rawr.DPSWarr\CalculationsDPSWarr.cs">
@@ -66,11 +71,29 @@
     <Compile Include="..\..\Rawr.DPSWarr\ComparisonCalculationsDPSWarr.cs">
       <Link>ComparisonCalculationsDPSWarr.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Rotation.Arms.cs">
+      <Link>Rotation.Arms.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSWarr\Rotation.cs">
       <Link>Rotation.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.cs">
-      <Link>Skills.cs</Link>
+    <Compile Include="..\..\Rawr.DPSWarr\Rotation.Fury.cs">
+      <Link>Rotation.Fury.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Skills.Arms.cs">
+      <Link>Skills.Arms.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Skills.Base.cs">
+      <Link>Skills.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Skills.Fury.cs">
+      <Link>Skills.Fury.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Skills.Prot.cs">
+      <Link>Skills.Prot.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Skills.Shared.cs">
+      <Link>Skills.Shared.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsDPSWarr.cs" />
     <Compile Include="CalculationOptionsPanelDPSWarr.xaml.cs">
@@ -101,4 +124,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\PreprocessXaml.targets" />
 </Project>

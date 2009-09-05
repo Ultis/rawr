@@ -11,53 +11,64 @@ using System.Windows.Shapes;
 using System.Text;
 
 namespace Rawr.DPSWarr {
-    public class CalculationOptionsDPSWarr : ICalculationOptionBase {
+    public class CalculationOptionsDPSWarr : ICalculationOptionBase
+    {
         public int TargetLevel = 83;
         public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
         public float Duration = 300f;
         public bool FuryStance = true;
-		public bool PTRMode = false;
-		public bool AllowFlooring = true;
+        public bool AllowFlooring = false;
+        public bool PTRMode = false;
+        public float SurvScale = 1.0f;
         // Rotational Changes
-        public bool InBack           = true ; public int InBackPerc           = 100;
-        public bool MultipleTargets  = false; public int MultipleTargetsPerc  = 100;public float MultipleTargetsMax  = 4f;
-            // nonfunctional
-            public bool MovingTargets    = false; public int MovingTargetsPerc    = 100;
-            public bool StunningTargets  = false; public int StunningTargetsPerc  = 100;
-		    public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
+        public bool InBack = true; public int InBackPerc = 100;
+        public bool MultipleTargets = false; public int MultipleTargetsPerc = 25; public float MultipleTargetsMax = 3;
+        public bool StunningTargets = false; public int StunningTargetsFreq = 120; public float StunningTargetsDur = 5000;
+        // nonfunctional
+        public bool MovingTargets = false; public int MovingTargetsPerc = 100;
+        public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
         // Abilities to Maintain
         public bool[] Maintenance = new bool[] {
             true,  // == Rage Gen ==
-            true,  // Berserker Rage
-            true,  // Bloodrage
+                true,  // Berserker Rage
+                true,  // Bloodrage
             false, // == Maintenance ==
-            false, // Battle Shout
-            false, // Demoralizing Shout
-            false, // Sunder Armor
-            false, // Thunder Clap
-            false, // Hamstring
+                false, // Shout Choice
+                    false, // Battle Shout
+                    false, // Commanding Shout
+                false, // Demoralizing Shout
+                false, // Sunder Armor
+                false, // Thunder Clap
+                false, // Hamstring
             true,  // == Periodics ==
-            true,  // Shattering Throw
-            true,  // Sweeping Strikes
-            true,  // DeathWish
-            true,  // Recklessness
+                true,  // Shattering Throw
+                true,  // Sweeping Strikes
+                true,  // DeathWish
+                true,  // Recklessness
+                true,  // Enraged Regeneration
             true,  // == Damage Dealers ==
-            true,  // Bladestorm
-            true,  // Mortal Strike
-            true,  // Rend
-            true,  // Overpower
-            true,  // Sudden Death
-            true,  // Slam
+                true,  // Fury
+                    true,  // Whirlwind
+                    true,  // Bloodthirst
+                    true,  // Bloodsurge
+                true,  // Arms
+                    true,  // Bladestorm
+                    true,  // Mortal Strike
+                    true,  // Rend
+                    true,  // Overpower
+                    true,  // Sudden Death
+                    true,  // Slam
             true,  // == Rage Dumps ==
-            true,  // Cleave
-            true   // Heroic Strike
+                true,  // Cleave
+                true   // Heroic Strike
         };
-        public enum Maintenances : int {
-            _RageGen__ = 0,   BerserkerRage_,   Bloodrage_,
-			_Maintenance__, BattleShout_, CommandingShout_, DemoralizingShout_, SunderArmor_, ThunderClap_, Hamstring_,
-            _Periodics__,     ShatteringThrow_, SweepingStrikes_,   DeathWish_,   Recklessness_,
-            _DamageDealers__, Bladestorm_,      MortalStrike_,      Rend_,        Overpower_,    SuddenDeath_, Slam_,
-			_RageDumps__, Cleave_, Whirlwind_, Bloodthirst_, Bloodsurge_, HeroicStrike_
+        public enum Maintenances : int
+        {
+            _RageGen__ = 0, BerserkerRage_, Bloodrage_,
+            _Maintenance__, ShoutChoice_, BattleShout_, CommandingShout_, DemoralizingShout_, SunderArmor_, ThunderClap_, Hamstring_,
+            _Periodics__, ShatteringThrow_, SweepingStrikes_, DeathWish_, Recklessness_, EnragedRegeneration_,
+            _DamageDealers__, Fury_, Whirlwind_, Bloodthirst_, Bloodsurge_, Arms_, Bladestorm_, MortalStrike_, Rend_, Overpower_, SuddenDeath_, Slam_,
+            _RageDumps__, Cleave_, HeroicStrike_
         };
         // Latency
         public float Lag = 179f;
@@ -66,7 +77,8 @@ namespace Rawr.DPSWarr {
         public float GetLatency() { return (Lag + GetReact()) / 1000f; }
         //
         public WarriorTalents talents = null;
-        public string GetXml() {
+        public string GetXml()
+        {
             var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSWarr));
             var xml = new StringBuilder();
             var sw = new System.IO.StringWriter(xml);

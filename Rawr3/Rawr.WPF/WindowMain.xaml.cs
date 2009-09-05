@@ -22,9 +22,9 @@ namespace Rawr.WPF
 	{
 		public WindowMain()
 		{
-			Application.Current.Exit += new ExitEventHandler(Current_Exit);
+			//Application.Current.Exit += new ExitEventHandler(Current_Exit);
 			InitializeComponent();
-			this.LoadScreen.StartLoading(new EventHandler(LoadFinished));
+			LoadScreen.StartLoading(new EventHandler(LoadFinished));
 		}
 
 		void Current_Exit(object sender, ExitEventArgs e)
@@ -34,7 +34,7 @@ namespace Rawr.WPF
 
 		private void LoadFinished(object sender, EventArgs e)
 		{
-			this.LoadScreen.Visibility = System.Windows.Visibility.Collapsed;
+			LoadScreen.Visibility = System.Windows.Visibility.Collapsed;
 			RootVisual.Children.Add(new MainPage());
 		}
 	}

@@ -54,15 +54,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Rogue\BasicStats\BaseRogueStats.cs">
-      <Link>BasicStats\BaseRogueStats.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\BasicStats\RelevantItems.cs">
-      <Link>BasicStats\RelevantItems.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Rogue\BasicStats\RogueGemmingTemplates.cs">
-      <Link>BasicStats\RogueGemmingTemplates.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Rogue\CalculationsRogue.cs">
       <Link>CalculationsRogue.cs</Link>
     </Compile>
@@ -153,9 +144,6 @@
     <Compile Include="..\..\Rawr.Rogue\Poisons\WoundPoison.cs">
       <Link>Poisons\WoundPoison.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Rogue\RogueConversions.cs">
-      <Link>RogueConversions.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Rogue\SpecialAbilities\Feint.cs">
       <Link>SpecialAbilities\Feint.cs</Link>
     </Compile>
@@ -186,6 +174,9 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BasicStats\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -194,4 +185,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\PreprocessXaml.targets" />
 </Project>

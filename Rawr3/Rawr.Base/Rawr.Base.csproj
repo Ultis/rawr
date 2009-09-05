@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Bin\Debug</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SILVERLIGHT,RAWR3</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;RAWR3</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -35,7 +35,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>Bin\Release</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT,RAWR3</DefineConstants>
+    <DefineConstants>TRACE;SILVERLIGHT;RAWR3</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -44,7 +44,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug - WPF|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug - WPF\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SILVERLIGHT,RAWR3</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;RAWR3</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,7 +55,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release - WPF|AnyCPU' ">
     <OutputPath>bin\Release - WPF\</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT,RAWR3</DefineConstants>
+    <DefineConstants>TRACE;SILVERLIGHT;RAWR3</DefineConstants>
     <Optimize>true</Optimize>
     <NoStdLib>true</NoStdLib>
     <DebugType>pdbonly</DebugType>
@@ -85,6 +85,9 @@
     </Compile>
     <Compile Include="..\..\Rawr.Base\Buff.cs">
       <Link>Buff.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Calculations.cs">
+      <Link>Calculations.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\Character.cs">
       <Link>Character.cs</Link>
@@ -151,7 +154,6 @@
     </Compile>
     <Compile Include="Armory.cs" />
     <Compile Include="ArrayUtils.cs" />
-    <Compile Include="Calculations.cs" />
     <Compile Include="GemmingTemplate.cs" />
     <Compile Include="ItemFilter.cs" />
     <Compile Include="ItemLocation.cs" />

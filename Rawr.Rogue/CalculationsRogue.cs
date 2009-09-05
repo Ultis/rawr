@@ -288,8 +288,12 @@ namespace Rawr.Rogue {
 				Dodge = talents.LightningReflexes * 0.02f,
 				Parry = talents.Deflection * 0.02f,
 				PhysicalHaste = (1f + talents.BladeFlurry * 0.20f)
-							  * (1f + (float)Math.Round((10f/3f*talents.LightningReflexes)/100f,MidpointRounding.AwayFromZero))
-							  - 1f,
+#if SILVERLIGHT
+                * (1f + (float)Math.Round((10f/3f*talents.LightningReflexes)/100f))
+#else
+                * (1f + (float)Math.Round((10f/3f*talents.LightningReflexes)/100f,MidpointRounding.AwayFromZero))
+#endif
+ - 1f,
 			};
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;

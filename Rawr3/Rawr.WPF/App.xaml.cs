@@ -11,22 +11,20 @@ namespace Rawr.WPF
 	/// <summary>
 	/// Interaction logic for App.xaml
 	/// </summary>
-	public partial class App : Application
+	public partial class App : Rawr.UI.App
 	{
-		public static Application CurrentApplication { get; set; }
 
 		public App()
 		{
-			CurrentApplication = this;
-			this.Exit += this.Application_Exit;
+            //this.Exit += this.Application_Exit;
 			
-			InitializeComponent();
+            InitializeComponent();
 
-			this.MainWindow = new WindowMain();
+			//this.MainWindow = new WindowMain();
 		}
 
 
-		private void App_CheckAndDownloadUpdateCompleted(object sender, CheckAndDownloadUpdateCompletedEventArgs e)
+		/*private void App_CheckAndDownloadUpdateCompleted(object sender, CheckAndDownloadUpdateCompletedEventArgs e)
 		{
 			if (e.UpdateAvailable)
 				MessageBox.Show("A new version of Rawr has automatically been downloaded and installed! Relaunch Rawr, at your leisure, to use it!", "New version installed", MessageBoxButton.OK);
@@ -35,6 +33,6 @@ namespace Rawr.WPF
 		private void Application_Exit(object sender, EventArgs e)
 		{
 			LoadScreen.SaveFiles();
-		}
+		}*/
 	}
 }

@@ -5,8 +5,13 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+#if SILVERLIGHT    
 	xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
 	xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
+#else
+	xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:data="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit"
+#endif    
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
 	x:Class="Rawr.UI.ItemBrowser"
 	Title="Item Browser" Width="600">

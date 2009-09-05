@@ -14,16 +14,46 @@ namespace Rawr.UI
 {
     public partial class App : Application
     {
+#if !SILVERLIGHT
+        public new static App Current
+        {
+            get
+            {
+                return Application.Current as App;
+            }
+        }
 
-        public static Application CurrentApplication { get; set; }
+        public Grid RootVisual
+        {
+            get
+            {
+                return (Grid)MainWindow.Content;
+            }
+            set
+            {
+                MainWindow.Content = value;
+            }
+        }
+
+        public bool IsRunningOutOfBrowser
+        {
+            get
+            {
+                return true;
+            }
+        }
+#endif
 
         public App()
         {
-            CurrentApplication = this;
             this.Startup += this.Application_Startup;
             this.Exit += this.Application_Exit;
+#if SILVERLIGHT
             this.UnhandledException += this.Application_UnhandledException;
-			this.CheckAndDownloadUpdateCompleted += new CheckAndDownloadUpdateCompletedEventHandler(App_CheckAndDownloadUpdateCompleted);
+            this.CheckAndDownloadUpdateCompleted += new CheckAndDownloadUpdateCompletedEventHandler(App_CheckAndDownloadUpdateCompleted);
+#else
+            this.DispatcherUnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
+#endif
 
 			//_timerUpdates = new System.Threading.Timer(_timerUpdates_Tick, null, 0, 60 * 60 * 1000);
 			InitializeComponent();
@@ -42,7 +72,9 @@ namespace Rawr.UI
 
 		private void Application_Startup(object sender, StartupEventArgs e)
         {
+#if SILVERLIGHT
             Properties.NetworkSettings.UseAspx = e.InitParams.ContainsKey("UseAspx");
+#endif
             Grid g = new Grid();
             LoadScreen ls = new LoadScreen();
             g.Children.Add(ls);
@@ -52,24 +84,34 @@ namespace Rawr.UI
 
         private void LoadFinished(object sender, EventArgs e)
         {
-            Grid g = RootVisual as Grid;
+            Grid g;
+            g = RootVisual as Grid;
             g.Children.RemoveAt(0);
             g.Children.Add(new MainPage());
-		
+#if SILVERLIGHT		
 			this.CheckAndDownloadUpdateAsync();
+#endif
 		}
 
+#if SILVERLIGHT
 		private void App_CheckAndDownloadUpdateCompleted(object sender, CheckAndDownloadUpdateCompletedEventArgs e)
 		{
 			if (e.UpdateAvailable)
 				MessageBox.Show("A new version of Rawr has automatically been downloaded and installed! Relaunch Rawr, at your leisure, to use it!", "New version installed", MessageBoxButton.OK);
 		}
+#endif
 
 		private void Application_Exit(object sender, EventArgs e)
         {
             LoadScreen.SaveFiles();
         }
 
+        void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            
+        }
+
+#if SILVERLIGHT
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
             // If the app is running outside of the debugger then report the exception using
@@ -99,5 +141,6 @@ namespace Rawr.UI
             {
             }
         }
+#endif
     }
 }

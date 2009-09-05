@@ -12,6 +12,9 @@ using System.Windows.Shapes;
 using Rawr.Optimizer;
 using System.IO;
 using System.Xml.Serialization;
+#if !SILVERLIGHT
+using Microsoft.Win32;
+#endif
 
 namespace Rawr.UI
 {

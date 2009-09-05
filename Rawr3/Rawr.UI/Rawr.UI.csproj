@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Bin\Debug</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SILVERLIGHT,RAWR3</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;RAWR3</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -35,7 +35,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>Bin\Release</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT,RAWR3</DefineConstants>
+    <DefineConstants>TRACE;SILVERLIGHT;RAWR3</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -67,9 +67,7 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="App.cs" />
     <Compile Include="BuffsControl.xaml.cs">
       <DependentUpon>BuffsControl.xaml</DependentUpon>
     </Compile>
@@ -96,6 +94,7 @@
     <Compile Include="GraphDisplay.xaml.cs">
       <DependentUpon>GraphDisplay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GroupBox.cs" />
     <Compile Include="Items\CustomItemInstance.xaml.cs">
       <DependentUpon>CustomItemInstance.xaml</DependentUpon>
     </Compile>
@@ -145,7 +144,6 @@
       <DependentUpon>Status.xaml</DependentUpon>
     </Compile>
     <Compile Include="FileUtils.cs" />
-    <Compile Include="GroupBox\Groupbox.cs" />
     <Compile Include="Items\EditItemFilter.xaml.cs">
       <DependentUpon>EditItemFilter.xaml</DependentUpon>
     </Compile>
@@ -197,10 +195,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="App.xaml">
-      <Generator>MSBuild:MarkupCompilePass1</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="BuffsControl.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -410,6 +404,10 @@
       <Project>{37A81CEA-4E34-4982-BE93-67D0F4BB98A9}</Project>
       <Name>Rawr.Rogue</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.TankDK\Rawr.TankDK.csproj">
+      <Project>{85C9EEA7-735C-465B-A5AD-6D9C0EF88601}</Project>
+      <Name>Rawr.TankDK</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Tree\Rawr.Tree.csproj">
       <Project>{0F4B5B78-ECD5-42ED-ADE8-93F24DCD6EA5}</Project>
       <Name>Rawr.Tree</Name>
@@ -516,4 +514,5 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\PreprocessXaml.targets" />
 </Project>

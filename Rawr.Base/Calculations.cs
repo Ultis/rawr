@@ -36,17 +36,30 @@ namespace Rawr
 			}
 		}
 
-		private static SortedList<string, Type> _models = null;
-		public static SortedList<string, Type> Models
+        public static void RegisterModel(Type type)
+        {
+            if (type.IsSubclassOf(typeof(CalculationsBase)))
+            {
+                RawrModelInfoAttribute[] modelInfos = type.GetCustomAttributes(typeof(RawrModelInfoAttribute), false) as RawrModelInfoAttribute[];
+                string[] displayName = type.Name.Split('|');
+                Models[modelInfos[0].Name] = type;
+                _modelIcons[modelInfos[0].Name] = modelInfos[0].IconPath;
+                _modelClasses[modelInfos[0].Name] = modelInfos[0].TargetClass;
+            }
+        }
+
+		private static Dictionary<string, Type> _models = null;
+        public static Dictionary<string, Type> Models
 		{
 			get
 			{
 				if (_models == null)
 				{
-					_models = new SortedList<string, Type>();
+                    _models = new Dictionary<string, Type>();
 					_modelIcons = new Dictionary<string, string>();
 					_modelClasses = new Dictionary<string, CharacterClass>();
 
+#if !RAWR3
                     string dir = AppDomain.CurrentDomain.BaseDirectory + "Data";
                     // when running in service the dlls are in relative search path
                     if (AppDomain.CurrentDomain.RelativeSearchPath != null) dir = AppDomain.CurrentDomain.RelativeSearchPath;
@@ -79,6 +92,7 @@ namespace Rawr
 
 					if (_models.Count == 0)
 						throw new TypeLoadException("Unable to find any model plug in dlls.  Please check that the files exist and are in the correct location");
+#endif
 				}
 				return _models;
 			}
@@ -180,11 +194,19 @@ namespace Rawr
         {
             get { return Instance.CustomRenderedChartNames; }
         }
+#if RAWR3
+        public static Dictionary<string, System.Windows.Media.Color> SubPointNameColors
+#else
         public static Dictionary<string, System.Drawing.Color> SubPointNameColors
+#endif
 		{
 			get { return Instance.SubPointNameColors; }
 		}
-		public static CalculationOptionsPanelBase CalculationOptionsPanel
+#if RAWR3
+        public static ICalculationOptionsPanel CalculationOptionsPanel
+#else
+        public static CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
 		{
 			get { return Instance.CalculationOptionsPanel; }
 		}
@@ -192,11 +214,12 @@ namespace Rawr
 		{
 			get { return Instance.TargetClass; }
 		}
+#if !RAWR3
 		public static StatGraphRenderer StatGraphRenderer
 		{
 			get { return Instance.StatGraphRenderer; }
 		}
-
+#endif
 
 		public static ComparisonCalculationBase CreateNewComparisonCalculation()
 		{
@@ -272,10 +295,12 @@ namespace Rawr
 		{
 			return Instance.GetCustomChartData(character, chartName);
 		}
+#if !RAWR3
         public static void RenderChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
             Instance.RenderChart(character, chartName, g, width, height);
         }
+#endif
         public static Stats GetRelevantStats(Stats stats)
 		{
 			return Instance.GetRelevantStats(stats);
@@ -336,13 +361,13 @@ namespace Rawr
 
         public static string ValidModel(string model)
         {
-            if (Models.Keys.Contains(model))
+            if (Models.ContainsKey(model))
             {
                 return model;
             }
             if(Models.Keys.Count > 0)
             {
-                return Models.Keys[0];
+                return new List<string>(Models.Keys)[0];
             }
             return null;
         }
@@ -368,12 +393,14 @@ namespace Rawr
 		protected Character _cachedCharacter = null;
 		public virtual Character CachedCharacter { get { return _cachedCharacter; } }
 		
+#if !RAWR3
 		protected StatGraphRenderer _statGraphRenderer = null;
 		public StatGraphRenderer StatGraphRenderer
 		{
 			get { return _statGraphRenderer = _statGraphRenderer ?? new StatGraphRenderer(); }
 		}
-		
+#endif
+
 		/// <summary>
 		/// Dictionary<string, Color> that includes the names of each rating which your model will use,
 		/// and a color for each. These colors will be used in the charts.
@@ -383,7 +410,11 @@ namespace Rawr
 		/// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
 		/// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
 		/// </summary>
+#if RAWR3
+        public abstract Dictionary<string, System.Windows.Media.Color> SubPointNameColors { get; }
+#else
 		public abstract Dictionary<string, System.Drawing.Color> SubPointNameColors { get; }
+#endif
 		
 		/// <summary>
 		/// An array of strings which will be used to build the calculation display.
@@ -419,7 +450,11 @@ namespace Rawr
 		/// setting CalculationOptions for the model. CalculationOptions are stored in the Character,
 		/// and can be used by multiple models. See comments on CalculationOptionsPanelBase for more details.
 		/// </summary>
-		public abstract CalculationOptionsPanelBase CalculationOptionsPanel { get; }
+#if RAWR3
+        public abstract ICalculationOptionsPanel CalculationOptionsPanel { get; }
+#else
+        public abstract CalculationOptionsPanelBase CalculationOptionsPanel { get; }
+#endif
 
 		/// <summary>
         /// List&lt;ItemType&gt; containing all of the ItemTypes relevant to this model. Typically this
@@ -514,6 +549,7 @@ namespace Rawr
 		/// <returns>The data for the custom chart.</returns>
 		public abstract ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName);
 
+#if !RAWR3
 		/// <summary>
 		/// Render a chart, based on the chart name, either Stat Graph, or defined in CustomRenderedChartNames.
 		/// </summary>
@@ -525,13 +561,13 @@ namespace Rawr
 		public void RenderChart(Character character, string chartName,
 			System.Drawing.Graphics g, int width, int height)
 		{
-			if (chartName == "Stat Graph")
+            if (chartName == "Stat Graph")
 				StatGraphRenderer.Render(character, g, width, height);
 			else
 				RenderCustomChart(character, chartName, g, width, height);
 		}
 
-		/// <summary>
+        /// <summary>
 		/// Render custom chart, based on the chart name, as defined in CustomRenderedChartNames.
 		/// </summary>
 		/// <param name="character">The character to build the chart for.</param>
@@ -544,8 +580,9 @@ namespace Rawr
 		{
 
 		}
+#endif
 
-		/// <summary>
+        /// <summary>
         /// List of default gemming templates recommended by the model
         /// </summary>
         public abstract List<GemmingTemplate> DefaultGemmingTemplates
@@ -1502,6 +1539,30 @@ namespace Rawr
         public virtual bool getBaseStatOption(Character character) { return false; }
     }
 
+#if RAWR3
+    /// <summary>
+    /// Base CalculationOptionsPanel class which should be inherited by a custom user control for the model.
+    /// The instance of the custom class returned by CalculationOptionsPanel will be placed in the Options 
+    /// tab on the main form when the model is active. Should contain controls to edit the CalculationOptions
+    /// on the character.
+    /// </summary>
+    public interface ICalculationOptionsPanel
+    {
+        /// <summary>
+        /// The current character. Will be set whenever the model loads or a character is loaded.
+        /// 
+        /// IMPORTANT: Call Character.OnItemsChanged() after changing the value of any CalculationOptions,
+        /// other than in LoadCalculationOptions().
+        /// </summary>
+        Character Character
+        {
+            get;
+            set;
+        }
+
+        System.Windows.Controls.UserControl PanelControl { get; }
+    }
+#else
 	/// <summary>
 	/// Base CalculationOptionsPanel class which should be inherited by a custom user control for the model.
 	/// The instance of the custom class returned by CalculationOptionsPanel will be placed in the Options 
@@ -1539,6 +1600,6 @@ namespace Rawr
 		/// </summary>
 		protected virtual void LoadCalculationOptions() { }
 	}
-
+#endif
 }
 //takemyhandigiveittoyounowyouownmealliamyousaidyouwouldneverleavemeibelieveyouibelieve

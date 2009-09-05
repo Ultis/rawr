@@ -56,12 +56,18 @@ namespace Rawr
             }
 
             return values.ToArray();
+        }
 #else
+        public static T[] GetValues<T>()
+        {
+            return (T[])Enum.GetValues(typeof(T));
+        }
+
         public static Array GetValues(Type enumType)
         {
             return Enum.GetValues(enumType);
-#endif
         }
+#endif
 
     }
 

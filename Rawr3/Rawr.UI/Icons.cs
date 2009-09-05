@@ -28,8 +28,11 @@ namespace Rawr
             talentTree = talentTree.Replace(" ", "");
             talentName = talentName.Replace(" ", "");
             talentName = talentName.Replace(":", "");
-            return new BitmapImage(new Uri(string.Format("http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}{3}.jpg",
-                charClass.ToString().ToLower(), talentTree.ToLower(), talentName.ToLower(), on ? "" : "-off"), UriKind.Absolute));
+            Uri uri = new Uri(string.Format("http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}{3}.jpg",
+                charClass.ToString().ToLower(), talentTree.ToLower(), talentName.ToLower(), on ? "" : "-off"), UriKind.Absolute);
+            // this thing is throwing InvalidDeploymentException in WPF when you're catching handled exceptions
+            // there's nothing wrong actually, it works when run normally
+            return new BitmapImage(uri);
         }
     }
 }

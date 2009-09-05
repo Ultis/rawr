@@ -59,11 +59,11 @@ namespace Rawr.UI
             ContextPopup.HorizontalOffset = offset.X;
             ContextPopup.IsOpen = true;
 
-            ContextGrid.Measure(Application.Current.RootVisual.DesiredSize);
+            ContextGrid.Measure(App.Current.RootVisual.DesiredSize);
 
-            GeneralTransform transform = relativeTo.TransformToVisual(Application.Current.RootVisual);
+            GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
             double distBetweenBottomOfPopupAndBottomOfWindow =
-                Application.Current.RootVisual.RenderSize.Height - offsetY -
+                App.Current.RootVisual.RenderSize.Height - offsetY -
                 transform.Transform(new Point(0, ContextGrid.DesiredSize.Height)).Y;
             if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
             {
@@ -79,7 +79,7 @@ namespace Rawr.UI
 
         private void Popup_LostFocus(object sender, RoutedEventArgs e)
         {
-            FrameworkElement focus = (FocusManager.GetFocusedElement() as FrameworkElement);
+            FrameworkElement focus = (App.GetFocusedElement() as FrameworkElement);
             DependencyObject parent = VisualTreeHelper.GetParent(focus);
             while (parent != null && parent != ContextGrid) parent = VisualTreeHelper.GetParent(parent);
             if (parent == null)
@@ -103,7 +103,11 @@ namespace Rawr.UI
                 }
                 else if (contextItem == ContextOpenWowhead)
                 {
+#if SILVERLIGHT
                     System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + SelectedItemInstance.Id), "_blank");
+#else
+                    // TODO open browser in WPF
+#endif
                 }
                 else if (contextItem == ContextAddCustom)
                 {

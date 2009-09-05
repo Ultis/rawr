@@ -14,14 +14,12 @@ using System.Windows.Browser;
 
 namespace Rawr.Silverlight
 {
-    public partial class App : Application
+    public partial class App : UI.App
     {
-        public static Application CurrentApplication { get; set; }
 		private MainPage _mainPage = null;
 
         public App()
         {
-            CurrentApplication = this;
             this.Startup += this.Application_Startup;
             this.Exit += this.Application_Exit;
             this.UnhandledException += this.Application_UnhandledException;

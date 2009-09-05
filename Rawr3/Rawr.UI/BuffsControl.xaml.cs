@@ -113,7 +113,6 @@ namespace Rawr.UI
             else FindParent.Clear();
 
             BuffStack.Children.Clear();
-
             Dictionary<string, GroupBox> buffGroups = new Dictionary<string, GroupBox>();
             if (Buff.RelevantBuffs != null)
             {

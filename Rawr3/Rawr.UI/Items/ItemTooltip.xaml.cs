@@ -384,11 +384,11 @@ namespace Rawr.UI
             ItemPopup.HorizontalOffset = offset.X;
             ItemPopup.IsOpen = true;
 
-            ItemGrid.Measure(Application.Current.RootVisual.DesiredSize);
+            ItemGrid.Measure(App.Current.RootVisual.DesiredSize);
 
-            GeneralTransform transform = relativeTo.TransformToVisual(Application.Current.RootVisual);
+            GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
             double distBetweenBottomOfPopupAndBottomOfWindow =
-                Application.Current.RootVisual.RenderSize.Height - offsetY -
+                App.Current.RootVisual.RenderSize.Height - offsetY -
                 transform.Transform(new Point(0, ItemGrid.DesiredSize.Height)).Y;
             if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
             {

@@ -104,9 +104,14 @@ namespace Rawr.UI
                 catch { }
             }
 
+#if SILVERLIGHT
 			PagedCollectionView itemsPCV = new PagedCollectionView(items);
 			itemsPCV.GroupDescriptions.Add(new PropertyGroupDescription("Slot"));
-            ItemGrid.ItemsSource = itemsPCV;
+            ItemGrid.ItemsSource = itemsPCV;            
+#else
+            // TODO implement paging in WPF
+            ItemGrid.ItemsSource = items;
+#endif
         }
 
         private void EditButton_Click(object sender, System.Windows.RoutedEventArgs e)

@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Bin\Debug</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SILVERLIGHT,RAWR3</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;RAWR3</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -35,7 +35,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>Bin\Release</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT,RAWR3</DefineConstants>
+    <DefineConstants>TRACE;SILVERLIGHT;RAWR3</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -69,11 +69,29 @@
     <Compile Include="..\..\Rawr.DPSWarr\ComparisonCalculationsDPSWarr.cs">
       <Link>ComparisonCalculationsDPSWarr.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Rotation.Arms.cs">
+      <Link>Rotation.Arms.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSWarr\Rotation.cs">
       <Link>Rotation.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.cs">
-      <Link>Skills.cs</Link>
+    <Compile Include="..\..\Rawr.DPSWarr\Rotation.Fury.cs">
+      <Link>Rotation.Fury.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Skills.Arms.cs">
+      <Link>Skills.Arms.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Skills.Base.cs">
+      <Link>Skills.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Skills.Fury.cs">
+      <Link>Skills.Fury.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Skills.Prot.cs">
+      <Link>Skills.Prot.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Skills.Shared.cs">
+      <Link>Skills.Shared.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsDPSWarr.cs" />
     <Compile Include="CalculationOptionsPanelDPSWarr.xaml.cs">
@@ -108,4 +126,5 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\PreprocessXaml.targets" />
 </Project>

@@ -296,7 +296,7 @@ namespace Rawr.UI
 
 		private void UserControl_LostFocus(object sender, RoutedEventArgs e)
 		{
-			FrameworkElement focus = (FocusManager.GetFocusedElement() as FrameworkElement);
+			FrameworkElement focus = (App.GetFocusedElement() as FrameworkElement);
 			if (focus is ComboBoxItem && comboBoxSort.Items.Contains(focus.DataContext))
 				focus = comboBoxSort;
 			DependencyObject parent = VisualTreeHelper.GetParent(focus);
