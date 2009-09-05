@@ -36,11 +36,9 @@ namespace Rawr.DPSWarr
             private float mhActivates, ohActivates;
             public void SetAllAbilityActivates(float mh, float oh) { mhActivates = mh; ohActivates = oh; }
             public override float ActivatesOverride { get { return mhActivates + ohActivates; } }
-            public override float TickSize
-            {
-                get
-                {
-                    if (!Validated) { return 0f; }
+            public override float TickSize {
+                get {
+                    if (!Validated || (mhActivates + ohActivates) <= 0f) { return 0f; }
 
                     // Doing it this way because Deep Wounds triggering off of a MH crit
                     // and Deep Wounds triggering off of an OH crit do diff damage.

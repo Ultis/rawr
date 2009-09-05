@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.DPSWarr
-{
-    public class ArmsRotation : Rotation
-    {
+namespace Rawr.DPSWarr {
+    public class ArmsRotation : Rotation {
         public ArmsRotation(Character character, Stats stats) {
             Char = character;
             StatS = stats;
@@ -18,6 +16,8 @@ namespace Rawr.DPSWarr
             //WhiteAtks = new Skills.WhiteAttacks(Char, StatS);
             // Initialize();
         }
+        #region Variables
+        // Ability Declarations
         public Skills.Bladestorm BLS;
         public Skills.MortalStrike MS;
         public Skills.Rend RD;
@@ -25,9 +25,22 @@ namespace Rawr.DPSWarr
         public Skills.TasteForBlood TB;
         public Skills.Suddendeath SD;
         public Skills.Swordspec SS;
-
-        public override void Initialize(CharacterCalculationsDPSWarr calcs)
-        {
+        // GCD Totals
+        public float _MS_DPS  = 0f, _MS_HPS  = 0f, _MS_GCDs  = 0f;
+        public float _RD_DPS  = 0f, _RD_HPS  = 0f, _RD_GCDs  = 0f;
+        public float _OP_DPS  = 0f, _OP_HPS  = 0f, _OP_GCDs  = 0f;
+        public float _TB_DPS  = 0f, _TB_HPS  = 0f, _TB_GCDs  = 0f;
+        public float _SD_DPS  = 0f, _SD_HPS  = 0f, _SD_GCDs  = 0f;
+        public float _SS_DPS  = 0f, _SS_HPS  = 0f, _SS_Acts  = 0f;
+        public float _BLS_DPS = 0f, _BLS_HPS = 0f, _BLS_GCDs = 0f;
+        // GCD Losses
+        public float _Move_GCDs = 0f;
+        public float _Stunned_Acts = 0f;
+        public float _HF_Acts = 0f;
+        public float _EM_Acts = 0f;
+        #endregion
+        #region Initialization
+        public override void Initialize(CharacterCalculationsDPSWarr calcs) {
             base.Initialize(calcs);
             calcs.WW = WW;
             calcs.BLS = BLS;
@@ -38,9 +51,7 @@ namespace Rawr.DPSWarr
             calcs.SD = SD;
             calcs.SS = SS;
         }
-
-        protected override void initAbilities()
-        {
+        protected override void initAbilities() {
             base.initAbilities();
             WW = new Skills.WhirlWind(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             BLS = new Skills.Bladestorm(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, WW);
@@ -51,8 +62,9 @@ namespace Rawr.DPSWarr
             TB = new Skills.TasteForBlood(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             SD = new Skills.Suddendeath(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
         }
-        public override float GetCriticalYellowsOverDurMH()
-        {
+        #endregion
+        #region Various Attacks Over Dur
+        public override float GetCriticalYellowsOverDurMH() {
             bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
             return base.GetCriticalYellowsOverDurMH()
                 + (_BLS_GCDs * BLS.MHAtkTable.Crit * BLS.AvgTargets * 6) / (useOH ? 2 : 1)
@@ -61,8 +73,7 @@ namespace Rawr.DPSWarr
                 + _TB_GCDs * TB.MHAtkTable.Crit * TB.AvgTargets
                 + _SD_GCDs * SD.MHAtkTable.Crit * SD.AvgTargets;
         }
-        public override float GetLandedYellowsOverDurMH()
-        {
+        public override float GetLandedYellowsOverDurMH() {
             bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
             return base.GetLandedYellowsOverDurMH()
                 + (_BLS_GCDs * BLS.MHAtkTable.AnyLand * BLS.AvgTargets * 6) / (useOH ? 2 : 1)
@@ -71,8 +82,7 @@ namespace Rawr.DPSWarr
                 + _TB_GCDs * TB.MHAtkTable.AnyLand * TB.AvgTargets
                 + _SD_GCDs * SD.MHAtkTable.AnyLand * SD.AvgTargets;
         }
-        public override float GetParriedYellowsOverDur()
-        {
+        public override float GetParriedYellowsOverDur() {
             bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
             return base.GetParriedYellowsOverDur()
                 + (useOH ? (_BLS_GCDs * BLS.MHAtkTable.Parry * BLS.AvgTargets + _BLS_GCDs * BLS.OHAtkTable.Parry * BLS.AvgTargets) / 2 : _BLS_GCDs * BLS.MHAtkTable.Parry * BLS.AvgTargets) * 6
@@ -82,12 +92,10 @@ namespace Rawr.DPSWarr
                 + _SD_GCDs * SD.MHAtkTable.Parry * SD.AvgTargets;
                 
         }
-        public override float GetCriticalYellowsOverDurOH()
-        {
+        public override float GetCriticalYellowsOverDurOH() {
             return base.GetCriticalYellowsOverDurOH() + (_BLS_GCDs * BLS.OHAtkTable.Crit * BLS.AvgTargets * 6) / 2;
         }
-        public override float GetDodgedYellowsOverDur()
-        {
+        public override float GetDodgedYellowsOverDur() {
             bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
             return base.GetDodgedYellowsOverDur()
                 + (useOH ? (_BLS_GCDs * BLS.MHAtkTable.Dodge * BLS.AvgTargets + _BLS_GCDs * BLS.OHAtkTable.Dodge * BLS.AvgTargets) / 2 : _BLS_GCDs * BLS.MHAtkTable.Dodge * BLS.AvgTargets) * 6
@@ -96,13 +104,11 @@ namespace Rawr.DPSWarr
                 + _TB_GCDs * TB.MHAtkTable.Dodge * TB.AvgTargets
                 + _SD_GCDs * SD.MHAtkTable.Dodge * SD.AvgTargets;
         }
-        public override float GetLandedYellowsOverDurOH()
-        {
+        public override float GetLandedYellowsOverDurOH() {
             return base.GetLandedYellowsOverDurOH()
                 + (_BLS_GCDs * BLS.OHAtkTable.AnyLand * BLS.AvgTargets * 6) / 2;
         }
-        public override float GetLandedAtksOverDurMH()
-        {
+        public override float GetLandedAtksOverDurMH() {
             float landednoss = GetLandedAtksOverDurNoSSMH();
             float ssActs = SS.GetActivates(GetLandedYellowsOverDurMH());
 
@@ -110,8 +116,7 @@ namespace Rawr.DPSWarr
 
             return landednoss + (float)Math.Max(0f, ssActs);
         }
-        public override float GetLandedAtksOverDurOH()
-        {
+        public override float GetLandedAtksOverDurOH() {
             if (!CombatFactors.useOH) { return 0; }
             float landednoss = GetLandedAtksOverDurNoSSOH();
             float ssActs = SS.GetActivates(GetLandedYellowsOverDurOH());
@@ -120,10 +125,10 @@ namespace Rawr.DPSWarr
 
             return landednoss + (float)Math.Max(0f, ssActs);
         }
-        public override float RageNeededOverDur
-        {
-            get
-            {
+        #endregion
+        #region Rage Calcs
+        public override float RageNeededOverDur {
+            get {
                 float SweepingRage = SW.GetRageUseOverDur(_SW_GCDs);
                 float BladestormRage = BLS.GetRageUseOverDur(_BLS_GCDs);
                 float MSRage = MS.GetRageUseOverDur(_MS_GCDs);
@@ -135,36 +140,18 @@ namespace Rawr.DPSWarr
                     RendRage + OPRage + TBRage + SDRage;
             }
         }
-        public override float FreeRageOverDur
-        {
-            get
-            {
+        public override float FreeRageOverDur {
+            get {
                 float sword = SS.GetRageUseOverDur(_SS_Acts);
                 return base.FreeRageOverDur + sword;
             }
         }
-
-        #region ArmsRotVariables
-        public float _MS_DPS = 0f, _MS_HPS = 0f, _MS_GCDs = 0f;
-        public float _RD_DPS = 0f, _RD_HPS = 0f, _RD_GCDs = 0f;
-        public float _OP_DPS = 0f, _OP_HPS = 0f, _OP_GCDs = 0f;
-        public float _TB_DPS = 0f, _TB_HPS = 0f, _TB_GCDs = 0f;
-        public float _SD_DPS = 0f, _SD_HPS = 0f, _SD_GCDs = 0f;
-        public float _SS_DPS = 0f, _SS_HPS = 0f, _SS_Acts = 0f;
-        public float _BLS_DPS = 0f, _BLS_HPS = 0f, _BLS_GCDs = 0f;
-        //
-        public float _Trink1_GCDs = 0f;
-        public float _Trink2_GCDs = 0f;
-        //
-        // GCD Losses
-        public float _Stunned_Acts = 0f;
-        public float _HF_Acts = 0f;
-        public float _EM_Acts = 0f;
-        //
-        
         #endregion
-        public override float MakeRotationandDoDPS()
-        {
+        protected override void calcDeepWounds() {
+            // The goggles! They do nothing!
+        }
+
+        public override float MakeRotationandDoDPS() {
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
             float FightDuration = CalcOpts.Duration;
@@ -177,10 +164,21 @@ namespace Rawr.DPSWarr
             float rageadd = 0f;
             float timelostwhilestunned = 0f;
             float percTimeInStun = 0f;
+            float timelostwhilemoving = 0f;
+            float percTimeInMovement = 0f;
 
             if (Char.MainHand == null) { return 0f; }
 
             // ==== Reasons GCDs would be lost ========
+            // Having to Move
+            if (CalcOpts.MovingTargets) {
+                timelostwhilemoving = CalcOpts.MovingTargetsTime * (1f - StatS.MovementSpeed);
+                percTimeInMovement = timelostwhilemoving / FightDuration;
+                _Move_GCDs = timelostwhilemoving / LatentGCD;
+                GCDsused += (float)Math.Min(NumGCDs, _Move_GCDs);
+                GCDUsage += (_Move_GCDs > 0 ? _Move_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : Spent Moving\n" : "");
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            }
 #if SILVERLIGHT
             float IronWillBonus = (float)Math.Round(20f / 3f * Talents.IronWill) / 100f;
 #else
@@ -188,8 +186,7 @@ namespace Rawr.DPSWarr
 #endif
             float BaseStunDur = (float)Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - IronWillBonus)));
             // Being Stunned or Charmed
-            if (CalcOpts.StunningTargets)
-            {
+            if (CalcOpts.StunningTargets) {
                 // Assume you are Stunned for 3 GCDs (1.5+latency)*3 = ~1.6*3 = ~4.8 seconds per stun
                 // Iron Will reduces the Duration of the stun by 7%,14%,20%
                 // 100% perc means you are stunned the entire fight, the boss is stunning you every third GCD, basically only refreshing his stun
@@ -203,8 +200,7 @@ namespace Rawr.DPSWarr
                 GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs-IronWillBonus : Stunned\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 // Now let's try and get some of those GCDs back
-                if (Talents.HeroicFury > 0 && _Stunned_Acts > 0f)
-                {
+                if (Talents.HeroicFury > 0 && _Stunned_Acts > 0f) {
                     float hfacts = HF.Activates;
                     _HF_Acts = (float)Math.Min(_Stunned_Acts, hfacts);
                     reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)/1000f*/)));
@@ -212,8 +208,7 @@ namespace Rawr.DPSWarr
                     GCDUsage += (_HF_Acts > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + HF.Name + " (adds back to GCDs when stunned)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 }
-                if (CHARACTER.Race == CharacterRace.Human && (_Stunned_Acts - _HF_Acts > 0))
-                {
+                if (CHARACTER.Race == CharacterRace.Human && (_Stunned_Acts - _HF_Acts > 0)) {
                     float emacts = EM.Activates;
                     _EM_Acts = (float)Math.Min(_Stunned_Acts - _HF_Acts, emacts);
                     reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)/1000f*/)));
@@ -234,50 +229,52 @@ namespace Rawr.DPSWarr
                 percTimeInStun = timelostwhilestunned / FightDuration;
             }
 
+            float TotalPercTimeLost = Math.Min(1f, percTimeInStun + percTimeInMovement);
+
             // ==== Rage Generation Priorities ========
             availRage += RageGenOverDur_Other;
 
             SndW.NumStunsOverDur = _Stunned_Acts;
             /*Second Wind       */
-            AddAnItem(ref availRage, percTimeInStun, ref _Second_Acts, ref HPS_TTL, ref _Second_HPS, SndW);
+            AddAnItem(ref availRage, TotalPercTimeLost, ref _Second_Acts, ref HPS_TTL, ref _Second_HPS, SndW);
             /*Bloodrage         */
-            AddAnItem(ref availRage, percTimeInStun, ref _Blood_GCDs, ref HPS_TTL, ref _Blood_HPS, BR);
+            AddAnItem(ref availRage, TotalPercTimeLost, ref _Blood_GCDs, ref HPS_TTL, ref _Blood_HPS, BR);
             /*Berserker Rage    */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _ZRage_GCDs, ref HPS_TTL, ref _ZRage_HPS, BZ, false);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _ZRage_GCDs, ref HPS_TTL, ref _ZRage_HPS, BZ, false);
 
             // ==== Maintenance Priorities ============
             /*Battle Shout      */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Battle_GCDs, ref HPS_TTL, ref _Battle_HPS, BTS);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _Battle_GCDs, ref HPS_TTL, ref _Battle_HPS, BTS);
             /*Commanding Shout  */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Comm_GCDs, ref HPS_TTL, ref _Comm_HPS, CS);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _Comm_GCDs, ref HPS_TTL, ref _Comm_HPS, CS);
             /*Demoralizing Shout*/
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Demo_GCDs, ref HPS_TTL, ref _Demo_HPS, DS);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _Demo_GCDs, ref HPS_TTL, ref _Demo_HPS, DS);
             /*Sunder Armor      */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Sunder_GCDs, ref HPS_TTL, ref _Sunder_HPS, SN);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _Sunder_GCDs, ref HPS_TTL, ref _Sunder_HPS, SN);
             /*Thunder Clap      */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Thunder_GCDs, ref DPS_TTL, ref HPS_TTL, ref _TH_DPS, ref _TH_HPS, TH);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _Thunder_GCDs, ref DPS_TTL, ref HPS_TTL, ref _TH_DPS, ref _TH_HPS, TH);
             /*Hamstring         */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Ham_GCDs, ref HPS_TTL, ref _Ham_HPS, HMS);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _Ham_GCDs, ref HPS_TTL, ref _Ham_HPS, HMS);
             /*Shattering Throw  */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Shatt_GCDs, ref DPS_TTL, ref HPS_TTL, ref _Shatt_DPS, ref _Shatt_HPS, ST);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _Shatt_GCDs, ref DPS_TTL, ref HPS_TTL, ref _Shatt_DPS, ref _Shatt_HPS, ST);
             /*Enraged Regeneratn*/
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _ER_GCDs, ref HPS_TTL, ref _ER_HPS, ER);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _ER_GCDs, ref HPS_TTL, ref _ER_HPS, ER);
             /*Sweeping Strikes  */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _SW_GCDs, ref HPS_TTL, ref _SW_HPS, SW);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _SW_GCDs, ref HPS_TTL, ref _SW_HPS, SW);
             /*Death Wish        */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Death_GCDs, ref HPS_TTL, ref _Death_HPS, Death);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _Death_GCDs, ref HPS_TTL, ref _Death_HPS, Death);
 
             // ==== Standard Priorities ===============
 
             // These are solid and not dependant on other attacks
             /*Bladestorm        */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _BLS_GCDs, ref DPS_TTL, ref HPS_TTL, ref _BLS_DPS, ref _BLS_HPS, BLS, 4f);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _BLS_GCDs, ref DPS_TTL, ref HPS_TTL, ref _BLS_DPS, ref _BLS_HPS, BLS, 4f);
             /*Mortal Strike     */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _MS_GCDs, ref DPS_TTL, ref HPS_TTL, ref _MS_DPS, ref _MS_HPS, MS);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _MS_GCDs, ref DPS_TTL, ref HPS_TTL, ref _MS_DPS, ref _MS_HPS, MS);
             /*Rend              */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _RD_GCDs, ref DPS_TTL, ref HPS_TTL, ref _RD_DPS, ref _RD_HPS, RD);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _RD_GCDs, ref DPS_TTL, ref HPS_TTL, ref _RD_DPS, ref _RD_HPS, RD);
             /*Taste for Blood   */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _TB_GCDs, ref DPS_TTL, ref HPS_TTL, ref _TB_DPS, ref _TB_HPS, TB);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _TB_GCDs, ref DPS_TTL, ref HPS_TTL, ref _TB_DPS, ref _TB_HPS, TB);
 
             // The following are dependant on other attacks as they are proccing abilities or are the fallback item
             // We need to loop these until the activates are relatively unchanged
@@ -306,21 +303,21 @@ namespace Rawr.DPSWarr
                 oldOPGCDs = _OP_GCDs; oldSDGCDs = _SD_GCDs; oldSLGCDs = _SL_GCDs; oldSSActs = _SS_Acts;
                 WhiteAtks.Slam_Freq = _SL_GCDs;
                 //Overpower
-                float acts = (float)Math.Min(availGCDs, OP.GetActivates(GetDodgedYellowsOverDur(), GetParriedYellowsOverDur(), _SS_Acts) * (1f - percTimeInStun));
+                float acts = (float)Math.Min(availGCDs, OP.GetActivates(GetDodgedYellowsOverDur(), GetParriedYellowsOverDur(), _SS_Acts) * (1f - TotalPercTimeLost));
                 float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                 _OP_GCDs = Abil_GCDs;
                 GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
 
                 //Sudden Death
-                acts = (float)Math.Min(availGCDs, SD.GetActivates(GetLandedAtksOverDur()) * (1f - percTimeInStun));
+                acts = (float)Math.Min(availGCDs, SD.GetActivates(GetLandedAtksOverDur()) * (1f - TotalPercTimeLost));
                 Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                 _SD_GCDs = Abil_GCDs;
                 GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
 
                 //Slam for remainder of GCDs
-                _SL_GCDs = SL.Validated ? availGCDs * (1f - SL.Whiteattacks.AvoidanceStreak) * (1f - percTimeInStun) : 0f;
+                _SL_GCDs = SL.Validated ? availGCDs * (1f - SL.Whiteattacks.AvoidanceStreak) * (1f - TotalPercTimeLost) : 0f;
                 GCDsused += (float)Math.Min(NumGCDs, _SL_GCDs);
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
 
@@ -355,7 +352,7 @@ namespace Rawr.DPSWarr
             // Alternate to Cleave is MultiTargs is active, but only to the perc of time where Targs is active
             // After iterating how many Overrides can be done and still do other abilities, then do the white dps
             WhiteAtks.Slam_Freq = _SL_GCDs;
-            float oldDPS_White = WhiteAtks.MhDPS * (1f - (CalcOpts.StunningTargets ? percTimeInStun : 0f));
+            float oldDPS_White = WhiteAtks.MhDPS * (1f - TotalPercTimeLost);
             float origAvailRage = availRage;
             loopCounter = 0;
 
@@ -363,11 +360,10 @@ namespace Rawr.DPSWarr
             bool clok = CalcOpts.MultipleTargets
                      && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
-            if (hsok || clok)
-            {
+            if (hsok || clok) {
                 WhiteAtks.HSOverridesOverDur = 0f;
                 WhiteAtks.CLOverridesOverDur = 0f;
-                RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - percTimeInStun);
+                RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - TotalPercTimeLost);
                 availRage += RageGenWhite;
 
                 // Assign Rage to each ability
@@ -397,7 +393,7 @@ namespace Rawr.DPSWarr
                     oldCLActivates = CL.Activates;
                     // Reset the rage
                     availRage = origAvailRage;
-                    RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - percTimeInStun);
+                    RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - TotalPercTimeLost);
                     availRage += RageGenWhite;
                     // Assign Rage to each ability
                     RageForCL = clok ? (!hsok ? availRage : availRage * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
@@ -423,24 +419,32 @@ namespace Rawr.DPSWarr
                 DPS_TTL += _CL_DPS;
                 // White
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
-                _WhiteDPSMH = WhiteAtks.MhDPS * (1f - (CalcOpts.StunningTargets ? percTimeInStun : 0f)); // MhWhiteDPS with loss of time in stun
+                _WhiteDPSMH = WhiteAtks.MhDPS * (1f - TotalPercTimeLost); // MhWhiteDPS with loss of time in stun and movement
                 _WhiteDPS = _WhiteDPSMH;
                 DPS_TTL += _WhiteDPS;
-            }
-            else
-            {
+            } else {
                 RageGenWhite = WHITEATTACKS.whiteRageGenOverDur;
                 availRage += RageGenWhite;
                 WhiteAtks.HSOverridesOverDur = 0f;
                 WhiteAtks.CLOverridesOverDur = 0f;
-                _WhiteDPSMH = WhiteAtks.MhDPS * (1f - (CalcOpts.StunningTargets ? percTimeInStun : 0f)); // MhWhiteDPS with loss of time in stun
+                _WhiteDPSMH = WhiteAtks.MhDPS * (1f - TotalPercTimeLost); // MhWhiteDPS with loss of time in stun and movement
                 _WhiteDPS = _WhiteDPSMH;
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
                 _HS_Acts = 0f; _HS_DPS = 0f; _HS_PerHit = 0f;
                 _CL_Acts = 0f; _CL_DPS = 0f; _CL_PerHit = 0f;
                 DPS_TTL += _WhiteDPS;
             }
-            calcDeepWounds();
+            // Deep Wounds Activates
+            float mhActivates =
+                /*OnAttack*/_HS_Acts * HS.MHAtkTable.Crit +
+                /*OnAttack*/_CL_Acts * CL.MHAtkTable.Crit +
+                /*Yellow  */GetCriticalYellowsOverDurMH() +
+                /*White   */(WhiteAtks.MhActivates * (1f - TotalPercTimeLost)) * WhiteAtks.MHAtkTable.Crit;
+
+            // Push to the Ability
+            DW.SetAllAbilityActivates(mhActivates, 0f);
+            _DW_PerHit = DW.TickSize;
+            _DW_DPS = DW.DPS;
 
             GCDUsage += "\n" + availGCDs.ToString("000") + " : Avail GCDs";
 
