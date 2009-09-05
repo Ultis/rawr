@@ -226,22 +226,24 @@ namespace Rawr.DPSWarr {
                                 (sec2lastNumB1 > 0 ? sec2lastNumB1 : sec2lastNumB1 * -1), (lastNumB1 > 0 ? lastNumB1 : lastNumB1 * -1),
                                 (sec2lastNumB2 > 0 ? sec2lastNumB2 : sec2lastNumB2 * -1), (lastNumB2 > 0 ? lastNumB2 : lastNumB2 * -1)
                             ));
-            
+
+            dictValues.Add("Description", string.Format("DPS : PerHit : #ActsD"));
             // DPS Fury
-            if (Rot.GetType() == typeof(FuryRotation))
-            {
+            format = "{0:0000} : {1:0000} : {2:000.00}";
+            if (Rot.GetType() == typeof(FuryRotation)) {
                 FuryRotation fr = (FuryRotation)Rot;
-                format = "{0:0000} : {1:0000} : {2:000.00}";
-                dictValues.Add("Description",       string.Format("DPS : PerHit : #ActsD"));
-                dictValues.Add("Bloodsurge",        string.Format(format,fr._BS_DPS ,BS.DamageOnUse ,fr._BS_GCDs    )+BS.GenTooltip( fr._BS_GCDs, fr._BS_DPS /TotalDPS));
-                dictValues.Add("Bloodthirst",       string.Format(format,fr._BT_DPS ,BT.DamageOnUse ,fr._BT_GCDs    )+BT.GenTooltip( fr._BT_GCDs, fr._BT_DPS /TotalDPS));
-                dictValues.Add("Whirlwind",         string.Format(format,fr._WW_DPS ,WW.DamageOnUse ,fr._WW_GCDs    )+WW.GenTooltip( fr._WW_GCDs, fr._WW_DPS /TotalDPS));
+                dictValues.Add("Bloodsurge",  string.Format(format, fr._BS_DPS, BS.DamageOnUse, fr._BS_GCDs) + BS.GenTooltip(fr._BS_GCDs, fr._BS_DPS / TotalDPS));
+                dictValues.Add("Bloodthirst", string.Format(format, fr._BT_DPS, BT.DamageOnUse, fr._BT_GCDs) + BT.GenTooltip(fr._BT_GCDs, fr._BT_DPS / TotalDPS));
+                dictValues.Add("Whirlwind",   string.Format(format, fr._WW_DPS, WW.DamageOnUse, fr._WW_GCDs) + WW.GenTooltip(fr._WW_GCDs, fr._WW_DPS / TotalDPS));
+            } else {
+                dictValues.Add("Bloodsurge",  string.Format(format, 0, 0, 0));
+                dictValues.Add("Bloodthirst", string.Format(format, 0, 0, 0));
+                dictValues.Add("Whirlwind",   string.Format(format, 0, 0, 0));
             }
             // DPS Arms
-            if (Rot.GetType() == typeof(ArmsRotation))
-            {
+            format = "{0:0000} : {1:0000} : {2:" + floorstring + "}";
+            if (Rot.GetType() == typeof(ArmsRotation)) {
                 ArmsRotation ar = (ArmsRotation)Rot;
-                format = "{0:0000} : {1:0000} : {2:" + floorstring + "}";
                 dictValues.Add("Bladestorm",        string.Format(format,ar._BLS_DPS,BLS.DamageOnUse/6f,ar._BLS_GCDs)+BLS.GenTooltip(ar._BLS_GCDs,ar._BLS_DPS/TotalDPS));
                 dictValues.Add("Mortal Strike",     string.Format(format,ar._MS_DPS ,MS.DamageOnUse ,ar._MS_GCDs    )+MS.GenTooltip( ar._MS_GCDs, ar._MS_DPS /TotalDPS));
                 dictValues.Add("Rend",              string.Format(format,ar._RD_DPS ,RD.TickSize    ,ar._RD_GCDs    )+RD.GenTooltip( ar._RD_GCDs, ar._RD_DPS /TotalDPS));
@@ -250,6 +252,15 @@ namespace Rawr.DPSWarr {
                 dictValues.Add("Sudden Death",      string.Format(format,ar._SD_DPS ,SD.DamageOnUse ,ar._SD_GCDs    )+SD.GenTooltip( ar._SD_GCDs, ar._SD_DPS /TotalDPS));
                 dictValues.Add("Slam",              string.Format(format,ar._SL_DPS ,SL.DamageOnUse ,Rot._SL_GCDs    )+SL.GenTooltip( ar._SL_GCDs, ar._SL_DPS /TotalDPS));
                 dictValues.Add("Sword Spec",        string.Format(format,ar._SS_DPS ,SS.DamageOnUse ,ar._SS_Acts    )+SS.GenTooltip( ar._SS_Acts, ar._SS_DPS /TotalDPS));
+            } else {
+                dictValues.Add("Bladestorm",        string.Format(format, 0, 0, 0));
+                dictValues.Add("Mortal Strike",     string.Format(format, 0, 0, 0));
+                dictValues.Add("Rend",              string.Format(format, 0, 0, 0));
+                dictValues.Add("Overpower",         string.Format(format, 0, 0, 0));
+                dictValues.Add("Taste for Blood",   string.Format(format, 0, 0, 0));
+                dictValues.Add("Sudden Death",      string.Format(format, 0, 0, 0));
+                dictValues.Add("Slam",              string.Format(format, 0, 0, 0));
+                dictValues.Add("Sword Spec",        string.Format(format, 0, 0, 0));
             }
             // DPS Maintenance
             format = "{0:0000} : {1:0000} : {2:" + floorstring + "}";

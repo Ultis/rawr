@@ -324,31 +324,32 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats() {
-                // Stats
+                // Base Stats
                 Stamina = stats.Stamina,
                 Agility = stats.Agility,
                 Strength = stats.Strength,
                 AttackPower = stats.AttackPower,
                 Health = stats.Health,
+                Armor = stats.Armor,
+                // Ratings
                 CritRating = stats.CritRating,
                 HitRating = stats.HitRating,
-                PhysicalHit = stats.PhysicalHit,
                 HasteRating = stats.HasteRating,
                 ExpertiseRating = stats.ExpertiseRating,
-				ArmorPenetration = stats.ArmorPenetration,
 				ArmorPenetrationRating = stats.ArmorPenetrationRating,
-                WeaponDamage = stats.WeaponDamage,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
-                Armor = stats.Armor,
+                ArcaneDamage = stats.ArcaneDamage,
+                // Bonuses
                 BonusArmor = stats.BonusArmor,
-                BaseArmorMultiplier = stats.BaseArmorMultiplier,
-                BonusArmorMultiplier = stats.BonusArmorMultiplier,
+                WeaponDamage = stats.WeaponDamage,
+                ArmorPenetration = stats.ArmorPenetration,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
-                ArcaneDamage = stats.ArcaneDamage,
+                PhysicalHit = stats.PhysicalHit,
+                // Procs
+                DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
-                // Normal Multipliers
+                // Multipliers
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -356,24 +357,29 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-                // Special Multipliers
+                BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusCritChance = stats.BonusCritChance,
+                BaseArmorMultiplier = stats.BaseArmorMultiplier,
+                BonusArmorMultiplier = stats.BonusArmorMultiplier,
+                // Set Bonuses
+                BonusWarrior_T7_2P_SlamDamage = stats.BonusWarrior_T7_2P_SlamDamage,
                 BonusWarrior_T7_4P_RageProc = stats.BonusWarrior_T7_4P_RageProc,
                 BonusWarrior_T8_2P_HasteProc = stats.BonusWarrior_T8_2P_HasteProc,
                 BonusWarrior_T8_4P_MSBTCritIncrease = stats.BonusWarrior_T8_4P_MSBTCritIncrease,
                 BonusWarrior_T9_2P_Crit = stats.BonusWarrior_T9_2P_Crit,
                 BonusWarrior_T9_2P_ArP = stats.BonusWarrior_T9_2P_ArP,
                 BonusWarrior_T9_4P_SLHSCritIncrease = stats.BonusWarrior_T9_4P_SLHSCritIncrease,
-                BonusWarrior_T7_2P_SlamDamage = stats.BonusWarrior_T7_2P_SlamDamage,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if ((effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.MeleeCrit ||
-                    effect.Trigger == Trigger.MeleeHit ||
-                    effect.Trigger == Trigger.PhysicalCrit ||
-                    effect.Trigger == Trigger.PhysicalHit ||
-                    effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.HSorSLHit)
+                     effect.Trigger == Trigger.MeleeCrit ||
+                     effect.Trigger == Trigger.MeleeHit ||
+                     effect.Trigger == Trigger.PhysicalCrit ||
+                     effect.Trigger == Trigger.PhysicalHit ||
+                     effect.Trigger == Trigger.DoTTick ||
+                     effect.Trigger == Trigger.DamageDone ||
+                     effect.Trigger == Trigger.DamageTaken ||
+                     effect.Trigger == Trigger.HSorSLHit)
                     && HasRelevantStats(effect.Stats))
                 {
                     relevantStats.AddSpecialEffect(effect);
@@ -383,40 +389,46 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
         public override bool HasRelevantStats(Stats stats) {
             bool relevant = (
+                // Base Stats
                 stats.Stamina +
-                stats.Health +
                 stats.Agility +
                 stats.Strength +
-                stats.BonusAgilityMultiplier +
-                stats.BonusStrengthMultiplier +
                 stats.AttackPower +
-                stats.BonusAttackPowerMultiplier +
+                stats.Health +
+                stats.Armor +
+                // Ratings
                 stats.CritRating +
                 stats.HitRating +
-                stats.PhysicalHit +
                 stats.HasteRating +
                 stats.ExpertiseRating +
-                stats.ArmorPenetration +
                 stats.ArmorPenetrationRating +
-                stats.WeaponDamage +
-                stats.BonusCritMultiplier +
-                stats.BonusDamageMultiplier +
-                stats.BonusBleedDamageMultiplier +
-                stats.BonusCritChance +
-                stats.Armor +
-                stats.BonusArmor +
-                stats.BaseArmorMultiplier + 
-                stats.BonusArmorMultiplier + 
-                stats.PhysicalHaste +
-                stats.PhysicalCrit +
                 stats.ArcaneDamage +
-                stats.BonusPhysicalDamageMultiplier +
-                stats.DarkmoonCardDeathProc + 
+                // Bonuses
+                stats.BonusArmor +
+                stats.WeaponDamage +
+                stats.ArmorPenetration +
+                stats.PhysicalCrit +
+                stats.PhysicalHaste +
+                stats.PhysicalHit +
+                // Procs
+                stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
                 stats.Paragon +
+                // Multipliers
+                stats.BonusStaminaMultiplier +
+                stats.BonusAgilityMultiplier +
+                stats.BonusStrengthMultiplier +
+                stats.BonusAttackPowerMultiplier +
+                stats.BonusBleedDamageMultiplier +
+                stats.BonusDamageMultiplier +
+                stats.BonusPhysicalDamageMultiplier +
+                stats.BonusCritMultiplier +
+                stats.BonusCritChance +
+                stats.BaseArmorMultiplier + 
+                stats.BonusArmorMultiplier + 
                 // Set Bonuses
-                stats.BonusWarrior_T7_4P_RageProc +
                 stats.BonusWarrior_T7_2P_SlamDamage +
+                stats.BonusWarrior_T7_4P_RageProc +
                 stats.BonusWarrior_T8_2P_HasteProc +
                 stats.BonusWarrior_T8_4P_MSBTCritIncrease +
                 stats.BonusWarrior_T9_2P_Crit +
@@ -431,6 +443,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     effect.Trigger == Trigger.PhysicalHit ||
                     effect.Trigger == Trigger.DoTTick ||
                     effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageTaken ||
                     effect.Trigger == Trigger.HSorSLHit)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
@@ -567,7 +580,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             CombatFactors combatFactors = new CombatFactors(character, stats);
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors);
-            Rotation Rot = new Rotation(character, stats);
+            Rotation Rot;
+            if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats);
+            else Rot = new ArmsRotation(character, stats);
             Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
 
             calculatedStats.Duration = calcOpts.Duration;
@@ -617,10 +632,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
             calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00";
 
             if (calcOpts.FuryStance) {
-                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Fury() + calculatedStats.Rot._DW_DPS;
+                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS() + calculatedStats.Rot._DW_DPS;
                 calculatedStats.WhiteDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
             }else{
-                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS_Arms() + calculatedStats.Rot._DW_DPS;
+                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS() + calculatedStats.Rot._DW_DPS;
                 calculatedStats.WhiteDPS = Rot._WhiteDPS;
             }
             float Health2Surv = stats.Health / 100f;
@@ -762,9 +777,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors);
-            Rotation Rot = new Rotation(character, statsTotal);
+            Rotation Rot;
+            if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal);
+            else Rot = new ArmsRotation(character, statsTotal);
             Rot.Initialize();
-            if (calcOpts.FuryStance) { Rot.MakeRotationandDoDPS_Fury(); } else { Rot.MakeRotationandDoDPS_Arms(); }
+            Rot.MakeRotationandDoDPS();
 
             // Add some last minute SpecialEffects
             if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_]) {

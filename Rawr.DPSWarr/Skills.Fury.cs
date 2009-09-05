@@ -83,15 +83,11 @@ namespace Rawr.DPSWarr
                 if (!Validated && !Override) { return 0f; }
 
                 float Damage;
-                if (isOffHand)
-                {
-                    if (this.Char.OffHand != null && this.Char.OffHand.Item != null)
-                    {
+                if (isOffHand) {
+                    if (Talents.TitansGrip > 0 && Char.OffHand != null && Char.OffHand.Item != null) {
                         Damage = combatFactors.NormalizedOhWeaponDmg;
-                    }
-                    else { Damage = 0f; }
-                }
-                else { Damage = combatFactors.NormalizedMhWeaponDmg; }
+                    } else { Damage = 0f; }
+                } else { Damage = combatFactors.NormalizedMhWeaponDmg; }
 
                 return (float)Math.Max(0f, Damage * DamageBonus);
             }

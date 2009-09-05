@@ -29,6 +29,7 @@ namespace Rawr.DPSWarr
         public override void Initialize(CharacterCalculationsDPSWarr calcs)
         {
             base.Initialize(calcs);
+            calcs.WW = WW;
             calcs.BLS = BLS;
             calcs.MS = MS;
             calcs.RD = RD;
@@ -41,6 +42,7 @@ namespace Rawr.DPSWarr
         protected override void initAbilities()
         {
             base.initAbilities();
+            WW = new Skills.WhirlWind(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             BLS = new Skills.Bladestorm(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, WW);
             MS = new Skills.MortalStrike(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             RD = new Skills.Rend(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
@@ -141,7 +143,8 @@ namespace Rawr.DPSWarr
                 float sword = SS.GetRageUseOverDur(_SS_Acts);
                 return base.FreeRageOverDur + sword;
             }
-        }
+        }
+
         #region ArmsRotVariables
         public float _MS_DPS = 0f, _MS_HPS = 0f, _MS_GCDs = 0f;
         public float _RD_DPS = 0f, _RD_HPS = 0f, _RD_GCDs = 0f;

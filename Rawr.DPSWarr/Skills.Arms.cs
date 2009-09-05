@@ -229,7 +229,7 @@ namespace Rawr.DPSWarr
             /// </summary>
             /// <TalentsAffecting>Bladestorm [Requires Talent]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Bladestorm [-15 sec Cd]</GlyphsAffecting>
-            public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, Ability ww)
+            public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, WhirlWind ww)
             {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
@@ -250,14 +250,14 @@ namespace Rawr.DPSWarr
                 InitializeB();
             }
             // Variables
-            public Ability WW;
+            public WhirlWind WW;
             // Functions
             public override float DamageOnUse
             {
                 get
                 {
                     if (!Validated) { return 0f; }
-                    float Damage = WW.DamageOnUse; // WW.DamageOnUseOverride;
+                    float Damage = WW.DamageOnUseOverride; // WW.DamageOnUseOverride;
                     return (float)Math.Max(0f, Damage * 6f); // it WW's 6 times
                 }
             }
