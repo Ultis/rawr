@@ -68,6 +68,8 @@ namespace Rawr
             }
         }*/
 
+        private delegate float Ibeta(int a, float b, float x);
+
         private class Parameters
         {
             public SpecialEffect[] effects; /*in*/
@@ -81,6 +83,7 @@ namespace Rawr
             public float[,] partialIntegral; /*out*/
             public int N;
             public int NC;
+            public Ibeta Ibeta;
 
             public Parameters(SpecialEffect[] effects, float[] triggerInterval, float[] triggerChance, float[] offset, float attackSpeed)
             {
@@ -104,6 +107,19 @@ namespace Rawr
                     }
                     if (c[i] < 1.0f) c[i] = 0.0f; // no cooldown model, WARNING: we currently don't support the case where 0 < cooldown < duration
                     o[i] = offset[i] / triggerInterval[i];
+                }
+
+                switch (Properties.GeneralSettings.Default.CombinationEffectMode)
+                {
+                    case 0:
+                        Ibeta = SpecialFunction.IbetaInterpolatedLinear;
+                        break;
+                    case 1:
+                        Ibeta = SpecialFunction.IbetaInterpolated;
+                        break;
+                    default:
+                        Ibeta = SpecialFunction.Ibeta;
+                        break;
                 }
             }
         }
@@ -394,11 +410,11 @@ namespace Rawr
                 int r = 1;
                 while (x > 0)
                 {
-                    uptime += SpecialFunction.IbetaInterpolated(r, x, p.p[i]);
+                    uptime += p.Ibeta(r, x, p.p[i]);
                     float xd = x - p.d[i];
                     if (xd > 0)
                     {
-                        uptime -= SpecialFunction.IbetaInterpolated(r, xd, p.p[i]);
+                        uptime -= p.Ibeta(r, xd, p.p[i]);
                     }
                     r++;
                     x -= p.c[i];
@@ -438,11 +454,11 @@ namespace Rawr
                     int r = 1;
                     while (x > 0)
                     {
-                        p.uptime[i] += SpecialFunction.IbetaInterpolated(r, x, p.p[i]);
+                        p.uptime[i] += p.Ibeta(r, x, p.p[i]);
                         float xd = x - p.d[i];
                         if (xd > 0)
                         {
-                            p.uptime[i] -= SpecialFunction.IbetaInterpolated(r, xd, p.p[i]);
+                            p.uptime[i] -= p.Ibeta(r, xd, p.p[i]);
                         }
                         r++;
                         x -= p.c[i];

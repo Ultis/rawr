@@ -43,6 +43,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxProcEffectCalculationMode = new System.Windows.Forms.ComboBox();
             this.checkBoxDisplayItemIds = new System.Windows.Forms.CheckBox();
+            this.comboBoxEffectCombinationsCalculationMode = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -133,10 +135,28 @@
             this.checkBoxDisplayItemIds.Name = "checkBoxDisplayItemIds";
             this.checkBoxDisplayItemIds.UseVisualStyleBackColor = true;
             // 
+            // comboBoxEffectCombinationsCalculationMode
+            // 
+            this.comboBoxEffectCombinationsCalculationMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxEffectCombinationsCalculationMode.FormattingEnabled = true;
+            this.comboBoxEffectCombinationsCalculationMode.Items.AddRange(new object[] {
+            resources.GetString("comboBoxEffectCombinationsCalculationMode.Items"),
+            resources.GetString("comboBoxEffectCombinationsCalculationMode.Items1"),
+            resources.GetString("comboBoxEffectCombinationsCalculationMode.Items2")});
+            resources.ApplyResources(this.comboBoxEffectCombinationsCalculationMode, "comboBoxEffectCombinationsCalculationMode");
+            this.comboBoxEffectCombinationsCalculationMode.Name = "comboBoxEffectCombinationsCalculationMode";
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            // 
             // GeneralSettings
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.comboBoxEffectCombinationsCalculationMode);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBoxDisplayItemIds);
             this.Controls.Add(this.comboBoxProcEffectCalculationMode);
             this.Controls.Add(this.label2);
@@ -171,6 +191,8 @@
         private System.Windows.Forms.ComboBox comboBoxProcEffectCalculationMode;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBoxDisplayItemIds;
+        private System.Windows.Forms.ComboBox comboBoxEffectCombinationsCalculationMode;
+        private System.Windows.Forms.Label label3;
 
 
 	}

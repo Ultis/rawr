@@ -21,6 +21,7 @@ namespace Rawr.UserControls.Options
             chbBuffSource.Checked = Rawr.Properties.GeneralSettings.Default.DisplayBuffSource;
             chbGemNames.Checked = Rawr.Properties.GeneralSettings.Default.DisplayGemNames;
             comboBoxProcEffectCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.ProcEffectMode;
+            comboBoxEffectCombinationsCalculationMode.SelectedIndex = Rawr.Properties.GeneralSettings.Default.CombinationEffectMode;
             checkBoxDisplayItemIds.Checked = Rawr.Properties.GeneralSettings.Default.DisplayItemIds;
             setLocale(Rawr.Properties.GeneralSettings.Default.Locale);
         }
@@ -60,6 +61,7 @@ namespace Rawr.UserControls.Options
             Rawr.Properties.GeneralSettings.Default.DisplayItemIds = checkBoxDisplayItemIds.Checked;
             Rawr.Properties.GeneralSettings.Default.Locale = _locale;
             Rawr.Properties.GeneralSettings.Default.ProcEffectMode = comboBoxProcEffectCalculationMode.SelectedIndex;
+            Rawr.Properties.GeneralSettings.Default.CombinationEffectMode = comboBoxEffectCombinationsCalculationMode.SelectedIndex;
 			Rawr.Properties.GeneralSettings.Default.Save();
             switch(_locale)
             {

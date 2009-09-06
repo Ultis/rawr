@@ -1097,15 +1097,16 @@ namespace Rawr
             }
             a -= 1;
 
-            int i = (int)(x * ibetaXResolution);
-            if (i == ibetaXResolution) return 1.0f;
+            float xx = x * ibetaXResolution;
+            int i = (int)xx;
+            if (i >= ibetaXResolution) return 1.0f;
 
             // interpolate at 4 control x values on grid along b
 
             // i - 1
             float y0;
             float y1;
-            if (i > 2)
+            if (i >= 2)
             {
                 y0 = InterpolateAux(ibetaCache[a][i - 1], b);
                 y1 = InterpolateAux(ibetaCache[a][i], b);
@@ -1137,7 +1138,7 @@ namespace Rawr
                 y2 = 1.0f;
                 y3 = 1.0f;
             }
-            float xx = x * ibetaXResolution - i;
+            xx -= i;
             // Catmull–Rom spline
             float y = 0.5f * (y0 * (xx * ((2 - xx) * xx - 1)) + y1 * (xx * xx * (3 * xx - 5) + 2) + y2 * (xx * ((4 - 3 * xx) * xx + 1)) + y3 * ((xx - 1) * xx * xx));
             //System.Diagnostics.Trace.WriteLine("Interp: " + y + "   Exact: " + Ibeta(a + 1, b, x));
@@ -1157,7 +1158,8 @@ namespace Rawr
             }
             else
             {
-                int j = (int)((b - data.Bmin) / (data.Bmax - data.Bmin) * ibetaBResolution);
+                float d = (b - data.Bmin) * ibetaBResolution / (data.Bmax - data.Bmin);
+                int j = (int)d;
                 // hermite interpolation
                 float y0;
                 if (j == 0)
@@ -1186,10 +1188,86 @@ namespace Rawr
                     y2 = 1f;
                     y3 = 1f;
                 }
-                float d = (b - data.Bmin) * ibetaBResolution / (data.Bmax - data.Bmin) - j;
+                d -= j;
                 // Catmull–Rom spline
                 return 0.5f * (y0 * (d * ((2 - d) * d - 1)) + y1 * (d * d * (3 * d - 5) + 2) + y2 * (d * ((4 - 3 * d) * d + 1)) + y3 * ((d - 1) * d * d));
             }
+        }
+
+        public static float IbetaInterpolatedLinear(int a, float b, float x)
+        {
+            if (a > ibetaCacheSize)
+            {
+                // not in cache, regen cache for values up to here?
+                return (float)Ibeta(a, b, x);
+            }
+            a -= 1;
+
+            float xx = x * ibetaXResolution;
+            int i = (int)xx;
+            if (i >= ibetaXResolution) return 1.0f;
+
+            // interpolate at 2 control x values on grid along b
+
+            // i - 1
+            float y1;
+            if (i >= 1)
+            {
+                y1 = InterpolateAuxLinear(ibetaCache[a][i], b);
+            }
+            else // i == 0
+            {
+                y1 = 0.0f;
+            }
+            float y2;
+            if (i <= ibetaXResolution - 2)
+            {
+                y2 = InterpolateAuxLinear(ibetaCache[a][i + 1], b);
+            }
+            else // i >= ibetaXResolution - 1
+            {
+                y2 = 1.0f;
+            }
+            xx -= i;
+            // linear spline
+            return y1 + xx * (y2 - y1);
+        }
+
+        private static float InterpolateAuxLinear(InterpolationData data, float b)
+        {
+            if (b < data.Bmin)
+            {
+                return data.Y[0] * b / data.Bmin;
+            }
+            else if (b > data.Bmax)
+            {
+                float d = b - data.Bmax;
+                return data.Y[ibetaBResolution] + (1.0f - data.Y[ibetaBResolution]) * d / (1 + d);
+            }
+            else
+            {
+                float d = (b - data.Bmin) * ibetaBResolution / (data.Bmax - data.Bmin);
+                int j = (int)d;
+                // linear interpolation
+                float y1 = data.Y[j];
+                float y2;
+                if (j <= ibetaBResolution - 1)
+                {
+                    y2 = data.Y[j + 1];
+                }
+                else // j > ibetaBResolution - 1
+                {
+                    y2 = 1f;
+                }
+                d -= j;
+                // linear spline
+                return y1 + d * (y2 - y1);
+            }
+        }
+
+        public static float Ibeta(int a, float b, float x)
+        {
+            return (float)Ibeta((double)a, (double)b, (double)x);
         }
 
         /// <summary>
