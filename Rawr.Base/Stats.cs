@@ -114,21 +114,12 @@ namespace Rawr {
         SpellCombatManaRegeneration,
         SpellCrit,
         SpellCritRating,
-        SpellPowerFor10SecOnCrit_20_45,
-        SpellPowerFor10SecOnHit_10_45,
-        SpellPowerFor10SecOnCast_15_45,
-        SpellPowerFor15SecOnUse90Sec,
-        SpellPowerFor15SecOnUse2Min,
-        SpellPowerFor20SecOnUse2Min,
         SpellDamageFromIntellectPercentage,
         SpellDamageFromSpiritPercentage,
         SpellPowerFromAttackPowerPercentage,
         SpellDamageRating,
         SpellFireDamageRating,
         SpellFrostDamageRating,
-        HasteRatingFor20SecOnUse2Min,
-        HasteRatingFor20SecOnUse5Min,
-        SpellHasteFor10SecOnCast_10_45,
         SpellHasteRating,
         SpellHit,
         SpellHitRating,
@@ -2247,36 +2238,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_10_45] = value; }
         }
 
-        // 10% chance, 45 sec internal cooldown
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Haste (10% 10 sec/Cast)")]
-        [Category("Old Equipment Procs")]
-        public float SpellHasteFor10SecOnCast_10_45
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteFor10SecOnCast_10_45]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor10SecOnCast_10_45] = value; }
-        }
-
-        // trinket effect, does not sum up over gear, 2 trinkets with this effect is not equivalent to 1 trinket with double effect
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Power (20 sec/2 min)")]
-        [Category("Old Equipment Procs")]
-        public float SpellPowerFor20SecOnUse2Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor20SecOnUse2Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor20SecOnUse2Min] = value; }
-        }
-
-        // not used by any item
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Power (15 sec/2 min)")]
-        [Category("Old Equipment Procs")]
-        public float SpellPowerFor15SecOnUse2Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnUse2Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnUse2Min] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Mana Restore on Crit (25%, 45sec)")]
         [Category("Old Equipment Procs")]
@@ -2284,53 +2245,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCrit_25_45]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCrit_25_45] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Power (15 sec/1.5 min)")]
-        [Category("Old Equipment Procs")]
-        public float SpellPowerFor15SecOnUse90Sec
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnUse90Sec]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnUse90Sec] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Haste (20 sec/2 min)")]
-        [Category("Old Equipment Procs")]
-        public float HasteRatingFor20SecOnUse2Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HasteRatingFor20SecOnUse2Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HasteRatingFor20SecOnUse2Min] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Haste (20 sec/5 min)")]
-        [Category("Old Equipment Procs")]
-        public float HasteRatingFor20SecOnUse5Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HasteRatingFor20SecOnUse5Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HasteRatingFor20SecOnUse5Min] = value; }
-        }
-
-        // 10% chance, 45 sec internal cooldown
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Power (10 sec)")]
-        [Category("Old Equipment Procs")]
-        public float SpellPowerFor10SecOnHit_10_45
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnHit_10_45]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnHit_10_45] = value; }
-        }
-
-        // 15% chance, 45 sec internal cooldown
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Power (10 sec)")]
-        [Category("Old Equipment Procs")]
-        public float SpellPowerFor10SecOnCast_15_45
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnCast_15_45]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnCast_15_45] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2356,14 +2270,6 @@ namespace Rawr {
         {
             get { return _rawNoStackData[(int)NonStackingStat.GreatnessProc]; }
             set { _rawNoStackData[(int)NonStackingStat.GreatnessProc] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Healed every 1 min")]
-        [Category("Old Equipment Procs")]
-        public float Heal1Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Heal1Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Heal1Min] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

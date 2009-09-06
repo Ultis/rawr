@@ -908,7 +908,7 @@ the Threat Scale defined on the Options tab.",
 				}
 			}
 
-			statsProcs.Agility += statsProcs.HighestStat;
+			statsProcs.Agility += statsProcs.HighestStat + statsProcs.Paragon;
 			statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
 			statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
@@ -1311,6 +1311,7 @@ the Threat Scale defined on the Options tab.",
 				FrostResistanceBuff = stats.FrostResistanceBuff,
 				ShadowResistanceBuff = stats.ShadowResistanceBuff,
 				HighestStat = stats.HighestStat,
+				Paragon = stats.Paragon,
 
                 Strength = stats.Strength,
                 AttackPower = stats.AttackPower,
@@ -1362,7 +1363,7 @@ the Threat Scale defined on the Options tab.",
 				stats.ArmorPenetrationRating + stats.PhysicalHaste
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
-				 + stats.BonusRipDuration + stats.HighestStat + stats.PhysicalHit
+				 + stats.BonusRipDuration + stats.HighestStat + stats.Paragon + stats.PhysicalHit
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier + stats.BonusSwipeDamageMultiplier
                  + stats.BloodlustProc + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
                  + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating) != 0;

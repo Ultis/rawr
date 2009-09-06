@@ -152,9 +152,9 @@ namespace Rawr.Warlock {
             Rotation = "None";
 
             PlayerStats = playerStats.Clone();
-            if (playerStats.HasteRatingFor20SecOnUse2Min   > 0f) PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
-            if (playerStats.HasteRatingFor20SecOnUse5Min   > 0f) PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse5Min * 20f / 300f;
-            if (playerStats.SpellHasteFor10SecOnCast_10_45 > 0f) PlayerStats.HasteRating += playerStats.SpellHasteFor10SecOnCast_10_45 * 10f / 75f;
+            //if (playerStats.HasteRatingFor20SecOnUse2Min   > 0f) PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
+            //if (playerStats.HasteRatingFor20SecOnUse5Min   > 0f) PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse5Min * 20f / 300f;
+            //if (playerStats.SpellHasteFor10SecOnCast_10_45 > 0f) PlayerStats.HasteRating += playerStats.SpellHasteFor10SecOnCast_10_45 * 10f / 75f;
             //PlayerStats.SpellHaste = StatConversion.GetSpellHasteFromRating(PlayerStats.HasteRating);
 
             CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;

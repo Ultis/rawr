@@ -703,8 +703,9 @@ namespace Rawr
                         }
                         else if (gemBonus == "Chance to restore mana on spellcast")
                         {
-                            stats.ManaRestoreOnCast_5_15 = 300; // IED
-                        }
+							stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 600 }, 0f, 15f, .05f));
+							stats.ManaRestoreOnCast_5_15 = 600; // IED
+						}
                         else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                         {
                             //stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
