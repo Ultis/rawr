@@ -50,6 +50,10 @@ namespace Rawr {
                 new Tenebron_10(),
                 new Vesperon_10(),
                 new Sartharion_10(),
+                // VoA-10
+                new ArchavonTheStoneWatcher_10(),
+                new EmalonTheStormWatcher_10(),
+                new KoralonTheFlameWatcher_10(),
                 // ==== Tier 7.5 Content ====
                 // Naxx-25
                 new AnubRekhan_25(),
@@ -124,6 +128,17 @@ namespace Rawr {
                 }
             }
             return retBoss;
+        }
+        /// <summary>
+        /// Generates a Fight Info description listing the stats of the fight as well as any comments listed for the boss
+        /// </summary>
+        /// <param name="bossName">The full name of the boss, can use BetterBossName</param>
+        /// <param name="useBettername">Set to True if you are passing the BetterBossName version of the Boss Name for proper verification</param>
+        /// <returns>The generated string</returns>
+        public string GenInfoString(string bossName, bool useBettername) {
+            BossHandler boss = useBettername ? GetBossFromBetterName(bossName) : GetBossFromName(bossName);
+            string retVal = boss.GenInfoString();
+            return retVal;
         }
         // The Special Bosses
         private BossHandler GenTheEZModeBoss() {
@@ -381,7 +396,9 @@ namespace Rawr {
             Content = "Generic";
             Instance = "None";
             Version = "10 Man";
-            BerserkTimer = 15 * 60; // The longest noted Enrage timer is 15 minutes, and seriously, if the fight is taking that long, then fail... just fail.
+            Comment = "No comments have been written for this Boss.";
+            BerserkTimer = 19 * 60; // The longest noted Enrage timer is 19 minutes, and seriously, if the fight is taking that long, then fail... just fail.
+            SpeedKillTimer = 3 * 60; // Lots of Achievements run on this timer, so using it for generic
             Level = (int)POSSIBLE_LEVELS.NPC_83;
             Health = 1000000f;
             Armor = (float)StatConversion.NPC_ARMOR[Level - NormCharLevel];
@@ -405,13 +422,18 @@ namespace Rawr {
             StunningTargsDur   = 5000f; // Default to stun durations of 5 seconds but since it's 0 stuns over dur, this means nothing
             MovingTargsTime    =    0f; // Default to not moving at all during fight
             DisarmingTargsPerc = 0.00f; // None of the bosses disarm
+            TimeBossIsInvuln   =    0f; // Default to never invulnerable (Invuln. like KT in Phase 1)
+            // Fight Requirements
+            Max_Players = 10;
+            Min_Healers =  3;
+            Min_Tanks   =  2;
         }
 
         #region Variables
         // Basics
-        private string NAME,CONTENT,INSTANCE,VERSION;
+        private string NAME,CONTENT,INSTANCE,VERSION,COMMENT;
         private float HEALTH,ARMOR;
-        private int BERSERKTIMER,LEVEL;
+        private int BERSERKTIMER,SPEEDKILLTIMER,LEVEL;
         private bool USERPARRYHASTE;
         // Resistance
         private float RESISTANCE_PHYSICAL,RESISTANCE_NATURE,RESISTANCE_ARCANE,RESISTANCE_FROST,RESISTANCE_FIRE,RESISTANCE_SHADOW,RESISTANCE_HOLY;
@@ -422,7 +444,10 @@ namespace Rawr {
                       MULTITARGSPERC, MAXNUMTARGS,
                       STUNNINGTARGS_FREQ, STUNNINGTARGS_DUR,
                       MOVINGTARGSTIME,
-                      DISARMINGTARGSPERC;
+                      DISARMINGTARGSPERC,
+                      TIMEBOSSISINVULN;
+        // Fight Requirements
+        private int MAX_PLAYERS, MIN_HEALERS, MIN_TANKS;
         #endregion
 
         #region Get/Set
@@ -431,10 +456,12 @@ namespace Rawr {
         public string Content            { get { return CONTENT;            } set { CONTENT            = value; } }
         public string Instance           { get { return INSTANCE;           } set { INSTANCE           = value; } }
         public string Version            { get { return VERSION;            } set { VERSION            = value; } }
+        public string Comment            { get { return COMMENT;            } set { COMMENT            = value; } }
         public int    Level              { get { return LEVEL;              } set { LEVEL              = value; } }
         public float  Health             { get { return HEALTH;             } set { HEALTH             = value; } }
         public float  Armor              { get { return ARMOR;              } set { ARMOR              = value; } }
         public int    BerserkTimer       { get { return BERSERKTIMER;       } set { BERSERKTIMER       = value; } }
+        public int    SpeedKillTimer     { get { return SPEEDKILLTIMER;     } set { SPEEDKILLTIMER     = value; } }
         public bool   UseParryHaste      { get { return USERPARRYHASTE;     } set { USERPARRYHASTE     = value; } }
         // ==== Attacks ====
         public Attack MeleeAttack        { get { return MELEEATTACK;        } set { MELEEATTACK        = value; } }
@@ -457,10 +484,15 @@ namespace Rawr {
         public float  MovingTargsTime    { get { return MOVINGTARGSTIME;    } set { MOVINGTARGSTIME    = value; } }
         // Disarming Targets
         public float  DisarmingTargsPerc { get { return DISARMINGTARGSPERC; } set { DISARMINGTARGSPERC = value; } }
+        public float  TimeBossIsInvuln   { get { return TIMEBOSSISINVULN;   } set { TIMEBOSSISINVULN = value;   } }
+        // ==== Fight Requirements ====
+        public int    Max_Players        { get { return MAX_PLAYERS;        } set { MAX_PLAYERS        = value; } }
+        public int    Min_Healers        { get { return MIN_HEALERS;        } set { MIN_HEALERS        = value; } }
+        public int    Min_Tanks          { get { return MIN_TANKS;          } set { MIN_TANKS          = value; } }
         #endregion
 
         #region Functions
-        /// <summary> A handler for Damage Reduction due to Resistance (Physical, Fire, etc). </summary>
+        /// <summary>A handler for Damage Reduction due to Resistance (Physical, Fire, etc). </summary>
         /// <returns>The Percentage of Damage to be removed (0.25 = 25% Damage Reduced, 100 Damage should become 75)</returns>
         public float Resistance(ItemDamageType type) {
             switch (type) {
@@ -475,7 +507,7 @@ namespace Rawr {
             }
             return 0f;
         }
-        /// <summary> A handler for Damage Reduction due to Resistance (Physical, Fire, etc). This is the Set function</summary>
+        /// <summary>A handler for Damage Reduction due to Resistance (Physical, Fire, etc). This is the Set function</summary>
         /// <returns>The Percentage of Damage to be removed (0.25 = 25% Damage Reduced, 100 Damage should become 75)</returns>
         public float Resistance(ItemDamageType type, float newValue) {
             switch (type) {
@@ -489,6 +521,47 @@ namespace Rawr {
                 default: break;
             }
             return 0f;
+        }
+        /// <summary>
+        /// Generates a Fight Info description listing the stats of the fight as well as any comments listed for the boss
+        /// </summary>
+        /// <returns>The generated string</returns>
+        public string GenInfoString() {
+            string retVal = "";
+            //
+            retVal += "Name: " + Name + "\r\n";
+            retVal += "Content: " + Content + "\r\n";
+            retVal += "Instance: " + Instance + " (" + Version + ")\r\n";
+            retVal += "Health: " + Health.ToString("#,##0") + "\r\n";
+            TimeSpan ts = TimeSpan.FromMinutes(BerserkTimer/60);
+            retVal += "Enrage Timer: " + ts.Minutes.ToString("00") + " Min " + ts.Seconds.ToString("00") + " Sec\r\n";
+            ts = TimeSpan.FromMinutes(SpeedKillTimer/60);
+            retVal += "Speed Kill Timer: " + ts.Minutes.ToString("00") + " Min " + ts.Seconds.ToString("00") + " Sec\r\n";
+            retVal += "\r\n";
+            retVal += "Fight Requirements:" + "\r\n";
+            retVal += "Max Players: "  + Max_Players.ToString() + "\r\n";
+            retVal += "Min Healers: "  + Min_Healers.ToString() + "\r\n";
+            retVal += "Min Tanks: "    + Min_Tanks.ToString() + "\r\n";
+            int room = Max_Players - Min_Healers - Min_Tanks;
+            retVal += "Room for DPS: " + room.ToString() + "\r\n";
+            retVal += "\r\n";
+            float TotalDPSNeeded = Health / (BerserkTimer - TimeBossIsInvuln - MovingTargsTime);
+            retVal += "To beat the Enrage Timer you need " + TotalDPSNeeded.ToString("#,##0") + " Total DPS\r\n";
+            float dpsdps  =  TotalDPSNeeded * ((float)room      / ((float)Min_Tanks / 2f + (float)room)) / (float)room;
+            float tankdps = (TotalDPSNeeded * ((float)Min_Tanks / ((float)Min_Tanks / 2f + (float)room)) / (float)Min_Tanks) / 2f;
+            retVal += "Tanks Req'd DPS per: " + tankdps.ToString("#,##0") + "\r\n";
+            retVal += "DPS Req'd DPS per: " + dpsdps.ToString("#,##0") + "\r\n";
+            retVal += "\r\n";
+            TotalDPSNeeded = Health / (SpeedKillTimer - TimeBossIsInvuln - SpeedKillTimer * (MovingTargsTime / BerserkTimer));
+            retVal += "To beat the Speed Kill Timer you need " + TotalDPSNeeded.ToString("#,##0") + " Total DPS\r\n";
+            dpsdps = TotalDPSNeeded * ((float)room / ((float)Min_Tanks / 2f + (float)room)) / (float)room;
+            tankdps = (TotalDPSNeeded * ((float)Min_Tanks / ((float)Min_Tanks / 2f + (float)room)) / (float)Min_Tanks) / 2f;
+            retVal += "Tanks Req'd DPS per: " + tankdps.ToString("#,##0") + "\r\n";
+            retVal += "DPS Req'd DPS per: " + dpsdps.ToString("#,##0") + "\r\n";
+            retVal += "\r\n";
+            retVal += "Comment(s):\r\n" + Comment;
+            //
+            return retVal;
         }
         #endregion
     }
@@ -525,6 +598,7 @@ namespace Rawr {
             // Every 70-120 seconds for 16 seconds you can't be on the target
             // Adding 4 seconds to the Duration for moving out before starts and then back in after
             MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            // Fight Requirements
             /* TODO:
              */
         }
@@ -565,6 +639,7 @@ namespace Rawr {
             InBackPerc_Melee = 0.75f;
             // Every 6-18 seconds for 3 seconds she has to be moved to compensate for Rain of Fire
             MovingTargsTime = (BerserkTimer / SpecialAttack_2.AttackSpeed) * (3f);
+            // Fight Requirements
             /* TODO:
              * Frenzy
              * Worshippers
@@ -604,6 +679,9 @@ namespace Rawr {
             // 8 Adds every 40 seconds for 8 seconds (only 7300 HP each)
             MultiTargsPerc = ((BerserkTimer / 40f) * 8f) / BerserkTimer;
             MaxNumTargets = 8;
+            // Fight Requirements
+            Min_Tanks = 1;
+            Min_Healers = 2;
             /* TODO:
              * Web Wrap
              * Poison Shock
@@ -643,6 +721,9 @@ namespace Rawr {
             InBackPerc_Melee = 0.95f;
             // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
             MultiTargsPerc = (BerserkTimer / 30f) * (20f) / BerserkTimer;
+            // Fight Requirements
+            Min_Tanks   = 1;
+            Min_Healers = 2;
             /* TODO:
              * Phase 2
              */
@@ -679,6 +760,8 @@ namespace Rawr {
             // to dance as much in 10 man
             // Every 90 seconds for 45 seconds you must do the safety dance
             MovingTargsTime = (BerserkTimer / 90f) * 45f;
+            // Fight Requirements
+            Min_Tanks = 1;
             /* TODO:
              */
         }
@@ -691,7 +774,7 @@ namespace Rawr {
             Content = "T7";
             Instance = "Naxxramas";
             Version = "10 Man";
-            Health = 2230000f;
+            Health = 6693600f;
             BerserkTimer = 5 * 60; // Inevitable Doom starts to get spammed every 15 seconds
             // Resistance
             // Attacks
@@ -721,6 +804,8 @@ namespace Rawr {
             // Initial 10 seconds to pop first Spore then every 3rd spore
             // after that (90 seconds respawn then 10 sec moving to/back)
             MovingTargsTime = 10 + (BerserkTimer / 90) * 10;
+            // Fight Requirements
+            Min_Tanks = 1;
             /* TODO:
              * Necrotic Aura
              * Fungal Creep
@@ -762,6 +847,7 @@ namespace Rawr {
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
+            // Fight Requirements
             // Every 70-120 seconds for 16 seconds you can't be on the target
             // Adding 4 seconds to the Duration for moving out before starts and then back in after
             /* TODO:
@@ -798,6 +884,7 @@ namespace Rawr {
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
+            // Fight Requirements
             /* TODO:
              * Phase 1
              * Harvest Soul
@@ -856,6 +943,9 @@ namespace Rawr {
             // Get to the back once: 10
             // Bounce back and forth in the back: Every 30 sec for 10 sec but for only 40% of the fight
             MovingTargsTime = 15f + 10f + ((BerserkTimer * 0.40f) / 30f) * 10f;
+            // Fight Requirements
+            Min_Tanks = 3; // simming 3rd to show that 2 dps have to OT the back
+            Min_Healers = 3;
             /* TODO:
              * Blaumeux's Void Zone
              */
@@ -890,6 +980,7 @@ namespace Rawr {
             };
             // Situational Changes
             InBackPerc_Melee = 1.00f;
+            // Fight Requirements
             /* TODO:
              * Frenzy
              */
@@ -1032,6 +1123,8 @@ namespace Rawr {
             // Every 45(+30) seconds for 30 seconds Sapph is in the air
             // He stops this at 10% hp
             MovingTargsTime = ((BerserkTimer / (45f+30f)) * 30f) * 0.90f;
+            // Fight Requirements
+            Min_Tanks = 3;
             /* TODO:
              * Chill (The Blizzard)
              * Ice Bolt
@@ -1048,6 +1141,7 @@ namespace Rawr {
             Version = "10 Man";
             Health = 2230000f;
             BerserkTimer = 19 * 60;
+            SpeedKillTimer = 6 * 60;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
@@ -1068,11 +1162,13 @@ namespace Rawr {
             InBackPerc_Melee = 0.95f;
             // Phase 1, no damage to KT
             MovingTargsTime = 3f*60f + 48f;
+            TimeBossIsInvuln = 3f * 60f + 48f;
             // Phase 2 & 3, gotta move out of Shadow Fissures periodically
             // We're assuming they pop every 30 seconds and you have to be
             // moved for 6 seconds and there's a 1/10 chance he will select
             // you over someone e;se
-            MovingTargsTime += (((BerserkTimer - MovingTargsTime) / 30f) * 6f) * 0.10f;
+            MovingTargsTime = (((BerserkTimer - MovingTargsTime) / 30f) * 6f) * 0.10f;
+            // Fight Requirements
             /* TODO:
              * The Mobs in Phase 1
              */
@@ -1118,6 +1214,9 @@ namespace Rawr {
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
             MovingTargsTime += ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            // Fight Requirements
+            Min_Tanks = 1;
+            Min_Healers = 2;
             /* TODO:
              * The Acolyte Add
              */
@@ -1164,6 +1263,9 @@ namespace Rawr {
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
             MovingTargsTime += ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            // Fight Requirements
+            // Fight Requirements
+            Min_Healers = 2;
             /* TODO:
              * The Adds' abilities
              */
@@ -1206,6 +1308,9 @@ namespace Rawr {
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
             MovingTargsTime = ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            // Fight Requirements
+            Min_Tanks = 1;
+            Min_Healers = 2;
             /* TODO:
              * The adds, which optimally you would ignore
              */
@@ -1240,18 +1345,23 @@ namespace Rawr {
             InBackPerc_Melee = 0.95f;
             // Every 45 seconds for 10 seconds you gotta move for Lava Waves
             MovingTargsTime = (BerserkTimer / 45f) * (10f);
+            // Fight Requirements
+            Min_Tanks = 1;
             /* TODO:
              */
         }
     }
-#if FALSE
     // ===== The Vault of Archavon ====================
-    public class AnubRekhan_10 : BossHandler {
-        public AnubRekhan_10() {
+    public class ArchavonTheStoneWatcher_10 : BossHandler {
+        public ArchavonTheStoneWatcher_10() {
             // If not listed here use values from defaults
             // Basics
-            Name = "Anub'Rekhan (10 Man)";
-            Health = 2230000f;
+            Name = "Archavon The Stone Watcher";
+            Content = "T7";
+            Instance = "The Vault of Archavon";
+            Version = "10 Man";
+            Health = 2300925f;
+            BerserkTimer = 5 * 60;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
@@ -1269,51 +1379,62 @@ namespace Rawr {
                 AttackSpeed = 40.0f,
             };
             // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            InBackPerc_Melee = 0.75f;
+            // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
+            MovingTargsTime = (BerserkTimer / (30f)) * (5f);
+            // Fight Requirements
             /* TODO:
+             * Rock Shards
+             * Crushing Leap
+             * Stomp (this also stuns)
+             * Impale (this also stuns)
              */
         }
     }
-    public class AnubRekhan_10 : BossHandler {
-        public AnubRekhan_10() {
+    public class EmalonTheStormWatcher_10 : BossHandler {
+        public EmalonTheStormWatcher_10() {
             // If not listed here use values from defaults
             // Basics
-            Name = "Anub'Rekhan (10 Man)";
-            Health = 2230000f;
+            Name = "Emalon the Storm Watcher";
+            Content = "T8";
+            Instance = "The Vault of Archavon";
+            Version = "10 Man";
+            Health = 2789000f;
+            BerserkTimer = 6 * 60;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = 90000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             };
-            SpecialAttack_1 = new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-            };
             // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            InBackPerc_Melee = 1.00f;
+            // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
+            // Adding 5 seconds to the Duration for moving out before starts and then 5 for back in after
+            MovingTargsTime  = (BerserkTimer / (45f + 18f)) * (18f + 5f + 5f);
+            // Lightning Nova, usually happens a few seconds after the overcharged add dies
+            // (right when most melee reaches the boss again) Simming 4 to run out and 4 to get back
+            MovingTargsTime += (BerserkTimer / (45f + 18f)) * (4f + 4f);
+            // Fight Requirements
             /* TODO:
+             * Adds Damage
+             * Chain Lightning Damage
+             * Lightning Nova Damage
              */
         }
     }
-    public class AnubRekhan_10 : BossHandler {
-        public AnubRekhan_10() {
+    public class KoralonTheFlameWatcher_10 : BossHandler {
+        public KoralonTheFlameWatcher_10() {
             // If not listed here use values from defaults
             // Basics
-            Name = "Anub'Rekhan (10 Man)";
-            Health = 2230000f;
+            Name = "Koralon the Flame Watcher";
+            Content = "T9";
+            Instance = "The Vault of Archavon";
+            Version = "10 Man";
+            Health = 4183500f;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
@@ -1323,23 +1444,18 @@ namespace Rawr {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             };
-            SpecialAttack_1 = new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-            };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            // Fight Requirements
+            Min_Tanks = 2;
+            Min_Healers = 3;
             /* TODO:
+             * I haven't done this fight yet so I can't really model it myself right now
              */
         }
     }
     // ===== The Eye of Eternity ======================
+#if FALSE
     public class AnubRekhan_10 : BossHandler {
         public AnubRekhan_10() {
             // If not listed here use values from defaults
@@ -1399,6 +1515,10 @@ namespace Rawr {
                 MaxNumTargets = SpecialAttack_1.MaxNumTargets,
                 AttackSpeed = SpecialAttack_1.AttackSpeed,
             };
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
             // Situational Changes
             /* TODO:
              */
@@ -1433,6 +1553,10 @@ namespace Rawr {
             // 8 Adds every 40 seconds for 10 seconds (only 14000 HP each)
             MultiTargsPerc = ((BerserkTimer / 40f) * 10f) / BerserkTimer;
             MaxNumTargets = 8;
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 1;
+            Min_Healers = 4;
             /* TODO:
              * Web Wrap
              * Poison Shock
@@ -1467,6 +1591,10 @@ namespace Rawr {
                 AttackSpeed = SpecialAttack_1.AttackSpeed,
             };
             // Situational Changes
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 3;
+            Min_Healers = 4;
             /* TODO:
              * Frenzy
              */

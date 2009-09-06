@@ -150,11 +150,13 @@ namespace Rawr.DPSWarr {
                         CB_MoveTargsTime.Enabled    = calcOpts.MovingTargets;
                         CB_MoveTargsPerc.Enabled    = calcOpts.MovingTargets;
                         LB_MoveSec.Enabled          = calcOpts.MovingTargets;
+                        LB_MovePerc.Enabled         = calcOpts.MovingTargets;
                         CB_MoveTargsTime.Value      = (int)calcOpts.MovingTargetsTime;
                         CB_MoveTargsPerc.Value      = (decimal)Math.Floor(calcOpts.MovingTargetsTime / (float)CB_Duration.Value * 100f);
-
+                    
+                    TB_BossInfo.Text = boss.GenInfoString();
                     isLoading = false;
-                }
+                }else{TB_BossInfo.Text = "You have set custom parameters.";}
                 Character.OnCalculationsInvalidated();
             }
             isLoading = false;
@@ -261,6 +263,7 @@ namespace Rawr.DPSWarr {
                 CB_MoveTargsTime.Enabled = calcOpts.MovingTargets;
                 CB_MoveTargsPerc.Enabled = calcOpts.MovingTargets;
                 LB_MoveSec.Enabled = calcOpts.MovingTargets;
+                LB_MovePerc.Enabled = calcOpts.MovingTargets;
                 //
                 Character.OnCalculationsInvalidated();
             }
