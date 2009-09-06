@@ -578,7 +578,7 @@ namespace Rawr.Cat
 				tempArPenRatings.Add(0.0f);
 				tempArPenRatingUptimes.Add(1.0f - uptime);
             }
-			else
+			else if (tempArPenEffects.Count > 1)
 			{
 			    float[] intervals = new float[tempArPenEffects.Count];
 			    float[] chances = new float[tempArPenEffects.Count];

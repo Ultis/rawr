@@ -1104,40 +1104,38 @@ namespace Rawr
 
             // i - 1
             float y0;
-            if (i <= 1)
-            {
-                y0 = 0.0f;
-            }
-            else
+            float y1;
+            if (i > 2)
             {
                 y0 = InterpolateAux(ibetaCache[a][i - 1], b);
-            }
-            float y1;
-            if (i == 0)
-            {
-                y1 = 0.0f;
-            }
-            else
-            {
                 y1 = InterpolateAux(ibetaCache[a][i], b);
             }
-            float y2;
-            if (i + 1 >= ibetaXResolution)
+            else if (i == 1)
             {
-                y2 = 1.0f;
+                y0 = 0.0f;
+                y1 = InterpolateAux(ibetaCache[a][i], b);
             }
-            else
+            else // i == 0
+            {
+                y0 = 0.0f;
+                y1 = 0.0f;
+            }
+            float y2;
+            float y3;
+            if (i < ibetaXResolution - 2)
             {
                 y2 = InterpolateAux(ibetaCache[a][i + 1], b);
+                y3 = InterpolateAux(ibetaCache[a][i + 2], b);
             }
-            float y3;
-            if (i + 2 >= ibetaXResolution)
+            else if (i == ibetaXResolution - 2)
             {
+                y2 = InterpolateAux(ibetaCache[a][i + 1], b);
                 y3 = 1.0f;
             }
-            else
+            else // i >= ibetaXResolution - 1
             {
-                y3 = InterpolateAux(ibetaCache[a][i + 2], b);
+                y2 = 1.0f;
+                y3 = 1.0f;
             }
             float xx = x * ibetaXResolution - i;
             // Catmull–Rom spline
@@ -1172,22 +1170,21 @@ namespace Rawr
                 }
                 float y1 = data.Y[j];
                 float y2;
-                if (j + 1 > ibetaBResolution)
-                {
-                    y2 = 1f;
-                }
-                else
+                float y3;
+                if (j <= ibetaBResolution - 2)
                 {
                     y2 = data.Y[j + 1];
+                    y3 = data.Y[j + 2];
                 }
-                float y3;
-                if (j + 2 > ibetaBResolution)
+                else if (j == ibetaBResolution - 1)
                 {
+                    y2 = data.Y[j + 1];
                     y3 = 1f;
                 }
-                else
+                else // j > ibetaBResolution - 1
                 {
-                    y3 = data.Y[j + 2];
+                    y2 = 1f;
+                    y3 = 1f;
                 }
                 float d = (b - data.Bmin) * ibetaBResolution / (data.Bmax - data.Bmin) - j;
                 // Catmull–Rom spline
