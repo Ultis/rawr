@@ -130,11 +130,11 @@ namespace Rawr.ProtWarr
             dictValues.Add("Resilience",
                 string.Format(@"{0}*Reduces the damage of critical strikes and chance to be critically hit by {1}%.",
                                 BasicStats.Resilience,
-                                StatConversion.GetResilienceCritReduction(BasicStats.Resilience, CharacterClass.Warrior)));
+                                StatConversion.GetCritReductionFromResilience(BasicStats.Resilience, CharacterClass.Warrior)));
             
             if (CritVulnerability > 0.0001f)
             {
-                float resilienceNeeded = (float)Math.Ceiling((StatConversion.CRITREDUC_PER_RESILIENCE * (CritVulnerability * 100.0f)));
+                float resilienceNeeded = (float)Math.Ceiling((StatConversion.RATING_PER_RESILIENCE * CritVulnerability));
                 dictValues.Add("Chance to be Crit",
                     string.Format("{0:0.00%}*CRITTABLE! Short by {1:0} defense or {2:0} resilience to be uncrittable.",
                                     CritVulnerability, DefenseRatingNeeded, resilienceNeeded));

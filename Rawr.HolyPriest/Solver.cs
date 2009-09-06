@@ -637,7 +637,7 @@ namespace Rawr.HolyPriest
                 calculatedStats.HPSSustainPoints = calculatedStats.HPSBurstPoints * regen / mp1use;
 
             // Lets just say that 15% of resilience scales all health by 150%.
-            float Resilience = (float)Math.Min(15f, StatConversion.GetResilienceFromRating(simstats.Resilience) * 100f) / 15f;
+            float Resilience = (float)Math.Min(15f, StatConversion.GetCritReductionFromResilience(simstats.Resilience) * 100f) / 15f;
             calculatedStats.SurvivabilityPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * calculationOptions.Survivability / 100f;
         }   
 
@@ -1181,7 +1181,7 @@ namespace Rawr.HolyPriest
             }
 
             // Lets just say that 15% of resilience scales all health by 150%.
-            float Resilience = (float)Math.Min(15f, StatConversion.GetResilienceFromRating(simstats.Resilience) * 100f) / 15f;
+            float Resilience = (float)Math.Min(15f, StatConversion.GetCritReductionFromResilience(simstats.Resilience) * 100f) / 15f;
             calculatedStats.SurvivabilityPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * calculationOptions.Survivability / 100f;
         }
     }

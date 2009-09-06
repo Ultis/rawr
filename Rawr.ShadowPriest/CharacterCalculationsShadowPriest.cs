@@ -80,8 +80,8 @@ namespace Rawr.ShadowPriest
             Stats baseStats = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
 
             dictValues.Add("Health", BasicStats.Health.ToString());
-            float ResilienceCap = 0.15f, ResilienceFromRating = StatConversion.GetResilienceFromRating(1);
-            float Resilience = StatConversion.GetResilienceFromRating(BasicStats.Resilience);
+            float ResilienceCap = 0.15f, ResilienceFromRating = StatConversion.GetCritReductionFromResilience(1);
+            float Resilience = StatConversion.GetCritReductionFromResilience(BasicStats.Resilience);
             dictValues.Add("Resilience", string.Format("{0}*-{1}% Damage from DoT and Mana Drains\n\r-{1}% Chance to be crit\r\n-{2}% Damage from Crits.\r\n{3}",
                 BasicStats.Resilience.ToString(),
                 (Resilience * 100f).ToString("0.00"),

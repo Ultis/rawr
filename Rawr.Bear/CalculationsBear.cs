@@ -442,7 +442,7 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
 			calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
             calculatedStats.CritReduction = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f)
-                                          + StatConversion.CRITREDUC_PER_RESILIENCE * StatConversion.GetResilienceFromRating(stats.Resilience, CharacterClass.Druid)
+                                          + StatConversion.GetCritReductionFromResilience(stats.Resilience, CharacterClass.Druid)
                                           + stats.CritChanceReduction;
 			calculatedStats.CappedCritReduction = Math.Min(0.05f + levelDifference, calculatedStats.CritReduction);
 
@@ -1587,10 +1587,10 @@ the Threat Scale defined on the Options tab.",
 				//+ (BasicStats.Resilience + resToCap) / (2050f / 52f) + BasicStats.CritChanceReduction < targetCritReduction)
 				//    resToCap++;
 				while (((float)Math.Floor(StatConversion.GetDefenseFromRating(BasicStats.DefenseRating + defToCap)) * 0.0004f)
-				+ StatConversion.GetResilienceFromRating(BasicStats.Resilience) + BasicStats.CritChanceReduction < targetCritReduction)
+				+ StatConversion.GetCritReductionFromResilience(BasicStats.Resilience) + BasicStats.CritChanceReduction < targetCritReduction)
 					defToCap++;
 				while (((float)Math.Floor(StatConversion.GetDefenseFromRating(BasicStats.DefenseRating)) * 0.0004f)
-				+ StatConversion.GetResilienceFromRating(BasicStats.Resilience + resToCap) + BasicStats.CritChanceReduction < targetCritReduction)
+				+ StatConversion.GetCritReductionFromResilience(BasicStats.Resilience + resToCap) + BasicStats.CritChanceReduction < targetCritReduction)
 					resToCap++;
 			}
 			else if (CritReduction > targetCritReduction)
@@ -1603,10 +1603,10 @@ the Threat Scale defined on the Options tab.",
 				//    resToCap--;
 				
 				while (((float)Math.Floor(StatConversion.GetDefenseFromRating(BasicStats.DefenseRating + defToCap)) * 0.0004f)
-				+ StatConversion.GetResilienceFromRating(BasicStats.Resilience) + BasicStats.CritChanceReduction > targetCritReduction)
+				+ StatConversion.GetCritReductionFromResilience(BasicStats.Resilience) + BasicStats.CritChanceReduction > targetCritReduction)
 					defToCap--;
 				while (((float)Math.Floor(StatConversion.GetDefenseFromRating(BasicStats.DefenseRating)) * 0.0004f)
-				+ StatConversion.GetResilienceFromRating(BasicStats.Resilience + resToCap) + BasicStats.CritChanceReduction > targetCritReduction)
+				+ StatConversion.GetCritReductionFromResilience(BasicStats.Resilience + resToCap) + BasicStats.CritChanceReduction > targetCritReduction)
 					resToCap--;
 				defToCap++;
 				resToCap++;

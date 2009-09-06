@@ -161,12 +161,12 @@ namespace Rawr.ProtPaladin
                 string.Format(@"{0}*Reduces periodic damage and chance to be critically hit by {1:0.00%}." + Environment.NewLine +
                                 "Reduces the effect of mana-drains and the damage of critical strikes by {2:0.00%}.",
                                 BasicStats.Resilience,
-                                StatConversion.GetResilienceCritReduction(BasicStats.Resilience,CharacterClass.Paladin),
-                                StatConversion.GetResilienceCritReduction(BasicStats.Resilience,CharacterClass.Paladin)*2f));
+                                StatConversion.GetCritReductionFromResilience(BasicStats.Resilience,CharacterClass.Paladin),
+                                StatConversion.GetCritReductionFromResilience(BasicStats.Resilience,CharacterClass.Paladin)*2f));
 
             if (CritVulnerability > 0.0001f) {
                 double defenseNeeded = Math.Ceiling((CritVulnerability / StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER) / StatConversion.RATING_PER_DEFENSE);
-                double resilienceNeeded = Math.Ceiling(CritVulnerability / StatConversion.CRITREDUC_PER_RESILIENCE);
+                double resilienceNeeded = Math.Ceiling(CritVulnerability / (StatConversion.RATING_PER_RESILIENCE / 100f));
                 dictValues.Add("Chance to be Crit",
                     string.Format("{0:0.00%}*CRITTABLE! Short by {1:0} defense rating or {2:0} resilience rating to be uncrittable.",
                                     CritVulnerability, defenseNeeded, resilienceNeeded));

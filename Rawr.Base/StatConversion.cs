@@ -54,7 +54,6 @@ namespace Rawr
         public const float RATING_PER_DODGEPARRYREDUC = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
         public const float DEFENSE_RATING_AVOIDANCE_MULTIPLIER = 0.04f;
         public const float BLOCKVALUE_PER_STR = 2.0f;
-        public const float CRITREDUC_PER_RESILIENCE = 81.97497559f;
 
         // Attack Table for players attacking mobs                                        80       81        82      83
         public static readonly float[] WHITE_MISS_CHANCE_CAP            = new float[] { 0.0500f, 0.0520f, 0.0540f, 0.0800f };
@@ -291,14 +290,6 @@ namespace Rawr
         /// <returns>A Value (5.4 = 5 extra Defense)</returns>
         public static float GetDefenseFromRating(float Rating) { return (float)Math.Round(Rating / RATING_PER_DEFENSE); }
 
-        public static float GetCritReducFromResilience(float resil, CharacterClass Class) { return GetCritReducFromResilience(resil); }
-        /// <summary>
-        /// Returns a Percent
-        /// </summary>
-        /// <param name="Rating">Resilience</param>
-        /// <returns>A Percent</returns>
-        public static float GetCritReducFromResilience(float resil) { return (float)Math.Round(resil / CRITREDUC_PER_RESILIENCE); }
-
         public static float GetDodgeFromRating(float Rating, CharacterClass Class) { return GetDodgeFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra Dodge)
@@ -393,15 +384,13 @@ namespace Rawr
         public static float GetRatingFromHit(float value) { return value * RATING_PER_PHYSICALHIT; }
 
         // Returns a Percentage
-        public static float GetResilienceCritReduction(float Rating) { return GetResilienceFromRating(Rating); }
-        public static float GetResilienceCritReduction(float Rating, CharacterClass Class) { return GetResilienceFromRating(Rating); }
-        public static float GetResilienceFromRating(float Rating, CharacterClass Class) { return GetResilienceFromRating(Rating); }
+        public static float GetCritReductionFromResilience(float Rating, CharacterClass Class) { return GetCritReductionFromResilience(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra Resilience)
         /// </summary>
         /// <param name="Rating">Resilience Rating</param>
         /// <returns>A Percentage (0.05 = 5% extra Resilience)</returns>
-        public static float GetResilienceFromRating(float Rating)
+        public static float GetCritReductionFromResilience(float Rating)
         {
             return Rating / RATING_PER_RESILIENCE;
         }
@@ -694,7 +683,7 @@ namespace Rawr
                     modifiedAvoid += (GetBlockFromRating(stats.BlockRating) * 100f);
                     break;
                 case HitResult.Crit:
-                    modifiedAvoid += (GetResilienceCritReduction(stats.Resilience) * 100f);
+                    modifiedAvoid += (GetCritReductionFromResilience(stats.Resilience) * 100f);
                     break;
             }
 
