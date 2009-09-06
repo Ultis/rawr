@@ -301,7 +301,7 @@ namespace Rawr.DPSWarr {
         #endregion
         public class Knuckles : Item {
             public Knuckles() {
-                Speed = 2f;
+                Speed = 0f;
                 MaxDamage = 0;
                 MinDamage = 0;
             }

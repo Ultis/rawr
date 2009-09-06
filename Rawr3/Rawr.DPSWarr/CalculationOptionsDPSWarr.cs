@@ -13,6 +13,7 @@ using System.Text;
 namespace Rawr.DPSWarr {
     public class CalculationOptionsDPSWarr : ICalculationOptionBase
     {
+        public string BossName = "Custom";
         public int TargetLevel = 83;
         public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
         public float Duration = 300f;
@@ -24,13 +25,13 @@ namespace Rawr.DPSWarr {
         public bool InBack = true; public int InBackPerc = 100;
         public bool MultipleTargets = false; public int MultipleTargetsPerc = 25; public float MultipleTargetsMax = 3;
         public bool StunningTargets = false; public int StunningTargetsFreq = 120; public float StunningTargetsDur = 5000;
+        public bool MovingTargets = false; public float MovingTargetsTime = 0;
         // nonfunctional
-        public bool MovingTargets = false; public int MovingTargetsPerc = 100;
         public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;
         // Abilities to Maintain
         public bool[] Maintenance = new bool[] {
             true,  // == Rage Gen ==
-                true,  // Berserker Rage
+                false,  // Berserker Rage
                 true,  // Bloodrage
             false, // == Maintenance ==
                 false, // Shout Choice
@@ -45,7 +46,7 @@ namespace Rawr.DPSWarr {
                 true,  // Sweeping Strikes
                 true,  // DeathWish
                 true,  // Recklessness
-                true,  // Enraged Regeneration
+                false, // Enraged Regeneration
             true,  // == Damage Dealers ==
                 true,  // Fury
                     true,  // Whirlwind

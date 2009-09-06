@@ -107,6 +107,7 @@
             this.Tab_Version = new System.Windows.Forms.TabPage();
             this.RTB_Version = new System.Windows.Forms.RichTextBox();
             this.Page_03_FightInfo = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
             this.CB_BossList = new System.Windows.Forms.ComboBox();
             this.CB_MoveTargsPerc = new System.Windows.Forms.NumericUpDown();
             this.LB_MovePerc = new System.Windows.Forms.Label();
@@ -136,7 +137,6 @@
             this.CK_Flooring = new System.Windows.Forms.CheckBox();
             this.CTL_Maints = new System.Windows.Forms.TreeView();
             this.CK_PTRMode = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_React)).BeginInit();
@@ -245,9 +245,9 @@
             this.LB_Duration.AutoSize = true;
             this.LB_Duration.Location = new System.Drawing.Point(6, 141);
             this.LB_Duration.Name = "LB_Duration";
-            this.LB_Duration.Size = new System.Drawing.Size(76, 13);
+            this.LB_Duration.Size = new System.Drawing.Size(102, 13);
             this.LB_Duration.TabIndex = 12;
-            this.LB_Duration.Text = "Duration (sec):";
+            this.LB_Duration.Text = "Fight Duration (sec):";
             this.LB_Duration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LB_Lag
@@ -499,9 +499,19 @@
             this.Page_03_FightInfo.Text = "Fight Info";
             this.Page_03_FightInfo.UseVisualStyleBackColor = true;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 61);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(75, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Boss Selector:";
+            // 
             // CB_BossList
             // 
             this.CB_BossList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_BossList.DropDownWidth = 250;
             this.CB_BossList.FormattingEnabled = true;
             this.CB_BossList.Items.AddRange(new object[] {
             "Custom"});
@@ -972,15 +982,6 @@
             this.CK_PTRMode.TabIndex = 2;
             this.CK_PTRMode.Text = "PTR Mode";
             this.CK_PTRMode.CheckedChanged += new System.EventHandler(this.CK_PTRMode_CheckedChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 61);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(75, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Boss Selector:";
             // 
             // CalculationOptionsPanelDPSWarr
             // 

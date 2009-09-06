@@ -16,10 +16,10 @@ namespace Rawr.DPSWarr {
         public CalculationOptionsPanelDPSWarr() {
             InitializeComponent();
 
-            armorBosses.Add(10643, "Default Boss Armor");
-            armorBosses.Add(10900, "Patchwerk");
-            armorBosses.Add(12000, "Grobbulus");
-            armorBosses.Add(13083, "-");
+            //armorBosses.Add(10643, "Default Boss Armor");
+            //armorBosses.Add(10900, "Patchwerk");
+            //armorBosses.Add(12000, "Grobbulus");
+            //armorBosses.Add(13083, "-");
 
             //CB_TargArmor.DisplayMember = "Key";
             //CB_TargArmor.DataSource = new BindingSource(armorBosses, null);

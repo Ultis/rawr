@@ -186,7 +186,7 @@ namespace Rawr.DPSWarr {
 #endif
             float BaseStunDur = (float)Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - IronWillBonus)));
             // Being Stunned or Charmed
-            if (CalcOpts.StunningTargets) {
+            if (CalcOpts.StunningTargets && CalcOpts.StunningTargetsFreq > 0) {
                 // Assume you are Stunned for 3 GCDs (1.5+latency)*3 = ~1.6*3 = ~4.8 seconds per stun
                 // Iron Will reduces the Duration of the stun by 7%,14%,20%
                 // 100% perc means you are stunned the entire fight, the boss is stunning you every third GCD, basically only refreshing his stun

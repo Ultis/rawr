@@ -37,7 +37,7 @@ namespace Rawr.DPSWarr {
 
             if (bosslist == null) { bosslist = new BossList(); }
             if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
-            if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBossNamesAsArray()); }
+            if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray()); }
 
             //CB_TargLvl.DataSource = new[] {83, 82, 81, 80};
             CB_Duration.Minimum = 0;
@@ -52,9 +52,6 @@ namespace Rawr.DPSWarr {
                 Character.CalculationOptions = new CalculationOptionsDPSWarr();
                 isLoading = true;
             }
-            //if (bosslist == null) { bosslist = new BossList(); }
-            //if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
-            //if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBossNamesAsArray()); }
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             CB_BossList.Text                = calcOpts.BossName;
             CB_TargLvl.Text                 = calcOpts.TargetLevel.ToString();
@@ -112,14 +109,14 @@ namespace Rawr.DPSWarr {
                 if (CB_BossList.Text != "Custom") {
                     isLoading = true;
                     // Get Values
-                    BossHandler boss = bosslist.GetBossFromName(CB_BossList.Text);
+                    BossHandler boss = bosslist.GetBossFromBetterName(CB_BossList.Text);
                     calcOpts.TargetLevel = boss.Level;
                     calcOpts.TargetArmor = (int)boss.Armor;
                     calcOpts.Duration = boss.BerserkTimer;
                     calcOpts.InBack = ((calcOpts.InBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
                     calcOpts.MultipleTargets = ((calcOpts.MultipleTargetsPerc = (int)(boss.MultiTargsPerc * 100f)) > 0);
                     calcOpts.MultipleTargetsMax = boss.MaxNumTargets;
-                    calcOpts.StunningTargets = ((calcOpts.StunningTargetsFreq = (int)(boss.StunningTargsFreq)) <= calcOpts.Duration*0.98f);
+                    calcOpts.StunningTargets = ((calcOpts.StunningTargetsFreq = (int)(boss.StunningTargsFreq)) <= calcOpts.Duration * 0.99f && calcOpts.StunningTargetsFreq != 0f);
                     calcOpts.StunningTargetsDur = boss.StunningTargsDur;
                     calcOpts.MovingTargets = ((calcOpts.MovingTargetsTime = (int)(boss.MovingTargsTime)) > 0);
                     calcOpts.DisarmingTargets = ((calcOpts.DisarmingTargetsPerc = (int)(boss.DisarmingTargsPerc * 100f)) > 0);
