@@ -20,6 +20,7 @@ using System.Xml;
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase {
         private bool isLoading = false;
+        private BossList bosslist = null;
         private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
         public CalculationOptionsPanelDPSWarr() {
             isLoading = true;
@@ -34,6 +35,10 @@ namespace Rawr.DPSWarr {
             CB_TargArmor.DisplayMember = "Key";
             CB_TargArmor.DataSource = new BindingSource(armorBosses, null);
 
+            if (bosslist == null) { bosslist = new BossList(); }
+            if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
+            if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBossNamesAsArray()); }
+
             //CB_TargLvl.DataSource = new[] {83, 82, 81, 80};
             CB_Duration.Minimum = 0;
             CB_Duration.Maximum = 60 * 20; // 20 minutes
@@ -47,7 +52,11 @@ namespace Rawr.DPSWarr {
                 Character.CalculationOptions = new CalculationOptionsDPSWarr();
                 isLoading = true;
             }
+            //if (bosslist == null) { bosslist = new BossList(); }
+            //if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
+            //if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBossNamesAsArray()); }
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            CB_BossList.Text                = calcOpts.BossName;
             CB_TargLvl.Text                 = calcOpts.TargetLevel.ToString();
             CB_TargArmor.Text               = calcOpts.TargetArmor.ToString();
             CB_Duration.Value               = (decimal)calcOpts.Duration;
@@ -96,6 +105,63 @@ namespace Rawr.DPSWarr {
             Character.OnCalculationsInvalidated();
             isLoading = false;
         }
+        // Boss Handler
+        private void CB_BossList_SelectedIndexChanged(object sender, EventArgs e) {
+            if(!isLoading){
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                if (CB_BossList.Text != "Custom") {
+                    isLoading = true;
+                    // Get Values
+                    BossHandler boss = bosslist.GetBossFromName(CB_BossList.Text);
+                    calcOpts.TargetLevel = boss.Level;
+                    calcOpts.TargetArmor = (int)boss.Armor;
+                    calcOpts.Duration = boss.BerserkTimer;
+                    calcOpts.InBack = ((calcOpts.InBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
+                    calcOpts.MultipleTargets = ((calcOpts.MultipleTargetsPerc = (int)(boss.MultiTargsPerc * 100f)) > 0);
+                    calcOpts.MultipleTargetsMax = boss.MaxNumTargets;
+                    calcOpts.StunningTargets = ((calcOpts.StunningTargetsFreq = (int)(boss.StunningTargsFreq)) <= calcOpts.Duration*0.98f);
+                    calcOpts.StunningTargetsDur = boss.StunningTargsDur;
+                    calcOpts.MovingTargets = ((calcOpts.MovingTargetsTime = (int)(boss.MovingTargsTime)) > 0);
+                    calcOpts.DisarmingTargets = ((calcOpts.DisarmingTargetsPerc = (int)(boss.DisarmingTargsPerc * 100f)) > 0);
+
+                    // Set Controls to those Values
+                    CB_TargLvl.Text          = calcOpts.TargetLevel.ToString();
+                    CB_TargArmor.Text        = calcOpts.TargetArmor.ToString();
+                    CB_Duration.Value        = (int)calcOpts.Duration;
+                    CB_MoveTargsTime.Maximum = CB_Duration.Value;
+
+                    CK_InBack.Checked               = calcOpts.InBack;
+                        LB_Perc5.Enabled            = calcOpts.InBack;
+                        CB_InBackPerc.Enabled       = calcOpts.InBack;
+                        CB_InBackPerc.Value         = calcOpts.InBackPerc;
+                    CK_MultiTargs.Checked           = calcOpts.MultipleTargets;
+                        LB_Max.Enabled              = calcOpts.MultipleTargets;
+                        LB_Perc1.Enabled            = calcOpts.MultipleTargets;
+                        CB_MultiTargsPerc.Enabled   = calcOpts.MultipleTargets;
+                        CB_MultiTargsMax.Enabled    = calcOpts.MultipleTargets;
+                        CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;
+                        CB_MultiTargsMax.Value      = (int)calcOpts.MultipleTargetsMax;
+                    CK_StunningTargs.Checked        = calcOpts.StunningTargets;
+                        NUD_StunFreq.Enabled        = calcOpts.StunningTargets;
+                        NUD_StunDur.Enabled         = calcOpts.StunningTargets;
+                        LB_Stun0.Enabled            = calcOpts.StunningTargets;
+                        LB_Stun1.Enabled            = calcOpts.StunningTargets;
+                        LB_Stun2.Enabled            = calcOpts.StunningTargets;
+                        NUD_StunFreq.Value          = (int)calcOpts.StunningTargetsFreq;
+                        NUD_StunDur.Value           = (int)calcOpts.StunningTargetsDur;
+                    CK_MovingTargs.Checked          = calcOpts.MovingTargets;
+                        CB_MoveTargsTime.Enabled    = calcOpts.MovingTargets;
+                        CB_MoveTargsPerc.Enabled    = calcOpts.MovingTargets;
+                        LB_MoveSec.Enabled          = calcOpts.MovingTargets;
+                        CB_MoveTargsTime.Value      = (int)calcOpts.MovingTargetsTime;
+                        CB_MoveTargsPerc.Value      = (decimal)Math.Floor(calcOpts.MovingTargetsTime / (float)CB_Duration.Value * 100f);
+
+                    isLoading = false;
+                }
+                Character.OnCalculationsInvalidated();
+            }
+            isLoading = false;
+        }
         // Basics
         private void CK_PTRMode_CheckedChanged(object sender, EventArgs e) {
             if (!isLoading) {
@@ -106,6 +172,7 @@ namespace Rawr.DPSWarr {
         }
         private void CB_ArmorBosses_SelectedIndexChanged(object sender, EventArgs e) {
             if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 int targetArmor = int.Parse(CB_TargArmor.Text);
 
                 if (Character != null && Character.CalculationOptions != null) {
@@ -116,10 +183,9 @@ namespace Rawr.DPSWarr {
             }
         }
         private void CB_TargetLevel_SelectedIndexChanged(object sender, EventArgs e) {
-            if (!isLoading)
-            {
-                if (Character != null && Character.CalculationOptions != null)
-                {
+            if (!isLoading) {
+                CB_BossList.Text = "Custom";
+                if (Character != null && Character.CalculationOptions != null) {
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     calcOpts.TargetLevel = int.Parse(CB_TargLvl.Text);
                     Character.OnCalculationsInvalidated();
@@ -127,8 +193,8 @@ namespace Rawr.DPSWarr {
             }
         }
         private void RB_StanceFury_CheckedChanged(object sender, EventArgs e) {
-            if (!isLoading)
-            {
+            if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.FuryStance = RB_StanceFury.Checked;
                 CTL_Maints.Nodes[3].Nodes[0].Checked = calcOpts.FuryStance;
@@ -138,6 +204,7 @@ namespace Rawr.DPSWarr {
         }
         private void CB_Duration_ValueChanged(object sender, EventArgs e) {
             if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.Duration = (float)CB_Duration.Value;
                 CB_MoveTargsTime.Maximum = CB_Duration.Value;
@@ -148,6 +215,7 @@ namespace Rawr.DPSWarr {
         // Rotational Changes
         private void RotChanges_InBack_ChecksChanged(object sender, EventArgs e) {
             if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.InBack = CK_InBack.Checked;
@@ -159,6 +227,7 @@ namespace Rawr.DPSWarr {
         }
         private void RotChanges_Multi_ChecksChanged(object sender, EventArgs e) {
             if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.MultipleTargets = CK_MultiTargs.Checked;
@@ -172,6 +241,7 @@ namespace Rawr.DPSWarr {
         }
         private void RotChanges_Stun_ChecksChanged(object sender, EventArgs e) {
             if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 bool Checked             = CK_StunningTargs.Checked;
@@ -187,6 +257,7 @@ namespace Rawr.DPSWarr {
         }
         private void RotChanges_Move_ChecksChanged(object sender, EventArgs e) {
             if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.MovingTargets = CK_MovingTargs.Checked;
@@ -199,6 +270,7 @@ namespace Rawr.DPSWarr {
         }
         private void RotChanges_Disarm_ChecksChanged(object sender, EventArgs e) {
             if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.DisarmingTargets = CK_DisarmTargs.Checked;
@@ -209,6 +281,7 @@ namespace Rawr.DPSWarr {
         }
         private void RotChanges_InBack_ValueChanged(object sender, EventArgs e) {
             if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
@@ -217,8 +290,8 @@ namespace Rawr.DPSWarr {
             }
         }
         private void RotChanges_Multi_ValueChanged(object sender, EventArgs e) {
-            if (!isLoading)
-            {
+            if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.MultipleTargetsPerc = (int)CB_MultiTargsPerc.Value;
@@ -227,8 +300,8 @@ namespace Rawr.DPSWarr {
             }
         }
         private void RotChanges_MultiMax_ValueChanged(object sender, EventArgs e) {
-            if (!isLoading)
-            {
+            if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.MultipleTargetsMax = (float)CB_MultiTargsMax.Value;
@@ -237,16 +310,16 @@ namespace Rawr.DPSWarr {
             }
         }
         private void NUD_StunFreq_ValueChanged(object sender, EventArgs e) {
-            if (!isLoading)
-            {
+            if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.StunningTargetsFreq = (int)NUD_StunFreq.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
         private void NUD_StunDur_ValueChanged(object sender, EventArgs e) {
-            if (!isLoading)
-            {
+            if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.StunningTargetsDur = (float)NUD_StunDur.Value;
                 Character.OnCalculationsInvalidated();
@@ -254,6 +327,7 @@ namespace Rawr.DPSWarr {
         }
         private void RotChanges_Move_ValueChanged(object sender, EventArgs e) {
             if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 isLoading = true;
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -266,6 +340,7 @@ namespace Rawr.DPSWarr {
         }
         private void CB_MoveTargsPerc_ValueChanged(object sender, EventArgs e) {
             if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 isLoading = true;
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -277,8 +352,8 @@ namespace Rawr.DPSWarr {
             }
         }
         private void RotChanges_Disarm_ValueChanged(object sender, EventArgs e) {
-            if (!isLoading)
-            {
+            if (!isLoading) {
+                CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
@@ -288,8 +363,7 @@ namespace Rawr.DPSWarr {
         }
         // Abilities to Maintain Changes
         private void CK_Flooring_CheckedChanged(object sender, EventArgs e) {
-            if (!isLoading)
-            {
+            if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.AllowFlooring = CK_Flooring.Checked;
                 Character.OnCalculationsInvalidated();
@@ -987,6 +1061,7 @@ namespace Rawr.DPSWarr {
     }
     [Serializable]
     public class CalculationOptionsDPSWarr : ICalculationOptionBase {
+        public string BossName = "Custom";
         public int TargetLevel = 83;
         public int TargetArmor = (int)StatConversion.NPC_ARMOR[83-80];
         public float Duration = 300f;
