@@ -28,7 +28,8 @@ namespace Rawr {
         // Constructors
         public BossList() {
             list = new BossHandler[] {
-                // Tier 7 Content
+                // ==== Tier 7 Content ====
+                // Naxx-10
                 new AnubRekhan_10(),
                 new GrandWidowFaerlina_10(),
                 new Maexxna_10(),
@@ -44,10 +45,16 @@ namespace Rawr {
                 new Thaddius_10(),
                 new Sapphiron_10(),
                 new KelThuzad_10(),
-                // Tier 7.5 Content
-                new Patchwerk_25(),
-                new Maexxna_25(),
+                // OS-10
+                new Shadron_10(),
+                new Tenebron_10(),
+                new Vesperon_10(),
+                new Sartharion_10(),
+                // ==== Tier 7.5 Content ====
+                // Naxx-25
                 new AnubRekhan_25(),
+                new Maexxna_25(),
+                new Patchwerk_25(),
             };
             DamageTypes = new ItemDamageType[] { ItemDamageType.Physical, ItemDamageType.Nature, ItemDamageType.Arcane, ItemDamageType.Frost, ItemDamageType.Fire, ItemDamageType.Shadow, ItemDamageType.Holy, };
             TheEZModeBoss  = GenTheEZModeBoss();
@@ -63,6 +70,7 @@ namespace Rawr {
         public BossHandler TheHardestBoss;
         #endregion
         #region Functions
+        // Name Calling
         public List<string> GetBossNames() {
             List<string> names = new List<string>() { };
             names.Add(TheEZModeBoss.Name);
@@ -117,6 +125,7 @@ namespace Rawr {
             }
             return retBoss;
         }
+        // The Special Bosses
         private BossHandler GenTheEZModeBoss() {
             BossHandler retboss = new BossHandler();
             float value = 0f;
@@ -287,7 +296,7 @@ namespace Rawr {
             value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.InBackPerc_Melee; } value /= list.Length; retboss.InBackPerc_Melee = value;
             value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.InBackPerc_Ranged; } value /= list.Length; retboss.InBackPerc_Ranged = value;
             value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.MultiTargsPerc; } value /= list.Length; retboss.MultiTargsPerc = value;
-            value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.MaxNumTargets; } value /= list.Length; retboss.MaxNumTargets = value;
+            value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.MaxNumTargets; } value /= list.Length; retboss.MaxNumTargets = (float)Math.Ceiling(value);
             value = 0f; count = 0; foreach (BossHandler boss in list) { value += (boss.StunningTargsFreq > 0 && boss.StunningTargsFreq < boss.BerserkTimer) ? boss.StunningTargsFreq : retboss.BerserkTimer; } value /= list.Length; retboss.StunningTargsFreq = value;
             value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.StunningTargsDur; } value /= list.Length; retboss.StunningTargsDur = value;
             value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.MovingTargsTime / boss.BerserkTimer; } value /= list.Length; retboss.MovingTargsTime = value * retboss.BerserkTimer;
@@ -354,7 +363,7 @@ namespace Rawr {
             value = list[0].InBackPerc_Melee;   foreach (BossHandler boss in list) { value = Math.Min(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
             value = list[0].InBackPerc_Ranged;  foreach (BossHandler boss in list) { value = Math.Min(value, boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
             value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
-            value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.MaxNumTargets     ); } retboss.MaxNumTargets      = value;
+            value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.MaxNumTargets     ); } retboss.MaxNumTargets      = (float)Math.Ceiling(value);
             value = list[0].BerserkTimer;       foreach (BossHandler boss in list) { value = Math.Min(value, boss.StunningTargsFreq != 0 ? boss.StunningTargsFreq : value); } retboss.StunningTargsFreq  = value;
             value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.StunningTargsDur  ); } retboss.StunningTargsDur   = value;
             value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.MovingTargsTime / boss.BerserkTimer); } retboss.MovingTargsTime = value * retboss.BerserkTimer;
@@ -1069,14 +1078,16 @@ namespace Rawr {
              */
         }
     }
-#if FALSE
     // ===== The Obsidian Sanctum =====================
-    public class AnubRekhan_10 : BossHandler {
-        public AnubRekhan_10() {
+    public class Shadron_10 : BossHandler {
+        public Shadron_10() {
             // If not listed here use values from defaults
             // Basics
-            Name = "Anub'Rekhan (10 Man)";
-            Health = 2230000f;
+            Name = "Shadron";
+            Content = "T7";
+            Instance = "The Obsidian Sanctum";
+            Version = "10 Man";
+            Health = 976150f;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
@@ -1087,27 +1098,40 @@ namespace Rawr {
                 AttackSpeed = 2.0f,
             };
             SpecialAttack_1 = new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
+                Name = "Shadow Fissure",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6188f + 8812f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 40.0f,
+            };
+            SpecialAttack_2 = new Attack {
+                Name = "Shadow Breath",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6938f + 8062f) / 2f,
+                MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            // Every 60 seconds for 20 seconds dps has to jump into the portal and kill the add
+            MovingTargsTime  = (BerserkTimer / (60f+20f)) * (20f);
+            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
+            // 1/10 chance he'll pick you
+            MovingTargsTime += ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
             /* TODO:
+             * The Acolyte Add
              */
         }
     }
-    public class AnubRekhan_10 : BossHandler {
-        public AnubRekhan_10() {
+    public class Tenebron_10 : BossHandler {
+        public Tenebron_10() {
             // If not listed here use values from defaults
             // Basics
-            Name = "Anub'Rekhan (10 Man)";
-            Health = 2230000f;
+            Name = "Tenebron";
+            Content = "T7";
+            Instance = "The Obsidian Sanctum";
+            Version = "10 Man";
+            Health = 976150f;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
@@ -1118,27 +1142,42 @@ namespace Rawr {
                 AttackSpeed = 2.0f,
             };
             SpecialAttack_1 = new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
+                Name = "Shadow Fissure",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6188f + 8812f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 40.0f,
+            };
+            SpecialAttack_2 = new Attack {
+                Name = "Shadow Breath",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6938f + 8062f) / 2f,
+                MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
+            MovingTargsTime  = (BerserkTimer / (30f+20f)) * (20f);
+            MultiTargsPerc = (BerserkTimer / (30f + 20f)) * (20f) / BerserkTimer;
+            MaxNumTargets = 6f + 1f;
+            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
+            // 1/10 chance he'll pick you
+            MovingTargsTime += ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
             /* TODO:
+             * The Adds' abilities
              */
         }
     }
-    public class AnubRekhan_10 : BossHandler {
-        public AnubRekhan_10() {
+    public class Vesperon_10 : BossHandler {
+        public Vesperon_10() {
             // If not listed here use values from defaults
             // Basics
-            Name = "Anub'Rekhan (10 Man)";
-            Health = 2230000f;
+            Name = "Vesperon";
+            Content = "T7";
+            Instance = "The Obsidian Sanctum";
+            Version = "10 Man";
+            Health = 976150f;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
@@ -1149,27 +1188,38 @@ namespace Rawr {
                 AttackSpeed = 2.0f,
             };
             SpecialAttack_1 = new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
+                Name = "Shadow Fissure",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6188f + 8812f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 40.0f,
+            };
+            SpecialAttack_2 = new Attack {
+                Name = "Shadow Breath",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6938f + 8062f) / 2f,
+                MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
+            // 1/10 chance he'll pick you
+            MovingTargsTime = ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
             /* TODO:
+             * The adds, which optimally you would ignore
              */
         }
     }
-    public class AnubRekhan_10 : BossHandler {
-        public AnubRekhan_10() {
+    public class Sartharion_10 : BossHandler {
+        public Sartharion_10() {
             // If not listed here use values from defaults
             // Basics
-            Name = "Anub'Rekhan (10 Man)";
-            Health = 2230000f;
+            Name = "Sartharion";
+            Content = "T7";
+            Instance = "The Obsidian Sanctum";
+            Version = "10 Man";
+            Health = 2510100f;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
@@ -1180,21 +1230,21 @@ namespace Rawr {
                 AttackSpeed = 2.0f,
             };
             SpecialAttack_1 = new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
+                Name = "Fire Breath",
+                DamageType = ItemDamageType.Fire,
+                DamagePerHit = (8750f + 11250f) / 2f,
+                MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            // Every 45 seconds for 10 seconds you gotta move for Lava Waves
+            MovingTargsTime = (BerserkTimer / 45f) * (10f);
             /* TODO:
              */
         }
     }
+#if FALSE
     // ===== The Vault of Archavon ====================
     public class AnubRekhan_10 : BossHandler {
         public AnubRekhan_10() {
