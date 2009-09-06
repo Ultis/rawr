@@ -722,6 +722,10 @@ namespace Rawr
                         {
                             stats.BonusIntellectMultiplier = 0.02f;
                         }
+						else if (gemBonus == "+2% Mana")
+                        {
+                            stats.BonusManaMultiplier = 0.02f;
+                        }
                         else if (gemBonus == "2% Reduced Threat")
                         {
                             stats.ThreatReductionMultiplier = 0.02f;
