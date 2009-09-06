@@ -293,7 +293,7 @@ namespace Rawr
 
         private static void GetCombinedUptimeCombinations(Parameters p, float t, int index)
         {
-            // Uptime(x) = sum_r=0..inf Ibeta(r+1, x - r * cooldown, p) - Ibeta(r+1, x - duration - r * cooldown, p)
+            // Up time(x) = sum_r=0..inf Ibeta(r+1, x - r * cooldown, p) - Ibeta(r+1, x - duration - r * cooldown, p)
             // t := x * interval
             // Uptime(t) = sum_r=0..inf Ibeta(r+1, t / interval - r * cooldown / interval, p) - Ibeta(r+1, t / interval - duration / interval - r * cooldown / interval, p)
 
@@ -321,15 +321,15 @@ namespace Rawr
                 p.combinedUptime[index, i] = 1.0f;
                 for (int j = 0; j < p.effects.Length; j++)
                 {
-                    if ((i & (1 << j)) == 0)
-                    {
-                        p.combinedUptime[index, i] *= (1.0f - p.uptime[i]);
-                    }
-                    else
-                    {
-                        p.combinedUptime[index, i] *= p.uptime[i];
-                    }
-                }
+					if ((i & (1 << j)) == 0)
+					{
+						p.combinedUptime[index, i] *= (1.0f - p.uptime[j]);
+					}
+					else
+					{
+						p.combinedUptime[index, i] *= p.uptime[j];
+					}
+				}
             }
         }
     }

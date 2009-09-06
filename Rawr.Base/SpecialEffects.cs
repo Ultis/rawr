@@ -34,7 +34,6 @@ namespace Rawr {
 				}
                 else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                 {
-                    stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 320 }, 6, 45, 0.15f));
                 }
                 else if (gemBonus == "+5% Shield Block Value")
@@ -198,6 +197,10 @@ namespace Rawr {
 			{ //Shattered Sun Pendant of Restoration
 				stats.ShatteredSunRestoProc += 1f;
 			}
+			else if (line.StartsWith("Protected from the cold. Your Frost resistance is increased by 20."))
+			{ //Mechanized Snow Goggles of the...
+				stats.FrostResistance = 20;
+			}
 			else if (line.StartsWith("Chance on hit to increase your attack power by 230"))
 			{ //Special handling for Shard of Contempt due to higher uptime
 				// stats.AttackPower += 90f;
@@ -323,7 +326,6 @@ namespace Rawr {
             else if ((match = new Regex(@"Your melee and ranged attacks have a chance to increase your haste rating by (?<amount>\d\d*) for 10 sec(s?).").Match(line)).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 45, .15f));
-                stats.HasteRatingOnPhysicalAttack += int.Parse(match.Groups["amount"].Value) * 10f / 45f;
             }
             else if ((match = new Regex(@"Chance on melee and ranged critical strike to increase your haste rating by (?<amount>\d\d*) for 10 sec(s?).").Match(line)).Success)
             {
@@ -569,29 +571,24 @@ namespace Rawr {
             else if (line.StartsWith("Grants 170 increased spell power for 10 sec when one of your spells is resisted."))
             {
                 // Eye of Magtheridon
-                stats.SpellPowerFor10SecOnResist += 170;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellMiss, new Stats() { SpellPower = 170 }, 10, 0));
             }
             else if (line.StartsWith("Your spell critical strikes have a 50% chance to grant you 145 spell haste rating for 5 sec."))
             {
-                stats.SpellHasteFor5SecOnCrit_50 += 145;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { HasteRating = 145 }, 5, 0, 0.5f));
             }
             else if (line.StartsWith("Your harmful spells have a chance to increase your spell haste rating by 320 for 6 secs."))
             {
-                stats.SpellHasteFor6SecOnHit_10_45 += 320;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { HasteRating = 320 }, 6, 45, 0.1f));
             }
             else if (line.StartsWith("Your spell casts have a chance to increase your spell power by 590 for 10 sec."))
             {
                 // Flow of Knowledge
-                stats.SpellPowerFor10SecOnCast_10_45 += 590;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = 590 }, 10, 45, 0.1f));
             }
             else if (line.StartsWith("Chance on spell critical hit to increase your spell power by 225 for 10 secs."))
             {
                 // Shiffar's Nexus-Horn
-                stats.SpellPowerFor10SecOnCrit_20_45 += 225;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { SpellPower = 225 }, 10, 45, 0.2f));
             }
             else if (line.StartsWith("Increases the effect that healing and mana potions have on the wearer by "))
@@ -614,7 +611,6 @@ namespace Rawr {
                 //    case 15:
                 //        if (name == "Sextant of Unstable Currents")
                 //        {
-                stats.SpellPowerFor15SecOnCrit_20_45 += value;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { SpellPower = value }, duration, 45, 0.2f));
                 //        }
                 //        break;
@@ -784,7 +780,6 @@ namespace Rawr {
             else if (line.StartsWith("2% chance on successful spellcast to allow 100% of your Mana regeneration to continue while casting for 15 sec."))
             {
                 // Darkmoon Card: Blue Dragon
-                stats.FullManaRegenFor15SecOnSpellcast += 2f;
             }
             else if ((match = new Regex("Reduces the mana cost of Holy Light by (?<amount>\\d\\d*).").Match(line)).Success)
             {
@@ -850,7 +845,6 @@ namespace Rawr {
                 // Forge Ember
                 stats.SpellPowerFor10SecOnHit_10_45 += spellPower;
                 // This is a nasty trick for compatibility = when designing a healer, please use this version:
-                stats.SpellPowerFor10SecOnHeal_10_45 += spellPower;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = spellPower }, int.Parse(match.Groups["duration"].Value), 45, 0.1f));
             }
             else if ((match = Regex.Match(line, @"Your harmful spells have a chance to increase your spell power by (?<spellPower>\d+) for (?<duration>\d+) sec.")).Success)
@@ -895,7 +889,7 @@ namespace Rawr {
             else if (line.StartsWith("Your direct healing and heal over time spells have a chance to increase your haste rating by 505 for 10 secs."))
             {
                 // The Egg of Mortal Essence
-                stats.SpellHasteFor10SecOnHeal_10_45 += 505;
+                //stats.SpellHasteFor10SecOnHeal_10_45 += 505;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { HasteRating = 505f }, 10f, 45f, .1f));
             }
             else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
@@ -1397,7 +1391,6 @@ namespace Rawr {
                         switch (cooldown_min)
                         {
                             case 5:
-                                stats.SpellPowerFor20SecOnUse5Min += spell_power;
                                 break;
                             case 2:
                                 stats.SpellPowerFor20SecOnUse2Min += spell_power;
@@ -1523,9 +1516,6 @@ namespace Rawr {
                 // Meteorite Crystal and Pendant of the Violet Eye
                 // Estimate cast as every 2.0f seconds, average stack height is 0.5f of final value
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Mp5 = mp5 * int.Parse(match.Groups["duration"].Value) * 0.5f / 2.0f }, int.Parse(match.Groups["duration"].Value), 120));
-
-                // Old entry in case some models still use it
-                stats.Mp5OnCastFor20SecOnUse2Min += int.Parse(match.Groups["mp5"].Value);
             }
             else if ((match = Regex.Match(line, @"Each time you cast a harmful spell, you gain (?<hasteRating>\d+) haste rating\. .*Stacks up to (?<stacks>\d+) times\. .*Entire effect lasts (?<duration>\d+) sec\.( \((?<cooldown>\d+) Min Cooldown\))?")).Success)
             {
@@ -1543,11 +1533,10 @@ namespace Rawr {
             // Figurine - Talasite Owl, 5 min cooldown
             else if (line.StartsWith("Restores 900 mana over 12 sec."))
             {
-                if (stats.Mp5 == 18) // Figurine - Seaspray Albatross, 3 min cooldown
-                    stats.ManaregenOver12SecOnUse3Min += 900;
-                else if (stats.Mp5 == 14) // Figurine - Talasite Owl, 5 min cooldown
-                    stats.ManaregenOver12SecOnUse5Min += 900;
-                // stats.Mp5 += 5f * 900f / 300f;
+				//if (stats.Mp5 == 18) // Figurine - Seaspray Albatross, 3 min cooldown
+				//    stats.ManaregenOver12SecOnUse3Min += 900;
+				//else if (stats.Mp5 == 14) // Figurine - Talasite Owl, 5 min cooldown
+				//    stats.ManaregenOver12SecOnUse5Min += 900;
             }
             else if ((match = new Regex(@"Increases the block value of your shield by (?<amount>\d\d*) for 20 sec.").Match(line)).Success)
             {
@@ -1576,7 +1565,7 @@ namespace Rawr {
 			}
 			else if (line.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket."))
 			{
-				stats.Mp5OnCastFor20SecOnUse2Min += 21;
+				//stats.Mp5OnCastFor20SecOnUse2Min += 21;
 			}
 			// Mind Quickening Gem
 			else if (line.StartsWith("Quickens the mind, increasing the Mage's haste rating by 330 for 20 sec."))
@@ -1600,7 +1589,7 @@ namespace Rawr {
             else if (line == "Restores 2340 mana over 12 sec. (5 Min Cooldown)")
             {
                 // Figurine - Sapphire Owl
-                stats.ManaRestore5min = 2340;
+                //stats.ManaRestore5min = 2340;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaRestore = 2340 }, 0f, 300f));
             }
             else if (line == "Instantly heal your current friendly target for 2710. (1 Min Cooldown)")

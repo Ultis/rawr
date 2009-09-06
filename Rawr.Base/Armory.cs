@@ -350,7 +350,7 @@ namespace Rawr
 
         }
 
-        public static Int32 GetItemIdByName(string item_name)
+        public static int GetItemIdByName(string item_name)
         {
             try
             {
@@ -362,7 +362,7 @@ namespace Rawr
                     // we only want a single match, even if its not exact
                     if (items_nodes.Count == 1)
                     {
-                        Int32 id = Int32.Parse(items_nodes[0].Attributes["id"].InnerText);
+						int id = Int32.Parse(items_nodes[0].Attributes["id"].InnerText);
                         return id;
                     }
                     else
@@ -372,7 +372,7 @@ namespace Rawr
                         {
                             if (node.Attributes["name"].InnerText == item_name)
                             {
-                                Int32 id = Int32.Parse(items_nodes[0].Attributes["id"].InnerText);
+                                int id = Int32.Parse(items_nodes[0].Attributes["id"].InnerText);
                                 return id;
                             }
                         }
@@ -475,7 +475,6 @@ namespace Rawr
 						requiredClasses.Add("Rogue");
 						break;
 				}
-
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAttackPower")) { stats.AttackPower = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) { stats.Armor = int.Parse(node.InnerText); }
@@ -512,46 +511,7 @@ namespace Rawr
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusManaRegen")) { stats.Mp5 = int.Parse(node.InnerText); }
 
-				if (slot == ItemSlot.Finger ||
-					slot == ItemSlot.MainHand ||
-					slot == ItemSlot.Neck ||
-					(slot == ItemSlot.OffHand && type != ItemType.Shield) ||
-					slot == ItemSlot.OneHand ||
-					slot == ItemSlot.Trinket ||
-					slot == ItemSlot.TwoHand)
-				{
-					stats.BonusArmor += stats.Armor;
-					stats.Armor = 0f;
-				}
-
-				if (slot == ItemSlot.Back)
-				{
-					float baseArmor = 0;
-					switch (quality)
-					{     
-						case ItemQuality.Temp:
-						case ItemQuality.Poor:
-						case ItemQuality.Common:
-						case ItemQuality.Uncommon:
-							baseArmor = (float)itemLevel * 1.19f + 5.1f;
-							break;
-
-						case ItemQuality.Rare:
-							baseArmor = ((float)itemLevel + 26.6f) * 16f / 25f;
-							break;
-
-						case ItemQuality.Epic:
-						case ItemQuality.Legendary:
-						case ItemQuality.Artifact:
-						case ItemQuality.Heirloom:
-							baseArmor = ((float)itemLevel + 358f) * 7f / 26f;
-							break;
-					}
-					
-					baseArmor = (float)Math.Floor(baseArmor);
-					stats.BonusArmor = stats.Armor - baseArmor;
-					stats.Armor = baseArmor;
-				}
+				DetermineBaseBonusArmor(stats, slot, type, id);
 
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/spellData/spell"))
 				{
@@ -747,14 +707,18 @@ namespace Rawr
                         }
                         else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                         {
-                            stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
+                            //stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
                             stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 320 }, 6, 45, 0.15f));
                         }
-                        else if (gemBonus == "+10% Shield Block Value")
-                        {
-                            stats.BonusBlockValueMultiplier = 0.1f;
-                        }
-                        else if (gemBonus == "+2% Intellect")
+						else if (gemBonus == "+10% Shield Block Value")
+						{
+							stats.BonusBlockValueMultiplier = 0.1f;
+						}
+						else if (gemBonus == "+5% Shield Block Value")
+						{
+							stats.BonusBlockValueMultiplier = 0.05f;
+						}
+						else if (gemBonus == "+2% Intellect")
                         {
                             stats.BonusIntellectMultiplier = 0.02f;
                         }
@@ -843,7 +807,10 @@ namespace Rawr
                                         break;
                                     case "Spell Hit Rating":
                                         stats.HitRating = gemBonusValue;
-                                        break;
+										break;
+									case "Spell Penetration":
+										stats.SpellPenetration = gemBonusValue;
+										break;
                                     case "Spell Haste Rating":
                                         stats.HasteRating = gemBonusValue;
                                         break;
@@ -964,6 +931,28 @@ namespace Rawr
 				//}
 				return null;
 			}
+		}
+
+		private static void DetermineBaseBonusArmor(Stats stats, ItemSlot slot, ItemType type, int id)
+		{
+			float totalArmor = stats.Armor;
+			float bonusArmor = 0f;
+
+			if (slot == ItemSlot.Finger || slot == ItemSlot.MainHand || slot == ItemSlot.Neck ||
+				(slot == ItemSlot.OffHand && type != ItemType.Shield) || slot == ItemSlot.OneHand ||
+				slot == ItemSlot.Trinket || slot == ItemSlot.TwoHand)
+				bonusArmor = totalArmor;
+			else if (id == 37084) //Flowing Cloak of Command
+				bonusArmor = 364;
+			else if (id == 39225) //Cloak of Armed Strife
+				bonusArmor = 336;
+			else if (id == 40252) //Cloak of the Shadowed Sun
+				bonusArmor = 336;
+			else if (id == 45267) //Saronite Plated Legguards
+				bonusArmor = 826;
+
+			stats.BonusArmor = bonusArmor;
+			stats.Armor = totalArmor - bonusArmor;
 		}
 
 		private static ItemType GetItemType(string subclassName, int inventoryType, int classId)

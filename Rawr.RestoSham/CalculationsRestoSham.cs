@@ -703,7 +703,7 @@ namespace Rawr.RestoSham
         #region Relevant Stats: Code Flag = Penguin (Impliment Real special effect, not module special effects)
         public override Stats GetRelevantStats(Stats stats)
         {
-            return SpecialEffects.GetRelevantStats(stats) + new Stats()
+            return new Stats()
             {
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,

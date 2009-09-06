@@ -575,36 +575,36 @@ namespace Rawr.Cat
                 float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration);
                 tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
                 tempArPenRatingUptimes.Add(uptime);
-                tempArPenRatings.Add(0.0f);
-                tempArPenRatingUptimes.Add(1.0f - uptime);
+				tempArPenRatings.Add(0.0f);
+				tempArPenRatingUptimes.Add(1.0f - uptime);
             }
-            else
-            {
-                float[] intervals = new float[tempArPenEffects.Count];
-                float[] chances = new float[tempArPenEffects.Count];
-                float[] offset = new float[tempArPenEffects.Count];
-                for (int i = 0; i < tempArPenEffects.Count; i++)
-                {
-                    intervals[i] = triggerIntervals[tempArPenEffects[0].Trigger];
-                    chances[i] = triggerChances[tempArPenEffects[0].Trigger];
-                }
-                if (tempArPenEffects.Count == 2)
-                {
-                    offset[0] = calcOpts.TrinketOffset;
-                }
-                WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), intervals, chances, offset, 1f, calcOpts.Duration, AdditiveStat.ArmorPenetrationRating);
-                for (int i = 0; i < arPenWeights.Length; i++)
-                {
-                    tempArPenRatings.Add(arPenWeights[i].Value);
-                    tempArPenRatingUptimes.Add(arPenWeights[i].Chance);
-                }
-            }
+			else
+			{
+			    float[] intervals = new float[tempArPenEffects.Count];
+			    float[] chances = new float[tempArPenEffects.Count];
+			    float[] offset = new float[tempArPenEffects.Count];
+			    for (int i = 0; i < tempArPenEffects.Count; i++)
+			    {
+			        intervals[i] = triggerIntervals[tempArPenEffects[0].Trigger];
+			        chances[i] = triggerChances[tempArPenEffects[0].Trigger];
+			    }
+			    if (tempArPenEffects.Count == 2)
+			    {
+			        offset[0] = calcOpts.TrinketOffset;
+			    }
+			    WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), intervals, chances, offset, 1f, calcOpts.Duration, AdditiveStat.ArmorPenetrationRating);
+			    for (int i = 0; i < arPenWeights.Length; i++)
+			    {
+			        tempArPenRatings.Add(arPenWeights[i].Value);
+			        tempArPenRatingUptimes.Add(arPenWeights[i].Chance);
+			    }
+			}
 			/*else if (tempArPenEffects.Count == 2)
 			{
 				SpecialEffect effectA = tempArPenEffects[0];
 				SpecialEffect effectB = tempArPenEffects[1];
 				//float offset = 22.5f;
-				float uptimeAB = new SpecialEffectCombination(tempArPenEffects).GetAverageCombinedUptime(
+				float uptimeAB = SpecialEffect.GetAverageCombinedUptime(tempArPenEffects.ToArray(),
 					new float[] { triggerIntervals[effectA.Trigger], triggerIntervals[effectB.Trigger] },
 					new float[] { triggerChances[effectA.Trigger], triggerChances[effectB.Trigger] },
 					new float[] { calcOpts.TrinketOffset, 0f }, 1f, calcOpts.Duration);
@@ -651,10 +651,10 @@ namespace Rawr.Cat
 				tempArPenRatingUptimes.Add(uptimeAC);
 				tempArPenRatings.Add(effectA.Stats.ArmorPenetrationRating + effectB.Stats.ArmorPenetrationRating + effectC.Stats.ArmorPenetrationRating);
 				tempArPenRatingUptimes.Add(uptimeABC);
-			}*/
+			}
 			
 			//Add a 0 rating uptime for the remaining % of the time
-			/*float totalTempArPenRatingUptime = 0f;
+			float totalTempArPenRatingUptime = 0f;
 			for (int i = 0; i < tempArPenRatings.Count; i++)
 				totalTempArPenRatingUptime += tempArPenRatingUptimes[i];
 			tempArPenRatings.Add(0f);

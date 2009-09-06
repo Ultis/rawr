@@ -605,6 +605,11 @@ namespace Rawr
 				item.Stats.BonusArmor += item.Stats.Armor;
 				item.Stats.Armor = 0f;
 			}
+			else if (item.Stats.Armor + item.Stats.BonusArmor == 0f)
+			{ //Fix for wowhead bug where guns/bows/crossbows show up with 0 total armor, but 24.5 (or some such) bonus armor (they really have no armor at all)
+				item.Stats.Armor = 0;
+				item.Stats.BonusArmor = 0;
+			}
 
 			if (htmlTooltip.Contains(" (0/"))
 			{
