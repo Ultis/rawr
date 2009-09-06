@@ -117,82 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="lineShape1.Bounds" type="System.Drawing.Rectangle, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>4, 56, 277, 0</value>
-  </metadata>
-  <metadata name="lineShape1.Size" type="System.Drawing.Size, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>277, 0</value>
-  </metadata>
-  <metadata name="lineShape1.Location" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>4, 56</value>
-  </metadata>
-  <data name="RTB_Welcome.Text" xml:space="preserve">
-    <value>Welcome to Rawr.DPSWarr!
-
-This module is designed for Warriors hoping to fulfill the DPS role in a raid, either as Fury or Arms Specialized.
-
-To begin, assuming you have already imported your character from either the profiler or WoW Armory, select your talent specialization above as either Fury or Arms.
-
-Next, jump over to the Fight Info Tab to set some background rules for the fight.
-- Target Level can be changed from 80 to 83. 83 is the numeric representation of all Raid Bosses (who show themselves as Level '??')
-- Target Armor is currently defaulted to 10,643 for all Level 83 Bosses. This is the currently accepted rule of thumb and there is little reason to change off of this.
-- Duration is the length of the fight in seconds. A value of 600 is 10 minutes. Most boss fights take 6 minutes or less but we left a high upper value for those wanting to see total damage for a greater period of time.
-- Lag is the average Latency reported in your WoW client. Many with broadband connections usually see a value between 100 ms and 200 ms. Those with slower connection types such as dial-up will see much larger numbers.
-- Reaction is the average amout of time it takes for you (the player) to react to a button that becomes available. For example, when an oponent dodges and the Overpower ability procs, how long does it take you to process this mentally and command your finger to push the hotkey for Overpower. The WoW client gives 250 ms (1/4 second) allowance for this before your reactions count against you. Most players fall under this 250 ms rule.
-NOTE: Lag and Reaction are combined into a single calculable value. Small adjustments to these numbers yield *very* small adjustments in your dps.
-- The Situational boxes provide the basic situation you will normally be fighting in. The default setting should be all disabled except 'Standing in Back' at 100%.
-
-Finally, go to the Ability Maintenance Tab and choose the abilities you will be maintaining during your battles. Note that changing one or the other can have serious effects on your total dps output, and some abilities act differently if you are in different situations. For example, Bladestorm will have a much larger DPS number if there are multiple targets throughout the fight.</value>
-  </data>
-  <data name="RTB_Advanced.Text" xml:space="preserve">
-    <value>This section is for advanced users only, most players do not need to concern themselves with these settings.
-
-Since you have gotten your feet wet, looked at your gear, maybe even run an optimization or two, now you must be hungry for more. Fear not, there's plenty more you can tweak with your character.
-
-The Fight Info Tab
-
-Nothing more to go over here in teh first part. We will be adding functionality to maintain damage taken, for survivability and for the additional rage generated from damage taken.
-
-The Situational Boxes on The Fight Info Tab
-
-This tab holds information regarding how often in a fight your toon is in that particular situation. Presently, there are five options with Percentages (0-100) on each:
-- Multiple Targets: Your encounter has additional mobs within melee striking distance for x% amount of time. This provides usefulness for abilities such as Cleave, Bladestorm, Whirlwind, Sweeping Strikes to start 'doing their thing' and allowing you to hit the additional targets for a greater overall DPS. Boss fights like Patchwerk however, do not have additional targets.
-- Moving Targets: Your encounter has a target that moves out of melee striking distance for x% amount of time. This provide usefulness for abilities such as Charge and Intercept and talents which enable these abilities. A good example of this situation is 'Archavon the Stone Watcher' in the 'Vault of Archavon (VoA)'. [Currently, this functionality has not been implemented, though it will be coming soon.]
-- Stunning Targets: Your encounter has a target that either stuns just yourself or your entire raid for x% of the time. This provides usefulness for abilities such as Every man for Himself (Humas) and the talent Iron Will. [Currently, this functionality has not been implemented, though it will be coming soon.]
-- Disarming Targets: Your encounter has a target that disarms your characters' weapon periodically in combat. This provides usefulness for things like Titanium Weapon Chain and the talent Weapon Mastery. Most bosses do not do this, but there are several groups of trash (namely in Karazhan) that will disarm players. [Currently, this functionality has not been implemented, though it will be coming soon.]
-- Standing in Back: You spend at least x% of the fight standing behind the target. Mobs are unable to parry attacks from behind so the ~13% of attacks that could normally be parried are no longer on the table. If you are not standing behind the mob during for any portion of the fight, Expertise will have additional value.
-Additional Situations to manage will be coming soon.
-
-The Ability Maintenance Tab
-
-Select additional abilities to watch how they affect your dps. Thunder clap appies a debuff to bosses as do Sunder Armor, Demoralizing Shout, Shattering Throw, etc.</value>
-  </data>
-  <data name="RTB_FAQ.Text" xml:space="preserve">
-    <value>Got a question about Rawr.DPSWarr? The answer may be here...
-
-== CONTENTS ==
-01Q. Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x dps.
-02Q. Why does X talent/glyph not show any value in the comparison lists?
-03Q. Why does X ability lower my DPS when I check it in the Ability Maintenance Tab?
-04Q. Why is it when I run the Optimizer I dont end up hit capped and/or expertise capped? Shouldn't that be automatic?
-
-== READ ON ==
-01Q. Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x dps.
-01A. When The standard rotation abilities for Arms are active (including Slam and Heroic Strike) the large rage consumption of the Mortal Strike Ability tends to overshadow the rage left-over for Heroic Strikes. Basically, if you here to Slam instead of Mortal Strike on every time you would have otherwise, there would be more rage left over to Heroic Strike. Currently, Rawr sees this as a DPS gain and wants you to drop Mortal Strike. We are still researching whether this is a fluke or actually true.
-
-02Q. Why does X talent/glyph not show any value in the comparison lists?
-02A. Many talents cannot be valued by DPS gain, whic his all that Rawr.DPSWarr currently models. In the future, we will add value to things that increase survivability and the like.
-
-03Q. Why does X ability lower my DPS when I check it in the Ability Maintenance Tab?
-03A. Abilities may not provide additional DPS, but they do absorb Global Cooldowns (GCDs). If the ability is replacing something that would otherwise cause damage and isn't providing at least a temporary buff, the total DPS will go down.
-
-04Q. Why is it when I run the Optimizer I dont end up hit capped and/or expertise capped? Shouldn't that be automatic?
-04A. The optimizer, when run without any requirements, will attempt to fing the highest possible Total DPS number. In many cases, this does not include being hit/expertise capped. This is an unfortunate calculational error that has been persistent throughhout Rawr.DPSWarr's history. We have made great strides to correct this issue but a few points are still off. To ensure these caps are enforced, add the 'Chance to be Avoided % &lt;= 0' requirement before optimizing.</value>
-  </data>
   <data name="RTB_Version.Text" xml:space="preserve">
     <value>Below are the raw patch notes for each build.
 
-v2.2.14 (Unreleased)
+v2.2.15 (Unreleased)
+
+- Partially applied a patch that updates talents to 3.2 (Rogue, Paladin and Warriors)
+- Added a PTR Mode checkbox (currently activates 3.2.2 changes for SwordSpec) (added variable to Rawr3 so it can compile)
+- Increased the loop limit on proc settling for Arms
+- Working on Stun handling
+- Working on Stun handling
+- More work on Stun handling
+- Reworked Multi-Targs and it's relation to Heroic Strike and Cleave. Now settles Cleaves used vs Heroic Strike with Multiple Targets Percent for Arms (Fury still needs to adopt this)
+- Added Heroic Strike and Cleave to Verbose Tooltip
+- Fixed the issue with Available Rage being shown on the panel as negative.
+- Added Survivability Calcs: This is Health / 100 + Heals Per Sec (HPS) that comes from self abilities (Second Wind, Enraged Regen, etc.). You can scale the effect using the Options Panel (set to 0 to ignore Survivability).
+- Made Changes to Fury Iter to settle Cleave in with HS and Bloodsurge. This was to fix a performance issue and Ebs needs to review
+- Fixed the bug that makes the Titan's Grip talent show massive negative DPS. Needed to add a lot more checks for OH stuff to require TG.
+- Added Enraged Regeneration to Ability Maintenance Tree.
+- Fixed Jothay's attempt to put multipletargets in fury :P Multiple Targets should now work properly in both arms and fury.
+- Oops, forgot to save a file :x
+- Added better logic to Enchant Fits in Slot checks for MH/OH
+- Changed the defaults for the Options panel to 100% in back, multitargs off and stunning off
+- Sweeping Strikes wasn't playing nice with my changes earlier
+- Fully removed the Trinket GCD system
+- Changed Sweeping Strike's chance to new attack table
+- Added Paragon support (Death's Verdict/Choice)
+- Fixed Rampage Talent Handling
+- Changed Trinket and other SpecialEffects trigger intervals to operate more on actual ability usage numbers
+- Reworked Ability Proc'g to operate more on actual ability usage numbers
+- Added Rage Gains from Sword Spec hits
+- Added Rage Slip effect to a couple of abilities that weren't using it
+- Adjusted Dual Wield Specialization Bonus application
+- Remodeled the following abilities to operate as SpecialEffects: Flurry, Wrecking Crew, Rampage, Trauma. This increases their accuracy for bonus over uptime.
+- Split handling of Cleave and Heroic Strike numbers where they were previously combined.
+- Pushed a series of code changes to make more items act in relation to Duration of Fight verse Per Sec to simplify math
+- Fix Bonus Targets for White Damage
+- Modeled Bloodrage's Health usage and Glyph to negate it
+- Removed some code that had become outdated
+- Removed some bugged requirements for Second Wind
+- Moved some of the extra SpecialEffects around to try and improve performance and accuracy.
+- Broke T8 2P set bonus (working on a solution)
+- Added OnAttack Abilities to Landed Attacks per sec (since they have different tables than white attacks)
+- Simplified a lot of the rage calcs
+- Reverted Flurry Change
+- Found the bug in T8 2P for Arms, fixed
+- Created FuryRotation and ArmsRotation as a subclass of Rotation, pulled all the fury/arms specific rotation logic into these files. Broke down Skills.cs to different partial classes to make it easier to navigate and see changes. I've tested both arms and fury for right now
+- Fixed Ebs's commit (one of the files was conflicting on his attempt to commit)
+- Fixed a bug with displayed information which occurred after rotation refactoring
+- Fixed a bug with Bladestorm which occurred after rotation refactoring
+- Simplified usage of use OH checks
+- Added MovementSpeed as a relevant stat
+- Fixed a slight bug with the new useOH method
+- Enabled Moving Targets, change the box from a Percentage to a Number of Seconds. This box is clipped by Duration (can't set a higher value than what Duration is at). Making the necessary code for Arms to make use of this box next.
+- Improved reliability of saved options recovering on the Panel by using an isLoading check found in several models.
+- Added a Percentage box to Moving Targets time. This relates directly to the other box (adjust one and it adjusts the other). Also when Fight Duration is updated, adjusts Move Time (seconds) by Move Time (%)
+- Added BossHandler usage: Users can now use the Boss Selection drop-down to change their Situational stuff (Moving, Stunning, Multiple Targets) to presets based upon boss fights or use one of the Special Bosses.
+- Swapped name list to use BetterBossNames (better for sorting)
+- Fixed a bug with Stunning targets where if freq is set to 0, you will get a NaN error.
+- Added Boss info box, updates using GenInfoString. TODO: Make it gen a new string based upon custom settings
+
+v2.2.14 (Aug 30, 2009 07:18)
 
 - Fixed a couple of stat roundings
 - Fix for issue 13873 "Target level does not affect yellow hit cap". Hit cap is now affected by target level in the Options Pane. This is reflected both in calculations and in the Hit can free/more hit needed tooltip.
@@ -216,6 +201,36 @@ v2.2.14 (Unreleased)
 - Added Every Man for Himself Handling (Humans Only) (Arms Only). Recovers GCDs lost to Stuns.
 - Added Heroic Fury Handling (Talent Only) (Arms Only). Recovers GCDs lost to Stuns.
 - Fixed Reloading of Saved options from the Options Panel, grouped function calls was causing it to set the first item or two, then an event would trigger and break the rest of the settings.
+- SpecialEffect procs now include hasted white attacks, not just unhasted.
+- Fixed a bug where swordspec was giving negative DPS if you weren't equipping a sword -- should have been 0 dps change.
+- Did some more work on the Verbose Tooltip, cleaning it up and having it hide parts of the table that are 0.
+- Changed the defaulting values in the Target Armor box
+- Added more abilities to the Verbose Tooltip (Bloodsurge, Bloodthirst, Whirlwind, Thunder Clap, Shattering Throw)
+- Removed Block from the Attack Table until proof can be shown of bosses in WotLK that block player's attacks
+- Added more verification for Swordspec to ensure it's not affecting anything without a Sword equipped.
+- Added Fall-through logic for Cleave and Heroic Strike. If MultiTargs is active and Cleave is not being maintained, you will Heroic Strike instead. There is currently not a half-way option yet.
+- Fixed Overpower so it cannot be Blocked
+- Fixed Targets display for Bladestorm
+- Fixed Targets for Hamstring, Shattering Throw, Retaliation
+- Turned off GCD Usage for Trinkets with Trigger.Use Effects
+- Fixed handling for internal Blood Frenzy (Buff Blood Frenzy stays the same)
+- Added White Attacks to the Verbose Tooltip method
+- Added Combat Table class to DPSWarr: Migrated all attack table related calls to this new class, now handles Crit cap against Glancing and other similar extreme ratings levels
+- Fixed a bug where Crits were getting an extra 100% damage
+- Fixed a bug in the Rage formula for Unbridled Wrath
+- Fixed a couple of abilities that had Crit on their attack table when they aren't capable of Critting
+- Fixed a bug in Sudden Death and Overpower abilities activating when not being maintained
+- Reworked the Activates for Overpower, no longer breaks on extremes
+- Reworked Rend activates to handle Rend Ability not landing. If it's dodged, etc on the application, player must redo Rend to get it on the target as Rend needs 100% uptime for Taste for Blood. (This adds value to hit and expertise)
+- Fixed several BuffEffects to operate on Attack Tables. If the debuff "misses" the ability is degraded. Will add reapplication checks (like Rend does now) later.
+Note to DPSWarr Users: New testing in Arms shows an optimize for Max DPS without any requirements will now place you within a gem's reach of Hit and Expertise caps. I've seen it forgo 4 hit rating (from cap) in favor of 8 STR or ArP, same on Expertise. Higher Standing in Back increases the likelihood STR will override Exp. Whether this affects Fury the same way remains to be seen by Ebs.
+- Now supports softcap with Grim Toll and Mjolnir Runestone (note: wearing BOTH trinkets is not yet supported).
+- Performance improvements
+- Reworked the tooltips for Hit and Expertise, you will now see better values and the differences in caps for 2h vs DW (hit) and Dodge vs Parry (Exp). Also takes better account for other bonuses towards the caps.
+- Fixed Bonus Armor procs not providing AttT bonus. This allows handling for Indestructible Potion
+- Attempt to correct issue with Options panel not showing same values as back end. Users may need to uncheck/recheck options in some cases to assert the values.
+- Changed Allow Flooring Default to false.
+- Possible fix for issue 13977. When some options, gear, etc are changed DPSWarr hangs. Added a loop counter to the OP/SD/SL/SS settler to stop it at 100 loop iterations if it hasn't already finished
 
 v2.2.13 (Aug 12, 2009 02:28)
 
@@ -422,6 +437,132 @@ v2.2.5 (May 25, 2009 16:25)
 - Enforced activation of buffs Trauma, Rampage and Blood Frenzy if you have the talents
 - Formulaic fixes and some Talent/Glyph improvements</value>
   </data>
+  <data name="RTB_Welcome.Text" xml:space="preserve">
+    <value>Welcome to Rawr.DPSWarr!
+
+This module is designed for Warriors hoping to fulfill the DPS role in a raid, either as Fury or Arms Specialized.
+
+To begin, assuming you have already imported your character from either Character Profiler or the WoW Armory, select your talent specialization above as either Fury or Arms if it did not do so automatically. If you would like to check your numbers against information from the next patch (at present, this is 3.2.2) you can check that item.
+
+Next, jump over to the Fight Info Tab to set some background rules for the fight you want to measure against.
+- Lag is the average Latency reported in your WoW client. Many with broadband connections usually see a value between 100 ms and 200 ms. Those with slower connection types such as dial-up will see much larger numbers.
+- Reaction is the average amount of time it takes for you (the player) to react to a button that becomes available. For example, when an opponent dodges and the Overpower ability procs, how long does it take you to process this mentally and command your finger to push the hotkey for Overpower. The WoW client gives 250 ms (1/4 second) allowance for this before your reactions count against you. Most players fall under this 250 ms rule.
+NOTE: Lag and Reaction are combined into a single calculable value. Small adjustments to these numbers yield *very* small adjustments in your DPS.
+- The Boss Selector is a new method of using defined Presets for your 'Situational' settings. Selecting a specific boss will tailor the Duration, in back time, multiple targets etc to what is necessary for that fight. Please note that as this is a new method, many of the values for the presets still need to be fine-tuned.
+- Target Level can be changed from 80 to 83. 83 is the numeric representation of all Raid Bosses (who show themselves as Level '??')
+- Target Armor is currently defaulted to 10,643 for all Level 83 Bosses. This is the currently accepted rule of thumb and there is little reason to change off of this.
+- Fight Duration is the length of the fight in seconds. A value of 600 is 10 minutes. Most boss fights take 6 minutes (value 360) or less but we left a high upper value for those wanting to see total damage for a greater period of time. The maximum for this box is 20 minutes, just above KT's Enrage Timer, which is a value of 1200.
+- The Situational boxes provide the basic situation you will normally be fighting in. The default setting should be all disabled except 'Standing in Back' at 100%. See the Advanced Instructions (the next tab over from this one) for more info on these settings.
+
+Finally, go to the Ability Maintenance Tab and choose the abilities you will be maintaining during your battles. Note that changing one or the other can have serious effects on your total DPS output, and some abilities act differently if you are in different situations. For example, Bladestorm will have a much larger DPS number if there are multiple targets throughout the fight.
+NOTE: If you have Flooring active, turn it off unless you really want to see what it does. The methods behind it have not been refined and it is presently not as accurate as having it disabled.</value>
+  </data>
+  <data name="RTB_Advanced.Text" xml:space="preserve">
+    <value>This section is for advanced users only, most players do not need to concern themselves with these settings.
+
+Since you have gotten your feet wet, looked at your gear, maybe even run an optimization or two, now you must be hungry for more. Fear not, there's plenty more you can tweak with your character.
+
+The Fight Info Tab
+
+We will be adding functionality to maintain damage taken, for survivability and for the additional rage generated from damage taken at some point, but time takes time.
+
+The Situational Boxes on The Fight Info Tab
+
+This tab holds information regarding how often in a fight your toon is in that particular situation. Presently, there are five options with individual settings for each:
+- Standing in Back: You spend at least x% of the fight standing behind the target. Mobs are unable to parry or block attacks from behind so the ~13% of attacks that could normally be parried are no longer on the table. If you are not standing behind the mob during for any portion of the fight, Expertise will have additional value due to it preventing Parries.
+- Multiple Targets: Your encounter has additional mobs within melee striking distance for x% amount of time. This provides usefulness for abilities such as Cleave, Bladestorm, Whirlwind, Sweeping Strikes to start 'doing their thing' and allowing you to hit the additional targets for a greater overall DPS. Boss fights like Patchwerk however, do not have additional targets. There is a cap for the number of targets placed so that abilities such as Whirlwind do not go for 4 targets worth of damage when there are only 2 targets.
+- Moving Targets: Your encounter has a target that moves out of melee striking distance for x% amount of time. This provides usefulness for abilities such as Charge and Intercept and talents which enable these abilities. This also provides effectiveness for Move Speed Enchants like Cat's Swiftness. A good example of this situation is 'Archavon the Stone Watcher' in the 'Vault of Archavon (VoA)'. [Currently this functionality is only active for Arms, not Fury, Charge, etc abilities are not yet modeled]
+- Stunning Targets: Your encounter has a target that either stuns just yourself or your entire raid  x times over the fight duration for y milliseconds (1000 = 1 second). This provides usefulness for abilities such as Every man for Himself (Humans) and the talent Iron Will. You can change the values of both boxes by changing one of them. E.g.- Set Percentage to 25% and it will change the seconds box to match and vice-versa. [Currently this functionality is only active for Arms, not Fury]
+- Disarming Targets: Your encounter has a target that disarms your characters' weapon periodically in combat. This provides usefulness for things like Titanium Weapon Chain and the talent Weapon Mastery. Most bosses do not do this, but there are several groups of trash (namely in Karazhan) that will disarm players. [Currently, this functionality has not been implemented, though it will be coming soon.]
+Additional Situations to manage will be coming soon.
+
+The Ability Maintenance Tab
+
+Select additional abilities to watch how they affect your DPS. Thunder Clap applies a debuff to bosses as do Sunder Armor, Demoralizing Shout, Shattering Throw, etc.</value>
+  </data>
+  <data name="RTB_FAQ.Text" xml:space="preserve">
+    <value>Got a question about Rawr.DPSWarr? The answer may be here...
+
+== CONTENTS ==
+01Q. Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x DPS.
+02Q. Why does X talent/glyph not show any value in the comparison lists?
+03Q. Why does X ability lower my DPS when I check it in the Ability Maintenance Tab?
+04Q. Why is it when I run the Optimizer I don't end up hit capped and/or expertise capped? Shouldn't that be automatic?
+05Q. Why does my toon do 0 DPS?
+06Q. Why does the Optimizer try and equip two of my weapon when I only have one?
+07Q. Why does the Optimizer sometimes lower my DPS?
+08Q. Why does the Optimizer sometimes just rearrange my Gems?
+09Q. Why is my Crit value so low compared to in-game?
+10Q. What about &lt;20% boss Health Execute Spamming?
+11Q. Why do T9 items sometimes show as less value than T8 items (and subsequently T8 to T7)?
+12Q. Why do Blood Frenzy/Savage Combat, Trauma/Mangle, Rampage/Leader of the Pack, Battle Shout/Blessing of Might, Commanding Shout/Blood Pact Buffs sometimes show 0 value or get cleared?
+13Q. Why aren't items with Resilience relevant?
+14Q. Why are the stats wrong for my x level (non-80) character when I load from Armory?
+15Q. Why can't I select X weapon type or Y Armor Type?
+
+== READ ON ==
+01Q. Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x DPS.
+01A. When The standard rotation abilities for Arms are active (including Slam and Heroic Strike) the large rage consumption of the Mortal Strike Ability tends to overshadow the rage left-over for Heroic Strikes. Basically, if you were to Slam instead of Mortal Strike on every time you would have otherwise, there would be more rage left over to Heroic Strike. In some cases, Rawr sees this as a DPS gain and wants you to drop Mortal Strike. Fully 25 Man raid buffed, Mortal Strike should have a higher DPS value than the rage to Heroic Strikes would provide.
+
+02Q. Why does X talent/glyph not show any value in the comparison lists?
+02A. Many talents cannot be valued by DPS gain or by Survivability Gain (which was recently added). Also, most Prot tree talents are not modeled as they are unnecessary, basically anything beyond 3rd tier. It's also possible that you do not have the Situation setting where the Talent/Glyph would have value. For example, If you are never Stunned, then Iron Will wouldn't have a value.
+
+03Q. Why does X ability lower my DPS when I check it in the Ability Maintenance Tab?
+03A. Abilities may not provide additional DPS, but they do absorb Global Cooldowns (GCDs). If the ability is replacing something that would otherwise cause damage and isn't providing at least a temporary buff, the total DPS will go down. This usually occurs when you check the Maintenance abilities. Commanding Shout doesn't add to DPS but takes GCDs to keep up.
+
+04Q. Why is it when I run the Optimizer I don't end up hit capped and/or expertise capped? Shouldn't that be automatic?
+04A. The optimizer, when run without any requirements, will attempt to find the highest possible Total DPS number. In many cases, this does not include being hit/expertise capped. This is an unfortunate calculational error that has been persistent throughout Rawr.DPSWarr's history. We have made great strides to correct this issue but a few points are still off. To ensure these caps are enforced, add the '% Chance to be Avoided &lt;= 0' requirement before optimizing. You must also consider that in some cases, if another Hit Gem would put you over the cap by a large amount (you need 3 hit but gem would give you 8 so 5 wasted) the optimizer may find that leaving that 3 under the cap and giving an 8 STR gem in its place would be more beneficial overall.
+
+05Q. Why does my toon do 0 DPS?
+05A. There are a couple possible reasons this could occur.
+1) You don't have a Main Hand Weapon, all DPS is tied to having a Main Hand Weapon.
+2) Your Situational settings on the Fight Info tab are set such that you have no ability to get any DPS out during the fight.
+
+06Q. Why does the optimizer try and equip two of my weapon when I only have one?
+06A. To restrict it to one item, right-click the item, select Edit then mark the Item as Unique. This will prevent it from putting the item in both MH and OH slots. The same goes for rings, trinkets, etc.
+
+07Q. Why does the Optimizer sometimes lower my DPS?
+07A. The Optimizer operates on a Random Seed method, which is why it works at all. Sometimes it can't use that random seed to find a set that is better than what you are currently wearing.
+
+08Q. Why does the Optimizer sometimes just rearrange my Gems?
+08A. This is a result of a the flaw of logic in the final push that the Optimizer uses, if your total DPS is the same and it was just the Gems that got swapped around, keep your existing set. Astrylian is working on an eventual solution to this problem.
+
+09Q. Why is my Crit value so low compared to in-game?
+09A. Boss level affects your Crit value. Level 83 has about a 4.8% drop, this is mentioned in the Crit Value tooltip.
+
+10Q. What about &lt;20% Target Health Execute Spamming?
+10A. We don't model this yet, sorry.
+
+11Q. Why do T9 items sometimes show as less value than T8 items (and subsequently T8 to T7)?
+11A. Set Bonuses can have a serious impact on DPS, getting that 2nd or 4th piece can mean more or less for your character at specific gear-sets. It could also be a factor of Meta Gem Requirements if you have that active.
+
+12Q. Why do Blood Frenzy/Savage Combat, Trauma/Mangle, Rampage/Leader of the Pack, Battle Shout/Blessing of Might, Commanding Shout/Blood Pact Buffs sometimes show 0 value or get cleared?
+12A. One of the most repeated issue submissions for DPSWarr, this is actually intended functionality. When your character is Maintaining this Buff themselves, we disable the Buff Version so that the Talent can have value instead and we can get a better DPS calculation. We also disable the Buff version to prevent Double-Dipping (getting buff twice, once as Buff and once as Talent).
+1) Blood Frenzy/Savage Combat: Disabled on having Blood Frenzy Talent (Arms)
+2) Trauma/Mangle: Disabled on having Trauma Talent (Arms)
+3) Rampage/Leader of the Pack: Disabled on having Rampage Talent (Fury)
+4) Battle Shout/Blessing of Might: Disabled on Maintaining Ability
+5) Commanding Shout/Blood Pact: Disabled on Maintaining Ability
+6) Presently we do NOT model the following abilities this way: Sunder Armor, Thunder Clap, Demoralizing Shout, Hamstring. Sunder because of the stacking effect we have yet to model and the others because their Buffs are currently not relevant to DPSWarr.
+
+13Q. Why aren't items with Resilience relevant?
+13A. Rawr is for PvE, not PvP.
+
+14Q. Why are the stats wrong for my x level (non-80) character when I load from Armory?
+14A. Rawr is for end-game PvE, meaning you should be level 80. Rawr does not factor things for leveling as there is no point, you will replace the item in a couple of levels anyway and all your raiding gear will end up requiring level 80 to wear.
+
+15Q. Why can't I select X weapon type or Y Armor Type?
+15A. Some weapon types are pointless to factor in, Staves and one handed weapons definitely being the big part of this. Same for Armor, though we can wear cloth, cloth can't physically boost our DPS in any way compared to Plate. Leather and Mail at top end items have a chance to beat out your DPS plate in some circumstances. If you want to enable Leather and Mail you can by use of Refine Types of Items Listed from the Tools menu.</value>
+  </data>
+  <metadata name="lineShape1.Bounds" type="System.Drawing.Rectangle, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>4, 56, 277, 0</value>
+  </metadata>
+  <metadata name="lineShape1.Size" type="System.Drawing.Size, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>277, 0</value>
+  </metadata>
+  <metadata name="lineShape1.Location" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>4, 56</value>
+  </metadata>
   <metadata name="lineShape1.Bounds" type="System.Drawing.Rectangle, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>4, 56, 277, 0</value>
   </metadata>

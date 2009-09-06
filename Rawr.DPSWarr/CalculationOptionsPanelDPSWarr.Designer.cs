@@ -107,6 +107,7 @@
             this.Tab_Version = new System.Windows.Forms.TabPage();
             this.RTB_Version = new System.Windows.Forms.RichTextBox();
             this.Page_03_FightInfo = new System.Windows.Forms.TabPage();
+            this.TB_BossInfo = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.CB_BossList = new System.Windows.Forms.ComboBox();
             this.CB_MoveTargsPerc = new System.Windows.Forms.NumericUpDown();
@@ -139,7 +140,6 @@
             this.CK_Flooring = new System.Windows.Forms.CheckBox();
             this.CTL_Maints = new System.Windows.Forms.TreeView();
             this.CK_PTRMode = new System.Windows.Forms.CheckBox();
-            this.TB_BossInfo = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_React)).BeginInit();
@@ -503,6 +503,20 @@
             this.Page_03_FightInfo.TabIndex = 2;
             this.Page_03_FightInfo.Text = "Fight Info";
             this.Page_03_FightInfo.UseVisualStyleBackColor = true;
+            // 
+            // TB_BossInfo
+            // 
+            this.TB_BossInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.TB_BossInfo.Location = new System.Drawing.Point(7, 326);
+            this.TB_BossInfo.MaxLength = 65536;
+            this.TB_BossInfo.Multiline = true;
+            this.TB_BossInfo.Name = "TB_BossInfo";
+            this.TB_BossInfo.ReadOnly = true;
+            this.TB_BossInfo.Size = new System.Drawing.Size(278, 221);
+            this.TB_BossInfo.TabIndex = 37;
+            this.TB_BossInfo.Text = "Boss Information would normally be displayed here";
             // 
             // label1
             // 
@@ -1005,20 +1019,6 @@
             this.CK_PTRMode.TabIndex = 2;
             this.CK_PTRMode.Text = "PTR Mode";
             this.CK_PTRMode.CheckedChanged += new System.EventHandler(this.CK_PTRMode_CheckedChanged);
-            // 
-            // TB_BossInfo
-            // 
-            this.TB_BossInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.TB_BossInfo.Location = new System.Drawing.Point(7, 326);
-            this.TB_BossInfo.MaxLength = 65536;
-            this.TB_BossInfo.Multiline = true;
-            this.TB_BossInfo.Name = "TB_BossInfo";
-            this.TB_BossInfo.ReadOnly = true;
-            this.TB_BossInfo.Size = new System.Drawing.Size(278, 221);
-            this.TB_BossInfo.TabIndex = 37;
-            this.TB_BossInfo.Text = "Boss Information would normally be displayed here";
             // 
             // CalculationOptionsPanelDPSWarr
             // 
