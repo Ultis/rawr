@@ -373,7 +373,6 @@ namespace Rawr.Elemental
                 #endregion
                 #region Totems
                 LightningSpellPower = stats.LightningSpellPower,
-                LightningBoltHasteProc_15_45 = stats.LightningBoltHasteProc_15_45,
                 LavaBurstBonus = stats.LavaBurstBonus,
                 #endregion
                 #region Sets
@@ -454,7 +453,6 @@ namespace Rawr.Elemental
             #region Totems
             elementalStats +=
                 stats.LightningSpellPower +
-                stats.LightningBoltHasteProc_15_45 +
                 stats.LavaBurstBonus;
             #endregion
             #region Sets
