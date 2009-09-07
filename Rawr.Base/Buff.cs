@@ -1947,25 +1947,6 @@ namespace Rawr
                 SetName = "Kel'Thuzad's Regalia",
                 SetThreshold = 4
             });
-            //horde [/spit] set
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gul'dan's Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Warlock2T9 = 0.10f },
-                SetName = "Gul'dan's Regalia",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gul'dan's Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Warlock4T9 = 0.10f },
-                SetName = "Gul'dan's Regalia",
-                SetThreshold = 4
-            });
             #endregion
 
             defaultBuffs.Add(new Buff()
@@ -2266,24 +2247,6 @@ namespace Rawr
 				SetName = "Malfurion's Battlegear",
 				SetThreshold = 4
 			});
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Runetotem's Battlegear 2 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { BonusRakeDuration = 3f, BonusLacerateDamageMultiplier = 0.05f },
-				SetName = "Runetotem's Battlegear",
-				SetThreshold = 2
-			});
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Runetotem's Battlegear 4 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { BonusRipCrit = 0.05f, BonusFerociousBiteCrit = 0.05f },
-				SetName = "Runetotem's Battlegear",
-				SetThreshold = 4
-			});
 			#endregion
 			#region Moonkin Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
@@ -2329,38 +2292,20 @@ namespace Rawr
             #region Moonkin Tier 9 set bonuses
             defaultBuffs.Add(new Buff()
             {
-                Name = "Malfurion's Regaila 2 Piece Bonus",
+                Name = "Malfurion's Regalia 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { MoonfireDotCrit = 1f },
-                SetName = "Malfurion's Regaila",
+				SetName = "Malfurion's Regalia",
                 SetThreshold = 2
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Malfurion's Regaila 4 Piece Bonus",
+				Name = "Malfurion's Regalia 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusMoonkinNukeDamage = 0.04f },
-                SetName = "Malfurion's Regaila",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Runetotem's Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MoonfireDotCrit = 1f },
-                SetName = "Runetotem's Regalia",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Runetotem's Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusMoonkinNukeDamage = 0.04f },
-                SetName = "Runetotem's Regalia",
+				SetName = "Malfurion's Regalia",
                 SetThreshold = 4
             });
             #endregion
@@ -2519,33 +2464,6 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusWarrior_T8_4P_MSBTCritIncrease = 0.1f },
                 SetName = "Siegebreaker Battlegear",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Hellscream's Battlegear (T9) 2 Piece Fury Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T9_2P_Crit = 0.02f },
-                SetName = "Hellscream's Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Hellscream's Battlegear (T9) 2 Piece Arms Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T9_2P_ArP = 0.06f },
-                SetName = "Hellscream's Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Hellscream's Battlegear (T9) 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T9_4P_SLHSCritIncrease = 0.05f },
-                SetName = "Hellscream's Battlegear",
                 SetThreshold = 4
             });
             defaultBuffs.Add(new Buff()
@@ -2725,20 +2643,20 @@ namespace Rawr
             // Tier 9
             defaultBuffs.Add(new Buff()
             {
-                Name = "Thrall's/Nobundo's Regalia 2 Piece Bonus",
+                Name = "Nobundo's Regalia 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Thrall's Regalia",
+                SetName = "Nobundo's Regalia",
                 Stats = { BonusFlameShockDuration = 9f },
                 SetThreshold = 2
             });
 
 			defaultBuffs.Add(new Buff()
 			{
-                Name = "Thrall's/Nobundo's Regalia 4 Piece Bonus",
+                Name = "Nobundo's Regalia 4 Piece Bonus",
 			    Group = "Set Bonuses",
 			    ConflictingBuffs = new List<string>(new string[] { }),
-			    SetName = "Thrall's Regalia",
+				SetName = "Nobundo's Regalia",
 			    Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
 			    SetThreshold = 4
 			});
@@ -2794,20 +2712,20 @@ namespace Rawr
 
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Enhance T9 2 Piece",
+				Name = "Nobundo's Battlegear 2 Piece",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Enhance2T9 = 1 },
-                SetName = "Thrall's Battlegear",
+                SetName = "Nobundo's Battlegear",
                 SetThreshold = 2
             });
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Enhance T9 4 Piece",
+				Name = "Nobundo's Battlegear 4 Piece",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Enhance4T9 = 1 },
-                SetName = "Thrall's Battlegear",
+				SetName = "Nobundo's Battlegear",
                 SetThreshold = 4
             });
             #endregion
@@ -2900,30 +2818,12 @@ namespace Rawr
             #region Windrunner's Pursuit & Windrunner's Battlegear (Tier 9)
             defaultBuffs.Add(new Buff()
             {
-                Name = "Windrunner's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Windrunner's Pursuit",
-                Stats = { BonusSerpentStingCanCrit = 1 },
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
                 Name = "Windrunner's Battlegear 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Windrunner's Battlegear",
                 Stats = { BonusSerpentStingCanCrit = 1 },
                 SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Windrunner's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Windrunner's Pursuit",
-                Stats = { BonusSteadyShotPetAttackPowerBuff = 1 },
-                SetThreshold = 4
             });
             defaultBuffs.Add(new Buff()
             {
@@ -3518,17 +3418,6 @@ namespace Rawr
                 SetThreshold = 2
 			});
 
-			//Retribution T9
-			defaultBuffs.Add(new Buff()
-			{
-                Name = "Liadrin's Battlegear 2 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { RighteousVengeanceCanCrit = 1f },
-				SetName = "Liadrin's Battlegear",
-				SetThreshold = 2
-			});
-
 			defaultBuffs.Add(new Buff()
 			{
                 Name = "Turalyon's Battlegear 4 Piece Bonus",
@@ -3538,16 +3427,6 @@ namespace Rawr
 				SetName = "Turalyon's Battlegear",
 				SetThreshold = 4
 			});
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Liadrin's Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { JudgementCrit = .05f },
-				SetName = "Liadrin's Battlegear",
-                SetThreshold = 4
-            });
 
             //Holy T8
             defaultBuffs.Add(new Buff()

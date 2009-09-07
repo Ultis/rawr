@@ -1544,15 +1544,29 @@ namespace Rawr
 			WebRequestWrapper.ResetFatalErrorIndicator();
 			StatusMessaging.UpdateStatus("Update All Items from Armory", "Beginning Update");
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
+			StringBuilder sbChanges = new StringBuilder();
 			for (int i = 0; i < ItemCache.AllItems.Length; i++)
 			{
 				Item item = ItemCache.AllItems[i];
+				string before = item.Stats.ToString();
 				StatusMessaging.UpdateStatus("Update All Items from Armory", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
 				if (item.Id < 90000)
 				{
-					Item.LoadFromId(item.Id, true, false, false);
+					Item newItem = Item.LoadFromId(item.Id, true, false, false);
+
+					string after = newItem.Stats.ToString();
+					if (before != after)
+					{
+						sbChanges.AppendFormat("[{0}] {1}\r\n", item.Id, item.Name);
+						sbChanges.AppendFormat("BEFORE: {0}\r\n", before);
+						sbChanges.AppendFormat("AFTER: {0}\r\n\r\n", after);
+					}
 				}
 			}
+#if DEBUG
+			if (sbChanges.Length > 0)
+				MessageBox.Show(sbChanges.ToString());
+#endif
 			StatusMessaging.UpdateStatusFinished("Update All Items");
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
 			ItemCache.OnItemsChanged();
@@ -1564,15 +1578,25 @@ namespace Rawr
 			WebRequestWrapper.ResetFatalErrorIndicator();
 			StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Beginning Update");
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
+			StringBuilder sbChanges = new StringBuilder();
 			for (int i = 0; i < ItemCache.AllItems.Length; i++)
 			{
 				Item item = ItemCache.AllItems[i];
-                StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
+                string before = item.Stats.ToString();
+				StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
 				if (item.Id < 90000)
 				{
 					try
 					{
-                        Item.LoadFromId(item.Id, true, false, true, Rawr.Properties.GeneralSettings.Default.Locale, usePTRDataToolStripMenuItem.Checked ? "ptr" : "www");
+                        Item newItem = Item.LoadFromId(item.Id, true, false, true, Rawr.Properties.GeneralSettings.Default.Locale, usePTRDataToolStripMenuItem.Checked ? "ptr" : "www");
+						
+						string after = newItem.Stats.ToString();
+						if (before != after)
+						{
+							sbChanges.AppendFormat("[{0}] {1}\r\n", item.Id, item.Name);
+							sbChanges.AppendFormat("BEFORE: {0}\r\n", before);
+							sbChanges.AppendFormat("AFTER: {0}\r\n\r\n", after);
+						}
 					}
 					catch (Exception ex)
 					{
@@ -1580,6 +1604,10 @@ namespace Rawr
 					}
 				}
 			}
+#if DEBUG
+			if (sbChanges.Length > 0)
+				MessageBox.Show(sbChanges.ToString());
+#endif
 			StatusMessaging.UpdateStatusFinished("Update All Items");
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
 			ItemCache.OnItemsChanged();
@@ -1824,7 +1852,7 @@ namespace Rawr
 				ToString(); //Breakpoint Here
 
 				List<int> ids = new List<int>();
-				System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("http://www.wowhead.com/?new-items=3.2");
+				System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("http://www.wowhead.com/?latest=additions");
 				Stream responseStream = request.GetResponse().GetResponseStream();
 				StreamReader reader = new StreamReader(responseStream);
 				string items32 = reader.ReadToEnd();
@@ -1836,7 +1864,7 @@ namespace Rawr
 				}
 
 				foreach (int id in ids)
-				{
+				{	
 					Item item = Wowhead.GetItem(id);
 					if (item != null)
 						ItemCache.AddItem(item);
@@ -1848,6 +1876,8 @@ namespace Rawr
 			}
 #endif
 		}
+
+		
 
         public class LoadCharacterProfileArguments
         {

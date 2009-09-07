@@ -884,10 +884,17 @@ namespace Rawr
 					slot = ItemSlot.Meta;
 
                 // normalize alliance/horde set names
-                setName = setName.Replace("Sunstrider's Regalia", "Khadgar's Regalia")   // Mage T9
-                                 .Replace("Nobundo's Battlegear", "Thrall's Battlegear") // Enhance T9
-                                 .Replace("Nobundo's Garb", "Thrall's Garb")             // RestoSham T9 
-                                 .Replace("Nobundo's Regalia", "Thrall's Regalia");      // Elemental T9
+				setName = setName.Replace("Sunstrider's", "Khadgar's")   // Mage T9
+								 .Replace("Zabra's", "Velen's") // Priest T9
+								 .Replace("Gul'dan's", "Kel'Thuzad's") // Warlock T9
+								 .Replace("Garona's", "VanCleef's") // Rogue T9
+								 .Replace("Runetotem's", "Malfurion's") // Druid T9
+								 .Replace("Windrunner's Pursuit", "Windrunner's Battlegear") // Hunter T9
+								 .Replace("Thrall's", "Nobundo's") // Shaman T9
+								 .Replace("Liadrin's", "Turalyon's") // Paladin T9
+								 .Replace("Hellscream's", "Wrynn's") // Warrior T9
+								 .Replace("Kolitra's", "Thassarian's") // Death Knight T9
+								 .Replace("Regaila", "Regalia"); // Fix for Moonkin set name being misspelled
                 Item item = new Item()
                 {
 					Id = id,
