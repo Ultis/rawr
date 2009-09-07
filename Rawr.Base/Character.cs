@@ -574,6 +574,26 @@ namespace Rawr //O O . .
                     itemChecked[item.Id] = true;
                     if (item.FitsInSlot(slot, this))
                     {
+						bool fitsFaction = true;
+						if (item.Faction != ItemFaction.Neutral)
+						{
+							switch (this.Race)
+							{
+								case CharacterRace.Draenei:
+								case CharacterRace.Dwarf:
+								case CharacterRace.Gnome:
+								case CharacterRace.Human:
+								case CharacterRace.NightElf:
+									fitsFaction &= item.Faction == ItemFaction.Alliance;
+									break;
+
+								default:
+									fitsFaction &= item.Faction == ItemFaction.Horde;
+									break;
+							}
+						}
+						if (!fitsFaction) continue;
+
                         List<ItemInstance> itemInstances = new List<ItemInstance>();
                         foreach (GemmingTemplate template in GemmingTemplate.CurrentTemplates)
                         {

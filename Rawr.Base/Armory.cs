@@ -405,6 +405,7 @@ namespace Rawr
                 }
 				ItemQuality quality = ItemQuality.Common;
 				ItemType type = ItemType.None;
+				ItemFaction faction = ItemFaction.Neutral;
                 ItemSlot socketColor1 = ItemSlot.None;
                 ItemSlot socketColor2 = ItemSlot.None;
                 ItemSlot socketColor3 = ItemSlot.None;
@@ -439,7 +440,8 @@ namespace Rawr
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.InnerText; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/allowableClasses/class")) { requiredClasses.Add(node.InnerText); }
 
-                foreach (XmlNode node in docItemInfo.SelectNodes("page/itemInfo/item/@level")) { itemLevel = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItemInfo.SelectNodes("page/itemInfo/item/@level")) { itemLevel = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItemInfo.SelectNodes("page/itemInfo/item/translationFor")) { faction = node.Attributes["factionEquiv"].Value == "1" ? ItemFaction.Alliance : ItemFaction.Horde; }
 
 				if (inventoryType >= 0)
 					slot = GetItemSlot(inventoryType, classId);
@@ -892,6 +894,7 @@ namespace Rawr
                     Name = name,
                     Quality = quality,
                     Type = type,
+					Faction = faction,
                     IconPath = iconPath,
                     Slot = slot,
                     SetName = setName,
@@ -1274,3 +1277,13 @@ namespace Rawr
 		}
 	}
 }
+/*
+
+A Tip: <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/_layout/items/tooltip.xsl"?><page globalSearch="1" lang="en_us" requestUrl="/item-tooltip.xml"><itemTooltips><itemTooltip><id>48211</id><name>Malfurion's Headguard of Triumph</name><icon>inv_helmet_139`</icon><overallQualityId>4</overallQualityId><bonding>1</bonding><classId>4</classId><equipData><inventoryType>1</inventoryType><subclassName>Leather</subclassName></equipData><damageData /><bonusAgility>120</bonusAgility><bonusStamina>136</bonusStamina><armor armorBonus="0">506</armor><socketData><socket color="Meta" /><socket color="Yellow" /></socketData><durability current="70" max="70" /><allowableClasses><class>Druid</class></allowableClasses><requiredLevel>80</requiredLevel><itemLevel>245</itemLevel><bonusAttackPower>149</bonusAttackPower><bonusCritRating>90</bonusCritRating><bonusExpertiseRating>74</bonusExpertiseRating><setData><name>Malfurion's Battlegear</name><item name="Malfurion's Handgrips " /><item name="Malfurion's Headguard " /><item name="Malfurion's Legguards " /><item name="Malfurion's Raiments " /><item name="Malfurion's Shoulderpads " /><setBonus desc="Decreases the cooldown on your Growl ability by 2 sec, increases the periodic damage done by your Lacerate ability by 5%, and increases the duration of your Rake ability by 3 sec." threshold="2" /><setBonus desc="Reduces the cooldown on Barkskin by 12 sec and increases the critical strike chance of Rip and Ferocious Bite by 5%." threshold="4" /></setData><itemSource value="sourceType.vendor" /></itemTooltip></itemTooltips></page>
+H Tip: <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/_layout/items/tooltip.xsl"?><page globalSearch="1" lang="en_us" requestUrl="/item-tooltip.xml"><itemTooltips><itemTooltip><id>48194</id><name>Runetotem's Headguard of Triumph</name><icon>inv_helmet_145b</icon><overallQualityId>4</overallQualityId><bonding>1</bonding><classId>4</classId><equipData><inventoryType>1</inventoryType><subclassName>Leather</subclassName></equipData><damageData /><bonusAgility>120</bonusAgility><bonusStamina>136</bonusStamina><armor armorBonus="0">506</armor><socketData><socket color="Meta" /><socket color="Yellow" /></socketData><durability current="70" max="70" /><allowableClasses><class>Druid</class></allowableClasses><requiredLevel>80</requiredLevel><itemLevel>245</itemLevel><bonusAttackPower>149</bonusAttackPower><bonusCritRating>90</bonusCritRating><bonusExpertiseRating>74</bonusExpertiseRating><setData><name>Runetotem's Battlegear</name><item name="Runetotem's Handgrips " /><item name="Runetotem's Headguard " /><item name="Runetotem's Legguards " /><item name="Runetotem's Raiments " /><item name="Runetotem's Shoulderpads " /><setBonus desc="Decreases the cooldown on your Growl ability by 2 sec, increases the periodic damage done by your Lacerate ability by 5%, and increases the duration of your Rake ability by 3 sec." threshold="2" /><setBonus desc="Reduces the cooldown on Barkskin by 12 sec and increases the critical strike chance of Rip and Ferocious Bite by 5%." threshold="4" /></setData><itemSource value="sourceType.vendor" /></itemTooltip></itemTooltips></page>
+A Info: <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/_layout/items/info.xsl"?><page globalSearch="1" lang="en_us" requestQuery="i=48211" requestUrl="/item-info.xml"><itemInfo><item icon="inv_helmet_139`" id="48211" level="245" name="Malfurion's Headguard of Triumph" quality="4" type="Leather"><cost><token count="75" icon="spell_holy_summonchampion" id="47241" /><token count="1" icon="inv_misc_trophy_argent" id="47242" /></cost><disenchantLoot requiredSkillRank="375"><item dropRate="6" icon="inv_enchant_abysscrystal" id="34057" level="80" maxCount="1" minCount="1" name="Abyss Crystal" quality="4" type="Enchanting" /></disenchantLoot><vendors><creature area="Icecrown" classification="0" heroic="1" id="35577" maxLevel="79" minLevel="79" name="Valiant Laradia" title="Triumphant Armor Vendor" type="Humanoid" /></vendors><translationFor factionEquiv="1"><item icon="inv_helmet_145b" id="48194" level="245" name="Runetotem's Headguard of Triumph" quality="4" /></translationFor></item></itemInfo></page>
+H Info: <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/_layout/items/info.xsl"?><page globalSearch="1" lang="en_us" requestQuery="i=48194" requestUrl="/item-info.xml"><itemInfo><item icon="inv_helmet_145b" id="48194" level="245" name="Runetotem's Headguard of Triumph" quality="4" type="Leather"><cost><token count="75" icon="spell_holy_summonchampion" id="47241" /><token count="1" icon="inv_misc_trophy_argent" id="47242" /></cost><disenchantLoot requiredSkillRank="375"><item dropRate="6" icon="inv_enchant_abysscrystal" id="34057" level="80" maxCount="1" minCount="1" name="Abyss Crystal" quality="4" type="Enchanting" /></disenchantLoot><vendors><creature area="Icecrown" classification="0" heroic="1" id="35578" maxLevel="79" minLevel="79" name="Valiant Bressia" title="Triumphant Armor Vendor" type="Humanoid" /></vendors><translationFor factionEquiv="0"><item icon="inv_helmet_139`" id="48211" level="245" name="Malfurion's Headguard of Triumph" quality="4" /></translationFor></item></itemInfo></page>
+
+
+
+*/

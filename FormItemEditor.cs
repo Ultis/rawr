@@ -71,8 +71,9 @@ namespace Rawr
                 checkBoxUnique.DataBindings.Clear();
                 comboBoxDamageType.DataBindings.Clear();
                 comboBoxSlot.DataBindings.Clear();
-                comboBoxQuality.DataBindings.Clear();
-                comboBoxType.DataBindings.Clear();
+				comboBoxQuality.DataBindings.Clear();
+				comboBoxType.DataBindings.Clear();
+				comboBoxFaction.DataBindings.Clear();
 				comboBoxSocket1.DataBindings.Clear();
 				comboBoxSocket2.DataBindings.Clear();
 				comboBoxSocket3.DataBindings.Clear();
@@ -95,8 +96,9 @@ namespace Rawr
 
                     checkBoxUnique.DataBindings.Add("Checked", selectedItem, "Unique");
                     comboBoxQuality.DataBindings.Add("Text", selectedItem, "Quality");
-                    comboBoxSlot.DataBindings.Add("Text", selectedItem, "SlotString");
+					comboBoxSlot.DataBindings.Add("Text", selectedItem, "SlotString");
 					comboBoxType.DataBindings.Add("Text", selectedItem, "TypeString");
+					comboBoxFaction.DataBindings.Add("Text", selectedItem, "FactionString");
                     comboBoxDamageType.DataBindings.Add("Text", selectedItem, "DamageType");
                     comboBoxSocket1.DataBindings.Add("Text", selectedItem, "SocketColor1String");
 					comboBoxSocket2.DataBindings.Add("Text", selectedItem, "SocketColor2String");

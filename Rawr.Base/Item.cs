@@ -30,6 +30,9 @@ namespace Rawr
 		
 		[XmlElement("Type")]
 		public ItemType _type = ItemType.None;
+
+		[XmlElement("Faction")]
+		public ItemFaction _faction = ItemFaction.Neutral;
 		
 		[DefaultValueAttribute(0)]
 		[XmlElement("MinDamage")]
@@ -225,6 +228,27 @@ namespace Rawr
 			{
 				_setName = value;
 			}
+		}
+		[XmlIgnore]
+		public ItemFaction Faction
+		{
+			get
+			{
+				return _faction;
+			}
+			set
+			{
+				_faction = value;
+			}
+		}
+		/// <summary>
+		/// String version of Faction, to facilitate databinding
+		/// </summary>
+		[XmlIgnore]
+		public string FactionString
+		{
+			get { return _faction.ToString(); }
+			set { _faction = (ItemFaction)Enum.Parse(typeof(ItemFaction), value, false); }
 		}
 		[XmlIgnore]
 		public ItemType Type
@@ -896,6 +920,16 @@ namespace Rawr
 							//have a socket bonus, just reuse the old one; Armory has been bugged for a while now
 							//to not show socket bonuses.
 							newItem.SocketBonus = oldItem.SocketBonus.Clone();
+						}
+					}
+					if (useWowhead && newItem.Faction == ItemFaction.Neutral)
+					{
+						Item oldItem = ItemCache.FindItemById(id);
+						if (oldItem != null)
+						{ //If we loaded from Wowhead, and got no faction, and we used to 
+							//have a faction, just reuse the old one; Wowhead doesn't support 
+							//faction-specificity yet
+							newItem.Faction = oldItem.Faction;
 						}
 					}
                     ItemCache.AddItem(newItem, raiseEvent);

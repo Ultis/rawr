@@ -106,6 +106,13 @@ namespace Rawr
 		Heirloom
 	}
 
+	public enum ItemFaction
+	{
+		Neutral = 0,
+		Alliance = 1,
+		Horde = 2,
+	}
+
 	public enum ItemType
 	{
 		None,
