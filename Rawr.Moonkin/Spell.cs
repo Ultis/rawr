@@ -145,6 +145,26 @@ namespace Rawr.Moonkin
                     }
                 };
             }
+			// Lightning Capacitor, Thunder Capacitor, Reign of the Unliving/Undead
+			else if (effect.Stats.NatureDamage > 0 || effect.Stats.FireDamage > 0)
+			{
+				if (effect.Stats.NatureDamage > 0)
+				{
+					CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+					{
+						float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusNatureDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+						return effect.GetAverageStats(r.Duration / (r.CastCount * sc)).NatureDamage * specialDamageModifier;
+					};
+				}
+				else
+				{
+					CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+					{
+						float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusFireDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+						return effect.GetAverageStats(r.Duration / (r.CastCount * sc)).FireDamage * specialDamageModifier;
+					};
+				}
+			}
             else if (effect.Stats.Mp5 > 0)
             {
                 CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
@@ -1166,23 +1186,6 @@ namespace Rawr.Moonkin
             foreach (SpecialEffect effect in calcs.BasicStats.SpecialEffects())
             {
                 procEffects.Add(new ProcEffect(effect));
-            }
-            // Thunder Capacitor (2.5s cooldown after a proc, 5(!) charges/proc)
-            if (calcs.BasicStats.ThunderCapacitorProc > 0)
-            {
-                procEffects.Add(new ProcEffect()
-                {
-                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                    {
-                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusNatureDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                        float baseDamage = (1181 + 1371) / 2.0f;
-                        float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
-                        float timeBetweenProcs = r.Duration / (sHi * sc * r.CastCount);
-                        if (timeBetweenProcs < 2.5f) timeBetweenProcs = timeBetweenProcs * 5.0f + 2.5f;
-                        else timeBetweenProcs *= 5.0f;
-                        return averageDamage / timeBetweenProcs;
-                    }
-                });
             }
         }
 

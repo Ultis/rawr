@@ -933,7 +933,6 @@ namespace Rawr.Moonkin
                 WrathDmg = stats.WrathDmg,
                 IdolCritRating = stats.IdolCritRating,
                 UnseenMoonDamageBonus = stats.UnseenMoonDamageBonus,
-                LightningCapacitorProc = stats.LightningCapacitorProc,
                 InnervateCooldownReduction = stats.InnervateCooldownReduction,
                 StarfireBonusWithDot = stats.StarfireBonusWithDot,
                 MoonfireExtension = stats.MoonfireExtension,
@@ -948,7 +947,6 @@ namespace Rawr.Moonkin
                 SpellHit = stats.SpellHit,
                 ArmorPenetration = stats.ArmorPenetration,
                 Bloodlust = stats.Bloodlust,
-                ThunderCapacitorProc = stats.ThunderCapacitorProc,
                 EclipseBonus = stats.EclipseBonus,
                 InsectSwarmDmg = stats.InsectSwarmDmg,
                 MoonfireDotCrit = stats.MoonfireDotCrit,
@@ -982,6 +980,8 @@ namespace Rawr.Moonkin
                         effect.Stats.HasteRating > 0 ||
                         effect.Stats.HighestStat > 0 ||
                         effect.Stats.ShadowDamage > 0 ||
+                        effect.Stats.NatureDamage > 0 ||
+                        effect.Stats.FireDamage > 0 ||
                         effect.Stats.StarfireProc > 0 ||
                         effect.Stats.Spirit > 0 ||
                         effect.Stats.Mp5 > 0)
@@ -1023,6 +1023,8 @@ namespace Rawr.Moonkin
                         effect.Stats.HasteRating > 0 ||
                         effect.Stats.HighestStat > 0 ||
                         effect.Stats.ShadowDamage > 0 ||
+                        effect.Stats.NatureDamage > 0 ||
+                        effect.Stats.FireDamage > 0 ||
                         effect.Stats.StarfireProc > 0 ||
                         effect.Stats.Spirit > 0 ||
                         effect.Stats.Mp5 > 0)
@@ -1039,7 +1041,7 @@ namespace Rawr.Moonkin
                 + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier
                 + stats.Mana + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromBaseManaPPM
                 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.StarfireDmg
-                + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc
+                + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus
                 + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
                 + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
                 + stats.Bloodlust + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
