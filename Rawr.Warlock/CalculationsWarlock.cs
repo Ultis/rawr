@@ -397,7 +397,7 @@ namespace Rawr.Warlock {
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
-                ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
+                //ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 //SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
                 //SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
@@ -407,10 +407,10 @@ namespace Rawr.Warlock {
                 //SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
                 //SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
                 //SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
-                TimbalsProc = stats.TimbalsProc,
-                PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
-                ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
-                LightweaveEmbroideryProc = stats.LightweaveEmbroideryProc,
+                //TimbalsProc = stats.TimbalsProc,
+                //PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
+                //ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
+                //LightweaveEmbroideryProc = stats.LightweaveEmbroideryProc,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 CorruptionTriggersCrit = stats.CorruptionTriggersCrit,
                 LifeTapBonusSpirit = stats.LifeTapBonusSpirit,
@@ -501,7 +501,7 @@ namespace Rawr.Warlock {
                 + stats.WarlockDemonArmor
                 + stats.WarlockGrandSpellstone
                 + stats.WarlockGrandFirestone
-                + stats.ManaRestoreOnCast_5_15
+                //+ stats.ManaRestoreOnCast_5_15
                 + stats.ManaRestoreFromBaseManaPPM
                 //+ stats.SpellPowerFor15SecOnUse90Sec
                 //+ stats.SpellPowerFor15SecOnUse2Min
@@ -511,10 +511,10 @@ namespace Rawr.Warlock {
                 //+ stats.SpellPowerFor10SecOnCast_15_45
                 //+ stats.SpellPowerFor10SecOnHit_10_45
                 //+ stats.SpellHasteFor10SecOnCast_10_45
-                + stats.TimbalsProc
-                + stats.PendulumOfTelluricCurrentsProc
-                + stats.ExtractOfNecromanticPowerProc
-                + stats.LightweaveEmbroideryProc
+                //+ stats.TimbalsProc
+                //+ stats.PendulumOfTelluricCurrentsProc
+                //+ stats.ExtractOfNecromanticPowerProc
+                //+ stats.LightweaveEmbroideryProc
                 + stats.BonusSpellCritMultiplier
                 + stats.CorruptionTriggersCrit
                 + stats.LifeTapBonusSpirit
