@@ -361,6 +361,7 @@ namespace Rawr.DPSDK
                     float addHastePercent = 1f + stats.PhysicalHaste;
                     KMPpM *= addHastePercent;
                     KMPpM *= calcOpts.KMProcUsage;
+                    KMPpM *= combatTable.totalMHMiss;
 
                     float KMPpR = KMPpM / (60f / calcOpts.rotation.curRotationDuration);
                     float totalAbilities = bonusHB + calcOpts.rotation.FrostStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast;
@@ -471,8 +472,6 @@ namespace Rawr.DPSDK
                 #endregion
 
                 #region Icy Touch
-                // this seems to handle crit strangely.
-                // additionally, looks like it's missing some multipliers? maybe they're applied later
                 {
                     if (calcOpts.rotation.IcyTouch > 0f)
                     {
@@ -1031,7 +1030,7 @@ namespace Rawr.DPSDK
                     PlagueStrikeMult *= 1 + BloodyVengeanceMult;
                     WhiteMult *= 1 + BloodyVengeanceMult;
 
-                    float HysteriaCoeff = .3f / 6f; // current uptime is 16.666...%
+                    float HysteriaCoeff = .2f / 6f; // current uptime is 16.666...%
                     float HysteriaMult = HysteriaCoeff * (float)talents.Hysteria;
                     BCBMult *= 1 + HysteriaMult;
                     BloodStrikeMult *= 1 + HysteriaMult;
@@ -1163,11 +1162,71 @@ namespace Rawr.DPSDK
                 {
                     if (talents.DancingRuneWeapon > 0)
                     {
+                        float dpsDRWMaximum = 0f;
+                        String effectsStats = "";
+                        Stats maxStats = GetCharacterStatsMaximum(character, additionalItem);
+                        DRW drw;
+                        Stats tempStats;
+
+                        foreach (SpecialEffect effect in maxStats.SpecialEffects())
+                        {
+                            if(effect.Trigger != Trigger.Use)
+                            {
+                                tempStats = new Stats();
+                                tempStats += maxStats;
+                                tempStats += effect.Stats;
+
+
+
+                                tempStats.Strength += tempStats.HighestStat + tempStats.Paragon;
+
+                                tempStats.Agility = (float)Math.Floor(tempStats.Agility * (1 + tempStats.BonusAgilityMultiplier));
+                                tempStats.Strength = (float)Math.Floor(tempStats.Strength * (1 + tempStats.BonusStrengthMultiplier));
+                                tempStats.Stamina = (float)Math.Floor(tempStats.Stamina * (1 + tempStats.BonusStaminaMultiplier));
+                                tempStats.Intellect = (float)Math.Floor(tempStats.Intellect * (1 + tempStats.BonusIntellectMultiplier));
+                                tempStats.Spirit = (float)Math.Floor(tempStats.Spirit * (1 + tempStats.BonusSpiritMultiplier));
+                                tempStats.Health = (float)Math.Floor(tempStats.Health + (tempStats.Stamina * 10f));
+                                tempStats.Mana = (float)Math.Floor(tempStats.Mana + (tempStats.Intellect * 15f));
+                                tempStats.AttackPower = (float)Math.Floor(tempStats.AttackPower + tempStats.Strength * 2);
+                                // Copy from TankDK.
+                                // tempStats.Armor = (float)Math.Floor((tempStats.Armor + tempStats.BonusArmor + 2f * tempStats.Agility) * 1f);
+                                tempStats.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(tempStats.Agility) +
+                                                    StatConversion.ApplyMultiplier(tempStats.Armor, tempStats.BaseArmorMultiplier) +
+                                                    StatConversion.ApplyMultiplier(tempStats.BonusArmor, tempStats.BonusArmorMultiplier));
+
+                                tempStats.AttackPower += (tempStats.Armor / 180f) * (float)talents.BladedArmor;
+
+                                tempStats.BonusSpellPowerMultiplier = tempStats.BonusShadowDamageMultiplier;
+
+                                tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
+
+                                if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
+                                {
+                                    tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
+                                    tempStats.BonusSpellPowerMultiplier *= 1.15f;
+                                }
+                                else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
+                                {
+                                    tempStats.PhysicalHaste += 0.15f;
+                                    tempStats.SpellHaste += 0.15f;
+                                }
+
+
+                                drw = new DRW(combatTable, calcs, calcOpts, tempStats, character, talents);
+                                if (drw.dpsDancingRuneWeapon > dpsDRWMaximum)
+                                {
+                                    dpsDRWMaximum = drw.dpsDancingRuneWeapon;
+                                    effectsStats = effect.ToString();
+                                }
+                            }
+
+                        }
+                        dpsDancingRuneWeapon = dpsDRWMaximum;
                         float DRWUptime = (12f + (talents.GlyphofDancingRuneWeapon ? 5f : 0f)) / 90f;
-                        dpsDancingRuneWeapon = (calcs.DPSPoints - calcs.GhoulDPS - calcs.BloodwormsDPS) * DRWUptime;
-                        dpsDancingRuneWeapon *= 0.5f; // "doing the same attacks as the Death Knight but for 50% reduced damage."
+                        dpsDancingRuneWeapon /= 90f;
                         calcs.DPSPoints += dpsDancingRuneWeapon;
                         calcs.DRWDPS = dpsDancingRuneWeapon;
+                        calcs.DRWStats = effectsStats;
                     }
                 }
                 #endregion
@@ -1285,6 +1344,76 @@ namespace Rawr.DPSDK
                 statsTotal.SpellHaste += 0.15f;
             }
 
+            return (statsTotal);
+        }
+
+        public Stats GetCharacterStatsMaximum(Character character, Item additionalItem)
+        {
+            CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
+            DeathKnightTalents talents = calcOpts.talents;
+            Stats statsRace = GetRaceStats(character);
+            Stats statsBaseGear = GetItemStats(character, additionalItem);
+            //Stats statsEnchants = GetEnchantsStats(character);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsTalents = new Stats()
+            {
+                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
+                BaseArmorMultiplier = .03f * (float)(talents.Toughness),
+                BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
+                Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
+                BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
+                BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
+            };
+            if (talents.UnbreakableArmor > 0)
+            {
+                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.25f }, 20f, 120f));
+            }
+            Stats statsTotal = new Stats();
+            Stats statsGearEnchantsBuffs = new Stats();
+
+            if (character.ActiveBuffsContains("Ferocious Inspiration"))
+            {
+                statsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsBuffs.BonusPhysicalDamageMultiplier) * (1f + (.01f * calcOpts.FerociousInspiration)));
+                statsBuffs.BonusSpellPowerMultiplier = ((1f + statsBuffs.BonusSpellPowerMultiplier) * (1f + (.01f * calcOpts.FerociousInspiration)));
+            }
+
+            statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
+
+            statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
+            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsBaseGear.ExpertiseRating);
+
+            StatsSpecialEffects se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
+            int temp = 0;
+            Stats statsTemp = new Stats();
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
+            {
+                statsTemp.AddSpecialEffect(effect);
+            }
+            foreach (SpecialEffect effect in statsTemp.SpecialEffects())
+            {
+                if (HasRelevantStats(effect.Stats))
+                {
+                    if (effect.Trigger == Trigger.Use)
+                    {
+                        if (effect.Stats.ArmorPenetrationRating > 0f && effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating + 12.31623993f * 2f * talents.BloodGorged > 1232f)
+                        {
+                            Stats tempStats = new Stats();
+                            tempStats += effect.Stats;
+                            tempStats.ArmorPenetrationRating = (1232f - statsTotal.ArmorPenetrationRating - 12.31623993f * 2f * talents.BloodGorged > 0f ? 1232f - statsTotal.ArmorPenetrationRating - 12.31623993f * 2f * talents.BloodGorged : 0f);
+                            statsTotal += tempStats;
+                        }
+                        else
+                        {
+                            statsTotal += effect.Stats;
+                        }
+                    }
+                    else
+                    {
+                        statsTotal.AddSpecialEffect(effect);
+                        temp++;
+                    }
+                }
+            }
             return (statsTotal);
         }
 

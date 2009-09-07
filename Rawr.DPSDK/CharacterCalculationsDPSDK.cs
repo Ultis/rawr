@@ -290,6 +290,13 @@ namespace Rawr.DPSDK
             set { _GhoulDPS = value; }
         }
 
+        private String _DRWStats;
+        public String DRWStats
+        {
+            get { return _DRWStats; }
+            set { _DRWStats = value; }
+        }
+
         private Stats _basicStats;
         public Stats BasicStats
         {
@@ -342,7 +349,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Blood Plague",      string.Format("{0:N2}*{1:P}", BloodPlagueDPS, (float)BloodPlagueDPS/DPSPoints));
             dictValues.Add("Blood Strike",      string.Format("{0:N2}*{1:P}", BloodStrikeDPS, (float)BloodStrikeDPS/DPSPoints));
             dictValues.Add("Death Coil",        string.Format("{0:N2}*{1:P}", DeathCoilDPS, (float)DeathCoilDPS / DPSPoints));
-            dictValues.Add("DRW",               string.Format("{0:N2}*{1:P}", DRWDPS, (float)DRWDPS/DPSPoints));
+            dictValues.Add("DRW",               string.Format("{0:N2}*{1:P}, wait for "+DRWStats+" proc", DRWDPS, (float)DRWDPS/DPSPoints));
             dictValues.Add("Frost Fever",       string.Format("{0:N2}*{1:P}", FrostFeverDPS, (float)FrostFeverDPS/DPSPoints));
             dictValues.Add("Frost Strike",      string.Format("{0:N2}*{1:P}", FrostStrikeDPS, (float)FrostStrikeDPS/DPSPoints));
             dictValues.Add("Gargoyle",          string.Format("{0:N2}*{1:P}", GargoyleDPS, (float)GargoyleDPS / DPSPoints));
@@ -361,6 +368,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Bloodworms",        string.Format("{0:N2}*{1:P}", BloodwormsDPS, (float)BloodwormsDPS / DPSPoints));
             dictValues.Add("Other",             string.Format("{0:N2}*{1:P}", OtherDPS, (float)OtherDPS / DPSPoints));
             dictValues.Add("Total DPS",         DPSPoints.ToString("N2"));
+
 
             return dictValues;
         }
