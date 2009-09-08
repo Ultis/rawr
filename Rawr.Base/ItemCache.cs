@@ -41,8 +41,8 @@ namespace Rawr
 		public static Item[] AllItems { get { return _instance.AllItems; } }
 		public static Item[] RelevantItems { get { return _instance.RelevantItems; } }
 
-        public static Item[] GetUnfilteredRelevantItems(CalculationsBase model) { return _instance.GetUnfilteredRelevantItems(model); }
-        public static Item[] GetRelevantItems(CalculationsBase model) { return _instance.GetRelevantItems(model); }
+        public static Item[] GetUnfilteredRelevantItems(CalculationsBase model, CharacterRace race) { return _instance.GetUnfilteredRelevantItems(model, race); }
+        public static Item[] GetRelevantItems(CalculationsBase model, CharacterRace race) { return _instance.GetRelevantItems(model, race); }
 
 		public static void OnItemsChanged() { _instance.OnItemsChanged(); }
 #if RAWR3
@@ -183,23 +183,43 @@ namespace Rawr
 			}
 		}
 
-        public Item[] GetUnfilteredRelevantItems(CalculationsBase model)
+        public Item[] GetUnfilteredRelevantItems(CalculationsBase model, CharacterRace race)
         {
             List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
-                delegate(Item item) { return model.IsItemRelevant(item); }));
+                delegate(Item item) 
+                { 
+                    return model.IsItemRelevant(item) && item.FitsFaction(race); 
+                }));
             return itemList.ToArray();
         }
 
-        public Item[] GetRelevantItems(CalculationsBase model)
+        private CalculationsBase lastModel;
+        private CharacterRace lastRace;
+        private Item[] cachedRelevantItems;
+        private object syncLock = new object();
+
+        public Item[] GetRelevantItems(CalculationsBase model, CharacterRace race)
         {
-            if (model == Calculations.Instance)
+            if (cachedRelevantItems == null || model != lastModel || race != lastRace)
             {
-                return RelevantItems;
+                lock (syncLock)
+                {
+                    // test again because of race conditions, but we still want to avoid the lock if we can because that'll be the majority case
+                    if (cachedRelevantItems == null || model != lastModel || race != lastRace)
+                    {
+
+                        List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
+                            delegate(Item item)
+                            {
+                                return model.IsItemRelevant(item) && ItemFilter.IsItemRelevant(model, item) && item.FitsFaction(race);
+                            }));
+                        cachedRelevantItems = itemList.ToArray();
+                        lastModel = model;
+                        lastRace = race;
+                    }
+                }
             }
-            else
-            {
-                return GetRelevantItemsInternal(model);
-            }
+            return cachedRelevantItems;
         }
 
         private Item[] GetRelevantItemsInternal(CalculationsBase model)

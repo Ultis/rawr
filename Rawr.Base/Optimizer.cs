@@ -1041,7 +1041,7 @@ namespace Rawr.Optimizer
 
                 upgrades = new Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
-                Item[] items = ItemCache.GetRelevantItems(model);
+                Item[] items = ItemCache.GetRelevantItems(model, _character.Race);
                 CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
                 foreach (CharacterSlot slot in slots)
                     upgrades[slot] = new List<ComparisonCalculationUpgrades>();
@@ -3220,7 +3220,7 @@ namespace Rawr.Optimizer
 
                 upgrades = new Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
-                Item[] items = ItemCache.GetRelevantItems(model);
+                Item[] items = ItemCache.GetRelevantItems(model, _character.Race);
                 CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
                 foreach (CharacterSlot slot in slots)
                     upgrades[slot] = new List<ComparisonCalculationUpgrades>();

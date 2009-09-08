@@ -241,6 +241,30 @@ namespace Rawr
 				_faction = value;
 			}
 		}
+
+        public bool FitsFaction(CharacterRace race)
+        {
+            bool fitsFaction = true;
+            if (Faction != ItemFaction.Neutral)
+            {
+                switch (race)
+                {
+                    case CharacterRace.Draenei:
+                    case CharacterRace.Dwarf:
+                    case CharacterRace.Gnome:
+                    case CharacterRace.Human:
+                    case CharacterRace.NightElf:
+                        fitsFaction &= Faction == ItemFaction.Alliance;
+                        break;
+
+                    default:
+                        fitsFaction &= Faction == ItemFaction.Horde;
+                        break;
+                }
+            }
+            return fitsFaction;
+        }
+
 		/// <summary>
 		/// String version of Faction, to facilitate databinding
 		/// </summary>
