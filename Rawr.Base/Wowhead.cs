@@ -617,7 +617,25 @@ namespace Rawr
 				htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
 				htmlTooltip = htmlTooltip.Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
 					.Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
-                    .Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor");
+					.Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor").Replace("Regaila", "Regalia");
+
+				if (htmlTooltip.Contains("Sunstrider's") || htmlTooltip.Contains("Zabra's") ||
+					htmlTooltip.Contains("Gul'dan's") || htmlTooltip.Contains("Garona's") ||
+					htmlTooltip.Contains("Runetotem's") || htmlTooltip.Contains("Windrunner's Pursuit") ||
+					htmlTooltip.Contains("Thrall's") || htmlTooltip.Contains("Liadrin's") ||
+					htmlTooltip.Contains("Hellscream's") || htmlTooltip.Contains("Kolitra's"))
+				{
+					item.Faction = ItemFaction.Horde;
+				}
+				else if (htmlTooltip.Contains("Khadgar's") || htmlTooltip.Contains("Velen's") ||
+					htmlTooltip.Contains("Kel'Thuzad's") || htmlTooltip.Contains("VanCleef's") ||
+					htmlTooltip.Contains("Malfurion's") || htmlTooltip.Contains("Windrunner's Battlegear") ||
+					htmlTooltip.Contains("Nobundo's") || htmlTooltip.Contains("Turalyon's") ||
+					htmlTooltip.Contains("Wrynn's") || htmlTooltip.Contains("Thassarian's"))
+				{
+					item.Faction = ItemFaction.Alliance;
+				}
+
                 // normalize alliance/horde set names
 				htmlTooltip = htmlTooltip.Replace("Sunstrider's", "Khadgar's")   // Mage T9
 										 .Replace("Zabra's", "Velen's") // Priest T9
@@ -628,29 +646,9 @@ namespace Rawr
 										 .Replace("Thrall's", "Nobundo's") // Shaman T9
 										 .Replace("Liadrin's", "Turalyon's") // Paladin T9
 										 .Replace("Hellscream's", "Wrynn's") // Warrior T9
-										 .Replace("Kolitra's", "Thassarian's") // Death Knight T9
-										 .Replace("Regaila", "Regalia"); // Fix for Moonkin set name being misspelled
+										 .Replace("Kolitra's", "Thassarian's"); // Death Knight T9
 				item.SetName = htmlTooltip;
 			}
-			//if (htmlTooltip.Contains("Scourgeborne Battlegear")) item.SetName = "Scourgeborne Battlegear";
-			//else if (htmlTooltip.Contains("Scourgeborne Plate")) item.SetName = "Scourgeborne Plate";
-			//else if (htmlTooltip.Contains("Dreamwalker Battlegear")) item.SetName = "Dreamwalker Battlegear";
-			//else if (htmlTooltip.Contains("Dreamwalker Garb")) item.SetName = "Dreamwalker Garb";
-			//else if (htmlTooltip.Contains("Dreamwalker Regalia")) item.SetName = "Dreamwalker Regalia";
-			//else if (htmlTooltip.Contains("Cryptstalker Battlegear")) item.SetName = "Cryptstalker Battlegear";
-			//else if (htmlTooltip.Contains("Frostfire Garb")) item.SetName = "Frostfire Garb";
-			//else if (htmlTooltip.Contains("Redemption Battlegear")) item.SetName = "Redemption Battlegear";
-			//else if (htmlTooltip.Contains("Redemption Plate")) item.SetName = "Redemption Plate";
-			//else if (htmlTooltip.Contains("Redemption Regalia")) item.SetName = "Redemption Regalia";
-			//else if (htmlTooltip.Contains("Garb of Faith")) item.SetName = "Garb of Faith";
-			//else if (htmlTooltip.Contains("Regalia of Faith")) item.SetName = "Regalia of Faith";
-			//else if (htmlTooltip.Contains("Bonescythe Battlegear")) item.SetName = "Bonescythe Battlegear";
-			//else if (htmlTooltip.Contains("Earthshatter Battlegear")) item.SetName = "Earthshatter Battlegear";
-			//else if (htmlTooltip.Contains("Earthshatter Garb")) item.SetName = "Earthshatter Garb";
-			//else if (htmlTooltip.Contains("Earthshatter Regalia")) item.SetName = "Earthshatter Regalia";
-			//else if (htmlTooltip.Contains("Plagueheart Garb")) item.SetName = "Plagueheart Garb";
-			//else if (htmlTooltip.Contains("Dreadnaught Battlegear")) item.SetName = "Dreadnaught Battlegear";
-			//else if (htmlTooltip.Contains("Dreadnaught Plate")) item.SetName = "Dreadnaught Plate";
 
 			if (filter && item.Quality == ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens
 			return item;
@@ -1074,11 +1072,29 @@ namespace Rawr
 				case "c2": //Don't care about continent
 					break;
 
-				case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
+				case "dd":      // Dungeon Difficulty 
+					// -1 = Normal Dungeon,  -2 = Heroic Dungeon
+					//  1 = Normal Raid (10), 2 = Normal Raid (25)
+					//  3 = Heroic Raid (10), 4 = Heroic Raid (25)
+					bool heroic = (value == "-2" || value == "3" || value == "4");
+					string areaAppend = (value == "1" || value == "3" ) ? " (10)" :
+						( (value == "2" || value == "4") ? " (25)" : string.Empty  );
 					ItemLocation locationDifficulty = item.LocationInfo;
-					if (locationDifficulty is StaticDrop) (locationDifficulty as StaticDrop).Heroic = value == "2";
-                    else if (locationDifficulty is ContainerItem) (locationDifficulty as ContainerItem).Heroic = value == "2";
-                    else if (locationDifficulty is WorldDrop) (locationDifficulty as WorldDrop).Heroic = (value == "2");
+					if (locationDifficulty is StaticDrop)
+					{
+						(locationDifficulty as StaticDrop).Heroic = heroic;
+						(locationDifficulty as StaticDrop).Area += areaAppend;
+					}
+					else if (locationDifficulty is ContainerItem)
+					{
+						(locationDifficulty as ContainerItem).Heroic = heroic;
+						(locationDifficulty as ContainerItem).Area += areaAppend;
+					}
+					else if (locationDifficulty is WorldDrop)
+					{
+						(locationDifficulty as WorldDrop).Heroic = heroic;
+						(locationDifficulty as WorldDrop).Location += areaAppend;
+					}
                     break;
 
 				case "s":
