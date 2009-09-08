@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Rawr.Warlock {
     public class CharacterCalculationsWarlock : CharacterCalculationsBase {
@@ -54,23 +55,23 @@ namespace Rawr.Warlock {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             CalculationOptionsWarlock calcOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
-            dictValues.Add("Health", BasicStats.Health.ToString());
-            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-            dictValues.Add("Mana", BasicStats.Mana.ToString());
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
-            dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));
-            dictValues.Add("Spell Power", String.Format("{0}*{1} Bonus Shadow\r\n{2} Bonus Fire",
+            dictValues.Add("Health", BasicStats.Health.ToString(CultureInfo.InvariantCulture));
+            dictValues.Add("Stamina", BasicStats.Stamina.ToString(CultureInfo.InvariantCulture));
+            dictValues.Add("Mana", BasicStats.Mana.ToString(CultureInfo.InvariantCulture));
+            dictValues.Add("Intellect", BasicStats.Intellect.ToString(CultureInfo.InvariantCulture));
+            dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0", CultureInfo.InvariantCulture));
+            dictValues.Add("Spell Power", String.Format(CultureInfo.InvariantCulture, "{0}*{1} Bonus Shadow\r\n{2} Bonus Fire",
                 Math.Floor(BasicStats.SpellPower),
                 Math.Floor(BasicStats.SpellPower + BasicStats.SpellShadowDamageRating),
                 Math.Floor(BasicStats.SpellPower + BasicStats.SpellFireDamageRating)));
-            dictValues.Add("Regen", String.Format("{0}*MP5: {1}\r\nOutFSR: {2}" , RegenInFSR.ToString("0"), BasicStats.Mp5.ToString(), RegenOutFSR.ToString("0")));
-            dictValues.Add("Crit", string.Format("{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{4}% from Base Crit\r\n{5}% from Buffs",
-                (BasicStats.SpellCrit * 100f).ToString("0.00"),
-                (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00"),
-                BasicStats.CritRating.ToString("0"),
-                (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"),
+            dictValues.Add("Regen", String.Format(CultureInfo.InvariantCulture, "{0}*MP5: {1}\r\nOutFSR: {2}", RegenInFSR.ToString("0", CultureInfo.InvariantCulture), BasicStats.Mp5.ToString(CultureInfo.InvariantCulture), RegenOutFSR.ToString("0", CultureInfo.InvariantCulture)));
+            dictValues.Add("Crit", String.Format(CultureInfo.InvariantCulture, "{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{4}% from Base Crit\r\n{5}% from Buffs",
+                (BasicStats.SpellCrit * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                BasicStats.CritRating.ToString("0", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
                 "1,701",
-                (BasicStats.SpellCrit * 100f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f - 1.701f).ToString("0.00")));
+                (BasicStats.SpellCrit * 100f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f - 1.701f).ToString("0.00", CultureInfo.InvariantCulture)));
 
             float Hit = calcOptions.TargetHit;
             float BonusHit = BasicStats.SpellHit * 100f;
@@ -84,31 +85,31 @@ namespace Rawr.Warlock {
             float RHitRating = 0.01f / StatConversion.GetSpellHitFromRating(1);
             float TalentHit = character.WarlockTalents.Suppression * 1f;
             float TotalHit = Hit + BonusHit;
-            dictValues.Add("Miss Chance", string.Format("{0}%*{1}% Total hit\r\n{2}% from {3} Hit Rating\r\n{4}% from Buffs\r\n{5}{6}% from {7} points in Suppression\r\n{8}",
-                Math.Max(0, 100 - TotalHit).ToString("0.00"),
-                BonusHit.ToString("0.00"),
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("0.00"),
+            dictValues.Add("Miss Chance", String.Format(CultureInfo.InvariantCulture, "{0}%*{1}% Total hit\r\n{2}% from {3} Hit Rating\r\n{4}% from Buffs\r\n{5}{6}% from {7} points in Suppression\r\n{8}",
+                Math.Max(0, 100 - TotalHit).ToString("0.00", CultureInfo.InvariantCulture),
+                BonusHit.ToString("0.00", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
                 BasicStats.HitRating,
-                (BonusHit - StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f - RacialHit - TalentHit).ToString("0.00"),
+                (BonusHit - StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f - RacialHit - TalentHit).ToString("0.00", CultureInfo.InvariantCulture),
                 RacialText,
                 TalentHit,
                 character.WarlockTalents.Suppression,
-                (TotalHit > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((TotalHit - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - TotalHit) * RHitRating))));
+                (TotalHit > 100f) ? String.Format(CultureInfo.InvariantCulture, "{0} hit rating above cap", Math.Floor((TotalHit - 100f) * RHitRating)) : String.Format(CultureInfo.InvariantCulture, "{0} hit rating below cap", Math.Ceiling((100f - TotalHit) * RHitRating))));
 
-            dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% from Buffs\r\n{4}s Global Cooldown",
-                (BasicStats.SpellHaste * 100f).ToString("0.00"),
-                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"),
-                BasicStats.HasteRating.ToString(),
-                (BasicStats.SpellHaste * 100f - StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"),
-                Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
+            dictValues.Add("Haste", String.Format(CultureInfo.InvariantCulture, "{0}%*{1}% from {2} Haste rating\r\n{3}% from Buffs\r\n{4}s Global Cooldown",
+                (BasicStats.SpellHaste * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                BasicStats.HasteRating.ToString(CultureInfo.InvariantCulture),
+                (BasicStats.SpellHaste * 100f - StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00", CultureInfo.InvariantCulture)));
 
             Solver solver = GetSolver(character, BasicStats);
             solver.Calculate(this);
 
-            dictValues.Add("Rotation", string.Format("{0}*{1}", solver.Name, solver.Rotation));
-            dictValues.Add("DPS", string.Format("{0}", solver.DPS.ToString("0")));
-            dictValues.Add("Pet DPS", string.Format("{0}", solver.PetDPS.ToString("0")));
-            dictValues.Add("Total DPS", string.Format("{0}", solver.TotalDPS.ToString("0")));
+            dictValues.Add("Rotation", String.Format(CultureInfo.InvariantCulture, "{0}*{1}", solver.Name, solver.Rotation));
+            dictValues.Add("DPS", String.Format(CultureInfo.InvariantCulture, "{0}", solver.DPS.ToString("0", CultureInfo.InvariantCulture)));
+            dictValues.Add("Pet DPS", String.Format(CultureInfo.InvariantCulture, "{0}", solver.PetDPS.ToString("0", CultureInfo.InvariantCulture)));
+            dictValues.Add("Total DPS", String.Format(CultureInfo.InvariantCulture, "{0}", solver.TotalDPS.ToString("0", CultureInfo.InvariantCulture)));
 
             dictValues.Add("Shadow Bolt", new ShadowBolt(BasicStats, character).ToString());
             dictValues.Add("Incinerate", new Incinerate(BasicStats, character).ToString());

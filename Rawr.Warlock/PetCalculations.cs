@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.Warlock {
-    class PetCalculations {
-        public PetCalculations(Stats charStats, Character Char) {
+namespace Rawr.Warlock 
+{
+    class PetCalculations 
+    {
+        public PetCalculations(Stats charStats, Character Char) 
+        {
             character = Char;
             talents = Char.WarlockTalents;
             CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
@@ -32,7 +35,9 @@ namespace Rawr.Warlock {
         public float critCount;
         #endregion
 
-        private void calculatePetStats(Stats charStats) {
+        //TODO: refactor 
+        private void calculatePetStats(Stats charStats) 
+        {
             this.charStats = charStats;
 
             bool isImpVoidSucHuntOrGuard = (Pet == "Imp" || Pet == "Voidwalker" || Pet == "Succubus" || Pet == "Felhunter" || Pet == "Felguard");
@@ -43,29 +48,47 @@ namespace Rawr.Warlock {
             petStats.Stamina   = (Pet == "Imp" ? 118 : 328) * (1f + charStats.BonusStaminaMultiplier  ) * (talents.FelVitality > 0 && isImpVoidSucHuntOrGuard ? (1f + talents.FelVitality * 0.05f) : 1f);//petStats.Stamina   += charStats.Stamina   * (0.299f + (talents.FelSynergy > 0 ? talents.FelSynergy * 0.05f : 0));
             petStats.Intellect = (Pet == "Imp" ? 369 : 150) * (1f + charStats.BonusIntellectMultiplier) * (talents.FelVitality > 0 && isImpVoidSucHuntOrGuard ? (1f + talents.FelVitality * 0.05f) : 1f);//petStats.Intellect += charStats.Intellect * (0.299f + (talents.FelSynergy > 0 ? talents.FelSynergy * 0.05f : 0));
             petStats.Spirit    = (Pet == "Imp" ? 367 : 209) * (1f + charStats.BonusSpiritMultiplier   );
+
             //AttackPower
             petStats.AttackPower = ((Pet == "Imp" ? 287 : 608) + ((charStats.SpellPower + Math.Max(charStats.SpellShadowDamageRating, charStats.SpellFireDamageRating)) * 0.57f)) * (1f + charStats.BonusAttackPowerMultiplier);
-            if (Pet == "Felguard") {
+            if (Pet == "Felguard") 
+            {
                 petStats.AttackPower *= 1f + ((0.05f + (talents.DemonicBrutality > 0 ? talents.DemonicBrutality * 0.01f : 0)) * 10);
                 if (talents.GlyphFelguard) { petStats.AttackPower *= 1.2f; }
             };
+            
             //SpellPower
             petStats.SpellPower = ((charStats.SpellPower + Math.Max(charStats.SpellShadowDamageRating, charStats.SpellFireDamageRating)) * 0.1495f) * (1f + charStats.BonusSpellPowerMultiplier);
+            
             //Mana
             petStats.Mana = (Pet == "Imp" ? 1175 : 1559) + petStats.Intellect * 11.55f;
+
             //Mana cost of special attack
             if      (Pet == "Imp")       specialCost = 180;
             else if (Pet == "Felhunter") specialCost = 131;
             else if (Pet == "Succubus")  specialCost = 250;
             else if (Pet == "Felguard")  specialCost = 439;
+            
             //Crit
             petStats.PhysicalCrit = 0.0320f + (petStats.Agility * 0.00019f) * (1 + charStats.Warlock2T9);//TODO: seems ok but need to verify
             petStats.PhysicalCrit -= ((CalculationOptions.TargetLevel * 5f) * 0.0004f);// TODO Replace with STatConvers.NPC_CRIT_MOD[CalculationOptions.TargetLevel-character.Level] but need to verify first
-            if (talents.ImprovedDemonicTactics > 0) { petStats.PhysicalCrit += charStats.PhysicalCrit * talents.ImprovedDemonicTactics * 0.1f; }
+            if (talents.ImprovedDemonicTactics > 0) 
+            { 
+                petStats.PhysicalCrit += charStats.PhysicalCrit * talents.ImprovedDemonicTactics * 0.1f; 
+            }
             petStats.SpellCrit = 0.05f + (petStats.Intellect / 460 * 0.061f) * (1 + charStats.Warlock2T9);//TODO: need to verify
-            if (talents.ImprovedDemonicTactics > 0) {petStats.SpellCrit += charStats.SpellCrit * talents.ImprovedDemonicTactics * 0.1f;}
-            if (Pet == "Imp" && talents.MasterDemonologist > 0) { petStats.SpellCrit += talents.MasterDemonologist * 0.01f; }
-            if (Pet == "Imp" && talents.DemonicEmpowerment > 0) { petStats.SpellCrit += talents.DemonicEmpowerment * 0.2f * 30f / (60f * (1 - talents.Nemesis * 0.1f));}
+            if (talents.ImprovedDemonicTactics > 0) 
+            {
+                petStats.SpellCrit += charStats.SpellCrit * talents.ImprovedDemonicTactics * 0.1f;
+            }
+            if (Pet == "Imp" && talents.MasterDemonologist > 0) 
+            { 
+                petStats.SpellCrit += talents.MasterDemonologist * 0.01f; 
+            }
+            if (Pet == "Imp" && talents.DemonicEmpowerment > 0) 
+            { 
+                petStats.SpellCrit += talents.DemonicEmpowerment * 0.2f * 30f / (60f * (1 - talents.Nemesis * 0.1f));
+            }
 
             critCoefSpecial = 1.5f;
             if (Pet == "Felguard") critCoefSpecial = 2;
@@ -75,12 +98,14 @@ namespace Rawr.Warlock {
             petStats += petStats2;
         }
 
-        private void calcSpecialDPS() {
+        private void calcSpecialDPS() 
+        {
             float specialHit = 0;
             float specialCastTime = 0;
             specialAttackDmg = 0;
             specialAttackSpeed = 0;
-            if (Pet == "Imp") {
+            if (Pet == "Imp") 
+            {
                 specialCastTime = specialAttackSpeed = 2.5f - (talents.DemonicPower > 0 ? talents.DemonicPower * 0.25f : 0);
                 specialHit = 2.5f / 3.5f * petStats.SpellPower + (199 + 223) / 2;
                 if (talents.ImprovedImp         > 0) { specialHit *= 1f + talents.ImprovedImp * 0.1f; }
@@ -110,7 +135,8 @@ namespace Rawr.Warlock {
             specialAttackDmg = (float)((specialHit * (1 - petStats.SpellCrit) + specialHit * critCoefSpecial * petStats.SpellCrit));
         }
 
-        public void calcBaseDPS() {
+        public void calcBaseDPS() 
+        {
             baseAttackDmg = 0;
             if      (Pet == "Felhunter")  { baseAttackDmg = petStats.AttackPower * 4f/35f  +  330f; }
             else if (Pet == "Succubus")   { baseAttackDmg = petStats.AttackPower * 0.1500f +  433f; }
@@ -118,7 +144,10 @@ namespace Rawr.Warlock {
             else if (Pet == "Felguard")   { baseAttackDmg = petStats.AttackPower * 0.1800f +  520f; }
             else if (Pet == "Infernal")   { baseAttackDmg = petStats.AttackPower * 0.1300f + 1040f; }//??
             baseAttackSpeed = 2;
-            if (Pet == "Felguard" && talents.DemonicEmpowerment > 0) { baseAttackSpeed *= 1f - talents.DemonicEmpowerment * 15f / (60f * (1f - talents.Nemesis * 0.1f)); }
+            if (Pet == "Felguard" && talents.DemonicEmpowerment > 0) 
+            { 
+                baseAttackSpeed *= 1f - talents.DemonicEmpowerment * 15f / (60f * (1f - talents.Nemesis * 0.1f)); 
+            }
 
             baseAttackDmg = baseAttackDmg * (1f - petStats.PhysicalCrit) + baseAttackDmg * critCoefMelee * petStats.PhysicalCrit;
             baseAttackDmg *= petHit;
@@ -132,7 +161,8 @@ namespace Rawr.Warlock {
             if (talents.MasterDemonologist > 0 && Pet == "Felguard") { baseAttackDmg *= 1f + talents.MasterDemonologist * 0.01f; }
         }
 
-        public float getPetDPS(Solver solv) {
+        public float getPetDPS(Solver solv) 
+        {
             solver = solv;
 
             if (Pet == null || (Pet == "Felguard" && !(talents.SummonFelguard > 0))) { return 0; }
@@ -150,18 +180,29 @@ namespace Rawr.Warlock {
 
             float availableMana = petStats.Mana;
             availableMana += petStats.Mp5 / 5f * solver.time;
-            if (CalculationOptions.Replenishment > 0) { availableMana += petStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f) * solver.time; }
+            if (CalculationOptions.Replenishment > 0) 
+            { 
+                availableMana += petStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f) * solver.time; 
+            }
             availableMana += solver.petManaGain;
-            if (charStats.ManaRestoreFromBaseManaPPM > 0) {
+            if (charStats.ManaRestoreFromBaseManaPPM > 0) 
+            {
                 float hitCount = solver.time / baseAttackSpeed;
                 availableMana += baseMana * charStats.ManaRestoreFromBaseManaPPM * (CalculationOptions.JoW / 100f) * hitCount * petHit;
             }
             int specialHits = 0;
-            while (availableMana > 0 && specialHits + 1 <= solver.time / specialAttackSpeed && specialAttackSpeed > 0) {
+            while (availableMana > 0 && specialHits + 1 <= solver.time / specialAttackSpeed && specialAttackSpeed > 0) 
+            {
                 specialHits++;
                 availableMana -= specialCost;
-                if (charStats.ManaRestoreFromBaseManaPPM > 0) { availableMana += baseMana * charStats.ManaRestoreFromBaseManaPPM * (CalculationOptions.JoW / 100f) * petHit; }
-                if (Pet == "Felhunter" && talents.ImprovedFelhunter > 0) { availableMana += petStats.Mana * talents.ImprovedFelhunter * 0.04f; }
+                if (charStats.ManaRestoreFromBaseManaPPM > 0) 
+                { 
+                    availableMana += baseMana * charStats.ManaRestoreFromBaseManaPPM * (CalculationOptions.JoW / 100f) * petHit; 
+                }
+                if (Pet == "Felhunter" && talents.ImprovedFelhunter > 0) 
+                { 
+                    availableMana += petStats.Mana * talents.ImprovedFelhunter * 0.04f; 
+                }
             }
             critCount = petStats.SpellCrit * specialHits;
             return (baseAttackDmg > 0 ? baseAttackDmg / baseAttackSpeed : 0) + (specialAttackDmg > 0 ? specialAttackDmg * specialHits / solver.time : 0);

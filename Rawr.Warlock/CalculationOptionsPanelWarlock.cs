@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace Rawr.Warlock {
     public partial class CalculationOptionsPanelWarlock : CalculationOptionsPanelBase {
@@ -24,7 +25,7 @@ namespace Rawr.Warlock {
                 case 0:case 1:case 2:case 3: { calcOpts.TargetLevel += 80; break; }
                 default: { break; } // Do nothing if it's already transitioned
             }
-            cbTargetLevel.Text = calcOpts.TargetLevel.ToString();
+            cbTargetLevel.Text = calcOpts.TargetLevel.ToString(CultureInfo.InvariantCulture);
 
             trkFightLength.Value = (int)calcOpts.FightLength;
             lblFightLength.Text = trkFightLength.Value + " minute fight.";
@@ -45,7 +46,7 @@ namespace Rawr.Warlock {
             lsSpellPriority.Items.Clear();
             lsSpellPriority.Items.AddRange(calcOpts.SpellPriority.ToArray());
 
-            tbAffEffects.Text = calcOpts.AffEffectsNumber.ToString();
+            tbAffEffects.Text = calcOpts.AffEffectsNumber.ToString(CultureInfo.InvariantCulture);
 
             cbPet.SelectedItem = calcOpts.Pet;
 
@@ -69,7 +70,7 @@ namespace Rawr.Warlock {
         private void cbTargetLevel_SelectedIndexChanged(object sender, EventArgs e) {
             if (!loading) {
                 CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.TargetLevel = int.Parse(cbTargetLevel.Text);
+                calcOpts.TargetLevel = int.Parse(cbTargetLevel.Text, CultureInfo.InvariantCulture);
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -122,7 +123,7 @@ namespace Rawr.Warlock {
         private void tbAffEffects_Changed(object sender, EventArgs e) {
             if (!loading) {
                 CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.AffEffectsNumber = System.Convert.ToInt32(tbAffEffects.Text);
+                calcOpts.AffEffectsNumber = System.Convert.ToInt32(tbAffEffects.Text, CultureInfo.InvariantCulture);
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -197,7 +198,7 @@ namespace Rawr.Warlock {
         public string GetXml() {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsWarlock));
             StringBuilder xml = new StringBuilder();
-            StringWriter writer = new StringWriter(xml);
+            StringWriter writer = new StringWriter(xml, CultureInfo.InvariantCulture);
             serializer.Serialize(writer, this);
             return xml.ToString();
         }

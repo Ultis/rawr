@@ -2,15 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Globalization;
 
-namespace Rawr.Warlock {
+namespace Rawr.Warlock 
+{
     public enum SpellTree { Affliction, Demonology, Destruction }
-    public static class SpellFactory {
-        public static Spell CreateSpell(string name, Stats stats, Character character) {
-            CalculationOptionsWarlock CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
+
+    public static class SpellFactory 
+    {
+        //TODO: refactor ...
+        public static Spell CreateSpell(string name, Stats stats, Character character) 
+        {
             WarlockTalents talents = character.WarlockTalents;
             
-            switch (name) {
+            switch (name) 
+            {
                 case "Shadow Bolt":         return new ShadowBolt(stats, character);
                 case "Incinerate":          return new Incinerate(stats, character);
                 case "Immolate":            return new Immolate(stats, character);
@@ -39,7 +45,9 @@ namespace Rawr.Warlock {
             }
         }
     }
-    public class SpellStatistics {
+
+    public class SpellStatistics 
+    {
         public float CritCount { get; set; }
         public float MissCount { get; set; }
         public float HitCount { get; set; }
@@ -49,17 +57,21 @@ namespace Rawr.Warlock {
         public float DamageDone { get; set; }
         public float ManaUsed { get; set; }
     }
-    public class Spell {
+
+    public class Spell 
+    {
         public CalculationOptionsWarlock CalculationOptions;
 
-        public class SpellData {
+        public class SpellData 
+        {
             public int Rank { get; protected set; }
             public int Level { get; protected set; }
             public int MinDamage { get; protected set; }
             public int MaxDamage { get; protected set; }
             public int DotDamage { get; protected set; }
 
-            public SpellData(int rank, int level, int minDamage, int maxDamage, int dotDamage) {
+            public SpellData(int rank, int level, int minDamage, int maxDamage, int dotDamage) 
+            {
                 Rank = rank;
                 Level = level;
                 MinDamage = minDamage;
@@ -68,7 +80,6 @@ namespace Rawr.Warlock {
             }
         }
 
-        //public static List<string> SpellList = new List<string>() { "Shadow Bolt", "Curse of Agony", "Curse of Doom", "Corruption", "Siphon Life", "Unstable Affliction", "Death Coil", "Drain Life", "Drain Soul", "Haunt", "Seed of Corruption", "Shadowflame", "Shadowburn", "Shadowfury", "Incinerate", "Immolate", "Rain of Fire", "Hellfire", "Searing Pain", "Soul Fire", "Conflagrate", "Chaos Bolt" };
         public static List<string> SpellList = new List<string>() { "Shadow Bolt", "Curse of Agony", "Curse of Doom", "Corruption", "Unstable Affliction", "Death Coil", "Drain Life", "Drain Soul", "Haunt", "Seed of Corruption", "Shadowflame", "Shadowburn", "Shadowfury", "Incinerate", "Immolate", "Rain of Fire", "Hellfire", "Searing Pain", "Soul Fire", "Conflagrate", "Chaos Bolt" };
 
         public string Name { get; protected set; }
@@ -123,19 +134,22 @@ namespace Rawr.Warlock {
         public float MinCrit { get { return MinDamage * CritCoef; } }
         #endregion
 
-        public Spell(string name, Stats stats, Character character, List<SpellData> SpellRankTable, int manaCost, float castTime, float critCoef, float dotDuration, float damageCoef, int range, float cooldown, Color col, MagicSchool magicSchool, SpellTree spelltree) {
+        public Spell(string name, Stats stats, Character character, List<SpellData> SpellRankTable, int manaCost, float castTime, float critCoef, float dotDuration, float damageCoef, int range, float cooldown, Color col, MagicSchool magicSchool, SpellTree spelltree) 
+        {
             DamageCoef = damageCoef;
             DebuffDuration = dotDuration;
             GraphColor = col;
-            foreach (SpellData sd in SpellRankTable) {
-                if (character.Level >= sd.Level) {
+            foreach (SpellData sd in SpellRankTable) 
+            {
+                if (character.Level >= sd.Level) 
+                {
                     Rank = sd.Rank;
                     BaseMinDamage = MinDamage = sd.MinDamage;
                     BaseMaxDamage = MaxDamage = sd.MaxDamage;
                     BaseDotDamage = DotDamage = sd.DotDamage;
                 }
             }
-            //Name = string.Format("{0}, Rank {1}", name, Rank);
+
             Name = name;
             BaseManaCost = ManaCost = manaCost;
             BaseCastTime = CastTime = castTime;
@@ -147,18 +161,24 @@ namespace Rawr.Warlock {
             Cooldown = cooldown;
             RealCastTime = (CastTime / (1 + stats.SpellHaste));
             SpellStatistics = new SpellStatistics();
-            if (character.WarlockTalents.AmplifyCurse > 0 && Name.StartsWith("Curse of")) {
+            if (character.WarlockTalents.AmplifyCurse > 0 && Name.StartsWith("Curse of", StringComparison.Ordinal)) 
+            {
                 GlobalCooldown = (float)Math.Max(0.5f, 1.0f / (1 + stats.SpellHaste));
                 BaseGlobalCooldown = 1.0f;
-            } else {
+            } 
+            else 
+            {
                 GlobalCooldown = (float)Math.Max(1.0f, 1.5f / (1 + stats.SpellHaste));
                 BaseGlobalCooldown = 1.5f;
             }
             MagicSchool = magicSchool;
             SpellTree = spelltree;
-            if (character.Level >= 70 && character.Level <= 80){
+            if (character.Level >= 70 && character.Level <= 80)
+            {
                 BaseMana = 2871 + (character.Level - 70) * (3856 - 2871) / 10;
-            }else{
+            }
+            else
+            {
                 BaseMana = 2871;
             }
         }
@@ -170,98 +190,123 @@ namespace Rawr.Warlock {
 
         public virtual void Calculate(Stats stats, Character character) { }
 
-        public override string ToString() {
+        public override string ToString() 
+        {
             if (DebuffDuration > 0f && CritChance > 0f)
-                return String.Format("{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCrit: {7}-{8}, Avg {9}\r\nTick: {10}-{11}\r\nCrit Chance: {12}%\r\nCast: {13}\r\nRealCast: {14}\r\nCost: {15}\r\n{16}",
-                    AvgDamage.ToString("0"),
-                    DpS.ToString("0.00"),
-                    DpCT.ToString("0.00"),
-                    DpM.ToString("0.00"),
-                    MinDamage.ToString("0"), MaxDamage.ToString("0"), AvgHit.ToString("0"),
-                    MinCrit.ToString("0"), MaxCrit.ToString("0"), AvgCrit.ToString("0"),
-                    Math.Floor(DotDamage / DebuffDuration * TimeBetweenTicks).ToString("0"), Math.Ceiling(DotDamage / DebuffDuration * TimeBetweenTicks).ToString("0"),
-                    (CritChance * 100f).ToString("0.00"),
-                    CastTime.ToString("0.00"),
-                    RealCastTime.ToString("0.00"),
-                    ManaCost.ToString("0"),
+                return String.Format(CultureInfo.InvariantCulture, "{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCrit: {7}-{8}, Avg {9}\r\nTick: {10}-{11}\r\nCrit Chance: {12}%\r\nCast: {13}\r\nRealCast: {14}\r\nCost: {15}\r\n{16}",
+                    AvgDamage.ToString("0", CultureInfo.InvariantCulture),
+                    DpS.ToString("0.00", CultureInfo.InvariantCulture),
+                    DpCT.ToString("0.00", CultureInfo.InvariantCulture),
+                    DpM.ToString("0.00", CultureInfo.InvariantCulture),
+                    MinDamage.ToString("0", CultureInfo.InvariantCulture),
+                    MaxDamage.ToString("0", CultureInfo.InvariantCulture),
+                    AvgHit.ToString("0", CultureInfo.InvariantCulture),
+                    MinCrit.ToString("0", CultureInfo.InvariantCulture),
+                    MaxCrit.ToString("0", CultureInfo.InvariantCulture),
+                    AvgCrit.ToString("0", CultureInfo.InvariantCulture),
+                    Math.Floor(DotDamage / DebuffDuration * TimeBetweenTicks).ToString("0", CultureInfo.InvariantCulture),
+                    Math.Ceiling(DotDamage / DebuffDuration * TimeBetweenTicks).ToString("0", CultureInfo.InvariantCulture),
+                    (CritChance * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                    CastTime.ToString("0.00", CultureInfo.InvariantCulture),
+                    RealCastTime.ToString("0.00", CultureInfo.InvariantCulture),
+                    ManaCost.ToString("0", CultureInfo.InvariantCulture),
                     Name);
             if (DebuffDuration > 0f)
-                return String.Format("{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nTick: {4}-{5}\r\nDuration: {6}s\r\nCost: {7}\r\n{8}",
-                          AvgDamage.ToString("0"),
-                          DpS.ToString("0.00"),
-                          DpCT.ToString("0.00"),
-                          DpM.ToString("0.00"),
-                          Math.Floor(AvgDamage / DebuffDuration * TimeBetweenTicks).ToString("0"),
-                          Math.Ceiling(AvgDamage / DebuffDuration * TimeBetweenTicks).ToString("0"),
-                          DebuffDuration.ToString("0"),
-                          ManaCost.ToString("0"),
+                return String.Format(CultureInfo.InvariantCulture, "{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nTick: {4}-{5}\r\nDuration: {6}s\r\nCost: {7}\r\n{8}",
+                          AvgDamage.ToString("0", CultureInfo.InvariantCulture),
+                          DpS.ToString("0.00", CultureInfo.InvariantCulture),
+                          DpCT.ToString("0.00", CultureInfo.InvariantCulture),
+                          DpM.ToString("0.00", CultureInfo.InvariantCulture),
+                          Math.Floor(AvgDamage / DebuffDuration * TimeBetweenTicks).ToString("0", CultureInfo.InvariantCulture),
+                          Math.Ceiling(AvgDamage / DebuffDuration * TimeBetweenTicks).ToString("0", CultureInfo.InvariantCulture),
+                          DebuffDuration.ToString("0", CultureInfo.InvariantCulture),
+                          ManaCost.ToString("0", CultureInfo.InvariantCulture),
                           Name);
             else if (CritChance > 0f)
                 if (Name == "Incinerate") 
                      {
-                         return String.Format("{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCrit: {7}-{8}, Avg {9}\r\nCrit Chance: {10}%\r\nBuffedHit: {11}-{12}, Avg {13}\r\nCast: {14}\r\nRealCast: {15}\r\nCost: {16}\r\n{17}",
-                         AvgDamage.ToString("0"),
-                         DpS.ToString("0.00"),
-                         DpCT.ToString("0.00"),
-                         DpM.ToString("0.00"),
-                         MinDamage.ToString("0"), MaxDamage.ToString("0"), AvgHit.ToString("0"),
-                         MinCrit.ToString("0"), MaxCrit.ToString("0"), AvgCrit.ToString("0"),
-                         (CritChance * 100f).ToString("0.00"),
-                         MinBuffedDamage.ToString("0"), MaxBuffedDamage.ToString("0"), AvgBuffedDamage.ToString("0"),
-                         CastTime.ToString("0.00"),
-                         RealCastTime.ToString("0.00"),
-                         ManaCost.ToString("0"),
+                         return String.Format(CultureInfo.InvariantCulture, "{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCrit: {7}-{8}, Avg {9}\r\nCrit Chance: {10}%\r\nBuffedHit: {11}-{12}, Avg {13}\r\nCast: {14}\r\nRealCast: {15}\r\nCost: {16}\r\n{17}",
+                         AvgDamage.ToString("0", CultureInfo.InvariantCulture),
+                         DpS.ToString("0.00", CultureInfo.InvariantCulture),
+                         DpCT.ToString("0.00", CultureInfo.InvariantCulture),
+                         DpM.ToString("0.00", CultureInfo.InvariantCulture),
+                         MinDamage.ToString("0", CultureInfo.InvariantCulture),
+                         MaxDamage.ToString("0", CultureInfo.InvariantCulture),
+                         AvgHit.ToString("0", CultureInfo.InvariantCulture),
+                         MinCrit.ToString("0", CultureInfo.InvariantCulture),
+                         MaxCrit.ToString("0", CultureInfo.InvariantCulture),
+                         AvgCrit.ToString("0", CultureInfo.InvariantCulture),
+                         (CritChance * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                         MinBuffedDamage.ToString("0", CultureInfo.InvariantCulture),
+                         MaxBuffedDamage.ToString("0", CultureInfo.InvariantCulture),
+                         AvgBuffedDamage.ToString("0", CultureInfo.InvariantCulture),
+                         CastTime.ToString("0.00", CultureInfo.InvariantCulture),
+                         RealCastTime.ToString("0.00", CultureInfo.InvariantCulture),
+                         ManaCost.ToString("0", CultureInfo.InvariantCulture),
                          Name);
                     }
                 else if (Name == "Chaos Bolt")
                      {
-                         return String.Format("{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCrit: {7}-{8}, Avg {9}\r\nCrit Chance: {10}%\r\nBuffedHit: {11}-{12}, Avg {13}\r\nCast: {14}\r\nRealCast: {15}\r\nCost: {16}\r\n{17}",
-                              AvgDamage.ToString("0"),
-                              DpS.ToString("0.00"),
-                              DpCT.ToString("0.00"),
-                              DpM.ToString("0.00"),
-                              MinDamage.ToString("0"), MaxDamage.ToString("0"), AvgHit.ToString("0"),
-                              MinCrit.ToString("0"), MaxCrit.ToString("0"), AvgCrit.ToString("0"),
-                              (CritChance * 100f).ToString("0.00"),
-                              MinBuffedDamage.ToString("0"), MaxBuffedDamage.ToString("0"), AvgBuffedDamage.ToString("0"),
-                              CastTime.ToString("0.00"),
-                              RealCastTime.ToString("0.00"),
-                              ManaCost.ToString("0"),
+                         return String.Format(CultureInfo.InvariantCulture, "{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCrit: {7}-{8}, Avg {9}\r\nCrit Chance: {10}%\r\nBuffedHit: {11}-{12}, Avg {13}\r\nCast: {14}\r\nRealCast: {15}\r\nCost: {16}\r\n{17}",
+                              AvgDamage.ToString("0", CultureInfo.InvariantCulture),
+                              DpS.ToString("0.00", CultureInfo.InvariantCulture),
+                              DpCT.ToString("0.00", CultureInfo.InvariantCulture),
+                              DpM.ToString("0.00", CultureInfo.InvariantCulture),
+                              MinDamage.ToString("0", CultureInfo.InvariantCulture),
+                              MaxDamage.ToString("0", CultureInfo.InvariantCulture),
+                              AvgHit.ToString("0", CultureInfo.InvariantCulture),
+                              MinCrit.ToString("0", CultureInfo.InvariantCulture),
+                              MaxCrit.ToString("0", CultureInfo.InvariantCulture),
+                              AvgCrit.ToString("0", CultureInfo.InvariantCulture),
+                              (CritChance * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                              MinBuffedDamage.ToString("0", CultureInfo.InvariantCulture),
+                              MaxBuffedDamage.ToString("0", CultureInfo.InvariantCulture),
+                              AvgBuffedDamage.ToString("0", CultureInfo.InvariantCulture),
+                              CastTime.ToString("0.00", CultureInfo.InvariantCulture),
+                              RealCastTime.ToString("0.00", CultureInfo.InvariantCulture),
+                              ManaCost.ToString("0", CultureInfo.InvariantCulture),
                               Name);
                     }
-                else
-                return String.Format("{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCrit: {7}-{8}, Avg {9}\r\nCrit Chance: {10}%\r\nCast: {11}\r\nRealCast: {12}\r\nCost: {13}\r\n{14}",
-                    AvgDamage.ToString("0"),
-                    DpS.ToString("0.00"),
-                    DpCT.ToString("0.00"),
-                    DpM.ToString("0.00"),
-                    MinDamage.ToString("0"), MaxDamage.ToString("0"), AvgHit.ToString("0"),
-                    MinCrit.ToString("0"), MaxCrit.ToString("0"), AvgCrit.ToString("0"),
-                    (CritChance * 100f).ToString("0.00"),
-                    CastTime.ToString("0.00"),
-                    RealCastTime.ToString("0.00"),
-                    ManaCost.ToString("0"),
+                else return String.Format(CultureInfo.InvariantCulture, "{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCrit: {7}-{8}, Avg {9}\r\nCrit Chance: {10}%\r\nCast: {11}\r\nRealCast: {12}\r\nCost: {13}\r\n{14}",
+                    AvgDamage.ToString("0", CultureInfo.InvariantCulture),
+                    DpS.ToString("0.00", CultureInfo.InvariantCulture),
+                    DpCT.ToString("0.00", CultureInfo.InvariantCulture),
+                    DpM.ToString("0.00", CultureInfo.InvariantCulture),
+                    MinDamage.ToString("0", CultureInfo.InvariantCulture),
+                    MaxDamage.ToString("0", CultureInfo.InvariantCulture),
+                    AvgHit.ToString("0", CultureInfo.InvariantCulture),
+                    MinCrit.ToString("0", CultureInfo.InvariantCulture),
+                    MaxCrit.ToString("0", CultureInfo.InvariantCulture),
+                    AvgCrit.ToString("0", CultureInfo.InvariantCulture),
+                    (CritChance * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                    CastTime.ToString("0.00", CultureInfo.InvariantCulture),
+                    RealCastTime.ToString("0.00", CultureInfo.InvariantCulture),
+                    ManaCost.ToString("0", CultureInfo.InvariantCulture),
                     Name);
-            else return String.Format("{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCast: {7}\r\nRealCast: {8}\r\nCost: {9}\r\n{10}",
-                AvgDamage.ToString("0"),
-                DpS.ToString("0.00"),
-                DpCT.ToString("0.00"),
-                DpM.ToString("0.00"),
-                MinDamage.ToString("0"), MaxDamage.ToString("0"), AvgHit.ToString("0"),
-                CastTime.ToString("0.00"),
-                RealCastTime.ToString("0.00"),
-                ManaCost.ToString("0"),
+            else return String.Format(CultureInfo.InvariantCulture, "{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCast: {7}\r\nRealCast: {8}\r\nCost: {9}\r\n{10}",
+                AvgDamage.ToString("0", CultureInfo.InvariantCulture),
+                DpS.ToString("0.00", CultureInfo.InvariantCulture),
+                DpCT.ToString("0.00", CultureInfo.InvariantCulture),
+                DpM.ToString("0.00", CultureInfo.InvariantCulture),
+                MinDamage.ToString("0", CultureInfo.InvariantCulture),
+                MaxDamage.ToString("0", CultureInfo.InvariantCulture),
+                AvgHit.ToString("0", CultureInfo.InvariantCulture),
+                CastTime.ToString("0.00", CultureInfo.InvariantCulture),
+                RealCastTime.ToString("0.00", CultureInfo.InvariantCulture),
+                ManaCost.ToString("0", CultureInfo.InvariantCulture),
                 Name);
         }
     }
 
-    public class ShadowBolt : Spell {
-        static readonly List<SpellData> SpellRankTable = new List<SpellData>() { new SpellData(13, 79, 690, 770, 0) };
+    public class ShadowBolt : Spell 
+    {
+        static readonly List<SpellData> SpellRankTable = new List<SpellData>() 
+        { 
+            new SpellData(13, 79, 690, 770, 0) 
+        };
 
-        public ShadowBolt(Stats stats, Character character)
-            : base("Shadow Bolt", stats, character, SpellRankTable, 17, 3f, 1.5f, 0f, 3f / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Destruction)
+        public ShadowBolt(Stats stats, Character character) : base("Shadow Bolt", stats, character, SpellRankTable, 17, 3f, 1.5f, 0f, 3f / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -295,10 +340,8 @@ namespace Rawr.Warlock {
             new SpellData(4, 80, 582, 676, 0)
         };
 
-        public Incinerate(Stats stats, Character character)
-            : base("Incinerate", stats, character, SpellRankTable, 14, 2.5f, 1.5f, 0f, 2.5f / 3.5f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction)
+        public Incinerate(Stats stats, Character character) : base("Incinerate", stats, character, SpellRankTable, 14, 2.5f, 1.5f, 0f, 2.5f / 3.5f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -342,10 +385,8 @@ namespace Rawr.Warlock {
             new SpellData(9, 79, 0, 0, 1740)
         };
 
-        public CurseOfAgony(Stats stats, Character character)
-            : base("Curse of Agony", stats, character, SpellRankTable, 10, 0f, 0, 24f, 1.2f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public CurseOfAgony(Stats stats, Character character): base("Curse of Agony", stats, character, SpellRankTable, 10, 0f, 0, 24f, 1.2f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -378,10 +419,8 @@ namespace Rawr.Warlock {
             new SpellData(3, 80, 0, 0, 7300)
         };
 
-        public CurseOfDoom(Stats stats, Character character)
-            : base("Curse of Doom", stats, character, SpellRankTable, 15, 0f, 0, 60f, 2f, 30, 60f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public CurseOfDoom(Stats stats, Character character): base("Curse of Doom", stats, character, SpellRankTable, 15, 0f, 0, 60f, 2f, 30, 60f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -406,10 +445,8 @@ namespace Rawr.Warlock {
             new SpellData(10, 77, 0, 0, 1080)
         };
 
-        public Corruption(Stats stats, Character character)
-            : base("Corruption", stats, character, SpellRankTable, 14, 0f, 0, 18f, 1.2f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public Corruption(Stats stats, Character character): base("Corruption", stats, character, SpellRankTable, 14, 0f, 0, 18f, 1.2f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -439,10 +476,8 @@ namespace Rawr.Warlock {
             new SpellData(8, 80, 0, 0, 810)
         };
 
-        public SiphonLife(Stats stats, Character character)
-            : base("Siphon Life", stats, character, SpellRankTable, 16, 0f, 0, 30f, 1f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public SiphonLife(Stats stats, Character character) : base("Siphon Life", stats, character, SpellRankTable, 16, 0f, 0, 30f, 1f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -467,10 +502,8 @@ namespace Rawr.Warlock {
             new SpellData(5, 80, 0, 0, 1150)
         };
 
-        public UnstableAffliction(Stats stats, Character character)
-            : base("Unstable Affliction", stats, character, SpellRankTable, 15, 1.5f, 0, 15f, 1f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public UnstableAffliction(Stats stats, Character character) : base("Unstable Affliction", stats, character, SpellRankTable, 15, 1.5f, 0, 15f, 1f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -501,10 +534,8 @@ namespace Rawr.Warlock {
             new SpellData(6, 78, 790, 790, 0)
         };
 
-        public DeathCoil(Stats stats, Character character)
-            : base("Death Coil", stats, character, SpellRankTable, 23, 0f, 0, 0f, 0.22f, 30, 120f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public DeathCoil(Stats stats, Character character): base("Death Coil", stats, character, SpellRankTable, 23, 0f, 0, 0f, 0.22f, 30, 120f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -531,10 +562,8 @@ namespace Rawr.Warlock {
             new SpellData(9, 78, 0, 0, 665)
         };
 
-        public DrainLife(Stats stats, Character character)
-            : base("Drain Life", stats, character, SpellRankTable, 17, 5f, 0, 0f, 5f / 2 / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public DrainLife(Stats stats, Character character): base("Drain Life", stats, character, SpellRankTable, 17, 5f, 0, 0f, 5f / 2 / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -559,10 +588,8 @@ namespace Rawr.Warlock {
             new SpellData(6, 77, 0, 0, 710)
         };
 
-        public DrainSoul(Stats stats, Character character)
-            : base("Drain Soul", stats, character, SpellRankTable, 14, 15f, 0, 15f / (1 + stats.SpellHaste), 5f / 2 / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public DrainSoul(Stats stats, Character character): base("Drain Soul", stats, character, SpellRankTable, 14, 15f, 0, 15f / (1 + stats.SpellHaste), 5f / 2 / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -587,10 +614,8 @@ namespace Rawr.Warlock {
             new SpellData(4, 80, 645, 753, 0)
         };
 
-        public Haunt(Stats stats, Character character)
-            : base("Haunt", stats, character, SpellRankTable, 12, 1.5f, 1.5f, 0f, 1.5f / 3.5f, 30, 8f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public Haunt(Stats stats, Character character): base("Haunt", stats, character, SpellRankTable, 12, 1.5f, 1.5f, 0f, 1.5f / 3.5f, 30, 8f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -615,14 +640,13 @@ namespace Rawr.Warlock {
     //Seed of Corruption: Aoe effect not added. Shorter duration not added. Only one Corruption spell per Warlock can be active on any one target.
     public class SeedOfCorruption : Spell
     {
-        static readonly List<SpellData> SpellRankTable = new List<SpellData>() {
+        static readonly List<SpellData> SpellRankTable = new List<SpellData>() 
+        {
             new SpellData(3, 80, 0, 0, 1518)
         };
 
-        public SeedOfCorruption(Stats stats, Character character)
-            : base("Seed of Corruption", stats, character, SpellRankTable, 34, 2f, 1.5f, 18f, 1.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public SeedOfCorruption(Stats stats, Character character) : base("Seed of Corruption", stats, character, SpellRankTable, 34, 2f, 1.5f, 18f, 1.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -650,10 +674,8 @@ namespace Rawr.Warlock {
            new SpellData(2, 80,  615, 671, 644)
         };
 
-        public Shadowflame(Stats stats, Character character)
-            : base("Shadowflame", stats, character, SpellRankTable, 2, 0f, 1.5f, 8f, 1.5f / 3.5f, 10, 15f, Color.Gold, MagicSchool.Shadow, SpellTree.Destruction)
+        public Shadowflame(Stats stats, Character character) : base("Shadowflame", stats, character, SpellRankTable, 2, 0f, 1.5f, 8f, 1.5f / 3.5f, 10, 15f, Color.Gold, MagicSchool.Shadow, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -692,10 +714,8 @@ namespace Rawr.Warlock {
             new SpellData(10, 80, 775, 865, 0)
         };
 
-        public Shadowburn(Stats stats, Character character)
-            : base("Shadowburn", stats, character, SpellRankTable, 20, 0f, 1.5f, 0f, 1.5f / 3.5f, 20, 15f, Color.Red, MagicSchool.Shadow, SpellTree.Destruction)
+        public Shadowburn(Stats stats, Character character) : base("Shadowburn", stats, character, SpellRankTable, 20, 0f, 1.5f, 0f, 1.5f / 3.5f, 20, 15f, Color.Red, MagicSchool.Shadow, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -724,10 +744,8 @@ namespace Rawr.Warlock {
             new SpellData(5, 80, 968, 1152, 0)
         };
 
-        public Shadowfury(Stats stats, Character character)
-            : base("Shadowfury", stats, character, SpellRankTable, 27, 0f, 1.5f, 0f, 0.195f, 30, 20f, Color.Red, MagicSchool.Shadow, SpellTree.Destruction)
+        public Shadowfury(Stats stats, Character character) : base("Shadowfury", stats, character, SpellRankTable, 27, 0f, 1.5f, 0f, 0.195f, 30, 20f, Color.Red, MagicSchool.Shadow, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -756,10 +774,8 @@ namespace Rawr.Warlock {
            new SpellData(11, 80,  460, 460, 785)
         };
 
-        public Immolate(Stats stats, Character character)
-            : base("Immolate", stats, character, SpellRankTable, 17, 2f, 1.5f, 15f, 2f / 3.5f, 30, 0f, Color.Gold, MagicSchool.Fire, SpellTree.Destruction)
+        public Immolate(Stats stats, Character character) : base("Immolate", stats, character, SpellRankTable, 17, 2f, 1.5f, 15f, 2f / 3.5f, 30, 0f, Color.Gold, MagicSchool.Fire, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -815,10 +831,8 @@ namespace Rawr.Warlock {
             new SpellData(7, 79, 0, 0, 2700)
         };
 
-        public RainOfFire(Stats stats, Character character)
-            : base("Rain of Fire", stats, character, SpellRankTable, 57, 8f, 1.5f, 0f, 1.15f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction)
+        public RainOfFire(Stats stats, Character character) : base("Rain of Fire", stats, character, SpellRankTable, 57, 8f, 1.5f, 0f, 1.15f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -846,10 +860,8 @@ namespace Rawr.Warlock {
             new SpellData(5, 78, 0, 0, 6765)
         };
 
-        public Hellfire(Stats stats, Character character)
-            : base("Hellfire", stats, character, SpellRankTable, 64, 15f, 0, 0f, 15f / 2 / 3.5f, 10, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction)
+        public Hellfire(Stats stats, Character character): base("Hellfire", stats, character, SpellRankTable, 64, 15f, 0, 0f, 15f / 2 / 3.5f, 10, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -874,10 +886,8 @@ namespace Rawr.Warlock {
             new SpellData(10, 79, 343, 405, 0)
         };
 
-        public SearingPain(Stats stats, Character character)
-            : base("Searing Pain", stats, character, SpellRankTable, 8, 1.5f, 1.5f, 0f, 1.5f / 3.5f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction)
+        public SearingPain(Stats stats, Character character) : base("Searing Pain", stats, character, SpellRankTable, 8, 1.5f, 1.5f, 0f, 1.5f / 3.5f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -910,10 +920,8 @@ namespace Rawr.Warlock {
             new SpellData(6, 80, 1323, 1657, 0)
         };
 
-        public SoulFire(Stats stats, Character character)
-            : base("Soul Fire", stats, character, SpellRankTable, 9, 6f, 1.5f, 0f, 1.15f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction)
+        public SoulFire(Stats stats, Character character) : base("Soul Fire", stats, character, SpellRankTable, 9, 6f, 1.5f, 0f, 1.15f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -945,10 +953,8 @@ namespace Rawr.Warlock {
             new SpellData(8, 80, 766, 945, 0)
         };
 
-        public Conflagrate(Stats stats, Character character)
-            : base("Conflagrate", stats, character, SpellRankTable, 12, 0f, 1.5f, 0f, 1.5f / 3.5f, 30, 10f, Color.Red, MagicSchool.Fire, SpellTree.Destruction)
+        public Conflagrate(Stats stats, Character character): base("Conflagrate", stats, character, SpellRankTable, 12, 0f, 1.5f, 0f, 1.5f / 3.5f, 30, 10f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
@@ -983,11 +989,9 @@ namespace Rawr.Warlock {
             new SpellData(4, 80, 1429, 1813, 0)
         };
 
-        public ChaosBolt(Stats stats, Character character)
-            : base("Chaos Bolt", stats, character, SpellRankTable, 7, 2.5f, 1.5f, 0f, 2.5f / 3.5f, 30, 12f, Color.Red, MagicSchool.Fire, SpellTree.Destruction)
+        public ChaosBolt(Stats stats, Character character): base("Chaos Bolt", stats, character, SpellRankTable, 7, 2.5f, 1.5f, 0f, 2.5f / 3.5f, 30, 12f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
         {
-            Calculate(stats, character);
-        }
+        } 
 
         public override void Calculate(Stats stats, Character character)
         {
@@ -1035,10 +1039,8 @@ namespace Rawr.Warlock {
             new SpellData(8, 80, 0, 0, 0)
         };
 
-        public LifeTap(Stats stats, Character character)
-            : base("Life Tap", stats, character, SpellRankTable, 0, 0f, 0f, 0f, 0f, 0, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+        public LifeTap(Stats stats, Character character) : base("Life Tap", stats, character, SpellRankTable, 0, 0f, 0f, 0f, 0f, 0, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
         {
-            Calculate(stats, character);
         }
 
         public override void Calculate(Stats stats, Character character)
