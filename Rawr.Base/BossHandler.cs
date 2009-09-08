@@ -27,6 +27,7 @@ namespace Rawr {
     public class BossList {
         // Constructors
         public BossList() {
+            DamageTypes = new ItemDamageType[] { ItemDamageType.Physical, ItemDamageType.Nature, ItemDamageType.Arcane, ItemDamageType.Frost, ItemDamageType.Fire, ItemDamageType.Shadow, ItemDamageType.Holy, };
             list = new BossHandler[] {
                 // ==== Tier 7 Content ====
                 // Naxx-10
@@ -60,27 +61,59 @@ namespace Rawr {
                 new Maexxna_25(),
                 new Patchwerk_25(),
             };
-            DamageTypes = new ItemDamageType[] { ItemDamageType.Physical, ItemDamageType.Nature, ItemDamageType.Arcane, ItemDamageType.Frost, ItemDamageType.Fire, ItemDamageType.Shadow, ItemDamageType.Holy, };
-            TheEZModeBoss  = GenTheEZModeBoss();
-            TheAvgBoss     = GenTheAvgBoss();
-            TheHardestBoss = GenTheHardestBoss();
+            TheEZModeBoss  = GenTheEZModeBoss(list);
+            TheAvgBoss     = GenTheAvgBoss(list);
+            TheHardestBoss = GenTheHardestBoss(list);
+            // This one is for filtered lists, defaults to the full list above
+            calledList = GenCalledList(FilterType.Content,"All");
         }
         #region Variables
         public const int NormCharLevel = 80;
-        public BossHandler[] list;
+        public BossHandler[] list, calledList;
         private ItemDamageType[] DamageTypes;
         public BossHandler TheEZModeBoss;
         public BossHandler TheAvgBoss;
         public BossHandler TheHardestBoss;
+        public BossHandler TheEZModeBoss_Called;
+        public BossHandler TheAvgBoss_Called;
+        public BossHandler TheHardestBoss_Called;
         #endregion
         #region Functions
+        // Called List Generation and Interaction
+        public enum FilterType { Content=0, Instance, Version, Name }
+        public BossHandler[] GenCalledList(FilterType ftype, string Filter) {
+            if (Filter.Equals("All",StringComparison.OrdinalIgnoreCase)) {
+                // Resets the calledList to the full, unfiltered List
+                TheEZModeBoss_Called  = TheEZModeBoss;
+                TheAvgBoss_Called     = TheAvgBoss;
+                TheHardestBoss_Called = TheHardestBoss;
+                return calledList = list;
+            }
+            // Generate a list based upon the specialized Filter, only 1 thing can be compared at a time though
+            List<BossHandler> retList = new List<BossHandler>();
+            foreach (BossHandler boss in list) {
+                switch (ftype) {
+                    case FilterType.Content:  { if (boss.Content.Equals( Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
+                    case FilterType.Instance: { if (boss.Instance.Equals(Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
+                    case FilterType.Version:  { if (boss.Version.Equals( Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
+                    case FilterType.Name:     { if (boss.Name.Equals(    Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
+                    default: { /*Invalid type, do nothing*/ break; }
+                }
+            }
+            BossHandler[] retList2 = retList.ToArray();
+            // Gen the special bosses based upon this filtered list
+            TheEZModeBoss_Called  = GenTheEZModeBoss(retList2);
+            TheAvgBoss_Called     = GenTheAvgBoss(retList2);
+            TheHardestBoss_Called = GenTheHardestBoss(retList2);
+            return calledList = retList2;
+        }
         // Name Calling
         public List<string> GetBossNames() {
             List<string> names = new List<string>() { };
             names.Add(TheEZModeBoss.Name);
             names.Add(TheAvgBoss.Name);
             names.Add(TheHardestBoss.Name);
-            foreach (BossHandler boss in list) {
+            foreach (BossHandler boss in calledList) {
                 names.Add(boss.Name);
             }
             return names;
@@ -91,7 +124,7 @@ namespace Rawr {
             names.Add(TheEZModeBoss.Name);
             names.Add(TheAvgBoss.Name);
             names.Add(TheHardestBoss.Name);
-            foreach (BossHandler boss in list) {
+            foreach (BossHandler boss in calledList) {
                 string name = boss.Content + " : " + boss.Instance + " (" + boss.Version + ") " + boss.Name;
                 names.Add(name);
             }
@@ -100,11 +133,11 @@ namespace Rawr {
         public string[] GetBetterBossNamesAsArray() { return GetBetterBossNames().ToArray(); }
         public BossHandler GetBossFromName(string name) {
             BossHandler retBoss = new BossHandler();
-            if      (TheEZModeBoss.Name  == name) { retBoss = TheEZModeBoss;  }
-            else if (TheAvgBoss.Name     == name) { retBoss = TheAvgBoss;     }
-            else if (TheHardestBoss.Name == name) { retBoss = TheHardestBoss; }
+            if      (TheEZModeBoss_Called.Name  == name) { retBoss = TheEZModeBoss_Called;  }
+            else if (TheAvgBoss_Called.Name     == name) { retBoss = TheAvgBoss_Called;     }
+            else if (TheHardestBoss_Called.Name == name) { retBoss = TheHardestBoss_Called; }
             else {
-                foreach (BossHandler boss in list) {
+                foreach (BossHandler boss in calledList) {
                     if(boss.Name == name){
                         retBoss = boss;
                         break;
@@ -115,11 +148,11 @@ namespace Rawr {
         }
         public BossHandler GetBossFromBetterName(string name) {
             BossHandler retBoss = new BossHandler();
-            if      (TheEZModeBoss.Name  == name) { retBoss = TheEZModeBoss;  }
-            else if (TheAvgBoss.Name     == name) { retBoss = TheAvgBoss;     }
-            else if (TheHardestBoss.Name == name) { retBoss = TheHardestBoss; }
+            if      (TheEZModeBoss_Called.Name  == name) { retBoss = TheEZModeBoss_Called;  }
+            else if (TheAvgBoss_Called.Name     == name) { retBoss = TheAvgBoss_Called;     }
+            else if (TheHardestBoss_Called.Name == name) { retBoss = TheHardestBoss_Called; }
             else {
-                foreach (BossHandler boss in list) {
+                foreach (BossHandler boss in calledList) {
                     string checkName = boss.Content + " : " + boss.Instance + " (" + boss.Version + ") " + boss.Name;
                     if(checkName == name){
                         retBoss = boss;
@@ -129,6 +162,42 @@ namespace Rawr {
             }
             return retBoss;
         }
+        public List<string> GetFilterList(FilterType ftype) {
+            List<string> names = new List<string>() { };
+            switch (ftype) {
+                case FilterType.Content: {
+                    if (!names.Contains(TheEZModeBoss_Called.Content)) { names.Add(TheEZModeBoss_Called.Content); }
+                    if (!names.Contains(TheAvgBoss_Called.Content)) { names.Add(TheAvgBoss_Called.Content); }
+                    if (!names.Contains(TheHardestBoss_Called.Content)) { names.Add(TheHardestBoss_Called.Content); }
+                    foreach (BossHandler boss in calledList) { if (!names.Contains(boss.Content)) { names.Add(boss.Content); } }
+                    break;
+                }
+                case FilterType.Instance: {
+                    if (!names.Contains(TheEZModeBoss_Called.Instance)) { names.Add(TheEZModeBoss_Called.Instance); }
+                    if (!names.Contains(TheAvgBoss_Called.Instance)) { names.Add(TheAvgBoss_Called.Instance); }
+                    if (!names.Contains(TheHardestBoss_Called.Instance)) { names.Add(TheHardestBoss_Called.Instance); }
+                    foreach (BossHandler boss in calledList) { if (!names.Contains(boss.Instance)) { names.Add(boss.Instance); } }
+                    break;
+                }
+                case FilterType.Name: {
+                    if (!names.Contains(TheEZModeBoss_Called.Name)) { names.Add(TheEZModeBoss_Called.Name); }
+                    if (!names.Contains(TheAvgBoss_Called.Name)) { names.Add(TheAvgBoss_Called.Name); }
+                    if (!names.Contains(TheHardestBoss_Called.Name)) { names.Add(TheHardestBoss_Called.Name); }
+                    foreach (BossHandler boss in calledList) { if (!names.Contains(boss.Name)) { names.Add(boss.Name); } }
+                    break;
+                }
+                case FilterType.Version: {
+                    if (!names.Contains(TheEZModeBoss_Called.Version)) { names.Add(TheEZModeBoss_Called.Version); }
+                    if (!names.Contains(TheAvgBoss_Called.Version)) { names.Add(TheAvgBoss_Called.Version); }
+                    if (!names.Contains(TheHardestBoss_Called.Version)) { names.Add(TheHardestBoss_Called.Version); }
+                    foreach (BossHandler boss in calledList) { if (!names.Contains(boss.Version)) { names.Add(boss.Version); } }
+                    break;
+                }
+                default: { /*Invalid type, do nothing*/ break; }
+            }
+            return names;
+        }
+        public string[] GetFilterListAsArray(FilterType ftype) { return GetFilterList(ftype).ToArray(); }
         /// <summary>
         /// Generates a Fight Info description listing the stats of the fight as well as any comments listed for the boss
         /// </summary>
@@ -141,28 +210,29 @@ namespace Rawr {
             return retVal;
         }
         // The Special Bosses
-        private BossHandler GenTheEZModeBoss() {
+        private BossHandler GenTheEZModeBoss(BossHandler[] passedList) {
             BossHandler retboss = new BossHandler();
+            if (passedList.Length < 1) { return retboss; }
             float value = 0f;
             // Basics
             retboss.Name = "The Easiest Boss";
-            value = 0f; foreach (BossHandler boss in list) { value = Math.Max(value, boss.BerserkTimer); } retboss.BerserkTimer = (int)Math.Ceiling(value);
-            value = list[0].Health; foreach (BossHandler boss in list) { value = Math.Min(value, boss.Health); } retboss.Health = value;
-            value = list[0].Armor; foreach (BossHandler boss in list) { value = Math.Min(value, boss.Armor); } retboss.Armor = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.BerserkTimer); } retboss.BerserkTimer = (int)Math.Ceiling(value);
+            value = passedList[0].Health; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Health); } retboss.Health = value;
+            value = passedList[0].Armor; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Armor); } retboss.Armor = value;
             retboss.UseParryHaste = false;
             // Resistance
             foreach (ItemDamageType t in DamageTypes) {
-                value = list[0].Resistance(t);
-                foreach (BossHandler boss in list) {
+                value = passedList[0].Resistance(t);
+                foreach (BossHandler boss in passedList) {
                     value = Math.Min(value, boss.Resistance(t));
                 }
                 retboss.Resistance(t, value);
             }
             // Attacks
             {
-                float perhit = list[0].MeleeAttack.DamagePerHit; foreach (BossHandler boss in list) { perhit = Math.Min(perhit, boss.MeleeAttack.Name == "Invalid" ? perhit : boss.MeleeAttack.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in list) { numtrg = Math.Min(numtrg, boss.MeleeAttack.Name == "Invalid" ? numtrg : boss.MeleeAttack.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in list) { atkspd = Math.Max(atkspd, boss.MeleeAttack.Name == "Invalid" ? atkspd : boss.MeleeAttack.AttackSpeed); }
+                float perhit = passedList[0].MeleeAttack.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.MeleeAttack.Name == "Invalid" ? perhit : boss.MeleeAttack.DamagePerHit); }
+                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.MeleeAttack.Name == "Invalid" ? numtrg : boss.MeleeAttack.MaxNumTargets); }
+                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.MeleeAttack.Name == "Invalid" ? atkspd : boss.MeleeAttack.AttackSpeed); }
                 retboss.MeleeAttack = new Attack {
                     Name = "Melee Attack",
                     DamageType = ItemDamageType.Physical,
@@ -172,9 +242,9 @@ namespace Rawr {
                 };
             }
             {
-                float perhit = list[0].SpellAttack.DamagePerHit; foreach (BossHandler boss in list) { perhit = Math.Min(perhit, boss.SpellAttack.Name == "Invalid" ? perhit : boss.SpellAttack.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in list) { numtrg = Math.Min(numtrg, boss.SpellAttack.Name == "Invalid" ? numtrg : boss.SpellAttack.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in list) { atkspd = Math.Max(atkspd, boss.SpellAttack.Name == "Invalid" ? atkspd : boss.SpellAttack.AttackSpeed); }
+                float perhit = passedList[0].SpellAttack.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.SpellAttack.Name == "Invalid" ? perhit : boss.SpellAttack.DamagePerHit); }
+                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.SpellAttack.Name == "Invalid" ? numtrg : boss.SpellAttack.MaxNumTargets); }
+                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.SpellAttack.Name == "Invalid" ? atkspd : boss.SpellAttack.AttackSpeed); }
                 retboss.SpellAttack = new Attack {
                     Name = "Spell Attack",
                     DamageType = ItemDamageType.Arcane,
@@ -184,9 +254,9 @@ namespace Rawr {
                 };
             }
             {
-                float perhit = list[0].SpecialAttack_1.DamagePerHit; foreach (BossHandler boss in list) { perhit = Math.Min(perhit, boss.SpecialAttack_1.Name == "Invalid" ? perhit : boss.SpecialAttack_1.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in list) { numtrg = Math.Min(numtrg, boss.SpecialAttack_1.Name == "Invalid" ? numtrg : boss.SpecialAttack_1.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in list) { atkspd = Math.Max(atkspd, boss.SpecialAttack_1.Name == "Invalid" ? atkspd : boss.SpecialAttack_1.AttackSpeed); }
+                float perhit = passedList[0].SpecialAttack_1.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.SpecialAttack_1.Name == "Invalid" ? perhit : boss.SpecialAttack_1.DamagePerHit); }
+                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.SpecialAttack_1.Name == "Invalid" ? numtrg : boss.SpecialAttack_1.MaxNumTargets); }
+                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.SpecialAttack_1.Name == "Invalid" ? atkspd : boss.SpecialAttack_1.AttackSpeed); }
                 retboss.SpecialAttack_1 = new Attack {
                     Name = "Special Attack 1",
                     DamageType = ItemDamageType.Fire,
@@ -196,9 +266,9 @@ namespace Rawr {
                 };
             }
             {
-                float perhit = list[0].SpecialAttack_2.DamagePerHit; foreach (BossHandler boss in list) { perhit = Math.Min(perhit, boss.SpecialAttack_2.Name == "Invalid" ? perhit : boss.SpecialAttack_2.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in list) { numtrg = Math.Min(numtrg, boss.SpecialAttack_2.Name == "Invalid" ? numtrg : boss.SpecialAttack_2.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in list) { atkspd = Math.Max(atkspd, boss.SpecialAttack_2.Name == "Invalid" ? atkspd : boss.SpecialAttack_2.AttackSpeed); }
+                float perhit = passedList[0].SpecialAttack_2.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.SpecialAttack_2.Name == "Invalid" ? perhit : boss.SpecialAttack_2.DamagePerHit); }
+                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.SpecialAttack_2.Name == "Invalid" ? numtrg : boss.SpecialAttack_2.MaxNumTargets); }
+                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.SpecialAttack_2.Name == "Invalid" ? atkspd : boss.SpecialAttack_2.AttackSpeed); }
                 retboss.SpecialAttack_2 = new Attack {
                     Name = "Special Attack 2",
                     DamageType = ItemDamageType.Frost,
@@ -208,9 +278,9 @@ namespace Rawr {
                 };
             }
             {
-                float perhit = list[0].SpecialAttack_3.DamagePerHit; foreach (BossHandler boss in list) { perhit = Math.Min(perhit, boss.SpecialAttack_3.Name == "Invalid" ? perhit : boss.SpecialAttack_3.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in list) { numtrg = Math.Min(numtrg, boss.SpecialAttack_3.Name == "Invalid" ? numtrg : boss.SpecialAttack_3.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in list) { atkspd = Math.Max(atkspd, boss.SpecialAttack_3.Name == "Invalid" ? atkspd : boss.SpecialAttack_3.AttackSpeed); }
+                float perhit = passedList[0].SpecialAttack_3.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.SpecialAttack_3.Name == "Invalid" ? perhit : boss.SpecialAttack_3.DamagePerHit); }
+                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.SpecialAttack_3.Name == "Invalid" ? numtrg : boss.SpecialAttack_3.MaxNumTargets); }
+                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.SpecialAttack_3.Name == "Invalid" ? atkspd : boss.SpecialAttack_3.AttackSpeed); }
                 retboss.SpecialAttack_3 = new Attack {
                     Name = "Special Attack 3",
                     DamageType = ItemDamageType.Nature,
@@ -220,9 +290,9 @@ namespace Rawr {
                 };
             }
             {
-                float perhit = list[0].SpecialAttack_4.DamagePerHit; foreach (BossHandler boss in list) { perhit = Math.Min(perhit, boss.SpecialAttack_4.Name == "Invalid" ? perhit : boss.SpecialAttack_4.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in list) { numtrg = Math.Min(numtrg, boss.SpecialAttack_4.Name == "Invalid" ? numtrg : boss.SpecialAttack_4.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in list) { atkspd = Math.Max(atkspd, boss.SpecialAttack_4.Name == "Invalid" ? atkspd : boss.SpecialAttack_4.AttackSpeed); }
+                float perhit = passedList[0].SpecialAttack_4.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.SpecialAttack_4.Name == "Invalid" ? perhit : boss.SpecialAttack_4.DamagePerHit); }
+                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.SpecialAttack_4.Name == "Invalid" ? numtrg : boss.SpecialAttack_4.MaxNumTargets); }
+                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.SpecialAttack_4.Name == "Invalid" ? atkspd : boss.SpecialAttack_4.AttackSpeed); }
                 retboss.SpecialAttack_4 = new Attack {
                     Name = "Special Attack 4",
                     DamageType = ItemDamageType.Holy,
@@ -232,157 +302,159 @@ namespace Rawr {
                 };
             }
             // Situational Changes
-            value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
-            value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
-            value = list[0].MultiTargsPerc;     foreach (BossHandler boss in list) { value = Math.Min(value, boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
-            value = list[0].MaxNumTargets;      foreach (BossHandler boss in list) { value = Math.Min(value, boss.MaxNumTargets     ); } retboss.MaxNumTargets      = value;
-            value = retboss.BerserkTimer;       foreach (BossHandler boss in list) { value = Math.Max(value, boss.StunningTargsFreq ); } retboss.StunningTargsFreq  = value;
-            value = list[0].StunningTargsDur;   foreach (BossHandler boss in list) { value = Math.Min(value, boss.StunningTargsDur  ); } retboss.StunningTargsDur   = value;
-            value = list[0].MovingTargsTime;    foreach (BossHandler boss in list) { value = Math.Min(value, boss.MovingTargsTime   ); } retboss.MovingTargsTime    = value;
-            value = list[0].DisarmingTargsPerc; foreach (BossHandler boss in list) { value = Math.Min(value, boss.DisarmingTargsPerc); } retboss.DisarmingTargsPerc = value;
+            value = 0f;                         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
+            value = 0f;                         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
+            value = passedList[0].MultiTargsPerc;     foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
+            value = passedList[0].MaxNumTargets;      foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MaxNumTargets     ); } retboss.MaxNumTargets      = value;
+            value = retboss.BerserkTimer;       foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.StunningTargsFreq ); } retboss.StunningTargsFreq  = value;
+            value = passedList[0].StunningTargsDur;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsDur  ); } retboss.StunningTargsDur   = value;
+            value = passedList[0].MovingTargsTime;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MovingTargsTime   ); } retboss.MovingTargsTime    = value;
+            value = passedList[0].DisarmingTargsPerc; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.DisarmingTargsPerc); } retboss.DisarmingTargsPerc = value;
             //
             return retboss;
         }
-        private BossHandler GenTheAvgBoss() {
+        private BossHandler GenTheAvgBoss(BossHandler[] passedList) {
             BossHandler retboss = new BossHandler();
+            if (passedList.Length < 1) { return retboss; }
             float value = 0f;
             int count = 0;
             bool use = false;
             // Basics
             retboss.Name = "The Average Boss";
-            value = 0f; foreach (BossHandler boss in list) { value += boss.BerserkTimer; } value /= list.Length; retboss.BerserkTimer = (int)Math.Floor(value);
-            value = 0f; foreach (BossHandler boss in list) { value += boss.Health; } value /= list.Length; retboss.Health = value;
-            value = 0f; foreach (BossHandler boss in list) { value += boss.Armor; } value /= list.Length; retboss.Armor = value;
-            use = false; foreach (BossHandler boss in list) { use |= boss.UseParryHaste; } retboss.UseParryHaste = use;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.BerserkTimer; } value /= passedList.Length; retboss.BerserkTimer = (int)Math.Floor(value);
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.Health; } value /= passedList.Length; retboss.Health = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.Armor; } value /= passedList.Length; retboss.Armor = value;
+            use = false; foreach (BossHandler boss in passedList) { use |= boss.UseParryHaste; } retboss.UseParryHaste = use;
             // Resistance
             foreach (ItemDamageType t in DamageTypes) {
                 value = 0f;
-                foreach (BossHandler boss in list) {
+                foreach (BossHandler boss in passedList) {
                     value += boss.Resistance(t);
                 }
-                value /= list.Length;
+                value /= passedList.Length;
                 retboss.Resistance(t, value);
             }
             #region Attacks
             {
                 count = 0;
-                float perhit = list[0].MeleeAttack.DamagePerHit; foreach (BossHandler boss in list) { perhit += boss.MeleeAttack.Name == "Invalid" ? 0f : boss.MeleeAttack.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in list) { numtrg += boss.MeleeAttack.Name == "Invalid" ? 0f : boss.MeleeAttack.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in list) { atkspd += boss.MeleeAttack.Name == "Invalid" ? 0f : boss.MeleeAttack.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
+                float perhit = passedList[0].MeleeAttack.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.MeleeAttack.Name == "Invalid" ? 0f : boss.MeleeAttack.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
+                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.MeleeAttack.Name == "Invalid" ? 0f : boss.MeleeAttack.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
+                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.MeleeAttack.Name == "Invalid" ? 0f : boss.MeleeAttack.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
                 retboss.MeleeAttack = new Attack { Name = "Melee Attack", DamageType = ItemDamageType.Physical, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             {
                 count = 0;
-                float perhit = list[0].SpellAttack.DamagePerHit; foreach (BossHandler boss in list) { perhit += boss.SpellAttack.Name == "Invalid" ? 0f : boss.SpellAttack.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in list) { numtrg += boss.SpellAttack.Name == "Invalid" ? 0f : boss.SpellAttack.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in list) { atkspd += boss.SpellAttack.Name == "Invalid" ? 0f : boss.SpellAttack.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
+                float perhit = passedList[0].SpellAttack.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.SpellAttack.Name == "Invalid" ? 0f : boss.SpellAttack.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
+                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.SpellAttack.Name == "Invalid" ? 0f : boss.SpellAttack.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
+                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.SpellAttack.Name == "Invalid" ? 0f : boss.SpellAttack.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
                 retboss.SpellAttack = new Attack { Name = "Spell Attack", DamageType = ItemDamageType.Arcane, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             {
                 count = 0;
-                float perhit = list[0].SpecialAttack_1.DamagePerHit; foreach (BossHandler boss in list) { perhit += boss.SpecialAttack_1.Name == "Invalid" ? 0f : boss.SpecialAttack_1.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in list) { numtrg += boss.SpecialAttack_1.Name == "Invalid" ? 0f : boss.SpecialAttack_1.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in list) { atkspd += boss.SpecialAttack_1.Name == "Invalid" ? 0f : boss.SpecialAttack_1.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
+                float perhit = passedList[0].SpecialAttack_1.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.SpecialAttack_1.Name == "Invalid" ? 0f : boss.SpecialAttack_1.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
+                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.SpecialAttack_1.Name == "Invalid" ? 0f : boss.SpecialAttack_1.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
+                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.SpecialAttack_1.Name == "Invalid" ? 0f : boss.SpecialAttack_1.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
                 retboss.SpecialAttack_1 = new Attack { Name = "Special Attack 1", DamageType = ItemDamageType.Fire, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             {
                 count = 0;
-                float perhit = list[0].SpecialAttack_2.DamagePerHit; foreach (BossHandler boss in list) { perhit += boss.SpecialAttack_2.Name == "Invalid" ? 0f : boss.SpecialAttack_2.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in list) { numtrg += boss.SpecialAttack_2.Name == "Invalid" ? 0f : boss.SpecialAttack_2.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in list) { atkspd += boss.SpecialAttack_2.Name == "Invalid" ? 0f : boss.SpecialAttack_2.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
+                float perhit = passedList[0].SpecialAttack_2.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.SpecialAttack_2.Name == "Invalid" ? 0f : boss.SpecialAttack_2.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
+                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.SpecialAttack_2.Name == "Invalid" ? 0f : boss.SpecialAttack_2.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
+                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.SpecialAttack_2.Name == "Invalid" ? 0f : boss.SpecialAttack_2.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
                 retboss.SpecialAttack_2 = new Attack { Name = "Special Attack 2", DamageType = ItemDamageType.Frost, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             {
                 count = 0;
-                float perhit = list[0].SpecialAttack_3.DamagePerHit; foreach (BossHandler boss in list) { perhit += boss.SpecialAttack_3.Name == "Invalid" ? 0f : boss.SpecialAttack_3.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in list) { numtrg += boss.SpecialAttack_3.Name == "Invalid" ? 0f : boss.SpecialAttack_3.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in list) { atkspd += boss.SpecialAttack_3.Name == "Invalid" ? 0f : boss.SpecialAttack_3.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
+                float perhit = passedList[0].SpecialAttack_3.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.SpecialAttack_3.Name == "Invalid" ? 0f : boss.SpecialAttack_3.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
+                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.SpecialAttack_3.Name == "Invalid" ? 0f : boss.SpecialAttack_3.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
+                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.SpecialAttack_3.Name == "Invalid" ? 0f : boss.SpecialAttack_3.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
                 retboss.SpecialAttack_3 = new Attack { Name = "Special Attack 3", DamageType = ItemDamageType.Nature, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             {
                 count = 0;
-                float perhit = list[0].SpecialAttack_4.DamagePerHit; foreach (BossHandler boss in list) { perhit += boss.SpecialAttack_4.Name == "Invalid" ? 0f : boss.SpecialAttack_4.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in list) { numtrg += boss.SpecialAttack_4.Name == "Invalid" ? 0f : boss.SpecialAttack_4.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in list) { atkspd += boss.SpecialAttack_4.Name == "Invalid" ? 0f : boss.SpecialAttack_4.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
+                float perhit = passedList[0].SpecialAttack_4.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.SpecialAttack_4.Name == "Invalid" ? 0f : boss.SpecialAttack_4.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
+                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.SpecialAttack_4.Name == "Invalid" ? 0f : boss.SpecialAttack_4.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
+                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.SpecialAttack_4.Name == "Invalid" ? 0f : boss.SpecialAttack_4.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
                 retboss.SpecialAttack_4 = new Attack { Name = "Special Attack 4", DamageType = ItemDamageType.Holy, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             #endregion
             // Situational Changes
-            value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.InBackPerc_Melee; } value /= list.Length; retboss.InBackPerc_Melee = value;
-            value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.InBackPerc_Ranged; } value /= list.Length; retboss.InBackPerc_Ranged = value;
-            value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.MultiTargsPerc; } value /= list.Length; retboss.MultiTargsPerc = value;
-            value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.MaxNumTargets; } value /= list.Length; retboss.MaxNumTargets = (float)Math.Ceiling(value);
-            value = 0f; count = 0; foreach (BossHandler boss in list) { value += (boss.StunningTargsFreq > 0 && boss.StunningTargsFreq < boss.BerserkTimer) ? boss.StunningTargsFreq : retboss.BerserkTimer; } value /= list.Length; retboss.StunningTargsFreq = value;
-            value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.StunningTargsDur; } value /= list.Length; retboss.StunningTargsDur = value;
-            value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.MovingTargsTime / boss.BerserkTimer; } value /= list.Length; retboss.MovingTargsTime = value * retboss.BerserkTimer;
-            value = 0f; count = 0; foreach (BossHandler boss in list) { value += boss.DisarmingTargsPerc; } value /= list.Length; retboss.DisarmingTargsPerc = value;
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Ranged; } value /= passedList.Length; retboss.InBackPerc_Ranged = value;
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.MultiTargsPerc; } value /= passedList.Length; retboss.MultiTargsPerc = value;
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.MaxNumTargets; } value /= passedList.Length; retboss.MaxNumTargets = (float)Math.Ceiling(value);
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.StunningTargsFreq > 0 && boss.StunningTargsFreq < boss.BerserkTimer) ? boss.StunningTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.StunningTargsFreq = value;
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.StunningTargsDur; } value /= passedList.Length; retboss.StunningTargsDur = value;
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.MovingTargsTime / boss.BerserkTimer; } value /= passedList.Length; retboss.MovingTargsTime = value * retboss.BerserkTimer;
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.DisarmingTargsPerc; } value /= passedList.Length; retboss.DisarmingTargsPerc = value;
             //
             return retboss;
         }
-        private BossHandler GenTheHardestBoss() {
+        private BossHandler GenTheHardestBoss(BossHandler[] passedList) {
             BossHandler retboss = new BossHandler();
+            if (passedList.Length < 1) { return retboss; }
             float value = 0f;
             // Basics
             retboss.Name = "The Hardest Boss";
-            value = list[0].BerserkTimer; foreach (BossHandler boss in list) { value = Math.Min(value, boss.BerserkTimer); } retboss.BerserkTimer = (int)Math.Floor(value);
-            value = 0f; foreach (BossHandler boss in list) { value = Math.Max(value, boss.Health); } retboss.Health = value;
-            value = 0f; foreach (BossHandler boss in list) { value = Math.Max(value, boss.Armor); } retboss.Armor = value;
+            value = passedList[0].BerserkTimer; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.BerserkTimer); } retboss.BerserkTimer = (int)Math.Floor(value);
+            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Health); } retboss.Health = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Armor); } retboss.Armor = value;
             retboss.UseParryHaste = true;
             // Resistance
             foreach (ItemDamageType t in DamageTypes) {
                 value = 0f;
-                foreach (BossHandler boss in list) {
+                foreach (BossHandler boss in passedList) {
                     value = Math.Max(value, boss.Resistance(t));
                 }
                 retboss.Resistance(t, value);
             }
             #region Attacks
             {
-                float perhit = list[0].MeleeAttack.DamagePerHit;  foreach (BossHandler boss in list) { perhit = Math.Max(perhit, boss.MeleeAttack.Name == "Invalid" ? perhit : boss.MeleeAttack.DamagePerHit); }
-                float numtrg = list[0].MeleeAttack.MaxNumTargets; foreach (BossHandler boss in list) { numtrg = Math.Max(numtrg, boss.MeleeAttack.Name == "Invalid" ? numtrg : boss.MeleeAttack.MaxNumTargets); }
-                float atkspd = list[0].MeleeAttack.AttackSpeed;   foreach (BossHandler boss in list) { atkspd = Math.Min(atkspd, boss.MeleeAttack.Name == "Invalid" ? atkspd : boss.MeleeAttack.AttackSpeed); }
+                float perhit = passedList[0].MeleeAttack.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.MeleeAttack.Name == "Invalid" ? perhit : boss.MeleeAttack.DamagePerHit); }
+                float numtrg = passedList[0].MeleeAttack.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.MeleeAttack.Name == "Invalid" ? numtrg : boss.MeleeAttack.MaxNumTargets); }
+                float atkspd = passedList[0].MeleeAttack.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.MeleeAttack.Name == "Invalid" ? atkspd : boss.MeleeAttack.AttackSpeed); }
                 retboss.MeleeAttack = new Attack { Name = "Melee Attack", DamageType = ItemDamageType.Physical, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             {
-                float perhit = list[0].SpellAttack.DamagePerHit;  foreach (BossHandler boss in list) { perhit = Math.Max(perhit, boss.SpellAttack.Name == "Invalid" ? perhit : boss.SpellAttack.DamagePerHit); }
-                float numtrg = list[0].SpellAttack.MaxNumTargets; foreach (BossHandler boss in list) { numtrg = Math.Max(numtrg, boss.SpellAttack.Name == "Invalid" ? numtrg : boss.SpellAttack.MaxNumTargets); }
-                float atkspd = list[0].SpellAttack.AttackSpeed;   foreach (BossHandler boss in list) { atkspd = Math.Min(atkspd, boss.SpellAttack.Name == "Invalid" ? atkspd : boss.SpellAttack.AttackSpeed); }
+                float perhit = passedList[0].SpellAttack.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.SpellAttack.Name == "Invalid" ? perhit : boss.SpellAttack.DamagePerHit); }
+                float numtrg = passedList[0].SpellAttack.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.SpellAttack.Name == "Invalid" ? numtrg : boss.SpellAttack.MaxNumTargets); }
+                float atkspd = passedList[0].SpellAttack.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.SpellAttack.Name == "Invalid" ? atkspd : boss.SpellAttack.AttackSpeed); }
                 retboss.SpellAttack = new Attack { Name = "Spell Attack", DamageType = ItemDamageType.Arcane, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             {
-                float perhit = list[0].SpecialAttack_1.DamagePerHit;  foreach (BossHandler boss in list) { perhit = Math.Max(perhit, boss.SpecialAttack_1.Name == "Invalid" ? perhit : boss.SpecialAttack_1.DamagePerHit); }
-                float numtrg = list[0].SpecialAttack_1.MaxNumTargets; foreach (BossHandler boss in list) { numtrg = Math.Max(numtrg, boss.SpecialAttack_1.Name == "Invalid" ? numtrg : boss.SpecialAttack_1.MaxNumTargets); }
-                float atkspd = list[0].SpecialAttack_1.AttackSpeed;   foreach (BossHandler boss in list) { atkspd = Math.Min(atkspd, boss.SpecialAttack_1.Name == "Invalid" ? atkspd : boss.SpecialAttack_1.AttackSpeed); }
+                float perhit = passedList[0].SpecialAttack_1.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.SpecialAttack_1.Name == "Invalid" ? perhit : boss.SpecialAttack_1.DamagePerHit); }
+                float numtrg = passedList[0].SpecialAttack_1.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.SpecialAttack_1.Name == "Invalid" ? numtrg : boss.SpecialAttack_1.MaxNumTargets); }
+                float atkspd = passedList[0].SpecialAttack_1.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.SpecialAttack_1.Name == "Invalid" ? atkspd : boss.SpecialAttack_1.AttackSpeed); }
                 retboss.SpecialAttack_1 = new Attack { Name = "Special Attack 1", DamageType = ItemDamageType.Holy, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             {
-                float perhit = list[0].SpecialAttack_2.DamagePerHit;  foreach (BossHandler boss in list) { perhit = Math.Max(perhit, boss.SpecialAttack_2.Name == "Invalid" ? perhit : boss.SpecialAttack_2.DamagePerHit); }
-                float numtrg = list[0].SpecialAttack_2.MaxNumTargets; foreach (BossHandler boss in list) { numtrg = Math.Max(numtrg, boss.SpecialAttack_2.Name == "Invalid" ? numtrg : boss.SpecialAttack_2.MaxNumTargets); }
-                float atkspd = list[0].SpecialAttack_2.AttackSpeed;   foreach (BossHandler boss in list) { atkspd = Math.Min(atkspd, boss.SpecialAttack_2.Name == "Invalid" ? atkspd : boss.SpecialAttack_2.AttackSpeed); }
+                float perhit = passedList[0].SpecialAttack_2.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.SpecialAttack_2.Name == "Invalid" ? perhit : boss.SpecialAttack_2.DamagePerHit); }
+                float numtrg = passedList[0].SpecialAttack_2.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.SpecialAttack_2.Name == "Invalid" ? numtrg : boss.SpecialAttack_2.MaxNumTargets); }
+                float atkspd = passedList[0].SpecialAttack_2.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.SpecialAttack_2.Name == "Invalid" ? atkspd : boss.SpecialAttack_2.AttackSpeed); }
                 retboss.SpecialAttack_2 = new Attack { Name = "Special Attack 2", DamageType = ItemDamageType.Shadow, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             {
-                float perhit = list[0].SpecialAttack_3.DamagePerHit;  foreach (BossHandler boss in list) { perhit = Math.Max(perhit, boss.SpecialAttack_3.Name == "Invalid" ? perhit : boss.SpecialAttack_3.DamagePerHit); }
-                float numtrg = list[0].SpecialAttack_3.MaxNumTargets; foreach (BossHandler boss in list) { numtrg = Math.Max(numtrg, boss.SpecialAttack_3.Name == "Invalid" ? numtrg : boss.SpecialAttack_3.MaxNumTargets); }
-                float atkspd = list[0].SpecialAttack_3.AttackSpeed;   foreach (BossHandler boss in list) { atkspd = Math.Min(atkspd, boss.SpecialAttack_3.Name == "Invalid" ? atkspd : boss.SpecialAttack_3.AttackSpeed); }
+                float perhit = passedList[0].SpecialAttack_3.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.SpecialAttack_3.Name == "Invalid" ? perhit : boss.SpecialAttack_3.DamagePerHit); }
+                float numtrg = passedList[0].SpecialAttack_3.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.SpecialAttack_3.Name == "Invalid" ? numtrg : boss.SpecialAttack_3.MaxNumTargets); }
+                float atkspd = passedList[0].SpecialAttack_3.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.SpecialAttack_3.Name == "Invalid" ? atkspd : boss.SpecialAttack_3.AttackSpeed); }
                 retboss.SpecialAttack_3 = new Attack { Name = "Special Attack 3", DamageType = ItemDamageType.Nature, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             {
-                float perhit = list[0].SpecialAttack_4.DamagePerHit;  foreach (BossHandler boss in list) { perhit = Math.Max(perhit, boss.SpecialAttack_4.Name == "Invalid" ? perhit : boss.SpecialAttack_4.DamagePerHit); }
-                float numtrg = list[0].SpecialAttack_4.MaxNumTargets; foreach (BossHandler boss in list) { numtrg = Math.Max(numtrg, boss.SpecialAttack_4.Name == "Invalid" ? numtrg : boss.SpecialAttack_4.MaxNumTargets); }
-                float atkspd = list[0].SpecialAttack_4.AttackSpeed;   foreach (BossHandler boss in list) { atkspd = Math.Min(atkspd, boss.SpecialAttack_4.Name == "Invalid" ? atkspd : boss.SpecialAttack_4.AttackSpeed); }
+                float perhit = passedList[0].SpecialAttack_4.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.SpecialAttack_4.Name == "Invalid" ? perhit : boss.SpecialAttack_4.DamagePerHit); }
+                float numtrg = passedList[0].SpecialAttack_4.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.SpecialAttack_4.Name == "Invalid" ? numtrg : boss.SpecialAttack_4.MaxNumTargets); }
+                float atkspd = passedList[0].SpecialAttack_4.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.SpecialAttack_4.Name == "Invalid" ? atkspd : boss.SpecialAttack_4.AttackSpeed); }
                 retboss.SpecialAttack_4 = new Attack { Name = "Special Attack 4", DamageType = ItemDamageType.Fire, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
             }
             #endregion
             // Situational Changes
-            value = list[0].InBackPerc_Melee;   foreach (BossHandler boss in list) { value = Math.Min(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
-            value = list[0].InBackPerc_Ranged;  foreach (BossHandler boss in list) { value = Math.Min(value, boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
-            value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
-            value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.MaxNumTargets     ); } retboss.MaxNumTargets      = (float)Math.Ceiling(value);
-            value = list[0].BerserkTimer;       foreach (BossHandler boss in list) { value = Math.Min(value, boss.StunningTargsFreq != 0 ? boss.StunningTargsFreq : value); } retboss.StunningTargsFreq  = value;
-            value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.StunningTargsDur  ); } retboss.StunningTargsDur   = value;
-            value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.MovingTargsTime / boss.BerserkTimer); } retboss.MovingTargsTime = value * retboss.BerserkTimer;
-            value = 0f;                         foreach (BossHandler boss in list) { value = Math.Max(value, boss.DisarmingTargsPerc); } retboss.DisarmingTargsPerc = value;
+            value = passedList[0].InBackPerc_Melee;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
+            value = passedList[0].InBackPerc_Ranged;  foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
+            value = 0f;                         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
+            value = 0f;                         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MaxNumTargets     ); } retboss.MaxNumTargets      = (float)Math.Ceiling(value);
+            value = passedList[0].BerserkTimer;       foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsFreq != 0 ? boss.StunningTargsFreq : value); } retboss.StunningTargsFreq  = value;
+            value = 0f;                         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.StunningTargsDur  ); } retboss.StunningTargsDur   = value;
+            value = 0f;                         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MovingTargsTime / boss.BerserkTimer); } retboss.MovingTargsTime = value * retboss.BerserkTimer;
+            value = 0f;                         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.DisarmingTargsPerc); } retboss.DisarmingTargsPerc = value;
             //
             return retboss;
         }

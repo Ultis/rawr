@@ -20,6 +20,7 @@ using System.Xml;
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase {
         private bool isLoading = false;
+        private bool firstload = true;
         private BossList bosslist = null;
         private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
         public CalculationOptionsPanelDPSWarr() {
@@ -30,7 +31,7 @@ namespace Rawr.DPSWarr {
             armorBosses.Add((int)StatConversion.NPC_ARMOR[80-80], "Level 80 Mob");
             armorBosses.Add((int)StatConversion.NPC_ARMOR[81-80], "Level 81 Mob");
             armorBosses.Add((int)StatConversion.NPC_ARMOR[82-80], "Level 82 Mob");
-            armorBosses.Add((int)StatConversion.NPC_ARMOR[83-80], "Ulduar Bosses");
+            armorBosses.Add((int)StatConversion.NPC_ARMOR[83-80], "Bosses");
 
             CB_TargArmor.DisplayMember = "Key";
             CB_TargArmor.DataSource = new BindingSource(armorBosses, null);
@@ -39,7 +40,16 @@ namespace Rawr.DPSWarr {
             if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
             if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray()); }
 
-            //CB_TargLvl.DataSource = new[] {83, 82, 81, 80};
+            if (CB_BL_FilterType.Text  == "") { CB_BL_FilterType.Text = "Content"; }
+
+            if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
+            bosslist.GenCalledList(BossList.FilterType.Content, CB_BL_Filter.Text);
+            if (CB_BL_Filter.Items.Count < 2) { CB_BL_Filter.Items.AddRange(bosslist.GetFilterListAsArray((BossList.FilterType)(CB_BL_FilterType.SelectedIndex))); }
+
+            if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+            CB_BossList.Items.Add("Custom");
+            CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray());
+
             CB_Duration.Minimum = 0;
             CB_Duration.Maximum = 60 * 20; // 20 minutes
             CB_MoveTargsTime.Maximum = 60 * 20; // 20 minutes
@@ -61,6 +71,16 @@ namespace Rawr.DPSWarr {
             RB_StanceArms.Checked           = !calcOpts.FuryStance;
             CK_PTRMode.Checked              =  calcOpts.PTRMode;
             NUD_SurvScale.Value             = (decimal)calcOpts.SurvScale;
+            // Boss Selector
+            // Save the new names
+            CB_BL_FilterType.Text = calcOpts.FilterType;
+            firstload = true;
+            isLoading = false;  CB_BL_FilterType_SelectedIndexChanged(null, null); isLoading = true;
+            CB_BL_Filter.Text = calcOpts.Filter;
+            isLoading = false; CB_BL_Filter_SelectedIndexChanged(null, null); isLoading = true;
+            CB_BossList.Text = calcOpts.BossName;
+            isLoading = false; CB_BossList_SelectedIndexChanged(null, null); isLoading = true;
+            firstload = false;
             // Rotational Changes
             CK_InBack.Checked               = calcOpts.InBack;
                 LB_Perc5.Enabled            = calcOpts.InBack;
@@ -99,10 +119,62 @@ namespace Rawr.DPSWarr {
             calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
             RB_StanceFury.Checked = calcOpts.FuryStance;
             RB_StanceArms.Checked = !RB_StanceFury.Checked;
+            //
             Character.OnCalculationsInvalidated();
             isLoading = false;
         }
         // Boss Handler
+        private void CB_BL_FilterType_SelectedIndexChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                isLoading = true;
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                // Use Filter Type Box to adjust Filter Box
+                if (CB_BL_Filter.Items.Count > 0) { CB_BL_Filter.Items.Clear(); }
+                if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
+                CB_BL_Filter.Text = "All";
+                BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
+                bosslist.GenCalledList(ftype, CB_BL_Filter.Text);
+                CB_BL_Filter.Items.AddRange(bosslist.GetFilterListAsArray(ftype));
+                CB_BL_Filter.Text = "All";
+                // Now edit the Boss List to the new filtered list of bosses
+                if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                CB_BossList.Items.Add("Custom");
+                CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray());
+                CB_BossList.Text = "Custom";
+                // Save the new names
+                if (!firstload) {
+                    calcOpts.FilterType = CB_BL_FilterType.Text;
+                    calcOpts.Filter = CB_BL_Filter.Text;
+                    calcOpts.BossName = CB_BossList.Text;
+                }
+                //
+                Character.OnCalculationsInvalidated();
+                isLoading = false;
+            }
+        }
+        private void CB_BL_Filter_SelectedIndexChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                isLoading = true;
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                // Use Filter Type Box to adjust Filter Box
+                BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
+                bosslist.GenCalledList(ftype, CB_BL_Filter.Text);
+                // Now edit the Boss List to the new filtered list of bosses
+                if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                CB_BossList.Items.Add("Custom");
+                CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray());
+                CB_BossList.Text = "Custom";
+                // Save the new names
+                if (!firstload) {
+                    calcOpts.FilterType = CB_BL_FilterType.Text;
+                    calcOpts.Filter = CB_BL_Filter.Text;
+                    calcOpts.BossName = CB_BossList.Text;
+                }
+                //
+                Character.OnCalculationsInvalidated();
+                isLoading = false;
+            }
+        }
         private void CB_BossList_SelectedIndexChanged(object sender, EventArgs e) {
             if(!isLoading){
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -155,6 +227,12 @@ namespace Rawr.DPSWarr {
                         CB_MoveTargsPerc.Value      = (decimal)Math.Floor(calcOpts.MovingTargetsTime / (float)CB_Duration.Value * 100f);
                     
                     TB_BossInfo.Text = boss.GenInfoString();
+                    // Save the new names
+                    if (!firstload) {
+                        calcOpts.FilterType = CB_BL_FilterType.Text;
+                        calcOpts.Filter = CB_BL_Filter.Text;
+                        calcOpts.BossName = CB_BossList.Text;
+                    }
                     isLoading = false;
                 }else{TB_BossInfo.Text = "You have set custom parameters.";}
                 Character.OnCalculationsInvalidated();
@@ -1061,6 +1139,8 @@ namespace Rawr.DPSWarr {
     }
     [Serializable]
     public class CalculationOptionsDPSWarr : ICalculationOptionBase {
+        public string FilterType = "Content";
+        public string Filter = "All";
         public string BossName = "Custom";
         public int TargetLevel = 83;
         public int TargetArmor = (int)StatConversion.NPC_ARMOR[83-80];
@@ -1070,7 +1150,7 @@ namespace Rawr.DPSWarr {
         public bool PTRMode = false;
         public float SurvScale = 1.0f;
         // Rotational Changes
-        public bool InBack             = true ; public int InBackPerc           =  100;
+        public bool InBack             = true ; public int InBackPerc           = 100;
         public bool MultipleTargets    = false; public int MultipleTargetsPerc  =  25; public float MultipleTargetsMax = 3;
         public bool StunningTargets    = false; public int StunningTargetsFreq  = 120; public float StunningTargetsDur = 5000;
         public bool MovingTargets      = false; public float MovingTargetsTime  = 0;
