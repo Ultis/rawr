@@ -716,7 +716,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 SpecialEffect wrecking = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = value, }, 12, 0);
                 statsTalents.AddSpecialEffect(wrecking);
             }
-            if (talents.Trauma > 0) {
+            if (talents.Trauma > 0 && character.MainHand != null) {
                 float value = talents.Trauma * 0.15f;
                 SpecialEffect trauma = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = value, }, 15, 0);
                 statsTalents.AddSpecialEffect(trauma);
