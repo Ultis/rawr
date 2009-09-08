@@ -1231,7 +1231,7 @@ namespace Rawr {
                     }
                 }
 
-                regex = new Regex(@"Each time you use your (?<ability>\w+\s*\w*) or (?<ability2>\w+\s*\w*) ability, you have a chance to gain (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec.");
+                regex = new Regex(@"Each time you use your (?<ability3>\w+\s*\w*), (?<ability>\w+\s*\w*) or (?<ability2>\w+\s*\w*) ability, you have a chance to gain (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec.");
                 match = regex.Match(line);
                 if (match.Success)
                 {
@@ -1240,13 +1240,19 @@ namespace Rawr {
                     float duration = int.Parse(match.Groups["duration"].Value);
                     string ability = match.Groups["ability"].Value;
                     string ability2 = match.Groups["ability2"].Value;
+                    string ability3 = match.Groups["ability3"].Value;
 
                     SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 10f, 0.8f);
                     stats.AddSpecialEffect(SE1);
                     SpecialEffect SE2 = EvalRegex(statName, amount, duration, ability2, 10f, 0.8f);
+                    SpecialEffect SE3 = EvalRegex(statName, amount, duration, ability3, 10f, 0.8f);
                     if (SE1.ToString() != SE2.ToString())
                     {
                         stats.AddSpecialEffect(SE2);
+                    }
+                    if (SE3.ToString() != SE2.ToString())
+                    {
+                        stats.AddSpecialEffect(SE3);
                     }
                 }
 
@@ -1828,6 +1834,9 @@ namespace Rawr {
                     break;
                 case "Scourge Strike":
                     trigger = Trigger.ScourgeStrikeHit;
+                    break;
+                case "Death Strike":
+                    trigger = Trigger.DeathStrikeHit;
                     break;
                 default:
                     trigger = Trigger.SpellHit;
