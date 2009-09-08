@@ -18,31 +18,21 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.14.0 
- - Improved Optimizer performance.
- - Improved parsing of Wowhead/Armory data (especially for Trial of Crusader items and item sources)
- - Improved Judgement of Wisdom calculations
- - Added feature to be able to manually remove an item from a built upgrade list.
- - Updated several more buffs/enchants for 3.2 changes.
- - Improved handling of several procs, especially new ones from ToC.
- - There are several more charts in the Buffs chart group, for subsets of buffs.
- - Improved the default set of ItemFilters. Note that the Alliance/Horde ToC filters are gone for the moment, but we will add them back as soon as we get data to support them (coming soon from Wowhead).
- - Rawr.Cat: Added support for offsetting trinkets (such as Grim Toll + Mjolnir Runestone).
- - Rawr.Bear: Updated presets on Options tab.
- - Rawr.Mage: Fixes to Flamestrike calculations/rotations. Added 3.2.2 mode.
- - Rawr.ProtPaladin: Updates to dodge/parry calculations for 3.2. Fixed Seal of Vengeance and Shield of Righteousness calculations. Fixed crit chance calculations.
- - Rawr.Hunter: Tons, and tons, and tons, of changes. Should be almost identical calculation logic to the spreadsheet now. 
- - Rawr.Tree: Updated Innervates calculations and talents for 3.2 changes. 
- - Rawr.DPSWarr: Slight tweaks to stat calculations to reflect WoW's rounding oddities. Fixes for several damage calculation issues. Added T9 set bonuses. Fixes to MultiTarget modes. Several glyph/talent updates for 3.2.
- - Rawr.Elemental: Improved Flameshock dot damage calculations. Improved handling of haste in rotations.
- - Rawr.Rogue: Lots of improvements to calculations, especially in talents.
- - Rawr.Moonkin: Fixed interaction of 4T9, Moonfury, Solar Eclipse, Earth and Moon, and Improved Insect Swarm (multiplicative vs additive).
- - Rawr.ProtWarr: Updated Devestate damage for 3.2. Slight fix to armor calculations.
- - Rawr.DPSDK: Added T9 set bonuses, and support for new Sigils. Fix for some crit chance calculations.
- - Rawr.Healadin: Updated default gemming tempaltes and gem handling for 3.2. Added option to not ignore items with spirit/hit.
- - Rawr.TankDK: Updated all calculations for 3.2. Fixed a few slight inaccuracies with health calculations.
- - Rawr.Warlock: Updated several calcultions for 3.2.
- - Rawr.Retribution: Improved support for new Librams and set bonuses.";
+			labelVersionHistory.Text = @"v2.2.15.0
+ - Updated rating calculations for 3.2.2 (if you want 3.2.0 calculations, stick with Rawr v2.2.14. We expect 3.2.2 to come out tomorrow, so are releasing this a day early)
+ - Major improvements to Armory and Wowhead parsing; only differences now should be actual data differences between the sites.
+ - Rawr will now load the faction-specificity of an item from the Armory, and will only show items available to your race's faction. Note that there are still a few ilvl258 items that aren't on the Armory, so there are still a few items in Rawr which don't have faction data, but the vast majority of items do.
+ - Fixed disabled offhand items with gems counting toward metagem requirements.
+ - Rawr.Cat: Improved handling of multiple temporary ArPen stats.
+ - Rawr.Bear: Support for Paragon special effect.
+ - Rawr.TankDK: Fix for ArPen rating being relevant.
+ - Rawr.DPSWarr: Added stun handling feature. Improved Multi-Target features. Added Survivability calculations. Fixed a few minor bugs. Updated for 3.2.2. Improved rage calculations. Added preset bosses feature.
+ - Rawr.DPSDK: Updated default rotations. Fixed bug with Frost Strike damage.
+ - Rawr.ProtPaladin: Fix for attack crit damage calculations.
+ - Rawr.Rogue: Fix for Lightning Reflexes calculation.
+ - Rawr.Warlock: Fixed crashing bug. Implemented T9 set bonuses. Cleaned up Options tab.
+ - Rawr.ProtWarr: Updated base stats to be consistent with 3.2.2. Updated Shield Slam damage, and a few minor proc effects.
+ - Rawr.Moonkin: Fix for a damage calculation bug. Added/improved support for several trinkets.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
