@@ -1801,7 +1801,7 @@ namespace Rawr
                 Name = "Gladiator's Regalia 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 35 },
+                Stats = { Resilience = 50 },
                 SetName = "Gladiator's Regalia",
                 SetThreshold = 2
             });

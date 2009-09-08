@@ -615,7 +615,7 @@ namespace Rawr
 			{
 				htmlTooltip = htmlTooltip.Substring(0, htmlTooltip.IndexOf(" (0/"));
 				htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
-				htmlTooltip = htmlTooltip.Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
+                htmlTooltip = htmlTooltip.Replace("Relentless ", "").Replace("Furious ", "").Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
 					.Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
 					.Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor").Replace("Regaila", "Regalia");
 
