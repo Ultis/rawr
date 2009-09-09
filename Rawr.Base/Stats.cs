@@ -3721,7 +3721,7 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T8] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0.10f)]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% increase to your pet's critical strike chance with its abilities")]
         [Category("Warlock")]
@@ -3731,7 +3731,7 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T9] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0.10f)]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% increase to damage done by your Immolate, Corruption and Unstable Affliction spells")]
         [Category("Warlock")]
