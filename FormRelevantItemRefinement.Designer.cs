@@ -213,9 +213,9 @@
             this.groupBox4.Controls.Add(this.checkBoxTwoHandedMace);
             this.groupBox4.Controls.Add(this.checkBoxStaff);
             this.groupBox4.Controls.Add(this.checkBoxPolearm);
-            this.groupBox4.Location = new System.Drawing.Point(144, 12);
+            this.groupBox4.Location = new System.Drawing.Point(136, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(117, 133);
+            this.groupBox4.Size = new System.Drawing.Size(125, 133);
             this.groupBox4.TabIndex = 4;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "2-Handed Weapons";
