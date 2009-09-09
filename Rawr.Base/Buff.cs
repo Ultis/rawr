@@ -845,14 +845,22 @@ namespace Rawr
             {
                 Name = "Grand Spellstone",
                 Group = "Class Buffs",
-                Stats = { WarlockGrandSpellstone = 1f },
+                Stats = 
+                { 
+                    WarlockSpellstoneDotDamageMultiplier = 0.01f, 
+                    WarlockSpellstoneHasteRating = 60f
+                },
                 ConflictingBuffs = new List<string>(new string[] { "Warlock Weapon Enchant" })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Grand Firestone",
                 Group = "Class Buffs",
-                Stats = { WarlockGrandFirestone = 1f },
+                Stats = 
+                { 
+                    WarlockFirestoneDirectDamageMultiplier = 0.01f,
+                    WarlockFirestoneSpellCritRating = 49f
+                },
                 ConflictingBuffs = new List<string>(new string[] { "Warlock Weapon Enchant" })
             });
             defaultBuffs.Add(new Buff()

@@ -190,7 +190,14 @@ namespace Rawr.Warlock
             {
                 if (_customChartNames == null) 
                 {
-                    _customChartNames = new string[] { "DPS Sources", "Mana Sources", "Mana Usage", /*"Glyphs", */"Haste Rating Gain" };
+                    _customChartNames = new string[] 
+                    { 
+                        "DPS Sources", 
+                        "Mana Sources", 
+                        "Mana Usage", 
+                        //*"Glyphs",
+                        "Haste Rating Gain" 
+                    };
                 }
                 return _customChartNames;
             }
@@ -341,33 +348,58 @@ namespace Rawr.Warlock
         {
             WarlockTalents talents = character.WarlockTalents;
 
-            Stats statsRace = BaseStats.GetBaseStats(character);
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
+            Stats statsBase = BaseStats.GetBaseStats(character);
+            Stats statsItem = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             Stats statsTalents = new Stats() 
             {
-                BonusStaminaMultiplier      = talents.DemonicEmbrace * 0.02f,
-                BonusHealthMultiplier       = talents.FelVitality    * 0.01f,
-                BonusManaMultiplier         = talents.FelVitality    * 0.01f,
-                BonusSpellPowerMultiplier   = talents.Malediction    * 0.03f,
-                BonusCritChance             = talents.DemonicTactics * 0.02f
-                                            + talents.Backlash       * 0.01f,
+                //Demonic Embrace: increases your stamina by 4/7/10%
+                BonusStaminaMultiplier      = (talents.DemonicEmbrace == 1) ? 0.04f : (talents.DemonicEmbrace == 2) ? 0.07f : (talents.DemonicEmbrace == 3) ? 0.10f : 0f,
+                
+                //Fel Vitality: increases your maximum Health & Mana by 1/2/3%
+                BonusHealthMultiplier       = (talents.FelVitality    * 0.01f),
+                BonusManaMultiplier         = (talents.FelVitality    * 0.01f),
+                
+                //Malediction: increases your spell damage by 1/2/3%
+                BonusSpellPowerMultiplier   = (talents.Malediction    * 0.01f),
+                
+                //Demonic Tactics: increases your spell crit chance by 2/4/6/8/10%
+                //Backlash: increases your spell crit chance by 1/2/3%
+                BonusCritChance             = (talents.DemonicTactics * 0.02f)
+                                            + (talents.Backlash       * 0.01f),
+
+                //Suppression: increases your chance to hit with spells by 1/2/3%
+                SpellHit                    = (talents.Suppression * 0.01f),
             };
+            
+            Stats statsTotal = statsBase + statsItem + statsBuffs + statsTalents;
 
-            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
-
+            //make sure that the bonus multipliers have been applied to each stat
             statsTotal.Stamina      = (float)Math.Floor(statsTotal.Stamina   * (1f + statsTotal.BonusStaminaMultiplier  ));
             statsTotal.Intellect    = (float)Math.Floor(statsTotal.Intellect * (1f + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit       = (float)Math.Floor(statsTotal.Spirit    * (1f + statsTotal.BonusSpiritMultiplier   ));
-            statsTotal.Mana        += (statsTotal.Intellect - 20f) * 15f + 20f;
-            statsTotal.Health      += statsTotal.Stamina * 10f;
-            statsTotal.SpellCrit   += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
-                                   +  StatConversion.GetSpellCritFromRating(statsTotal.CritRating + (statsTotal.WarlockGrandFirestone * 49f) * (1f + talents.MasterConjuror * 1.5f))
-                                   +  0.01701f;
-            statsTotal.HasteRating += (statsTotal.WarlockGrandSpellstone * 60f) * (1f + talents.MasterConjuror * 1.5f);
+
+            //Health is calculated from stamina rating first, then its bonus multiplier (in this case, "Fel Vitality" talent) gets applied
+            statsTotal.Health      += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+            statsTotal.Health      *= (1 + statsTotal.BonusHealthMultiplier);
+
+            //Mana is calculated from intellect rating first, then its bonus multiplier (in this case, "Expansive Mind" - Gnome racial) is applied
+            statsTotal.Mana        += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
+            statsTotal.Mana        *= (1 + statsTotal.BonusManaMultiplier);
+            
+            //Crit rating - the MasterConjuror talent improves the firestone
+            statsTotal.CritRating  += statsTotal.WarlockFirestoneSpellCritRating * (1f + (talents.MasterConjuror * 1.5f));
+            statsTotal.SpellCrit   += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
+            statsTotal.SpellCrit   += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
+            statsTotal.SpellCrit   += statsTotal.BonusCritChance;
+
+            //Haste rating - the MasterConjuror talent improves the spellstone
+            statsTotal.HasteRating += statsTotal.WarlockSpellstoneHasteRating * (1f + (talents.MasterConjuror * 1.5f));
             statsTotal.SpellHaste  +=  StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
-            statsTotal.SpellHit    += (StatConversion.GetSpellHitFromRating(statsTotal.HitRating) + talents.Suppression * 0.01f);
+            
+            //Hit rating 
+            statsTotal.SpellHit    += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
 
             if (statsTotal.WarlockFelArmor > 0) 
             {
@@ -540,8 +572,10 @@ namespace Rawr.Warlock
                 + stats.BonusFireDamageMultiplier
                 + stats.WarlockFelArmor
                 + stats.WarlockDemonArmor
-                + stats.WarlockGrandSpellstone
-                + stats.WarlockGrandFirestone
+                + stats.WarlockSpellstoneDotDamageMultiplier
+                + stats.WarlockSpellstoneHasteRating
+                + stats.WarlockFirestoneDirectDamageMultiplier
+                + stats.WarlockFirestoneSpellCritRating
                 //+ stats.ManaRestoreOnCast_5_15
                 + stats.ManaRestoreFromBaseManaPPM
                 //+ stats.SpellPowerFor15SecOnUse90Sec

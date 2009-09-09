@@ -217,8 +217,6 @@ namespace Rawr.UnitTests.Rogue
         LotPCritRating,
         WarlockFelArmor,
         WarlockDemonArmor,
-        WarlockGrandSpellstone,
-        WarlockGrandFirestone,
         Mana,
         ManaRestore5min,
         ManaRestorePerCast,

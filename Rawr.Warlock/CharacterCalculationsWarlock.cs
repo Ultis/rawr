@@ -55,9 +55,9 @@ namespace Rawr.Warlock {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             CalculationOptionsWarlock calcOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
-            dictValues.Add("Health", BasicStats.Health.ToString(CultureInfo.InvariantCulture));
+            dictValues.Add("Health", BasicStats.Health.ToString("0", CultureInfo.InvariantCulture));
             dictValues.Add("Stamina", BasicStats.Stamina.ToString(CultureInfo.InvariantCulture));
-            dictValues.Add("Mana", BasicStats.Mana.ToString(CultureInfo.InvariantCulture));
+            dictValues.Add("Mana", BasicStats.Mana.ToString("0", CultureInfo.InvariantCulture));
             dictValues.Add("Intellect", BasicStats.Intellect.ToString(CultureInfo.InvariantCulture));
             dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0", CultureInfo.InvariantCulture));
             dictValues.Add("Spell Power", String.Format(CultureInfo.InvariantCulture, "{0}*{1} Bonus Shadow\r\n{2} Bonus Fire",
@@ -65,13 +65,15 @@ namespace Rawr.Warlock {
                 Math.Floor(BasicStats.SpellPower + BasicStats.SpellShadowDamageRating),
                 Math.Floor(BasicStats.SpellPower + BasicStats.SpellFireDamageRating)));
             dictValues.Add("Regen", String.Format(CultureInfo.InvariantCulture, "{0}*MP5: {1}\r\nOutFSR: {2}", RegenInFSR.ToString("0", CultureInfo.InvariantCulture), BasicStats.Mp5.ToString(CultureInfo.InvariantCulture), RegenOutFSR.ToString("0", CultureInfo.InvariantCulture)));
-            dictValues.Add("Crit", String.Format(CultureInfo.InvariantCulture, "{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{4}% from Base Crit\r\n{5}% from Buffs",
-                (BasicStats.SpellCrit * 100f).ToString("0.00", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
-                BasicStats.CritRating.ToString("0", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
-                "1,701",
-                (BasicStats.SpellCrit * 100f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f - 1.701f).ToString("0.00", CultureInfo.InvariantCulture)));
+            dictValues.Add("Crit", String.Format(CultureInfo.InvariantCulture, "{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{4}% from Base Crit\r\n{5}% from Demonic Tactics\r\n{6}% from Backlash",
+                    (BasicStats.SpellCrit * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                    (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                    BasicStats.CritRating.ToString("0", CultureInfo.InvariantCulture),
+                    (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00", CultureInfo.InvariantCulture),
+                    "1.701",
+                    ((character.WarlockTalents.DemonicTactics * 0.02f) * 100f).ToString("0", CultureInfo.InvariantCulture),
+                    ((character.WarlockTalents.Backlash * 0.01f) * 100f).ToString("0", CultureInfo.InvariantCulture)
+                ));
 
             float Hit = calcOptions.TargetHit;
             float BonusHit = BasicStats.SpellHit * 100f;

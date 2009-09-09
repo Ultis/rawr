@@ -563,7 +563,7 @@ namespace Rawr
                     S.PhysicalCrit = 0.028f;
                     S.Dodge = 0.0238110f;
                     S.SpellPower = 0;
-                    S.SpellCrit = 0.017f;
+                    S.SpellCrit = 0.01701f;
                     switch (characterRace)
                     {
                         case CharacterRace.BloodElf:
@@ -584,7 +584,7 @@ namespace Rawr
                             S.Strength = 59;
                             S.Agility = 67;
                             S.Stamina = 89;
-                            S.Intellect = 162;
+                            S.Intellect = 159;
                             S.Spirit = 165; // 170/1.03 = 165.05 ~165
                             break;
                         case CharacterRace.Orc:

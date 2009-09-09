@@ -887,8 +887,8 @@ namespace Rawr.Warlock
                 }
                 if (CounterShadowEmbrace > 0 && spell.MagicSchool == MagicSchool.Shadow)
                     dotDamage *= 1 + (float)CounterShadowEmbrace / (float)CounterShadowDotTicks * character.WarlockTalents.ShadowEmbrace * 0.01f;
-                directDamage *= 1 + simStats.WarlockGrandFirestone * 0.01f;
-                dotDamage *= 1 + simStats.WarlockGrandSpellstone * 0.01f;
+                directDamage *= (1 + simStats.WarlockFirestoneDirectDamageMultiplier);
+                dotDamage *= (1f + simStats.WarlockSpellstoneDotDamageMultiplier);
                 if (character.WarlockTalents.Metamorphosis > 0)
                 {
                     directDamage *= 1 + 0.2f * metaUptime;
