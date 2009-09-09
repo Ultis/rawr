@@ -58,6 +58,7 @@ namespace Rawr.ProtWarr
                 case Ability.Devastate:
                     // Assumes 5 stacks of Sunder Armor debuff
                     baseDamage = Lookup.WeaponDamage(Character, Stats, true) + (202.0f * 5.0f);
+                    DamageMultiplier *= (1.0f + Stats.BonusDevastateDamage);
                     break;
                 case Ability.HeroicStrike:
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false) + 495.0f;

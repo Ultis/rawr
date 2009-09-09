@@ -499,8 +499,9 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1.0f + statsTotal.BonusAgilityMultiplier));
             statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1.0f + statsTotal.BonusAgilityMultiplier));
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina, CharacterClass.Warrior);
-            if (character.ActiveBuffsContains("Commanding Shout"))
-                statsBuffs.Health += statsBuffs.BonusCommandingShoutHP;
+            // Disabled support for this set bonus for the time being
+            //if (character.ActiveBuffsContains("Commanding Shout"))
+            //    statsBuffs.Health += statsBuffs.BonusCommandingShoutHP;
             statsTotal.Health *= (float)Math.Floor(1.0f + statsTotal.BonusHealthMultiplier);
 
             // Defensive Stats
@@ -554,6 +555,15 @@ threat and limited threat scaled by the threat scale.",
                 {
                     case Trigger.Use:
                         statsSpecialEffects += effect.GetAverageStats(0.0f, 1.0f, weaponSpeed);
+                        // Trial of the Crusader Stacking Use Effect Trinkets
+                        foreach (SpecialEffect childEffect in effect.Stats.SpecialEffects())
+                        {
+                            if (childEffect.Trigger == Trigger.DamageTaken)
+                            {
+                                statsSpecialEffects += childEffect.Stats * effect.GetAverageUptime(0.0f, 1.0f) *
+                                    childEffect.GetAverageStackSize((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed, effect.Duration);
+                            }
+                        }
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
@@ -866,16 +876,34 @@ threat and limited threat scaled by the threat scale.",
         //Hide the ranged weapon enchants. None of them apply to melee damage at all.
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            return enchant.Slot == ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant, character, slot);
+            // Filters out Non-Shield Offhand Enchants and Ranged Enchants
+            if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
+            // Filters out Death Knight and Two-Hander Enchants
+            if (enchant.Name.StartsWith("Rune of the") || enchant.Slot == ItemSlot.TwoHand) return false;
+            
+            return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
         public override bool IsItemRelevant(Item item)
         {
-            // Bone Fishing Pole
+            // Bone Fishing Pole, it loves to muck up the list!
             if (item.Id == 45991)
                 return false;
 
             return base.IsItemRelevant(item);
+        }
+
+        public override bool IsBuffRelevant(Buff buff)
+        {
+            bool NotClassSetBonus = 
+                ((buff.Group == "Set Bonuses") && !(
+                    buff.Name.StartsWith("Dreadnaught") || 
+                    buff.Name.StartsWith("Siegebreaker") || 
+                    buff.Name.StartsWith("Wyrnn's") ||
+                    buff.Name.Contains("Gladiator")
+                ));
+
+            return base.IsBuffRelevant(buff) && !NotClassSetBonus;
         }
 
         public override Stats GetRelevantStats(Stats stats)
@@ -937,7 +965,8 @@ threat and limited threat scaled by the threat scale.",
                 HighestStat = stats.HighestStat,
                 BonusCommandingShoutHP = stats.BonusCommandingShoutHP,
                 BonusShieldSlamDamage = stats.BonusShieldSlamDamage,
-                DevastateCritIncrease = stats.DevastateCritIncrease
+                DevastateCritIncrease = stats.DevastateCritIncrease,
+                BonusDevastateDamage = stats.BonusDevastateDamage
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -977,7 +1006,8 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusCritMultiplier + stats.CritChanceReduction +
                     stats.ThreatIncreaseMultiplier + stats.BonusDamageMultiplier + stats.BonusBlockValueMultiplier +
                     stats.BonusBleedDamageMultiplier +
-                    stats.HighestStat + stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage + stats.DevastateCritIncrease
+                    stats.HighestStat + 
+                    stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage
                 ) != 0;
 
             foreach (SpecialEffect effect in stats.SpecialEffects())

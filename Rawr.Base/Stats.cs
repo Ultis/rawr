@@ -456,6 +456,7 @@ namespace Rawr {
         #endregion
         #region Warrior set bonuses
         BonusShieldSlamDamage,
+        BonusDevastateDamage,
         BonusWarrior_T7_2P_SlamDamage,
         #endregion
         #region Boss Stats
@@ -3822,6 +3823,16 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DevastateCritIncrease]; }
             set { _rawAdditiveData[(int)AdditiveStat.DevastateCritIncrease] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Devastate Damage")]
+        public float BonusDevastateDamage
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDevastateDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDevastateDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

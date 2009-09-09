@@ -1715,6 +1715,19 @@ namespace Rawr {
                 childEffect.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = int.Parse(match.Groups["hasteRating"].Value) }, float.PositiveInfinity, 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, childEffect, int.Parse(match.Groups["duration"].Value), cooldown, 1f));
             }
+            else if ((match = Regex.Match(line, @"Each time you are struck by an attack, you gain (?<bonusArmor>\d+) armor\. .*Stacks up to (?<stacks>\d+) times\. .*Entire effect lasts (?<duration>\d+) sec\.( \((?<cooldown>\d+) Min Cooldown\))?")).Success)
+            {
+                // Fervor of the Frostborn / Eitrigg's Oath
+                // armory doesn't give cooldown info
+                int cooldown = 120;
+                if (match.Groups["cooldown"].Success)
+                {
+                    cooldown = int.Parse(match.Groups["cooldown"].Value) * 60;
+                }
+                Stats childEffect = new Stats();
+                childEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { BonusArmor = int.Parse(match.Groups["bonusArmor"].Value) }, float.PositiveInfinity, 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, childEffect, int.Parse(match.Groups["duration"].Value), cooldown, 1f));
+            }
             // Figurine - Talasite Owl, 5 min cooldown
             else if (line.StartsWith("Restores 900 mana over 12 sec."))
             {

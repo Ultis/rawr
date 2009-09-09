@@ -2372,9 +2372,11 @@ namespace Rawr
             });
             #endregion
             #region Warrior set bonuses
+            /* Don't believe we need these older bonuses cluttering up the list anymore
+             * However, commenting just in case!
             defaultBuffs.Add(new Buff()
             {
-                Name = "Destroyer Armor 2 Piece Bonus",
+                Name = "Destroyer Armor (T5) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BlockValue = 100f / 2f },
@@ -2386,7 +2388,7 @@ namespace Rawr
                 //This can vary depending on how many mobs are being tanked and your
                 //avoidance, for now assume it procs once every 30 seconds.
                 //200 haste for 10 sec every 30 sec = 200 / 3 = 67 haste rating
-                Name = "Destroyer Armor 4 Piece Bonus",
+                Name = "Destroyer Armor (T5) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { HasteRating = 67f },
@@ -2395,7 +2397,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Onslaught Armor 2 Piece Bonus",
+                Name = "Onslaught Armor (T6) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusCommandingShoutHP = 170f },
@@ -2404,16 +2406,17 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Onslaught Armor 4 Piece Bonus",
+                Name = "Onslaught Armor (T6) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusShieldSlamDamage = 0.1f },
                 SetName = "Onslaught Armor",
                 SetThreshold = 4
             });
+            */
             defaultBuffs.Add(new Buff()
             {
-                Name = "Dreadnaught Plate 2 Piece Bonus",
+                Name = "Dreadnaught Plate (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusShieldSlamDamage = 0.1f },
@@ -2422,7 +2425,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Siegebreaker Plate 2 Piece Bonus",
+                Name = "Siegebreaker Plate (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { DevastateCritIncrease = 0.1f },
@@ -2492,6 +2495,15 @@ namespace Rawr
                 Stats = { BonusWarrior_T9_4P_SLHSCritIncrease = 0.05f },
                 SetName = "Wrynn's Battlegear",
                 SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Wrynn's Plate (T9) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusDevastateDamage = 0.05f },
+                SetName = "Wrynn's Plate",
+                SetThreshold = 2
             });
             #endregion
 
