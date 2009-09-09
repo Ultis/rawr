@@ -413,7 +413,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #endregion 
 
             // Get the shotrotation/combat model here.
-            if (opts.m_Rotation == null) { return calcs; }
+            if (opts.m_Rotation == null) 
+            { 
+                return calcs; 
+            }
 
             #region TargetDodge/Parry/Miss & Expertise - finish populating totalstats.
             bool bDualWielding = false;
@@ -467,8 +470,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             calcs.Expertise = stats.Expertise;
             #endregion
 
-            // need to calculate the rotation after we have the DR values for Dodge/Parry/Miss.
-            opts.m_Rotation.m_FullStats = stats.Clone() as Stats;
+            // need to calculate the rotation after we have the DR values for Dodge/Parry/Miss/haste.
+            opts.m_Rotation.m_fDodge = stats.Dodge;
+            opts.m_Rotation.m_fParry = stats.Parry;
+            opts.m_Rotation.m_fPhysicalHaste = stats.PhysicalHaste;
 
             CombatTable ct = new CombatTable(character, stats, opts);
 
@@ -540,7 +545,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             #region ***** Mitigation Rating *****
             float fFightDuration = opts.FightLength;
-            if (fFightDuration == 0f) { opts.FightLength = fFightDuration = 10f; }
+            if (fFightDuration == 0f) 
+            { 
+                opts.FightLength = fFightDuration = 10f;
+            }
             float fNumRotations = 0f;
             float fIncMagicalDamage = (opts.IncomingDamage * opts.PercentIncomingFromMagic);
             float fIncPhysicalDamage = (opts.IncomingDamage - fIncMagicalDamage);
@@ -756,7 +764,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <param name="character">The character to build the chart for.</param>
         /// <param name="chartName">The name of the custom chart to get data for.</param>
         /// <returns>The data for the custom chart.</returns>
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) { return new ComparisonCalculationBase[0]; }
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) 
+        { 
+            return new ComparisonCalculationBase[0]; 
+        }
+
         private Stats GetRaceStats(Character character) {
             Stats Base = new Stats();
             Base = BaseStats.GetBaseStats(character);
@@ -791,9 +803,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
-				ArmorPenetration = stats.ArmorPenetration,
-				ArmorPenetrationRating = stats.ArmorPenetrationRating,
-				ExpertiseRating = stats.ExpertiseRating,
+                ArmorPenetration = stats.ArmorPenetration,
+                ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                ExpertiseRating = stats.ExpertiseRating,
                 Expertise = stats.Expertise,
                 HasteRating = stats.HasteRating,
                 WeaponDamage = stats.WeaponDamage,
@@ -920,7 +932,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.PhysicalHaste != 0);
             bResults |= (stats.PhysicalHit != 0);
             bResults |= (stats.ArmorPenetration != 0);
-			bResults |= (stats.ArmorPenetrationRating != 0);
+            bResults |= (stats.ArmorPenetrationRating != 0);
             bResults |= (stats.ExpertiseRating != 0);
             bResults |= (stats.Expertise != 0);
             bResults |= (stats.HasteRating != 0);

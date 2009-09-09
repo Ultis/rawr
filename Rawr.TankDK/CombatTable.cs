@@ -317,6 +317,7 @@ namespace Rawr.TankDK
             */
 
             //spell AP multipliers, for diseases its per tick
+            // TODO: Factor in BB & CE values for Multi-Target Tank roations
             float BloodBoilAPMult = .04f;
             float BloodPlagueAPMult = 0.055f;
             float CorpseExplosionAPMult = .0475f;
@@ -326,7 +327,7 @@ namespace Rawr.TankDK
             float GargoyleAPMult = 0.4f;
             float HowlingBlastAPMult = 0.1f;
             float IcyTouchAPMult = 0.1f;
-            float StrangulateAPMult = .06f;
+            //float StrangulateAPMult = .06f;
             float UnholyBlightAPMult = 0.013f;
 
             //for estimating rotation pushback
@@ -613,10 +614,17 @@ namespace Rawr.TankDK
 
             #region Wandering Plague
             {
-                fDamWanderingPlague = fDamWPFromBP + fDamWPFromFF;
-                fDamWanderingPlague *= (1f / 3f) * (float)talents.WanderingPlague;
-                // Since the damage is spread across all nearby targets, let's add that in.
-                fDamWanderingPlague *= calcOpts.uNumberTargets; 
+                if ((float)talents.WanderingPlague > 0)
+                {
+                    fDamWanderingPlague = fDamWPFromBP + fDamWPFromFF;
+                    fDamWanderingPlague *= (1f / 3f) * (float)talents.WanderingPlague;
+                    // Since the damage is spread across all nearby targets, let's add that in.
+                    fDamWanderingPlague *= calcOpts.uNumberTargets;
+                }
+                else
+                {
+                    fDamWanderingPlague = 0f;
+                }
             }
             #endregion
 
@@ -774,8 +782,10 @@ namespace Rawr.TankDK
                     float DSCrit = 1f + ((this.physCrits +
                         (.03f * (float)talents.ImprovedDeathStrike) +
                         stats.BonusDeathStrikeCrit) * DSCritDmgMult);
-                    fDamDeathStrike *= DSCrit; // threat from Damage.
-                    fDamDeathStrike *= ((stats.Health * .05f * calcOpts.m_Rotation.numDisease) / calcOpts.uNumberTargets / 2); // threat from Healing divided by number of targets.
+                    // Factor in threat from damage
+                    fDamDeathStrike *= DSCrit; 
+                    // Add in threat from Healing.
+                    fDamDeathStrike += ((stats.Health * .05f * calcOpts.m_Rotation.numDisease) / calcOpts.uNumberTargets / 2); // threat from Healing divided by number of targets.
                 }
             }
             #endregion

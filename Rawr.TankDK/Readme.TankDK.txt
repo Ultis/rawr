@@ -1,17 +1,13 @@
 ﻿Tracking doc for status of Rawr.Tank Module.
 
-As of June 29, 2009, has support for 3.1 needs alot of validation.
+As of Sept 9,2009, has support for 3.2 needs alot of validation.
 
-Re-worked Talents
-Re-worked point evaluations
-Including a shot rotation improving combat model.
-
-2.2.8:
-Shot rotation improved.
-Incoming damage changed to Incoming DPS.
-Threat changed from flat Threat generated in the rotation to TPS.
-Mitigation changed from flat mitigation to Mitigation Per Second.
+2.2.15:
+Pulled Stats object out of ShotRotation so it's not bloating the saved character XML
+Fix Blood rotation so the threat values were not so screwed.
 
 Current TODOs:
 * Fix defects
-* refine evaluations
+* Fix shot rotation/threat modeling.
+* Add graphs for mapping Burst & Reaction Time.
+* Integrate a Paperdoll vs. Effective Stats model.

@@ -5,7 +5,13 @@ using System.Text;
 namespace Rawr.TankDK {
     public class Rotation {
         // I need FullCharacterStats
-        public Stats m_FullStats = new Stats();
+        // May need to pull these from the character rather than creating a new stats object here.
+        // however these are the stats that are being saved in the XML under the TANKDK area.
+        // I only need the Dodge & Parry & Haste Values.
+        public float m_fDodge = 0f;
+        public float m_fParry = 0f;
+        public float m_fPhysicalHaste = 0f;
+//        public Stats m_FullStats = new Stats();
         
         // Initial Code taken from DPSDK
         public Type curRotationType = Type.Frost;
@@ -16,7 +22,7 @@ namespace Rawr.TankDK {
         public float avgDiseaseMult = 0f;
         public float numDisease = 0f;
         public float diseaseUptime = 0f;
-        public float GargoyleDuration = 0f;
+//        public float GargoyleDuration = 0f;
         
         //ability number of times per rotation used 
         public float DeathCoil = 0f;
@@ -49,6 +55,14 @@ namespace Rawr.TankDK {
         public Boolean managedRP = false;
         public float GCDTime;
         public float RP;
+
+        public Rotation() { new Rotation(0f, 0f); }
+        public Rotation(float fDodge, float fParry) 
+        {
+            this.m_fDodge = fDodge;
+            this.m_fParry = fParry;
+            this.setRotation(this.curRotationType); 
+        }
 
         public enum Type { Custom, Blood, Frost, Unholy }
 
@@ -129,18 +143,10 @@ namespace Rawr.TankDK {
         /// <param name="s">Total Stats for the character.</param>
         /// <returns>Duration of the GCD in seconds.</returns>
         public float GetGCDHasted() {
-            float fHR = m_FullStats.HasteRating;
-            float fPH = m_FullStats.PhysicalHaste;
             float fNormalGCD = 1.5f;
-            if (null == m_FullStats) {
-                fHR = 0f;
-                fPH = 0f;
-            }
-            float fPercHaste = StatConversion.GetHasteFromRating(fHR, CharacterClass.DeathKnight) + fPH;
-            float fHastedGCD = Math.Max( 1f, fNormalGCD/(1f + fPercHaste) );
+            float fHastedGCD = Math.Max( 1f, fNormalGCD/(1f + this.m_fPhysicalHaste) );
             return fHastedGCD;
         }
-        public Rotation() { this.setRotation(this.curRotationType); }
 
         public void setRotation(Type t) {
             curRotationType = t;
@@ -161,7 +167,7 @@ namespace Rawr.TankDK {
                     HeartStrike = 6f;
                     curRotationDuration = 20f;
                     DancingRuneWeapon = 190f;
-                    GargoyleDuration = 0f;
+//                    GargoyleDuration = 0f;
                     DeathStrike = 2f;
                     break;
                 case Type.Frost:
@@ -179,7 +185,7 @@ namespace Rawr.TankDK {
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 20f;
-                    GargoyleDuration = 0f;
+//                    GargoyleDuration = 0f;
                     DeathStrike = 0f;
                     RuneStrike = 3f;
                     break;
@@ -198,7 +204,7 @@ namespace Rawr.TankDK {
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 20f;
-                    GargoyleDuration = 30f;
+//                    GargoyleDuration = 30f;
                     DeathStrike = 0f;
                     break;
                 case Type.Custom:
@@ -217,7 +223,7 @@ namespace Rawr.TankDK {
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 0f;
                     GargoyleDuration = 0f;
-                    presence = CalculationOptionsDPSDK.Presence.Blood;*/
+                    */
                     break;
             }
         }
