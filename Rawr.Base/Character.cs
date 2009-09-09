@@ -571,9 +571,9 @@ namespace Rawr //O O . .
                 items = new List<ItemInstance>();
                 foreach (Item item in ItemCache.RelevantItems)
                 {
-                    itemChecked[item.Id] = true;
                     if (item.FitsInSlot(slot, this) && item.FitsFaction(Race))
                     {
+                        itemChecked[item.Id] = true;
                         List<ItemInstance> itemInstances = new List<ItemInstance>();
                         foreach (GemmingTemplate template in GemmingTemplate.CurrentTemplates)
                         {
