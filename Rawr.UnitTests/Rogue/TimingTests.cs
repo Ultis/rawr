@@ -302,8 +302,6 @@ namespace Rawr.UnitTests.Rogue
         WrathDmg,
         DruidAshtongueTrinket,
         BonusPetCritChance,
-        BonusWarlockSchoolDamageOnCast,
-        BonusWarlockDotExtension,
         RegrowthExtraTicks,
         LifebloomFinalHealBonus,
         BonusHealingTouchMultiplier,

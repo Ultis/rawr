@@ -140,8 +140,6 @@ namespace Rawr {
         WindfuryAPBonus,
         WrathDmg,
         DruidAshtongueTrinket,
-        BonusWarlockSchoolDamageOnCast,
-        BonusWarlockDotExtension,
         RegrowthExtraTicks,
         LifebloomFinalHealBonus,
         BonusHealingTouchMultiplier,
@@ -390,7 +388,6 @@ namespace Rawr {
         BonusFrostDamageMultiplier,
         BonusIntellectMultiplier,
         BonusMageNukeMultiplier,
-        BonusWarlockNukeMultiplier,
         BonusNatureDamageMultiplier,
         BonusPhysicalDamageMultiplier,
         BonusDamageMultiplier,
@@ -415,7 +412,6 @@ namespace Rawr {
         BonusHolyDamageMultiplier,
         BonusDiseaseDamageMultiplier,
         ThreatIncreaseMultiplier,
-        BonusWarlockDotDamageMultiplier,
         BonusManaregenWhileCastingMultiplier,
         PhysicalHaste,
         RangedHaste,
@@ -2705,22 +2701,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warlock")]
-        public float BonusWarlockSchoolDamageOnCast
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warlock")]
-        public float BonusWarlockDotExtension
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spirit while casting")]
         [Category("Equipment Effects")]
         public float ExtraSpiritWhileCasting
@@ -3691,16 +3671,8 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier] = value; }
         }
         #endregion
-        #region Added by Rawr.Warlock
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warlock")]
-        public float BonusWarlockNukeMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier] = value; }
-        }
 
+        #region Added by Rawr.Warlock
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% damage bonus on Unstable Affliction and 10% on Immolate")]
@@ -3744,15 +3716,6 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warlock")]
-        public float BonusWarlockDotDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockDotDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockDotDamageMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warlock")]
         [DisplayName("% Warlock Spell Power")]
         public float BonusSpellPowerDemonicPactMultiplier
         {
@@ -3760,6 +3723,7 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerDemonicPactMultiplier] = value; }
         }
         #endregion
+
         #region Added by Rawr.Hunter
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]

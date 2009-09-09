@@ -1859,42 +1859,7 @@ namespace Rawr
                 SetName = "Tempest Regalia",
                 SetThreshold = 4
             });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Voidheart Raiment 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarlockSchoolDamageOnCast = 135 },
-                SetName = "Voidheart Raiment",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Voidheart Raiment 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarlockDotExtension = 3 },
-                SetName = "Voidheart Raiment",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Corruptor Raiment 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarlockDotDamageMultiplier = 0.1f },
-                SetName = "Corruptor Raiment",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Malefic Raiment 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarlockNukeMultiplier = 0.06f },
-                SetName = "Malefic Raiment",
-                SetThreshold = 4
-            });
+
             #region Warlock T7 set bonuses
             defaultBuffs.Add(new Buff()
             {
