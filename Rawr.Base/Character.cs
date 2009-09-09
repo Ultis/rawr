@@ -663,7 +663,16 @@ namespace Rawr //O O . .
                         {
                             ItemInstance instance = new ItemInstance(int.Parse(ids[0]), int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]), (ids[4] == "*") ? GetEnchantBySlot(slot).Id : int.Parse(ids[4]));
                             instance.ForceDisplay = true;
-                            if (!items.Contains(instance)) items.Add(instance);
+                            // we want to force display even if it's already present (might be lower then top N)
+                            int index = items.IndexOf(instance);
+                            if (index < 0)
+                            {
+                                items.Add(instance);
+                            }
+                            else
+                            {
+                                items[index] = instance;
+                            }
                         }
                     }
                 } 
