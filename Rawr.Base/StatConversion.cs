@@ -288,7 +288,7 @@ namespace Rawr
         /// </summary>
         /// <param name="Rating">Defense Rating</param>
         /// <returns>A Value (5.4 = 5 extra Defense)</returns>
-        public static float GetDefenseFromRating(float Rating) { return (float)Math.Round(Rating / RATING_PER_DEFENSE); }
+        public static float GetDefenseFromRating(float Rating) { return (float)Math.Floor(Rating / RATING_PER_DEFENSE); }
 
         public static float GetDodgeFromRating(float Rating, CharacterClass Class) { return GetDodgeFromRating(Rating); }
         /// <summary>
