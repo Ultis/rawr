@@ -374,6 +374,8 @@ namespace Rawr.DPSWarr {
 
                 float RageForCL = clok ? (!hsok ? availRage : availRage * clPercOvd) : 0f;
                 float RageForHS = hsok ? availRage - RageForCL : 0f;
+                RageForHS = Math.Max(RageForHS, 0.0f);
+                RageForCL = Math.Max(RageForCL, 0.0f);
                 float numHSOverDur = RageForHS / HS.FullRageCost;
                 float numCLOverDur = RageForCL / CL.FullRageCost;
                 HS.OverridesOverDur = numHSOverDur;

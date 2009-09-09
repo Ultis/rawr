@@ -90,7 +90,9 @@ namespace Rawr.DPSWarr {
             public float AvgMhDamageOnUse { get { return MhDamageOnUse * MhActivates; } }
             public float MhActivates {
                 get {
-                    return (float)Math.Max(0f, CalcOpts.Duration / MhEffectiveSpeed - HSOverridesOverDur - CLOverridesOverDur);
+                    if (MhEffectiveSpeed != 0)
+                        return (float)Math.Max(0f, CalcOpts.Duration / MhEffectiveSpeed - HSOverridesOverDur - CLOverridesOverDur);
+                    else return 0f;
                 }
             }
             public float MhDPS { get { return AvgMhDamageOnUse / CalcOpts.Duration; } }
