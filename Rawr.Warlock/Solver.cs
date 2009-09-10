@@ -40,6 +40,7 @@ namespace Rawr.Warlock
         public float ImmolateEnd { get; protected set; }
         public Stats simStats { get; protected set; }
         public Spell fillerSpell { get; protected set; }
+
         public Spell drainSoul { get; protected set; }
         public Spell corruption { get; protected set; }
         public Spell haunt { get; protected set; }
@@ -94,9 +95,9 @@ namespace Rawr.Warlock
             timeTillNextSpell = 100;
             foreach (Spell spell in SpellPriority) 
             {
-                if (timeTillNextSpell < GetCastTime(spell) + lag) continue;
-                float realcasttime = GetRealCastTime(spell);
-                float casttime = GetCastTime(spell);
+                if (timeTillNextSpell < spell.CastTime) continue;
+
+                float casttime = (spell.CastTime + lag);
                 
                 switch (spell.Name) 
                 {
@@ -104,7 +105,7 @@ namespace Rawr.Warlock
                     {
                         if (spell.SpellStatistics.CooldownReset <= time) 
                         {
-                            if (Math.Round(time + GetGlobalCooldown(spell) + lag + casttime, 4) > Math.Round(spell.SpellStatistics.CooldownReset + 4, 4) || spell.SpellStatistics.CooldownReset == 0) 
+                            if ((time + GetGlobalCooldown(spell) + casttime) > (spell.SpellStatistics.CooldownReset + 4) || spell.SpellStatistics.CooldownReset == 0) 
                             {
                                 return spell;
                             } 
@@ -113,9 +114,9 @@ namespace Rawr.Warlock
                                 foreach (Spell tempspell in SpellPriority) 
                                 {
                                     if (tempspell.Name == "Haunt") continue;
-                                    float realcasttimetemp = GetRealCastTime(tempspell);
-                                    float casttimetemp = GetCastTime(tempspell);
-                                    if (Math.Round(time + realcasttimetemp + lag, 4) >= Math.Round(tempspell.SpellStatistics.CooldownReset, 4) && Math.Round(time + casttimetemp + lag + casttime + lag, 4) <= Math.Round(spell.SpellStatistics.CooldownReset + 4, 4)) 
+
+                                    float casttimetemp = tempspell.CastTime + lag;
+                                    if ((time + casttimetemp + lag + casttime + lag) <= (spell.SpellStatistics.CooldownReset + 4))
                                     {
                                         return tempspell;
                                     }
@@ -123,16 +124,19 @@ namespace Rawr.Warlock
                             }
                             return spell;
                         }
-                        timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset + 4f - time - realcasttime - lag) : timeTillNextSpell);
+                        timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset + 4f - time - casttime) : timeTillNextSpell);
                         break;
                     }
                     case "Conflagrate" : 
                     {
-                        if (Math.Round(spell.SpellStatistics.CooldownReset, 4) <= Math.Round(time, 4)) 
+                        if (spell.SpellStatistics.CooldownReset <= time) 
                         {
                             for (int index = 0; index < events.Count; index++) 
                             {
-                                if (events.Values[index].Name == "Immolate") { return spell; }
+                                if (events.Values[index].Name == "Immolate") 
+                                { 
+                                    return spell; 
+                                }
                             }
                             if (spell.Cooldown > 0) 
                             {
@@ -140,7 +144,7 @@ namespace Rawr.Warlock
                             } 
                             else 
                             {
-                                timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - time - realcasttime - lag) : timeTillNextSpell);
+                                timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - time - casttime) : timeTillNextSpell);
                             }
                         }
                         break;
@@ -151,29 +155,31 @@ namespace Rawr.Warlock
                         {
                             if (UseDSBelow25 || UseDSBelow35) 
                             {
-                                if (Math.Round(time, 4) < Math.Round(DSCastEnd, 4)
-                                 && Math.Round(time, 4) <= Math.Round(timeTillNextSpell - GetCastTime(drainSoul), 4)
-                                 )
+                                if ((time < DSCastEnd) && (time <= (timeTillNextSpell - drainSoul.CastTime)))
                                     return null;
-                                if (((Math.Round(time, 4) >= Math.Round(maxTime * 0.65f, 4) && UseDSBelow35)
-                                  || (Math.Round(time, 4) >= Math.Round(maxTime * 0.75f, 4) && UseDSBelow25)
-                                  && (Math.Round(time, 4) <= Math.Round(timeTillNextSpell - GetGlobalCooldown(drainSoul), 4)))
-                                   )
+
+                                if ((((time) >= (maxTime * 0.65f) && UseDSBelow35)
+                                  || ((time) >= (maxTime * 0.75f) && UseDSBelow25)
+                                  && ((time) <= (timeTillNextSpell - GetGlobalCooldown(drainSoul)))))
+                                {
                                     return drainSoul;
+                                }
                             }
                         }
-                        if (Math.Round(time + realcasttime + lag, 4) >= Math.Round(spell.SpellStatistics.CooldownReset, 4)) 
+                        if ((time /* + casttime*/) >= spell.SpellStatistics.CooldownReset) 
                         {
                             return spell;
                         }
                         if (spell.Cooldown > 0) 
                         {
-                            timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset) : timeTillNextSpell);
+                            timeTillNextSpell = (spell.Cooldown - spell.CastTime);
                         } 
                         else 
                         {
-                            timeTillNextSpell = (spell.SpellStatistics.CooldownReset > 0 ? Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - time - realcasttime - lag) : timeTillNextSpell);
+                            timeTillNextSpell = (spell.DebuffDuration > 0 ? Math.Min(timeTillNextSpell, spell.DebuffDuration) : timeTillNextSpell);
+                            timeTillNextSpell -= (spell.CastTime > 0 ? spell.CastTime : spell.GlobalCooldown);
                         }
+                        
                         break;
                     }
                 }
@@ -188,23 +194,24 @@ namespace Rawr.Warlock
             Rotation = "None";
 
             PlayerStats = playerStats.Clone();
-            //if (playerStats.HasteRatingFor20SecOnUse2Min   > 0f) PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
-            //if (playerStats.HasteRatingFor20SecOnUse5Min   > 0f) PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse5Min * 20f / 300f;
-            //if (playerStats.SpellHasteFor10SecOnCast_10_45 > 0f) PlayerStats.HasteRating += playerStats.SpellHasteFor10SecOnCast_10_45 * 10f / 75f;
-            //PlayerStats.SpellHaste = StatConversion.GetSpellHasteFromRating(PlayerStats.HasteRating);
 
             CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
             lag = CalculationOptions.Delay / 1000f;
 
             HitChance = PlayerStats.SpellHit * 100f + CalculationOptions.TargetHit;
-            if (character.Race == CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence")) { HitChance += 1; }
+            if (character.Race == CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence")) 
+            { 
+                HitChance += 1; 
+            }
 
             ManaSources = new List<ManaSource>();
             SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
             shadowBolt = SpellFactory.CreateSpell("Shadow Bolt", PlayerStats, character);
             lifeTap = SpellFactory.CreateSpell("Life Tap", PlayerStats, character);
+
             bool UAImmoChosen = false;
             bool CurseChosen = false;
+            
             foreach (string spellname in CalculationOptions.SpellPriority) 
             {
                 Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character);
@@ -218,6 +225,7 @@ namespace Rawr.Warlock
                     if (spelltmp.Name.Contains("Curse")) { CurseChosen = true; }
                 }
             }
+
             if (SpellPriority.Count == 0) SpellPriority.Add(shadowBolt);
             fillerSpell = SpellPriority[SpellPriority.Count - 1];
             //            UseBSBelow35 = CalculationOptions.UseBSBelow35;
@@ -285,7 +293,7 @@ namespace Rawr.Warlock
                 }
                 switch (currentEvent.Name) 
                 {
-                    #region Done Casting Event
+                    #region Event "Done Casting"
                     case "Done casting": 
                         {
                             Spell spell = GetCastSpellNew(time, simStats);
@@ -299,49 +307,56 @@ namespace Rawr.Warlock
                                 removeEvent(drainSoul);
                                 DSCastEnd = 0;
                             }*/
-                            CastList.Add(time, spell);
+                            if (!CastList.ContainsKey(time))
+                            {
+                                CastList.Add(time, spell);
+                            }
                             spell.SpellStatistics.HitCount++;
+                            if (BackdraftCounter > 0 && spell.SpellTree == SpellTree.Destruction)
+                            {
+                                BackdraftCounter--;
+                            }
 
                             if (spell.Name == "Drain Soul" || spell.Name == "Drain Life")
                             {
-                                float debuff = spell.TimeBetweenTicks + lag;
-                                while (debuff <= spell.DebuffDuration + .0001 + lag)
+                                float debuff = spell.TimeBetweenTicks;
+                                while (debuff <= spell.DebuffDuration)
                                 {
-                                    events.Add(time + debuff, new Event(spell, "Dot tick"));
-                                    events.Add(time + debuff, new Event(spell, "Done casting"));
+                                    events.Add(time + debuff + lag, new Event(spell, "Dot tick"));
+                                    events.Add(time + debuff + lag, new Event(spell, "Done casting"));
                                     debuff += spell.TimeBetweenTicks;
                                 }
                             }
                             else
                             {
+                                float doneTime = (spell.CastTime > 0 ? spell.CastTime : spell.GlobalCooldown);
+
+                                events.Add((time + doneTime + lag), new Event(spell, "Done casting"));
+
                                 if (spell.DebuffDuration > 0f)
                                 {
-                                    float debuff = spell.TimeBetweenTicks + (spell.CastTime > 0 ? GetRealCastTime(spell) : 0) + lag;
-                                    float bla = GetRealCastTime(spell);
-                                    while (Math.Round(debuff, 4) <= Math.Round(spell.DebuffDuration + (spell.CastTime > 0 ? bla : 0) + lag + (spell.Name == "Curse of Agony" && character.WarlockTalents.GlyphCoA ? 4 : 0), 4))
+                                    float debuff = spell.DebuffDuration;
+                                    //while (debuff <= (spell.DebuffDuration + spell.CastTime))
+                                    while (debuff >= spell.TimeBetweenTicks)
                                     {
-                                        events.Add(time + debuff, new Event(spell, "Dot tick"));
-                                        debuff += spell.TimeBetweenTicks;
+                                        events.Add(time + debuff + lag, new Event(spell, "Dot tick"));
+                                        debuff -= spell.TimeBetweenTicks;
                                     }
                                     if (spell.SpellTree == SpellTree.Affliction)
                                     {
                                         AffEffectsNumber++;
-                                        events.Add(time + debuff - spell.TimeBetweenTicks, new Event(spell, "Aff effect"));
+                                        events.Add(time + doneTime + lag, new Event(spell, "Aff effect"));
                                     }
-                                }
-                                events.Add((time + GetCastTime(spell) + lag), new Event(spell, "Done casting"));
+                                }                                
                             }
+
                             if (spell.Cooldown > 0f)
-                                spell.SpellStatistics.CooldownReset = time + lag + GetRealCastTime(spell) + spell.Cooldown;
+                            {
+                                spell.SpellStatistics.CooldownReset = time + spell.Cooldown;
+                            }
                             else if (spell.DebuffDuration > 0f)
                             {
-                                spell.SpellStatistics.CooldownReset = time + lag + GetRealCastTime(spell) + spell.DebuffDuration;
-
-                                //CoA handling moved to the spell. The effect is a bit more complex than just extending its duration
-                                //if (spell.Name == "Curse of Agony" && character.WarlockTalents.GlyphCoA)
-                                //    spell.SpellStatistics.CooldownReset += 4;
-                                if (spell.Name == "Chaos Bolt" && character.WarlockTalents.GlyphChaosBolt)
-                                    spell.SpellStatistics.CooldownReset -= 2;
+                                spell.SpellStatistics.CooldownReset = time + spell.DebuffDuration;
                             }
 
                             switch (spell.Name)
@@ -351,8 +366,11 @@ namespace Rawr.Warlock
                                         if (character.WarlockTalents.ShadowEmbrace > 0)
                                         {
                                             ShadowEmbrace = Math.Min(ShadowEmbrace + 1, 2);
-                                            if (!removeEvent("Shadow Embrace debuff")) AffEffectsNumber++;
-                                            events.Add(time + GetRealCastTime(spell) + 12, new Event(spell, "Shadow Embrace debuff"));
+                                            if (!removeEvent("Shadow Embrace debuff"))
+                                            {
+                                                AffEffectsNumber++;
+                                            }
+                                            events.Add(time + spell.CastTime + spell.DebuffDuration + lag, new Event(spell, "Shadow Embrace debuff"));
                                         }
                                         float nextCorTick = 0;
                                         Event nextCorTickEvent = null;
@@ -369,14 +387,14 @@ namespace Rawr.Warlock
                                             removeEvent(nextCorTickEvent.Spell, "Aff effect");
                                             float debuff = nextCorTick;
                                             float lastDebuff = debuff;
-                                            while (debuff <= time + GetRealCastTime(spell) + nextCorTickEvent.Spell.DebuffDuration)
+                                            while (debuff <= time + spell.CastTime + nextCorTickEvent.Spell.DebuffDuration)
                                             {
                                                 lastDebuff = debuff;
-                                                events.Add(debuff, new Event(nextCorTickEvent.Spell, "Dot tick"));
+                                                events.Add(debuff + lag, new Event(nextCorTickEvent.Spell, "Dot tick"));
                                                 debuff += nextCorTickEvent.Spell.TimeBetweenTicks;
                                             }
                                             nextCorTickEvent.Spell.SpellStatistics.CooldownReset = lastDebuff;
-                                            events.Add(time + GetRealCastTime(spell) + nextCorTickEvent.Spell.DebuffDuration, new Event(nextCorTickEvent.Spell, "Aff effect"));
+                                            events.Add(time + spell.CastTime + nextCorTickEvent.Spell.DebuffDuration + lag, new Event(nextCorTickEvent.Spell, "Aff effect"));
                                         }
                                         break;
                                     }
@@ -387,29 +405,36 @@ namespace Rawr.Warlock
                                         {
                                             ShadowEmbrace = Math.Min(ShadowEmbrace + 1, 2);
                                             removeEvent("Shadow Embrace debuff");
-                                            events.Add(time + GetRealCastTime(spell) + 12, new Event(spell, "Shadow Embrace debuff"));
+                                            events.Add(time + (spell.CastTime + 12) + lag, new Event(spell, "Shadow Embrace debuff"));
                                         }
                                         break;
                                     }
                                 case "Drain Soul":
                                     {
-                                        DSCastEnd = time + GetRealCastTime(spell) + lag;
+                                        DSCastEnd = time + spell.CastTime + lag;
                                         break;
                                     }
                                 case "Conflagrate":
                                     {
                                         if (ImmolateEnd - time <= 5) CounterBuffedConflag++;
+
+                                        //The Glyph of Conflag (if present) will not consume your Immolate or Shadowflame spell on the target.
+                                        //In other words, when this glyph is not present, we must consume the shadowflame or immolate spell.
                                         if (!character.WarlockTalents.GlyphConflag)
+                                        {
                                             if (!removeEvent("Shadowflame"))
                                             {
                                                 removeEvent("Immolate");
                                                 ImmolateIsUp = false;
                                                 immolate.SpellStatistics.CooldownReset = time;
                                             }
+                                        }
+
+                                        //When you cast Conflagrate, the cast time and global cooldown of your next three Destruction spells is reduced by 10/20/30%. Lasts 15 sec.
                                         if (character.WarlockTalents.Backdraft > 0)
                                         {
                                             BackdraftCounter = 3;
-                                            events.Add(time + 15, new Event(spell, "Backdraft"));
+                                            events.Add(time + 15, new Event(spell, "Backdraft Ends"));
                                         }
                                         break;
                                     }
@@ -421,25 +446,29 @@ namespace Rawr.Warlock
                                 case "Immolate":
                                     {
                                         ImmolateIsUp = true;
-                                        ImmolateEnd = time + GetRealCastTime(spell) + 15;
-                                        events.Add(time + GetRealCastTime(spell) + 15, new Event(spell, "Immolate"));
+                                        ImmolateEnd = time + spell.CastTime + spell.DebuffDuration + lag;
+                                        events.Add(ImmolateEnd, new Event(spell, "Immolate"));
                                         break;
                                     }
                                 case "Shadowflame":
                                     {
-                                        events.Add(time + GetRealCastTime(spell) + 8, new Event(spell, "Shadowflame"));
+                                        events.Add(time + spell.CastTime + spell.DebuffDuration + lag, new Event(spell, "Shadowflame"));
                                         break;
                                     }
                             }
-                            //                        if (time >= maxTime * 0.65f && spell.MagicSchool == MagicSchool.Shadow)
-                            //                            damage = (float)((1 - Math.Min((time - maxTime * 0.65f) / GetCastTime(spell),1)) * damage + Math.Min((time - maxTime * 0.65f) / GetCastTime(spell),1) * damage * (1 + character.WarlockTalents.DeathsEmbrace * 0.04f));
-                            if (spell.MagicSchool == MagicSchool.Shadow && spell.Name != "Drain Soul") MoltenCoreCounter++;
-                            //                        if (time >= maxTime * 0.75f && spell.Name == "Drain Soul") damage *= 4f;
 
+                            if (spell.MagicSchool == MagicSchool.Shadow)
+                            {
+                                if (spell.Name != "Drain Soul")
+                                {
+                                    MoltenCoreCounter++;
+                                }
+                            }
                             break;
                         }
                     #endregion
-                    #region Dot Tick Event
+
+                    #region Event "Dot Tick"
                     case "Dot tick":
                         {
                             Spell spell = currentEvent.Spell;
@@ -478,13 +507,17 @@ namespace Rawr.Warlock
                                         break;
                                     }
                             }
-                            //                        if (time >= maxTime * 0.65f && spell.MagicSchool == MagicSchool.Shadow)
-                            //                            damage *= 1 + character.WarlockTalents.DeathsEmbrace * 0.04f;
-                            if (spell.MagicSchool == MagicSchool.Shadow && spell.Name != "Drain Soul")
-                                MoltenCoreCounter++;
+                            if (spell.MagicSchool == MagicSchool.Shadow)
+                            {
+                                if (spell.Name != "Drain Soul")
+                                {
+                                    MoltenCoreCounter++;
+                                }
+                            }
                             break;
                         }
                     #endregion
+
                     #region Other Events
                     default:
                         {
@@ -501,7 +534,7 @@ namespace Rawr.Warlock
                                         AffEffectsNumber--;
                                         break;
                                     }
-                                case "Backdraft":
+                                case "Backdraft Ends":
                                     {
                                         BackdraftCounter = 0;
                                         break;
@@ -540,11 +573,14 @@ namespace Rawr.Warlock
             {
                 NightfallProcs = NightfallCounter * (character.WarlockTalents.Nightfall * 0.02f + (character.WarlockTalents.GlyphCorruption ? 0.04f : 0));
                 if (shadowBolt != null)
-                    shadowBolt.SpellStatistics.ManaUsed += (float)(NightfallProcs * shadowBolt.ManaCost * (GetCastTime(shadowBolt) - GetGlobalCooldown(shadowBolt)) / GetCastTime(shadowBolt));
+                {
+                    shadowBolt.SpellStatistics.ManaUsed += (float)(NightfallProcs * shadowBolt.ManaCost * (shadowBolt.CastTime - GetGlobalCooldown(shadowBolt)) / (shadowBolt.CastTime));
+                }
             }
             float hauntMisses = 0;
             if (haunt != null)
                 hauntMisses = haunt.SpellStatistics.HitCount * (1 - haunt.SpellStatistics.HitChance);
+
             PetCalculations pet = new PetCalculations(simStats, character);
             pet.getPetDPS(this);
             float pactUptime = 0;
@@ -578,8 +614,8 @@ namespace Rawr.Warlock
             }
             if (corruption != null)
             {
-                fillerSpell.SpellStatistics.ManaUsed -= (float)(corDrops * fillerSpell.ManaCost * GetCastTime(corruption) / GetCastTime(fillerSpell));
-                currentMana += corDrops * fillerSpell.ManaCost * GetCastTime(corruption) / GetCastTime(fillerSpell);
+                fillerSpell.SpellStatistics.ManaUsed -= (float)(corDrops * fillerSpell.ManaCost * corruption.CastTime / fillerSpell.CastTime);
+                currentMana += corDrops * fillerSpell.ManaCost * corruption.CastTime / fillerSpell.CastTime;
             }
 
             float manaGain = simStats.Mana;
@@ -635,12 +671,12 @@ namespace Rawr.Warlock
                 // #LT = mana gain / (lifetapMana + fillerManaCost * CastTime(LifeTap) / castTime(filler) )
 
                 float fillerManaCost = fillerSpell.SpellStatistics.HitCount / fillerSpell.SpellStatistics.ManaUsed;
-                float numberOfTaps = (float)(currentMana / (lifeTap.ManaCost + fillerManaCost * GetCastTime(lifeTap) / GetCastTime(fillerSpell)));
+                float numberOfTaps = (float)(currentMana / (lifeTap.ManaCost + fillerManaCost * (lifeTap.CastTime) / (fillerSpell.CastTime)));
                 manaGain -= currentMana;
                 currentMana = 0;
 
-                fillerSpell.SpellStatistics.HitCount -= (float)(numberOfTaps * GetCastTime(lifeTap) / GetCastTime(fillerSpell));
-                fillerSpell.SpellStatistics.ManaUsed -= (float)(numberOfTaps * GetCastTime(lifeTap) / GetCastTime(fillerSpell) * fillerManaCost);
+                fillerSpell.SpellStatistics.HitCount -= (float)(numberOfTaps * (lifeTap.CastTime) / (fillerSpell.CastTime));
+                fillerSpell.SpellStatistics.ManaUsed -= (float)(numberOfTaps * (lifeTap.CastTime) / (fillerSpell.CastTime) * fillerManaCost);
 
                 if (simStats.LifeTapBonusSpirit > 0 && simStats.WarlockFelArmor > 0)
                     simStats.SpellPower += (float)(300 * 0.3f * Math.Min(numberOfTaps * 10 / time, 1));
@@ -753,7 +789,7 @@ namespace Rawr.Warlock
             foreach (Spell spell in SpellPriority)
             {
                 if (spell == fillerSpell && corruption != null)
-                    spell.SpellStatistics.HitCount -= (float)(corDrops * GetCastTime(corruption) / GetCastTime(spell));
+                    spell.SpellStatistics.HitCount -= (float)(corDrops * (corruption.CastTime) / (spell.CastTime));
                 float directDamage = spell.AvgDirectDamage * spell.SpellStatistics.HitCount;
                 float dotDamage = spell.AvgDotDamage * spell.SpellStatistics.TickCount;
                 if (haunt != null && spell.MagicSchool == MagicSchool.Shadow)
@@ -769,7 +805,7 @@ namespace Rawr.Warlock
                         {
                             if (simStats.CorruptionTriggersCrit > 0)
                                 directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) * spell.SpellStatistics.HitCount + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f) * spell.SpellStatistics.HitCount;
-                            directDamage += (float)(NightfallProcs * spell.AvgDirectDamage * (GetCastTime(spell) - GetGlobalCooldown(spell)) / GetCastTime(spell));
+                            directDamage += (float)(NightfallProcs * spell.AvgDirectDamage * ((spell.CastTime) - GetGlobalCooldown(spell)) / (spell.CastTime));
                             break;
                         }
                     case "Unstable Affliction":
@@ -798,11 +834,6 @@ namespace Rawr.Warlock
                             break;
                         }
                     case "Immolate":
-                        {
-                            if (character.WarlockTalents.GlyphImmolate)
-                                dotDamage *= 1.1f;
-                            break;
-                        }
                     case "Drain Life":
                     case "Drain Soul":
                         {
@@ -1006,37 +1037,15 @@ namespace Rawr.Warlock
             return Math.Max(1.0f, spell.BaseGlobalCooldown / (1 + simStats.SpellHaste));
         }
 
-        public float GetCastTime(Spell spell)
-        {
-            float castTime = Math.Max(spell.CastTime / (1 + simStats.SpellHaste), Math.Max(1.0f, spell.BaseGlobalCooldown / (1 + simStats.SpellHaste)));
-            if (BackdraftCounter > 0 && spell.SpellTree == SpellTree.Destruction)
-            {
-                castTime *= 1 - character.WarlockTalents.Backdraft * 0.1f;
-                BackdraftCounter--;
-            }
-            if (spell.Name == "Unstable Affliction" && character.WarlockTalents.GlyphUA)
-                castTime -= 0.2f;
-            return castTime;
-        }
-
-        public float GetRealCastTime(Spell spell)
-        {
-            float realCastTime = spell.CastTime / (1 + simStats.SpellHaste);
-            if (BackdraftCounter > 0 && spell.SpellTree == SpellTree.Destruction)
-            {
-                realCastTime *= 1 - character.WarlockTalents.Backdraft * 0.1f;
-                BackdraftCounter--;
-            }
-            if (spell.Name == "Unstable Affliction" && character.WarlockTalents.GlyphUA)
-                realCastTime -= 0.2f;
-            return realCastTime;
-        }
-
         public Spell GetSpellByName(string name)
         {
             foreach (Spell spell in SpellPriority)
+            {
                 if (spell.Name.Contains(name))
+                {
                     return spell;
+                }
+            }
             return null;
         }
     }

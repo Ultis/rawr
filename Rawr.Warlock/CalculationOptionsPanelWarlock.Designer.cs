@@ -169,7 +169,7 @@
             this.tabEvents.Padding = new System.Windows.Forms.Padding(3);
             this.tabEvents.Size = new System.Drawing.Size(292, 579);
             this.tabEvents.TabIndex = 4;
-            this.tabEvents.Text = "Events:";
+            this.tabEvents.Text = "Events";
             this.tabEvents.UseVisualStyleBackColor = true;
             // 
             // textEvents
