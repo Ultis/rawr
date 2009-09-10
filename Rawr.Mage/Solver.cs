@@ -717,6 +717,15 @@ namespace Rawr.Mage
             calculationResult.BaseShadowCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + baseStats.CritBonusDamage));
             calculationResult.BaseHolyCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + baseStats.CritBonusDamage));
 
+            float combustionCritBonus = 0f;
+            if (calculationOptions.Mode322)
+            {
+                combustionCritBonus = 0.5f;
+            }
+
+            calculationResult.CombustionFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + 0.25f * talents.SpellPower + 0.1f * talents.Burnout + baseStats.CritBonusDamage)) * (1 + 0.08f * talents.Ignite);
+            calculationResult.CombustionFrostFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + talents.IceShards / 3.0f + 0.25f * talents.SpellPower + 0.1f * talents.Burnout + baseStats.CritBonusDamage)) * (1 + 0.08f * talents.Ignite);
+
             calculationResult.BaseCastingSpeed = (1 + baseStats.HasteRating / 995f * levelScalingFactor) * (1f + baseStats.SpellHaste) * (1f + 0.02f * character.MageTalents.NetherwindPresence) * calculationOptions.EffectHasteMultiplier;
             calculationResult.BaseGlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / calculationResult.BaseCastingSpeed);
 

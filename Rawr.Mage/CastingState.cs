@@ -91,11 +91,11 @@ namespace Rawr.Mage
         public float HolySpellModifier { get { return StateSpellModifier * Calculations.BaseHolySpellModifier; } }
 
         public float ArcaneCritBonus { get { return Calculations.BaseArcaneCritBonus; } }
-        public float FireCritBonus { get { return Calculations.BaseFireCritBonus; } }
+        public float FireCritBonus { get { return Combustion ? Calculations.CombustionFireCritBonus : Calculations.BaseFireCritBonus; } }
         public float FrostCritBonus { get { return Calculations.BaseFrostCritBonus; } }
         public float NatureCritBonus { get { return Calculations.BaseNatureCritBonus; } }
         public float ShadowCritBonus { get { return Calculations.BaseShadowCritBonus; } }
-        public float FrostFireCritBonus { get { return Calculations.BaseFrostFireCritBonus; } }
+        public float FrostFireCritBonus { get { return Combustion ? Calculations.CombustionFrostFireCritBonus : Calculations.BaseFrostFireCritBonus; } }
         public float HolyCritBonus { get { return Calculations.BaseHolyCritBonus; } }
 
         public float StateCritRate { get; set; }

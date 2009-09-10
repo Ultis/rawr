@@ -341,7 +341,7 @@ namespace Rawr.Mage
         public float RealResistance { get { return template.RealResistance; } }
         public float CritRate;
         public float ThreatMultiplier { get { return template.ThreatMultiplier; } }
-        public float CritBonus { get { return template.CritBonus; } }
+        public float CritBonus;
         public float HitRate { get { return template.HitRate; } }
         public float PartialResistFactor { get { return template.PartialResistFactor; } }
         public float RawSpellDamage;
@@ -388,10 +388,19 @@ namespace Rawr.Mage
             InterruptProtection = template.BaseInterruptProtection;
 
             SpellModifier = template.BaseSpellModifier * castingState.StateSpellModifier;
+            CritBonus = template.CritBonus;
             CritRate = template.BaseCritRate + castingState.StateCritRate;
             if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
             {
                 CritRate = 3 / castingState.CombustionDuration;
+                if (MagicSchool == MagicSchool.Fire)
+                {
+                    CritBonus = castingState.Calculations.CombustionFireCritBonus;
+                }
+                else if (MagicSchool == MagicSchool.FrostFire)
+                {
+                    CritBonus = castingState.Calculations.CombustionFrostFireCritBonus;
+                }
             }
 
             switch (MagicSchool)
