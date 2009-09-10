@@ -1506,7 +1506,7 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
-            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusArcaneDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
         }
     }
@@ -1518,7 +1518,7 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
-            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusFireDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
         }
     }
@@ -1530,7 +1530,7 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
-            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusFrostDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
         }
     }
@@ -1542,7 +1542,7 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
-            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusShadowDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
         }
     }
@@ -1554,7 +1554,7 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
-            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusNatureDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
         }
     }
@@ -1566,7 +1566,7 @@ namespace Rawr.Mage
         {
             Calculate(calculations);
             CritBonus = (1 + (1.5f * (1 + calculations.BaseStats.BonusSpellCritMultiplier) - 1));
-            BaseSpellModifier = calculations.BaseSpellModifier;
+            BaseSpellModifier = calculations.BaseSpellModifier * (1 + calculations.BaseStats.BonusHolyDamageMultiplier);
             BaseCritRate = calculations.BaseCritRate;
         }
     }
