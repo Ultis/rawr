@@ -278,6 +278,7 @@ namespace Rawr.DPSDK
             float dpsOtherShadow = 0f;
             float dpsOtherArcane = 0f;
             float dpsOtherFrost = 0f;
+            float dpsOtherFire = 0f;
             float dpsBloodworms = 0f;
 
             //shared variables
@@ -519,24 +520,71 @@ namespace Rawr.DPSDK
                     (talents.GlyphofDisease && calcOpts.rotation.Pestilence > 0f))
                     {
                         // Frost Fever is renewed with every Icy Touch and starts a new cd
-                        float ITCD = calcOpts.rotation.curRotationDuration /
-                        (calcOpts.rotation.IcyTouch +
-                        (talents.GlyphofHowlingBlast ? calcOpts.rotation.HowlingBlast : 0f));
-                        float PestRefresh = (15f + talents.Epidemic * 3f);
-                        float FFCD = 0f;
+                        float ITCD =(calcOpts.rotation.IcyTouch + (talents.GlyphofHowlingBlast ? calcOpts.rotation.HowlingBlast : 0f));
+                        float FFDmg = 0f;
+                        String effectStats;
+                        float ticksPerRotation = 5f + talents.Epidemic + (talents.GlyphofScourgeStrike ? Math.Min(calcOpts.rotation.ScourgeStrike, 3f) : 0f);
+                        if (ITCD > 1f)
+                        {
+                            ticksPerRotation += (ITCD - 1f) / 2f;
+                        }
+                        if (ticksPerRotation * 3f > combatTable.realDuration)
+                        {
+                            float lostTicks = ticksPerRotation - combatTable.realDuration / 3f;
+                            lostTicks += 0.5f;
+                            lostTicks = (float)((int)lostTicks);
+                            ticksPerRotation -= lostTicks;
+                        }
+                        float PestRefresh = (15f + talents.Epidemic * 3f + 
+                            (talents.GlyphofScourgeStrike ? Math.Min(3f * calcOpts.rotation.ScourgeStrike, 9f) : 0f));
                         if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f)
                         {
-                            ITCD = calcOpts.rotation.curRotationDuration;
-                            FFCD = 3f;
+                            ticksPerRotation = combatTable.realDuration / 3f;
+                            Stats maxStats = GetCharacterStatsMaximum(character, null);
+                            Stats tempStats;
+                            foreach (SpecialEffect effect in maxStats.SpecialEffects())
+                            {
+                                if (effect.Trigger != Trigger.Use)
+                                {
+                                    tempStats = new Stats();
+                                    tempStats += maxStats;
+                                    tempStats += effect.Stats;
+                                    tempStats.Strength += tempStats.HighestStat + tempStats.Paragon;
+                                    tempStats.Agility = (float)Math.Floor(tempStats.Agility * (1 + tempStats.BonusAgilityMultiplier));
+                                    tempStats.Strength = (float)Math.Floor(tempStats.Strength * (1 + tempStats.BonusStrengthMultiplier));
+                                    tempStats.AttackPower = (float)Math.Floor(tempStats.AttackPower + tempStats.Strength * 2);
+                                    // Copy from TankDK.
+                                    // tempStats.Armor = (float)Math.Floor((tempStats.Armor + tempStats.BonusArmor + 2f * tempStats.Agility) * 1f);
+                                    tempStats.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(tempStats.Agility) +
+                                                        StatConversion.ApplyMultiplier(tempStats.Armor, tempStats.BaseArmorMultiplier) +
+                                                        StatConversion.ApplyMultiplier(tempStats.BonusArmor, tempStats.BonusArmorMultiplier));
+                                    tempStats.AttackPower += (tempStats.Armor / 180f) * (float)talents.BladedArmor;
+                                    tempStats.BonusSpellPowerMultiplier = tempStats.BonusShadowDamageMultiplier;
+                                    tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
+                                    if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
+                                    {
+                                        tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
+                                        tempStats.BonusSpellPowerMultiplier *= 1.15f;
+                                    }
+                                    else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
+                                    {
+                                        tempStats.PhysicalHaste += 0.15f;
+                                        tempStats.SpellHaste += 0.15f;
+                                    }
+                                    float tempFFDmg = BloodPlagueAPMult * tempStats.AttackPower + 31.1f;
+                                    if (tempFFDmg > FFDmg)
+                                    {
+                                        FFDmg = tempFFDmg;
+                                        effectStats = effect.ToString();
+                                    }
+                                }
+                            }
                         }
                         else
                         {
-                            FFCD = 3f / (calcOpts.rotation.diseaseUptime / 100);
-                            int tempF = (int)Math.Floor(ITCD / FFCD);
-                            FFCD = ((ITCD - ((float)tempF * FFCD)) / ((float)tempF + 1f)) + FFCD;
+                            FFDmg = FrostFeverAPMult * stats.AttackPower;
                         }
-                        float FFDmg = FrostFeverAPMult * stats.AttackPower + 25.6f;
-                        dpsFrostFever = FFDmg / FFCD;
+                        dpsFrostFever = FFDmg * ticksPerRotation / combatTable.realDuration;
                         dpsFrostFever *= 1.15f;	// Patch 3.2: Diseases hit 15% harder.
                         dpsWPFromFF = dpsFrostFever * combatTable.physCrits;
                     }
@@ -548,22 +596,71 @@ namespace Rawr.DPSDK
                     if (calcOpts.rotation.PlagueStrike > 0f || talents.GlyphofDisease)
                     {
                         // Blood Plague is renewed with every Plague Strike and starts a new cd
-                        float PSCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.PlagueStrike;
-                        float PestRefresh = (15f + talents.Epidemic * 3f);
-                        float BPCD = 0f;
+                        float PSCD = calcOpts.rotation.PlagueStrike;
+                        float PestRefresh = (15f + talents.Epidemic * 3f + 
+                            (talents.GlyphofScourgeStrike ? Math.Min(3f * calcOpts.rotation.ScourgeStrike, 9f) : 0f));
+                        float BPDmg = 0f;
+                        String tempEffect = "";
+                        float ticksPerRotation = 5f + talents.Epidemic + (talents.GlyphofScourgeStrike ? Math.Min(calcOpts.rotation.ScourgeStrike, 3f) : 0f);
+                        if (PSCD > 1f)
+                        {
+                            ticksPerRotation += (PSCD - 1f) / 2f;
+                        }
+                        if (ticksPerRotation * 3f > combatTable.realDuration)
+                        {
+                            float lostTicks = ticksPerRotation - combatTable.realDuration / 3f;
+                            lostTicks += 0.5f;
+                            lostTicks = (float)((int)lostTicks);
+                            ticksPerRotation -= lostTicks;
+                        }
                         if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f)
                         {
-                            PSCD = calcOpts.rotation.curRotationDuration;
-                            BPCD = 3f;
+                            ticksPerRotation = combatTable.realDuration / 3f;
+                            Stats maxStats = GetCharacterStatsMaximum(character, null);
+                            Stats tempStats;
+                            foreach (SpecialEffect effect in maxStats.SpecialEffects())
+                            {
+                                if (effect.Trigger != Trigger.Use)
+                                {
+                                    tempStats = new Stats();
+                                    tempStats += maxStats;
+                                    tempStats += effect.Stats;
+                                    tempStats.Strength += tempStats.HighestStat + tempStats.Paragon;
+                                    tempStats.Agility = (float)Math.Floor(tempStats.Agility * (1 + tempStats.BonusAgilityMultiplier));
+                                    tempStats.Strength = (float)Math.Floor(tempStats.Strength * (1 + tempStats.BonusStrengthMultiplier));
+                                    tempStats.AttackPower = (float)Math.Floor(tempStats.AttackPower + tempStats.Strength * 2);
+                                    // Copy from TankDK.
+                                    // tempStats.Armor = (float)Math.Floor((tempStats.Armor + tempStats.BonusArmor + 2f * tempStats.Agility) * 1f);
+                                    tempStats.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(tempStats.Agility) +
+                                                        StatConversion.ApplyMultiplier(tempStats.Armor, tempStats.BaseArmorMultiplier) +
+                                                        StatConversion.ApplyMultiplier(tempStats.BonusArmor, tempStats.BonusArmorMultiplier));
+                                    tempStats.AttackPower += (tempStats.Armor / 180f) * (float)talents.BladedArmor;
+                                    tempStats.BonusSpellPowerMultiplier = tempStats.BonusShadowDamageMultiplier;
+                                    tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
+                                    if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
+                                    {
+                                        tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
+                                        tempStats.BonusSpellPowerMultiplier *= 1.15f;
+                                    }
+                                    else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
+                                    {
+                                        tempStats.PhysicalHaste += 0.15f;
+                                        tempStats.SpellHaste += 0.15f;
+                                    }
+                                    float tempBPDmg = BloodPlagueAPMult * tempStats.AttackPower;
+                                    if (tempBPDmg > BPDmg)
+                                    {
+                                        BPDmg = tempBPDmg;
+                                        tempEffect = effect.ToString();
+                                    }
+                                }
+                            }
                         }
                         else
                         {
-                            BPCD = 3f / (calcOpts.rotation.diseaseUptime / 100);
-                            int tempF = (int)Math.Floor(PSCD / BPCD);
-                            BPCD = ((PSCD - ((float)tempF * BPCD)) / ((float)tempF + 1f)) + BPCD;
+                            BPDmg = BloodPlagueAPMult * stats.AttackPower + 31.1f;
                         }
-                        float BPDmg = BloodPlagueAPMult * stats.AttackPower + 31.1f;
-                        dpsBloodPlague = BPDmg / BPCD;
+                        dpsBloodPlague = BPDmg * ticksPerRotation / combatTable.realDuration;
                         dpsBloodPlague *= 1.15f; // Patch 3.2: Diseases hit 15% harder.
                         dpsWPFromBP = dpsBloodPlague * combatTable.physCrits;
                     }
@@ -599,7 +696,8 @@ namespace Rawr.DPSDK
                         SSDmg *= 1f + 0.10f * calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseScourgeStrikeDamage);
                         dpsScourgeStrike = SSDmg / SSCD;
                         float SSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier;
-                        float SSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.ViciousStrikes) + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
+                        float SSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.ViciousStrikes) + (.03f * (float)talents.Subversion)
+                                            + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
                         dpsScourgeStrike = dpsScourgeStrike * SSCrit;
                         dpsScourgeStrike *= 1f + (2f / 3f * .01f /*0.0666666666666666666f*/ * (float)talents.Outbreak);
                     }
@@ -662,6 +760,7 @@ namespace Rawr.DPSDK
                 {
                     dpsOtherArcane = stats.ArcaneDamage;
                     dpsOtherShadow = stats.ShadowDamage;
+                    dpsOtherFire = stats.FireDamage;
 
                     // TODO: Differentiate between MH razorice and OH razorice
                     if (combatTable.MH != null)
@@ -684,6 +783,7 @@ namespace Rawr.DPSDK
                     float OtherCrit = 1f + ((combatTable.spellCrits) * OtherCritDmgMult);
                     dpsOtherArcane *= OtherCrit;
                     dpsOtherShadow *= OtherCrit;
+                    dpsOtherFire *= OtherCrit;
                 }
                 #endregion
 
@@ -1150,6 +1250,7 @@ namespace Rawr.DPSDK
                 calcs.WanderingPlagueDPS = dpsWanderingPlague * WanderingPlagueMult;
                 calcs.OtherDPS = dpsOtherShadow * otherShadowMult +
                     dpsOtherArcane * otherArcaneMult +
+                    dpsOtherFire * otherArcaneMult +
                     dpsOtherFrost * otherFrostMult;
 
 
@@ -1724,8 +1825,8 @@ namespace Rawr.DPSDK
                 + stats.BonusPerDiseaseBloodStrikeDamage + stats.BonusPerDiseaseHeartStrikeDamage + stats.BonusPerDiseaseObliterateDamage
                 + stats.BonusPerDiseaseScourgeStrikeDamage + stats.BonusPlagueStrikeCrit + stats.BonusRPFromDeathStrike
                 + stats.BonusRPFromObliterate + stats.BonusRPFromScourgeStrike + stats.BonusRuneStrikeMultiplier + stats.BonusScourgeStrikeCrit
-                + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage + stats.DiseasesCanCrit + stats.HighestStat
-                + stats.BonusCritMultiplier + stats.Paragon) != 0;
+                + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage + stats.DiseasesCanCrit + 
+                stats.HighestStat + stats.BonusCritMultiplier + stats.Paragon + stats.FireDamage) != 0;
         }
 
 
@@ -1755,11 +1856,6 @@ namespace Rawr.DPSDK
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
                         "Health",
-                        "Nature Resistance",
-                        "Fire Resistance",
-                        "Frost Resistance",
-                        "Shadow Resistance",
-                        "Arcane Resistance",
                         "Crit Rating",
                         "Expertise Rating",
                         "Hit Rating",
