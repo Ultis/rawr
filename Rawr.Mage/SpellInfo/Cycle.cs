@@ -620,9 +620,9 @@ namespace Rawr.Mage
                     {
                         contrib = new SpellContribution() { Name = name };
                         dict[name] = contrib;
-                        contrib.Hits += effectsPerSecond * duration;
-                        contrib.Damage += boltDps * duration;
                     }
+                    contrib.Hits += effectsPerSecond * duration;
+                    contrib.Damage += boltDps * duration;
                 }
             }
             /*if (CastingState.BaseStats.LightningCapacitorProc > 0)
