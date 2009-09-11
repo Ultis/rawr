@@ -290,8 +290,7 @@ namespace Rawr.DPSWarr
                 InitializeB();
             }
         }
-        public class Recklessness : BuffEffect
-        {
+        public class Recklessness : BuffEffect {
             // Constructors
             /// <summary>
             /// Your next 3 special ability attacks have an additional 100% to critically hit
@@ -299,8 +298,7 @@ namespace Rawr.DPSWarr
             /// </summary>
             /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Recklessness(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public Recklessness(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Recklessness";
@@ -312,23 +310,6 @@ namespace Rawr.DPSWarr
                     new Stats { PhysicalCrit = 1f, DamageTakenMultiplier = 0.20f, },
                     Duration, Cd);
                 InitializeB();
-            }
-            public override float Activates
-            {
-                get
-                {
-                    return !Validated ? 0f : ActivatesOverride;
-                }
-            }
-            public override float ActivatesOverride
-            {
-                get
-                {
-                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
-                    float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.GetLatency());
-                    float Every = LatentGCD / GCDPerc * (1f - Whiteattacks.AvoidanceStreak);
-                    return (float)Math.Max(0f, FightDuration / Every);
-                }
             }
         }
         public class SweepingStrikes : BuffEffect
@@ -350,6 +331,7 @@ namespace Rawr.DPSWarr
                 ReqMeleeRange = true;
                 ReqMultiTargs = true;
                 Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration+(1.5f+CalcOpts.GetLatency()); // In Seconds
+                Duration = 30f;
                 RageCost = 30f - (Talents.FocusedRage * 1f);
                 RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);
                 StanceOkFury = StanceOkArms = true;

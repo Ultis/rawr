@@ -15,6 +15,7 @@ namespace Rawr.DPSWarr {
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
 				///Relevant Gem IDs for DPSWarrs
+                //                  uncom  rare    epic  jewel
 				//Red
 				int[] bold      = { 39900, 39996, 40111, 42142 };
                 int[] frac      = { 39909, 40002, 40117, 42153 };
@@ -25,23 +26,36 @@ namespace Rawr.DPSWarr {
 				int[] insc      = { 39947, 40037, 40142 };
 				//Meta
 				int chaotic     = 41285;
+                int relent      = 41398;
 
 				return new List<GemmingTemplate>() {
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = chaotic },// Max Strength
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = bold[0], YellowId = insc[0], BlueId = svrn[0], PrismaticId = bold[0], MetaId = chaotic },// Strength
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = bold[0], YellowId = insc[0], BlueId = svrn[0], PrismaticId = bold[0], MetaId = chaotic },// STR
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = chaotic },// Max STR
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = relent  },// Max STR with All red Meta
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = frac[0], YellowId = insc[0], BlueId = pusn[0], PrismaticId = frac[0], MetaId = chaotic },// ArP
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = frac[0], YellowId = frac[0], BlueId = frac[0], PrismaticId = frac[0], MetaId = chaotic },// Max ArP
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Uncommon",              RedId = frac[0], YellowId = frac[0], BlueId = frac[0], PrismaticId = frac[0], MetaId = relent  },// Max ArP with All red Meta
                     
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true,  RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },// Max Strength
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true,  RedId = bold[1], YellowId = insc[1], BlueId = svrn[1], PrismaticId = bold[1], MetaId = chaotic },// Strength
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true,  RedId = frac[1], YellowId = insc[1], BlueId = pusn[1], PrismaticId = frac[1], MetaId = chaotic },// ArPen
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Rare", Enabled = true,  RedId = frac[1], YellowId = frac[1], BlueId = frac[1], PrismaticId = frac[1], MetaId = chaotic },// Max ArPen
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = bold[1], YellowId = insc[1], BlueId = svrn[1], PrismaticId = bold[1], MetaId = chaotic },// STR
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },// Max STR
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = relent  },// Max STR with All red Meta
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = frac[1], YellowId = insc[1], BlueId = pusn[1], PrismaticId = frac[1], MetaId = chaotic },// ArP
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = frac[1], YellowId = frac[1], BlueId = frac[1], PrismaticId = frac[1], MetaId = chaotic },// Max ArP
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = frac[1], YellowId = frac[1], BlueId = frac[1], PrismaticId = frac[1], MetaId = relent  },// Max ArP with All red Meta
 	
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic",                  RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },// Max Strength
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic",                  RedId = bold[2], YellowId = insc[2], BlueId = svrn[2], PrismaticId = bold[2], MetaId = chaotic },// Strength
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = bold[2], YellowId = insc[2], BlueId = svrn[2], PrismaticId = bold[2], MetaId = chaotic },// STR
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },// Max STR
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = relent  },// Max STR with All red Meta
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = frac[2], YellowId = insc[2], BlueId = pusn[2], PrismaticId = frac[2], MetaId = chaotic },// ArP
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = frac[2], YellowId = frac[2], BlueId = frac[2], PrismaticId = frac[2], MetaId = chaotic },// Max ArP
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = frac[2], YellowId = frac[2], BlueId = frac[2], PrismaticId = frac[2], MetaId = relent  },// Max ArP with All red Meta
 						
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },// Max Strength
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = bold[1], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[1], MetaId = chaotic },// Strength
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[1], YellowId = frac[3], BlueId = frac[3], PrismaticId = frac[1], MetaId = chaotic },// ArPen
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = frac[3], BlueId = frac[3], PrismaticId = frac[3], MetaId = chaotic },// Max ArPen
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = bold[3], YellowId = insc[2], BlueId = svrn[2], PrismaticId = bold[3], MetaId = chaotic },// STR
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },// Max STR
+					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = relent  },// Max STR with All red Meta
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = insc[2], BlueId = pusn[2], PrismaticId = frac[3], MetaId = chaotic },// ArP
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = frac[3], BlueId = frac[3], PrismaticId = frac[3], MetaId = chaotic },// Max ArP
+                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = frac[3], BlueId = frac[3], PrismaticId = frac[3], MetaId = relent  },// Max ArP with All red Meta
 				};
             }
         }
@@ -781,32 +795,32 @@ Don't forget your weapons used matched with races can affect these numbers.",
             Rot.MakeRotationandDoDPS();
 
             // Add some last minute SpecialEffects
-            if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_]) {
+            if (Rot.ST.Validated) {
                 SpecialEffect shatt = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.20f, },
                     Rot.ST.Duration, Rot.ST.Cd,
                     Rot.ST.MHAtkTable.AnyLand);
                 statsTotal.AddSpecialEffect(shatt);
             }
-            if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_]) {
+            if (Rot.BR.Validated) {
                 SpecialEffect blood = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusRageGen = 1f * (1f + talents.ImprovedBloodrage * 0.25f), },
                     Rot.BR.Duration, Rot.BR.Cd);
                 statsTotal.AddSpecialEffect(blood);
             }
-            /*if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Hamstring_]) {
+            /*if (Rot.Hammy.Validated) {
                 SpecialEffect hammy = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusTargets = 1f * calcOpts.MultipleTargetsPerc / 100f, },
                     Rot.SW.Duration, Rot.SW.Cd);
                 statsTotal.AddSpecialEffect(hammy);
             }*/
-            if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
+            if (Rot.BTS.Validated) {
                 SpecialEffect bs = new SpecialEffect(Trigger.Use,
                     new Stats() { AttackPower = (548f * (1f + talents.CommandingPresence * 0.05f)), },
                     Rot.BTS.Duration, Rot.BTS.Cd+0.01f);
                 statsTotal.AddSpecialEffect(bs);
             }
-            if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_]) {
+            if (Rot.CS.Validated) {
                 float value = (2255f * (1f + talents.CommandingPresence * 0.05f));
                 SpecialEffect cs = new SpecialEffect(Trigger.Use,
                     new Stats() { Health = value, },
@@ -821,12 +835,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float mhLandsPerSecond = 0f, ohLandsPerSecond = 0f;
             float mhCritsPerSecond = 0f, ohCritsPerSecond = 0f;
 
-            if (         Rot.GetLandedAtksOverDurMH()   != 0f) {
-                mhLandsPerSecond = calcOpts.Duration / Rot.GetLandedAtksOverDurMH();
-            }
-            if (useOH && Rot.GetLandedAtksOverDurOH()   != 0f) { ohLandsPerSecond = calcOpts.Duration / Rot.GetLandedAtksOverDurOH(); }
-            if (         Rot.GetCriticalAtksOverDurMH() != 0f) { mhCritsPerSecond = calcOpts.Duration / Rot.GetCriticalAtksOverDurMH(); }
-            if (useOH && Rot.GetCriticalAtksOverDurOH() != 0f) { ohCritsPerSecond = calcOpts.Duration / Rot.GetCriticalAtksOverDurOH(); }
+            mhLandsPerSecond = Rot.GetLandedAtksOverDurMH() / calcOpts.Duration;
+            ohLandsPerSecond = Rot.GetLandedAtksOverDurOH() / calcOpts.Duration;
+            mhCritsPerSecond = Rot.GetCriticalAtksOverDurMH() / calcOpts.Duration;
+            ohCritsPerSecond = Rot.GetCriticalAtksOverDurOH() / calcOpts.Duration;
 
             float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
             float mhLandInterval = mhLandsPerSecond,
@@ -837,13 +849,18 @@ Don't forget your weapons used matched with races can affect these numbers.",
                   bothCritInterval = mhCritInterval + ohCritInterval;
             float dmgDoneInterval = bothLandInterval + bleedHitInterval;
 
-            if (calcOpts.MultipleTargets
-                && calcOpts.MultipleTargetsPerc != 0
-                && calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_]) {
+            if (Rot.SW.Validated) {
                 SpecialEffect sweep = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusTargets = 1f, },
-                    bothLandInterval * 5f, Rot.SW.Cd);
+                    (float)Math.Min(Rot.SW.Duration, bothLandInterval * 5f), Rot.SW.Cd);
                 statsTotal.AddSpecialEffect(sweep);
+            }
+
+            if (Rot.RK.Validated) {
+                SpecialEffect reck = new SpecialEffect(Trigger.Use,
+                    new Stats() { PhysicalCrit = 1f - Rot.RK.MHAtkTable.Crit, },
+                    (float)Math.Min(Rot.RK.Duration, bothLandInterval * 3f), Rot.RK.Cd);
+                statsTotal.AddSpecialEffect(reck);
             }
 
             SpecialEffect bersMainHand = null;
