@@ -30,7 +30,7 @@ namespace Rawr {
             DamageTypes = new ItemDamageType[] { ItemDamageType.Physical, ItemDamageType.Nature, ItemDamageType.Arcane, ItemDamageType.Frost, ItemDamageType.Fire, ItemDamageType.Shadow, ItemDamageType.Holy, };
             list = new BossHandler[] {
                 // ==== Tier 7 Content ====
-                // Naxx-10
+                // Naxxramas
                 new AnubRekhan_10(),
                 new GrandWidowFaerlina_10(),
                 new Maexxna_10(),
@@ -46,20 +46,61 @@ namespace Rawr {
                 new Thaddius_10(),
                 new Sapphiron_10(),
                 new KelThuzad_10(),
-                // OS-10
+                // The Obsidian Sanctum
                 new Shadron_10(),
                 new Tenebron_10(),
                 new Vesperon_10(),
                 new Sartharion_10(),
-                // VoA-10
+                // Vault of Archavon
                 new ArchavonTheStoneWatcher_10(),
-                new EmalonTheStormWatcher_10(),
-                new KoralonTheFlameWatcher_10(),
+                // The Eye of Eternity
+                new Malygos_10(),
                 // ==== Tier 7.5 Content ====
-                // Naxx-25
+                // Naxxramas
                 new AnubRekhan_25(),
+                new GrandWidowFaerlina_25(),
                 new Maexxna_25(),
+                new NoththePlaguebringer_25(),
+                new HeigantheUnclean_25(),
+                new Loatheb_25(),
+                new InstructorRazuvious_25(),
+                new GothiktheHarvester_25(),
+                new FourHorsemen_25(),
                 new Patchwerk_25(),
+                new Grobbulus_25(),
+                new Gluth_25(),
+                new Thaddius_25(),
+                new Sapphiron_25(),
+                new KelThuzad_25(),
+                // The Obsidian Sanctum
+                new Shadron_25(),
+                new Tenebron_25(),
+                new Vesperon_25(),
+                new Sartharion_25(),
+                // Vault of Archavon
+                new ArchavonTheStoneWatcher_25(),
+                // The Eye of Eternity
+                new Malygos_25(),
+                // ==== Tier 8 Content ====
+                // Vault of Archavon
+                new EmalonTheStormWatcher_10(),
+                // Ulduar
+                // ==== Tier 8.5 Content ====
+                // Vault of Archavon
+                new EmalonTheStormWatcher_25(),
+                // Ulduar
+                // ==== Tier 9 (10) Content ====
+                // Vault of Archavon
+                new KoralonTheFlameWatcher_10(),
+                // Trial of the Crusader
+                // ==== Tier 9 (25) Content ====
+                // Vault of Archavon
+                new KoralonTheFlameWatcher_25(),
+                // Trial of the Crusader
+                // ==== Tier 9 (10) H Content ====
+                // Trial of the Grand Crusader
+                // ==== Tier 9 (25) H Content ====
+                // Trial of the Grand Crusader
             };
             TheEZModeBoss  = GenTheEZModeBoss(list);
             TheAvgBoss     = GenTheAvgBoss(list);
@@ -665,11 +706,20 @@ namespace Rawr {
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
             };
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
+            // ==== Situational Changes ====
+            // When he Impales, he turns around and faces the raid
+            // simming this by using the activates over fight and having him facing raid for 2 seconds
+            float time = (BerserkTimer / SpecialAttack_1.AttackSpeed) * 2f;
+            InBackPerc_Melee = 1f - time / BerserkTimer;
             // Every 70-120 seconds for 16 seconds you can't be on the target
             // Adding 4 seconds to the Duration for moving out before starts and then back in after
             MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            // Every x seconds he summons a Crypt Guard, assuming he's up for 10 seconds
+            // and its every 60 seconds
+            time  = (BerserkTimer / 60f) * 10f;
+            // Every x seconds he summons a few scarabs
+            time += (BerserkTimer / 60f) *  8f;
+            MultiTargsPerc = time / BerserkTimer;
             // Fight Requirements
             /* TODO:
              */
@@ -1463,6 +1513,914 @@ namespace Rawr {
              */
         }
     }
+    // ===== The Eye of Eternity ======================
+    public class Malygos_10 : BossHandler {
+        public Malygos_10() {
+            // If not listed here use values from defaults
+            // Basics
+            Name = "Malygos";
+            Content = "T7";
+            Instance = "The Eye of Eternity";
+            Version = "10 Man";
+            Health = 2230000f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Impale",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = (4813f + 6187f) / 2f,
+                MaxNumTargets = 10,
+                AttackSpeed = 40.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Every 70-120 seconds for 16 seconds you can't be on the target
+            // Adding 4 seconds to the Duration for moving out before starts and then back in after
+            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            /* TODO:
+             */
+        }
+    }
+    #endregion
+    #region T7.5 Content
+    // ===== Naxxramas ================================
+    // Spider Wing
+    public class AnubRekhan_25 : AnubRekhan_10 {
+        public AnubRekhan_25() {
+            // If not listed here use values from 10 man version
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 6763325f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = MeleeAttack.Name,
+                DamageType = MeleeAttack.DamageType,
+                DamagePerHit = 120000f,
+                MaxNumTargets = MeleeAttack.MaxNumTargets,
+                AttackSpeed = MeleeAttack.AttackSpeed,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = SpecialAttack_1.Name,
+                DamageType = SpecialAttack_1.DamageType,
+                DamagePerHit = (5688f + 7312f) / 2f,
+                MaxNumTargets = SpecialAttack_1.MaxNumTargets,
+                AttackSpeed = SpecialAttack_1.AttackSpeed,
+            };
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            // Situational Changes
+            /* TODO:
+             */
+        }
+    }
+    public class GrandWidowFaerlina_25 : GrandWidowFaerlina_10 {
+        public GrandWidowFaerlina_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 2230000f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Poison Bold Volley",
+                DamageType = ItemDamageType.Nature,
+                DamagePerHit = (/*Initial*/(2625f + 3375f) / 2.0f) + (/*Dot*/((1480f+1720f)/2.0f)*8f/2f),
+                MaxNumTargets = 3,
+                AttackSpeed = (7.0f+15.0f)/2.0f,
+            };
+            SpecialAttack_2 = new Attack {
+                Name = "Rain of Fire",
+                DamageType = ItemDamageType.Fire,
+                DamagePerHit = (/*Dot*/((1750f+2750f)/2.0f)*6f/2f),
+                MaxNumTargets = 10,
+                AttackSpeed = (6.0f+18.0f)/2.0f,
+            };
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            // Situational Changes
+            InBackPerc_Melee = 0.75f;
+            // Every 6-18 seconds for 3 seconds she has to be moved to compensate for Rain of Fire
+            MovingTargsTime = (BerserkTimer / SpecialAttack_2.AttackSpeed) * (3f);
+            // Fight Requirements
+            /* TODO:
+             * Frenzy
+             * Worshippers
+             */
+        }
+    }
+    public class Maexxna_25 : Maexxna_10 {
+        public Maexxna_25() {
+            // If not listed here use values from 10 man version
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 7600000f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = MeleeAttack.Name,
+                DamageType = MeleeAttack.DamageType,
+                DamagePerHit = 120000f,
+                MaxNumTargets = MeleeAttack.MaxNumTargets,
+                AttackSpeed = MeleeAttack.AttackSpeed,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = SpecialAttack_1.Name,
+                DamageType = SpecialAttack_1.DamageType,
+                DamagePerHit = (2188f + 2812f) / 2f,
+                MaxNumTargets = 25,
+                AttackSpeed = SpecialAttack_1.AttackSpeed,
+            };
+            // Situational Changes
+            // 8 Adds every 40 seconds for 10 seconds (only 14000 HP each)
+            MultiTargsPerc = ((BerserkTimer / 40f) * 10f) / BerserkTimer;
+            MaxNumTargets = 8;
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 1;
+            Min_Healers = 4;
+            /* TODO:
+             * Web Wrap
+             * Poison Shock
+             * Necrotic Poison
+             * Frenzy
+             */
+        }
+    }
+    // Plague Quarter
+    public class NoththePlaguebringer_25 : NoththePlaguebringer_10 {
+        public NoththePlaguebringer_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 2500000f;
+            BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Impale",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = (4813f + 6187f) / 2f,
+                MaxNumTargets = 10,
+                AttackSpeed = 40.0f,
+            };
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
+            MultiTargsPerc = (BerserkTimer / 30f) * (20f) / BerserkTimer;
+            // Fight Requirements
+            Min_Tanks   = 1;
+            Min_Healers = 2;
+            /* TODO:
+             * Phase 2
+             */
+        }
+    }
+    public class HeigantheUnclean_25 : HeigantheUnclean_10 {
+        public HeigantheUnclean_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 3060000f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Decrepit Fever",
+                DamageType = ItemDamageType.Nature,
+                DamagePerHit = 3000f / 3f * 21f,
+                MaxNumTargets = 1,
+                AttackSpeed = 30.0f,
+            };
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            // Situational Changes
+            InBackPerc_Melee = 0.25f;
+            // We are assuming you are using the corner trick so you don't have
+            // to dance as much in 10 man
+            // Every 90 seconds for 45 seconds you must do the safety dance
+            MovingTargsTime = (BerserkTimer / 90f) * 45f;
+            // Fight Requirements
+            Min_Tanks = 1;
+            /* TODO:
+             */
+        }
+    }
+    public class Loatheb_25 : Loatheb_10 {
+        public Loatheb_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 6693600f;
+            BerserkTimer = 5 * 60; // Inevitable Doom starts to get spammed every 15 seconds
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Deathbloom",
+                DamageType = ItemDamageType.Nature,
+                DamagePerHit = (/*DoT*/200f / 1f * 6f) + (/*Bloom*/1200f),
+                MaxNumTargets = 10,
+                AttackSpeed = 30.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Inevitable Doom",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = 4000 / 30 * 120,
+                MaxNumTargets = 10,
+                AttackSpeed = 120.0f,
+            };
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            // Situational Changes
+            InBackPerc_Melee = 1.00f;
+            // Initial 10 seconds to pop first Spore then every 3rd spore
+            // after that (90 seconds respawn then 10 sec moving to/back)
+            MovingTargsTime = 10 + (BerserkTimer / 90) * 10;
+            // Fight Requirements
+            Min_Tanks = 1;
+            /* TODO:
+             * Necrotic Aura
+             * Fungal Creep
+             */
+        }
+    }
+    // Military Quarter
+    public class InstructorRazuvious_25 : InstructorRazuvious_10 {
+        public InstructorRazuvious_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 3349000f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 120000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Disrupting Shout",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = (4275f + 4725f) / 2f,
+                MaxNumTargets = 10,
+                AttackSpeed = 15.0f,
+            };
+            SpecialAttack_2 = new Attack {
+                Name = "Jagged Knife",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 5000 + (10000 / 5 * 5),
+                MaxNumTargets = 1,
+                AttackSpeed = 10.0f,
+            };
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Fight Requirements
+            // Every 70-120 seconds for 16 seconds you can't be on the target
+            // Adding 4 seconds to the Duration for moving out before starts and then back in after
+            /* TODO:
+             * Unbalancing Strike
+             * Using the Understudies
+             */
+        }
+    }
+    public class GothiktheHarvester_25 : GothiktheHarvester_10 {
+        public GothiktheHarvester_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 839000f;
+            BerserkTimer = BerserkTimer - (4 * 60 + 34);
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Shadowbolt",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (2880f + 3520f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 1.0f,
+            };
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Fight Requirements
+            /* TODO:
+             * Phase 1
+             * Harvest Soul
+             */
+        }
+    }
+    public class FourHorsemen_25 : FourHorsemen_10 {
+        public FourHorsemen_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 781000f * 4f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Korth'azz's Meteor",
+                DamageType = ItemDamageType.Fire,
+                DamagePerHit = (13775f + 15225f) / 2f,
+                MaxNumTargets = 8,
+                AttackSpeed = 15.0f,
+            };
+            SpecialAttack_2 = new Attack {
+                Name = "Rivendare's Unholy Shadow",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (2160f + 2640f) / 2f + (4800/2*4),
+                MaxNumTargets = 8,
+                AttackSpeed = 15.0f,
+            };
+            SpecialAttack_3 = new Attack {
+                Name = "Blaumeux's Shadow Bolt",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (2357f + 2643f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_4 = new Attack {
+                Name = "Zeliek's Holy Bolt",
+                DamageType = ItemDamageType.Holy,
+                DamagePerHit = (2357f + 2643f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 2.0f,
+            };
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            // Situational Changes
+            InBackPerc_Melee = 0.75f;
+            // Swap 1st 2 mobs once: 15
+            // Get to the back once: 10
+            // Bounce back and forth in the back: Every 30 sec for 10 sec but for only 40% of the fight
+            MovingTargsTime = 15f + 10f + ((BerserkTimer * 0.40f) / 30f) * 10f;
+            // Fight Requirements
+            Min_Tanks = 3; // simming 3rd to show that 2 dps have to OT the back
+            Min_Healers = 3;
+            /* TODO:
+             * Blaumeux's Void Zone
+             */
+        }
+    }
+    // Construct Quarter
+    public class Patchwerk_25 : Patchwerk_10 {
+        public Patchwerk_25() {
+            // If not listed here use values from 10 man version
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 13000000f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = MeleeAttack.Name,
+                DamageType = MeleeAttack.DamageType,
+                DamagePerHit = 120000f,
+                MaxNumTargets = MeleeAttack.MaxNumTargets,
+                AttackSpeed = MeleeAttack.AttackSpeed,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = SpecialAttack_1.Name,
+                DamageType = SpecialAttack_1.DamageType,
+                DamagePerHit = (79000f + 81000f) / 2f,
+                MaxNumTargets = SpecialAttack_1.MaxNumTargets,
+                AttackSpeed = SpecialAttack_1.AttackSpeed,
+            };
+            // Situational Changes
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 3;
+            Min_Healers = 4;
+            /* TODO:
+             * Frenzy
+             */
+        }
+    }
+    public class Grobbulus_25 : Grobbulus_10 {
+        public Grobbulus_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 2928000f;
+            BerserkTimer = 12 * 60;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Every 8 seconds for 3 seconds Grob has to be kited to
+            // avoid Poison Cloud Farts. This goes on the entire fight
+            MovingTargsTime  = (BerserkTimer / 8f) * 3f;
+            // Every 20 seconds 1/10 chance to get hit with Mutating Injection
+            // You have to run off for 10 seconds then run back for 4-5
+            MovingTargsTime += ((BerserkTimer / 20f) * (10f+(4f+5f)/2f)) * 0.10f;
+            /* TODO:
+             * Slime Spray
+             * Occasional Poins Cloud Ticks that are unavoidable
+             */
+        }
+    }
+    public class Gluth_25 : Gluth_10 {
+        public Gluth_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 3230000f;
+            BerserkTimer = 8 * 60;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 40000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 1.00f;
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            /* TODO:
+             * Decimate
+             * Enrage
+             * Mortal Wound
+             * Zombie Chows
+             */
+        }
+    }
+    public class Thaddius_25 : Thaddius_10 {
+        public Thaddius_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 3850000f + 838300f; // one player only deals with one of the add's total health + thadd's health
+            BerserkTimer = 6 * 60; // Need to verify if starts at beg. of combat or beg. of Thadd
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpellAttack = new Attack {
+                Name = "Chain Lightning",
+                DamageType = ItemDamageType.Nature,
+                DamagePerHit = (3600f+4400f)/2f,
+                MaxNumTargets = 3f,
+                AttackSpeed = 15.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.50f;
+            // Every 30 seconds, polarity shift, 3 sec move
+            // 50% chance that your polarity will change
+            MovingTargsTime = ((BerserkTimer / 30f) * 3f) * 0.50f;
+            /* TODO:
+             * Better handle of Feugen and Stalagg
+             */
+        }
+    }
+    // Frostwyrm Lair
+    public class Sapphiron_25 : Sapphiron_10 {
+        public Sapphiron_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 4250000f;
+            BerserkTimer = 15 * 60;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Frost Aura",
+                DamageType = ItemDamageType.Frost,
+                DamagePerHit = 1200f,
+                MaxNumTargets = 10,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_2 = new Attack {
+                Name = "Life Drain",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (((4376f+5624f)/2f) * 3f) * 4f,
+                MaxNumTargets = 2,
+                AttackSpeed = 24.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Every 45(+30) seconds for 30 seconds Sapph is in the air
+            // He stops this at 10% hp
+            MovingTargsTime = ((BerserkTimer / (45f+30f)) * 30f) * 0.90f;
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 3;
+            Min_Healers = 4;
+            /* TODO:
+             * Chill (The Blizzard)
+             * Ice Bolt
+             */
+        }
+    }
+    public class KelThuzad_25 : KelThuzad_10 {
+        public KelThuzad_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 2230000f;
+            BerserkTimer = 19 * 60;
+            SpeedKillTimer = 6 * 60;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Impale",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = (4813f + 6187f) / 2f,
+                MaxNumTargets = 10,
+                AttackSpeed = 40.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Phase 1, no damage to KT
+            MovingTargsTime = 3f*60f + 48f;
+            TimeBossIsInvuln = 3f * 60f + 48f;
+            // Phase 2 & 3, gotta move out of Shadow Fissures periodically
+            // We're assuming they pop every 30 seconds and you have to be
+            // moved for 6 seconds and there's a 1/10 chance he will select
+            // you over someone e;se
+            MovingTargsTime = (((BerserkTimer - MovingTargsTime) / 30f) * 6f) * 0.10f;
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 3;
+            Min_Healers = 4;
+            /* TODO:
+             * The Mobs in Phase 1
+             */
+        }
+    }
+    // ===== The Obsidian Sanctum =====================
+    public class Shadron_25 : Shadron_10 {
+        public Shadron_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 976150f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Shadow Fissure",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6188f + 8812f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 40.0f,
+            };
+            SpecialAttack_2 = new Attack {
+                Name = "Shadow Breath",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6938f + 8062f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 40.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Every 60 seconds for 20 seconds dps has to jump into the portal and kill the add
+            MovingTargsTime  = (BerserkTimer / (60f+20f)) * (20f);
+            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
+            // 1/10 chance he'll pick you
+            MovingTargsTime += ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            /* TODO:
+             * The Acolyte Add
+             */
+        }
+    }
+    public class Tenebron_25 : Tenebron_10 {
+        public Tenebron_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 976150f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Shadow Fissure",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6188f + 8812f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 40.0f,
+            };
+            SpecialAttack_2 = new Attack {
+                Name = "Shadow Breath",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6938f + 8062f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 40.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
+            MovingTargsTime  = (BerserkTimer / (30f+20f)) * (20f);
+            MultiTargsPerc = (BerserkTimer / (30f + 20f)) * (20f) / BerserkTimer;
+            MaxNumTargets = 6f + 1f;
+            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
+            // 1/10 chance he'll pick you
+            MovingTargsTime += ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            /* TODO:
+             * The Adds' abilities
+             */
+        }
+    }
+    public class Vesperon_25 : Vesperon_10 {
+        public Vesperon_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 976150f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Shadow Fissure",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6188f + 8812f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 40.0f,
+            };
+            SpecialAttack_2 = new Attack {
+                Name = "Shadow Breath",
+                DamageType = ItemDamageType.Shadow,
+                DamagePerHit = (6938f + 8062f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 40.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
+            // 1/10 chance he'll pick you
+            MovingTargsTime = ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            /* TODO:
+             * The adds, which optimally you would ignore
+             */
+        }
+    }
+    public class Sartharion_25 : Sartharion_10 {
+        public Sartharion_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 2510100f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Fire Breath",
+                DamageType = ItemDamageType.Fire,
+                DamagePerHit = (8750f + 11250f) / 2f,
+                MaxNumTargets = 1,
+                AttackSpeed = 40.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Every 45 seconds for 10 seconds you gotta move for Lava Waves
+            MovingTargsTime = (BerserkTimer / 45f) * (10f);
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            /* TODO:
+             */
+        }
+    }
+    // ===== The Vault of Archavon ====================
+    public class ArchavonTheStoneWatcher_25 : ArchavonTheStoneWatcher_10 {
+        public ArchavonTheStoneWatcher_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 2300925f;
+            BerserkTimer = 5 * 60;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Impale",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = (4813f + 6187f) / 2f,
+                MaxNumTargets = 10,
+                AttackSpeed = 40.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.75f;
+            // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
+            MovingTargsTime = (BerserkTimer / (30f)) * (5f);
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            /* TODO:
+             * Rock Shards
+             * Crushing Leap
+             * Stomp (this also stuns)
+             * Impale (this also stuns)
+             */
+        }
+    }
+    // ===== The Eye of Eternity ======================
+    public class Malygos_25 : Malygos_10 {
+        public Malygos_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T7.5";
+            Version = "25 Man";
+            Health = 2230000f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            SpecialAttack_1 = new Attack {
+                Name = "Impale",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = (4813f + 6187f) / 2f,
+                MaxNumTargets = 10,
+                AttackSpeed = 40.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.95f;
+            // Every 70-120 seconds for 16 seconds you can't be on the target
+            // Adding 4 seconds to the Duration for moving out before starts and then back in after
+            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            /* TODO:
+             */
+        }
+    }
+    #endregion
+    #region T8 Content
+    // ===== The Vault of Archavon ====================
     public class EmalonTheStormWatcher_10 : BossHandler {
         public EmalonTheStormWatcher_10() {
             // If not listed here use values from defaults
@@ -1498,6 +2456,48 @@ namespace Rawr {
              */
         }
     }
+    #endregion
+    #region T8.5 Content
+    // ===== The Vault of Archavon ====================
+    public class EmalonTheStormWatcher_25 : EmalonTheStormWatcher_10 {
+        public EmalonTheStormWatcher_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T8.5";
+            Version = "25 Man";
+            Health = 2789000f;
+            BerserkTimer = 6 * 60;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 90000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 1.00f;
+            // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
+            // Adding 5 seconds to the Duration for moving out before starts and then 5 for back in after
+            MovingTargsTime  = (BerserkTimer / (45f + 18f)) * (18f + 5f + 5f);
+            // Lightning Nova, usually happens a few seconds after the overcharged add dies
+            // (right when most melee reaches the boss again) Simming 4 to run out and 4 to get back
+            MovingTargsTime += (BerserkTimer / (45f + 18f)) * (4f + 4f);
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            /* TODO:
+             * Adds Damage
+             * Chain Lightning Damage
+             * Lightning Nova Damage
+             */
+        }
+    }
+    #endregion
+    #region T9 (10) Content
+    // ===== The Vault of Archavon ====================
     public class KoralonTheFlameWatcher_10 : BossHandler {
         public KoralonTheFlameWatcher_10() {
             // If not listed here use values from defaults
@@ -1526,162 +2526,38 @@ namespace Rawr {
              */
         }
     }
-    // ===== The Eye of Eternity ======================
-#if FALSE
-    public class AnubRekhan_10 : BossHandler {
-        public AnubRekhan_10() {
+    #endregion
+    #region T9 (10) H Content
+    #endregion
+    #region T9 (25) Content
+    // ===== The Vault of Archavon ====================
+    public class KoralonTheFlameWatcher_25 : KoralonTheFlameWatcher_10 {
+        public KoralonTheFlameWatcher_25() {
             // If not listed here use values from defaults
             // Basics
-            Name = "Anub'Rekhan (10 Man)";
-            Health = 2230000f;
+            Content = "T9.5";
+            Version = "25 Man";
+            Health = 4183500f;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = 120000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             };
-            SpecialAttack_1 = new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-            };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
-            /* TODO:
-             */
-        }
-    }
-#endif
-    #endregion
-    #region T7.5 Content
-    public class AnubRekhan_25 : AnubRekhan_10 {
-        public AnubRekhan_25() {
-            // If not listed here use values from 10 man version
-            // Basics
-            Name = "Anub'Rekhan";
-            Content = "T7.5";
-            Instance = "Naxxramas";
-            Version = "25 Man";
-            Health = 6763325f;
-            // Resistance
-            // Attacks
-            MeleeAttack = new Attack {
-                Name = MeleeAttack.Name,
-                DamageType = MeleeAttack.DamageType,
-                DamagePerHit = 120000f,
-                MaxNumTargets = MeleeAttack.MaxNumTargets,
-                AttackSpeed = MeleeAttack.AttackSpeed,
-            };
-            SpecialAttack_1 = new Attack {
-                Name = SpecialAttack_1.Name,
-                DamageType = SpecialAttack_1.DamageType,
-                DamagePerHit = (5688f + 7312f) / 2f,
-                MaxNumTargets = SpecialAttack_1.MaxNumTargets,
-                AttackSpeed = SpecialAttack_1.AttackSpeed,
-            };
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
             Min_Healers = 4;
-            // Situational Changes
             /* TODO:
+             * I haven't done this fight yet so I can't really model it myself right now
              */
         }
     }
-    public class Maexxna_25 : Maexxna_10 {
-        public Maexxna_25() {
-            // If not listed here use values from 10 man version
-            // Basics
-            Name = "Maexxna";
-            Content = "T7.5";
-            Instance = "Naxxramas";
-            Version = "25 Man";
-            Health = 7600000f;
-            // Resistance
-            // Attacks
-            MeleeAttack = new Attack {
-                Name = MeleeAttack.Name,
-                DamageType = MeleeAttack.DamageType,
-                DamagePerHit = 120000f,
-                MaxNumTargets = MeleeAttack.MaxNumTargets,
-                AttackSpeed = MeleeAttack.AttackSpeed,
-            };
-            SpecialAttack_1 = new Attack {
-                Name = SpecialAttack_1.Name,
-                DamageType = SpecialAttack_1.DamageType,
-                DamagePerHit = (2188f + 2812f) / 2f,
-                MaxNumTargets = 25,
-                AttackSpeed = SpecialAttack_1.AttackSpeed,
-            };
-            // Situational Changes
-            // 8 Adds every 40 seconds for 10 seconds (only 14000 HP each)
-            MultiTargsPerc = ((BerserkTimer / 40f) * 10f) / BerserkTimer;
-            MaxNumTargets = 8;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 1;
-            Min_Healers = 4;
-            /* TODO:
-             * Web Wrap
-             * Poison Shock
-             * Necrotic Poison
-             * Frenzy
-             */
-        }
-    }
-    public class Patchwerk_25 : Patchwerk_10 {
-        public Patchwerk_25() {
-            // If not listed here use values from 10 man version
-            // Basics
-            Name = "Patchwerk";
-            Content = "T7.5";
-            Instance = "Naxxramas";
-            Version = "25 Man";
-            Health = 13000000f;
-            // Resistance
-            // Attacks
-            MeleeAttack = new Attack {
-                Name = MeleeAttack.Name,
-                DamageType = MeleeAttack.DamageType,
-                DamagePerHit = 120000f,
-                MaxNumTargets = MeleeAttack.MaxNumTargets,
-                AttackSpeed = MeleeAttack.AttackSpeed,
-            };
-            SpecialAttack_1 = new Attack {
-                Name = SpecialAttack_1.Name,
-                DamageType = SpecialAttack_1.DamageType,
-                DamagePerHit = (79000f + 81000f) / 2f,
-                MaxNumTargets = SpecialAttack_1.MaxNumTargets,
-                AttackSpeed = SpecialAttack_1.AttackSpeed,
-            };
-            // Situational Changes
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 3;
-            Min_Healers = 4;
-            /* TODO:
-             * Frenzy
-             */
-        }
-    }
-    #endregion
-    #region T8 Content
-    #endregion
-    #region T8.5 Content
-    #endregion
-    #region T9 (10) Content
-    #endregion
-    #region T9 (10) H Content
-    #endregion
-    #region T9 (25) Content
     #endregion
     #region T9 (25) H Content
     #endregion

@@ -339,8 +339,7 @@ namespace Rawr.DPSWarr
             /// </summary>
             /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Sweeping Strikes [-100% Rage cost]</GlyphsAffecting>
-            public SweepingStrikes(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public SweepingStrikes(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Sweeping Strikes";
@@ -350,31 +349,12 @@ namespace Rawr.DPSWarr
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 ReqMultiTargs = true;
-                Cd = 30f; // In Seconds
-                Duration = 4f; // Using 4 seconds to sim consume time
+                Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration+(1.5f+CalcOpts.GetLatency()); // In Seconds
                 RageCost = 30f - (Talents.FocusedRage * 1f);
                 RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);
                 StanceOkFury = StanceOkArms = true;
-                //Effect = new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f * CalcOpts.MultipleTargetsPerc / 100f, }, Duration, Cd);
                 //
                 InitializeB();
-            }
-            // reduce the numer of time activated by MultiTargsPerc
-            public override float ActivatesOverride { get { return base.ActivatesOverride * (CalcOpts.MultipleTargetsPerc / 100f); } }
-            public override Stats AverageStats
-            {
-                get
-                {
-                    if (!Validated) { return new Stats(); }
-                    Stats bonus = Effect.GetAverageStats(
-                        0f,
-                        (1f * MHAtkTable.AnyLand) // The additional hit also has the attack table to deal with
-                        * (CalcOpts.MultipleTargetsPerc / 100f),                 // And we need to reduce the number of activates by the % of
-                        // time where there are multiple mobs in the fight
-                        Whiteattacks.MhEffectiveSpeed,
-                        CalcOpts.Duration);
-                    return bonus;
-                }
             }
         }
         public class SecondWind : BuffEffect

@@ -13,7 +13,7 @@ namespace Rawr.DPSWarr {
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CombatFactors = new CombatFactors(Char, StatS);
             CalcOpts = Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() : Char.CalculationOptions as CalculationOptionsDPSWarr;
-            //WhiteAtks = new Skills.WhiteAttacks(Char, StatS);
+            WhiteAtks = new Skills.WhiteAttacks(Char, StatS, CombatFactors);
             // Initialize();
         }
         #region Variables
@@ -65,7 +65,7 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Various Attacks Over Dur
         public override float GetCriticalYellowsOverDurMH() {
-            bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            bool useOH = CombatFactors.useOH;
             return base.GetCriticalYellowsOverDurMH()
                 + (_BLS_GCDs * BLS.MHAtkTable.Crit * BLS.AvgTargets * 6) / (useOH ? 2 : 1)
                 + _MS_GCDs * MS.MHAtkTable.Crit * MS.AvgTargets
@@ -74,7 +74,7 @@ namespace Rawr.DPSWarr {
                 + _SD_GCDs * SD.MHAtkTable.Crit * SD.AvgTargets;
         }
         public override float GetLandedYellowsOverDurMH() {
-            bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            bool useOH = CombatFactors.useOH;
             return base.GetLandedYellowsOverDurMH()
                 + (_BLS_GCDs * BLS.MHAtkTable.AnyLand * BLS.AvgTargets * 6) / (useOH ? 2 : 1)
                 + _MS_GCDs * MS.MHAtkTable.AnyLand * MS.AvgTargets
@@ -83,7 +83,7 @@ namespace Rawr.DPSWarr {
                 + _SD_GCDs * SD.MHAtkTable.AnyLand * SD.AvgTargets;
         }
         public override float GetParriedYellowsOverDur() {
-            bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            bool useOH = CombatFactors.useOH ;
             return base.GetParriedYellowsOverDur()
                 + (useOH ? (_BLS_GCDs * BLS.MHAtkTable.Parry * BLS.AvgTargets + _BLS_GCDs * BLS.OHAtkTable.Parry * BLS.AvgTargets) / 2 : _BLS_GCDs * BLS.MHAtkTable.Parry * BLS.AvgTargets) * 6
                 + _MS_GCDs * MS.MHAtkTable.Parry * MS.AvgTargets
@@ -96,7 +96,7 @@ namespace Rawr.DPSWarr {
             return base.GetCriticalYellowsOverDurOH() + (_BLS_GCDs * BLS.OHAtkTable.Crit * BLS.AvgTargets * 6) / 2;
         }
         public override float GetDodgedYellowsOverDur() {
-            bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            bool useOH = CombatFactors.useOH;
             return base.GetDodgedYellowsOverDur()
                 + (useOH ? (_BLS_GCDs * BLS.MHAtkTable.Dodge * BLS.AvgTargets + _BLS_GCDs * BLS.OHAtkTable.Dodge * BLS.AvgTargets) / 2 : _BLS_GCDs * BLS.MHAtkTable.Dodge * BLS.AvgTargets) * 6
                 + _MS_GCDs * MS.MHAtkTable.Dodge * MS.AvgTargets
@@ -179,11 +179,7 @@ namespace Rawr.DPSWarr {
                 GCDUsage += (_Move_GCDs > 0 ? _Move_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : Spent Moving\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             }
-#if SILVERLIGHT
-            float IronWillBonus = (float)Math.Round(20f / 3f * Talents.IronWill) / 100f;
-#else
-            float IronWillBonus = (float)Math.Round(20f / 3f * Talents.IronWill, MidpointRounding.AwayFromZero) / 100f;
-#endif
+            float IronWillBonus = (float)Math.Ceiling(20f / 3f * Talents.IronWill) / 100f;
             float BaseStunDur = (float)Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - IronWillBonus)));
             // Being Stunned or Charmed
             if (CalcOpts.StunningTargets && CalcOpts.StunningTargetsFreq > 0) {
@@ -260,7 +256,7 @@ namespace Rawr.DPSWarr {
             /*Enraged Regeneratn*/
             AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _ER_GCDs, ref HPS_TTL, ref _ER_HPS, ER);
             /*Sweeping Strikes  */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _SW_GCDs, ref HPS_TTL, ref _SW_HPS, SW);
+            AddAnItem(ref availRage, TotalPercTimeLost, ref _SW_GCDs, ref HPS_TTL, ref _SW_HPS, SW);
             /*Death Wish        */
             AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _Death_GCDs, ref HPS_TTL, ref _Death_HPS, Death);
 

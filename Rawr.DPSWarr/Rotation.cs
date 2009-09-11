@@ -184,11 +184,11 @@ namespace Rawr.DPSWarr {
                 /*White   */WhiteAtks.MhActivates * WhiteAtks.MHAtkTable.Crit;
 
             // Off Hand
-            float ohActivates = (CHARACTER.OffHand != null && Char.OffHand.Speed == 0f) ?
+            float ohActivates = (CombatFactors.useOH ?
                 // No OnAttacks for OH
                 /*Yellow*/GetCriticalYellowsOverDurOH() +
                 /*White */WhiteAtks.OhActivates * WhiteAtks.OHAtkTable.Crit
-                : 0f;
+                : 0f);
 
             // Push to the Ability
             DW.SetAllAbilityActivates(mhActivates, ohActivates);
@@ -201,7 +201,7 @@ namespace Rawr.DPSWarr {
         /// <returns>Total Critical attacks over fight duration for Maintenance, Fury and Arms abilities. Does not include Heroic Strikes or Cleaves</returns>
         public float GetCriticalYellowsOverDur() { return GetCriticalYellowsOverDurMH() + GetCriticalYellowsOverDurOH(); }
         public virtual float GetCriticalYellowsOverDurMH() {
-            bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            bool useOH = CombatFactors.useOH;
 
             float onAttack = WhiteAtks.HSOverridesOverDur * HS.MHAtkTable.Crit * HS.AvgTargets
                            + WhiteAtks.CLOverridesOverDur * CL.MHAtkTable.Crit * CL.AvgTargets;
@@ -244,7 +244,7 @@ namespace Rawr.DPSWarr {
         /// <summary>This is used by Overpower when you have the glyph</summary>
         /// <returns>Total Parried attacks over fight duration for Maintenance, Fury and Arms abilities</returns>
         public virtual float GetParriedYellowsOverDur() {
-            bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            bool useOH = CombatFactors.useOH;
 
             float onAttack = WhiteAtks.HSOverridesOverDur * HS.MHAtkTable.Parry * HS.AvgTargets
                            + WhiteAtks.CLOverridesOverDur * CL.MHAtkTable.Parry * CL.AvgTargets;
@@ -266,7 +266,7 @@ namespace Rawr.DPSWarr {
         /// <summary>This is used by Overpower</summary>
         /// <returns>Total Dodged attacks over fight duration for Maintenance, Fury and Arms abilities</returns>
         public virtual float GetDodgedYellowsOverDur() {
-            bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            bool useOH = CombatFactors.useOH;
 
             float onAttack = WhiteAtks.HSOverridesOverDur * HS.MHAtkTable.Dodge * HS.AvgTargets
                            + WhiteAtks.CLOverridesOverDur * CL.MHAtkTable.Dodge * CL.AvgTargets;
@@ -277,7 +277,7 @@ namespace Rawr.DPSWarr {
                 + _Ham_GCDs * HMS.MHAtkTable.Dodge * HMS.AvgTargets
                 + _Shatt_GCDs * ST.MHAtkTable.Dodge * ST.AvgTargets
                 // Fury Abilities
-                + (useOH ? (_WW_GCDs * WW.MHAtkTable.Dodge * WW.AvgTargets + _WW_GCDs * WW.OHAtkTable.Dodge * WW.AvgTargets) / 2 : _WW_GCDs * WW.MHAtkTable.Dodge * WW.AvgTargets)
+                + (useOH ? (_WW_GCDs * WW.MHAtkTable.Dodge * WW.AvgTargets + _WW_GCDs * WW.OHAtkTable.Dodge * WW.AvgTargets) / 2f : _WW_GCDs * WW.MHAtkTable.Dodge * WW.AvgTargets)
                 + _SL_GCDs * SL.MHAtkTable.Dodge * SL.AvgTargets
                 // Arms Abilities
                 
@@ -289,7 +289,7 @@ namespace Rawr.DPSWarr {
         // Yellow Only Landed Attacks Over Dur
         public float GetLandedYellowsOverDur() { return GetLandedYellowsOverDurMH() + GetLandedYellowsOverDurOH(); }
         public virtual float GetLandedYellowsOverDurMH() {
-            bool useOH = CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
+            bool useOH = CombatFactors.useOH;
 
             float onAttack = WhiteAtks.HSOverridesOverDur * HS.MHAtkTable.AnyLand * HS.AvgTargets
                            + WhiteAtks.CLOverridesOverDur * CL.MHAtkTable.AnyLand * CL.AvgTargets;
@@ -343,8 +343,7 @@ namespace Rawr.DPSWarr {
             return GetLandedAtksOverDurNoSSMH();
         }
         public virtual float GetLandedAtksOverDurOH() {
-            bool useOH = Talents.TitansGrip > 0 && CombatFactors.OH != null && CombatFactors.OHSpeed > 0;
-            if (!useOH) { return 0; }
+            if (!CombatFactors.useOH) { return 0; }
             return GetLandedAtksOverDurNoSSOH();
         }
         public float CritHsSlamOverDur {

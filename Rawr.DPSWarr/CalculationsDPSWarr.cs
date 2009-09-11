@@ -788,12 +788,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     Rot.ST.MHAtkTable.AnyLand);
                 statsTotal.AddSpecialEffect(shatt);
             }
-            if (calcOpts.MultipleTargets && calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_]) {
-                SpecialEffect sweep = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusTargets = 1f * calcOpts.MultipleTargetsPerc / 100f, },
-                    Rot.SW.Duration, Rot.SW.Cd);
-                statsTotal.AddSpecialEffect(sweep);
-            }
             if (calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_]) {
                 SpecialEffect blood = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusRageGen = 1f * (1f + talents.ImprovedBloodrage * 0.25f), },
@@ -823,21 +817,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float fightDuration = calcOpts.Duration;
 
             bool useOH = combatFactors.useOH;
-            //float mhLandInterval = 0f, ohLandInterval = 0f, bothLandInterval = 0f;
-            //float mhCritInterval = 0f, ohCritInterval = 0f, bothCritInterval = 0f;
 
             float mhLandsPerSecond = 0f, ohLandsPerSecond = 0f;
             float mhCritsPerSecond = 0f, ohCritsPerSecond = 0f;
 
-            if (Rot.GetLandedAtksOverDurMH() != 0f)
-                mhLandsPerSecond = 1f / Rot.GetLandedAtksOverDurMH();
-            if (useOH && Rot.GetLandedAtksOverDurOH() != 0f)
-                ohLandsPerSecond = 1f / Rot.GetLandedAtksOverDurOH();
-
-            if (Rot.GetCriticalAtksOverDurMH() != 0f)
-                mhCritsPerSecond = 1f / Rot.GetCriticalAtksOverDurMH();
-            if (useOH && Rot.GetCriticalAtksOverDurOH() != 0f)
-                ohCritsPerSecond = 1f / Rot.GetCriticalAtksOverDurOH();
+            if (         Rot.GetLandedAtksOverDurMH()   != 0f) {
+                mhLandsPerSecond = calcOpts.Duration / Rot.GetLandedAtksOverDurMH();
+            }
+            if (useOH && Rot.GetLandedAtksOverDurOH()   != 0f) { ohLandsPerSecond = calcOpts.Duration / Rot.GetLandedAtksOverDurOH(); }
+            if (         Rot.GetCriticalAtksOverDurMH() != 0f) { mhCritsPerSecond = calcOpts.Duration / Rot.GetCriticalAtksOverDurMH(); }
+            if (useOH && Rot.GetCriticalAtksOverDurOH() != 0f) { ohCritsPerSecond = calcOpts.Duration / Rot.GetCriticalAtksOverDurOH(); }
 
             float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
             float mhLandInterval = mhLandsPerSecond,
@@ -847,6 +836,15 @@ Don't forget your weapons used matched with races can affect these numbers.",
                   ohCritInterval = ohCritsPerSecond,
                   bothCritInterval = mhCritInterval + ohCritInterval;
             float dmgDoneInterval = bothLandInterval + bleedHitInterval;
+
+            if (calcOpts.MultipleTargets
+                && calcOpts.MultipleTargetsPerc != 0
+                && calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_]) {
+                SpecialEffect sweep = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusTargets = 1f, },
+                    bothLandInterval * 5f, Rot.SW.Cd);
+                statsTotal.AddSpecialEffect(sweep);
+            }
 
             SpecialEffect bersMainHand = null;
             SpecialEffect bersOffHand = null;
@@ -884,7 +882,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     switch (effect.Trigger)
                     {
                         case Trigger.Use:
-                            statsProcs += effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration); 
+                            statsProcs += effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
                             break;
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit:

@@ -40,7 +40,7 @@ namespace Rawr.DPSWarr {
                 get {
                     if (CalcOpts.MultipleTargets) {
                         float extraTargetsHit = (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
-                        return 1f + (extraTargetsHit + StatS.BonusTargets) * CalcOpts.MultipleTargetsPerc / 100f;
+                        return 1f + (extraTargetsHit) * CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets;
                     }
                     else { return 1f; }
                 }
@@ -212,7 +212,7 @@ namespace Rawr.DPSWarr {
             public float OHRageGenOverDur {
                 get {
                     float result = 0f;
-                    if (combatFactors.OH != null && combatFactors.OH.MaxDamage > 0) {
+                    if (combatFactors.useOH) {
                         float ragePer = OHSwingRage;
                         result = OhActivates * ragePer;
                     }
@@ -259,7 +259,7 @@ namespace Rawr.DPSWarr {
             }
             public float LandedAtksOverDurOH {
                 get {
-                    float whiteLands = (combatFactors.OH != null ? OhActivates * OHAtkTable.AnyLand : 0f);
+                    float whiteLands = (combatFactors.useOH ? OhActivates * OHAtkTable.AnyLand : 0f);
                     return whiteLands;
                 }
             }
@@ -354,7 +354,7 @@ namespace Rawr.DPSWarr {
                     Environment.NewLine + "DPS: " + (MhDPS > 0 ? MhDPS.ToString("0.00") : "None") +
                     Environment.NewLine + "Percentage of Total DPS: " + (ttldpspercMH > 0 ? ttldpspercMH.ToString("00.00%") : "None");
 
-                if (combatFactors.OH != null) {
+                if (combatFactors.useOH) {
                     // ==== OFF HAND ====
                     acts = OhActivates;
                     misses = GetXActs(AttackTableSelector.Missed, acts, false); missesPerc = (acts == 0f ? 0f : misses / acts);
@@ -480,7 +480,7 @@ namespace Rawr.DPSWarr {
                 get {
                     if (CalcOpts.MultipleTargets) {
                         float extraTargetsHit = (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
-                        return 1f + (extraTargetsHit + StatS.BonusTargets) * CalcOpts.MultipleTargetsPerc / 100f;
+                        return 1f + (extraTargetsHit) * CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets;
                     } else {return 1f;}
                 }
             }
@@ -558,7 +558,7 @@ namespace Rawr.DPSWarr {
                     // Need a weapon
                     if (ReqMeleeWeap && Char.MainHand.MaxDamage <= 0) { return false; }
                     // Need Multiple Targets or it's useless
-                    if (ReqMultiTargs && !CalcOpts.MultipleTargets) { return false; }
+                    if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0)) { return false; }
                     // Proper Stance
                     if ((CalcOpts.FuryStance && !StanceOkFury)
                         || (!CalcOpts.FuryStance && !StanceOkArms)

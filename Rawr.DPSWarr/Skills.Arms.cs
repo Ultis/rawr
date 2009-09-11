@@ -141,7 +141,7 @@ namespace Rawr.DPSWarr
                 if (dodge + parry > 0f)
                 {
                     float WhtHitsOverDur = FightDuration / Whiteattacks.MhEffectiveSpeed
-             + (combatFactors.OH != null ? FightDuration / Whiteattacks.OhEffectiveSpeed : 0f)
+                  + (combatFactors.useOH ? FightDuration / Whiteattacks.OhEffectiveSpeed : 0f)
                                            + ssActs;
 
                     float dodgesoverDur = 0f +
