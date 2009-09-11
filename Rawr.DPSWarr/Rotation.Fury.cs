@@ -261,14 +261,15 @@ namespace Rawr.DPSWarr
             bool CLok = CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
             WhiteAtks.Slam_Freq = 0f;// _SL_GCDs;
-            if (HSok || CLok)
+            if ((HSok || CLok) && availRage > 0f)
             {
                 float numHSOverDur = availRage / HS.FullRageCost;
                 HS.OverridesOverDur = numHSOverDur;
                 WhiteAtks.HSOverridesOverDur = numHSOverDur;
                 WhiteAtks.CLOverridesOverDur = 0f;
                 _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
-                _WhiteDPS = _WhiteDPSMH;
+                _WhiteDPSOH = WhiteAtks.OhDPS;
+                _WhiteDPS = _WhiteDPSMH + _WhiteDPSOH;
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
                 _HS_DPS = HS.DPS;
                 _HS_PerHit = HS.DamageOnUse;
@@ -281,7 +282,7 @@ namespace Rawr.DPSWarr
             else
             {
                 RageGenWhite = WHITEATTACKS.whiteRageGenOverDur;
-                availRage += RageGenWhite;
+                //availRage += RageGenWhite;
                 WhiteAtks.HSOverridesOverDur = 0f;
                 WhiteAtks.CLOverridesOverDur = 0f;
                 _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS

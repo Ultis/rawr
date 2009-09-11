@@ -14,15 +14,6 @@ namespace Rawr.DPSWarr {
             CalcOpts = null;
         }
 
-        /*public Rotation(Character character, Stats stats) {
-            Char = character;
-            StatS = stats;
-            Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
-            CombatFactors = new CombatFactors(Char, StatS);
-            CalcOpts = Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() : Char.CalculationOptions as CalculationOptionsDPSWarr;
-            //WhiteAtks = new Skills.WhiteAttacks(Char, StatS);
-            // Initialize();
-        }*/
         #region Variables
         protected Character CHARACTER;
         protected WarriorTalents TALENTS;
@@ -221,7 +212,7 @@ namespace Rawr.DPSWarr {
                 + _Ham_GCDs * HMS.MHAtkTable.Crit * HMS.AvgTargets
                 + _Shatt_GCDs * ST.MHAtkTable.Crit * ST.AvgTargets
                 // Fury Abilities
-                + (_WW_GCDs * WW.MHAtkTable.Crit * WW.AvgTargets * 6) / (useOH ? 2 : 1)
+                + (_WW_GCDs * WW.MHAtkTable.Crit * WW.AvgTargets) / (useOH ? 2 : 1)
                 + _SL_GCDs * SL.MHAtkTable.Crit * SL.AvgTargets
             ;
 
