@@ -237,7 +237,7 @@ namespace Rawr.ProtWarr
             modelThreat += Abilities[Ability.DeepWounds].Threat * modelCrits;
             modelDamage += Abilities[Ability.DeepWounds].Damage * modelCrits;
 
-            // Vigilance
+            // Vigilance, is already calculated as TPS
             if (Options.UseVigilance)
                 modelThreat += Abilities[Ability.Vigilance].Threat * modelLength;
 

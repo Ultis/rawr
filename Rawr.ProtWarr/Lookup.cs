@@ -86,27 +86,22 @@ namespace Rawr.ProtWarr
         public static float BonusArmorPenetrationPercentage(Character character, Stats stats)
         {
             return StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating, CharacterClass.Warrior);
-            //return ((stats.ArmorPenetrationRating * ProtWarr.ArPToArmorPenetration) / 100.0f);
         }
 
         public static float BonusExpertisePercentage(Character character, Stats stats)
         {
             return StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise + 
                 StatConversion.GetExpertiseFromRating(stats.ExpertiseRating), CharacterClass.Warrior);
-            //return (((stats.ExpertiseRating * ProtWarr.ExpertiseRatingToExpertise) + stats.Expertise)
-            //        * ProtWarr.ExpertiseToDodgeParryReduction) / 100.0f;
         }
 
         public static float BonusHastePercentage(Character character, Stats stats)
         {
             return StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Warrior) + stats.PhysicalHaste;
-            //return ((stats.HasteRating * ProtWarr.HasteRatingToHaste) / 100.0f) + stats.PhysicalHaste;
         }
 
         public static float BonusHitPercentage(Character character, Stats stats)
         {
             return StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Warrior) + stats.PhysicalHit;
-            //return ((stats.HitRating * ProtWarr.HitRatingToHit) / 100.0f) + stats.PhysicalHit;
         }
 
         public static float BonusCritMultiplier(Character character, Stats stats, Ability ability)
@@ -125,17 +120,6 @@ namespace Rawr.ProtWarr
                 StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Warrior) + 
                 StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Warrior) + 
                 stats.PhysicalCrit - StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level]));
-
-            /*
-            if ((calcOpts.TargetLevel - character.Level) < 3)
-                // This formula may or may not be accurate anymore, as the modifier on +1/2 mobs is untested
-                return Math.Min(1.0f, (((stats.CritRating * ProtWarr.CritRatingToCrit) + (stats.Agility * ProtWarr.AgilityToCrit)
-                                    - LevelModifier(character)) / 100.0f) + stats.PhysicalCrit);
-            else
-                // 4.8% critical hit supression as tested on bosses
-                return Math.Min(1.0f, (((stats.CritRating * ProtWarr.CritRatingToCrit) + (stats.Agility * ProtWarr.AgilityToCrit)
-                                    - 4.8f) / 100.0f) + stats.PhysicalCrit);
-            */
         }
 
         public static float BonusCritPercentage(Character character, Stats stats, Ability ability)
@@ -216,76 +200,31 @@ namespace Rawr.ProtWarr
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
             return StatConversion.GetArmorDamageReduction(calcOpts.TargetLevel, stats.Armor, 0.0f, 0.0f, 0.0f);
-            // return Math.Max(0.0f, Math.Min(0.75f, stats.Armor / (stats.Armor + (467.5f * calcOpts.TargetLevel - 22167.5f))));
         }
 
         public static float MagicReduction(Character character, Stats stats, DamageType school)
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-            float damageReduction = Lookup.StanceDamageReduction(character, stats, school);
-            float totalResist = stats.AllResist;
-            float resistScale = 0.0f;
-
+            float totalResist = 0.0f;
             switch (school)
             {
-                case DamageType.Arcane: totalResist += stats.ArcaneResistance; break;
-                case DamageType.Fire: totalResist += stats.FireResistance; break;
-                case DamageType.Frost: totalResist += stats.FrostResistance; break;
-                case DamageType.Nature: totalResist += stats.NatureResistance; break;
-                case DamageType.Shadow: totalResist += stats.ShadowResistance; break;
+                case DamageType.Arcane: totalResist = stats.ArcaneResistance; break;
+                case DamageType.Fire: totalResist = stats.FireResistance; break;
+                case DamageType.Frost: totalResist = stats.FrostResistance; break;
+                case DamageType.Nature: totalResist = stats.NatureResistance; break;
+                case DamageType.Shadow: totalResist = stats.ShadowResistance; break;
             }
 
-            if ((calcOpts.TargetLevel - character.Level) < 3)
-                resistScale = 400.0f;
-            else
-                // This number is still being tested by many and may be slightly higher
-                resistScale = 510.0f;
+            float damageReduction = Lookup.StanceDamageReduction(character, stats, school);
+            float averageResistance = StatConversion.GetAverageResistance(calcOpts.TargetLevel, character.Level, totalResist, 0.0f);
 
-            return Math.Max(0.0f, (1.0f - (totalResist / (resistScale + totalResist))) * damageReduction);
+            return Math.Max(0.0f, (1.0f - averageResistance) * damageReduction);
         }
 
         public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType)
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
             return StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, calcOpts.TargetLevel);
-            
-            /*
-            float defSkill = (float)Math.Floor(stats.DefenseRating * ProtWarr.DefenseRatingToDefense);
-            float baseAvoid = 0.0f;
-            float modifiedAvoid = 0.0f;
-
-            switch (avoidanceType)
-            {
-                case HitResult.Dodge:
-                    baseAvoid = stats.Dodge + (stats.BaseAgility * ProtWarr.AgilityToDodge) - LevelModifier(character);
-                    modifiedAvoid = ((stats.Agility - stats.BaseAgility) * ProtWarr.AgilityToDodge) +
-                                        (stats.DodgeRating * ProtWarr.DodgeRatingToDodge) + (defSkill * ProtWarr.DefenseToDodge);
-                    modifiedAvoid = 1.0f / (1.0f / 88.129021f + 0.9560f / modifiedAvoid);
-                    break;
-                case HitResult.Parry:
-                    baseAvoid = stats.Parry - LevelModifier(character);
-                    modifiedAvoid = (stats.ParryRating * ProtWarr.ParryRatingToParry) + (defSkill * ProtWarr.DefenseToParry);
-                    modifiedAvoid = 1.0f / (1.0f / 47.003525f + 0.9560f / modifiedAvoid);
-                    break;
-                case HitResult.Miss:
-                    baseAvoid = stats.Miss * 100f - LevelModifier(character);
-                    modifiedAvoid = (defSkill * ProtWarr.DefenseToMiss);
-                    modifiedAvoid = 1.0f / (1.0f / 16.0f + 0.9560f / modifiedAvoid);
-                    break;
-                case HitResult.Block:
-                    // The 5% base block should be moved into stats.Block as a base value like the others
-                    baseAvoid = 5.0f + stats.Block - LevelModifier(character);
-                    modifiedAvoid = (stats.BlockRating * ProtWarr.BlockRatingToBlock) + (defSkill * ProtWarr.DefenseToBlock);
-                    break;
-                case HitResult.Crit:
-                    modifiedAvoid = (defSkill * ProtWarr.DefenseToCritReduction) + (stats.Resilience * ProtWarr.ResilienceRatingToCritReduction);
-                    break;
-            }
-
-            // Many of the base values are whole numbers, so need to get it back to decimal. 
-            // May want to look at making this more consistant in the future.
-            return (baseAvoid + modifiedAvoid) / 100.0f;
-            */
         }
 
         public static bool IsAvoidable(Ability ability)

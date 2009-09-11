@@ -18,7 +18,7 @@ namespace Rawr.ProtWarr
                 int[] bold = { 39900, 39996, 40111, 42142 };        // Strength
                 int[] delicate = { 39905, 39997, 40112, 42143 };    // Agility
                 int[] subtle = { 39907, 40000, 40115, 42151 };      // Dodge
-                int[] flashing = { 39908, 40001, 40116, 42152 };     // Parry
+                int[] flashing = { 39908, 40001, 40116, 42152 };    // Parry
                 int[] precise = { 39910, 40003, 40118, 42154 };     // Expertise
 
                 // Purple
@@ -52,16 +52,20 @@ namespace Rawr.ProtWarr
                 int[,][] gemmingTemplates = new int[,][]
                 {
                     //Red       Yellow      Blue        Prismatic   Meta
-                    { subtle,   subtle,     subtle,     subtle,     austere },  // Max Avoidance
-                    { subtle,   stalwart,   regal,      subtle,     austere },  // Avoidance Heavy
-                    { regal,    enduring,   solid,      solid,      austere },  // Balanced Avoidance
+                    { flashing, flashing,   flashing,   flashing,   austere },  // Max Avoidance (Parry)
+                    { subtle,   subtle,     subtle,     subtle,     austere },  // Max Avoidance (Dodge)
+                    { flashing, glimmering, defender,   flashing,   austere },  // Avoidance Heavy (Parry)
+                    { subtle,   stalwart,   regal,      subtle,     austere },  // Avoidance Heavy (Dodge)
+                    { defender, enduring,   solid,      solid,      austere },  // Balanced Avoidance (Parry)
+                    { regal,    enduring,   solid,      solid,      austere },  // Balanced Avoidance (Dodge)
                     { guardian, enduring,   solid,      solid,      austere },  // Balanced TPS
                     { solid,    solid,      solid,      solid,      austere },  // Max Health
                 };
 
                 // Generate List of Gemming Templates
+                // groupNames[] index starts at 1 to ignore Uncommon gems currently
                 List<GemmingTemplate> gemmingTemplate = new List<GemmingTemplate>();
-                for (int j = 0; j <= groupNames.GetUpperBound(0); j++)
+                for (int j = 1; j <= groupNames.GetUpperBound(0); j++)
                 {
                     for (int i = 0; i <= gemmingTemplates.GetUpperBound(0); i++)
                     {
@@ -74,7 +78,7 @@ namespace Rawr.ProtWarr
                             BlueId = gemmingTemplates[i, 2][j],
                             PrismaticId = gemmingTemplates[i, 3][j],
                             MetaId = gemmingTemplates[i, 4][0],
-                            Enabled = j == 1
+                            Enabled = j == 2
                         });
                     }
                 }
@@ -526,7 +530,10 @@ threat and limited threat scaled by the threat scale.",
             statsTotal += GetSpecialEffectStats(character, statsTotal);
 
             // Greatness/Highest Stat Effect
-            statsTotal.Strength += (float)Math.Floor(statsTotal.HighestStat * (1 + statsTotal.BonusStrengthMultiplier));
+            if(statsTotal.Strength > statsTotal.Agility)
+                statsTotal.Strength += (float)Math.Floor(statsTotal.HighestStat * (1.0f + statsTotal.BonusStrengthMultiplier));
+            else
+                statsTotal.Agility += (float)Math.Floor(statsTotal.HighestStat * (1.0f + statsTotal.BonusAgilityMultiplier));
 
             return statsTotal;
         }
@@ -615,10 +622,12 @@ threat and limited threat scaled by the threat scale.",
 
             switch (chartName)
             {
+                #region Ability Damage and Threat
                 case "Ability Damage":
                 case "Ability Threat":
                     {
-                        ComparisonCalculationBase[] comparisons = new ComparisonCalculationBase[calculations.Abilities.Count];
+                        // Vigilance will need to be ignores as it is outside the scope of this
+                        ComparisonCalculationBase[] comparisons = new ComparisonCalculationBase[calculations.Abilities.Count - 1];
                         int j = 0;
                         foreach (AbilityModel ability in calculations.Abilities)
                         {
@@ -639,6 +648,8 @@ threat and limited threat scaled by the threat scale.",
                         }
                         return comparisons;
                     }
+                #endregion
+                #region Combat Table
                 case "Combat Table":
                     {
                         ComparisonCalculationProtWarr calcMiss = new ComparisonCalculationProtWarr();
@@ -667,6 +678,8 @@ threat and limited threat scaled by the threat scale.",
                         }
                         return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcBlock, calcCrit, calcCrush, calcHit };
                     }
+                #endregion
+                #region Item Budget
                 case "Item Budget":
                     CharacterCalculationsProtWarr calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 10f } }) as CharacterCalculationsProtWarr;
@@ -869,11 +882,12 @@ threat and limited threat scaled by the threat scale.",
                             SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcResilValue.ThreatPoints - calcBaseValue.ThreatPoints)},
 					};
+                #endregion
                 default:
                     return new ComparisonCalculationBase[0];
             }
         }
-        //Hide the ranged weapon enchants. None of them apply to melee damage at all.
+
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
             // Filters out Non-Shield Offhand Enchants and Ranged Enchants
@@ -899,7 +913,7 @@ threat and limited threat scaled by the threat scale.",
                 ((buff.Group == "Set Bonuses") && !(
                     buff.Name.StartsWith("Dreadnaught") || 
                     buff.Name.StartsWith("Siegebreaker") || 
-                    buff.Name.StartsWith("Wyrnn's") ||
+                    buff.Name.StartsWith("Wrynn") ||
                     buff.Name.Contains("Gladiator")
                 ));
 
@@ -1010,19 +1024,22 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage
                 ) != 0;
 
-            foreach (SpecialEffect effect in stats.SpecialEffects())
+            if (!relevant) // No reason to check effects if it's already known as relevant
             {
-                if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.MeleeCrit ||
-                    effect.Trigger == Trigger.MeleeHit ||
-                    effect.Trigger == Trigger.PhysicalCrit ||
-                    effect.Trigger == Trigger.PhysicalHit ||
-                    effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.DamageTaken)
+                foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
-                    relevant |= HasRelevantStats(effect.Stats);
-                    if (relevant) break;
+                    if (effect.Trigger == Trigger.Use ||
+                        effect.Trigger == Trigger.MeleeCrit ||
+                        effect.Trigger == Trigger.MeleeHit ||
+                        effect.Trigger == Trigger.PhysicalCrit ||
+                        effect.Trigger == Trigger.PhysicalHit ||
+                        effect.Trigger == Trigger.DoTTick ||
+                        effect.Trigger == Trigger.DamageDone ||
+                        effect.Trigger == Trigger.DamageTaken)
+                    {
+                        relevant |= HasRelevantStats(effect.Stats);
+                        if (relevant) break;
+                    }
                 }
             }
 
