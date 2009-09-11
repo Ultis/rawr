@@ -103,6 +103,8 @@
             this.Tab_Advanced = new System.Windows.Forms.TabPage();
             this.RTB_Advanced = new System.Windows.Forms.RichTextBox();
             this.Tab_FAQ = new System.Windows.Forms.TabPage();
+            this.LB_FAQ = new System.Windows.Forms.Label();
+            this.CB_FAQ_Questions = new System.Windows.Forms.ComboBox();
             this.RTB_FAQ = new System.Windows.Forms.RichTextBox();
             this.Tab_Version = new System.Windows.Forms.TabPage();
             this.RTB_Version = new System.Windows.Forms.RichTextBox();
@@ -229,16 +231,16 @@
             0,
             0,
             0});
-			this.CB_Duration.Minimum = new decimal(new int[] {
+            this.CB_Duration.Minimum = new decimal(new int[] {
             30,
             0,
             0,
             0});
-			this.CB_Duration.Name = "CB_Duration";
-			this.CB_Duration.Size = new System.Drawing.Size(148, 20);
-			this.CB_Duration.TabIndex = 13;
-			this.CB_Duration.ThousandsSeparator = true;
-			this.CB_Duration.Value = new decimal(new int[] {
+            this.CB_Duration.Name = "CB_Duration";
+            this.CB_Duration.Size = new System.Drawing.Size(148, 20);
+            this.CB_Duration.TabIndex = 13;
+            this.CB_Duration.ThousandsSeparator = true;
+            this.CB_Duration.Value = new decimal(new int[] {
             300,
             0,
             0,
@@ -276,36 +278,36 @@
             0,
             0,
             0});
-			this.CB_Lag.Name = "CB_Lag";
-			this.CB_Lag.Size = new System.Drawing.Size(58, 20);
-			this.CB_Lag.TabIndex = 1;
-			this.CB_Lag.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.CB_Lag.ValueChanged += new System.EventHandler(this.CB_Latency_ValueChanged);
-			// 
-			// LB_React
-			// 
-			this.LB_React.AutoSize = true;
-			this.LB_React.Location = new System.Drawing.Point(146, 8);
-			this.LB_React.Name = "LB_React";
-			this.LB_React.Size = new System.Drawing.Size(81, 13);
-			this.LB_React.TabIndex = 2;
-			this.LB_React.Text = "React (millisec):";
-			// 
-			// CB_React
-			// 
-			this.CB_React.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.CB_React.Location = new System.Drawing.Point(228, 6);
-			this.CB_React.Maximum = new decimal(new int[] {
+            this.CB_Lag.Name = "CB_Lag";
+            this.CB_Lag.Size = new System.Drawing.Size(58, 20);
+            this.CB_Lag.TabIndex = 1;
+            this.CB_Lag.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.CB_Lag.ValueChanged += new System.EventHandler(this.CB_Latency_ValueChanged);
+            // 
+            // LB_React
+            // 
+            this.LB_React.AutoSize = true;
+            this.LB_React.Location = new System.Drawing.Point(146, 8);
+            this.LB_React.Name = "LB_React";
+            this.LB_React.Size = new System.Drawing.Size(81, 13);
+            this.LB_React.TabIndex = 2;
+            this.LB_React.Text = "React (millisec):";
+            // 
+            // CB_React
+            // 
+            this.CB_React.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_React.Location = new System.Drawing.Point(228, 6);
+            this.CB_React.Maximum = new decimal(new int[] {
             500,
             0,
             0,
             0});
-			this.CB_React.Name = "CB_React";
-			this.CB_React.Size = new System.Drawing.Size(57, 20);
-			this.CB_React.TabIndex = 3;
-			this.CB_React.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.CB_React.Value = new decimal(new int[] {
+            this.CB_React.Name = "CB_React";
+            this.CB_React.Size = new System.Drawing.Size(57, 20);
+            this.CB_React.TabIndex = 3;
+            this.CB_React.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.CB_React.Value = new decimal(new int[] {
             220,
             0,
             0,
@@ -418,6 +420,8 @@
             // 
             // Tab_FAQ
             // 
+            this.Tab_FAQ.Controls.Add(this.LB_FAQ);
+            this.Tab_FAQ.Controls.Add(this.CB_FAQ_Questions);
             this.Tab_FAQ.Controls.Add(this.RTB_FAQ);
             this.Tab_FAQ.Location = new System.Drawing.Point(4, 22);
             this.Tab_FAQ.Name = "Tab_FAQ";
@@ -427,15 +431,42 @@
             this.Tab_FAQ.Text = "F.A.Q.";
             this.Tab_FAQ.UseVisualStyleBackColor = true;
             // 
+            // LB_FAQ
+            // 
+            this.LB_FAQ.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.LB_FAQ.Location = new System.Drawing.Point(6, 7);
+            this.LB_FAQ.Name = "LB_FAQ";
+            this.LB_FAQ.Size = new System.Drawing.Size(271, 40);
+            this.LB_FAQ.TabIndex = 4;
+            this.LB_FAQ.Text = "Got a question about Rawr.DPSWarr?\r\nThe answer may be here...\r\nSelect a Question " +
+                "or choose All to display all";
+            this.LB_FAQ.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // CB_FAQ_Questions
+            // 
+            this.CB_FAQ_Questions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_FAQ_Questions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_FAQ_Questions.DropDownWidth = 600;
+            this.CB_FAQ_Questions.FormattingEnabled = true;
+            this.CB_FAQ_Questions.Location = new System.Drawing.Point(6, 50);
+            this.CB_FAQ_Questions.Name = "CB_FAQ_Questions";
+            this.CB_FAQ_Questions.Size = new System.Drawing.Size(271, 21);
+            this.CB_FAQ_Questions.TabIndex = 3;
+            this.CB_FAQ_Questions.SelectedIndexChanged += new System.EventHandler(this.CB_FAQ_Questions_SelectedIndexChanged);
+            // 
             // RTB_FAQ
             // 
-            this.RTB_FAQ.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RTB_FAQ.Location = new System.Drawing.Point(3, 3);
+            this.RTB_FAQ.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.RTB_FAQ.Location = new System.Drawing.Point(6, 77);
             this.RTB_FAQ.Name = "RTB_FAQ";
             this.RTB_FAQ.ReadOnly = true;
-            this.RTB_FAQ.Size = new System.Drawing.Size(277, 521);
+            this.RTB_FAQ.Size = new System.Drawing.Size(271, 447);
             this.RTB_FAQ.TabIndex = 2;
-            this.RTB_FAQ.Text = resources.GetString("RTB_FAQ.Text");
+            this.RTB_FAQ.Text = "";
             // 
             // Tab_Version
             // 
@@ -622,41 +653,41 @@
             0,
             0,
             0});
-			this.CB_MoveTargsTime.Name = "CB_MoveTargsTime";
-			this.CB_MoveTargsTime.Size = new System.Drawing.Size(58, 20);
-			this.CB_MoveTargsTime.TabIndex = 29;
-			this.CB_MoveTargsTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.CB_MoveTargsTime.ValueChanged += new System.EventHandler(this.RotChanges_Move_ValueChanged);
-			// 
-			// LB_SurvScale
-			// 
-			this.LB_SurvScale.AutoSize = true;
-			this.LB_SurvScale.Location = new System.Drawing.Point(6, 34);
-			this.LB_SurvScale.Name = "LB_SurvScale";
-			this.LB_SurvScale.Size = new System.Drawing.Size(96, 13);
-			this.LB_SurvScale.TabIndex = 4;
-			this.LB_SurvScale.Text = "Survivability Scale:";
-			// 
-			// NUD_SurvScale
-			// 
-			this.NUD_SurvScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.NUD_SurvScale.DecimalPlaces = 1;
-			this.NUD_SurvScale.Increment = new decimal(new int[] {
+            this.CB_MoveTargsTime.Name = "CB_MoveTargsTime";
+            this.CB_MoveTargsTime.Size = new System.Drawing.Size(58, 20);
+            this.CB_MoveTargsTime.TabIndex = 29;
+            this.CB_MoveTargsTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.CB_MoveTargsTime.ValueChanged += new System.EventHandler(this.RotChanges_Move_ValueChanged);
+            // 
+            // LB_SurvScale
+            // 
+            this.LB_SurvScale.AutoSize = true;
+            this.LB_SurvScale.Location = new System.Drawing.Point(6, 34);
+            this.LB_SurvScale.Name = "LB_SurvScale";
+            this.LB_SurvScale.Size = new System.Drawing.Size(96, 13);
+            this.LB_SurvScale.TabIndex = 4;
+            this.LB_SurvScale.Text = "Survivability Scale:";
+            // 
+            // NUD_SurvScale
+            // 
+            this.NUD_SurvScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.NUD_SurvScale.DecimalPlaces = 1;
+            this.NUD_SurvScale.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-			this.NUD_SurvScale.Location = new System.Drawing.Point(137, 32);
-			this.NUD_SurvScale.Maximum = new decimal(new int[] {
+            this.NUD_SurvScale.Location = new System.Drawing.Point(137, 32);
+            this.NUD_SurvScale.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-			this.NUD_SurvScale.Name = "NUD_SurvScale";
-			this.NUD_SurvScale.Size = new System.Drawing.Size(148, 20);
-			this.NUD_SurvScale.TabIndex = 5;
-			this.NUD_SurvScale.Value = new decimal(new int[] {
+            this.NUD_SurvScale.Name = "NUD_SurvScale";
+            this.NUD_SurvScale.Size = new System.Drawing.Size(148, 20);
+            this.NUD_SurvScale.TabIndex = 5;
+            this.NUD_SurvScale.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -684,15 +715,15 @@
             0,
             0,
             0});
-			this.NUD_StunDur.Minimum = new decimal(new int[] {
+            this.NUD_StunDur.Minimum = new decimal(new int[] {
             1500,
             0,
             0,
             0});
-			this.NUD_StunDur.Name = "NUD_StunDur";
-			this.NUD_StunDur.Size = new System.Drawing.Size(57, 20);
-			this.NUD_StunDur.TabIndex = 26;
-			this.NUD_StunDur.Value = new decimal(new int[] {
+            this.NUD_StunDur.Name = "NUD_StunDur";
+            this.NUD_StunDur.Size = new System.Drawing.Size(57, 20);
+            this.NUD_StunDur.TabIndex = 26;
+            this.NUD_StunDur.Value = new decimal(new int[] {
             5000,
             0,
             0,
@@ -710,11 +741,11 @@
             0,
             0,
             0});
-			this.NUD_StunFreq.Name = "NUD_StunFreq";
-			this.NUD_StunFreq.Size = new System.Drawing.Size(60, 20);
-			this.NUD_StunFreq.TabIndex = 24;
-			this.NUD_StunFreq.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.NUD_StunFreq.Value = new decimal(new int[] {
+            this.NUD_StunFreq.Name = "NUD_StunFreq";
+            this.NUD_StunFreq.Size = new System.Drawing.Size(60, 20);
+            this.NUD_StunFreq.TabIndex = 24;
+            this.NUD_StunFreq.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NUD_StunFreq.Value = new decimal(new int[] {
             120,
             0,
             0,
@@ -764,16 +795,16 @@
             0,
             0,
             0});
-			this.CB_MultiTargsMax.Minimum = new decimal(new int[] {
+            this.CB_MultiTargsMax.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-			this.CB_MultiTargsMax.Name = "CB_MultiTargsMax";
-			this.CB_MultiTargsMax.Size = new System.Drawing.Size(46, 20);
-			this.CB_MultiTargsMax.TabIndex = 19;
-			this.CB_MultiTargsMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			this.CB_MultiTargsMax.Value = new decimal(new int[] {
+            this.CB_MultiTargsMax.Name = "CB_MultiTargsMax";
+            this.CB_MultiTargsMax.Size = new System.Drawing.Size(46, 20);
+            this.CB_MultiTargsMax.TabIndex = 19;
+            this.CB_MultiTargsMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CB_MultiTargsMax.Value = new decimal(new int[] {
             4,
             0,
             0,
@@ -1085,6 +1116,7 @@
             this.Page_02_Maintenance.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -1148,5 +1180,7 @@
         private System.Windows.Forms.Label LB_Where;
         private System.Windows.Forms.Label LB_Is;
         private System.Windows.Forms.ComboBox CB_BL_FilterType;
+        private System.Windows.Forms.Label LB_FAQ;
+        private System.Windows.Forms.ComboBox CB_FAQ_Questions;
     }
 }
