@@ -675,7 +675,7 @@ namespace Rawr.ShadowPriest
                 BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
                 BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.02f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
                 BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
-                SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.02f,
+                SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.04f,
                 SpellHaste = character.PriestTalents.Enlightenment * 0.02f,
                 SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.5f / 3f,
                 SpellCrit = character.PriestTalents.FocusedWill * 0.01f,
@@ -752,6 +752,8 @@ namespace Rawr.ShadowPriest
                 WeakenedSoulDurationDecrease = stats.WeakenedSoulDurationDecrease,
                 DevouringPlagueBonusDamage = stats.DevouringPlagueBonusDamage,
                 MindBlastHasteProc = stats.MindBlastHasteProc,
+                PriestDPS_T9_2pc = stats.PriestDPS_T9_2pc,
+                PriestDPS_T9_4pc = stats.PriestDPS_T9_4pc,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 ManaRestore = stats.ManaRestore,
                 SpellsManaReduction = stats.SpellsManaReduction,
@@ -830,6 +832,7 @@ namespace Rawr.ShadowPriest
                 + stats.MindBlastCostReduction + stats.ShadowWordDeathCritIncrease
                 + stats.WeakenedSoulDurationDecrease
                 + stats.DevouringPlagueBonusDamage + stats.MindBlastHasteProc
+                + stats.PriestDPS_T9_2pc + stats.PriestDPS_T9_4pc
                 + stats.ManaRestoreFromBaseManaPPM + stats.BonusSpellCritMultiplier
                 + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat
                 + stats.ShadowDamage

@@ -176,6 +176,8 @@ namespace Rawr {
         WeakenedSoulDurationDecrease,
         PrayerOfHealingExtraCrit,
         PWSBonusSpellPowerProc,
+        PriestHeal_T9_2pc,
+        PriestHeal_T9_4pc,
         #endregion
         #region Added by Rawr.ShadowPriest
         SWPDurationIncrease,
@@ -183,6 +185,8 @@ namespace Rawr {
         ShadowWordDeathCritIncrease,
         DevouringPlagueBonusDamage,
         MindBlastHasteProc,
+        PriestDPS_T9_2pc,
+        PriestDPS_T9_4pc,
         #endregion
         #region Added by Rawr.Mage
         AldorRegaliaInterruptProtection,
@@ -4124,6 +4128,25 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.MindBlastHasteProc] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Priest")]
+        [DisplayName(" seconds increased duration of Vampiric Touch. (Priest)")]
+        public float PriestDPS_T9_2pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PriestDPS_T9_2pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PriestDPS_T9_2pc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Priest")]
+        [DisplayName("% increased critical hit chance on Mind Flay. (Priest)")]
+        public float PriestDPS_T9_4pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PriestDPS_T9_4pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PriestDPS_T9_4pc] = value; }
+        }
+
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -4183,7 +4206,7 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("seconds reduced duration of Weakened Sou (Priest)l")]
+        [DisplayName("seconds reduced duration of Weakened Soul (Priest)")]
         [Category("Priest")]
         public float WeakenedSoulDurationDecrease
         {
@@ -4209,6 +4232,29 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.PWSBonusSpellPowerProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.PWSBonusSpellPowerProc] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increased healing on Prayer of Mending. (Priest)")]
+        [Category("Priest")]
+        public float PriestHeal_T9_2pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PriestHeal_T9_2pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PriestHeal_T9_2pc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increased effect on Divine Aegis and Empowered Renew. (Priest)")]
+        [Category("Priest")]
+        public float PriestHeal_T9_4pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PriestHeal_T9_4pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PriestHeal_T9_4pc] = value; }
+        }
+
+
+
         #endregion
         #region Added by Rawr.Elemental
         [System.ComponentModel.DefaultValueAttribute(0f)]

@@ -76,6 +76,8 @@ namespace Rawr.ShadowPriest
             }
         }
 
+
+
         public SolverBase(Stats playerStats, Character _char) 
         {
             character = _char;
@@ -330,8 +332,12 @@ namespace Rawr.ShadowPriest
                 timer += CalculationOptions.Delay / 1000f;
                 CastsPerSecond++;
                 HitsPerSecond += ShadowHitChance / 100f;
-                if (spell == SWD || spell == MB)
-                    CritsPerSecond++;
+                if (spell == SWD)
+                    CritsPerSecond += SWD.CritChance;
+                else if (spell == MB)
+                    CritsPerSecond += MB.CritChance;
+                else if (spell == MF)
+                    CritsPerSecond += MF.CritChance * 3;
                 //if (spell == MF)
                 //    HitsPerSecond += 2;   // MF can hit 3 times / cast
             }
@@ -340,14 +346,8 @@ namespace Rawr.ShadowPriest
             HitsPerSecond /= timer;
 
             // Deal with Spirit Tap
-            float STCrit = 0f;
-            if (MB != null)
-                STCrit += MB.CritChance;
-            if (SWD != null)
-                STCrit += SWD.CritChance;
-            if (MB != null && SWD != null)
-                STCrit /= 2;
-            float ImpSTUptime = CritsPerSecond * STCrit * 8f;    // Spirit Tap lasts 8 seconds. Very little overlap time due to CD on MB/SW:D
+            float ImpSTUptime = 
+                Math.Min(1f, CritsPerSecond * 8f);    // Spirit Tap lasts 8 seconds. Very little overlap time due to CD on MB/SW:D
             float NewSpirit = simStats.Spirit * ImpSTUptime * character.PriestTalents.ImprovedSpiritTap * 0.05f;
             float NewSPP = NewSpirit * simStats.SpellDamageFromSpiritPercentage;
             simStats.Spirit += NewSpirit;

@@ -3172,6 +3172,47 @@ namespace Rawr
                 SetName = "Sanctification Garb",
                 SetThreshold = 4
             });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Velen's Raiment 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestHeal_T9_2pc = 0.2f },
+                SetName = "Velen's Raiment",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Velen's Raiment 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestHeal_T9_4pc = 0.1f },
+                SetName = "Velen's Raiment",
+                SetThreshold = 4
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Velen's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestDPS_T9_2pc = 6 },
+                SetName = "Velen's Regalia",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Velen's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestDPS_T9_4pc = 0.05f },
+                SetName = "Velen's Regalia",
+                SetThreshold = 4
+            });
+
             #endregion
 
             #region Rogue set bonuses

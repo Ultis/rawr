@@ -768,7 +768,7 @@ namespace Rawr.HolyPriest
                 SpellsManaReduction = stats.SpellsManaReduction,
                 HighestStat = stats.HighestStat,
                 ShieldFromHealed = stats.ShieldFromHealed,
-                /*ManaGainOnGreaterHealOverheal = stats.ManaGainOnGreaterHealOverheal,
+                ManaGainOnGreaterHealOverheal = stats.ManaGainOnGreaterHealOverheal,
                 RenewDurationIncrease = stats.RenewDurationIncrease,
                 BonusPoHManaCostReductionMultiplier = stats.BonusPoHManaCostReductionMultiplier,
                 BonusGHHealingMultiplier = stats.BonusGHHealingMultiplier,
@@ -777,6 +777,9 @@ namespace Rawr.HolyPriest
                 WeakenedSoulDurationDecrease = stats.WeakenedSoulDurationDecrease,
                 PrayerOfHealingExtraCrit = stats.PrayerOfHealingExtraCrit,
                 PWSBonusSpellPowerProc = stats.PWSBonusSpellPowerProc,
+                PriestHeal_T9_2pc = stats.PriestHeal_T9_2pc,
+                PriestHeal_T9_4pc = stats.PriestHeal_T9_4pc,
+                /*
                 ManaregenFor8SecOnUse5Min = stats.ManaregenFor8SecOnUse5Min,
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
@@ -858,6 +861,7 @@ namespace Rawr.HolyPriest
                 + stats.BonusPoHManaCostReductionMultiplier + stats.BonusGHHealingMultiplier
                 + stats.PrayerOfMendingExtraJumps + stats.GreaterHealCostReduction
                 + stats.WeakenedSoulDurationDecrease
+                + stats.PriestHeal_T9_2pc + stats.PriestHeal_T9_4pc
 
                 + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat
                 + stats.ShieldFromHealed

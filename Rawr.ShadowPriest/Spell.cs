@@ -9,7 +9,7 @@ namespace Rawr.ShadowPriest {
             PriestTalents talents = character.PriestTalents;
             switch (name) {
                 case "Vampiric Embrace":    return (talents.VampiricEmbrace > 0 ? new VampiricEmbrace(stats, character) : null);
-                case "Vampiric Touch":      return (talents.VampiricEmbrace > 0 ? new VampiricEmbrace(stats, character) : null);
+                case "Vampiric Touch":      return (talents.VampiricTouch > 0 ? new VampiricTouch(stats, character) : null);
                 case "Shadow Word: Pain":   return new ShadowWordPain(stats, character);
                 case "Devouring Plague":    return new DevouringPlague(stats, character);
                 case "Mind Blast":          return new MindBlast(stats, character);
@@ -45,7 +45,7 @@ namespace Rawr.ShadowPriest {
             }
         }
 
-        public static readonly List<string> ShadowSpellList = new List<string>() { "Vampiric Embrace", "Vampiric Touch", "Mind Blast", "Devouring Plague", "Shadow Word: Pain", "Shadow Word: Death", "Mind Flay" };
+        public static readonly List<string> ShadowSpellList = new List<string>() { "Vampiric Embrace", "Vampiric Touch", "Mind Blast", "Devouring Plague", "Shadow Word: Pain", "Mind Flay", "Shadow Word: Death" };
         public static readonly List<string> HolySpellList = new List<string>() { "Penance", "Holy Fire", "Devouring Plague", "Shadow Word: Pain", "Mind Blast", "Shadow Word: Death", "Smite" };
 
         public string Name { get; protected set; }
@@ -67,6 +67,7 @@ namespace Rawr.ShadowPriest {
         public float CritChance { get; protected set; }
         public float BaseCritCoef { get; protected set; }
         public float CritCoef { get; protected set; }
+        public float BaseDebuffDuration { get; protected set; }
         public float DebuffDuration { get; protected set; }
         public int Targets { get; protected set; }
 
@@ -104,7 +105,7 @@ namespace Rawr.ShadowPriest {
             Name = name;
             BaseManaCost = ManaCost = manaCost;
             BaseCastTime = CastTime = castTime;
-            DebuffDuration = dotDuration;
+            BaseDebuffDuration = DebuffDuration = dotDuration;
             BaseDamageCoef = DamageCoef = damageCoef;
             BaseRange = Range = range;
             CritChance = 0f;
@@ -214,11 +215,19 @@ namespace Rawr.ShadowPriest {
                 return;
             }
 
-            MinDamage = MaxDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
+            MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                 * (1f + character.PriestTalents.FocusedPower * 0.02f)
                 * (1f + character.PriestTalents.Darkness * 0.02f)
                 * (1f + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1f + character.PriestTalents.Shadowform * 0.15f);
+
+            if (stats.PriestDPS_T9_2pc > 0)
+            {
+                DebuffDuration = BaseDebuffDuration + stats.PriestDPS_T9_2pc;
+                MinDamage *= DebuffDuration / BaseDebuffDuration;
+            }
+
+            MaxDamage = MinDamage;
 
             ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f));
@@ -366,7 +375,7 @@ namespace Rawr.ShadowPriest {
                 * (1f - talents.ShadowFocus * 0.02f)
                 * (1f - talents.FocusedMind * 0.05f));
 
-            CritChance = stats.SpellCrit + talents.MindMelt * 0.02f;
+            CritChance = stats.SpellCrit + talents.MindMelt * 0.02f + stats.PriestDPS_T9_4pc;
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + talents.ShadowPower * 0.2f) + 1f;
 

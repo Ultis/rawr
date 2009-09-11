@@ -185,9 +185,9 @@ namespace Rawr.ShadowPriest
         public CalculationOptionsShadowPriest()
         {
             TargetLevel = 3;
-            FightLength = 5f;
+            FightLength = 6f;
             FSRRatio = 100f;
-            Delay = 100f;
+            Delay = 350f;
             Shadowfiend = 100f;
             Replenishment = 100f;
             JoW = 100f;

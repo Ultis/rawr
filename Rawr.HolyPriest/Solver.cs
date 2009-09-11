@@ -308,6 +308,7 @@ namespace Rawr.HolyPriest
                 ActionList += "\r\n- " + s.Name;
 
             float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, castlandctr = 0, crittable = 0, holyconccast = 0, holyconccrit = 0, pwscasts = 0;
+            float divineaegis = character.PriestTalents.DivineAegis * 0.1f * (1f + stats.PriestHeal_T9_4pc);
             for (int x = 0; x < sr.Count; x++)
             {
                 float mcost = 0, absorb = 0, heal = 0, rheal = 0, clen = 0;
@@ -315,7 +316,7 @@ namespace Rawr.HolyPriest
                 {   // Greater Heal (A Borrowed Time GHeal cannot also be improved Holy conc hasted, so this works)
                     clen = sr[x].CastTime;
                     rheal = sr[x].AvgTotHeal * healmultiplier;
-                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * divineaegis;
                     solctr = 1f - (1f - solctr) * (1f - solchance);
                     mcost = sr[x].ManaCost;
                     mcost -= simstats.ManaGainOnGreaterHealOverheal * calculationOptions.Serendipity / 100f;
@@ -329,7 +330,7 @@ namespace Rawr.HolyPriest
                 {   // Flash Heal (Same applies to FH as GHeal with regards to borrowed time)
                     clen = sr[x].CastTime;
                     rheal = sr[x].AvgTotHeal * healmultiplier;
-                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * divineaegis;
                     solctr = 1f - (1f - solctr) * (1f - solchance);
                     mcost = sr[x].ManaCost;
                     mcost -= mcost * solctr;
@@ -344,7 +345,7 @@ namespace Rawr.HolyPriest
                 {
                     clen = sr[x].CastTime;
                     rheal = sr[x].AvgTotHeal * healmultiplier;
-                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * divineaegis;
                     mcost = sr[x].ManaCost;
                     castctr++;
                     castlandctr += 3f; // Penance counts as 3 casts for some purposes.
@@ -365,7 +366,7 @@ namespace Rawr.HolyPriest
                     clen = sr[x].CastTime;
                     heal = sr[x].AvgTotHeal * healmultiplier;
                     solctr = 1f - (1f - solctr) * (1f - sol5chance);
-                    absorb = sr[x].AvgCrit * sr[x].Targets * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.01f;
+                    absorb = sr[x].AvgCrit * sr[x].Targets * healmultiplier * sr[x].CritChance * divineaegis;
                     mcost = sr[x].ManaCost;
                     castctr++;
                     castlandctr += sr[x].Targets;
@@ -390,7 +391,11 @@ namespace Rawr.HolyPriest
                     absorb = sr[x].AvgTotHeal;
                     mcost = sr[x].ManaCost;
                     if (character.PriestTalents.GlyphofPowerWordShield)
-                        heal = absorb * 0.2f;   // Not entirely right, but close enough.
+                    {
+                        heal = absorb * 0.2f * healmultiplier * (1 + 0.5f * (stats.SpellCrit + character.PriestTalents.HolySpecialization));   // Not entirely right, but close enough.
+                        // Divine Aegis isn't yet entirely fixed for PWS
+                        // absorb += heal * sr[x].CritChance * divineaegis;
+                    }
                     castctr++;
                     castlandctr++;
                     pwscasts++;
@@ -399,7 +404,7 @@ namespace Rawr.HolyPriest
                 {
                     clen = sr[x].GlobalCooldown;
                     heal = sr[x].AvgTotHeal * healmultiplier;
-                    absorb = sr[x].AvgCrit * sr[x].Targets * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
+                    absorb = sr[x].AvgCrit * sr[x].Targets * healmultiplier * sr[x].CritChance * divineaegis;
                     mcost = sr[x].ManaCost;
                     castctr++;
                     castlandctr += sr[x].Targets;
@@ -749,7 +754,8 @@ namespace Rawr.HolyPriest
 
             // Insightful Earthstorm Diamond.
             float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.045f) * (1 + simstats.HealingReceivedMultiplier);
-            float divineaegis = character.PriestTalents.DivineAegis * 0.1f;
+            float divineaegis = character.PriestTalents.DivineAegis * 0.1f
+                * (1f + stats.PriestHeal_T9_4pc);
 
             float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
             float solbhchance = 1f - (float)Math.Pow(1f - solchance, 2);

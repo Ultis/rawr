@@ -218,7 +218,8 @@ namespace Rawr.HolyPriest
             if (character.PriestTalents.GlyphofRenew)
                 HotDuration -= 3;
 
-            InstantHealEffect = character.PriestTalents.EmpoweredRenew * 0.05f * MinHeal;
+            InstantHealEffect = character.PriestTalents.EmpoweredRenew * 0.05f * MinHeal * 
+                (1f + stats.PriestHeal_T9_4pc);
             MaxHeal = MinHeal;
 
             ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
@@ -804,14 +805,16 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
-                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f)
+                * (1 + stats.PriestHeal_T9_2pc);
             MaxHeal = (MaxHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
-                * (1 + character.PriestTalents.BlessedResilience * 0.01f);
+                * (1 + character.PriestTalents.BlessedResilience * 0.01f)
+                * (1 + stats.PriestHeal_T9_2pc);
 
             ManaCost = (int)Math.Floor((ManaCost / 100f * BaseMana - stats.SpellsManaReduction)
                 * (1 - character.PriestTalents.HealingPrayers * 0.1f) 
