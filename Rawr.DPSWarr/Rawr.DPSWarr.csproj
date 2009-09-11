@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Rotation.Arms.cs" />
     <Compile Include="Rotation.Fury.cs" />
     <Compile Include="Skills.Shared.cs" />
