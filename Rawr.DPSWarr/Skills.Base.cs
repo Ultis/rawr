@@ -132,7 +132,9 @@ namespace Rawr.DPSWarr {
                 }
             }
             public float AvgOhDamageOnUse { get { return OhDamageOnUse * OhActivates; } }
-            public float OhActivates { get { return (float)Math.Max(0f, CalcOpts.Duration / OhEffectiveSpeed); } }
+            public float OhActivates { get { 
+                if (OhEffectiveSpeed > 0f) return (float)Math.Max(0f, CalcOpts.Duration / OhEffectiveSpeed); 
+                else return 0; } }
             public float OhDPS { get { return AvgOhDamageOnUse / CalcOpts.Duration; } }
             // Rage Calcs
             public float MHSwingRage {

@@ -625,21 +625,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // DPS
 
             Rot.Initialize(calculatedStats);
-            if (calcOpts.MultipleTargets) { calculatedStats.Which = calculatedStats.HS; } else { calculatedStats.Which = calculatedStats.CL; }
-
+            
             // Neutral
             // Defensive
             calculatedStats.Armor = (int)stats.Armor;
 
             calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00";
 
-            if (calcOpts.FuryStance) {
-                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS() + calculatedStats.Rot._DW_DPS;
-                calculatedStats.WhiteDPS = calculatedStats.WhiteDPSMH + calculatedStats.WhiteDPSOH;
-            }else{
-                calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS() + calculatedStats.Rot._DW_DPS;
-                calculatedStats.WhiteDPS = Rot._WhiteDPS;
-            }
+            calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS() + calculatedStats.Rot._DW_DPS;
+            calculatedStats.WhiteDPS = Rot._WhiteDPS;
+            
             float Health2Surv = stats.Health / 100f;
             calculatedStats.TotalHPS = Rot._HPS_TTL;
             calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv) * calcOpts.SurvScale;

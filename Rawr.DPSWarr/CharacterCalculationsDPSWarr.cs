@@ -102,7 +102,7 @@ namespace Rawr.DPSWarr {
         public Skills.Cleave CL { get; set; }
         public Skills.DeepWounds DW { get; set; }
         public Skills.HeroicStrike HS { get; set; }
-        public Skills.OnAttack Which { get; set; }
+        
         #endregion
         #region Neutral
         public float BaseHealth { get; set; }
