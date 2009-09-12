@@ -25,7 +25,7 @@ namespace Rawr.ProtWarr
 
         public static float TargetCritChance(Character character, Stats stats)
         {
-            return Math.Max(0.0f, ((5.0f + Lookup.LevelModifier(character)) / 100.0f) - AvoidanceChance(character, stats, HitResult.Crit));
+            return Math.Max(0.0f, 0.05f - AvoidanceChance(character, stats, HitResult.Crit));
         }
 
         public static float TargetAvoidanceChance(Character character, Stats stats, HitResult avoidanceType)

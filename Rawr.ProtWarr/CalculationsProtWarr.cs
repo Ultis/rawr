@@ -628,18 +628,38 @@ threat and limited threat scaled by the threat scale.",
                     {
                         // Vigilance will need to be ignores as it is outside the scope of this
                         ComparisonCalculationBase[] comparisons = new ComparisonCalculationBase[calculations.Abilities.Count - 1];
+                        // Index Deep Wounds for including in everything that can crit
+                        AbilityModel DeepWounds = calculations.Abilities[Ability.DeepWounds];
+
                         int j = 0;
                         foreach (AbilityModel ability in calculations.Abilities)
                         {
                             if (ability.Ability != Ability.Vigilance)
                             {
                                 ComparisonCalculationProtWarr comparison = new ComparisonCalculationProtWarr();
-
                                 comparison.Name = ability.Name;
-                                if (chartName == "Ability Damage")
-                                    comparison.MitigationPoints = ability.Damage;
-                                if (chartName == "Ability Threat")
-                                    comparison.ThreatPoints = ability.Threat;
+
+                                // Deep Wounds gets colored red to make the integrated parts easier to understand
+                                if (ability.Ability == Ability.DeepWounds)
+                                {
+                                    if (chartName == "Ability Damage")
+                                        comparison.MitigationPoints = ability.Damage;
+                                    else
+                                        comparison.MitigationPoints = ability.Threat;
+                                }
+                                else
+                                {
+                                    if (chartName == "Ability Damage")
+                                    {
+                                        comparison.ThreatPoints = ability.Damage;
+                                        comparison.MitigationPoints = ability.CritPercentage * DeepWounds.Damage;
+                                    }
+                                    else
+                                    {
+                                        comparison.ThreatPoints = ability.Threat;
+                                        comparison.MitigationPoints = ability.CritPercentage * DeepWounds.Threat;
+                                    }
+                                }
 
                                 comparison.OverallPoints = comparison.SurvivalPoints + comparison.ThreatPoints + comparison.MitigationPoints;
                                 comparisons[j] = comparison;
