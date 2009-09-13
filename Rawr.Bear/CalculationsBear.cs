@@ -903,7 +903,7 @@ the Threat Scale defined on the Options tab.",
 						statsProcs += effect.GetAverageStats(2.25f, chanceHit, 2.5f);
 						break;
 					case Trigger.DamageTaken:
-						statsProcs += effect.GetAverageStats(calcOpts.TargetAttackSpeed, 1f - dodgeTotal - missTotal);
+						statsProcs += effect.GetAverageStats(calcOpts.TargetAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
 						break;
 				}
 			}
