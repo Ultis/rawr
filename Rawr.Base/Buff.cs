@@ -363,13 +363,26 @@ namespace Rawr
             #endregion
 
             #region Damage Reduction (%)
-            defaultBuffs.Add(new Buff
+            defaultBuffs.Add(buff = new Buff
             {
                 Name = "Blessing of Sanctuary",
                 Source = "Prot Paladin",
 				Group = "Damage Reduction (Minor %)",
-                Stats = { DamageTakenMultiplier = -0.03f }
+                Stats = { DamageTakenMultiplier = -0.03f },
+                Improvements = {
+                    new Buff {
+                        Name = "Blessing of Sanctuary (Stamina Bonus)",
+                        Source = "Prot Paladin",
+                        Group = "Stat Multiplier",
+                        Stats = {
+                            BonusStaminaMultiplier = 0.10f
+                            //BonusStrengthMultiplier = 0.10f, // Uncomment this line for 3.2.2 per PTR Notes
+                        },
+                        ConflictingBuffs = new List<string>(new string[] { "SanctuaryKings", }),
+                    }
+                }
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageAvoided, new Stats() { ManaorEquivRestore = 0.02f }, 0f, 0f));
             defaultBuffs.Add(new Buff
             {
                 Name = "Grace",
@@ -716,13 +729,23 @@ namespace Rawr
                 Name = "Blessing of Kings",
                 Source = "Paladin",
                 Group = "Stat Multiplier",
-                Stats =
-                {
-                    BonusAgilityMultiplier = 0.1f,
-                    BonusStrengthMultiplier = 0.1f,
-                    BonusIntellectMultiplier = 0.1f,
-                    BonusStaminaMultiplier = 0.1f,
-                    BonusSpiritMultiplier = 0.1f
+                Stats = {
+                    BonusAgilityMultiplier = 0.10f,
+                    BonusStrengthMultiplier = 0.10f, // Comment this line for 3.2.2 per PTR Notes
+                    BonusIntellectMultiplier = 0.10f,
+                    BonusSpiritMultiplier = 0.10f
+                },
+                Improvements = {
+                    new Buff {
+                        Name = "Blessing of Kings (Stamina Bonus)",
+                        Source = "Paladin",
+                        Group = "Stat Multiplier",
+                        Stats = {
+                            BonusStaminaMultiplier = 0.10f,
+                            //BonusStrengthMultiplier = 0.10f, // Uncomment this line for 3.2.2 per PTR Notes
+                        },
+                        ConflictingBuffs = new List<string>(new string[] { "SanctuaryKings", }),
+                    }
                 }
             });
             #endregion

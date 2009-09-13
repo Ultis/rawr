@@ -84,6 +84,7 @@ namespace Rawr.ProtPaladin
             this.extendedToolTipLabel3 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.comboBoxTrinketOnUseHandling = new System.Windows.Forms.ComboBox();
             this.tabPageAbilities = new System.Windows.Forms.TabPage();
+            this.CK_PTRMode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.groupBoxPaladinSkills.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).BeginInit();
@@ -815,6 +816,7 @@ namespace Rawr.ProtPaladin
             // 
             // tabPageAbilities
             // 
+            this.tabPageAbilities.Controls.Add(this.CK_PTRMode);
             this.tabPageAbilities.Controls.Add(this.groupBoxPaladinAbilities);
             this.tabPageAbilities.Controls.Add(this.groupBoxPaladinSkills);
             this.tabPageAbilities.Location = new System.Drawing.Point(4, 22);
@@ -824,6 +826,17 @@ namespace Rawr.ProtPaladin
             this.tabPageAbilities.TabIndex = 2;
             this.tabPageAbilities.Text = "Abilities";
             this.tabPageAbilities.UseVisualStyleBackColor = true;
+            // 
+            // CK_PTRMode
+            // 
+            this.CK_PTRMode.AutoSize = true;
+            this.CK_PTRMode.Location = new System.Drawing.Point(6, 141);
+            this.CK_PTRMode.Name = "CK_PTRMode";
+            this.CK_PTRMode.Size = new System.Drawing.Size(111, 17);
+            this.CK_PTRMode.TabIndex = 2;
+            this.CK_PTRMode.Text = "PTR Mode (3.2.2)";
+            this.CK_PTRMode.UseVisualStyleBackColor = true;
+            this.CK_PTRMode.CheckedChanged += new System.EventHandler(this.CK_PTRMode_CheckedChanged);
             // 
             // CalculationOptionsPanelProtPaladin
             // 
@@ -857,6 +870,7 @@ namespace Rawr.ProtPaladin
             this.tabPageRanking.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.tabPageAbilities.ResumeLayout(false);
+            this.tabPageAbilities.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -919,6 +933,7 @@ namespace Rawr.ProtPaladin
         private System.Windows.Forms.Label labelBossMagicSpeed;
         private System.Windows.Forms.ComboBox comboBoxMagicDamageType;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox CK_PTRMode;
 
 	}
 }

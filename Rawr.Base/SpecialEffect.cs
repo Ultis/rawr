@@ -22,6 +22,8 @@ namespace Rawr
         PhysicalHit,
         PhysicalCrit,
 		DamageTaken,
+        /// <summary>The player blocks, parries or dodges a melee attack</summary>
+        DamageAvoided,
         ManaGem,
         DoTTick,
         DamageDone,

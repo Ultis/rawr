@@ -85,6 +85,7 @@ namespace Rawr {
         ManaRestoreFromBaseManaPPM,
         ManaRestoreFromMaxManaPerSecond,
         ManaRestoreOnCrit_25_45,
+        ManaorEquivRestore,
         MangleCostReduction,
         RakeCostReduction,
         ShredCostReduction,
@@ -2030,6 +2031,15 @@ namespace Rawr {
         #endregion
 
         #region Equipment Effects
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Mana or Equivalent Restore")]
+        [Category("Equipment Effects")]
+        [Percentage]
+        public float ManaorEquivRestore
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaorEquivRestore]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaorEquivRestore] = value; }
+        }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Mana Restore")]
         [Category("Equipment Effects")]

@@ -44,6 +44,8 @@ namespace Rawr.ProtPaladin
 			CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
             PaladinTalents Talents = Character.PaladinTalents;
 
+            CK_PTRMode.Checked = calcOpts.PTRMode;
+
             // Attacker Stats
             comboBoxTargetType.SelectedItem = calcOpts.TargetType.ToString();
             numericUpDownTargetLevel.Value = calcOpts.TargetLevel;
@@ -287,6 +289,14 @@ namespace Rawr.ProtPaladin
             }
 		}
 
+        private void CK_PTRMode_CheckedChanged(object sender, EventArgs e) {
+            if (!_loadingCalculationOptions) {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                calcOpts.PTRMode = CK_PTRMode.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
 	}
 
 	[Serializable]
@@ -301,6 +311,7 @@ namespace Rawr.ProtPaladin
 			serializer.Serialize(writer, this);
 			return xml.ToString();
 		}
+        public bool PTRMode = false;
 
 		public int TargetLevel = 83;
 		public int TargetArmor = (int)StatConversion.NPC_ARMOR[83-80];

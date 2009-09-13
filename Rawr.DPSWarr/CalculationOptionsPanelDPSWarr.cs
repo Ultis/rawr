@@ -300,7 +300,7 @@ FAQStuff.Add(
                     calcOpts.Duration = boss.BerserkTimer;
                     calcOpts.InBack = ((calcOpts.InBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
                     calcOpts.MultipleTargets = ((calcOpts.MultipleTargetsPerc = (int)(boss.MultiTargsPerc * 100f)) > 0);
-                    calcOpts.MultipleTargetsMax = boss.MaxNumTargets;
+                    calcOpts.MultipleTargetsMax = Math.Min((float)CB_MultiTargsMax.Maximum, boss.MaxNumTargets);
                     calcOpts.StunningTargets = ((calcOpts.StunningTargetsFreq = (int)(boss.StunningTargsFreq)) <= calcOpts.Duration * 0.99f && calcOpts.StunningTargetsFreq != 0f);
                     calcOpts.StunningTargetsDur = boss.StunningTargsDur;
                     calcOpts.MovingTargets = ((calcOpts.MovingTargetsTime = (int)(boss.MovingTargsTime)) > 0);

@@ -1175,7 +1175,9 @@ namespace Rawr
         public int ImprovedDevotionAura { get { return _data[36]; } set { _data[36] = value; } }
 
         [TalentData(37, "Blessing of Sanctuary", 1, 1, 2, 5, -1, new string[] {
-@"Places a Blessing on the friendly target, reducing damage taken from all sources by 3% for 10 min and increasing stamina by 10%. In addition, when the target blocks, parries, or dodges a melee attack the target will gain 2% of maximum displayed mana. Players may only have one Blessing on them per Paladin at any one time.",}, "spell_nature_lightningshield")]
+@"Places a Blessing on the friendly target, reducing damage taken from all sources by 3% for 10 min and increasing stamina by 10%. In addition, when the target blocks, parries, or dodges a melee attack the target will gain 2% of maximum displayed mana. Players may only have one Blessing on them per Paladin at any one time.", // Comment for 3.2.2 per PTR Notes
+//@"Places a Blessing on the friendly target, reducing damage taken from all sources by 3% for 10 min and increasing strength and stamina by 10%. In addition, when the target blocks, parries, or dodges a melee attack the target will gain 2% of maximum displayed mana. Players may only have one Blessing on them per Paladin at any one time.", // Uncomment for 3.2.2 per PTR Notes
+        }, "spell_nature_lightningshield")]
         public int BlessingOfSanctuary { get { return _data[37]; } set { _data[37] = value; } }
 
         [TalentData(38, "Reckoning", 5, 1, 3, 5, -1, new string[] {
@@ -1225,9 +1227,13 @@ namespace Rawr
         public int CombatExpertise { get { return _data[45]; } set { _data[45] = value; } }
 
         [TalentData(46, "Touched by the Light", 3, 1, 1, 9, -1, new string[] {
-@"Increases your spell power by an amount equal to 10% of your Stamina and increases the amount healed by your critical heals by 10%.",
-@"Increases your spell power by an amount equal to 20% of your Stamina and increases the amount healed by your critical heals by 20%.",
-@"Increases your spell power by an amount equal to 30% of your Stamina and increases the amount healed by your critical heals by 30%.",}, "ability_paladin_touchedbylight")]
+@"Increases your spell power by an amount equal to 10% of your Stamina and increases the amount healed by your critical heals by 10%.", // Comment for 3.2.2 per PTR Notes
+@"Increases your spell power by an amount equal to 20% of your Stamina and increases the amount healed by your critical heals by 20%.", // Comment for 3.2.2 per PTR Notes
+@"Increases your spell power by an amount equal to 30% of your Stamina and increases the amount healed by your critical heals by 30%.", // Comment for 3.2.2 per PTR Notes
+//@"Increases your spell power by an amount equal to 20% of your Strength and increases the amount healed by your critical heals by 10%.", // Uncomment for 3.2.2 per PTR Notes
+//@"Increases your spell power by an amount equal to 40% of your Strength and increases the amount healed by your critical heals by 20%.", // Uncomment for 3.2.2 per PTR Notes
+//@"Increases your spell power by an amount equal to 60% of your Strength and increases the amount healed by your critical heals by 30%.", // Uncomment for 3.2.2 per PTR Notes
+        }, "ability_paladin_touchedbylight")]
         public int TouchedByTheLight { get { return _data[46]; } set { _data[46] = value; } }
 
         [TalentData(47, "Avenger's Shield", 1, 1, 2, 9, 42, new string[] {
@@ -1246,8 +1252,11 @@ namespace Rawr
         public int ShieldOfTheTemplar { get { return _data[49]; } set { _data[49] = value; } }
 
         [TalentData(50, "Judgements of the Just", 2, 1, 3, 10, -1, new string[] {
-@"Reduces the cooldown of your Hammer of Justice by 10 sec, increases the duration of your Seal of Justice effect by 0.5 sec and your Judgement spells also reduce the melee attack speed of the target by 10%.",
-@"Reduces the cooldown of your Hammer of Justice by 20 sec, increases the duration of your Seal of Justice effect by 1 sec and your Judgement spells also reduce the melee attack speed of the target by 20%.",}, "ability_paladin_judgementsofthejust")]
+@"Reduces the cooldown of your Hammer of Justice by 10 sec, increases the duration of your Seal of Justice effect by 0.5 sec and your Judgement spells also reduce the melee attack speed of the target by 10%.",  //   Comment for 3.2.2 per PTR Notes
+@"Reduces the cooldown of your Hammer of Justice by 20 sec, increases the duration of your Seal of Justice effect by 1 sec and your Judgement spells also reduce the melee attack speed of the target by 20%.",    //   Comment for 3.2.2 per PTR Notes
+//@"Reduces the cooldown of your Hammer of Justice by 5 sec, increases the duration of your Seal of Justice effect by 0.5 sec and your Judgement spells also reduce the melee attack speed of the target by 10%.", // Uncomment for 3.2.2 per PTR Notes
+//@"Reduces the cooldown of your Hammer of Justice by 10 sec, increases the duration of your Seal of Justice effect by 1 sec and your Judgement spells also reduce the melee attack speed of the target by 20%.",  // Uncomment for 3.2.2 per PTR Notes
+        }, "ability_paladin_judgementsofthejust")]
         public int JudgementsOfTheJust { get { return _data[50]; } set { _data[50] = value; } }
 
         [TalentData(51, "Hammer of the Righteous", 1, 1, 2, 11, -1, new string[] {

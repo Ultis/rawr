@@ -711,18 +711,19 @@ namespace Rawr {
             // simming this by using the activates over fight and having him facing raid for 2 seconds
             float time = (BerserkTimer / SpecialAttack_1.AttackSpeed) * 2f;
             InBackPerc_Melee = 1f - time / BerserkTimer;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
+            // Locust Swarm: Every 80-120 seconds for 16 seconds you can't be on the target
             // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
-            // Every x seconds he summons a Crypt Guard, assuming he's up for 10 seconds
-            // and its every 60 seconds
+            MovingTargsTime = (BerserkTimer / (80f + 120f / 2f)) * (16f+4f);
+            // Every time he Locust Swarms he summons a Crypt Guard
+            // Let's assume it's up for 10 seconds
             time  = (BerserkTimer / 60f) * 10f;
-            // Every x seconds he summons a few scarabs
-            time += (BerserkTimer / 60f) *  8f;
+            // Every time he spawns a Crypt Guard and it dies, x seconds
+            // after he summons 10 scarabs from it's body
+            // Assuming they are up for 8 sec
+            time += ((BerserkTimer-20f) / 60f) *  8f;
+            MaxNumTargets = 10f;
             MultiTargsPerc = time / BerserkTimer;
-            // Fight Requirements
-            /* TODO:
-             */
+            // ==== Fight Requirements ====
         }
     }
     public class GrandWidowFaerlina_10 : BossHandler {
@@ -733,7 +734,7 @@ namespace Rawr {
             Content = "T7";
             Instance = "Naxxramas";
             Version = "10 Man";
-            Health = 2230000f;
+            Health = 2231200f;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
@@ -758,7 +759,6 @@ namespace Rawr {
                 AttackSpeed = (6.0f+18.0f)/2.0f,
             };
             // Situational Changes
-            InBackPerc_Melee = 0.75f;
             // Every 6-18 seconds for 3 seconds she has to be moved to compensate for Rain of Fire
             MovingTargsTime = (BerserkTimer / SpecialAttack_2.AttackSpeed) * (3f);
             // Fight Requirements
@@ -1579,9 +1579,24 @@ namespace Rawr {
             Max_Players = 25;
             Min_Tanks = 2;
             Min_Healers = 4;
-            // Situational Changes
-            /* TODO:
-             */
+            // ==== Situational Changes ====
+            // When he Impales, he turns around and faces the raid
+            // simming this by using the activates over fight and having him facing raid for 2 seconds
+            float time = (BerserkTimer / SpecialAttack_1.AttackSpeed) * 2f;
+            InBackPerc_Melee = 1f - time / BerserkTimer;
+            // Locust Swarm: Every 80-120 seconds for 16 seconds you can't be on the target
+            // Adding 4 seconds to the Duration for moving out before starts and then back in after
+            MovingTargsTime = (BerserkTimer / (80f + 120f / 2f)) * (16f + 4f);
+            // Every time he Locust Swarms he summons 2 Crypt Guards
+            // Let's assume it's up for 10 seconds
+            time = (BerserkTimer / 60f) * 10f;
+            // Every time he spawns a Crypt Guard and it dies, x seconds
+            // after he summons 10 scarabs from each's body
+            // Assuming they are up for 8 sec
+            time += ((BerserkTimer - 20f) / 60f) * 8f;
+            MaxNumTargets = 20f;
+            MultiTargsPerc = time / BerserkTimer;
+            // ==== Fight Requirements ====
         }
     }
     public class GrandWidowFaerlina_25 : GrandWidowFaerlina_10 {
@@ -1590,7 +1605,7 @@ namespace Rawr {
             // Basics
             Content = "T7.5";
             Version = "25 Man";
-            Health = 2230000f;
+            Health = 6763325;
             // Resistance
             // Attacks
             MeleeAttack = new Attack {
@@ -1603,14 +1618,14 @@ namespace Rawr {
             SpecialAttack_1 = new Attack {
                 Name = "Poison Bold Volley",
                 DamageType = ItemDamageType.Nature,
-                DamagePerHit = (/*Initial*/(2625f + 3375f) / 2.0f) + (/*Dot*/((1480f+1720f)/2.0f)*8f/2f),
+                DamagePerHit = (/*Initial*/(33755f + 4125f) / 2.0f) + (/*Dot*/((1900f+2100f)/2.0f)*8f/2f),
                 MaxNumTargets = 3,
                 AttackSpeed = (7.0f+15.0f)/2.0f,
             };
             SpecialAttack_2 = new Attack {
                 Name = "Rain of Fire",
                 DamageType = ItemDamageType.Fire,
-                DamagePerHit = (/*Dot*/((1750f+2750f)/2.0f)*6f/2f),
+                DamagePerHit = (/*Dot*/((3700f+4300f)/2.0f)*6f/2f),
                 MaxNumTargets = 10,
                 AttackSpeed = (6.0f+18.0f)/2.0f,
             };
@@ -1619,9 +1634,6 @@ namespace Rawr {
             Min_Tanks = 2;
             Min_Healers = 4;
             // Situational Changes
-            InBackPerc_Melee = 0.75f;
-            // Every 6-18 seconds for 3 seconds she has to be moved to compensate for Rain of Fire
-            MovingTargsTime = (BerserkTimer / SpecialAttack_2.AttackSpeed) * (3f);
             // Fight Requirements
             /* TODO:
              * Frenzy
