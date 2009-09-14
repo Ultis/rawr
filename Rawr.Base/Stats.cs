@@ -168,6 +168,7 @@ namespace Rawr {
         BonusNukeCritChance,
         BonusHoTOnDirectHeals,
         TigersFuryCooldownReduction,
+        SpellReflectChance,
         #region Added by Rawr.HolyPriest
         PriestInnerFire,
         RenewDurationIncrease,
@@ -418,6 +419,8 @@ namespace Rawr {
         DamageTakenMultiplier,
         SpellDamageTakenMultiplier,
         StunDurReduc,
+        SnareRootDurReduc,
+        FearDurReduc,
         #region Added by Some Model or Another
         BonusMageNukeMultiplier,
         BonusSwipeDamageMultiplier,
@@ -521,7 +524,6 @@ namespace Rawr {
 
         NUM_MagicSchool, // Always the last entry in the enum.
     }
-
 
 #if SILVERLIGHT
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
@@ -2118,6 +2120,15 @@ namespace Rawr {
         {
             get { return _rawNoStackData[(int)NonStackingStat.ShieldFromHealed]; }
             set { _rawNoStackData[(int)NonStackingStat.ShieldFromHealed] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Equipment Effects")]
+        [DisplayName("% Chance to Reflect Spell")]
+        [Percentage]
+        public float SpellReflectChance {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellReflectChance]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellReflectChance] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -4414,6 +4425,26 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.StunDurReduc]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.StunDurReduc] = value; }
+        }
+
+        [DisplayName("% Snare/Root Duration Reduction")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        public float SnareRootDurReduc
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.SnareRootDurReduc]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.SnareRootDurReduc] = value; }
+        }
+
+        [DisplayName("% Fear Duration Reduction")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        public float FearDurReduc
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.FearDurReduc]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.FearDurReduc] = value; }
         }
         #endregion
 

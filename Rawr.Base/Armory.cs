@@ -730,6 +730,32 @@ namespace Rawr
                             int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
                             stats.StunDurReduc = (float)bonus / 100f;
                         }
+                        else if (gemBonus.Contains("Reduces Snare/Root Duration by "))
+                        {
+                            int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+                            stats.SnareRootDurReduc = (float)bonus / 100f;
+                        }
+                        else if (gemBonus.Contains("Fear Duration Reduced by "))
+                        {
+                            int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+                            stats.FearDurReduc = (float)bonus / 100f;
+                        }
+                        else if (gemBonus.Contains("% Spell Reflect"))
+                        {
+                            int bonus = int.Parse(gemBonus.Substring(0, 2).Trim('%'));
+                            stats.SpellReflectChance = (float)bonus / 100f;
+                        }
+                        else if (gemBonus == "Sometimes Heal on Your Crits")
+                        {
+                            // this is supposed to be 2% of your total health healed when it procs, 50% chance to proc on crit
+                            stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { Health = 400f }, 0f, 0f, 0.50f));
+                            stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit   , new Stats() { Health = 400f }, 0f, 0f, 0.50f));
+                        }
+                        else if (gemBonus.Contains("Reduce Spell Damage Taken by "))
+                        {
+                            int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+                            stats.SpellDamageTakenMultiplier = (float)bonus / -100f;
+                        }
                         else if (gemBonus == "+2% Intellect")
                         {
                             stats.BonusIntellectMultiplier = 0.02f;

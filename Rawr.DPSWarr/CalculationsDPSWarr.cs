@@ -355,6 +355,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 PhysicalHit = stats.PhysicalHit,
                 MovementSpeed = stats.MovementSpeed,
                 StunDurReduc = stats.StunDurReduc,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
                 // Procs
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
                 HighestStat = stats.HighestStat,
@@ -427,11 +429,13 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.PhysicalHit +
                 stats.MovementSpeed +
                 stats.StunDurReduc +
+                stats.SnareRootDurReduc +
+                stats.FearDurReduc +
                 // Procs
                 stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
                 stats.Paragon +
-                stats.ManaorEquivRestore + 
+                stats.ManaorEquivRestore +
                 // Multipliers
                 stats.BonusAgilityMultiplier +
                 stats.BonusStrengthMultiplier +
@@ -487,7 +491,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if (!HidingBadStuff) { return false; }
             return (
                 // Remove Spellcasting Stuff
-                stats.Mp5 + stats.SpellPower + stats.Mana + stats.Spirit + stats.Intellect + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.SpellPenetration +
+                stats.Mp5 + stats.SpellPower + stats.Mana + stats.Spirit + stats.Intellect + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.SpellPenetration + stats.BonusManaMultiplier +
                 // Remove Defensive Stuff (until we do that special modelling)
                 stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block +
                 // Remove PvP Items
