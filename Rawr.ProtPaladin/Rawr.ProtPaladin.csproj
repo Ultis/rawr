@@ -52,6 +52,7 @@
     <Compile Include="CalculationOptionsPanelProtPaladin.Designer.cs">
       <DependentUpon>CalculationOptionsPanelProtPaladin.cs</DependentUpon>
     </Compile>
+    <Compile Include="CalculationOptionsProtPaladin.cs" />
     <Compile Include="CalculationsProtPaladin.cs" />
     <Compile Include="CharacterCalculationsProtPaladin.cs" />
     <Compile Include="CombatTable.cs" />

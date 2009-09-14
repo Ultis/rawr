@@ -3,6 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+#if RAWR3
+using System.Windows.Media;
+#else
+using System.Drawing;
+#endif
 
 using Rawr;
 
@@ -282,27 +287,27 @@ namespace Rawr.HolyPriest
         private string _currentChartName = null;
         private float _currentChartTotal = 0;
         
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+        private Dictionary<string, Color> _subPointNameColors = null;
+        public override Dictionary<string, Color> SubPointNameColors
         {
             get
             {
-                _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+                _subPointNameColors = new Dictionary<string, Color>();
                 switch (_currentChartName)
                 {
                     case "MP5 Sources":
-                        _subPointNameColors.Add(string.Format("MP5 Sources ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
+						_subPointNameColors.Add(string.Format("MP5 Sources ({0} total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 0, 0, 255));
                         break;
                     case "Spell HpS":
-                        _subPointNameColors.Add("HpS", System.Drawing.Color.Red);
+						_subPointNameColors.Add("HpS", Color.FromArgb(255, 255, 0, 0));
                         break;
                     case "Spell HpM":
-                        _subPointNameColors.Add("HpM", System.Drawing.Color.Red);
+						_subPointNameColors.Add("HpM", Color.FromArgb(255, 255, 0, 0));
                         break;
                     default:
-                        _subPointNameColors.Add("HPS-Burst", System.Drawing.Color.Red);
-                        _subPointNameColors.Add("HPS-Sustained", System.Drawing.Color.Blue);
-                        _subPointNameColors.Add("Survivability", System.Drawing.Color.Green);
+						_subPointNameColors.Add("HPS-Burst", Color.FromArgb(255, 255, 0, 0));
+						_subPointNameColors.Add("HPS-Sustained", Color.FromArgb(255, 0, 0, 255));
+						_subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
                         break;
                 }
                 _currentChartName = null;
@@ -384,8 +389,13 @@ namespace Rawr.HolyPriest
         }
 
 
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
+#if RAWR3
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+		public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
+		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+		public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get {
                 if (_calculationOptionsPanel == null)
@@ -445,7 +455,7 @@ namespace Rawr.HolyPriest
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = BaseStats.GetBaseStats(character);  // GetRaceStats(character);
             CharacterCalculationsHolyPriest calculatedStats = new CharacterCalculationsHolyPriest();
-            CalculationOptionsPriest calculationOptions = character.CalculationOptions as CalculationOptionsPriest;
+            CalculationOptionsHolyPriest calculationOptions = character.CalculationOptions as CalculationOptionsHolyPriest;
             if (calculationOptions == null)
                 return null;
 
@@ -458,7 +468,7 @@ namespace Rawr.HolyPriest
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 
             BaseSolver solver;
-            if (calculationOptions.Role == CalculationOptionsPriest.eRole.CUSTOM)
+            if (calculationOptions.Role == CalculationOptionsHolyPriest.eRole.CUSTOM)
                 solver = new AdvancedSolver(stats, character);
             else
                 solver = new Solver(stats, character);
@@ -533,7 +543,7 @@ namespace Rawr.HolyPriest
                     _currentChartName = chartName;
                     CharacterCalculationsHolyPriest mscalcs = GetCharacterCalculations(character) as CharacterCalculationsHolyPriest;
                     BaseSolver mssolver;
-                    if ((character.CalculationOptions as CalculationOptionsPriest).Role == CalculationOptionsPriest.eRole.CUSTOM)
+                    if ((character.CalculationOptions as CalculationOptionsHolyPriest).Role == CalculationOptionsHolyPriest.eRole.CUSTOM)
                         mssolver = new AdvancedSolver(mscalcs.BasicStats, character);
                     else
                         mssolver = new Solver(mscalcs.BasicStats, character);
@@ -909,9 +919,9 @@ namespace Rawr.HolyPriest
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
             System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsPriest));
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHolyPriest));
             System.IO.StringReader reader = new System.IO.StringReader(xml);
-            CalculationOptionsPriest calcOpts = serializer.Deserialize(reader) as CalculationOptionsPriest;
+            CalculationOptionsHolyPriest calcOpts = serializer.Deserialize(reader) as CalculationOptionsHolyPriest;
             return calcOpts;
         }
     }

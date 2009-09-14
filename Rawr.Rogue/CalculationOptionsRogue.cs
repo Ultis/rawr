@@ -7,8 +7,10 @@ using Rawr.Rogue.SpecialAbilities;
 
 namespace Rawr.Rogue
 {
-    [Serializable]
-    public class CalculationOptionsRogue : ICalculationOptionBase
+#if !SILVERLIGHT
+	[Serializable]
+#endif
+	public class CalculationOptionsRogue : ICalculationOptionBase
     {
         public string GetXml()
         {
@@ -19,8 +21,8 @@ namespace Rawr.Rogue
 			return xml.ToString();
         }
 
-        public int TargetLevel;
-        public int TargetArmor;
+        public int TargetLevel = 83;
+		public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
         public Cycle DpsCycle = new Cycle();
 		public PoisonBase TempMainHandEnchant = new NoPoison();
 		public PoisonBase TempOffHandEnchant = new NoPoison();

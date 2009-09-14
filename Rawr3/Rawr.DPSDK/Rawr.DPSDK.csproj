@@ -51,6 +51,9 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.DPSDK\CalculationOptionsDPSDK.cs">
+      <Link>CalculationOptionsDPSDK.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSDK\CalculationsDPSDK.cs">
       <Link>CalculationsDPSDK.cs</Link>
     </Compile>
@@ -62,6 +65,9 @@
     </Compile>
     <Compile Include="..\..\Rawr.DPSDK\ComparisonCalculationDPSDK.cs">
       <Link>ComparisonCalculationDPSDK.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\DRW.cs">
+      <Link>DRW.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.DPSDK\Rotation.cs">
       <Link>Rotation.cs</Link>
@@ -75,7 +81,6 @@
     <Compile Include="CalculationOptionsPanelDPSDK.xaml.cs">
       <DependentUpon>CalculationOptionsPanelDPSDK.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalculationOptionsDPSDK.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

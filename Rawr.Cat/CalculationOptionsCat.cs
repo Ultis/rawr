@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Rawr.Cat
 {
+#if !SILVERLIGHT
+	[Serializable]
+#endif
 	public class CalculationOptionsCat : ICalculationOptionBase
 	{
 		public string GetXml()
@@ -24,26 +19,14 @@ namespace Rawr.Cat
 			return xml.ToString();
 		}
 
-		public CalculationOptionsCat()
-		{
-			TargetLevel = 83;
-            TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
-			CustomUseShred = false;
-			CustomUseRip = false;
-			CustomUseRake = false;
-			CustomCPFerociousBite = 0;
-			CustomCPSavageRoar = 2;
-			Duration = 300;
-		}
-
 		public int TargetLevel = 83;
-        public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
+		public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
 		public bool CustomUseShred = false;
 		public bool CustomUseRip = false;
 		public bool CustomUseRake = false;
 		public int CustomCPFerociousBite = 0;
 		public int CustomCPSavageRoar = 2;
 		public int Duration = 300;
-        public float TrinketOffset = 0f;
+		public float TrinketOffset = 0f;
 	}
 }

@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BearRotationCalculator.cs" />
+    <Compile Include="CalculationOptionsBear.cs" />
     <Compile Include="CalculationOptionsPanelBear.cs">
       <SubType>UserControl</SubType>
     </Compile>

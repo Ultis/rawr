@@ -97,6 +97,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CalculationOptionsMoonkin.cs" />
     <Compile Include="CalculationOptionsPanelMoonkin.cs">
       <SubType>UserControl</SubType>
     </Compile>

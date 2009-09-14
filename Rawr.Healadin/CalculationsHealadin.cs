@@ -214,7 +214,7 @@ namespace Rawr.Healadin
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Fight Healing", System.Drawing.Color.Red);
+                    _subPointNameColors.Add("Fight Healing", System.Drawing.Color.FromArgb(255, 255, 0, 0));
                     _subPointNameColors.Add("Burst Healing", System.Drawing.Color.CornflowerBlue);
                 }
                 return _subPointNameColors;

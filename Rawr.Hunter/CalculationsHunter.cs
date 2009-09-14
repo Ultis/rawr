@@ -204,14 +204,14 @@ namespace Rawr.Hunter
 					});
 
             _subPointNameColorsDPS = new Dictionary<string, Color>();
-            _subPointNameColorsDPS.Add("Hunter DPS", Color.FromArgb(0, 128, 255));
-            _subPointNameColorsDPS.Add("Pet DPS", Color.FromArgb(255, 100, 0));
+            _subPointNameColorsDPS.Add("Hunter DPS", Color.FromArgb(255, 0, 128, 255));
+            _subPointNameColorsDPS.Add("Pet DPS", Color.FromArgb(255, 255, 100, 0));
 
             _subPointNameColorsMPS = new Dictionary<string, Color>();
-            _subPointNameColorsMPS.Add("MPS", Color.FromArgb(0, 0, 255));
+            _subPointNameColorsMPS.Add("MPS", Color.FromArgb(255, 0, 0, 255));
 
             _subPointNameColorsDPM = new Dictionary<string, Color>();
-            _subPointNameColorsDPM.Add("Damage per Mana", Color.FromArgb(0, 0, 255));
+            _subPointNameColorsDPM.Add("Damage per Mana", Color.FromArgb(255, 0, 0, 255));
 
             _subPointNameColors = _subPointNameColorsDPS;
 		}

@@ -79,19 +79,10 @@ namespace Rawr.Cat
 #if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
-		{
-			get
-			{
-				if (_calculationOptionsPanel == null)
-				{
-					_calculationOptionsPanel = new CalculationOptionsPanelCat();
-				}
-				return _calculationOptionsPanel;
-			}
-		}
 #else
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
 		{
 			get
 			{
@@ -102,7 +93,6 @@ namespace Rawr.Cat
 				return _calculationOptionsPanel;
 			}
 		}
-#endif
 
 		private string[] _characterDisplayCalculationLabels = null;
 		public override string[] CharacterDisplayCalculationLabels

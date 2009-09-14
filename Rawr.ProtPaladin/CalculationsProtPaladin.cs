@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+#if RAWR3
+using System.Windows.Media;
+#else
+using System.Drawing;
+#endif
 
 namespace Rawr.ProtPaladin
 {
@@ -98,8 +103,13 @@ namespace Rawr.ProtPaladin
         }
 
         #region Variables and Properties
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
+#if RAWR3
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+		public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
+		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+		public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get
             {
@@ -244,17 +254,17 @@ focus on Survival Points.",
             }
         }
 
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+        private Dictionary<string, Color> _subPointNameColors = null;
+        public override Dictionary<string, Color> SubPointNameColors
         {
             get
             {
                 if (_subPointNameColors == null)
                 {
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Survival", System.Drawing.Color.Blue);
-                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("Threat", System.Drawing.Color.Yellow);
+                    _subPointNameColors = new Dictionary<string, Color>();
+					_subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 255));
+					_subPointNameColors.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
+					_subPointNameColors.Add("Threat", Color.FromArgb(255, 255, 255, 0));
                 }
                 return _subPointNameColors;
             }
@@ -945,7 +955,7 @@ focus on Survival Points.",
                     {
                         ComparisonCalculationBase[] comparisons = new ComparisonCalculationBase[calculations.Abilities.Count];
                         int j = 0;
-                        foreach (System.Collections.DictionaryEntry abilities in calculations.Abilities)
+                        foreach (var abilities in calculations.Abilities)
                         {
                             AbilityModel ability = (AbilityModel)abilities.Value;
                             ComparisonCalculationProtPaladin comparison = new ComparisonCalculationProtPaladin();

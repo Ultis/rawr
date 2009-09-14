@@ -1,4 +1,4 @@
-﻿namespace Rawr
+﻿namespace Rawr.Bear
 {
 	partial class CalculationOptionsPanelBear
 	{

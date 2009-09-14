@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace Rawr.TankDK {
     [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", CharacterClass.DeathKnight)]
-    class CalculationsTankDK : CalculationsBase {
+    public class CalculationsTankDK : CalculationsBase {
         enum Quality {
             Uncommon,
             Rare, 
@@ -135,9 +135,9 @@ namespace Rawr.TankDK {
             get {
                 if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Survival", System.Drawing.Color.Blue);
-                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("Threat", System.Drawing.Color.Green);
+                    _subPointNameColors.Add("Survival", System.Drawing.Color.FromArgb(255, 0, 0, 255));
+                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors.Add("Threat", System.Drawing.Color.FromArgb(255, 0, 128, 0));
                 }
                 return _subPointNameColors;
             }

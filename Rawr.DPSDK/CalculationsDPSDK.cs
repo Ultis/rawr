@@ -88,7 +88,7 @@ namespace Rawr.DPSDK
                     _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255,0,0,255));
 #else
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("DPS", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(255, 0, 0, 255));
 #endif
                 }
                 return _subPointNameColors;

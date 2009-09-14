@@ -202,9 +202,9 @@ namespace Rawr.Tree {
             get {
                 if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("HealBurst", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("HealSustained", System.Drawing.Color.Blue);
-                    _subPointNameColors.Add("Survival", System.Drawing.Color.Green);
+                    _subPointNameColors.Add("HealBurst", System.Drawing.Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors.Add("HealSustained", System.Drawing.Color.FromArgb(255, 0, 0, 255));
+                    _subPointNameColors.Add("Survival", System.Drawing.Color.FromArgb(255, 0, 128, 0));
                 }
                 return _subPointNameColors;
             }

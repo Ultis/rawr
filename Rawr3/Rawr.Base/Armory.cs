@@ -418,7 +418,6 @@ namespace Rawr
                         }
                         else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                         {
-                            stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
                             stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 320 }, 6, 45, 0.15f));
                         }
                         else if (gemBonus == "+10% Shield Block Value")

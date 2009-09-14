@@ -22,17 +22,17 @@ namespace Rawr.HolyPriest
         {
             loading = true;
             if (Character.CalculationOptions == null)
-                Character.CalculationOptions = new CalculationOptionsPriest();
+                Character.CalculationOptions = new CalculationOptionsHolyPriest();
 
-            CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+            CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
 
             if (calcOpts.Rotation > 0)
             {   // Fix for Legacy
-                calcOpts.Role = (CalculationOptionsPriest.eRole)calcOpts.Rotation;
+                calcOpts.Role = (CalculationOptionsHolyPriest.eRole)calcOpts.Rotation;
                 calcOpts.Rotation = 0;
             }
             cbRotation.SelectedIndex = (int)calcOpts.Role;
-            panelCustom.Visible = calcOpts.Role == CalculationOptionsPriest.eRole.CUSTOM;
+            panelCustom.Visible = calcOpts.Role == CalculationOptionsHolyPriest.eRole.CUSTOM;
 
             cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
@@ -85,7 +85,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.ManaPot = cmbManaAmt.SelectedIndex;
                 Character.OnCalculationsInvalidated();
             }
@@ -95,7 +95,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 lblActivity.Text = trkActivity.Value + "% of fight spent in FSR.";
                 calcOpts.FSRRatio = trkActivity.Value;
                 Character.OnCalculationsInvalidated();
@@ -106,10 +106,10 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                calcOpts.Role = (CalculationOptionsPriest.eRole)cbRotation.SelectedIndex;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
+                calcOpts.Role = (CalculationOptionsHolyPriest.eRole)cbRotation.SelectedIndex;
                 Character.OnCalculationsInvalidated();
-                panelCustom.Visible = calcOpts.Role == CalculationOptionsPriest.eRole.CUSTOM;
+                panelCustom.Visible = calcOpts.Role == CalculationOptionsHolyPriest.eRole.CUSTOM;
             }
         }
 
@@ -117,7 +117,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.FightLengthSeconds = (int)numFightLength.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -127,7 +127,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 lblSerendipity.Text = trkSerendipity.Value + "% T5 2 Set Bonus.";
                 calcOpts.Serendipity = trkSerendipity.Value;
                 Character.OnCalculationsInvalidated();
@@ -138,7 +138,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 lblReplenishment.Text = trkReplenishment.Value + "% time with Replenishment buff.";
                 calcOpts.Replenishment = trkReplenishment.Value;
                 Character.OnCalculationsInvalidated();
@@ -149,7 +149,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 lblShadowfiend.Text = trkShadowfiend.Value + "% effectiveness of Shadowfiend.";
                 calcOpts.Shadowfiend = trkShadowfiend.Value;
                 Character.OnCalculationsInvalidated();
@@ -161,7 +161,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 lblSurvivability.Text = trkSurvivability.Value + "% weight on Survivability.";
                 calcOpts.Survivability = trkSurvivability.Value;
                 Character.OnCalculationsInvalidated();
@@ -172,7 +172,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 lblRapture.Text = trkRapture.Value + "% of max Rapture returns.";
                 calcOpts.Rapture = trkRapture.Value;
                 Character.OnCalculationsInvalidated();
@@ -183,7 +183,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.ModelProcs = cbModelProcs.Checked;
                 Character.OnCalculationsInvalidated();
             }
@@ -193,7 +193,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 lblTestOfFaith.Text = trkTestOfFaith.Value + "% of heals use Test of Faith or Improved Flash Heal.";
                 calcOpts.TestOfFaith = trkTestOfFaith.Value;
                 Character.OnCalculationsInvalidated();
@@ -204,7 +204,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.FlashHealCast = (int)numFlashHealCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -214,7 +214,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.GreaterHealCast = (int)numGreaterHealCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -224,7 +224,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.PenanceCast = (int)numPenanceCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -234,7 +234,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.RenewCast = (int)numRenewCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -244,7 +244,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.RenewTicks = (int)numRenewTicks.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -254,7 +254,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.ProMCast = (int)numProMCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -264,7 +264,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.ProMTicks = (int)numProMTicks.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -274,7 +274,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.PoHCast = (int)numPoHCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -284,7 +284,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.PWSCast = (int)numPWSCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -294,7 +294,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.CoHCast = (int)numCoHCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -304,7 +304,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.HolyNovaCast = (int)numHolyNovaCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -314,7 +314,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.DispelCast = (int)numDispelCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -324,7 +324,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.MDCast = (int)numMDCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -334,7 +334,7 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.BindingHealCast = (int)numBindingHealCast.Value;
                 Character.OnCalculationsInvalidated();
             }
@@ -344,60 +344,10 @@ namespace Rawr.HolyPriest
         {
             if (!loading)
             {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
                 calcOpts.DivineHymnCast = (int)numDivineHymnCast.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
     }
-
-    [Serializable]
-	public class CalculationOptionsPriest : ICalculationOptionBase
-	{
-		public string GetXml()
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsPriest));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
-
-        private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
-        public int ManaPot = 4;
-        public int ManaAmt { get { return manaAmt[ManaPot]; } }
-        public enum eRole
-        {
-            AUTO_Tank, AUTO_Raid, Greater_Heal, Flash_Heal, CoH_PoH, Holy_Tank, Holy_Raid,
-            Disc_Tank_GH, Disc_Tank_FH, Disc_Raid, CUSTOM
-        };
-        public eRole Role = 0;
-        public int Rotation = 0;    // LEGACY
-        public float FSRRatio = 93f;
-        public float FightLengthSeconds = 480f;
-        public float Serendipity = 75f;
-        public float Replenishment = 75f;
-        public float Shadowfiend = 100f;
-        public float Survivability = 2f;
-        public float Rapture = 25f;
-        public float TestOfFaith = 25f;
-        public bool ModelProcs = true;
-
-        public int FlashHealCast = 0;
-        public int BindingHealCast = 0;
-        public int GreaterHealCast = 0;
-        public int PenanceCast = 0;
-        public int RenewCast = 0;
-        public int RenewTicks = 0;
-        public int ProMCast = 0;
-        public int ProMTicks = 0;
-        public int PoHCast = 0;
-        public int PWSCast = 0;
-        public int CoHCast = 0;
-        public int HolyNovaCast = 0;
-        public int DivineHymnCast = 0;
-        public int DispelCast = 0;
-        public int MDCast = 0;
-	}
 }

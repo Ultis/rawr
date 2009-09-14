@@ -93,6 +93,7 @@
     <Compile Include="CalculationOptionsPanelProtWarr.Designer.cs">
       <DependentUpon>CalculationOptionsPanelProtWarr.cs</DependentUpon>
     </Compile>
+    <Compile Include="CalculationOptionsProtWarr.cs" />
     <Compile Include="CalculationsProtWarr.cs" />
     <Compile Include="CharacterCalculationsProtWarr.cs" />
     <Compile Include="CombatTable.cs" />

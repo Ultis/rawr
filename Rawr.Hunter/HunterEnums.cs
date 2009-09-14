@@ -193,7 +193,7 @@ namespace Rawr.Hunter
         Unhappy
     }
 
-    public static class HunterRatings
+    public static class HunterRatings //TODO: Why is this here? Use Rawr.Base's Rawr.StatConversion class for this.
     {
         public static double HIT_RATING_PER_PERCENT = 32.78998947;
 

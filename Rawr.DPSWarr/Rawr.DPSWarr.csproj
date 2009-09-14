@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CalculationOptionsDPSWarr.cs" />
     <Compile Include="Rotation.Arms.cs" />
     <Compile Include="Rotation.Fury.cs" />
     <Compile Include="Skills.Shared.cs" />

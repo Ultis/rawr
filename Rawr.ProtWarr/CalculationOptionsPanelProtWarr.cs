@@ -149,30 +149,4 @@ namespace Rawr.ProtWarr {
                 RB_DamageOutput.Checked = true;
         }
 	}
-
-	[Serializable]
-	public class CalculationOptionsProtWarr : ICalculationOptionBase {
-		public string GetXml() {
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsProtWarr));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
-
-		public int TargetLevel = 83;
-        public int TargetArmor = (int)StatConversion.NPC_ARMOR[83-80];
-		public int BossAttackValue = 60000;
-        public float BossAttackSpeed = 2.0f;
-        public bool UseParryHaste = false;
-		public float ThreatScale = 8.0f;
-        public float MitigationScale = 0.125f;
-        public int RankingMode = 1;
-        public bool UseVigilance = true;
-        public int VigilanceValue = 2500;
-        public float ShieldBlockUptime = 100;
-		public bool UseShieldBlock = false;
-		public WarriorTalents talents = null;
-	}
 }

@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+#if RAWR3
+using System.Windows.Media;
+#else
 using System.Drawing;
+#endif
 using System.Text;
 
 
@@ -194,7 +198,7 @@ namespace Rawr.HolyPriest
         }
 
         public Renew(Stats stats, Character character)
-            : base("Renew", stats, character, SpellRankTable, 17, 15f / 15f, 15f, Color.Green)
+			: base("Renew", stats, character, SpellRankTable, 17, 15f / 15f, 15f, Color.FromArgb(255, 0, 128, 0))
         {
             Calculate(stats, character);
         }
@@ -257,14 +261,14 @@ namespace Rawr.HolyPriest
         };
 
 		public FlashHeal(Stats stats, Character character)
-            : base("Flash Heal", stats, character, SpellRankTable, 18, 1.5f / 3.5f, Color.YellowGreen)
+            : base("Flash Heal", stats, character, SpellRankTable, 18, 1.5f / 3.5f, Color.FromArgb(255, 154, 205, 50))
         {
             Calculate(stats, character);
         }
 
         protected void Calculate(Stats stats, Character character)
         {
-            CalculationOptionsPriest calcOpts = character.CalculationOptions as CalculationOptionsPriest;
+            CalculationOptionsHolyPriest calcOpts = character.CalculationOptions as CalculationOptionsHolyPriest;
 
             MinHeal = (MinHeal +
                 stats.SpellPower * ((1 - RankCoef) * HealingCoef * SP2HP
@@ -320,7 +324,7 @@ namespace Rawr.HolyPriest
         };
 
 		public Heal(Stats stats, Character character)
-            : base("Heal", stats, character, SpellRankTable, 32, 3f / 3.5f, Color.DarkSeaGreen)
+            : base("Heal", stats, character, SpellRankTable, 32, 3f / 3.5f, Color.FromArgb(255, 143, 188, 143))
         {
             if (character.Level < 16)
                 Name = "Lesser " + Name;
@@ -371,11 +375,11 @@ namespace Rawr.HolyPriest
 
         private static readonly Color[] targetColors = new Color[]
                                            {
-                                               Color.Orange,
-                                               Color.Orange,
-                                               Color.Orange,
-                                               Color.OrangeRed,
-                                               Color.DarkOrange
+                                               Color.FromArgb(255, 255, 165, 0),
+                                               Color.FromArgb(255, 255, 165, 0),
+                                               Color.FromArgb(255, 255, 165, 0),
+                                               Color.FromArgb(255, 255, 69, 0),
+                                               Color.FromArgb(255, 255, 140, 0)
                                            };
 
         public override float AvgTotHeal
@@ -503,7 +507,7 @@ namespace Rawr.HolyPriest
         }
 
         public CircleOfHealing(Stats stats, Character character, int targets)
-            : base(string.Format("Circle of Healing ({0} targets)", targets), stats, character, SpellRankTable, 21, 1.5f / 3.5f * 0.5f, Color.Gold)
+            : base(string.Format("Circle of Healing ({0} targets)", targets), stats, character, SpellRankTable, 21, 1.5f / 3.5f * 0.5f, Color.FromArgb(255, 255, 215, 0))
         {
             Targets = targets;
             Calculate(stats, character);
@@ -581,11 +585,11 @@ namespace Rawr.HolyPriest
 
         private static readonly Color[] targetColors = new Color[]
                                            {
-                                               Color.Coral,
-                                               Color.Coral,
-                                               Color.Coral,
-                                               Color.BurlyWood,
-                                               Color.Brown
+                                               Color.FromArgb(255, 255, 127, 80),
+                                               Color.FromArgb(255, 255, 127, 80),
+                                               Color.FromArgb(255, 255, 127, 80),
+                                               Color.FromArgb(255, 222, 184, 135),
+                                               Color.FromArgb(255, 165, 42, 42)
                                            };
 
         public override float AvgTotHeal
@@ -707,7 +711,7 @@ namespace Rawr.HolyPriest
         }
 
         public BindingHeal(Stats stats, Character character)
-            : base("Binding Heal", stats, character, SpellRankTable, 27, 1.5f / 3.5f, Color.Purple)
+            : base("Binding Heal", stats, character, SpellRankTable, 27, 1.5f / 3.5f, Color.FromArgb(255, 128, 0, 128))
         {
             Calculate(stats, character);
         }
@@ -785,7 +789,7 @@ namespace Rawr.HolyPriest
         }
 
         public PrayerOfMending(Stats stats, Character character, int targets)
-            : base(string.Format("Prayer of Mending ({0} targets)", targets), stats, character, SpellRankTable, 15, 1.5f / 3.5f, Color.Cyan)
+            : base(string.Format("Prayer of Mending ({0} targets)", targets), stats, character, SpellRankTable, 15, 1.5f / 3.5f, Color.FromArgb(255, 0, 255, 255))
         {
             Targets = targets;
             Calculate(stats, character);
@@ -871,7 +875,7 @@ namespace Rawr.HolyPriest
         }
 
         public PowerWordShield(Stats stats, Character character)
-            : base("Power Word Shield", stats, character, SpellRankTable, 23, 1.5f / 3.5f, Color.SlateGray)
+            : base("Power Word Shield", stats, character, SpellRankTable, 23, 1.5f / 3.5f, Color.FromArgb(255, 112, 128, 144))
         {
             Calculate(stats, character);
         }
@@ -931,7 +935,7 @@ namespace Rawr.HolyPriest
         }
 
         public Lightwell(Stats stats, Character character)
-            : base("Lightwell", stats, character, SpellRankTable, 17, 1f, 6, Color.Gray)
+            : base("Lightwell", stats, character, SpellRankTable, 17, 1f, 6, Color.FromArgb(255, 128, 128, 128))
         {
             Calculate(stats, character);
         }
@@ -975,7 +979,7 @@ namespace Rawr.HolyPriest
         };
 
         public Penance(Stats stats, Character character)
-            : base("Penance", stats, character, SpellRankTable, 16, 3f / 3.5f, Color.Gray)
+            : base("Penance", stats, character, SpellRankTable, 16, 3f / 3.5f, Color.FromArgb(255, 128, 128, 128))
         {
             Calculate(stats, character);
         }
@@ -1037,7 +1041,7 @@ namespace Rawr.HolyPriest
     public class GiftOfTheNaaru : Spell
     {
         public GiftOfTheNaaru(Stats stats, Character character)
-            : base("Gift of the Naaru", stats, character, new List<SpellData>() { new SpellData(1, 1, character.Level*15+35, character.Level*15+35, 1.5f) }, 0, 15f / 15f, 15f, Color.Green)
+            : base("Gift of the Naaru", stats, character, new List<SpellData>() { new SpellData(1, 1, character.Level*15+35, character.Level*15+35, 1.5f) }, 0, 15f / 15f, 15f, Color.FromArgb(255, 0, 128, 0))
         {
             Calculate(stats, character);
         }
@@ -1076,7 +1080,7 @@ namespace Rawr.HolyPriest
         };
 
         public DivineHymn(Stats stats, Character character)
-            : base("Divine Hymn", stats, character, SpellRankTable, 63, 8f / 3.5f, 8f, Color.White)
+            : base("Divine Hymn", stats, character, SpellRankTable, 63, 8f / 3.5f, 8f, Color.FromArgb(255, 255, 255, 255))
         {
             Calculate(stats, character);
         }
@@ -1127,7 +1131,7 @@ namespace Rawr.HolyPriest
     public class Dispel : Spell
     {
         public Dispel(Stats stats, Character character)
-            : base("Dispel", stats, character, new List<SpellData>() { new SpellData(1, 30, 0, 0, 0) }, 12, 0f, Color.Gray)
+            : base("Dispel", stats, character, new List<SpellData>() { new SpellData(1, 30, 0, 0, 0) }, 12, 0f, Color.FromArgb(255, 128, 128, 128))
         {
             Calculate(stats, character);
         }
@@ -1155,7 +1159,7 @@ namespace Rawr.HolyPriest
     public class MassDispel : Spell
     {
         public MassDispel(Stats stats, Character character)
-            : base("MassDispel", stats, character, new List<SpellData>() { new SpellData(1, 30, 0, 0, 1.5f) }, 36, 0f, Color.Gray)
+            : base("MassDispel", stats, character, new List<SpellData>() { new SpellData(1, 30, 0, 0, 1.5f) }, 36, 0f, Color.FromArgb(255, 128, 128, 128))
         {
             Calculate(stats, character);
         }
@@ -1179,7 +1183,7 @@ namespace Rawr.HolyPriest
     public class Resurrection : Spell
     {
         public Resurrection(Stats stats, Character character)
-            : base("Resurrection", stats, character, new List<SpellData>() { new SpellData(1, 10, 0, 0, 10f) }, 60, 0, Color.Gray)
+            : base("Resurrection", stats, character, new List<SpellData>() { new SpellData(1, 10, 0, 0, 10f) }, 60, 0, Color.FromArgb(255, 128, 128, 128))
         {
             Calculate(stats, character);
         }

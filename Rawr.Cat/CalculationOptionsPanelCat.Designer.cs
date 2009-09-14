@@ -1,4 +1,4 @@
-﻿namespace Rawr
+﻿namespace Rawr.Cat
 {
 	partial class CalculationOptionsPanelCat
 	{

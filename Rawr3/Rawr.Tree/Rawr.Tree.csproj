@@ -59,8 +59,8 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Tree\CalculationsOptionsTree.cs">
-      <Link>CalculationsOptionsTree.cs</Link>
+    <Compile Include="..\..\Rawr.Tree\CalculationOptionsTree.cs">
+      <Link>CalculationOptionsTree.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Tree\CalculationsTree.cs">
       <Link>CalculationsTree.cs</Link>

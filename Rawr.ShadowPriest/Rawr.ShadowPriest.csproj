@@ -89,6 +89,7 @@
     <Compile Include="CalculationOptionsPanelShadowPriest.Designer.cs">
       <DependentUpon>CalculationOptionsPanelShadowPriest.cs</DependentUpon>
     </Compile>
+    <Compile Include="CalculationOptionsShadowPriest.cs" />
     <Compile Include="CalculationsShadowPriest.cs" />
     <Compile Include="CharacterCalculationsShadowPriest.cs" />
     <Compile Include="ComparisonCalculationShadowPriest.cs" />

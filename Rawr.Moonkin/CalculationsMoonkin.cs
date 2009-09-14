@@ -268,8 +268,8 @@ namespace Rawr.Moonkin
                 if (subColors == null)
                 {
                     subColors = new Dictionary<string, System.Drawing.Color>();
-                    subColors.Add("Sustained Damage", System.Drawing.Color.Blue);
-                    subColors.Add("Burst Damage", System.Drawing.Color.Red);
+                    subColors.Add("Sustained Damage", System.Drawing.Color.FromArgb(255, 0, 0, 255));
+                    subColors.Add("Burst Damage", System.Drawing.Color.FromArgb(255, 255, 0, 0));
                 }
                 return subColors;
             }

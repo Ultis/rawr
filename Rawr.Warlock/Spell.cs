@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+#if RAWR3
+using System.Windows.Media;
+#else
 using System.Drawing;
+#endif
 using System.Text;
 using System.Globalization;
 
@@ -337,7 +341,7 @@ namespace Rawr.Warlock
         };
 
         public ShadowBolt(Stats stats, Character character)
-            : base("Shadow Bolt", stats, character, SpellRankTable, 17, 3f, 1.5f, 0f, 3f / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Destruction) 
+            : base("Shadow Bolt", stats, character, SpellRankTable, 17, 3f, 1.5f, 0f, 3f / 3.5f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Destruction) 
         {
         }
 
@@ -372,7 +376,7 @@ namespace Rawr.Warlock
         };
 
         public Incinerate(Stats stats, Character character)
-            : base("Incinerate", stats, character, SpellRankTable, 14, 2.5f, 1.5f, 0f, 2.5f / 3.5f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
+            : base("Incinerate", stats, character, SpellRankTable, 14, 2.5f, 1.5f, 0f, 2.5f / 3.5f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Fire, SpellTree.Destruction) 
         {
         }
 
@@ -423,7 +427,7 @@ namespace Rawr.Warlock
         };
 
         public CurseOfAgony(Stats stats, Character character)
-            : base("Curse of Agony", stats, character, SpellRankTable, 10, 0f, 0, 24f, 1.2f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Curse of Agony", stats, character, SpellRankTable, 10, 0f, 0, 24f, 1.2f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 
@@ -456,7 +460,7 @@ namespace Rawr.Warlock
         };
 
         public CurseOfDoom(Stats stats, Character character)
-            : base("Curse of Doom", stats, character, SpellRankTable, 15, 0f, 0, 60f, 2f, 30, 60f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Curse of Doom", stats, character, SpellRankTable, 15, 0f, 0, 60f, 2f, 30, 60f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 
@@ -483,7 +487,7 @@ namespace Rawr.Warlock
         };
 
         public Corruption(Stats stats, Character character)
-            : base("Corruption", stats, character, SpellRankTable, 14, 0f, 0, 18f, 1.2f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Corruption", stats, character, SpellRankTable, 14, 0f, 0, 18f, 1.2f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 
@@ -517,7 +521,7 @@ namespace Rawr.Warlock
         };
 
         public SiphonLife(Stats stats, Character character)
-            : base("Siphon Life", stats, character, SpellRankTable, 16, 0f, 0, 30f, 1f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Siphon Life", stats, character, SpellRankTable, 16, 0f, 0, 30f, 1f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 
@@ -542,7 +546,7 @@ namespace Rawr.Warlock
         };
 
         public UnstableAffliction(Stats stats, Character character) 
-            : base("Unstable Affliction", stats, character, SpellRankTable, 15, 1.5f, 0, 15f, 1f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Unstable Affliction", stats, character, SpellRankTable, 15, 1.5f, 0, 15f, 1f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 
@@ -583,7 +587,7 @@ namespace Rawr.Warlock
         };
 
         public DeathCoil(Stats stats, Character character)
-            : base("Death Coil", stats, character, SpellRankTable, 23, 0f, 0, 0f, 0.22f, 30, 120f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Death Coil", stats, character, SpellRankTable, 23, 0f, 0, 0f, 0.22f, 30, 120f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 
@@ -612,7 +616,7 @@ namespace Rawr.Warlock
         };
 
         public DrainLife(Stats stats, Character character)
-            : base("Drain Life", stats, character, SpellRankTable, 17, 5f, 0, 0f, 5f / 2 / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Drain Life", stats, character, SpellRankTable, 17, 5f, 0, 0f, 5f / 2 / 3.5f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 
@@ -641,7 +645,7 @@ namespace Rawr.Warlock
         };
 
         public DrainSoul(Stats stats, Character character)
-            : base("Drain Soul", stats, character, SpellRankTable, 14, 15f, 0, 15f / (1 + stats.SpellHaste), 5f / 2 / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Drain Soul", stats, character, SpellRankTable, 14, 15f, 0, 15f / (1 + stats.SpellHaste), 5f / 2 / 3.5f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 
@@ -670,7 +674,7 @@ namespace Rawr.Warlock
         };
 
         public Haunt(Stats stats, Character character)
-            : base("Haunt", stats, character, SpellRankTable, 12, 1.5f, 1.5f, 0f, 1.5f / 3.5f, 30, 8f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Haunt", stats, character, SpellRankTable, 12, 1.5f, 1.5f, 0f, 1.5f / 3.5f, 30, 8f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 
@@ -708,7 +712,7 @@ namespace Rawr.Warlock
         };
 
         public SeedOfCorruption(Stats stats, Character character)
-            : base("Seed of Corruption", stats, character, SpellRankTable, 34, 2f, 1.5f, 18f, 1.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Seed of Corruption", stats, character, SpellRankTable, 34, 2f, 1.5f, 18f, 1.5f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 
@@ -740,7 +744,7 @@ namespace Rawr.Warlock
         };
 
         public Shadowflame(Stats stats, Character character)
-            : base("Shadowflame", stats, character, SpellRankTable, 2, 0f, 1.5f, 8f, 1.5f / 3.5f, 10, 15f, Color.Gold, MagicSchool.Shadow, SpellTree.Destruction) 
+            : base("Shadowflame", stats, character, SpellRankTable, 2, 0f, 1.5f, 8f, 1.5f / 3.5f, 10, 15f, Color.FromArgb(255, 255, 215, 0), MagicSchool.Shadow, SpellTree.Destruction) 
         {
         }
 
@@ -784,7 +788,7 @@ namespace Rawr.Warlock
         };
 
         public Shadowburn(Stats stats, Character character)
-            : base("Shadowburn", stats, character, SpellRankTable, 20, 0f, 1.5f, 0f, 1.5f / 3.5f, 20, 15f, Color.Red, MagicSchool.Shadow, SpellTree.Destruction) 
+            : base("Shadowburn", stats, character, SpellRankTable, 20, 0f, 1.5f, 0f, 1.5f / 3.5f, 20, 15f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Destruction) 
         {
         }
 
@@ -818,7 +822,7 @@ namespace Rawr.Warlock
         };
 
         public Shadowfury(Stats stats, Character character)
-            : base("Shadowfury", stats, character, SpellRankTable, 27, 0f, 1.5f, 0f, 0.195f, 30, 20f, Color.Red, MagicSchool.Shadow, SpellTree.Destruction) 
+            : base("Shadowfury", stats, character, SpellRankTable, 27, 0f, 1.5f, 0f, 0.195f, 30, 20f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Destruction) 
         {
         }
 
@@ -852,7 +856,7 @@ namespace Rawr.Warlock
         };
 
         public Immolate(Stats stats, Character character) 
-            : base("Immolate", stats, character, SpellRankTable, 17, 2f, 1.5f, 15f, 2f / 3.5f, 30, 0f, Color.Gold, MagicSchool.Fire, SpellTree.Destruction) 
+            : base("Immolate", stats, character, SpellRankTable, 17, 2f, 1.5f, 15f, 2f / 3.5f, 30, 0f, Color.FromArgb(255, 255, 215, 0), MagicSchool.Fire, SpellTree.Destruction) 
         {
         }
 
@@ -909,7 +913,7 @@ namespace Rawr.Warlock
         };
 
         public RainOfFire(Stats stats, Character character)
-            : base("Rain of Fire", stats, character, SpellRankTable, 57, 8f, 1.5f, 0f, 1.15f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
+            : base("Rain of Fire", stats, character, SpellRankTable, 57, 8f, 1.5f, 0f, 1.15f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Fire, SpellTree.Destruction) 
         {
         }
 
@@ -944,7 +948,7 @@ namespace Rawr.Warlock
         };
 
         public Hellfire(Stats stats, Character character)
-            : base("Hellfire", stats, character, SpellRankTable, 64, 15f, 0, 0f, 15f / 2 / 3.5f, 10, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
+            : base("Hellfire", stats, character, SpellRankTable, 64, 15f, 0, 0f, 15f / 2 / 3.5f, 10, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Fire, SpellTree.Destruction) 
         {
         }
 
@@ -973,7 +977,7 @@ namespace Rawr.Warlock
         };
 
         public SearingPain(Stats stats, Character character)
-            : base("Searing Pain", stats, character, SpellRankTable, 8, 1.5f, 1.5f, 0f, 1.5f / 3.5f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
+            : base("Searing Pain", stats, character, SpellRankTable, 8, 1.5f, 1.5f, 0f, 1.5f / 3.5f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Fire, SpellTree.Destruction) 
         {
         }
 
@@ -1014,7 +1018,7 @@ namespace Rawr.Warlock
         };
 
         public SoulFire(Stats stats, Character character)
-            : base("Soul Fire", stats, character, SpellRankTable, 9, 6f, 1.5f, 0f, 1.15f, 30, 0f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
+            : base("Soul Fire", stats, character, SpellRankTable, 9, 6f, 1.5f, 0f, 1.15f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Fire, SpellTree.Destruction) 
         {
         }
 
@@ -1051,7 +1055,7 @@ namespace Rawr.Warlock
         };
 
         public Conflagrate(Stats stats, Character character)
-            : base("Conflagrate", stats, character, SpellRankTable, 12, 0f, 1.5f, 0f, 1.5f / 3.5f, 30, 10f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
+            : base("Conflagrate", stats, character, SpellRankTable, 12, 0f, 1.5f, 0f, 1.5f / 3.5f, 30, 10f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Fire, SpellTree.Destruction) 
         {
         }
 
@@ -1092,7 +1096,7 @@ namespace Rawr.Warlock
         };
 
         public ChaosBolt(Stats stats, Character character)
-            : base("Chaos Bolt", stats, character, SpellRankTable, 7, 2.5f, 1.5f, 0f, 2.5f / 3.5f, 30, 12f, Color.Red, MagicSchool.Fire, SpellTree.Destruction) 
+            : base("Chaos Bolt", stats, character, SpellRankTable, 7, 2.5f, 1.5f, 0f, 2.5f / 3.5f, 30, 12f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Fire, SpellTree.Destruction) 
         {
         } 
 
@@ -1147,7 +1151,7 @@ namespace Rawr.Warlock
         };
 
         public LifeTap(Stats stats, Character character)
-            : base("Life Tap", stats, character, SpellRankTable, 0, 0f, 0f, 0f, 0f, 0, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction) 
+            : base("Life Tap", stats, character, SpellRankTable, 0, 0f, 0f, 0f, 0f, 0, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
         {
         }
 

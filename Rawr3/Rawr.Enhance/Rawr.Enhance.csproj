@@ -51,6 +51,9 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Enhance\CalculationOptionsEnhance.cs">
+      <Link>CalculationOptionsEnhance.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Enhance\CalculationsEnhance.cs">
       <Link>CalculationsEnhance.cs</Link>
     </Compile>
@@ -72,7 +75,6 @@
     <Compile Include="..\..\Rawr.Enhance\StatsSpecialEffects.cs">
       <Link>StatsSpecialEffects.cs</Link>
     </Compile>
-    <Compile Include="CalculationOptionsEnhance.cs" />
     <Compile Include="CalculationOptionsPanelEnhance.xaml.cs">
       <DependentUpon>CalculationOptionsPanelEnhance.xaml</DependentUpon>
     </Compile>

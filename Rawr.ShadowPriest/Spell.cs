@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+#if RAWR3
+using System.Windows.Media;
+#else
 using System.Drawing;
+#endif
 using System.Text;
 
 namespace Rawr.ShadowPriest {
@@ -165,7 +169,7 @@ namespace Rawr.ShadowPriest {
             new SpellData(12, 80, 1380, 1380)
         };       
         public ShadowWordPain(Stats stats, Character character)
-            : base("Shadow Word: Pain", stats, character, SpellRankTable, 22, 0, 0, 18f, 18f / 15f / 1.1f, 30, 0f, Color.Red)
+			: base("Shadow Word: Pain", stats, character, SpellRankTable, 22, 0, 0, 18f, 18f / 15f / 1.1f, 30, 0f, Color.FromArgb(255, 255, 0, 0))
         {
             Calculate(stats, character);
         }
@@ -205,7 +209,7 @@ namespace Rawr.ShadowPriest {
             new SpellData( 5, 80, 850, 850)
         };
         public VampiricTouch(Stats stats, Character character)
-            : base("Vampiric Touch", stats, character, SpellRankTable, 16, 1.5f, 0, 15f, 15f / 15f * 1.9f, 30, 0f, Color.Blue)
+            : base("Vampiric Touch", stats, character, SpellRankTable, 16, 1.5f, 0, 15f, 15f / 15f * 1.9f, 30, 0f, Color.FromArgb(255, 0, 0, 255))
         {
             Calculate(stats, character);
         }
@@ -259,7 +263,7 @@ namespace Rawr.ShadowPriest {
             new SpellData(13, 79, 992, 1048)
         };
         public MindBlast(Stats stats, Character character)
-            : base("Mind Blast", stats, character, SpellRankTable, 17, 1.5f, 1.5f, 0, 1.5f / 3.5f, 30, 8f, Color.Gold)
+			: base("Mind Blast", stats, character, SpellRankTable, 17, 1.5f, 1.5f, 0, 1.5f / 3.5f, 30, 8f, Color.FromArgb(255, 255, 192, 0))
         {
             Calculate(stats, character);
         }
@@ -305,7 +309,7 @@ namespace Rawr.ShadowPriest {
             new SpellData( 4, 80, 750, 870)
         };
         public ShadowWordDeath(Stats stats, Character character)
-            : base("Shadow Word: Death", stats, character, SpellRankTable, 12, 0, 1.5f, 0, 1.5f / 3.5f, 30, 12f, Color.Gold)
+            : base("Shadow Word: Death", stats, character, SpellRankTable, 12, 0, 1.5f, 0, 1.5f / 3.5f, 30, 12f, Color.FromArgb(255, 255, 215, 0))
         {
             Calculate(stats, character);
         }
@@ -348,7 +352,7 @@ namespace Rawr.ShadowPriest {
             new SpellData( 9, 80, 588, 588)
         };
         public MindFlay(Stats stats, Character character)
-            : base("Mind Flay", stats, character, SpellRankTable, 9, 3f, 1.5f, 0, 3f / 3.5f, 20, 0f, Color.LightBlue)
+            : base("Mind Flay", stats, character, SpellRankTable, 9, 3f, 1.5f, 0, 3f / 3.5f, 20, 0f, Color.FromArgb(255, 173, 216, 230))
         {
             Calculate(stats, character);
         }
@@ -414,7 +418,7 @@ namespace Rawr.ShadowPriest {
             new SpellData(14, 80, 2230, 2230)
         };
         public PowerWordShield(Stats stats, Character character)
-            : base("Power Word: Shield", stats, character, SpellRankTable, 23, 0, 0, 0, 1.5f / 3.5f, 30, 4f, Color.Brown)
+            : base("Power Word: Shield", stats, character, SpellRankTable, 23, 0, 0, 0, 1.5f / 3.5f, 30, 4f, Color.FromArgb(255, 165, 42, 42))
         {
             Calculate(stats, character);
         }
@@ -443,7 +447,7 @@ namespace Rawr.ShadowPriest {
         };
         public float HealthConvertionCoef { get; protected set; }
         public VampiricEmbrace(Stats stats, Character character)
-            : base("Vampiric Embrace", stats, character, SpellRankTable, 2, 0, 0, 60f, 0, 30, 10f, Color.Green)
+            : base("Vampiric Embrace", stats, character, SpellRankTable, 2, 0, 0, 60f, 0, 30, 10f, Color.FromArgb(255, 0, 128, 0))
         {
             HealthConvertionCoef = 0.15f;
             Calculate(stats, character);
@@ -482,7 +486,7 @@ namespace Rawr.ShadowPriest {
         public float CastDamageCrit { get { return AvgHit * ApplyDamageCoefficient * 1.5f; } }
         public override float AvgDamage { get { return (AvgHit + CastDamage) * (1f - CritChance) + (AvgCrit + CastDamageCrit) * CritChance; } }
         public DevouringPlague(Stats stats, Character character)
-            : base("Devouring Plague", stats, character, SpellRankTable, 25, 0, 0, 24, 24f / 15f * 0.925f, 30, 24, Color.Purple)
+            : base("Devouring Plague", stats, character, SpellRankTable, 25, 0, 0, 24, 24f / 15f * 0.925f, 30, 24, Color.FromArgb(255, 128, 0, 128))
         {
             Calculate(stats, character);
         }
@@ -530,7 +534,7 @@ namespace Rawr.ShadowPriest {
             new SpellData(1, 0, 285, 475)
         };
         public TimbalProc(Stats stats, Character character)
-            : base("TimbalProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.Black)
+            : base("TimbalProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.FromArgb(255, 0, 0, 0))
         {
             Calculate(stats, character);
         }
@@ -558,7 +562,7 @@ namespace Rawr.ShadowPriest {
             new SpellData(1, 0, 788, 1312)
         };
         public ExtractProc(Stats stats, Character character)
-            : base("ExtractProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.Black)
+            : base("ExtractProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.FromArgb(255, 0, 0, 0))
         {
             Calculate(stats, character);
         }
@@ -586,7 +590,7 @@ namespace Rawr.ShadowPriest {
             new SpellData(1, 0, 1168, 1752)
         };
         public PendulumProc(Stats stats, Character character)
-            : base("PendulumProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.Black)
+            : base("PendulumProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.FromArgb(255, 0, 0, 0))
         {
             Calculate(stats, character);
         }
@@ -625,7 +629,7 @@ namespace Rawr.ShadowPriest {
             new SpellData(12, 79, 707, 793)
         };
         public Smite(Stats stats, Character character)
-            : base("Smite", stats, character, SpellRankTable, 15, 2.5f, 1.5f, 0, 2.5f / 3.5f, 30, 0f, Color.Yellow)
+            : base("Smite", stats, character, SpellRankTable, 15, 2.5f, 1.5f, 0, 2.5f / 3.5f, 30, 0f, Color.FromArgb(255, 255, 255, 0))
         {
             Calculate(stats, character);
         }
@@ -676,7 +680,7 @@ namespace Rawr.ShadowPriest {
         public override float AvgDamage { get { return AvgHit * (1f - CritChance) + AvgCrit * CritChance + DotDamage; } }
         public override float DpCT { get { return AvgDamage / CastTime; } }
         public override float DpS { get { return AvgDamage / CastTime; } }
-        public HolyFire(Stats stats, Character character) : base("Holy Fire", stats, character, SpellRankTable, 11, 2.0f, 1.5f, 7f, 2f / 3.5f, 30, 10f, Color.Gold) {
+        public HolyFire(Stats stats, Character character) : base("Holy Fire", stats, character, SpellRankTable, 11, 2.0f, 1.5f, 7f, 2f / 3.5f, 30, 10f, Color.FromArgb(255, 255, 215, 0)) {
             Calculate(stats, character);
             foreach (SpellData sd in SpellRankTable) {
                 if (character.Level > sd.Level) {
@@ -731,7 +735,7 @@ namespace Rawr.ShadowPriest {
             new SpellData(4, 80, 864, 864)
         };
         public Penance(Stats stats, Character character)
-            : base("Penance", stats, character, SpellRankTable, 16, 2f, 1.5f, 0, 2.4f / 3.5f, 30, 10f, Color.Orange)
+            : base("Penance", stats, character, SpellRankTable, 16, 2f, 1.5f, 0, 2.4f / 3.5f, 30, 10f, Color.FromArgb(255, 255, 165, 0))
         {
             Calculate(stats, character);
         }
@@ -781,7 +785,7 @@ namespace Rawr.ShadowPriest {
         float Swings = 10f;
         public override float DpCT { get { return AvgDamage * Swings / GlobalCooldown; } }
         public override float DpS { get { return AvgDamage * Swings / DebuffDuration; } }
-        public Shadowfiend(Stats stats, Character character) : base("Shadowfiend", stats, character, SpellRankTable, 0, 0f, 2.0f, 10f, 1.5f / 3.5f * 0.9f, 30, (5f - character.PriestTalents.VeiledShadows * 1f) * 60f, Color.Black)
+        public Shadowfiend(Stats stats, Character character) : base("Shadowfiend", stats, character, SpellRankTable, 0, 0f, 2.0f, 10f, 1.5f / 3.5f * 0.9f, 30, (5f - character.PriestTalents.VeiledShadows * 1f) * 60f, Color.FromArgb(255, 0, 0, 0))
         {   // Coefficient is Spell Power * 15 seconds over 3.5 seconds, with a 10% penalty.
             Calculate(stats, character);
         }

@@ -320,9 +320,9 @@ the Threat Scale defined on the Options tab.",
 				if (_subPointNameColors == null)
 				{
 					_subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-					_subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
-					_subPointNameColors.Add("Survival", System.Drawing.Color.Blue);
-                    _subPointNameColors.Add("Threat", System.Drawing.Color.Green);
+					_subPointNameColors.Add("Mitigation", System.Drawing.Color.FromArgb(255, 255, 0, 0));
+					_subPointNameColors.Add("Survival", System.Drawing.Color.FromArgb(255, 0, 0, 255));
+                    _subPointNameColors.Add("Threat", System.Drawing.Color.FromArgb(255, 0, 128, 0));
 				}
 				return _subPointNameColors;
 			}

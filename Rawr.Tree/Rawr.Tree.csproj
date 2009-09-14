@@ -89,7 +89,7 @@
     <Compile Include="CalculationOptionsPanelTree.Designer.cs">
       <DependentUpon>CalculationOptionsPanelTree.cs</DependentUpon>
     </Compile>
-    <Compile Include="CalculationsOptionsTree.cs" />
+    <Compile Include="CalculationOptionsTree.cs" />
     <Compile Include="CalculationsTree.cs" />
     <Compile Include="CharacterCalculationsTree.cs" />
     <Compile Include="ComparisonCalculationTree.cs" />

@@ -91,6 +91,7 @@
     <Compile Include="CalculationOptionsPanelRestoSham.Designer.cs">
       <DependentUpon>CalculationOptionsPanelRestoSham.cs</DependentUpon>
     </Compile>
+    <Compile Include="CalculationOptionsRestoSham.cs" />
     <Compile Include="CalculationsRestoSham.cs" />
     <Compile Include="CharacterCalculationsRestoSham.cs" />
     <Compile Include="ComparisonCalculationRestoSham.cs" />

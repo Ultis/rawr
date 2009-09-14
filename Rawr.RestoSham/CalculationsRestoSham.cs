@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+#if RAWR3
+using System.Windows.Media;
+#else
+using System.Drawing;
+#endif
 
 namespace Rawr.RestoSham
 {
     [Rawr.Calculations.RawrModelInfo("RestoSham", "Spell_Nature_Magicimmunity", CharacterClass.Shaman)]
-    class CalculationsRestoSham : CalculationsBase
+    public class CalculationsRestoSham : CalculationsBase
     {
         #region Gemming Template Area
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -121,21 +126,24 @@ namespace Rawr.RestoSham
             character.ActiveBuffs.Add(Buff.GetBuffByName("Earthliving Weapon"));
         }
         private string[] _characterDisplayCalcLabels = null;
-        private Dictionary<string, System.Drawing.Color> _subpointColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+
+
+        private Dictionary<string, Color> _subpointColors = null;
+        public override Dictionary<string, Color> SubPointNameColors
         {
             get
             {
                 if (_subpointColors == null)
                 {
-                    _subpointColors = new Dictionary<string, System.Drawing.Color>();
-                    _subpointColors.Add("Burst", System.Drawing.Color.Red);
-                    _subpointColors.Add("Sustained", System.Drawing.Color.Blue);
-                    _subpointColors.Add("Survival", System.Drawing.Color.Green);
+                    _subpointColors = new Dictionary<string, Color>();
+                    _subpointColors.Add("Burst", Color.FromArgb(255, 255, 0, 0));
+					_subpointColors.Add("Sustained", Color.FromArgb(255, 0, 0, 255));
+					_subpointColors.Add("Survival", Color.FromArgb(255, 0, 128, 0));
                 }
                 return _subpointColors;
             }
         }
+
         public override string[] CharacterDisplayCalculationLabels
         {
             get
@@ -225,8 +233,13 @@ namespace Rawr.RestoSham
         //
         // Calculations options panel:
         //
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
+#if RAWR3
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+		public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
+		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+		public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get
             {
@@ -326,7 +339,7 @@ namespace Rawr.RestoSham
                 stats.SpellHaste = .3f / (60 * options.FightLength);
             if (options.Heroism.Equals("Yes"))
                 stats.SpellHaste = .3f / (60 * options.FightLength);
-            calcStats.TotalManaPool = (((((float)Math.Truncate(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
+            calcStats.TotalManaPool = (((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
                 ((character.ShamanTalents.GlyphofManaTideTotem ? 0.4f : 0)))))) * (options.ManaTideEveryCD ? 1 : 0)) + 
                 stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
                 (options.BurstPercentage * .01f)) + ((stats.Mp5 / 5) * 60 * options.FightLength) - HeroismMana;

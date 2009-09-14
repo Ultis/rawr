@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-
+#if RAWR3
+using System.Windows.Media;
+#else
+using System.Drawing;
+#endif
 using Rawr;
 
 namespace Rawr.ShadowPriest
@@ -219,31 +223,31 @@ namespace Rawr.ShadowPriest
         private string _currentChartName = null;
         private float _currentChartTotal = 0;
 
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+        private Dictionary<string, Color> _subPointNameColors = null;
+        public override Dictionary<string, Color> SubPointNameColors
         {
             get
             {
-                _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+                _subPointNameColors = new Dictionary<string, Color>();
                 switch (_currentChartName)
                 {
                     case "Mana Sources":
-                        _subPointNameColors.Add(string.Format("MP5 Sources ({0} Total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
+						_subPointNameColors.Add(string.Format("MP5 Sources ({0} Total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 0, 0, 255));
                         break;
                     case "DPS Sources":
-                        _subPointNameColors.Add(string.Format("DPS Sources ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Red);
+						_subPointNameColors.Add(string.Format("DPS Sources ({0} total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 255, 0, 0));
                         break;
                     case "Mana Usage":
-                        _subPointNameColors.Add(string.Format("Mana Usage ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
+						_subPointNameColors.Add(string.Format("Mana Usage ({0} total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 0, 0, 255));
                         break;
                     case "Haste Rating Gain":
-                        _subPointNameColors.Add(string.Format("DPS-Burst"), System.Drawing.Color.Red);
-                        _subPointNameColors.Add(string.Format("DPS-Sustained"), System.Drawing.Color.Blue);
+						_subPointNameColors.Add(string.Format("DPS-Burst"), Color.FromArgb(255, 255, 0, 0));
+						_subPointNameColors.Add(string.Format("DPS-Sustained"), Color.FromArgb(255, 0, 0, 255));
                         break;
                     default:
-                        _subPointNameColors.Add("DPS-Burst", System.Drawing.Color.Red);
-                        _subPointNameColors.Add("DPS-Sustained", System.Drawing.Color.Blue);
-                        _subPointNameColors.Add("Survivability", System.Drawing.Color.Green);
+						_subPointNameColors.Add("DPS-Burst", Color.FromArgb(255, 255, 0, 0));
+						_subPointNameColors.Add("DPS-Sustained", Color.FromArgb(255, 0, 0, 255));
+						_subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
                         break;
                 }
                 _currentChartName = null;
@@ -318,8 +322,13 @@ namespace Rawr.ShadowPriest
             }
         }
 
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
+#if RAWR3
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+		public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
+		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+		public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get {
                 if (_calculationOptionsPanel == null)

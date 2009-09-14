@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using System.Globalization;
+#if RAWR3
+using System.Windows.Media;
+#else
+using System.Drawing;
+#endif
 using Rawr;
 
 namespace Rawr.Warlock 
@@ -87,21 +92,21 @@ namespace Rawr.Warlock
         private string _currentChartName;
         private float _currentChartTotal;
 
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors 
+        private Dictionary<string, Color> _subPointNameColors;
+        public override Dictionary<string, Color> SubPointNameColors 
         {
             get 
             {
-                _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+                _subPointNameColors = new Dictionary<string, Color>();
                 switch (_currentChartName) 
                 {
-                    case "Mana Sources": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "Mana Sources ({0} Total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), System.Drawing.Color.Blue); break;
-                    case "DPS Sources": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "DPS Sources ({0} total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), System.Drawing.Color.Red); break;
-                    case "Mana Usage": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "Mana Usage ({0} total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), System.Drawing.Color.Blue); break;
-                    case "Haste Rating Gain": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "DPS"), System.Drawing.Color.Red); break;
+					case "Mana Sources": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "Mana Sources ({0} Total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), Color.FromArgb(255, 0, 0, 255)); break;
+					case "DPS Sources": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "DPS Sources ({0} total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), Color.FromArgb(255, 255, 0, 0)); break;
+					case "Mana Usage": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "Mana Usage ({0} total)", _currentChartTotal.ToString("0", CultureInfo.InvariantCulture)), Color.FromArgb(255, 0, 0, 255)); break;
+					case "Haste Rating Gain": _subPointNameColors.Add(String.Format(CultureInfo.InvariantCulture, "DPS"), Color.FromArgb(255, 255, 0, 0)); break;
                     default:
-                        _subPointNameColors.Add("DPS", System.Drawing.Color.Red);
-                        _subPointNameColors.Add("Pet DPS", System.Drawing.Color.Blue);
+                        _subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
+                        _subPointNameColors.Add("Pet DPS", Color.FromArgb(255, 0, 0, 255));
                         break;
                 }
                 _currentChartName = null;
@@ -156,8 +161,13 @@ namespace Rawr.Warlock
             }
         }
 
-        private CalculationOptionsPanelBase _calculationOptionsPanel;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel 
+#if RAWR3
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+		public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
+		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+		public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
         {
             get 
             {

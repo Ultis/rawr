@@ -51,6 +51,9 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Rogue\CalculationOptionsRogue.cs">
+      <Link>CalculationOptionsRogue.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Rogue\CalculationsRogue.cs">
       <Link>CalculationsRogue.cs</Link>
     </Compile>
@@ -153,7 +156,6 @@
     <Compile Include="CalculationOptionsPanelRogue.xaml.cs">
       <DependentUpon>CalculationOptionsPanelRogue.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalculationOptionsRogue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

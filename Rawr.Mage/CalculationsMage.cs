@@ -1067,7 +1067,7 @@ namespace Rawr.Mage
             Brush black25brush = new SolidBrush(Color.FromArgb(25, 0, 0, 0));
 
             string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Crit Rating", "10 Haste Rating", "10 Hit Rating", "10 Intellect", "10 Spirit" };
-            Color[] statColors = new Color[] { Color.Red, Color.DarkBlue, Color.Orange, Color.Olive, Color.YellowGreen, Color.Aqua, Color.Blue };
+            Color[] statColors = new Color[] { Color.FromArgb(255, 255, 0, 0), Color.DarkBlue, Color.FromArgb(255, 255, 165, 0), Color.Olive, Color.FromArgb(255, 154, 205, 50), Color.Aqua, Color.FromArgb(255, 0, 0, 255) };
 
             List<float> X = new List<float>();
             List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
@@ -1092,7 +1092,7 @@ namespace Rawr.Mage
 
                         Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.PotionOfWildMagic, Cooldown.PotionOfSpeed, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect, Cooldown.PowerInfusion };
 						string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Potion of Wild Magic", "Potion of Speed", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Item.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Item.Name : "Trinket 2", "Combustion", "Water Elemental", "Mana Gem Effect", "Power Infusion" };
-						Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.LemonChiffon, Color.Orange, Color.Aqua, Color.Blue, Color.OrangeRed, Color.DarkCyan, Color.DarkGreen, Color.Yellow };
+						Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.FromArgb(255, 128, 0, 128), Color.LemonChiffon, Color.FromArgb(255, 255, 165, 0), Color.Aqua, Color.FromArgb(255, 0, 0, 255), Color.FromArgb(255, 255, 69, 0), Color.DarkCyan, Color.DarkGreen, Color.FromArgb(255, 255, 255, 0) };
                         brushSubPoints = new Brush[cooldownColors.Length];
                         colorSubPointsA = new Color[cooldownColors.Length];
                         colorSubPointsB = new Color[cooldownColors.Length];
@@ -1196,7 +1196,7 @@ namespace Rawr.Mage
                         float mana = calculations.StartingMana;
                         int gemCount = 0;
                         float time = 0;
-                        Color manaFill = Color.FromArgb(50, Color.Blue);
+                        Color manaFill = Color.FromArgb(50, Color.FromArgb(255, 0, 0, 255));
                         float lastMana = mana;
                         float maxMana = calculations.BaseStats.Mana;
                         float maxDps = 100;

@@ -1,6 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if RAWR3
+using System.Windows.Media;
+#else
+using System.Drawing;
+#endif
 using Rawr.Elemental.Estimation;
 
 namespace Rawr.Elemental
@@ -111,8 +116,13 @@ namespace Rawr.Elemental
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = quick, BlueId = lustrous, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
 
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+#if RAWR3
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+		public override ICalculationOptionsPanel CalculationOptionsPanel
+#else
+		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
+#endif
 		{
 			get
 			{
@@ -159,16 +169,16 @@ namespace Rawr.Elemental
 			}
 		}
 
-		private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-		public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+		private Dictionary<string, Color> _subPointNameColors = null;
+		public override Dictionary<string, Color> SubPointNameColors
 		{
 			get
 			{
 				if (_subPointNameColors == null)
 				{
-					_subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-					_subPointNameColors.Add("Burst DPS", System.Drawing.Color.FromArgb(255, 0, 0));
-					_subPointNameColors.Add("Sustained DPS", System.Drawing.Color.FromArgb(0, 0, 255));
+					_subPointNameColors = new Dictionary<string, Color>();
+					_subPointNameColors.Add("Burst DPS", Color.FromArgb(255, 255, 0, 0));
+					_subPointNameColors.Add("Sustained DPS", Color.FromArgb(255, 0, 0, 255));
 				}
 				return _subPointNameColors;
 			}

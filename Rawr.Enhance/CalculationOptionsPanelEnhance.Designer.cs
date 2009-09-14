@@ -1,4 +1,4 @@
-﻿namespace Rawr
+﻿namespace Rawr.Enhance
 {
 	partial class CalculationOptionsPanelEnhance
 	{

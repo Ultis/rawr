@@ -111,37 +111,4 @@ namespace Rawr.Moonkin
             Character.OnCalculationsInvalidated();
         }
     }
-
-	[Serializable]
-	public class CalculationOptionsMoonkin : ICalculationOptionBase
-	{
-		public string GetXml()
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsMoonkin));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
-
-        public CalculationOptionsMoonkin()
-        {
-        }
-
-        public CalculationOptionsMoonkin(Character character)
-        {
-        }
-
-		public int TargetLevel = 83;
-		public float Latency = 0.2f;
-		public float FightLength = 5;
-		public bool Innervate = false;
-		public float InnervateDelay = 1;
-		public bool ManaPots = false;
-		public string ManaPotType = "Runic Mana Potion";
-        public float ReplenishmentUptime = 1.0f;
-        public float TreantLifespan = 1.0f;
-        public string UserRotation = "None";
-	}
 }

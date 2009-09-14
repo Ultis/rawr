@@ -212,7 +212,7 @@ namespace Rawr.Retribution
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("DPS", System.Drawing.Color.Red);
+                    _subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(255, 255, 0, 0));
                 }
                 return _subPointNameColors;
             }

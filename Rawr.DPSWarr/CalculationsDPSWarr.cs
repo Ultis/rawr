@@ -196,8 +196,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     _subPointNameColors.Add("Survivability", System.Windows.Media.Color.FromArgb(255, 64, 128, 32));
 #else
                     _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("DPS", Color.Red);
-                    _subPointNameColors.Add("Survivability", Color.Green);
+                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
 #endif
                 }
                 return _subPointNameColors;

@@ -60,19 +60,69 @@ namespace Rawr.Warlock
             }
         }
 
-        public class EventList : SortedList<float, Event> 
-        {
-            public new void Add(float _key, Event _Value) 
-            {
-                float key = _key;
-                foreach (float basekey in base.Keys) 
-                {
-                    if      (key == basekey) { key += 0.0001f; }
-                    else if (key <  basekey) { break; }
-                }
-                base.Add((float)key, _Value);
-            }
-        }
+		public class EventList //[Astryl] Refactored this to not use SortedList, which isn't part of Silverlight
+		{
+			public List<float> Keys = new List<float>();
+			public List<Event> Values = new List<Event>();
+
+			public void Add(float _key, Event _Value)
+			{
+				float key = _key;
+				int i = 0;
+				for (i = 0; i < Keys.Count; i++)
+				{
+					if (Keys[i] == key) key += 0.0001f;
+					if (Keys[i] > key) break;
+				}
+
+				Keys.Insert(i, key);
+				Values.Insert(i, _Value);
+			}
+
+			public int Count { get { return Keys.Count; } }
+			public void RemoveAt(int index)
+			{
+				Keys.RemoveAt(index);
+				Values.RemoveAt(index);
+			}
+
+			public bool ContainsKey(float key)
+			{
+				return Keys.Contains(key);
+			}
+		}
+
+		public class SpellList
+		{
+			public List<float> Keys = new List<float>();
+			public List<Spell> Values = new List<Spell>();
+
+			public void Add(float _key, Spell _Value)
+			{
+				float key = _key;
+				int i = 0;
+				for (i = 0; i < Keys.Count; i++)
+				{
+					if (Keys[i] == key) key += 0.0001f;
+					if (Keys[i] > key) break;
+				}
+
+				Keys.Insert(i, key);
+				Values.Insert(i, _Value);
+			}
+
+			public int Count { get { return Keys.Count; } }
+			public void RemoveAt(int index)
+			{
+				Keys.RemoveAt(index);
+				Values.RemoveAt(index);
+			}
+
+			public bool ContainsKey(float key)
+			{
+				return Keys.Contains(key);
+			}
+		}
 
         public class Event 
         {
@@ -256,7 +306,7 @@ namespace Rawr.Warlock
         {
             if (SpellPriority.Count == 0) { return; }
             simStats = PlayerStats.Clone();
-            SortedList<float, Spell> CastList = new SortedList<float, Spell>();
+			SpellList CastList = new SpellList();
             events = new EventList();
             maxTime = CalculationOptions.FightLength * 60f;
             currentMana = 0;
@@ -710,9 +760,9 @@ namespace Rawr.Warlock
             float HitsPerSecond = 0;
             float DotTicksPerSecond = 0;
             float PossibleCrits = 0;
-            foreach (KeyValuePair<float, Spell> cast in CastList)
+            foreach (Spell spell in CastList.Values)
             {
-                Spell spell = cast.Value;
+                //Spell spell = cast.Value;
                 CastsPerSecond++;
                 HitsPerSecond += spell.SpellStatistics.HitChance;
                 if (spell.CritChance > 0) PossibleCrits++;
