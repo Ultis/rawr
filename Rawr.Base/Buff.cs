@@ -2367,21 +2367,21 @@ namespace Rawr
             #region Tree Tier 9 set bonuses
             defaultBuffs.Add(new Buff()
             {
-                Name = "Stormrage's Regalia 2 Piece Bonus",
+				Name = "Malfurion's Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { NourishCritBonus = 0.05f },
-                SetName = "Stormrage Regalia",
+				SetName = "Malfurion's Garb",
                 SetThreshold = 2
             });
 
             defaultBuffs.Add(new Buff()
             {
-                Name = "Stormrage's Regalia 4 Piece Bonus",
+				Name = "Malfurion's Garb 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { RejuvenationCrit = 1.0f },
-                SetName = "Stormrage Regalia",
+				SetName = "Malfurion's Garb",
                 SetThreshold = 4
             });
             #endregion
