@@ -689,25 +689,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00";
 
-            calculatedStats.TotalDPS = Rot.MakeRotationandDoDPS() + calculatedStats.Rot._DW_DPS;
-            calculatedStats.WhiteDPS = Rot._WhiteDPS;
+            Rot.MakeRotationandDoDPS(true);
             
             float Health2Surv = stats.Health / 100f;
             calculatedStats.TotalHPS = Rot._HPS_TTL;
             calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv) * calcOpts.SurvScale;
             calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability;
-
-            if (calcOpts.FuryStance) {
-                calculatedStats.WhiteRage = whiteAttacks.whiteRageGenOverDur / calcOpts.Duration;
-                calculatedStats.OtherRage = Rot.RageGenOverDur_Other / calcOpts.Duration;
-                calculatedStats.NeedyRage = Rot.RageNeededOverDur / calcOpts.Duration;
-                calculatedStats.FreeRage  = Rot.FreeRageOverDur / calcOpts.Duration;
-            }else{
-                calculatedStats.WhiteRage = Rot.RageGenWhite;
-                calculatedStats.OtherRage = Rot.RageGenOther;
-                calculatedStats.NeedyRage = Rot.RageNeeded;
-                calculatedStats.FreeRage  = Rot.RageGenWhite + Rot.RageGenOther - Rot.RageNeeded;
-            }
 
             return calculatedStats;
         }
@@ -836,7 +823,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal);
             else Rot = new ArmsRotation(character, statsTotal);
             Rot.Initialize();
-            Rot.MakeRotationandDoDPS();
+            Rot.MakeRotationandDoDPS(false);
 
             // Add some last minute SpecialEffects
             if (Rot.ST.Validated) {

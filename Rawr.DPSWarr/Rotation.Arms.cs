@@ -127,7 +127,7 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Rage Calcs
-        public override float RageNeededOverDur {
+        protected override float RageNeededOverDur {
             get {
                 float SweepingRage = SW.GetRageUseOverDur(_SW_GCDs);
                 float BladestormRage = BLS.GetRageUseOverDur(_BLS_GCDs);
@@ -140,7 +140,7 @@ namespace Rawr.DPSWarr {
                     RendRage + OPRage + TBRage + SDRage;
             }
         }
-        public override float FreeRageOverDur {
+        protected override float FreeRageOverDur {
             get {
                 float sword = SS.GetRageUseOverDur(_SS_Acts);
                 return base.FreeRageOverDur + sword;
@@ -151,7 +151,8 @@ namespace Rawr.DPSWarr {
             // The goggles! They do nothing!
         }
 
-        public float MakeRotationandDoDPS_Above(float PercTimeUnder20) {
+        public void MakeRotationandDoDPS(bool setCalcs, float PercTimeUnder20)
+        {
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
             float FightDuration = CalcOpts.Duration;
@@ -167,11 +168,12 @@ namespace Rawr.DPSWarr {
             float timelostwhilemoving = 0f;
             float percTimeInMovement = 0f;
 
-            if (Char.MainHand == null) { return 0f; }
+            if (Char.MainHand == null) { return; }
 
             // ==== Reasons GCDs would be lost ========
             // Having to Move
-            if (CalcOpts.MovingTargets) {
+            if (CalcOpts.MovingTargets)
+            {
                 timelostwhilemoving = CalcOpts.MovingTargetsTime * (1f - StatS.MovementSpeed);
                 percTimeInMovement = timelostwhilemoving / FightDuration;
                 _Move_GCDs = timelostwhilemoving / LatentGCD;
@@ -182,7 +184,8 @@ namespace Rawr.DPSWarr {
             //float IronWillBonus = (float)Math.Ceiling(20f / 3f * Talents.IronWill) / 100f;
             float BaseStunDur = (float)Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - StatS.StunDurReduc)));
             // Being Stunned or Charmed
-            if (CalcOpts.StunningTargets && CalcOpts.StunningTargetsFreq > 0) {
+            if (CalcOpts.StunningTargets && CalcOpts.StunningTargetsFreq > 0)
+            {
                 // Assume you are Stunned for 3 GCDs (1.5+latency)*3 = ~1.6*3 = ~4.8 seconds per stun
                 // Iron Will reduces the Duration of the stun by 7%,14%,20%
                 // 100% perc means you are stunned the entire fight, the boss is stunning you every third GCD, basically only refreshing his stun
@@ -196,7 +199,8 @@ namespace Rawr.DPSWarr {
                 GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs-IronWillBonus : Stunned\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 // Now let's try and get some of those GCDs back
-                if (Talents.HeroicFury > 0 && _Stunned_Acts > 0f) {
+                if (Talents.HeroicFury > 0 && _Stunned_Acts > 0f)
+                {
                     float hfacts = HF.Activates;
                     _HF_Acts = (float)Math.Min(_Stunned_Acts, hfacts);
                     reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)/1000f*/)));
@@ -204,7 +208,8 @@ namespace Rawr.DPSWarr {
                     GCDUsage += (_HF_Acts > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + HF.Name + " (adds back to GCDs when stunned)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 }
-                if (CHARACTER.Race == CharacterRace.Human && (_Stunned_Acts - _HF_Acts > 0)) {
+                if (CHARACTER.Race == CharacterRace.Human && (_Stunned_Acts - _HF_Acts > 0))
+                {
                     float emacts = EM.Activates;
                     _EM_Acts = (float)Math.Min(_Stunned_Acts - _HF_Acts, emacts);
                     reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)/1000f*/)));
@@ -261,7 +266,8 @@ namespace Rawr.DPSWarr {
             AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _Death_GCDs, ref HPS_TTL, ref _Death_HPS, Death);
 
             // ==== Execute Spamming <20% =============
-            if (PercTimeUnder20 > 0f) {
+            if (PercTimeUnder20 > 0f)
+            {
                 EX.FreeRage = EX.RageCost;
                 float acts = (float)Math.Min(availGCDs, EX.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                 float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
@@ -374,7 +380,8 @@ namespace Rawr.DPSWarr {
             bool clok = CalcOpts.MultipleTargets
                      && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
-            if (hsok || clok) {
+            if (hsok || clok)
+            {
                 WhiteAtks.HSOverridesOverDur = 0f;
                 WhiteAtks.CLOverridesOverDur = 0f;
                 RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - TotalPercTimeLost);
@@ -438,7 +445,9 @@ namespace Rawr.DPSWarr {
                 _WhiteDPSMH = WhiteAtks.MhDPS * (1f - TotalPercTimeLost); // MhWhiteDPS with loss of time in stun and movement
                 _WhiteDPS = _WhiteDPSMH;
                 DPS_TTL += _WhiteDPS;
-            } else {
+            }
+            else
+            {
                 RageGenWhite = WHITEATTACKS.whiteRageGenOverDur;
                 availRage += RageGenWhite;
                 WhiteAtks.HSOverridesOverDur = 0f;
@@ -451,7 +460,8 @@ namespace Rawr.DPSWarr {
                 DPS_TTL += _WhiteDPS;
             }
             // Add any leftover Rage to Execute
-            if (PercTimeUnder20 > 0f) {
+            if (PercTimeUnder20 > 0f)
+            {
                 DPS_TTL -= _EX_DPS;
                 EX.FreeRage = EX.FreeRage + (availRage * PercTimeUnder20 / _EX_GCDs);
                 _EX_DPS = EX.GetDPS(_EX_GCDs);
@@ -469,19 +479,30 @@ namespace Rawr.DPSWarr {
             DW.SetAllAbilityActivates(mhActivates, 0f);
             _DW_PerHit = DW.TickSize;
             _DW_DPS = DW.DPS;
+            DPS_TTL += _DW_DPS;
 
             GCDUsage += "\n" + availGCDs.ToString("000") + " : Avail GCDs";
 
             // Return result
             _HPS_TTL = HPS_TTL;
-            return DPS_TTL;
+
+            if (setCalcs)
+            {
+                this.calcs.TotalDPS = DPS_TTL;
+                this.calcs.WhiteDPS = this._WhiteDPS;
+
+                this.calcs.WhiteRage = this.RageGenWhite;
+                this.calcs.OtherRage = this.RageGenOther;
+                this.calcs.NeedyRage = this.RageNeeded;
+                this.calcs.FreeRage = this.RageGenWhite + this.RageGenOther - this.RageNeeded;
+            }
         }
-        public override float MakeRotationandDoDPS() {
+        public override void MakeRotationandDoDPS(bool setCalcs) {
             float PercTimeUnder20 = 0f;
             if(CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_]){
                 PercTimeUnder20 = 0.15f;
             }
-            return MakeRotationandDoDPS_Above(PercTimeUnder20);
+            MakeRotationandDoDPS(setCalcs, PercTimeUnder20);
         }
     }
 }

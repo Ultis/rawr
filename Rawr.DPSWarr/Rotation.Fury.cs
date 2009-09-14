@@ -37,6 +37,19 @@ namespace Rawr.DPSWarr
             BT = new Skills.BloodThirst(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             BS = new Skills.BloodSurge(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, SL, WW, BT);
         }
+
+        protected void new_doIterations()
+        {
+            base.doIterations();
+
+            HS.OverridesOverDur = 0f;
+            WhiteAtks.HSOverridesOverDur = 0f;
+            WhiteAtks.CLOverridesOverDur = 0f;
+
+            float bsBaseRage = BS.RageUseOverDur;
+            float hsRageUsed = (FreeRageOverDur - bsBaseRage) / (1f + HS.FullRageCost * (Talents.Bloodsurge * 0.20f / 3f));
+            
+        }
         protected override void doIterations()
         {
             base.doIterations();
@@ -60,18 +73,19 @@ namespace Rawr.DPSWarr
             float oldHSActivates = 0f, newHSActivates = HS.Activates;
             float oldCLActivates = 0f, newCLActivates = CL.Activates;
             BS.maintainActs = MaintainCDs;
-            for (int loopIterator = 0;
+            int loopIterator;
+            for (loopIterator = 0;
                  CalcOpts.FuryStance
                     && loopIterator < 50
-                    && (Math.Abs(newHSActivates - oldHSActivates) > 0.01f
-                        || Math.Abs(newCLActivates - oldCLActivates) > 0.01f);
+                    && (Math.Abs(newHSActivates - oldHSActivates) > 1f
+                        || Math.Abs(newCLActivates - oldCLActivates) > 1f);
                   loopIterator++)
             {
                 oldHSActivates = HS.Activates;
                 oldCLActivates = CL.Activates;
                 //
                 BS.hsActivates = oldHSActivates; // bloodsurge only cares about HSes, not Cleaves
-                _bloodsurgeRPS = HS.bloodsurgeRPS = CL.bloodsurgeRPS = (BS.RageUseOverDur);
+                _bloodsurgeRPS = (BS.RageUseOverDur);
                 hsRageUsed = FreeRageOverDur * hsPercOvd;
                 clRageUsed = FreeRageOverDur * clPercOvd;
                 WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = hsRageUsed / HS.FullRageCost;
@@ -80,6 +94,7 @@ namespace Rawr.DPSWarr
                 newHSActivates = HS.Activates;
                 newCLActivates = CL.Activates;
             }
+
             BS.hsActivates = newHSActivates;
             BS.hsActivates += newCLActivates;
             if (CalcOpts.FuryStance)
@@ -125,7 +140,7 @@ namespace Rawr.DPSWarr
             return base.GetLandedYellowsOverDurOH();
         }
 
-        public override float RageNeededOverDur
+        protected override float RageNeededOverDur
         {
             get
             {
@@ -140,7 +155,7 @@ namespace Rawr.DPSWarr
         public float _BS_DPS = 0f, _BS_HPS = 0f, _BS_GCDs = 0f;
         public float _BT_DPS = 0f, _BT_HPS = 0f, _BT_GCDs = 0f;
         #endregion
-        public override float MakeRotationandDoDPS()
+        public override void MakeRotationandDoDPS(bool setCalcs)
         {
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
@@ -155,9 +170,9 @@ namespace Rawr.DPSWarr
             //float timelostwhilestunned = 0f;
             float percTimeInStun = 0f;
 
-            if (Char.MainHand == null) { return 0f; }
+            if (Char.MainHand == null) { return; }
 
-            doIterations();
+            //doIterations();
 
             // ==== Rage Generation Priorities ========
             availRage += RageGenOverDur_Other;
@@ -198,7 +213,7 @@ namespace Rawr.DPSWarr
             availRage -= rageadd;
             RageNeeded += rageadd;*/
 
-            doIterations();
+            //doIterations();
 
             // Priority 1 : Whirlwind on every CD
             float WW_GCDs = (float)Math.Min(availGCDs, WW.Activates);
@@ -228,7 +243,7 @@ namespace Rawr.DPSWarr
             availRage -= rageadd;
             RageNeeded += rageadd;
 
-            doIterations();
+            //doIterations();
             // Priority 3 : Bloodsurge Blood Proc (Do an Instant Slam) if available
             float BS_GCDs = (float)Math.Min(availGCDs, BS.Activates);
             _BS_GCDs = BS_GCDs;
@@ -250,7 +265,7 @@ namespace Rawr.DPSWarr
             DPS_TTL += _SS_DPS;*/
             // TODO: Add Rage since it's a white hit
 
-            doIterations();
+            //doIterations();
             // Priority 4 : Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
             // Alternate to Cleave is MultiTargs is active
             // After iterating how many Overrides can be done and still do other abilities, then do the white dps
@@ -293,12 +308,25 @@ namespace Rawr.DPSWarr
                 DPS_TTL += _WhiteDPS;
             }
             calcDeepWounds();
+            _DW_PerHit = DW.TickSize;
+            _DW_DPS = DW.DPS;
+            DPS_TTL += _DW_DPS;
 
             GCDUsage += "\nAvail: " + availGCDs.ToString();
 
             // Return result
             _HPS_TTL = HPS_TTL;
-            return DPS_TTL;
+
+            if (setCalcs)
+            {
+                this.calcs.TotalDPS = DPS_TTL;
+                this.calcs.WhiteDPS = this._WhiteDPS;
+
+                this.calcs.WhiteRage = this.RageGenWhite;
+                this.calcs.OtherRage = this.RageGenOther;
+                this.calcs.NeedyRage = this.RageNeeded;
+                this.calcs.FreeRage = this.RageGenWhite + this.RageGenOther - this.RageNeeded;
+            }
         }
     }
 }

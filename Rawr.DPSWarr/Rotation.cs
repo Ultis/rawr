@@ -24,27 +24,28 @@ namespace Rawr.DPSWarr {
 
         public float _HPS_TTL;
         public string GCDUsage = "";
+        protected CharacterCalculationsDPSWarr calcs = null;
 
         public float _Thunder_GCDs = 0f, _TH_DPS = 0f, _TH_HPS = 0f;
-        public float _Blood_GCDs = 0f, _Blood_HPS = 0f;
-        public float _ZRage_GCDs = 0f, _ZRage_HPS = 0f;
-        public float _Second_Acts = 0f, _Second_HPS = 0f;
-        public float _Battle_GCDs = 0f, _Battle_HPS = 0f;
-        public float _Comm_GCDs = 0f, _Comm_HPS = 0f;
-        public float _Demo_GCDs = 0f, _Demo_HPS = 0f;
-        public float _Sunder_GCDs = 0f, _Sunder_HPS = 0f;
-        public float _Ham_GCDs = 0f, _Ham_DPS = 0f, _Ham_HPS = 0f;
-        public float _ER_GCDs = 0f, _ER_HPS = 0f;
+        protected float _Blood_GCDs = 0f, _Blood_HPS = 0f;
+        protected float _ZRage_GCDs = 0f, _ZRage_HPS = 0f;
+        protected float _Second_Acts = 0f, _Second_HPS = 0f;
+        protected float _Battle_GCDs = 0f, _Battle_HPS = 0f;
+        protected float _Comm_GCDs = 0f, _Comm_HPS = 0f;
+        protected float _Demo_GCDs = 0f, _Demo_HPS = 0f;
+        protected float _Sunder_GCDs = 0f, _Sunder_HPS = 0f;
+        protected float _Ham_GCDs = 0f, _Ham_DPS = 0f, _Ham_HPS = 0f;
+        protected float _ER_GCDs = 0f, _ER_HPS = 0f;
         public float _Shatt_GCDs = 0f, _Shatt_DPS = 0f, _Shatt_HPS = 0f;
-        public float _Death_GCDs = 0f, _Death_HPS = 0f;
-        public float _Reck_GCDs = 0f, _Reck_HPS = 0f;
+        protected float _Death_GCDs = 0f, _Death_HPS = 0f;
+        protected float _Reck_GCDs = 0f, _Reck_HPS = 0f;
         public float _EX_GCDs = 0f, _EX_DPS = 0f, _EX_HPS = 0f;
-        public float _SW_DPS = 0f, _SW_HPS = 0f, _SW_GCDs = 0f;
-        public float RageGenWhite = 0f; public float RageGenOther = 0f; public float RageNeeded = 0f;
-        public float _HS_PerHit = 0f, _HS_DPS = 0f, _HS_Acts = 0f;
-        public float _CL_PerHit = 0f, _CL_DPS = 0f, _CL_Acts = 0f;
-        public float _WhiteDPSMH = 0f; public float _WhiteDPSOH = 0f;
-        public float _WhiteDPS = 0f; public float _WhitePerHit = 0f;
+        protected float _SW_DPS = 0f, _SW_HPS = 0f, _SW_GCDs = 0f;
+        protected float RageGenWhite = 0f; protected float RageGenOther = 0f; protected float RageNeeded = 0f;
+        protected float _HS_PerHit = 0f, _HS_DPS = 0f, _HS_Acts = 0f;
+        protected float _CL_PerHit = 0f, _CL_DPS = 0f, _CL_Acts = 0f;
+        protected float _WhiteDPSMH = 0f; protected float _WhiteDPSOH = 0f;
+        protected float _WhiteDPS = 0f; protected float _WhitePerHit = 0f;
         public float _DW_PerHit = 0f, _DW_DPS = 0f;
         #region Abilities
         // Anti-DeBuff
@@ -83,15 +84,17 @@ namespace Rawr.DPSWarr {
 
         #endregion
         #region Get/Set
-        public Character Char { get { return CHARACTER; } set { CHARACTER = value; } }
-        public WarriorTalents Talents { get { return TALENTS; } set { TALENTS = value; } }
-        public Stats StatS { get { return STATS; } set { STATS = value; } }
-        public CombatFactors CombatFactors { get { return COMBATFACTORS; } set { COMBATFACTORS = value; } }
-        public Skills.WhiteAttacks WhiteAtks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
-        public CalculationOptionsDPSWarr CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
+        protected Character Char { get { return CHARACTER; } set { CHARACTER = value; } }
+        protected WarriorTalents Talents { get { return TALENTS; } set { TALENTS = value; } }
+        protected Stats StatS { get { return STATS; } set { STATS = value; } }
+        protected CombatFactors CombatFactors { get { return COMBATFACTORS; } set { COMBATFACTORS = value; } }
+        protected Skills.WhiteAttacks WhiteAtks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
+        protected CalculationOptionsDPSWarr CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
         #endregion
         #region Functions
         public virtual void Initialize(CharacterCalculationsDPSWarr calcs) {
+            this.calcs = calcs;
+
             initAbilities();
             doIterations();
 
@@ -131,7 +134,7 @@ namespace Rawr.DPSWarr {
         }
         public void Initialize() { initAbilities(); doIterations(); }
 
-        public virtual float MakeRotationandDoDPS() { return -1.0f; }
+        public virtual void MakeRotationandDoDPS(bool setCalcs) { }
 
         protected virtual void initAbilities() {
             // Whites
@@ -158,12 +161,12 @@ namespace Rawr.DPSWarr {
             RK = new Skills.Recklessness(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
 
             // Slam used by Bloodsurge, WW used by Bladestorm, so they're shared
-            SL = new Skills.Slam(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS); // actually arms but BS needs it
-            WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SL = new Skills.Slam(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS); // actually arms but BS needs it
+            WW = new Skills.WhirlWind(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             
-            DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            DW = new Skills.DeepWounds(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            CL = new Skills.Cleave(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            HS = new Skills.HeroicStrike(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             EX = new Skills.Execute(            CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
         }
         protected virtual void doIterations() { }
@@ -363,9 +366,9 @@ namespace Rawr.DPSWarr {
         public float MaintainCDs { get { return _Thunder_GCDs + _Sunder_GCDs + _Demo_GCDs + _Ham_GCDs + _Battle_GCDs + _Comm_GCDs + _ER_GCDs; } }
         #endregion
         #region Rage Calcs
-        public virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
-        public virtual float RageGenOverDur_Wrath { get { return (Talents.UnbridledWrath * 3.0f / 60.0f) * CalcOpts.Duration; } }
-        public virtual float RageGenOverDur_Other {
+        protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
+        protected virtual float RageGenOverDur_Wrath { get { return (Talents.UnbridledWrath * 3.0f / 60.0f) * CalcOpts.Duration; } }
+        protected virtual float RageGenOverDur_Other {
             get {
                 if (Char.MainHand == null) { return 0f; }
                 float rage = RageGenOverDur_Anger
@@ -380,7 +383,7 @@ namespace Rawr.DPSWarr {
                 return rage;
             }
         }
-        public virtual float RageNeededOverDur {
+        protected virtual float RageNeededOverDur {
             get {
                 if (Char.MainHand == null) { return 0f; }
                 // Fury
@@ -402,7 +405,7 @@ namespace Rawr.DPSWarr {
                 return rage;
             }
         }
-        public virtual float FreeRageOverDur {
+        protected virtual float FreeRageOverDur {
             get {
                 if (Char.MainHand == null) { return 0f; }
                 float white = WHITEATTACKS.whiteRageGenOverDur;

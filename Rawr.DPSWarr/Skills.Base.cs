@@ -471,7 +471,6 @@ namespace Rawr.DPSWarr {
             public int AbilIterater;
             #endregion
             #region Get/Set
-            public float bloodsurgeRPS { get; set; }
             public string Name { get { return NAME; } set { NAME = value; } }
             public bool ReqTalent { get { return REQTALENT; } set { REQTALENT = value; } }
             public int Talent2ChksValue { get { return TALENT2CHKSVALUE; } set { TALENT2CHKSVALUE = value; } }

@@ -334,7 +334,6 @@ namespace Rawr.DPSWarr
                 RageCost = 15f - (Talents.ImprovedHeroicStrike * 1f) - (Talents.FocusedRage * 1f);
                 CastTime = 0f; // In Seconds // Replaces a white hit
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
-                bloodsurgeRPS = 0.0f;
                 DamageBase = Whiteattacks.MhDamage + 495f;
                 BonusCritChance = Talents.Incite * 0.05f + StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
                 //
@@ -369,7 +368,6 @@ namespace Rawr.DPSWarr
                 Targets += (CalcOpts.MultipleTargets ? 1f + (Talents.GlyphOfCleaving ? 1f : 0f) : 0f);
                 CastTime = 0f; // In Seconds // Replaces a white hit
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
-                bloodsurgeRPS = 0.0f;
                 DamageBase = Whiteattacks.MhDamage + 222f;
                 DamageBonus = 1f + Talents.ImprovedCleave * 0.40f;
                 BonusCritChance = Talents.Incite * 0.05f;
