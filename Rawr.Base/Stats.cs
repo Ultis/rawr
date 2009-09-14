@@ -392,11 +392,9 @@ namespace Rawr {
         BonusFireDamageMultiplier,
         BonusFrostDamageMultiplier,
         BonusIntellectMultiplier,
-        BonusMageNukeMultiplier,
         BonusNatureDamageMultiplier,
         BonusPhysicalDamageMultiplier,
         BonusDamageMultiplier,
-        BonusRipDamageMultiplier,
         BonusSpellCritMultiplier,
         BonusSpellPowerMultiplier,
         BonusSpellPowerDemonicPactMultiplier,
@@ -406,11 +404,6 @@ namespace Rawr {
         BonusCritHealMultiplier,
         BonusStaminaMultiplier,
         BonusStrengthMultiplier,
-        BonusSwipeDamageMultiplier,
-        BonusMangleDamageMultiplier,
-        BonusShredDamageMultiplier,
-        BonusRakeDamageMultiplier,
-        BonusFerociousBiteDamageMultiplier,
         BonusMaulDamageMultiplier,
         BonusEnrageDamageMultiplier,
         BonusShadowDamageMultiplier,
@@ -424,6 +417,16 @@ namespace Rawr {
         HealingReceivedMultiplier,
         DamageTakenMultiplier,
         SpellDamageTakenMultiplier,
+        StunDurReduc,
+        #region Added by Some Model or Another
+        BonusMageNukeMultiplier,
+        BonusSwipeDamageMultiplier,
+        BonusMangleDamageMultiplier,
+        BonusShredDamageMultiplier,
+        BonusRakeDamageMultiplier,
+        BonusFerociousBiteDamageMultiplier,
+        BonusRipDamageMultiplier,
+        #endregion
         #region Added by Rawr.HolyPriest
         BonusPoHManaCostReductionMultiplier,
         BonusGHHealingMultiplier,
@@ -457,7 +460,7 @@ namespace Rawr {
         Warlock2T9,
         Warlock4T9,
         #endregion
-        #region Warrior set bonuses
+        #region Added by Rawr.Warrior
         BonusShieldSlamDamage,
         BonusDevastateDamage,
         BonusWarrior_T7_2P_SlamDamage,
@@ -4401,6 +4404,16 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.SpellDamageTakenMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.SpellDamageTakenMultiplier] = value; }
+        }
+
+        [DisplayName("% Stun Duration Reduction")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        public float StunDurReduc
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.StunDurReduc]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.StunDurReduc] = value; }
         }
         #endregion
 

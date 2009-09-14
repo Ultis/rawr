@@ -510,7 +510,7 @@ namespace Rawr {
             Instance = "None";
             Version = "10 Man";
             Comment = "No comments have been written for this Boss.";
-            BerserkTimer = 19 * 60; // The longest noted Enrage timer is 19 minutes, and seriously, if the fight is taking that long, then fail... just fail.
+            BerserkTimer = 8 * 60; // The longest noted Enrage timer is 19 minutes, and seriously, if the fight is taking that long, then fail... just fail.
             SpeedKillTimer = 3 * 60; // Lots of Achievements run on this timer, so using it for generic
             Level = (int)POSSIBLE_LEVELS.NPC_83;
             Health = 1000000f;
@@ -1861,7 +1861,7 @@ namespace Rawr {
             Content = "T7.5";
             Version = "25 Man";
             Health = 839000f;
-            BerserkTimer = BerserkTimer - (4 * 60 + 34);
+            //BerserkTimer = (8 * 60) - (4 * 60 + 34);
             // Resistance
             // Attacks
             MeleeAttack = new Attack {

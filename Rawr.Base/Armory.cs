@@ -725,6 +725,11 @@ namespace Rawr
                         {
                             stats.MovementSpeed = 0.08f;
                         }
+                        else if (gemBonus.Contains("Stun Duration Reduced by "))
+                        {
+                            int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+                            stats.StunDurReduc = (float)bonus / 100f;
+                        }
                         else if (gemBonus == "+2% Intellect")
                         {
                             stats.BonusIntellectMultiplier = 0.02f;

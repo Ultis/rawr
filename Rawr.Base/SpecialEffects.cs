@@ -14,7 +14,7 @@ namespace Rawr {
                     gemBonuses.Add(gemBonusString.Substring(gemBonusString.IndexOf(" +") + 1));
                 } else{ gemBonuses.Add(gemBonusString); }
 			}
-            foreach (string gemBonus in gemBonuses)             {
+            foreach (string gemBonus in gemBonuses) {
                 if (gemBonus == "Spell Damage +6")
                 {
                     stats.SpellPower = 6.0f;
@@ -60,6 +60,11 @@ namespace Rawr {
                 else if (gemBonus == "Minor Run Speed Increase")
                 {
                     stats.MovementSpeed = 0.08f;
+                }
+                else if (gemBonus.Contains("Stun Duration Reduced by "))
+                {
+                    int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+                    stats.StunDurReduc = (float)bonus / 100f;
                 }
                 else if (gemBonus == "2% Reduced Threat")
                 {
