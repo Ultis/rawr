@@ -70,9 +70,12 @@ namespace Rawr.DPSWarr
             }
             // Variables
             // Get/Set
+            public float GetMaxRange() { return this.MaxRange; }
+            public float GetTargets() { return this.Targets; }
+            public float GetDamageOnUseOverride() { return this.DamageOnUseOverride; }
             // Functions
             // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
-            public override float Damage { get { return GetDamage(false, false) + GetDamage(false, true); } }
+            protected override float Damage { get { return GetDamage(false, false) + GetDamage(false, true); } }
             public override float DamageOverride { get { return GetDamage(true, false) + GetDamage(true, true); } }
             /// <summary></summary>
             /// <param name="Override">When true, do not check for Bers Stance</param>
@@ -144,7 +147,7 @@ namespace Rawr.DPSWarr
                     return (float)Math.Max(0f, Damage * AvgTargets);
                 }
             }
-            public override float DamageOnUseOverride
+            protected override float DamageOnUseOverride
             {
                 get
                 {
@@ -293,7 +296,7 @@ namespace Rawr.DPSWarr
                 }
                 return numProcs;
             }
-            public override float ActivatesOverride
+            protected override float ActivatesOverride
             {
                 get
                 {
@@ -308,7 +311,7 @@ namespace Rawr.DPSWarr
                     return procs3 * (1f - Whiteattacks.AvoidanceStreak);
                 }
             }
-            public override float Damage { get { return !Validated ? 0f : (float)Math.Max(0f, SL.DamageOverride); } }
+            protected override float Damage { get { return !Validated ? 0f : (float)Math.Max(0f, SL.DamageOverride); } }
             #endregion
         }
         #endregion

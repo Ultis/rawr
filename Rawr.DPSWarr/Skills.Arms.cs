@@ -62,8 +62,8 @@ namespace Rawr.DPSWarr
                 RageCost = Exec.RageCost;
                 ReqTalent = true;
                 Talent2ChksValue = Talents.SuddenDeath;
-                ReqMeleeWeap = Exec.ReqMeleeWeap;
-                ReqMeleeRange = Exec.ReqMeleeRange;
+                ReqMeleeWeap = Exec.GetReqMeleeWeap();
+                ReqMeleeRange = Exec.GetReqMeleeRange();
                 //Targets += StatS.BonusTargets;
                 Cd = Exec.Cd;
                 StanceOkArms = true;
@@ -84,7 +84,7 @@ namespace Rawr.DPSWarr
 
                 return (float)Math.Max(0f, acts * (1f - Whiteattacks.AvoidanceStreak));
             }
-            public override float Damage
+            protected override float Damage
             {
                 get
                 {
@@ -186,7 +186,7 @@ namespace Rawr.DPSWarr
                 //
                 InitializeB();
             }
-            public override float ActivatesOverride
+            protected override float ActivatesOverride
             {
                 get
                 {
@@ -240,8 +240,8 @@ namespace Rawr.DPSWarr
                 Talent2ChksValue = Talents.Bladestorm;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                MaxRange = WW.MaxRange; // In Yards
-                Targets = WW.Targets; // Handled in WW
+                MaxRange = WW.GetMaxRange(); // In Yards
+                Targets = WW.GetTargets(); // Handled in WW
                 Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
                 RageCost = 25f - (Talents.FocusedRage * 1f);
                 CastTime = 6f; // In Seconds // Channeled
@@ -257,7 +257,7 @@ namespace Rawr.DPSWarr
                 get
                 {
                     if (!Validated) { return 0f; }
-                    float Damage = WW.DamageOnUseOverride; // WW.DamageOnUseOverride;
+                    float Damage = WW.GetDamageOnUseOverride(); // WW.DamageOnUseOverride;
                     return (float)Math.Max(0f, Damage * 6f); // it WW's 6 times
                 }
             }
@@ -323,9 +323,11 @@ namespace Rawr.DPSWarr
                 //
                 InitializeB();
             }
+            public bool GetReqMeleeWeap() { return this.ReqMeleeWeap; }
+            public bool GetReqMeleeRange() { return this.ReqMeleeRange; }
             public float FreeRage;
             //public override float Activates { get { if (!Validated) { return 0f; } return 0f; } }
-            public override float Damage { get { return GetDamage(false); } }
+            protected override float Damage { get { return GetDamage(false); } }
             public override float DamageOverride { get { return GetDamage(true); } }
             private float GetDamage(bool Override) {
                 if        ( Override && !Validated) {
@@ -403,7 +405,7 @@ namespace Rawr.DPSWarr
             public float addMisses;
             public float addDodges;
             public float addParrys;
-            public override float ActivatesOverride
+            protected override float ActivatesOverride
             {
                 get
                 {

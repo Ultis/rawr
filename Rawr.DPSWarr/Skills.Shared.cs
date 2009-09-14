@@ -35,7 +35,7 @@ namespace Rawr.DPSWarr
             }
             private float mhActivates, ohActivates;
             public void SetAllAbilityActivates(float mh, float oh) { mhActivates = mh; ohActivates = oh; }
-            public override float ActivatesOverride { get { return mhActivates + ohActivates; } }
+            protected override float ActivatesOverride { get { return mhActivates + ohActivates; } }
             public override float TickSize {
                 get {
                     if (!Validated || (mhActivates + ohActivates) <= 0f) { return 0f; }

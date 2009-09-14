@@ -31,14 +31,14 @@ namespace Rawr.DPSWarr {
             private readonly WarriorTalents Talents;
             private readonly CombatFactors combatFactors;
             private CalculationOptionsDPSWarr CalcOpts;
-            public float TARGETS;
+            private float TARGETS;
             public AttackTable MHAtkTable;
             public AttackTable OHAtkTable;
             private float OVDOVERDUR_HS;
             private float OVDOVERDUR_CL;
-            public float FightDuration;
-            public float Targets { get { return TARGETS; } set { TARGETS = value; } }
-            public float AvgTargets {
+            private float FightDuration;
+            private float Targets { get { return TARGETS; } set { TARGETS = value; } }
+            private float AvgTargets {
                 get {
                     if (CalcOpts.MultipleTargets) {
                         float extraTargetsHit = (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
@@ -222,7 +222,7 @@ namespace Rawr.DPSWarr {
                 }
             }
             // Rage generated per second
-            public float MHRageRatio {
+            private float MHRageRatio {
                 get {
                     float realMHRage = MHRageGenOverDur;
                     float realOverallRage = realMHRage + OHRageGenOverDur;
@@ -230,7 +230,7 @@ namespace Rawr.DPSWarr {
                 }
             }
             public float whiteRageGenOverDur { get { return MHRageGenOverDur + OHRageGenOverDur; } }
-            public float RageFormula(float d, float s, float f) {
+            private float RageFormula(float d, float s, float f) {
                 /* R = Rage Generated
                  * d = damage amount
                  * c = rage conversion value
@@ -265,7 +265,7 @@ namespace Rawr.DPSWarr {
                     return whiteLands;
                 }
             }
-            public float CriticalAtksOverDur {
+            private float CriticalAtksOverDur {
                 get {
                     float whiteLands = CriticalAtksOverDurMH + CriticalAtksOverDurOH;
                     return whiteLands;
@@ -472,11 +472,11 @@ namespace Rawr.DPSWarr {
             #endregion
             #region Get/Set
             public string Name { get { return NAME; } set { NAME = value; } }
-            public bool ReqTalent { get { return REQTALENT; } set { REQTALENT = value; } }
-            public int Talent2ChksValue { get { return TALENT2CHKSVALUE; } set { TALENT2CHKSVALUE = value; } }
-            public bool ReqMeleeWeap { get { return REQMELEEWEAP; } set { REQMELEEWEAP = value; } }
-            public bool ReqMeleeRange { get { return REQMELEERRANGE; } set { REQMELEERRANGE = value; } }
-            public bool ReqMultiTargs { get { return REQMULTITARGS; } set { REQMULTITARGS = value; } }
+            protected bool ReqTalent { get { return REQTALENT; } set { REQTALENT = value; } }
+            protected int Talent2ChksValue { get { return TALENT2CHKSVALUE; } set { TALENT2CHKSVALUE = value; } }
+            protected bool ReqMeleeWeap { get { return REQMELEEWEAP; } set { REQMELEEWEAP = value; } }
+            protected bool ReqMeleeRange { get { return REQMELEERRANGE; } set { REQMELEERRANGE = value; } }
+            protected bool ReqMultiTargs { get { return REQMULTITARGS; } set { REQMULTITARGS = value; } }
             public float AvgTargets {
                 get {
                     if (CalcOpts.MultipleTargets) {
@@ -485,12 +485,12 @@ namespace Rawr.DPSWarr {
                     } else {return 1f;}
                 }
             }
-            public float Targets { get { return TARGETS; } set { TARGETS = value; } }
+            protected float Targets { get { return TARGETS; } set { TARGETS = value; } }
             public bool CanBeDodged { get { return CANBEDODGED; } set { CANBEDODGED = value; } }
             public bool CanBeParried { get { return CANBEPARRIED; } set { CANBEPARRIED = value; } }
             public bool CanBeBlocked { get { return CANBEBLOCKED; } set { CANBEBLOCKED = value; } }
             public bool CanCrit { get { return CANCRIT; } set { CANCRIT = value; } }
-            public float MaxRange { get { return MAXRANGE; } set { MAXRANGE = value; } } // In Yards 
+            protected float MaxRange { get { return MAXRANGE; } set { MAXRANGE = value; } } // In Yards 
             public float Cd { // In Seconds
                 get { return CD; }
                 set {
@@ -509,16 +509,16 @@ namespace Rawr.DPSWarr {
             public float RageCost { get { return RAGECOST; } set { RAGECOST = value; } }
             public float CastTime { get { return CASTTIME; } set { CASTTIME = value; } } // In Seconds
             /// <summary>Base Damage Value (500 = 500.00 Damage)</summary>
-            public float DamageBase { get { return DAMAGEBASE; } set { DAMAGEBASE = value; } }
+            protected float DamageBase { get { return DAMAGEBASE; } set { DAMAGEBASE = value; } }
             /// <summary>Percentage Based Damage Bonus (1.5 = 150% damage)</summary>
-            public float DamageBonus { get { return DAMAGEBONUS; } set { DAMAGEBONUS = value; } }
-            public float HealingBase { get { return HEALINGBASE; } set { HEALINGBASE = value; } }
-            public float HealingBonus { get { return HEALINGBONUS; } set { HEALINGBONUS = value; } }
-            public float BonusCritChance { get { return BONUSCRITCHANCE; } set { BONUSCRITCHANCE = value; } }
-            public bool StanceOkFury { get { return STANCEOKFURY; } set { STANCEOKFURY = value; } }
-            public bool StanceOkArms { get { return STANCEOKARMS; } set { STANCEOKARMS = value; } }
-            public bool StanceOkDef { get { return STANCEOKDEF; } set { STANCEOKDEF = value; } }
-            public Character Char {
+            protected float DamageBonus { get { return DAMAGEBONUS; } set { DAMAGEBONUS = value; } }
+            protected float HealingBase { get { return HEALINGBASE; } set { HEALINGBASE = value; } }
+            protected float HealingBonus { get { return HEALINGBONUS; } set { HEALINGBONUS = value; } }
+            protected float BonusCritChance { get { return BONUSCRITCHANCE; } set { BONUSCRITCHANCE = value; } }
+            protected bool StanceOkFury { get { return STANCEOKFURY; } set { STANCEOKFURY = value; } }
+            protected bool StanceOkArms { get { return STANCEOKARMS; } set { STANCEOKARMS = value; } }
+            protected bool StanceOkDef { get { return STANCEOKDEF; } set { STANCEOKDEF = value; } }
+            protected Character Char {
                 get { return CHARACTER; }
                 set {
                     CHARACTER = value;
@@ -539,15 +539,15 @@ namespace Rawr.DPSWarr {
                     }
                 }
             }
-            public WarriorTalents Talents { get { return TALENTS; } set { TALENTS = value; } }
-            public Stats StatS { get { return STATS; } set { STATS = value; } }
-            public CombatFactors combatFactors { get { return COMBATFACTORS; } set { COMBATFACTORS = value; } }
+            protected WarriorTalents Talents { get { return TALENTS; } set { TALENTS = value; } }
+            protected Stats StatS { get { return STATS; } set { STATS = value; } }
+            protected CombatFactors combatFactors { get { return COMBATFACTORS; } set { COMBATFACTORS = value; } }
             public AttackTable MHAtkTable { get { return MHATTACKTABLE; } set { MHATTACKTABLE = value; } }
             public AttackTable OHAtkTable { get { return OHATTACKTABLE; } set { OHATTACKTABLE = value; } }
             public WhiteAttacks Whiteattacks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
-            public CalculationOptionsDPSWarr CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
+            protected CalculationOptionsDPSWarr CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
             public virtual float RageUseOverDur { get { return (!Validated ? 0f : Activates * RageCost); } }
-            public float FightDuration { get { return CalcOpts.Duration; } }
+            protected float FightDuration { get { return CalcOpts.Duration; } }
             public virtual bool Validated {
                 get {
                     // Null crap is bad
@@ -573,7 +573,7 @@ namespace Rawr.DPSWarr {
             /// Number of times it can possibly be activated (# times actually used may
             /// be less or same). This one does not check for stance/weapon info, etc.
             /// </summary>
-            public virtual float ActivatesOverride {
+            protected virtual float ActivatesOverride {
                 get {
                     float LatentGCD = 1.5f + CalcOpts.GetLatency();
                     float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.GetLatency());
@@ -581,8 +581,8 @@ namespace Rawr.DPSWarr {
                     return (float)Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));
                 }
             }
-            public virtual float Healing { get { return !Validated ? 0f : HealingBase * HealingBonus; } }
-            public virtual float HealingOnUse {
+            protected virtual float Healing { get { return !Validated ? 0f : HealingBase * HealingBonus; } }
+            protected virtual float HealingOnUse {
                 get {
                     float hp = Healing; // Base Healing
                     hp *= combatFactors.HealthBonus; // Global Healing Bonuses
@@ -590,9 +590,9 @@ namespace Rawr.DPSWarr {
                     return hp;
                 }
             }
-            public virtual float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
-            public virtual float HPS { get { return AvgHealingOnUse / FightDuration; } }
-            public virtual float Damage { get { return !Validated ? 0f : DamageOverride; } }
+            protected virtual float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
+            protected virtual float HPS { get { return AvgHealingOnUse / FightDuration; } }
+            protected virtual float Damage { get { return !Validated ? 0f : DamageOverride; } }
             public virtual float DamageOverride { get { return (float)Math.Max(0f, DamageBase * DamageBonus * AvgTargets); } }
             public virtual float DamageOnUse {
                 get {
@@ -620,14 +620,14 @@ namespace Rawr.DPSWarr {
                     return (float)Math.Max(0f, dmg);
                 }
             }
-            public virtual float DamageOnUseOverride
+            protected virtual float DamageOnUseOverride
             {
                 get
                 {
                     return DamageOnUse;
                 }
             }
-            public virtual float AvgDamageOnUse { get { return DamageOnUse * Activates; } }
+            protected virtual float AvgDamageOnUse { get { return DamageOnUse * Activates; } }
             public virtual float DPS { get { return AvgDamageOnUse / FightDuration; } }
             #endregion
             #region Functions
@@ -666,7 +666,7 @@ namespace Rawr.DPSWarr {
                 float BaseCrit = IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit;
                 return (float)Math.Min(1f, Math.Max(0f, BaseCrit + BonusCritChance));
             }
-            public virtual float GetXActs(AttackTableSelector i,float acts) {
+            protected virtual float GetXActs(AttackTableSelector i,float acts) {
                 float retVal = 0f;
                 switch (i) {
                     case AttackTableSelector.Missed:  { retVal = acts * MHAtkTable.Miss;  break; }

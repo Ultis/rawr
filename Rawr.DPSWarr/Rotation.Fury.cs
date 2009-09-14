@@ -19,10 +19,16 @@ namespace Rawr.DPSWarr
             // Initialize();
         }
 
+        #region FuryRotVariables
         public Skills.BloodThirst BT;
         public Skills.BloodSurge BS;
 
         public const float ROTATION_LENGTH_FURY = 8.0f;
+        
+        float _bloodsurgeRPS;
+        public float _BS_DPS = 0f, _BS_HPS = 0f, _BS_GCDs = 0f;
+        public float _BT_DPS = 0f, _BT_HPS = 0f, _BT_GCDs = 0f;
+        #endregion
 
         public override void Initialize(CharacterCalculationsDPSWarr calcs)
         {
@@ -105,6 +111,8 @@ namespace Rawr.DPSWarr
                 _CL_PerHit = CL.DamageOnUse * clPercOvd;
             }
         }
+
+        #region LandedAtks
         public override float GetLandedYellowsOverDurMH()
         {
             float ret = base.GetLandedYellowsOverDurMH();
@@ -139,7 +147,7 @@ namespace Rawr.DPSWarr
         {
             return base.GetLandedYellowsOverDurOH();
         }
-
+        #endregion
         protected override float RageNeededOverDur
         {
             get
@@ -150,13 +158,50 @@ namespace Rawr.DPSWarr
                 return base.RageNeededOverDur + BTRage + BloodSurgeRage;
             }
         }
-        #region FuryRotVariables
-        float _bloodsurgeRPS;
-        public float _BS_DPS = 0f, _BS_HPS = 0f, _BS_GCDs = 0f;
-        public float _BT_DPS = 0f, _BT_HPS = 0f, _BT_GCDs = 0f;
-        #endregion
+
+        public void new_MakeRotationandDoDPS(bool setCalcs)
+        {
+            float LatentGCD = 1.5f + CalcOpts.GetLatency();
+            float NumGCDs = CalcOpts.Duration / LatentGCD;
+            GCDUsage += "NumGCDs: " + NumGCDs.ToString() + "\n\n";
+
+            // Maintenance abilities
+
+            // First, apply initial debuffs
+            float bloodsurge_percUsed = 1f; // Since we can only bloodsurge once every 8secs, 
+                                            // this keeps track of how many times we can actually slam vs refresh an ability
+            
+            if (SN.Validated) // Sunder
+            {
+                NumGCDs -= 5f / SN.MHAtkTable.AnyLand; // initial application
+                bloodsurge_percUsed -= 1f / (int)(SN.Duration / 8f); // keep it up
+            }
+            if (TH.Validated) // Thunderclap
+            {
+                NumGCDs -= 1f / TH.MHAtkTable.AnyLand; // initial application -- TODO: Remove support for tclap in general?
+                bloodsurge_percUsed -= 1f / (int)(TH.Duration / 8f); // keep it up
+            }
+            if (DS.Validated) // Demo Shout
+            {
+                NumGCDs -= 1f / DS.MHAtkTable.AnyLand; // initial application
+                bloodsurge_percUsed -= 1f / (int)(DS.Duration / 8f); // keep it up
+            }
+            // Assuming these are already applied at the start of the fight
+            if (BTS.Validated)
+            {
+                bloodsurge_percUsed -= 1f / (int)(BTS.Duration / 8f);
+            }
+            if (CS.Validated)
+            {
+                bloodsurge_percUsed -= 1f / (int)(CS.Duration / 8f);
+            }
+            bloodsurge_percUsed = Math.Max(bloodsurge_percUsed, 0f);
+
+        }
+
         public override void MakeRotationandDoDPS(bool setCalcs)
         {
+            new_MakeRotationandDoDPS(setCalcs);
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
             float FightDuration = CalcOpts.Duration;
