@@ -125,37 +125,41 @@ namespace Rawr.Warlock
                     "Simulation:DPS",
                     "Simulation:Pet DPS",
                     "Simulation:Total DPS",
-                    "Basic Stats:Health",
-                    "Basic Stats:Mana",
-                    "Basic Stats:Stamina",
-                    "Basic Stats:Intellect",
-                    "Basic Stats:Spirit",
-                    "Basic Stats:Spell Power",
-                    "Basic Stats:Regen",
-                    "Basic Stats:Crit",
-                    "Basic Stats:Miss Chance",
-                    "Basic Stats:Haste",
-                    "Shadow:Shadow Bolt",
-                    "Shadow:Curse of Agony",
-                    "Shadow:Curse of Doom",
-                    "Shadow:Corruption",
-                    "Shadow:Unstable Affliction",
-                    "Shadow:Death Coil",
-                    "Shadow:Drain Life",
-                    "Shadow:Drain Soul",
-                    "Shadow:Haunt",
-                    "Shadow:Seed of Corruption",
-                    "Shadow:Shadowflame",
-                    "Shadow:Shadowburn",
-                    "Shadow:Shadowfury",
-                    "Fire:Incinerate",
-                    "Fire:Immolate",
-                    "Fire:Rain of Fire",
-                    "Fire:Hellfire",
-                    "Fire:Searing Pain",
-                    "Fire:Soul Fire",
-                    "Fire:Conflagrate",
-                    "Fire:Chaos Bolt"
+                    "HP/Mana Stats:Health",
+                    "HP/Mana Stats:Mana",
+                    "Base Stats:Strength",
+                    "Base Stats:Agility",
+                    "Base Stats:Stamina",
+                    "Base Stats:Intellect",
+                    "Base Stats:Spirit",
+                    "Base Stats:Armor",
+                    "Spell:Bonus Damage",
+                    "Spell:Hit Rating",
+                    "Spell:Miss Chance",
+                    "Spell:Crit",
+                    "Spell:Haste",
+                    "Spell:Mana Regen",
+                    "Shadow School:Shadow Bolt",
+                    "Shadow School:Haunt",
+                    "Shadow School:Corruption",
+                    "Shadow School:Curse of Agony",
+                    "Shadow School:Curse of Doom",
+                    "Shadow School:Unstable Affliction",
+                    "Shadow School:Death Coil",
+                    "Shadow School:Drain Life",
+                    "Shadow School:Drain Soul",
+                    "Shadow School:Seed of Corruption",
+                    "Shadow School:Shadowflame",
+                    "Shadow School:Shadowburn",
+                    "Shadow School:Shadowfury",
+                    "Fire School:Incinerate",
+                    "Fire School:Immolate",
+                    "Fire School:Conflagrate",
+                    "Fire School:Chaos Bolt",
+                    "Fire School:Rain of Fire",
+                    "Fire School:Hellfire",
+                    "Fire School:Searing Pain",
+                    "Fire School:Soul Fire"                    
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -389,6 +393,13 @@ namespace Rawr.Warlock
             statsTotal.Stamina      = (float)Math.Floor(statsTotal.Stamina   * (1f + statsTotal.BonusStaminaMultiplier  ));
             statsTotal.Intellect    = (float)Math.Floor(statsTotal.Intellect * (1f + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit       = (float)Math.Floor(statsTotal.Spirit    * (1f + statsTotal.BonusSpiritMultiplier   ));
+            statsTotal.Strength     = (float)Math.Floor(statsTotal.Strength  * (1f + statsTotal.BonusStrengthMultiplier ));
+            statsTotal.Agility      = (float)Math.Floor(statsTotal.Agility   * (1f + statsTotal.BonusAgilityMultiplier  ));
+            statsTotal.Armor        = (float)Math.Floor(statsTotal.Armor     * (1f + statsTotal.BonusArmorMultiplier    ));
+
+            // Agility increases Armor by 2 per point (http://www.wowwiki.com/Agility#Agility)
+            statsTotal.BonusArmor  += (statsTotal.Agility * 2);
+            statsTotal.Armor       += statsTotal.BonusArmor;
 
             //Health is calculated from stamina rating first, then its bonus multiplier (in this case, "Fel Vitality" talent) gets applied
             statsTotal.Health      += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
@@ -475,20 +486,7 @@ namespace Rawr.Warlock
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
-                //ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
-                //SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
-                //SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
-                //SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
-                //HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
-                //HasteRatingFor20SecOnUse5Min = stats.HasteRatingFor20SecOnUse5Min,
-                //SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
-                //SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
-                //SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
-                //TimbalsProc = stats.TimbalsProc,
-                //PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
-                //ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
-                //LightweaveEmbroideryProc = stats.LightweaveEmbroideryProc,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 CorruptionTriggersCrit = stats.CorruptionTriggersCrit,
                 LifeTapBonusSpirit = stats.LifeTapBonusSpirit,
@@ -586,20 +584,7 @@ namespace Rawr.Warlock
                 + stats.WarlockSpellstoneHasteRating
                 + stats.WarlockFirestoneDirectDamageMultiplier
                 + stats.WarlockFirestoneSpellCritRating
-                //+ stats.ManaRestoreOnCast_5_15
                 + stats.ManaRestoreFromBaseManaPPM
-                //+ stats.SpellPowerFor15SecOnUse90Sec
-                //+ stats.SpellPowerFor15SecOnUse2Min
-                //+ stats.SpellPowerFor20SecOnUse2Min
-                //+ stats.HasteRatingFor20SecOnUse2Min
-                //+ stats.HasteRatingFor20SecOnUse5Min
-                //+ stats.SpellPowerFor10SecOnCast_15_45
-                //+ stats.SpellPowerFor10SecOnHit_10_45
-                //+ stats.SpellHasteFor10SecOnCast_10_45
-                //+ stats.TimbalsProc
-                //+ stats.PendulumOfTelluricCurrentsProc
-                //+ stats.ExtractOfNecromanticPowerProc
-                //+ stats.LightweaveEmbroideryProc
                 + stats.BonusSpellCritMultiplier
                 + stats.CorruptionTriggersCrit
                 + stats.LifeTapBonusSpirit
