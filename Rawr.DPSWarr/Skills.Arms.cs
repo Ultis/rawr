@@ -301,8 +301,7 @@ namespace Rawr.DPSWarr
                 return (float)Math.Max(0f, Math.Min(rawActs, capActs));
             }
         }
-        public class Execute : Ability
-        {
+        public class Execute : Ability {
             // Constructors
             /// <summary>
             /// Attempt to finish off a wounded foe, causing (1456+AP*0.2) damage and converting each
@@ -311,38 +310,31 @@ namespace Rawr.DPSWarr
             /// </summary>
             /// <TalentsAffecting>Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5).]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Execute [Your Execute ability acts as if it has 10 additional rage.]</GlyphsAffecting>
-            public Execute(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public Execute(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Execute";
-                //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Execute_;
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                //Targets += StatS.BonusTargets;
+                Cd = 1.5f;
                 RageCost = 15f - (Talents.ImprovedExecute * 2.5f) - (Talents.FocusedRage * 1f);
                 StanceOkFury = StanceOkArms = true;
                 //
                 InitializeB();
             }
             public float FreeRage;
-            public override float Activates { get { if (!Validated) { return 0f; } return 0f; } }
+            //public override float Activates { get { if (!Validated) { return 0f; } return 0f; } }
             public override float Damage { get { return GetDamage(false); } }
             public override float DamageOverride { get { return GetDamage(true); } }
-            private float GetDamage(bool Override)
-            {
-                if (!Override && !Validated) { return 0f; }
+            private float GetDamage(bool Override) {
+                if        ( Override && !Validated) {
+                } else if (!Override &&  Validated) {
+                } else if (!Override && !Validated) { return 0f; }
 
                 float freerage = (float)System.Math.Max(0f, FreeRage);
-                if (Override && freerage <= (RageCost - (Talents.ImprovedExecute * 2.5f)))
-                {
-                    freerage = RageCost - (Talents.ImprovedExecute * 2.5f);
-                }
-                else if (freerage <= 0f)
-                {
-                    return 0.0f; // No Free Rage = 0 damage
-                }
-                float executeRage = freerage * FightDuration;
+                if (freerage < RageCost) { freerage = RageCost; }
+                float executeRage = freerage;
                 executeRage = (float)Math.Min(30f, executeRage);
                 executeRage += (Talents.GlyphOfExecution ? 10.00f : 0.00f);
                 executeRage -= RageCost;

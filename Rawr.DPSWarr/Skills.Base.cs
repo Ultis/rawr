@@ -18,6 +18,7 @@ namespace Rawr.DPSWarr {
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 MHAtkTable = new AttackTable(Char, StatS, combatFactors, true);
                 OHAtkTable = new AttackTable(Char, StatS, combatFactors, false);
+                FightDuration = CalcOpts.Duration;
                 //
                 Targets = 1f;
                 HSOverridesOverDur = 0f;
@@ -35,6 +36,7 @@ namespace Rawr.DPSWarr {
             public AttackTable OHAtkTable;
             private float OVDOVERDUR_HS;
             private float OVDOVERDUR_CL;
+            public float FightDuration;
             public float Targets { get { return TARGETS; } set { TARGETS = value; } }
             public float AvgTargets {
                 get {
@@ -51,7 +53,7 @@ namespace Rawr.DPSWarr {
             public float Slam_Freq;
             #endregion
             // bah
-            private float SlamFreqSpdMod { get { return (Slam_Freq == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_Freq/CalcOpts.Duration))); } }
+            private float SlamFreqSpdMod { get { return (Slam_Freq == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_Freq / FightDuration))); } }
             // Main Hand
             public float MhEffectiveSpeed { get { return combatFactors.MHSpeed + SlamFreqSpdMod; } }
             public float MhDamage {
@@ -91,11 +93,11 @@ namespace Rawr.DPSWarr {
             public float MhActivates {
                 get {
                     if (MhEffectiveSpeed != 0)
-                        return (float)Math.Max(0f, CalcOpts.Duration / MhEffectiveSpeed - HSOverridesOverDur - CLOverridesOverDur);
+                        return (float)Math.Max(0f, FightDuration / MhEffectiveSpeed - HSOverridesOverDur - CLOverridesOverDur);
                     else return 0f;
                 }
             }
-            public float MhDPS { get { return AvgMhDamageOnUse / CalcOpts.Duration; } }
+            public float MhDPS { get { return AvgMhDamageOnUse / FightDuration; } }
             // Off Hand
             public float OhEffectiveSpeed { get { return combatFactors.OHSpeed + SlamFreqSpdMod; } }
             public float OhDamage {
@@ -132,10 +134,10 @@ namespace Rawr.DPSWarr {
                 }
             }
             public float AvgOhDamageOnUse { get { return OhDamageOnUse * OhActivates; } }
-            public float OhActivates { get { 
-                if (OhEffectiveSpeed > 0f) return (float)Math.Max(0f, CalcOpts.Duration / OhEffectiveSpeed); 
+            public float OhActivates { get {
+                if (OhEffectiveSpeed > 0f) return (float)Math.Max(0f, FightDuration / OhEffectiveSpeed); 
                 else return 0; } }
-            public float OhDPS { get { return AvgOhDamageOnUse / CalcOpts.Duration; } }
+            public float OhDPS { get { return AvgOhDamageOnUse / FightDuration; } }
             // Rage Calcs
             public float MHSwingRage {
                 get {

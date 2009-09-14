@@ -19,7 +19,7 @@ namespace Rawr.DPSWarr {
         protected WarriorTalents TALENTS;
         protected Stats STATS;
         protected CombatFactors COMBATFACTORS;
-        protected Skills.WhiteAttacks WHITEATTACKS;
+        protected Skills.WhiteAttacks WHITEATTACKS, WHITEATTACKSUNDER;
         protected CalculationOptionsDPSWarr CALCOPTS;
 
         public float _HPS_TTL;
@@ -207,6 +207,8 @@ namespace Rawr.DPSWarr {
                 // Fury Abilities
                 + (_WW_GCDs * WW.MHAtkTable.Crit * WW.AvgTargets) / (useOH ? 2 : 1)
                 + _SL_GCDs * SL.MHAtkTable.Crit * SL.AvgTargets
+                // Generic
+                + _EX_GCDs * EX.MHAtkTable.Crit * EX.AvgTargets
             ;
 
             return yellow + onAttack;
@@ -251,7 +253,8 @@ namespace Rawr.DPSWarr {
                 + (useOH ? (_WW_GCDs * WW.MHAtkTable.Parry * WW.AvgTargets + _WW_GCDs * WW.OHAtkTable.Parry * WW.AvgTargets) / 2 : _WW_GCDs * WW.MHAtkTable.Parry * WW.AvgTargets)
                 + _SL_GCDs * SL.MHAtkTable.Parry * SL.AvgTargets
                 // Arms Abilities
-                
+                // Generic
+                + _EX_GCDs * EX.MHAtkTable.Parry * EX.AvgTargets
             ;
 
             return yellow + onAttack;
@@ -273,8 +276,8 @@ namespace Rawr.DPSWarr {
                 + (useOH ? (_WW_GCDs * WW.MHAtkTable.Dodge * WW.AvgTargets + _WW_GCDs * WW.OHAtkTable.Dodge * WW.AvgTargets) / 2f : _WW_GCDs * WW.MHAtkTable.Dodge * WW.AvgTargets)
                 + _SL_GCDs * SL.MHAtkTable.Dodge * SL.AvgTargets
                 // Arms Abilities
-                
-                
+                // Generic
+                + _EX_GCDs * EX.MHAtkTable.Dodge * EX.AvgTargets
             ;
 
             return yellow + onAttack;
@@ -296,6 +299,8 @@ namespace Rawr.DPSWarr {
                 + (_WW_GCDs * WW.MHAtkTable.AnyLand * WW.AvgTargets) / (useOH ? 2 : 1)
                 // Arms Abilities
                 + _SL_GCDs * SL.MHAtkTable.AnyLand * SL.AvgTargets
+                // Generic
+                + _EX_GCDs * EX.MHAtkTable.AnyLand * EX.AvgTargets
             ;
 
             return yellow + onAttack;
@@ -390,9 +395,10 @@ namespace Rawr.DPSWarr {
                 float DemoRage       = DS.GetRageUseOverDur( _Demo_GCDs  );
                 float HamstringRage  = HMS.GetRageUseOverDur(_Ham_GCDs   );
                 float BattleRage     = BTS.GetRageUseOverDur(_Battle_GCDs);
+                float ExecSpamRage   = EX.GetRageUseOverDur( _EX_GCDs    );
                 // Total
                 float rage = WWRage + SlamRage +
-                    ThunderRage + SunderRage + DemoRage + HamstringRage + BattleRage;
+                    ThunderRage + SunderRage + DemoRage + HamstringRage + BattleRage + ExecSpamRage;
                 return rage;
             }
         }
