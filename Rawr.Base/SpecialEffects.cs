@@ -57,6 +57,10 @@ namespace Rawr {
                 {
                     stats.BonusCritHealMultiplier = 0.03f;
                 }
+                else if (gemBonus == "Minor Run Speed Increase")
+                {
+                    stats.MovementSpeed = 0.08f;
+                }
                 else if (gemBonus == "2% Reduced Threat")
                 {
                     stats.ThreatReductionMultiplier = 0.02f;

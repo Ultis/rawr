@@ -721,7 +721,11 @@ namespace Rawr
 						{
 							stats.BonusBlockValueMultiplier = 0.05f;
 						}
-						else if (gemBonus == "+2% Intellect")
+                        else if (gemBonus == "Minor Run Speed Increase")
+                        {
+                            stats.MovementSpeed = 0.08f;
+                        }
+                        else if (gemBonus == "+2% Intellect")
                         {
                             stats.BonusIntellectMultiplier = 0.02f;
                         }

@@ -271,12 +271,30 @@ namespace Rawr
             #region Armor
             defaultBuffs.Add(new Buff
             {
+                Name = "Stoneskin Totem",
+                Source = "Shaman",
+                Group = "Armor",
+                Stats = { BonusArmor = 1150f },
+                Improvements = { 
+					new Buff {
+                        Name = "Improved Stoneskin Totem (Armor)",
+                        Source = "Shaman",
+                        Stats = { BonusArmor = (float)Math.Floor(1150f * 0.20f) }
+                    }
+				}
+            });
+            defaultBuffs.Add(new Buff
+            {
                 Name = "Devotion Aura",
                 Source = "Paladin",
                 Group = "Armor",
                 Stats = { BonusArmor = 1205f },
                 Improvements = { 
-					new Buff { Name = "Improved Devotion Aura (Armor)", Source = "Prot Paladin", Stats = { BonusArmor = (float)Math.Floor(1205f * 0.5f) } }
+					new Buff {
+                        Name = "Improved Devotion Aura (Armor)",
+                        Source = "Prot Paladin",
+                        Stats = { BonusArmor = (float)Math.Floor(1205f * 0.5f) }
+                    }
 				}
             });
             #endregion
@@ -385,7 +403,7 @@ namespace Rawr
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageAvoided, new Stats() { ManaorEquivRestore = 0.02f }, 0f, 0f));
             defaultBuffs.Add(new Buff
             {
-                Name = "Grace",
+                Name = "Renewed Hope",
                 Source = "Disc Priest",
 				Group = "Damage Reduction (Minor %)",
                 Stats = { DamageTakenMultiplier = -0.03f }
