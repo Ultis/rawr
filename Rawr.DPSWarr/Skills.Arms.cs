@@ -134,8 +134,8 @@ namespace Rawr.DPSWarr
                 float acts = 0f;
                 float LatentGCD = (1.5f + CalcOpts.GetLatency());
 
-                float dodge = SS.MHAtkTable.Dodge;
-                float parry = (Talents.GlyphOfOverpower ? SS.MHAtkTable.Parry : 0f);
+                float dodge = Whiteattacks.MHAtkTable.Dodge;
+                float parry = (Talents.GlyphOfOverpower ? Whiteattacks.MHAtkTable.Parry : 0f);
 
                 // Chance to activate: Dodges + (if glyphed) Parries
                 if (dodge + parry > 0f)
@@ -144,10 +144,10 @@ namespace Rawr.DPSWarr
                   + (combatFactors.useOH ? FightDuration / Whiteattacks.OhEffectiveSpeed : 0f)
                                            + ssActs;
 
-                    float dodgesoverDur = 0f +
-                          WhtHitsOverDur * (dodge + parry)
-                        + dodge > 0 ? YellowAttacksThatDodgeOverDur : 0
-                        + parry > 0 ? YellowAttacksThatParryOverDur : 0;
+                    float dodgesoverDur = 0f
+                        + WhtHitsOverDur * (dodge + parry)
+                        + (dodge > 0 ? YellowAttacksThatDodgeOverDur : 0)
+                        + (parry > 0 ? YellowAttacksThatParryOverDur : 0);
 
                     acts += (float)Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.AvoidanceStreak));
                 }

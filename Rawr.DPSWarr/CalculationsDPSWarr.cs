@@ -63,18 +63,13 @@ namespace Rawr.DPSWarr {
         #region Variables and Properties
 
         #if RAWR3
-        public ICalculationOptionsPanel _calculationOptionsPanel = null;
-            public override ICalculationOptionsPanel CalculationOptionsPanel {
-                get {
-                    if (_calculationOptionsPanel == null) {
-                        _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
-                    }
-                    return _calculationOptionsPanel;
-                }
-            }
+            public ICalculationOptionsPanel _calculationOptionsPanel = null;
+            public override ICalculationOptionsPanel CalculationOptionsPanel
         #else
             public CalculationOptionsPanelBase _calculationOptionsPanel = null;
-            public override CalculationOptionsPanelBase CalculationOptionsPanel {
+            public override CalculationOptionsPanelBase CalculationOptionsPanel
+        #endif
+            {
                 get {
                     if (_calculationOptionsPanel == null) {
                         _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
@@ -82,7 +77,6 @@ namespace Rawr.DPSWarr {
                     return _calculationOptionsPanel;
                 }
             }
-        #endif
 
 		private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels {
@@ -188,15 +182,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
         private Dictionary<string, Color> _subPointNameColors = null;
         public override Dictionary<string, Color> SubPointNameColors {
             get {
-                if (_subPointNameColors == null)
-                {
-#if RAWR3
-                    _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
-                    _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255,255,0,0));
-                    _subPointNameColors.Add("Survivability", System.Windows.Media.Color.FromArgb(255, 64, 128, 32));
-#else
+                if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors.Add("DPS", Color.FromArgb(255,255,0,0));
+#if RAWR3
+                    _subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
+#else
                     _subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
 #endif
                 }
@@ -336,6 +327,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return _relevantGlyphs;
         }
 
+        private static bool _HidingBadStuff = true;
+        internal static bool HidingBadStuff { get { return _HidingBadStuff; } set { _HidingBadStuff = value; } }
+
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats() {
                 // Base Stats
@@ -360,12 +354,15 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
                 MovementSpeed = stats.MovementSpeed,
+                StunDurReduc = stats.StunDurReduc,
                 // Procs
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
+                ManaorEquivRestore = stats.ManaorEquivRestore,
                 // Multipliers
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
@@ -403,13 +400,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return relevantStats;
         }
         public override bool HasRelevantStats(Stats stats) {
+            bool relevant = HasWantedStats(stats) && !HasIgnoreStats(stats);
+            return relevant;
+        }
+
+        private bool HasWantedStats(Stats stats) {
             bool relevant = (
                 // Base Stats
-                stats.Stamina +
                 stats.Agility +
                 stats.Strength +
                 stats.AttackPower +
-                stats.Health +
                 stats.Armor +
                 // Ratings
                 stats.CritRating +
@@ -426,12 +426,13 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.PhysicalHaste +
                 stats.PhysicalHit +
                 stats.MovementSpeed +
+                stats.StunDurReduc +
                 // Procs
                 stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
                 stats.Paragon +
+                stats.ManaorEquivRestore + 
                 // Multipliers
-                stats.BonusStaminaMultiplier +
                 stats.BonusAgilityMultiplier +
                 stats.BonusStrengthMultiplier +
                 stats.BonusAttackPowerMultiplier +
@@ -460,6 +461,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     effect.Trigger == Trigger.DoTTick ||
                     effect.Trigger == Trigger.DamageDone ||
                     effect.Trigger == Trigger.DamageTaken ||
+                    effect.Trigger == Trigger.DamageAvoided ||
                     effect.Trigger == Trigger.HSorSLHit)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
@@ -468,6 +470,42 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
             return relevant;
         }
+
+        private bool HasSurvivabilityStats(Stats stats) {
+            bool retVal = false;
+            if (( stats.Health
+                + stats.Stamina
+                + stats.BonusHealthMultiplier
+                + stats.BonusStaminaMultiplier
+                ) > 0) {
+                retVal = true;
+            }
+            return retVal;
+        }
+
+        private bool HasIgnoreStats(Stats stats) {
+            if (!HidingBadStuff) { return false; }
+            return (
+                // Remove Spellcasting Stuff
+                stats.Mp5 + stats.SpellPower + stats.Mana + stats.Spirit + stats.Intellect + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.SpellPenetration +
+                // Remove Defensive Stuff (until we do that special modelling)
+                stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block +
+                // Remove PvP Items
+                stats.Resilience
+                ) > 0;
+        }
+
+        public override bool IsItemRelevant(Item item) {
+            Stats stats = item.Stats;
+            bool wantedStats = HasWantedStats(stats);
+            bool survstats = HasSurvivabilityStats(stats);
+            bool ignoreStats = HasIgnoreStats(stats);
+            return (wantedStats || survstats) && !ignoreStats;
+        }
+
+        public override bool IsBuffRelevant(Buff buff) { return HasWantedStats(buff.Stats) || (HasSurvivabilityStats(buff.Stats) && !HasIgnoreStats(buff.Stats)); }
+
+        public override bool IsEnchantRelevant(Enchant enchant) { return HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)); }
 
         public Stats GetBuffsStats(Character character) {
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -706,6 +744,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
                 PhysicalHit = talents.Precision * 0.01f,
                 PhysicalHaste = talents.BloodFrenzy * 0.05f,
+                StunDurReduc = (float)Math.Ceiling(20f / 3f * talents.IronWill) / 100f,
                 // Defensive
                 Parry = talents.Deflection * 0.01f,
                 Dodge = talents.Anticipation * 0.01f,

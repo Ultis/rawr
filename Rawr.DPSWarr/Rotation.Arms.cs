@@ -179,8 +179,8 @@ namespace Rawr.DPSWarr {
                 GCDUsage += (_Move_GCDs > 0 ? _Move_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : Spent Moving\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             }
-            float IronWillBonus = (float)Math.Ceiling(20f / 3f * Talents.IronWill) / 100f;
-            float BaseStunDur = (float)Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - IronWillBonus)));
+            //float IronWillBonus = (float)Math.Ceiling(20f / 3f * Talents.IronWill) / 100f;
+            float BaseStunDur = (float)Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - StatS.StunDurReduc)));
             // Being Stunned or Charmed
             if (CalcOpts.StunningTargets && CalcOpts.StunningTargetsFreq > 0) {
                 // Assume you are Stunned for 3 GCDs (1.5+latency)*3 = ~1.6*3 = ~4.8 seconds per stun

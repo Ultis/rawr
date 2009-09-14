@@ -18,6 +18,7 @@ namespace Rawr.DPSWarr
 		public bool FuryStance = true;
 		public bool AllowFlooring = false;
 		public bool PTRMode = false;
+        public bool HideBadItems = true;
 		public float SurvScale = 1.0f;
 		// Rotational Changes
 		public bool InBack = true; public int InBackPerc = 100;

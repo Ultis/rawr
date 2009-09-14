@@ -31,14 +31,6 @@ namespace Rawr.DPSWarr {
             SetUpFAQ();
             CTL_Maints.ExpandAll();
 
-            //armorBosses.Add((int)StatConversion.NPC_ARMOR[80-80], "Level 80 Mob");
-            //armorBosses.Add((int)StatConversion.NPC_ARMOR[81-80], "Level 81 Mob");
-            //armorBosses.Add((int)StatConversion.NPC_ARMOR[82-80], "Level 82 Mob");
-            //armorBosses.Add((int)StatConversion.NPC_ARMOR[83-80], "Bosses");
-
-            //CB_TargArmor.DisplayMember = "Key";
-            //CB_TargArmor.DataSource = new BindingSource(armorBosses, null);
-
             if (bosslist == null) { bosslist = new BossList(); }
             if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
             if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray()); }
@@ -183,6 +175,7 @@ FAQStuff.Add(
                 CB_MoveTargsTime.Maximum    = CB_Duration.Value;
             RB_StanceArms.Checked           = !calcOpts.FuryStance;
             CK_PTRMode.Checked              =  calcOpts.PTRMode;
+            CK_HideBadItems.Checked         =  calcOpts.HideBadItems;CalculationsDPSWarr.HidingBadStuff = calcOpts.HideBadItems;ItemCache.OnItemsChanged();
             NUD_SurvScale.Value             = (decimal)calcOpts.SurvScale;
             // Boss Selector
             // Save the new names
@@ -347,12 +340,38 @@ FAQStuff.Add(
                         calcOpts.BossName = CB_BossList.Text;
                     }
                     isLoading = false;
-                }else{TB_BossInfo.Text = "You have set custom parameters.";}
+                }else{
+                    isLoading = true;
+                    BossHandler boss = new BossHandler();
+                    //
+                    boss.Name = "Custom";
+                    boss.Level = int.Parse(CB_TargLvl.Text);
+                    boss.Armor = float.Parse(CB_TargArmor.Text);
+                    boss.BerserkTimer = (int)CB_Duration.Value;
+                    boss.InBackPerc_Melee = ((float)CB_InBackPerc.Value / 100f);
+                    boss.MaxNumTargets = (float)CB_MultiTargsMax.Value;
+                    boss.MultiTargsPerc = ((float)CB_MultiTargsPerc.Value / 100f);
+                    boss.StunningTargsDur = (float)NUD_StunDur.Value;
+                    boss.StunningTargsFreq = (float)NUD_StunFreq.Value;
+                    boss.MovingTargsTime = (float)CB_MoveTargsTime.Value;
+                    //
+                    TB_BossInfo.Text = boss.GenInfoString();
+                    isLoading = false;
+                }
                 Character.OnCalculationsInvalidated();
             }
             isLoading = false;
         }
         // Basics
+        private void CK_HideBadItems_CheckedChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.HideBadItems = CK_HideBadItems.Checked;
+                CalculationsDPSWarr.HidingBadStuff = calcOpts.HideBadItems;
+                ItemCache.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
+            }
+        }
         private void CK_PTRMode_CheckedChanged(object sender, EventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
