@@ -35,7 +35,7 @@ namespace Rawr
         #region Character Constants
 
         public const float LEVEL_80_COMBATRATING_MODIFIER = 3.2789987789987789987789987789988f; // 82/52 * Math.Pow(131/63, ((80 - 70) / 10));
-        public const float RATING_PER_ARMORPENETRATION = 1231.6239f / (1.1f/1.25f) ; // 4.69512177f / 1.25f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_ARMORPENETRATION = 1231.6239f /* / (1.1f/1.25f)*/ ; // 4.69512177f / 1.25f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_BLOCK = 1639.4994f; // 5f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_DEFENSE = 4.918498039f; // 1.5f * LEVEL_80_COMBATRATING_MODIFIER;
         public const float RATING_PER_DODGE = 4525.018692f; // 12f * LEVEL_80_COMBATRATING_MODIFIER * 100f;

@@ -18,21 +18,17 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.15.0
- - Updated rating calculations for 3.2.2 (if you want 3.2.0 calculations, stick with Rawr v2.2.14. We expect 3.2.2 to come out tomorrow, so are releasing this a day early)
- - Major improvements to Armory and Wowhead parsing; only differences now should be actual data differences between the sites.
- - Rawr will now load the faction-specificity of an item from the Armory, and will only show items available to your race's faction. Note that there are still a few ilvl258 items that aren't on the Armory, so there are still a few items in Rawr which don't have faction data, but the vast majority of items do.
- - Fixed disabled offhand items with gems counting toward metagem requirements.
- - Rawr.Cat: Improved handling of multiple temporary ArPen stats.
- - Rawr.Bear: Support for Paragon special effect.
- - Rawr.TankDK: Fix for ArPen rating being relevant.
- - Rawr.DPSWarr: Added stun handling feature. Improved Multi-Target features. Added Survivability calculations. Fixed a few minor bugs. Updated for 3.2.2. Improved rage calculations. Added preset bosses feature.
- - Rawr.DPSDK: Updated default rotations. Fixed bug with Frost Strike damage.
- - Rawr.ProtPaladin: Fix for attack crit damage calculations.
- - Rawr.Rogue: Fix for Lightning Reflexes calculation.
- - Rawr.Warlock: Fixed crashing bug. Implemented T9 set bonuses. Cleaned up Options tab.
- - Rawr.ProtWarr: Updated base stats to be consistent with 3.2.2. Updated Shield Slam damage, and a few minor proc effects.
- - Rawr.Moonkin: Fix for a damage calculation bug. Added/improved support for several trinkets.";
+			labelVersionHistory.Text = @"v2.2.16.0
+ - Switched back to 3.2 ArPen rating conversion, since 3.2.2 still looks to be a bit out. Will release a new version as soon as 3.2.2 actually comes out.
+ - Rawr.Warlock: Crashing fixed! Joy! Sorry that took so long.
+ - Rawr.DPSWarr: Fixed a bug where dps values would come up as NaN in certain cituations. Improvements to Boss handling features. Updated default gemming templates.
+ - Rawr.Mage: Update PTR mode to latest 3.2.2 mechanics. Fix for resilience relevancy.
+ - Rawr.ProtWarr: Added support for 2T9, and a couple more trinkets. Added threat/damage from Deep Wouds
+ - Rawr.TankDK: Fix for blood threat numbers being way off.
+ - Rawr.DPSDK: Added support for 3.2.2 PTR changes.
+ - Rawr.HolyPriest: Added support for 2T9 and 4T9.
+ - Rawr.ShadowPriest: Added support for 2T9 and 4T9. Added 3.2.2 changes.
+ - Rawr.Elemental: Fix for T9 bonuses.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
