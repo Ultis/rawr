@@ -438,7 +438,10 @@ namespace Rawr.TankDK
 
                 float KMPpR = KMPpM / (60 / calcOpts.m_Rotation.curRotationDuration);
                 float totalAbilities = calcOpts.m_Rotation.FrostStrike + calcOpts.m_Rotation.IcyTouch + calcOpts.m_Rotation.HowlingBlast;
-                KMRatio = KMPpR / totalAbilities;
+                if (totalAbilities > 0)
+                {
+                    KMRatio = KMPpR / totalAbilities;
+                }
             }
             #endregion
 
@@ -447,8 +450,10 @@ namespace Rawr.TankDK
                 float shadowFrostAbilitiesPerSecond = ((calcOpts.m_Rotation.DeathCoil + calcOpts.m_Rotation.FrostStrike +
                         calcOpts.m_Rotation.ScourgeStrike + calcOpts.m_Rotation.IcyTouch + calcOpts.m_Rotation.HowlingBlast) /
                         this.realDuration);
-
-                CinderglacierMultiplier *= 1f + (0.2f / (shadowFrostAbilitiesPerSecond / stats.CinderglacierProc));
+                if (shadowFrostAbilitiesPerSecond > 0)
+                {
+                    CinderglacierMultiplier *= 1f + (0.2f / (shadowFrostAbilitiesPerSecond / stats.CinderglacierProc));
+                }
             }
             #endregion
 
@@ -586,9 +591,11 @@ namespace Rawr.TankDK
                     FFCD = ((ITCD - ((float)tempF * FFCD)) / ((float)tempF + 1f)) + FFCD;
                     // Patch 3.2: Incease Damage by 15%
                     float FFDmg = (FrostFeverAPMult * stats.AttackPower + 25.6f) * 1.15f;
-                    fDamFrostFever = FFDmg / FFCD * fDuration;
-                    fDamWPFromFF = fDamFrostFever * this.physCrits * fDuration;
-
+                    if (fDuration > 0)
+                    {
+                        fDamFrostFever = FFDmg / FFCD * fDuration;
+                        fDamWPFromFF = fDamFrostFever * this.physCrits * fDuration;
+                    }
                     // TODO: this is the issue w/ the Glyph of HB vs. the Sigil of the Unfaltering Knight problems come from.
                     // Need to update that based on solid shot rotation work.
                 }
@@ -606,8 +613,11 @@ namespace Rawr.TankDK
                     BPCD = ((PSCD - ((float)tempF * BPCD)) / ((float)tempF + 1f)) + BPCD;
                     // Patch 3.2: Increase damage by 15%
                     float BPDmg = (BloodPlagueAPMult * stats.AttackPower + 31.1f) * 1.15f;
-                    fDamBloodPlague = BPDmg / BPCD * fDuration;
-                    fDamWPFromBP = fDamBloodPlague * this.physCrits * fDuration;
+                    if (fDuration > 0)
+                    {
+                        fDamBloodPlague = BPDmg / BPCD * fDuration;
+                        fDamWPFromBP = fDamBloodPlague * this.physCrits * fDuration;
+                    }
                 }
             }
             #endregion
@@ -1106,10 +1116,12 @@ namespace Rawr.TankDK
 
             DPSPoints *= 2.0735f;
 
+#if DEBUG
             if ( float.IsNaN(DPSPoints) )
             {
                 throw new Exception("DPSPoints NaN");
             }
+#endif 
 
             return DPSPoints;
         }

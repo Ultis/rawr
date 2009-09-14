@@ -56,11 +56,8 @@ namespace Rawr.TankDK {
         public float GCDTime;
         public float RP;
 
-        public Rotation() { new Rotation(0f, 0f); }
-        public Rotation(float fDodge, float fParry) 
+        public Rotation() 
         {
-            this.m_fDodge = fDodge;
-            this.m_fParry = fParry;
             this.setRotation(this.curRotationType); 
         }
 
@@ -148,13 +145,14 @@ namespace Rawr.TankDK {
             return fHastedGCD;
         }
 
+        // Rotations set by Skeleton Jack's 3.2 build and rotation notes.
         public void setRotation(Type t) {
             curRotationType = t;
             switch (curRotationType) {
                 case Type.Blood:
                     numDisease = 2f;
                     diseaseUptime = 100f;
-                    DeathCoil = 3f;
+                    DeathCoil = 2f;
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
                     ScourgeStrike = 0f;
@@ -166,9 +164,8 @@ namespace Rawr.TankDK {
                     BloodStrike = 0f;
                     HeartStrike = 6f;
                     curRotationDuration = 20f;
-                    DancingRuneWeapon = 190f;
+//                    DancingRuneWeapon = 190f;
 //                    GargoyleDuration = 0f;
-                    DeathStrike = 2f;
                     break;
                 case Type.Frost:
                     numDisease = 2f;
@@ -178,21 +175,21 @@ namespace Rawr.TankDK {
                     PlagueStrike = 2f;
                     ScourgeStrike = 0f;
                     UnholyBlight = 0f;
-                    FrostStrike = 2f;
-                    HowlingBlast = 2f;
+                    FrostStrike = 0f;
+                    HowlingBlast = 0f;
                     Obliterate = 3f;
                     BloodStrike = 2f;
                     HeartStrike = 0f;
-                    DancingRuneWeapon = 0f;
+//                    DancingRuneWeapon = 0f;
                     curRotationDuration = 20f;
 //                    GargoyleDuration = 0f;
                     DeathStrike = 0f;
-                    RuneStrike = 3f;
+                    RuneStrike = 2f;
                     break;
                 case Type.Unholy:
                     numDisease = 3f;
                     diseaseUptime = 100f;
-                    DeathCoil = 1f;
+                    DeathCoil = 0f;
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
                     ScourgeStrike = 4f;
@@ -202,10 +199,11 @@ namespace Rawr.TankDK {
                     Obliterate = 0f;
                     BloodStrike = 2f;
                     HeartStrike = 0f;
-                    DancingRuneWeapon = 0f;
+//                    DancingRuneWeapon = 0f;
                     curRotationDuration = 20f;
 //                    GargoyleDuration = 30f;
                     DeathStrike = 0f;
+                    RuneStrike = 2f;
                     break;
                 case Type.Custom:
                    /* numDisease = 0f;

@@ -328,7 +328,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     "Chance to be Crit",
                     "Avoidance %",
                     "Damage Reduction %",
-                    "Target Miss %",
+                    "+Hit",
                     "Target Parry %",
                     "Target Dodge %",
                     "Armor",
@@ -568,11 +568,17 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 fNumRotations = (fFightDuration * 60f) / fRotDuration;
                 // How many shots does the boss take over a given rotation period.
                 fBossShotCountPerRot = fRotDuration / opts.BossAttackSpeed;
-                // How fast is a hasted shot? 40% faster.
+                // How fast is a hasted shot? up to 40% faster.
                 // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
                 float fCharacterShotCount = 0f;
-                if (character.MainHand != null && ct.MH.hastedSpeed > 0f) { fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed); }
-                if (character.OffHand  != null && ct.OH.hastedSpeed > 0f) { fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed); }
+                if (character.MainHand != null && ct.MH.hastedSpeed > 0f) 
+                { 
+                    fCharacterShotCount += (fRotDuration / ct.MH.hastedSpeed); 
+                }
+                if (character.OffHand  != null && ct.OH.hastedSpeed > 0f) 
+                { 
+                    fCharacterShotCount += (fRotDuration / ct.OH.hastedSpeed); 
+                }
                 fCharacterShotCount += ct.totalParryableAbilities;
                 // The number of shots taken * the chance to be parried.
                 // Ensure that this value doesn't go over 100%
@@ -765,8 +771,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <param name="chartName">The name of the custom chart to get data for.</param>
         /// <returns>The data for the custom chart.</returns>
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) 
-        { 
-            return new ComparisonCalculationBase[0]; 
+        {
+                return new ComparisonCalculationBase[0];
         }
 
         private Stats GetRaceStats(Character character) {

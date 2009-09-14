@@ -20,7 +20,7 @@ namespace Rawr.TankDK
         {
             InitializeComponent();
             this.calcOpts = calcOpts;
-            rotation = calcOpts.m_Rotation;
+            this.rotation = calcOpts.m_Rotation;
             talents = character.DeathKnightTalents;
             this.character = character;
 
@@ -132,8 +132,9 @@ namespace Rawr.TankDK
             // ensure that rotation actually means something.
             if (null == rotation)
             {
-                rotation = new Rotation();
-                rotation.setRotation(Rotation.Type.Frost);
+                return;
+//                rotation = new Rotation();
+//                rotation.setRotation(Rotation.Type.Frost);
             }
             if (rotation.curRotationType == Rotation.Type.Blood)
             {

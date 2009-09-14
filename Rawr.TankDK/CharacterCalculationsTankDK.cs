@@ -44,6 +44,7 @@ namespace Rawr.TankDK {
             get { return new float[] {  Survival * SurvivalWeight, Mitigation, Threat * ThreatWeight }; }
             set { _subPoints = value; }
         }
+
         private float _whiteDPS;
         public float WhiteDPS {
             get { return _whiteDPS; }
@@ -229,11 +230,12 @@ namespace Rawr.TankDK {
             get { return _OHExpertise; }
             set { _OHExpertise = value; }
         }
+
         public override float GetOptimizableCalculationValue(string calculation) {
             switch (calculation) {
                 case "Chance to be Crit": return Crit; // Def cap chance to be critted by boss.  For optimization this needs to be  <= 0
                 case "Avoidance %": return (Miss + Parry + Dodge); // Another duplicate math location?
-                case "Target Miss %": return TargetMiss * 100.0f;
+                case "+Hit": return (1f - TargetMiss) * 100.0f; // +Hit related
                 case "Target Parry %": return TargetParry * 100.0f; // Expertise related.
                 case "Target Dodge %": return TargetDodge * 100.0f; // Expertise related.
                 case "Damage Reduction %": return ArmorDamageReduction * 100.0f; // % Damage reduction by Armor
