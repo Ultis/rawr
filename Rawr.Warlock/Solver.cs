@@ -809,7 +809,7 @@ namespace Rawr.Warlock
                 if (searingPain != null) pyroclasmProcs += searingPain.SpellStatistics.HitCount * searingPain.CritChance;
                 if (conflagrate != null) pyroclasmProcs += conflagrate.SpellStatistics.HitCount * conflagrate.CritChance;
                 //6% additional SP on pyroclasm proc; max 100% uptime
-                simStats.SpellPower *= (float)(1 + character.WarlockTalents.Pyroclasm * 0.02f * Math.Min(10 * pyroclasmProcs / time, 1));
+                simStats.SpellPower += (float)(simStats.SpellPower * (character.WarlockTalents.Pyroclasm * 0.02f * Math.Min(10 * pyroclasmProcs / time, 1)));
             }
 
             foreach (SpecialEffect effect in simStats.SpecialEffects())
