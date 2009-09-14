@@ -319,7 +319,7 @@ namespace Rawr.Warlock
             int ISBCounter = 0;
             int MoltenCoreCounter = 0;
             int CounterBuffedIncinerate = 0;
-            int CounterBuffedConflag = 0;
+            int CounterBuffedChaosBolt = 0;
             int CounterShadowEmbrace = 0;
             int CounterShadowDotTicks = 0;
             int CounterFireDotTicks = 0;
@@ -328,6 +328,7 @@ namespace Rawr.Warlock
             float Procs2T7 = 0;
             float newtime = 0;
             float lastUsedTime = 0;
+            float modCast = 0;
 
             #region Calculate cast rotation
             Event currentEvent = new Event(null, "Done casting");
@@ -362,9 +363,16 @@ namespace Rawr.Warlock
                                 CastList.Add(time, spell);
                             }
                             spell.SpellStatistics.HitCount++;
-                            if (BackdraftCounter > 0 && spell.SpellTree == SpellTree.Destruction)
+
+                            //modCast used to store spell cast time incase it needs to be modified by backdraft proc
+                            modCast = spell.CastTime;
+                            //backdraft: cast time and global cooldown of your next three Destruction spells is reduced by 30%. Lasts 15 sec.
+                            if (BackdraftCounter > 0 && spell.SpellTree == SpellTree.Destruction && spell.CastTime > 0)
                             {
+                                //lower cast speed according to backdraft and consume charge; 1sec GCD hardcap
+                                modCast = (float)Math.Max(1.0f, modCast * (1 - (character.WarlockTalents.Backdraft * 0.1)));
                                 BackdraftCounter--;
+                                if (BackdraftCounter == 0) removeEvent("Backdraft Ends");
                             }
 
                             if (spell.Name == "Drain Soul" || spell.Name == "Drain Life")
@@ -379,7 +387,7 @@ namespace Rawr.Warlock
                             }
                             else
                             {
-                                float doneTime = (spell.CastTime > 0 ? spell.CastTime : spell.GlobalCooldown);
+                                float doneTime = (spell.CastTime > 0 ? modCast : spell.GlobalCooldown);
 
                                 events.Add((time + doneTime + lag), new Event(spell, "Done casting"));
 
@@ -389,7 +397,7 @@ namespace Rawr.Warlock
                                     //while (debuff <= (spell.DebuffDuration + spell.CastTime))
                                     while (debuff >= spell.TimeBetweenTicks)
                                     {
-                                        events.Add(time + debuff + lag, new Event(spell, "Dot tick"));
+                                        events.Add(time + debuff + lag + modCast, new Event(spell, "Dot tick"));
                                         debuff -= spell.TimeBetweenTicks;
                                     }
                                     if (spell.SpellTree == SpellTree.Affliction)
@@ -455,7 +463,7 @@ namespace Rawr.Warlock
                                         {
                                             ShadowEmbrace = Math.Min(ShadowEmbrace + 1, 2);
                                             removeEvent("Shadow Embrace debuff");
-                                            events.Add(time + (spell.CastTime + 12) + lag, new Event(spell, "Shadow Embrace debuff"));
+                                            events.Add(time + (modCast + 12) + lag, new Event(spell, "Shadow Embrace debuff"));
                                         }
                                         break;
                                     }
@@ -466,7 +474,6 @@ namespace Rawr.Warlock
                                     }
                                 case "Conflagrate":
                                     {
-                                        if (ImmolateEnd - time <= 5) CounterBuffedConflag++;
 
                                         //The Glyph of Conflag (if present) will not consume your Immolate or Shadowflame spell on the target.
                                         //In other words, when this glyph is not present, we must consume the shadowflame or immolate spell.
@@ -474,9 +481,10 @@ namespace Rawr.Warlock
                                         {
                                             if (!removeEvent("Shadowflame"))
                                             {
-                                                removeEvent("Immolate");
+                                                removeEvent(immolate);
                                                 ImmolateIsUp = false;
                                                 immolate.SpellStatistics.CooldownReset = time;
+
                                             }
                                         }
 
@@ -493,10 +501,15 @@ namespace Rawr.Warlock
                                         if (ImmolateIsUp) CounterBuffedIncinerate++;
                                         break;
                                     }
+                                case "Chaos Bolt":
+                                    {
+                                        if (ImmolateIsUp) CounterBuffedChaosBolt++;
+                                        break;
+                                    }
                                 case "Immolate":
                                     {
                                         ImmolateIsUp = true;
-                                        ImmolateEnd = time + spell.CastTime + spell.DebuffDuration + lag;
+                                        ImmolateEnd = time + modCast + spell.DebuffDuration + lag;
                                         events.Add(ImmolateEnd, new Event(spell, "Immolate"));
                                         break;
                                     }
@@ -686,16 +699,18 @@ namespace Rawr.Warlock
 			//}
             if (CalculationOptions.Replenishment > 0)
             {
-                manaGain = simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f) * time;
+                manaGain = simStats.Mana * 0.002f * (CalculationOptions.Replenishment / 100f) * time;
                 currentMana += manaGain;
                 ManaSources.Add(new ManaSource("Replenishment", manaGain));
             }
+
+            //24PPM/60 * 0.02(%mana) = 0.008
             if (simStats.ManaRestoreFromBaseManaPPM > 0)
             {
                 float hitCount = 0;
                 foreach (Spell spell in SpellPriority)
                     hitCount += spell.SpellStatistics.HitCount;
-                manaGain = 3856 * simStats.ManaRestoreFromBaseManaPPM * (CalculationOptions.JoW / 100f) * hitCount;
+                manaGain = BaseStats.GetBaseStats(character).Mana * 0.008f * (CalculationOptions.JoW / 100f) * time;
                 currentMana += manaGain;
                 ManaSources.Add(new ManaSource("Judgement of Wisdom", manaGain));
             }
@@ -731,7 +746,7 @@ namespace Rawr.Warlock
                 if (simStats.LifeTapBonusSpirit > 0 && simStats.WarlockFelArmor > 0)
                     simStats.SpellPower += (float)(300 * 0.3f * Math.Min(numberOfTaps * 10 / time, 1));
                 if (character.WarlockTalents.GlyphLifeTap)
-                    simStats.SpellPower += (float)(simStats.Spirit * 0.2f * Math.Min(numberOfTaps * 20 / time, 1));
+                    simStats.SpellPower += (float)(simStats.Spirit * 0.2f * Math.Min(numberOfTaps * 40 / time, 1));
                 if (character.WarlockTalents.ManaFeed > 0)
                     petManaGain += manaGain;
                 ManaSources.Add(new ManaSource("Life Tap", manaGain));
@@ -793,7 +808,8 @@ namespace Rawr.Warlock
                 Spell conflagrate = GetSpellByName("Conflagrate");
                 if (searingPain != null) pyroclasmProcs += searingPain.SpellStatistics.HitCount * searingPain.CritChance;
                 if (conflagrate != null) pyroclasmProcs += conflagrate.SpellStatistics.HitCount * conflagrate.CritChance;
-                simStats.SpellPower += (float)(character.WarlockTalents.Pyroclasm * 0.02f * 10 * pyroclasmProcs / time);
+                //6% additional SP on pyroclasm proc; max 100% uptime
+                simStats.SpellPower *= (float)(1 + character.WarlockTalents.Pyroclasm * 0.02f * Math.Min(10 * pyroclasmProcs / time, 1));
             }
 
             foreach (SpecialEffect effect in simStats.SpecialEffects())
@@ -870,9 +886,6 @@ namespace Rawr.Warlock
                         }
                     case "Conflagrate":
                         {
-                            if (character.WarlockTalents.FireAndBrimstone > 0)
-                                directDamage = (spell.SpellStatistics.HitCount - CounterBuffedConflag) * spell.AvgDirectDamage
-                                             + CounterBuffedConflag * (spell.AvgHit * (1f - spell.CritChance - character.WarlockTalents.FireAndBrimstone * 0.05f) + spell.AvgCrit * (spell.CritChance + character.WarlockTalents.FireAndBrimstone * 0.05f));
                             break;
                         }
                     case "Incinerate":
@@ -880,7 +893,6 @@ namespace Rawr.Warlock
                             if (simStats.CorruptionTriggersCrit > 0)
                                 directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) * spell.SpellStatistics.HitCount + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f) * spell.SpellStatistics.HitCount;
                             directDamage += CounterBuffedIncinerate * (spell.AvgBuffedDamage - spell.AvgDirectDamage);
-                            directDamage *= 1 + (character.WarlockTalents.GlyphIncinerate ? 1 : 0) * 0.05f;
                             break;
                         }
                     case "Immolate":
@@ -917,6 +929,8 @@ namespace Rawr.Warlock
                     case "Soul Fire":
                     case "Chaos Bolt":
                         {
+                            //fire and brimstone -> 10% added damage if immolate is up
+                            directDamage += CounterBuffedChaosBolt * (spell.AvgBuffedDamage - spell.AvgDirectDamage);
                             break;
                         }
                 }

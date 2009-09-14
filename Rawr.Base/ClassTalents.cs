@@ -4987,11 +4987,11 @@ namespace Rawr
         public int EmpoweredImp { get { return _data[78]; } set { _data[78] = value; } }
 
         [TalentData(79, "Fire and Brimstone", 5, 2, 2, 10, -1, new string[] {
-@"Increases the damage of your Immolate spell by an amount equal to 3% of your spell power, and the critical strike chance of your Conflagrate spell is increased by 5% if the Immolate on the target has 5 or fewer seconds remaining.",
-@"Increases the damage of your Immolate spell by an amount equal to 6% of your spell power, and the critical strike chance of your Conflagrate spell is increased by 10% if the Immolate on the target has 5 or fewer seconds remaining.",
-@"Increases the damage of your Immolate spell by an amount equal to 9% of your spell power, and the critical strike chance of your Conflagrate spell is increased by 15% if the Immolate on the target has 5 or fewer seconds remaining.",
-@"Increases the damage of your Immolate spell by an amount equal to 12% of your spell power, and the critical strike chance of your Conflagrate spell is increased by 20% if the Immolate on the target has 5 or fewer seconds remaining.",
-@"Increases the damage of your Immolate spell by an amount equal to 15% of your spell power, and the critical strike chance of your Conflagrate spell is increased by 25% if the Immolate on the target has 5 or fewer seconds remaining.",}, "ability_warlock_fireandbrimstone")]
+@"Increases the damage done by your Incinerate and Chaos Bolt spells to targets afflicted by your Immolate by 2%, and the critical strike chance of your Conflagrate spell is increased by 5%.",
+@"Increases the damage done by your Incinerate and Chaos Bolt spells to targets afflicted by your Immolate by 4%, and the critical strike chance of your Conflagrate spell is increased by 10%.",
+@"Increases the damage done by your Incinerate and Chaos Bolt spells to targets afflicted by your Immolate by 6%, and the critical strike chance of your Conflagrate spell is increased by 15%.",
+@"Increases the damage done by your Incinerate and Chaos Bolt spells to targets afflicted by your Immolate by 8%, and the critical strike chance of your Conflagrate spell is increased by 20%.",
+@"Increases the damage done by your Incinerate and Chaos Bolt spells to targets afflicted by your Immolate by 10%, and the critical strike chance of your Conflagrate spell is increased by 25%.",}, "ability_warlock_fireandbrimstone")]
         public int FireAndBrimstone { get { return _data[79]; } set { _data[79] = value; } }
 
         [TalentData(80, "Chaos Bolt", 1, 2, 2, 11, -1, new string[] {

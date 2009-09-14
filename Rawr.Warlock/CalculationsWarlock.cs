@@ -424,15 +424,9 @@ namespace Rawr.Warlock
 
             if (statsTotal.WarlockFelArmor > 0) 
             {
-                statsTotal.SpellDamageFromSpiritPercentage += 0.3f;
-                statsTotal.SpellPower += 180f;
-                statsTotal.Hp5 += statsTotal.Health * 0.02f;
-                if (talents.DemonicAegis > 0) 
-                {
-                    statsTotal.SpellDamageFromSpiritPercentage += 0.09f;
-                    statsTotal.SpellPower += 54f;
-                    statsTotal.Hp5 += statsTotal.Health * 0.006f;
-                }
+                statsTotal.SpellDamageFromSpiritPercentage += 0.3f * (1 + talents.DemonicAegis *0.10f);
+                statsTotal.SpellPower += 180f * (1 + talents.DemonicAegis * 0.10f);
+                statsTotal.Hp5 += statsTotal.Health * 0.02f * (1 + talents.DemonicAegis * 0.10f);
             } 
             else if (statsTotal.WarlockDemonArmor > 0) 
             {
