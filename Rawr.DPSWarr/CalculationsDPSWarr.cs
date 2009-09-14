@@ -129,6 +129,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (General):Heroic Strike",
                         "DPS Breakdown (General):Cleave",
                         "DPS Breakdown (General):White DPS",
+                        "DPS Breakdown (General):Execute*<20% Spamming only",
                         @"DPS Breakdown (General):Total DPS*1st number is total DPS
 2nd number is total DMG over Duration",
                       

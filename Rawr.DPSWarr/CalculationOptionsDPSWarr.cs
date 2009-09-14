@@ -58,6 +58,7 @@ namespace Rawr.DPSWarr
                     true,  // Overpower
                     true,  // Sudden Death
                     true,  // Slam
+                true,  // <20% Execute Spamming
             true,  // == Rage Dumps ==
                 true,  // Cleave
                 true   // Heroic Strike
@@ -67,7 +68,7 @@ namespace Rawr.DPSWarr
 			_RageGen__ = 0, BerserkerRage_, Bloodrage_,
 			_Maintenance__, ShoutChoice_, BattleShout_, CommandingShout_, DemoralizingShout_, SunderArmor_, ThunderClap_, Hamstring_,
 			_Periodics__, ShatteringThrow_, SweepingStrikes_, DeathWish_, Recklessness_, EnragedRegeneration_,
-			_DamageDealers__, Fury_, Whirlwind_, Bloodthirst_, Bloodsurge_, Arms_, Bladestorm_, MortalStrike_, Rend_, Overpower_, SuddenDeath_, Slam_,
+            _DamageDealers__, Fury_, Whirlwind_, Bloodthirst_, Bloodsurge_, Arms_, Bladestorm_, MortalStrike_, Rend_, Overpower_, SuddenDeath_, Slam_, ExecuteSpam_,
 			_RageDumps__, Cleave_, HeroicStrike_
 		};
 		// Latency

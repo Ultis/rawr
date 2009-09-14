@@ -38,6 +38,7 @@ namespace Rawr.DPSWarr {
         public float _Shatt_GCDs = 0f, _Shatt_DPS = 0f, _Shatt_HPS = 0f;
         public float _Death_GCDs = 0f, _Death_HPS = 0f;
         public float _Reck_GCDs = 0f, _Reck_HPS = 0f;
+        public float _EX_GCDs = 0f, _EX_DPS = 0f, _EX_HPS = 0f;
         public float _SW_DPS = 0f, _SW_HPS = 0f, _SW_GCDs = 0f;
         public float RageGenWhite = 0f; public float RageGenOther = 0f; public float RageNeeded = 0f;
         public float _HS_PerHit = 0f, _HS_DPS = 0f, _HS_Acts = 0f;
@@ -77,6 +78,7 @@ namespace Rawr.DPSWarr {
         public Skills.DeepWounds DW;
         public Skills.Cleave CL;
         public Skills.HeroicStrike HS;
+        public Skills.Execute EX;
         #endregion
 
         #endregion
@@ -92,17 +94,6 @@ namespace Rawr.DPSWarr {
         public virtual void Initialize(CharacterCalculationsDPSWarr calcs) {
             initAbilities();
             doIterations();
-
-            /*WHITEATTACKS.OvdFreqHS = HS.Activates * WHITEATTACKS.MhEffectiveSpeed / CalcOpts.Duration;
-            WHITEATTACKS.OvdFreqCL = CL.Activates * WHITEATTACKS.MhEffectiveSpeed / CalcOpts.Duration;
-
-            calcs.WhiteDPSMH = (CHARACTER.MainHand == null ? 0f : WHITEATTACKS.MhDPS); // MhWhiteDPS
-            calcs.WhiteDPSOH = (CHARACTER.OffHand  == null ? 0f : WHITEATTACKS.OhDPS);
-            calcs.WhiteDPS = calcs.WhiteDPSMH + calcs.WhiteDPSOH;
-            calcs.WhiteDmg = (CHARACTER.MainHand == null ? 0f : WHITEATTACKS.MhDamageOnUse); //MhAvgSwingDmg
-
-            WHITEATTACKS.OvdFreqHS = 0;
-            WHITEATTACKS.OvdFreqCL = 0;*/
 
             // Whites
             calcs.Whites = WhiteAtks;
@@ -136,6 +127,7 @@ namespace Rawr.DPSWarr {
             calcs.CL = CL;
             calcs.DW = DW;
             calcs.HS = HS;
+            calcs.EX = EX;
         }
         public void Initialize() { initAbilities(); doIterations(); }
 
@@ -166,12 +158,13 @@ namespace Rawr.DPSWarr {
             RK = new Skills.Recklessness(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
 
             // Slam used by Bloodsurge, WW used by Bladestorm, so they're shared
-            SL = new Skills.Slam(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS); // actually arms but BS needs it
-            WW = new Skills.WhirlWind(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SL = new Skills.Slam(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS); // actually arms but BS needs it
+            WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             
-            DW = new Skills.DeepWounds(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            CL = new Skills.Cleave(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            HS = new Skills.HeroicStrike(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            EX = new Skills.Execute(            CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
         }
         protected virtual void doIterations() { }
 

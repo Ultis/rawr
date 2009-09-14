@@ -21,7 +21,7 @@ namespace Rawr.DPSWarr {
         public float Survivability { get { return _subPoints[1]; } set { _subPoints[1] = value; } }
         #endregion
 
-        #region display values
+        #region Display Values
         public int TargetLevel { get; set; }
         public float Duration { get; set; }
         public string floorstring { get; set; }
@@ -102,6 +102,7 @@ namespace Rawr.DPSWarr {
         public Skills.Cleave CL { get; set; }
         public Skills.DeepWounds DW { get; set; }
         public Skills.HeroicStrike HS { get; set; }
+        public Skills.Execute EX { get; set; }
         
         #endregion
         #region Neutral
@@ -264,14 +265,16 @@ namespace Rawr.DPSWarr {
             }
             // DPS Maintenance
             format = "{0:0000} : {1:0000} : {2:" + floorstring + "}";
-            dictValues.Add("Thunder Clap",      string.Format(format,Rot._TH_DPS ,TH.DamageOnUse ,Rot._Thunder_GCDs)+TH.GenTooltip(Rot._Thunder_GCDs, Rot._TH_DPS /TotalDPS));
-            dictValues.Add("Shattering Throw",  string.Format(format,Rot._Shatt_DPS,ST.DamageOnUse,Rot._Shatt_GCDs )+ST.GenTooltip(Rot._Shatt_GCDs, Rot._Shatt_DPS/TotalDPS));
+            dictValues.Add("Thunder Clap",          string.Format(format,Rot._TH_DPS ,TH.DamageOnUse ,Rot._Thunder_GCDs)+TH.GenTooltip(Rot._Thunder_GCDs, Rot._TH_DPS /TotalDPS));
+            dictValues.Add("Shattering Throw",      string.Format(format,Rot._Shatt_DPS,ST.DamageOnUse,Rot._Shatt_GCDs )+ST.GenTooltip(Rot._Shatt_GCDs, Rot._Shatt_DPS/TotalDPS));
             // DPS General
-            dictValues.Add("Deep Wounds",       string.Format("{0:0000}*{1:00.0%} of DPS",Rot._DW_DPS     ,Rot._DW_DPS/TotalDPS));
-            dictValues.Add("Heroic Strike",     string.Format(format, HS.DPS, HS.DamageOnUse, HS.Activates, HS.DPS / TotalDPS)+HS.GenTooltip(HS.Activates,HS.DPS/TotalDPS));
-            dictValues.Add("Cleave",            string.Format(format, CL.DPS, CL.DamageOnUse, CL.Activates, CL.DPS / TotalDPS)+CL.GenTooltip(CL.Activates,CL.DPS/TotalDPS));
-            dictValues.Add("White DPS",         string.Format("{0:0000} : {1:0000}", WhiteDPS, WhiteDmg)+Whites.GenTooltip(WhiteDPSMH / TotalDPS, WhiteDPSOH / TotalDPS));
-            dictValues.Add("Total DPS",         string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));
+            dictValues.Add("Deep Wounds",           string.Format("{0:0000}*{1:00.0%} of DPS",Rot._DW_DPS     ,Rot._DW_DPS/TotalDPS));
+            dictValues.Add("Heroic Strike",         string.Format(format, HS.DPS, HS.DamageOnUse, HS.Activates, HS.DPS / TotalDPS)+HS.GenTooltip(HS.Activates,HS.DPS/TotalDPS));
+            dictValues.Add("Cleave",                string.Format(format, CL.DPS, CL.DamageOnUse, CL.Activates, CL.DPS / TotalDPS)+CL.GenTooltip(CL.Activates,CL.DPS/TotalDPS));
+            dictValues.Add("White DPS",             string.Format("{0:0000} : {1:0000}", WhiteDPS, WhiteDmg)+Whites.GenTooltip(WhiteDPSMH / TotalDPS, WhiteDPSOH / TotalDPS));
+            dictValues.Add("Execute",               string.Format(format,Rot._EX_DPS, EX.DamageOnUse, Rot._EX_GCDs) + EX.GenTooltip(Rot._EX_GCDs, Rot._EX_DPS / TotalDPS));
+            //
+            dictValues.Add("Total DPS",             string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));
             // Rage
             format = "{0:00.000}";
             dictValues.Add("Total Generated Rage",      string.Format("{0:00.000} = {1:0.000} + {2:0.000}",WhiteRage+OtherRage,WhiteRage,OtherRage));

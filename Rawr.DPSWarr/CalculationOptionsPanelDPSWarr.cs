@@ -867,6 +867,7 @@ FAQStuff.Add(
                             CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[4].Checked = CTL_Maints.Nodes[currentNode].Checked;
                             CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[5].Checked = CTL_Maints.Nodes[currentNode].Checked;
                         }
+                        CTL_Maints.Nodes[currentNode].Nodes[2].Checked = true;
                         break;
                     }
                     #region Fury
@@ -1128,6 +1129,20 @@ FAQStuff.Add(
                         break;
                     }
                     #endregion
+                    case "<20% Execute Spamming": {
+                        int currentNode = 3;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[2].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked
+                             && !CTL_Maints.Nodes[currentNode].Nodes[1].Checked)
+                            {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
                     #endregion
                     #region Rage Dumps
                     case "Rage Dumps": {
@@ -1200,6 +1215,7 @@ FAQStuff.Add(
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Overpower_]        = CTL_Maints.Nodes[3].Nodes[1].Nodes[3].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SuddenDeath_]      = CTL_Maints.Nodes[3].Nodes[1].Nodes[4].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Slam_]             = CTL_Maints.Nodes[3].Nodes[1].Nodes[5].Checked;
+            calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_]      = CTL_Maints.Nodes[3].Nodes[2].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageDumps__]      = CTL_Maints.Nodes[4].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Cleave_]           = CTL_Maints.Nodes[4].Nodes[0].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_]     = CTL_Maints.Nodes[4].Nodes[1].Checked;
@@ -1209,7 +1225,7 @@ FAQStuff.Add(
             // Bounds Check
             if (calcOpts.Maintenance.GetUpperBound(0) != (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_) {
                 bool[] newArray = new bool[] {true, true, true, false, false, false, false, false, false, false, false, false, true,
-                                              true, true, true, true, true, true, true, true, true, true, true, true, true,
+                                              true, true, true, true, true, true, true, true, true, true, true, true, true, true,
                                               true, true, true, true,  true, true };
                 calcOpts.Maintenance = newArray;
             }
@@ -1243,6 +1259,7 @@ FAQStuff.Add(
             CTL_Maints.Nodes[3].Nodes[1].Nodes[3].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Overpower_];
             CTL_Maints.Nodes[3].Nodes[1].Nodes[4].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SuddenDeath_];
             CTL_Maints.Nodes[3].Nodes[1].Nodes[5].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Slam_];
+            CTL_Maints.Nodes[3].Nodes[2].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_];
             CTL_Maints.Nodes[4].Checked                     = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageDumps__];
             CTL_Maints.Nodes[4].Nodes[0].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Cleave_];
             CTL_Maints.Nodes[4].Nodes[1].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
@@ -1261,8 +1278,7 @@ FAQStuff.Add(
         }
         // Survival
         private void NUD_SurvScale_ValueChanged(object sender, EventArgs e) {
-            if (!isLoading)
-            {
+            if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.SurvScale = (float)NUD_SurvScale.Value;
                 Character.OnCalculationsInvalidated();
