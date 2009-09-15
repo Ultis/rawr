@@ -27,8 +27,8 @@ namespace Rawr.Enhance
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, relentless, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, chaotic, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, relentless, true)); // Enable Rare & epic gems by default
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));    // Enable Rare & epic gems by default
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, relentless, false)); // Enable Rare & epic gems by default
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, false));    // Enable Rare & epic gems by default
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, relentless, true));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, true));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, relentless, false));

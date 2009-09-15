@@ -308,7 +308,10 @@ namespace Rawr.Enhance
             dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
 
             dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("Yellow Hit", YellowHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            if(YellowHit < 100f && TotalExpertiseMH < 26)
+                dictValues.Add("Yellow Hit", String.Format("{0}%*Less than 100% as expertise isn't capped", YellowHit.ToString("F2", CultureInfo.InvariantCulture)));
+            else
+                dictValues.Add("Yellow Hit", YellowHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (OverSpellHitCap > 0.38f) // only warn if more than .38% over cap (equivalent to 10 hit rating)
                 dictValues.Add("Spell Hit", String.Format("{0}% (Over Cap)*Over Spell Hit Cap by {1}%",
                     SpellHit.ToString("F2", CultureInfo.InvariantCulture),
