@@ -154,7 +154,7 @@ namespace Rawr.Elemental
 
         public float PeriodicDamage(float duration)
         {
-            if (PeriodicTickTime == 0)
+            if (PeriodicTickTime <= 0 || duration <= 0)
                 return 0;
             int effectiveTicks = (int)Math.Floor(Math.Min(duration, Duration) / PeriodicTickTime);
             return PeriodicTick * effectiveTicks;

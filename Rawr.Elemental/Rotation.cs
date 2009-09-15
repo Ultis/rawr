@@ -380,7 +380,7 @@ namespace Rawr.Elemental
                 else
                     return time;
             }
-            return 0f;
+            return float.MaxValue;
         }
 
         /// <summary>
