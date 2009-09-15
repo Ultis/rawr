@@ -424,19 +424,14 @@ namespace Rawr.Warlock
 
             if (statsTotal.WarlockFelArmor > 0) 
             {
-                statsTotal.SpellDamageFromSpiritPercentage += 0.3f * (1 + talents.DemonicAegis *0.10f);
-                statsTotal.SpellPower += 180f * (1 + talents.DemonicAegis * 0.10f);
+                statsTotal.SpellPower += statsTotal.WarlockFelArmor * (1 + talents.DemonicAegis * 0.10f);
+                statsTotal.SpellDamageFromSpiritPercentage += 0.30f * (1 + talents.DemonicAegis *0.10f);
                 statsTotal.Hp5 += statsTotal.Health * 0.02f * (1 + talents.DemonicAegis * 0.10f);
             } 
             else if (statsTotal.WarlockDemonArmor > 0) 
             {
-                statsTotal.Armor += 950f;
-                statsTotal.HealingReceivedMultiplier += 0.2f;
-                if (talents.DemonicAegis > 0) 
-                {
-                    statsTotal.Armor += 285f;
-                    statsTotal.HealingReceivedMultiplier += 0.06f;
-                }
+                statsTotal.Armor += statsTotal.WarlockDemonArmor * (1 + talents.DemonicAegis * 0.10f);
+                statsTotal.HealingReceivedMultiplier += 0.2f * (1 + talents.DemonicAegis * 0.10f);
             }
             
             statsTotal.SpellPower += (float)Math.Round(statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit);
@@ -482,8 +477,8 @@ namespace Rawr.Warlock
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
-                CorruptionTriggersCrit = stats.CorruptionTriggersCrit,
-                LifeTapBonusSpirit = stats.LifeTapBonusSpirit,
+                Warlock2T7 = stats.Warlock2T7,
+                Warlock4T7 = stats.Warlock4T7,
                 Warlock2T8 = stats.Warlock2T8,
                 Warlock4T8 = stats.Warlock4T8,
                 Warlock2T9 = stats.Warlock2T9,
@@ -580,8 +575,8 @@ namespace Rawr.Warlock
                 + stats.WarlockFirestoneSpellCritRating
                 + stats.ManaRestoreFromBaseManaPPM
                 + stats.BonusSpellCritMultiplier
-                + stats.CorruptionTriggersCrit
-                + stats.LifeTapBonusSpirit
+                + stats.Warlock2T7
+                + stats.Warlock4T7
                 + stats.Warlock2T8
                 + stats.Warlock4T8
                 + stats.Warlock2T9

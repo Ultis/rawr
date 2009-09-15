@@ -319,7 +319,7 @@ namespace Rawr {
         PetSpirit,
         #endregion
         #region Set Bonuses: Warlock
-        LifeTapBonusSpirit,
+        Warlock4T7,
         #endregion
         #region Set Bonuses: Warrior
 		DevastateCritIncrease,
@@ -457,7 +457,7 @@ namespace Rawr {
         #region Added by Rawr.Warlock
         WarlockSpellstoneDotDamageMultiplier,
         WarlockFirestoneDirectDamageMultiplier,
-        CorruptionTriggersCrit,
+        Warlock2T7,
         Warlock2T8,
         Warlock4T8,
         Warlock2T9,
@@ -2666,6 +2666,7 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Warlock
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("spellpower, plus an additional 30% of spirit is added to spellpower")]
         [Category("Warlock")]
         public float WarlockFelArmor
         {
@@ -2674,6 +2675,7 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("armor")]
         [Category("Warlock")]
         public float WarlockDemonArmor
         {
@@ -2722,10 +2724,10 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Spirit after Life Tap")]
         [Category("Warlock")]
-        public float LifeTapBonusSpirit
+        public float Warlock4T7
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.LifeTapBonusSpirit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LifeTapBonusSpirit] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.Warlock4T7]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Warlock4T7] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -3577,16 +3579,6 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBleedDamageMultiplier] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Chance to increase SB/Inc crit chance")]
-        [Category("Old Equipment Procs")]
-        public float CorruptionTriggersCrit
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.CorruptionTriggersCrit]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.CorruptionTriggersCrit] = value; }
-        }
-
         #region Buffs/Debuffs
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -3701,6 +3693,16 @@ namespace Rawr {
         #endregion
 
         #region Added by Rawr.Warlock
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increase to the critical strike chance of your next Shadowbolt or Incinerate spell")]
+        [Category("Warlock")]
+        public float Warlock2T7
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T7]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T7] = value; }
+        }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% damage bonus on Unstable Affliction and 10% on Immolate")]

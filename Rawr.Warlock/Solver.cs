@@ -743,7 +743,7 @@ namespace Rawr.Warlock
                 fillerSpell.SpellStatistics.HitCount -= (float)(numberOfTaps * (lifeTap.CastTime) / (fillerSpell.CastTime));
                 fillerSpell.SpellStatistics.ManaUsed -= (float)(numberOfTaps * (lifeTap.CastTime) / (fillerSpell.CastTime) * fillerManaCost);
 
-                if (simStats.LifeTapBonusSpirit > 0 && simStats.WarlockFelArmor > 0)
+                if (simStats.Warlock4T7 > 0 && simStats.WarlockFelArmor > 0)
                     simStats.SpellPower += (float)(300 * 0.3f * Math.Min(numberOfTaps * 10 / time, 1));
                 if (character.WarlockTalents.GlyphLifeTap)
                     simStats.SpellPower += (float)(simStats.Spirit * 0.2f * Math.Min(numberOfTaps * 40 / time, 1));
@@ -869,7 +869,7 @@ namespace Rawr.Warlock
                 {
                     case "Shadow Bolt":
                         {
-                            if (simStats.CorruptionTriggersCrit > 0)
+                            if (simStats.Warlock2T7 > 0)
                                 directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) * spell.SpellStatistics.HitCount + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f) * spell.SpellStatistics.HitCount;
                             directDamage += (float)(NightfallProcs * spell.AvgDirectDamage * ((spell.CastTime) - GetGlobalCooldown(spell)) / (spell.CastTime));
                             break;
@@ -890,7 +890,7 @@ namespace Rawr.Warlock
                         }
                     case "Incinerate":
                         {
-                            if (simStats.CorruptionTriggersCrit > 0)
+                            if (simStats.Warlock2T7 > 0)
                                 directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) * spell.SpellStatistics.HitCount + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f) * spell.SpellStatistics.HitCount;
                             directDamage += CounterBuffedIncinerate * (spell.AvgBuffedDamage - spell.AvgDirectDamage);
                             break;

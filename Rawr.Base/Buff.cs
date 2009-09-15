@@ -872,14 +872,14 @@ namespace Rawr
             {
                 Name = "Fel Armor",
                 Group = "Class Buffs",
-                Stats = { WarlockFelArmor = 1f },
+                Stats = { WarlockFelArmor = 180f },
                 ConflictingBuffs = new List<string>(new string[] { "Warlock Class Armor" })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Demon Armor",
                 Group = "Class Buffs",
-                Stats = { WarlockDemonArmor = 1f },
+                Stats = { WarlockDemonArmor = 2100f },
                 ConflictingBuffs = new List<string>(new string[] { "Warlock Class Armor" })
             });
             defaultBuffs.Add(new Buff()
@@ -1907,7 +1907,7 @@ namespace Rawr
                 Name = "Plagueheart Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { CorruptionTriggersCrit = 0.15f },
+                Stats = { Warlock2T7 = 0.10f },
                 SetName = "Plagueheart Garb",
                 SetThreshold = 2
             });
@@ -1916,7 +1916,7 @@ namespace Rawr
                 Name = "Plagueheart Garb 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { LifeTapBonusSpirit = 300f },
+                Stats = { Warlock4T7 = 300f },
                 SetName = "Plagueheart Garb",
                 SetThreshold = 4
             });
