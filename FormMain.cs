@@ -2238,7 +2238,7 @@ namespace Rawr
         private void copyEnhSimConfigToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Type formOptionsPanel = Calculations.CalculationOptionsPanel.GetType();
-            if (formOptionsPanel.FullName == "Rawr.CalculationOptionsPanelEnhance")
+            if (formOptionsPanel.FullName == "Rawr.Enhance.CalculationOptionsPanelEnhance")
             {
                 MethodInfo exportMethod = formOptionsPanel.GetMethod("Export");
                 if (exportMethod != null)
