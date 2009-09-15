@@ -304,7 +304,7 @@ threat and limited threat scaled by the threat scale.",
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Grace"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Renewed Hope"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Presence (Health)"));
@@ -708,7 +708,7 @@ threat and limited threat scaled by the threat scale.",
                     CharacterCalculationsProtWarr calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 10f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcExpertiseValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 10f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcHitValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 10f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcBlockValueValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockValue = 10f / 0.65f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcBlockValueValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockValue = (10f / 0.65f) * 2.0f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = (10f * 10f) / 0.667f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 10f } }) as CharacterCalculationsProtWarr;
 
@@ -886,7 +886,7 @@ threat and limited threat scaled by the threat scale.",
 							MitigationPoints = (calcHitValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHitValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHitValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "15.38 Block Value",
+                        new ComparisonCalculationProtWarr() { Name = "30.76 Block Value",
                             OverallPoints = (calcBlockValueValue.OverallPoints - calcBaseValue.OverallPoints), 
 							MitigationPoints = (calcBlockValueValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcBlockValueValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
