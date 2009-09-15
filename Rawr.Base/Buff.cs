@@ -3712,13 +3712,6 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Badge of Tenacity",
-                Group = "Temporary Buffs",
-                Stats = { Agility = 150 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
                 Name = "Commendation of Kael'thas",
                 Group = "Temporary Buffs",
                 Stats = { DodgeRating = 152 },
@@ -3726,37 +3719,9 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Shattered Sun Pendant of Resolve Proc (Aldor)",
-                Group = "Temporary Buffs",
-                Stats = { DodgeRating = 100 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Shattered Sun Pendant of Resolve Proc (Scryer)",
-                Group = "Temporary Buffs",
-                Stats = { ExpertiseRating = 100 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
                 Name = "Figurine - Empyrean Tortoise",
                 Group = "Temporary Buffs",
                 Stats = { DodgeRating = 165 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Moroes' Lucky Pocket Watch",
-                Group = "Temporary Buffs",
-                Stats = { DodgeRating = 300 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Idol of Terror",
-                Group = "Temporary Buffs",
-                Stats = { Agility = 65 },
                 ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
