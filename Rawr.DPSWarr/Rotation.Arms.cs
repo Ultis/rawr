@@ -292,9 +292,9 @@ namespace Rawr.DPSWarr {
             /*Mortal Strike     */
             AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost + PercTimeUnder20, ref _MS_GCDs, ref DPS_TTL, ref HPS_TTL, ref _MS_DPS, ref _MS_HPS, MS);
             /*Rend              */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost + PercTimeUnder20, ref _RD_GCDs, ref DPS_TTL, ref HPS_TTL, ref _RD_DPS, ref _RD_HPS, RD);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _RD_GCDs, ref DPS_TTL, ref HPS_TTL, ref _RD_DPS, ref _RD_HPS, RD);
             /*Taste for Blood   */
-            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost + PercTimeUnder20, ref _TB_GCDs, ref DPS_TTL, ref HPS_TTL, ref _TB_DPS, ref _TB_HPS, TB);
+            AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, TotalPercTimeLost, ref _TB_GCDs, ref DPS_TTL, ref HPS_TTL, ref _TB_DPS, ref _TB_HPS, TB);
 
             // The following are dependant on other attacks as they are proccing abilities or are the fallback item
             // We need to loop these until the activates are relatively unchanged
