@@ -5,7 +5,7 @@ namespace Rawr.DPSWarr
     internal class ComparisonCalculationsDPSWarr : ComparisonCalculationBase
     {
         private string _name = string.Empty;
-        private float[] _subPoints = new[] {0f};
+        private float[] _subPoints = new[] { 0f, 0f };
 
         public override string Name {
             get { return _name; }
@@ -22,6 +22,11 @@ namespace Rawr.DPSWarr
         public float DPSPoints {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
+        }
+
+        public float SurvPoints {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
         }
 
 		public override Item Item { get; set; }

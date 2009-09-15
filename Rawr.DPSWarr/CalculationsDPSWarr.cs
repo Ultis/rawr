@@ -165,21 +165,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
         }
 
-        private string[] _customChartNames = null;
-        public override string[] CustomChartNames {
-            get {
-                if (_customChartNames == null) {
-                    _customChartNames = new string[] {
-                        /*"Ability DPS Comparison"/*,
-                        /*""/*,
-                        /*""/*,
-                        /*""*/
-                    };
-                }
-                return _customChartNames;
-            }
-        }
-
         private Dictionary<string, Color> _subPointNameColors = null;
         public override Dictionary<string, Color> SubPointNameColors {
             get {
@@ -631,6 +616,178 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
         #endregion
 
+        #region Special Comparison Charts
+        private string[] _customChartNames = null;
+        public override string[] CustomChartNames {
+            get {
+                if (_customChartNames == null) {
+                    _customChartNames = new string[] {
+                        "Ability DPS+Damage",
+                    };
+                }
+                return _customChartNames;
+            }
+        }
+
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) {
+            CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(character) as CharacterCalculationsDPSWarr;
+
+            switch (chartName) {
+                #region Ability DPS+Damage
+                case "Ability DPS+Damage":
+                    {
+                        List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
+                        if(calculations.Rot.GetType() == typeof(FuryRotation)) {
+                            #region Fury
+                            FuryRotation fr = (FuryRotation)calculations.Rot;
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Bloodsurge";
+                                comparison.DPSPoints = fr._BS_DPS;
+                                comparison.SurvPoints = fr.BS.DamageOnUse;
+                                comparisons.Add(comparison);
+                            }
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Bloodthirst";
+                                comparison.DPSPoints = fr._BT_DPS;
+                                comparison.SurvPoints = fr.BT.DamageOnUse;
+                                comparisons.Add(comparison);
+                            }
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Whirlwind";
+                                comparison.DPSPoints = fr._WW_DPS;
+                                comparison.SurvPoints = fr.WW.DamageOnUse;
+                                comparisons.Add(comparison);
+                            }
+                            #endregion
+                        } else if (calculations.Rot.GetType() == typeof(ArmsRotation)) {
+                            #region Arms
+                            ArmsRotation ar = (ArmsRotation)calculations.Rot;
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Bladestorm";
+                                comparison.DPSPoints = ar._BLS_DPS;
+                                comparison.SurvPoints = ar.BLS.DamageOnUse / 6f;
+                                comparisons.Add(comparison);
+                            }
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Mortal Strike";
+                                comparison.DPSPoints = ar._MS_DPS;
+                                comparison.SurvPoints = ar.MS.DamageOnUse;
+                                comparisons.Add(comparison);
+                            }
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Rend";
+                                comparison.DPSPoints = ar._RD_DPS;
+                                comparison.SurvPoints = ar.RD.DamageOnUse;
+                                comparisons.Add(comparison);
+                            }
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Overpower";
+                                comparison.DPSPoints = ar._OP_DPS;
+                                comparison.SurvPoints = ar.OP.DamageOnUse;
+                                comparisons.Add(comparison);
+                            }
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Taste for Blood";
+                                comparison.DPSPoints = ar._TB_DPS;
+                                comparison.SurvPoints = ar.TB.DamageOnUse;
+                                comparisons.Add(comparison);
+                            }
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Sudden Death";
+                                comparison.DPSPoints = ar._SD_DPS;
+                                comparison.SurvPoints = ar.SD.DamageOnUse;
+                                comparisons.Add(comparison);
+                            }
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Slam";
+                                comparison.DPSPoints = ar._SL_DPS;
+                                comparison.SurvPoints = ar.SL.DamageOnUse;
+                                comparisons.Add(comparison);
+                            }
+                            {
+                                ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                                comparison.Name = "Sword Spec";
+                                comparison.DPSPoints = ar._SS_DPS;
+                                comparison.SurvPoints = ar.SS.DamageOnUse;
+                                comparisons.Add(comparison);
+                            }
+                            #endregion
+                        }
+                        #region Maintenance
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Thunder Clap";
+                            comparison.DPSPoints = calculations.Rot._TH_DPS;
+                            comparison.SurvPoints = calculations.Rot.TH.DamageOnUse;
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Shattering Throw";
+                            comparison.DPSPoints = calculations.Rot._Shatt_DPS;
+                            comparison.SurvPoints = calculations.Rot.ST.DamageOnUse;
+                            comparisons.Add(comparison);
+                        }
+                        #endregion
+                        #region Generics
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Deep Wounds";
+                            comparison.DPSPoints = calculations.Rot._DW_DPS;
+                            comparison.SurvPoints = calculations.Rot.DW.TickSize;
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Heroic Strike";
+                            comparison.DPSPoints = calculations.HS.DPS;
+                            comparison.SurvPoints = calculations.HS.DamageOnUse;
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Cleave";
+                            comparison.DPSPoints = calculations.CL.DPS;
+                            comparison.SurvPoints = calculations.CL.DamageOnUse;
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "White Attacks";
+                            comparison.DPSPoints = calculations.WhiteDPS;
+                            comparison.SurvPoints = calculations.Whites.MhDamageOnUse
+                                                  + calculations.Whites.OhDamageOnUse;
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Execute";
+                            comparison.DPSPoints = calculations.Rot._EX_DPS;
+                            comparison.SurvPoints = calculations.Rot.EX.DamageOnUse;
+                            comparisons.Add(comparison);
+                        }
+                        #endregion
+                        foreach(ComparisonCalculationsDPSWarr comp in comparisons){
+                            comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
+                        }
+                        return comparisons.ToArray();
+                    }
+                #endregion
+                default: { return new ComparisonCalculationBase[0]; }
+            }
+        }
+        #endregion
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -997,18 +1154,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                        - 1f;
 
             return statsTotal;
-        }
-
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) {
-            /*List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            //CharacterCalculationsDPSWarr baseCalc, calc;
-            //ComparisonCalculationBase comparison;
-            //float[] subPoints;
-            */
-            switch (chartName) {
-                default:
-                    return new ComparisonCalculationBase[0];
-            }
         }
     }
 }
