@@ -48,7 +48,8 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         protected override float ComboPointsGeneratedPerAttack(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
         {
-            return base.ComboPointsGeneratedPerAttack(combatFactors, calcOpts) + (Glyphs.GlyphOfSinisterStrike ? .5f : 0f);
+            float CpCriRate = Crit(combatFactors, calcOpts);
+            return 1 + (Talents.SealFate.Bonus * CpCriRate) + (Glyphs.GlyphOfSinisterStrike ? .5f * CpCriRate : 0f);
         }
     }
 }

@@ -29,7 +29,8 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         protected override float ComboPointsGeneratedPerAttack(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
 		{
-            return base.ComboPointsGeneratedPerAttack(combatFactors, calcOpts) + 1;
+            float BothNoCri = (1f - Crit(combatFactors,calcOpts)) * (1f - Crit(combatFactors,calcOpts));
+            return 2f + (Talents.SealFate.Bonus * (1f - BothNoCri));
 		}
 
         public override float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
