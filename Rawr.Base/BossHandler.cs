@@ -109,14 +109,25 @@ namespace Rawr {
             calledList = GenCalledList(FilterType.Content,"All");
         }
         #region Variables
+        /// <summary>Global setting, the Character's level should always be 80 until the next expansion</summary>
         public const int NormCharLevel = 80;
-        public BossHandler[] list, calledList;
+        /// <summary>The primary list, this hold all bosses regardless of filters</summary>
+        public BossHandler[] list;
+        /// <summary>This is what modules actually see and is based upon current filters</summary>
+        public BossHandler[] calledList;
+        /// <summary>Variable for storing Damage Type (Physical, Nature, Holy, etc)</summary>
         private ItemDamageType[] DamageTypes;
+        /// <summary>Checks all the bosses to find the easiest of each stat and combines them to a single boss. Does NOT pick the easiest boss in the list but MAKES a new one. This IS NOT affected by filters.</summary>
         public BossHandler TheEZModeBoss;
+        /// <summary>Checks all the bosses to total up stats and average them out and combines them to a single boss, this is what most users should base their characters against. This IS NOT affected by filters.</summary>
         public BossHandler TheAvgBoss;
+        /// <summary>Checks all the bosses to find the worst of each stat and combines them to a single boss. Does NOT pick the hardest boss in the list but MAKES a new one. This IS NOT affected by filters.</summary>
         public BossHandler TheHardestBoss;
+        /// <summary>Checks all the bosses to find the easiest of each stat and combines them to a single boss. Does NOT pick the easiest boss in the list but MAKES a new one. This IS affected by filters.</summary>
         public BossHandler TheEZModeBoss_Called;
+        /// <summary>Checks all the bosses to total up stats and average them out and combines them to a single boss, this is what most users should base their characters against. This IS affected by filters.</summary>
         public BossHandler TheAvgBoss_Called;
+        /// <summary>Checks all the bosses to find the worst of each stat and combines them to a single boss. Does NOT pick the hardest boss in the list but MAKES a new one. This IS affected by filters.</summary>
         public BossHandler TheHardestBoss_Called;
         #endregion
         #region Functions

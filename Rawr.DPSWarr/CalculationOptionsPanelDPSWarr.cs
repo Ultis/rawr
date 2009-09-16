@@ -22,6 +22,7 @@ namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase {
         private bool isLoading = false;
         private bool firstload = true;
+        /// <summary>This Model's local bosslist</summary>
         private BossList bosslist = null;
         //private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
@@ -31,12 +32,16 @@ namespace Rawr.DPSWarr {
             SetUpFAQ();
             CTL_Maints.ExpandAll();
 
+            // Create our local Boss List
             if (bosslist == null) { bosslist = new BossList(); }
+            // Populate the Boss List ComboBox
             if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
             if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray()); }
-
+            // Set the default Filter Type
             if (CB_BL_FilterType.Text  == "") { CB_BL_FilterType.Text = "Content"; }
-
+            // Set the Default filter to All and Populate the list based upon the Filter Type
+            // E.g.- If the type is Content, the Filter List will be { "All", "T7", "T7.5",... }
+            // E.g.- If the type is Version, the Filter List will be { "All", "10 Man", "25 man", "25 Man Heroic",... }
             if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
             bosslist.GenCalledList(BossList.FilterType.Content, CB_BL_Filter.Text);
             if (CB_BL_Filter.Items.Count < 2) { CB_BL_Filter.Items.AddRange(bosslist.GetFilterListAsArray((BossList.FilterType)(CB_BL_FilterType.SelectedIndex))); }
