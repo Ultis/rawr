@@ -56,13 +56,13 @@
             this.CpPerSecLabel = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.MurderTalentCheckBox = new System.Windows.Forms.CheckBox();
             this.UseTurnTheTables = new System.Windows.Forms.CheckBox();
             this.TurnTheTablesNumericStepperLabel = new System.Windows.Forms.Label();
             this.TurnTheTablesUptimePercent = new System.Windows.Forms.NumericUpDown();
             this.FeintDelayLabel = new System.Windows.Forms.Label();
             this.FeintDelayStepper = new System.Windows.Forms.NumericUpDown();
             this.Feint = new System.Windows.Forms.CheckBox();
-            this.MurderTalentCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBoxCycles.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -76,36 +76,37 @@
             // 
             // comboBoxTargetLevel
             // 
+            this.comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTargetLevel.FormattingEnabled = true;
-            this.comboBoxTargetLevel.Location = new System.Drawing.Point(92, 14);
+            this.comboBoxTargetLevel.Location = new System.Drawing.Point(92, 13);
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-            this.comboBoxTargetLevel.Size = new System.Drawing.Size(181, 21);
+            this.comboBoxTargetLevel.Size = new System.Drawing.Size(181, 20);
             this.comboBoxTargetLevel.TabIndex = 0;
             this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetLevel_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 17);
+            this.label1.Location = new System.Drawing.Point(15, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
+            this.label1.Size = new System.Drawing.Size(67, 12);
             this.label1.TabIndex = 1;
             this.label1.Text = "Target Level:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 52);
+            this.label2.Location = new System.Drawing.Point(15, 48);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 13);
+            this.label2.Size = new System.Drawing.Size(72, 12);
             this.label2.TabIndex = 3;
             this.label2.Text = "Target Armor:";
             // 
             // labelTargetArmorDescription
             // 
-            this.labelTargetArmorDescription.Location = new System.Drawing.Point(26, 87);
+            this.labelTargetArmorDescription.Location = new System.Drawing.Point(26, 80);
             this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
-            this.labelTargetArmorDescription.Size = new System.Drawing.Size(241, 26);
+            this.labelTargetArmorDescription.Size = new System.Drawing.Size(241, 24);
             this.labelTargetArmorDescription.TabIndex = 5;
             // 
             // groupBoxCycles
@@ -117,9 +118,9 @@
             this.groupBoxCycles.Controls.Add(this.comboBoxComboPoints2);
             this.groupBoxCycles.Controls.Add(this.comboBoxFinisher1);
             this.groupBoxCycles.Controls.Add(this.comboBoxComboPoints1);
-            this.groupBoxCycles.Location = new System.Drawing.Point(15, 214);
+            this.groupBoxCycles.Location = new System.Drawing.Point(15, 198);
             this.groupBoxCycles.Name = "groupBoxCycles";
-            this.groupBoxCycles.Size = new System.Drawing.Size(258, 107);
+            this.groupBoxCycles.Size = new System.Drawing.Size(258, 99);
             this.groupBoxCycles.TabIndex = 6;
             this.groupBoxCycles.TabStop = false;
             this.groupBoxCycles.Text = "Cycles";
@@ -132,9 +133,9 @@
             this.groupBox2.Controls.Add(this.comboBox4);
             this.groupBox2.Controls.Add(this.comboBox5);
             this.groupBox2.Controls.Add(this.comboBox6);
-            this.groupBox2.Location = new System.Drawing.Point(1, -58);
+            this.groupBox2.Location = new System.Drawing.Point(1, -54);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(182, 52);
+            this.groupBox2.Size = new System.Drawing.Size(182, 48);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Cycles";
@@ -142,102 +143,108 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(78, 75);
+            this.comboBox1.Location = new System.Drawing.Point(78, 69);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(98, 21);
+            this.comboBox1.Size = new System.Drawing.Size(98, 20);
             this.comboBox1.TabIndex = 5;
             // 
             // comboBox2
             // 
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(11, 76);
+            this.comboBox2.Location = new System.Drawing.Point(11, 70);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(60, 21);
+            this.comboBox2.Size = new System.Drawing.Size(60, 20);
             this.comboBox2.TabIndex = 4;
             // 
             // comboBox3
             // 
             this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(78, 47);
+            this.comboBox3.Location = new System.Drawing.Point(78, 43);
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(98, 21);
+            this.comboBox3.Size = new System.Drawing.Size(98, 20);
             this.comboBox3.TabIndex = 3;
             // 
             // comboBox4
             // 
             this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location = new System.Drawing.Point(11, 48);
+            this.comboBox4.Location = new System.Drawing.Point(11, 44);
             this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(60, 21);
+            this.comboBox4.Size = new System.Drawing.Size(60, 20);
             this.comboBox4.TabIndex = 2;
             // 
             // comboBox5
             // 
             this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(78, 19);
+            this.comboBox5.Location = new System.Drawing.Point(78, 18);
             this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(98, 21);
+            this.comboBox5.Size = new System.Drawing.Size(98, 20);
             this.comboBox5.TabIndex = 1;
             // 
             // comboBox6
             // 
             this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Location = new System.Drawing.Point(11, 20);
+            this.comboBox6.Location = new System.Drawing.Point(11, 18);
             this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(60, 21);
+            this.comboBox6.Size = new System.Drawing.Size(60, 20);
             this.comboBox6.TabIndex = 0;
             // 
             // comboBoxFinisher3
             // 
+            this.comboBoxFinisher3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFinisher3.FormattingEnabled = true;
-            this.comboBoxFinisher3.Location = new System.Drawing.Point(104, 76);
+            this.comboBoxFinisher3.Location = new System.Drawing.Point(104, 70);
             this.comboBoxFinisher3.Name = "comboBoxFinisher3";
-            this.comboBoxFinisher3.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxFinisher3.Size = new System.Drawing.Size(148, 20);
             this.comboBoxFinisher3.TabIndex = 10;
             this.comboBoxFinisher3.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // comboBoxComboPoints3
             // 
+            this.comboBoxComboPoints3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxComboPoints3.FormattingEnabled = true;
-            this.comboBoxComboPoints3.Location = new System.Drawing.Point(11, 76);
+            this.comboBoxComboPoints3.Location = new System.Drawing.Point(11, 70);
             this.comboBoxComboPoints3.Name = "comboBoxComboPoints3";
-            this.comboBoxComboPoints3.Size = new System.Drawing.Size(87, 21);
+            this.comboBoxComboPoints3.Size = new System.Drawing.Size(87, 20);
             this.comboBoxComboPoints3.TabIndex = 9;
             this.comboBoxComboPoints3.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // comboBoxFinisher2
             // 
+            this.comboBoxFinisher2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFinisher2.FormattingEnabled = true;
-            this.comboBoxFinisher2.Location = new System.Drawing.Point(104, 47);
+            this.comboBoxFinisher2.Location = new System.Drawing.Point(104, 43);
             this.comboBoxFinisher2.Name = "comboBoxFinisher2";
-            this.comboBoxFinisher2.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxFinisher2.Size = new System.Drawing.Size(148, 20);
             this.comboBoxFinisher2.TabIndex = 8;
             this.comboBoxFinisher2.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // comboBoxComboPoints2
             // 
+            this.comboBoxComboPoints2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxComboPoints2.FormattingEnabled = true;
-            this.comboBoxComboPoints2.Location = new System.Drawing.Point(11, 48);
+            this.comboBoxComboPoints2.Location = new System.Drawing.Point(11, 44);
             this.comboBoxComboPoints2.Name = "comboBoxComboPoints2";
-            this.comboBoxComboPoints2.Size = new System.Drawing.Size(87, 21);
+            this.comboBoxComboPoints2.Size = new System.Drawing.Size(87, 20);
             this.comboBoxComboPoints2.TabIndex = 7;
             this.comboBoxComboPoints2.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // comboBoxFinisher1
             // 
+            this.comboBoxFinisher1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFinisher1.FormattingEnabled = true;
-            this.comboBoxFinisher1.Location = new System.Drawing.Point(104, 19);
+            this.comboBoxFinisher1.Location = new System.Drawing.Point(104, 18);
             this.comboBoxFinisher1.Name = "comboBoxFinisher1";
-            this.comboBoxFinisher1.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxFinisher1.Size = new System.Drawing.Size(148, 20);
             this.comboBoxFinisher1.TabIndex = 6;
             this.comboBoxFinisher1.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // comboBoxComboPoints1
             // 
+            this.comboBoxComboPoints1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxComboPoints1.FormattingEnabled = true;
-            this.comboBoxComboPoints1.Location = new System.Drawing.Point(11, 20);
+            this.comboBoxComboPoints1.Location = new System.Drawing.Point(11, 18);
             this.comboBoxComboPoints1.Name = "comboBoxComboPoints1";
-            this.comboBoxComboPoints1.Size = new System.Drawing.Size(87, 21);
+            this.comboBoxComboPoints1.Size = new System.Drawing.Size(87, 20);
             this.comboBoxComboPoints1.TabIndex = 5;
             this.comboBoxComboPoints1.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
@@ -247,9 +254,9 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.comboBoxMHPoison);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(15, 333);
+            this.groupBox1.Location = new System.Drawing.Point(15, 307);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(258, 77);
+            this.groupBox1.Size = new System.Drawing.Size(258, 71);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Poisons";
@@ -261,18 +268,18 @@
             this.comboBoxOHPoison.Items.AddRange(new object[] {
             "Deadly Poison",
             "Instant Poison"});
-            this.comboBoxOHPoison.Location = new System.Drawing.Point(104, 48);
+            this.comboBoxOHPoison.Location = new System.Drawing.Point(104, 44);
             this.comboBoxOHPoison.Name = "comboBoxOHPoison";
-            this.comboBoxOHPoison.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxOHPoison.Size = new System.Drawing.Size(148, 20);
             this.comboBoxOHPoison.TabIndex = 12;
             this.comboBoxOHPoison.SelectedIndexChanged += new System.EventHandler(this.OnOHPoisonChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(45, 51);
+            this.label4.Location = new System.Drawing.Point(45, 47);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(53, 13);
+            this.label4.Size = new System.Drawing.Size(52, 12);
             this.label4.TabIndex = 2;
             this.label4.Text = "Off Hand:";
             // 
@@ -280,50 +287,52 @@
             // 
             this.comboBoxMHPoison.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMHPoison.FormattingEnabled = true;
-            this.comboBoxMHPoison.Location = new System.Drawing.Point(104, 16);
+            this.comboBoxMHPoison.Location = new System.Drawing.Point(104, 15);
             this.comboBoxMHPoison.Name = "comboBoxMHPoison";
-            this.comboBoxMHPoison.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxMHPoison.Size = new System.Drawing.Size(148, 20);
             this.comboBoxMHPoison.TabIndex = 11;
             this.comboBoxMHPoison.SelectedIndexChanged += new System.EventHandler(this.OnMHPoisonChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(36, 24);
+            this.label3.Location = new System.Drawing.Point(36, 22);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 13);
+            this.label3.Size = new System.Drawing.Size(60, 12);
             this.label3.TabIndex = 0;
             this.label3.Text = "Main Hand:";
             // 
             // comboBoxArmorBosses
             // 
+            this.comboBoxArmorBosses.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxArmorBosses.FormattingEnabled = true;
             this.comboBoxArmorBosses.Items.AddRange(new object[] {
             "83",
             "82",
             "81",
             "80"});
-            this.comboBoxArmorBosses.Location = new System.Drawing.Point(91, 44);
+            this.comboBoxArmorBosses.Location = new System.Drawing.Point(91, 41);
             this.comboBoxArmorBosses.Name = "comboBoxArmorBosses";
-            this.comboBoxArmorBosses.Size = new System.Drawing.Size(182, 21);
+            this.comboBoxArmorBosses.Size = new System.Drawing.Size(182, 20);
             this.comboBoxArmorBosses.TabIndex = 1;
             this.comboBoxArmorBosses.SelectedIndexChanged += new System.EventHandler(this.comboBoxArmorBosses_SelectedIndexChanged);
             // 
             // groupBox3
             // 
-            this.groupBox3.Location = new System.Drawing.Point(15, 71);
+            this.groupBox3.Location = new System.Drawing.Point(15, 66);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(258, 45);
+            this.groupBox3.Size = new System.Drawing.Size(258, 42);
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Bosses";
             // 
             // ComboBoxCpGenerator
             // 
+            this.ComboBoxCpGenerator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxCpGenerator.FormattingEnabled = true;
-            this.ComboBoxCpGenerator.Location = new System.Drawing.Point(10, 41);
+            this.ComboBoxCpGenerator.Location = new System.Drawing.Point(10, 38);
             this.ComboBoxCpGenerator.Name = "ComboBoxCpGenerator";
-            this.ComboBoxCpGenerator.Size = new System.Drawing.Size(86, 21);
+            this.ComboBoxCpGenerator.Size = new System.Drawing.Size(86, 20);
             this.ComboBoxCpGenerator.TabIndex = 2;
             this.ComboBoxCpGenerator.SelectedIndexChanged += new System.EventHandler(this.ComboBoxCpGenerator_SelectedIndexChanged);
             // 
@@ -335,7 +344,7 @@
             0,
             0,
             65536});
-            this.HatStepper.Location = new System.Drawing.Point(102, 41);
+            this.HatStepper.Location = new System.Drawing.Point(102, 38);
             this.HatStepper.Maximum = new decimal(new int[] {
             10,
             0,
@@ -347,7 +356,7 @@
             0,
             65536});
             this.HatStepper.Name = "HatStepper";
-            this.HatStepper.Size = new System.Drawing.Size(73, 20);
+            this.HatStepper.Size = new System.Drawing.Size(73, 22);
             this.HatStepper.TabIndex = 3;
             this.HatStepper.Value = new decimal(new int[] {
             1,
@@ -365,9 +374,9 @@
             this.groupBox4.Controls.Add(this.label5);
             this.groupBox4.Controls.Add(this.HatStepper);
             this.groupBox4.Controls.Add(this.ComboBoxCpGenerator);
-            this.groupBox4.Location = new System.Drawing.Point(17, 122);
+            this.groupBox4.Location = new System.Drawing.Point(17, 113);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(256, 76);
+            this.groupBox4.Size = new System.Drawing.Size(256, 70);
             this.groupBox4.TabIndex = 11;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Combo Point Generator";
@@ -375,9 +384,9 @@
             // HemoPerCycleLabel
             // 
             this.HemoPerCycleLabel.AutoSize = true;
-            this.HemoPerCycleLabel.Location = new System.Drawing.Point(178, 24);
+            this.HemoPerCycleLabel.Location = new System.Drawing.Point(178, 22);
             this.HemoPerCycleLabel.Name = "HemoPerCycleLabel";
-            this.HemoPerCycleLabel.Size = new System.Drawing.Size(66, 13);
+            this.HemoPerCycleLabel.Size = new System.Drawing.Size(63, 12);
             this.HemoPerCycleLabel.TabIndex = 14;
             this.HemoPerCycleLabel.Text = "Hemo/Cycle";
             // 
@@ -389,32 +398,32 @@
             0,
             0,
             65536});
-            this.HemoPerCycle.Location = new System.Drawing.Point(181, 40);
+            this.HemoPerCycle.Location = new System.Drawing.Point(181, 37);
             this.HemoPerCycle.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.HemoPerCycle.Name = "HemoPerCycle";
-            this.HemoPerCycle.Size = new System.Drawing.Size(69, 20);
+            this.HemoPerCycle.Size = new System.Drawing.Size(69, 22);
             this.HemoPerCycle.TabIndex = 4;
             this.HemoPerCycle.ValueChanged += new System.EventHandler(this.HatStepper_ValueChanged);
             // 
             // CpPerSecLabel
             // 
             this.CpPerSecLabel.AutoSize = true;
-            this.CpPerSecLabel.Location = new System.Drawing.Point(99, 25);
+            this.CpPerSecLabel.Location = new System.Drawing.Point(99, 23);
             this.CpPerSecLabel.Name = "CpPerSecLabel";
-            this.CpPerSecLabel.Size = new System.Drawing.Size(48, 13);
+            this.CpPerSecLabel.Size = new System.Drawing.Size(40, 12);
             this.CpPerSecLabel.TabIndex = 12;
             this.CpPerSecLabel.Text = "CPs/sec";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 25);
+            this.label5.Location = new System.Drawing.Point(9, 23);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(29, 13);
+            this.label5.Size = new System.Drawing.Size(27, 12);
             this.label5.TabIndex = 11;
             this.label5.Text = "CPG";
             // 
@@ -427,19 +436,30 @@
             this.groupBox5.Controls.Add(this.FeintDelayLabel);
             this.groupBox5.Controls.Add(this.FeintDelayStepper);
             this.groupBox5.Controls.Add(this.Feint);
-            this.groupBox5.Location = new System.Drawing.Point(15, 417);
+            this.groupBox5.Location = new System.Drawing.Point(15, 385);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(258, 105);
+            this.groupBox5.Size = new System.Drawing.Size(258, 97);
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Abilities";
             // 
+            // MurderTalentCheckBox
+            // 
+            this.MurderTalentCheckBox.AutoSize = true;
+            this.MurderTalentCheckBox.Location = new System.Drawing.Point(12, 64);
+            this.MurderTalentCheckBox.Name = "MurderTalentCheckBox";
+            this.MurderTalentCheckBox.Size = new System.Drawing.Size(145, 16);
+            this.MurderTalentCheckBox.TabIndex = 6;
+            this.MurderTalentCheckBox.Text = "Target is valid for Murder";
+            this.MurderTalentCheckBox.UseVisualStyleBackColor = true;
+            this.MurderTalentCheckBox.CheckedChanged += new System.EventHandler(this.MurderTalentCheckBox_CheckedChanged);
+            // 
             // UseTurnTheTables
             // 
             this.UseTurnTheTables.AutoSize = true;
-            this.UseTurnTheTables.Location = new System.Drawing.Point(11, 46);
+            this.UseTurnTheTables.Location = new System.Drawing.Point(11, 42);
             this.UseTurnTheTables.Name = "UseTurnTheTables";
-            this.UseTurnTheTables.Size = new System.Drawing.Size(101, 17);
+            this.UseTurnTheTables.Size = new System.Drawing.Size(97, 16);
             this.UseTurnTheTables.TabIndex = 5;
             this.UseTurnTheTables.Text = "Turn the Tables";
             this.UseTurnTheTables.UseVisualStyleBackColor = true;
@@ -448,9 +468,9 @@
             // TurnTheTablesNumericStepperLabel
             // 
             this.TurnTheTablesNumericStepperLabel.AutoSize = true;
-            this.TurnTheTablesNumericStepperLabel.Location = new System.Drawing.Point(126, 46);
+            this.TurnTheTablesNumericStepperLabel.Location = new System.Drawing.Point(126, 42);
             this.TurnTheTablesNumericStepperLabel.Name = "TurnTheTablesNumericStepperLabel";
-            this.TurnTheTablesNumericStepperLabel.Size = new System.Drawing.Size(51, 13);
+            this.TurnTheTablesNumericStepperLabel.Size = new System.Drawing.Size(51, 12);
             this.TurnTheTablesNumericStepperLabel.TabIndex = 4;
             this.TurnTheTablesNumericStepperLabel.Text = "Uptime %";
             this.TurnTheTablesNumericStepperLabel.Visible = false;
@@ -462,9 +482,9 @@
             0,
             0,
             0});
-            this.TurnTheTablesUptimePercent.Location = new System.Drawing.Point(183, 44);
+            this.TurnTheTablesUptimePercent.Location = new System.Drawing.Point(183, 41);
             this.TurnTheTablesUptimePercent.Name = "TurnTheTablesUptimePercent";
-            this.TurnTheTablesUptimePercent.Size = new System.Drawing.Size(69, 20);
+            this.TurnTheTablesUptimePercent.Size = new System.Drawing.Size(69, 22);
             this.TurnTheTablesUptimePercent.TabIndex = 3;
             this.TurnTheTablesUptimePercent.Visible = false;
             this.TurnTheTablesUptimePercent.ValueChanged += new System.EventHandler(this.TurnTheTablesUptimePercent_ValueChanged);
@@ -472,23 +492,23 @@
             // FeintDelayLabel
             // 
             this.FeintDelayLabel.AutoSize = true;
-            this.FeintDelayLabel.Location = new System.Drawing.Point(83, 20);
+            this.FeintDelayLabel.Location = new System.Drawing.Point(83, 18);
             this.FeintDelayLabel.Name = "FeintDelayLabel";
-            this.FeintDelayLabel.Size = new System.Drawing.Size(94, 13);
+            this.FeintDelayLabel.Size = new System.Drawing.Size(91, 12);
             this.FeintDelayLabel.TabIndex = 2;
             this.FeintDelayLabel.Text = "Delay (in seconds)";
             this.FeintDelayLabel.Visible = false;
             // 
             // FeintDelayStepper
             // 
-            this.FeintDelayStepper.Location = new System.Drawing.Point(183, 17);
+            this.FeintDelayStepper.Location = new System.Drawing.Point(183, 16);
             this.FeintDelayStepper.Minimum = new decimal(new int[] {
             10,
             0,
             0,
             0});
             this.FeintDelayStepper.Name = "FeintDelayStepper";
-            this.FeintDelayStepper.Size = new System.Drawing.Size(69, 20);
+            this.FeintDelayStepper.Size = new System.Drawing.Size(69, 22);
             this.FeintDelayStepper.TabIndex = 1;
             this.FeintDelayStepper.Value = new decimal(new int[] {
             10,
@@ -501,28 +521,17 @@
             // Feint
             // 
             this.Feint.AutoSize = true;
-            this.Feint.Location = new System.Drawing.Point(11, 20);
+            this.Feint.Location = new System.Drawing.Point(11, 18);
             this.Feint.Name = "Feint";
-            this.Feint.Size = new System.Drawing.Size(49, 17);
+            this.Feint.Size = new System.Drawing.Size(47, 16);
             this.Feint.TabIndex = 0;
             this.Feint.Text = "Feint";
             this.Feint.UseVisualStyleBackColor = true;
             this.Feint.CheckedChanged += new System.EventHandler(this.Feint_CheckedChanged);
             // 
-            // MurderTalentCheckBox
-            // 
-            this.MurderTalentCheckBox.AutoSize = true;
-            this.MurderTalentCheckBox.Location = new System.Drawing.Point(12, 69);
-            this.MurderTalentCheckBox.Name = "MurderTalentCheckBox";
-            this.MurderTalentCheckBox.Size = new System.Drawing.Size(143, 17);
-            this.MurderTalentCheckBox.TabIndex = 6;
-            this.MurderTalentCheckBox.Text = "Target is valid for Murder";
-            this.MurderTalentCheckBox.UseVisualStyleBackColor = true;
-            this.MurderTalentCheckBox.CheckedChanged += new System.EventHandler(this.MurderTalentCheckBox_CheckedChanged);
-            // 
             // CalculationOptionsPanelRogue
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
@@ -535,7 +544,7 @@
             this.Controls.Add(this.labelTargetArmorDescription);
             this.Controls.Add(this.groupBox3);
             this.Name = "CalculationOptionsPanelRogue";
-            this.Size = new System.Drawing.Size(294, 542);
+            this.Size = new System.Drawing.Size(294, 500);
             this.groupBoxCycles.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);

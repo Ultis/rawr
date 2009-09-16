@@ -22,5 +22,15 @@ namespace Rawr.Rogue.SpecialAbilities
             var baseCost = 20 - (Glyphs.GlyphOfFeint ? 10 : 0);
             return _delay == 0f ? 0f : baseCost / _delay;
         }
+
+        public bool IsNeedFeint()
+        {
+            return (_delay > 0) ? true : false;
+    }
+
+        public int Delay()
+        {
+            return (int)_delay;
+        }
     }
 }
