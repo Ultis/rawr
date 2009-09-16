@@ -2473,7 +2473,7 @@ namespace Rawr
                 SetName = "Siegebreaker Battlegear",
                 SetThreshold = 2
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HSorSLHit, new Stats() { HasteRating = 150f, }, 5f, 0f));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HSorSLHit, new Stats() { HasteRating = 150f, }, 5f, 0f, 0.40f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Siegebreaker Battlegear (T8) 4 Piece Bonus",

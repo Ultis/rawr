@@ -973,6 +973,18 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // Crit
             statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
 
+            // Haste
+            statsTotal.HasteRating = (float)Math.Floor(statsTotal.HasteRating);
+            float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Warrior);
+            statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
+                                       (1f + statsItems.PhysicalHaste) *
+                                       (1f + statsBuffs.PhysicalHaste) *
+                                       (1f + statsTalents.PhysicalHaste) *
+                                       (1f + statsOptionsPanel.PhysicalHaste) *
+                                       //(1f + statsProcs.PhysicalHaste) *
+                                       (1f + ratingHasteBonus)
+                                       - 1f;
+
             // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
             Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors);
@@ -1106,7 +1118,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         case Trigger.HSorSLHit: // Set bonus handler
                             //Rot._SL_GCDs = Rot._SL_GCDs;
                             //Rot._HS_Acts = Rot._HS_Acts;
-                            if (Rot.CritHsSlamOverDur > 0f) statsProcs += effect.GetAverageStats(1f / Rot.CritHsSlamOverDur);
+                            if (Rot.CritHsSlamOverDur > 0f) statsProcs += effect.GetAverageStats(Rot.CritHsSlamOverDur / calcOpts.Duration);
                             break;
                     }
                     effect.Stats.ArmorPenetrationRating = oldArp;
@@ -1143,7 +1155,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             // Haste
             statsTotal.HasteRating   = (float)Math.Floor(statsTotal.HasteRating);
-            float ratingHasteBonus   = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Warrior);
+            ratingHasteBonus         = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Warrior);
             statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
                                        (1f + statsItems.PhysicalHaste) *
                                        (1f + statsBuffs.PhysicalHaste) *
