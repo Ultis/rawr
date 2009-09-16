@@ -910,7 +910,7 @@ namespace Rawr.DPSDK
                     if (calcOpts.rotation.GargoyleDuration > 0f && talents.SummonGargoyle > 0f)
                     {
                         float GargoyleCastTime = 2.0f;  //2.0 second base cast time
-                        GargoyleCastTime *= combatTable.MH.baseSpeed / combatTable.MH.hastedSpeed;
+                        GargoyleCastTime *= combatTable.MH.hastedSpeed / combatTable.MH.baseSpeed;
                         // benefits from all haste effects
 
                         float GargoyleStrike = 120f + GargoyleAPMult * stats.AttackPower;
