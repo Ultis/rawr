@@ -490,7 +490,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
             bool wantedStats = HasWantedStats(stats);
             bool survstats = HasSurvivabilityStats(stats);
             bool ignoreStats = HasIgnoreStats(stats);
-            return (wantedStats || survstats) && !ignoreStats;
+            return (wantedStats || survstats) && !ignoreStats && base.IsItemRelevant(item);
         }
 
         public override bool IsBuffRelevant(Buff buff) { return HasWantedStats(buff.Stats) || (HasSurvivabilityStats(buff.Stats) && !HasIgnoreStats(buff.Stats)); }
