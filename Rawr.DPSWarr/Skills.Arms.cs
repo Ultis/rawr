@@ -320,13 +320,15 @@ namespace Rawr.DPSWarr
                 Cd = 1.5f;
                 RageCost = 15f - (Talents.ImprovedExecute * 2.5f) - (Talents.FocusedRage * 1f);
                 StanceOkFury = StanceOkArms = true;
+                PercTimeUnder20 = 0.15f;
                 //
                 InitializeB();
             }
             public bool GetReqMeleeWeap() { return this.ReqMeleeWeap; }
             public bool GetReqMeleeRange() { return this.ReqMeleeRange; }
             public float FreeRage;
-            //public override float Activates { get { if (!Validated) { return 0f; } return 0f; } }
+            public float PercTimeUnder20;
+            protected override float ActivatesOverride { get { return base.ActivatesOverride * PercTimeUnder20; } }
             protected override float Damage { get { return GetDamage(false); } }
             public override float DamageOverride { get { return GetDamage(true); } }
             private float GetDamage(bool Override) {
@@ -346,21 +348,19 @@ namespace Rawr.DPSWarr
                 return (float)Math.Max(0f, Damage * AvgTargets);
             }
         }
-        public class Slam : Ability
-        {
+        public class Slam : Ability {
             // Constructors
             /// <summary>Slams the opponent, causing weapon damage plus 250.</summary>
             /// <TalentsAffecting>Improved Slam [Reduces cast time of your Slam ability by (0.5/1) sec.]</TalentsAffecting>
             /// <SetsAffecting>T7 Deadnaught Battlegear 2 Pc [+10% Damage]</SetsAffecting>
-            public Slam(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public Slam(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Slam";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
-                //Targets += StatS.BonusTargets;
+                Cd = 1.5f;
                 RageCost = 15f - (Talents.FocusedRage * 1f);
                 CastTime = (1.5f - (Talents.ImprovedSlam * 0.5f)); // In Seconds
                 StanceOkArms = StanceOkDef = true;
