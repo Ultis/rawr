@@ -18,17 +18,16 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.16.0
- - Switched back to 3.2 ArPen rating conversion, since 3.2.2 still looks to be a bit out. Will release a new version as soon as 3.2.2 actually comes out.
- - Rawr.Warlock: Crashing fixed! Joy! Sorry that took so long.
- - Rawr.DPSWarr: Fixed a bug where dps values would come up as NaN in certain cituations. Improvements to Boss handling features. Updated default gemming templates.
- - Rawr.Mage: Update PTR mode to latest 3.2.2 mechanics. Fix for resilience relevancy.
- - Rawr.ProtWarr: Added support for 2T9, and a couple more trinkets. Added threat/damage from Deep Wouds
- - Rawr.TankDK: Fix for blood threat numbers being way off.
- - Rawr.DPSDK: Added support for 3.2.2 PTR changes.
- - Rawr.HolyPriest: Added support for 2T9 and 4T9.
- - Rawr.ShadowPriest: Added support for 2T9 and 4T9. Added 3.2.2 changes.
- - Rawr.Elemental: Fix for T9 bonuses.";
+			labelVersionHistory.Text = @"v2.2.17.0
+ - Fix for crashing bugs in Rawr.TankDK and Rawr.ProtWarr.
+ - Fix for not being able to load priest files saved with previous verisons of Rawr.
+ - Rawr.DPSWarr: Added support for Execute spam under 20%. Improved performance. Added a comparison chart for ability DPS/damage. Fix for 2T8 calculations.
+ - Rawr.Warlock: Tons of updates to spell damage and talent calculations. Should be more more representitive of actual results now.
+ - Rawr.Tree: Fix for T9 set bonuses.
+ - Rawr.TankDK: No longer crashes. Joy!
+ - Rawr.Enhance: Fixes for EnhSim export. Updated default gemming templates.
+ - Rawr.ProtWarr: Support for new 3.2.2 Critical Block. Fix for crash on loading protection warriors from the Armory.
+ - Rawr.Elemental: Fix for T9 bonuses. Fix for Flameshock periodic damage calculations.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
