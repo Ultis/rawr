@@ -30,9 +30,11 @@ namespace Rawr.Warlock
 		public float Replenishment { get; set; }
 		public float JoW { get; set; }
 		public float LTUsePercent { get; set; }
+        public float Health35Perc { get; set; }
 		public String Pet { get; set; }
 		public bool UseInfernal { get; set; }
 		public bool UseImmoAura { get; set; }
+        public bool UseDecimation { get; set; }
 
 		public List<string> SpellPriority { get; set; }
 
@@ -51,6 +53,7 @@ namespace Rawr.Warlock
 			Delay = 100f;
 			Replenishment = 100f;
 			JoW = 100f;
+            Health35Perc = 35f;
 			Pet = "None";
 
 			SpellPriority = null;

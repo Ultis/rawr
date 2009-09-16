@@ -59,6 +59,10 @@ namespace Rawr.Warlock
             chbUseInfernal.Checked = calcOpts.UseInfernal;
             chbImmoAura.Checked = calcOpts.UseImmoAura;
 
+            chbDecimation.Checked = calcOpts.UseDecimation;
+            trk35Health.Value = (int)calcOpts.Health35Perc;
+            lbl35Health.Text = trk35Health.Value + "% of Time Boss < 35% Health."; 
+
             loading = false;
         }
 
@@ -182,6 +186,27 @@ namespace Rawr.Warlock
             {
                 CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
                 textEvents.Text = calcOpts.castseq;
+            }
+        }
+
+        private void trk35Health_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.Health35Perc = trk35Health.Value;
+                lbl35Health.Text = trk35Health.Value + "% of Time Boss < 35% Health.";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbDecimation_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.UseDecimation = chbDecimation.Checked;
+                Character.OnCalculationsInvalidated();
             }
         }
     }

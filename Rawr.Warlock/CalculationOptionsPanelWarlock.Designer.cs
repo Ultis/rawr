@@ -38,6 +38,8 @@
             this.tbAffEffects = new System.Windows.Forms.TextBox();
             this.lblAfflictionEffects = new System.Windows.Forms.Label();
             this.chbImmoAura = new System.Windows.Forms.CheckBox();
+            this.trk35Health = new System.Windows.Forms.TrackBar();
+            this.chbDecimation = new System.Windows.Forms.CheckBox();
             this.tabEvents = new System.Windows.Forms.TabPage();
             this.textEvents = new System.Windows.Forms.TextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
@@ -51,6 +53,7 @@
             this.cbTargetLevel = new System.Windows.Forms.ComboBox();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.tabChar = new System.Windows.Forms.TabPage();
+            this.lbl35Health = new System.Windows.Forms.Label();
             this.gbSpellPriority = new System.Windows.Forms.GroupBox();
             this.bChangePriority = new System.Windows.Forms.Button();
             this.lsSpellPriority = new System.Windows.Forms.ListBox();
@@ -61,6 +64,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trk35Health)).BeginInit();
             this.tabEvents.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabFight.SuspendLayout();
@@ -71,6 +75,7 @@
             // 
             // trkJoW
             // 
+            this.trkJoW.BackColor = System.Drawing.SystemColors.Window;
             this.trkJoW.Location = new System.Drawing.Point(9, 308);
             this.trkJoW.Maximum = 100;
             this.trkJoW.Name = "trkJoW";
@@ -82,6 +87,7 @@
             // 
             // trkReplenishment
             // 
+            this.trkReplenishment.BackColor = System.Drawing.SystemColors.Window;
             this.trkReplenishment.Location = new System.Drawing.Point(9, 260);
             this.trkReplenishment.Maximum = 100;
             this.trkReplenishment.Name = "trkReplenishment";
@@ -93,6 +99,7 @@
             // 
             // trkFightLength
             // 
+            this.trkFightLength.BackColor = System.Drawing.SystemColors.Window;
             this.trkFightLength.Location = new System.Drawing.Point(9, 162);
             this.trkFightLength.Maximum = 20;
             this.trkFightLength.Minimum = 1;
@@ -105,6 +112,7 @@
             // 
             // trkDelay
             // 
+            this.trkDelay.BackColor = System.Drawing.SystemColors.Window;
             this.trkDelay.Location = new System.Drawing.Point(9, 211);
             this.trkDelay.Maximum = 1000;
             this.trkDelay.Name = "trkDelay";
@@ -152,7 +160,7 @@
             // chbImmoAura
             // 
             this.chbImmoAura.AutoSize = true;
-            this.chbImmoAura.Location = new System.Drawing.Point(18, 206);
+            this.chbImmoAura.Location = new System.Drawing.Point(11, 206);
             this.chbImmoAura.Name = "chbImmoAura";
             this.chbImmoAura.Size = new System.Drawing.Size(123, 17);
             this.chbImmoAura.TabIndex = 67;
@@ -160,6 +168,31 @@
             this.toolTip1.SetToolTip(this.chbImmoAura, "Check if you want to use Immolation Aura when in Metamorphosis");
             this.chbImmoAura.UseVisualStyleBackColor = true;
             this.chbImmoAura.CheckedChanged += new System.EventHandler(this.chbImmoAura_CheckedChanged);
+            // 
+            // trk35Health
+            // 
+            this.trk35Health.BackColor = System.Drawing.SystemColors.Window;
+            this.trk35Health.Location = new System.Drawing.Point(11, 265);
+            this.trk35Health.Maximum = 100;
+            this.trk35Health.Name = "trk35Health";
+            this.trk35Health.Size = new System.Drawing.Size(266, 45);
+            this.trk35Health.TabIndex = 68;
+            this.trk35Health.TickFrequency = 5;
+            this.toolTip1.SetToolTip(this.trk35Health, "Percentage of fight time boss is below 35% health.");
+            this.trk35Health.Value = 35;
+            this.trk35Health.Scroll += new System.EventHandler(this.trk35Health_Scroll);
+            // 
+            // chbDecimation
+            // 
+            this.chbDecimation.AutoSize = true;
+            this.chbDecimation.Location = new System.Drawing.Point(11, 229);
+            this.chbDecimation.Name = "chbDecimation";
+            this.chbDecimation.Size = new System.Drawing.Size(101, 17);
+            this.chbDecimation.TabIndex = 69;
+            this.chbDecimation.Text = "Use Decimation";
+            this.toolTip1.SetToolTip(this.chbDecimation, "Check to use Decimation.");
+            this.chbDecimation.UseVisualStyleBackColor = true;
+            this.chbDecimation.CheckedChanged += new System.EventHandler(this.chbDecimation_CheckedChanged);
             // 
             // tabEvents
             // 
@@ -311,6 +344,9 @@
             // tabChar
             // 
             this.tabChar.AutoScroll = true;
+            this.tabChar.Controls.Add(this.lbl35Health);
+            this.tabChar.Controls.Add(this.chbDecimation);
+            this.tabChar.Controls.Add(this.trk35Health);
             this.tabChar.Controls.Add(this.chbImmoAura);
             this.tabChar.Controls.Add(this.gbSpellPriority);
             this.tabChar.Location = new System.Drawing.Point(4, 22);
@@ -320,6 +356,15 @@
             this.tabChar.TabIndex = 2;
             this.tabChar.Text = "Character";
             this.tabChar.UseVisualStyleBackColor = true;
+            // 
+            // lbl35Health
+            // 
+            this.lbl35Health.AutoSize = true;
+            this.lbl35Health.Location = new System.Drawing.Point(8, 249);
+            this.lbl35Health.Name = "lbl35Health";
+            this.lbl35Health.Size = new System.Drawing.Size(159, 13);
+            this.lbl35Health.TabIndex = 72;
+            this.lbl35Health.Text = "% Time Boss Below 35% Health:";
             // 
             // gbSpellPriority
             // 
@@ -401,6 +446,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trk35Health)).EndInit();
             this.tabEvents.ResumeLayout(false);
             this.tabEvents.PerformLayout();
             this.tabControl.ResumeLayout(false);
@@ -445,5 +491,8 @@
         private System.Windows.Forms.CheckBox chbImmoAura;
         private System.Windows.Forms.TabPage tabEvents;
         private System.Windows.Forms.TextBox textEvents;
+        private System.Windows.Forms.TrackBar trk35Health;
+        private System.Windows.Forms.CheckBox chbDecimation;
+        private System.Windows.Forms.Label lbl35Health;
     }
 }

@@ -34,6 +34,7 @@ namespace Rawr.Warlock
         public bool UseDSBelow35 { get; protected set; }
         public bool UseDSBelow25 { get; protected set; }
         public int BackdraftCounter { get; protected set; }
+        public bool Decimation { get; protected set; }
         public float maxTime { get; protected set; }
         public float currentMana { get; protected set; }
         public float DSCastEnd { get; protected set; }
@@ -46,6 +47,7 @@ namespace Rawr.Warlock
         public Spell haunt { get; protected set; }
         public Spell immolate { get; protected set; }
         public Spell shadowBolt { get; protected set; }
+        public Spell soulFire { get; protected set; }
         #endregion
 
         public class ManaSource 
@@ -215,6 +217,10 @@ namespace Rawr.Warlock
                                     return drainSoul;
                                 }
                             }
+                            if (CalculationOptions.UseDecimation && Decimation && soulFire.SpellStatistics.CooldownReset <= time)
+                            {
+                                return soulFire;
+                            }
                         }
                         if ((time /* + casttime*/) >= spell.SpellStatistics.CooldownReset) 
                         {
@@ -288,10 +294,19 @@ namespace Rawr.Warlock
                 SpellPriority.Add(drainSoul);
             }
 
+            if (CalculationOptions.UseDecimation)
+            {
+                soulFire = SpellFactory.CreateSpell("Soul Fire", PlayerStats, character);
+                SpellPriority.Add(soulFire);
+                soulFire.SpellStatistics.HitChance = (float)Math.Min(1f, HitChance / 100f);
+            }
+
+
             corruption = GetSpellByName("Corruption");
             haunt = GetSpellByName("Haunt");
             immolate = GetSpellByName("Immolate");
             shadowBolt = GetSpellByName("Shadow Bolt");
+            
 
             Name = "User defined";
             Rotation = "Priority Based:";
@@ -375,6 +390,13 @@ namespace Rawr.Warlock
                                 if (BackdraftCounter == 0) removeEvent("Backdraft Ends");
                             }
 
+                            if (Decimation && spell.Name == "Soul Fire")
+                            {
+                                modCast = (float)Math.Max(1.0f, modCast * (1 - character.WarlockTalents.Decimation * 0.3));
+                                Decimation = false;
+                                removeEvent("Decimation Ends");
+                            }
+
                             if (spell.Name == "Drain Soul" || spell.Name == "Drain Life")
                             {
                                 float debuff = spell.TimeBetweenTicks;
@@ -397,7 +419,7 @@ namespace Rawr.Warlock
                                     //while (debuff <= (spell.DebuffDuration + spell.CastTime))
                                     while (debuff >= spell.TimeBetweenTicks)
                                     {
-                                        events.Add(time + debuff + lag + modCast, new Event(spell, "Dot tick"));
+                                        events.Add(time + debuff + lag + doneTime, new Event(spell, "Dot tick"));
                                         debuff -= spell.TimeBetweenTicks;
                                     }
                                     if (spell.SpellTree == SpellTree.Affliction)
@@ -465,6 +487,12 @@ namespace Rawr.Warlock
                                             removeEvent("Shadow Embrace debuff");
                                             events.Add(time + (modCast + 12) + lag, new Event(spell, "Shadow Embrace debuff"));
                                         }
+                                        if (CalculationOptions.UseDecimation && time > maxTime*(1 - CalculationOptions.Health35Perc / 100) && character.WarlockTalents.Decimation > 0)
+                                        {
+                                            Decimation = true;
+                                            removeEvent("Decimation Ends");
+                                            events.Add(time + 10, new Event(spell, "Decimation Ends"));
+                                        }
                                         break;
                                     }
                                 case "Drain Soul":
@@ -492,6 +520,7 @@ namespace Rawr.Warlock
                                         if (character.WarlockTalents.Backdraft > 0)
                                         {
                                             BackdraftCounter = 3;
+                                            removeEvent("Backdraft Ends");
                                             events.Add(time + 15, new Event(spell, "Backdraft Ends"));
                                         }
                                         break;
@@ -499,6 +528,12 @@ namespace Rawr.Warlock
                                 case "Incinerate":
                                     {
                                         if (ImmolateIsUp) CounterBuffedIncinerate++;
+                                        if (CalculationOptions.UseDecimation && time < CalculationOptions.Health35Perc / 100 * maxTime && character.WarlockTalents.Decimation > 0)
+                                        {
+                                            Decimation = true;
+                                            removeEvent("Decimation Ends");
+                                            events.Add(time + 10, new Event(spell, "Decimation Ends"));
+                                        }
                                         break;
                                     }
                                 case "Chaos Bolt":
@@ -600,6 +635,11 @@ namespace Rawr.Warlock
                                 case "Backdraft Ends":
                                     {
                                         BackdraftCounter = 0;
+                                        break;
+                                    }
+                                case "Decimation Ends":
+                                    {
+                                        Decimation = false;
                                         break;
                                     }
                                 case "Immolate":
@@ -982,8 +1022,8 @@ namespace Rawr.Warlock
                 }
                 if (CounterShadowEmbrace > 0 && spell.MagicSchool == MagicSchool.Shadow)
                     dotDamage *= 1 + (float)CounterShadowEmbrace / (float)CounterShadowDotTicks * character.WarlockTalents.ShadowEmbrace * 0.01f;
-                directDamage *= (1 + simStats.WarlockFirestoneDirectDamageMultiplier);
-                dotDamage *= (1f + simStats.WarlockSpellstoneDotDamageMultiplier);
+                directDamage *= (1 + simStats.WarlockFirestoneDirectDamageMultiplier) * (1f + simStats.BonusDamageMultiplier);
+                dotDamage *= (1f + simStats.WarlockSpellstoneDotDamageMultiplier) * (1f + simStats.BonusDamageMultiplier);
                 if (character.WarlockTalents.Metamorphosis > 0)
                 {
                     directDamage *= 1 + 0.2f * metaUptime;
@@ -1003,7 +1043,6 @@ namespace Rawr.Warlock
                 OverallDamage += spell.SpellStatistics.DamageDone;
             }
             #endregion
-
             DPS = (float)(OverallDamage / time);
 
             #region Finalize procs
@@ -1041,6 +1080,7 @@ namespace Rawr.Warlock
 
             calculatedStats.DpsPoints = DPS;
             PetDPS = new PetCalculations(simStats, character).getPetDPS(this);
+            PetDPS *= (1f + simStats.BonusDamageMultiplier);
             calculatedStats.PetDPSPoints = PetDPS;
             TotalDPS = DPS + PetDPS;
         }
