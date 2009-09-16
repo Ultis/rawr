@@ -1118,7 +1118,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         case Trigger.HSorSLHit: // Set bonus handler
                             //Rot._SL_GCDs = Rot._SL_GCDs;
                             //Rot._HS_Acts = Rot._HS_Acts;
-                            if (Rot.CritHsSlamOverDur > 0f) statsProcs += effect.GetAverageStats(Rot.CritHsSlamOverDur / calcOpts.Duration);
+                            if (Rot.CritHsSlamOverDur > 0f) {
+                                Stats addme = effect.GetAverageStats(Rot.CritHsSlamOverDur/* / calcOpts.Duration*/, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                                statsProcs += addme;
+                            }
                             break;
                     }
                     effect.Stats.ArmorPenetrationRating = oldArp;
