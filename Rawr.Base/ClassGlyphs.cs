@@ -572,7 +572,7 @@ namespace Rawr
 
     public partial class RogueTalents
     {
-        private bool[] _glyphData = new bool[15];
+        private bool[] _glyphData = new bool[34];
         public override bool[] GlyphData { get { return _glyphData; } }
 
         [GlyphData(0, "Glyph of Backstab", true, @"Your Backstab increases the duration of your Rupture effect on the target by 2 sec, up to a maximum of 6 additional sec.")]
@@ -605,6 +605,46 @@ namespace Rawr
         public bool GlyphOfBladeFlurry { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
         [GlyphData(14, "Glyph of Adrenaline Rush", true, @"Increases the duration of Adrenaline Rush by 5 sec.")]
         public bool GlyphOfAdrenalineRush { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+        [GlyphData(15, "Glyph of Evasion", true, @"Increases the duration of Evasion by 5 sec.")]
+        public bool GlyphOfEvasion { get { return _glyphData[15]; } set{ _glyphData[15] = value;} }
+        [GlyphData(16, "Glyph of Garrote",true, @"Increases periodic damage dealt by Garrote by 45%, but decreases the duration by 3 sec.")]
+        public bool GlyphOfGarrote { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+        [GlyphData(17, "Glyph of Gouge",true, @"Reduces the energy cost of Gouge by 10.")]
+        public bool GlyphOfGouge { get { return _glyphData[17]; } set{ _glyphData[17] = value;} }
+        [GlyphData(18, "Glyph of Sap", true, @"Increases the duration of Sap by 20 sec.")]
+        public bool GlyphOfSap { get { return _glyphData[18]; } set{ _glyphData[18] = value;} }
+        [GlyphData(19, "Glyph of Sprint", true, @"Increases the movement speed of your Sprint ability by an additional 30%.")]
+        public bool GlyphOfSprint { get { return _glyphData[19]; } set{ _glyphData[19] = value;} }
+        [GlyphData(20, "Glyph of Ambush", true, @"Increases the range on Ambush by 5 yards.")]
+        public bool GlyphOfAmbush { get { return _glyphData[20]; } set{ _glyphData[20] = value;} }
+        [GlyphData(21, "Glyph of Crippling Poison", true, @"Increases the chance to trigger Crippling Poison by 20%.")]
+        public bool GlyphOfCripplingPoison { get { return _glyphData[21]; } set{ _glyphData[21] = value;} }
+        [GlyphData(22, "Glyph of Hemorrhage", true, @"Increases the damage bonus against targets afflicted by Hemorrhage by 40%.")]
+        public bool GlyphOfHemorrhage { get { return _glyphData[22]; } set{ _glyphData[22] = value;} }
+        [GlyphData(23, "Glyph of Preparation", true, @"Your Preparation ability also instantly resets the cooldown of Blade Furry, Dismantle, and Kick.")]
+        public bool GlyphOfPreparation { get { return _glyphData[23]; } set{ _glyphData[23] = value;} }
+        [GlyphData(24, "Glyph of Shadow Dance", true, @"Increases the duration of Shadow Dance by 4 sec.")]
+        public bool GlyphOfShadowDance { get { return _glyphData[24]; } set{ _glyphData[24] = value;} }
+        [GlyphData(25, "Glyph of Deadly Throw", true, @"Increases the slowing effect on Deadly Throw by 10%.")]
+        public bool GlyphOfDeadlyThrow { get { return _glyphData[25]; } set{ _glyphData[25] = value;} }
+        [GlyphData(26, "Glyph of Cloak of Shadows", true, @"While Cloak of Shadows is active, you take 40% less physical damage.")]
+        public bool GlyphOfCloakOfShadows { get { return _glyphData[26]; } set{ _glyphData[26] = value;} }
+        [GlyphData(27, "Glyph of Tricks of the Trade", true, @"Your Tricks of the Trade grants an additional 10% bonus damage to your target.")]
+        public bool GlyphOfTricksOfTheTrade { get { return _glyphData[27]; } set{ _glyphData[27] = value;} }
+
+        //minor glyphs
+        [GlyphData(28, "Glyph of Blurred Speed", false, @"You gain the ability to walk on water while your Sprint ability is active.")]
+        public bool GlyphOfBlurredSpeed { get { return _glyphData[28]; } set{ _glyphData[28] = value;} }
+        [GlyphData(29, "Glyph of Pick Pocket", false, @"Increases the range of your Pick Pocket ability by 5 yards.")]
+        public bool GlyphOfPickPocket { get { return _glyphData[29]; } set{ _glyphData[29] = value;} }
+        [GlyphData(30, "Glyph of Pick Lock", false, @"Reduces the cast time of your Pick Lock ability by 100%.")]
+        public bool GlyphOfPickLock { get { return _glyphData[30]; } set{ _glyphData[30] = value;} }
+        [GlyphData(31, "Glyph of Distract", false, @"Increases the range of your Distract ability by 5 yards.")]
+        public bool GlyphOfDistrict { get { return _glyphData[31]; } set{ _glyphData[31] = value;} }
+        [GlyphData(32, "Glyph of Vanish", false, @"Increases your movement speed by 30% while the Vanish effect is active.")]
+        public bool GlyphOfVanish { get { return _glyphData[32]; } set{ _glyphData[32] = value;} }
+        [GlyphData(33, "Glyph of Safe Fall", false, @"Increases the distance your Safe Fall ability allows you to fall without taking damage.")]
+        public bool GlyphOfSafeFall { get { return _glyphData[33]; } set{ _glyphData[33] = value;}}
     }
 
     public partial class HunterTalents
