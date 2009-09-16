@@ -276,8 +276,8 @@ namespace Rawr.DPSWarr {
             //
             dictValues.Add("Total DPS",             string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));
             // Rage
-            format = "{0:00.000}";
-            dictValues.Add("Total Generated Rage",      string.Format("{0:00.000} = {1:0.000} + {2:0.000}",WhiteRage+OtherRage,WhiteRage,OtherRage));
+            format = "{0:0000}";
+            dictValues.Add("Total Generated Rage",      string.Format("{0:00} = {1:0} + {2:0}",WhiteRage+OtherRage,WhiteRage,OtherRage));
             dictValues.Add("Needed Rage for Abilities", string.Format(format,NeedyRage));
             dictValues.Add("Available Free Rage",       string.Format(format,FreeRage ));
             

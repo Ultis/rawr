@@ -85,46 +85,6 @@ namespace Rawr.DPSWarr
                 InitializeB();
             }
         }
-        /*public class Trauma : BuffEffect
-        {
-            // Constructors
-            /// <summary>
-            /// Your melee critical strikes increase the effectiveness of Bleed Effects on the
-            /// target by (15*Pts)% for 15 sec.
-            /// </summary>
-            /// <TalentsAffecting>Trauma (Requires Talent)</TalentsAffecting>
-            /// <GlyphsAffecting></GlyphsAffecting>
-            public Trauma(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
-                //
-                Name = "Trauma";
-                ReqMeleeWeap = false;
-                ReqMeleeRange = true;
-                ReqTalent = true;
-                Talent2ChksValue = Talents.Trauma;
-                Duration = 15f; // In Seconds
-                StanceOkFury = StanceOkArms = StanceOkDef = true;
-                Effect = new SpecialEffect(Trigger.MeleeCrit, StatS, Duration, 0f);//, MHAtkTable.Crit
-                //
-                InitializeB();
-            }
-            // Variables
-            // Get/Set
-            // Functions
-            public override float ActivatesOverride
-            {
-                get
-                {
-                    // Chance to activate on every GCD
-                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
-                    Cd = LatentGCD;
-                    float GCDPerc = LatentGCD / (Cd + CalcOpts.GetLatency());
-                    return (float)Math.Max(0f, FightDuration / LatentGCD * MHAtkTable.Crit);
-                    // Jothay (a note to self): This is so very, very wrong... redo this you moron
-                }
-            }
-        }*/
         public class EnragedRegeneration : BuffEffect
         {
             /// <summary>

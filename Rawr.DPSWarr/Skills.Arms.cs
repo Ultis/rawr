@@ -52,8 +52,7 @@ namespace Rawr.DPSWarr
             /// <TalentsAffecting>Sudden Death (Requires Talent) [(3*Pts)% chance to proc and (3/7/10) rage kept after],
             /// Improved Execute [-(2.5*Pts) rage cost]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Execute [Execute acts as if it had 10 additional rage]</GlyphsAffecting>
-            public Suddendeath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public Suddendeath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Sudden Death";
@@ -73,9 +72,9 @@ namespace Rawr.DPSWarr
             // Variables
             public Execute Exec;
             public float FreeRage { get { return Exec.FreeRage; } set { Exec.FreeRage = value; } }
+            public float UsedExtraRage { get { return Exec.UsedExtraRage; } set { Exec.UsedExtraRage = value; } }
             // Functions
-            public float GetActivates(float landedatksoverdur)
-            {
+            public float GetActivates(float landedatksoverdur) {
                 if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
 
                 float rate = Talents.SuddenDeath * 0.03f;
@@ -84,14 +83,16 @@ namespace Rawr.DPSWarr
 
                 return (float)Math.Max(0f, acts * (1f - Whiteattacks.AvoidanceStreak));
             }
-            protected override float Damage
-            {
-                get
-                {
+            protected override float Damage {
+                get {
                     if (!Validated) { return 0f; }
                     float Damage = Exec.DamageOverride;
                     return (float)Math.Max(0f, Damage);
                 }
+            }
+            public override float GetRageUseOverDur(float acts) {
+                if (!Validated) { return 0f; }
+                return acts * (RageCost + UsedExtraRage);
             }
         }
         public class OverPower : Ability
@@ -171,14 +172,15 @@ namespace Rawr.DPSWarr
                 //
                 Name = "Taste for Blood";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
+                ReqTalent = true;
+                Talent2ChksValue = Talents.TasteForBlood;
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 CanBeDodged = false;
                 CanBeParried = false;
                 CanBeBlocked = false;
-                Cd = 5f - (2f * Talents.UnrelentingAssault); // In Seconds
+                Cd = 6f; // In Seconds
                 RageCost = 5f - (Talents.FocusedRage * 1f);
-                //Targets += StatS.BonusTargets; // should be handled in an OP subitem like Sudden Death does to Execute but we'll wait on that
                 StanceOkArms = true;
                 DamageBase = combatFactors.NormalizedMhWeaponDmg;
                 DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
@@ -186,32 +188,14 @@ namespace Rawr.DPSWarr
                 //
                 InitializeB();
             }
-            protected override float ActivatesOverride
-            {
-                get
-                {
+            protected override float ActivatesOverride {
+                get {
                     float acts = 0f;
                     float LatentGCD = (1.5f + CalcOpts.GetLatency());
-                    float cd = (float)Math.Max(Cd, LatentGCD);
-                    float Every = 0f;
-                    float GCDPerc = 0f;
 
-                    // Chance to activate: Taste for Blood (Requires Rend)
-                    if (Talents.TasteForBlood > 0f && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_])
-                    {
-                        // Not more than once every 6 seconds
-                        cd = 6f;
-                        // Percent chance to proc, if it's not at 3/3 then the cd grows
-                        switch (Talents.TasteForBlood)
-                        {
-                            case 1: { cd += 6f; break; }
-                            case 2: { cd += 3f; break; }
-                            case 3: { cd += 0f; break; }
-                        }
-
-                        GCDPerc = LatentGCD / (cd + CalcOpts.GetLatency());
-                        Every = LatentGCD / GCDPerc;
-                        acts += (float)Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));
+                    // Chance to activate Requires Rend
+                    if (CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_]) {
+                        acts = base.ActivatesOverride * (1f / 3f * Talents.TasteForBlood);
                     }
 
                     return acts;
@@ -327,6 +311,7 @@ namespace Rawr.DPSWarr
             public bool GetReqMeleeWeap() { return this.ReqMeleeWeap; }
             public bool GetReqMeleeRange() { return this.ReqMeleeRange; }
             public float FreeRage;
+            public float UsedExtraRage;
             public float PercTimeUnder20;
             protected override float ActivatesOverride { get { return base.ActivatesOverride * PercTimeUnder20; } }
             protected override float Damage { get { return GetDamage(false); } }
@@ -336,16 +321,16 @@ namespace Rawr.DPSWarr
                 } else if (!Override &&  Validated) {
                 } else if (!Override && !Validated) { return 0f; }
 
-                float freerage = (float)System.Math.Max(0f, FreeRage);
-                if (freerage < RageCost) { freerage = RageCost; }
-                float executeRage = freerage;
-                executeRage = (float)Math.Min(30f, executeRage);
-                executeRage += (Talents.GlyphOfExecution ? 10.00f : 0.00f);
-                executeRage -= RageCost;
+                UsedExtraRage = (float)Math.Max(0f, (float)Math.Min(30f, FreeRage));
+                float executeRage = UsedExtraRage + (Talents.GlyphOfExecution ? 10.00f : 0.00f);
 
                 float Damage = 1456f + StatS.AttackPower * 0.2f + executeRage * 38f;
 
                 return (float)Math.Max(0f, Damage * AvgTargets);
+            }
+            public override float GetRageUseOverDur(float acts) {
+                if (!Validated) { return 0f; }
+                return acts * (RageCost + UsedExtraRage);
             }
         }
         public class Slam : Ability {
@@ -370,7 +355,6 @@ namespace Rawr.DPSWarr
                 //
                 InitializeB();
             }
-            public override float Activates { get { if (!Validated) { return 0f; } return 0f; } }
         }
         #endregion
 
@@ -384,8 +368,7 @@ namespace Rawr.DPSWarr
             /// </summary>
             /// <TalentsAffecting>Improved Rend [+(10*Pts)% Bleed Damage], Trauma [+(15*Pts)% Bleed Damage]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Rending [+2 damage ticks]</GlyphsAffecting>
-            public Rend(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public Rend(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Rend";
@@ -405,10 +388,8 @@ namespace Rawr.DPSWarr
             public float addMisses;
             public float addDodges;
             public float addParrys;
-            protected override float ActivatesOverride
-            {
-                get
-                {
+            protected override float ActivatesOverride {
+                get {
                     // Since Rend has to be up in order to Taste for Blood
                     // this override has the intention of taking the baseline
                     // activates and forcing the char to use Rend again to ensure it's up
@@ -427,10 +408,8 @@ namespace Rawr.DPSWarr
 
                 }
             }
-            public override float TickSize
-            {
-                get
-                {
+            public override float TickSize {
+                get {
                     if (!Validated) { return 0f; }
 
                     float DmgBonusBase = ((StatS.AttackPower * Whiteattacks.MhEffectiveSpeed) / 14f + (combatFactors.MH.MaxDamage + combatFactors.MH.MinDamage) / 2f) * (743f / 300000f);
@@ -442,8 +421,7 @@ namespace Rawr.DPSWarr
                     return TickSize;
                 }
             }
-            public override float GetDPS(float acts)
-            {
+            public override float GetDPS(float acts) {
                 float dmgonuse = TickSize;
                 float numticks = NumTicks * (acts - addMisses - addDodges - addParrys);
                 float result = GetDmgOverTickingTime(acts) / FightDuration;
