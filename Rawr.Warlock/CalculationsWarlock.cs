@@ -541,8 +541,8 @@ namespace Rawr.Warlock
                 }
             }
             return (
-                //stats.Stamina
-                stats.Health
+                stats.Stamina
+                + stats.Health
                 + stats.Intellect
                 + stats.Mana
                 + stats.Spirit
