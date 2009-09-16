@@ -2672,7 +2672,7 @@ namespace Rawr
                 Name = "Thrall's/Nobundo's Regalia 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Thrall's Regalia",
+                SetName = "Nobundo's Regalia",
                 Stats = { BonusFlameShockDuration = 9f },
                 SetThreshold = 2
             });
@@ -2682,7 +2682,7 @@ namespace Rawr
                 Name = "Thrall's/Nobundo's Regalia 4 Piece Bonus",
 			    Group = "Set Bonuses",
 			    ConflictingBuffs = new List<string>(new string[] { }),
-				SetName = "Thrall's Regalia",
+                SetName = "Nobundo's Regalia",
 			    Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
 			    SetThreshold = 4
 			});
