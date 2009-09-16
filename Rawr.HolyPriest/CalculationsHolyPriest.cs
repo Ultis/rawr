@@ -920,7 +920,7 @@ namespace Rawr.HolyPriest
         {
             System.Xml.Serialization.XmlSerializer serializer =
                 new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHolyPriest));
-            System.IO.StringReader reader = new System.IO.StringReader(xml);
+			System.IO.StringReader reader = new System.IO.StringReader(xml.Replace("CalculationOptionsPriest", "CalculationOptionsHolyPriest"));
             CalculationOptionsHolyPriest calcOpts = serializer.Deserialize(reader) as CalculationOptionsHolyPriest;
             return calcOpts;
         }
