@@ -13,7 +13,7 @@ namespace Rawr.DPSWarr
 		public string Filter = "All";
 		public string BossName = "Custom";
 		public int TargetLevel = 83;
-		public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
+		public float TargetArmor = StatConversion.NPC_ARMOR[83 - 80];
 		public float Duration = 300f;
 		public bool FuryStance = true;
 		public bool AllowFlooring = false;

@@ -27,32 +27,41 @@ namespace Rawr.DPSWarr {
         //private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         public CalculationOptionsPanelDPSWarr() {
+            int line = 0;
             isLoading = true;
-            InitializeComponent();
-            SetUpFAQ();
-            CTL_Maints.ExpandAll();
+            //try {
+                InitializeComponent();
+                SetUpFAQ();
+                CTL_Maints.ExpandAll(); line = 10;
 
-            // Create our local Boss List
-            if (bosslist == null) { bosslist = new BossList(); }
-            // Populate the Boss List ComboBox
-            if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
-            if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray()); }
-            // Set the default Filter Type
-            if (CB_BL_FilterType.Text  == "") { CB_BL_FilterType.Text = "Content"; }
-            // Set the Default filter to All and Populate the list based upon the Filter Type
-            // E.g.- If the type is Content, the Filter List will be { "All", "T7", "T7.5",... }
-            // E.g.- If the type is Version, the Filter List will be { "All", "10 Man", "25 man", "25 Man Heroic",... }
-            if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
-            bosslist.GenCalledList(BossList.FilterType.Content, CB_BL_Filter.Text);
-            if (CB_BL_Filter.Items.Count < 2) { CB_BL_Filter.Items.AddRange(bosslist.GetFilterListAsArray((BossList.FilterType)(CB_BL_FilterType.SelectedIndex))); }
-
-            if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
-            CB_BossList.Items.Add("Custom");
-            CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray());
-
-            CB_Duration.Minimum = 0;
-            CB_Duration.Maximum = 60 * 20; // 20 minutes
-            CB_MoveTargsTime.Maximum = 60 * 20; // 20 minutes
+                // Create our local Boss List
+                if (bosslist == null) { bosslist = new BossList(); }
+                // Populate the Boss List ComboBox
+                if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
+                if (CB_BossList.Items.Count < 2) { CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray()); } line = 15;
+                // Set the default Filter Type
+                if (CB_BL_FilterType.Text == "") { CB_BL_FilterType.Text = "Content"; }
+                // Set the Default filter to All and Populate the list based upon the Filter Type
+                // E.g.- If the type is Content, the Filter List will be { "All", "T7", "T7.5",... }
+                // E.g.- If the type is Version, the Filter List will be { "All", "10 Man", "25 man", "25 Man Heroic",... }
+                if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
+                bosslist.GenCalledList(BossList.FilterType.Content, CB_BL_Filter.Text);
+                if (CB_BL_Filter.Items.Count < 2) { CB_BL_Filter.Items.AddRange(bosslist.GetFilterListAsArray((BossList.FilterType)(CB_BL_FilterType.SelectedIndex))); }
+                line = 20;
+                if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                CB_BossList.Items.Add("Custom");
+                CB_BossList.Items.AddRange(bosslist.GetBetterBossNamesAsArray());
+                line = 25;
+                CB_Duration.Minimum = 0;
+                CB_Duration.Maximum = 60 * 20; // 20 minutes
+                CB_MoveTargsTime.Maximum = 60 * 20; // 20 minutes
+                line = 50;
+            /*} catch (Exception ex) {
+                MessageBox.Show("LoadCalculationOptions()\n\n"
+                              + ex.Message
+                              + "\n\nLine: " + line.ToString(),
+                              "Error in creating DPSWarr Character");
+            }*/
             isLoading = false;
         }
         private void SetUpFAQ() {
@@ -166,72 +175,83 @@ FAQStuff.Add(
             }
         }
         protected override void LoadCalculationOptions() {
-            isLoading = true;
-            if (Character != null && Character.CalculationOptions == null) { 
-                // If it's broke, make a new one with the defaults
-                Character.CalculationOptions = new CalculationOptionsDPSWarr();
-                isLoading = true;
-            }
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            CB_BossList.Text                = calcOpts.BossName;
-            CB_TargLvl.Text                 = calcOpts.TargetLevel.ToString();
-            CB_TargArmor.Text               = calcOpts.TargetArmor.ToString();
-            CB_Duration.Value               = (decimal)calcOpts.Duration;
-                CB_MoveTargsTime.Maximum    = CB_Duration.Value;
-            RB_StanceArms.Checked           = !calcOpts.FuryStance;
-            CK_PTRMode.Checked              =  calcOpts.PTRMode;
-            CK_HideBadItems.Checked         =  calcOpts.HideBadItems;CalculationsDPSWarr.HidingBadStuff = calcOpts.HideBadItems;ItemCache.OnItemsChanged();
-            NUD_SurvScale.Value             = (decimal)calcOpts.SurvScale;
-            // Boss Selector
-            // Save the new names
-            CB_BL_FilterType.Text = calcOpts.FilterType;
-            firstload = true;
-            isLoading = false;  CB_BL_FilterType_SelectedIndexChanged(null, null); isLoading = true;
-            CB_BL_Filter.Text = calcOpts.Filter;
-            isLoading = false; CB_BL_Filter_SelectedIndexChanged(null, null); isLoading = true;
-            CB_BossList.Text = calcOpts.BossName;
-            isLoading = false; CB_BossList_SelectedIndexChanged(null, null); isLoading = true;
-            firstload = false;
-            // Rotational Changes
-            CK_InBack.Checked               = calcOpts.InBack;
-                LB_Perc5.Enabled            = calcOpts.InBack;
-                CB_InBackPerc.Enabled       = calcOpts.InBack;
-                CB_InBackPerc.Value         = calcOpts.InBackPerc;
-            CK_MultiTargs.Checked           = calcOpts.MultipleTargets;
-                LB_Max.Enabled              = calcOpts.MultipleTargets;
-                LB_Perc1.Enabled            = calcOpts.MultipleTargets;
-                CB_MultiTargsPerc.Enabled   = calcOpts.MultipleTargets;
-                CB_MultiTargsMax.Enabled    = calcOpts.MultipleTargets;
-                CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;
-                CB_MultiTargsMax.Value      = (int)calcOpts.MultipleTargetsMax;
-            CK_StunningTargs.Checked        = calcOpts.StunningTargets;
-                NUD_StunFreq.Enabled        = calcOpts.StunningTargets;
-                NUD_StunDur.Enabled         = calcOpts.StunningTargets;
-                LB_Stun0.Enabled            = calcOpts.StunningTargets;
-                LB_Stun1.Enabled            = calcOpts.StunningTargets;
-                LB_Stun2.Enabled            = calcOpts.StunningTargets;
-                NUD_StunFreq.Value          = (int)calcOpts.StunningTargetsFreq;
-                NUD_StunDur.Value           = (int)calcOpts.StunningTargetsDur;
-            CK_MovingTargs.Checked          = calcOpts.MovingTargets;
-                CB_MoveTargsTime.Enabled    = calcOpts.MovingTargets;
-                CB_MoveTargsPerc.Enabled    = calcOpts.MovingTargets;
-                LB_MoveSec.Enabled          = calcOpts.MovingTargets;
-                CB_MoveTargsTime.Value      = (int)calcOpts.MovingTargetsTime;
-            // nonfunctional
-            CK_DisarmTargs.Checked          = calcOpts.DisarmingTargets;
-                CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc;
-            // Abilities to Maintain
-            CK_Flooring.Checked = calcOpts.AllowFlooring;
-            LoadAbilBools(calcOpts);
-            // Latency
-            CB_Lag.Value   = (int)calcOpts.Lag;
-            CB_React.Value = (int)calcOpts.React;
-            //
-            calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
-            RB_StanceFury.Checked = calcOpts.FuryStance;
-            RB_StanceArms.Checked = !RB_StanceFury.Checked;
-            //
-            Character.OnCalculationsInvalidated();
+            int line = 0; string info = "";
+            isLoading = true; line = 1;
+            CalculationOptionsDPSWarr calcOpts; line = 2;
+            //try {
+                if (Character != null && Character.CalculationOptions == null) {
+                    // If it's broke, make a new one with the defaults
+                    Character.CalculationOptions = new CalculationOptionsDPSWarr(); line = 3;
+                    isLoading = true; line = 4;
+                }
+                calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; line = 5;
+                CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
+                CB_TargLvl.Text = info;// string.Format("{0}", calcOpts.TargetLevel);
+                        line = 7; info = calcOpts.TargetArmor.ToString();
+                CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); line = 8;
+                CB_Duration.Value = (decimal)calcOpts.Duration; line = 9;
+                CB_MoveTargsTime.Maximum = CB_Duration.Value; line = 10;
+                RB_StanceArms.Checked = !calcOpts.FuryStance; line = 11;
+                CK_PTRMode.Checked = calcOpts.PTRMode; line = 12;
+                CK_HideBadItems.Checked = calcOpts.HideBadItems; CalculationsDPSWarr.HidingBadStuff = calcOpts.HideBadItems; ItemCache.OnItemsChanged(); line = 13;
+                NUD_SurvScale.Value = (decimal)calcOpts.SurvScale; line = 14;
+                // Boss Selector
+                // Save the new names
+                CB_BL_FilterType.Text = calcOpts.FilterType;
+                firstload = true;
+                isLoading = false; CB_BL_FilterType_SelectedIndexChanged(null, null); isLoading = true;
+                CB_BL_Filter.Text = calcOpts.Filter;
+                isLoading = false; CB_BL_Filter_SelectedIndexChanged(null, null); isLoading = true;
+                CB_BossList.Text = calcOpts.BossName;
+                isLoading = false; CB_BossList_SelectedIndexChanged(null, null); isLoading = true;
+                firstload = false; line = 15;
+                // Rotational Changes
+                CK_InBack.Checked = calcOpts.InBack;
+                LB_Perc5.Enabled = calcOpts.InBack;
+                CB_InBackPerc.Enabled = calcOpts.InBack;
+                CB_InBackPerc.Value = calcOpts.InBackPerc;
+                CK_MultiTargs.Checked = calcOpts.MultipleTargets;
+                LB_Max.Enabled = calcOpts.MultipleTargets;
+                LB_Perc1.Enabled = calcOpts.MultipleTargets;
+                CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
+                CB_MultiTargsMax.Enabled = calcOpts.MultipleTargets;
+                CB_MultiTargsPerc.Value = calcOpts.MultipleTargetsPerc;
+                CB_MultiTargsMax.Value = (int)calcOpts.MultipleTargetsMax;
+                CK_StunningTargs.Checked = calcOpts.StunningTargets;
+                NUD_StunFreq.Enabled = calcOpts.StunningTargets;
+                NUD_StunDur.Enabled = calcOpts.StunningTargets;
+                LB_Stun0.Enabled = calcOpts.StunningTargets;
+                LB_Stun1.Enabled = calcOpts.StunningTargets;
+                LB_Stun2.Enabled = calcOpts.StunningTargets;
+                NUD_StunFreq.Value = (int)calcOpts.StunningTargetsFreq;
+                NUD_StunDur.Value = (int)calcOpts.StunningTargetsDur;
+                CK_MovingTargs.Checked = calcOpts.MovingTargets;
+                CB_MoveTargsTime.Enabled = calcOpts.MovingTargets;
+                CB_MoveTargsPerc.Enabled = calcOpts.MovingTargets;
+                LB_MoveSec.Enabled = calcOpts.MovingTargets;
+                CB_MoveTargsTime.Value = (int)calcOpts.MovingTargetsTime; line = 20;
+                // nonfunctional
+                CK_DisarmTargs.Checked = calcOpts.DisarmingTargets;
+                CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc; line = 25;
+                // Abilities to Maintain
+                CK_Flooring.Checked = calcOpts.AllowFlooring;
+                LoadAbilBools(calcOpts); line = 30;
+                // Latency
+                CB_Lag.Value = (int)calcOpts.Lag;
+                CB_React.Value = (int)calcOpts.React; line = 40;
+                //
+                calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
+                RB_StanceFury.Checked = calcOpts.FuryStance;
+                RB_StanceArms.Checked = !RB_StanceFury.Checked; line = 50;
+                //
+                Character.OnCalculationsInvalidated();
+            /*} catch (Exception ex) {
+                MessageBox.Show("LoadCalculationOptions() Line: " + line.ToString() + "\n\n"
+                              + ex.Message
+                              + "\n\nInfo: " + info
+                              + "\n\nStack Trace:\n" + ex.StackTrace
+                              ,"Error in loading DPSWarr Character");
+            }*/
             isLoading = false;
         }
         // Boss Handler
@@ -287,84 +307,92 @@ FAQStuff.Add(
             }
         }
         private void CB_BossList_SelectedIndexChanged(object sender, EventArgs e) {
-            if(!isLoading){
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                if (CB_BossList.Text != "Custom") {
-                    isLoading = true;
-                    // Get Values
-                    BossHandler boss = bosslist.GetBossFromBetterName(CB_BossList.Text);
-                    calcOpts.TargetLevel = boss.Level;
-                    calcOpts.TargetArmor = (int)boss.Armor;
-                    calcOpts.Duration = boss.BerserkTimer;
-                    calcOpts.InBack = ((calcOpts.InBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
-                    calcOpts.MultipleTargets = ((calcOpts.MultipleTargetsPerc = (int)(boss.MultiTargsPerc * 100f)) > 0);
-                    calcOpts.MultipleTargetsMax = Math.Min((float)CB_MultiTargsMax.Maximum, boss.MaxNumTargets);
-                    calcOpts.StunningTargets = ((calcOpts.StunningTargetsFreq = (int)(boss.StunningTargsFreq)) <= calcOpts.Duration * 0.99f && calcOpts.StunningTargetsFreq != 0f);
-                    calcOpts.StunningTargetsDur = boss.StunningTargsDur;
-                    calcOpts.MovingTargets = ((calcOpts.MovingTargetsTime = (int)(boss.MovingTargsTime)) > 0);
-                    calcOpts.DisarmingTargets = ((calcOpts.DisarmingTargetsPerc = (int)(boss.DisarmingTargsPerc * 100f)) > 0);
+            //try {
+                if (!isLoading) {
+                    CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                    if (CB_BossList.Text != "Custom") {
+                        isLoading = true;
+                        // Get Values
+                        BossHandler boss = bosslist.GetBossFromBetterName(CB_BossList.Text);
+                        calcOpts.TargetLevel = boss.Level;
+                        calcOpts.TargetArmor = (int)boss.Armor;
+                        calcOpts.Duration = boss.BerserkTimer;
+                        calcOpts.InBack = ((calcOpts.InBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
+                        calcOpts.MultipleTargets = ((calcOpts.MultipleTargetsPerc = (int)(boss.MultiTargsPerc * 100f)) > 0);
+                        calcOpts.MultipleTargetsMax = Math.Min((float)CB_MultiTargsMax.Maximum, boss.MaxNumTargets);
+                        calcOpts.StunningTargets = ((calcOpts.StunningTargetsFreq = (int)(boss.StunningTargsFreq)) <= calcOpts.Duration * 0.99f && calcOpts.StunningTargetsFreq != 0f);
+                        calcOpts.StunningTargetsDur = boss.StunningTargsDur;
+                        calcOpts.MovingTargets = ((calcOpts.MovingTargetsTime = (int)(boss.MovingTargsTime)) > 0);
+                        calcOpts.DisarmingTargets = ((calcOpts.DisarmingTargetsPerc = (int)(boss.DisarmingTargsPerc * 100f)) > 0);
 
-                    // Set Controls to those Values
-                    CB_TargLvl.Text          = calcOpts.TargetLevel.ToString();
-                    CB_TargArmor.Text        = calcOpts.TargetArmor.ToString();
-                    CB_Duration.Value        = (int)calcOpts.Duration;
-                    CB_MoveTargsTime.Maximum = CB_Duration.Value;
+                        // Set Controls to those Values
+                        CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
+                        CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
+                        CB_Duration.Value = (int)calcOpts.Duration;
+                        CB_MoveTargsTime.Maximum = CB_Duration.Value;
 
-                    CK_InBack.Checked               = calcOpts.InBack;
-                        LB_Perc5.Enabled            = calcOpts.InBack;
-                        CB_InBackPerc.Enabled       = calcOpts.InBack;
-                        CB_InBackPerc.Value         = calcOpts.InBackPerc;
-                    CK_MultiTargs.Checked           = calcOpts.MultipleTargets;
-                        LB_Max.Enabled              = calcOpts.MultipleTargets;
-                        LB_Perc1.Enabled            = calcOpts.MultipleTargets;
-                        CB_MultiTargsPerc.Enabled   = calcOpts.MultipleTargets;
-                        CB_MultiTargsMax.Enabled    = calcOpts.MultipleTargets;
-                        CB_MultiTargsPerc.Value     = calcOpts.MultipleTargetsPerc;
-                        CB_MultiTargsMax.Value      = (int)calcOpts.MultipleTargetsMax;
-                    CK_StunningTargs.Checked        = calcOpts.StunningTargets;
-                        NUD_StunFreq.Enabled        = calcOpts.StunningTargets;
-                        NUD_StunDur.Enabled         = calcOpts.StunningTargets;
-                        LB_Stun0.Enabled            = calcOpts.StunningTargets;
-                        LB_Stun1.Enabled            = calcOpts.StunningTargets;
-                        LB_Stun2.Enabled            = calcOpts.StunningTargets;
-                        NUD_StunFreq.Value          = (int)calcOpts.StunningTargetsFreq;
-                        NUD_StunDur.Value           = (int)calcOpts.StunningTargetsDur;
-                    CK_MovingTargs.Checked          = calcOpts.MovingTargets;
-                        CB_MoveTargsTime.Enabled    = calcOpts.MovingTargets;
-                        CB_MoveTargsPerc.Enabled    = calcOpts.MovingTargets;
-                        LB_MoveSec.Enabled          = calcOpts.MovingTargets;
-                        LB_MovePerc.Enabled         = calcOpts.MovingTargets;
-                        CB_MoveTargsTime.Value      = (int)calcOpts.MovingTargetsTime;
-                        CB_MoveTargsPerc.Value      = (decimal)Math.Floor(calcOpts.MovingTargetsTime / (float)CB_Duration.Value * 100f);
-                    
-                    TB_BossInfo.Text = boss.GenInfoString();
-                    // Save the new names
-                    if (!firstload) {
-                        calcOpts.FilterType = CB_BL_FilterType.Text;
-                        calcOpts.Filter = CB_BL_Filter.Text;
-                        calcOpts.BossName = CB_BossList.Text;
+                        CK_InBack.Checked = calcOpts.InBack;
+                        LB_Perc5.Enabled = calcOpts.InBack;
+                        CB_InBackPerc.Enabled = calcOpts.InBack;
+                        CB_InBackPerc.Value = calcOpts.InBackPerc;
+                        CK_MultiTargs.Checked = calcOpts.MultipleTargets;
+                        LB_Max.Enabled = calcOpts.MultipleTargets;
+                        LB_Perc1.Enabled = calcOpts.MultipleTargets;
+                        CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
+                        CB_MultiTargsMax.Enabled = calcOpts.MultipleTargets;
+                        CB_MultiTargsPerc.Value = calcOpts.MultipleTargetsPerc;
+                        CB_MultiTargsMax.Value = (int)calcOpts.MultipleTargetsMax;
+                        CK_StunningTargs.Checked = calcOpts.StunningTargets;
+                        NUD_StunFreq.Enabled = calcOpts.StunningTargets;
+                        NUD_StunDur.Enabled = calcOpts.StunningTargets;
+                        LB_Stun0.Enabled = calcOpts.StunningTargets;
+                        LB_Stun1.Enabled = calcOpts.StunningTargets;
+                        LB_Stun2.Enabled = calcOpts.StunningTargets;
+                        NUD_StunFreq.Value = (int)calcOpts.StunningTargetsFreq;
+                        NUD_StunDur.Value = (int)calcOpts.StunningTargetsDur;
+                        CK_MovingTargs.Checked = calcOpts.MovingTargets;
+                        CB_MoveTargsTime.Enabled = calcOpts.MovingTargets;
+                        CB_MoveTargsPerc.Enabled = calcOpts.MovingTargets;
+                        LB_MoveSec.Enabled = calcOpts.MovingTargets;
+                        LB_MovePerc.Enabled = calcOpts.MovingTargets;
+                        CB_MoveTargsTime.Value = (int)calcOpts.MovingTargetsTime;
+                        CB_MoveTargsPerc.Value = (decimal)Math.Floor(calcOpts.MovingTargetsTime / (float)CB_Duration.Value * 100f);
+
+                        TB_BossInfo.Text = boss.GenInfoString();
+                        // Save the new names
+                        if (!firstload) {
+                            calcOpts.FilterType = CB_BL_FilterType.Text;
+                            calcOpts.Filter = CB_BL_Filter.Text;
+                            calcOpts.BossName = CB_BossList.Text;
+                        }
+                        isLoading = false;
+                    } else {
+                        isLoading = true;
+                        BossHandler boss = new BossHandler();
+                        //
+                        boss.Name = "Custom";
+                        boss.Level = int.Parse(CB_TargLvl.Text);
+                        boss.Armor = (float)int.Parse(CB_TargArmor.Text == "" ? "10643" : CB_TargArmor.Text);
+                        boss.BerserkTimer = (int)CB_Duration.Value;
+                        boss.InBackPerc_Melee = ((float)CB_InBackPerc.Value / 100f);
+                        boss.MaxNumTargets = (float)CB_MultiTargsMax.Value;
+                        boss.MultiTargsPerc = ((float)CB_MultiTargsPerc.Value / 100f);
+                        boss.StunningTargsDur = (float)NUD_StunDur.Value;
+                        boss.StunningTargsFreq = (float)NUD_StunFreq.Value;
+                        boss.MovingTargsTime = (float)CB_MoveTargsTime.Value;
+                        //
+                        TB_BossInfo.Text = boss.GenInfoString();
+                        isLoading = false;
                     }
-                    isLoading = false;
-                }else{
-                    isLoading = true;
-                    BossHandler boss = new BossHandler();
-                    //
-                    boss.Name = "Custom";
-                    boss.Level = int.Parse(CB_TargLvl.Text);
-                    boss.Armor = float.Parse(CB_TargArmor.Text);
-                    boss.BerserkTimer = (int)CB_Duration.Value;
-                    boss.InBackPerc_Melee = ((float)CB_InBackPerc.Value / 100f);
-                    boss.MaxNumTargets = (float)CB_MultiTargsMax.Value;
-                    boss.MultiTargsPerc = ((float)CB_MultiTargsPerc.Value / 100f);
-                    boss.StunningTargsDur = (float)NUD_StunDur.Value;
-                    boss.StunningTargsFreq = (float)NUD_StunFreq.Value;
-                    boss.MovingTargsTime = (float)CB_MoveTargsTime.Value;
-                    //
-                    TB_BossInfo.Text = boss.GenInfoString();
-                    isLoading = false;
+                    Character.OnCalculationsInvalidated();
                 }
-                Character.OnCalculationsInvalidated();
-            }
+            /*} catch (Exception ex) {
+                MessageBox.Show("CB_BossList_SelectedIndexChanged()\n\n"// Line: " + line.ToString() + "\n\n"
+                              + ex.Message
+                              //+ "\n\nInfo: " + info
+                              + "\n\nStack Trace:\n" + ex.StackTrace
+                              , "Error in setting DPSWarr Character settings from Boss");
+            }*/
             isLoading = false;
         }
         // Basics
