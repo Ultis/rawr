@@ -298,6 +298,8 @@ namespace Rawr
                             if (locationSize.Width > 300)
                             {
                                 extraLocation = (int)locationSize.Height;
+                                //int index = Math.Max(0,location.IndexOf(" in "));
+                                //location.Insert(index+4,
                             }
 
                             int enchantSize = 0;
@@ -396,12 +398,13 @@ namespace Rawr
                             {
                                 SizeF name_size = g.MeasureString(CurrentItem.Name, _fontName);
                                 Brush ilvlBrush = Brushes.Gray;
-                                if (Properties.GeneralSettings.Default.DisplayItemIds)
-                                {
+                                if (Properties.GeneralSettings.Default.DisplayItemIds && Properties.GeneralSettings.Default.DisplayItemType) {
+                                    g.DrawString(string.Format("[{0}] ({1})", CurrentItem.ItemLevel, CurrentItem.Id) + " [" + CurrentItem.SlotString + "]", _fontName, ilvlBrush, name_size.Width + 2, 4);
+                                } else if (Properties.GeneralSettings.Default.DisplayItemType) {
+                                    g.DrawString(string.Format("[{0}]", CurrentItem.ItemLevel) + " [" + CurrentItem.SlotString + "]", _fontName, ilvlBrush, name_size.Width + 2, 4);
+                                } else if (Properties.GeneralSettings.Default.DisplayItemIds) {
                                     g.DrawString(string.Format("[{0}] ({1})", CurrentItem.ItemLevel, CurrentItem.Id), _fontName, ilvlBrush, name_size.Width + 2, 4);
-                                }
-                                else
-                                {
+                                } else {
                                     g.DrawString(string.Format("[{0}]", CurrentItem.ItemLevel), _fontName, ilvlBrush, name_size.Width + 2, 4);
                                 }
                             }

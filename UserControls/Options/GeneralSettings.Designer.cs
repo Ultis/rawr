@@ -45,6 +45,7 @@
             this.checkBoxDisplayItemIds = new System.Windows.Forms.CheckBox();
             this.comboBoxEffectCombinationsCalculationMode = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.checkBoxDisplayItemType = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -151,10 +152,17 @@
             resources.ApplyResources(this.label3, "label3");
             this.label3.Name = "label3";
             // 
+            // checkBoxDisplayItemType
+            // 
+            resources.ApplyResources(this.checkBoxDisplayItemType, "checkBoxDisplayItemType");
+            this.checkBoxDisplayItemType.Name = "checkBoxDisplayItemType";
+            this.checkBoxDisplayItemType.UseVisualStyleBackColor = true;
+            // 
             // GeneralSettings
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBoxDisplayItemType);
             this.Controls.Add(this.comboBoxEffectCombinationsCalculationMode);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBoxDisplayItemIds);
@@ -193,6 +201,7 @@
         private System.Windows.Forms.CheckBox checkBoxDisplayItemIds;
         private System.Windows.Forms.ComboBox comboBoxEffectCombinationsCalculationMode;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox checkBoxDisplayItemType;
 
 
 	}

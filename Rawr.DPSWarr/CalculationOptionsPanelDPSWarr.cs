@@ -24,7 +24,6 @@ namespace Rawr.DPSWarr {
         private bool firstload = true;
         /// <summary>This Model's local bosslist</summary>
         private BossList bosslist = null;
-        //private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         public CalculationOptionsPanelDPSWarr() {
             int line = 0;
