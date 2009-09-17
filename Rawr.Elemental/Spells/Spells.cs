@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rawr.Elemental
+namespace Rawr.Elemental.Spells
 {
     public abstract class Spell
     {

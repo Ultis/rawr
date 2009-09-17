@@ -6,7 +6,7 @@ using System.Windows.Media;
 #else
 using System.Drawing;
 #endif
-using Rawr.Elemental.Estimation;
+using Rawr.Elemental.Spells;
 
 namespace Rawr.Elemental
 {
@@ -251,7 +251,7 @@ namespace Rawr.Elemental
             calculatedStats.LocalCharacter = character;
             calcOpts.calculatedStats = calculatedStats;
 
-            Rawr.Elemental.Estimation.Estimation.solve(calculatedStats, calcOpts);
+            Rawr.Elemental.Estimation.solve(calculatedStats, calcOpts);
 
             return calculatedStats;
 			

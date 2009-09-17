@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Rawr.Elemental.Spells;
 
-namespace Rawr.Elemental.Estimation
+namespace Rawr.Elemental
 {
     public class Estimation
     {
