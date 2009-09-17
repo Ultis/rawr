@@ -147,7 +147,8 @@ namespace Rawr.Warlock
             timeTillNextSpell = 100;
             foreach (Spell spell in SpellPriority) 
             {
-                if (timeTillNextSpell < spell.CastTime) continue;
+                //This was causing an infinite loop.
+                //if (timeTillNextSpell < spell.CastTime) continue;
 
                 float casttime = (spell.CastTime + lag);
                 
