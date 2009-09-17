@@ -53,9 +53,9 @@ namespace Rawr.DPSDK
 
             totalMeleeAbilities = calcOpts.rotation.PlagueStrike + calcOpts.rotation.ScourgeStrike +
                 calcOpts.rotation.Obliterate + calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike +
-                calcOpts.rotation.FrostStrike;
+                calcOpts.rotation.FrostStrike + calcOpts.rotation.DeathStrike;
 
-            totalSpellAbilities = calcOpts.rotation.DeathCoil + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast;
+            totalSpellAbilities = calcOpts.rotation.DeathCoil + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast + calcOpts.rotation.Pestilence + calcOpts.rotation.Horn + calcOpts.rotation.GhoulFrenzy;
 
             hitBonus = .01f * (float)talents.NervesOfColdSteel;
             Weapons();
@@ -137,12 +137,21 @@ namespace Rawr.DPSDK
                 // Total physical misses
                 totalMHMiss = calcs.DodgedMHAttacks + chanceMiss;
                 totalOHMiss = calcs.DodgedOHAttacks + chanceMiss;
-                realDuration = calcOpts.rotation.curRotationDuration;
-                float foo = (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)));
-                realDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
+                float minDuration = totalMeleeAbilities * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1f) +
+                    totalSpellAbilities * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? (1.5f / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste) < 1f ? 1f : 1.5f / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)) : 1f);
+                minDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
                     ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
                     ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)))))); //still need to implement spellhaste here
-            }
+            
+                if (minDuration > calcOpts.rotation.curRotationDuration)
+                {
+                    realDuration = minDuration;
+                }
+                else
+                {
+                    realDuration = calcOpts.rotation.curRotationDuration;
+                }
+                }
             #endregion
         }
 

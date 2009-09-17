@@ -359,10 +359,8 @@ namespace Rawr.DPSDK
                 #region Killing Machine
                 {
                     float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.PhysicalHaste); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
-                    float addHastePercent = 1f + stats.PhysicalHaste;
-                    KMPpM *= addHastePercent;
                     KMPpM *= calcOpts.KMProcUsage;
-                    KMPpM *= combatTable.totalMHMiss;
+                    KMPpM *= 1f - combatTable.totalMHMiss;
 
                     float KMPpR = KMPpM / (60f / calcOpts.rotation.curRotationDuration);
                     float totalAbilities = bonusHB + calcOpts.rotation.FrostStrike + calcOpts.rotation.IcyTouch + calcOpts.rotation.HowlingBlast;
@@ -537,7 +535,7 @@ namespace Rawr.DPSDK
                         }
                         float PestRefresh = (15f + talents.Epidemic * 3f + 
                             (talents.GlyphofScourgeStrike ? Math.Min(3f * calcOpts.rotation.ScourgeStrike, 9f) : 0f));
-                        if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f)
+                        if (PestRefresh * calcOpts.rotation.Pestilence - combatTable.realDuration > 0f)
                         {
                             ticksPerRotation = combatTable.realDuration / 3f;
                             Stats maxStats = GetCharacterStatsMaximum(character, null);
@@ -613,7 +611,7 @@ namespace Rawr.DPSDK
                             lostTicks = (float)((int)lostTicks);
                             ticksPerRotation -= lostTicks;
                         }
-                        if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f)
+                        if (PestRefresh * calcOpts.rotation.Pestilence - combatTable.realDuration > 0f)
                         {
                             ticksPerRotation = combatTable.realDuration / 3f;
                             Stats maxStats = GetCharacterStatsMaximum(character, null);
