@@ -73,7 +73,7 @@ namespace Rawr
         public static readonly float[] YELLOW_PARRY_CHANCE_CAP          = WHITE_PARRY_CHANCE_CAP;
         //public static readonly float[] YELLOW_PARRY_CHANCE_CAP_BEHIND   = WHITE_PARRY_CHANCE_CAP_BEHIND;
 
-        public static readonly float[] WHITE_GLANCE_CHANCE_CAP          = new float[] { 0.1000f, 0.1500f, 0.5000f, 0.2500f }; // 25%
+        public static readonly float[] WHITE_GLANCE_CHANCE_CAP          = new float[] { 0.1000f, 0.1500f, 0.2000f, 0.2500f }; // 25%
         //public static readonly float[] WHITE_GLANCE_CHANCE_CAP_BEHIND   = WHITE_GLANCE_CHANCE_CAP;
         public static readonly float[] YELLOW_GLANCE_CHANCE_CAP         = new float[] { 0.0000f, 0.0000f, 0.0000f, 0.0000f }; //  0% Yellows don't glance
         //public static readonly float[] YELLOW_GLANCE_CHANCE_CAP_BEHIND  = YELLOW_GLANCE_CHANCE_CAP;
