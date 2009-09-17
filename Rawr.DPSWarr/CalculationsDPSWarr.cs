@@ -996,7 +996,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             // Haste
             statsTotal.HasteRating = (float)Math.Floor(statsTotal.HasteRating);
-            float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Warrior);
+            float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, character.Class);
             statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
                                        (1f + statsItems.PhysicalHaste) *
                                        (1f + statsBuffs.PhysicalHaste) *
@@ -1170,16 +1170,19 @@ Don't forget your weapons used matched with races can affect these numbers.",
             float apBonusOtherProcs = (1f + totalBAPM) * (statsProcs.AttackPower);
             statsProcs.AttackPower  = (float)Math.Floor(apBonusSTRProcs + apBonusAttTProcs + apBonusOtherProcs);
 
+            // Crit
+            statsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(statsProcs.Agility, character.Class);
+
             // Haste
             statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
-                                     * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, CharacterClass.Warrior))
+                                     * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, character.Class))
                                      - 1f;
 
             statsTotal             += statsProcs;
 
             // Haste
             statsTotal.HasteRating   = (float)Math.Floor(statsTotal.HasteRating);
-            ratingHasteBonus         = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Warrior);
+            ratingHasteBonus         = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, character.Class);
             statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
                                        (1f + statsItems.PhysicalHaste) *
                                        (1f + statsBuffs.PhysicalHaste) *
