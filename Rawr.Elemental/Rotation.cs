@@ -372,16 +372,19 @@ namespace Rawr.Elemental
         public float getNextCastTime(int i)
         {
             Type spellType = spells[Mod(i, spells.Count)].GetType();
-            int start = Mod(i + 1, spells.Count);
+            int start = Mod(i, spells.Count);
             float time = GetTime(i);
-            for (int j = start; j != start; j = Mod(i++, spells.Count))
+            i++;
+            for (int j = start + 1; true; j = Mod(++i, spells.Count))
             {
                 if (!spellType.IsInstanceOfType(spells[j]))
-                    time += spells[j].CastTime;
+                    if (j == start)
+                        return float.MaxValue;
+                    else
+                        time += spells[j].CastTime;
                 else
                     return time;
             }
-            return float.MaxValue;
         }
 
         /// <summary>
@@ -396,6 +399,8 @@ namespace Rawr.Elemental
             {
                 if (!(spells[i] is Wait))
                     castNumber--;
+                if (castNumber < 0)
+                    break;
             }
             return i;
         }
