@@ -154,6 +154,7 @@ namespace Rawr
 
 		public void Show(Character character, ItemInstance item, CharacterSlot equipSlot, ItemInstance[] characterItems, bool allowDelete)
 		{
+            if (character == null) { return; }
             Character = character;
 			_item = item;
             _characterItems = characterItems;
