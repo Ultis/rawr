@@ -877,6 +877,11 @@ namespace Rawr
 
         public void LoadSavedCharacter(string path)
         {
+            if (!File.Exists(path)) {
+                MessageBox.Show("That file no longer exists.\n\nRawr will now skip the remainder of the attempt to open the file",
+                    "Error Opening File",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                return;
+            }
             switch (GetFileType(path))
             {
                 case FileType.Character:
