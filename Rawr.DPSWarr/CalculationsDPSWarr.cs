@@ -493,7 +493,28 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return (wantedStats || survstats) && !ignoreStats && base.IsItemRelevant(item);
         }
 
-        public override bool IsBuffRelevant(Buff buff) { return HasWantedStats(buff.Stats) || (HasSurvivabilityStats(buff.Stats) && !HasIgnoreStats(buff.Stats)); }
+        public override bool IsBuffRelevant(Buff buff) {
+            string name = buff.Name;
+            // Force some buffs to active
+            if (name.Contains("Potion of Wild Magic")) {
+                return true;
+            }
+            // Force some buffs to go away
+            else if(name.Contains("Malorne")
+                 || name.Contains("Duskweaver")
+                 || name.Contains("Primalstrike")
+                 || name.Contains("Clefthoof")
+                 || name.Contains("Dreamwalker")
+                 || name.Contains("Skyshatter")
+            ) {
+                return false;
+            }
+            bool haswantedStats = HasWantedStats(buff.Stats);
+            bool hassurvStats = HasSurvivabilityStats(buff.Stats);
+            bool hasbadstats = HasIgnoreStats(buff.Stats);
+            bool retVal = haswantedStats || (hassurvStats && !hasbadstats);
+            return retVal;
+        }
 
         public override bool IsEnchantRelevant(Enchant enchant) { return HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)); }
 
