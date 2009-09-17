@@ -24,7 +24,7 @@ namespace Rawr.Enhance
 		public int AverageLag = 250;
 		public string MainhandImbue = "Windfury";
 		public string OffhandImbue = "Flametongue";
-		public float FightLength = 6.0f;
+		public float FightLength = 10.0f;
 		public int TargetFireResistance = 0;
 		public int TargetNatureResistance = 0;
 		public bool Magma = true;

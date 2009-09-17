@@ -161,7 +161,7 @@
             this.cmbLength.Size = new System.Drawing.Size(44, 20);
             this.cmbLength.TabIndex = 35;
             this.cmbLength.Value = new decimal(new int[] {
-            5,
+            10,
             0,
             0,
             0});
