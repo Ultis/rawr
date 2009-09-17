@@ -555,7 +555,7 @@ namespace Rawr.Healadin
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
                 + stats.HealingReceivedMultiplier + stats.BonusCritHealMultiplier + stats.SpellsManaReduction
-                + stats.SacredShieldICDReduction + stats.HolyShockHoTOnCrit) > 0;
+                + stats.SacredShieldICDReduction + stats.HolyShockHoTOnCrit + stats.MovementSpeed) > 0;
         }
 
         private bool HasMaybeStats(Stats stats)
