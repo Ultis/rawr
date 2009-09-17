@@ -287,25 +287,31 @@ namespace Rawr
                             }
                             #endregion
                             int statHeight = (xPos > xGrid.initial) ? yPos : Math.Max(0, yPos - yGrid.step);
-                            int extraLocation = 0;
 
+                            int extraLocation = 0;
                             string location = "Unknown source";
-                            if (_currentItem.LocationInfo != null)
-                            {
+                            if (_currentItem.LocationInfo != null) {
                                 location = _currentItem.LocationInfo.Description;
                             }
                             SizeF locationSize = _dummyBitmap.MeasureString(location, _fontStats);
-                            if (locationSize.Width > 300)
-                            {
+                            if (locationSize.Width > 300) {
                                 extraLocation = (int)locationSize.Height;
-                                //int index = Math.Max(0,location.IndexOf(" in "));
-                                //location.Insert(index+4,
+                                int index = location.IndexOf(" in ");
+                                index = (index == -1 ? -1 : index + 4);
+                                if (index != -1) { location = location.Insert(index, "\r\n    "); }
                             }
 
-                            int enchantSize = 0;
-                            if (CurrentItemInstance != null && CurrentItemInstance.Enchant != null)
-                            {
-                                enchantSize = 17;
+                            int extraEnchant = 0;
+                            string enchant = "No Enchant";
+                            if (CurrentItemInstance != null && CurrentItemInstance.Enchant != null) {
+                                enchant = CurrentItemInstance.Enchant.ToString();
+                            }
+                            SizeF enchantsize = _dummyBitmap.MeasureString(enchant, _fontStats);
+                            if (enchantsize.Width > 300) {
+                                extraEnchant = (int)enchantsize.Height;
+                                int index = enchant.IndexOf(": ");
+                                index = (index == -1 ? -1 : index + 2);
+                                if (index != -1) { enchant = enchant.Insert(index, "\r\n    "); }
                             }
 
                             int gemInfoSize = 0;
@@ -341,7 +347,7 @@ namespace Rawr
                                 }
                             }
 
-                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + extraLocation + enchantSize + gemInfoSize + gemNamesSize + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
+                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + (13) + extraLocation + (13) + extraEnchant + gemInfoSize + gemNamesSize + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
 
                             Graphics g = Graphics.FromImage(_cachedToolTipImage);
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -592,24 +598,23 @@ namespace Rawr
                                 yPos += (int)gem_info_size.Height;
                             }
 
-                            if (_currentItem.Quality != ItemQuality.Temp)
-                            {
+                            if (_currentItem.Quality != ItemQuality.Temp) {
                                 PointF draw_pos = new PointF(2, yPos);
                                 //Rectangle textRec = new Rectangle(2, (hasSockets ? 76 : 18) + statHeight + 4, _cachedToolTipImage.Width - 4, (int)locationSize.Height + extraLocation);
                                 g.DrawString(location, _fontStats, SystemBrushes.InfoText, draw_pos);
                                 // update yPos here
                                 SizeF quality_size = g.MeasureString(location, _fontStats);
                                 yPos += (int)quality_size.Height;
+
+                                draw_pos = new PointF(2, yPos);
+                                g.DrawString(enchant, _fontStats, SystemBrushes.InfoText, draw_pos);
+                                // update yPos here
+                                quality_size = g.MeasureString(enchant, _fontStats);
+                                yPos += (int)quality_size.Height;
                             }
 
                             xPos = 2;                           
                             //yPos = (hasSockets ? 76 : 18) + statHeight + 4 + (int)locationSize.Height + extraLocation + 2;
-
-                            if (CurrentItemInstance != null && CurrentItemInstance.Enchant != null)
-                            {
-                                g.DrawString(CurrentItemInstance.Enchant.ToString(), _fontStats, SystemBrushes.InfoText, xPos, yPos + 1);
-                                yPos += enchantSize;
-                            }
 
                             if (CurrentCharacterItems != null)
                             {
