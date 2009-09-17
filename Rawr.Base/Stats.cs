@@ -2291,15 +2291,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Greatness Proc")]
-        [Category("Old Equipment Procs")]
-        public float GreatnessProc
-        {
-            get { return _rawNoStackData[(int)NonStackingStat.GreatnessProc]; }
-            set { _rawNoStackData[(int)NonStackingStat.GreatnessProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spirit for 20 sec. (2 min cd)")]
         [Category("Old Equipment Procs")]
         public float SpiritFor20SecOnUse2Min

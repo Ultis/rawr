@@ -254,12 +254,12 @@ namespace Rawr.Enhance
             float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritMeleeRating + _stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
             chanceCrit         = Math.Min(1 - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
-            chanceDodgeMH      = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[  _calcOpts.TargetLevel - 80] - expertiseBonusMH);
-            chanceDodgeOH      = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[  _calcOpts.TargetLevel - 80] - expertiseBonusOH);
-            chanceWhiteMissMH  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - 80] - hitBonus) + chanceDodgeMH;
-            chanceWhiteMissOH  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - 80] - hitBonus) + chanceDodgeOH;
-            chanceYellowMissMH = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[  _calcOpts.TargetLevel - 80] - hitBonus) + chanceDodgeMH; // base miss 8% now
-            chanceYellowMissOH = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[  _calcOpts.TargetLevel - 80] - hitBonus) + chanceDodgeOH; // base miss 8% now
+            chanceDodgeMH      = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level] - expertiseBonusMH);
+            chanceDodgeOH      = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level] - expertiseBonusOH);
+            chanceWhiteMissMH  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - _character.Level] - hitBonus) + chanceDodgeMH;
+            chanceWhiteMissOH  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - _character.Level] - hitBonus) + chanceDodgeOH;
+            chanceYellowMissMH = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level] - hitBonus) + chanceDodgeMH; // base miss 8% now
+            chanceYellowMissOH = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level] - hitBonus) + chanceDodgeOH; // base miss 8% now
             chanceWhiteCritMH  = Math.Min(chanceCrit - whiteCritDepression , 1f - glancingRate - chanceWhiteMissMH);
             chanceWhiteCritOH  = Math.Min(chanceCrit - whiteCritDepression , 1f - glancingRate - chanceWhiteMissOH);
             chanceYellowCritMH = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMissMH);

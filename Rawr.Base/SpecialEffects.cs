@@ -243,7 +243,6 @@ namespace Rawr {
 			}
 			else if (line.StartsWith("When you heal or deal damage you have a chance to gain Greatness"))
 			{ //Darkmoon Card: Greatness
-                stats.GreatnessProc = 300;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HighestStat = 300f }, 15f, 45f, .33f));
 			}

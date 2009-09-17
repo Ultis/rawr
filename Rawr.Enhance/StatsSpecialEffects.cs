@@ -92,43 +92,67 @@ namespace Rawr.Enhance
                     }
                 }
             }
+            AddParagon();
+            AddHighestStat();
             return statsAverage;
         }
 
-        public void GreatnessProc()
+        private void AddParagon()
+        {
+            if (_stats.Paragon > 0)
+            {
+                float paragon = 0f;
+                if (_stats.Strength > _stats.Agility)
+                {
+                    paragon = (float)Math.Floor((float)(_stats.Paragon * (1 + _stats.BonusStrengthMultiplier)));
+                    _stats.Strength += paragon;
+                    _stats.AttackPower += paragon;
+                }
+                else
+                {
+                    paragon = (float)Math.Floor((float)(_stats.Paragon * (1 + _stats.BonusAgilityMultiplier)));
+                    _stats.Agility += paragon;
+                    _stats.AttackPower += paragon;
+                }
+            }
+        }
+
+        private void AddHighestStat()
         {
             //trinket procs
-            if (_stats.GreatnessProc > 0)
+            if (_stats.HighestStat > 0)
             {
-                float expectedAgi = (float)Math.Floor((float)(_stats.Agility * (1 + _stats.BonusAgilityMultiplier)));
-                float expectedStr = (float)Math.Floor((float)(_stats.Strength * (1 + _stats.BonusStrengthMultiplier)));
-                float expectedInt = (float)Math.Floor((float)(_stats.Intellect * (1 + _stats.BonusIntellectMultiplier)));
                 float intfromAP = _character.ShamanTalents.MentalDexterity / 3;
                 // Highest stat
-                if (expectedAgi > expectedStr)
+                float highestStat = 0f;
+                if (_stats.Agility > _stats.Strength)
                 {
-                    if (expectedAgi > expectedInt)
+                    if (_stats.Agility > _stats.Intellect)
                     {
-                        _stats.Agility += _stats.GreatnessProc * 15f / 45f;  
-                        _stats.AttackPower += _stats.GreatnessProc * 15f / 45f;
+                        highestStat = (float)Math.Floor((float)(_stats.HighestStat * (1 + _stats.BonusAgilityMultiplier)));
+                        _stats.Agility += highestStat;  
+                        _stats.AttackPower += highestStat;
                     }
                     else
                     {
-                        _stats.Intellect += _stats.GreatnessProc * 15f / 45f;
-                        _stats.AttackPower += intfromAP * _stats.GreatnessProc * 15f / 45f ;
+                        highestStat = (float)Math.Floor((float)(_stats.HighestStat * (1 + _stats.BonusIntellectMultiplier)));
+                        _stats.Intellect += highestStat;
+                        _stats.AttackPower += intfromAP * highestStat;
                     }
                 }
                 else
                 {
-                    if (expectedStr > expectedInt)
+                    if (_stats.Strength > _stats.Intellect)
                     {
-                        _stats.Strength += _stats.GreatnessProc * 15f / 45f;
-                        _stats.AttackPower += _stats.GreatnessProc * 15f / 45f;
+                        highestStat = (float)Math.Floor((float)(_stats.HighestStat * (1 + _stats.BonusStrengthMultiplier)));
+                        _stats.Strength += highestStat;
+                        _stats.AttackPower += highestStat;
                     }
                     else
                     {
-                        _stats.Intellect += _stats.GreatnessProc * 15f / 45f;
-                        _stats.AttackPower += intfromAP * _stats.GreatnessProc * 15f / 45f;
+                        highestStat = (float)Math.Floor((float)(_stats.HighestStat * (1 + _stats.BonusIntellectMultiplier)));
+                        _stats.Intellect += highestStat;
+                        _stats.AttackPower += intfromAP * highestStat;
                     }
                 }
             }

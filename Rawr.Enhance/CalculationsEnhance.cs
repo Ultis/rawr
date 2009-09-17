@@ -212,8 +212,6 @@ namespace Rawr.Enhance
             StatsSpecialEffects se = new StatsSpecialEffects(character, stats);
             Stats specialEffects = se.getSpecialEffects();
             stats += specialEffects;
-            if (stats.GreatnessProc > 0)
-                se.GreatnessProc();
             //Set up some talent variables
             float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
@@ -744,7 +742,8 @@ namespace Rawr.Enhance
                     LightningSpellPower = stats.LightningSpellPower,
                     BonusSSDamage = stats.BonusSSDamage,
                     BonusWFAttackPower = stats.BonusWFAttackPower,
-                    GreatnessProc = stats.GreatnessProc,
+                    HighestStat = stats.HighestStat,
+                    Paragon = stats.Paragon,
                     BonusLSDamage = stats.BonusLSDamage,
                     BonusFlurryHaste = stats.BonusFlurryHaste,
                     BonusMWFreq = stats.BonusMWFreq,
@@ -809,8 +808,8 @@ namespace Rawr.Enhance
                 stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
                 stats.ExposeWeakness + stats.Bloodlust + stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
-                stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit +
-                stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.GreatnessProc +
+                stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + 
+                stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
                 stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
                 stats.BonusWFAttackPower + stats.Enhance2T9 + stats.Enhance4T9 +
                 stats.BonusLSDamage + stats.BonusLLSSDamage + stats.BonusSSDamage) > 0

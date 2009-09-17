@@ -292,15 +292,15 @@ namespace Rawr.Elemental
 
 			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
-            if (statsTotal.GreatnessProc > 0)
+            if (statsTotal.HighestStat > 0)
             {
                 if (statsTotal.Spirit > statsTotal.Intellect)
                 {
-                    statsTotal.Spirit += (statsTotal.GreatnessProc * 15f / 50f);
+                    statsTotal.Spirit += (statsTotal.HighestStat * 15f / 50f);
                 }
                 else
                 {
-                    statsTotal.Intellect += (statsTotal.GreatnessProc * 15f / 50f);
+                    statsTotal.Intellect += (statsTotal.HighestStat * 15f / 50f);
                 }
             }
 
