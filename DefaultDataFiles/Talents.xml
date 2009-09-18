@@ -49,6 +49,30 @@
     <Tree3>0</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
+    <Name>Beast Mastery</Name>
+    <Class>Hunter</Class>
+    <Spec>512002015150122431015313510053031000000000000000000005000000000000000000000000000.000000000100000100000000101010000</Spec>
+    <Tree1>54</Tree1>
+    <Tree2>12</Tree2>
+    <Tree3>5</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Marksmanship</Name>
+    <Class>Hunter</Class>
+    <Spec>502000000000000000000000000053351312300132331152310515000002000000000000000000000.000000000100000100000000101010000</Spec>
+    <Tree1>7</Tree1>
+    <Tree2>57</Tree2>
+    <Tree3>7</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Survival</Name>
+    <Class>Hunter</Class>
+    <Spec>000000000000000000000000000053051010000000000000000005000032500033330532135301321.000000010100001100000000001000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>15</Tree2>
+    <Tree3>56</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
     <Name>Untalented</Name>
     <Class>Druid</Class>
     <Spec>0000000000000000000000000000000000000000000000000000000000000000000000000000000000000.000000000000000000000000</Spec>
