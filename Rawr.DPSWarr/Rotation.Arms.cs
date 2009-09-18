@@ -142,12 +142,6 @@ namespace Rawr.DPSWarr {
                     RendRage + OPRage + TBRage + SDRage;
             }
         }
-        protected override float FreeRageOverDur {
-            get {
-                float sword = SS.GetRageUseOverDur(_SS_Acts);
-                return base.FreeRageOverDur + sword;
-            }
-        }
         #endregion
         protected override void calcDeepWounds() {
             // The goggles! They do nothing!

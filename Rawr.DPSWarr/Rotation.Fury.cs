@@ -418,5 +418,18 @@ namespace Rawr.DPSWarr
                 this.calcs.FreeRage = this.RageGenWhite + this.RageGenOther - this.RageNeeded;
             }
         }
+
+        protected float FreeRageOverDur
+        {
+            get
+            {
+                if (Char.MainHand == null) { return 0f; }
+                float white = WHITEATTACKS.whiteRageGenOverDurNoHS;
+                //float sword = SS.GetRageUseOverDur(_SS_Acts);
+                float other = RageGenOverDur_Other;
+                float needy = RageNeededOverDur;
+                return white + other - needy;
+            }
+        }
     }
 }
