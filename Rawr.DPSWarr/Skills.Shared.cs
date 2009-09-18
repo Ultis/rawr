@@ -376,6 +376,7 @@ namespace Rawr.DPSWarr {
                 DamageBase = 300f + StatS.AttackPower * 0.12f;
                 DamageBonus = 1f + Talents.ImprovedThunderClap * 0.10f;
                 BonusCritChance = Talents.Incite * 0.05f;
+                UseSpellHit = true;
                 //
                 InitializeB();
             }
@@ -503,6 +504,7 @@ namespace Rawr.DPSWarr {
                 Duration = 30f;
                 RageCost = 10f - (Talents.FocusedRage * 1f);
                 StanceOkArms = StanceOkFury = true;
+                UseSpellHit = true;
                 //
                 InitializeB();
                 //

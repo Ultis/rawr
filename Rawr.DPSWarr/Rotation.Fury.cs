@@ -23,7 +23,8 @@ namespace Rawr.DPSWarr
         public Skills.BloodThirst BT;
         public Skills.BloodSurge BS;
 
-        public const float ROTATION_LENGTH_FURY = 8.0f;
+        private const float ROTATION_LENGTH = 8.0f;
+        private const float FREE_GCDS = 1.0f;
         
         float _bloodsurgeRPS;
         public float _BS_DPS = 0f, _BS_HPS = 0f, _BS_GCDs = 0f;
@@ -70,6 +71,7 @@ namespace Rawr.DPSWarr
                 hsPercOvd -= CalcOpts.MultipleTargetsPerc / 100f;
             clPercOvd = (clok ? 1f - hsPercOvd : 0f);
 
+            _bloodsurgeRPS = BS.RageUseOverDur;
             float hsRageUsed = FreeRageOverDur * hsPercOvd;
             float clRageUsed = FreeRageOverDur * clPercOvd;
 
@@ -102,7 +104,7 @@ namespace Rawr.DPSWarr
             }
 
             BS.hsActivates = newHSActivates;
-            BS.hsActivates += newCLActivates;
+            //BS.hsActivates += newCLActivates;
             if (CalcOpts.FuryStance)
             {
                 _HS_DPS = HS.DPS;
@@ -159,49 +161,91 @@ namespace Rawr.DPSWarr
             }
         }
 
+        #region NewRotation
+        private float bloodsurge_percUsed;  // Since we can only bloodsurge once every
+                                            // 8secs, this keeps track of how many times we
+                                            // can actually slam vs refresh an ability
+        private float rotationSlipTime = 0f;// for when maint abilities fail
+            
+        private float gcdCounter;                  // where we are in the fight
+        
+        // maintenance
+        private float numSunderGCDs = 0f, numThunderGCDs = 0f, numDemoShoutGCDs = 0f,
+                      numBattleShoutGCDs = 0f, numCommandingShoutGCDs = 0f;
+        
+        // cooldowns on the GCD
+        private float numDeathwishGCDs = 0f, numBerserkerRageGCDs = 0f;
+        
+        // dps
+        private float numBloodthirstGCDs = 0f, numWhirlwindGCDs = 0f, numBloodsurgeGCDs = 0f;
+
+        
+        private void Preprocess(Skills.Ability ability) { Preprocess(ability, 1f); }
+        /// <summary>
+        /// Preprocesses the rotation variables for each maintenance ability
+        /// </summary>
+        /// <param name="ability">An ability that may be maintained</param>
+        /// <param name="stacks">The number of stacks applied at the START of the fight (ex: Battle Shout would be 0, Sunder Armor would be 5, Demo Shout would be 1)</param>
+        private void Preprocess(Skills.Ability ability, float stacks)
+        {
+            if (ability.Validated)
+            {
+                float slip = 1f / DS.MHAtkTable.AnyLand; // initial application
+                float reapplyPeriod = (int)(DS.Duration / ROTATION_LENGTH);
+                
+                bloodsurge_percUsed -= 1f / reapplyPeriod; // keep it up
+                rotationSlipTime += (1f - slip);// if I on average have to do
+                                                // 1.08 demos to apply it, then
+                                                // 8% of my rotations have a 1.5sec slip
+                numDemoShoutGCDs += stacks * slip;
+                gcdCounter += stacks * slip;
+            }
+        }
+
         public void new_MakeRotationandDoDPS(bool setCalcs)
         {
             float LatentGCD = 1.5f + CalcOpts.GetLatency();
             float NumGCDs = CalcOpts.Duration / LatentGCD;
             GCDUsage += "NumGCDs: " + NumGCDs.ToString() + "\n\n";
-
+            
             // Maintenance abilities
 
             // First, apply initial debuffs
-            float bloodsurge_percUsed = 1f; // Since we can only bloodsurge once every 8secs, 
+            bloodsurge_percUsed = 1f; // Since we can only bloodsurge once every 8secs, 
                                             // this keeps track of how many times we can actually slam vs refresh an ability
             
-            if (SN.Validated) // Sunder
-            {
-                NumGCDs -= 5f / SN.MHAtkTable.AnyLand; // initial application
-                bloodsurge_percUsed -= 1f / (int)(SN.Duration / 8f); // keep it up
-            }
-            if (TH.Validated) // Thunderclap
-            {
-                NumGCDs -= 1f / TH.MHAtkTable.AnyLand; // initial application -- TODO: Remove support for tclap in general?
-                bloodsurge_percUsed -= 1f / (int)(TH.Duration / 8f); // keep it up
-            }
-            if (DS.Validated) // Demo Shout
-            {
-                NumGCDs -= 1f / DS.MHAtkTable.AnyLand; // initial application
-                bloodsurge_percUsed -= 1f / (int)(DS.Duration / 8f); // keep it up
-            }
+            // maintenance
+            numSunderGCDs = 0f; numThunderGCDs = 0f; numDemoShoutGCDs = 0f;
+            numBattleShoutGCDs = 0f; numCommandingShoutGCDs = 0f;
+            // cooldowns on the GCD
+            numDeathwishGCDs = 0f; numBerserkerRageGCDs = 0f;
+            // dps
+            numBloodthirstGCDs = 0f; numWhirlwindGCDs = 0f; numBloodsurgeGCDs = 0f;
+
+            gcdCounter = 0f; // where we are in the fight
+
+            /************************************************************************
+             * The following code block does two things in one pass:                *
+             * 1) Determines how long it takes to apply initial debuffs (stored in  *
+             *         gcdCounter)                                                  *
+             * 2) Determines how frequently we actually get to bloodsurge based on  *
+             *         free GCDs (stored in bloodsurge_percUsed)                    *
+             ************************************************************************/
+            Preprocess(SN, 5f);
+            Preprocess(TH);
+            Preprocess(DS);
             // Assuming these are already applied at the start of the fight
-            if (BTS.Validated)
-            {
-                bloodsurge_percUsed -= 1f / (int)(BTS.Duration / 8f);
-            }
-            if (CS.Validated)
-            {
-                bloodsurge_percUsed -= 1f / (int)(CS.Duration / 8f);
-            }
-            bloodsurge_percUsed = Math.Max(bloodsurge_percUsed, 0f);
+            Preprocess(BTS, 0f);
+            Preprocess(CS, 0f);
+            
+            if (bloodsurge_percUsed < 0f)
+                bloodsurge_percUsed = Math.Max(bloodsurge_percUsed, 0f);
 
         }
-
+        #endregion
         public override void MakeRotationandDoDPS(bool setCalcs)
         {
-            //new_MakeRotationandDoDPS(setCalcs);
+            new_MakeRotationandDoDPS(setCalcs);
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
             float FightDuration = CalcOpts.Duration;
@@ -288,7 +332,7 @@ namespace Rawr.DPSWarr
             availRage -= rageadd;
             RageNeeded += rageadd;
 
-            //doIterations();
+            doIterations();
             // Priority 3 : Bloodsurge Blood Proc (Do an Instant Slam) if available
             float BS_GCDs = (float)Math.Min(availGCDs, BS.Activates);
             _BS_GCDs = BS_GCDs;
@@ -323,10 +367,11 @@ namespace Rawr.DPSWarr
             WhiteAtks.Slam_Freq = 0f;// _SL_GCDs;
             if ((HSok || CLok) && availRage > 0f)
             {
-                float numHSOverDur = availRage / HS.FullRageCost;
-                HS.OverridesOverDur = numHSOverDur;
-                WhiteAtks.HSOverridesOverDur = numHSOverDur;
-                WhiteAtks.CLOverridesOverDur = 0f;
+                //float numHSOverDur = availRage / HS.FullRageCost;
+                //HS.OverridesOverDur = numHSOverDur;
+                //WhiteAtks.HSOverridesOverDur = numHSOverDur;
+                //WhiteAtks.CLOverridesOverDur = 0f;
+                RageGenWhite = WhiteAtks.whiteRageGenOverDur;
                 _WhiteDPSMH = WhiteAtks.MhDPS; // MhWhiteDPS
                 _WhiteDPSOH = WhiteAtks.OhDPS;
                 _WhiteDPS = _WhiteDPSMH + _WhiteDPSOH;

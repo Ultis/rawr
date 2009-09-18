@@ -96,7 +96,7 @@ namespace Rawr.DPSWarr {
             this.calcs = calcs;
 
             initAbilities();
-            doIterations();
+            //doIterations();
 
             // Whites
             calcs.Whites = WhiteAtks;
@@ -132,7 +132,7 @@ namespace Rawr.DPSWarr {
             calcs.HS = HS;
             calcs.EX = EX;
         }
-        public void Initialize() { initAbilities(); doIterations(); }
+        public void Initialize() { initAbilities(); /*doIterations();*/ }
 
         public virtual void MakeRotationandDoDPS(bool setCalcs) { }
 
@@ -408,7 +408,7 @@ namespace Rawr.DPSWarr {
         protected virtual float FreeRageOverDur {
             get {
                 if (Char.MainHand == null) { return 0f; }
-                float white = WHITEATTACKS.whiteRageGenOverDur;
+                float white = WHITEATTACKS.whiteRageGenOverDurNoHS;
                 //float sword = SS.GetRageUseOverDur(_SS_Acts);
                 float other = RageGenOverDur_Other;
                 float needy = RageNeededOverDur;

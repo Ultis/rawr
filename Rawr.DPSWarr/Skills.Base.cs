@@ -16,8 +16,8 @@ namespace Rawr.DPSWarr {
                 Talents = Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
                 combatFactors = cf;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-                MHAtkTable = new AttackTable(Char, StatS, combatFactors, true);
-                OHAtkTable = new AttackTable(Char, StatS, combatFactors, false);
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, true, false);
+                OHAtkTable = new AttackTable(Char, StatS, combatFactors, false, false);
                 FightDuration = CalcOpts.Duration;
                 //
                 Targets = 1f;
@@ -97,6 +97,15 @@ namespace Rawr.DPSWarr {
                     else return 0f;
                 }
             }
+            public float MhActivatesNoHS
+            {
+                get
+                {
+                    if (MhEffectiveSpeed != 0)
+                        return (float)Math.Max(0f, FightDuration / MhEffectiveSpeed);
+                    else return 0f;
+                }
+            }
             public float MhDPS { get { return AvgMhDamageOnUse / FightDuration; } }
             // Off Hand
             public float OhEffectiveSpeed { get { return combatFactors.OHSpeed + SlamFreqSpdMod; } }
@@ -148,7 +157,7 @@ namespace Rawr.DPSWarr {
                     float based;
 
                     rage = 0.0f;
-                    s = MhEffectiveSpeed;
+                    s = combatFactors._c_mhItemSpeed;
                     based = combatFactors.AvgMhWeaponDmg(s) * combatFactors.DamageBonus * combatFactors.DamageReduction;
 
                     // regular hit
@@ -179,7 +188,7 @@ namespace Rawr.DPSWarr {
                     float based;
 
                     rage = 0.0f;
-                    s = OhEffectiveSpeed;
+                    s = combatFactors._c_ohItemSpeed;
                     based = combatFactors.AvgOhWeaponDmg(s) * combatFactors.DamageBonus * combatFactors.DamageReduction;
 
                     // regular hit
@@ -211,6 +220,19 @@ namespace Rawr.DPSWarr {
                     return result;
                 }
             }
+            public float MHRageGenOverDurNoHS
+            {
+                get
+                {
+                    float result = 0f;
+                    if (combatFactors.MH != null && combatFactors.MH.MaxDamage > 0)
+                    {
+                        float ragePer = MHSwingRage;
+                        result = MhActivatesNoHS * ragePer;
+                    }
+                    return result;
+                }
+            }
             public float OHRageGenOverDur {
                 get {
                     float result = 0f;
@@ -230,6 +252,7 @@ namespace Rawr.DPSWarr {
                 }
             }
             public float whiteRageGenOverDur { get { return MHRageGenOverDur + OHRageGenOverDur; } }
+            public float whiteRageGenOverDurNoHS { get { return MHRageGenOverDurNoHS + OHRageGenOverDur; } }
             private float RageFormula(float d, float s, float f) {
                 /* R = Rage Generated
                  * d = damage amount
@@ -434,6 +457,7 @@ namespace Rawr.DPSWarr {
                 HealingBase = 0f;
                 HealingBonus = 1f;
                 BonusCritChance = 0.00f;
+                UseSpellHit = false;
             }
             #region Variables
             private string NAME;
@@ -468,6 +492,7 @@ namespace Rawr.DPSWarr {
             private AttackTable OHATTACKTABLE;
             private WhiteAttacks WHITEATTACKS;
             private CalculationOptionsDPSWarr CALCOPTS;
+            private bool USESPELLHIT;
             public int AbilIterater;
             #endregion
             #region Get/Set
@@ -548,6 +573,7 @@ namespace Rawr.DPSWarr {
             protected CalculationOptionsDPSWarr CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
             public virtual float RageUseOverDur { get { return (!Validated ? 0f : Activates * RageCost); } }
             protected float FightDuration { get { return CalcOpts.Duration; } }
+            protected bool UseSpellHit { get { return USESPELLHIT; } set { USESPELLHIT = value; } }
             public virtual bool Validated {
                 get {
                     // Null crap is bad
@@ -636,8 +662,8 @@ namespace Rawr.DPSWarr {
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
             }
             protected void InitializeB() {
-                MHAtkTable = new AttackTable(Char, StatS, combatFactors, this, true );
-                OHAtkTable = new AttackTable(Char, StatS, combatFactors, this, false);
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, this, true,  UseSpellHit);
+                OHAtkTable = new AttackTable(Char, StatS, combatFactors, this, false, UseSpellHit);
             }
             public virtual float GetRageUseOverDur(float acts) {
                 if (!Validated) { return 0f; }

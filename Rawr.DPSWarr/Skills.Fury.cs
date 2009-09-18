@@ -245,10 +245,10 @@ namespace Rawr.DPSWarr
                 float chanceWeDontProc = 1f;
                 float actMod = 8f / FightDuration; // since we're assuming an 8sec rotation
 
-                chanceWeDontProc *= (1f - actMod * hsActivates * procChance * chanceMHhit);
-                chanceWeDontProc *= (1f - actMod * WW.Activates * procChance * chanceMHhit)
-                                 * (1f - actMod * WW.Activates * procChance * chanceOHhit);
-                chanceWeDontProc *= (1f - actMod * BT.Activates * procChance * chanceMHhit);
+                chanceWeDontProc *= (1f - actMod * hsActivates * procChance * MHAtkTable.AnyLand);
+                chanceWeDontProc *= (1f - actMod * WW.Activates * procChance * MHAtkTable.AnyLand)
+                                 * (1f - actMod * WW.Activates * procChance * OHAtkTable.AnyLand);
+                chanceWeDontProc *= (1f - actMod * BT.Activates * procChance * MHAtkTable.AnyLand);
                 return (1f - chanceWeDontProc) / actMod;
             }
             private float CalcSlamProcs(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)

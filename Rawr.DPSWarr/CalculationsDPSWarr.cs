@@ -406,6 +406,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.ExpertiseRating +
                 stats.ArmorPenetrationRating +
                 stats.ArcaneDamage +
+                stats.SpellHit + // used for TClap/Demo Shout maintenance
                 // Bonuses
                 stats.BonusArmor +
                 stats.WeaponDamage +

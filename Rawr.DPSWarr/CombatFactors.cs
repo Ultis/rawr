@@ -322,10 +322,11 @@ namespace Rawr.DPSWarr {
         protected CombatFactors combatFactors;
         protected Stats StatS;
         protected Skills.Ability Abil;
+        protected bool useSpellHit = false;
 
         public bool isWhite;
         public bool isMH;
-
+        
         public float Miss { get; protected set; }
         public float Dodge { get; protected set; }
         public float Parry { get; protected set; }
@@ -339,7 +340,7 @@ namespace Rawr.DPSWarr {
 
         protected virtual void Calculate() { }
 
-        protected void Initialize(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh) {
+        protected void Initialize(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh, bool useSpellHit) {
             Char = character;
             StatS = stats;
             calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
@@ -347,6 +348,7 @@ namespace Rawr.DPSWarr {
             Abil = ability;
             isWhite = (Abil == null);
             isMH = ismh;
+            this.useSpellHit = useSpellHit;
             /*// Defaults
             Miss 
             Dodge
@@ -390,7 +392,7 @@ namespace Rawr.DPSWarr {
             Hit = Math.Max(0f, 1f - tableSize);
         }
 
-        public DefendTable(Character character, Stats stats, CombatFactors cf) { Initialize(character, stats, cf, null, true); }
+        public DefendTable(Character character, Stats stats, CombatFactors cf) { Initialize(character, stats, cf, null, true, useSpellHit); }
     }
 
     public class AttackTable : CombatTable {
@@ -398,7 +400,15 @@ namespace Rawr.DPSWarr {
             float tableSize = 0f;
 
             // Miss
-            Miss = Math.Min(1f - tableSize, isWhite ? combatFactors._c_wmiss : combatFactors._c_ymiss);
+            if (useSpellHit)
+            {
+                float hitIncrease = StatConversion.GetHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit;
+                Miss = Math.Min(1f - tableSize, Math.Max(0.17f - hitIncrease, 0f));
+            }
+            else
+            {
+                Miss = Math.Min(1f - tableSize, isWhite ? combatFactors._c_wmiss : combatFactors._c_ymiss);
+            }
             tableSize += Miss;
             // Dodge
             if (isWhite || Abil.CanBeDodged) {
@@ -434,8 +444,8 @@ namespace Rawr.DPSWarr {
             Hit = Math.Max(0f, 1f - tableSize);
         }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, bool ismh) { Initialize(character, stats, cf, null, ismh); }
+        public AttackTable(Character character, Stats stats, CombatFactors cf, bool ismh, bool useSpellHit) { Initialize(character, stats, cf, null, ismh, useSpellHit); }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh) { Initialize(character, stats, cf, ability, ismh); }
+        public AttackTable(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh, bool useSpellHit) { Initialize(character, stats, cf, ability, ismh, useSpellHit); }
     }
 }
