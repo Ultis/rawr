@@ -936,7 +936,7 @@ namespace Rawr.Mage
         {
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
-            spell.SpellModifier *= 1 + arcaneBlastDamageMultiplier * arcaneBlastDebuff;
+            spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * arcaneBlastDebuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState);
             return spell;
@@ -985,7 +985,7 @@ namespace Rawr.Mage
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
             if (manualClearcasting) spell.CalculateManualClearcasting(true, false, clearcastingActive);
-            spell.SpellModifier *= baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * debuff;
+            spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (castingState.CalculationOptions.Mode322)
             {
@@ -1004,7 +1004,7 @@ namespace Rawr.Mage
         {
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
-            spell.SpellModifier *= baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * debuff;
+            spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (castingState.CalculationOptions.Mode322)
             {
@@ -1022,7 +1022,7 @@ namespace Rawr.Mage
         {
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
-            spell.SpellModifier *= baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * debuff;
+            spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (castingState.CalculationOptions.Mode322)
             {
@@ -1040,7 +1040,6 @@ namespace Rawr.Mage
         {
             Spell spell = new Spell(this);
             spell.Calculate(castingState);
-            // do not use baseAdditiveSpellModifier, this overload is used for the raw version that combines all debuffs and that is already taken into account
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
             return spell;
@@ -1070,7 +1069,7 @@ namespace Rawr.Mage
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
             cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
-            float multiplier = weight * baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3);
+            float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3)) / rawSpell.AdditiveSpellModifier;
             cycle.DpsPerSpellPower += multiplier * rawSpell.CastTime * rawSpell.DpsPerSpellPower;
             cycle.damagePerSecond += multiplier * rawSpell.CastTime * rawSpell.DamagePerSecond;
             cycle.threatPerSecond += multiplier * rawSpell.CastTime * rawSpell.ThreatPerSecond;
@@ -1100,14 +1099,13 @@ namespace Rawr.Mage
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
             cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
-            float multiplier = weight * baseAdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4);
+            float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4)) / rawSpell.AdditiveSpellModifier;
             cycle.DpsPerSpellPower += multiplier * rawSpell.CastTime * rawSpell.DpsPerSpellPower;
             cycle.damagePerSecond += multiplier * rawSpell.CastTime * rawSpell.DamagePerSecond;
             cycle.threatPerSecond += multiplier * rawSpell.CastTime * rawSpell.ThreatPerSecond;
         }
 
         private float arcaneBlastDamageMultiplier;
-        private float baseAdditiveSpellModifier;
         private float tormentTheWeak;
 
         public ArcaneBlastTemplate(CharacterCalculationsMage calculations)
@@ -1121,7 +1119,7 @@ namespace Rawr.Mage
             BaseCostModifier += baseStats.ArcaneBlastBonus;
             BaseCritRate += 0.05f * calculations.BaseStats.Mage4T9;
             arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
-            baseAdditiveSpellModifier = 1.0f + baseStats.ArcaneBlastBonus + 0.02f * mageTalents.SpellImpact;
+            BaseAdditiveSpellModifier += baseStats.ArcaneBlastBonus + 0.02f * mageTalents.SpellImpact;
             tormentTheWeak = 0.04f * mageTalents.TormentTheWeak;
             SpellDamageCoefficient += 0.03f * mageTalents.ArcaneEmpowerment;
             BaseCritRate += 0.02f * mageTalents.Incineration;
@@ -1257,7 +1255,8 @@ namespace Rawr.Mage
                     spell.CostAmplifier = 0;
                 }
             }
-            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime) * (1 + arcaneBlastDamageMultiplier * arcaneBlastDebuff);
+            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
+            spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * arcaneBlastDebuff;
             spell.SpellModifier *= ticks / 5.0f;
             spell.CalculateDerivedStats(castingState);
             spell.CalculateManualClearcastingCost(castingState.Calculations, false, true, clearcastingAveraged, clearcastingActive);
@@ -1282,7 +1281,8 @@ namespace Rawr.Mage
                     spell.CostAmplifier = 0;
                 }
             }
-            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime) * (1 + arcaneBlastDamageMultiplier * arcaneBlastDebuff);
+            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
+            spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * arcaneBlastDebuff;
             spell.SpellModifier *= ticks / 5.0f;
             spell.CalculateDerivedStats(castingState);
             return spell;

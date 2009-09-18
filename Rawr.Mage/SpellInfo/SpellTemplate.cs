@@ -44,6 +44,7 @@ namespace Rawr.Mage
         public float BaseCostAmplifier;
         public float BaseInterruptProtection;
         public float BaseSpellModifier;
+        public float BaseAdditiveSpellModifier;
         public float BaseCritRate;
         public float BaseDirectDamageModifier;
         public float BaseDotDamageModifier;
@@ -154,6 +155,7 @@ namespace Rawr.Mage
             {
                 case MagicSchool.Arcane:
                     BaseSpellModifier = calculations.BaseArcaneSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseArcaneAdditiveSpellModifier;
                     BaseCritRate = calculations.BaseArcaneCritRate;
                     CritBonus = calculations.BaseArcaneCritBonus;
                     HitRate = calculations.BaseArcaneHitRate;
@@ -162,6 +164,7 @@ namespace Rawr.Mage
                     break;
                 case MagicSchool.Fire:
                     BaseSpellModifier = calculations.BaseFireSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseFireAdditiveSpellModifier;
                     BaseCritRate = calculations.BaseFireCritRate;
                     CritBonus = calculations.BaseFireCritBonus;
                     HitRate = calculations.BaseFireHitRate;
@@ -170,6 +173,7 @@ namespace Rawr.Mage
                     break;
                 case MagicSchool.FrostFire:
                     BaseSpellModifier = calculations.BaseFrostFireSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseFrostFireAdditiveSpellModifier;
                     BaseCritRate = calculations.BaseFrostFireCritRate;
                     CritBonus = calculations.BaseFrostFireCritBonus;
                     HitRate = calculations.BaseFrostFireHitRate;
@@ -189,6 +193,7 @@ namespace Rawr.Mage
                     break;
                 case MagicSchool.Frost:
                     BaseSpellModifier = calculations.BaseFrostSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseFrostAdditiveSpellModifier;
                     BaseCritRate = calculations.BaseFrostCritRate;
                     CritBonus = calculations.BaseFrostCritBonus;
                     HitRate = calculations.BaseFrostHitRate;
@@ -197,6 +202,7 @@ namespace Rawr.Mage
                     break;
                 case MagicSchool.Nature:
                     BaseSpellModifier = calculations.BaseNatureSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseNatureAdditiveSpellModifier;
                     BaseCritRate = calculations.BaseNatureCritRate;
                     CritBonus = calculations.BaseNatureCritBonus;
                     HitRate = calculations.BaseNatureHitRate;
@@ -205,6 +211,7 @@ namespace Rawr.Mage
                     break;
                 case MagicSchool.Shadow:
                     BaseSpellModifier = calculations.BaseShadowSpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseShadowAdditiveSpellModifier;
                     BaseCritRate = calculations.BaseShadowCritRate;
                     CritBonus = calculations.BaseShadowCritBonus;
                     HitRate = calculations.BaseShadowHitRate;
@@ -213,6 +220,7 @@ namespace Rawr.Mage
                     break;
                 case MagicSchool.Holy:
                     BaseSpellModifier = calculations.BaseHolySpellModifier;
+                    BaseAdditiveSpellModifier = calculations.BaseHolyAdditiveSpellModifier;
                     BaseCritRate = calculations.BaseHolyCritRate;
                     CritBonus = calculations.BaseHolyCritBonus;
                     HitRate = calculations.BaseHolyHitRate;

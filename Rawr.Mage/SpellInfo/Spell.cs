@@ -118,6 +118,8 @@ namespace Rawr.Mage
             Stats baseStats = castingState.BaseStats;
             CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
 
+            SpellModifier *= AdditiveSpellModifier;
+
             if (CritRate < 0.0f) CritRate = 0.0f;
             if (CritRate > 1.0f) CritRate = 1.0f;
 
@@ -336,6 +338,7 @@ namespace Rawr.Mage
         public float CostModifier;
         public float CostAmplifier;
         public float SpellModifier;
+        public float AdditiveSpellModifier;
         public float DirectDamageModifier;
         public float DotDamageModifier;
         public float RealResistance { get { return template.RealResistance; } }
@@ -388,6 +391,7 @@ namespace Rawr.Mage
             InterruptProtection = template.BaseInterruptProtection;
 
             SpellModifier = template.BaseSpellModifier * castingState.StateSpellModifier;
+            AdditiveSpellModifier = template.BaseAdditiveSpellModifier + castingState.StateAdditiveSpellModifier;
             CritBonus = template.CritBonus;
             CritRate = template.BaseCritRate + castingState.StateCritRate;
             if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
@@ -461,6 +465,8 @@ namespace Rawr.Mage
             MageTalents mageTalents = castingState.MageTalents;
             Stats baseStats = castingState.BaseStats;
             CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
+
+            SpellModifier *= AdditiveSpellModifier;
 
             if (CritRate < 0.0f) CritRate = 0.0f;
             if (CritRate > 1.0f) CritRate = 1.0f;

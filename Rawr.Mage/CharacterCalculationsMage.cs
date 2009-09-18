@@ -213,6 +213,15 @@ namespace Rawr.Mage
         public float BaseFrostFireSpellModifier { get; set; }
         public float BaseHolySpellModifier { get; set; }
 
+        public float BaseAdditiveSpellModifier { get; set; }
+        public float BaseArcaneAdditiveSpellModifier { get; set; }
+        public float BaseFireAdditiveSpellModifier { get; set; }
+        public float BaseFrostAdditiveSpellModifier { get; set; }
+        public float BaseNatureAdditiveSpellModifier { get; set; }
+        public float BaseShadowAdditiveSpellModifier { get; set; }
+        public float BaseFrostFireAdditiveSpellModifier { get; set; }
+        public float BaseHolyAdditiveSpellModifier { get; set; }
+
         public float BaseCritRate { get; set; }
         public float BaseArcaneCritRate { get; set; }
         public float BaseFireCritRate { get; set; }

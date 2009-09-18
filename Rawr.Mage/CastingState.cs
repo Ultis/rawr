@@ -81,14 +81,7 @@ namespace Rawr.Mage
         public float Dodge { get { return Calculations.Dodge; } }
 
         public float StateSpellModifier { get; set; }
-
-        public float ArcaneSpellModifier { get { return StateSpellModifier * Calculations.BaseArcaneSpellModifier; } }
-        public float FireSpellModifier { get { return StateSpellModifier * Calculations.BaseFireSpellModifier; } }
-        public float FrostSpellModifier { get { return StateSpellModifier * Calculations.BaseFrostSpellModifier; } }
-        public float NatureSpellModifier { get { return StateSpellModifier * Calculations.BaseNatureSpellModifier; } }
-        public float ShadowSpellModifier { get { return StateSpellModifier * Calculations.BaseShadowSpellModifier; } }
-        public float FrostFireSpellModifier { get { return StateSpellModifier * Calculations.BaseFrostFireSpellModifier; } }
-        public float HolySpellModifier { get { return StateSpellModifier * Calculations.BaseHolySpellModifier; } }
+        public float StateAdditiveSpellModifier { get; set; }
 
         public float ArcaneCritBonus { get { return Calculations.BaseArcaneCritBonus; } }
         public float FireCritBonus { get { return Combustion ? Calculations.CombustionFireCritBonus : Calculations.BaseFireCritBonus; } }
@@ -321,7 +314,7 @@ namespace Rawr.Mage
             StateSpellModifier = 1.0f;
             if (ArcanePower)
             {
-                StateSpellModifier *= 1.2f;
+                StateAdditiveSpellModifier += 0.2f;
             }
             if (MoltenFury)
             {

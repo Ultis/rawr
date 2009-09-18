@@ -595,14 +595,23 @@ namespace Rawr.Mage
             calculationResult.HolyThreatMultiplier = threatFactor;
 
             float baseSpellModifier = (1 + 0.01f * talents.ArcaneInstability) * (1 + 0.01f * talents.PlayingWithFire) * (1 + baseStats.BonusDamageMultiplier) * calculationOptions.EffectDamageMultiplier;
+            float baseAdditiveSpellModifier = 1.0f;
             calculationResult.BaseSpellModifier = baseSpellModifier;
+            calculationResult.BaseAdditiveSpellModifier = baseAdditiveSpellModifier;
             calculationResult.BaseArcaneSpellModifier = baseSpellModifier * (1 + baseStats.BonusArcaneDamageMultiplier);
-            calculationResult.BaseFireSpellModifier = baseSpellModifier * (1 + 0.02f * talents.FirePower) * (1 + baseStats.BonusFireDamageMultiplier);
+            calculationResult.BaseArcaneAdditiveSpellModifier = baseAdditiveSpellModifier;
+            calculationResult.BaseFireSpellModifier = baseSpellModifier * (1 + baseStats.BonusFireDamageMultiplier);
+            calculationResult.BaseFireAdditiveSpellModifier = baseAdditiveSpellModifier + 0.02f * talents.FirePower;
             calculationResult.BaseFrostSpellModifier = baseSpellModifier * (1 + 0.02f * talents.PiercingIce) * (1 + 0.01f * talents.ArcticWinds) * (1 + baseStats.BonusFrostDamageMultiplier);
+            calculationResult.BaseFrostAdditiveSpellModifier = baseAdditiveSpellModifier;
             calculationResult.BaseNatureSpellModifier = baseSpellModifier * (1 + baseStats.BonusNatureDamageMultiplier);
+            calculationResult.BaseNatureAdditiveSpellModifier = baseAdditiveSpellModifier;
             calculationResult.BaseShadowSpellModifier = baseSpellModifier * (1 + baseStats.BonusShadowDamageMultiplier);
+            calculationResult.BaseShadowAdditiveSpellModifier = baseAdditiveSpellModifier;
             calculationResult.BaseHolySpellModifier = baseSpellModifier * (1 + baseStats.BonusHolyDamageMultiplier);
-            calculationResult.BaseFrostFireSpellModifier = baseSpellModifier * (1 + 0.02f * talents.FirePower) * (1 + 0.02f * talents.PiercingIce) * (1 + 0.01f * talents.ArcticWinds) * Math.Max(1 + baseStats.BonusFireDamageMultiplier, 1 + baseStats.BonusFrostDamageMultiplier);
+            calculationResult.BaseHolyAdditiveSpellModifier = baseAdditiveSpellModifier;
+            calculationResult.BaseFrostFireSpellModifier = baseSpellModifier * (1 + 0.02f * talents.PiercingIce) * (1 + 0.01f * talents.ArcticWinds) * Math.Max(1 + baseStats.BonusFireDamageMultiplier, 1 + baseStats.BonusFrostDamageMultiplier);
+            calculationResult.BaseFrostFireAdditiveSpellModifier = baseAdditiveSpellModifier + 0.02f * talents.FirePower;
 
             float spellCritPerInt = 0f;
             float spellCritBase = 0f;
