@@ -888,17 +888,17 @@ namespace Rawr.Enhance
                     float dpsSta = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 30 } }).OverallPoints - dpsBase);
 
                     return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationEnhance() { Name = "24 Stamina", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
-						new ComparisonCalculationEnhance() { Name = "16 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
-						new ComparisonCalculationEnhance() { Name = "16 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
-						new ComparisonCalculationEnhance() { Name = "32 Attack Power", OverallPoints = dpsAP, DPSPoints = dpsAP },
-						new ComparisonCalculationEnhance() { Name = "16 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
-						new ComparisonCalculationEnhance() { Name = "16 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
-						new ComparisonCalculationEnhance() { Name = "16 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
-						new ComparisonCalculationEnhance() { Name = "16 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
-						new ComparisonCalculationEnhance() { Name = "16 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
-						new ComparisonCalculationEnhance() { Name = "16 Armor Penetration", OverallPoints = dpsPen, DPSPoints = dpsPen },
-                        new ComparisonCalculationEnhance() { Name = "19 Spellpower", OverallPoints = dpsSpd, DPSPoints = dpsSpd }
+						new ComparisonCalculationEnhance() { Name = "30 Stamina", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+						new ComparisonCalculationEnhance() { Name = "20 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+						new ComparisonCalculationEnhance() { Name = "20 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
+						new ComparisonCalculationEnhance() { Name = "40 Attack Power", OverallPoints = dpsAP, DPSPoints = dpsAP },
+						new ComparisonCalculationEnhance() { Name = "20 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
+						new ComparisonCalculationEnhance() { Name = "20 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
+						new ComparisonCalculationEnhance() { Name = "20 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
+						new ComparisonCalculationEnhance() { Name = "20 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
+						new ComparisonCalculationEnhance() { Name = "20 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
+						new ComparisonCalculationEnhance() { Name = "20 Armor Penetration", OverallPoints = dpsPen, DPSPoints = dpsPen },
+                        new ComparisonCalculationEnhance() { Name = "23 Spellpower", OverallPoints = dpsSpd, DPSPoints = dpsSpd }
 					};
 
                 case "MH Weapon Speeds":
@@ -914,8 +914,9 @@ namespace Rawr.Enhance
                     ComparisonCalculationBase MHtwoPointFive = CheckWeaponSpeedEffect(character, 2.5f, true);
                     ComparisonCalculationBase MHtwoPointSix = CheckWeaponSpeedEffect(character, 2.6f, true);
                     ComparisonCalculationBase MHtwoPointSeven = CheckWeaponSpeedEffect(character, 2.7f, true);
+                    ComparisonCalculationBase MHtwoPointEight = CheckWeaponSpeedEffect(character, 2.8f, true);
                     return new ComparisonCalculationBase[] { MHonePointFour, MHonePointFive, MHonePointSix, MHonePointSeven, MHonePointEight, 
-                                                             MHtwoPointThree, MHtwoPointFour, MHtwoPointFive, MHtwoPointSix, MHtwoPointSeven };
+                                                             MHtwoPointThree, MHtwoPointFour, MHtwoPointFive, MHtwoPointSix, MHtwoPointSeven, MHtwoPointEight };
 
                 case "OH Weapon Speeds":
                     if (character.OffHand == null || character.ShamanTalents.DualWield != 1)
@@ -930,8 +931,9 @@ namespace Rawr.Enhance
                     ComparisonCalculationBase OHtwoPointFive = CheckWeaponSpeedEffect(character, 2.5f, false);
                     ComparisonCalculationBase OHtwoPointSix = CheckWeaponSpeedEffect(character, 2.6f, false);
                     ComparisonCalculationBase OHtwoPointSeven = CheckWeaponSpeedEffect(character, 2.7f, false);
+                    ComparisonCalculationBase OHtwoPointEight = CheckWeaponSpeedEffect(character, 2.8f, false);
                     return new ComparisonCalculationBase[] { OHonePointFour, OHonePointFive, OHonePointSix, OHonePointSeven, OHonePointEight, 
-                                                             OHtwoPointThree, OHtwoPointFour, OHtwoPointFive, OHtwoPointSix, OHtwoPointSeven };
+                                                             OHtwoPointThree, OHtwoPointFour, OHtwoPointFive, OHtwoPointSix, OHtwoPointSeven, OHtwoPointEight };
 
                 default:
                     return new ComparisonCalculationBase[0];
