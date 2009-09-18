@@ -412,10 +412,13 @@ namespace Rawr.DPSWarr
                 this.calcs.TotalDPS = DPS_TTL;
                 this.calcs.WhiteDPS = this._WhiteDPS;
 
-                this.calcs.WhiteRage = this.RageGenWhite;
-                this.calcs.OtherRage = this.RageGenOther;
-                this.calcs.NeedyRage = this.RageNeeded;
-                this.calcs.FreeRage = this.RageGenWhite + this.RageGenOther - this.RageNeeded;
+                this.calcs.WhiteRage  = this.RageGenWhite;
+                this.calcs.OtherRage  = this.RageGenOther;
+                this.calcs.NeedyRage  = this.RageNeeded;
+                this.calcs.FreeRage   = this.RageGenWhite + this.RageGenOther - this.RageNeeded;
+                this.calcs.WhiteDPSMH = this.WhiteAtks.MhDPS;
+                this.calcs.WhiteDPSOH = this.WhiteAtks.OhDPS;
+                this.calcs.WhiteDmg   = this.WhiteAtks.MhDamageOnUse + this.WhiteAtks.OhDamageOnUse;
             }
         }
 
