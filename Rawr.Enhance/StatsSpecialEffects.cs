@@ -28,7 +28,7 @@ namespace Rawr.Enhance
                 else
                 {
                     float trigger = 0f;
-                    float chance = effect.Chance;
+                    float chance = 1f;
                     float unhastedAttackSpeed = 3f;
                     switch (effect.Trigger)
                     {
@@ -70,15 +70,19 @@ namespace Rawr.Enhance
                             break;
                         case Trigger.ShamanLightningBolt :
                             trigger = 1f / cs.AbilityCooldown("Lightning Bolt");
+                            chance = cs.ChanceSpellHit;
                             break;
                         case Trigger.ShamanStormStrike :
                             trigger = 1f / cs.AbilityCooldown("Stormstrike");
+                            chance = cs.ChanceYellowHitMH;
                             break;
                         case Trigger.ShamanShock :
                             trigger = 1f / cs.AbilityCooldown("Earth Shock");
+                            chance = cs.ChanceSpellHit;
                             break;
                         case Trigger.ShamanLavaLash :
                             trigger = 1f / cs.AbilityCooldown("Lava Lash");
+                            chance = cs.ChanceYellowHitOH;
                             break;
                     }
                     if (effect.MaxStack > 1)
@@ -92,35 +96,35 @@ namespace Rawr.Enhance
                     }
                 }
             }
-            AddParagon();
-            AddHighestStat();
+            AddParagon(statsAverage);
+            AddHighestStat(statsAverage);
             return statsAverage;
         }
 
-        private void AddParagon()
+        private void AddParagon(Stats statsAverage)
         {
-            if (_stats.Paragon > 0)
+            if (statsAverage.Paragon > 0)
             {
                 float paragon = 0f;
                 if (_stats.Strength > _stats.Agility)
                 {
-                    paragon = (float)Math.Floor((float)(_stats.Paragon * (1 + _stats.BonusStrengthMultiplier)));
-                    _stats.Strength += paragon;
-                    _stats.AttackPower += paragon;
+                    paragon = (float)Math.Floor((float)(statsAverage.Paragon * (1 + _stats.BonusStrengthMultiplier)));
+                    statsAverage.Strength += paragon;
+                    statsAverage.AttackPower += paragon;
                 }
                 else
                 {
-                    paragon = (float)Math.Floor((float)(_stats.Paragon * (1 + _stats.BonusAgilityMultiplier)));
-                    _stats.Agility += paragon;
-                    _stats.AttackPower += paragon;
+                    paragon = (float)Math.Floor((float)(statsAverage.Paragon * (1 + _stats.BonusAgilityMultiplier)));
+                    statsAverage.Agility += paragon;
+                    statsAverage.AttackPower += paragon;
                 }
             }
         }
 
-        private void AddHighestStat()
+        private void AddHighestStat(Stats statsAverage)
         {
             //trinket procs
-            if (_stats.HighestStat > 0)
+            if (statsAverage.HighestStat > 0)
             {
                 float intfromAP = _character.ShamanTalents.MentalDexterity / 3;
                 // Highest stat
@@ -129,30 +133,30 @@ namespace Rawr.Enhance
                 {
                     if (_stats.Agility > _stats.Intellect)
                     {
-                        highestStat = (float)Math.Floor((float)(_stats.HighestStat * (1 + _stats.BonusAgilityMultiplier)));
-                        _stats.Agility += highestStat;  
-                        _stats.AttackPower += highestStat;
+                        highestStat = (float)Math.Floor((float)(statsAverage.HighestStat * (1 + _stats.BonusAgilityMultiplier)));
+                        statsAverage.Agility += highestStat;
+                        statsAverage.AttackPower += highestStat;
                     }
                     else
                     {
-                        highestStat = (float)Math.Floor((float)(_stats.HighestStat * (1 + _stats.BonusIntellectMultiplier)));
-                        _stats.Intellect += highestStat;
-                        _stats.AttackPower += intfromAP * highestStat;
+                        highestStat = (float)Math.Floor((float)(statsAverage.HighestStat * (1 + _stats.BonusIntellectMultiplier)));
+                        statsAverage.Intellect += highestStat;
+                        statsAverage.AttackPower += intfromAP * highestStat;
                     }
                 }
                 else
                 {
                     if (_stats.Strength > _stats.Intellect)
                     {
-                        highestStat = (float)Math.Floor((float)(_stats.HighestStat * (1 + _stats.BonusStrengthMultiplier)));
-                        _stats.Strength += highestStat;
-                        _stats.AttackPower += highestStat;
+                        highestStat = (float)Math.Floor((float)(statsAverage.HighestStat * (1 + _stats.BonusStrengthMultiplier)));
+                        statsAverage.Strength += highestStat;
+                        statsAverage.AttackPower += highestStat;
                     }
                     else
                     {
-                        highestStat = (float)Math.Floor((float)(_stats.HighestStat * (1 + _stats.BonusIntellectMultiplier)));
-                        _stats.Intellect += highestStat;
-                        _stats.AttackPower += intfromAP * highestStat;
+                        highestStat = (float)Math.Floor((float)(statsAverage.HighestStat * (1 + _stats.BonusIntellectMultiplier)));
+                        statsAverage.Intellect += highestStat;
+                        statsAverage.AttackPower += intfromAP * highestStat;
                     }
                 }
             }
