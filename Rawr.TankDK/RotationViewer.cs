@@ -35,7 +35,7 @@ namespace Rawr.TankDK
             txtOblit.KeyUp += new KeyEventHandler(txtOblit_KeyUp);
             txtPS.KeyUp += new KeyEventHandler(txtPS_KeyUp);
             txtSS.KeyUp += new KeyEventHandler(txtSS_KeyUp);
-            txtUB.KeyUp += new KeyEventHandler(txtUB_KeyUp);
+            txtPest.KeyUp += new KeyEventHandler(txtPest_KeyUp);
             txtUptime.KeyUp += new KeyEventHandler(txtUptime_KeyUp);
             txtDS.KeyUp += new KeyEventHandler(txtDS_KeyUp);
             txtHoW.KeyUp += new KeyEventHandler(txtHoW_KeyUp);
@@ -81,7 +81,7 @@ namespace Rawr.TankDK
             txtDS.Text = rotation.DeathStrike.ToString();
             txtPS.Text = rotation.PlagueStrike.ToString();
             txtSS.Text = rotation.ScourgeStrike.ToString();
-            txtUB.Text = rotation.UnholyBlight.ToString();
+            txtPest.Text = rotation.Pestilence.ToString();
             txtUptime.Text = rotation.diseaseUptime.ToString();
             txtHoW.Text = rotation.Horn.ToString();
             txtRS.Text = rotation.RuneStrike.ToString();
@@ -104,7 +104,7 @@ namespace Rawr.TankDK
             txtOblit.ReadOnly = true;
             txtPS.ReadOnly = true;
             txtSS.ReadOnly = true;
-            txtUB.ReadOnly = true;
+            txtPest.ReadOnly = true;
             txtUptime.ReadOnly = true;
             updateLabels();
         }
@@ -122,7 +122,7 @@ namespace Rawr.TankDK
             txtOblit.ReadOnly = false;
             txtPS.ReadOnly = false;
             txtSS.ReadOnly = false;
-            txtUB.ReadOnly = false;
+            txtPest.ReadOnly = false;
             txtUptime.ReadOnly = false;
             updateLabels();
         }
@@ -421,18 +421,18 @@ namespace Rawr.TankDK
             updateLabels();
         }
 
-        void txtUB_KeyUp(object sender, KeyEventArgs e)
+        void txtPest_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
             {
                 double d = double.Parse(t.Text);
                 float f = (float)d;
-                rotation.UnholyBlight = f;
+                rotation.Pestilence = f;
             }
             catch
             {
-                rotation.UnholyBlight = 0f;
+                rotation.Pestilence = 0f;
                 t.Text = "0";
             }
             updateLabels();
@@ -508,15 +508,30 @@ namespace Rawr.TankDK
 
         private void cbManagedRP_CheckedChanged(object sender, EventArgs e)
         {
+            // On the RP abilities need to become readonly.
             txtFS.ReadOnly = cbManagedRP.Checked;
-            txtUB.ReadOnly = cbManagedRP.Checked;
+            txtRS.ReadOnly = cbManagedRP.Checked;
             txtDC.ReadOnly = cbManagedRP.Checked;
             rotation.managedRP = cbManagedRP.Checked;
             updateLabels();
             txtFS.Text = rotation.FrostStrike.ToString();
             txtDC.Text = rotation.DeathCoil.ToString();
-            txtUB.Text = rotation.UnholyBlight.ToString();
             txtRS.Text = rotation.RuneStrike.ToString();
+        }
+
+        private void txtPest_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label16_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label23_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

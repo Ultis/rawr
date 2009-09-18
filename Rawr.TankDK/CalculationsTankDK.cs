@@ -555,19 +555,21 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // How much damage per shot normal shot?
             float fPerShotPhysical = fIncPhysicalDamage;
             // How many shots over the length of the fight?
-            float fTotalBossAttacksPerFight = (fFightDuration * 60f) / opts.BossAttackSpeed;
+            float fBossAverageAttackSpeed = opts.BossAttackSpeed * (1f + .02f * character.DeathKnightTalents.ImprovedIcyTouch);
+            // Factor in attack speed negative haste caused by talents.
+
+            float fTotalBossAttacksPerFight = (fFightDuration * 60f) / fBossAverageAttackSpeed;
             // Integrate Expertise values to prevent additional physical damage coming in:
             // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
             // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
             // Figure out how many shots there are.  Right now, just calculating white damage.
-            float fBossParryHastedSpeed = opts.BossAttackSpeed * (1f - 0.24f);
-            float fBossAverageAttackSpeed = opts.BossAttackSpeed;
+            float fBossParryHastedSpeed = fBossAverageAttackSpeed * (1f - 0.24f);
             float fShotsParried = 0f;
             float fBossShotCountPerRot = 0f;
             if (fRotDuration > 0) {
                 fNumRotations = (fFightDuration * 60f) / fRotDuration;
                 // How many shots does the boss take over a given rotation period.
-                fBossShotCountPerRot = fRotDuration / opts.BossAttackSpeed;
+                fBossShotCountPerRot = fRotDuration / fBossAverageAttackSpeed;
                 // How fast is a hasted shot? up to 40% faster.
                 // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
                 float fCharacterShotCount = 0f;
@@ -587,7 +589,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
                 float fTimeNormal = fRotDuration - fTimeHasted;
                 // Update the shot count w/ the new # of normal shots + the number of hasted shots.
-                fBossShotCountPerRot = (fTimeNormal / opts.BossAttackSpeed) + fShotsParried;
+                fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
                 // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
                 fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
                 fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
@@ -676,7 +678,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 float.IsNaN(calcs.Mitigation) ||
                 float.IsNaN(calcs.OverallPoints) )
             {
+#if DEBUG
                 throw new Exception("One of the Subpoints are Invalid.");
+#endif
             }
             #endregion
 
@@ -1222,7 +1226,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 sReturn.BonusIcyTouchDamage += (0.05f * character.DeathKnightTalents.ImprovedIcyTouch);
                 // TODO: Need to factor in the correct haste adjustment for target.
                 // For now assuming a straight 2% damage reduction per point.
-                sReturn.DamageTakenMultiplier -= 0.02f * character.DeathKnightTalents.ImprovedIcyTouch;
+
+//                sReturn.DamageTakenMultiplier -= 0.02f * character.DeathKnightTalents.ImprovedIcyTouch;
             }
 
             // Runic Power Mastery
@@ -1260,7 +1265,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (character.DeathKnightTalents.IcyTalons > 0) {
                 newStats = new Stats();
                 newStats.PhysicalHaste += (0.04f * character.DeathKnightTalents.IcyTalons);
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 20f, 0f));
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.IcyTouchHit, newStats, 20f, 0f));
             }
 
             // Lichborne
@@ -1318,6 +1323,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // increases your haste by 5% all the time.
             if (character.DeathKnightTalents.ImprovedIcyTalons > 0) {
                 sReturn.PhysicalHaste += 0.05f;
+                // TODO: Factor in raid utility by improving raid haste by 20%
+                newStats = new Stats();
+                newStats.PhysicalHaste += (0.2f * character.DeathKnightTalents.IcyTalons);
+                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.IcyTouchHit, newStats, 20f, 0f));
             }
 
             // Merciless Combat

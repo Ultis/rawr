@@ -8,10 +8,18 @@ using System.Windows.Forms;
 
 namespace Rawr.TankDK {
     public partial class CalculationOptionsPanelTankDK : Rawr.CalculationOptionsPanelBase {
-        public CalculationOptionsPanelTankDK() { InitializeComponent(); }
-        protected override void LoadCalculationOptions() {
+        public CalculationOptionsPanelTankDK() 
+        { 
+            InitializeComponent(); 
+        }
+
+        protected override void LoadCalculationOptions() 
+        {
             _loadingCalculationOptions = true;
-            if (Character.CalculationOptions == null) { Character.CalculationOptions = new CalculationOptionsTankDK(); }
+            if (Character.CalculationOptions == null) 
+            { 
+                Character.CalculationOptions = new CalculationOptionsTankDK();
+            }
 
             options = Character.CalculationOptions as CalculationOptionsTankDK;
 
@@ -27,8 +35,11 @@ namespace Rawr.TankDK {
 
             _loadingCalculationOptions = false;
         }
+
         private bool _loadingCalculationOptions = false;
+
         private CalculationOptionsTankDK options;
+
         private void cmbAttackerLevel_SelectedIndexChanged(object sender, EventArgs e) {
             if (!_loadingCalculationOptions) {
                 options.TargetLevel = int.Parse(cmbAttackerLevel.SelectedItem.ToString());

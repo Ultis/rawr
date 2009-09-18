@@ -582,7 +582,7 @@ namespace Rawr.TankDK
 
             #region Frost Fever
             {
-                if (calcOpts.m_Rotation.IcyTouch > 0f || (talents.GlyphofHowlingBlast && calcOpts.m_Rotation.HowlingBlast > 0f) || (talents.GlyphofDisease))
+                if (calcOpts.m_Rotation.IcyTouch > 0f || (talents.GlyphofHowlingBlast && calcOpts.m_Rotation.HowlingBlast > 0f))
                 {
                     // Frost Fever is renewed with every Icy Touch and starts a new cd
                     float ITCD = calcOpts.m_Rotation.curRotationDuration / (calcOpts.m_Rotation.IcyTouch + (talents.GlyphofHowlingBlast ? calcOpts.m_Rotation.HowlingBlast : 0f));
@@ -604,7 +604,7 @@ namespace Rawr.TankDK
 
             #region Blood Plague
             {
-                if (calcOpts.m_Rotation.PlagueStrike > 0f || talents.GlyphofPestilence)
+                if (calcOpts.m_Rotation.PlagueStrike > 0f)
                 {
                     // Blood Plague is renewed with every Plague Strike and starts a new cd
                     float PSCD = calcOpts.m_Rotation.curRotationDuration / calcOpts.m_Rotation.PlagueStrike;
@@ -618,6 +618,16 @@ namespace Rawr.TankDK
                         fDamBloodPlague = BPDmg / BPCD * fDuration;
                         fDamWPFromBP = fDamBloodPlague * this.physCrits * fDuration;
                     }
+                }
+            }
+            #endregion
+
+            #region Pestilence
+            {
+                if (calcOpts.m_Rotation.Pestilence > 0f )
+                {
+                    fDamBloodPlague *= calcOpts.uNumberTargets;
+                    fDamFrostFever *= calcOpts.uNumberTargets;
                 }
             }
             #endregion

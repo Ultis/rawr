@@ -80,6 +80,7 @@ namespace Rawr.TankDK {
             this.GlyphofIT = talents.GlyphofIcyTouch;
             this.GlyphofFS = talents.GlyphofFrostStrike;
 
+            // Abilities that grant RP:
             RP = ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.ChillOfTheGrave + 2.5f * talents.Dirge) * Obliterate) +
                  ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * ScourgeStrike) +
                  ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * DeathStrike) +
@@ -90,37 +91,45 @@ namespace Rawr.TankDK {
                   (10 * (BloodStrike + HeartStrike + BloodBoil + Horn)) +
                  ((curRotationDuration / 5f) * talents.Butchery);
 
-            if (managedRP) {
+
+            if (managedRP)
+            {
                 RP = manageRPDumping(talents, RP);
-            } else {
-                RP -= ((40 * DeathCoil) +
-                    ((GlyphofFS ? 32 : 40) * FrostStrike) 
-                    + (40 * UnholyBlight)
+            } 
+            else 
+            {
+                RP -= ((40 * DeathCoil)
+                    + ((GlyphofFS ? 32 : 40) * FrostStrike) 
                     + (20 * RuneStrike));
             }
             return RP;
         }
-        public float manageRPDumping(DeathKnightTalents talents, float RP) {
+
+        public float manageRPDumping(DeathKnightTalents talents, float RP)
+        {
+            // We need to get the # of boss attacks from the mitigation section to 
+            // figure out what is the chance the # of RS we can see.
+            // MaxRSBySpeed = RotationDuration/MH.Speed
+            // MaxRSByRP = RP/20f;
+            // PossibleRS = AverageBossAttacksPerRotation * (Dodge% + Parry%)
+            // ActualRS = Math.Min(MaxRSBySpeed, PossibleRS);
             /*RuneStrike = RP / 20f;
             // RuneStrikes count is also based on Dodge & Parry chance:
             RuneStrike *= (m_FullStats.Dodge + m_FullStats.Parry);
             // Remove the RS shots from the pool of available RP.
             RP -= (RuneStrike * 20f);*/            
-            if (talents.FrostStrike > 0f) {
+            if (talents.FrostStrike > 0f) 
+            {
                 FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
                 DeathCoil = 0f;
-                UnholyBlight = 0f;
+                RuneStrike = 0f;
                 RP = 0f;
-            } else if (talents.UnholyBlight > 0f) {
-                UnholyBlight = curRotationDuration / (talents.GlyphofUnholyBlight ? 30f : 20f);
-                RP -= UnholyBlight * 40f;
+            } 
+            else 
+            {
                 DeathCoil = RP / 40f;
                 FrostStrike = 0f;
-                RP = 0f;
-            } else {
-                DeathCoil = RP / 40f;
-                FrostStrike = 0f;
-                UnholyBlight = 0f;
+                RuneStrike = 0f;
                 RP = 0f;
             }
 
@@ -156,16 +165,15 @@ namespace Rawr.TankDK {
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
                     ScourgeStrike = 0f;
-                    UnholyBlight = 0f;
                     FrostStrike = 0f;
                     HowlingBlast = 0f;
                     Obliterate = 0f;
                     DeathStrike = 2f;
                     BloodStrike = 0f;
                     HeartStrike = 6f;
+                    Pestilence = 0f;
+                    RuneStrike = 2f;
                     curRotationDuration = 20f;
-//                    DancingRuneWeapon = 190f;
-//                    GargoyleDuration = 0f;
                     break;
                 case Type.Frost:
                     numDisease = 2f;
@@ -175,16 +183,15 @@ namespace Rawr.TankDK {
                     PlagueStrike = 2f;
                     ScourgeStrike = 0f;
                     UnholyBlight = 0f;
-                    FrostStrike = 0f;
+                    FrostStrike = 1f;
                     HowlingBlast = 0f;
                     Obliterate = 3f;
                     BloodStrike = 2f;
                     HeartStrike = 0f;
-//                    DancingRuneWeapon = 0f;
-                    curRotationDuration = 20f;
-//                    GargoyleDuration = 0f;
                     DeathStrike = 0f;
                     RuneStrike = 2f;
+                    Pestilence = 0f;
+                    curRotationDuration = 20f;
                     break;
                 case Type.Unholy:
                     numDisease = 3f;
@@ -199,11 +206,10 @@ namespace Rawr.TankDK {
                     Obliterate = 0f;
                     BloodStrike = 2f;
                     HeartStrike = 0f;
-//                    DancingRuneWeapon = 0f;
                     curRotationDuration = 20f;
-//                    GargoyleDuration = 30f;
                     DeathStrike = 0f;
                     RuneStrike = 2f;
+                    Pestilence = 0f;
                     break;
                 case Type.Custom:
                    /* numDisease = 0f;
