@@ -874,18 +874,18 @@ namespace Rawr.Enhance
 
                 case "Relative Gem Values":
                     float dpsBase = GetCharacterCalculations(character).OverallPoints;
-                    float dpsStr = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 16 } }).OverallPoints - dpsBase);
-                    float dpsAgi = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 16 } }).OverallPoints - dpsBase);
-                    float dpsAP = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 32 } }).OverallPoints - dpsBase);
-                    float dpsInt = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 16 } }).OverallPoints - dpsBase);
-                    float dpsCrit = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 16 } }).OverallPoints - dpsBase);
-                    float dpsExp = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 16 } }).OverallPoints - dpsBase);
-                    float dpsHaste = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 16 } }).OverallPoints - dpsBase);
-                    float dpsHit = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 16 } }).OverallPoints - dpsBase);
+                    float dpsStr = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 20 } }).OverallPoints - dpsBase);
+                    float dpsAgi = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 20 } }).OverallPoints - dpsBase);
+                    float dpsAP = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 40 } }).OverallPoints - dpsBase);
+                    float dpsInt = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 20 } }).OverallPoints - dpsBase);
+                    float dpsCrit = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 20 } }).OverallPoints - dpsBase);
+                    float dpsExp = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 20 } }).OverallPoints - dpsBase);
+                    float dpsHaste = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 20 } }).OverallPoints - dpsBase);
+                    float dpsHit = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 20 } }).OverallPoints - dpsBase);
                     float dpsDmg = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase);
-                    float dpsPen = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetrationRating = 16 } }).OverallPoints - dpsBase);
-                    float dpsSpd = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 19 } }).OverallPoints - dpsBase);
-                    float dpsSta = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 24 } }).OverallPoints - dpsBase);
+                    float dpsPen = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetrationRating = 20 } }).OverallPoints - dpsBase);
+                    float dpsSpd = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 23 } }).OverallPoints - dpsBase);
+                    float dpsSta = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 30 } }).OverallPoints - dpsBase);
 
                     return new ComparisonCalculationBase[] { 
 						new ComparisonCalculationEnhance() { Name = "24 Stamina", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
