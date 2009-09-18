@@ -16,8 +16,7 @@ namespace Rawr.ProtPaladin
         public AbilityModelList Abilities = new AbilityModelList();
 
         private AttackModelMode _attackModelMode;
-        public AttackModelMode AttackModelMode
-        {
+        public AttackModelMode AttackModelMode {
             get { return _attackModelMode; }
             set { _attackModelMode = value; Calculate(); }
         }
@@ -26,62 +25,59 @@ namespace Rawr.ProtPaladin
         public string Description { get; private set; }
         public float ThreatPerSecond { get; private set; }
         public float DamagePerSecond { get; private set; }
+        public float AttackerHitsPerSecond { get; private set; }
 
-        private void Calculate()
-        {
+        private void Calculate() {
             float modelLength = 0.0f;
             float modelThreat = 0.0f;
             float modelDamage = 0.0f;
             float modelCrits = 0.0f;
 
-            switch (AttackModelMode)
-            {
-                case AttackModelMode.BasicSoV:
-                    {
-                        // Basic Rotation (Assumes Judgement of Vengeance)
-                        Name        = "Basic + Seal of Vengeance";
-                        Description = "9-6-9-6 Rotation";
-                        modelLength = 18.0f;
-                        modelThreat = 
-                            Abilities[Ability.ShieldOfRighteousness].Threat * 3 + 
-                            Abilities[Ability.HammerOfTheRighteous].Threat * 3 + 
-                            Abilities[Ability.JudgementOfVengeance].Threat * 2 +
-                            Abilities[Ability.Consecration].Threat * 2;
-                        modelDamage =
-                            Abilities[Ability.ShieldOfRighteousness].Damage * 3 +
-                            Abilities[Ability.HammerOfTheRighteous].Damage * 3 +
-                            Abilities[Ability.JudgementOfVengeance].Damage * 2 +
-                            Abilities[Ability.Consecration].Damage * 2;
-                        modelCrits  =
-                            Abilities[Ability.ShieldOfRighteousness].CritPercentage * 3 +
-                            Abilities[Ability.HammerOfTheRighteous].CritPercentage * 3 +
-                            Abilities[Ability.JudgementOfVengeance].CritPercentage * 2 +
-                            Abilities[Ability.Consecration].CritPercentage * 2;
-                        break;
-                    }
-                case AttackModelMode.BasicSoR:
-                    {                        
-                        // Basic Rotation (Assumes Judgement of Righteousness)
-                        Name = "Basic + Seal of Righteousness";
-                        Description = "9-6-9-6 Rotation";
-                        modelLength = 18.0f;
-                        modelThreat =
-                            Abilities[Ability.ShieldOfRighteousness].Threat * 3 +
-                            Abilities[Ability.HammerOfTheRighteous].Threat * 3 +
-                            Abilities[Ability.JudgementOfRighteousness].Threat * 2 +
-                            Abilities[Ability.Consecration].Threat * 2;
-                        modelDamage =
-                            Abilities[Ability.ShieldOfRighteousness].Damage * 3 +
-                            Abilities[Ability.HammerOfTheRighteous].Damage * 3 +
-                            Abilities[Ability.JudgementOfRighteousness].Damage * 2 +
-                            Abilities[Ability.Consecration].Damage * 2;
-                        modelCrits =
-                            Abilities[Ability.ShieldOfRighteousness].CritPercentage * 3 +
-                            Abilities[Ability.HammerOfTheRighteous].CritPercentage * 3 +
-                            Abilities[Ability.JudgementOfRighteousness].CritPercentage * 2 +
-                            Abilities[Ability.Consecration].CritPercentage * 2;
-                        break;
-                    }
+            switch (AttackModelMode) {
+                case AttackModelMode.BasicSoV: {
+                    // Basic Rotation (Assumes Judgement of Vengeance)
+                    Name        = "Basic + Seal of Vengeance";
+                    Description = "9-6-9-6 Rotation";
+                    modelLength = 18.0f;
+                    modelThreat = 
+                        Abilities[Ability.ShieldOfRighteousness].Threat * 3 + 
+                        Abilities[Ability.HammerOfTheRighteous].Threat * 3 + 
+                        Abilities[Ability.JudgementOfVengeance].Threat * 2 +
+                        Abilities[Ability.Consecration].Threat * 2;
+                    modelDamage =
+                        Abilities[Ability.ShieldOfRighteousness].Damage * 3 +
+                        Abilities[Ability.HammerOfTheRighteous].Damage * 3 +
+                        Abilities[Ability.JudgementOfVengeance].Damage * 2 +
+                        Abilities[Ability.Consecration].Damage * 2;
+                    modelCrits  =
+                        Abilities[Ability.ShieldOfRighteousness].CritPercentage * 3 +
+                        Abilities[Ability.HammerOfTheRighteous].CritPercentage * 3 +
+                        Abilities[Ability.JudgementOfVengeance].CritPercentage * 2 +
+                        Abilities[Ability.Consecration].CritPercentage * 2;
+                    break;
+                }
+                case AttackModelMode.BasicSoR: {                        
+                    // Basic Rotation (Assumes Judgement of Righteousness)
+                    Name = "Basic + Seal of Righteousness";
+                    Description = "9-6-9-6 Rotation";
+                    modelLength = 18.0f;
+                    modelThreat =
+                        Abilities[Ability.ShieldOfRighteousness].Threat * 3 +
+                        Abilities[Ability.HammerOfTheRighteous].Threat * 3 +
+                        Abilities[Ability.JudgementOfRighteousness].Threat * 2 +
+                        Abilities[Ability.Consecration].Threat * 2;
+                    modelDamage =
+                        Abilities[Ability.ShieldOfRighteousness].Damage * 3 +
+                        Abilities[Ability.HammerOfTheRighteous].Damage * 3 +
+                        Abilities[Ability.JudgementOfRighteousness].Damage * 2 +
+                        Abilities[Ability.Consecration].Damage * 2;
+                    modelCrits =
+                        Abilities[Ability.ShieldOfRighteousness].CritPercentage * 3 +
+                        Abilities[Ability.HammerOfTheRighteous].CritPercentage * 3 +
+                        Abilities[Ability.JudgementOfRighteousness].CritPercentage * 2 +
+                        Abilities[Ability.Consecration].CritPercentage * 2;
+                    break;
+                }
             }
 
             // White Damage
@@ -93,8 +89,7 @@ namespace Rawr.ProtPaladin
 			
 			// Seals
 			weaponHits += modelLength / 6.0f; // Add Seal Damage from Hammer of the Righteous
-            switch (Options.SealChoice)
-            {
+            switch (Options.SealChoice) {
                 // Seal of Righteousness
                 case "Seal of Righteousness":				
                     modelThreat += Abilities[Ability.SealOfRighteousness].Threat * weaponHits;
@@ -123,8 +118,11 @@ namespace Rawr.ProtPaladin
                 modelCrits += Abilities[Ability.HolyShield].CritPercentage * attackerBlocks;
             }
 
+            float attackerHits = DefendTable.AnyHit * (modelLength / ParryModel.BossAttackSpeed); //Options.BossAttackSpeed;
+
             ThreatPerSecond = modelThreat / modelLength;
             DamagePerSecond = modelDamage / modelLength;
+            AttackerHitsPerSecond = attackerHits / modelLength;
         }
 
         public AttackModel(Character character, Stats stats, AttackModelMode attackModelMode) //, RageModelMode rageModelMode)

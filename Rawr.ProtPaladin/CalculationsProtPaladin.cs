@@ -848,7 +848,7 @@ focus on Survival Points.",
                                        - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
             float chanceHitPhysical = 1.0f - chanceMissPhysicalAny;
             float chanceHitSpell = 1.0f - chanceMissSpell;
-            float chanceDoTTick = chanceHitSpell * 16.0f / 18.0f;// 16 ticks in 18 seconds of 9696 rotation. cba with cons. glyph atm.
+            float chanceDoTTick = chanceHitSpell * (talents.GlyphOfConsecration ? 1.0f : 16.0f / 18.0f); // 16 ticks in 18 seconds of 9696 rotation. cba with cons. glyph atm.
             
             float intervalRotation = 18.0f;
             float intervalDoTTick = 1.0f;
@@ -866,30 +866,48 @@ focus on Survival Points.",
              // * judgement hit chance ? I personally believe the effect triggers even on a miss.
              // either way, TODO: 9696 Rotation trigger intervals, change these values once custom rotations are supported.
             
+
+            float weaponSpeed = (character.MainHand != null ? character.MainHand.Speed : 2.0f);
+
+            AttackModelMode amm = AttackModelMode.BasicSoV;
+            if (calcOpts.SealChoice == "Seal of Righteousness")
+                amm = AttackModelMode.BasicSoR;
+
+            AttackModel am = new AttackModel(character, statsTotal, amm);
+
             Stats effectsToAdd = new Stats();
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use) {
-                    if (calcOpts.TrinketOnUseHandling != "Ignore")
-                        if (calcOpts.TrinketOnUseHandling == "Active"){
+                    if (calcOpts.TrinketOnUseHandling != "Ignore") {
+                        if (calcOpts.TrinketOnUseHandling == "Active") {
                             statsTotal += effect.Stats;
-                        }else{
+                        } else {
                             effectsToAdd += effect.GetAverageStats();
                             effectsToAdd.Health = 0.0f; // Health on Use Effects are never averaged.
                             statsTotal += effectsToAdd;
                         }
+                    }
                     //else
                         //statsTotal = statsTotal;
+
+                    // Trial of the Crusader Stacking Use Effect Trinkets
+                    foreach (SpecialEffect childEffect in effect.Stats.SpecialEffects()) {
+                        if (childEffect.Trigger == Trigger.DamageTaken) {
+                            statsTotal += childEffect.Stats * effect.GetAverageUptime(0.0f, 1.0f) *
+                                childEffect.GetAverageStackSize((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed, effect.Duration);
+                        }
+                    }
                 } else {
                     switch (effect.Trigger) {
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit:
-                            effectsToAdd += effect.GetAverageStats(intervalPhysical, chanceHitPhysical, 2.4f);
+                            effectsToAdd += effect.GetAverageStats(intervalPhysical, chanceHitPhysical, weaponSpeed);
                             effectsToAdd.Armor = (float)Math.Floor(2.0f * effectsToAdd.Agility); // mongoose agi
                             statsTotal += effectsToAdd;
                             break;
                         case Trigger.MeleeCrit:
                         case Trigger.PhysicalCrit:
-                            statsTotal += effect.GetAverageStats(intervalPhysical, chanceCritPhysical, 2.4f);
+                            statsTotal += effect.GetAverageStats(intervalPhysical, chanceCritPhysical, weaponSpeed);
                             break;
                         case Trigger.DoTTick:
                             statsTotal += effect.GetAverageStats(intervalDoTTick, chanceDoTTick);
@@ -897,8 +915,11 @@ focus on Survival Points.",
                         case Trigger.DamageDone:
                             statsTotal += effect.GetAverageStats(intervalDamageDone, chanceDamageDone);
                             break;
+                        case Trigger.DamageTaken:
+                            statsTotal += effect.GetAverageStats((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed);
+                            break;
                         case Trigger.JudgementHit:
-                            Stats test = new Stats();
+                            //Stats test = new Stats();
                             statsTotal += effect.GetAverageStats(intervalJudgement);
                             break;
                         case Trigger.ShieldofRighteousness:
