@@ -85,10 +85,14 @@ namespace Rawr {
                 // Vault of Archavon
                 new EmalonTheStormWatcher_10(),
                 // Ulduar
+                new Auriaya_10(),
+                new Hodir_10(),
                 // ==== Tier 8.5 Content ====
                 // Vault of Archavon
                 new EmalonTheStormWatcher_25(),
                 // Ulduar
+                new Auriaya_25(),
+                new Hodir_25(),
                 // ==== Tier 9 (10) Content ====
                 // Vault of Archavon
                 new KoralonTheFlameWatcher_10(),
@@ -2503,6 +2507,91 @@ namespace Rawr {
              */
         }
     }
+    // ===== Ulduar ===================================
+    // The Siege
+        // TODO: Flame Leviathan
+        // TODO: Ignis the Furnace Master
+        // TODO: Razorscale
+        // TODO: XT-002 Deconstructor
+    // The Antechamber
+        // TODO: Assembly of Iron
+        // TODO: Kologarn
+    public class Auriaya_10 : BossHandler {
+        public Auriaya_10() {
+            // If not listed here use values from defaults
+            // Basics
+            Name = "Auriaya";
+            Content = "T8";
+            Instance = "Ulduar";
+            Version = "10 Man";
+            BerserkTimer = 10 * 60;
+            Health = 3137625f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
+            // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
+            // Guardian Swarm: Marks a player and summons a pack of 10 Swarming Guardians with low health around them soon after.
+            // Feral Defender: If you leave him alone, he's up about 90% of the fight
+            MultiTargsPerc = 0.90f; // need to sim this out
+            MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
+            // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
+            // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
+            FearingTargsFreq = 45f;
+            FearingTargsDur = 5f * 1000f;
+            // Fight Requirements
+            /* TODO:
+             */
+        }
+    }
+    // The Keepers
+        // TODO: Mimiron
+        // TODO: Freya
+        // TODO: Thorim
+    public class Hodir_10 : BossHandler {
+        public Hodir_10() {
+            // If not listed here use values from defaults
+            // Basics
+            Name = "Hodir";
+            Content = "T8";
+            Instance = "Ulduar";
+            Version = "10 Man";
+            BerserkTimer = 8 * 60;
+            Health = 8115990f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            // Situational Changes
+            InBackPerc_Melee = 0.75f; // he moves A LOT so it's hard to stay behind him at all times
+            // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
+            // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
+            // Going to assume the CD is 45 sec for now
+            RootingTargsFreq = 45f;
+            RootingTargsDur = 10f * 1000f;
+            // Fight Requirements
+            Min_Tanks = 1;
+            /* TODO:
+             */
+        }
+    }
+    // The Descent into Madness
+        // TODO: General Vezax
+        // TODO: Yogg-Saron
+    // Supermassive
+    // TODO: Algalon the Observer
     #endregion
     #region T8.5 Content
     // ===== The Vault of Archavon ====================
@@ -2542,6 +2631,91 @@ namespace Rawr {
              */
         }
     }
+    // ===== Ulduar ===================================
+    // The Siege
+        // TODO: Flame Leviathan
+        // TODO: Ignis the Furnace Master
+        // TODO: Razorscale
+        // TODO: XT-002 Deconstructor
+    // The Antechamber
+        // TODO: Assembly of Iron
+        // TODO: Kologarn
+    public class Auriaya_25 : Auriaya_10 {
+        public Auriaya_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T8.5";
+            Version = "25 Man";
+            BerserkTimer = 10 * 60;
+            Health = 16734000f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            // Situational Changes
+            //InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
+            // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
+            // Guardian Swarm: Marks a player and summons a pack of 10 Swarming Guardians with low health around them soon after.
+            // Feral Defender: If you leave him alone, he's up about 90% of the fight
+            //MultiTargsPerc = 0.90f; // need to sim this out
+            //MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
+            // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
+            // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
+            //FearingTargsFreq = 45f;
+            //FearingTargsDur = 5f * 1000f;
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 2;
+            Min_Healers = 4;
+            /* TODO:
+             */
+        }
+    }
+    // The Keepers
+        // TODO: Mimiron
+        // TODO: Freya
+        // TODO: Thorim
+    public class Hodir_25 : Hodir_10 {
+        public Hodir_25() {
+            // If not listed here use values from defaults
+            // Basics
+            Content = "T8.5";
+            Version = "25 Man";
+            Health = 32477904f;
+            // Resistance
+            // Attacks
+            MeleeAttack = new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 60000f,
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+            };
+            // Situational Changes
+            //InBackPerc_Melee = 0.75f; // he moves A LOT so it's hard to stay behind him at all times
+            // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
+            // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
+            // Going to assume the CD is 45 sec for now
+            //RootingTargsFreq = 45f;
+            //RootingTargsDur = 10f * 1000f;
+            // Fight Requirements
+            Max_Players = 25;
+            Min_Tanks = 1;
+            Min_Healers = 4;
+            /* TODO:
+             */
+        }
+    }
+    // The Descent into Madness
+        // TODO: General Vezax
+        // TODO: Yogg-Saron
+    // Supermassive
+    // TODO: Algalon the Observer
     #endregion
     #region T9 (10) Content
     // ===== The Vault of Archavon ====================

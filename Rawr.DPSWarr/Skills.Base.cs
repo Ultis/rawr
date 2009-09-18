@@ -758,25 +758,24 @@ namespace Rawr.DPSWarr {
             }
             public override float DPS { get { return TickSize / TickLength; } }
         }
-        public class BuffEffect : Ability
-        {
+        public class BuffEffect : Ability {
             // Constructors
-            public BuffEffect()
-            {
+            public BuffEffect() {
                 EFFECT = null;
                 EFFECT2 = null;
             }
             // Variables
             private SpecialEffect EFFECT;
             private SpecialEffect EFFECT2;
+            protected float addMisses;
+            protected float addDodges;
+            protected float addParrys;
             // Get/Set
             public SpecialEffect Effect { get { return EFFECT; } set { EFFECT = value; } }
             public SpecialEffect Effect2 { get { return EFFECT2; } set { EFFECT2 = value; } }
             // Functions
-            public virtual Stats AverageStats
-            {
-                get
-                {
+            public virtual Stats AverageStats {
+                get {
                     if (!Validated) { return new Stats(); }
                     Stats bonus = (Effect == null) ? new Stats() { AttackPower = 0f, } : Effect.GetAverageStats(0f, MHAtkTable.Hit + MHAtkTable.Crit, Whiteattacks.MhEffectiveSpeed, FightDuration);
                     bonus += (Effect2 == null) ? new Stats() { AttackPower = 0f, } : Effect2.GetAverageStats(0f, MHAtkTable.Hit + MHAtkTable.Crit, Whiteattacks.MhEffectiveSpeed, FightDuration);

@@ -3,10 +3,8 @@
  **********/
 using System;
 
-namespace Rawr.DPSWarr
-{
-    public partial class Skills
-    {
+namespace Rawr.DPSWarr {
+    public partial class Skills {
         public class DeepWounds : DoT
         {
             // Constructors
@@ -340,8 +338,7 @@ namespace Rawr.DPSWarr
         }
         #endregion
         #region DeBuff Abilities
-        public class ThunderClap : BuffEffect
-        {
+        public class ThunderClap : BuffEffect {
             /// <summary>
             /// Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec
             /// and doing [300+AP*0.12] damage to them. Damage increased by attack power.
@@ -355,8 +352,7 @@ namespace Rawr.DPSWarr
             /// Glyph of Thunder Clap [+2 yds MaxRange]
             /// Glyph of Resonating Power [-5 RageCost]
             /// </GlyphsAffecting>
-            public ThunderClap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public ThunderClap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Thunder Clap";
@@ -383,15 +379,32 @@ namespace Rawr.DPSWarr
                 //
                 InitializeB();
             }
+            protected override float ActivatesOverride {
+                get {
+                    // Since this has to be up according to Debuff Maintenance Rules
+                    // this override has the intention of taking the baseline
+                    // activates and forcing the char to use Rend again to ensure it's up
+                    // in the event that the attemtped activate didn't land (it Missed, was Dodged or Parried)
+                    // We're only doing the additional check once so it will at most do this
+                    // twice in a row, may consider doing a settler
+                    float result = 0f;
+                    float Base = base.ActivatesOverride;
+                    addMisses = (MHAtkTable.Miss  > 0) ? Base * MHAtkTable.Miss  : 0f;
+                    //addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
+                    //addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
+
+                    result = Base + addMisses + addDodges + addParrys;
+
+                    return result;
+                }
+            }
         }
-        public class SunderArmor : BuffEffect
-        {
+        public class SunderArmor : BuffEffect {
             // Constructors
             /// <summary></summary>
             /// <TalentsAffecting>Focused Rage [-(Pts) Rage Cost], Puncture [-(Pts) Rage Cost], </TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Sunder Armor [+1 Targets]</GlyphsAffecting>
-            public SunderArmor(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public SunderArmor(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Sunder Armor";
@@ -411,15 +424,32 @@ namespace Rawr.DPSWarr
                     new Stats() { ArmorPenetration = 0.04f, },
                     Duration, Cd, MHAtkTable.Hit, 5);
             }
+            protected override float ActivatesOverride {
+                get {
+                    // Since this has to be up according to Debuff Maintenance Rules
+                    // this override has the intention of taking the baseline
+                    // activates and forcing the char to use Rend again to ensure it's up
+                    // in the event that the attemtped activate didn't land (it Missed, was Dodged or Parried)
+                    // We're only doing the additional check once so it will at most do this
+                    // twice in a row, may consider doing a settler
+                    float result = 0f;
+                    float Base = base.ActivatesOverride;
+                    addMisses = (MHAtkTable.Miss  > 0) ? Base * MHAtkTable.Miss  : 0f;
+                    addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
+                    addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
+
+                    result = Base + addMisses + addDodges + addParrys;
+
+                    return result;
+                }
+            }
         }
-        public class ShatteringThrow : BuffEffect
-        {
+        public class ShatteringThrow : BuffEffect {
             /// <summary>
             /// Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power),
             /// reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.
             /// </summary>
-            public ShatteringThrow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public ShatteringThrow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Shattering Throw";
@@ -443,16 +473,14 @@ namespace Rawr.DPSWarr
                     MHAtkTable.Hit + MHAtkTable.Crit);*/
             }
         }
-        public class DemoralizingShout : BuffEffect
-        {
+        public class DemoralizingShout : BuffEffect {
             // Constructors
             /// <summary>
             /// Reduces the melee attack power of all enemies within 10 yards by 411 for 30 sec.
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public DemoralizingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public DemoralizingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Demoralizing Shout";
@@ -471,17 +499,34 @@ namespace Rawr.DPSWarr
                     Duration, Duration,
                     MHAtkTable.Hit + MHAtkTable.Crit);
             }
+            protected override float ActivatesOverride {
+                get {
+                    // Since this has to be up according to Debuff Maintenance Rules
+                    // this override has the intention of taking the baseline
+                    // activates and forcing the char to use Rend again to ensure it's up
+                    // in the event that the attemtped activate didn't land (it Missed, was Dodged or Parried)
+                    // We're only doing the additional check once so it will at most do this
+                    // twice in a row, may consider doing a settler
+                    float result = 0f;
+                    float Base = base.ActivatesOverride;
+                    addMisses = (MHAtkTable.Miss  > 0) ? Base * MHAtkTable.Miss  : 0f;
+                    //addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
+                    //addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
+
+                    result = Base + addMisses + addDodges + addParrys;
+
+                    return result;
+                }
+            }
         }
-        public class Hamstring : BuffEffect
-        {
+        public class Hamstring : BuffEffect {
             /// <summary>
             /// Instant, No cd, 10 Rage, Melee Range, Melee Weapon, (Battle/Zerker)
             /// Maims the enemy, reducing movement speed by 50% for 15 sec.
             /// </summary>
             /// <TalentsAffecting>Improved Hamstring [Gives a [5*Pts]% chance to immobilize the target for 5 sec.]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Hamstring [Gives a 10% chance to immobilize the target for 5 sec.]</GlyphsAffecting>
-            public Hamstring(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public Hamstring(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Hamstring";
@@ -501,6 +546,25 @@ namespace Rawr.DPSWarr
                     5f, Duration, Chance);
                 //
                 InitializeB();
+            }
+            protected override float ActivatesOverride {
+                get {
+                    // Since this has to be up according to Debuff Maintenance Rules
+                    // this override has the intention of taking the baseline
+                    // activates and forcing the char to use Rend again to ensure it's up
+                    // in the event that the attemtped activate didn't land (it Missed, was Dodged or Parried)
+                    // We're only doing the additional check once so it will at most do this
+                    // twice in a row, may consider doing a settler
+                    float result = 0f;
+                    float Base = base.ActivatesOverride;
+                    addMisses = (MHAtkTable.Miss  > 0) ? Base * MHAtkTable.Miss  : 0f;
+                    addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
+                    addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
+
+                    result = Base + addMisses + addDodges + addParrys;
+
+                    return result;
+                }
             }
         }
         #endregion

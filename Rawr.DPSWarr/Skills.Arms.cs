@@ -3,10 +3,8 @@
  **********/
 using System;
 
-namespace Rawr.DPSWarr
-{
-    public partial class Skills
-    {
+namespace Rawr.DPSWarr {
+    public partial class Skills {
         #region Instants
         public class MortalStrike : Ability
         {
@@ -358,8 +356,7 @@ namespace Rawr.DPSWarr
         }
         #endregion
 
-        public class Rend : DoT
-        {
+        public class Rend : DoT {
             // Constructors
             /// <summary>
             /// Wounds the target causing them to bleed for 380 damage plus an additional
@@ -385,27 +382,26 @@ namespace Rawr.DPSWarr
                 //
                 InitializeB();
             }
-            public float addMisses;
-            public float addDodges;
-            public float addParrys;
+            protected float addMisses;
+            protected float addDodges;
+            protected float addParrys;
             protected override float ActivatesOverride {
                 get {
                     // Since Rend has to be up in order to Taste for Blood
                     // this override has the intention of taking the baseline
                     // activates and forcing the char to use Rend again to ensure it's up
-                    // in the event that the attemtped activate didn't land (it Missed, was dodged or parried)
+                    // in the event that the attemtped activate didn't land (it Missed, was Dodged or Parried)
                     // We're only doing the additional check once so it will at most Rend
                     // twice in a row, may consider doing a settler
                     float result = 0f;
                     float Base = base.ActivatesOverride;
-                    addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
+                    addMisses = (MHAtkTable.Miss  > 0) ? Base * MHAtkTable.Miss  : 0f;
                     addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
                     addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
 
                     result = Base + addMisses + addDodges + addParrys;
 
                     return result;
-
                 }
             }
             public override float TickSize {
