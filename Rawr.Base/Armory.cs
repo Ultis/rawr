@@ -740,6 +740,11 @@ namespace Rawr
                             int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
                             stats.FearDurReduc = (float)bonus / 100f;
                         }
+                        else if (gemBonus.Contains("Chance to Increase Melee/Ranged Attack Speed"))
+                        {
+                            // 480 Haste Rating on 100% Chance to proc every 60 seconds for 6 seconds
+                            stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HasteRating = 480f, }, 6f, 60f));
+                        }
                         else if (gemBonus.Contains("% Spell Reflect"))
                         {
                             int bonus = int.Parse(gemBonus.Substring(0, 2).Trim('%'));
