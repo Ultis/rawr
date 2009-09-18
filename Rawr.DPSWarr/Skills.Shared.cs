@@ -389,9 +389,15 @@ namespace Rawr.DPSWarr {
                     // twice in a row, may consider doing a settler
                     float result = 0f;
                     float Base = base.ActivatesOverride;
-                    addMisses = (MHAtkTable.Miss  > 0) ? Base * MHAtkTable.Miss  : 0f;
+                    addMisses  = (MHAtkTable.Miss  > 0) ? Base * MHAtkTable.Miss  : 0f;
                     //addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
                     //addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
+
+                    if (CalcOpts.AllowFlooring) {
+                        addMisses = (float)Math.Ceiling(addMisses);
+                        //addDodges = (float)Math.Ceiling(addDodges);
+                        //addParrys = (float)Math.Ceiling(addParrys);
+                    }
 
                     result = Base + addMisses + addDodges + addParrys;
 
@@ -437,6 +443,12 @@ namespace Rawr.DPSWarr {
                     addMisses = (MHAtkTable.Miss  > 0) ? Base * MHAtkTable.Miss  : 0f;
                     addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
                     addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
+
+                    if (CalcOpts.AllowFlooring) {
+                        addMisses = (float)Math.Ceiling(addMisses);
+                        addDodges = (float)Math.Ceiling(addDodges);
+                        addParrys = (float)Math.Ceiling(addParrys);
+                    }
 
                     result = Base + addMisses + addDodges + addParrys;
 
@@ -513,6 +525,12 @@ namespace Rawr.DPSWarr {
                     //addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
                     //addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
 
+                    if (CalcOpts.AllowFlooring) {
+                        addMisses = (float)Math.Ceiling(addMisses);
+                        //addDodges = (float)Math.Ceiling(addDodges);
+                        //addParrys = (float)Math.Ceiling(addParrys);
+                    }
+
                     result = Base + addMisses + addDodges + addParrys;
 
                     return result;
@@ -560,6 +578,12 @@ namespace Rawr.DPSWarr {
                     addMisses = (MHAtkTable.Miss  > 0) ? Base * MHAtkTable.Miss  : 0f;
                     addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
                     addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
+
+                    if (CalcOpts.AllowFlooring) {
+                        addMisses = (float)Math.Ceiling(addMisses);
+                        addDodges = (float)Math.Ceiling(addDodges);
+                        addParrys = (float)Math.Ceiling(addParrys);
+                    }
 
                     result = Base + addMisses + addDodges + addParrys;
 
