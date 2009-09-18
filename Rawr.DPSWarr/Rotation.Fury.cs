@@ -245,7 +245,7 @@ namespace Rawr.DPSWarr
         #endregion
         public override void MakeRotationandDoDPS(bool setCalcs)
         {
-            new_MakeRotationandDoDPS(setCalcs);
+            //new_MakeRotationandDoDPS(setCalcs);
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
             float FightDuration = CalcOpts.Duration;

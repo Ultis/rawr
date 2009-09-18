@@ -1144,7 +1144,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                             //Rot._SL_GCDs = Rot._SL_GCDs;
                             //Rot._HS_Acts = Rot._HS_Acts;
                             if (Rot.CritHsSlamOverDur > 0f) {
-                                Stats addme = effect.GetAverageStats(Rot.CritHsSlamOverDur/* / calcOpts.Duration*/, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                                Stats addme = effect.GetAverageStats(calcOpts.Duration / Rot.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration);
                                 statsProcs += addme;
                             }
                             break;
