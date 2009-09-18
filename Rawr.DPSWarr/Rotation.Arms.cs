@@ -36,6 +36,8 @@ namespace Rawr.DPSWarr {
         // GCD Losses
         public float _Move_GCDs = 0f;
         public float _Stunned_Acts = 0f;
+        public float _Feared_Acts = 0f;
+        public float _Rooted_Acts = 0f;
         public float _HF_Acts = 0f;
         public float _EM_Acts = 0f;
         #endregion
@@ -165,11 +167,15 @@ namespace Rawr.DPSWarr {
             float percTimeInStun = 0f;
             float timelostwhilemoving = 0f;
             float percTimeInMovement = 0f;
+            float timelostwhilefeared = 0f;
+            float percTimeInFear = 0f;
+            float timelostwhilerooted = 0f;
+            float percTimeInRoot = 0f;
 
             if (Char.MainHand == null) { return; }
 
             // ==== Reasons GCDs would be lost ========
-            // Having to Move
+            #region Having to Move
             if (CalcOpts.MovingTargets) {
                 timelostwhilemoving = CalcOpts.MovingTargetsTime * (1f - StatS.MovementSpeed);
                 percTimeInMovement = timelostwhilemoving / FightDuration;
@@ -178,13 +184,10 @@ namespace Rawr.DPSWarr {
                 GCDUsage += (_Move_GCDs > 0 ? _Move_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : Spent Moving\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             }
-            float BaseStunDur = (float)Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - StatS.StunDurReduc)));
-            // Being Stunned or Charmed
+            #endregion
+            #region Being Stunned
             if (CalcOpts.StunningTargets && CalcOpts.StunningTargetsFreq > 0) {
-                // Assume you are Stunned for 3 GCDs (1.5+latency)*3 = ~1.6*3 = ~4.8 seconds per stun
-                // Iron Will reduces the Duration of the stun by 7%,14%,20%
-                // 100% perc means you are stunned the entire fight, the boss is stunning you every third GCD, basically only refreshing his stun
-                //  50% perc means you are stunned half the fight, the boss is stunning you every sixth GCD
+                float BaseStunDur = (float)Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - StatS.StunDurReduc)));
                 float stunnedActs = (float)Math.Max(0f, FightDuration / CalcOpts.StunningTargetsFreq);
                 //float acts = (float)Math.Min(availGCDs, stunnedGCDs);
                 float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Floor(stunnedActs) : stunnedActs;
@@ -224,8 +227,71 @@ namespace Rawr.DPSWarr {
                                        - (BaseStunDur - LatentGCD) * _EM_Acts;
                 percTimeInStun = timelostwhilestunned / FightDuration;
             }
+            #endregion
+            #region Being Feared
+            if (CalcOpts.FearingTargets && CalcOpts.FearingTargetsFreq > 0) {
+                float BaseFearDur = (float)Math.Max(0f, (CalcOpts.FearingTargetsDur / 1000f * (1f - StatS.FearDurReduc)));
+                float fearedActs = (float)Math.Max(0f, FightDuration / CalcOpts.FearingTargetsFreq);
+                //float acts = (float)Math.Min(availGCDs, fearedActs);
+                float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Floor(fearedActs) : fearedActs;
+                _Feared_Acts = Abil_Acts;
+                float reduc = Math.Max(0f, BaseFearDur);
+                GCDsused += (float)Math.Min(NumGCDs, (reduc * Abil_Acts) / LatentGCD);
+                GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : Feared\n" : "");
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                // Now let's try and get some of those GCDs back
+                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_] && _Feared_Acts > 0f) {
+                    float bzacts = BZ.Activates;
+                    _ZRage_GCDs = (float)Math.Min(_Feared_Acts, bzacts);
+                    reduc = Math.Max(0f, (BaseFearDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)/1000f*/)));
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * bzacts) / LatentGCD);
+                    GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + BZ.Name + " (adds back to GCDs when feared)\n" : "");
+                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                }
+                // Now to give Feared GCDs back and later we'll use %
+                // of time lost to stuns to affect each ability equally
+                // othwerwise we are only seriously affecting things at
+                // the bottom of priorities, which isn't fair (poor Slam)
+                GCDsused -= (_Feared_Acts * BaseFearDur) / LatentGCD;
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                timelostwhilefeared = _Feared_Acts * BaseFearDur
+                                      - (BaseFearDur - LatentGCD) * _ZRage_GCDs;
+                percTimeInFear = timelostwhilefeared / FightDuration;
+            }
+            #endregion
+            #region Being Snared/Rooted
+            if (CalcOpts.RootingTargets && CalcOpts.RootingTargetsFreq > 0) {
+                float BaseRootDur = (float)Math.Max(0f, (CalcOpts.RootingTargetsDur / 1000f * (1f - StatS.SnareRootDurReduc)));
+                float rootedActs = (float)Math.Max(0f, FightDuration / CalcOpts.RootingTargetsFreq);
+                //float acts = (float)Math.Min(availGCDs, fearedActs);
+                float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Floor(rootedActs) : rootedActs;
+                _Rooted_Acts = Abil_Acts;
+                float reduc = Math.Max(0f, BaseRootDur);
+                GCDsused += (float)Math.Min(NumGCDs, (reduc * Abil_Acts) / LatentGCD);
+                GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : Rooted\n" : "");
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                // Now let's try and get some of those GCDs back
+                /*if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_] && _Feared_Acts > 0f) {
+                    float bzacts = BZ.Activates;
+                    _ZRage_GCDs = (float)Math.Min(_Feared_Acts, bzacts);
+                    reduc = Math.Max(0f, (BaseRootDur - Math.Max(0f,/*(*//*CalcOpts.React/*-250)/1000f*//*)));
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * bzacts) / LatentGCD);
+                    GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + BZ.Name + " (adds back to GCDs when Rooted)\n" : "");
+                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                }*/
+                // Now to give Rooted GCDs back and later we'll use %
+                // of time lost to stuns to affect each ability equally
+                // othwerwise we are only seriously affecting things at
+                // the bottom of priorities, which isn't fair (poor Slam)
+                GCDsused -= (_Rooted_Acts * BaseRootDur) / LatentGCD;
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                timelostwhilerooted = _Rooted_Acts * BaseRootDur;
+                                       //- (BaseRootDur - LatentGCD) * _ZRage_GCDs;
+                percTimeInRoot = timelostwhilerooted / FightDuration;
+            }
+            #endregion
 
-            float TotalPercTimeLost = Math.Min(1f, percTimeInStun + percTimeInMovement);
+            float TotalPercTimeLost = Math.Min(1f, percTimeInStun + percTimeInMovement + percTimeInFear + percTimeInRoot);
 
             // ==== Rage Generation Priorities ========
             availRage += RageGenOverDur_Other;

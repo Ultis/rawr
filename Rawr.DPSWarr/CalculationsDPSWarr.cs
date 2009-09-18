@@ -477,9 +477,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if (!HidingBadStuff) { return false; }
             return (
                 // Remove Spellcasting Stuff
-                stats.Mp5 + stats.SpellPower + stats.Mana + stats.Spirit + stats.Intellect + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.SpellPenetration + stats.BonusManaMultiplier +
+                stats.Mp5 + stats.SpellPower + stats.Mana + stats.Spirit + stats.Intellect
+                + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier
+                + stats.SpellPenetration + stats.BonusManaMultiplier
                 // Remove Defensive Stuff (until we do that special modelling)
-                stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block +
+                + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
+                + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block +
                 // Remove PvP Items
                 stats.Resilience
                 ) > 0;
