@@ -153,7 +153,8 @@ namespace Rawr.DPSDK
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
                     ScourgeStrike = 0f;
-                    
+                    managedRP = true;
+                    Horn = 0f;
                     FrostStrike = 0f;
                     HowlingBlast = 0f;
                     Obliterate = 0f;
@@ -175,7 +176,8 @@ namespace Rawr.DPSDK
                     IcyTouch = 0f;
                     PlagueStrike = 0f;
                     ScourgeStrike = 0f;
-                    
+                    managedRP = true;
+                    Horn = 0f;
                     FrostStrike = 3f;
                     HowlingBlast = 0f;
                     Obliterate = 5f;
@@ -192,21 +194,22 @@ namespace Rawr.DPSDK
                 case Type.Unholy:
                     numDisease = 3f;
                     diseaseUptime = 100f;
-                    DeathCoil = 1f;
+                    DeathCoil = 2f;
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
-                    ScourgeStrike = 0f;
-                    
+                    ScourgeStrike = 1f;
+                    managedRP = true;
                     FrostStrike = 0f;
                     HowlingBlast = 0f;
-                    Obliterate = 4f;
+                    Obliterate = 0f;
                     BloodStrike = 2f;
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
-                    curRotationDuration = 20f;
+                    curRotationDuration = 10f;
+                    Horn = 0.5f;
                     GargoyleDuration = 30f;
                     DeathStrike = 0f;
-                    GhoulFrenzy = 0.0166666666666666666666f;
+                    GhoulFrenzy = 0f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Custom:

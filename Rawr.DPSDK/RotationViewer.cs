@@ -60,6 +60,9 @@ namespace Rawr.DPSDK
                 netRP.ForeColor = Color.Red;
             }
             else netRP.ForeColor = Color.Black;
+
+            txtFS.Text = rotation.FrostStrike.ToString();
+            txtDC.Text = rotation.DeathCoil.ToString();
         }
 
         private void loadCurRotation()
