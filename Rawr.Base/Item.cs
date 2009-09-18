@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.ComponentModel;
+using System.Net;
 #if RAWR3
 using System.Linq;
 #endif
@@ -932,9 +933,19 @@ namespace Rawr
                 {
                     if (!locale.Equals("en"))
                     {
+                        WebRequestWrapper wrw = new WebRequestWrapper();
+                        if (locale.Equals("zhTW"))
+                            newItem.LocalizedName = wrw.GetNameFromArmory(id, "tw");
+                        else if (locale.Equals("zhCN"))
+                            newItem.LocalizedName = wrw.GetNameFromArmory(id, "cn");
+                        else if (locale.Equals("kr"))
+                            newItem.LocalizedName = wrw.GetNameFromArmory(id, "kr");
+                        else
+                        {
                         Item localItem = Wowhead.GetItem(id, false, locale);
                         if (localItem != null)
                             newItem.LocalizedName = localItem.Name;
+                    }
                     }
 					if (!useWowhead && newItem.SocketBonus.ToString() == "")
 					{

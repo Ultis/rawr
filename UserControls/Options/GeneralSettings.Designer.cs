@@ -43,6 +43,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxProcEffectCalculationMode = new System.Windows.Forms.ComboBox();
             this.checkBoxDisplayItemIds = new System.Windows.Forms.CheckBox();
+            this.rbZhTW = new System.Windows.Forms.RadioButton();
+            this.rbZhCn = new System.Windows.Forms.RadioButton();
+            this.rbKr = new System.Windows.Forms.RadioButton();
             this.comboBoxEffectCombinationsCalculationMode = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.checkBoxDisplayItemType = new System.Windows.Forms.CheckBox();
@@ -136,6 +139,27 @@
             this.checkBoxDisplayItemIds.Name = "checkBoxDisplayItemIds";
             this.checkBoxDisplayItemIds.UseVisualStyleBackColor = true;
             // 
+            // rbZhTW
+            // 
+            resources.ApplyResources(this.rbZhTW, "rbZhTW");
+            this.rbZhTW.Name = "rbZhTW";
+            this.rbZhTW.UseVisualStyleBackColor = true;
+            this.rbZhTW.CheckedChanged += new System.EventHandler(this.rbZhTW_CheckedChanged);
+            // 
+            // rbZhCn
+            // 
+            resources.ApplyResources(this.rbZhCn, "rbZhCn");
+            this.rbZhCn.Name = "rbZhCn";
+            this.rbZhCn.UseVisualStyleBackColor = true;
+            this.rbZhCn.CheckedChanged += new System.EventHandler(this.rbZhCn_CheckedChanged);
+            // 
+            // rbKr
+            // 
+            resources.ApplyResources(this.rbKr, "rbKr");
+            this.rbKr.Name = "rbKr";
+            this.rbKr.UseVisualStyleBackColor = true;
+            this.rbKr.CheckedChanged += new System.EventHandler(this.rbKr_CheckedChanged);
+            // 
             // comboBoxEffectCombinationsCalculationMode
             // 
             this.comboBoxEffectCombinationsCalculationMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -162,6 +186,9 @@
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.rbKr);
+            this.Controls.Add(this.rbZhCn);
+            this.Controls.Add(this.rbZhTW);
             this.Controls.Add(this.checkBoxDisplayItemType);
             this.Controls.Add(this.comboBoxEffectCombinationsCalculationMode);
             this.Controls.Add(this.label3);
@@ -199,6 +226,9 @@
         private System.Windows.Forms.ComboBox comboBoxProcEffectCalculationMode;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBoxDisplayItemIds;
+        private System.Windows.Forms.RadioButton rbZhCn;
+        private System.Windows.Forms.RadioButton rbZhTW;
+        private System.Windows.Forms.RadioButton rbKr;
         private System.Windows.Forms.ComboBox comboBoxEffectCombinationsCalculationMode;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox checkBoxDisplayItemType;

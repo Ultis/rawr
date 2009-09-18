@@ -47,6 +47,15 @@ namespace Rawr.UserControls.Options
                 case "ru":
                     rbRussian.Checked = true;
                     break;
+                case "zhTW":
+                    rbZhTW.Checked = true;
+                    break;
+                case "zhCN":
+                    rbZhCn.Checked = true;
+                    break;
+                case "kr":
+                    rbKr.Checked = true;
+                    break;
             }
         }
 
@@ -82,6 +91,18 @@ namespace Rawr.UserControls.Options
                 case "ru":
                     title = "Обновить профиль";
                     message = "Вы должны использовать 'Update Item Cache from Wowhead' чтобы перезагрузить пунктов для Российских локаль.";
+                    break;
+                case "zhTW":
+                    title = "更新資料";
+                    message = "本地化檔案請選擇'Update Item Cache from Wowhead'";
+                    break;
+                case "zhCN":
+                    title = "更新资料";
+                    message = "本地化档案请选择'Update Item Cache from Wowhead'";
+                    break;
+                case "kr":
+                    title = "프로필 업데이트";
+                    message = "선택하세요'Update Item Cache from Wowhead'";
                     break;
             }
             if (!_locale.Equals("en"))
@@ -167,6 +188,21 @@ namespace Rawr.UserControls.Options
         private void rbRussian_CheckedChanged(object sender, EventArgs e)
         {
             _locale = "ru";
+        }
+
+        private void rbZhTW_CheckedChanged(object sender, EventArgs e)
+        {
+            _locale = "zhTW";
+        }
+
+        private void rbZhCn_CheckedChanged(object sender, EventArgs e)
+        {
+            _locale = "zhCN";
+        }
+
+        private void rbKr_CheckedChanged(object sender, EventArgs e)
+        {
+            _locale = "kr";
         }
 
         public static event EventHandler DisplayBuffChanged;

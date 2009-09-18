@@ -758,6 +758,41 @@ namespace Rawr
 			return returnDocument;
 		}
 
+        public string GetNameFromArmory(int id, string site)
+        {
+            string name = null;
+
+            try
+            {
+                WebClient webClient = CreateWebClient();
+
+                string URI = string.Format("http://{0}.wowarmory.com/item-tooltip.xml?i={1}", site, id);    //item-info.xml would be twice bigger
+                if (site.Equals("tw"))
+                    webClient.Headers.Add("Accept-Language", "zh-tw");
+                if (site.Equals("cn"))
+                    webClient.Headers.Add("Accept-Language", "zh-cn");
+                if (site.Equals("kr"))
+                    webClient.Headers.Add("Accept-Language", "kr");
+
+                string xml = webClient.DownloadString(URI);
+                if (!String.IsNullOrEmpty(xml) && xml.Contains("<itemTooltip>"))
+                {
+                    XmlDocument docItem = new XmlDocument();
+                    docItem.XmlResolver = null;
+                    docItem.LoadXml(xml.Replace("&", ""));
+                    name = docItem.SelectSingleNode("page/itemTooltips/itemTooltip/name").InnerText;
+                }
+            }
+            catch (Exception)
+            {
+                //do nothing
+            }
+
+            if (name == null)
+                StatusMessaging.ReportError("Get item name", null, string.Format("Cannot get item {0} on {1} server", id, site));
+            return name;
+        }
+
 		/// <summary>
 		/// Queues up download requests and then starts a new thread if the thread pool is not full.
 		/// </summary>
