@@ -273,7 +273,7 @@ namespace Rawr
             {
                 Name = "Stoneskin Totem",
                 Source = "Shaman",
-                Group = "Armor",
+                Group = "Armor (Stackable)",
                 Stats = { BonusArmor = 1150f },
                 Improvements = { 
 					new Buff {
