@@ -528,9 +528,7 @@ namespace Rawr.DPSDK
                         }
                         if (ticksPerRotation * 3f > combatTable.realDuration)
                         {
-                            float lostTicks = ticksPerRotation - combatTable.realDuration / 3f;
-                            lostTicks += 0.5f;
-                            lostTicks = (float)((int)lostTicks);
+                            float lostTicks = ticksPerRotation - (float)((int)(combatTable.realDuration / 3f));
                             ticksPerRotation -= lostTicks;
                         }
                         float PestRefresh = (15f + talents.Epidemic * 3f + 
@@ -606,9 +604,7 @@ namespace Rawr.DPSDK
                         }
                         if (ticksPerRotation * 3f > combatTable.realDuration)
                         {
-                            float lostTicks = ticksPerRotation - combatTable.realDuration / 3f;
-                            lostTicks += 0.5f;
-                            lostTicks = (float)((int)lostTicks);
+                            float lostTicks = ticksPerRotation - (float)((int)(combatTable.realDuration / 3f));
                             ticksPerRotation -= lostTicks;
                         }
                         if (PestRefresh * calcOpts.rotation.Pestilence - combatTable.realDuration > 0f)

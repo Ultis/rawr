@@ -130,7 +130,7 @@ namespace Rawr.DPSDK
                 // Resists: Base 17%
                 spellResist = .17f;
                 spellResist -= StatConversion.GetSpellHitFromRating(stats.HitRating);
-                spellResist -= hitBonus + (.01f * talents.Virulence);
+                spellResist -= .01f * talents.Virulence;
                 spellResist -= stats.SpellHit;
                 if (spellResist < 0f) spellResist = 0f;
 
@@ -138,10 +138,10 @@ namespace Rawr.DPSDK
                 totalMHMiss = calcs.DodgedMHAttacks + chanceMiss;
                 totalOHMiss = calcs.DodgedOHAttacks + chanceMiss;
                 float minDuration = totalMeleeAbilities * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1f) +
-                    totalSpellAbilities * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? (1.5f / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste) < 1f ? 1f : 1.5f / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)) : 1f);
+                    totalSpellAbilities * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? (1.5f / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.SpellHaste)) < 1f ? 1f : 1.5f / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.SpellHaste))) : 1f);
                 minDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
                     ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
-                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / (1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.SpellHaste)))))); //still need to implement spellhaste here
+                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.SpellHaste))) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.SpellHaste))))))); //still need to implement spellhaste here
             
                 if (minDuration > calcOpts.rotation.curRotationDuration)
                 {
