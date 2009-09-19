@@ -1108,7 +1108,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     statsProcs += bersOffHand.GetAverageStats(ohLandInterval, 1f, combatFactors.OHSpeed, fightDuration);
                 }
             }
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
+            statsProcs += GetSpecialEffectsStats(character, Rot, bersMainHand, bersOffHand, bothLandInterval, bothCritInterval, bleedHitInterval, dmgDoneInterval, statsTotal, null);
+            /*foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
                 if (effect != bersMainHand && effect != bersOffHand) // bersStats is null if the char doesn't have berserking enchant
                 {
                     float oldArp = effect.Stats.ArmorPenetrationRating;
@@ -1124,7 +1125,14 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     switch (effect.Trigger)
                     {
                         case Trigger.Use:
-                            statsProcs += effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                            if (effect.Stats._rawSpecialEffectDataSize > 0) {
+                                Stats _stats = new Stats();
+                                _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
+                                statsProcs += GetSpecialEffectsStats(character, Rot, bersMainHand, bersOffHand, bothLandInterval, bothCritInterval, bleedHitInterval,dmgDoneInterval,statsTotal, _stats)
+                                             * (effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration) / fightDuration);
+                            } else {
+                                statsProcs += effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                            }
                             break;
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit:
@@ -1151,8 +1159,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     }
                     effect.Stats.ArmorPenetrationRating = oldArp;
                 }
-            }
+            }*/
 
+            // Base Stats
             statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier    ));
             statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
             statsProcs.Strength    += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
@@ -1197,6 +1206,74 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                        - 1f;
 
             return statsTotal;
+        }
+        private Stats GetSpecialEffectsStats(Character Char, Rotation Rot,
+            SpecialEffect bersMainHand, SpecialEffect bersOffHand,
+            float bothLandInterval, float bothCritInterval, float bleedHitInterval, float dmgDoneInterval,
+            Stats statsTotal, Stats statsToProcess)
+        {
+            CombatFactors combatFactors = new CombatFactors(Char, statsTotal);
+            CalculationOptionsDPSWarr calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+            WarriorTalents talents = Char.WarriorTalents;
+            Stats statsProcs = new Stats();
+            float fightDuration = calcOpts.Duration;
+            //
+            foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects()))
+            {
+                if (effect != bersMainHand && effect != bersOffHand) // bersStats is null if the char doesn't have berserking enchant
+                {
+                    float oldArp = effect.Stats.ArmorPenetrationRating;
+                    if (effect.Stats.ArmorPenetrationRating > 0)
+                    {
+                        float arpenBuffs =
+                            ((combatFactors._c_mhItemType == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f) +
+                            (!calcOpts.FuryStance ? (0.10f + statsTotal.BonusWarrior_T9_2P_ArP) : 0.0f);
+                        float currentArp = arpenBuffs + StatConversion.GetArmorPenetrationFromRating(statsTotal.ArmorPenetrationRating
+                            + (statsToProcess != null ? statsToProcess.ArmorPenetrationRating : 0f));
+                        float arpToHardCap = (1f - currentArp) * StatConversion.RATING_PER_ARMORPENETRATION;
+                        if (arpToHardCap < effect.Stats.ArmorPenetrationRating) effect.Stats.ArmorPenetrationRating = arpToHardCap;
+                    }
+                    switch (effect.Trigger)
+                    {
+                        case Trigger.Use:
+                            if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null) {
+                                Stats _stats = new Stats();
+                                _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
+                                float uptime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                                statsProcs += GetSpecialEffectsStats(Char, Rot, bersMainHand, bersOffHand, bothLandInterval, bothCritInterval, bleedHitInterval, dmgDoneInterval, statsTotal, _stats)
+                                             * uptime;
+                            } else {
+                                statsProcs += effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                            }
+                            break;
+                        case Trigger.MeleeHit:
+                        case Trigger.PhysicalHit:
+                            if (bothLandInterval > 0f) statsProcs += effect.GetAverageStats(bothLandInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                            break;
+                        case Trigger.MeleeCrit:
+                        case Trigger.PhysicalCrit:
+                            if (bothCritInterval > 0f) statsProcs += effect.GetAverageStats(bothCritInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                            break;
+                        case Trigger.DoTTick:
+                            if (bleedHitInterval > 0f) statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend
+                            break;
+                        case Trigger.DamageDone: // physical and dots
+                            if (dmgDoneInterval > 0f) statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); 
+                            break;
+                        case Trigger.HSorSLHit: // Set bonus handler
+                            //Rot._SL_GCDs = Rot._SL_GCDs;
+                            //Rot._HS_Acts = Rot._HS_Acts;
+                            if (Rot.CritHsSlamOverDur > 0f) {
+                                Stats addme = effect.GetAverageStats(fightDuration / Rot.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration);
+                                statsProcs += addme;
+                            }
+                            break;
+                    }
+                    effect.Stats.ArmorPenetrationRating = oldArp;
+                }
+            }
+
+            return statsProcs;
         }
     }
 }
