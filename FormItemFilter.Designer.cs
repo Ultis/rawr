@@ -56,8 +56,8 @@
             this.buttonDelete = new System.Windows.Forms.Button();
             this.LayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
-            this.itemFilterTreeView = new Rawr.ItemFilterTreeView();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.itemFilterTreeView = new Rawr.ItemFilterTreeView();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceItemFilter)).BeginInit();
             this.LayoutPanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -185,6 +185,7 @@
             this.LayoutPanel.SetColumnSpan(this.comboBoxMinItemQuality, 2);
             this.comboBoxMinItemQuality.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.bindingSourceItemFilter, "MinItemQuality", true));
             this.comboBoxMinItemQuality.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxMinItemQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMinItemQuality.FormattingEnabled = true;
             this.comboBoxMinItemQuality.Location = new System.Drawing.Point(131, 336);
             this.comboBoxMinItemQuality.Margin = new System.Windows.Forms.Padding(1);
@@ -197,6 +198,7 @@
             this.LayoutPanel.SetColumnSpan(this.comboBoxMaxItemQuality, 2);
             this.comboBoxMaxItemQuality.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.bindingSourceItemFilter, "MaxItemQuality", true));
             this.comboBoxMaxItemQuality.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxMaxItemQuality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMaxItemQuality.FormattingEnabled = true;
             this.comboBoxMaxItemQuality.Location = new System.Drawing.Point(131, 362);
             this.comboBoxMaxItemQuality.Margin = new System.Windows.Forms.Padding(1);
@@ -413,19 +415,6 @@
             this.label2.Text = "to";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // itemFilterTreeView
-            // 
-            this.LayoutPanel.SetColumnSpan(this.itemFilterTreeView, 4);
-            this.itemFilterTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemFilterTreeView.EditMode = true;
-            this.itemFilterTreeView.HideSelection = false;
-            this.itemFilterTreeView.Location = new System.Drawing.Point(1, 27);
-            this.itemFilterTreeView.Margin = new System.Windows.Forms.Padding(1);
-            this.itemFilterTreeView.Name = "itemFilterTreeView";
-            this.itemFilterTreeView.Size = new System.Drawing.Size(258, 183);
-            this.itemFilterTreeView.TabIndex = 0;
-            this.itemFilterTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.itemFilterTreeView_AfterSelect);
-            // 
             // panel1
             // 
             this.LayoutPanel.SetColumnSpan(this.panel1, 4);
@@ -441,6 +430,19 @@
             this.panel1.Size = new System.Drawing.Size(260, 26);
             this.panel1.TabIndex = 28;
             // 
+            // itemFilterTreeView
+            // 
+            this.LayoutPanel.SetColumnSpan(this.itemFilterTreeView, 4);
+            this.itemFilterTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemFilterTreeView.EditMode = true;
+            this.itemFilterTreeView.HideSelection = false;
+            this.itemFilterTreeView.Location = new System.Drawing.Point(1, 27);
+            this.itemFilterTreeView.Margin = new System.Windows.Forms.Padding(1);
+            this.itemFilterTreeView.Name = "itemFilterTreeView";
+            this.itemFilterTreeView.Size = new System.Drawing.Size(258, 183);
+            this.itemFilterTreeView.TabIndex = 0;
+            this.itemFilterTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.itemFilterTreeView_AfterSelect);
+            // 
             // FormItemFilter
             // 
             this.AcceptButton = this.OKButton;
@@ -453,6 +455,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(301, 555);
             this.Name = "FormItemFilter";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Item Filter Editor...";
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceItemFilter)).EndInit();
