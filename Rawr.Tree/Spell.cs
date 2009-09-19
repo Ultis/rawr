@@ -631,7 +631,8 @@ namespace Rawr.Tree {
 
             #region Base Values
             castTimeBeforeHaste = 1.5f;
-            coefDH = 0.6611f; // Spreadsheet says .69, wowwiki says .6611, 1.5/3.5 = .43, confused!
+//            coefDH = 0.6611f; // Spreadsheet says .69, wowwiki says .6611, 1.5/3.5 = .43, confused!
+            coefDH = 0.671429f; // Best guess based on tests reported in workitem http://rawr.codeplex.com/WorkItem/View.aspx?WorkItemId=13809
             manaCost = 0.18f * TreeConstants.BaseMana;
             healingBonus = calculatedStats.SpellPower;
             critPercent = calculatedStats.SpellCrit;
