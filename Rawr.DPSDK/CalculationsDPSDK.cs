@@ -35,11 +35,6 @@ namespace Rawr.DPSDK
 
                 return new List<GemmingTemplate>()
 				{
-					new GemmingTemplate() { Model = "DPSDK", Group = "Uncommon", //Max Strength
-						RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Uncommon", //Strength
-						RedId = bold[0], YellowId = inscribed[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = chaotic },
-						
 					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", Enabled = true, //Max Strength
 						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", Enabled = true, //Strength
@@ -49,7 +44,7 @@ namespace Rawr.DPSDK
 						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", //Strength
 						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
-						
+
 					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength
 						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Strength
