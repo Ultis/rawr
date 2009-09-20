@@ -28,5 +28,6 @@ namespace Rawr.Cat
 		public int CustomCPSavageRoar = 2;
 		public int Duration = 300;
 		public float TrinketOffset = 0f;
+		public int LagVariance = 200;
 	}
 }

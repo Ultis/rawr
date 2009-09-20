@@ -46,10 +46,13 @@
 			this.label6 = new System.Windows.Forms.Label();
 			this.trackBarTrinketOffset = new System.Windows.Forms.TrackBar();
 			this.labelTrinketOffset = new System.Windows.Forms.Label();
+			this.label7 = new System.Windows.Forms.Label();
+			this.numericUpDownLagVariance = new System.Windows.Forms.NumericUpDown();
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTrinketOffset)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLagVariance)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -72,9 +75,9 @@
             "81",
             "82",
             "83"});
-			this.comboBoxTargetLevel.Location = new System.Drawing.Point(83, 3);
+			this.comboBoxTargetLevel.Location = new System.Drawing.Point(108, 3);
 			this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-			this.comboBoxTargetLevel.Size = new System.Drawing.Size(185, 21);
+			this.comboBoxTargetLevel.Size = new System.Drawing.Size(160, 21);
 			this.comboBoxTargetLevel.TabIndex = 1;
 			this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
@@ -89,7 +92,7 @@
 			this.groupBox1.Controls.Add(this.comboBoxSavageRoar);
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.label2);
-			this.groupBox1.Location = new System.Drawing.Point(3, 82);
+			this.groupBox1.Location = new System.Drawing.Point(3, 108);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(265, 73);
 			this.groupBox1.TabIndex = 7;
@@ -188,14 +191,14 @@
 			// 
 			this.numericUpDownTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.numericUpDownTargetArmor.Location = new System.Drawing.Point(83, 30);
+			this.numericUpDownTargetArmor.Location = new System.Drawing.Point(108, 30);
 			this.numericUpDownTargetArmor.Maximum = new decimal(new int[] {
             15000,
             0,
             0,
             0});
 			this.numericUpDownTargetArmor.Name = "numericUpDownTargetArmor";
-			this.numericUpDownTargetArmor.Size = new System.Drawing.Size(185, 20);
+			this.numericUpDownTargetArmor.Size = new System.Drawing.Size(160, 20);
 			this.numericUpDownTargetArmor.TabIndex = 6;
 			this.numericUpDownTargetArmor.ThousandsSeparator = true;
 			this.numericUpDownTargetArmor.Value = new decimal(new int[] {
@@ -227,7 +230,7 @@
 			// 
 			this.numericUpDownDuration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.numericUpDownDuration.Location = new System.Drawing.Point(83, 56);
+			this.numericUpDownDuration.Location = new System.Drawing.Point(108, 56);
 			this.numericUpDownDuration.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -239,7 +242,7 @@
             0,
             0});
 			this.numericUpDownDuration.Name = "numericUpDownDuration";
-			this.numericUpDownDuration.Size = new System.Drawing.Size(185, 20);
+			this.numericUpDownDuration.Size = new System.Drawing.Size(160, 20);
 			this.numericUpDownDuration.TabIndex = 6;
 			this.numericUpDownDuration.ThousandsSeparator = true;
 			this.numericUpDownDuration.Value = new decimal(new int[] {
@@ -251,7 +254,7 @@
 			// 
 			// label6
 			// 
-			this.label6.Location = new System.Drawing.Point(8, 210);
+			this.label6.Location = new System.Drawing.Point(8, 236);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(254, 98);
 			this.label6.TabIndex = 5;
@@ -260,7 +263,7 @@
 			// trackBarTrinketOffset
 			// 
 			this.trackBarTrinketOffset.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.trackBarTrinketOffset.Location = new System.Drawing.Point(3, 174);
+			this.trackBarTrinketOffset.Location = new System.Drawing.Point(3, 200);
 			this.trackBarTrinketOffset.Maximum = 90;
 			this.trackBarTrinketOffset.Name = "trackBarTrinketOffset";
 			this.trackBarTrinketOffset.Size = new System.Drawing.Size(259, 45);
@@ -270,12 +273,42 @@
 			// 
 			// labelTrinketOffset
 			// 
-			this.labelTrinketOffset.Location = new System.Drawing.Point(8, 158);
+			this.labelTrinketOffset.Location = new System.Drawing.Point(8, 184);
 			this.labelTrinketOffset.Name = "labelTrinketOffset";
 			this.labelTrinketOffset.Size = new System.Drawing.Size(254, 13);
 			this.labelTrinketOffset.TabIndex = 5;
 			this.labelTrinketOffset.Tag = "Trinket Offset: {0}sec";
 			this.labelTrinketOffset.Text = "Trinket Offset:";
+			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.Location = new System.Drawing.Point(3, 84);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(99, 13);
+			this.label7.TabIndex = 5;
+			this.label7.Text = "Lag Variance* (ms):";
+			// 
+			// numericUpDownLagVariance
+			// 
+			this.numericUpDownLagVariance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.numericUpDownLagVariance.Location = new System.Drawing.Point(108, 82);
+			this.numericUpDownLagVariance.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+			this.numericUpDownLagVariance.Name = "numericUpDownLagVariance";
+			this.numericUpDownLagVariance.Size = new System.Drawing.Size(160, 20);
+			this.numericUpDownLagVariance.TabIndex = 6;
+			this.numericUpDownLagVariance.ThousandsSeparator = true;
+			this.numericUpDownLagVariance.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.numericUpDownLagVariance.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// CalculationOptionsPanelCat
 			// 
@@ -285,7 +318,9 @@
 			this.Controls.Add(this.label6);
 			this.Controls.Add(this.trackBarTrinketOffset);
 			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.numericUpDownLagVariance);
 			this.Controls.Add(this.numericUpDownDuration);
+			this.Controls.Add(this.label7);
 			this.Controls.Add(this.labelTrinketOffset);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.numericUpDownTargetArmor);
@@ -299,6 +334,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTrinketOffset)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLagVariance)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -323,5 +359,7 @@
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.TrackBar trackBarTrinketOffset;
 		private System.Windows.Forms.Label labelTrinketOffset;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.NumericUpDown numericUpDownLagVariance;
 	}
 }

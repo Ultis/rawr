@@ -33,6 +33,7 @@ namespace Rawr.Cat
 			comboBoxSavageRoar.SelectedItem = calcOpts.CustomCPSavageRoar.ToString();
 			trackBarTrinketOffset.Value = (int)(calcOpts.TrinketOffset * 2);
 			numericUpDownDuration.Value = calcOpts.Duration;
+			numericUpDownLagVariance.Value = calcOpts.LagVariance;
 
 			labelTrinketOffset.Text = string.Format(labelTrinketOffset.Tag.ToString(), calcOpts.TrinketOffset);
 			
@@ -54,6 +55,7 @@ namespace Rawr.Cat
 				calcOpts.CustomCPSavageRoar = int.Parse(comboBoxSavageRoar.SelectedItem.ToString());
 				calcOpts.TrinketOffset = (float)trackBarTrinketOffset.Value / 2f;
 				calcOpts.Duration = (int)numericUpDownDuration.Value;
+				calcOpts.LagVariance = (int)numericUpDownLagVariance.Value;
 
 				labelTrinketOffset.Text = string.Format(labelTrinketOffset.Tag.ToString(), calcOpts.TrinketOffset);
 

@@ -57,8 +57,14 @@
     <Compile Include="..\..\Rawr.Cat\CalculationsCat.cs">
       <Link>CalculationsCat.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Cat\CatAbilityStats.cs">
+      <Link>CatAbilityStats.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Cat\CatRotationCalculator.cs">
       <Link>CatRotationCalculator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Cat\CharacterCalculationsCat.cs">
+      <Link>CharacterCalculationsCat.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelCat.xaml.cs">
       <DependentUpon>CalculationOptionsPanelCat.xaml</DependentUpon>
