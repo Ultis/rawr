@@ -28,39 +28,40 @@ namespace Rawr.DPSWarr {
             isLoading = true;
             try {
                 InitializeComponent();
-                SetUpFAQ();
+                //SetUpFAQ();
                 //CTL_Maints.ExpandAll(); line = 10;
 
                 // Create our local Boss List
                 if (bosslist == null) { bosslist = new BossList(); }
                 // Populate the Boss List ComboBox
-                if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
-                if (CB_BossList.Items.Count < 2) {
-                    foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
-                } line = 15;
+                //if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
+                //if (CB_BossList.Items.Count < 2) {
+                    //foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
+                //} line = 15;
                 // Set the default Filter Type
-                if (CB_BL_FilterType.SelectedIndex == -1) { CB_BL_FilterType.SelectedIndex = 0; }
+                //if (CB_BL_FilterType.SelectedIndex == -1) { CB_BL_FilterType.SelectedIndex = 0; }
                 // Set the Default filter to All and Populate the list based upon the Filter Type
                 // E.g.- If the type is Content, the Filter List will be { "All", "T7", "T7.5",... }
                 // E.g.- If the type is Version, the Filter List will be { "All", "10 Man", "25 man", "25 Man Heroic",... }
-                if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
+                //if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
                 //bosslist.GenCalledList(BossList.FilterType.Content, CB_BL_Filter.Text);
-                if (CB_BL_Filter.Items.Count < 2) {
-                    foreach (string s in bosslist.GetFilterListAsArray((BossList.FilterType)(CB_BL_FilterType.SelectedIndex))) {
-                        CB_BL_Filter.Items.Add(s);
-                    }
-                }
+                //if (CB_BL_Filter.Items.Count < 2) {
+                    //foreach (string s in bosslist.GetFilterListAsArray((BossList.FilterType)(CB_BL_FilterType.SelectedIndex))) {
+                        //CB_BL_Filter.Items.Add(s);
+                    //}
+                //}
                 line = 20;
-                if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
-                CB_BossList.Items.Add("Custom");
-                foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
+                //if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                //CB_BossList.Items.Add("Custom");
+                //foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
                 line = 25;
                 CB_Duration.Minimum = 0;
                 CB_Duration.Maximum = 60 * 20; // 20 minutes
                 CB_MoveTargsTime.Maximum = 60 * 20; // 20 minutes
                 line = 50;
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane", ex.Message, "CalculationOptionsPanelDPSWarr()", line);
+                new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane",
+                    ex.Message, "CalculationOptionsPanelDPSWarr()", line);
             }
             isLoading = false;
         }
@@ -141,37 +142,42 @@ FAQStuff.Add(
             CB_FAQ_Questions_SelectedIndexChanged(null, null);
         }
         private void CB_FAQ_Questions_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            string text = "";
-            if (true /*CB_FAQ_Questions.Text == "All"*/) {
-                int Iter = 1;
-                text += "== CONTENTS ==" + "\r\n";
-                foreach (string s in FAQStuff.Keys) {
-                    text += Iter.ToString("00") + "Q. " + s + "\r\n"; // Question
-                    Iter++;
-                } Iter = 1;
-                text += "\r\n";
-                text += "== READ ON ==" + "\r\n";
-                foreach (string s in FAQStuff.Keys) {
+            try {
+                string text = "";
+                if (true /*CB_FAQ_Questions.Text == "All"*/) {
+                    int Iter = 1;
+                    text += "== CONTENTS ==" + "\r\n";
+                    foreach (string s in FAQStuff.Keys) {
+                        text += Iter.ToString("00") + "Q. " + s + "\r\n"; // Question
+                        Iter++;
+                    } Iter = 1;
+                    text += "\r\n";
+                    text += "== READ ON ==" + "\r\n";
+                    foreach (string s in FAQStuff.Keys) {
+                        string a = "invalid";
+                        text += Iter.ToString("00") + "Q. " + s + "\r\n"; // Question
+                        bool ver = FAQStuff.TryGetValue(s, out a);
+                        text += Iter.ToString("00") + "A. " + (ver ? a : "An error occurred calling the string") + "\r\n"; // Answer
+                        text += "\r\n" + "\r\n";
+                        Iter++;
+                    } Iter = 1;
+                    RTB_FAQ.Text = text;
+                } else {
+                    string s = "";//CB_FAQ_Questions.Text;
                     string a = "invalid";
-                    text += Iter.ToString("00") + "Q. " + s + "\r\n"; // Question
                     bool ver = FAQStuff.TryGetValue(s, out a);
-                    text += Iter.ToString("00") + "A. " + (ver ? a : "An error occurred calling the string") + "\r\n"; // Answer
-                    text += "\r\n" + "\r\n";
-                    Iter++;
-                } Iter = 1;
-                RTB_FAQ.Text = text;
-            }else{
-                string s = "";//CB_FAQ_Questions.Text;
-                string a = "invalid";
-                bool ver = FAQStuff.TryGetValue(s, out a);
-                text += s + "\r\n";
-                text += "\r\n";
-                text += (ver ? a : "An error occurred calling the string");
-                RTB_FAQ.Text = text;
-                RTB_FAQ.SelectAll();
-                //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
-                RTB_FAQ.Select(0, RTB_FAQ.Text.IndexOf('\n'));
-                //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
+                    text += s + "\r\n";
+                    text += "\r\n";
+                    text += (ver ? a : "An error occurred calling the string");
+                    RTB_FAQ.Text = text;
+                    RTB_FAQ.SelectAll();
+                    //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
+                    RTB_FAQ.Select(0, RTB_FAQ.Text.IndexOf('\n'));
+                    //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
+                }
+            } catch(Exception ex){
+                new ErrorBoxDPSWarr("Error in setting the FAQ Item",
+                    ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
             }
         }
         public void LoadCalculationOptions() {
@@ -269,64 +275,75 @@ FAQStuff.Add(
                 //
                 Character.OnCalculationsInvalidated();
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in loading the DPSWarr Options Pane", ex.Message, "LoadCalculationOptions()", info, ex.StackTrace, line);
+                new ErrorBoxDPSWarr("Error in loading the DPSWarr Options Pane",
+                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace, line);
             }
             isLoading = false;
         }
         // Boss Handler
         private void CB_BL_FilterType_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            if (!isLoading) {
-                isLoading = true;
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                // Use Filter Type Box to adjust Filter Box
-                if (CB_BL_Filter.Items.Count > 0) { CB_BL_Filter.Items.Clear(); }
-                if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
-                //CB_BL_Filter.Text = "All";
-                BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
-                //bosslist.GenCalledList(ftype, CB_BL_Filter.Text);
-                foreach (string s in bosslist.GetFilterListAsArray(ftype)) { CB_BL_Filter.Items.Add(s); }
-                //CB_BL_Filter.Text = "All";
-                // Now edit the Boss List to the new filtered list of bosses
-                if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
-                CB_BossList.Items.Add("Custom");
-                foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
-                //CB_BossList.Text = "Custom";
-                // Save the new names
-                if (!firstload) {
-                    //calcOpts.FilterType = CB_BL_FilterType.Text;
-                    //calcOpts.Filter = CB_BL_Filter.Text;
-                    //calcOpts.BossName = CB_BossList.Text;
+            try {
+                if (!isLoading) {
+                    isLoading = true;
+                    CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                    // Use Filter Type Box to adjust Filter Box
+                    if (CB_BL_Filter.Items.Count > 0) { CB_BL_Filter.Items.Clear(); }
+                    if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
+                    //CB_BL_Filter.Text = "All";
+                    BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
+                    //bosslist.GenCalledList(ftype, CB_BL_Filter.Text);
+                    foreach (string s in bosslist.GetFilterListAsArray(ftype)) { CB_BL_Filter.Items.Add(s); }
+                    //CB_BL_Filter.Text = "All";
+                    // Now edit the Boss List to the new filtered list of bosses
+                    if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                    CB_BossList.Items.Add("Custom");
+                    foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
+                    //CB_BossList.Text = "Custom";
+                    // Save the new names
+                    if (!firstload) {
+                        //calcOpts.FilterType = CB_BL_FilterType.Text;
+                        //calcOpts.Filter = CB_BL_Filter.Text;
+                        //calcOpts.BossName = CB_BossList.Text;
+                    }
+                    //
+                    Character.OnCalculationsInvalidated();
+                    isLoading = false;
                 }
-                //
-                Character.OnCalculationsInvalidated();
-                isLoading = false;
+            }catch (Exception ex){
+                new ErrorBoxDPSWarr("Error in the Boss Options",
+                    ex.Message, "CB_BL_FilterType_SelectedIndexChanged()", "No Additional Info", ex.StackTrace, 0);
             }
         }
         private void CB_BL_Filter_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            if (!isLoading) {
-                isLoading = true;
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                // Use Filter Type Box to adjust Filter Box
-                BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
-                //bosslist.GenCalledList(ftype, CB_BL_Filter.Text);
-                // Now edit the Boss List to the new filtered list of bosses
-                if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
-                CB_BossList.Items.Add("Custom");
-                foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
-                //CB_BossList.Text = "Custom";
-                // Save the new names
-                if (!firstload) {
-                    //calcOpts.FilterType = CB_BL_FilterType.Text;
-                    //calcOpts.Filter = CB_BL_Filter.Text;
-                    //calcOpts.BossName = CB_BossList.Text;
+            try {
+                if (!isLoading) {
+                    isLoading = true;
+                    CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                    // Use Filter Type Box to adjust Filter Box
+                    BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
+                    //bosslist.GenCalledList(ftype, CB_BL_Filter.Text);
+                    // Now edit the Boss List to the new filtered list of bosses
+                    if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                    CB_BossList.Items.Add("Custom");
+                    foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
+                    //CB_BossList.Text = "Custom";
+                    // Save the new names
+                    if (!firstload) {
+                        //calcOpts.FilterType = CB_BL_FilterType.Text;
+                        //calcOpts.Filter = CB_BL_Filter.Text;
+                        //calcOpts.BossName = CB_BossList.Text;
+                    }
+                    //
+                    Character.OnCalculationsInvalidated();
+                    isLoading = false;
                 }
-                //
-                Character.OnCalculationsInvalidated();
-                isLoading = false;
+            }catch (Exception ex){
+                new ErrorBoxDPSWarr("Error in the Boss Options",
+                    ex.Message, "CB_BL_Filter_SelectedIndexChanged()", "No Additional Info", ex.StackTrace, 0);
             }
         }
         private void CB_BossList_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            //try {
+            try {
                 if (!isLoading) {
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     if (CB_BossList.SelectedIndex != 0) { // "Custom"
@@ -430,22 +447,33 @@ FAQStuff.Add(
                     }
                     Character.OnCalculationsInvalidated();
                 }
-            /*} catch (Exception ex) {
-                MessageBox.Show("CB_BossList_SelectedIndexChanged()\n\n"// Line: " + line.ToString() + "\n\n"
-                              + ex.Message
-                              //+ "\n\nInfo: " + info
-                              + "\n\nStack Trace:\n" + ex.StackTrace
-                              , "Error in setting DPSWarr Character settings from Boss");
-            }*/
+            } catch (Exception ex) {
+                new ErrorBoxDPSWarr("Error in setting DPSWarr Character settings from Boss",
+                    ex.Message, "CB_BossList_SelectedIndexChanged()", "No Additional Info", ex.StackTrace, 0);
+            }
             isLoading = false;
         }
         // Basics
+        private void RB_StanceFury_CheckedChanged(object sender, RoutedEventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.FuryStance = (bool)RB_StanceFury.IsChecked;
+                //CTL_Maints.Nodes[3].Nodes[0].Checked = calcOpts.FuryStance;
+                //CTL_Maints.Nodes[3].Nodes[1].Checked = !calcOpts.FuryStance;
+                //CB_BossList.Text = "Custom";
+                //
+                Character.OnCalculationsInvalidated();
+            }
+        }
         private void CK_HideBadItems_CheckedChanged(object sender, RoutedEventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
                 calcOpts.HideBadItems = (bool)CK_HideBadItems.IsChecked;
                 CalculationsDPSWarr.HidingBadStuff = calcOpts.HideBadItems;
                 ItemCache.OnItemsChanged();
+                //
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -455,6 +483,21 @@ FAQStuff.Add(
                 //
                 calcOpts.PTRMode = (bool)CK_PTRMode.IsChecked;
                 //
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void CB_Latency_ValueChanged(object sender, RoutedEventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.Lag   = (int)CB_Lag.Value;
+                calcOpts.React = (int)CB_React.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void NUD_SurvScale_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.SurvScale = (float)NUD_SurvScale.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -483,18 +526,6 @@ FAQStuff.Add(
                 }
             }
         }
-        private void RB_StanceFury_CheckedChanged(object sender, RoutedEventArgs e) {
-            if (!isLoading) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                //
-                calcOpts.FuryStance = (bool)RB_StanceFury.IsChecked;
-                //CTL_Maints.Nodes[3].Nodes[0].Checked = calcOpts.FuryStance;
-                //CTL_Maints.Nodes[3].Nodes[1].Checked = !calcOpts.FuryStance;
-                //CB_BossList.Text = "Custom";
-                //
-                Character.OnCalculationsInvalidated();
-            }
-        }
         private void CB_Duration_ValueChanged(object sender, RoutedEventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -508,6 +539,16 @@ FAQStuff.Add(
             }
         }
         // Rotational Changes
+        private void NUD_Under20Perc_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.Under20Perc = (float)NUD_Under20Perc.Value / 100f;
+                //CB_BossList.Text = "Custom";
+                //
+                Character.OnCalculationsInvalidated();
+            }
+        }
         private void RotChanges_InBack_ChecksChanged(object sender, RoutedEventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -607,7 +648,7 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void RotChanges_InBack_ValueChanged(object sender, RoutedEventArgs e) {
+        private void RotChanges_InBack_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -617,7 +658,7 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void RotChanges_Multi_ValueChanged(object sender, RoutedEventArgs e) {
+        private void RotChanges_Multi_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -627,7 +668,7 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void RotChanges_MultiMax_ValueChanged(object sender, RoutedEventArgs e) {
+        private void RotChanges_MultiMax_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -637,7 +678,7 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void NUD_StunFreq_ValueChanged(object sender, RoutedEventArgs e) {
+        private void NUD_StunFreq_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -647,7 +688,7 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void NUD_StunDur_ValueChanged(object sender, RoutedEventArgs e) {
+        private void NUD_StunDur_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -657,7 +698,7 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void RotChanges_Move_ValueChanged(object sender, RoutedEventArgs e) {
+        private void RotChanges_Move_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 isLoading = true;
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -670,7 +711,7 @@ FAQStuff.Add(
                 isLoading = false;
             }
         }
-        private void CB_MoveTargsPerc_ValueChanged(object sender, RoutedEventArgs e) {
+        private void CB_MoveTargsPerc_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 isLoading = true;
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -683,7 +724,7 @@ FAQStuff.Add(
                 isLoading = false;
             }
         }
-        private void RotChanges_Disarm_ValueChanged(object sender, RoutedEventArgs e) {
+        private void RotChanges_Disarm_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -693,7 +734,7 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void NUD_FearFreq_ValueChanged(object sender, RoutedEventArgs e) {
+        private void NUD_FearFreq_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -703,7 +744,7 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void NUD_FearDur_ValueChanged(object sender, RoutedEventArgs e) {
+        private void NUD_FearDur_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -713,7 +754,7 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void NUD_RootFreq_ValueChanged(object sender, RoutedEventArgs e) {
+        private void NUD_RootFreq_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -723,7 +764,7 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void NUD_RootDur_ValueChanged(object sender, RoutedEventArgs e) {
+        private void NUD_RootDur_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
@@ -1429,23 +1470,6 @@ FAQStuff.Add(
             CTL_Maints.Nodes[4].Nodes[1].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             //
             this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);*/
-        }
-        // Latency
-        private void CB_Latency_ValueChanged(object sender, RoutedEventArgs e) {
-            if (!isLoading) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.Lag   = (int)CB_Lag.Value;
-                calcOpts.React = (int)CB_React.Value;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        // Survival
-        private void NUD_SurvScale_ValueChanged(object sender, RoutedEventArgs e) {
-            if (!isLoading) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.SurvScale = (float)NUD_SurvScale.Value;
-                Character.OnCalculationsInvalidated();
-            }
         }
     }
 }
