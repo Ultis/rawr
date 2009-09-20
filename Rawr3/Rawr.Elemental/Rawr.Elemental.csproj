@@ -63,8 +63,38 @@
     <Compile Include="..\..\Rawr.Elemental\Rotation.cs">
       <Link>Rotation.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Elemental\Spells.cs">
-      <Link>Spells.cs</Link>
+    <Compile Include="..\..\Rawr.Elemental\Spells\ChainLightning.cs">
+      <Link>ChainLightning.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\EarthShock.cs">
+      <Link>EarthShock.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\ElementalMastery.cs">
+      <Link>ElementalMastery.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\FlameShock.cs">
+      <Link>FlameShock.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\FrostShock.cs">
+      <Link>FrostShock.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\LavaBurst.cs">
+      <Link>LavaBurst.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\LightningBolt.cs">
+      <Link>LightningBolt.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\Shock.cs">
+      <Link>Shock.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\Spell.cs">
+      <Link>Spell.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\Thunderstorm.cs">
+      <Link>Thunderstorm.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\Wait.cs">
+      <Link>Wait.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelElemental.xaml.cs">
       <DependentUpon>CalculationOptionsPanelElemental.xaml</DependentUpon>
