@@ -892,7 +892,7 @@ namespace Rawr.DPSWarr {
         public override void MakeRotationandDoDPS(bool setCalcs) {
             float PercTimeUnder20 = 0f;
             if(CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_]){
-                PercTimeUnder20 = 0.15f;
+                PercTimeUnder20 = CalcOpts.Under20Perc;
             }
             MakeRotationandDoDPS(setCalcs, PercTimeUnder20);
         }

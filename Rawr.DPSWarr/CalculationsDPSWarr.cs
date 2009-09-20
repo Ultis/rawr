@@ -930,23 +930,23 @@ Don't forget your weapons used matched with races can affect these numbers.",
             int line = 0;
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
             try {
-                CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
-                Stats stats = GetCharacterStats(character, additionalItem);
-                WarriorTalents talents = character.WarriorTalents;
+                CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr; line++;
+                Stats stats = GetCharacterStats(character, additionalItem); line++;
+                WarriorTalents talents = character.WarriorTalents; line++;
 
-                CombatFactors combatFactors = new CombatFactors(character, stats);
-                Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors);
-                Rotation Rot;
+                CombatFactors combatFactors = new CombatFactors(character, stats); line++;
+                Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors); line++;
+                Rotation Rot; line++;
                 if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats);
-                else Rot = new ArmsRotation(character, stats);
-                Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+                else Rot = new ArmsRotation(character, stats); line++;
+                Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race); line++;
 
-                calculatedStats.Duration = calcOpts.Duration;
-                calculatedStats.BasicStats = stats;
-                calculatedStats.combatFactors = combatFactors;
-                calculatedStats.Rot = Rot;
-                calculatedStats.TargetLevel = calcOpts.TargetLevel;
-                calculatedStats.BaseHealth = statsRace.Health;
+                calculatedStats.Duration = calcOpts.Duration; line++;
+                calculatedStats.BasicStats = stats; line++;
+                calculatedStats.combatFactors = combatFactors; line++;
+                calculatedStats.Rot = Rot; line++;
+                calculatedStats.TargetLevel = calcOpts.TargetLevel; line++;
+                calculatedStats.BaseHealth = statsRace.Health; line++;
                 {// == Attack Table ==
                     // Miss
                     calculatedStats.Miss = stats.Miss;
@@ -961,7 +961,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;
                     calculatedStats.MhCrit = combatFactors._c_mhycrit;
                     calculatedStats.OhCrit = combatFactors._c_ohycrit;
-                }
+                } line++;
                 // Offensive
                 float teethbonus = stats.Armor;
                 teethbonus *= (float)character.WarriorTalents.ArmoredToTheTeeth;
@@ -976,24 +976,25 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     + calculatedStats.ArmorPenetrationRating2Perc;
                 calculatedStats.HasteRating = stats.HasteRating;
                 calculatedStats.HastePercent = stats.PhysicalHaste; //talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
+                line++;
                 // DPS
 
                 Rot.Initialize(calculatedStats);
-                
+                line++;
                 // Neutral
                 // Defensive
-                calculatedStats.Armor = (int)stats.Armor;
+                calculatedStats.Armor = (int)stats.Armor; line++;
 
-                calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00";
+                calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00"; line++;
 
-                Rot.MakeRotationandDoDPS(true);
-                
-                float Health2Surv = stats.Health / 100f;
-                calculatedStats.TotalHPS = Rot._HPS_TTL;
-                calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv) * calcOpts.SurvScale;
-                calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability;
+                Rot.MakeRotationandDoDPS(true); line++;
+
+                float Health2Surv = stats.Health / 100f; line++;
+                calculatedStats.TotalHPS = Rot._HPS_TTL; line++;
+                calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv) * calcOpts.SurvScale; line++;
+                calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; line++;
             }catch (Exception ex){
-                new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations", ex.Message, "GetCharacterCalculations()");
+                new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations", ex.Message, "GetCharacterCalculations()", line);
             }
             return calculatedStats;
         }

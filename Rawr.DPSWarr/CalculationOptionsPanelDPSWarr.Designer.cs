@@ -628,6 +628,7 @@
             0,
             0,
             0});
+            this.NUD_Under20Perc.ValueChanged += new System.EventHandler(this.NUD_Under20Perc_ValueChanged);
             // 
             // LB_Root0
             // 

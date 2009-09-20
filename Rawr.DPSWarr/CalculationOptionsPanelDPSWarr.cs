@@ -493,6 +493,16 @@ FAQStuff.Add(
             }
         }
         // Rotational Changes
+        private void NUD_Under20Perc_ValueChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.Under20Perc = (float)NUD_Under20Perc.Value / 100f;
+                CB_BossList.Text = "Custom";
+                //
+                Character.OnCalculationsInvalidated();
+            }
+        }
         private void RotChanges_InBack_ChecksChanged(object sender, EventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;

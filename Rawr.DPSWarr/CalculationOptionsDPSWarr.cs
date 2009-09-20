@@ -18,6 +18,7 @@ namespace Rawr.DPSWarr {
 		public bool PTRMode = false;
         public bool HideBadItems = true;
 		public float SurvScale = 1.0f;
+        public float Under20Perc = 0.17f;
 		// Rotational Changes
 		public bool InBack           = true ; public int InBackPerc           = 100;
 		public bool MultipleTargets  = false; public int MultipleTargetsPerc  =  25; public float MultipleTargetsMax =    3;
