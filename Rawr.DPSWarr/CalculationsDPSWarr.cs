@@ -490,11 +490,20 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
 
         public override bool IsItemRelevant(Item item) {
-            Stats stats = item.Stats;
-            bool wantedStats = HasWantedStats(stats);
-            bool survstats = HasSurvivabilityStats(stats);
-            bool ignoreStats = HasIgnoreStats(stats);
-            return (wantedStats || survstats) && !ignoreStats && base.IsItemRelevant(item);
+            if ( // Manual override for +X to all Stats gems
+                   item.Name == "Nightmare Tear"
+                || item.Name == "Enchanted Tear"
+                || item.Name == "Enchanted Pearl"
+                || item.Name == "Chromatic Sphere"
+                ){
+                return true;
+            }else{
+                Stats stats = item.Stats;
+                bool wantedStats = HasWantedStats(stats);
+                bool survstats = HasSurvivabilityStats(stats);
+                bool ignoreStats = HasIgnoreStats(stats);
+                return (wantedStats || survstats) && !ignoreStats && base.IsItemRelevant(item);
+            }
         }
 
         public override bool IsBuffRelevant(Buff buff) {
