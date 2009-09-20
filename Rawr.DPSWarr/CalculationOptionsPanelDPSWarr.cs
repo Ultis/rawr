@@ -54,10 +54,7 @@ namespace Rawr.DPSWarr {
                 CB_MoveTargsTime.Maximum = 60 * 20; // 20 minutes
                 line = 50;
             } catch (Exception ex) {
-                MessageBox.Show("LoadCalculationOptions()\n\n"
-                              + ex.Message
-                              + "\n\nLine: " + line.ToString(),
-                              "Error in creating DPSWarr Character");
+                new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane", ex.Message, "CalculationOptionsPanelDPSWarr()", line);
             }
             isLoading = false;
         }
@@ -266,11 +263,7 @@ FAQStuff.Add(
                 //
                 Character.OnCalculationsInvalidated();
             } catch (Exception ex) {
-                MessageBox.Show("LoadCalculationOptions() Line: " + line.ToString() + "\n\n"
-                              + ex.Message
-                              + "\n\nInfo: " + info
-                              + "\n\nStack Trace:\n" + ex.StackTrace
-                              ,"Error in loading DPSWarr Character");
+                new ErrorBoxDPSWarr("Error in loading the DPSWarr Options Pane", ex.Message, "LoadCalculationOptions()",info,ex.StackTrace, line);
             }
             isLoading = false;
         }

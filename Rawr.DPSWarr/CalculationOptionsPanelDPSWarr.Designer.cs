@@ -608,14 +608,14 @@
             // 
             this.NUD_Under20Perc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.NUD_Under20Perc.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
             this.NUD_Under20Perc.Location = new System.Drawing.Point(219, 147);
             this.NUD_Under20Perc.Maximum = new decimal(new int[] {
             25,
+            0,
+            0,
+            0});
+            this.NUD_Under20Perc.Minimum = new decimal(new int[] {
+            10,
             0,
             0,
             0});
