@@ -795,6 +795,12 @@ namespace Rawr.Mage
             set { _ChanceToLiveScore = value; OnPropertyChanged("ChanceToLiveScore"); }
         }
 
+        private float _ChanceToLiveAttenuation;
+        public float ChanceToLiveAttenuation
+        {
+            get { return _ChanceToLiveAttenuation; }
+            set { _ChanceToLiveAttenuation = value; OnPropertyChanged("ChanceToLiveAttenuation"); }
+        }
 
         private float _EffectSpiritMultiplier;
         public float EffectSpiritMultiplier
@@ -1036,6 +1042,7 @@ namespace Rawr.Mage
             EffectHasteMultiplier = 1.0f;
             EffectRegenMultiplier = 1.0f;
             EffectCostMultiplier = 1.0f;
+            ChanceToLiveAttenuation = 0.1f;
         }
 
         public CalculationOptionsMage(Character character)

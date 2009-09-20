@@ -839,7 +839,7 @@ namespace Rawr.Mage
             //double timeToDie = Math.Min(1.0 / calculatedStats.ChanceToDie - 1, maxTimeToDie);
 
             //calculatedStats.SubPoints[1] = calculatedStats.BasicStats.Health * calculationOptions.SurvivabilityRating + (float)(calculationOptions.ChanceToLiveScore * timeToDie / maxTimeToDie);
-            float ret = calculationResult.BaseStats.Health * calculationOptions.SurvivabilityRating + (float)(calculationOptions.ChanceToLiveScore * Math.Pow(1 - calculationResult.ChanceToDie, 0.1));
+            float ret = calculationResult.BaseStats.Health * calculationOptions.SurvivabilityRating + (float)(calculationOptions.ChanceToLiveScore * Math.Pow(1 - calculationResult.ChanceToDie, calculationOptions.ChanceToLiveAttenuation));
             if (float.IsNaN(ret)) ret = 0f;
             return ret;
         }
