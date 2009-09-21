@@ -1098,7 +1098,7 @@ namespace Rawr {
                 if (m.Success) // Totem of Quaking Earth
                 {
                     float attackPower = (float)int.Parse(m.Groups["attackpower"].Value);
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 18f, 0f, 0.8f));
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 18f, 9f, 0.8f));
                 }
             }
             else if (line.StartsWith("Each time you cast Lightning Bolt,"))
