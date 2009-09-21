@@ -9,13 +9,13 @@ namespace Rawr.DPSWarr
 {
     public class FuryRotation : Rotation
     {
-        public FuryRotation(Character character, Stats stats) {
+        public FuryRotation(Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa) {
             Char = character;
             StatS = stats;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
-            CombatFactors = new CombatFactors(Char, StatS);
+            CombatFactors = cf;
             CalcOpts = Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() : Char.CalculationOptions as CalculationOptionsDPSWarr;
-            //WhiteAtks = new Skills.WhiteAttacks(Char, StatS);
+            WhiteAtks = wa;
             // Initialize();
         }
 

@@ -937,8 +937,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 CombatFactors combatFactors = new CombatFactors(character, stats); line++;
                 Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors); line++;
                 Rotation Rot; line++;
-                if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats);
-                else Rot = new ArmsRotation(character, stats); line++;
+                if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks);
+                else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks); line++;
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race); line++;
 
                 calculatedStats.Duration = calcOpts.Duration; line++;
@@ -1049,8 +1049,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 };
                 // Add Talents that give SpecialEffects
                 if (talents.Rampage > 0) {
-                    SpecialEffect rampage = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalCrit = 0.05f, }, 10, 0);
-                    statsTalents.AddSpecialEffect(rampage);
+                    /*SpecialEffect rampage = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalCrit = 0.05f, }, 10, 0);
+                    statsTalents.AddSpecialEffect(rampage);*/
+                    statsTalents.PhysicalCrit += 0.05f;
                 }
                 if (talents.WreckingCrew > 0) {
                     float value = talents.WreckingCrew * 0.02f;
@@ -1062,11 +1063,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     SpecialEffect trauma = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = value, }, 15, 0);
                     statsTalents.AddSpecialEffect(trauma);
                 }
-                /*if (talents.Flurry > 0) {
-                    float value = talents.Flurry * 0.05f;
-                    SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalHaste = value, }, 2, 0);
-                    statsTalents.AddSpecialEffect(flurry);
-                }*/
                 if (talents.DeathWish > 0 && calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) {
                     SpecialEffect death = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
@@ -1133,8 +1129,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 CombatFactors combatFactors = new CombatFactors(character, statsTotal);
                 Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors);
                 Rotation Rot;
-                if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal);
-                else Rot = new ArmsRotation(character, statsTotal);
+                if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks);
+                else Rot = new ArmsRotation(character, statsTotal, combatFactors, whiteAttacks);
                 Rot.Initialize();
                 Rot.MakeRotationandDoDPS(false);
 
@@ -1171,7 +1167,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         Rot.CS.Duration, Rot.CS.Cd+0.01f);
                     statsTotal.AddSpecialEffect(cs);
                 }
-
+                
                 float fightDuration = calcOpts.Duration;
 
                 bool useOH = combatFactors.useOH;
@@ -1179,8 +1175,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
                 float attemptedAtksInterval = fightDuration / Rot.GetAttemptedAtksOverDur();
                 float landedAtksInterval = fightDuration / Rot.GetLandedAtksOverDur();
-                float mhLandInterval = fightDuration / Rot.GetLandedAtksOverDurMH();
-                float ohLandInterval = fightDuration / Rot.GetLandedAtksOverDurOH();
                 float dmgDoneInterval = fightDuration / (Rot.GetLandedAtksOverDur() + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
                 float hitRate = Rot.GetLandedAtksOverDur() / Rot.GetAttemptedAtksOverDur();
@@ -1192,35 +1186,43 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         (float)Math.Min(Rot.SW.Duration, landedAtksInterval * 5f), Rot.SW.Cd);
                     statsTotal.AddSpecialEffect(sweep);
                 }
-
                 if (Rot.RK.Validated) {
                     SpecialEffect reck = new SpecialEffect(Trigger.Use,
                         new Stats() { PhysicalCrit = 1f - Rot.RK.MHAtkTable.Crit, },
                         (float)Math.Min(Rot.RK.Duration, landedAtksInterval * 3f), Rot.RK.Cd);
                     statsTotal.AddSpecialEffect(reck);
                 }
+                if (talents.Flurry > 0)
+                {
+                    float value = talents.Flurry * 0.05f;
+                    SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalHaste = value, }, 
+                        landedAtksInterval * 3f, 0f);
+                    statsTotal.AddSpecialEffect(flurry);
+                }
 
                 SpecialEffect bersMainHand = null;
                 SpecialEffect bersOffHand = null;
 
-                // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
-                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789){ // berserker enchant id
+                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789)
+                { // berserker enchant id
                     Stats.SpecialEffectEnumerator mhEffects = character.MainHandEnchant.Stats.SpecialEffects();
 
-                    if (mhEffects.MoveNext()) {
+                    if (mhEffects.MoveNext())
+                    {
                         bersMainHand = mhEffects.Current;
-                        statsProcs += bersMainHand.GetAverageStats(mhLandInterval, 1f, combatFactors.MHSpeed, fightDuration);
                     }
                 }
-                if (combatFactors.useOH && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789){
+                if (combatFactors.useOH && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789)
+                {
                     Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
 
-                    if (ohEffects.MoveNext()) {
+                    if (ohEffects.MoveNext())
+                    {
                         bersOffHand = ohEffects.Current;
-                        statsProcs += bersOffHand.GetAverageStats(ohLandInterval, 1f, combatFactors.OHSpeed, fightDuration);
                     }
                 }
-                statsProcs += GetSpecialEffectsStats(character, Rot, bersMainHand, bersOffHand, attemptedAtksInterval, hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, null);
+
+                statsProcs += GetSpecialEffectsStats(character, Rot, combatFactors, bersMainHand, bersOffHand, attemptedAtksInterval, hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, null);
 
                 // Base Stats
                 statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier    ));
@@ -1265,6 +1267,22 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                            (1f + statsProcs.PhysicalHaste) *
                                            (1f + ratingHasteBonus)
                                            - 1f;
+                // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
+                combatFactors.StatS = statsTotal;
+                Stats bersStats = new Stats();
+                if (bersMainHand != null)
+                { // berserker enchant id
+                    bersStats += bersMainHand.GetAverageStats(fightDuration/Rot.GetAttemptedAtksOverDurMH(), Rot.GetLandedAtksOverDurMH() / Rot.GetAttemptedAtksOverDurMH(), combatFactors._c_mhItemSpeed, fightDuration);
+                    float f = bersMainHand.GetAverageUptime(fightDuration / Rot.GetAttemptedAtksOverDurMH(), Rot.GetLandedAtksOverDurMH() / Rot.GetAttemptedAtksOverDurMH(), combatFactors._c_mhItemSpeed, fightDuration);
+                }
+                if (bersOffHand != null)
+                {
+                    bersStats += bersOffHand.GetAverageStats(fightDuration / Rot.GetAttemptedAtksOverDurOH(), Rot.GetLandedAtksOverDurOH() / Rot.GetAttemptedAtksOverDurOH(), combatFactors._c_mhItemSpeed, fightDuration);
+                    float f = bersOffHand.GetAverageUptime(fightDuration / Rot.GetAttemptedAtksOverDurOH(), Rot.GetLandedAtksOverDurOH() / Rot.GetAttemptedAtksOverDurOH(), combatFactors._c_mhItemSpeed, fightDuration);
+                }
+                apBonusOtherProcs = (1f + totalBAPM) * (bersStats.AttackPower);
+                bersStats.AttackPower = (float)Math.Floor(apBonusOtherProcs);
+                statsTotal += bersStats;
 
                 return statsTotal;
             }catch (Exception ex){
@@ -1272,13 +1290,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
             }
             return new Stats();
         }
-        private Stats GetSpecialEffectsStats(Character Char, Rotation Rot,
+        private Stats GetSpecialEffectsStats(Character Char, Rotation Rot, CombatFactors combatFactors,
             SpecialEffect bersMainHand, SpecialEffect bersOffHand,
             float attemptedAtkInterval, float hitRate, float critRate, float bleedHitInterval, float dmgDoneInterval,
             Stats statsTotal, Stats statsToProcess)
         {
             try {
-                CombatFactors combatFactors = new CombatFactors(Char, statsTotal);
                 CalculationOptionsDPSWarr calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 WarriorTalents talents = Char.WarriorTalents;
                 Stats statsProcs = new Stats();
@@ -1306,7 +1323,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                     Stats _stats = new Stats();
                                     _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
                                     float uptime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
-                                    statsProcs += GetSpecialEffectsStats(Char, Rot, bersMainHand, bersOffHand, attemptedAtkInterval, hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, _stats)
+                                    statsProcs += GetSpecialEffectsStats(Char, Rot, combatFactors, bersMainHand, bersOffHand, attemptedAtkInterval, hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, _stats)
                                                  * uptime;
                                 } else {
                                     statsProcs += effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
@@ -1315,10 +1332,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
                             case Trigger.MeleeHit:
                             case Trigger.PhysicalHit:
                                 if (attemptedAtkInterval > 0f) statsProcs += effect.GetAverageStats(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration);
+                                float i = effect.GetAverageUptime(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration);
                                 break;
                             case Trigger.MeleeCrit:
                             case Trigger.PhysicalCrit:
                                 if (attemptedAtkInterval > 0f) statsProcs += effect.GetAverageStats(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration);
+                                float j = effect.GetAverageUptime(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration);
                                 break;
                             case Trigger.DoTTick:
                                 if (bleedHitInterval > 0f) statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend

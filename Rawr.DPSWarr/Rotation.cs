@@ -138,7 +138,7 @@ namespace Rawr.DPSWarr {
 
         protected virtual void initAbilities() {
             // Whites
-            WhiteAtks = new Skills.WhiteAttacks(CHARACTER, STATS, COMBATFACTORS);
+            //WhiteAtks = new Skills.WhiteAttacks(CHARACTER, STATS, COMBATFACTORS);
             // Anti-Debuff
             HF  = new Skills.HeroicFury(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             EM  = new Skills.EveryManForHimself(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
@@ -354,12 +354,12 @@ namespace Rawr.DPSWarr {
         }
         // All Landed Attacks Over Dur, Yellow and White
         public float GetAttemptedAtksOverDur() { return GetAttemptedAtksOverDurMH() + GetAttemptedAtksOverDurOH(); }
-        protected float GetAttemptedAtksOverDurMH() {
+        public float GetAttemptedAtksOverDurMH() {
             float white = WhiteAtks.MhActivates;
             float yellow = GetAttemptedYellowsOverDurMH();
             return white + yellow;
         }
-        protected float GetAttemptedAtksOverDurOH()
+        public float GetAttemptedAtksOverDurOH()
         {
             if (!CombatFactors.useOH) return 0f;
             float white = WhiteAtks.OhActivates;

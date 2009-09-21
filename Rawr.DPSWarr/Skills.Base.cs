@@ -27,7 +27,7 @@ namespace Rawr.DPSWarr {
             }
             #region Variables
             private readonly Character Char;
-            private readonly Stats StatS;
+            private Stats StatS;
             private readonly WarriorTalents Talents;
             private readonly CombatFactors combatFactors;
             private CalculationOptionsDPSWarr CalcOpts;
@@ -48,6 +48,7 @@ namespace Rawr.DPSWarr {
                 }
             }
             // Get/Set
+            public void UpdateStats(Stats stats) { StatS = stats; }
             public float HSOverridesOverDur { get { return OVDOVERDUR_HS; } set { OVDOVERDUR_HS = value; } }
             public float CLOverridesOverDur { get { return OVDOVERDUR_CL; } set { OVDOVERDUR_CL = value; } }
             public float Slam_Freq;
