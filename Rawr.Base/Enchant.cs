@@ -49,7 +49,7 @@ namespace Rawr
 					.Replace("Attack Power", "AP").Replace("Rune of the ", "").Replace(" Gargoyle", "")
 					.Replace("speed Accelerators", "").Replace(" Mysteries", "").Replace(" Embroidery", "")
 					.Replace("Mana Restoration", "Mp5").Replace("Restore Mana", "Mp5").Replace("Vengeance", "Veng.")
-                    .Replace("Reticulated Armor ", "");
+                    .Replace("Reticulated Armor ", "").Replace("Titanium Weapon Chain", "Titnm.W.Chn");
                 return shortName.Substring(0, Math.Min(shortName.Length, 12));
             }
         }
