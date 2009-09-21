@@ -46,7 +46,7 @@ namespace Rawr.TankDK
                 calcOpts.m_Rotation.FrostStrike + calcOpts.m_Rotation.DeathStrike;
 
             totalSpellAbilities = calcOpts.m_Rotation.DeathCoil + calcOpts.m_Rotation.IcyTouch + calcOpts.m_Rotation.HowlingBlast
-                + calcOpts.m_Rotation.UnholyBlight + calcOpts.m_Rotation.Pestilence + calcOpts.m_Rotation.Horn + calcOpts.m_Rotation.DeathNDecay
+                + calcOpts.m_Rotation.Pestilence + calcOpts.m_Rotation.Horn + calcOpts.m_Rotation.DeathNDecay
                 + calcOpts.m_Rotation.BoneShield;
 
             totalParryableAbilities = calcOpts.m_Rotation.PlagueStrike + calcOpts.m_Rotation.ScourgeStrike +
@@ -328,7 +328,7 @@ namespace Rawr.TankDK
             float HowlingBlastAPMult = 0.1f;
             float IcyTouchAPMult = 0.1f;
             //float StrangulateAPMult = .06f;
-            float UnholyBlightAPMult = 0.013f;
+//            float UnholyBlightAPMult = 0.013f;
 
             //for estimating rotation pushback
 
@@ -418,7 +418,6 @@ namespace Rawr.TankDK
                 FrostFeverAPMult *= impurityMult;
                 BloodPlagueAPMult *= impurityMult;
                 DeathCoilAPMult *= impurityMult;
-                UnholyBlightAPMult *= impurityMult;
                 GargoyleAPMult *= impurityMult;
             }
             #endregion
@@ -528,7 +527,9 @@ namespace Rawr.TankDK
                 {
                     float DCCD = this.realDuration / (calcOpts.m_Rotation.DeathCoil + (0.05f * (float)talents.SuddenDoom * calcOpts.m_Rotation.HeartStrike));
                     float DCDmg = 443f + (DeathCoilAPMult * stats.AttackPower) + stats.BonusDeathCoilDamage;
+                    // Unholy Blight causes additional 20% DC damage over 10 sec. 
                     fDamDeathCoil = DCDmg / DCCD * calcOpts.m_Rotation.DeathCoil;
+                    fDamDeathCoil += DCDmg * (talents.UnholyBlight * 0.2f) / 10f;
                     float DCCritDmgMult = 1.5f * (1f + stats.BonusSpellCritMultiplier);
                     float DCCrit = 1f + ((this.spellCrits + stats.BonusDeathCoilCrit) * DCCritDmgMult);
                     fDamDeathCoil *= DCCrit;

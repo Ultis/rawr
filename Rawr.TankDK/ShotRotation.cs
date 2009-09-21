@@ -31,14 +31,12 @@ namespace Rawr.TankDK {
         public float FrostFever = 0f;
         public float BloodPlague = 0f;
         public float ScourgeStrike = 0f;
-        public float UnholyBlight = 0f;
         public float FrostStrike = 0f;
         public float HowlingBlast = 0f;
         public float Obliterate = 0f;
         public float DeathStrike = 0f;
         public float BloodStrike = 0f;
         public float HeartStrike = 0f;
-        public float DancingRuneWeapon = 0f;
         public float Horn = 0f;
         public float Pestilence = 0f;
         public float BloodBoil = 0f;
@@ -140,7 +138,7 @@ namespace Rawr.TankDK {
         public float getGCDTime() {
             GCDTime = GetGCDHasted() * (PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike +
                 BloodStrike + HeartStrike);
-            GCDTime += GetGCDHasted() * (DeathCoil + IcyTouch + UnholyBlight + HowlingBlast + Horn + DeathNDecay + BloodBoil + Pestilence);
+            GCDTime += GetGCDHasted() * (DeathCoil + IcyTouch + HowlingBlast + Horn + DeathNDecay + BloodBoil + Pestilence);
             return GCDTime;
         }
         /// <summary>
@@ -182,7 +180,6 @@ namespace Rawr.TankDK {
                     IcyTouch = 2f;
                     PlagueStrike = 2f;
                     ScourgeStrike = 0f;
-                    UnholyBlight = 0f;
                     FrostStrike = 1f;
                     HowlingBlast = 0f;
                     Obliterate = 3f;
@@ -200,7 +197,6 @@ namespace Rawr.TankDK {
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
                     ScourgeStrike = 4f;
-                    UnholyBlight = 1f;
                     FrostStrike = 0f;
                     HowlingBlast = 0f;
                     Obliterate = 0f;
