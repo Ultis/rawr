@@ -565,7 +565,7 @@ namespace Rawr.DPSDK
                         if (PestRefresh * temp.Pestilence - combatTable.realDuration > 0f)
                         {
                             ticksPerRotation = combatTable.realDuration / 3f;
-                            Stats maxStats = GetCharacterStatsMaximum(character, null);
+                            Stats maxStats = GetCharacterStatsMaximum(character, additionalItem, calcOpts.FightLength * 60f);
                             Stats tempStats;
                             foreach (SpecialEffect effect in maxStats.SpecialEffects())
                             {
@@ -639,7 +639,7 @@ namespace Rawr.DPSDK
                         if (PestRefresh * temp.Pestilence - combatTable.realDuration > 0f)
                         {
                             ticksPerRotation = combatTable.realDuration / 3f;
-                            Stats maxStats = GetCharacterStatsMaximum(character, null);
+                            Stats maxStats = GetCharacterStatsMaximum(character, additionalItem, calcOpts.FightLength * 60f);
                             Stats tempStats;
                             foreach (SpecialEffect effect in maxStats.SpecialEffects())
                             {
@@ -1288,7 +1288,7 @@ namespace Rawr.DPSDK
                     {
                         float dpsDRWMaximum = 0f;
                         String effectsStats = "";
-                        Stats maxStats = GetCharacterStatsMaximum(character, additionalItem);
+                        Stats maxStats = GetCharacterStatsMaximum(character, additionalItem, 90f);
                         DRW drw;
                         Stats tempStats;
 
@@ -1472,7 +1472,7 @@ namespace Rawr.DPSDK
             return (statsTotal);
         }
 
-        public Stats GetCharacterStatsMaximum(Character character, Item additionalItem)
+        public Stats GetCharacterStatsMaximum(Character character, Item additionalItem, float abilityCooldown)
         {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
             DeathKnightTalents talents = calcOpts.talents;
@@ -1520,16 +1520,28 @@ namespace Rawr.DPSDK
                 {
                     if (effect.Trigger == Trigger.Use)
                     {
+                        float uptimeMult = 0f;
+                        if (effect.Cooldown > abilityCooldown)
+                        {
+                            for (int i = 0; i * effect.Cooldown < calcOpts.FightLength * 60f; i++)
+                            {
+                                if (i * effect.Cooldown % abilityCooldown == 0)
+                                {
+                                    uptimeMult++;
+                                }
+                            }
+                            uptimeMult /= calcOpts.FightLength * 60f / abilityCooldown;
+                        }
                         if (effect.Stats.ArmorPenetrationRating > 0f && effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating + 12.31623993f * 2f * talents.BloodGorged > 1232f)
                         {
                             Stats tempStats = new Stats();
                             tempStats += effect.Stats;
                             tempStats.ArmorPenetrationRating = (1232f - statsTotal.ArmorPenetrationRating - 12.31623993f * 2f * talents.BloodGorged > 0f ? 1232f - statsTotal.ArmorPenetrationRating - 12.31623993f * 2f * talents.BloodGorged : 0f);
-                            statsTotal += tempStats;
+                            statsTotal += tempStats * uptimeMult;
                         }
                         else
                         {
-                            statsTotal += effect.Stats;
+                            statsTotal += effect.Stats * uptimeMult;
                         }
                     }
                     else
