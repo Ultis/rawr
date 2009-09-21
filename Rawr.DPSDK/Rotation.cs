@@ -129,13 +129,13 @@ namespace Rawr.DPSDK
             {
                 GCDTime = DeathCoil + IcyTouch + PlagueStrike + ScourgeStrike +
                     FrostStrike + HowlingBlast + Obliterate + DeathStrike + BloodStrike +
-                    HeartStrike + Horn;
+                    HeartStrike + Horn + Pestilence + GhoulFrenzy;
             }
             else if (presence.Equals(CalculationOptionsDPSDK.Presence.Blood))
             {
                 GCDTime = 1.5f * (PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike +
                     BloodStrike + HeartStrike);
-                GCDTime += 1.5f * (DeathCoil + IcyTouch + HowlingBlast + Horn);
+                GCDTime += 1.5f * (DeathCoil + IcyTouch + HowlingBlast + Horn + Pestilence + GhoulFrenzy);
                 // this does not currently account for haste, and I don't think it is possible in the current design.
             }
             return GCDTime;
@@ -210,6 +210,7 @@ namespace Rawr.DPSDK
                     GargoyleDuration = 30f;
                     DeathStrike = 0f;
                     GhoulFrenzy = 0f;
+                    Pestilence = 0f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Custom:
