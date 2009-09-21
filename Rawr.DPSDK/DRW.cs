@@ -147,23 +147,8 @@ namespace Rawr.DPSDK
                 (talents.GlyphofHowlingBlast && calcOpts.rotation.HowlingBlast > 0f) ||
                 (talents.GlyphofDisease && calcOpts.rotation.Pestilence > 0f))
                 {
-                    // Frost Fever is renewed with every Icy Touch and starts a new cd
-                    float ITCD = 1;
-                    float PestRefresh = (15f + talents.Epidemic * 3f);
-                    float FFCD = 0f;
-                    if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f)
-                    {
-                        ITCD = calcOpts.rotation.curRotationDuration;
-                        FFCD = 3f;
-                    }
-                    else
-                    {
-                        FFCD = 3f / (calcOpts.rotation.diseaseUptime / 100);
-                        int tempF = (int)Math.Floor(ITCD / FFCD);
-                        FFCD = ((ITCD - ((float)tempF * FFCD)) / ((float)tempF + 1f)) + FFCD;
-                    }
                     float FFDmg = FrostFeverAPMult * stats.AttackPower + 25.6f;
-                    dpsFrostFever = FFDmg / FFCD;
+                    dpsFrostFever = FFDmg;
                     dpsFrostFever *= 1.15f;	// Patch 3.2: Diseases hit 15% harder.
                     dpsWPFromFF = dpsFrostFever * combatTable.physCrits;
                 }
@@ -174,23 +159,8 @@ namespace Rawr.DPSDK
             {
                 if (calcOpts.rotation.PlagueStrike > 0f || talents.GlyphofDisease)
                 {
-                    // Blood Plague is renewed with every Plague Strike and starts a new cd
-                    float PSCD = 1;
-                    float PestRefresh = (15f + talents.Epidemic * 3f);
-                    float BPCD = 0f;
-                    if (PestRefresh * calcOpts.rotation.Pestilence - calcOpts.rotation.curRotationDuration > 0f)
-                    {
-                        PSCD = calcOpts.rotation.curRotationDuration;
-                        BPCD = 3f;
-                    }
-                    else
-                    {
-                        BPCD = 3f / (calcOpts.rotation.diseaseUptime / 100);
-                        int tempF = (int)Math.Floor(PSCD / BPCD);
-                        BPCD = ((PSCD - ((float)tempF * BPCD)) / ((float)tempF + 1f)) + BPCD;
-                    }
                     float BPDmg = BloodPlagueAPMult * stats.AttackPower + 31.1f;
-                    dpsBloodPlague = BPDmg / BPCD;
+                    dpsBloodPlague = BPDmg;
                     dpsBloodPlague *= 1.15f; // Patch 3.2: Diseases hit 15% harder.
                     dpsWPFromBP = dpsBloodPlague * combatTable.physCrits;
                 }
