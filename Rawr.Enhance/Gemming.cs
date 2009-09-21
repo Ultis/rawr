@@ -38,11 +38,16 @@ namespace Rawr.Enhance
         private int[] jagged = { 39974, 40086, 40165, 40165 };   // Crit/Sta
         private int[] forceful = { 39978, 40091, 40169, 40169 }; // Haste/Sta
 
+        //Prismatic
+        private int[] tear = { 34143, 42702, 49110, 49110 }; // +X to all stats
+
         public List<GemmingTemplate> addTemplates(String group, int rarity, int metagem, bool enabled)
         {
             return new List<GemmingTemplate>() { 
             	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, //Max Expertise
 					RedId = precise[rarity], YellowId = accurate[rarity], BlueId = guardian[rarity], PrismaticId = precise[rarity], MetaId = metagem },
+            	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, //Max Expertise
+					RedId = precise[rarity], YellowId = accurate[rarity], BlueId = guardian[rarity], PrismaticId = tear[rarity], MetaId = metagem },
 
             	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Hit - red exp
 					RedId = accurate[rarity], YellowId = rigid[rarity], BlueId = vivid[rarity], PrismaticId = rigid[rarity], MetaId = metagem },
@@ -52,11 +57,11 @@ namespace Rawr.Enhance
 					RedId = pristine[rarity], YellowId = rigid[rarity], BlueId = vivid[rarity], PrismaticId = rigid[rarity], MetaId = metagem },
 
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Attack Power - yellow hit
-					RedId = bright[rarity], YellowId = pristine[rarity], BlueId = balanced[rarity], PrismaticId = bright[rarity], MetaId = metagem },
+					RedId = bright[rarity], YellowId = pristine[rarity], BlueId = tear[rarity], PrismaticId = bright[rarity], MetaId = metagem },
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Attack Power - yellow haste
-					RedId = bright[rarity], YellowId = stark[rarity], BlueId = balanced[rarity], PrismaticId = bright[rarity], MetaId = metagem },
+					RedId = bright[rarity], YellowId = stark[rarity], BlueId = tear[rarity], PrismaticId = bright[rarity], MetaId = metagem },
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Attack Power - yellow crit
-					RedId = bright[rarity], YellowId = wicked[rarity], BlueId = balanced[rarity], PrismaticId = bright[rarity], MetaId = metagem },
+					RedId = bright[rarity], YellowId = wicked[rarity], BlueId = tear[rarity], PrismaticId = bright[rarity], MetaId = metagem },
 
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Agility - yellow hit
 					RedId = delicate[rarity], YellowId = glinting[rarity], BlueId = shifting[rarity], PrismaticId = delicate[rarity], MetaId = metagem },
