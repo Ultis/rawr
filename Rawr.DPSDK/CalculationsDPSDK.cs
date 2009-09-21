@@ -493,7 +493,8 @@ namespace Rawr.DPSDK
                          affectedDCMult /= temp.DeathCoil;
                          dpsDeathCoil += dpsDeathCoil * affectedDCMult;*/
 
-                        dpsDeathCoil *= 1f + (.05f * (float)talents.Morbidity) + (talents.GlyphofDarkDeath ? .15f : 0f);
+                        dpsDeathCoil *= 1f + (.05f * (float)talents.Morbidity);
+                        dpsDeathCoil *= 1f + (talents.GlyphofDarkDeath ? .15f : 0f);
                     }
                 }
                 #endregion
@@ -721,7 +722,7 @@ namespace Rawr.DPSDK
                         float SSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.ViciousStrikes) + (.03f * (float)talents.Subversion)
                                             + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
                         dpsScourgeStrike = dpsScourgeStrike * SSCrit;
-                        dpsScourgeStrike *= 1f + (2f / 3f * .01f /*0.0666666666666666666f*/ * (float)talents.Outbreak);
+                        dpsScourgeStrike *= 1f + (0.2f / 3f * (float)talents.Outbreak);
                     }
                 }
                 #endregion
