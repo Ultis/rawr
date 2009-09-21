@@ -476,7 +476,21 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Utgarde Pinnacle</Name>
-          <Pattern>(?&lt;! Heroic )Utgarde Pinnacle(?&lt;! Heroic)</Pattern>
+          <Pattern>(?&lt;! Heroic )Utgarde Pinnacle</Pattern>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Trial of the Champion</Name>
+          <Pattern>(?&lt;! Heroic )Trial of the Champion</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -489,7 +503,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Dungeons</Name>
-      <Pattern>(?&lt;! Heroic (The )?)Oculus|(?&lt;! Heroic )Azjol-Nerub|(?&lt;! Heroic )Ahn'kahet|(?&lt;! Heroic )Drak'Tharon|(?&lt;! Heroic )Gundrak|(?&lt;! Heroic )Culling of Stratholme(?&lt;! Heroic)|(?&lt;! Heroic )The Culling of Stratholme(?&lt;! Heroic)|(?&lt;! Heroic (The )?)Nexus|(?&lt;! Heroic (The )?)Violet Hold|(?&lt;! Heroic )Halls of Lightning(?&lt;!  Heroic)|(?&lt;! Heroic )Halls of Stone|(?&lt;! Heroic )Utgarde Keep|(?&lt;! Heroic )Utgarde Pinnacle(?&lt;! Heroic)</Pattern>
+      <Pattern>(?&lt;! Heroic (The )?)Oculus|(?&lt;! Heroic )Azjol-Nerub|(?&lt;! Heroic )Ahn'kahet|(?&lt;! Heroic )Drak'Tharon|(?&lt;! Heroic )Gundrak|(?&lt;! Heroic )Culling of Stratholme(?&lt;! Heroic)|(?&lt;! Heroic )The Culling of Stratholme(?&lt;! Heroic)|(?&lt;! Heroic (The )?)Nexus|(?&lt;! Heroic (The )?)Violet Hold|(?&lt;! Heroic )Halls of Lightning(?&lt;!  Heroic)|(?&lt;! Heroic )Halls of Stone|(?&lt;! Heroic )Utgarde Keep|(?&lt;! Heroic )Utgarde Pinnacle|(?&lt;! Heroic )Trial of the Champion</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -669,10 +683,24 @@
           <AppliesToGems>true</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Trial of the Champion</Name>
+          <Pattern>Heroic Trial of the Champion</Pattern>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Dungeons (Heroic)</Name>
-      <Pattern>Heroic (The )?Oculus|Heroic Azjol-Nerub|Heroic Ahn'kahet|Heroic Drak'Tharon|Heroic Gundrak|Heroic (CoT: )?Stratholme|Heroic (The )?Nexus|Heroic (The )?Violet Hold|Heroic Halls of Lightning|Heroic Halls of Stone|Heroic Utgarde Keep|Heroic Utgarde Pinnacle</Pattern>
+      <Pattern>Heroic (The )?Oculus|Heroic Azjol-Nerub|Heroic Ahn'kahet|Heroic Drak'Tharon|Heroic Gundrak|Heroic (CoT: )?Stratholme|Heroic (The )?Nexus|Heroic (The )?Violet Hold|Heroic Halls of Lightning|Heroic Halls of Stone|Heroic Utgarde Keep|Heroic Utgarde Pinnacle|Heroic Trial of the Champion</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>

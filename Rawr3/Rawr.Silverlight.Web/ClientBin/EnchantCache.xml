@@ -328,7 +328,7 @@
     <Slot>Feet</Slot>
     <Stats>
       <Agility>6</Agility>
-      <MovementSpeed>8</MovementSpeed>
+      <MovementSpeed>0.08</MovementSpeed>
     </Stats>
   </Enchant>
   <Enchant>
@@ -337,7 +337,7 @@
     <Slot>Feet</Slot>
     <Stats>
       <Stamina>9</Stamina>
-      <MovementSpeed>8</MovementSpeed>
+      <MovementSpeed>0.08</MovementSpeed>
     </Stats>
   </Enchant>
   <Enchant>
@@ -346,7 +346,7 @@
     <Slot>Feet</Slot>
     <Stats>
       <Stamina>15</Stamina>
-      <MovementSpeed>8</MovementSpeed>
+      <MovementSpeed>0.08</MovementSpeed>
     </Stats>
   </Enchant>
   <Enchant>
