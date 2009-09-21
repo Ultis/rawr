@@ -250,7 +250,6 @@ namespace Rawr.DPSDK
             //DPS Subgroups
             float dpsWhite = 0f;
             float dpsBCB = 0f;
-            float dpsNecrosis = 0f;
             float dpsDeathCoil = 0f;
             float dpsIcyTouch = 0f;
             float dpsPlagueStrike = 0f;
@@ -447,12 +446,6 @@ namespace Rawr.DPSDK
                     #endregion
 
                     dpsWhite = MHDPS + OHDPS;
-                }
-                #endregion
-
-                #region Necrosis
-                {
-                    dpsNecrosis = dpsWhiteMinusGlancing * (.04f * (float)talents.Necrosis); // doesn't proc off Glancings
                 }
                 #endregion
 
@@ -1094,7 +1087,6 @@ namespace Rawr.DPSDK
                 float HeartStrikeMult = 1f;
                 float HowlingBlastMult = 1f;
                 float IcyTouchMult = 1f;
-                float NecrosisMult = 1f;
                 float ObliterateMult = 1f;
                 float DeathStrikeMult = 1f;
                 float PlagueStrikeMult = 1f;
@@ -1148,7 +1140,6 @@ namespace Rawr.DPSDK
                     float magicMit = partialResist /** combatTable.spellResist*/;
                     // magicMit = 1f - magicMit;
 
-                    dpsNecrosis *= magicMit;
                     dpsBloodPlague *= magicMit;
                     dpsDeathCoil *= magicMit * (1f - combatTable.spellResist);
                     dpsFrostFever *= magicMit;
@@ -1156,8 +1147,6 @@ namespace Rawr.DPSDK
                     dpsIcyTouch *= magicMit;
                     dpsUnholyBlight *= magicMit * (1f - combatTable.spellResist);
 
-
-                    NecrosisMult *= spellPowerMult;
                     BloodPlagueMult *= spellPowerMult;
                     DeathCoilMult *= spellPowerMult;
                     FrostFeverMult *= frostSpellPowerMult;
@@ -1236,13 +1225,9 @@ namespace Rawr.DPSDK
                     BloodPlagueMult *= 1 + DesecrationMult;						// of the rotation system
                     BloodStrikeMult *= 1 + DesecrationMult;
                     DeathCoilMult *= 1 + DesecrationMult;
-                    DancingRuneWeaponMult *= 1 + DesecrationMult;
                     FrostFeverMult *= 1 + DesecrationMult;
                     FrostStrikeMult *= 1 + DesecrationMult;
-                    HeartStrikeMult *= 1 + DesecrationMult;
-                    HowlingBlastMult *= 1 + DesecrationMult;
                     IcyTouchMult *= 1 + DesecrationMult;
-                    NecrosisMult *= 1 + DesecrationMult;
                     ObliterateMult *= 1 + DesecrationMult;
                     DeathStrikeMult *= 1 + DesecrationMult;
                     PlagueStrikeMult *= 1 + DesecrationMult;
@@ -1260,13 +1245,9 @@ namespace Rawr.DPSDK
                         BloodPlagueMult *= 1 + BoneMult;
                         BloodStrikeMult *= 1 + BoneMult;
                         DeathCoilMult *= 1 + BoneMult;
-                        DancingRuneWeaponMult *= 1 + BoneMult;
                         FrostFeverMult *= 1 + BoneMult;
                         FrostStrikeMult *= 1 + BoneMult;
-                        HeartStrikeMult *= 1 + BoneMult;
-                        HowlingBlastMult *= 1 + BoneMult;
                         IcyTouchMult *= 1 + BoneMult;
-                        NecrosisMult *= 1 + BoneMult;
                         ObliterateMult *= 1 + BoneMult;
                         DeathStrikeMult *= 1 + BoneMult;
                         PlagueStrikeMult *= 1 + BoneMult;
@@ -1301,7 +1282,7 @@ namespace Rawr.DPSDK
                 calcs.HeartStrikeDPS = dpsHeartStrike * HeartStrikeMult;
                 calcs.HowlingBlastDPS = dpsHowlingBlast * HowlingBlastMult;
                 calcs.IcyTouchDPS = dpsIcyTouch * IcyTouchMult;
-                calcs.NecrosisDPS = dpsNecrosis * NecrosisMult;
+                calcs.NecrosisDPS = dpsWhite * (.04f * talents.Necrosis);
                 calcs.ObliterateDPS = dpsObliterate * ObliterateMult;
                 calcs.DeathStrikeDPS = dpsDeathStrike * DeathStrikeMult;
                 calcs.PlagueStrikeDPS = dpsPlagueStrike * PlagueStrikeMult;
