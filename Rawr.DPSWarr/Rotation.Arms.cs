@@ -66,7 +66,7 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Various Attacks Over Dur
-        public override float GetCriticalYellowsOverDurMH() {
+        protected override float GetCriticalYellowsOverDurMH() {
             bool useOH = CombatFactors.useOH;
             return base.GetCriticalYellowsOverDurMH()
                 + (_BLS_GCDs * BLS.MHAtkTable.Crit * BLS.AvgTargets * 6) / (useOH ? 2 : 1)
@@ -75,7 +75,7 @@ namespace Rawr.DPSWarr {
                 + _TB_GCDs * TB.MHAtkTable.Crit * TB.AvgTargets
                 + _SD_GCDs * SD.MHAtkTable.Crit * SD.AvgTargets;
         }
-        public override float GetLandedYellowsOverDurMH() {
+        protected override float GetLandedYellowsOverDurMH() {
             bool useOH = CombatFactors.useOH;
             return base.GetLandedYellowsOverDurMH()
                 + (_BLS_GCDs * BLS.MHAtkTable.AnyLand * BLS.AvgTargets * 6) / (useOH ? 2 : 1)
@@ -94,7 +94,7 @@ namespace Rawr.DPSWarr {
                 + _SD_GCDs * SD.MHAtkTable.Parry * SD.AvgTargets;
                 
         }
-        public override float GetCriticalYellowsOverDurOH() {
+        protected override float GetCriticalYellowsOverDurOH() {
             return base.GetCriticalYellowsOverDurOH() + (_BLS_GCDs * BLS.OHAtkTable.Crit * BLS.AvgTargets * 6) / 2;
         }
         public override float GetDodgedYellowsOverDur() {
@@ -106,9 +106,26 @@ namespace Rawr.DPSWarr {
                 + _TB_GCDs * TB.MHAtkTable.Dodge * TB.AvgTargets
                 + _SD_GCDs * SD.MHAtkTable.Dodge * SD.AvgTargets;
         }
-        public override float GetLandedYellowsOverDurOH() {
+        protected override float GetLandedYellowsOverDurOH() {
+            if (!CombatFactors.useOH) return 0f;
             return base.GetLandedYellowsOverDurOH()
-                + (_BLS_GCDs * BLS.OHAtkTable.AnyLand * BLS.AvgTargets * 6) / 2;
+                + (_BLS_GCDs * BLS.OHAtkTable.AnyLand * BLS.AvgTargets * 6f);
+        }
+        protected override float GetAttemptedYellowsOverDurMH()
+        {
+            bool useOH = CombatFactors.useOH;
+            return base.GetLandedYellowsOverDurMH()
+                + (_BLS_GCDs * BLS.AvgTargets * 6f)
+                + _MS_GCDs * MS.AvgTargets
+                + _OP_GCDs * OP.AvgTargets
+                + _TB_GCDs * TB.AvgTargets
+                + _SD_GCDs * SD.AvgTargets;
+        }
+        protected override float GetAttemptedYellowsOverDurOH()
+        {
+            if (!CombatFactors.useOH) return 0f;
+            return base.GetAttemptedYellowsOverDurOH()
+                + (_BLS_GCDs  * BLS.AvgTargets * 6f);
         }
         public override float GetLandedAtksOverDurMH() {
             float landednoss = GetLandedAtksOverDurNoSSMH();
@@ -127,6 +144,28 @@ namespace Rawr.DPSWarr {
 
             return landednoss + (float)Math.Max(0f, ssActs);
         }
+
+        public float GetLandedAtksOverDurNoSS() { return GetLandedAtksOverDurNoSSMH() + GetLandedAtksOverDurNoSSOH(); }
+        public float GetLandedAtksOverDurNoSSMH()
+        {
+            float white = WhiteAtks.LandedAtksOverDurMH;
+            float yellow = GetLandedYellowsOverDurMH();
+
+            float result = white + yellow;
+
+            return result;
+        }
+        public float GetLandedAtksOverDurNoSSOH()
+        {
+            if (!CombatFactors.useOH) { return 0; }
+            float white = WhiteAtks.LandedAtksOverDurOH;
+            float yellow = GetLandedYellowsOverDurOH();
+
+            float result = white + yellow;
+
+            return result;
+        }
+        
         #endregion
         #region Rage Calcs
         protected override float RageNeededOverDur {

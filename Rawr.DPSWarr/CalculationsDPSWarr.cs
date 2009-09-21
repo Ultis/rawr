@@ -1176,34 +1176,27 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
                 bool useOH = combatFactors.useOH;
 
-                float mhLandsPerSecond = 0f, ohLandsPerSecond = 0f;
-                float mhCritsPerSecond = 0f, ohCritsPerSecond = 0f;
-
-                mhLandsPerSecond = Rot.GetLandedAtksOverDurMH() / calcOpts.Duration;
-                ohLandsPerSecond = Rot.GetLandedAtksOverDurOH() / calcOpts.Duration;
-                mhCritsPerSecond = Rot.GetCriticalAtksOverDurMH() / calcOpts.Duration;
-                ohCritsPerSecond = Rot.GetCriticalAtksOverDurOH() / calcOpts.Duration;
-
                 float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
-                float mhLandInterval = mhLandsPerSecond,
-                      ohLandInterval = ohLandsPerSecond,
-                      bothLandInterval = mhLandInterval + ohLandInterval;
-                float mhCritInterval = mhCritsPerSecond,
-                      ohCritInterval = ohCritsPerSecond,
-                      bothCritInterval = mhCritInterval + ohCritInterval;
-                float dmgDoneInterval = bothLandInterval + bleedHitInterval;
+                float attemptedAtksInterval = fightDuration / Rot.GetAttemptedAtksOverDur();
+                float landedAtksInterval = fightDuration / Rot.GetLandedAtksOverDur();
+                float mhLandInterval = fightDuration / Rot.GetLandedAtksOverDurMH();
+                float ohLandInterval = fightDuration / Rot.GetLandedAtksOverDurOH();
+                float dmgDoneInterval = fightDuration / (Rot.GetLandedAtksOverDur() + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
+                float hitRate = Rot.GetLandedAtksOverDur() / Rot.GetAttemptedAtksOverDur();
+                float critRate = Rot.GetCriticalAtksOverDur() / Rot.GetAttemptedAtksOverDur();
+                
                 if (Rot.SW.Validated) {
                     SpecialEffect sweep = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusTargets = 1f, },
-                        (float)Math.Min(Rot.SW.Duration, bothLandInterval * 5f), Rot.SW.Cd);
+                        (float)Math.Min(Rot.SW.Duration, landedAtksInterval * 5f), Rot.SW.Cd);
                     statsTotal.AddSpecialEffect(sweep);
                 }
 
                 if (Rot.RK.Validated) {
                     SpecialEffect reck = new SpecialEffect(Trigger.Use,
                         new Stats() { PhysicalCrit = 1f - Rot.RK.MHAtkTable.Crit, },
-                        (float)Math.Min(Rot.RK.Duration, bothLandInterval * 3f), Rot.RK.Cd);
+                        (float)Math.Min(Rot.RK.Duration, landedAtksInterval * 3f), Rot.RK.Cd);
                     statsTotal.AddSpecialEffect(reck);
                 }
 
@@ -1227,7 +1220,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         statsProcs += bersOffHand.GetAverageStats(ohLandInterval, 1f, combatFactors.OHSpeed, fightDuration);
                     }
                 }
-                statsProcs += GetSpecialEffectsStats(character, Rot, bersMainHand, bersOffHand, bothLandInterval, bothCritInterval, bleedHitInterval, dmgDoneInterval, statsTotal, null);
+                statsProcs += GetSpecialEffectsStats(character, Rot, bersMainHand, bersOffHand, attemptedAtksInterval, hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, null);
 
                 // Base Stats
                 statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier    ));
@@ -1281,7 +1274,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
         }
         private Stats GetSpecialEffectsStats(Character Char, Rotation Rot,
             SpecialEffect bersMainHand, SpecialEffect bersOffHand,
-            float bothLandInterval, float bothCritInterval, float bleedHitInterval, float dmgDoneInterval,
+            float attemptedAtkInterval, float hitRate, float critRate, float bleedHitInterval, float dmgDoneInterval,
             Stats statsTotal, Stats statsToProcess)
         {
             try {
@@ -1313,7 +1306,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                     Stats _stats = new Stats();
                                     _stats.AddSpecialEffect(effect.Stats._rawSpecialEffectData[0]);
                                     float uptime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
-                                    statsProcs += GetSpecialEffectsStats(Char, Rot, bersMainHand, bersOffHand, bothLandInterval, bothCritInterval, bleedHitInterval, dmgDoneInterval, statsTotal, _stats)
+                                    statsProcs += GetSpecialEffectsStats(Char, Rot, bersMainHand, bersOffHand, attemptedAtkInterval, hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, _stats)
                                                  * uptime;
                                 } else {
                                     statsProcs += effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
@@ -1321,11 +1314,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                 break;
                             case Trigger.MeleeHit:
                             case Trigger.PhysicalHit:
-                                if (bothLandInterval > 0f) statsProcs += effect.GetAverageStats(bothLandInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                                if (attemptedAtkInterval > 0f) statsProcs += effect.GetAverageStats(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration);
                                 break;
                             case Trigger.MeleeCrit:
                             case Trigger.PhysicalCrit:
-                                if (bothCritInterval > 0f) statsProcs += effect.GetAverageStats(bothCritInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                                if (attemptedAtkInterval > 0f) statsProcs += effect.GetAverageStats(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration);
                                 break;
                             case Trigger.DoTTick:
                                 if (bleedHitInterval > 0f) statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend

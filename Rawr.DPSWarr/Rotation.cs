@@ -196,7 +196,7 @@ namespace Rawr.DPSWarr {
         /// <summary>This is used by Deep Wounds</summary>
         /// <returns>Total Critical attacks over fight duration for Maintenance, Fury and Arms abilities. Does not include Heroic Strikes or Cleaves</returns>
         public float GetCriticalYellowsOverDur() { return GetCriticalYellowsOverDurMH() + GetCriticalYellowsOverDurOH(); }
-        public virtual float GetCriticalYellowsOverDurMH() {
+        protected virtual float GetCriticalYellowsOverDurMH() {
             bool useOH = CombatFactors.useOH;
 
             float onAttack = WhiteAtks.HSOverridesOverDur * HS.MHAtkTable.Crit * HS.AvgTargets
@@ -208,7 +208,7 @@ namespace Rawr.DPSWarr {
                 + _Ham_GCDs * HMS.MHAtkTable.Crit * HMS.AvgTargets
                 + _Shatt_GCDs * ST.MHAtkTable.Crit * ST.AvgTargets
                 // Fury Abilities
-                + (_WW_GCDs * WW.MHAtkTable.Crit * WW.AvgTargets) / (useOH ? 2 : 1)
+                + (_WW_GCDs * WW.MHAtkTable.Crit * WW.AvgTargets)
                 + _SL_GCDs * SL.MHAtkTable.Crit * SL.AvgTargets
                 // Generic
                 + _EX_GCDs * EX.MHAtkTable.Crit * EX.AvgTargets
@@ -216,24 +216,24 @@ namespace Rawr.DPSWarr {
 
             return yellow + onAttack;
         }
-        public virtual float GetCriticalYellowsOverDurOH() {
+        protected virtual float GetCriticalYellowsOverDurOH() {
             if (!CombatFactors.useOH) { return 0; }
             float yellow = 0f
                 // Maintenance
                 // Fury Abilities
-                + (_WW_GCDs * WW.OHAtkTable.Crit * WW.AvgTargets) / 2
+                + (_WW_GCDs * WW.OHAtkTable.Crit * WW.AvgTargets)
                 // Arms Abilities
             ;
 
             return yellow;
         }
         public float GetCriticalAtksOverDur() { return GetCriticalAtksOverDurMH() + GetCriticalAtksOverDurOH(); }
-        public float GetCriticalAtksOverDurMH() {
+        protected float GetCriticalAtksOverDurMH() {
             float yellows = GetCriticalYellowsOverDurMH();
             float whites = WhiteAtks.CriticalAtksOverDurMH;
             return yellows + whites;
         }
-        public float GetCriticalAtksOverDurOH() {
+        protected float GetCriticalAtksOverDurOH() {
             if (!CombatFactors.useOH) { return 0; }
             float yellows = GetCriticalYellowsOverDurOH();
             float whites = WhiteAtks.CriticalAtksOverDurOH;
@@ -287,9 +287,41 @@ namespace Rawr.DPSWarr {
         }
         // Yellow Only Landed Attacks Over Dur
         public float GetLandedYellowsOverDur() { return GetLandedYellowsOverDurMH() + GetLandedYellowsOverDurOH(); }
-        public virtual float GetLandedYellowsOverDurMH() {
-            bool useOH = CombatFactors.useOH;
+        protected virtual float GetAttemptedYellowsOverDurMH()
+        {
+            float onAttack = WhiteAtks.HSOverridesOverDur * HS.AvgTargets
+                           + WhiteAtks.CLOverridesOverDur * CL.AvgTargets;
 
+            float yellow = 0f
+                // Maintenance
+                + _Thunder_GCDs * TH.AvgTargets
+                + _Ham_GCDs * HMS.AvgTargets
+                + _Shatt_GCDs * ST.AvgTargets
+                // Fury Abilities
+                + (_WW_GCDs * WW.AvgTargets)
+                // Arms Abilities
+                + _SL_GCDs * SL.AvgTargets
+                // Generic
+                + _EX_GCDs * EX.AvgTargets
+            ;
+
+            return yellow + onAttack;
+
+        }
+        protected virtual float GetAttemptedYellowsOverDurOH()
+        {
+            if (!CombatFactors.useOH) { return 0; }
+            float yellow = 0f
+                // Maintenance
+                // Fury Abilities
+                + (_WW_GCDs * WW.AvgTargets)
+                // Arms Abilities
+
+            ;
+
+            return yellow;
+        }
+        protected virtual float GetLandedYellowsOverDurMH() {
             float onAttack = WhiteAtks.HSOverridesOverDur * HS.MHAtkTable.AnyLand * HS.AvgTargets
                            + WhiteAtks.CLOverridesOverDur * CL.MHAtkTable.AnyLand * CL.AvgTargets;
 
@@ -299,7 +331,7 @@ namespace Rawr.DPSWarr {
                 + _Ham_GCDs * HMS.MHAtkTable.AnyLand * HMS.AvgTargets
                 + _Shatt_GCDs * ST.MHAtkTable.AnyLand * ST.AvgTargets
                 // Fury Abilities
-                + (_WW_GCDs * WW.MHAtkTable.AnyLand * WW.AvgTargets) / (useOH ? 2 : 1)
+                + (_WW_GCDs * WW.MHAtkTable.AnyLand * WW.AvgTargets)
                 // Arms Abilities
                 + _SL_GCDs * SL.MHAtkTable.AnyLand * SL.AvgTargets
                 // Generic
@@ -308,12 +340,12 @@ namespace Rawr.DPSWarr {
 
             return yellow + onAttack;
         }
-        public virtual float GetLandedYellowsOverDurOH() {
+        protected virtual float GetLandedYellowsOverDurOH() {
             if (!CombatFactors.useOH) { return 0; }
             float yellow = 0f
                 // Maintenance
                 // Fury Abilities
-                + (_WW_GCDs * WW.OHAtkTable.AnyLand * WW.AvgTargets) / 2
+                + (_WW_GCDs * WW.OHAtkTable.AnyLand * WW.AvgTargets)
                 // Arms Abilities
                 
             ;
@@ -321,8 +353,21 @@ namespace Rawr.DPSWarr {
             return yellow;
         }
         // All Landed Attacks Over Dur, Yellow and White
-        public float GetLandedAtksOverDurNoSS() { return GetLandedAtksOverDurNoSSMH() + GetLandedAtksOverDurNoSSOH(); }
-        public float GetLandedAtksOverDurNoSSMH() {
+        public float GetAttemptedAtksOverDur() { return GetAttemptedAtksOverDurMH() + GetAttemptedAtksOverDurOH(); }
+        protected float GetAttemptedAtksOverDurMH() {
+            float white = WhiteAtks.MhActivates;
+            float yellow = GetAttemptedYellowsOverDurMH();
+            return white + yellow;
+        }
+        protected float GetAttemptedAtksOverDurOH()
+        {
+            if (!CombatFactors.useOH) return 0f;
+            float white = WhiteAtks.OhActivates;
+            float yellow = GetAttemptedYellowsOverDurOH();
+            return white + yellow;
+        }
+        public float GetLandedAtksOverDur() { return GetLandedAtksOverDurMH() + GetLandedAtksOverDurOH(); }
+        public virtual float GetLandedAtksOverDurMH() {
             float white = WhiteAtks.LandedAtksOverDurMH;
             float yellow = GetLandedYellowsOverDurMH();
 
@@ -330,7 +375,7 @@ namespace Rawr.DPSWarr {
 
             return result;
         }
-        public float GetLandedAtksOverDurNoSSOH() {
+        public virtual float GetLandedAtksOverDurOH() {
             if (!CombatFactors.useOH) { return 0; }
             float white = WhiteAtks.LandedAtksOverDurOH;
             float yellow = GetLandedYellowsOverDurOH();
@@ -338,14 +383,6 @@ namespace Rawr.DPSWarr {
             float result = white + yellow;
 
             return result;
-        }
-        public float GetLandedAtksOverDur() { return GetLandedAtksOverDurMH() + GetLandedAtksOverDurOH(); }
-        public virtual float GetLandedAtksOverDurMH() {
-            return GetLandedAtksOverDurNoSSMH();
-        }
-        public virtual float GetLandedAtksOverDurOH() {
-            if (!CombatFactors.useOH) { return 0; }
-            return GetLandedAtksOverDurNoSSOH();
         }
         public float CritHsSlamOverDur {
             get {

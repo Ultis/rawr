@@ -115,7 +115,7 @@ namespace Rawr.DPSWarr
         }
 
         #region LandedAtks
-        public override float GetLandedYellowsOverDurMH()
+        protected override float GetLandedYellowsOverDurMH()
         {
             float ret = base.GetLandedYellowsOverDurMH();
             ret += _BT_GCDs * BT.MHAtkTable.AnyLand * BT.AvgTargets
@@ -123,11 +123,21 @@ namespace Rawr.DPSWarr
             return ret;
                 
         }
-        public override float GetCriticalYellowsOverDurMH()
+        protected override float GetCriticalYellowsOverDurMH()
         {
             float ret = base.GetCriticalYellowsOverDurMH();
             return ret + _BT_GCDs * BT.MHAtkTable.Crit * BT.AvgTargets
                        + _BS_GCDs * BS.MHAtkTable.Crit * BS.AvgTargets;
+        }
+        protected override float GetAttemptedYellowsOverDurMH()
+        {
+            return base.GetAttemptedYellowsOverDurMH()
+                + _BT_GCDs * BT.AvgTargets
+                + _BS_GCDs * BS.AvgTargets;
+        }
+        protected override float GetAttemptedYellowsOverDurOH()
+        {
+            return base.GetAttemptedYellowsOverDurOH();
         }
         public override float GetParriedYellowsOverDur()
         {
@@ -135,7 +145,7 @@ namespace Rawr.DPSWarr
                 + _BT_GCDs * BT.MHAtkTable.Parry * BT.AvgTargets
                 + _BS_GCDs * BS.MHAtkTable.Parry * BS.AvgTargets;
         }
-        public override float GetCriticalYellowsOverDurOH()
+        protected override float GetCriticalYellowsOverDurOH()
         {
             return base.GetCriticalYellowsOverDurOH();
         }
@@ -145,7 +155,7 @@ namespace Rawr.DPSWarr
                 + _BT_GCDs * BT.MHAtkTable.Dodge * BT.AvgTargets
                 + _BS_GCDs * BS.MHAtkTable.Dodge * BS.AvgTargets;
         }
-        public override float GetLandedYellowsOverDurOH()
+        protected override float GetLandedYellowsOverDurOH()
         {
             return base.GetLandedYellowsOverDurOH();
         }
