@@ -180,7 +180,7 @@ namespace Rawr.Enhance
                 abilities.Add(new Ability("Magma Totem", 20f, 1.0f, ++priority));
             else
                 abilities.Add(new Ability("Searing Totem", 60f, 1.0f, ++priority));
-            abilities.Add(new Ability("Refresh Totems", 300f, 1.0f, ++priority)); // patch 3.2 takes just 1 second GCD to refresh totems.
+            abilities.Add(new Ability("Refresh Totems", 300f, 3.0f, ++priority)); // patch 3.2 takes just 1 second GCD to refresh totems.
             abilities.Sort();
         }
 
@@ -202,7 +202,7 @@ namespace Rawr.Enhance
                         break;
                     }
                 }
- /*
+/*
                    System.Diagnostics.Debug.Print("Time: {0} - FS {1}, {2} - LB {3}, {4} - SS {5}, {6} - ES {7}, {8} - LL {9}, {10} - LS {11}, {12} - MT {13}, {14} - used {15}",
                    timeElapsed,
                    abilities[0].Uses, abilities[0].CooldownOver,
@@ -214,7 +214,13 @@ namespace Rawr.Enhance
                    abilities[6].Uses, abilities[6].CooldownOver, name);
  */
             }
-            // at this stage abilities now contains the number of procs per fight for each ability.
+            // at this stage abilities now contains the number of procs per fight for each ability as a whole number
+            // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
+            // use beyond fight duration.
+            foreach (Ability ability in abilities)
+            {
+                ability.AddRemainder((ability.CooldownOver - FightLength)/ ability.Duration);
+            }
         }
 
         public float AbilityCooldown(string name)
@@ -478,7 +484,7 @@ namespace Rawr.Enhance
         private float _duration;
         private int _priority;
         private float _cooldownOver;
-        private int _uses;
+        private float _uses;
         private float _gcd = 1.5f;
 
         public Ability(string name, float duration, float gcd, int priority)
@@ -495,12 +501,17 @@ namespace Rawr.Enhance
         public float Duration { get { return _duration; } }
         public float GCD { get { return _gcd; } }
         public float CooldownOver { get { return _cooldownOver; } }
-        public int Uses { get { return _uses; } }
+        public float Uses { get { return _uses; } }
 
         public void AddUse(float useTime, float lag)
         {
             _uses++;
             _cooldownOver = useTime + _duration + lag;
+        }
+
+        public void AddRemainder(float remainder)
+        {
+            _uses += remainder;
         }
 
         public bool OffCooldown(float starttime)
