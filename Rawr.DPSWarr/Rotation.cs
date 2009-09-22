@@ -287,8 +287,7 @@ namespace Rawr.DPSWarr {
         }
         // Yellow Only Landed Attacks Over Dur
         public float GetLandedYellowsOverDur() { return GetLandedYellowsOverDurMH() + GetLandedYellowsOverDurOH(); }
-        protected virtual float GetAttemptedYellowsOverDurMH()
-        {
+        protected virtual float GetAttemptedYellowsOverDurMH() {
             float onAttack = WhiteAtks.HSOverridesOverDur * HS.AvgTargets
                            + WhiteAtks.CLOverridesOverDur * CL.AvgTargets;
 
@@ -359,8 +358,7 @@ namespace Rawr.DPSWarr {
             float yellow = GetAttemptedYellowsOverDurMH();
             return white + yellow;
         }
-        public float GetAttemptedAtksOverDurOH()
-        {
+        public float GetAttemptedAtksOverDurOH() {
             if (!CombatFactors.useOH) return 0f;
             float white = WhiteAtks.OhActivates;
             float yellow = GetAttemptedYellowsOverDurOH();

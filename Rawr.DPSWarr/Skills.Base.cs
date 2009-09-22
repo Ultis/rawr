@@ -345,7 +345,7 @@ namespace Rawr.DPSWarr {
                 }
                 return retVal;
             }
-            public virtual string GenTooltip(float ttldpspercMH, float ttldpspercOH) {
+            public virtual string GenTooltip(float ttldpsMH, float ttldpsOH, float ttldps) {
                 // ==== MAIN HAND ====
                 float acts = MhActivates;
                 float misses = GetXActs(AttackTableSelector.Missed, acts, true), missesPerc = (acts == 0f ? 0f : misses / acts);
@@ -377,8 +377,8 @@ namespace Rawr.DPSWarr {
                     Environment.NewLine +
                     //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
                     Environment.NewLine + "Targets Hit: " + (Targets != -1 ? Targets.ToString("0.00") : "None") +
-                    Environment.NewLine + "DPS: " + (MhDPS > 0 ? MhDPS.ToString("0.00") : "None") +
-                    Environment.NewLine + "Percentage of Total DPS: " + (ttldpspercMH > 0 ? ttldpspercMH.ToString("00.00%") : "None");
+                    Environment.NewLine + "DPS: " + (ttldpsMH > 0 ? ttldpsMH.ToString("0.00") : "None") +
+                    Environment.NewLine + "Percentage of Total DPS: " + (ttldpsMH > 0 ? (ttldpsMH / ttldps).ToString("00.00%") : "None");
 
                 if (combatFactors.useOH) {
                     // ==== OFF HAND ====
@@ -397,7 +397,7 @@ namespace Rawr.DPSWarr {
                     showblock = blocks > 0f;
                     showcrits = crits  > 0f;
 
-                    tooltip += Environment.NewLine + Environment.NewLine + "White Damage (Offhandn Hand)" +
+                    tooltip += Environment.NewLine + Environment.NewLine + "White Damage (Off Hand)" +
                         Environment.NewLine + "Cast Time: Instant"
                                             + ", CD: " + (OhEffectiveSpeed != -1 ? OhEffectiveSpeed.ToString("0.00") : "None")
                                             + ", Rage Generated: " + (OHSwingRage != -1 ? OHSwingRage.ToString("0.00") : "None") +
@@ -412,8 +412,8 @@ namespace Rawr.DPSWarr {
                         Environment.NewLine +
                         //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
                         Environment.NewLine + "Targets Hit: " + (Targets != -1 ? Targets.ToString("0.00") : "None") +
-                        Environment.NewLine + "DPS: " + (OhDPS > 0 ? OhDPS.ToString("0.00") : "None") +
-                        Environment.NewLine + "Percentage of Total DPS: " + (ttldpspercOH > 0 ? ttldpspercOH.ToString("00.00%") : "None");
+                        Environment.NewLine + "DPS: " + (ttldpsOH > 0 ? ttldpsOH.ToString("0.00") : "None") +
+                        Environment.NewLine + "Percentage of Total DPS: " + (ttldpsOH > 0 ? (ttldpsOH / ttldps).ToString("00.00%") : "None");
                 }
                 return tooltip;
             }

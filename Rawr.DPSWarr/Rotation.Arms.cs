@@ -111,18 +111,17 @@ namespace Rawr.DPSWarr {
             return base.GetLandedYellowsOverDurOH()
                 + (_BLS_GCDs * BLS.OHAtkTable.AnyLand * BLS.AvgTargets * 6f);
         }
-        protected override float GetAttemptedYellowsOverDurMH()
-        {
+        protected override float GetAttemptedYellowsOverDurMH() {
             bool useOH = CombatFactors.useOH;
             return base.GetLandedYellowsOverDurMH()
                 + (_BLS_GCDs * BLS.AvgTargets * 6f)
                 + _MS_GCDs * MS.AvgTargets
                 + _OP_GCDs * OP.AvgTargets
                 + _TB_GCDs * TB.AvgTargets
-                + _SD_GCDs * SD.AvgTargets;
+                + _SD_GCDs * SD.AvgTargets
+                + _SS_Acts * SS.AvgTargets;
         }
-        protected override float GetAttemptedYellowsOverDurOH()
-        {
+        protected override float GetAttemptedYellowsOverDurOH() {
             if (!CombatFactors.useOH) return 0f;
             return base.GetAttemptedYellowsOverDurOH()
                 + (_BLS_GCDs  * BLS.AvgTargets * 6f);
@@ -146,8 +145,7 @@ namespace Rawr.DPSWarr {
         }
 
         public float GetLandedAtksOverDurNoSS() { return GetLandedAtksOverDurNoSSMH() + GetLandedAtksOverDurNoSSOH(); }
-        public float GetLandedAtksOverDurNoSSMH()
-        {
+        public float GetLandedAtksOverDurNoSSMH() {
             float white = WhiteAtks.LandedAtksOverDurMH;
             float yellow = GetLandedYellowsOverDurMH();
 
@@ -155,8 +153,7 @@ namespace Rawr.DPSWarr {
 
             return result;
         }
-        public float GetLandedAtksOverDurNoSSOH()
-        {
+        public float GetLandedAtksOverDurNoSSOH() {
             if (!CombatFactors.useOH) { return 0; }
             float white = WhiteAtks.LandedAtksOverDurOH;
             float yellow = GetLandedYellowsOverDurOH();
@@ -361,6 +358,8 @@ namespace Rawr.DPSWarr {
             if (setCalcs) {
                 this.calcs.TotalDPS = DPS_TTL;
                 this.calcs.WhiteDPS = this._WhiteDPS;
+                this.calcs.WhiteDPSMH = this._WhiteDPSMH;
+                this.calcs.WhiteDmg = this.WhiteAtks.MhDamageOnUse;
 
                 this.calcs.WhiteRage = this.RageGenWhite;
                 this.calcs.OtherRage = this.RageGenOther;

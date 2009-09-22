@@ -40,7 +40,7 @@ namespace Rawr.DPSWarr
         public override bool Equipped { get; set; }
 
         public override string ToString() {
-            return string.Format("{0}: ({1}O {2}D)", Name, Math.Round(OverallPoints), Math.Round(DPSPoints));
+            return string.Format("{0}: ({1}O {2}D {3}S)", Name, Math.Round(OverallPoints), Math.Round(DPSPoints), Math.Round(SurvPoints));
         }
     }
 }
