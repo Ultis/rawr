@@ -12,7 +12,7 @@ public class FlameShock : Shock
             spCoef = 1.5f / 3.5f / 2f;
             dotSpCoef = .1f;
             periodicTick = 556f / 4f;
-            periodicTicks = 4f;
+            periodicTicks = 6f;
             manaCost = .17f * Constants.BaseMana;
             cooldown = 6f;
             shortName = "FS";
@@ -40,10 +40,6 @@ public class FlameShock : Shock
             totalCoef *= 1 + stats.BonusFireDamageMultiplier;
             periodicTicks += stats.BonusFlameShockDuration / 3f; // t9 2 piece
 
-            if (shamanTalents.GlyphofFlameShock)
-            {
-                periodicTicks += 2;
-            }
             if (shamanTalents.GlyphofShocking)
                 gcd -= .5f;
 

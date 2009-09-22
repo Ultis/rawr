@@ -33,6 +33,7 @@ namespace Rawr.Elemental
             #region Spells
             Stats addedStats = baseStats.Clone();
             addedStats.Accumulate(procStats);
+
             LB = new LightningBolt(addedStats, talents);
             CL = new ChainLightning(addedStats, talents, 0);
             CL3 = new ChainLightning(addedStats, talents, 3);
@@ -103,6 +104,12 @@ namespace Rawr.Elemental
             Rotation rot;
             float damage;
             Stats procStats;
+
+            #region Stat changing glyphs
+            if (talents.GlyphofFlameShock)
+                stats.FlameShockDoTCanCrit = 1f;
+            #endregion
+
             // WITHOUT PROCS
             e = new Estimation(stats, new Stats{}, talents, calcOpts);
             rot = e.getPriorityRotation(calcOpts.rotationType);

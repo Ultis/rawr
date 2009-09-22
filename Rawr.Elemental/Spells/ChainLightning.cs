@@ -21,7 +21,13 @@ public class ChainLightning : Spell
             #endregion
         }
 
-        public new void Initialize(Stats stats, ShamanTalents shamanTalents, int additionalTargets)
+        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        {
+            Initialize(stats, shamanTalents, 0);
+        }
+    
+
+        public void Initialize(Stats stats, ShamanTalents shamanTalents, int additionalTargets)
         {
             // jumps
             if (additionalTargets < 0)
@@ -29,14 +35,16 @@ public class ChainLightning : Spell
             if (additionalTargets > 3)
                 additionalTargets = 3;
             shortName = "CL" + 1 + additionalTargets;
-            if (!shamanTalents.GlyphofChainLightning && additionalTargets > 3)
-                additionalTargets = 3;
+            if (!shamanTalents.GlyphofChainLightning && additionalTargets > 2)
+                additionalTargets = 2;
             this.additionalTargets = additionalTargets;
             totalCoef *= new float[] { 1f, 1.7f, 2.19f, 2.533f, 2.7731f }[additionalTargets];
 
             manaCost *= 1f - .02f * shamanTalents.Convection;
             totalCoef += .01f * shamanTalents.Concussion;
             crit += .05f * shamanTalents.CallOfThunder;
+            spCoef += .03f * shamanTalents.Shamanism;
+            loCoef += .03f * shamanTalents.Shamanism;
             castTime -= .1f * shamanTalents.LightningMastery;
             cooldown -= new float[] { 0, .75f, 1.5f, 2.5f }[shamanTalents.StormEarthAndFire];
             crit += .01f * shamanTalents.TidalMastery;

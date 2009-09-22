@@ -153,63 +153,51 @@ namespace Rawr.Elemental
             Invalidate();
             float waitThreshold = LB.CastTime;
 
-            if (Talents.GlyphofFlameShock)
+            float LvBreadyAt = 0, FSdropsAt = 0;
+            while (true)
             {
-                float LvBreadyAt = 0, FSdropsAt = 0;
-                while (true)
+                if (GetTime() >= LvBreadyAt)
                 {
-                    if (GetTime() >= LvBreadyAt)
+                    if (GetTime() + LvBFS.CastTimeWithoutGCD < FSdropsAt)
                     {
-                        if (GetTime() + LvBFS.CastTimeWithoutGCD < FSdropsAt)
-                        {
-                            AddSpell(LvBFS);
-                            LvBreadyAt = GetTime() + LvBFS.Cooldown;
-                        }
-                        else if (FSdropsAt == 0)
-                        {
-                            FSdropsAt = GetTime() + FS.Duration;
-                            AddSpell(FS);
-                        }
-                        else
-                            break; //done
+                        AddSpell(LvBFS);
+                        LvBreadyAt = GetTime() + LvBFS.Cooldown;
+                    }
+                    else if (FSdropsAt == 0)
+                    {
+                        FSdropsAt = GetTime() + FS.Duration;
+                        AddSpell(FS);
                     }
                     else
-                    {
-                        if (GetTime() + LvB.CastTime > FSdropsAt)
-                        {
-                            if (LvBreadyAt - (GetTime() + FS.CastTime) > LB.CastTime)
-                            {
-                                AddSpell(LB);
-                                break;
-                            }
-                            else if (LvBreadyAt - (GetTime() + FS.CastTime) > 0 && addlb2)
-                            {
-                                AddSpell(LB);
-                                break;
-                            }
-                            else
-                            {
-                                float waitTime = LvBreadyAt - (GetTime() + FS.CastTime);
-                                if (waitTime > 0f)
-                                    AddSpell(new Wait(waitTime));
-                                break; //done
-                            }
-                        }
-                        else if (LvBreadyAt - GetTime() <= LB.CastTime && !addlb1)
-                            AddSpell(new Wait(LvBreadyAt - GetTime()));
-                        else
-                            AddSpell(LB);
-                    }
+                        break; //done
                 }
-            }
-            else //unglyphed
-            {
-                AddSpell(LvBFS);
-                AddSpell(FS);
-                while (LvBFS.Cooldown - GetTime() > waitThreshold)
-                    AddSpell(LB);
-                if (LvBFS.Cooldown - GetTime() > float.Epsilon) //a little time left
-                    AddSpell(new Wait(LvBFS.Cooldown - GetTime()));
+                else
+                {
+                    if (GetTime() + LvB.CastTime > FSdropsAt)
+                    {
+                        if (LvBreadyAt - (GetTime() + FS.CastTime) > LB.CastTime)
+                        {
+                            AddSpell(LB);
+                            break;
+                        }
+                        else if (LvBreadyAt - (GetTime() + FS.CastTime) > 0 && addlb2)
+                        {
+                            AddSpell(LB);
+                            break;
+                        }
+                        else
+                        {
+                            float waitTime = LvBreadyAt - (GetTime() + FS.CastTime);
+                            if (waitTime > 0f)
+                                AddSpell(new Wait(waitTime));
+                            break; //done
+                        }
+                    }
+                    else if (LvBreadyAt - GetTime() <= LB.CastTime && !addlb1)
+                        AddSpell(new Wait(LvBreadyAt - GetTime()));
+                    else
+                        AddSpell(LB);
+                }
             }
         }
 

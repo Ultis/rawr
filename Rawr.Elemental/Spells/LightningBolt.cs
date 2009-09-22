@@ -25,8 +25,8 @@ public class LightningBolt : Spell
             manaCost *= 1f - .02f * shamanTalents.Convection;
             totalCoef += .01f * shamanTalents.Concussion;
             crit += .05f * shamanTalents.CallOfThunder;
-            spCoef += .02f * shamanTalents.Shamanism;
-            loCoef += .02f * shamanTalents.Shamanism;
+            spCoef += .03f * shamanTalents.Shamanism;
+            loCoef += .03f * shamanTalents.Shamanism;
             crit += .05f * shamanTalents.TidalMastery;
             manaCost *= 1 - stats.LightningBoltCostReduction / 100f; // T7 2 piece
             spellPower += stats.SpellNatureDamageRating; // Nature SP
