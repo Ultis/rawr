@@ -180,7 +180,7 @@ namespace Rawr.Enhance
                 abilities.Add(new Ability("Magma Totem", 20f, 1.0f, ++priority));
             else
                 abilities.Add(new Ability("Searing Totem", 60f, 1.0f, ++priority));
-            abilities.Add(new Ability("Refresh Totems", 300f, 3.0f, ++priority)); // patch 3.2 takes just 1 second GCD to refresh totems.
+            abilities.Add(new Ability("Refresh Totems", 300f, 1.0f, ++priority)); // patch 3.2 takes just 1 second GCD to refresh totems.
             abilities.Sort();
         }
 
