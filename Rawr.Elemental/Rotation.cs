@@ -151,51 +151,49 @@ namespace Rawr.Elemental
                 return;
             spells.Clear();
             Invalidate();
-            float waitThreshold = LB.CastTime;
 
             float LvBreadyAt = 0, FSdropsAt = 0;
             while (true)
             {
-                if (GetTime() >= LvBreadyAt)
+                if (GetTime() >= LvBreadyAt) //LvB is ready
                 {
-                    if (GetTime() + LvBFS.CastTimeWithoutGCD < FSdropsAt)
+                    if (GetTime() + LvBFS.CastTimeWithoutGCD < FSdropsAt) //the LvB cast will be finished before FS runs out
                     {
                         AddSpell(LvBFS);
                         LvBreadyAt = GetTime() + LvBFS.Cooldown;
                     }
-                    else if (FSdropsAt == 0)
+                    else if (FSdropsAt == 0) //the first FS
                     {
                         FSdropsAt = GetTime() + FS.Duration;
                         AddSpell(FS);
                     }
-                    else
+                    else //since FS would run out recast FS now -> Rotation end
                         break; //done
                 }
-                else
+                else //LvB is not ready
                 {
-                    if (GetTime() + LvB.CastTime > FSdropsAt)
+                    if (GetTime() + LvB.CastTime > FSdropsAt) //FS will run out
                     {
-                        if (LvBreadyAt - (GetTime() + FS.CastTime) > LB.CastTime)
+                        if (LvBreadyAt - (GetTime() + FS.CastTime) > LB.CastTime) //there is enough time to fit in another LB and a FS before LvB is ready
                         {
                             AddSpell(LB);
-                            break;
                         }
-                        else if (LvBreadyAt - (GetTime() + FS.CastTime) > 0 && addlb2)
+                        else if (LvBreadyAt - (GetTime() + FS.CastTime) > 0 && addlb2) //FS would still fit in before LvB is ready
                         {
                             AddSpell(LB);
-                            break;
+                            break; //FS recast nescessary -> done
                         }
                         else
                         {
                             float waitTime = LvBreadyAt - (GetTime() + FS.CastTime);
                             if (waitTime > 0f)
                                 AddSpell(new Wait(waitTime));
-                            break; //done
+                            break; //FS recast nescessary -> done
                         }
                     }
-                    else if (LvBreadyAt - GetTime() <= LB.CastTime && !addlb1)
+                    else if (LvBreadyAt - GetTime() <= LB.CastTime && !addlb1) //time before the next LvB is lower than LB cast time
                         AddSpell(new Wait(LvBreadyAt - GetTime()));
-                    else
+                    else //LvB is on cooldown, FS won't run out soon
                         AddSpell(LB);
                 }
             }
