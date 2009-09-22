@@ -1415,7 +1415,7 @@ namespace Rawr.DPSDK
             };
             if (talents.UnbreakableArmor > 0)
             {
-                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats(){BonusStrengthMultiplier = 0.25f}, 20f, 120f));
+                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats(){ BonusStrengthMultiplier = 0.1f}, 20f, 60f));
             }
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
@@ -1510,7 +1510,7 @@ namespace Rawr.DPSDK
             };
             if (talents.UnbreakableArmor > 0)
             {
-                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.25f }, 20f, 120f));
+                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.1f }, 20f, 60f));
             }
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
