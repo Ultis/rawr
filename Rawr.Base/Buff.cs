@@ -393,8 +393,8 @@ namespace Rawr
                         Source = "Prot Paladin",
                         Group = "Stat Multiplier",
                         Stats = {
-                            BonusStaminaMultiplier = 0.10f
-                            //BonusStrengthMultiplier = 0.10f, // Uncomment this line for 3.2.2 per PTR Notes
+                            BonusStaminaMultiplier = 0.10f,
+                            BonusStrengthMultiplier = 0.10f
                         },
                         ConflictingBuffs = new List<string>(new string[] { "SanctuaryKings", }),
                     }
@@ -749,7 +749,6 @@ namespace Rawr
                 Group = "Stat Multiplier",
                 Stats = {
                     BonusAgilityMultiplier = 0.10f,
-                    BonusStrengthMultiplier = 0.10f, // Comment this line for 3.2.2 per PTR Notes
                     BonusIntellectMultiplier = 0.10f,
                     BonusSpiritMultiplier = 0.10f
                 },
@@ -760,7 +759,7 @@ namespace Rawr
                         Group = "Stat Multiplier",
                         Stats = {
                             BonusStaminaMultiplier = 0.10f,
-                            //BonusStrengthMultiplier = 0.10f, // Uncomment this line for 3.2.2 per PTR Notes
+                            BonusStrengthMultiplier = 0.10f
                         },
                         ConflictingBuffs = new List<string>(new string[] { "SanctuaryKings", }),
                     }

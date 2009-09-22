@@ -257,7 +257,7 @@ namespace Rawr.ProtPaladin {
         private void CalculateThreat() {
             // Base threat is always going to be the damage of the ability, if it is damaging
             float abilityThreat = Damage;
-            float holyThreatModifier = 1.9f;
+            float holyThreatModifier = 1.8f;
 
             switch (Ability) {
                 case Ability.ShieldOfRighteousness:

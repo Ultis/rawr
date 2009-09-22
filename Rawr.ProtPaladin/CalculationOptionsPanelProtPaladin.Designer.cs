@@ -125,7 +125,7 @@ namespace Rawr.ProtPaladin
             this.trackBarTargetArmor.Location = new System.Drawing.Point(86, 45);
             this.trackBarTargetArmor.Maximum = 20000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
-            this.trackBarTargetArmor.Size = new System.Drawing.Size(181, 45);
+            this.trackBarTargetArmor.Size = new System.Drawing.Size(181, 42);
             this.trackBarTargetArmor.TabIndex = 5;
             this.trackBarTargetArmor.TickFrequency = 1000;
             this.trackBarTargetArmor.Value = 10643;
@@ -197,7 +197,7 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackValue.Maximum = 100000;
             this.trackBarBossAttackValue.Minimum = 500;
             this.trackBarBossAttackValue.Name = "trackBarBossAttackValue";
-            this.trackBarBossAttackValue.Size = new System.Drawing.Size(178, 45);
+            this.trackBarBossAttackValue.Size = new System.Drawing.Size(178, 42);
             this.trackBarBossAttackValue.SmallChange = 500;
             this.trackBarBossAttackValue.TabIndex = 1;
             this.trackBarBossAttackValue.TickFrequency = 5000;
@@ -234,7 +234,7 @@ namespace Rawr.ProtPaladin
             this.trackBarThreatScale.Location = new System.Drawing.Point(86, 16);
             this.trackBarThreatScale.Maximum = 30;
             this.trackBarThreatScale.Name = "trackBarThreatScale";
-            this.trackBarThreatScale.Size = new System.Drawing.Size(178, 45);
+            this.trackBarThreatScale.Size = new System.Drawing.Size(178, 42);
             this.trackBarThreatScale.TabIndex = 1;
             this.trackBarThreatScale.Value = 10;
             this.trackBarThreatScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
@@ -258,7 +258,7 @@ namespace Rawr.ProtPaladin
             this.trackBarMitigationScale.Location = new System.Drawing.Point(86, 67);
             this.trackBarMitigationScale.Maximum = 30;
             this.trackBarMitigationScale.Name = "trackBarMitigationScale";
-            this.trackBarMitigationScale.Size = new System.Drawing.Size(178, 45);
+            this.trackBarMitigationScale.Size = new System.Drawing.Size(178, 42);
             this.trackBarMitigationScale.TabIndex = 3;
             this.trackBarMitigationScale.Value = 10;
             this.trackBarMitigationScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
@@ -569,7 +569,7 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackSpeed.Maximum = 20;
             this.trackBarBossAttackSpeed.Minimum = 1;
             this.trackBarBossAttackSpeed.Name = "trackBarBossAttackSpeed";
-            this.trackBarBossAttackSpeed.Size = new System.Drawing.Size(178, 45);
+            this.trackBarBossAttackSpeed.Size = new System.Drawing.Size(178, 42);
             this.trackBarBossAttackSpeed.TabIndex = 4;
             this.trackBarBossAttackSpeed.Value = 8;
             this.trackBarBossAttackSpeed.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
@@ -715,7 +715,7 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackValueMagic.Maximum = 100000;
             this.trackBarBossAttackValueMagic.Minimum = 500;
             this.trackBarBossAttackValueMagic.Name = "trackBarBossAttackValueMagic";
-            this.trackBarBossAttackValueMagic.Size = new System.Drawing.Size(178, 45);
+            this.trackBarBossAttackValueMagic.Size = new System.Drawing.Size(178, 42);
             this.trackBarBossAttackValueMagic.TabIndex = 3;
             this.trackBarBossAttackValueMagic.TickFrequency = 5000;
             this.trackBarBossAttackValueMagic.Value = 8000;
@@ -741,7 +741,7 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackSpeedMagic.Maximum = 240;
             this.trackBarBossAttackSpeedMagic.Minimum = 4;
             this.trackBarBossAttackSpeedMagic.Name = "trackBarBossAttackSpeedMagic";
-            this.trackBarBossAttackSpeedMagic.Size = new System.Drawing.Size(178, 45);
+            this.trackBarBossAttackSpeedMagic.Size = new System.Drawing.Size(178, 42);
             this.trackBarBossAttackSpeedMagic.TabIndex = 6;
             this.trackBarBossAttackSpeedMagic.TickFrequency = 40;
             this.trackBarBossAttackSpeedMagic.Value = 40;
@@ -832,10 +832,11 @@ namespace Rawr.ProtPaladin
             this.CK_PTRMode.AutoSize = true;
             this.CK_PTRMode.Location = new System.Drawing.Point(6, 141);
             this.CK_PTRMode.Name = "CK_PTRMode";
-            this.CK_PTRMode.Size = new System.Drawing.Size(111, 17);
+            this.CK_PTRMode.Size = new System.Drawing.Size(78, 17);
             this.CK_PTRMode.TabIndex = 2;
-            this.CK_PTRMode.Text = "PTR Mode (3.2.2)";
+            this.CK_PTRMode.Text = "PTR Mode";
             this.CK_PTRMode.UseVisualStyleBackColor = true;
+            this.CK_PTRMode.Visible = false;
             this.CK_PTRMode.CheckedChanged += new System.EventHandler(this.CK_PTRMode_CheckedChanged);
             // 
             // CalculationOptionsPanelProtPaladin
