@@ -682,7 +682,9 @@ namespace Rawr //O O . .
             return items;
         }
 
-        public List<Item> GetRelevantItems(CharacterSlot slot)
+        public void ClearRelevantGems() { _relevantItems.Remove(CharacterSlot.Gems); }
+        public List<Item> GetRelevantItems(CharacterSlot slot) { return GetRelevantItems(slot, ItemSlot.None); }
+        public List<Item> GetRelevantItems(CharacterSlot slot, ItemSlot gemColour)
         {
             List<Item> items;
             if (!_relevantItems.TryGetValue(slot, out items))
@@ -692,7 +694,13 @@ namespace Rawr //O O . .
                 {
                     if (item.FitsInSlot(slot, this))
                     {
-                        items.Add(item);
+                        if ((gemColour == ItemSlot.None) ||
+                            (gemColour == ItemSlot.Red && item.IsRedGem) ||
+                            (gemColour == ItemSlot.Yellow && item.IsYellowGem) ||
+                            (gemColour == ItemSlot.Blue && item.IsBlueGem))
+                        {
+                            items.Add(item);
+                        }
                     }
                 }
                 _relevantItems[slot] = items;

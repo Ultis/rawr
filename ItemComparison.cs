@@ -52,7 +52,8 @@ namespace Rawr
 		private int _calculationCount = 0;
 		private ComparisonCalculationBase[] _itemCalculations = null;
 		private AutoResetEvent _autoResetEvent = null;
-        public void LoadGearBySlot(CharacterSlot slot)
+        public void LoadGearBySlot(CharacterSlot slot) { LoadGearBySlot(slot, ItemSlot.None); }
+        public void LoadGearBySlot(CharacterSlot slot, ItemSlot gemColour)
 		{
 			Calculations.ClearCache();
             //_itemCalculations = new List<ComparisonCalculationBase>();
@@ -112,7 +113,8 @@ namespace Rawr
                 }
                 else
                 { //Gems/Metas
-					List<Item> relevantItems = Character.GetRelevantItems(slot);
+                    Character.ClearRelevantGems(); // we need to reset relevant items for gems to allow colour selection
+					List<Item> relevantItems = Character.GetRelevantItems(slot, gemColour);
 					_itemCalculations = new ComparisonCalculationBase[relevantItems.Count];
 					_calculationCount = 0;
                     if (relevantItems.Count > 0)
@@ -121,10 +123,10 @@ namespace Rawr
                         //DateTime before = DateTime.Now;
                         foreach (Item item in relevantItems)
                         {
-                            if (useMultithreading)
-                                ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
-                            else
-                                GetItemCalculations(item);
+                                if (useMultithreading)
+                                    ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
+                                else
+                                    GetItemCalculations(item);
                         }
                         //Wait for all items to be processed
                         _autoResetEvent.WaitOne();

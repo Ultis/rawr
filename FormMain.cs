@@ -1234,7 +1234,9 @@ namespace Rawr
 					toolStripDropDownButtonSubSlotBuffs.Visible = false;
 			}
 			else if (gemsToolStripMenuItem.DropDownItems.Contains(clickedMenuItem) ||
+                normalToolStripMenuItem.DropDownItems.Contains(clickedMenuItem) || 
 				toolStripDropDownButtonSubSlotGems.DropDownItems.Contains(clickedMenuItem) ||
+                toolStripMenuItemNormalGems.DropDownItems.Contains(clickedMenuItem) ||
 				clickedMenuItem == gemsToolStripMenuItem)
 			{
 				gemsToolStripMenuItem.Tag = selectedTag;
@@ -1323,8 +1325,11 @@ namespace Rawr
 			switch (tag[0])
 			{
 				case "Gear":
-				case "Gems":
-					itemComparison1.LoadGearBySlot((CharacterSlot)Enum.Parse(typeof(CharacterSlot), tag[1]));
+                    itemComparison1.LoadGearBySlot((CharacterSlot)Enum.Parse(typeof(CharacterSlot), tag[1]));
+                    break;
+ 
+                case "Gems":
+                    itemComparison1.LoadGearBySlot((CharacterSlot)Enum.Parse(typeof(CharacterSlot), tag[1]), (ItemSlot)Enum.Parse(typeof(ItemSlot), tag[2]));
 					break;
 
 				case "Enchants":
