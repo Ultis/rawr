@@ -171,6 +171,8 @@
             this.textBoxEffectBonusSpirit = new System.Windows.Forms.TextBox();
             this.label62 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.textBoxChanceToLiveAttenuation = new System.Windows.Forms.TextBox();
+            this.label90 = new System.Windows.Forms.Label();
             this.textBoxAbsorptionPerSecond = new System.Windows.Forms.TextBox();
             this.label74 = new System.Windows.Forms.Label();
             this.label75 = new System.Windows.Forms.Label();
@@ -226,8 +228,6 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.label87 = new System.Windows.Forms.Label();
             this.checkBoxForceIncrementalOptimizations = new System.Windows.Forms.CheckBox();
-            this.label85 = new System.Windows.Forms.Label();
-            this.checkBoxMode322 = new System.Windows.Forms.CheckBox();
             this.buttonHotStreakUtilization = new System.Windows.Forms.Button();
             this.buttonComputeOptimalFrostCycles = new System.Windows.Forms.Button();
             this.buttonEditTalentScores = new System.Windows.Forms.Button();
@@ -269,8 +269,6 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxChanceToLiveAttenuation = new System.Windows.Forms.TextBox();
-            this.label90 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -1860,6 +1858,25 @@
             this.tabPage5.Text = "Survivability";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // textBoxChanceToLiveAttenuation
+            // 
+            this.textBoxChanceToLiveAttenuation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ChanceToLiveAttenuation", true));
+            this.textBoxChanceToLiveAttenuation.Location = new System.Drawing.Point(128, 368);
+            this.textBoxChanceToLiveAttenuation.Name = "textBoxChanceToLiveAttenuation";
+            this.textBoxChanceToLiveAttenuation.Size = new System.Drawing.Size(75, 20);
+            this.textBoxChanceToLiveAttenuation.TabIndex = 241;
+            // 
+            // label90
+            // 
+            this.label90.AutoSize = true;
+            this.label90.Location = new System.Drawing.Point(-1, 371);
+            this.label90.Name = "label90";
+            this.label90.Size = new System.Drawing.Size(130, 13);
+            this.label90.TabIndex = 240;
+            this.label90.Text = "Survivability Attenuation: *";
+            this.toolTipMage.SetToolTip(this.label90, "Final Survivability value is calculated as Survivability Score * Chance To Live ^" +
+                    " Survivability Attenuation.");
+            // 
             // textBoxAbsorptionPerSecond
             // 
             this.textBoxAbsorptionPerSecond.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AbsorptionPerSecond", true));
@@ -2309,8 +2326,6 @@
             // 
             this.tabPage4.Controls.Add(this.label87);
             this.tabPage4.Controls.Add(this.checkBoxForceIncrementalOptimizations);
-            this.tabPage4.Controls.Add(this.label85);
-            this.tabPage4.Controls.Add(this.checkBoxMode322);
             this.tabPage4.Controls.Add(this.buttonHotStreakUtilization);
             this.tabPage4.Controls.Add(this.buttonComputeOptimalFrostCycles);
             this.tabPage4.Controls.Add(this.buttonEditTalentScores);
@@ -2379,26 +2394,6 @@
             this.checkBoxForceIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
             this.checkBoxForceIncrementalOptimizations.TabIndex = 207;
             this.checkBoxForceIncrementalOptimizations.UseVisualStyleBackColor = true;
-            // 
-            // label85
-            // 
-            this.label85.AutoSize = true;
-            this.label85.Location = new System.Drawing.Point(0, 107);
-            this.label85.Name = "label85";
-            this.label85.Size = new System.Drawing.Size(71, 13);
-            this.label85.TabIndex = 206;
-            this.label85.Text = "3.2.2 Mode: *";
-            this.toolTipMage.SetToolTip(this.label85, "Enables Patch 3.2.2 calculations.");
-            // 
-            // checkBoxMode322
-            // 
-            this.checkBoxMode322.AutoSize = true;
-            this.checkBoxMode322.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Mode322", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxMode322.Location = new System.Drawing.Point(185, 107);
-            this.checkBoxMode322.Name = "checkBoxMode322";
-            this.checkBoxMode322.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxMode322.TabIndex = 205;
-            this.checkBoxMode322.UseVisualStyleBackColor = true;
             // 
             // buttonHotStreakUtilization
             // 
@@ -2836,25 +2831,6 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // textBoxChanceToLiveAttenuation
-            // 
-            this.textBoxChanceToLiveAttenuation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ChanceToLiveAttenuation", true));
-            this.textBoxChanceToLiveAttenuation.Location = new System.Drawing.Point(128, 368);
-            this.textBoxChanceToLiveAttenuation.Name = "textBoxChanceToLiveAttenuation";
-            this.textBoxChanceToLiveAttenuation.Size = new System.Drawing.Size(75, 20);
-            this.textBoxChanceToLiveAttenuation.TabIndex = 241;
-            // 
-            // label90
-            // 
-            this.label90.AutoSize = true;
-            this.label90.Location = new System.Drawing.Point(-1, 371);
-            this.label90.Name = "label90";
-            this.label90.Size = new System.Drawing.Size(130, 13);
-            this.label90.TabIndex = 240;
-            this.label90.Text = "Survivability Attenuation: *";
-            this.toolTipMage.SetToolTip(this.label90, "Final Survivability value is calculated as Survivability Score * Chance To Live ^" +
-                    " Survivability Attenuation.");
-            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3121,8 +3097,6 @@
         private System.Windows.Forms.Label label88;
         private System.Windows.Forms.TextBox textBoxCastLatency;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label85;
-        private System.Windows.Forms.CheckBox checkBoxMode322;
         private System.Windows.Forms.Label label87;
         private System.Windows.Forms.CheckBox checkBoxForceIncrementalOptimizations;
         private System.Windows.Forms.TextBox textBoxChanceToLiveAttenuation;

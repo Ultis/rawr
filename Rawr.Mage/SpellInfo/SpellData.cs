@@ -987,14 +987,7 @@ namespace Rawr.Mage
             if (manualClearcasting) spell.CalculateManualClearcasting(true, false, clearcastingActive);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
-            if (castingState.CalculationOptions.Mode322)
-            {
-                spell.CostModifier += 1.75f * debuff;
-            }
-            else
-            {
-                spell.CostModifier += 2.00f * debuff;
-            }
+            spell.CostModifier += 1.75f * debuff;
             spell.CalculateDerivedStats(castingState, false, pom, false, true, false, false);
             if (manualClearcasting) spell.CalculateManualClearcastingCost(castingState.Calculations, false, true, false, clearcastingActive);
             return spell;
@@ -1006,14 +999,7 @@ namespace Rawr.Mage
             spell.Calculate(castingState);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
-            if (castingState.CalculationOptions.Mode322)
-            {
-                spell.CostModifier += 1.75f * debuff;
-            }
-            else
-            {
-                spell.CostModifier += 2.00f * debuff;
-            }
+            spell.CostModifier += 1.75f * debuff;
             spell.CalculateDerivedStats(castingState, false, false, false, true, forceHit, !forceHit);
             return spell;
         }
@@ -1024,14 +1010,7 @@ namespace Rawr.Mage
             spell.Calculate(castingState);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
-            if (castingState.CalculationOptions.Mode322)
-            {
-                spell.CostModifier += 1.75f * debuff;
-            }
-            else
-            {
-                spell.CostModifier += 2.00f * debuff;
-            }
+            spell.CostModifier += 1.75f * debuff;
             spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
             return spell;
         }
@@ -1058,14 +1037,7 @@ namespace Rawr.Mage
             cycle.TargetProcs += weight * rawSpell.TargetProcs;
 
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
-            if (calculations.CalculationOptions.Mode322)
-            {
-                cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)));
-            }
-            else
-            {
-                cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.00f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 4.00f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 6.00f)));
-            }
+            cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)));
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
             cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
@@ -1088,14 +1060,7 @@ namespace Rawr.Mage
             cycle.TargetProcs += weight * rawSpell.TargetProcs;
 
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
-            if (calculations.CalculationOptions.Mode322)
-            {
-                cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 7.00f)));
-            }
-            else
-            {
-                cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2.00f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 4.00f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 6.00f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 8.00f)));
-            }
+            cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 7.00f)));
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
             cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * calculations.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
@@ -1250,10 +1215,7 @@ namespace Rawr.Mage
             if (barrage)
             {
                 spell.BaseCastTime *= 0.5f;
-                if (castingState.CalculationOptions.Mode322)
-                {
-                    spell.CostAmplifier = 0;
-                }
+                spell.CostAmplifier = 0;
             }
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * arcaneBlastDebuff;
@@ -1276,10 +1238,7 @@ namespace Rawr.Mage
             if (barrage)
             {
                 spell.BaseCastTime *= 0.5f;
-                if (castingState.CalculationOptions.Mode322)
-                {
-                    spell.CostAmplifier = 0;
-                }
+                spell.CostAmplifier = 0;
             }
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * arcaneBlastDebuff;

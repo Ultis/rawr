@@ -253,15 +253,7 @@ namespace Rawr.Mage
             Spell AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
             Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
 
-            float MB;
-            if (castingState.CalculationOptions.Mode322)
-            {
-                MB = 0.08f * castingState.MageTalents.MissileBarrage;
-            }
-            else
-            {
-                MB = 0.04f * castingState.MageTalents.MissileBarrage;
-            }
+            float MB = 0.08f * castingState.MageTalents.MissileBarrage;
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             float K1 = (1 - MB) * (1 - MB);
             float S0 = (1 - T8) / (1 - K1 * T8);
@@ -1568,16 +1560,8 @@ namespace Rawr.Mage
             MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
             MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
 
-            if (castingState.CalculationOptions.Mode322)
-            {
-                ABMB = 0.08f * castingState.MageTalents.MissileBarrage;
-                maxStack = 4;
-            }
-            else
-            {
-                ABMB = 0.04f * castingState.MageTalents.MissileBarrage;
-                maxStack = 3;
-            }
+            ABMB = 0.08f * castingState.MageTalents.MissileBarrage;
+            maxStack = 4;
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
