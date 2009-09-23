@@ -594,6 +594,8 @@ namespace Rawr.Enhance
             character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Sanctuary"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Sanctuary (Str/Sta Bonus)"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
@@ -606,6 +608,7 @@ namespace Rawr.Enhance
             character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings (Str/Sta Bonus)"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
