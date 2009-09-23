@@ -563,6 +563,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Each parry reducing swing timer by up to 40% so we'll average that damage increase out.
             // Each parry is factored by weapon speed - the faster the weapons, the more likely the boss can parry.
             // Figure out how many shots there are.  Right now, just calculating white damage.
+            // How fast is a hasted shot? up to 40% faster.
+            // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
             float fBossParryHastedSpeed = fBossAverageAttackSpeed * (1f - 0.24f);
             float fShotsParried = 0f;
             float fBossShotCountPerRot = 0f;
@@ -570,8 +572,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 fNumRotations = (fFightDuration * 60f) / fRotDuration;
                 // How many shots does the boss take over a given rotation period.
                 fBossShotCountPerRot = fRotDuration / fBossAverageAttackSpeed;
-                // How fast is a hasted shot? up to 40% faster.
-                // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
                 float fCharacterShotCount = 0f;
                 if (character.MainHand != null && ct.MH.hastedSpeed > 0f) 
                 { 
@@ -662,7 +662,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float fBurstDPS = fBurstDamage / fBossAverageAttackSpeed;
             float fReactionDamage = fReactionSwingCount * fPerShotPhysical;
 
-            calcs.Mitigation = fReactionSwingCount * fBossAverageAttackSpeed * fIncPhysicalDamage;
+            // Mitigation is the difference between what damage would have been before and what it is once you factor in mitigation effects.
+            calcs.Mitigation = fReactionSwingCount * fBossAverageAttackSpeed * (fIncPhysicalDamage - fPerShotPhysical);
             #endregion
 
             #region Key Data Validation

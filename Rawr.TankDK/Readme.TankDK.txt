@@ -2,11 +2,10 @@
 
 As of Sept 9,2009, has support for 3.2 needs alot of validation.
 
-2.2.18:
-Fixed Defect 14124: Added Pestilence to the rotation viewer and adjusted rotation math to account for it.
-No Defect: Fixed Talent: Improved Icy Touch to properly adjust Boss Attack Speed rather than just a flat damage reduction.
-No Defect: Adjusted Rotation view layout to make a bit more sense
-No Defect: Fixed readonly values for RP values when Manage RP is enabled.
+2.2.19:
+Integration for 3.2.2 changes
+Fix Defect 14234: Mitigation wasn't properly taking in DamageReductionModifer.
+
 
 Current TODOs:
 * Fix defects
