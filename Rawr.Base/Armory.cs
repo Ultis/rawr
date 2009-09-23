@@ -524,7 +524,7 @@ namespace Rawr
 					{
 						if (childNode.Name == "trigger")
 						{
-							isEquip = childNode.InnerText == "1";
+							isEquip = (childNode.InnerText == "1" || childNode.InnerText == "2");
 							isUse = childNode.InnerText == "0";
 						}
 						if (childNode.Name == "desc")

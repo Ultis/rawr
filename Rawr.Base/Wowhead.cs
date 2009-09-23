@@ -588,7 +588,8 @@ namespace Rawr
 				htmlTooltip = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q2\">") + "<span class=\"q2\">".Length);
 				string line = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</span>"));
 				if (line.StartsWith("Equip: ")) equipLines.Add(line.Substring("Equip: ".Length));
-				else if (line.StartsWith("Use: ")) useLines.Add(line.Substring("Use: ".Length));
+                else if (line.StartsWith("Chance on hit: ")) equipLines.Add(line.Substring("Chance on hit: ".Length));
+                else if (line.StartsWith("Use: ")) useLines.Add(line.Substring("Use: ".Length));
 				htmlTooltip = htmlTooltip.Substring(line.Length + "</span>".Length);
 			}
 			foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);

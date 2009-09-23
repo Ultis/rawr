@@ -972,6 +972,11 @@ namespace Rawr {
                     stats.BonusHoTOnDirectHeals += hot / 60f;
                 }
             }
+            else if ((match = Regex.Match(line, @"When active, grants the wielder (?<defenseRating>\d+) defense rating and (?<bonusArmor>\d+) armor for 10 sec.")).Success)
+            {
+                // Quel'Serrar Sanctuary proc (all versions)
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { DefenseRating = int.Parse(match.Groups["defenseRating"].Value), BonusArmor = int.Parse(match.Groups["bonusArmor"].Value) }, 10f, 0f, -2f));
+            }
             else if (line.StartsWith("Increases spell power of Chain Lightning and Lightning Bolt by "))
             {
                 line = line.Replace(".", "");
