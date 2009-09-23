@@ -722,8 +722,7 @@ namespace Rawr
                     NatureResistanceBuff = 54,
                     ShadowResistanceBuff = 54
                 },
-				ConflictingBuffs = { "StatArmor" },
-                Improvements = { 
+				Improvements = { 
 					new Buff { Name = "Improved Mark of the Wild", Stats = {
 					BonusArmor = (float)Math.Floor(750f * 0.4f),
 					Strength = (float)Math.Floor(37f * 0.4f),
@@ -737,7 +736,29 @@ namespace Rawr
 					NatureResistanceBuff = (float)Math.Floor(54f * 1.4f),
 					ShadowResistanceBuff = (float)Math.Floor(54f * 1.4f)} 
 					} 
-				}
+				},
+                ConflictingBuffs = new List<string>(new string[] { "StatArmor", "Mark of the Wild" })
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Drums of the Wild",
+                Source = "Leatherworking",
+                Group = "Stat Add",
+                Stats =
+                {
+                    BonusArmor = 750,
+                    Strength = 37,
+                    Agility = 37,
+                    Stamina = 37,
+                    Intellect = 37,
+                    Spirit = 37,
+                    ArcaneResistanceBuff = 54,
+                    FireResistanceBuff = 54,
+                    FrostResistanceBuff = 54,
+                    NatureResistanceBuff = 54,
+                    ShadowResistanceBuff = 54
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Mark of the Wild" })
             });
             #endregion
 
@@ -749,21 +770,37 @@ namespace Rawr
                 Group = "Stat Multiplier",
                 Stats = {
                     BonusAgilityMultiplier = 0.10f,
+                    //BonusStrengthMultiplier = 0.10f, // Comment this line for 3.2.2 per PTR Notes
                     BonusIntellectMultiplier = 0.10f,
                     BonusSpiritMultiplier = 0.10f
                 },
                 Improvements = {
                     new Buff {
-                        Name = "Blessing of Kings (Stamina Bonus)",
+                        Name = "Blessing of Kings (Str/Sta Bonus)",
                         Source = "Paladin",
                         Group = "Stat Multiplier",
                         Stats = {
                             BonusStaminaMultiplier = 0.10f,
-                            BonusStrengthMultiplier = 0.10f
+                            BonusStrengthMultiplier = 0.10f, // Uncomment this line for 3.2.2 per PTR Notes
                         },
                         ConflictingBuffs = new List<string>(new string[] { "SanctuaryKings", }),
                     }
-                }
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Blessing of Kings" })
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Drums of Forgotten Kings",
+                Source = "Leatherworking",
+                Group = "Stat Multiplier", 
+                Stats = {
+                    BonusAgilityMultiplier = 0.08f,
+                    BonusStrengthMultiplier = 0.08f, 
+                    BonusIntellectMultiplier = 0.08f,
+                    BonusSpiritMultiplier = 0.08f,
+                    BonusStaminaMultiplier = 0.08f
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Blessing of Kings" })
             });
             #endregion
 
