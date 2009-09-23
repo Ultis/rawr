@@ -810,7 +810,7 @@ focus on Survival Points.",
 
             statsTotal.AttackPower += (statsTotal.Strength - 20f) * 2f + 20f;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsTotal.SpellPower += (float)Math.Floor((calcOpts.PTRMode ? statsTotal.Strength : statsTotal.Stamina) * talents.TouchedByTheLight * 0.2f);
+            statsTotal.SpellPower += (float)Math.Floor(statsTotal.Strength * talents.TouchedByTheLight * 0.2f);
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
