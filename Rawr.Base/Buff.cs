@@ -389,7 +389,7 @@ namespace Rawr
                 Stats = { DamageTakenMultiplier = -0.03f },
                 Improvements = {
                     new Buff {
-                        Name = "Blessing of Sanctuary (Stamina Bonus)",
+                        Name = "Blessing of Sanctuary (Str/Sta Bonus)",
                         Source = "Prot Paladin",
                         Group = "Stat Multiplier",
                         Stats = {
@@ -698,6 +698,14 @@ namespace Rawr
                 Improvements = { 
 					new Buff { Name = "Improved Power Word: Fortitude", Stats = { Stamina = (float)Math.Floor(165f * 0.3f) } } 
 				},
+                ConflictingBuffs = new List<string>(new string[] { "Stamina" }),
+            });
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Runescroll of Fortitude",
+                Source = "Inscription",
+                Group = "Stamina",
+                Stats = { Stamina = 165f },
                 ConflictingBuffs = new List<string>(new string[] { "Stamina" }),
             });
             #endregion
