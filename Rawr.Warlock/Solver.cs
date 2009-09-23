@@ -839,8 +839,14 @@ namespace Rawr.Warlock
             }
             if (character.WarlockTalents.EmpoweredImp > 0 && CalculationOptions.Pet == "Imp")
             {
+
+                float CritInterval = time / PossibleCrits;
+                float EmpoweredImpInterval = time / (pet.critCount * character.WarlockTalents.EmpoweredImp / 3);
+                simStats.SpellCrit += (CritInterval / EmpoweredImpInterval) * (1.0f - simStats.SpellCrit);
+                /*
                 float empImpProcs = pet.critCount * character.WarlockTalents.EmpoweredImp / 3;
                 simStats.SpellCrit += (float)(empImpProcs / PossibleCrits * 0.2f);
+                 */
             }
             float pyroclasmProcs = 0;
             if (character.WarlockTalents.Pyroclasm > 0 && (GetSpellByName("Searing Pain") != null || GetSpellByName("Conflagrate") != null))
