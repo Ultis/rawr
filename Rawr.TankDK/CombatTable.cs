@@ -660,7 +660,7 @@ namespace Rawr.TankDK
                     SSDmg += 120; // Bonus threat
                     fDamScourgeStrike = SSDmg / SSCD * fDuration;
                     float SSCritDmgMult = 2f * (1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier);
-                    float SSCrit = 1f + ((this.physCrits + (.03f * (float)talents.ViciousStrikes) + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
+                    float SSCrit = 1f + ((this.physCrits + (.03f * (float)talents.ViciousStrikes) + (.03f * (float)talents.Subversion) + stats.BonusScourgeStrikeCrit) * SSCritDmgMult);
                     fDamScourgeStrike *= SSCrit;
                     fDamScourgeStrike *= 1f + (.0666666666666666666f * (float)talents.Outbreak);
                 }
@@ -860,8 +860,8 @@ namespace Rawr.TankDK
                 float RSCritDmgMult = 2f * (1f + (.15f * (float)talents.MightOfMograine) + stats.BonusCritMultiplier + (talents.GlyphofRuneStrike ? .01f : 0f));
                 float RSCrit = 1f + ((this.physCrits) * RSCritDmgMult);
                 // How many RS do we get?
-                // No more than the number of white swings
-                m_fRSCount = Math.Min((fDuration / MH.hastedSpeed), (calcOpts.m_Rotation.RP / 20f) * (stats.Dodge + stats.Parry));
+                // No more than the number of white swings or the amount of RP available.
+                m_fRSCount = Math.Min((fDuration / MH.hastedSpeed), (calcOpts.m_Rotation.RP / 20f));
                 if (m_fRSCount == 0)
                 {
                     m_fRSCount = calcOpts.m_Rotation.RuneStrike;

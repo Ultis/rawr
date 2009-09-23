@@ -79,7 +79,7 @@ namespace Rawr.TankDK {
             this.GlyphofFS = talents.GlyphofFrostStrike;
 
             // Abilities that grant RP:
-            RP = ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.ChillOfTheGrave + 2.5f * talents.Dirge) * Obliterate) +
+            RP = ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.ChillOfTheGrave) * Obliterate) +
                  ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * ScourgeStrike) +
                  ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * DeathStrike) +
                  ((10 + 2.5f * talents.Dirge) * PlagueStrike) +
