@@ -18,7 +18,7 @@ public class LavaBurst : Spell
             #endregion
         }
 
-        public new void Initialize(Stats stats, ShamanTalents shamanTalents, float fs)
+        public void Initialize(Stats stats, ShamanTalents shamanTalents, float fs)
         {
             manaCost *= 1f - .02f * shamanTalents.Convection;
             totalCoef += .01f * shamanTalents.Concussion;

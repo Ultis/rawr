@@ -70,9 +70,7 @@ namespace Rawr {
         InsectSwarmDmg,
         Intellect,
         InterruptProtection,
-        LightningCapacitorProc,
         LightweaveEmbroideryProc,
-        ThunderCapacitorProc,
         LotPCritRating,
         WarlockFelArmor,
         WarlockDemonArmor,
@@ -2062,21 +2060,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.PVPTrinket] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Effects")]
-        public float LightningCapacitorProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LightningCapacitorProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LightningCapacitorProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Effects")]
-        public float ThunderCapacitorProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ThunderCapacitorProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ThunderCapacitorProc] = value; }
-        }
         [DisplayName("Bonus Healing Received")]
         [Category("Equipment Effects")]
         [System.ComponentModel.DefaultValueAttribute(0f)]

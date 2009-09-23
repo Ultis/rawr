@@ -585,7 +585,7 @@ namespace Rawr {
                 line = line.Substring(0, line.IndexOf(" mana"));
                 stats.Mp5 += int.Parse(line);
             }
-            else if ((match = Regex.Match(line, @"You gain (?:a|an) (?<buffName>[\w\s]+) each time you cause a damaging spell critical strike\.(?:\s|nbsp;)+When you reach (?<stackSize>\d+) [\w\s]+, they will release, firing (?<projectile>[\w\s]+) for (?<mindmg>\d+) to (?<maxdmg>\d+) damage\.(?:\s|nbsp;)+[\w\s]+ cannot be gained more often than once every (?<icd>\d+(?:\.\d+)?) sec.")).Success)
+            else if ((match = Regex.Match(line, @"You gain (?:a|an) (?<buffName>[\w\s]+) each time you cause a (?<trigger>non-periodic|damaging)+ spell critical strike\.(?:\s|nbsp;)+When you reach (?<stackSize>\d+) [\w\s]+, they will release, firing (?<projectile>[\w\s]+) for (?<mindmg>\d+) to (?<maxdmg>\d+) damage\.(?:\s|nbsp;)+[\w\s]+ cannot be gained more often than once every (?<icd>\d+(?:\.\d+)?) sec.")).Success)
             {
                 //Capacitor like procs
                 string buffName = match.Groups["buffName"].Value.TrimStart(' ');
@@ -595,19 +595,16 @@ namespace Rawr {
                 int maxdmg = int.Parse(match.Groups["maxdmg"].Value);
                 float avgdmgperstack = (mindmg + maxdmg) / 2f / stackSize;
                 float icd = float.Parse(match.Groups["icd"].Value, System.Globalization.CultureInfo.InvariantCulture);
+                Trigger trigger = Trigger.SpellCrit;
+                if (match.Groups["trigger"].Value.StartsWith("damaging"))
+                    trigger = Trigger.DamageSpellCrit;
                 Stats projectileStats = new Stats();
-                
-                //legacy stats
-                if (buffName.StartsWith("Thunder Charge"))
-                    stats.ThunderCapacitorProc = 1;
-                else if(buffName.StartsWith("Electrical Charge"))
-                    stats.LightningCapacitorProc = 1;
 
                 if (projectile.StartsWith("a Lightning Bolt"))
                     projectileStats.NatureDamage = avgdmgperstack;
                 else if (projectile.StartsWith("a Pillar of Flame"))
                     projectileStats.FireDamage = avgdmgperstack;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, projectileStats, 0f, icd));
+                stats.AddSpecialEffect(new SpecialEffect(trigger, projectileStats, 0f, icd));
             }
             else if (line.StartsWith("You gain 25% more mana when you use a mana gem.  In addition, using a mana gem grants you 225 spell power for 15 sec."))
             {
