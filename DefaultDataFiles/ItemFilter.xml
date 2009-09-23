@@ -322,7 +322,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Ahn'kahet</Name>
-          <Pattern>(?&lt;! Heroic )Ahn'kahet</Pattern>
+          <Pattern>Ahn'kahet</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -336,7 +336,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Azjol-Nerub</Name>
-          <Pattern>(?&lt;! Heroic )Azjol-Nerub</Pattern>
+          <Pattern>Azjol-Nerub</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -350,7 +350,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>The Culling of Stratholme</Name>
-          <Pattern>(?&lt;! Heroic )Culling of Stratholme(?&lt;! Heroic)|(?&lt;! Heroic )The Culling of Stratholme(?&lt;! Heroic)</Pattern>
+          <Pattern>Stratholme</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -363,8 +363,8 @@
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Drak'Tharon</Name>
-          <Pattern>(?&lt;! Heroic )Drak'Tharon</Pattern>
+          <Name>Drak'Tharon Keep</Name>
+          <Pattern>Drak'Tharon</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -378,7 +378,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Gundrak</Name>
-          <Pattern>(?&lt;! Heroic )Gundrak</Pattern>
+          <Pattern>Gundrak</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -392,7 +392,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Halls of Lightning</Name>
-          <Pattern>(?&lt;! Heroic )Halls of Lightning(?&lt;!  Heroic)</Pattern>
+          <Pattern>Halls of Lightning</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -406,7 +406,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Halls of Stone</Name>
-          <Pattern>(?&lt;! Heroic )Halls of Stone</Pattern>
+          <Pattern>Halls of Stone</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -420,7 +420,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Nexus</Name>
-          <Pattern>(?&lt;! Heroic (The )?)Nexus</Pattern>
+          <Pattern>Nexus</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -434,7 +434,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>The Oculus</Name>
-          <Pattern>(?&lt;! Heroic (The )?)Oculus</Pattern>
+          <Pattern>Oculus</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -462,7 +462,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Utgarde Keep</Name>
-          <Pattern>(?&lt;! Heroic )Utgarde Keep</Pattern>
+          <Pattern>Utgarde Keep</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -476,7 +476,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Utgarde Pinnacle</Name>
-          <Pattern>(?&lt;! Heroic )Utgarde Pinnacle(?&lt;! Heroic)</Pattern>
+          <Pattern>Utgarde Pinnacle</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -490,7 +490,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Violet Hold</Name>
-          <Pattern>(?&lt;! Heroic (The )?)Violet Hold</Pattern>
+          <Pattern>Violet Hold</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -503,7 +503,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Dungeons</Name>
-      <Pattern>(?&lt;! Heroic (The )?)Oculus|(?&lt;! Heroic )Azjol-Nerub|(?&lt;! Heroic )Ahn'kahet|(?&lt;! Heroic )Drak'Tharon|(?&lt;! Heroic )Gundrak|(?&lt;! Heroic (The )?)Culling of Stratholme|(?&lt;! Heroic (The )?)Nexus|(?&lt;! Heroic (The )?)Violet Hold|(?&lt;! Heroic )Halls of Lightning|(?&lt;! Heroic )Halls of Stone|(?&lt;! Heroic )Utgarde Keep|(?&lt;! Heroic )Utgarde Pinnacle|(?&lt;! Heroic )Trial of the Champion</Pattern>
+      <Pattern>(?&lt;! Heroic.*)(Ahn'kahet|Azjol-Nerub|Stratholme|Drak'Tharon|Gundrak|Halls of Lightning|Halls of Stone|Nexus|Oculus|Trial of the Champion|Utgarde Keep|Utgarde Pinnacle|Violet Hold)</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -519,7 +519,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Ahn'kahet</Name>
-          <Pattern>Heroic Ahn'kahet</Pattern>
+          <Pattern>Ahn'kahet</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -533,7 +533,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Azjol-Nerub</Name>
-          <Pattern>Heroic Azjol-Nerub</Pattern>
+          <Pattern>Azjol-Nerub</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -547,7 +547,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>The Culling of Stratholme</Name>
-          <Pattern>Heroic (CoT: )?Stratholme|Heroic (Culling of )?Stratholme</Pattern>
+          <Pattern>Stratholme</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -560,8 +560,8 @@
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Drak'Tharon</Name>
-          <Pattern>Heroic Drak'Tharon</Pattern>
+          <Name>Drak'Tharon Keep</Name>
+          <Pattern>Drak'Tharon</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -575,7 +575,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Gundrak</Name>
-          <Pattern>Heroic Gundrak</Pattern>
+          <Pattern>Gundrak</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -589,7 +589,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Halls of Lightning</Name>
-          <Pattern>Heroic Halls of Lightning</Pattern>
+          <Pattern>Halls of Lightning</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -603,7 +603,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Halls of Stone</Name>
-          <Pattern>Heroic Halls of Stone</Pattern>
+          <Pattern>Halls of Stone</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -617,7 +617,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Nexus</Name>
-          <Pattern>Heroic (The )?Nexus</Pattern>
+          <Pattern>Nexus</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -631,7 +631,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>The Oculus</Name>
-          <Pattern>Heroic (The )?Oculus</Pattern>
+          <Pattern>Oculus</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -645,7 +645,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Trial of the Champion</Name>
-          <Pattern>Heroic Trial of the Champion</Pattern>
+          <Pattern>Trial of the Champion</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -659,7 +659,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Utgarde Keep</Name>
-          <Pattern>Heroic Utgarde Keep</Pattern>
+          <Pattern>Utgarde Keep</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -673,7 +673,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Utgarde Pinnacle</Name>
-          <Pattern>Heroic Utgarde Pinnacle</Pattern>
+          <Pattern>Utgarde Pinnacle</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -687,7 +687,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Violet Hold</Name>
-          <Pattern>Heroic (The )?Violet Hold</Pattern>
+          <Pattern>Violet Hold</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -700,7 +700,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Dungeons (Heroic)</Name>
-      <Pattern>Heroic (The )?Oculus|Heroic Azjol-Nerub|Heroic Ahn'kahet|Heroic Drak'Tharon|Heroic Gundrak|Heroic (CoT: )?Stratholme|Heroic (The )?Nexus|Heroic (The )?Violet Hold|Heroic Halls of Lightning|Heroic Halls of Stone|Heroic Utgarde Keep|Heroic Utgarde Pinnacle|Heroic Trial of the Champion</Pattern>
+      <Pattern>Heroic.*(Ahn'kahet|Azjol-Nerub|Stratholme|Drak'Tharon|Gundrak|Halls of Lightning|Halls of Stone|Nexus|Oculus|Trial of the Champion|Utgarde Keep|Utgarde Pinnacle|Violet Hold)</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -1100,7 +1100,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 7 Raids (10)</Name>
-      <Pattern>(?&lt;!Heroic.*)(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon)(?! Heroic)</Pattern>
+      <Pattern>(?&lt;! Heroic.*)(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon)(?! .*\(.*\))|(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon) \(10\)</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -1500,7 +1500,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 7 Raids (25)</Name>
-      <Pattern>(Heroic.*)(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon)</Pattern>
+      <Pattern>Heroic.*(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon)(?! .*\(.*\))|(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon) \(25\)</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -1713,7 +1713,7 @@
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Normal Ulduar</Name>
-          <Pattern />
+          <Pattern>Ulduar</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>219</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -1924,7 +1924,7 @@
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Hard Ulduar</Name>
-          <Pattern />
+          <Pattern>Ulduar</Pattern>
           <MinItemLevel>220</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -1937,7 +1937,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 8 Raids (10)</Name>
-      <Pattern>(?&lt;! Heroic )Ulduar|Bragund Brightlink</Pattern>
+      <Pattern>(?&lt;! Heroic )Ulduar(?! .*\(.*\))|Ulduar \(10\)</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -2150,7 +2150,7 @@
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Normal Ulduar</Name>
-          <Pattern />
+          <Pattern>Ulduar</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>232</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -2361,7 +2361,7 @@
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Hard Ulduar</Name>
-          <Pattern />
+          <Pattern>Ulduar</Pattern>
           <MinItemLevel>233</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -2374,7 +2374,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 8 Raids (25)</Name>
-      <Pattern>Heroic Ulduar|Bragund Brightlink</Pattern>
+      <Pattern>Heroic Ulduar(?! .*\(.*\))|Ulduar \(25\)</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -2460,10 +2460,10 @@
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Normal Trial of the Crusader</Name>
+          <Name>Trial of the Crusader</Name>
           <Pattern>(?&lt;! Heroic )Trial of the Crusader \(10\)</Pattern>
           <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>232</MaxItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
@@ -2559,9 +2559,9 @@
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Heroic Trial of the Crusader</Name>
+          <Name>Trial of the Grand Crusader</Name>
           <Pattern>Heroic Trial of the Crusader \(10\)</Pattern>
-          <MinItemLevel>245</MinItemLevel>
+          <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
           <MaxItemQuality>Heirloom</MaxItemQuality>
@@ -2573,7 +2573,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 9 Raids (10)</Name>
-      <Pattern>Trial of the Crusader \(10\)|Koralon the Flame Watcher</Pattern>
+      <Pattern>Trial of the Crusader \(10\)</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -2659,10 +2659,10 @@
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Normal Trial of the Crusader</Name>
+          <Name>Trial of the Crusader</Name>
           <Pattern>(?&lt;! Heroic )Trial of the Crusader \(25\)</Pattern>
           <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>245</MaxItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
@@ -2758,9 +2758,9 @@
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Heroic Trial of the Crusader</Name>
+          <Name>Trial of the Grand Crusader</Name>
           <Pattern>Heroic Trial of the Crusader \(25\)</Pattern>
-          <MinItemLevel>258</MinItemLevel>
+          <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
           <MaxItemQuality>Heirloom</MaxItemQuality>
@@ -2773,6 +2773,20 @@
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 9 Raids (25)</Name>
       <Pattern>Trial of the Crusader \(25\)</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>true</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>Onyxia</Name>
+      <Pattern>Onyxia's Lair</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -2802,7 +2816,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Valor</Name>
-          <Pattern>Emblem of Valor|Brasael</Pattern>
+          <Pattern>Emblem of Valor</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -2926,63 +2940,6 @@
     <ItemFilterRegex>
       <RegexList>
         <ItemFilterRegex>
-          <RegexList>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Crafted</Name>
-              <Pattern>(?&lt;!BoP.*)rafted|Created</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>PvP</Name>
-              <Pattern>Points</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-            <ItemFilterRegex>
-              <RegexList />
-              <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>World Drop</Name>
-              <Pattern>World Drop</Pattern>
-              <MinItemLevel>0</MinItemLevel>
-              <MaxItemLevel>1000</MaxItemLevel>
-              <MinItemQuality>Temp</MinItemQuality>
-              <MaxItemQuality>Heirloom</MaxItemQuality>
-              <AdditiveFilter>true</AdditiveFilter>
-              <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
-              <Enabled>true</Enabled>
-            </ItemFilterRegex>
-          </RegexList>
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Gems</Name>
-          <Pattern>(?&lt;!BoP.*)(rafted|reated)|World Drop|Points</Pattern>
-          <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>1000</MaxItemLevel>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
-        </ItemFilterRegex>
-        <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Alchemy</Name>
@@ -3055,8 +3012,36 @@
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Leatherworking</Name>
+          <Pattern>Leatherworking</Pattern>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Tailoring</Name>
           <Pattern>Tailoring</Pattern>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Created with other Items</Name>
+          <Pattern>Created via</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -3155,7 +3140,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Kirin Tor</Name>
-          <Pattern>Archamage Alvareaux</Pattern>
+          <Pattern>Archmage Alvareaux</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -3294,7 +3279,7 @@
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Mark of Honor</Name>
           <Pattern>Mark of Honor</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -3304,13 +3289,13 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Honor Points</Name>
-          <Pattern>Honor Points</Pattern>
+          <Pattern>Honor Points|Doris Volanthius|Lieutenant Tristia</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -3318,13 +3303,13 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Arena Points</Name>
-          <Pattern>Arena Points|Blazzek the Biter</Pattern>
+          <Pattern>Arena Points|Blazzek the Biter|Argex Irongut|Nargle Lashcord|Grex Brainboiler|Trapjaw Rix|for 0  Points</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -3332,11 +3317,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Venture Coin</Name>
           <Pattern>Venture Coin</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -3346,11 +3331,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>? (Refresh from Armory)</Name>
           <Pattern>PvP Points</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -3360,10 +3345,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>PVP</Name>
       <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Lady Palanseer|Doris Volanthius|Evee Copperspring</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -3373,7 +3358,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
@@ -3391,7 +3376,7 @@
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
-      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <OtherRegexEnabled>false</OtherRegexEnabled>
       <Name>Not found on armory</Name>
       <Pattern>Not found on armory</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -3401,13 +3386,13 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
           <Name>Disable BoP Alchemy</Name>
           <Pattern>BoP crafted Alchemy</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -3417,11 +3402,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
           <Name>Disable BoP Blacksmithing</Name>
           <Pattern>BoP crafted Blacksmithing</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -3431,11 +3416,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
           <Name>Disable BoP Engineering</Name>
           <Pattern>BoP crafted Engineering</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -3445,11 +3430,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
           <Name>Disable BoP Inscription</Name>
           <Pattern>BoP crafted Inscription</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -3459,11 +3444,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
           <Name>Disable BoP Jewelcrafting</Name>
           <Pattern>BoP crafted Jewelcrafting</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -3473,13 +3458,56 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
           <Name>Disable BoP Leatherworking</Name>
           <Pattern>BoP crafted Leatherworking</Pattern>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>false</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <Name>Disable BoP Tailoring</Name>
+          <Pattern>BoP crafted Tailoring</Pattern>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>false</Enabled>
+        </ItemFilterRegex>
+      </RegexList>
+      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <Name>Options</Name>
+      <Pattern>(BoP crafted )(Engineering|Blacksmithing|Tailoring|Jewelcrafting|Inscription|Alchemy|Leatherworking)</Pattern>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>false</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>true</AppliesToGems>
+      <Enabled>false</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Crafted</Name>
+          <Pattern>Crafted|Created</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -3492,8 +3520,22 @@
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Disable BoP Tailoring</Name>
-          <Pattern>BoP crafted Tailoring</Pattern>
+          <Name>PvP</Name>
+          <Pattern>Points</Pattern>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>World Drop</Name>
+          <Pattern>World Drop</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
@@ -3505,14 +3547,14 @@
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Options</Name>
-      <Pattern>(BoP crafted )(Engineering|Blacksmithing|Tailoring|Jewelcrafting|Inscription|Alchemy|Leatherworking)</Pattern>
+      <Name>Gems</Name>
+      <Pattern>.*</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
-      <AppliesToItems>true</AppliesToItems>
+      <AppliesToItems>false</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>

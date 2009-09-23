@@ -186,11 +186,11 @@
       <string>17904</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="QuestItem">
-        <Area>Unknown - 2597</Area>
-        <Quest>The Eye of Command</Quest>
-        <MinLevel>51</MinLevel>
-        <Party>0</Party>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Unknown</Skill>
+        <Level>0</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Conjure Stormpike Rank 6 Insignia DND</SpellName>
       </ItemLocation>
     </value>
   </item>
@@ -557,10 +557,11 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="QuestItem">
-        <Area>Unknown - 279</Area>
+        <Area>Deadwind Pass</Area>
         <Quest>The New Directive</Quest>
         <MinLevel>68</MinLevel>
         <Party>0</Party>
+        <Type />
       </ItemLocation>
     </value>
   </item>
@@ -783,9 +784,7 @@
       <string>33820</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
-        <Heroic>false</Heroic>
-      </ItemLocation>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="NoSource" />
     </value>
   </item>
   <item>
@@ -2276,11 +2275,7 @@
       <string>37128</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Unknown - 1584</Area>
-        <Heroic>false</Heroic>
-        <Boss>Coren Direbrew</Boss>
-      </ItemLocation>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="NoSource" />
     </value>
   </item>
   <item>
@@ -11414,10 +11409,10 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
-        <Skill>Jewelcrafting</Skill>
+        <Skill>Unknown</Skill>
         <Level>0</Level>
-        <Bind>None</Bind>
-        <SpellName>NAME</SpellName>
+        <Bind>BoE</Bind>
+        <SpellName>Timeless Eye of Zul</SpellName>
       </ItemLocation>
     </value>
   </item>
@@ -30850,9 +30845,10 @@
       <string>45234</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
-        <Location>Ulduar (25)</Location>
-        <Heroic>false</Heroic>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Ulduar</Area>
+        <Heroic>true</Heroic>
+        <Boss>Runemaster Molgeim</Boss>
       </ItemLocation>
     </value>
   </item>
@@ -40948,7 +40944,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (25)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -41344,7 +41339,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (25)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -41548,7 +41542,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (25)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -42884,8 +42877,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
-        <Location>Trial of the Crusader (25)</Location>
-        <Heroic>true</Heroic>
+        <Location>Vault of Archavon</Location>
+        <Heroic>false</Heroic>
       </ItemLocation>
     </value>
   </item>
@@ -42944,8 +42937,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -43117,8 +43110,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Fjola Lightbane</Boss>
       </ItemLocation>
     </value>
@@ -43141,8 +43134,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -43191,8 +43184,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Eydis Darkbane</Boss>
       </ItemLocation>
     </value>
@@ -43363,8 +43356,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Icehowl</Boss>
       </ItemLocation>
     </value>
@@ -43670,8 +43663,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Fjola Lightbane</Boss>
       </ItemLocation>
     </value>
@@ -43706,8 +43699,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -43854,8 +43847,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -43878,8 +43871,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -43950,8 +43943,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Icehowl</Boss>
       </ItemLocation>
     </value>
@@ -43975,8 +43968,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -43999,8 +43992,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -44109,8 +44102,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -44145,8 +44138,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -44229,8 +44222,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -44410,8 +44403,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -44495,8 +44488,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Icehowl</Boss>
       </ItemLocation>
     </value>
@@ -44605,8 +44598,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Trial of the Crusader</Area>
-        <Heroic>false</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Heroic>true</Heroic>
         <Boss>Lord Jaraxxus</Boss>
       </ItemLocation>
     </value>
@@ -44922,7 +44915,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -44996,7 +44988,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -45034,7 +45025,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -45183,7 +45173,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -45233,7 +45222,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -45259,7 +45247,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -45739,7 +45726,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -45765,7 +45751,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -45863,7 +45848,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -45937,7 +45921,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -46023,7 +46006,6 @@
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
         <Heroic>false</Heroic>
-        <Area>Heroic Trial of the Crusader (10)</Area>
         <Container>Champions' Cache</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -48960,8 +48942,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
+        <Heroic>true</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
         <Container>Argent Crusade Tribute Chest</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -49058,8 +49040,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
+        <Heroic>true</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
         <Container>Argent Crusade Tribute Chest</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -59548,10 +59530,10 @@
       <string>46374</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
-        <PointType>PvP</PointType>
-        <Points>0</Points>
-        <TokenCount>0</TokenCount>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Vault of Archavon</Area>
+        <Heroic>false</Heroic>
+        <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
     </value>
   </item>
@@ -59597,7 +59579,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59633,7 +59615,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59645,7 +59627,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon (25)</Area>
+        <Area>Vault of Archavon</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59681,7 +59663,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59693,7 +59675,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59705,7 +59687,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59729,7 +59711,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59741,7 +59723,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59753,7 +59735,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59789,7 +59771,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59861,7 +59843,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59873,7 +59855,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon (25)</Area>
+        <Area>Vault of Archavon</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59897,7 +59879,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon (25)</Area>
+        <Area>Vault of Archavon</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59909,7 +59891,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -59945,7 +59927,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -60005,7 +59987,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -60041,7 +60023,7 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
-        <Area>Vault of Archavon</Area>
+        <Area>Vault of Archavon (25)</Area>
         <Heroic>false</Heroic>
         <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
@@ -60196,11 +60178,10 @@
       <string>40790</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60209,11 +60190,10 @@
       <string>40791</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60222,11 +60202,10 @@
       <string>40792</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60235,11 +60214,10 @@
       <string>40829</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60248,11 +60226,10 @@
       <string>40830</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60261,11 +60238,10 @@
       <string>40831</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60313,11 +60289,10 @@
       <string>40883</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Doris Volanthius</VendorName>
-        <VendorArea>Orgrimmar</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Vault of Archavon (25)</Area>
+        <Heroic>false</Heroic>
+        <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
     </value>
   </item>
@@ -60326,11 +60301,10 @@
       <string>40910</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60339,11 +60313,10 @@
       <string>40934</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60365,11 +60338,10 @@
       <string>40994</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60378,11 +60350,10 @@
       <string>40995</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60391,11 +60362,10 @@
       <string>41020</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60430,11 +60400,10 @@
       <string>41082</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60443,11 +60412,10 @@
       <string>41088</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60456,11 +60424,10 @@
       <string>41152</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60469,11 +60436,10 @@
       <string>41158</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60534,11 +60500,10 @@
       <string>41299</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Vault of Archavon (25)</Area>
+        <Heroic>false</Heroic>
+        <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
     </value>
   </item>
@@ -60547,11 +60512,10 @@
       <string>41311</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60560,11 +60524,10 @@
       <string>41317</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60573,11 +60536,10 @@
       <string>41322</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60586,11 +60548,10 @@
       <string>41328</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60599,11 +60560,10 @@
       <string>41631</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Doris Volanthius</VendorName>
-        <VendorArea>Orgrimmar</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Vault of Archavon</Area>
+        <Heroic>false</Heroic>
+        <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
     </value>
   </item>
@@ -60612,11 +60572,10 @@
       <string>41651</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60625,11 +60584,10 @@
       <string>41662</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60638,11 +60596,10 @@
       <string>41673</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60651,11 +60608,10 @@
       <string>41679</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60690,11 +60646,10 @@
       <string>41855</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60703,11 +60658,10 @@
       <string>41860</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60729,11 +60683,10 @@
       <string>41916</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60742,11 +60695,10 @@
       <string>41922</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60755,11 +60707,10 @@
       <string>41928</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Vault of Archavon (25)</Area>
+        <Heroic>false</Heroic>
+        <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
     </value>
   </item>
@@ -60781,11 +60732,10 @@
       <string>41947</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60794,11 +60744,10 @@
       <string>41954</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60820,11 +60769,10 @@
       <string>41972</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Vault of Archavon (25)</Area>
+        <Heroic>false</Heroic>
+        <Boss>Koralon the Flame Watcher</Boss>
       </ItemLocation>
     </value>
   </item>
@@ -60833,11 +60781,10 @@
       <string>41994</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60846,11 +60793,10 @@
       <string>41999</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60872,11 +60818,10 @@
       <string>42392</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Argex Irongut</VendorName>
-        <VendorArea>Tanaris</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -60899,8 +60844,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
+        <Heroic>true</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
         <Container>Argent Crusade Tribute Chest</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -60912,12 +60857,9 @@
       <string>48697</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
-        <Container>Argent Crusade Tribute Chest</Container>
-        <MinLevel>0</MinLevel>
-        <Party>0</Party>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
+        <Location>Trial of the Crusader (10)</Location>
+        <Heroic>true</Heroic>
       </ItemLocation>
     </value>
   </item>
@@ -60926,12 +60868,9 @@
       <string>48699</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
-        <Container>Argent Crusade Tribute Chest</Container>
-        <MinLevel>0</MinLevel>
-        <Party>0</Party>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
+        <Location>Trial of the Crusader (10)</Location>
+        <Heroic>true</Heroic>
       </ItemLocation>
     </value>
   </item>
@@ -60941,8 +60880,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
+        <Heroic>true</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
         <Container>Argent Crusade Tribute Chest</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -60955,8 +60894,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
+        <Heroic>true</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
         <Container>Argent Crusade Tribute Chest</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -60969,8 +60908,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
+        <Heroic>true</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
         <Container>Argent Crusade Tribute Chest</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -60982,12 +60921,9 @@
       <string>48709</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
-        <Container>Argent Crusade Tribute Chest</Container>
-        <MinLevel>0</MinLevel>
-        <Party>0</Party>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
+        <Location>Trial of the Crusader (10)</Location>
+        <Heroic>true</Heroic>
       </ItemLocation>
     </value>
   </item>
@@ -60997,8 +60933,8 @@
     </key>
     <value>
       <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
+        <Heroic>true</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
         <Container>Argent Crusade Tribute Chest</Container>
         <MinLevel>0</MinLevel>
         <Party>0</Party>
@@ -61010,12 +60946,9 @@
       <string>48711</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
-        <Container>Argent Crusade Tribute Chest</Container>
-        <MinLevel>0</MinLevel>
-        <Party>0</Party>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
+        <Location>Trial of the Crusader (10)</Location>
+        <Heroic>true</Heroic>
       </ItemLocation>
     </value>
   </item>
@@ -61024,12 +60957,9 @@
       <string>48712</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
-        <Container>Argent Crusade Tribute Chest</Container>
-        <MinLevel>0</MinLevel>
-        <Party>0</Party>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
+        <Location>Trial of the Crusader (10)</Location>
+        <Heroic>true</Heroic>
       </ItemLocation>
     </value>
   </item>
@@ -61038,12 +60968,9 @@
       <string>48713</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Trial of the Crusader</Area>
-        <Container>Argent Crusade Tribute Chest</Container>
-        <MinLevel>0</MinLevel>
-        <Party>0</Party>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
+        <Location>Trial of the Crusader (10)</Location>
+        <Heroic>true</Heroic>
       </ItemLocation>
     </value>
   </item>
@@ -61052,11 +60979,10 @@
       <string>49179</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Doris Volanthius</VendorName>
-        <VendorArea>Orgrimmar</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -61065,11 +60991,10 @@
       <string>49181</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Doris Volanthius</VendorName>
-        <VendorArea>Orgrimmar</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -61078,11 +61003,10 @@
       <string>49183</string>
     </key>
     <value>
-      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
-        <Count>0</Count>
-        <Cost>0</Cost>
-        <VendorName>Doris Volanthius</VendorName>
-        <VendorArea>Orgrimmar</VendorArea>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PvpItem">
+        <PointType>PvP</PointType>
+        <Points>0</Points>
+        <TokenCount>0</TokenCount>
       </ItemLocation>
     </value>
   </item>
@@ -61096,6 +61020,1485 @@
         <Cost>0</Cost>
         <VendorName>Blazzek the Biter</VendorName>
         <VendorArea>Tanaris</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>46817</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="FactionItem">
+        <FactionName>The Silver Covenant</FactionName>
+        <Level>Exalted</Level>
+        <Cost>0</Cost>
+        <TokenMap>
+          <item>
+            <key>
+              <string>Champion's Seal</string>
+            </key>
+            <value>
+              <int>50</int>
+            </value>
+          </item>
+        </TokenMap>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>45671</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Count>0</Count>
+        <Cost>0</Cost>
+        <VendorName>Broxel Goldgrasp</VendorName>
+        <VendorArea>Icecrown</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>4333</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Unknown</Skill>
+        <Level>0</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Dark Silk Shirt</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>4336</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Unknown</Skill>
+        <Level>0</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Black Swashbuckler's Shirt</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>28380</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Count>0</Count>
+        <Cost>0</Cost>
+        <VendorName>Captain Dirgehammer</VendorName>
+        <VendorArea>Champions' Hall</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>25978</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="QuestItem">
+        <Area>Terokkar Forest</Area>
+        <Quest>Rather Be Fishin'</Quest>
+        <MinLevel>62</MinLevel>
+        <Party>0</Party>
+        <Type />
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>33672</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Count>0</Count>
+        <Cost>0</Cost>
+        <VendorName>Ecton Brasstumbler</VendorName>
+        <VendorArea>Tanaris</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>28127</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Count>0</Count>
+        <Cost>0</Cost>
+        <VendorName>Lady Palanseer</VendorName>
+        <VendorArea>Hall of Legends</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>16309</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="QuestItem">
+        <Area>Winterspring</Area>
+        <Quest>Drakefire Amulet</Quest>
+        <MinLevel>50</MinLevel>
+        <Party>0</Party>
+        <Type>r</Type>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>31971</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Count>0</Count>
+        <Cost>0</Cost>
+        <VendorName>Lady Palanseer</VendorName>
+        <VendorArea>Durotar</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>29100</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Gruul's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>High King Maulgar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>33675</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Count>0</Count>
+        <Cost>0</Cost>
+        <VendorName>Ecton Brasstumbler</VendorName>
+        <VendorArea>Tanaris</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>33583</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Token>Badge of Justice</Token>
+        <Count>60</Count>
+        <Cost>0</Cost>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>29099</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Gruul's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Gruul the Dragonkiller</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>34998</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Count>0</Count>
+        <Cost>0</Cost>
+        <VendorName>Evee Copperspring</VendorName>
+        <VendorArea>Tanaris</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>29097</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Karazhan</Area>
+        <Heroic>false</Heroic>
+        <Boss>The Curator</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>6202</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area />
+        <Heroic>false</Heroic>
+        <Boss />
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>34887</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Token>Badge of Justice</Token>
+        <Count>60</Count>
+        <Cost>0</Cost>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>29279</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="QuestItem">
+        <Area>Deadwind Pass</Area>
+        <Quest>Eminence Among the Violet Eye</Quest>
+        <MinLevel>70</MinLevel>
+        <Party>0</Party>
+        <Type />
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>37127</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="NoSource" />
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>28528</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Karazhan</Area>
+        <Heroic>false</Heroic>
+        <Boss>Moroes</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>38287</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="NoSource" />
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>33593</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Token>Badge of Justice</Token>
+        <Count>35</Count>
+        <Cost>0</Cost>
+        <VendorName>G'eras</VendorName>
+        <VendorArea>Unknown - 3703</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>30847</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Unknown</Skill>
+        <Level>0</Level>
+        <Bind>BoE</Bind>
+        <SpellName>X-52 Rocket Helmet Replacement</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>28301</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Botanica</Area>
+        <Heroic>false</Heroic>
+        <Boss>Orendil Broadleaf</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>37822</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area />
+        <Heroic>false</Heroic>
+        <Boss />
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>27895</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Hellfire Ramparts</Area>
+        <Heroic>true</Heroic>
+        <Boss>Omor the Unscarred</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>32658</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="CraftedItem">
+        <Skill>Unknown</Skill>
+        <Level>0</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Apexis Crystal Infusion</SpellName>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>13966</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="QuestItem">
+        <Area>Durotar</Area>
+        <Quest>For The Horde!</Quest>
+        <MinLevel>55</MinLevel>
+        <Party>0</Party>
+        <Type>r</Type>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>38259</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="QuestItem">
+        <Area>Howling Fjord</Area>
+        <Quest>The Jig is Up</Quest>
+        <MinLevel>69</MinLevel>
+        <Party>3</Party>
+        <Type />
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>32257</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Black Temple</Area>
+        <Heroic>false</Heroic>
+        <Boss>Supremus</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>29098</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Karazhan</Area>
+        <Heroic>false</Heroic>
+        <Boss>Prince Malchezaar</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>43155</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="FactionItem">
+        <FactionName>Knights of the Ebon Blade</FactionName>
+        <Level>Friendly</Level>
+        <Cost>10000</Cost>
+        <TokenMap />
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>16059</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Count>0</Count>
+        <Cost>0</Cost>
+        <VendorName>Halija Whitestrider</VendorName>
+        <VendorArea>The Barrens</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>3427</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="VendorItem">
+        <Count>0</Count>
+        <Cost>0</Cost>
+        <VendorName>Lisbeth Schneider</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>48663</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Unknown - 1584</Area>
+        <Heroic>false</Heroic>
+        <Boss>Coren Direbrew</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49120</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Unknown - 1584</Area>
+        <Heroic>false</Heroic>
+        <Boss>Coren Direbrew</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49078</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Unknown - 1584</Area>
+        <Heroic>false</Heroic>
+        <Boss>Coren Direbrew</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49116</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Unknown - 1584</Area>
+        <Heroic>false</Heroic>
+        <Boss>Coren Direbrew</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49080</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Unknown - 1584</Area>
+        <Heroic>false</Heroic>
+        <Boss>Coren Direbrew</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49118</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Unknown - 1584</Area>
+        <Heroic>false</Heroic>
+        <Boss>Coren Direbrew</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49074</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Unknown - 1584</Area>
+        <Heroic>false</Heroic>
+        <Boss>Coren Direbrew</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49076</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Unknown - 1584</Area>
+        <Heroic>false</Heroic>
+        <Boss>Coren Direbrew</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>48693</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
+        <Location>Trial of the Crusader (10)</Location>
+        <Heroic>true</Heroic>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>48714</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
+        <Location>Trial of the Crusader (10)</Location>
+        <Heroic>true</Heroic>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>48708</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ContainerItem">
+        <Heroic>true</Heroic>
+        <Area>Trial of the Crusader (10)</Area>
+        <Container>Argent Crusade Tribute Chest</Container>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49469</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49498</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49488</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49472</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49471</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49500</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49483</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49470</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49481</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49493</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49484</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49477</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49494</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49474</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49468</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49491</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49467</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49489</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49480</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49473</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49490</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49495</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49478</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49464</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49492</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49475</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49501</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49465</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49476</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49482</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49499</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49496</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49479</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49466</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>true</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49296</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49328</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49297</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49298</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49322</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49315</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49324</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49319</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49329</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49308</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49307</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49326</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49302</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49304</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49325</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49305</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49320</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49323</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49330</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49333</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49463</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49321</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49306</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49303</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49309</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49437</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49316</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49327</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49299</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49331</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49317</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49310</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49332</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49318</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49643</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49644</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49636</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>18705</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="WorldDrop">
+        <Location>Burning Steppes</Location>
+        <Heroic>true</Heroic>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49295</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49294</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
+      </ItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>21108</string>
+    </key>
+    <value>
+      <ItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="StaticDrop">
+        <Area>Onyxia's Lair</Area>
+        <Heroic>false</Heroic>
+        <Boss>Onyxia</Boss>
       </ItemLocation>
     </value>
   </item>

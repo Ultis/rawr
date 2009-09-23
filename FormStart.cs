@@ -18,21 +18,14 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.18.0
- - UI updates! Added optional display of item slot in tooltips. Also improved wrapping on tooltips. Charts should provide more intuitive sorting. You can now view charts for gems by color.
- - Improved the default item filters somewhat.
- - Rawr.Cat: Tweaks to rotation calculations. Significantly improved Stats tab UI.
- - Rawr.Healadin: Fix for movement speed relevancy.
- - Rawr.Rogue: Fixes for several issues.
- - Rawr.DPSWarr: Fix for filtering with and without 'Hide Bad Items' turned on. Fix for a potential crash. Fix for an issue with loading previously saved characters. Significan updates to rage calculations.
- - Rawr.Warlock: Fix for another potential crash.
- - Rawr.Elemental: Fix for DoT calculations.
- - Rawr.DPSDK: Updates for 3.2.2.
- - Rawr.Mage: Updates for 3.2.2.
- - Rawr.TankDK: Several improvements to rotations. Updates for 3.2 and 3.2.2.
- - Rawr.Enhance: Several minor tweaks to custom charts, totems, and haste smoothing.
- - Rawr.ProtPaladin: Improvements to special effect handling.
- - Rawr.Tree: Fix for IED handling.";
+			labelVersionHistory.Text = @"v2.2.19.0
+ - Those were not the filters that you were looking for. v2.2.18 accidentally included some horrible inbreed of a filters file, not the one it was supposed to have. Now it has the one it's supposed to have.
+ - Added consumables that provide low end raid buffs.
+ - Rawr.Mage: Adjustments for 3.2.2.
+ - Rawr.ProtPaladin: Adjustments for 3.2.2.
+ - Rawr.Elemental: Adjustments for 3.2.2.
+ - Rawr.ShadowPriest: Fix for DoT crit damage with metagem.
+ - Rawr.Enhance: Fix for a totem drop rate.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
