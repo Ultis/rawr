@@ -35,6 +35,7 @@ namespace Rawr.Mage
         ABSpam03C,
         ABSpam3C,
         ABSpam03MBAM,
+        ABSpam04MBAM,
         ABSpam3MBAM,
         ABAMABar,
         AB2AMABar,

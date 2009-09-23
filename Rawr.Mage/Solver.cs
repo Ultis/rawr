@@ -3021,6 +3021,7 @@ namespace Rawr.Mage
                                 list.Add(CycleId.ABSpam234MBAM);
                                 list.Add(CycleId.ABSpam24MBAM);
                                 list.Add(CycleId.ABSpam4MBAM);
+                                list.Add(CycleId.ABSpam04MBAM);
                             }
                             list.Add(CycleId.ArcaneBlastSpam);
                         }
@@ -3072,6 +3073,7 @@ namespace Rawr.Mage
                             list.Add(CycleId.ABSpam234MBAM);
                             list.Add(CycleId.ABSpam24MBAM);
                             list.Add(CycleId.ABSpam4MBAM);
+                            list.Add(CycleId.ABSpam04MBAM);
                         }
                         list.Add(CycleId.ArcaneBlastSpam);
                         /*list.Add(CycleId.ArcaneBlastSpam);

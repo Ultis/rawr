@@ -421,6 +421,9 @@ namespace Rawr.Mage
                 case CycleId.ArcaneBlastSpam:
                     c = GetSpell(SpellId.ArcaneBlast4);
                     break;
+                case CycleId.ABSpam04MBAM:
+                    c = new ABSpam04MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.ABSpam4MBAM:
                     c = new ABSpam4MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
