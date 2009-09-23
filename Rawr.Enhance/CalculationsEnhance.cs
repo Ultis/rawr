@@ -595,7 +595,6 @@ namespace Rawr.Enhance
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Sanctuary"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Sanctuary (Str/Sta Bonus)"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
