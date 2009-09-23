@@ -3013,14 +3013,23 @@ namespace Rawr.Mage
                         }
                         else if (talents.ArcaneEmpowerment > 0)
                         {
-                            list.Add(CycleId.AB2AM);
-                            list.Add(CycleId.AB3AM23MBAM);
-                            list.Add(CycleId.AB4AM234MBAM);
+                            if (talents.ArcaneBarrage > 0)
+                            {
+                                list.Add(CycleId.AB2ABar12MBAM);
+                                list.Add(CycleId.AB3ABar123MBAM);
+                                list.Add(CycleId.AB4ABar1234MBAM);
+                            }
+                            else
+                            {
+                                list.Add(CycleId.AB2AM12MBAM);
+                                list.Add(CycleId.AB3AM123MBAM);
+                                list.Add(CycleId.AB4AM1234MBAM);
+                            }
                             if (talents.MissileBarrage > 0)
                             {
-                                list.Add(CycleId.ABSpam234MBAM);
-                                list.Add(CycleId.ABSpam24MBAM);
-                                list.Add(CycleId.ABSpam4MBAM);
+                                list.Add(CycleId.ABSpam1234MBAM);
+                                list.Add(CycleId.ABSpam0234MBAM);
+                                list.Add(CycleId.ABSpam024MBAM);
                                 list.Add(CycleId.ABSpam04MBAM);
                             }
                             list.Add(CycleId.ArcaneBlastSpam);
@@ -3065,15 +3074,19 @@ namespace Rawr.Mage
                             }
                             list.Add(CycleId.FrBIL);
                         }
-                        list.Add(CycleId.AB2AM);
-                        list.Add(CycleId.AB3AM23MBAM);
-                        list.Add(CycleId.AB4AM234MBAM);
+                        list.Add(CycleId.AB2ABar12MBAM);
+                        list.Add(CycleId.AB3ABar123MBAM);
+                        list.Add(CycleId.AB4ABar1234MBAM);
+                        list.Add(CycleId.AB2AM12MBAM);
+                        list.Add(CycleId.AB3AM123MBAM);
+                        list.Add(CycleId.AB4AM1234MBAM);
                         if (talents.MissileBarrage > 0)
                         {
-                            list.Add(CycleId.ABSpam234MBAM);
-                            list.Add(CycleId.ABSpam24MBAM);
-                            list.Add(CycleId.ABSpam4MBAM);
+                            list.Add(CycleId.ABSpam1234MBAM);
+                            list.Add(CycleId.ABSpam0234MBAM);
+                            list.Add(CycleId.ABSpam024MBAM);
                             list.Add(CycleId.ABSpam04MBAM);
+                            list.Add(CycleId.ABSpam4MBAM);
                         }
                         list.Add(CycleId.ArcaneBlastSpam);
                         /*list.Add(CycleId.ArcaneBlastSpam);
