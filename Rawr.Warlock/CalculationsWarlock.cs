@@ -541,7 +541,15 @@ namespace Rawr.Warlock
                 }
             }
             return (
-                stats.Stamina
+                stats.ArmorPenetration
+                + stats.BonusAttackPower
+                + stats.AttackPower
+                + stats.BonusAttackPowerMultiplier
+                + stats.BonusCritChance
+                + stats.BonusPhysicalDamageMultiplier
+                + stats.Agility
+                + stats.Strength
+                + stats.Stamina
                 + stats.Health
                 + stats.Intellect
                 + stats.Mana
