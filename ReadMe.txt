@@ -1,17 +1,22 @@
-Rawr v2.2.17.0
+Rawr v2.2.18.0
 ------------
-Welcome to Rawr 2.2.17.0.
+Welcome to Rawr 2.2.18.0.
    
 Recent Changes:
- - Fix for crashing bugs in Rawr.TankDK and Rawr.ProtWarr.
- - Fix for not being able to load priest files saved with previous verisons of Rawr.
- - Rawr.DPSWarr: Added support for Execute spam under 20%. Improved performance. Added a comparison chart for ability DPS/damage. Fix for 2T8 calculations.
- - Rawr.Warlock: Tons of updates to spell damage and talent calculations. Should be more more representitive of actual results now.
- - Rawr.Tree: Fix for T9 set bonuses.
- - Rawr.TankDK: No longer crashes. Joy!
- - Rawr.Enhance: Fixes for EnhSim export. Updated default gemming templates.
- - Rawr.ProtWarr: Support for new 3.2.2 Critical Block. Fix for crash on loading protection warriors from the Armory.
- - Rawr.Elemental: Fix for T9 bonuses. Fix for Flameshock periodic damage calculations.
+ - UI updates! Added optional display of item slot in tooltips. Also improved wrapping on tooltips. Charts should provide more intuitive sorting. You can now view charts for gems by color.
+ - Improved the default item filters somewhat.
+ - Rawr.Cat: Tweaks to rotation calculations. Significantly improved Stats tab UI.
+ - Rawr.Healadin: Fix for movement speed relevancy.
+ - Rawr.Rogue: Fixes for several issues.
+ - Rawr.DPSWarr: Fix for filtering with and without 'Hide Bad Items' turned on. Fix for a potential crash. Fix for an issue with loading previously saved characters. Significan updates to rage calculations.
+ - Rawr.Warlock: Fix for another potential crash.
+ - Rawr.Elemental: Fix for DoT calculations.
+ - Rawr.DPSDK: Updates for 3.2.2.
+ - Rawr.Mage: Updates for 3.2.2.
+ - Rawr.TankDK: Several improvements to rotations. Updates for 3.2 and 3.2.2.
+ - Rawr.Enhance: Several minor tweaks to custom charts, totems, and haste smoothing.
+ - Rawr.ProtPaladin: Improvements to special effect handling.
+ - Rawr.Tree: Fix for IED handling.
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -82,6 +87,17 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.17.0
+ - Fix for crashing bugs in Rawr.TankDK and Rawr.ProtWarr.
+ - Fix for not being able to load priest files saved with previous verisons of Rawr.
+ - Rawr.DPSWarr: Added support for Execute spam under 20%. Improved performance. Added a comparison chart for ability DPS/damage. Fix for 2T8 calculations.
+ - Rawr.Warlock: Tons of updates to spell damage and talent calculations. Should be more more representitive of actual results now.
+ - Rawr.Tree: Fix for T9 set bonuses.
+ - Rawr.TankDK: No longer crashes. Joy!
+ - Rawr.Enhance: Fixes for EnhSim export. Updated default gemming templates.
+ - Rawr.ProtWarr: Support for new 3.2.2 Critical Block. Fix for crash on loading protection warriors from the Armory.
+ - Rawr.Elemental: Fix for T9 bonuses. Fix for Flameshock periodic damage calculations.
+
 v2.2.16.0
  - Switched back to 3.2 ArPen rating conversion, since 3.2.2 still looks to be a bit out. Will release a new version as soon as 3.2.2 actually comes out.
  - Rawr.Warlock: Crashing fixed! Joy! Sorry that took so long.
