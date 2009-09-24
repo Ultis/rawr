@@ -12,8 +12,13 @@ namespace Rawr.Rogue.FinishingMoves
         private const float BASE_HASTE_BONUS = .4f;
         public override char Id { get { return 'S'; } }
         public override string Name { get { return NAME; } }
-        public override float EnergyCost(CombatFactors combatFactors, int rank) {
-            return 25f - Talents.RelentlessStrikes.Bonus;
+        public override float EnergyCost(CombatFactors combatFactors, int rank)
+        {
+            float baseCost = 25f;
+            float rsBonus = 25f * rank * Talents.RelentlessStrikes.Bonus;
+
+            return baseCost - rsBonus;
+            //  return 25f - Talents.RelentlessStrikes.Bonus;
         }
         public override float CalcFinisherDPS(CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues ) {
             return 0f;

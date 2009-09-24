@@ -133,7 +133,7 @@ namespace Rawr.Rogue.ClassAbilities
         //---------------------------------------------------------------------
         //Subtlety Talents
         //---------------------------------------------------------------------
-        public static readonly Talents RelentlessStrikes = new TalentBonusPulledFromList(() => _talents.RelentlessStrikes, 1f, 2f, 3f, 4f, 5f);  //Average energy returned per combo point
+        public static readonly Talents RelentlessStrikes = new TalentBonusPulledFromList(() => _talents.RelentlessStrikes, 0.04f, 0.08f, 0.12f, 0.16f, 0.20f);  //Average energy returned per combo point
         public static readonly Talents Opportunity = new TalentBonusPulledFromList(() => _talents.Opportunity, 0.1f, 0.2f);
         //NEED:  Ghostly Strike (might be another CPG class)
 

@@ -17,10 +17,11 @@ namespace Rawr.Rogue.FinishingMoves
 
         public override float EnergyCost(CombatFactors combatFactors, int rank)
         {
-            var baseCost = 25f - Talents.RelentlessStrikes.Bonus;
-            var missCost = baseCost * combatFactors.YellowMissChance * (1 - Talents.QuickRecovery.Bonus);
-            var dodgeCost = baseCost * (Talents.SurpriseAttacks.HasPoints ? combatFactors.MhDodgeChance * (1 - Talents.QuickRecovery.Bonus) : 0);
-            return baseCost + missCost + dodgeCost;
+            float baseCost = 25f;
+            float rsBonus = 25f * rank * Talents.RelentlessStrikes.Bonus;
+            float missCost = (Talents.SurpriseAttacks.HasPoints) ? 0 : 25f * (1f - Talents.QuickRecovery.Bonus) * combatFactors.YellowMissChance;
+
+            return baseCost - rsBonus + missCost;
         }
 
         public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues )
