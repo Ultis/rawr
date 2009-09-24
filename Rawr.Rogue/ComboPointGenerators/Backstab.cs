@@ -37,10 +37,17 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         private static float BaseAttackDamage(CombatFactors combatFactors)
         {
+            if (combatFactors.MH.Type == ItemType.Dagger)
+            {
             var attackDamage = combatFactors.MhNormalizedDamage;
             attackDamage += 465;
             attackDamage *= (1.5f + Talents.SinisterCalling.HemoAndBackstab.Bonus);
             return attackDamage;
+        }
+            else
+            {
+                return 0f;
+            }
         }
 
         private static float CriticalDamageMultiplier(CombatFactors combatFactors)

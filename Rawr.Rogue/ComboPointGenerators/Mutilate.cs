@@ -9,7 +9,9 @@ namespace Rawr.Rogue.ComboPointGenerators
 #endif
     public class Mutilate : ComboPointGenerator
     {
-        public override string Name { get { return "Mutilate"; } }
+        public const string NAME = "Mutilate";
+
+        public override string Name { get { return NAME; } }
 
         public override float EnergyCost(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
 		{ 
@@ -48,9 +50,16 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         private static float BaseAttackDamage(CombatFactors combatFactors)
         {
+            if (combatFactors.MH.Type == ItemType.Dagger && combatFactors.OH.Type == ItemType.Dagger)
+            {
             var damage = combatFactors.MhNormalizedDamage + 181;
-            damage += combatFactors.OhNormalizedDamage + (181 * 2 *combatFactors.OffHandDamagePenalty);
+                damage += combatFactors.OhNormalizedDamage + (181 * 2 * combatFactors.OffHandDamagePenalty);
             return damage;
+        }
+            else
+            {
+                return 0f;
+            }
         }
 
         private static float BonusIfTargetIsPoisoned(CalculationOptionsRogue calcOpts)
