@@ -273,7 +273,7 @@ namespace Rawr.DPSWarr {
             {
                 if (combatFactors._c_mhItemType != ItemType.TwoHandSword && combatFactors._c_mhItemType != ItemType.OneHandSword) { return 0.0f; }
 
-                float rate = Talents.SwordSpecialization * (CalcOpts.PTRMode ? 0.02f : 0.01f);
+                float rate = Talents.SwordSpecialization * 0.02f;
                 // This attack doesnt consume GCDs and doesn't affect the swing timer
                 float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) * rate;
 

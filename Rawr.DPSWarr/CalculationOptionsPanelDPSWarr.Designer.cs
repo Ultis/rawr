@@ -1397,6 +1397,7 @@
             // 
             this.CK_PTRMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CK_PTRMode.AutoSize = true;
+            this.CK_PTRMode.Enabled = false;
             this.CK_PTRMode.Location = new System.Drawing.Point(209, 4);
             this.CK_PTRMode.Name = "CK_PTRMode";
             this.CK_PTRMode.Size = new System.Drawing.Size(85, 17);
