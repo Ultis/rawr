@@ -56,6 +56,7 @@ namespace Rawr
             "<br>Ranged",
             "<br>Thrown",
             "<br>Projectile",
+
             // German
             "<br>Kopf",
             "<br>Hals",
@@ -78,6 +79,7 @@ namespace Rawr
             "<br>Distanz",
             "<br>Wurfwaffe",
             "<br>Projektil",
+
             // French
             "<br>Tête",
             "<br>Cou",
@@ -128,7 +130,7 @@ namespace Rawr
 			}
 		}
 
-		static string getGearString(SavedVariablesDictionary item)
+		static string getGearString(SavedVariablesDictionary item, bool replaceAsterisks)
 		{
 			string sItemString = item["Item"] as string;
 			char[] acSplitCharacters = { ':' };
@@ -138,7 +140,7 @@ namespace Rawr
 			{
 				SavedVariablesDictionary gems = item["Gem"] as SavedVariablesDictionary;
 
-				string sItemSlotString = asItemElements[0];
+				string sItemSlotString = "";
 				for (long lGemSlot = 1; lGemSlot <= 3; lGemSlot++)
 				{
 					sItemSlotString += ".";
@@ -150,26 +152,45 @@ namespace Rawr
 					}
 					else
 					{
-						sItemSlotString += "0";
+                        sItemSlotString += "0";
 					}
 				}
 
-				return sItemSlotString;
+                if (replaceAsterisks && sItemSlotString == ".0.0.0")
+                {
+                    return asItemElements[0] + ".*.*.*";
+                }
+                else
+                {
+                    return asItemElements[0] + sItemSlotString;
+                }
 			}
 			else
 			{
-				return asItemElements[0] + ".0.0.0";
+				if (replaceAsterisks)
+				{
+                    return asItemElements[0] + ".*.*.*";
+                }
+				else
+				{
+                    return asItemElements[0] + ".0.0.0";
+                }
 			}
 		}
 
-		static string getGearStringBySlot(SavedVariablesDictionary characterInfo, string sSlot)
+		static string getGearStringBySlot(SavedVariablesDictionary characterInfo, string sSlot, bool replaceAsterisks)
 		{
 			SavedVariablesDictionary equipment = (SavedVariablesDictionary)characterInfo["Equipment"];
 
 			if (equipment.ContainsKey(sSlot))
 			{
 				SavedVariablesDictionary item = equipment[sSlot] as SavedVariablesDictionary;
-				return getGearString(item) + "." + getEnchant(item);
+				string enchant = getEnchant(item).ToString();
+				if (enchant == "0" && replaceAsterisks)
+				{
+					enchant = "*";
+				}
+				return getGearString(item, replaceAsterisks) + "." + enchant;
 			}
 			else
 			{
@@ -206,11 +227,17 @@ namespace Rawr
 		static bool addEquippedItemForOptimization(List<string> asOptimizableItems,
 			SavedVariablesDictionary characterInfo, string sSlot)
 		{
-			string sItem = getGearStringBySlot(characterInfo, sSlot);
+			string sItem = getGearStringBySlot(characterInfo, sSlot, true);
 
 			if (sItem != null)
 			{
-				asOptimizableItems.Add(sItem + "." + getEnchantBySlot(characterInfo, sSlot));
+                char[] acSplitCharacters = { '.' };
+                string[] asItemElements = sItem.Split(acSplitCharacters);
+                if (sItem.Substring(asItemElements[0].Length) == ".*.*.*.*")
+                {
+                    sItem = asItemElements[0];
+                }
+                asOptimizableItems.Add(sItem);
 				return true;
 			}
 
@@ -239,7 +266,19 @@ namespace Rawr
 
 							if (isEquippable(item))
 							{
-								asOptimizableItems.Add(getGearString(item) + "." + getEnchant(item));
+                                string enchant = getEnchant(item).ToString();
+                                if (enchant == "0")
+                                {
+                                    enchant = "*";
+                                }
+                                string item2 = getGearString(item, true) + "." + enchant;
+                                char[] acSplitCharacters = { '.' };
+                                string[] asItemElements = item2.Split(acSplitCharacters);
+                                if (item2.Substring(asItemElements[0].Length) == ".*.*.*.*")
+                                {
+                                    item2 = asItemElements[0];
+                                }
+                                asOptimizableItems.Add(item2);
 							}
 						}
 					}
@@ -335,26 +374,26 @@ namespace Rawr
             m_character = new Character(m_sName, m_sRealm,
 			charRegion,
 			race,
-			getGearStringBySlot(m_characterInfo, "Head"),
-			getGearStringBySlot(m_characterInfo, "Neck"),
-			getGearStringBySlot(m_characterInfo, "Shoulder"),
-			getGearStringBySlot(m_characterInfo, "Back"),
-			getGearStringBySlot(m_characterInfo, "Chest"),
-			getGearStringBySlot(m_characterInfo, "Shirt"),
-			getGearStringBySlot(m_characterInfo, "Tabard"),
-			getGearStringBySlot(m_characterInfo, "Wrist"),
-			getGearStringBySlot(m_characterInfo, "Hands"),
-			getGearStringBySlot(m_characterInfo, "Waist"),
-			getGearStringBySlot(m_characterInfo, "Legs"),
-			getGearStringBySlot(m_characterInfo, "Feet"),
-			getGearStringBySlot(m_characterInfo, "Finger0"),
-			getGearStringBySlot(m_characterInfo, "Finger1"),
-			getGearStringBySlot(m_characterInfo, "Trinket0"),
-			getGearStringBySlot(m_characterInfo, "Trinket1"),
-			getGearStringBySlot(m_characterInfo, "MainHand"),
-			getGearStringBySlot(m_characterInfo, "SecondaryHand"),
-			getGearStringBySlot(m_characterInfo, "Ranged"),
-			getGearStringBySlot(m_characterInfo, "Ammo"),
+			getGearStringBySlot(m_characterInfo, "Head", false),
+            getGearStringBySlot(m_characterInfo, "Neck", false),
+            getGearStringBySlot(m_characterInfo, "Shoulder", false),
+            getGearStringBySlot(m_characterInfo, "Back", false),
+            getGearStringBySlot(m_characterInfo, "Chest", false),
+            getGearStringBySlot(m_characterInfo, "Shirt", false),
+            getGearStringBySlot(m_characterInfo, "Tabard", false),
+            getGearStringBySlot(m_characterInfo, "Wrist", false),
+            getGearStringBySlot(m_characterInfo, "Hands", false),
+            getGearStringBySlot(m_characterInfo, "Waist", false),
+            getGearStringBySlot(m_characterInfo, "Legs", false),
+            getGearStringBySlot(m_characterInfo, "Feet", false),
+            getGearStringBySlot(m_characterInfo, "Finger0", false),
+            getGearStringBySlot(m_characterInfo, "Finger1", false),
+            getGearStringBySlot(m_characterInfo, "Trinket0", false),
+            getGearStringBySlot(m_characterInfo, "Trinket1", false),
+            getGearStringBySlot(m_characterInfo, "MainHand", false),
+            getGearStringBySlot(m_characterInfo, "SecondaryHand", false),
+            getGearStringBySlot(m_characterInfo, "Ranged", false),
+            getGearStringBySlot(m_characterInfo, "Ammo", false),
 			null // Not sure what projectile bag is called
 				/*null, //TODO: Find ExtraWristSocket
 				null, //TODO: Find ExtraHandsSocket
