@@ -3378,7 +3378,7 @@ namespace Rawr
                 Name = "Bonescythe Battlegear 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RogueT7FourPieceBonus = 1f },
+                Stats = { RogueT7FourPieceBonus = .05f },
                 SetName = "Bonescythe Battlegear",
                 SetThreshold = 4
             });
