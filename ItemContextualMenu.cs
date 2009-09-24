@@ -33,6 +33,7 @@ namespace Rawr
 		private ToolStripMenuItem _menuItemName;
 		private ToolStripMenuItem _menuItemEdit;
 		private ToolStripMenuItem _menuItemWowhead;
+        private ToolStripMenuItem _menuItemArmory;
 		private ToolStripMenuItem _menuItemRefresh;
 		private ToolStripMenuItem _menuItemRefreshWowhead;
 		private ToolStripMenuItem _menuItemEquip;
@@ -55,6 +56,9 @@ namespace Rawr
 
 			_menuItemWowhead = new ToolStripMenuItem("Open in Wowhead");
 			_menuItemWowhead.Click += new EventHandler(_menuItemWowhead_Click);
+
+            _menuItemArmory = new ToolStripMenuItem("Open in Armory");
+            _menuItemArmory.Click += new EventHandler(_menuItemArmory_Click);
 
 			_menuItemRefresh = new ToolStripMenuItem("Refresh Item Data from Armory");
 			_menuItemRefresh.Click += new EventHandler(_menuItemRefresh_Click);
@@ -90,7 +94,8 @@ namespace Rawr
 			this.Items.Add(new ToolStripSeparator());
 			this.Items.Add(_menuItemEdit);
 			this.Items.Add(_menuItemWowhead);
-			this.Items.Add(_menuItemRefresh);
+            this.Items.Add(_menuItemArmory);
+            this.Items.Add(_menuItemRefresh);
 			this.Items.Add(_menuItemRefreshWowhead);
 			this.Items.Add(_menuItemEquip);
 			this.Items.Add(_menuItemEquipAll);
@@ -345,6 +350,25 @@ namespace Rawr
             }
             Help.ShowHelp(null, "http://" + site + ".wowhead.com/?item=" + _item.Id);
 		}
+        void _menuItemArmory_Click(object sender, EventArgs e)
+        {
+            string site = "www";
+            switch (_character.Region) {
+                case CharacterRegion.CN:
+                    site = "cn";
+                    break;
+                case CharacterRegion.EU:
+                    site = "eu";
+                    break;
+                case CharacterRegion.KR:
+                    site = "kr";
+                    break;
+                case CharacterRegion.TW:
+                    site = "tw";
+                    break;
+            }
+            Help.ShowHelp(null, "http://" + site + ".wowarmory.com/item-info.xml?i=" + _item.Id);
+        }
 
 		void _menuItemEdit_Click(object sender, EventArgs e)
 		{
