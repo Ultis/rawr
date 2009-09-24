@@ -308,7 +308,7 @@ namespace Rawr.DPSWarr
 
                     procs3 = (maintainActs > procs3) ? 0f : procs3 - maintainActs;
 
-                    return procs3 * (1f - Whiteattacks.AvoidanceStreak);
+                    return procs3; // *(1f - Whiteattacks.AvoidanceStreak); // Not using AvoidanceStreak, as it's already accounted by the other ability's activates
                 }
             }
             protected override float Damage { get { return !Validated ? 0f : (float)Math.Max(0f, SL.DamageOverride); } }

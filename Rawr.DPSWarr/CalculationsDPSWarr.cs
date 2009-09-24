@@ -355,19 +355,37 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
             // We need specilized handling due to Titan's Grip
-            if (item == null || character == null) {
+            if (item == null || character == null) 
+            {
                 return false;
-            } else if (character.WarriorTalents.TitansGrip > 0 && item.Type == ItemType.Polearm && slot == CharacterSlot.OffHand) {
-                return false;
-            } else if (character.WarriorTalents.TitansGrip > 0 && item.Slot == ItemSlot.TwoHand && slot == CharacterSlot.OffHand) {
-                return true;
-            } else if (slot == CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == ItemSlot.TwoHand) {
-                return false;
-            } else if (item.Type == ItemType.Polearm && slot == CharacterSlot.MainHand) {
-                return true;
-            } else {
-                return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
             }
+
+            // Covers all TG weapons
+            if (character.WarriorTalents.TitansGrip > 0)
+            {
+                // Polearm can't go in OH, can't go in MH if there's an OH, but can go in MH if there's no OH
+                if (item.Type == ItemType.Polearm)
+                {
+                    if (slot == CharacterSlot.OffHand || character.OffHand != null) return false;
+                    if (slot == CharacterSlot.MainHand) return true;
+                    return false;
+                }
+                // If there's a polearm in the MH, nothing can go in OH
+                if (slot == CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Type == ItemType.Polearm)
+                {
+                    return false;
+                }
+                // Else, if it's a 2h weapon it can go in OH or MH
+                if (item.Slot == ItemSlot.TwoHand && (slot == CharacterSlot.OffHand || slot == CharacterSlot.MainHand)) return true;
+            }
+
+            // Not TG, so can't dual-wield with a 2H in the MH
+            if (slot == CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == ItemSlot.TwoHand) 
+            {
+                return false;
+            } 
+
+            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
         private static List<string> _relevantGlyphs = null;
@@ -599,8 +617,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 || item.Name == "Enchanted Tear"
                 || item.Name == "Enchanted Pearl"
                 || item.Name == "Chromatic Sphere"
-                ){
+                )
+            {
                 return true;
+            //}else if (item.Type == ItemType.Polearm && 
             }else{
                 Stats stats = item.Stats;
                 bool wantedStats = HasWantedStats(stats);
@@ -641,37 +661,30 @@ Don't forget your weapons used matched with races can affect these numbers.",
             // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blessing of Might (+Improved)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            List<Buff> removedBuffs = new List<Buff>();
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
-                float hasRelevantBuff = character.WarriorTalents.BoomingVoice +
-                                        character.WarriorTalents.CommandingPresence;
                 Buff a = Buff.GetBuffByName("Commanding Presence (Attack Power)");
                 Buff b = Buff.GetBuffByName("Battle Shout");
                 Buff c = Buff.GetBuffByName("Improved Blessing of Might");
                 Buff d = Buff.GetBuffByName("Blessing of Might");
-                if(hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); }
-                }
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
             }
 
             // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blood Pact (+Improved Imp)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_]) {
-                float hasRelevantBuff = character.WarriorTalents.BoomingVoice +
-                                        character.WarriorTalents.CommandingPresence;
                 Buff a = Buff.GetBuffByName("Commanding Presence (Health)");
                 Buff b = Buff.GetBuffByName("Commanding Shout");
                 Buff c = Buff.GetBuffByName("Improved Imp");
                 Buff d = Buff.GetBuffByName("Blood Pact");
-                if(hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); }
-                }
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
             }
 
             // Removes the Trauma Buff and it's equivalent Mangle if you are maintaining it yourself
@@ -681,8 +694,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 Buff a = Buff.GetBuffByName("Trauma");
                 Buff b = Buff.GetBuffByName("Mangle");
                 if(hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
                 }
             }
 
@@ -693,8 +706,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 Buff a = Buff.GetBuffByName("Blood Frenzy");
                 Buff b = Buff.GetBuffByName("Savage Combat");
                 if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
                 }
             }
 
@@ -705,12 +718,18 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 Buff a = Buff.GetBuffByName("Rampage");
                 Buff b = Buff.GetBuffByName("Leader of the Pack");
                 if (hasRelevantBuff == 1) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); }
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
                 }
             }
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            foreach (Buff b in removedBuffs)
+            {
+                character.ActiveBuffs.Add(b);
+            }
+
             return statsBuffs;
         }
         public override void SetDefaults(Character character) {

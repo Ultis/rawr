@@ -28,6 +28,7 @@ namespace Rawr.DPSWarr {
                 TimeBtwnTicks = 1f; // In Seconds
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 mhActivates = ohActivates = 0f;
+                UseHitTable = false;
                 //
                 InitializeB();
             }
@@ -79,6 +80,7 @@ namespace Rawr.DPSWarr {
                 Cd = 30f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
                 RageCost = 0f + (Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
                 StanceOkArms = StanceOkDef = StanceOkFury = true;
+                UseHitTable = false;
                 //
                 InitializeB();
             }
@@ -102,6 +104,7 @@ namespace Rawr.DPSWarr {
                 RageCost = 15f;
                 StanceOkArms = StanceOkDef = StanceOkFury = true;
                 HealingBase = StatS.Health * (0.30f + (Talents.GlyphOfEnragedRegeneration ? 0.10f : 0f));
+                UseHitTable = false;
                 //
                 InitializeB();
             }
@@ -137,6 +140,7 @@ namespace Rawr.DPSWarr {
                 float baseHealth = Base.Health + StatConversion.GetHealthFromStamina(Base.Stamina, CharacterClass.Warrior);
                 HealingBase = -1f * (float)Math.Floor(baseHealth) * 0.16f;
                 HealingBonus = (Talents.GlyphOfBloodrage ? 0f : 1f);
+                UseHitTable = false;
                 /*Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusRageGen = 1f * (1f + Talents.ImprovedBloodrage * 0.25f), },
                     Duration, Cd);*/
@@ -166,6 +170,7 @@ namespace Rawr.DPSWarr {
                 Cd = Duration;
                 RageCost = 10f;
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
+                UseHitTable = false;
                 /*Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { AttackPower = (548f*(1f+Talents.CommandingPresence*0.05f)), },
                     Duration, Cd);*/
@@ -204,6 +209,7 @@ namespace Rawr.DPSWarr {
                 Cd = Duration;
                 RageCost = 10f;
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
+                UseHitTable = false;
                 /*Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { Health = (2255f*(1f+Talents.CommandingPresence*0.05f)), },
                     Duration, Cd);*/
@@ -241,6 +247,7 @@ namespace Rawr.DPSWarr {
                 Duration = 30f;
                 RageCost = 10f;
                 StanceOkArms = StanceOkFury = true;
+                UseHitTable = false;
                 /*Effect = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
                         Duration, Cd);*/
@@ -267,6 +274,7 @@ namespace Rawr.DPSWarr {
                 Effect = new SpecialEffect(Trigger.Use,
                     new Stats { PhysicalCrit = 1f, DamageTakenMultiplier = 0.20f, },
                     Duration, Cd);
+                UseHitTable = false;
                 InitializeB();
             }
         }
@@ -293,6 +301,7 @@ namespace Rawr.DPSWarr {
                 RageCost = 30f - (Talents.FocusedRage * 1f);
                 RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);
                 StanceOkFury = StanceOkArms = true;
+                UseHitTable = false;
                 //
                 InitializeB();
             }
@@ -321,6 +330,7 @@ namespace Rawr.DPSWarr {
                 StanceOkDef = StanceOkFury = StanceOkArms = true;
                 //Effect = new SpecialEffect(Trigger.Use, new Stats() { BonusRageGen = 10f * Talents.SecondWind, }, Duration, Cd);
                 HealingBase = StatS.Health * 0.05f * Talents.SecondWind;
+                UseHitTable = false;
                 //
                 InitializeB();
             }
@@ -612,6 +622,7 @@ namespace Rawr.DPSWarr {
                 if (c.Race != CharacterRace.Human) { return; }
                 Cd = 2f * 60f;
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
+                UseHitTable = false;
                 //
                 InitializeB();
             }
@@ -633,6 +644,7 @@ namespace Rawr.DPSWarr {
                 Talent2ChksValue = Talents.HeroicFury;
                 Cd = 45f;
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
+                UseHitTable = false;
                 //
                 InitializeB();
             }
@@ -719,6 +731,7 @@ namespace Rawr.DPSWarr {
                 Cd = 30f * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
                 RageCost = 10f;
                 StanceOkDef = true; StanceOkArms = StanceOkFury = (Talents.Warbringer == 1);
+                UseHitTable = false;
                 //
                 InitializeB();
             }
@@ -746,6 +759,7 @@ namespace Rawr.DPSWarr {
                 Cd = 5f * 60f - Talents.ImprovedDisciplines * 30f;
                 Duration = 12f;
                 StackCap = 20f;
+                UseHitTable = false;
                 //
                 InitializeB();
             }

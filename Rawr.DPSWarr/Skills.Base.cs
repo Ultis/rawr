@@ -16,8 +16,8 @@ namespace Rawr.DPSWarr {
                 Talents = Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
                 combatFactors = cf;
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-                MHAtkTable = new AttackTable(Char, StatS, combatFactors, true, false);
-                OHAtkTable = new AttackTable(Char, StatS, combatFactors, false, false);
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, true, false, false);
+                OHAtkTable = new AttackTable(Char, StatS, combatFactors, false, false, false);
                 FightDuration = CalcOpts.Duration;
                 //
                 Targets = 1f;
@@ -493,7 +493,8 @@ namespace Rawr.DPSWarr {
             private AttackTable OHATTACKTABLE;
             private WhiteAttacks WHITEATTACKS;
             private CalculationOptionsDPSWarr CALCOPTS;
-            private bool USESPELLHIT;
+            private bool USESPELLHIT = false;
+            private bool USEHITTABLE = true;
             public int AbilIterater;
             #endregion
             #region Get/Set
@@ -575,6 +576,7 @@ namespace Rawr.DPSWarr {
             public virtual float RageUseOverDur { get { return (!Validated ? 0f : Activates * RageCost); } }
             protected float FightDuration { get { return CalcOpts.Duration; } }
             protected bool UseSpellHit { get { return USESPELLHIT; } set { USESPELLHIT = value; } }
+            protected bool UseHitTable { get { return USEHITTABLE; } set { USEHITTABLE = value; } }
             public virtual bool Validated {
                 get {
                     // Null crap is bad
@@ -663,8 +665,8 @@ namespace Rawr.DPSWarr {
                 CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
             }
             protected void InitializeB() {
-                MHAtkTable = new AttackTable(Char, StatS, combatFactors, this, true,  UseSpellHit);
-                OHAtkTable = new AttackTable(Char, StatS, combatFactors, this, false, UseSpellHit);
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, this, true,  UseSpellHit, !UseHitTable);
+                OHAtkTable = new AttackTable(Char, StatS, combatFactors, this, false, UseSpellHit, !UseHitTable);
             }
             public virtual float GetRageUseOverDur(float acts) {
                 if (!Validated) { return 0f; }

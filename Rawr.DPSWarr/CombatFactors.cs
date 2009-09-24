@@ -339,6 +339,11 @@ namespace Rawr.DPSWarr {
         public float AnyNotLand { get { return (Miss + Dodge + Parry); } }
 
         protected virtual void Calculate() { }
+        protected virtual void CalculateAlwaysHit()
+        {
+            Miss = Dodge = Parry = Block = Glance = Crit = 0f;
+            Hit = 1f;
+        }
 
         protected void Initialize(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh, bool useSpellHit) {
             Char = character;
@@ -357,8 +362,8 @@ namespace Rawr.DPSWarr {
             Glance
             Critical
             Hit*/
-            // Start a calc
-            Calculate();
+            // Start a calc            
+            Calculate();            
         }
     }
 
@@ -444,8 +449,15 @@ namespace Rawr.DPSWarr {
             Hit = Math.Max(0f, 1f - tableSize);
         }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, bool ismh, bool useSpellHit) { Initialize(character, stats, cf, null, ismh, useSpellHit); }
+        public AttackTable(Character character, Stats stats, CombatFactors cf, bool ismh, bool useSpellHit, bool alwaysHit) {
+        
+            Initialize(character, stats, cf, null, ismh, useSpellHit);
+            if (alwaysHit) base.CalculateAlwaysHit();
+        }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh, bool useSpellHit) { Initialize(character, stats, cf, ability, ismh, useSpellHit); }
+        public AttackTable(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh, bool useSpellHit, bool alwaysHit) {
+            Initialize(character, stats, cf, ability, ismh, useSpellHit);
+            if (alwaysHit) base.CalculateAlwaysHit();
+        }
     }
 }
