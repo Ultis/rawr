@@ -2403,7 +2403,7 @@ namespace Rawr
                 Name = "Nightsong Regalia 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RejuvenationInstantTick = 1.0f },
+                Stats = { RejuvenationInstantTick = 0.5f },
                 SetName = "Nightsong Regalia",
                 SetThreshold = 4
             });

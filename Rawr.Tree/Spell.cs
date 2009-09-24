@@ -344,8 +344,8 @@ namespace Rawr.Tree {
             #region Tier 8 (4) SetBonus
             if (calculatedStats.RejuvenationInstantTick > 0.0f) {
                 // Set AverageHealingwithCrit = PeriodicTick
-                minHeal     = PeriodicTick;
-                maxHeal     = PeriodicTick;
+                minHeal     = PeriodicTick * calculatedStats.RejuvenationInstantTick;  //Some talents doesn't apply to this instant tick, so it should actually be less than the normal tick, hopefully small enough error
+                maxHeal     = PeriodicTick * calculatedStats.RejuvenationInstantTick;
                 coefDH      = 0.0f; // PeriodicTick already scaled by SpellPower, so don't scale again
                 critPercent = 0.0f;
             }
