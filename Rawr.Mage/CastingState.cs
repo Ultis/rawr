@@ -421,36 +421,6 @@ namespace Rawr.Mage
                 case CycleId.ArcaneBlastSpam:
                     c = GetSpell(SpellId.ArcaneBlast4);
                     break;
-                case CycleId.ABSpam04MBAM:
-                    c = new ABSpam04MBAM(Calculations.NeedsDisplayCalculations, this);
-                    break;
-                case CycleId.ABSpam024MBAM:
-                    c = new ABSpam024MBAM(Calculations.NeedsDisplayCalculations, this);
-                    break;
-                case CycleId.ABSpam1234MBAM:
-                    c = new ABSpam1234MBAM(Calculations.NeedsDisplayCalculations, this);
-                    break;
-                case CycleId.AB2AM12MBAM:
-                    c = new AB2AM12MBAM(Calculations.NeedsDisplayCalculations, this);
-                    break;
-                case CycleId.AB3AM123MBAM:
-                    c = new AB3AM123MBAM(Calculations.NeedsDisplayCalculations, this);
-                    break;
-                case CycleId.AB4AM1234MBAM:
-                    c = new AB4AM1234MBAM(Calculations.NeedsDisplayCalculations, this);
-                    break;
-                case CycleId.AB4ABar1234MBAM:
-                    c = new AB4ABar1234MBAM(Calculations.NeedsDisplayCalculations, this);
-                    break;
-                case CycleId.AB3ABar123MBAM:
-                    c = new AB3ABar123MBAM(Calculations.NeedsDisplayCalculations, this);
-                    break;
-                case CycleId.AB2ABar12MBAM:
-                    c = new AB2ABar12MBAM(Calculations.NeedsDisplayCalculations, this);
-                    break;
-                case CycleId.ABSpam0234MBAM:
-                    c = new ABSpam0234MBAM(Calculations.NeedsDisplayCalculations, this);
-                    break;
                 case CycleId.ABSpam4MBAM:
                     c = new ABSpam4MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
