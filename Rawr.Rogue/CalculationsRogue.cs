@@ -139,6 +139,7 @@ namespace Rawr.Rogue {
                         ItemType.Thrown,
                         ItemType.Dagger,
                         ItemType.FistWeapon,
+                        ItemType.OneHandAxe,
                         ItemType.OneHandMace,
                         ItemType.OneHandSword
                     });
@@ -513,6 +514,19 @@ namespace Rawr.Rogue {
             }
         }
 
+        public override bool IsBuffRelevant(Buff buff)
+        {
+            if (buff.Name == "Focus Magic")     return false;
+
+            if (buff.Group == "Set Bonuses")
+            {
+                if (buff.SetName == "Strength of the Clefthoof")    return false;
+                if (buff.SetName == "Skyshatter Regalia")           return false;
+            }
+
+            return base.IsBuffRelevant(buff);
+        }
+
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats {
                            Agility = stats.Agility,
@@ -564,7 +578,14 @@ namespace Rawr.Rogue {
                            RogueT7TwoPieceBonus = stats.RogueT7TwoPieceBonus,
                            RogueT7FourPieceBonus = stats.RogueT7FourPieceBonus,
                            RogueT8TwoPieceBonus = stats.RogueT8TwoPieceBonus,
-                           RogueT8FourPieceBonus = stats.RogueT8FourPieceBonus
+                           RogueT8FourPieceBonus = stats.RogueT8FourPieceBonus,
+                           ReduceEnergyCostFromRupture = stats.ReduceEnergyCostFromRupture,
+                           BonusCPGCritChance = stats.BonusCPGCritChance,
+
+                           BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                           SpellHit = stats.SpellHit,
+                           SpellCrit = stats.SpellCrit,
+                           BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier
                        };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -633,7 +654,15 @@ namespace Rawr.Rogue {
                     stats.RogueT7TwoPieceBonus +
                     stats.RogueT7FourPieceBonus +
                     stats.RogueT8TwoPieceBonus +
-                    stats.RogueT8FourPieceBonus
+                    //stats.RuptureCrit +
+                    stats.RogueT8FourPieceBonus +
+                    stats.ReduceEnergyCostFromRupture +
+                    stats.BonusCPGCritChance +
+
+                    stats.BonusPhysicalDamageMultiplier +
+                    stats.SpellHit +
+                    stats.SpellCrit +
+                    stats.BonusNatureDamageMultiplier
                 ) != 0;
 
             foreach (SpecialEffect effect in stats.SpecialEffects()) {

@@ -3368,7 +3368,7 @@ namespace Rawr
                 Name = "Bonescythe Battlegear 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RogueT7TwoPieceBonus = 1f },
+                Stats = { RogueT7TwoPieceBonus = 0.1f },
                 SetName = "Bonescythe Battlegear",
                 SetThreshold = 2
             });
@@ -3396,7 +3396,7 @@ namespace Rawr
 
             defaultBuffs.Add(new Buff()
             {
-                Name = "Terrorblade Battlegear4 Piece Bonus",
+                Name = "Terrorblade Battlegear 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { RogueT8FourPieceBonus = 1f },
@@ -3404,6 +3404,46 @@ namespace Rawr
                 SetThreshold = 4
             });
 
+            //T9 - Alliance (VanCleef's) ; Horde (Garona's)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "VanCleef's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ReduceEnergyCostFromRupture = 40f },
+                SetName = "VanCleef's Battlegear",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "VanCleef's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusCPGCritChance = .05f },
+                SetName = "VanCleef's Battlegear",
+                SetThreshold = 4
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Garona's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ReduceEnergyCostFromRupture = 40f },
+                SetName = "Garona's Battlegear",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Garona's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusCPGCritChance = .05f },
+                SetName = "Garona's Battlegear",
+                SetThreshold = 4
+            });
             #endregion
 
             #region Paladin Set Bonuses

@@ -337,6 +337,10 @@ namespace Rawr {
         CPOnFinisher,
         RogueComboMoveEnergyReduction,
         RogueRuptureDamageBonus,
+        BonusEnergyFromDP,
+        RuptureCrit,
+        ReduceEnergyCostFromRupture,
+        BonusCPGCritChance,
         #endregion
         #region DK Sigil Bonuses
         BonusBloodStrikeDamage,
@@ -1533,6 +1537,22 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RogueComboMoveEnergyReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.RogueComboMoveEnergyReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float ReduceEnergyCostFromRupture
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ReduceEnergyCostFromRupture]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ReduceEnergyCostFromRupture] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float BonusCPGCritChance
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusCPGCritChance]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusCPGCritChance] = value; }
         }
         #endregion
 
