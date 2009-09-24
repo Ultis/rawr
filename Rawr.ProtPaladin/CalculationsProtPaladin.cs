@@ -85,23 +85,6 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        private static List<string> _relevantGlyphs;
-        public override List<string> GetRelevantGlyphs()
-        {
-            if (_relevantGlyphs == null)
-            {
-                _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Judgement");
-                _relevantGlyphs.Add("Glyph of Exorcism");
-                _relevantGlyphs.Add("Glyph of Sense Undead");
-                _relevantGlyphs.Add("Glyph of Consecration");
-                _relevantGlyphs.Add("Glyph of Seal of Vengeance");
-                _relevantGlyphs.Add("Glyph of Seal of Righteousness");
-                _relevantGlyphs.Add("Glyph of Divine Plea");
-            }
-            return _relevantGlyphs;
-        }
-
         #region Variables and Properties
 #if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
@@ -827,127 +810,11 @@ focus on Survival Points.",
             statsTotal.WeaponDamage += Lookup.WeaponDamage(character, statsTotal, false);
             //statsTotal.ExposeWeakness = statsBase.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness; // Nerfed in 3.1
 
-            #region Triggers and SpecialEffect stats
-            // temporary combat table, used for the implementation of special effects.
-            float hitBonusPhysical   = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating,CharacterClass.Paladin) + statsTotal.PhysicalHit;
-            float hitBonusSpell      = StatConversion.GetSpellHitFromRating(statsTotal.HitRating,CharacterClass.Paladin) + statsTotal.SpellHit;
-            float expertiseBonus     = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating,CharacterClass.Paladin) + statsTotal.Expertise,CharacterClass.Paladin);
-            float chanceMissSpell    = Math.Max(0f, StatConversion.GetSpellMiss(character.Level - calcOpts.TargetLevel, false) - hitBonusSpell);
-            float chanceMissPhysical = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[ calcOpts.TargetLevel-80] - hitBonusPhysical);
-            float chanceMissDodge    = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-80] - expertiseBonus);
-            float chanceMissParry    = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[calcOpts.TargetLevel-80] - expertiseBonus);
-            float chanceMissPhysicalAny = chanceMissPhysical + chanceMissDodge + chanceMissParry;
+            // * judgement hit chance ? I personally believe the effect triggers even on a miss.
+            // either way, TODO: 9696 Rotation trigger intervals, change these values once custom rotations are supported.
 
-            float chanceCritPhysical = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating, CharacterClass.Paladin)
-                                       + StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Paladin)
-                                       + statsTotal.PhysicalCrit
-                                       + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel-80];
-            float chanceCritSpell    = StatConversion.GetSpellCritFromRating(statsTotal.CritRating, CharacterClass.Paladin)
-                                       + StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect, CharacterClass.Paladin)
-                                       + statsTotal.SpellCrit
-                                       - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
-            float chanceHitPhysical = 1.0f - chanceMissPhysicalAny;
-            float chanceHitSpell = 1.0f - chanceMissSpell;
-            float chanceDoTTick = chanceHitSpell * (talents.GlyphOfConsecration ? 1.0f : 16.0f / 18.0f); // 16 ticks in 18 seconds of 9696 rotation. cba with cons. glyph atm.
-            
-            float intervalRotation = 18.0f;
-            float intervalDoTTick = 1.0f;
-            float intervalPhysical = Lookup.WeaponSpeed(character, statsTotal); // + calcOptsTargetsHotR / intervalHotR;
-            //float intervalHitPhysical = intervalPhysical / chanceHitPhysical;
-            float intervalSpellCast = 1.5f; // 9696 assumes casting a spell every gcd. Changing auras, and casting a blessing is disregarded.
-            //float intervalHitSpell = intervalSpellCast / chanceHitSpell;
-            float intervalDamageSpellCast = 8.0f / intervalRotation;// 9696 has 8 direct damage spell casts in 18 seconds.
-            float intervalDamageDone = 1.0f / (1.0f / intervalPhysical + 1.0f / intervalSpellCast);
-            float chanceDamageDone = (intervalPhysical * chanceHitPhysical + intervalSpellCast * chanceHitSpell) / (intervalPhysical + intervalSpellCast);
-            float intervalJudgement = (10.0f - talents.ImprovedJudgements * 1.0f);
-            float intervalShoR = 6.0f;
-            float intervalHolyShield = 9.0f;
-
-             // * judgement hit chance ? I personally believe the effect triggers even on a miss.
-             // either way, TODO: 9696 Rotation trigger intervals, change these values once custom rotations are supported.
-            
-
-            float weaponSpeed = (character.MainHand != null ? character.MainHand.Speed : 2.0f);
-
-            AttackModelMode amm = AttackModelMode.BasicSoV;
-            if (calcOpts.SealChoice == "Seal of Righteousness")
-                amm = AttackModelMode.BasicSoR;
-
-            AttackModel am = new AttackModel(character, statsTotal, amm);
-
-            Stats effectsToAdd = new Stats();
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
-                if (effect.Trigger == Trigger.Use) {
-                    if (calcOpts.TrinketOnUseHandling != "Ignore") {
-                        if (calcOpts.TrinketOnUseHandling == "Active") {
-                            statsTotal += effect.Stats;
-                        } else {
-                            effectsToAdd += effect.GetAverageStats();
-                            effectsToAdd.Health = 0.0f; // Health on Use Effects are never averaged.
-                            statsTotal += effectsToAdd;
-                        }
-                    }
-                    //else
-                        //statsTotal = statsTotal;
-
-                    // Trial of the Crusader Stacking Use Effect Trinkets
-                    foreach (SpecialEffect childEffect in effect.Stats.SpecialEffects()) {
-                        if (childEffect.Trigger == Trigger.DamageTaken) {
-                            statsTotal += childEffect.Stats * effect.GetAverageUptime(0.0f, 1.0f) *
-                                childEffect.GetAverageStackSize((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed, effect.Duration);
-                        }
-                    }
-                } else {
-                    switch (effect.Trigger) {
-                        case Trigger.MeleeHit:
-                        case Trigger.PhysicalHit:
-                            effectsToAdd += effect.GetAverageStats(intervalPhysical, chanceHitPhysical, weaponSpeed);
-                            effectsToAdd.Armor = (float)Math.Floor(2.0f * effectsToAdd.Agility); // mongoose agi
-                            statsTotal += effectsToAdd;
-                            break;
-                        case Trigger.MeleeCrit:
-                        case Trigger.PhysicalCrit:
-                            statsTotal += effect.GetAverageStats(intervalPhysical, chanceCritPhysical, weaponSpeed);
-                            break;
-                        case Trigger.DoTTick:
-                            statsTotal += effect.GetAverageStats(intervalDoTTick, chanceDoTTick);
-                            break;
-                        case Trigger.DamageDone:
-                            statsTotal += effect.GetAverageStats(intervalDamageDone, chanceDamageDone);
-                            break;
-                        case Trigger.DamageTaken:
-                            statsTotal += effect.GetAverageStats((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed);
-                            break;
-                        case Trigger.JudgementHit:
-                            //Stats test = new Stats();
-                            statsTotal += effect.GetAverageStats(intervalJudgement);
-                            break;
-                        case Trigger.ShieldofRighteousness:
-                            statsTotal += effect.GetAverageStats(intervalShoR);
-                            break;
-                        case Trigger.HolyShield:
-                            statsTotal += effect.GetAverageStats(intervalHolyShield);
-                            break;
-                        case Trigger.SpellCast:
-                            statsTotal += effect.GetAverageStats(intervalSpellCast);
-                            break;
-                        case Trigger.DamageSpellCast:
-                            statsTotal += effect.GetAverageStats(intervalDamageSpellCast);
-                            break;
-                        case Trigger.DamageSpellHit:
-                            statsTotal += effect.GetAverageStats(intervalDamageSpellCast, chanceHitSpell);
-                            break;
-                        case Trigger.DamageSpellCrit:
-                            statsTotal += effect.GetAverageStats(intervalDamageSpellCast, chanceCritSpell);
-                            break;
-                    }
-                }
-            }
-
-            //statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier));
-            //statsProcs.BonusArmor += statsProcs.Agility * 2f;
-            //statsProcs.BonusArmor = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
-            //statsProcs.Armor += statsProcs.BonusArmor;
+            // Calculate Procs and Special Effects
+            statsTotal += GetSpecialEffectStats(character, statsTotal, calcOpts);
 
             if ((calcOpts.UseHolyShield) && character.OffHand != null && (character.OffHand.Type == ItemType.Shield))
             {
@@ -959,9 +826,145 @@ focus on Survival Points.",
                 statsTotal.ShieldOfRighteousnessBlockValue = 0.0f;
                 statsTotal.JudgementBlockValue = 0.0f;
             }
-            #endregion
 
             return statsTotal;
+        }
+
+        private Stats GetSpecialEffectStats(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts)
+        {
+            Stats statsSpecialEffects = new Stats();
+
+            float weaponSpeed = 1.0f;
+            if (character.MainHand != null)
+                weaponSpeed = character.MainHand.Speed;
+
+            AttackModelMode amm = AttackModelMode.BasicSoV;
+            if (calcOpts.SealChoice == "Seal of Righteousness")
+                amm = AttackModelMode.BasicSoR;
+
+            AttackModel am = new AttackModel(character, stats, amm);
+            // temporary combat table, used for the implementation of special effects.
+            float hitBonusPhysical = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.PhysicalHit;
+            float hitBonusSpell = StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.SpellHit;
+            float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin) + stats.Expertise, CharacterClass.Paladin);
+            float chanceMissSpell = Math.Max(0f, StatConversion.GetSpellMiss(character.Level - calcOpts.TargetLevel, false) - hitBonusSpell);
+            float chanceMissPhysical = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - hitBonusPhysical);
+            float chanceMissDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel - 80] - expertiseBonus);
+            float chanceMissParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[calcOpts.TargetLevel - 80] - expertiseBonus);
+            float chanceMissPhysicalAny = chanceMissPhysical + chanceMissDodge + chanceMissParry;
+
+            float chanceCritPhysical = StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin)
+                                       + StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin)
+                                       + stats.PhysicalCrit
+                                       + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - 80];
+            float chanceCritSpell = StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin)
+                                       + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin)
+                                       + stats.SpellCrit
+                                       - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
+            float chanceHitPhysical = 1.0f - chanceMissPhysicalAny;
+            float chanceHitSpell = 1.0f - chanceMissSpell;
+            float chanceDoTTick = chanceHitSpell * (character.PaladinTalents.GlyphOfConsecration ? 1.0f : 16.0f / 18.0f); // 16 ticks in 18 seconds of 9696 rotation. cba with cons. glyph atm.
+            
+            float intervalRotation = 18.0f;
+            float intervalDoTTick = 1.0f;
+            float intervalPhysical = Lookup.WeaponSpeed(character, stats); // + calcOptsTargetsHotR / intervalHotR;
+            //float intervalHitPhysical = intervalPhysical / chanceHitPhysical;
+            float intervalSpellCast = 1.5f; // 9696 assumes casting a spell every gcd. Changing auras, and casting a blessing is disregarded.
+            //float intervalHitSpell = intervalSpellCast / chanceHitSpell;
+            float intervalDamageSpellCast = 8.0f / intervalRotation;// 9696 has 8 direct damage spell casts in 18 seconds.
+            float intervalDamageDone = 1.0f / (1.0f / intervalPhysical + 1.0f / intervalSpellCast);
+            float chanceDamageDone = (intervalPhysical * chanceHitPhysical + intervalSpellCast * chanceHitSpell) / (intervalPhysical + intervalSpellCast);
+            float intervalJudgement = (10.0f - character.PaladinTalents.ImprovedJudgements * 1.0f);
+            float intervalShoR = 6.0f;
+            float intervalHolyShield = 9.0f;
+
+            Stats effectsToAdd = new Stats();
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if (effect.Trigger == Trigger.Use) {
+                    if (calcOpts.TrinketOnUseHandling != "Ignore") {
+                        if (calcOpts.TrinketOnUseHandling == "Active") {
+                            statsSpecialEffects += effect.Stats;
+                        } else {
+                            effectsToAdd += effect.GetAverageStats();
+                            effectsToAdd.Health = 0.0f; // Health on Use Effects are never averaged.
+                            statsSpecialEffects += effectsToAdd;
+                        }
+                    }
+
+                    // Trial of the Crusader Stacking Use Effect Trinkets
+                    foreach (SpecialEffect childEffect in effect.Stats.SpecialEffects()) {
+                        if (childEffect.Trigger == Trigger.DamageTaken) {
+                            statsSpecialEffects += childEffect.Stats * effect.GetAverageUptime(0.0f, 1.0f) *
+                                childEffect.GetAverageStackSize((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed, effect.Duration);
+                        }
+                    }
+                } else {
+                    switch (effect.Trigger) {
+                        case Trigger.MeleeHit:
+                        case Trigger.PhysicalHit:
+                            effectsToAdd += effect.GetAverageStats(intervalPhysical, chanceHitPhysical, weaponSpeed);
+                            effectsToAdd.Armor = (float)Math.Floor(2.0f * effectsToAdd.Agility); // mongoose agi
+                            statsSpecialEffects += effectsToAdd;
+                            break;
+                        case Trigger.MeleeCrit:
+                        case Trigger.PhysicalCrit:
+                            statsSpecialEffects += effect.GetAverageStats(intervalPhysical, chanceCritPhysical, weaponSpeed);
+                            break;
+                        case Trigger.DoTTick:
+                            statsSpecialEffects += effect.GetAverageStats(intervalDoTTick, chanceDoTTick);
+                            break;
+                        case Trigger.DamageDone:
+                            statsSpecialEffects += effect.GetAverageStats(intervalDamageDone, chanceDamageDone);
+                            break;
+                        case Trigger.DamageTaken:
+                            statsSpecialEffects += effect.GetAverageStats((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed);
+                            break;
+                        case Trigger.JudgementHit:
+                            //Stats test = new Stats();
+                            statsSpecialEffects += effect.GetAverageStats(intervalJudgement);
+                            break;
+                        case Trigger.ShieldofRighteousness:
+                            statsSpecialEffects += effect.GetAverageStats(intervalShoR);
+                            break;
+                        case Trigger.HolyShield:
+                            statsSpecialEffects += effect.GetAverageStats(intervalHolyShield);
+                            break;
+                        case Trigger.SpellCast:
+                            statsSpecialEffects += effect.GetAverageStats(intervalSpellCast);
+                            break;
+                        case Trigger.DamageSpellCast:
+                            statsSpecialEffects += effect.GetAverageStats(intervalDamageSpellCast);
+                            break;
+                        case Trigger.DamageSpellHit:
+                            statsSpecialEffects += effect.GetAverageStats(intervalDamageSpellCast, chanceHitSpell);
+                            break;
+                        case Trigger.DamageSpellCrit:
+                            statsSpecialEffects += effect.GetAverageStats(intervalDamageSpellCast, chanceCritSpell);
+                            break;
+                    }
+                }
+            }
+
+            // Base Stats
+            statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + stats.BonusStaminaMultiplier));
+            statsSpecialEffects.Strength = (float)Math.Floor(statsSpecialEffects.Strength * (1.0f + stats.BonusStrengthMultiplier));
+            statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + stats.BonusAgilityMultiplier));
+            statsSpecialEffects.Health += (float)Math.Floor(statsSpecialEffects.Stamina * 10.0f);
+
+            // Defensive Stats
+            statsSpecialEffects.Armor = (float)Math.Floor(statsSpecialEffects.Armor * (1f + stats.BaseArmorMultiplier + statsSpecialEffects.BaseArmorMultiplier));
+            statsSpecialEffects.BonusArmor += statsSpecialEffects.Agility * 2.0f;
+            statsSpecialEffects.BonusArmor = (float)Math.Floor(statsSpecialEffects.BonusArmor * (1.0f + stats.BonusArmorMultiplier + statsSpecialEffects.BonusArmorMultiplier));
+            statsSpecialEffects.Armor += statsSpecialEffects.BonusArmor;
+ 
+            statsSpecialEffects.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsSpecialEffects.Strength, CharacterClass.Paladin));
+            statsSpecialEffects.BlockValue = (float)Math.Floor(statsSpecialEffects.BlockValue * (1.0f + stats.BonusBlockValueMultiplier + statsSpecialEffects.BonusBlockValueMultiplier));
+
+            // Offensive Stats
+            statsSpecialEffects.AttackPower += statsSpecialEffects.Strength * 2.0f;
+            statsSpecialEffects.AttackPower = (float)Math.Floor(statsSpecialEffects.AttackPower * (1.0f + stats.BonusAttackPowerMultiplier + statsSpecialEffects.BonusAttackPowerMultiplier));
+
+            return statsSpecialEffects;
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -1309,8 +1312,22 @@ focus on Survival Points.",
         }
 
         #region Relevancy Methods
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
-        {
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs() {
+            if (_relevantGlyphs == null) {
+                _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Judgement");
+                _relevantGlyphs.Add("Glyph of Exorcism");
+                _relevantGlyphs.Add("Glyph of Sense Undead");
+                _relevantGlyphs.Add("Glyph of Consecration");
+                _relevantGlyphs.Add("Glyph of Seal of Vengeance");
+                _relevantGlyphs.Add("Glyph of Seal of Righteousness");
+                _relevantGlyphs.Add("Glyph of Divine Plea");
+            }
+            return _relevantGlyphs;
+        }
+
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
             // Filters out Non-Shield Offhand Enchants and Ranged Enchants
             if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
             // Filters out Death Knight and Two-Hander Enchants
@@ -1320,17 +1337,13 @@ focus on Survival Points.",
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
-        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
-        {
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
             if (slot == CharacterSlot.OffHand && (item.Slot == ItemSlot.OneHand || item.Type == ItemType.None)) return false;
-            
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
-        public override Stats GetRelevantStats(Stats stats)
-        {
-            Stats s = new Stats()
-            {
+        public override Stats GetRelevantStats(Stats stats) {
+            Stats s = new Stats() {
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 AverageArmor = stats.AverageArmor,
@@ -1393,18 +1406,14 @@ focus on Survival Points.",
                 BonusSealOfVengeanceDamageMultiplier = stats.BonusSealOfVengeanceDamageMultiplier,
                 ConsecrationSpellPower = stats.ConsecrationSpellPower,
             };
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-//                if (effect.Trigger != null)
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
                     effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.DamageSpellHit)
+                    effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken)
                 {
-                    if (hasRelevantSpecialEffect(effect.Stats))
-                    //if (effect.Stats != null)
-                    {
+                    if (hasRelevantSpecialEffect(effect.Stats)) {
                         s.AddSpecialEffect(effect);
                     }
                 }
@@ -1412,18 +1421,14 @@ focus on Survival Points.",
             return s;
         }
 
-        public override bool IsItemRelevant(Item item)
-        {
-            try
-            {
+        public override bool IsItemRelevant(Item item) {
+            try {
                 bool relevant = (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString())) &&
                     (RelevantItemTypes.Contains(item.Type)) && (HasRelevantStats(item.Stats) ||
                     (((item.Slot == ItemSlot.Trinket) || (item.IsGem)) && (hasRelevantTrinketGemStats(item.Stats)))) ||
                     (item.Slot == ItemSlot.Ranged) && (item.Type == ItemType.Libram);
                 return relevant;
-            }
-            catch (Exception)
-            {
+            } catch (Exception) {
                 return false;
             }
         }
@@ -1473,6 +1478,10 @@ focus on Survival Points.",
                 //stats.HolyDamage
                 //stats.DamageShields +
                 ) != 0;
+            foreach (SpecialEffect childEffect in stats.SpecialEffects()) {
+                relevant |= hasRelevantSpecialEffect(childEffect.Stats);
+            }
+
             return relevant;
         }
 
@@ -1515,7 +1524,7 @@ focus on Survival Points.",
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
                     effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.DamageSpellHit)
+                    effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken)
                 {
                     trinketStats |= hasRelevantSpecialEffect(effect.Stats);
                     if (trinketStats) break;
@@ -1579,7 +1588,8 @@ focus on Survival Points.",
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
+                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit ||
+                    effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken)
                 {
                     //if (effect.Stats != null)
                     if (hasRelevantSpecialEffect(effect.Stats)) 
