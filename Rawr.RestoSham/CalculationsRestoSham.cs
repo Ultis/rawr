@@ -631,11 +631,19 @@ namespace Rawr.RestoSham
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
 
             // Fight options:
-
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
+            #endregion
+
+            // Special effects
+            Stats statsProcs = new Stats();
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
+            {
+                statsProcs += effect.GetAverageStats();
+            }
+            statsProcs.Intellect += statsProcs.HighestStat;
+            statsTotal += statsProcs;
 
             return statsTotal;
-            #endregion
         }
         #endregion
         #region Chart data area: Code Flag = Penguin (Model MAPS)
@@ -716,7 +724,7 @@ namespace Rawr.RestoSham
         #region Relevant Stats: Code Flag = Penguin (Impliment Real special effect, not module special effects)
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats()
+            Stats s = new Stats()
             {
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
@@ -741,15 +749,30 @@ namespace Rawr.RestoSham
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier
-                
             };
+
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.HealingSpellCast ||
+                    effect.Trigger == Trigger.HealingSpellCrit ||
+                    effect.Trigger == Trigger.HealingSpellHit ||
+                    effect.Trigger == Trigger.SpellCast ||
+                    effect.Trigger == Trigger.SpellCrit ||
+                    effect.Trigger == Trigger.Use)
+                {
+                    if (HasRelevantStats(effect.Stats))
+                        s.AddSpecialEffect(effect);
+                }
+            }
+
+            return s;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating +
                 stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 + 
-                stats.ManaRestoreOnCrit_25_45 + stats.ManaRestoreOnCast_10_45 +
+                stats.ManaRestoreOnCrit_25_45 + stats.ManaRestoreOnCast_10_45 + stats.ManaRestore + stats.HighestStat +
                 stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste +
                 stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast + stats.CHCTDecrease +
                 stats.RTCDDecrease + stats.Earthliving + stats.TotemCHBaseHeal + stats.TotemHWBaseCost + stats.TotemCHBaseCost + 
