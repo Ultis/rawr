@@ -1251,19 +1251,19 @@ namespace Rawr.Mage
                 }
                 if (evocation > 0)
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation", evocation / EvocationDuration));
+                    sb.AppendLine(String.Format("{0}: {1:F}x ({2:F} mps)", "Evocation", evocation / EvocationDuration, EvocationRegen));
                 }
                 if (evocationIV > 0)
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation (Icy Veins)", evocationIV / EvocationDurationIV));
+                    sb.AppendLine(String.Format("{0}: {1:F}x ({2:F} mps)", "Evocation (Icy Veins)", evocationIV / EvocationDurationIV, EvocationRegenIV));
                 }
                 if (evocationHero > 0)
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation (Heroism)", evocationHero / EvocationDurationHero));
+                    sb.AppendLine(String.Format("{0}: {1:F}x ({2:F} mps)", "Evocation (Heroism)", evocationHero / EvocationDurationHero, EvocationRegenHero));
                 }
                 if (evocationIVHero > 0)
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation (Icy Veins+Heroism)", evocationIVHero / EvocationDurationIVHero));
+                    sb.AppendLine(String.Format("{0}: {1:F}x ({2:F} mps)", "Evocation (Icy Veins+Heroism)", evocationIVHero / EvocationDurationIVHero, EvocationRegenIVHero));
                 }
                 if (manaPotion > 0)
                 {
