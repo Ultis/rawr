@@ -17,8 +17,14 @@ namespace Rawr.Rogue.Poisons
 
         public override float CalcPoisonDps( Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits, CycleTime cycleTime, Item weapon )
         {
-            //TODO:  model loss of stacks due to envenom
-            return STACK_SIZE * (296f + .12f * stats.AttackPower) * Talents.Add(Talents.VilePoisons, Talents.HungerForBlood.Damage).Multiplier / DURATION;
+            //TODO:  model loss of stacks due to envenom.
+            float baseDamage = (296f + .12f * stats.AttackPower);
+            baseDamage *= (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
+            baseDamage *= (1f + Talents.VilePoisons.Bonus) * (1f + Talents.HungerForBlood.Damage.Bonus);
+            baseDamage *= (calcOpts.TargetIsValidForMurder) ? (1f + Talents.Murder.Bonus) : 1f;
+            baseDamage *= (1f - combatFactors.PoisonDamageReduction);
+
+            return STACK_SIZE * baseDamage / DURATION;
         }
 
         public static float ChanceToApplyPoison

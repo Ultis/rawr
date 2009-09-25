@@ -41,7 +41,7 @@ namespace Rawr.Rogue.ClassAbilities
         //NEED:  Cold Blood
         public static readonly Talents QuickRecovery = new TalentBonusPulledFromList(() => _talents.QuickRecovery, 0.4f, .8f);
         public static readonly Talents SealFate = new TalentBonusPulledFromList(() => _talents.SealFate, .2f, .4f, .6f, .8f, 1f);
-        public static readonly Talents Murder = new TalentBonusPulledFromList(() => _talents.Murder, .2f, .4f);
+        public static readonly Talents Murder = new TalentBonusPulledFromList(() => _talents.Murder, .02f, .04f);
         public static readonly Talents DeadlyBrew = new TalentBonusPulledFromList(() => _talents.DeadlyBrew, 0.5f, 1.0f);
 
         public static readonly Talents FocusedAttacks = new TalentBonusPulledFromList(() => _talents.FocusedAttacks, .66f, 1.32f, 2f);//energy per rank (e.g. .33*2, .66*2, 1*2)
@@ -59,7 +59,7 @@ namespace Rawr.Rogue.ClassAbilities
 
         public class HungerForBlood
         {
-            public static readonly Talents EnergyPerSecond = new TalentBonusPulledFromList(() => _talents.HungerForBlood, -0.25f);
+            public static readonly Talents EnergyCost = new TalentBonusPulledFromList(() => _talents.HungerForBlood, 15f);
             public static readonly Talents Damage = new TalentBonusCalculatedFromMethod(() => _talents.HungerForBlood, HungerForBloodCalc);
 
             private static float HungerForBloodCalc(int talent)
@@ -173,7 +173,7 @@ namespace Rawr.Rogue.ClassAbilities
         {
             _talents = talents;
         }
-        
+        /*
         public static void InitializeMurder(CalculationOptionsRogue calcOpts)
         {
             if(!calcOpts.TargetIsValidForMurder)
@@ -181,7 +181,7 @@ namespace Rawr.Rogue.ClassAbilities
                 ( (TalentBonusPulledFromList) Murder ).SetBonusValues(new [] {0f, 0f, 0f});
             }            
         }
-
+        */
         public abstract float Bonus { get; }
 
         public float Multiplier

@@ -1,5 +1,6 @@
 using System;
 using Rawr.Rogue.ClassAbilities;
+using Rawr.Rogue.FinishingMoves;
 
 namespace Rawr.Rogue.Poisons
 {
@@ -16,20 +17,37 @@ namespace Rawr.Rogue.Poisons
 
         public override float CalcPoisonDps( Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits, CycleTime cycleTime, Item weapon )
         {
-            var damage = hits * ChanceToApply(weapon) * (300f + .10f * stats.AttackPower);
-            damage *= combatFactors.ProbPoisonHit;
-            damage *= Talents.Add(Talents.VilePoisons, Talents.HungerForBlood.Damage).Multiplier;
-            return damage/cycleTime.Duration;
+            float baseDamage = (300f + .10f * stats.AttackPower);
+            baseDamage *= (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
+            baseDamage *= (1f + Talents.VilePoisons.Bonus) * (1f + Talents.HungerForBlood.Damage.Bonus);
+            baseDamage *= (calcOpts.TargetIsValidForMurder) ? (1f + Talents.Murder.Bonus) : 1f;
+            baseDamage *= (1f - combatFactors.PoisonDamageReduction);
+
+            float critDamage = baseDamage * combatFactors.BaseSpellCritMultiplier;
+
+            float timeEnvnProc = 0;
+
+            foreach (CycleComponent comp in calcOpts.DpsCycle.Components)
+            {
+                if(comp.Finisher.Name == "Envenom") timeEnvnProc += (float)comp.Rank + 1f;
+            }
+
+            hits = hits * (cycleTime.Duration - timeEnvnProc) / cycleTime.Duration * ChanceToApply(weapon, false) +
+                   hits * timeEnvnProc / cycleTime.Duration * ChanceToApply(weapon, true);
+
+            float damage = hits * (1f - combatFactors.ProbPoisonCrit) * baseDamage;
+            damage += hits * combatFactors.ProbPoisonCrit * critDamage;
+
+            return damage / cycleTime.Duration;
         }
 
-        private static float ChanceToApply(Item weapon)
+        private static float ChanceToApply(Item weapon, bool bEnvenom)
         {
-            return BaseChanceToApply(weapon) > 1f ? 1f : BaseChanceToApply(weapon);
-        }
+            float BaseChanceToApply = Talents.ImprovedPoisons.InstantPoison.Multiplier * (PROCS_PER_MINUTE / (60 / weapon.Speed));
 
-        private static float BaseChanceToApply(Item weapon)
-        {
-            return Talents.ImprovedPoisons.InstantPoison.Multiplier * (PROCS_PER_MINUTE / (60 / weapon.Speed));
+            if(bEnvenom)    BaseChanceToApply *= 1.75f;
+
+            return (BaseChanceToApply > 1f) ? 1f : BaseChanceToApply;
         }
     }
 }

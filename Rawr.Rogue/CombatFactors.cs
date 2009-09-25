@@ -22,8 +22,10 @@ namespace Rawr.Rogue {
 
         #region Crit
         public float CritFromCritRating { get { return StatConversion.GetCritFromRating(_stats.CritRating,CharacterClass.Rogue); } }
-        public float BonusWhiteCritDmg { get { return 1f + _stats.BonusCritMultiplier; } }
-        public float BaseCritMultiplier { get { return 2f * BonusWhiteCritDmg; } }
+        public float SpellCritFromCritRating { get { return StatConversion.GetSpellCritFromRating(_stats.CritRating,CharacterClass.Rogue); } }
+        //  public float BonusWhiteCritDmg { get { return 1f + _stats.BonusCritMultiplier; } }
+        public float BaseCritMultiplier { get { return 2f * (1f + Talents.PreyOnTheWeak.Bonus) * (1f + _stats.BonusCritMultiplier); } }
+        public float BaseSpellCritMultiplier { get { return 1.5f * (1f + Talents.PreyOnTheWeak.Bonus) * (1f + _stats.BonusCritMultiplier); } }
         public float ProbMhCrit { get { return CalcCrit(MH); } }
         public float ProbOhCrit { get { return CalcCrit(OH); } }
         private float CalcCrit(Item weapon) {
@@ -36,6 +38,7 @@ namespace Rawr.Rogue {
             // Contain it between 0% and 100%
             return (float)Math.Max(0f,Math.Min(1f,crit));
         }
+        public float ProbPoisonCrit { get { return _stats.SpellCrit + SpellCritFromCritRating; } }
         #endregion
 
         #region Expertise and Dodge
@@ -65,9 +68,10 @@ namespace Rawr.Rogue {
         #region Hit Rating and Miss
         public float YellowMissChance { get { return Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level] - HitPercent); } }
         public float WhiteMissChance { get { return Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - _character.Level] - HitPercent); } }
+        public float PoisonMissChance { get { return Math.Max(0f, StatConversion.GetSpellMiss(_character.Level - _calcOpts.TargetLevel, false) - PoisonHitPercent); } }
         public float HitPercent { get { return _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating, CharacterClass.Rogue); } }
+        public float PoisonHitPercent { get { return _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating, CharacterClass.Rogue); } }
         public float ProbPoisonHit { get { return 1f + (PoisonHitPercent <= 0.17f ? PoisonHitPercent - 0.17f : 0f); } }
-        public float PoisonHitPercent { get { return _stats.PhysicalHit + StatConversion.GetSpellHitFromRating(_stats.HitRating,CharacterClass.Rogue); } }
         #endregion
 
         public float TotalHaste {
@@ -96,6 +100,7 @@ namespace Rawr.Rogue {
                 return armorReduction;
             }
         }
+        public float PoisonDamageReduction { get { return StatConversion.GetAverageResistance(_character.Level,_calcOpts.TargetLevel,0f,0f); } }
         public float AvgMhWeaponDmg { get { return CalcAverageWeaponDamage(MH, _stats); } }
         public float MhAvgDamage { get { return AvgMhWeaponDmg + (_stats.AttackPower / 14.0f) * MH.Speed; } }
         public float MhNormalizedDamage { get { return AvgMhWeaponDmg + (_stats.AttackPower / 14.0f) * MhNormalizedAttackSpeed; } }
@@ -113,7 +118,7 @@ namespace Rawr.Rogue {
                 float energyRegen = 10f;
                 energyRegen += Talents.Vitality.Bonus;
                 energyRegen += Talents.AdrenalineRush.Energy.Bonus;
-                //energyRegen += Talents.HungerForBlood.EnergyPerSecond.Bonus;
+                energyRegen -= Talents.HungerForBlood.EnergyCost.Bonus / 55f;           //  Assum reactive HungerForBlood every 55 sec
                 energyRegen -= Talents.BladeFlurry.EnergyCost.Bonus;
                 energyRegen -= _calcOpts.Feint.EnergyCost();
                 return energyRegen;

@@ -174,7 +174,7 @@ namespace Rawr.Rogue {
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             TalentsAndGlyphs.Initialize(character.RogueTalents);
             CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
-            Talents.InitializeMurder(calcOpts);
+            //  Talents.InitializeMurder(calcOpts);
             Stats stats = GetCharacterStats(character, additionalItem);
             CombatFactors combatFactors = new CombatFactors(character, stats);
 
@@ -276,16 +276,20 @@ namespace Rawr.Rogue {
             Stats statsOptionsPanel = new Stats() {
                 // handle boss level difference
                 PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
+                SpellCrit = StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
             };
 			Stats statsTalents = new Stats()
 			{
 				BonusAgilityMultiplier = talents.SinisterCalling * 0.03f,
 				PhysicalHit = talents.Precision * 0.01f,
+                SpellHit = talents.Precision * 0.01f,
 				BonusAttackPowerMultiplier = talents.Deadliness * 0.02f
 										   + talents.SavageCombat * 0.02f,
-				PhysicalCrit = talents.Malice * 0.01f +
+				/*  PhysicalCrit = talents.Malice * 0.01f +
 								((character.ActiveBuffs.FindAll(buff => buff.Group == "Critical Strike Chance Taken").Count == 0)
-									? talents.MasterPoisoner * 0.01f : 0f),
+									? talents.MasterPoisoner * 0.01f : 0f), */
+                PhysicalCrit = talents.Malice * 0.01f,
+                SpellCrit = talents.Malice * 0.01f,
 				Dodge = talents.LightningReflexes * 0.02f,
 				Parry = talents.Deflection * 0.02f,
 				PhysicalHaste = (1f + talents.BladeFlurry * 0.20f)

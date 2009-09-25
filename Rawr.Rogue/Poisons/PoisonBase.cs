@@ -18,18 +18,43 @@ namespace Rawr.Rogue.Poisons
 
         public static float CalcPoisonDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, WhiteAttacks whiteAttacks, CharacterCalculationsRogue calculatedStats, CycleTime cycleTime)
         {
-            var mhPoisonDps = calcOpts.TempMainHandEnchant.CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks.MhHits + calcOpts.CpGenerator.MhHitsNeeded(combatFactors, calcOpts), cycleTime, combatFactors.MH);
-            calculatedStats.AddToolTip(DisplayValue.PoisonDps, "MH Poison DPS: " + Math.Round(mhPoisonDps, 2));
-
             if (calcOpts.TempMainHandEnchant.IsDeadlyPoison && calcOpts.TempOffHandEnchant.IsDeadlyPoison)
             {
+                float mohPoisonHits = cycleTime.Duration * (whiteAttacks.MhSwingsPerSecond + whiteAttacks.OhSwingsPerSecond) + calcOpts.CpGenerator.MhHitsNeeded(combatFactors, calcOpts);
+                mohPoisonHits *= (1f - combatFactors.PoisonMissChance);
+
+                var mhPoisonDps = calcOpts.TempMainHandEnchant.CalcPoisonDps(stats,calcOpts,combatFactors,mohPoisonHits,cycleTime,combatFactors.MH);
+
+                calculatedStats.AddToolTip(DisplayValue.PoisonDps, "Deadly Poison DPS: " + Math.Round(mhPoisonDps, 2));
+
                 return mhPoisonDps;
             }
+            else
+            {
+                float mhPoisonHits = cycleTime.Duration * whiteAttacks.MhSwingsPerSecond + calcOpts.CpGenerator.MhHitsNeeded(combatFactors,calcOpts);
+                mhPoisonHits *= (1f - combatFactors.PoisonMissChance);
 
-            var ohPoisonDps = calcOpts.TempOffHandEnchant.CalcPoisonDps(stats, calcOpts, combatFactors, whiteAttacks.OhHits, cycleTime, combatFactors.OH);
-            calculatedStats.AddToolTip(DisplayValue.PoisonDps, "OH Poison DPS: " + Math.Round(ohPoisonDps, 2));
+                var mhPoisonDps = calcOpts.TempMainHandEnchant.CalcPoisonDps(stats,calcOpts,combatFactors,mhPoisonHits,cycleTime,combatFactors.MH);
+                
+                float ohPoisonHits = cycleTime.Duration * whiteAttacks.OhSwingsPerSecond;
+                ohPoisonHits *= (1f - combatFactors.PoisonMissChance);
 
-            return mhPoisonDps + ohPoisonDps;
+                var ohPoisonDps = calcOpts.TempOffHandEnchant.CalcPoisonDps(stats,calcOpts,combatFactors,ohPoisonHits,cycleTime,combatFactors.OH);
+
+                var totalPoisonDps = mhPoisonDps + ohPoisonDps;
+
+                if (calcOpts.TempMainHandEnchant.Name == calcOpts.TempOffHandEnchant.Name)
+                {
+                    calculatedStats.AddToolTip(DisplayValue.PoisonDps, calcOpts.TempMainHandEnchant.Name + " DPS: " + Math.Round(totalPoisonDps, 2));
+                }
+                else
+                {
+                    calculatedStats.AddToolTip(DisplayValue.PoisonDps, calcOpts.TempMainHandEnchant.Name + " DPS: " + Math.Round(mhPoisonDps, 2));
+                    calculatedStats.AddToolTip(DisplayValue.PoisonDps, calcOpts.TempOffHandEnchant.Name + " DPS: " + Math.Round(ohPoisonDps, 2));
+                }
+
+                return totalPoisonDps;
+            }
         }
     }
 }

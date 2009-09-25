@@ -27,19 +27,13 @@ namespace Rawr.Rogue.FinishingMoves
             float missCost  = (Talents.SurpriseAttacks.HasPoints) ? 0 : 35f * (1f - Talents.QuickRecovery.Bonus) * combatFactors.YellowMissChance;
 
             return baseCost - rsBonus + missCost;
-            /*
-            var baseCost = 35f - Talents.RelentlessStrikes.Bonus;
-            var missCost = baseCost * combatFactors.YellowMissChance * (1 - Talents.QuickRecovery.Bonus);
-            var dodgeCost = baseCost * (Talents.SurpriseAttacks.HasPoints ? combatFactors.MhDodgeChance * (1 - Talents.QuickRecovery.Bonus) : 0);
-            return baseCost + missCost + dodgeCost;
-            */
         }
 
         public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues )
         {
             var dpAverageStackSize = CalcAverageStackSize(calcOpts, combatFactors, whiteAttacks, rank);
-            var damage = ( 75 + stats.AttackPower * 0.07f ) * dpAverageStackSize;
-            damage *= Talents.Add(Talents.VilePoisons, Talents.FindWeakness, Talents.Murder, Talents.HungerForBlood.Damage).Multiplier;
+            var damage = ( 75 + stats.AttackPower * 0.09f ) * dpAverageStackSize;
+            damage *= Talents.Add(Talents.VilePoisons, Talents.FindWeakness, Talents.Murder, Talents.HungerForBlood.Damage).Multiplier * (1f + stats.BonusNatureDamageMultiplier) * 0.95f;
 
             var nonCritDamage = damage * ( 1 - CritChance(combatFactors, calcOpts) );
             var critDamage = damage * 2 * CritChance(combatFactors, calcOpts);
