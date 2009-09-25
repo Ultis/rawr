@@ -1728,6 +1728,7 @@ namespace Rawr.DPSDK
                 Agility = stats.Agility,
                 Stamina = stats.Stamina,
                 Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
 
@@ -1880,7 +1881,7 @@ namespace Rawr.DPSDK
                 + stats.BonusPerDiseaseScourgeStrikeDamage + stats.BonusPlagueStrikeCrit + stats.BonusRPFromDeathStrike
                 + stats.BonusRPFromObliterate + stats.BonusRPFromScourgeStrike + stats.BonusRuneStrikeMultiplier + stats.BonusScourgeStrikeCrit
                 + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage + stats.DiseasesCanCrit + 
-                stats.HighestStat + stats.BonusCritMultiplier + stats.Paragon + stats.FireDamage) != 0;
+                stats.HighestStat + stats.BonusCritMultiplier + stats.Paragon + stats.FireDamage + stats.Armor + stats.BonusArmor) != 0;
         }
 
 
