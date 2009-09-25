@@ -292,78 +292,20 @@ namespace Rawr {
                 retboss.Resistance(t, value);
             }
             // Attacks
-            {
-                float perhit = passedList[0].MeleeAttack.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.MeleeAttack.Name == "Invalid" ? perhit : boss.MeleeAttack.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.MeleeAttack.Name == "Invalid" ? numtrg : boss.MeleeAttack.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.MeleeAttack.Name == "Invalid" ? atkspd : boss.MeleeAttack.AttackSpeed); }
-                retboss.MeleeAttack = new Attack {
-                    Name = "Melee Attack",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = perhit,
-                    MaxNumTargets = numtrg,
-                    AttackSpeed = atkspd,
-                };
-            }
-            {
-                float perhit = passedList[0].SpellAttack.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.SpellAttack.Name == "Invalid" ? perhit : boss.SpellAttack.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.SpellAttack.Name == "Invalid" ? numtrg : boss.SpellAttack.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.SpellAttack.Name == "Invalid" ? atkspd : boss.SpellAttack.AttackSpeed); }
-                retboss.SpellAttack = new Attack {
-                    Name = "Spell Attack",
-                    DamageType = ItemDamageType.Arcane,
-                    DamagePerHit = perhit,//averaging min/max value
-                    MaxNumTargets = numtrg,
-                    AttackSpeed = atkspd,
-                };
-            }
-            {
-                float perhit = passedList[0].SpecialAttack_1.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.SpecialAttack_1.Name == "Invalid" ? perhit : boss.SpecialAttack_1.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.SpecialAttack_1.Name == "Invalid" ? numtrg : boss.SpecialAttack_1.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.SpecialAttack_1.Name == "Invalid" ? atkspd : boss.SpecialAttack_1.AttackSpeed); }
-                retboss.SpecialAttack_1 = new Attack {
-                    Name = "Special Attack 1",
-                    DamageType = ItemDamageType.Fire,
-                    DamagePerHit = perhit,
-                    MaxNumTargets = numtrg,
-                    AttackSpeed = atkspd,
-                };
-            }
-            {
-                float perhit = passedList[0].SpecialAttack_2.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.SpecialAttack_2.Name == "Invalid" ? perhit : boss.SpecialAttack_2.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.SpecialAttack_2.Name == "Invalid" ? numtrg : boss.SpecialAttack_2.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.SpecialAttack_2.Name == "Invalid" ? atkspd : boss.SpecialAttack_2.AttackSpeed); }
-                retboss.SpecialAttack_2 = new Attack {
-                    Name = "Special Attack 2",
-                    DamageType = ItemDamageType.Frost,
-                    DamagePerHit = perhit,//averaging min/max value
-                    MaxNumTargets = numtrg,
-                    AttackSpeed = atkspd,
-                };
-            }
-            {
-                float perhit = passedList[0].SpecialAttack_3.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.SpecialAttack_3.Name == "Invalid" ? perhit : boss.SpecialAttack_3.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.SpecialAttack_3.Name == "Invalid" ? numtrg : boss.SpecialAttack_3.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.SpecialAttack_3.Name == "Invalid" ? atkspd : boss.SpecialAttack_3.AttackSpeed); }
-                retboss.SpecialAttack_3 = new Attack {
-                    Name = "Special Attack 3",
-                    DamageType = ItemDamageType.Nature,
-                    DamagePerHit = perhit,
-                    MaxNumTargets = numtrg,
-                    AttackSpeed = atkspd,
-                };
-            }
-            {
-                float perhit = passedList[0].SpecialAttack_4.DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.SpecialAttack_4.Name == "Invalid" ? perhit : boss.SpecialAttack_4.DamagePerHit); }
-                float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.SpecialAttack_4.Name == "Invalid" ? numtrg : boss.SpecialAttack_4.MaxNumTargets); }
-                float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.SpecialAttack_4.Name == "Invalid" ? atkspd : boss.SpecialAttack_4.AttackSpeed); }
-                retboss.SpecialAttack_4 = new Attack {
-                    Name = "Special Attack 4",
-                    DamageType = ItemDamageType.Holy,
-                    DamagePerHit = perhit,//averaging min/max value
-                    MaxNumTargets = numtrg,
-                    AttackSpeed = atkspd,
-                };
-            }
+            /*if (passedList[0].Attacks.Count > 0) {
+                foreach (Attack a in passedList[0].Attacks) {
+                    float perhit = passedList[0].Attacks[0].DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.Attacks[0].Name == "Invalid" ? perhit : boss.Attacks[0].DamagePerHit); }
+                    float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg = Math.Min(numtrg, boss.Attacks[0].Name == "Invalid" ? numtrg : boss.Attacks[0].MaxNumTargets); }
+                    float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd = Math.Max(atkspd, boss.Attacks[0].Name == "Invalid" ? atkspd : boss.Attacks[0].AttackSpeed); }
+                    retboss.Attacks.Add(new Attack {
+                        Name = "Melee Attack",
+                        DamageType = ItemDamageType.Physical,
+                        DamagePerHit = perhit,
+                        MaxNumTargets = numtrg,
+                        AttackSpeed = atkspd,
+                    });
+                }
+            }*/
             // Situational Changes
             value = 0f;                               foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
             value = 0f;                               foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
@@ -402,48 +344,13 @@ namespace Rawr {
                 retboss.Resistance(t, value);
             }
             #region Attacks
-            {
+            /*{
                 count = 0;
-                float perhit = passedList[0].MeleeAttack.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.MeleeAttack.Name == "Invalid" ? 0f : boss.MeleeAttack.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.MeleeAttack.Name == "Invalid" ? 0f : boss.MeleeAttack.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.MeleeAttack.Name == "Invalid" ? 0f : boss.MeleeAttack.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
-                retboss.MeleeAttack = new Attack { Name = "Melee Attack", DamageType = ItemDamageType.Physical, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
-            {
-                count = 0;
-                float perhit = passedList[0].SpellAttack.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.SpellAttack.Name == "Invalid" ? 0f : boss.SpellAttack.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.SpellAttack.Name == "Invalid" ? 0f : boss.SpellAttack.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.SpellAttack.Name == "Invalid" ? 0f : boss.SpellAttack.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
-                retboss.SpellAttack = new Attack { Name = "Spell Attack", DamageType = ItemDamageType.Arcane, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
-            {
-                count = 0;
-                float perhit = passedList[0].SpecialAttack_1.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.SpecialAttack_1.Name == "Invalid" ? 0f : boss.SpecialAttack_1.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.SpecialAttack_1.Name == "Invalid" ? 0f : boss.SpecialAttack_1.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.SpecialAttack_1.Name == "Invalid" ? 0f : boss.SpecialAttack_1.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
-                retboss.SpecialAttack_1 = new Attack { Name = "Special Attack 1", DamageType = ItemDamageType.Fire, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
-            {
-                count = 0;
-                float perhit = passedList[0].SpecialAttack_2.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.SpecialAttack_2.Name == "Invalid" ? 0f : boss.SpecialAttack_2.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.SpecialAttack_2.Name == "Invalid" ? 0f : boss.SpecialAttack_2.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.SpecialAttack_2.Name == "Invalid" ? 0f : boss.SpecialAttack_2.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
-                retboss.SpecialAttack_2 = new Attack { Name = "Special Attack 2", DamageType = ItemDamageType.Frost, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
-            {
-                count = 0;
-                float perhit = passedList[0].SpecialAttack_3.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.SpecialAttack_3.Name == "Invalid" ? 0f : boss.SpecialAttack_3.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.SpecialAttack_3.Name == "Invalid" ? 0f : boss.SpecialAttack_3.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.SpecialAttack_3.Name == "Invalid" ? 0f : boss.SpecialAttack_3.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
-                retboss.SpecialAttack_3 = new Attack { Name = "Special Attack 3", DamageType = ItemDamageType.Nature, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
-            {
-                count = 0;
-                float perhit = passedList[0].SpecialAttack_4.DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.SpecialAttack_4.Name == "Invalid" ? 0f : boss.SpecialAttack_4.DamagePerHit; if (boss.MeleeAttack.Name != "Invalid") { count++; } } perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.SpecialAttack_4.Name == "Invalid" ? 0f : boss.SpecialAttack_4.MaxNumTargets; if (boss.MeleeAttack.Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.SpecialAttack_4.Name == "Invalid" ? 0f : boss.SpecialAttack_4.AttackSpeed; if (boss.MeleeAttack.Name != "Invalid") { count++; } } atkspd /= (float)count;
-                retboss.SpecialAttack_4 = new Attack { Name = "Special Attack 4", DamageType = ItemDamageType.Holy, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
+                float perhit = passedList[0].Attacks[0].DamagePerHit; foreach (BossHandler boss in passedList) { perhit += boss.Attacks[0].Name == "Invalid" ? 0f : boss.Attacks[0].DamagePerHit; if (boss.Attacks[0].Name != "Invalid") { count++; } } perhit /= (float)count;
+                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.Attacks[0].Name == "Invalid" ? 0f : boss.Attacks[0].MaxNumTargets; if (boss.Attacks[0].Name != "Invalid") { count++; } } numtrg /= (float)count;
+                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.Attacks[0].Name == "Invalid" ? 0f : boss.Attacks[0].AttackSpeed; if (boss.Attacks[0].Name != "Invalid") { count++; } } atkspd /= (float)count;
+                retboss.Attacks.Add(new Attack { Name = "Melee Attack", DamageType = ItemDamageType.Physical, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, });
+            }*/
             #endregion
             // Situational Changes
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
@@ -480,42 +387,12 @@ namespace Rawr {
                 retboss.Resistance(t, value);
             }
             #region Attacks
-            {
-                float perhit = passedList[0].MeleeAttack.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.MeleeAttack.Name == "Invalid" ? perhit : boss.MeleeAttack.DamagePerHit); }
-                float numtrg = passedList[0].MeleeAttack.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.MeleeAttack.Name == "Invalid" ? numtrg : boss.MeleeAttack.MaxNumTargets); }
-                float atkspd = passedList[0].MeleeAttack.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.MeleeAttack.Name == "Invalid" ? atkspd : boss.MeleeAttack.AttackSpeed); }
-                retboss.MeleeAttack = new Attack { Name = "Melee Attack", DamageType = ItemDamageType.Physical, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
-            {
-                float perhit = passedList[0].SpellAttack.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.SpellAttack.Name == "Invalid" ? perhit : boss.SpellAttack.DamagePerHit); }
-                float numtrg = passedList[0].SpellAttack.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.SpellAttack.Name == "Invalid" ? numtrg : boss.SpellAttack.MaxNumTargets); }
-                float atkspd = passedList[0].SpellAttack.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.SpellAttack.Name == "Invalid" ? atkspd : boss.SpellAttack.AttackSpeed); }
-                retboss.SpellAttack = new Attack { Name = "Spell Attack", DamageType = ItemDamageType.Arcane, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
-            {
-                float perhit = passedList[0].SpecialAttack_1.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.SpecialAttack_1.Name == "Invalid" ? perhit : boss.SpecialAttack_1.DamagePerHit); }
-                float numtrg = passedList[0].SpecialAttack_1.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.SpecialAttack_1.Name == "Invalid" ? numtrg : boss.SpecialAttack_1.MaxNumTargets); }
-                float atkspd = passedList[0].SpecialAttack_1.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.SpecialAttack_1.Name == "Invalid" ? atkspd : boss.SpecialAttack_1.AttackSpeed); }
-                retboss.SpecialAttack_1 = new Attack { Name = "Special Attack 1", DamageType = ItemDamageType.Holy, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
-            {
-                float perhit = passedList[0].SpecialAttack_2.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.SpecialAttack_2.Name == "Invalid" ? perhit : boss.SpecialAttack_2.DamagePerHit); }
-                float numtrg = passedList[0].SpecialAttack_2.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.SpecialAttack_2.Name == "Invalid" ? numtrg : boss.SpecialAttack_2.MaxNumTargets); }
-                float atkspd = passedList[0].SpecialAttack_2.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.SpecialAttack_2.Name == "Invalid" ? atkspd : boss.SpecialAttack_2.AttackSpeed); }
-                retboss.SpecialAttack_2 = new Attack { Name = "Special Attack 2", DamageType = ItemDamageType.Shadow, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
-            {
-                float perhit = passedList[0].SpecialAttack_3.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.SpecialAttack_3.Name == "Invalid" ? perhit : boss.SpecialAttack_3.DamagePerHit); }
-                float numtrg = passedList[0].SpecialAttack_3.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.SpecialAttack_3.Name == "Invalid" ? numtrg : boss.SpecialAttack_3.MaxNumTargets); }
-                float atkspd = passedList[0].SpecialAttack_3.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.SpecialAttack_3.Name == "Invalid" ? atkspd : boss.SpecialAttack_3.AttackSpeed); }
-                retboss.SpecialAttack_3 = new Attack { Name = "Special Attack 3", DamageType = ItemDamageType.Nature, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
-            {
-                float perhit = passedList[0].SpecialAttack_4.DamagePerHit;  foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.SpecialAttack_4.Name == "Invalid" ? perhit : boss.SpecialAttack_4.DamagePerHit); }
-                float numtrg = passedList[0].SpecialAttack_4.MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.SpecialAttack_4.Name == "Invalid" ? numtrg : boss.SpecialAttack_4.MaxNumTargets); }
-                float atkspd = passedList[0].SpecialAttack_4.AttackSpeed;   foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.SpecialAttack_4.Name == "Invalid" ? atkspd : boss.SpecialAttack_4.AttackSpeed); }
-                retboss.SpecialAttack_4 = new Attack { Name = "Special Attack 4", DamageType = ItemDamageType.Fire, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-            }
+            /*{
+                float perhit = passedList[0].Attacks[0].DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.Attacks[0].Name == "Invalid" ? perhit : boss.Attacks[0].DamagePerHit); }
+                float numtrg = passedList[0].Attacks[0].MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.Attacks[0].Name == "Invalid" ? numtrg : boss.Attacks[0].MaxNumTargets); }
+                float atkspd = passedList[0].Attacks[0].AttackSpeed; foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.Attacks[0].Name == "Invalid" ? atkspd : boss.Attacks[0].AttackSpeed); }
+                retboss.Attacks[0] = new Attack { Name = "Melee Attack", DamageType = ItemDamageType.Physical, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
+            }*/
             #endregion
             // Situational Changes
             value = passedList[0].InBackPerc_Melee; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
@@ -554,12 +431,7 @@ namespace Rawr {
             ItemDamageType[] DamageTypes = new ItemDamageType[] { ItemDamageType.Physical, ItemDamageType.Nature, ItemDamageType.Arcane, ItemDamageType.Frost, ItemDamageType.Fire, ItemDamageType.Shadow, ItemDamageType.Holy, };
             foreach (ItemDamageType t in DamageTypes) { Resistance(t, 0f); }
             // Attacks
-            MeleeAttack     = new Attack { Name = "Invalid", DamageType = ItemDamageType.Physical, DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_MELEE,  };
-            SpellAttack     = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_RANGED, }; 
-            SpecialAttack_1 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_AOE,    };
-            SpecialAttack_2 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_AOE,    };
-            SpecialAttack_3 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_AOE,    };
-            SpecialAttack_4 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_AOE,    };
+            Attacks = new List<Attack>();
             // Situational Changes
             InBackPerc_Melee   = 0.00f; // Default to never in back
             InBackPerc_Ranged  = 0.00f; // Default to never in back
@@ -589,7 +461,7 @@ namespace Rawr {
         // Resistance
         private float RESISTANCE_PHYSICAL,RESISTANCE_NATURE,RESISTANCE_ARCANE,RESISTANCE_FROST,RESISTANCE_FIRE,RESISTANCE_SHADOW,RESISTANCE_HOLY;
         // Attacks
-        private Attack MELEEATTACK,SPELLATTACK,SPECIALATTACK_1,SPECIALATTACK_2,SPECIALATTACK_3,SPECIALATTACK_4;
+        private List<Attack> ATTACKS;
         // Situational Changes
         private float INBACKPERC_MELEE, INBACKPERC_RANGED,
                       MULTITARGSPERC, MAXNUMTARGS,
@@ -617,12 +489,7 @@ namespace Rawr {
         public int    SpeedKillTimer     { get { return SPEEDKILLTIMER;     } set { SPEEDKILLTIMER     = value; } }
         public bool   UseParryHaste      { get { return USERPARRYHASTE;     } set { USERPARRYHASTE     = value; } }
         // ==== Attacks ====
-        public Attack MeleeAttack        { get { return MELEEATTACK;        } set { MELEEATTACK        = value; } }
-        public Attack SpellAttack        { get { return SPELLATTACK;        } set { SPELLATTACK        = value; } }
-        public Attack SpecialAttack_1    { get { return SPECIALATTACK_1;    } set { SPECIALATTACK_1    = value; } }
-        public Attack SpecialAttack_2    { get { return SPECIALATTACK_2;    } set { SPECIALATTACK_2    = value; } }
-        public Attack SpecialAttack_3    { get { return SPECIALATTACK_3;    } set { SPECIALATTACK_3    = value; } }
-        public Attack SpecialAttack_4    { get { return SPECIALATTACK_4;    } set { SPECIALATTACK_4    = value; } }
+        public List<Attack> Attacks { get { return ATTACKS; } set { ATTACKS = value; } }
         // ==== Situational Changes ====
         // Standing in back
         public float  InBackPerc_Melee   { get { return INBACKPERC_MELEE;   } set { INBACKPERC_MELEE   = value; } }
@@ -648,6 +515,74 @@ namespace Rawr {
         public int    Max_Players        { get { return MAX_PLAYERS;        } set { MAX_PLAYERS        = value; } }
         public int    Min_Healers        { get { return MIN_HEALERS;        } set { MIN_HEALERS        = value; } }
         public int    Min_Tanks          { get { return MIN_TANKS;          } set { MIN_TANKS          = value; } }
+        // ==== Methods for Pulling DPS ===============
+        /// <summary>Public function for the DPS Gets so we can re-use code. Includes a full player defend table.</summary>
+        /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
+        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
+        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
+        /// <param name="p_missPerc">Perc value (0.08f = 8% Chance for Boss to Miss Player)</param>
+        /// <param name="p_dodgePerc">Perc value (0.201f = 20.10% Chance for Player to Dodge Boss Attack)</param>
+        /// <param name="p_parryPerc">Perc value (0.1375f = 13.75% Chance for Player to Parry Boss Attack)</param>
+        /// <param name="p_blockPerc">Perc value (0.065f = 6.5% Chance for Player to Block Boss Attack)</param>
+        /// <param name="p_blockVal">How much Damage is absorbed by player's Shield in Block Value</param>
+        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
+        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty,
+                                  float p_missPerc, float p_dodgePerc, float p_parryPerc, float p_blockPerc, float p_blockVal)
+        {
+            if (Attacks.Count <= 0) { return 0f; } // make sure there were some TO put in there
+            List<Attack> attacks = new List<Attack>();
+            foreach (Attack a in Attacks) { if (a.AttackType == type) { attacks.Add(a); } }
+            if (attacks.Count <= 0) { return 0f; } // make sure there were some put in there
+
+            float retDPS = 0f;
+
+            foreach (Attack a in attacks) {
+                float damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty),
+                      damageOnUse = damage * (1f - p_missPerc - p_dodgePerc - p_parryPerc - p_blockPerc), // takes out the player's defend table
+                      swing = a.AttackSpeed;
+                      damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
+                float acts = BerserkTimer / swing,
+                      avgDmg = damageOnUse * acts,
+                      dps = avgDmg / BerserkTimer;
+                retDPS += dps;
+            }
+
+            return retDPS;
+        }
+        /// <summary>Public function for the DPS Gets so we can re-use code.</summary>
+        /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
+        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
+        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
+        /// <param name="p_missPerc">Perc value (0.08f = 8% Chance for Boss to Miss Player)</param>
+        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
+        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty, float p_missPerc) {
+            return GetDPSByType(type, BossDamageBonus, BossDamagePenalty, p_missPerc, 0, 0, 0, 0);
+        }
+        /// <summary>Public function for the DPS Gets so we can re-use code.</summary>
+        /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
+        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
+        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
+        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
+        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty) {
+            return GetDPSByType(type, BossDamageBonus, BossDamagePenalty, 0, 0, 0, 0, 0);
+        }
+        /// <summary>
+        /// Gets Raw DPS of all attacks that are Melee type. DPS and Healing characters should not normally see this damage.
+        /// Tanks will recieve this damage.
+        /// </summary>
+        public float DPS_SingleTarg_Melee { get { float dps = GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0); return dps; } }
+        /// <summary>
+        /// Gets Raw DPS of all attacks that are Ranged type. DPS and Healing characters will use this
+        /// to determine incoming damage to Raid, on specific targets. Tanks will recieve this damage in
+        /// addition to the Melee single-target under chance methods.
+        /// </summary>
+        public float DPS_SingleTarg_Ranged { get { float dps = GetDPSByType(ATTACK_TYPES.AT_RANGED, 0, 0, 0); return dps; } }
+        /// <summary>
+        /// Gets Raw DPS of all attacks that are AoE type. DPS and Healing characters will use this
+        /// to determine incoming damage to Raid. Tanks will recieve this damage in addition to the
+        /// Melee single-target.
+        /// </summary>
+        public float DPS_AoE { get { float dps = GetDPSByType(ATTACK_TYPES.AT_AOE, 0, 0); return dps; } }
         #endregion
 
         #region Functions
@@ -684,8 +619,17 @@ namespace Rawr {
         /// <summary>
         /// Generates a Fight Info description listing the stats of the fight as well as any comments listed for the boss
         /// </summary>
+        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
+        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
+        /// <param name="p_missPerc">Perc value (0.08f = 8% Chance for Boss to Miss Player)</param>
+        /// <param name="p_dodgePerc">Perc value (0.201f = 20.10% Chance for Player to Dodge Boss Attack)</param>
+        /// <param name="p_parryPerc">Perc value (0.1375f = 13.75% Chance for Player to Parry Boss Attack)</param>
+        /// <param name="p_blockPerc">Perc value (0.065f = 6.5% Chance for Player to Block Boss Attack)</param>
+        /// <param name="p_blockVal">How much Damage is absorbed by player's Shield in Block Value</param>
         /// <returns>The generated string</returns>
-        public string GenInfoString() {
+        public string GenInfoString(float BossDamageBonus, float BossDamagePenalty,
+                                  float p_missPerc, float p_dodgePerc, float p_parryPerc, float p_blockPerc, float p_blockVal)
+        {
             string retVal = "";
             //
             retVal += "Name: " + Name + "\r\n";
@@ -718,10 +662,22 @@ namespace Rawr {
             retVal += "Tanks Req'd DPS per: " + tankdps.ToString("#,##0") + "\r\n";
             retVal += "DPS Req'd DPS per: " + dpsdps.ToString("#,##0") + "\r\n";
             retVal += "\r\n";
+            retVal += "This boss does the following Damage Per Second Amounts, factoring Armor and Defend Tables where applicable:" + "\r\n";
+            retVal += "Single Target Melee: " + GetDPSByType(ATTACK_TYPES.AT_MELEE,BossDamageBonus, BossDamagePenalty,
+                                  p_missPerc, p_dodgePerc, p_parryPerc, p_blockPerc, p_blockVal).ToString("0.0") + "\r\n";
+            retVal += "Single Target Ranged: " + GetDPSByType(ATTACK_TYPES.AT_RANGED, BossDamageBonus, BossDamagePenalty,
+                                  p_missPerc).ToString("0.0") + "\r\n";
+            retVal += "Raid AoE: " + GetDPSByType(ATTACK_TYPES.AT_AOE, BossDamageBonus, 0).ToString("0.0") + "\r\n";
+            retVal += "\r\n";
             retVal += "Comment(s):\r\n" + Comment;
             //
             return retVal;
         }
+        /// <summary>
+        /// Generates a Fight Info description listing the stats of the fight as well as any comments listed for the boss
+        /// </summary>
+        /// <returns>The generated string</returns>
+        public string GenInfoString() { return GenInfoString(0,0,0,0,0,0,0); }
         #endregion
     }
     #region T7 Content
@@ -738,26 +694,26 @@ namespace Rawr {
             Health = 2230000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Impale",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // ==== Situational Changes ====
             // When he Impales, he turns around and faces the raid
             // simming this by using the activates over fight and having him facing raid for 2 seconds
-            float time = (BerserkTimer / SpecialAttack_1.AttackSpeed) * 2f;
+            float time = (BerserkTimer / Attacks[1].AttackSpeed) * 2f;
             InBackPerc_Melee = 1f - time / BerserkTimer;
             // Locust Swarm: Every 80-120 seconds for 16 seconds you can't be on the target
             // Adding 4 seconds to the Duration for moving out before starts and then back in after
@@ -785,33 +741,33 @@ namespace Rawr {
             Health = 2231200f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Poison Bold Volley",
                 DamageType = ItemDamageType.Nature,
                 DamagePerHit = (/*Initial*/(2625f + 3375f) / 2.0f) + (/*Dot*/((1480f+1720f)/2.0f)*8f/2f),
                 MaxNumTargets = 3,
                 AttackSpeed = (7.0f+15.0f)/2.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Rain of Fire",
                 DamageType = ItemDamageType.Fire,
                 DamagePerHit = (/*Dot*/((1750f+2750f)/2.0f)*6f/2f),
                 MaxNumTargets = 10,
                 AttackSpeed = (6.0f+18.0f)/2.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             // Every 6-18 seconds for 3 seconds she has to be moved to compensate for Rain of Fire
-            MovingTargsTime = (BerserkTimer / SpecialAttack_2.AttackSpeed) * (3f);
+            MovingTargsTime = (BerserkTimer / Attacks[2].AttackSpeed) * (3f);
             // Fight Requirements
             /* TODO:
              * Frenzy
@@ -830,22 +786,22 @@ namespace Rawr {
             Health = 2510000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Web Spray",
                 DamageType = ItemDamageType.Nature,
                 DamagePerHit = (1750f + 2250f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.90f;
             // 6 second stun every 40 seconds
@@ -878,22 +834,22 @@ namespace Rawr {
             BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Impale",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
@@ -917,22 +873,22 @@ namespace Rawr {
             Health = 3060000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Decrepit Fever",
                 DamageType = ItemDamageType.Nature,
                 DamagePerHit = 3000f / 3f * 21f,
                 MaxNumTargets = 1,
                 AttackSpeed = 30.0f,
                 AttackType = ATTACK_TYPES.AT_RANGED,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.25f;
             // We are assuming you are using the corner trick so you don't have
@@ -957,30 +913,30 @@ namespace Rawr {
             BerserkTimer = 5 * 60; // Inevitable Doom starts to get spammed every 15 seconds
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Deathbloom",
                 DamageType = ItemDamageType.Nature,
                 DamagePerHit = (/*DoT*/200f / 1f * 6f) + (/*Bloom*/1200f),
                 MaxNumTargets = 10,
                 AttackSpeed = 30.0f,
                 AttackType = ATTACK_TYPES.AT_RANGED,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Inevitable Doom",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = 4000 / 30 * 120,
                 MaxNumTargets = 10,
                 AttackSpeed = 120.0f,
                 AttackType = ATTACK_TYPES.AT_RANGED,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
             // Initial 10 seconds to pop first Spore then every 3rd spore
@@ -1006,30 +962,30 @@ namespace Rawr {
             Health = 3349000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 120000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Disrupting Shout",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4275f + 4725f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 15.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Jagged Knife",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 5000 + (10000 / 5 * 5),
                 MaxNumTargets = 1,
                 AttackSpeed = 10.0f,
                 AttackType = ATTACK_TYPES.AT_RANGED,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Fight Requirements
@@ -1053,22 +1009,22 @@ namespace Rawr {
             BerserkTimer = BerserkTimer - (4 * 60 + 34);
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadowbolt",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (2880f + 3520f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 1.0f,
                 AttackType = ATTACK_TYPES.AT_RANGED,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Fight Requirements
@@ -1089,46 +1045,46 @@ namespace Rawr {
             Health = 781000f * 4f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Korth'azz's Meteor",
                 DamageType = ItemDamageType.Fire,
                 DamagePerHit = (13775f + 15225f) / 2f,
                 MaxNumTargets = 8,
                 AttackSpeed = 15.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Rivendare's Unholy Shadow",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (2160f + 2640f) / 2f + (4800/2*4),
                 MaxNumTargets = 8,
                 AttackSpeed = 15.0f,
                 AttackType = ATTACK_TYPES.AT_RANGED,
-            };
-            SpecialAttack_3 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Blaumeux's Shadow Bolt",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (2357f + 2643f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_RANGED,
-            };
-            SpecialAttack_4 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Zeliek's Holy Bolt",
                 DamageType = ItemDamageType.Holy,
                 DamagePerHit = (2357f + 2643f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_RANGED,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.75f;
             // Swap 1st 2 mobs once: 15
@@ -1156,22 +1112,22 @@ namespace Rawr {
             Health = 4320000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Hateful Strike",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (19975f + 27025f) / 2f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 1.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
             // Fight Requirements
@@ -1192,14 +1148,14 @@ namespace Rawr {
             BerserkTimer = 12 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 8 seconds for 3 seconds Grob has to be kited to
@@ -1226,14 +1182,14 @@ namespace Rawr {
             BerserkTimer = 8 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 40000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
             /* TODO:
@@ -1256,22 +1212,22 @@ namespace Rawr {
             BerserkTimer = 6 * 60; // Need to verify if starts at beg. of combat or beg. of Thadd
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpellAttack = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Chain Lightning",
                 DamageType = ItemDamageType.Nature,
                 DamagePerHit = (3600f+4400f)/2f,
                 MaxNumTargets = 3f,
                 AttackSpeed = 15.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.50f;
             // Every 30 seconds, polarity shift, 3 sec move
@@ -1295,30 +1251,30 @@ namespace Rawr {
             BerserkTimer = 15 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Frost Aura",
                 DamageType = ItemDamageType.Frost,
                 DamagePerHit = 1200f,
                 MaxNumTargets = 10,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Life Drain",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (((4376f+5624f)/2f) * 3f) * 4f,
                 MaxNumTargets = 2,
                 AttackSpeed = 24.0f,
                 AttackType = ATTACK_TYPES.AT_RANGED,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 45(+30) seconds for 30 seconds Sapph is in the air
@@ -1345,22 +1301,22 @@ namespace Rawr {
             SpeedKillTimer = 6 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Impale",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Phase 1, no damage to KT
@@ -1389,37 +1345,37 @@ namespace Rawr {
             Health = 976150f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6188f + 8812f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Breath",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6938f + 8062f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 60 seconds for 20 seconds dps has to jump into the portal and kill the add
             MovingTargsTime  = (BerserkTimer / (60f+20f)) * (20f);
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
-            MovingTargsTime += ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            MovingTargsTime += ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
             // Fight Requirements
             Min_Tanks = 1;
             Min_Healers = 2;
@@ -1439,30 +1395,30 @@ namespace Rawr {
             Health = 976150f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6188f + 8812f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Breath",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6938f + 8062f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
@@ -1471,7 +1427,7 @@ namespace Rawr {
             MaxNumTargets = 6f + 1f;
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
-            MovingTargsTime += ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            MovingTargsTime += ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
             // Fight Requirements
             // Fight Requirements
             Min_Healers = 2;
@@ -1491,35 +1447,35 @@ namespace Rawr {
             Health = 976150f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6188f + 8812f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Breath",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6938f + 8062f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
-            MovingTargsTime = ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            MovingTargsTime = ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
             // Fight Requirements
             Min_Tanks = 1;
             Min_Healers = 2;
@@ -1539,22 +1495,22 @@ namespace Rawr {
             Health = 2510100f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Fire Breath",
                 DamageType = ItemDamageType.Fire,
                 DamagePerHit = (8750f + 11250f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 45 seconds for 10 seconds you gotta move for Lava Waves
@@ -1578,22 +1534,22 @@ namespace Rawr {
             BerserkTimer = 5 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Impale",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.75f;
             // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
@@ -1619,22 +1575,22 @@ namespace Rawr {
             Health = 2230000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Impale",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
                 AttackType = ATTACK_TYPES.AT_AOE,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 70-120 seconds for 16 seconds you can't be on the target
@@ -1657,20 +1613,8 @@ namespace Rawr {
             Health = 6763325f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
-                Name = MeleeAttack.Name,
-                DamageType = MeleeAttack.DamageType,
-                DamagePerHit = 120000f,
-                MaxNumTargets = MeleeAttack.MaxNumTargets,
-                AttackSpeed = MeleeAttack.AttackSpeed,
-            };
-            SpecialAttack_1 = new Attack {
-                Name = SpecialAttack_1.Name,
-                DamageType = SpecialAttack_1.DamageType,
-                DamagePerHit = (5688f + 7312f) / 2f,
-                MaxNumTargets = SpecialAttack_1.MaxNumTargets,
-                AttackSpeed = SpecialAttack_1.AttackSpeed,
-            };
+            //Attacks[0].DamagePerHit = 120000f;
+            //Attacks[1].DamagePerHit = (5688f + 7312f) / 2f;
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -1678,7 +1622,7 @@ namespace Rawr {
             // ==== Situational Changes ====
             // When he Impales, he turns around and faces the raid
             // simming this by using the activates over fight and having him facing raid for 2 seconds
-            float time = (BerserkTimer / SpecialAttack_1.AttackSpeed) * 2f;
+            float time = (BerserkTimer / Attacks[1].AttackSpeed) * 2f;
             InBackPerc_Melee = 1f - time / BerserkTimer;
             // Locust Swarm: Every 80-120 seconds for 16 seconds you can't be on the target
             // Adding 4 seconds to the Duration for moving out before starts and then back in after
@@ -1704,27 +1648,27 @@ namespace Rawr {
             Health = 6763325;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Poison Bold Volley",
                 DamageType = ItemDamageType.Nature,
                 DamagePerHit = (/*Initial*/(33755f + 4125f) / 2.0f) + (/*Dot*/((1900f+2100f)/2.0f)*8f/2f),
                 MaxNumTargets = 3,
                 AttackSpeed = (7.0f+15.0f)/2.0f,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Rain of Fire",
                 DamageType = ItemDamageType.Fire,
                 DamagePerHit = (/*Dot*/((3700f+4300f)/2.0f)*6f/2f),
                 MaxNumTargets = 10,
                 AttackSpeed = (6.0f+18.0f)/2.0f,
-            };
+            });
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -1746,20 +1690,20 @@ namespace Rawr {
             Health = 7600000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            /*Attacks.Add(new Attack {
                 Name = MeleeAttack.Name,
                 DamageType = MeleeAttack.DamageType,
                 DamagePerHit = 120000f,
                 MaxNumTargets = MeleeAttack.MaxNumTargets,
                 AttackSpeed = MeleeAttack.AttackSpeed,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = SpecialAttack_1.Name,
                 DamageType = SpecialAttack_1.DamageType,
                 DamagePerHit = (2188f + 2812f) / 2f,
                 MaxNumTargets = 25,
                 AttackSpeed = SpecialAttack_1.AttackSpeed,
-            };
+            });*/
             // Situational Changes
             // 8 Adds every 40 seconds for 10 seconds (only 14000 HP each)
             MultiTargsPerc = ((BerserkTimer / 40f) * 10f) / BerserkTimer;
@@ -1787,20 +1731,20 @@ namespace Rawr {
             BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Impale",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
-            };
+            });
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -1826,20 +1770,20 @@ namespace Rawr {
             Health = 3060000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Decrepit Fever",
                 DamageType = ItemDamageType.Nature,
                 DamagePerHit = 3000f / 3f * 21f,
                 MaxNumTargets = 1,
                 AttackSpeed = 30.0f,
-            };
+            });
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -1866,27 +1810,27 @@ namespace Rawr {
             BerserkTimer = 5 * 60; // Inevitable Doom starts to get spammed every 15 seconds
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Deathbloom",
                 DamageType = ItemDamageType.Nature,
                 DamagePerHit = (/*DoT*/200f / 1f * 6f) + (/*Bloom*/1200f),
                 MaxNumTargets = 10,
                 AttackSpeed = 30.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Inevitable Doom",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = 4000 / 30 * 120,
                 MaxNumTargets = 10,
                 AttackSpeed = 120.0f,
-            };
+            });
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -1914,27 +1858,27 @@ namespace Rawr {
             Health = 3349000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 120000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Disrupting Shout",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4275f + 4725f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 15.0f,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Jagged Knife",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 5000 + (10000 / 5 * 5),
                 MaxNumTargets = 1,
                 AttackSpeed = 10.0f,
-            };
+            });
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -1960,20 +1904,20 @@ namespace Rawr {
             //BerserkTimer = (8 * 60) - (4 * 60 + 34);
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadowbolt",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (2880f + 3520f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 1.0f,
-            };
+            });
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -1996,41 +1940,41 @@ namespace Rawr {
             Health = 781000f * 4f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Korth'azz's Meteor",
                 DamageType = ItemDamageType.Fire,
                 DamagePerHit = (13775f + 15225f) / 2f,
                 MaxNumTargets = 8,
                 AttackSpeed = 15.0f,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Rivendare's Unholy Shadow",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (2160f + 2640f) / 2f + (4800/2*4),
                 MaxNumTargets = 8,
                 AttackSpeed = 15.0f,
-            };
-            SpecialAttack_3 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Blaumeux's Shadow Bolt",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (2357f + 2643f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_4 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Zeliek's Holy Bolt",
                 DamageType = ItemDamageType.Holy,
                 DamagePerHit = (2357f + 2643f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -2059,20 +2003,20 @@ namespace Rawr {
             Health = 13000000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            /*Attacks.Add(new Attack {
                 Name = MeleeAttack.Name,
                 DamageType = MeleeAttack.DamageType,
                 DamagePerHit = 120000f,
                 MaxNumTargets = MeleeAttack.MaxNumTargets,
                 AttackSpeed = MeleeAttack.AttackSpeed,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = SpecialAttack_1.Name,
                 DamageType = SpecialAttack_1.DamageType,
                 DamagePerHit = (79000f + 81000f) / 2f,
                 MaxNumTargets = SpecialAttack_1.MaxNumTargets,
                 AttackSpeed = SpecialAttack_1.AttackSpeed,
-            };
+            });*/
             // Situational Changes
             // Fight Requirements
             Max_Players = 25;
@@ -2093,13 +2037,13 @@ namespace Rawr {
             BerserkTimer = 12 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -2128,13 +2072,13 @@ namespace Rawr {
             BerserkTimer = 8 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 40000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
             // Fight Requirements
@@ -2159,20 +2103,20 @@ namespace Rawr {
             BerserkTimer = 6 * 60; // Need to verify if starts at beg. of combat or beg. of Thadd
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpellAttack = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Chain Lightning",
                 DamageType = ItemDamageType.Nature,
                 DamagePerHit = (3600f+4400f)/2f,
                 MaxNumTargets = 3f,
                 AttackSpeed = 15.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.50f;
             // Every 30 seconds, polarity shift, 3 sec move
@@ -2194,27 +2138,27 @@ namespace Rawr {
             BerserkTimer = 15 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Frost Aura",
                 DamageType = ItemDamageType.Frost,
                 DamagePerHit = 1200f,
                 MaxNumTargets = 10,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Life Drain",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (((4376f+5624f)/2f) * 3f) * 4f,
                 MaxNumTargets = 2,
                 AttackSpeed = 24.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 45(+30) seconds for 30 seconds Sapph is in the air
@@ -2241,20 +2185,20 @@ namespace Rawr {
             SpeedKillTimer = 6 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Impale",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Phase 1, no damage to KT
@@ -2284,34 +2228,34 @@ namespace Rawr {
             Health = 976150f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6188f + 8812f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Breath",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6938f + 8062f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 60 seconds for 20 seconds dps has to jump into the portal and kill the add
             MovingTargsTime  = (BerserkTimer / (60f+20f)) * (20f);
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
-            MovingTargsTime += ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            MovingTargsTime += ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -2330,27 +2274,27 @@ namespace Rawr {
             Health = 976150f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6188f + 8812f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Breath",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6938f + 8062f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
@@ -2359,7 +2303,7 @@ namespace Rawr {
             MaxNumTargets = 6f + 1f;
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
-            MovingTargsTime += ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            MovingTargsTime += ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -2378,32 +2322,32 @@ namespace Rawr {
             Health = 976150f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6188f + 8812f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
-            };
-            SpecialAttack_2 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Shadow Breath",
                 DamageType = ItemDamageType.Shadow,
                 DamagePerHit = (6938f + 8062f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
-            MovingTargsTime = ((BerserkTimer / SpecialAttack_1.AttackSpeed) * (5f + 1f)) * 0.10f;
+            MovingTargsTime = ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
             // Fight Requirements
             Max_Players = 25;
             Min_Tanks = 2;
@@ -2422,20 +2366,20 @@ namespace Rawr {
             Health = 2510100f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Fire Breath",
                 DamageType = ItemDamageType.Fire,
                 DamagePerHit = (8750f + 11250f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 45 seconds for 10 seconds you gotta move for Lava Waves
@@ -2459,20 +2403,20 @@ namespace Rawr {
             BerserkTimer = 5 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Impale",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.75f;
             // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
@@ -2499,20 +2443,20 @@ namespace Rawr {
             Health = 2230000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
-            SpecialAttack_1 = new Attack {
+            });
+            Attacks.Add(new Attack {
                 Name = "Impale",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 70-120 seconds for 16 seconds you can't be on the target
@@ -2541,13 +2485,13 @@ namespace Rawr {
             BerserkTimer = 6 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 90000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
             // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
@@ -2585,13 +2529,13 @@ namespace Rawr {
             Health = 3137625f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
             // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
@@ -2624,13 +2568,13 @@ namespace Rawr {
             Health = 8115990f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.75f; // he moves A LOT so it's hard to stay behind him at all times
             // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
@@ -2662,13 +2606,13 @@ namespace Rawr {
             BerserkTimer = 6 * 60;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 90000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
             // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
@@ -2707,13 +2651,13 @@ namespace Rawr {
             Health = 16734000f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Situational Changes
             //InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
             // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
@@ -2746,13 +2690,13 @@ namespace Rawr {
             Health = 32477904f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Situational Changes
             //InBackPerc_Melee = 0.75f; // he moves A LOT so it's hard to stay behind him at all times
             // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
@@ -2787,13 +2731,13 @@ namespace Rawr {
             Health = 4183500f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Fight Requirements
@@ -2818,13 +2762,13 @@ namespace Rawr {
             Health = 4183500f;
             // Resistance
             // Attacks
-            MeleeAttack = new Attack {
+            Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = 120000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
-            };
+            });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Fight Requirements

@@ -54,7 +54,8 @@ namespace Rawr.DPSWarr {
                 CB_MoveTargsTime.Maximum = 60 * 20; // 20 minutes
                 line = 50;
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane", ex.Message, "CalculationOptionsPanelDPSWarr()", line);
+                new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane",
+                    ex.Message, "CalculationOptionsPanelDPSWarr()", "No Additional Info", ex.StackTrace, line);
             }
             isLoading = false;
         }
@@ -323,6 +324,7 @@ FAQStuff.Add(
             //try {
                 if (!isLoading) {
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                    CalculationsDPSWarr calcs = new CalculationsDPSWarr();
                     if (CB_BossList.Text != "Custom") {
                         isLoading = true;
                         // Get Values
@@ -390,8 +392,15 @@ FAQStuff.Add(
                         LB_Root2.Enabled = calcOpts.RootingTargets;
                         NUD_RootFreq.Value = (int)calcOpts.RootingTargetsFreq;
                         NUD_RootDur.Value = (int)calcOpts.RootingTargetsDur;
-
-                        TB_BossInfo.Text = boss.GenInfoString();
+                        Stats stats = calcs.GetCharacterStats(Character, null);
+                        TB_BossInfo.Text = boss.GenInfoString(
+                            0, // The Boss' Damage bonuses against you (meaning YOU are debuffed)
+                            StatConversion.GetArmorDamageReduction(calcOpts.TargetLevel, stats.Armor,0,0,0), // Your Armor's resulting Damage Reduction
+                            StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Miss , calcOpts.TargetLevel), // Your chance for Boss to Miss you
+                            StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Dodge, calcOpts.TargetLevel), // Your chance Dodge
+                            StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Parry, calcOpts.TargetLevel), // Your chance Parry
+                            0,  // Your Chance to Block
+                            0); // How much you Block when you Block
                         // Save the new names
                         if (!firstload) {
                             calcOpts.FilterType = CB_BL_FilterType.Text;
