@@ -27,12 +27,19 @@ namespace Rawr.DPSWarr {
             int line = 0;
             isLoading = true;
             try {
-                InitializeComponent();
+                //try {
+                    //string isnull = null;
+                    //string check = isnull + "1";
+                //}catch (Exception ex) {
+                    new ErrorBoxDPSWarr("Test Title", "Test message", "CalculationOptionsPanelDPSWarr()",
+                        "This is a forced one, just making sure the frackin thing works", "test stack trace", 0);
+                //}
+                //InitializeComponent();
                 //SetUpFAQ();
                 //CTL_Maints.ExpandAll(); line = 10;
 
                 // Create our local Boss List
-                if (bosslist == null) { bosslist = new BossList(); }
+                //if (bosslist == null) { bosslist = new BossList(); }
                 // Populate the Boss List ComboBox
                 //if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
                 //if (CB_BossList.Items.Count < 2) {
@@ -65,7 +72,7 @@ namespace Rawr.DPSWarr {
             }
             isLoading = false;
         }
-        private void SetUpFAQ() {
+        private void SetUpFAQ() {/*
 FAQStuff.Add(
 "Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x DPS.",
 @"When the standard rotation abilities for Arms are active (including Slam and Heroic Strike) the large rage consumption of the Mortal Strike Ability tends to overshadow the rage left-over for Heroic Strikes. Basically, if you were to Slam instead of Mortal Strike on every time you would have otherwise, there would be more rage left over to Heroic Strike. In some cases, Rawr sees this as a DPS gain and wants you to drop Mortal Strike. Fully 25 Man raid buffed, Mortal Strike should have a higher DPS value than the rage to Heroic Strikes would provide."
@@ -139,12 +146,12 @@ FAQStuff.Add(
             FAQStuff.Keys.CopyTo(arr,0);
             //CB_FAQ_Questions.Items.AddRange(arr);
             //CB_FAQ_Questions.SelectedIndex = 0;
-            CB_FAQ_Questions_SelectedIndexChanged(null, null);
+            CB_FAQ_Questions_SelectedIndexChanged(null, null);*/
         }
         private void CB_FAQ_Questions_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            try {
+            /*try {
                 string text = "";
-                if (true /*CB_FAQ_Questions.Text == "All"*/) {
+                if (true /*CB_FAQ_Questions.Text == "All"*//*) {
                     int Iter = 1;
                     text += "== CONTENTS ==" + "\r\n";
                     foreach (string s in FAQStuff.Keys) {
@@ -178,7 +185,7 @@ FAQStuff.Add(
             } catch(Exception ex){
                 new ErrorBoxDPSWarr("Error in setting the FAQ Item",
                     ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
-            }
+            }*/
         }
         public void LoadCalculationOptions() {
             int line = 0; string info = "";
@@ -287,17 +294,17 @@ FAQStuff.Add(
                     isLoading = true;
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     // Use Filter Type Box to adjust Filter Box
-                    if (CB_BL_Filter.Items.Count > 0) { CB_BL_Filter.Items.Clear(); }
-                    if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
+                    //if (CB_BL_Filter.Items.Count > 0) { CB_BL_Filter.Items.Clear(); }
+                    //if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
                     //CB_BL_Filter.Text = "All";
-                    BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
+                    //BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
                     //bosslist.GenCalledList(ftype, CB_BL_Filter.Text);
-                    foreach (string s in bosslist.GetFilterListAsArray(ftype)) { CB_BL_Filter.Items.Add(s); }
+                    //foreach (string s in bosslist.GetFilterListAsArray(ftype)) { CB_BL_Filter.Items.Add(s); }
                     //CB_BL_Filter.Text = "All";
                     // Now edit the Boss List to the new filtered list of bosses
-                    if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
-                    CB_BossList.Items.Add("Custom");
-                    foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
+                    //if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                    //CB_BossList.Items.Add("Custom");
+                    //foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
                     //CB_BossList.Text = "Custom";
                     // Save the new names
                     if (!firstload) {
@@ -320,12 +327,12 @@ FAQStuff.Add(
                     isLoading = true;
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     // Use Filter Type Box to adjust Filter Box
-                    BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
+                    //BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
                     //bosslist.GenCalledList(ftype, CB_BL_Filter.Text);
                     // Now edit the Boss List to the new filtered list of bosses
-                    if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
-                    CB_BossList.Items.Add("Custom");
-                    foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
+                    //if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                    //CB_BossList.Items.Add("Custom");
+                    //foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
                     //CB_BossList.Text = "Custom";
                     // Save the new names
                     if (!firstload) {
@@ -349,7 +356,7 @@ FAQStuff.Add(
                     if (CB_BossList.SelectedIndex != 0) { // "Custom"
                         isLoading = true;
                         // Get Values
-                        BossHandler boss = bosslist.GetBossFromBetterName("T7 : Naxxramas : 10 man : Patchwerk"/*CB_BossList.Text*/);
+                        /*BossHandler boss = bosslist.GetBossFromBetterName("T7 : Naxxramas : 10 man : Patchwerk"/*CB_BossList.Text*//*);
                         calcOpts.TargetLevel = boss.Level;
                         calcOpts.TargetArmor = (int)boss.Armor;
                         calcOpts.Duration = boss.BerserkTimer;
@@ -363,7 +370,7 @@ FAQStuff.Add(
                         calcOpts.FearingTargets = ((calcOpts.FearingTargetsFreq = (int)(boss.FearingTargsFreq)) <= calcOpts.Duration * 0.99f && calcOpts.FearingTargetsFreq != 0f);
                         calcOpts.FearingTargetsDur = boss.FearingTargsDur;
                         calcOpts.RootingTargets = ((calcOpts.RootingTargetsFreq = (int)(boss.RootingTargsFreq)) <= calcOpts.Duration * 0.99f && calcOpts.RootingTargetsFreq != 0f);
-                        calcOpts.RootingTargetsDur = boss.RootingTargsDur;
+                        calcOpts.RootingTargetsDur = boss.RootingTargsDur;*/
 
                         // Set Controls to those Values
                         //CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
@@ -414,7 +421,7 @@ FAQStuff.Add(
                         NUD_RootFreq.Value = (int)calcOpts.RootingTargetsFreq;
                         NUD_RootDur.Value = (int)calcOpts.RootingTargetsDur;
 
-                        TB_BossInfo.Text = boss.GenInfoString();
+                        //TB_BossInfo.Text = boss.GenInfoString();
                         // Save the new names
                         if (!firstload) {
                             //calcOpts.FilterType = CB_BL_FilterType.Text;
@@ -503,11 +510,11 @@ FAQStuff.Add(
         }
         private void CB_ArmorBosses_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
             if (!isLoading) {
-                int targetArmor = int.Parse((string)CB_TargArmor.SelectedItem);
+                //int targetArmor = int.Parse((string)CB_TargArmor.SelectedItem);
                 if (Character != null && Character.CalculationOptions != null) {
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     //
-                    calcOpts.TargetArmor = targetArmor;
+                    //calcOpts.TargetArmor = targetArmor;
                     //CB_BossList.Text = "Custom";
                     //
                     Character.OnCalculationsInvalidated();

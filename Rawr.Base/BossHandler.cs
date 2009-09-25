@@ -10,6 +10,11 @@ namespace Rawr {
     #region Subclasses
     /// <summary>Enumerator for creating a list of possible values for the Level box</summary>
     public enum POSSIBLE_LEVELS { NPC_80 = 80, NPC_81, NPC_82, NPC_83, }
+    /// <summary>
+    /// Enumerator for attack types, this mostly is for raid members that aren't
+    /// being directly attacked to know when AoE damage is coming from the boss
+    /// </summary>
+    public enum ATTACK_TYPES { AT_MELEE, AT_RANGED, AT_AOE, }
     /// <summary>A single Attack of various types</summary>
     public struct Attack {
         /// <summary>The Name of the Attack</summary>
@@ -22,6 +27,8 @@ namespace Rawr {
         public float MaxNumTargets;
         /// <summary>The frequency of this attack (in seconds)</summary>
         public float AttackSpeed;
+        /// <summary>The Attack Type (for AoE vs single-target Melee/Ranged)</summary>
+        public ATTACK_TYPES AttackType;
     }
     #endregion
     public class BossList {
@@ -547,12 +554,12 @@ namespace Rawr {
             ItemDamageType[] DamageTypes = new ItemDamageType[] { ItemDamageType.Physical, ItemDamageType.Nature, ItemDamageType.Arcane, ItemDamageType.Frost, ItemDamageType.Fire, ItemDamageType.Shadow, ItemDamageType.Holy, };
             foreach (ItemDamageType t in DamageTypes) { Resistance(t, 0f); }
             // Attacks
-            MeleeAttack     = new Attack { Name = "Invalid", DamageType = ItemDamageType.Physical, DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f };
-            SpellAttack     = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f }; 
-            SpecialAttack_1 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f };
-            SpecialAttack_2 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f };
-            SpecialAttack_3 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f };
-            SpecialAttack_4 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f };
+            MeleeAttack     = new Attack { Name = "Invalid", DamageType = ItemDamageType.Physical, DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_MELEE,  };
+            SpellAttack     = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_RANGED, }; 
+            SpecialAttack_1 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_AOE,    };
+            SpecialAttack_2 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_AOE,    };
+            SpecialAttack_3 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_AOE,    };
+            SpecialAttack_4 = new Attack { Name = "Invalid", DamageType = ItemDamageType.Arcane,   DamagePerHit = 0f, MaxNumTargets = 1f, AttackSpeed = 2f, AttackType = ATTACK_TYPES.AT_AOE,    };
             // Situational Changes
             InBackPerc_Melee   = 0.00f; // Default to never in back
             InBackPerc_Ranged  = 0.00f; // Default to never in back
@@ -737,6 +744,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Impale",
@@ -744,6 +752,7 @@ namespace Rawr {
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // ==== Situational Changes ====
             // When he Impales, he turns around and faces the raid
@@ -782,6 +791,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Poison Bold Volley",
@@ -789,6 +799,7 @@ namespace Rawr {
                 DamagePerHit = (/*Initial*/(2625f + 3375f) / 2.0f) + (/*Dot*/((1480f+1720f)/2.0f)*8f/2f),
                 MaxNumTargets = 3,
                 AttackSpeed = (7.0f+15.0f)/2.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             SpecialAttack_2 = new Attack {
                 Name = "Rain of Fire",
@@ -796,6 +807,7 @@ namespace Rawr {
                 DamagePerHit = (/*Dot*/((1750f+2750f)/2.0f)*6f/2f),
                 MaxNumTargets = 10,
                 AttackSpeed = (6.0f+18.0f)/2.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             // Every 6-18 seconds for 3 seconds she has to be moved to compensate for Rain of Fire
@@ -824,6 +836,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Web Spray",
@@ -831,6 +844,7 @@ namespace Rawr {
                 DamagePerHit = (1750f + 2250f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.90f;
@@ -870,6 +884,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Impale",
@@ -877,6 +892,7 @@ namespace Rawr {
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -907,6 +923,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Decrepit Fever",
@@ -914,6 +931,7 @@ namespace Rawr {
                 DamagePerHit = 3000f / 3f * 21f,
                 MaxNumTargets = 1,
                 AttackSpeed = 30.0f,
+                AttackType = ATTACK_TYPES.AT_RANGED,
             };
             // Situational Changes
             InBackPerc_Melee = 0.25f;
@@ -945,6 +963,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Deathbloom",
@@ -952,6 +971,7 @@ namespace Rawr {
                 DamagePerHit = (/*DoT*/200f / 1f * 6f) + (/*Bloom*/1200f),
                 MaxNumTargets = 10,
                 AttackSpeed = 30.0f,
+                AttackType = ATTACK_TYPES.AT_RANGED,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Inevitable Doom",
@@ -959,6 +979,7 @@ namespace Rawr {
                 DamagePerHit = 4000 / 30 * 120,
                 MaxNumTargets = 10,
                 AttackSpeed = 120.0f,
+                AttackType = ATTACK_TYPES.AT_RANGED,
             };
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -991,6 +1012,7 @@ namespace Rawr {
                 DamagePerHit = 120000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Disrupting Shout",
@@ -998,6 +1020,7 @@ namespace Rawr {
                 DamagePerHit = (4275f + 4725f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 15.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             SpecialAttack_2 = new Attack {
                 Name = "Jagged Knife",
@@ -1005,6 +1028,7 @@ namespace Rawr {
                 DamagePerHit = 5000 + (10000 / 5 * 5),
                 MaxNumTargets = 1,
                 AttackSpeed = 10.0f,
+                AttackType = ATTACK_TYPES.AT_RANGED,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1035,6 +1059,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Shadowbolt",
@@ -1042,6 +1067,7 @@ namespace Rawr {
                 DamagePerHit = (2880f + 3520f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 1.0f,
+                AttackType = ATTACK_TYPES.AT_RANGED,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1069,6 +1095,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Korth'azz's Meteor",
@@ -1076,6 +1103,7 @@ namespace Rawr {
                 DamagePerHit = (13775f + 15225f) / 2f,
                 MaxNumTargets = 8,
                 AttackSpeed = 15.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             SpecialAttack_2 = new Attack {
                 Name = "Rivendare's Unholy Shadow",
@@ -1083,6 +1111,7 @@ namespace Rawr {
                 DamagePerHit = (2160f + 2640f) / 2f + (4800/2*4),
                 MaxNumTargets = 8,
                 AttackSpeed = 15.0f,
+                AttackType = ATTACK_TYPES.AT_RANGED,
             };
             SpecialAttack_3 = new Attack {
                 Name = "Blaumeux's Shadow Bolt",
@@ -1090,6 +1119,7 @@ namespace Rawr {
                 DamagePerHit = (2357f + 2643f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_RANGED,
             };
             SpecialAttack_4 = new Attack {
                 Name = "Zeliek's Holy Bolt",
@@ -1097,6 +1127,7 @@ namespace Rawr {
                 DamagePerHit = (2357f + 2643f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_RANGED,
             };
             // Situational Changes
             InBackPerc_Melee = 0.75f;
@@ -1131,6 +1162,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Hateful Strike",
@@ -1138,6 +1170,7 @@ namespace Rawr {
                 DamagePerHit = (19975f + 27025f) / 2f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 1.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -1165,6 +1198,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1198,6 +1232,7 @@ namespace Rawr {
                 DamagePerHit = 40000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -1227,6 +1262,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpellAttack = new Attack {
                 Name = "Chain Lightning",
@@ -1234,6 +1270,7 @@ namespace Rawr {
                 DamagePerHit = (3600f+4400f)/2f,
                 MaxNumTargets = 3f,
                 AttackSpeed = 15.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.50f;
@@ -1264,6 +1301,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Frost Aura",
@@ -1271,6 +1309,7 @@ namespace Rawr {
                 DamagePerHit = 1200f,
                 MaxNumTargets = 10,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             SpecialAttack_2 = new Attack {
                 Name = "Life Drain",
@@ -1278,6 +1317,7 @@ namespace Rawr {
                 DamagePerHit = (((4376f+5624f)/2f) * 3f) * 4f,
                 MaxNumTargets = 2,
                 AttackSpeed = 24.0f,
+                AttackType = ATTACK_TYPES.AT_RANGED,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1311,6 +1351,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Impale",
@@ -1318,6 +1359,7 @@ namespace Rawr {
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1353,6 +1395,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Shadow Fissure",
@@ -1360,6 +1403,7 @@ namespace Rawr {
                 DamagePerHit = (6188f + 8812f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             SpecialAttack_2 = new Attack {
                 Name = "Shadow Breath",
@@ -1367,6 +1411,7 @@ namespace Rawr {
                 DamagePerHit = (6938f + 8062f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1400,6 +1445,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Shadow Fissure",
@@ -1407,6 +1453,7 @@ namespace Rawr {
                 DamagePerHit = (6188f + 8812f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             SpecialAttack_2 = new Attack {
                 Name = "Shadow Breath",
@@ -1414,6 +1461,7 @@ namespace Rawr {
                 DamagePerHit = (6938f + 8062f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1449,6 +1497,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Shadow Fissure",
@@ -1456,6 +1505,7 @@ namespace Rawr {
                 DamagePerHit = (6188f + 8812f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             SpecialAttack_2 = new Attack {
                 Name = "Shadow Breath",
@@ -1463,6 +1513,7 @@ namespace Rawr {
                 DamagePerHit = (6938f + 8062f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1494,6 +1545,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Fire Breath",
@@ -1501,6 +1553,7 @@ namespace Rawr {
                 DamagePerHit = (8750f + 11250f) / 2f,
                 MaxNumTargets = 1,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1531,6 +1584,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Impale",
@@ -1538,6 +1592,7 @@ namespace Rawr {
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.75f;
@@ -1570,6 +1625,7 @@ namespace Rawr {
                 DamagePerHit = 60000f,
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
             };
             SpecialAttack_1 = new Attack {
                 Name = "Impale",
@@ -1577,6 +1633,7 @@ namespace Rawr {
                 DamagePerHit = (4813f + 6187f) / 2f,
                 MaxNumTargets = 10,
                 AttackSpeed = 40.0f,
+                AttackType = ATTACK_TYPES.AT_AOE,
             };
             // Situational Changes
             InBackPerc_Melee = 0.95f;

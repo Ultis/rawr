@@ -195,9 +195,12 @@ namespace Rawr.DPSWarr {
                         "Base Stats:Crit",
                         "Base Stats:Haste",
                         @"Base Stats:Armor Penetration*Rating to Cap with bonuses applied
-1232-None
-1109-Arms(123)
-0924-Arms(123)+Mace(185)",
+(but not trinkets)
+1400-None
+1261-Battle(140)
+1177-Battle(140)+T92P(084)
+1051-Battle(140)+Mace(210)
+0967-Battle(140)+T92P(084)+Mace(210)",
                         @"Base Stats:Hit*8.00% chance to miss base for Yellow Attacks
 Precision 0- 8%-0%=8%=262 Rating soft cap
 Precision 1- 8%-1%=7%=230 Rating soft cap
@@ -946,6 +949,15 @@ Don't forget your weapons used matched with races can affect these numbers.",
         #endregion
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+#if RAWR3
+            try {
+                string isnull = null;
+                string check = isnull + "1";
+            }catch (Exception ex) {
+                new ErrorBoxDPSWarr("Test Title", ex.Message, "GetCharacterCalculations()",
+                    "This is a forced one, just making sure the frackin thing works", ex.StackTrace, 0);
+            }
+#endif
             int line = 0;
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
             try {
@@ -1215,59 +1227,48 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         (float)Math.Min(Rot.RK.Duration, landedAtksInterval * 3f), Rot.RK.Cd);
                     statsTotal.AddSpecialEffect(reck);
                 }
-                if (talents.Flurry > 0)
-                {
+                if (talents.Flurry > 0) {
                     float value = talents.Flurry * 0.05f;
-                    SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalHaste = value, }, 
-                        landedAtksInterval * 3f, 0f);
+                    SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit,
+                        new Stats() { PhysicalHaste = value, }, landedAtksInterval * 3f, 0f);
                     statsTotal.AddSpecialEffect(flurry);
                 }
 
                 SpecialEffect bersMainHand = null;
                 SpecialEffect bersOffHand = null;
 
-                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789)
-                { // berserker enchant id
+                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789) { // 3789 = Berserker Enchant ID
                     Stats.SpecialEffectEnumerator mhEffects = character.MainHandEnchant.Stats.SpecialEffects();
-
-                    if (mhEffects.MoveNext())
-                    {
-                        bersMainHand = mhEffects.Current;
-                    }
+                    if (mhEffects.MoveNext()) { bersMainHand = mhEffects.Current; }
                 }
-                if (combatFactors.useOH && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789)
-                {
+                if (combatFactors.useOH && character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789) {
                     Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
-
-                    if (ohEffects.MoveNext())
-                    {
-                        bersOffHand = ohEffects.Current;
-                    }
+                    if (ohEffects.MoveNext()) { bersOffHand = ohEffects.Current; }
                 }
 
                 statsProcs += GetSpecialEffectsStats(character, Rot, combatFactors, bersMainHand, bersOffHand, attemptedAtksInterval, hitRate, critRate, bleedHitInterval, dmgDoneInterval, statsTotal, null);
 
                 // Base Stats
-                statsProcs.Stamina      = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier    ));
-                statsProcs.Strength     = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
-                statsProcs.Strength    += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
-                statsProcs.Strength    += (float)Math.Floor(statsProcs.Paragon     * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
-                statsProcs.Agility      = (float)Math.Floor(statsProcs.Agility     * (1f + totalBAM)   * (1f + statsProcs.BonusAgilityMultiplier    ));
-                statsProcs.Health      += (float)Math.Floor(statsProcs.Stamina     * 10f);
+                statsProcs.Stamina       = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier    ));
+                statsProcs.Strength      = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
+                statsProcs.Strength     += (float)Math.Floor(statsProcs.HighestStat * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
+                statsProcs.Strength     += (float)Math.Floor(statsProcs.Paragon     * (1f + totalBSM)   * (1f + statsProcs.BonusStrengthMultiplier   ));
+                statsProcs.Agility       = (float)Math.Floor(statsProcs.Agility     * (1f + totalBAM)   * (1f + statsProcs.BonusAgilityMultiplier    ));
+                statsProcs.Health       += (float)Math.Floor(statsProcs.Stamina     * 10f);
                 
                 // Armor
-                statsProcs.Armor        = (float)Math.Floor(statsProcs.Armor      * (1f + statsTotal.BaseArmorMultiplier  + statsProcs.BaseArmorMultiplier ));
-                statsProcs.BonusArmor  += statsProcs.Agility * 2f;
-                statsProcs.BonusArmor   = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
-                statsProcs.Armor       += statsProcs.BonusArmor;
-                statsProcs.BonusArmor  = 0; //it's been added to Armor so kill it
+                statsProcs.Armor         = (float)Math.Floor(statsProcs.Armor      * (1f + statsTotal.BaseArmorMultiplier  + statsProcs.BaseArmorMultiplier ));
+                statsProcs.BonusArmor   += statsProcs.Agility * 2f;
+                statsProcs.BonusArmor    = (float)Math.Floor(statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier));
+                statsProcs.Armor        += statsProcs.BonusArmor;
+                statsProcs.BonusArmor    = 0; //it's been added to Armor so kill it
 
                 // Attack Power
-                float totalBAPMProcs    = (1f + statsTotal.BonusAttackPowerMultiplier) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
-                float apBonusSTRProcs   = (1f + totalBAPM) * (statsProcs.Strength * 2f);
-                float apBonusAttTProcs  = (1f + totalBAPM) * ((statsProcs.Armor / 108f) * talents.ArmoredToTheTeeth);
-                float apBonusOtherProcs = (1f + totalBAPM) * (statsProcs.AttackPower);
-                statsProcs.AttackPower  = (float)Math.Floor(apBonusSTRProcs + apBonusAttTProcs + apBonusOtherProcs);
+                float totalBAPMProcs     = (1f + statsTotal.BonusAttackPowerMultiplier) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
+                float apBonusSTRProcs    = (1f + totalBAPM) * (statsProcs.Strength * 2f);
+                float apBonusAttTProcs   = (1f + totalBAPM) * ((statsProcs.Armor / 108f) * talents.ArmoredToTheTeeth);
+                float apBonusOtherProcs  = (1f + totalBAPM) * (statsProcs.AttackPower);
+                statsProcs.AttackPower   = (float)Math.Floor(apBonusSTRProcs + apBonusAttTProcs + apBonusOtherProcs);
 
                 // Crit
                 statsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(statsProcs.Agility, character.Class);
@@ -1290,16 +1291,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                            (1f + statsProcs.PhysicalHaste) *
                                            (1f + ratingHasteBonus)
                                            - 1f;
+
                 // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
                 combatFactors.StatS = statsTotal;
                 Stats bersStats = new Stats();
-                if (bersMainHand != null)
-                { // berserker enchant id
+                if (bersMainHand != null) {
+                    // berserker enchant id
                     bersStats += bersMainHand.GetAverageStats(fightDuration/Rot.GetAttemptedAtksOverDurMH(), Rot.GetLandedAtksOverDurMH() / Rot.GetAttemptedAtksOverDurMH(), combatFactors._c_mhItemSpeed, fightDuration);
                     float f = bersMainHand.GetAverageUptime(fightDuration / Rot.GetAttemptedAtksOverDurMH(), Rot.GetLandedAtksOverDurMH() / Rot.GetAttemptedAtksOverDurMH(), combatFactors._c_mhItemSpeed, fightDuration);
                 }
-                if (bersOffHand != null)
-                {
+                if (bersOffHand != null) {
                     bersStats += bersOffHand.GetAverageStats(fightDuration / Rot.GetAttemptedAtksOverDurOH(), Rot.GetLandedAtksOverDurOH() / Rot.GetAttemptedAtksOverDurOH(), combatFactors._c_mhItemSpeed, fightDuration);
                     float f = bersOffHand.GetAverageUptime(fightDuration / Rot.GetAttemptedAtksOverDurOH(), Rot.GetLandedAtksOverDurOH() / Rot.GetAttemptedAtksOverDurOH(), combatFactors._c_mhItemSpeed, fightDuration);
                 }
@@ -1309,7 +1310,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
                 return statsTotal;
             }catch (Exception ex){
-                new ErrorBoxDPSWarr("Error in creating Character Stats", ex.Message, "GetCharacterStats()");
+                new ErrorBoxDPSWarr("Error in creating Character Stats",
+                    ex.Message, "GetCharacterStats()", "No Additional Info", ex.StackTrace, 0);
             }
             return new Stats();
         }
