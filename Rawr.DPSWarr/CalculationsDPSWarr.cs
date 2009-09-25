@@ -1025,7 +1025,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv) * calcOpts.SurvScale; line++;
                 calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; line++;
             }catch (Exception ex){
-                new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations", ex.Message, "GetCharacterCalculations()", line);
+                new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations",
+                    ex.Message, "GetCharacterCalculations()", "No Additional Info", ex.StackTrace, line);
             }
             return calculatedStats;
         }

@@ -57,60 +57,64 @@ namespace Rawr.DPSWarr
             float hsRageUsed = (FreeRageOverDur - bsBaseRage) / (1f + HS.FullRageCost * (Talents.Bloodsurge * 0.20f / 3f));
             
         }
-        protected override void doIterations()
-        {
-            base.doIterations();
-            // Fury Iteration
-            bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
-            bool clok = CalcOpts.MultipleTargets
-                     && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+        protected override void doIterations() {
+            int line = 0;
+            try {
+                base.doIterations();
+                // Fury Iteration
+                bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+                bool clok = CalcOpts.MultipleTargets
+                         && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
-            float hsPercOvd, clPercOvd; // what percentage of overrides are cleave and hs
-            hsPercOvd = (hsok ? 1f : 0f);
-            if (CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_])
-                hsPercOvd -= CalcOpts.MultipleTargetsPerc / 100f;
-            clPercOvd = (clok ? 1f - hsPercOvd : 0f);
+                float hsPercOvd, clPercOvd; // what percentage of overrides are cleave and hs
+                hsPercOvd = (hsok ? 1f : 0f);
+                if (CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_])
+                    hsPercOvd -= CalcOpts.MultipleTargetsPerc / 100f;
+                clPercOvd = (clok ? 1f - hsPercOvd : 0f);
 
-            _bloodsurgeRPS = BS.RageUseOverDur;
-            float hsRageUsed = FreeRageOverDur * hsPercOvd;
-            float clRageUsed = FreeRageOverDur * clPercOvd;
+                _bloodsurgeRPS = BS.RageUseOverDur;
+                float hsRageUsed = FreeRageOverDur * hsPercOvd;
+                float clRageUsed = FreeRageOverDur * clPercOvd;
 
-            WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = hsRageUsed / HS.FullRageCost;
-            WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = clRageUsed / CL.FullRageCost;
-
-            float oldHSActivates = 0f, newHSActivates = HS.Activates;
-            float oldCLActivates = 0f, newCLActivates = CL.Activates;
-            BS.maintainActs = MaintainCDs;
-            int loopIterator;
-            for (loopIterator = 0;
-                 CalcOpts.FuryStance
-                    && loopIterator < 50
-                    && (Math.Abs(newHSActivates - oldHSActivates) > 1f
-                        || Math.Abs(newCLActivates - oldCLActivates) > 1f);
-                  loopIterator++)
-            {
-                oldHSActivates = HS.Activates;
-                oldCLActivates = CL.Activates;
-                //
-                BS.hsActivates = oldHSActivates; // bloodsurge only cares about HSes, not Cleaves
-                _bloodsurgeRPS = (BS.RageUseOverDur);
-                hsRageUsed = FreeRageOverDur * hsPercOvd;
-                clRageUsed = FreeRageOverDur * clPercOvd;
                 WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = hsRageUsed / HS.FullRageCost;
                 WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = clRageUsed / CL.FullRageCost;
-                //
-                newHSActivates = HS.Activates;
-                newCLActivates = CL.Activates;
-            }
 
-            BS.hsActivates = newHSActivates;
-            //BS.hsActivates += newCLActivates;
-            if (CalcOpts.FuryStance)
-            {
-                _HS_DPS = HS.DPS;
-                _CL_DPS += CL.DPS;
-                _HS_PerHit = HS.DamageOnUse * hsPercOvd;
-                _CL_PerHit = CL.DamageOnUse * clPercOvd;
+                float oldHSActivates = 0f, newHSActivates = HS.Activates;
+                float oldCLActivates = 0f, newCLActivates = CL.Activates;
+                BS.maintainActs = MaintainCDs;
+                int loopIterator;
+                for (loopIterator = 0;
+                     CalcOpts.FuryStance
+                        && loopIterator < 50
+                        && (Math.Abs(newHSActivates - oldHSActivates) > 1f
+                            || Math.Abs(newCLActivates - oldCLActivates) > 1f);
+                      loopIterator++)
+                {
+                    oldHSActivates = HS.Activates;
+                    oldCLActivates = CL.Activates;
+                    //
+                    BS.hsActivates = oldHSActivates; // bloodsurge only cares about HSes, not Cleaves
+                    _bloodsurgeRPS = (BS.RageUseOverDur);
+                    hsRageUsed = FreeRageOverDur * hsPercOvd;
+                    clRageUsed = FreeRageOverDur * clPercOvd;
+                    WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = hsRageUsed / HS.FullRageCost;
+                    WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = clRageUsed / CL.FullRageCost;
+                    //
+                    newHSActivates = HS.Activates;
+                    newCLActivates = CL.Activates;
+                }
+
+                BS.hsActivates = newHSActivates;
+                //BS.hsActivates += newCLActivates;
+                if (CalcOpts.FuryStance)
+                {
+                    _HS_DPS = HS.DPS;
+                    _CL_DPS += CL.DPS;
+                    _HS_PerHit = HS.DamageOnUse * hsPercOvd;
+                    _CL_PerHit = CL.DamageOnUse * clPercOvd;
+                }
+            } catch (Exception ex) {
+                new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations", ex.Message, "doIterations()", "No Additional Info", ex.StackTrace, line);
             }
         }
 

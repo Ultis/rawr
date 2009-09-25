@@ -64,11 +64,39 @@ namespace Rawr.DPSWarr {
                 true   // Heroic Strike
         };
 		public enum Maintenances : int {
-			_RageGen__ = 0, BerserkerRage_, Bloodrage_,
-			_Maintenance__, ShoutChoice_, BattleShout_, CommandingShout_, DemoralizingShout_, SunderArmor_, ThunderClap_, Hamstring_,
-			_Periodics__, ShatteringThrow_, SweepingStrikes_, DeathWish_, Recklessness_, EnragedRegeneration_,
-            _DamageDealers__, Fury_, Whirlwind_, Bloodthirst_, Bloodsurge_, Arms_, Bladestorm_, MortalStrike_, Rend_, Overpower_, SuddenDeath_, Slam_, ExecuteSpam_,
-			_RageDumps__, Cleave_, HeroicStrike_
+			_RageGen__ = 0,
+                BerserkerRage_,
+                Bloodrage_,
+			_Maintenance__,
+                ShoutChoice_,
+                    BattleShout_,
+                    CommandingShout_,
+                DemoralizingShout_,
+                SunderArmor_,
+                ThunderClap_,
+                Hamstring_,
+			_Periodics__,
+                ShatteringThrow_,
+                SweepingStrikes_,
+                DeathWish_,
+                Recklessness_,
+                EnragedRegeneration_,
+            _DamageDealers__,
+                Fury_,
+                    Whirlwind_,
+                    Bloodthirst_,
+                    Bloodsurge_,
+                Arms_,
+                    Bladestorm_,
+                    MortalStrike_,
+                    Rend_,
+                    Overpower_,
+                    SuddenDeath_,
+                    Slam_,
+                ExecuteSpam_,
+			_RageDumps__,
+                Cleave_,
+                HeroicStrike_
 		};
 		// Latency
 		public float Lag = 179f;
