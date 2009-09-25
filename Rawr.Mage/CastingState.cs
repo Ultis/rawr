@@ -421,6 +421,15 @@ namespace Rawr.Mage
                 case CycleId.ArcaneBlastSpam:
                     c = GetSpell(SpellId.ArcaneBlast4);
                     break;
+                case CycleId.ABSpam04MBAM:
+                    c = new ABSpam04MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.ABSpam024MBAM:
+                    c = new ABSpam024MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.ABSpam0234MBAM:
+                    c = new ABSpam0234MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.ABSpam4MBAM:
                     c = new ABSpam4MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
@@ -435,6 +444,12 @@ namespace Rawr.Mage
                     break;
                 case CycleId.AB3AM23MBAM:
                     c = new AB3AM23MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AB4AM0234MBAM:
+                    c = new AB4AM0234MBAM(Calculations.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AB3AM023MBAM:
+                    c = new AB3AM023MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABarAM:
                     c = new ABarAM(Calculations.NeedsDisplayCalculations, this);
