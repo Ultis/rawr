@@ -954,11 +954,6 @@ namespace Rawr.Warlock
                             break;
                         }
                     case "Searing Pain":
-                        {
-                            if (character.WarlockTalents.GlyphSearingPain)
-                                directDamage = spell.AvgHit * (1f - spell.CritChance - 0.2f) + spell.AvgCrit * (spell.CritChance + 0.2f);
-                            break;
-                        }
                     case "Curse of Agony":
                     case "Curse of Doom":
                     case "Seed of Corruption":

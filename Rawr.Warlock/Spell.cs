@@ -27,7 +27,6 @@ namespace Rawr.Warlock
                 case "Curse of Agony":      return new CurseOfAgony(stats, character);
                 case "Curse of Doom":       return new CurseOfDoom(stats, character);
                 case "Corruption":          return new Corruption(stats, character);
-                case "Siphon Life":         return (talents.SiphonLife         > 0 ? new SiphonLife(        stats, character) : null);
                 case "Unstable Affliction": return (talents.UnstableAffliction > 0 ? new UnstableAffliction(stats, character) : null);
                 case "Life Tap":            return new LifeTap(stats, character);
                 //case "Dark Pact":         return (talents.DarkPact           > 0 ? new DarkPact(          stats, character) : null);
@@ -356,9 +355,9 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
-            CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f + stats.Warlock4T8;
+            CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + stats.Warlock4T8;
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
@@ -401,11 +400,10 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.FireAndBrimstone * 0.02f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
             CritChance  = stats.SpellCrit 
-                        + (character.WarlockTalents.Devastation * 0.05f)
-                        + (character.WarlockTalents.Backlash * 0.01f) 
+                        + (character.WarlockTalents.Devastation * 0.05f) 
                         + stats.Warlock4T8;
 
             CritCoef    = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) 
@@ -503,36 +501,9 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Malediction * 0.03f) 
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.Malediction * 0.03f);
 
             CritCoef = (character.WarlockTalents.Pandemic > 0 ? 2 : 1);
-
-            Range = (int)Math.Round(BaseRange * (1 + character.WarlockTalents.GrimReach * 0.1));
-        }
-    }
-
-    //Siphon Life: Transfers 81 health every 3 sec to the caster. Only dmg done implemented.
-    //TODO: remove - this spell has been merged with corruption
-    public class SiphonLife : Spell
-    {
-        static readonly List<SpellData> SpellRankTable = new List<SpellData>() {
-            new SpellData(8, 80, 0, 0, 810)
-        };
-
-        public SiphonLife(Stats stats, Character character)
-            : base("Siphon Life", stats, character, SpellRankTable, 16, 0f, 0, 30f, 1f, 30, 0f, Color.FromArgb(255, 255, 0, 0), MagicSchool.Shadow, SpellTree.Affliction) 
-        {
-        }
-
-        public override void Calculate(Stats stats, Character character)
-        {
-            DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * (DamageCoef + character.WarlockTalents.EverlastingAffliction * 0.01f * 10))
-                       * (1 + character.WarlockTalents.ShadowMastery * 0.03f)
-                       * (1 + character.WarlockTalents.Malediction * 0.01f);
-
-            ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Suppression * 0.02f));
 
             Range = (int)Math.Round(BaseRange * (1 + character.WarlockTalents.GrimReach * 0.1));
         }
@@ -563,8 +534,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Malediction * 0.03f) 
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.Malediction * 0.03f);
 
             CritCoef = (character.WarlockTalents.Pandemic > 0 ? 2 : 1);
 
@@ -692,8 +662,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
 
             //TODO: identify where this 5% increase to spellcrit is coming from
-            CritChance = stats.SpellCrit * 0.05f 
-                       + (character.WarlockTalents.Backlash * 0.01f);
+            //CritChance = stats.SpellCrit * 0.05f;
 
             CritCoef = (character.WarlockTalents.Pandemic > 0 ? 2 : 1);
 
@@ -727,8 +696,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.ImprovedCorruption * 0.01f) 
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.ImprovedCorruption * 0.01f);
 
             CastTime = (float)Math.Max(1.0f, (BaseCastTime / (1 + stats.SpellHaste)));
 
@@ -768,11 +736,10 @@ namespace Rawr.Warlock
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f) 
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.Devastation * 0.05f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
             TimeBetweenTicks = 2f;
 
@@ -803,11 +770,10 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f) 
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.Devastation * 0.05f);
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
@@ -837,11 +803,10 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f) 
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.Devastation * 0.05f);
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
@@ -891,11 +856,10 @@ namespace Rawr.Warlock
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f) 
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.Devastation * 0.05f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
             CastTime = (float)Math.Max(1.0f, ((BaseCastTime - (character.WarlockTalents.Bane * 0.1f)) / (1 + stats.SpellHaste)));
 
@@ -924,11 +888,10 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f) 
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.Devastation * 0.05f);
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
             
@@ -959,7 +922,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
             TimeBetweenTicks = 1f / (1 + stats.SpellHaste);
 
@@ -992,17 +955,13 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm : 1));
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f) 
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.Devastation * 0.05f)
+                       + (character.WarlockTalents.ImprovedSearingPain > 0 ? 0.01f + 0.03f * character.WarlockTalents.ImprovedSearingPain: 0);
 
-            if      (character.WarlockTalents.ImprovedSearingPain == 1) CritChance += 0.04f;
-            else if (character.WarlockTalents.ImprovedSearingPain == 2) CritChance += 0.07f;
-            else if (character.WarlockTalents.ImprovedSearingPain == 3) CritChance += 0.1f;
-
-            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f + (character.WarlockTalents.GlyphSearingPain ? 0.2f : 0)) + 1f;
 
             CastTime = (float)Math.Max(1.0f, (BaseCastTime / (1 + stats.SpellHaste)));
 
@@ -1033,11 +992,10 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f)
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.Devastation * 0.05f);
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
@@ -1074,11 +1032,10 @@ namespace Rawr.Warlock
                           * (1 + character.WarlockTalents.Malediction * 0.01f);
             */
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f) 
-                       + (character.WarlockTalents.Backlash * 0.01f)
+                       + (character.WarlockTalents.Devastation * 0.05f)
                        + (character.WarlockTalents.FireAndBrimstone * 0.05f);
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
@@ -1116,11 +1073,10 @@ namespace Rawr.Warlock
                      * (1 + character.WarlockTalents.FireAndBrimstone * 0.02f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
+                     * (character.WarlockTalents.Cataclysm > 0 ? 1 - 0.01f - 0.03f * character.WarlockTalents.Cataclysm: 1));
 
             CritChance = stats.SpellCrit 
-                       + (character.WarlockTalents.Devastation * 0.05f)
-                       + (character.WarlockTalents.Backlash * 0.01f);
+                       + (character.WarlockTalents.Devastation * 0.05f);
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f; ;
 
