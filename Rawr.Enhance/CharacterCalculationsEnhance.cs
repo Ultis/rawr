@@ -400,10 +400,14 @@ namespace Rawr.Enhance
 
         private String getExpertiseString()
         {
+            String caps = "";
             if (TotalExpertiseMH == TotalExpertiseOH)
             {
-                return String.Format((TotalExpertiseMH > 26 ? "{0} (Cap Exceeded)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged" :
-                                                              "{0}*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged"),
+                if (TotalExpertiseMH > 26)
+                    caps = "{0} (Over Cap)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged";
+                else
+                    caps = "{0}*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged";
+                return String.Format(caps,
                     TotalExpertiseMH.ToString("F0", CultureInfo.InvariantCulture),
                     BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
                     BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture),
@@ -411,9 +415,15 @@ namespace Rawr.Enhance
             }
             else
             {
-                return String.Format(((TotalExpertiseMH > 26 || TotalExpertiseOH > 26) ?
-                        "{0}/{1} (Cap Exceeded)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged" :
-                        "{0}/{1}*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged"),
+                if (TotalExpertiseMH > 26 && TotalExpertiseOH > 26)
+                    caps = "{0}/{1} (Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged";
+                else if (TotalExpertiseMH > 26)
+                    caps = "{0}/{1} (MH Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% OH Dodged";
+                else if (TotalExpertiseOH > 26)
+                    caps = "{0}/{1} (OH Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% MH Dodged";
+                else
+                    caps = "{0}/{1}*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged";
+               return String.Format(caps,
                     TotalExpertiseMH.ToString("F0", CultureInfo.InvariantCulture),
                     TotalExpertiseOH.ToString("F0", CultureInfo.InvariantCulture), 
                     BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
