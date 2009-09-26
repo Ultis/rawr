@@ -316,6 +316,7 @@ threat and limited threat scaled by the threat scale.",
             character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings (Str/Sta Bonus)"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Trauma"));
@@ -597,7 +598,7 @@ threat and limited threat scaled by the threat scale.",
             statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + stats.BonusStaminaMultiplier));
             statsSpecialEffects.Strength = (float)Math.Floor(statsSpecialEffects.Strength * (1.0f + stats.BonusStrengthMultiplier));
             statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + stats.BonusAgilityMultiplier));
-            statsSpecialEffects.Health += (float)Math.Floor(statsSpecialEffects.Stamina * 10.0f);
+            statsSpecialEffects.Health = (float)Math.Floor(statsSpecialEffects.Health + statsSpecialEffects.Stamina * 10.0f);
 
             // Defensive Stats
             statsSpecialEffects.Armor = (float)Math.Floor(statsSpecialEffects.Armor * (1f + stats.BaseArmorMultiplier + statsSpecialEffects.BaseArmorMultiplier));

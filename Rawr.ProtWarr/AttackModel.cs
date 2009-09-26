@@ -10,6 +10,7 @@ namespace Rawr.ProtWarr
         private Character Character;
         private CalculationOptionsProtWarr Options;
         private Stats Stats;
+        private WarriorTalents Talents;
         private DefendTable DefendTable;
         private ParryModel ParryModel;
 
@@ -208,27 +209,24 @@ namespace Rawr.ProtWarr
                     }
             }
 
-            // White Damage
-            float weaponHits = modelLength / ParryModel.WeaponSpeed; //Lookup.WeaponSpeed(Character, Stats);
+            // Weapon Swings
+            float weaponHits = modelLength / ParryModel.WeaponSpeed;
+            float heroicStrikePercentage = 0.0f;
             if (RageModelMode == RageModelMode.Infinite)
-            {
-                // Convert all white hits to heroic strikes
-                modelThreat += Abilities[Ability.HeroicStrike].Threat * weaponHits;
-                modelDamage += Abilities[Ability.HeroicStrike].Damage * weaponHits;
-                modelCrits  += Abilities[Ability.HeroicStrike].CritPercentage * weaponHits;
-                modelHits   += Abilities[Ability.HeroicStrike].HitPercentage * weaponHits;
-            }
-            else
-            {
-                // Normal white hits if we aren't using infinite rage, add some logic for a hybrid system later...
-                modelThreat += Abilities[Ability.None].Threat * weaponHits;
-                modelDamage += Abilities[Ability.None].Damage * weaponHits;
-                modelCrits  += Abilities[Ability.None].CritPercentage * weaponHits;
-                modelHits   += Abilities[Ability.None].HitPercentage * weaponHits;
-            }
+                heroicStrikePercentage = 0.9f;
+
+            modelThreat += Abilities[Ability.HeroicStrike].Threat * weaponHits * heroicStrikePercentage;
+            modelDamage += Abilities[Ability.HeroicStrike].Damage * weaponHits * heroicStrikePercentage;
+            modelCrits  += Abilities[Ability.HeroicStrike].CritPercentage * weaponHits * heroicStrikePercentage;
+            modelHits   += Abilities[Ability.HeroicStrike].HitPercentage * weaponHits * heroicStrikePercentage;
+           
+            modelThreat += Abilities[Ability.None].Threat * weaponHits * (1.0f - heroicStrikePercentage);
+            modelDamage += Abilities[Ability.None].Damage * weaponHits * (1.0f - heroicStrikePercentage);
+            modelCrits  += Abilities[Ability.None].CritPercentage * weaponHits * (1.0f - heroicStrikePercentage);
+            modelHits   += Abilities[Ability.None].HitPercentage * weaponHits * (1.0f - heroicStrikePercentage);
 
             // Damage Shield
-            float attackerHits = DefendTable.AnyHit * (modelLength / ParryModel.BossAttackSpeed); //Options.BossAttackSpeed;
+            float attackerHits = DefendTable.AnyHit * (modelLength / ParryModel.BossAttackSpeed);
             modelThreat += Abilities[Ability.DamageShield].Threat * attackerHits;
             modelDamage += Abilities[Ability.DamageShield].Damage * attackerHits;
             modelCrits  += Abilities[Ability.DamageShield].CritPercentage * attackerHits;
@@ -236,6 +234,12 @@ namespace Rawr.ProtWarr
             // Deep Wounds
             modelThreat += Abilities[Ability.DeepWounds].Threat * modelCrits;
             modelDamage += Abilities[Ability.DeepWounds].Damage * modelCrits;
+
+            // Misc. Power Gains
+            modelThreat += DefendTable.DodgeParryBlock * (modelLength / ParryModel.BossAttackSpeed) * 25.0f * 
+                (Talents.ShieldSpecialization * 0.2f);
+            modelThreat += DefendTable.DodgeParryBlock * (modelLength / ParryModel.BossAttackSpeed) * 1.0f * 
+                Lookup.StanceThreatMultipler(Character, Stats) * (Talents.ImprovedDefensiveStance * 0.5f);
 
             // Vigilance, is already calculated as TPS
             if (Options.UseVigilance)
@@ -256,8 +260,9 @@ namespace Rawr.ProtWarr
         public AttackModel(Character character, Stats stats, AttackModelMode attackModelMode, RageModelMode rageModelMode)
         {
             Character        = character;
-            Options          = Character.CalculationOptions as CalculationOptionsProtWarr;
             Stats            = stats;
+            Options          = Character.CalculationOptions as CalculationOptionsProtWarr;
+            Talents          = Character.WarriorTalents;
             DefendTable      = new DefendTable(character, stats);
             ParryModel       = new ParryModel(character, stats);
             _attackModelMode = attackModelMode;

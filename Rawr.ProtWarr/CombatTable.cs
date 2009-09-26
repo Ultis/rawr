@@ -29,6 +29,11 @@ namespace Rawr.ProtWarr
             get { return (Miss + Dodge + Parry); }
         }
 
+        public float DodgeParryBlock
+        {
+            get { return (Dodge + Parry + Block); }
+        }
+
         protected virtual void Calculate()
         {
         }

@@ -124,10 +124,11 @@ namespace Rawr.ProtWarr
                     abilityThreat += 225.0f;
                     break;
                 case Ability.Devastate:
+                    // Glyph of Devastate doubles bonus threat
                     if(Talents.GlyphOfDevastate)
-                        abilityThreat += (Stats.AttackPower * 0.1f);
+                        abilityThreat += (315 + (Stats.AttackPower * 0.05f)) * 2.0f;
                     else
-                        abilityThreat += (Stats.AttackPower * 0.05f);
+                        abilityThreat += 315 + (Stats.AttackPower * 0.05f);
                     break;
                 case Ability.HeroicStrike:
                     abilityThreat += 259.0f;
@@ -197,33 +198,5 @@ namespace Rawr.ProtWarr
         {
             this.Add(new AbilityModel(character, stats, ability));
         }
-
-        /*
-        public AbilityModel this[Ability ability]
-        {
-            get { return ((AbilityModel)(Dictionary[ability])); }
-            set { Dictionary[ability] = value; }
-        }
-
-        public void Add(Ability ability, AbilityModel abilityModel)
-        {
-            Dictionary.Add(ability, abilityModel);
-        }
-
-        public void Add(Ability ability, Character character, Stats stats)
-        {
-            Dictionary.Add(ability, new AbilityModel(character, stats, ability));
-        }
-
-        public void Remove(Ability ability)
-        {
-            Dictionary.Remove(ability);
-        }
-
-        public bool Contains(Ability ability)
-        {
-            return Dictionary.Contains(ability);
-        }
-         * */
     }
 }
