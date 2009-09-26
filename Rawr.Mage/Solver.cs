@@ -1242,272 +1242,293 @@ namespace Rawr.Mage
                     for (int segment = 0; segment < evocationSegments; segment++)
                     {
                         // base evocation
-                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = evoState });
-                        column = lp.AddColumnUnsafe();
-                        lp.SetColumnUpperBound(column, (evocationSegments > 1) ? evocationDuration : evocationDuration * calculationResult.MaxEvocation);
-                        if (segment == 0) calculationResult.ColumnEvocation = column;
-                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegen);
-                        lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegen);
-                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                        lp.SetElementUnsafe(rowEvocation, column, 1.0);
-                        lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                        calculationResult.EvocationTps = tps;
-                        lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                        if (needsDisplayCalculations) tpsList.Add(tps);
-                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                        if (restrictManaUse)
+                        if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoState))
                         {
-                            for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                            if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = evoState });
+                            column = lp.AddColumnUnsafe();
+                            lp.SetColumnUpperBound(column, (evocationSegments > 1) ? evocationDuration : evocationDuration * calculationResult.MaxEvocation);
+                            if (calculationResult.ColumnEvocation == -1) calculationResult.ColumnEvocation = column;
+                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegen);
+                            lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegen);
+                            lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                            lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                            lp.SetElementUnsafe(rowEvocation, column, 1.0);
+                            lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
+                            calculationResult.EvocationTps = tps;
+                            lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                            if (needsDisplayCalculations) tpsList.Add(tps);
+                            if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                            if (restrictManaUse)
                             {
-                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegen);
-                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegen);
+                                for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegen);
+                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegen);
+                                }
+                                foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                {
+                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                }
                             }
-                            foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                            if (restrictThreat)
                             {
-                                if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                            }
-                        }
-                        if (restrictThreat)
-                        {
-                            for (int ss = segment; ss < segmentList.Count - 1; ss++)
-                            {
-                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                }
                             }
                         }
                         if (calculationOptions.EnableHastedEvocation)
                         {
                             if (icyVeinsAvailable)
                             {
-                                // last tick of icy veins
-                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoStateIV });
-                                column = lp.AddColumnUnsafe();
-                                lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIV : calculationResult.EvocationDurationIV * calculationResult.MaxEvocation);
-                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIV);
-                                lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenIV);
-                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
-                                lp.SetElementUnsafe(rowEvocation, column, 1.2);
-                                lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
-                                //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0 - calculationResult.EvocationDurationIV / 0.1);
-                                lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                if (needsDisplayCalculations) tpsList.Add(tps);
-                                if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                if (segmentCooldowns)
+                                if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoStateIV))
                                 {
-                                    foreach (SegmentConstraint constraint in rowSegmentIcyVeins)
+                                    // last tick of icy veins
+                                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoStateIV });
+                                    column = lp.AddColumnUnsafe();
+                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIV : calculationResult.EvocationDurationIV * calculationResult.MaxEvocation);
+                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIV);
+                                    lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenIV);
+                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                    lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
+                                    lp.SetElementUnsafe(rowEvocation, column, 1.2);
+                                    lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
+                                    //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0 - calculationResult.EvocationDurationIV / 0.1);
+                                    lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    if (needsDisplayCalculations) tpsList.Add(tps);
+                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                    if (segmentCooldowns)
                                     {
-                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                        foreach (SegmentConstraint constraint in rowSegmentIcyVeins)
+                                        {
+                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                        }
+                                    }
+                                    if (restrictManaUse)
+                                    {
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenIV);
+                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenIV);
+                                        }
+                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                        {
+                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2);
+                                        }
+                                    }
+                                    if (restrictThreat)
+                                    {
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                        }
                                     }
                                 }
-                                if (restrictManaUse)
+                                if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoState))
                                 {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                    // remainder
+                                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoState });
+                                    column = lp.AddColumnUnsafe();
+                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIV : calculationResult.EvocationDurationIV * calculationResult.MaxEvocation);
+                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIV);
+                                    lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenIV);
+                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                    lp.SetElementUnsafe(rowEvocation, column, 1.2);
+                                    lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
+                                    //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0);
+                                    lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    if (needsDisplayCalculations) tpsList.Add(tps);
+                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                    if (restrictManaUse)
                                     {
-                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenIV);
-                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenIV);
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenIV);
+                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenIV);
+                                        }
+                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                        {
+                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2);
+                                        }
                                     }
-                                    foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                    if (restrictThreat)
                                     {
-                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2);
-                                    }
-                                }
-                                if (restrictThreat)
-                                {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
-                                    {
-                                        lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
-                                    }
-                                }
-                                // remainder
-                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoState });
-                                column = lp.AddColumnUnsafe();
-                                lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIV : calculationResult.EvocationDurationIV * calculationResult.MaxEvocation);
-                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIV);
-                                lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenIV);
-                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                lp.SetElementUnsafe(rowEvocation, column, 1.2);
-                                lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
-                                //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0);
-                                lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                if (needsDisplayCalculations) tpsList.Add(tps);
-                                if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                if (restrictManaUse)
-                                {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
-                                    {
-                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenIV);
-                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenIV);
-                                    }
-                                    foreach (SegmentConstraint constraint in rowSegmentEvocation)
-                                    {
-                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2);
-                                    }
-                                }
-                                if (restrictThreat)
-                                {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
-                                    {
-                                        lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                        }
                                     }
                                 }
                             }
                             if (heroismAvailable)
                             {
-                                // last tick of heroism
-                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoStateHero });
-                                column = lp.AddColumnUnsafe();
-                                lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationHero : calculationResult.EvocationDurationHero);
-                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenHero);
-                                lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenHero);
-                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                lp.SetElementUnsafe(rowHeroism, column, 1.0);
-                                lp.SetElementUnsafe(rowEvocation, column, 1.3);
-                                lp.SetElementUnsafe(rowEvocationHero, column, 1.0);
-                                //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0 - calculationResult.EvocationDurationHero / 0.1);
-                                lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                if (needsDisplayCalculations) tpsList.Add(tps);
-                                if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                if (restrictManaUse)
+                                if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoStateHero))
                                 {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                    // last tick of heroism
+                                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoStateHero });
+                                    column = lp.AddColumnUnsafe();
+                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationHero : calculationResult.EvocationDurationHero);
+                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenHero);
+                                    lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenHero);
+                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                    lp.SetElementUnsafe(rowHeroism, column, 1.0);
+                                    lp.SetElementUnsafe(rowEvocation, column, 1.3);
+                                    lp.SetElementUnsafe(rowEvocationHero, column, 1.0);
+                                    //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0 - calculationResult.EvocationDurationHero / 0.1);
+                                    lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    if (needsDisplayCalculations) tpsList.Add(tps);
+                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                    if (restrictManaUse)
                                     {
-                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenHero);
-                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenHero);
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenHero);
+                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenHero);
+                                        }
+                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                        {
+                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.3);
+                                        }
                                     }
-                                    foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                    if (restrictThreat)
                                     {
-                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.3);
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                        }
                                     }
                                 }
-                                if (restrictThreat)
+                                if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoState))
                                 {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                    // remainder
+                                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoState });
+                                    column = lp.AddColumnUnsafe();
+                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationHero : calculationResult.EvocationDurationHero);
+                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenHero);
+                                    lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenHero);
+                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                    lp.SetElementUnsafe(rowEvocation, column, 1.3);
+                                    lp.SetElementUnsafe(rowEvocationHero, column, 1.0);
+                                    //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0);
+                                    lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    if (needsDisplayCalculations) tpsList.Add(tps);
+                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                    if (restrictManaUse)
                                     {
-                                        lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenHero);
+                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenHero);
+                                        }
+                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                        {
+                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.3);
+                                        }
                                     }
-                                }
-                                // remainder
-                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoState });
-                                column = lp.AddColumnUnsafe();
-                                lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationHero : calculationResult.EvocationDurationHero);
-                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenHero);
-                                lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenHero);
-                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                lp.SetElementUnsafe(rowEvocation, column, 1.3);
-                                lp.SetElementUnsafe(rowEvocationHero, column, 1.0);
-                                //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0);
-                                lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                if (needsDisplayCalculations) tpsList.Add(tps);
-                                if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                if (restrictManaUse)
-                                {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                    if (restrictThreat)
                                     {
-                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenHero);
-                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenHero);
-                                    }
-                                    foreach (SegmentConstraint constraint in rowSegmentEvocation)
-                                    {
-                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.3);
-                                    }
-                                }
-                                if (restrictThreat)
-                                {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
-                                    {
-                                        lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                        }
                                     }
                                 }
                             }
                             if (icyVeinsAvailable && heroismAvailable)
                             {
-                                // last tick of icy veins+heroism
-                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoStateIVHero });
-                                column = lp.AddColumnUnsafe();
-                                lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIVHero : calculationResult.EvocationDurationIVHero);
-                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIVHero);
-                                lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenIVHero);
-                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                lp.SetElementUnsafe(rowHeroism, column, 1.0);
-                                lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
-                                lp.SetElementUnsafe(rowHeroismIcyVeins, column, 1.0);
-                                lp.SetElementUnsafe(rowEvocation, column, 1.2 * 1.3);
-                                lp.SetElementUnsafe(rowEvocationHero, column, 1.2);
-                                lp.SetElementUnsafe(rowEvocationIVHero, column, 1.0);
-                                //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0 - calculationResult.EvocationDurationIVHero / 0.1);
-                                lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                if (needsDisplayCalculations) tpsList.Add(tps);
-                                if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                if (segmentCooldowns)
+                                if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoStateIVHero))
                                 {
-                                    foreach (SegmentConstraint constraint in rowSegmentIcyVeins)
+                                    // last tick of icy veins+heroism
+                                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoStateIVHero });
+                                    column = lp.AddColumnUnsafe();
+                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIVHero : calculationResult.EvocationDurationIVHero);
+                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIVHero);
+                                    lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenIVHero);
+                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                    lp.SetElementUnsafe(rowHeroism, column, 1.0);
+                                    lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
+                                    lp.SetElementUnsafe(rowHeroismIcyVeins, column, 1.0);
+                                    lp.SetElementUnsafe(rowEvocation, column, 1.2 * 1.3);
+                                    lp.SetElementUnsafe(rowEvocationHero, column, 1.2);
+                                    lp.SetElementUnsafe(rowEvocationIVHero, column, 1.0);
+                                    //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0 - calculationResult.EvocationDurationIVHero / 0.1);
+                                    lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    if (needsDisplayCalculations) tpsList.Add(tps);
+                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                    if (segmentCooldowns)
                                     {
-                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                        foreach (SegmentConstraint constraint in rowSegmentIcyVeins)
+                                        {
+                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                        }
+                                    }
+                                    if (restrictManaUse)
+                                    {
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenIVHero);
+                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenIVHero);
+                                        }
+                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                        {
+                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2 * 1.3);
+                                        }
+                                    }
+                                    if (restrictThreat)
+                                    {
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                        }
                                     }
                                 }
-                                if (restrictManaUse)
+                                if (calculationOptions.CooldownRestrictionsValid(segmentList[segment], evoState))
                                 {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                    // remainder
+                                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoState });
+                                    column = lp.AddColumnUnsafe();
+                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIVHero : calculationResult.EvocationDurationIVHero);
+                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIVHero);
+                                    lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenIVHero);
+                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                    lp.SetElementUnsafe(rowEvocation, column, 1.2 * 1.3);
+                                    lp.SetElementUnsafe(rowEvocationHero, column, 1.2);
+                                    lp.SetElementUnsafe(rowEvocationIVHero, column, 1.0);
+                                    //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0);
+                                    lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
+                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                    if (needsDisplayCalculations) tpsList.Add(tps);
+                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                    if (restrictManaUse)
                                     {
-                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenIVHero);
-                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenIVHero);
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenIVHero);
+                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenIVHero);
+                                        }
+                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                        {
+                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2 * 1.3);
+                                        }
                                     }
-                                    foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                    if (restrictThreat)
                                     {
-                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2 * 1.3);
-                                    }
-                                }
-                                if (restrictThreat)
-                                {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
-                                    {
-                                        lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
-                                    }
-                                }
-                                // remainder
-                                if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoState });
-                                column = lp.AddColumnUnsafe();
-                                lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIVHero : calculationResult.EvocationDurationIVHero);
-                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIVHero);
-                                lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenIVHero);
-                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                lp.SetElementUnsafe(rowEvocation, column, 1.2 * 1.3);
-                                lp.SetElementUnsafe(rowEvocationHero, column, 1.2);
-                                lp.SetElementUnsafe(rowEvocationIVHero, column, 1.0);
-                                //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0);
-                                lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                                lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                                if (needsDisplayCalculations) tpsList.Add(tps);
-                                if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                if (restrictManaUse)
-                                {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
-                                    {
-                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegenIVHero);
-                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegenIVHero);
-                                    }
-                                    foreach (SegmentConstraint constraint in rowSegmentEvocation)
-                                    {
-                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2 * 1.3);
-                                    }
-                                }
-                                if (restrictThreat)
-                                {
-                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
-                                    {
-                                        lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                        for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                        }
                                     }
                                 }
                             }

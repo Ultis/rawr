@@ -2493,6 +2493,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                     if (lowestMpsIndex > -1)
                     {
+                        bool swapped = false;
                         // we've found a suitable candidate for swap
                         // find first suitable non-cooldown with higher mps to perform swap
                         // and validate mana gap as we go over items
@@ -2523,6 +2524,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                 sequence[lowestMpsIndex] = tmp;
                                 ComputeTimestamps();
                                 extraMana -= neededSwap * mpsdiff;
+                                swapped = true;
                                 break;
                             }
                             else
@@ -2549,6 +2551,10 @@ namespace Rawr.Mage.SequenceReconstruction
                                     t -= d;
                                 }
                             }
+                        }
+                        if (!swapped)
+                        {
+                            lowestMpsIndex = -1; // if the lowest can't be swapped anywhere don't go into infinite loop
                         }
                     }
                 }
