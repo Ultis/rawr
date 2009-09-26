@@ -109,12 +109,13 @@ namespace Rawr.DPSWarr
                 if (CalcOpts.FuryStance)
                 {
                     _HS_DPS = HS.DPS;
-                    _CL_DPS += CL.DPS;
+                    _CL_DPS = CL.DPS;
                     _HS_PerHit = HS.DamageOnUse * hsPercOvd;
                     _CL_PerHit = CL.DamageOnUse * clPercOvd;
                 }
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations", ex.Message, "doIterations()", "No Additional Info", ex.StackTrace, line);
+                new ErrorBoxDPSWarr("Error in performing Fury Iterations",
+                    ex.Message, "doIterations()", "No Additional Info", ex.StackTrace, line);
             }
         }
 
@@ -379,8 +380,7 @@ namespace Rawr.DPSWarr
             bool CLok = CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
             WhiteAtks.Slam_Freq = 0f;// _SL_GCDs;
-            if ((HSok || CLok) && availRage > 0f)
-            {
+            if ((HSok || CLok) && availRage > 0f) {
                 //float numHSOverDur = availRage / HS.FullRageCost;
                 //HS.OverridesOverDur = numHSOverDur;
                 //WhiteAtks.HSOverridesOverDur = numHSOverDur;
@@ -396,10 +396,8 @@ namespace Rawr.DPSWarr
                 _CL_PerHit = CL.DamageOnUse;
                 DPS_TTL += _WhiteDPS;
                 DPS_TTL += _HS_DPS;
-                //DPS_TTL += _CL_DPS;
-            }
-            else
-            {
+                DPS_TTL += _CL_DPS;
+            } else {
                 RageGenWhite = WHITEATTACKS.whiteRageGenOverDur;
                 //availRage += RageGenWhite;
                 WhiteAtks.HSOverridesOverDur = 0f;
