@@ -72,6 +72,11 @@ namespace Rawr
             _domains.Add(CharacterRegion.CN, "cn");
         }
 
+        internal void DownloadItemSearch(string itemName)
+        {
+            DownloadDocument(new Uri(string.Format(Properties.NetworkSettings.Default.ItemSearchURI, "www", itemName), UriKind.Relative));
+        }
+
         internal void DownloadItemToolTipSheet(int id)
         {
             DownloadDocument(new Uri(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id), UriKind.Relative));

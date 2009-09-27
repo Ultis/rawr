@@ -54,6 +54,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Enhance\CalculationOptionsEnhance.cs">
+      <Link>CalculationOptionsEnhance.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Enhance\CalculationsEnhance.cs">
       <Link>CalculationsEnhance.cs</Link>
     </Compile>
@@ -75,7 +78,6 @@
     <Compile Include="..\..\Rawr.Enhance\StatsSpecialEffects.cs">
       <Link>StatsSpecialEffects.cs</Link>
     </Compile>
-    <Compile Include="CalculationOptionsEnhance.cs" />
     <Compile Include="CalculationOptionsPanelEnhance.xaml.cs">
       <DependentUpon>CalculationOptionsPanelEnhance.xaml</DependentUpon>
     </Compile>

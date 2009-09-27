@@ -62,6 +62,9 @@
     <Compile Include="..\..\Rawr.Base\BaseStats.cs">
       <Link>BaseStats.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\BossHandler.cs">
+      <Link>BossHandler.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\Buff.cs">
       <Link>Buff.cs</Link>
     </Compile>

@@ -57,10 +57,12 @@
     <Compile Include="..\..\Rawr.Bear\BearRotationCalculator.cs">
       <Link>BearRotationCalculator.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Bear\CalculationOptionsBear.cs">
+      <Link>CalculationOptionsBear.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Bear\CalculationsBear.cs">
       <Link>CalculationsBear.cs</Link>
     </Compile>
-    <Compile Include="CalculationOptionsBear.cs" />
     <Compile Include="CalculationOptionsPanelBear.xaml.cs">
       <DependentUpon>CalculationOptionsPanelBear.xaml</DependentUpon>
     </Compile>

@@ -54,6 +54,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Rogue\CalculationOptionsRogue.cs">
+      <Link>CalculationOptionsRogue.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Rogue\CalculationsRogue.cs">
       <Link>CalculationsRogue.cs</Link>
     </Compile>
@@ -156,7 +159,6 @@
     <Compile Include="CalculationOptionsPanelRogue.xaml.cs">
       <DependentUpon>CalculationOptionsPanelRogue.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalculationOptionsRogue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

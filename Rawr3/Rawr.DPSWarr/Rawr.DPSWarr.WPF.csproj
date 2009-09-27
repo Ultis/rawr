@@ -59,6 +59,9 @@
     <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.DPSWarr\CalculationOptionsDPSWarr.cs">
+      <Link>CalculationOptionsDPSWarr.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSWarr\CalculationsDPSWarr.cs">
       <Link>CalculationsDPSWarr.cs</Link>
     </Compile>
@@ -95,7 +98,6 @@
     <Compile Include="..\..\Rawr.DPSWarr\Skills.Shared.cs">
       <Link>Skills.Shared.cs</Link>
     </Compile>
-    <Compile Include="CalculationOptionsDPSWarr.cs" />
     <Compile Include="CalculationOptionsPanelDPSWarr.xaml.cs">
       <DependentUpon>CalculationOptionsPanelDPSWarr.xaml</DependentUpon>
     </Compile>

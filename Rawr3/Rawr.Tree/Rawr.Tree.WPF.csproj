@@ -54,8 +54,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Tree\CalculationsOptionsTree.cs">
-      <Link>CalculationsOptionsTree.cs</Link>
+    <Compile Include="..\..\Rawr.Tree\CalculationOptionsTree.cs">
+      <Link>CalculationOptionsTree.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Tree\CalculationsTree.cs">
       <Link>CalculationsTree.cs</Link>

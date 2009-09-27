@@ -62,20 +62,42 @@
     <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbilityModel.cs" />
-    <Compile Include="AttackModel.cs" />
+    <Compile Include="..\..\Rawr.ProtWarr\AbilityModel.cs">
+      <Link>AbilityModel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.ProtWarr\AttackModel.cs">
+      <Link>AttackModel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.ProtWarr\CalculationOptionsProtWarr.cs">
+      <Link>CalculationOptionsProtWarr.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.ProtWarr\CalculationsProtWarr.cs">
+      <Link>CalculationsProtWarr.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.ProtWarr\CharacterCalculationsProtWarr.cs">
+      <Link>CharacterCalculationsProtWarr.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.ProtWarr\CombatTable.cs">
+      <Link>CombatTable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.ProtWarr\ComparisonCalculationsProtWarr.cs">
+      <Link>ComparisonCalculationsProtWarr.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.ProtWarr\DefendModel.cs">
+      <Link>DefendModel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.ProtWarr\Enum.cs">
+      <Link>Enum.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.ProtWarr\Lookup.cs">
+      <Link>Lookup.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.ProtWarr\ParryModel.cs">
+      <Link>ParryModel.cs</Link>
+    </Compile>
     <Compile Include="CalculationOptionsPanelProtWarr.xaml.cs">
       <DependentUpon>CalculationOptionsPanelProtWarr.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CalculationOptionsProtWarr.cs" />
-    <Compile Include="CalculationsProtWarr.cs" />
-    <Compile Include="CharacterCalculationsProtWarr.cs" />
-    <Compile Include="CombatTable.cs" />
-    <Compile Include="ComparisonCalculationsProtWarr.cs" />
-    <Compile Include="DefendModel.cs" />
-    <Compile Include="Enum.cs" />
-    <Compile Include="Lookup.cs" />
-    <Compile Include="ParryModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -46,7 +46,7 @@ namespace Rawr.Properties
             _default.UseDefaultAuthenticationForProxy = false;
             _default.ProxyDomain = "";
             _default.ItemWowheadURI = "http://{0}.wowhead.com/?item={1}&xml";
-            _default.ItemSearchURI = "http://{0}.wowarmory.com/search.xml?searchQuery={1}&searchType=items";
+            _default.ItemSearchURI = "Armory.php?{0}*search.xml*searchQuery={1}&searchType=items";//"http://{0}.wowarmory.com/search.xml?searchQuery={1}&searchType=items";
             _default.ItemWowheadUpgradeURI = "http://{0}.wowhead.com/?items&filter={1}";
             _default.ArmoryTalentIconURI = "http://www.wowarmory.com/wow-icons/_images/_talents43x43/{0}";
 
@@ -125,7 +125,17 @@ namespace Rawr.Properties
         public bool UseDefaultAuthenticationForProxy { get; set; }
         public string ProxyDomain { get; set; }
         public string ItemWowheadURI { get; set; }
-        public string ItemSearchURI { get; set; }
+
+        private string itemSearchURI;
+        public string ItemSearchURI
+        {
+            get
+            {
+                if (UseAspx) return itemSearchURI.Replace("php", "aspx");
+                else return itemSearchURI;
+            }
+            set { itemSearchURI = value; }
+        }
         public string ItemWowheadUpgradeURI { get; set; }
         public string ArmoryTalentIconURI { get; set; }
 

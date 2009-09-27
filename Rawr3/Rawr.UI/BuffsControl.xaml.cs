@@ -20,13 +20,34 @@ namespace Rawr.UI
             get { return character; }
             set
             {
+                if (character != null)
+                {
+                    character.CalculationsInvalidated -= new EventHandler(Character_ItemsChanged);
+                }
                 character = value;
                 _loadingBuffsFromCharacter = true;
                 BuildControls();
-                LoadBuffsFromCharacter();
+                if (character != null)
+                {
+                    character.CalculationsInvalidated += new EventHandler(Character_ItemsChanged);
+                    LoadBuffsFromCharacter();
+                }
                 UpdateEnabledStates();
                 _loadingBuffsFromCharacter = false;
             }
+        }
+
+        private void Character_ItemsChanged(object sender, EventArgs e)
+        {
+            if (!CheckAccess())
+            {
+                Dispatcher.BeginInvoke((EventHandler)Character_ItemsChanged, sender, e);
+                //Invoke((EventHandler)Character_ItemsChanged, sender, e);
+                //InvokeHelper.Invoke(this, "Character_ItemsChanged", new object[] { null, null });
+                return;
+            }
+            LoadBuffsFromCharacter();
+            UpdateEnabledStates();
         }
 
         private bool _loadingBuffsFromCharacter;

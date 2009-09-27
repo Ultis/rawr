@@ -54,6 +54,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.DPSDK\CalculationOptionsDPSDK.cs">
+      <Link>CalculationOptionsDPSDK.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSDK\CalculationsDPSDK.cs">
       <Link>CalculationsDPSDK.cs</Link>
     </Compile>
@@ -66,6 +69,9 @@
     <Compile Include="..\..\Rawr.DPSDK\ComparisonCalculationDPSDK.cs">
       <Link>ComparisonCalculationDPSDK.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSDK\DRW.cs">
+      <Link>DRW.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSDK\Rotation.cs">
       <Link>Rotation.cs</Link>
     </Compile>
@@ -75,7 +81,6 @@
     <Compile Include="..\..\Rawr.DPSDK\Weapon.cs">
       <Link>Weapon.cs</Link>
     </Compile>
-    <Compile Include="CalculationOptionsDPSDK.cs" />
     <Compile Include="CalculationOptionsPanelDPSDK.xaml.cs">
       <DependentUpon>CalculationOptionsPanelDPSDK.xaml</DependentUpon>
     </Compile>

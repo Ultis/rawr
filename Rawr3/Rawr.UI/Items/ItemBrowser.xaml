@@ -173,6 +173,7 @@
 			</Grid>
 		</toolkit:Expander>
 		<StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="3" Orientation="Horizontal" Margin="2,0,0,2">
+            <Button x:Name="AddButton" Content="Add" Width="75" IsEnabled="True" Click="AddButton_Click" Margin="2,2,2,2"/>
 			<Button x:Name="EditButton" Content="Edit" Width="75" IsEnabled="False" Click="EditButton_Click" Margin="2,2,2,2"/>
 			<Button x:Name="RefreshButton" Content="Refresh" Width="75" IsEnabled="False" Click="RefreshButton_Click" Margin="2,2,2,2"/>
 		</StackPanel>

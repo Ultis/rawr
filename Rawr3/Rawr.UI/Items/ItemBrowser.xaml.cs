@@ -19,8 +19,26 @@ namespace Rawr.UI
         {
             get
             {
-                if (itemEditor == null) itemEditor = new ItemEditor();
+                if (itemEditor == null)
+                {
+                    itemEditor = new ItemEditor();
+                    itemEditor.Closed += new EventHandler(ItemEditor_Closed);
+                }
                 return itemEditor;
+            }
+        }
+
+        private EnterId enterId;
+        public EnterId EnterId
+        {
+            get
+            {
+                if (enterId == null)
+                {
+                    enterId = new EnterId();
+                    enterId.Closed += new EventHandler(EnterId_Closed);
+                }
+                return enterId;
             }
         }
 
@@ -114,6 +132,128 @@ namespace Rawr.UI
 #endif
         }
 
+        private void AddButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            EnterId.Show();
+        }
+
+        void EnterId_Closed(object sender, EventArgs e)
+        {
+            if (EnterId.DialogResult.GetValueOrDefault(false))
+            {
+                //_changingItemCache = true;
+                try
+                {
+                    //WebRequestWrapper.ResetFatalErrorIndicator();
+                    int itemId = EnterId.Value;
+                    if (itemId > 0)
+                        AddItemById(EnterId.Value, EnterId.UseArmory, EnterId.UseWowhead);
+                    else
+                        AddItemByName(EnterId.ItemName, EnterId.UseArmory, EnterId.UseWowhead);
+                }
+                finally
+                {
+                    //_changingItemCache = false;
+                }
+            }
+        }
+
+        private void AddItemByName(string name, bool useArmory, bool useWowhead)
+        {
+            // ignore empty strings
+            if (name.Length <= 0) return;
+
+            // try the armory (if requested)
+            if (useArmory)
+            {
+                Armory.GetItemIdByName(name, armoryId => AddItemByName(name, armoryId, useWowhead));
+            }
+            else
+            {
+                AddItemByName(name, 0, useWowhead);
+            }
+        }
+
+        private void AddItemByName(string name, int armoryId, bool useWowhead)
+        {
+            Item newItem = null;
+
+            // try the armory (if requested)
+            if (armoryId > 0)
+            {
+                newItem = Item.LoadFromId(armoryId, true, true, false);
+            }
+
+            // try wowhead (if requested)
+            // TODO add back when we add wowhead support
+            /*if ((newItem == null) && useWowhead)
+            {
+                // make sure we don't get some bad input that is going to mess with our gem info passing
+                if (!name.Contains("."))
+                {
+                    // need to add + where the spaces are
+                    string wowhead_name = name.Replace(' ', '+');
+                    // we can now pass it through the normal URI
+                    newItem = Wowhead.GetItem(wowhead_name + ".0.0.0", true);
+                    if (newItem != null) ItemCache.AddItem(newItem, true);
+                }
+            }*/
+
+            if (newItem == null)
+            {
+                MessageBox.Show("Unable to load item: " + name + ".", "Item not found.", MessageBoxButton.OK);
+            }
+            else
+            {
+                UpdateItemList();
+                // TODO this does not work, figure out how to select an item
+                ItemGrid.SelectedItem = newItem;
+            }
+        }
+
+        private void AddItemById(int id, bool useArmory, bool useWowhead) { AddItemsById(new int[] { id }, useArmory, useWowhead); }
+        private void AddItemsById(int[] ids, bool useArmory, bool useWowhead)
+        {
+            foreach (int id in ids)
+            {
+                Item newItem = null;
+
+                // try the armory (if requested)
+                if (useArmory)
+                {
+                    newItem = Item.LoadFromId(id, true, true, false);
+                }
+
+                // try wowhead (if requested)
+                /*if ((newItem == null) && useWowhead)
+                {
+                    newItem = Wowhead.GetItem(id.ToString(), true);
+                    if (newItem != null) ItemCache.AddItem(newItem, true);
+                }
+                if ((newItem == null) && useWowhead)
+                {
+                    newItem = Wowhead.GetItem("ptr", id.ToString(), true);
+                    if (newItem != null) ItemCache.AddItem(newItem, true);
+                }*/
+
+                if (newItem == null)
+                {
+                    // TODO don't use message box
+                    if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButton.OK) == MessageBoxResult.OK)
+                    {
+                        newItem = new Item("New Item", ItemQuality.Epic, ItemType.None, id, "temp", ItemSlot.Head, string.Empty, false, new Stats(), new Stats(), ItemSlot.None, ItemSlot.None, ItemSlot.None, 0, 0, ItemDamageType.Physical, 0f, string.Empty);
+                        ItemCache.AddItem(newItem);
+                    }
+                }
+                else
+                {
+                    UpdateItemList();
+                    // TODO this does not work, figure out how to select an item
+                    ItemGrid.SelectedItem = newItem;
+                }
+            }
+        }
+
         private void EditButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Item i = ItemGrid.SelectedItem as Item;
@@ -121,7 +261,6 @@ namespace Rawr.UI
             {
                 ItemEditor.CurrentItem = i;
                 ItemEditor.Show();
-                ItemEditor.Closed += new EventHandler(ItemEditor_Closed);
             }
         }
 

@@ -19,6 +19,73 @@ namespace Rawr
             new ItemRequest(id, callback);
         }
 
+        public static void GetItemIdByName(string itemName, Action<int> callback)
+        {
+            new ItemIdRequest(itemName, callback);
+        }
+    }
+
+    public class ItemIdRequest
+    {
+        private readonly string itemName;
+        public string ItemName { get { return itemName; } }
+
+        private readonly Action<int> callback;
+        public Action<int> Callback { get { return callback; } }
+
+        public XDocument ItemSearch { get; set; }
+
+        public int Result { get; set; }
+
+        public void Invoke()
+        {
+            callback(Result);
+        }
+
+        public ItemIdRequest(string itemName, Action<int> callback)
+        {
+            this.itemName = itemName;
+            this.callback = callback;
+            GetItemId();
+        }
+        public void GetItemId()
+        {
+            new NetworkUtils(new EventHandler(ItemSearchReady)).DownloadItemSearch(ItemName);
+        }
+
+        private void ItemSearchReady(object sender, EventArgs e)
+        {
+            NetworkUtils network = sender as NetworkUtils;
+            ItemSearch = network.Result;
+            try
+            {
+                List<XElement> items_nodes = new List<XElement>(ItemSearch.SelectNodes("/page/armorySearch/searchResults/items/item"));
+                // we only want a single match, even if its not exact
+                if (items_nodes.Count == 1)
+                {
+                    int id = Int32.Parse(items_nodes[0].Attribute("id").Value);
+                    Result = id;
+                }
+                else
+                {
+                    // choose an exact match if it exists
+                    foreach (XElement node in items_nodes)
+                    {
+                        if (node.Attribute("name").Value == itemName)
+                        {
+                            int id = Int32.Parse(items_nodes[0].Attribute("id").Value);
+                            Result = id;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessaging.ReportError("Get Item", ex, "Rawr encountered an error getting Item Id from Armory: " + ItemName);
+            }
+            Invoke();
+        }
     }
 
     public class ItemRequest
