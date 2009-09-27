@@ -152,7 +152,7 @@ namespace Rawr.Mage
             }
 
 
-            StringBuilder sb = new StringBuilder();
+            /*StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("Optimal Cycle Palette:");
             sb.AppendLine("");
@@ -211,7 +211,11 @@ z = remaining time on Missile Barrage
                 sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
             }
 
-            MessageBox.Show(sb.ToString());
+            MessageBox.Show(sb.ToString());*/
+
+            ArcaneCycleGenerator generator = new ArcaneCycleGenerator(baseState);
+            CycleAnalyzer analyzer = new CycleAnalyzer(baseState, generator, wand);
+            analyzer.Show();
         }
 
         private void buttonCooldownRestrictionsEditor_Click(object sender, EventArgs e)

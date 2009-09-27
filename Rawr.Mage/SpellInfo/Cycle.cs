@@ -1184,6 +1184,13 @@ namespace Rawr.Mage
         public int[] ControlOptions;
         public int[] ControlValue;
         public int[] ControlIndex;
+        public virtual string StateDescription
+        {
+            get
+            {
+                return "";
+            }
+        }
 
         public void GenerateStateDescription()
         {
@@ -1286,10 +1293,53 @@ namespace Rawr.Mage
 
         public List<Cycle> Analyze(CastingState castingState, Cycle wand)
         {
+            return Analyze(castingState, wand, null);
+        }
+
+        public List<Cycle> Analyze(CastingState castingState, Cycle wand, System.ComponentModel.BackgroundWorker worker)
+        {
             Dictionary<string, Cycle> cycleDict = new Dictionary<string, Cycle>();
             int j;
+            // reset
+            for (int i = 0; i < ControlValue.Length; i++)
+            {
+                ControlValue[i] = 0;
+            }
+            // count total cycles
+            int total = 0;
             do
             {
+                total++;
+                j = ControlValue.Length - 1;
+                ControlValue[j]++;
+                while (ControlValue[j] >= ControlOptions[j])
+                {
+                    ControlValue[j] = 0;
+                    j--;
+                    if (j < 0)
+                    {
+                        break;
+                    }
+                    ControlValue[j]++;
+                }
+            } while (j >= 0);
+            // reset
+            for (int i = 0; i < ControlValue.Length; i++)
+            {
+                ControlValue[i] = 0;
+            }
+            int count = 0;
+            do
+            {
+                if (worker != null && worker.CancellationPending)
+                {
+                    break;
+                }
+                if (worker != null && count % 100 == 0)
+                {
+                    worker.ReportProgress((100 * count) / total, count + "/" + total);
+                }
+                count++;
                 string name = "";
                 for (int i = 0; i < ControlValue.Length; i++)
                 {

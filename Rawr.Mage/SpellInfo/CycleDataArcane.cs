@@ -2075,5 +2075,19 @@ namespace Rawr.Mage
             State b = (State)state2;
             return (a.ArcaneBlastStack != b.ArcaneBlastStack || a.ArcaneBarrageCooldown != b.ArcaneBarrageCooldown || a.MissileBarrageRegistered != b.MissileBarrageRegistered/* || (a.MissileBarrageRegistered == true && b.MissileBarrageRegistered == true && a.MissileBarrageDuration != b.MissileBarrageDuration)*/);
         }
+
+        public override string StateDescription
+        {
+            get
+            {
+                return @"Cycle Code Legend: 0 = AB, 1 = ABar, 2 = AM
+State Descriptions: ABx,ABary,MBz+-
+x = number of AB stacks
+y = remaining cooldown on Arcane Barrage
+z = remaining time on Missile Barrage
++ = Missile Barrage proc visible
+- = Missile Barrage proc not visible";
+            }
+        }
     }
 }
