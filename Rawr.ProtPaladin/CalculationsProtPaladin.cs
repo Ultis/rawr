@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Xml.Serialization;
 #if RAWR3
 using System.Windows.Media;
 #else
@@ -94,10 +96,8 @@ namespace Rawr.ProtPaladin
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 #endif
         {
-            get
-            {
-                if (_calculationOptionsPanel == null)
-                {
+            get {
+                if (_calculationOptionsPanel == null) {
                     _calculationOptionsPanel = new CalculationOptionsPanelProtPaladin();
                 }
                 return _calculationOptionsPanel;
@@ -105,10 +105,8 @@ namespace Rawr.ProtPaladin
         }
 
         private string[] _characterDisplayCalculationLabels = null;
-        public override string[] CharacterDisplayCalculationLabels
-        {
-            get
-            {
+        public override string[] CharacterDisplayCalculationLabels {
+            get {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
                     "Base Stats:Health",
@@ -187,11 +185,10 @@ focus on Survival Points.",
                 return _characterDisplayCalculationLabels;
             }
         }
+
         private string[] _optimizableCalculationLabels = null;
-        public override string[] OptimizableCalculationLabels
-        {
-            get
-            {
+        public override string[] OptimizableCalculationLabels {
+            get {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
                     "Health",
@@ -220,10 +217,8 @@ focus on Survival Points.",
         }
 
         private string[] _customChartNames = null;
-        public override string[] CustomChartNames
-        {
-            get
-            {
+        public override string[] CustomChartNames {
+            get {
                 if (_customChartNames == null)
                     _customChartNames = new string[] {
                     "Ability Damage",
@@ -238,12 +233,9 @@ focus on Survival Points.",
         }
 
         private Dictionary<string, Color> _subPointNameColors = null;
-        public override Dictionary<string, Color> SubPointNameColors
-        {
-            get
-            {
-                if (_subPointNameColors == null)
-                {
+        public override Dictionary<string, Color> SubPointNameColors {
+            get {
+                if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, Color>();
 					_subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 255));
 					_subPointNameColors.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
@@ -253,37 +245,13 @@ focus on Survival Points.",
             }
         }
 
-        private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (_relevantItemTypes == null)
-                {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]
-                    {
-                        ItemType.Plate,
-                        ItemType.None,
-                        ItemType.Shield,
-                        ItemType.Libram,
-                        ItemType.OneHandAxe,
-                        ItemType.OneHandMace,
-                        ItemType.OneHandSword,
-                    });
-                }
-                return _relevantItemTypes;
-            }
-        }
-
         public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationProtPaladin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsProtPaladin(); }
 
-        public override ICalculationOptionBase DeserializeDataObject(string xml)
-        {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsProtPaladin));
-            System.IO.StringReader reader = new System.IO.StringReader(xml);
+        public override ICalculationOptionBase DeserializeDataObject(string xml) {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsProtPaladin));
+            StringReader reader = new StringReader(xml);
             CalculationOptionsProtPaladin calcOpts = serializer.Deserialize(reader) as CalculationOptionsProtPaladin;
             return calcOpts;
         }
@@ -1312,6 +1280,24 @@ focus on Survival Points.",
         }
 
         #region Relevancy Methods
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes {
+            get {
+                if (_relevantItemTypes == null) {
+                    _relevantItemTypes = new List<ItemType>(new ItemType[] {
+                        ItemType.Plate,
+                        ItemType.None,
+                        ItemType.Shield,
+                        ItemType.Libram,
+                        ItemType.OneHandAxe,
+                        ItemType.OneHandMace,
+                        ItemType.OneHandSword,
+                    });
+                }
+                return _relevantItemTypes;
+            }
+        }
+
         private static List<string> _relevantGlyphs;
         public override List<string> GetRelevantGlyphs() {
             if (_relevantGlyphs == null) {
@@ -1413,7 +1399,7 @@ focus on Survival Points.",
                     effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit ||
                     effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken)
                 {
-                    if (hasRelevantSpecialEffect(effect.Stats)) {
+                    if (HasRelevantStats(effect.Stats)) {
                         s.AddSpecialEffect(effect);
                     }
                 }
@@ -1423,41 +1409,45 @@ focus on Survival Points.",
 
         public override bool IsItemRelevant(Item item) {
             try {
-                bool relevant = (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString())) &&
-                    (RelevantItemTypes.Contains(item.Type)) && (HasRelevantStats(item.Stats) ||
-                    (((item.Slot == ItemSlot.Trinket) || (item.IsGem)) && (hasRelevantTrinketGemStats(item.Stats)))) ||
-                    (item.Slot == ItemSlot.Ranged) && (item.Type == ItemType.Libram);
+                bool relevant = (string.IsNullOrEmpty(item.RequiredClasses)
+                                 || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString()))
+                                && RelevantItemTypes.Contains(item.Type)
+                                && HasRelevantStats(item.Stats)
+                                || (item.Slot == ItemSlot.Ranged && item.Type == ItemType.Libram);
                 return relevant;
             } catch (Exception) {
                 return false;
             }
         }
 
-        public bool hasRelevantSpecialEffect(Stats stats)
-        {
+        public override bool HasRelevantStats(Stats stats) {
             bool relevant = (
-
-                //Basic Stats
+                // Basic Stats
+                stats.Stamina +
                 stats.Health +
                 stats.Strength +
                 stats.Agility +
 
-                //Tanking Stats
-                stats.DefenseRating +
-                stats.DodgeRating +
-                stats.ParryRating +
-                stats.BlockValue +
-                stats.BlockRating +
+                // Tanking Stats
                 stats.Armor +
                 stats.BonusArmor +
+                stats.Block +
+                stats.BlockValue +
+                stats.BlockRating +
+                stats.Defense +
+                stats.DefenseRating +
+                stats.DodgeRating +
+                stats.Miss +
+                stats.ParryRating +
                 stats.Resilience +
 
                 stats.BaseArmorMultiplier +
                 stats.BonusArmorMultiplier +
+                stats.BonusBlockValueMultiplier +
 
-                //Threat Stats
-                stats.ArmorPenetrationRating +
+                // Threat Stats
                 stats.ArmorPenetration +
+                stats.ArmorPenetrationRating +
                 stats.AttackPower +
                 stats.SpellPower +
                 stats.CritRating +
@@ -1465,98 +1455,12 @@ focus on Survival Points.",
                 stats.SpellCrit +
                 stats.HasteRating +
                 stats.PhysicalHaste +
-
-                stats.PhysicalHaste +
-
-                // Special Stats
-                stats.HighestStat +
-                stats.Healed +
-                stats.ArcaneDamage +
-                stats.ShadowDamage +
-                stats.JudgementBlockValue +
-                stats.ShieldOfRighteousnessBlockValue
-                //stats.HolyDamage
-                //stats.DamageShields +
-                ) != 0;
-            foreach (SpecialEffect childEffect in stats.SpecialEffects()) {
-                relevant |= hasRelevantSpecialEffect(childEffect.Stats);
-            }
-
-            return relevant;
-        }
-
-        public bool hasRelevantTrinketGemStats(Stats stats)
-        {
-            bool trinketStats = (
-
-                //Trinket+Gem Stats
-                stats.Strength +
-                stats.Stamina +
-
-                stats.Armor +
-                stats.BonusArmor +
-
-                //Gem Stats
-                stats.BaseArmorMultiplier +
-                stats.BonusArmorMultiplier +
-                stats.BonusBlockValueMultiplier +
-
-                //Tanking Stats
-                stats.Resilience +  
-                stats.ParryRating + 
-                stats.BlockRating + 
-                stats.BlockValue + 
-                stats.DefenseRating + 
-                stats.DodgeRating +
-                stats.Resilience +
-
-                //Threat Stats
-                stats.AttackPower +
-                stats.CritRating +
+                stats.SpellHaste +
                 stats.HitRating +
-                stats.ExpertiseRating
-                ) != 0;
-
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                //if (effect.Trigger != null)
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
-                    effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
-                    effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken)
-                {
-                    trinketStats |= hasRelevantSpecialEffect(effect.Stats);
-                    if (trinketStats) break;
-                }
-            }
-            return trinketStats;
-        }
-
-        public override bool HasRelevantStats(Stats stats)
-        {
-            bool relevant = (
-
-                //Basic Stats
-                stats.Health +
-                stats.Agility +
-
-                //Tanking Stats
-                stats.DefenseRating +
-                stats.DodgeRating +
-                stats.ParryRating +
-                stats.BlockValue +
-                stats.BlockRating +
-                stats.Armor +
-                stats.BonusArmor +
-
-                stats.BaseArmorMultiplier +
-                stats.BonusArmorMultiplier +
-
-                //Threat Stats
-                stats.ArmorPenetrationRating +
-                stats.ArmorPenetration +
-                stats.AttackPower +
+                stats.PhysicalHit +
+                stats.SpellHit +
+                stats.Expertise +
+                stats.ExpertiseRating +
 
                 // Special Stats
                 stats.JudgementBlockValue +
@@ -1567,6 +1471,24 @@ focus on Survival Points.",
                 stats.BonusSealOfVengeanceDamageMultiplier +
                 stats.ConsecrationSpellPower +
                 stats.HighestStat +
+                stats.ArcaneDamage +
+                stats.ShadowDamage +
+                stats.Healed +
+
+                // Multiplier Buffs/Debuffs
+                stats.BonusStrengthMultiplier +
+                stats.BonusAgilityMultiplier +
+                stats.BonusStaminaMultiplier +
+                stats.BonusHealthMultiplier +
+                stats.BossAttackSpeedMultiplier +
+                stats.ThreatIncreaseMultiplier +
+                stats.BaseArmorMultiplier +
+                stats.BonusArmorMultiplier +
+                stats.BonusAttackPowerMultiplier +
+                stats.BonusDamageMultiplier +
+                stats.BonusPhysicalDamageMultiplier +
+                stats.BonusHolyDamageMultiplier +
+                stats.DamageTakenMultiplier +
 
                 // Resistances
                 stats.AllResist +
@@ -1582,169 +1504,37 @@ focus on Survival Points.",
                 stats.ShadowResistanceBuff 
                 ) != 0;
 
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                //if (effect.Trigger != null)
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
-                    effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
-                    effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken)
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if (effect.Trigger == Trigger.Use          ||
+                    effect.Trigger == Trigger.MeleeHit     || effect.Trigger == Trigger.PhysicalHit    ||
+                    effect.Trigger == Trigger.MeleeCrit    || effect.Trigger == Trigger.PhysicalCrit   || 
+                    effect.Trigger == Trigger.DoTTick      || effect.Trigger == Trigger.SpellCast      ||
+                    effect.Trigger == Trigger.DamageDone   || effect.Trigger == Trigger.DamageTaken    ||
+                    effect.Trigger == Trigger.SpellHit     || effect.Trigger == Trigger.DamageSpellHit ||
+                    effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield     ||
+                    effect.Trigger == Trigger.ShieldofRighteousness)
                 {
-                    //if (effect.Stats != null)
-                    if (hasRelevantSpecialEffect(effect.Stats)) 
-                    {
-                        return true;
-                        //break;
-                    }
+                    relevant |= HasRelevantStats(effect.Stats);
                 }
             }
             return relevant;
         }
 
-        public override bool IsBuffRelevant(Buff buff)
-        {
+        public override bool IsBuffRelevant(Buff buff) {
             Stats stats = buff.Stats;
-            bool hasRelevantBuffStats = (
-
-                //Basic Stats
-                stats.Stamina +
-                stats.Strength +
-                stats.Agility +
-                stats.Health +
-
-                //Defensive Stats
-                stats.Resilience +
-                stats.DefenseRating +
-                stats.Defense +
-                stats.Miss +
-                stats.Block +
-                stats.BlockRating +
-                stats.Armor +
-                stats.BonusArmor +
-                stats.BlockValue +
-
-                //Threat Stats
-                stats.CritRating +
-                stats.PhysicalCrit +
-                stats.SpellCrit +
-                stats.HasteRating +
-                stats.PhysicalHaste +
-                stats.SpellHaste +
-                stats.HitRating +
-                stats.PhysicalHit +
-                stats.SpellHit +
-                stats.AttackPower +
-                stats.SpellPower +
-                stats.ArmorPenetration +
-                stats.ArmorPenetrationRating +
-                stats.Expertise +
-                stats.ExpertiseRating +
-
-                //Multiplier Buffs/Debuffs
-                stats.BonusStrengthMultiplier +
-                stats.BonusAgilityMultiplier +
-                stats.BonusStaminaMultiplier +
-                stats.BonusHealthMultiplier +
-                stats.BossAttackSpeedMultiplier +
-                stats.ThreatIncreaseMultiplier +
-                stats.BaseArmorMultiplier +
-                stats.BonusArmorMultiplier +
-                stats.BonusAttackPowerMultiplier +
-                stats.BonusDamageMultiplier +
-                stats.BonusPhysicalDamageMultiplier +
-                stats.BonusHolyDamageMultiplier +
-                stats.DamageTakenMultiplier +
-
-                //Resistances
-                stats.AllResist +
-                stats.ArcaneResistance +
-                stats.NatureResistance +
-                stats.FireResistance +
-                stats.FrostResistance +
-                stats.ShadowResistance +
-                stats.ArcaneResistanceBuff +
-                stats.NatureResistanceBuff +
-                stats.FireResistanceBuff +
-                stats.FrostResistanceBuff +
-                stats.ShadowResistanceBuff +
-
-                //stats.Bonus
-                stats.BonusHammerOfTheRighteousMultiplier +
-                stats.ConsecrationSpellPower +
-                stats.ShieldOfRighteousnessBlockValue +
-                stats.BonusSealOfCorruptionDamageMultiplier +
-                stats.BonusSealOfRighteousnessDamageMultiplier +
-                stats.BonusSealOfVengeanceDamageMultiplier
-
-                ) != 0;
-
+            bool hasRelevantBuffStats = HasRelevantStats(stats);
+            
             bool NotClassSetBonus = ((buff.Group == "Set Bonuses") && !(buff.Name.Contains("Aegis") || buff.Name.Contains("Redemption")));
-
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                //if (effect.Trigger != null)
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
-                    effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
-                    effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast)
-                {
-                    if (hasRelevantSpecialEffect(effect.Stats)) 
-                    {
-                        return true;
-                        //break;
-                    }
-                }
-            }
 
             bool relevant = hasRelevantBuffStats && !NotClassSetBonus;
             return relevant;
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant)
-        {
+        public override bool IsEnchantRelevant(Enchant enchant) {
             Stats stats = enchant.Stats;
 
-            bool relevant = (
+            bool relevant = HasRelevantStats(stats);
 
-                //Basic Stats
-                stats.Health +
-                stats.Strength +
-                stats.Stamina +
-                stats.Agility +
-
-                //Tanking Stats
-                stats.DefenseRating +
-                stats.DodgeRating +
-                stats.ParryRating +
-                stats.BlockRating +
-                stats.BlockValue +
-                stats.Resilience +
-                stats.BonusArmor +
-
-                //Threat Stats
-                stats.ThreatIncreaseMultiplier +
-                stats.CritRating +
-                stats.HitRating +
-                stats.ExpertiseRating
-
-                ) != 0;
-
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                //if (effect.Trigger != null)
-                if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
-                    effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
-                    effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
-                {
-                    if (hasRelevantSpecialEffect(effect.Stats))
-                    {
-                        return true;
-                        //break;
-                    }
-                }
-            }
             return relevant;
         }
         #endregion
@@ -1753,8 +1543,7 @@ focus on Survival Points.",
         /// Saves the talents for the character
         /// </summary>
         /// <param name="character">The character for whom the talents should be saved</param>
-        public void GetTalents(Character character)
-        {
+        public void GetTalents(Character character) {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             calcOpts.talents = character.PaladinTalents;
         }
