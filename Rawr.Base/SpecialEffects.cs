@@ -225,6 +225,10 @@ namespace Rawr {
                 // Elemental Focus Stone
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { HasteRating = 522 }, 10f, 45f, 0.1f));
             }
+			else if (line.StartsWith("When struck in combat has a chance of"))
+			{ // Essence of Gossamer
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -0.01f }, 10, 1, 0.05f));
+			}
             else if (line.StartsWith("Your melee and ranged attacks have a chance to call on the power"))
 			{ //Shattered Sun Pendant of Might
 				stats.ShatteredSunMightProc += 1f;

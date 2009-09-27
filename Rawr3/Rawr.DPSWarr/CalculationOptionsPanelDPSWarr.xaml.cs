@@ -236,8 +236,8 @@ FAQStuff.Add(
                 CB_MoveTargsTime.IsEnabled = calcOpts.MovingTargets;
                 CB_MoveTargsPerc.IsEnabled = calcOpts.MovingTargets;
                 LB_MoveSec.IsEnabled = calcOpts.MovingTargets;
-                CB_MoveTargsTime.Value = (int)calcOpts.MovingTargetsTime;
-                CB_MoveTargsPerc.Value = (int)(calcOpts.MovingTargetsTime / calcOpts.Duration * 100); line = 20;
+                //CB_MoveTargsTime.Value = (int)calcOpts.MovingTargetsTime;
+                //CB_MoveTargsPerc.Value = (int)(calcOpts.MovingTargetsTime / calcOpts.Duration * 100); line = 20;
 
                 CK_StunningTargs.IsChecked = calcOpts.StunningTargets;
                 NUD_StunFreq.IsEnabled = calcOpts.StunningTargets;
@@ -268,7 +268,8 @@ FAQStuff.Add(
 
                 // nonfunctional
                 CK_DisarmTargs.IsChecked = calcOpts.DisarmingTargets;
-                CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc; line = 25;
+                //CB_DisarmingTargsPerc.Value = calcOpts.DisarmingTargetsPerc; line = 25;
+
                 // Abilities to Maintain
                 CK_Flooring.IsChecked = calcOpts.AllowFlooring;
                 LoadAbilBools(calcOpts); line = 30;
@@ -402,8 +403,8 @@ FAQStuff.Add(
                         CB_MoveTargsPerc.IsEnabled = calcOpts.MovingTargets;
                         LB_MoveSec.IsEnabled = calcOpts.MovingTargets;
                         LB_MovePerc.IsEnabled = calcOpts.MovingTargets;
-                        CB_MoveTargsTime.Value = (int)calcOpts.MovingTargetsTime;
-                        CB_MoveTargsPerc.Value = (double)Math.Floor(calcOpts.MovingTargetsTime / (float)CB_Duration.Value * 100f);
+                        //CB_MoveTargsTime.Value = (int)calcOpts.MovingTargetsTime;
+                        //CB_MoveTargsPerc.Value = (double)Math.Floor(calcOpts.MovingTargetsTime / (float)CB_Duration.Value * 100f);
                         CK_FearingTargs.IsChecked = calcOpts.FearingTargets;
                         NUD_FearFreq.IsEnabled = calcOpts.FearingTargets;
                         NUD_FearDur.IsEnabled = calcOpts.FearingTargets;
@@ -442,7 +443,7 @@ FAQStuff.Add(
                         boss.MultiTargsPerc    = ((float)CB_MultiTargsPerc.Value / 100f);
                         boss.StunningTargsDur  = (float)NUD_StunDur.Value;
                         boss.StunningTargsFreq = (float)NUD_StunFreq.Value;
-                        boss.MovingTargsTime   = (float)CB_MoveTargsTime.Value;
+                        //boss.MovingTargsTime   = (float)CB_MoveTargsTime.Value;
                         boss.FearingTargsDur   = (float)NUD_FearDur.Value;
                         boss.FearingTargsFreq  = (float)NUD_FearFreq.Value;
                         boss.RootingTargsDur   = (float)NUD_RootDur.Value;
@@ -710,8 +711,8 @@ FAQStuff.Add(
                 isLoading = true;
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
-                calcOpts.MovingTargetsTime = (float)CB_MoveTargsTime.Value;
-                CB_MoveTargsPerc.Value = (double)Math.Floor(calcOpts.MovingTargetsTime / (float)CB_Duration.Value * 100f);
+                //calcOpts.MovingTargetsTime = (float)CB_MoveTargsTime.Value;
+                //CB_MoveTargsPerc.Value = (double)Math.Floor(calcOpts.MovingTargetsTime / (float)CB_Duration.Value * 100f);
                 //CB_BossList.Text = "Custom";
                 //
                 Character.OnCalculationsInvalidated();
@@ -723,8 +724,8 @@ FAQStuff.Add(
                 isLoading = true;
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
-                CB_MoveTargsTime.Value = (double)Math.Floor(((float)CB_MoveTargsPerc.Value/100f) * (float)CB_Duration.Value);
-                calcOpts.MovingTargetsTime = (float)CB_MoveTargsTime.Value;
+                //CB_MoveTargsTime.Value = (double)Math.Floor(((float)CB_MoveTargsPerc.Value/100f) * (float)CB_Duration.Value);
+                //calcOpts.MovingTargetsTime = (float)CB_MoveTargsTime.Value;
                 //CB_BossList.Text = "Custom";
                 //
                 Character.OnCalculationsInvalidated();
@@ -735,7 +736,7 @@ FAQStuff.Add(
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
-                calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
+                //calcOpts.DisarmingTargetsPerc = (int)CB_DisarmingTargsPerc.Value;
                 //CB_BossList.Text = "Custom";
                 //
                 Character.OnCalculationsInvalidated();

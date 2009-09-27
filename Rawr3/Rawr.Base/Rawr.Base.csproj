@@ -83,6 +83,12 @@
     <Compile Include="..\..\Rawr.Base\BaseStats.cs">
       <Link>BaseStats.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\Bosses.cs">
+      <Link>Bosses.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Bosses2.cs">
+      <Link>Bosses2.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\BossHandler.cs">
       <Link>BossHandler.cs</Link>
     </Compile>

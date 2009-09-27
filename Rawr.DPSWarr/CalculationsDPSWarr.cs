@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Xml.Serialization;
 #if RAWR3
 using System.Windows.Media;
 #else
 using System.Drawing;
 #endif
+using System.IO;
+using System.Text;
+using System.Xml.Serialization;
 
 namespace Rawr.DPSWarr {
     public class ErrorBoxDPSWarr {
@@ -788,7 +788,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 return _customChartNames;
             }
         }
-
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) {
             CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(character) as CharacterCalculationsDPSWarr;
 
