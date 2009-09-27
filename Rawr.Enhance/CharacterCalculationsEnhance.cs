@@ -308,8 +308,13 @@ namespace Rawr.Enhance
             dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
 
             dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            if(YellowHit < 100f && TotalExpertiseMH < 26)
-                dictValues.Add("Yellow Hit", String.Format("{0}%*Less than 100% as expertise isn't capped", YellowHit.ToString("F2", CultureInfo.InvariantCulture)));
+            if (YellowHit < 100f && TotalExpertiseMH < 26)
+            {
+                float ratingRequired = (float)Math.Ceiling(4f * StatConversion.GetRatingFromExpertise(100f - YellowHit));
+                dictValues.Add("Yellow Hit", String.Format("{0}% (Under Cap)*You need {1} more expertise to cap specials (WF,SS)",
+                    YellowHit.ToString("F2", CultureInfo.InvariantCulture),
+                    ratingRequired.ToString("F0", CultureInfo.InvariantCulture)));
+            }
             else
                 dictValues.Add("Yellow Hit", YellowHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (OverSpellHitCap > 0.38f) // only warn if more than .38% over cap (equivalent to 10 hit rating)
@@ -317,7 +322,16 @@ namespace Rawr.Enhance
                     SpellHit.ToString("F2", CultureInfo.InvariantCulture),
                     OverSpellHitCap.ToString("F2", CultureInfo.InvariantCulture)));
             else
-                dictValues.Add("Spell Hit", SpellHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            {
+                if (SpellHit < 100f) {
+                    float ratingRequired = (float)Math.Ceiling(StatConversion.GetRatingFromHit(1f - SpellHit/100f));
+                    dictValues.Add("Spell Hit", String.Format("{0}% (Under Cap)*You need {1} more hit rating to cap spells (ES, LB etc)", 
+                        SpellHit.ToString("F2", CultureInfo.InvariantCulture),
+                        ratingRequired.ToString("F0", CultureInfo.InvariantCulture)));
+                }
+                else
+                    dictValues.Add("Spell Hit", SpellHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            }
             dictValues.Add("Melee Crit", String.Format("{0}*Crit Rating {1} (+{2}% crit chance)",
                 MeleeCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
                 (BasicStats.CritMeleeRating + BasicStats.CritRating).ToString("F0", CultureInfo.InvariantCulture),
