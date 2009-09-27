@@ -21,12 +21,12 @@ namespace Rawr.DPSWarr {
         public float Under20Perc = 0.17f;
 		// Rotational Changes
 		public bool InBack           = true ; public int InBackPerc           = 100;
-		public bool MultipleTargets  = false; public int MultipleTargetsPerc  =  25; public float MultipleTargetsMax =    3;
-		public bool DisarmingTargets = false; public int DisarmingTargetsPerc = 100;// nonfunctional
-		public bool MovingTargets    = false; public float MovingTargetsTime  =   0;
-		public bool StunningTargets  = false; public int StunningTargetsFreq  = 120; public float StunningTargetsDur = 5000;
-        public bool FearingTargets   = false; public int FearingTargetsFreq   = 120; public float FearingTargetsDur  = 5000;
-        public bool RootingTargets   = false; public int RootingTargetsFreq   = 120; public float RootingTargetsDur  = 5000;
+		public bool MultipleTargets  = false; public int MultipleTargetsPerc  =  25; public float MultipleTargetsMax  =    3;
+		public bool MovingTargets    = false; public int MovingTargetsFreq    = 120; public float MovingTargetsDur    = 5000;
+		public bool StunningTargets  = false; public int StunningTargetsFreq  = 120; public float StunningTargetsDur  = 5000;
+        public bool FearingTargets   = false; public int FearingTargetsFreq   = 120; public float FearingTargetsDur   = 5000;
+        public bool RootingTargets   = false; public int RootingTargetsFreq   = 120; public float RootingTargetsDur   = 5000;
+		public bool DisarmingTargets = false; public int DisarmingTargetsFreq = 120; public float DisarmingTargetsDur = 5000;// nonfunctional
 		// Abilities to Maintain
 		public bool[] Maintenance = new bool[] {
             true,  // == Rage Gen ==

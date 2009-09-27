@@ -206,14 +206,19 @@ namespace Rawr.DPSWarr {
 
             // ==== Reasons GCDs would be lost ========
             #region Having to Move
-            if (CalcOpts.MovingTargets) {
-                float val = CalcOpts.MovingTargetsTime * (1f - StatS.MovementSpeed);
+            if (CalcOpts.MovingTargets && CalcOpts.MovingTargetsFreq > 0) {
+                float BaseMoveDur = (float)Math.Max(0f, (CalcOpts.MovingTargetsDur / 1000f * (1f - StatS.MovementSpeed)));
+                float movedActs = (float)Math.Max(0f, FightDuration / CalcOpts.MovingTargetsFreq);
+                float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Ceiling(movedActs) : movedActs;
+                _Move_GCDs = Abil_Acts;
+                float reduc = Math.Max(0f, BaseMoveDur);
+                GCDsused += (float)Math.Min(NumGCDs, (reduc * Abil_Acts) / LatentGCD);
+                GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : Spent Moving\n" : "");
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+
+                float val = Abil_Acts * BaseMoveDur;
                 timelostwhilemoving = (CalcOpts.AllowFlooring ? (float)Math.Ceiling(val) : val);
                 percTimeInMovement = timelostwhilemoving / FightDuration;
-                _Move_GCDs = timelostwhilemoving / LatentGCD;
-                GCDsused += (float)Math.Min(NumGCDs, _Move_GCDs);
-                GCDUsage += (_Move_GCDs > 0 ? _Move_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : Spent Moving\n" : "");
-                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
             }
             #endregion
             #region Being Stunned
@@ -225,7 +230,7 @@ namespace Rawr.DPSWarr {
                 _Stunned_Acts = Abil_Acts;
                 float reduc = Math.Max(0f, BaseStunDur);
                 GCDsused += (float)Math.Min(NumGCDs, (reduc * Abil_Acts) / LatentGCD);
-                GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs-IronWillBonus : Stunned\n" : "");
+                GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : Stunned\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 // Now let's try and get some of those GCDs back
                 if (Talents.HeroicFury > 0 && _Stunned_Acts > 0f) {

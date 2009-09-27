@@ -111,20 +111,17 @@
             this.Tab_Version = new System.Windows.Forms.TabPage();
             this.RTB_Version = new System.Windows.Forms.RichTextBox();
             this.Page_03_FightInfo = new System.Windows.Forms.TabPage();
+            this.NUD_DisarmDur = new System.Windows.Forms.NumericUpDown();
+            this.NUD_DisarmFreq = new System.Windows.Forms.NumericUpDown();
+            this.NUD_MoveDur = new System.Windows.Forms.NumericUpDown();
             this.LB_Under20Perc = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.LBUnder20Perc2 = new System.Windows.Forms.Label();
             this.NUD_Under20Perc = new System.Windows.Forms.NumericUpDown();
-            this.LB_Root0 = new System.Windows.Forms.Label();
             this.NUD_RootDur = new System.Windows.Forms.NumericUpDown();
             this.NUD_RootFreq = new System.Windows.Forms.NumericUpDown();
-            this.LB_Root1 = new System.Windows.Forms.Label();
-            this.LB_Root2 = new System.Windows.Forms.Label();
             this.CK_RootingTargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
-            this.LB_Fear0 = new System.Windows.Forms.Label();
             this.NUD_FearDur = new System.Windows.Forms.NumericUpDown();
             this.NUD_FearFreq = new System.Windows.Forms.NumericUpDown();
-            this.LB_Fear1 = new System.Windows.Forms.Label();
-            this.LB_Fear2 = new System.Windows.Forms.Label();
             this.CK_FearingTargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.LB_Where = new System.Windows.Forms.Label();
             this.LB_Is = new System.Windows.Forms.Label();
@@ -133,16 +130,13 @@
             this.TB_BossInfo = new System.Windows.Forms.TextBox();
             this.LB_BossTitle = new System.Windows.Forms.Label();
             this.CB_BossList = new System.Windows.Forms.ComboBox();
-            this.CB_MoveTargsPerc = new System.Windows.Forms.NumericUpDown();
-            this.LB_MovePerc = new System.Windows.Forms.Label();
-            this.CB_MoveTargsTime = new System.Windows.Forms.NumericUpDown();
+            this.NUD_MoveFreq = new System.Windows.Forms.NumericUpDown();
             this.LB_SurvScale = new System.Windows.Forms.Label();
             this.NUD_SurvScale = new System.Windows.Forms.NumericUpDown();
-            this.LB_Stun0 = new System.Windows.Forms.Label();
+            this.LB_Freq = new System.Windows.Forms.Label();
             this.NUD_StunDur = new System.Windows.Forms.NumericUpDown();
             this.NUD_StunFreq = new System.Windows.Forms.NumericUpDown();
-            this.LB_Stun1 = new System.Windows.Forms.Label();
-            this.LB_Stun2 = new System.Windows.Forms.Label();
+            this.LB_Dur = new System.Windows.Forms.Label();
             this.LB_Max = new System.Windows.Forms.Label();
             this.CB_MultiTargsMax = new System.Windows.Forms.NumericUpDown();
             this.LB_InBehindPerc = new System.Windows.Forms.Label();
@@ -151,11 +145,8 @@
             this.CK_MovingTargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_InBack = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CB_MultiTargsPerc = new System.Windows.Forms.NumericUpDown();
-            this.LB_DisarmTargsPerc = new System.Windows.Forms.Label();
-            this.CB_DisarmingTargsPerc = new System.Windows.Forms.NumericUpDown();
             this.LB_MultiTargsPerc = new System.Windows.Forms.Label();
             this.CK_DisarmTargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
-            this.LB_MoveSec = new System.Windows.Forms.Label();
             this.CK_StunningTargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.Page_02_Maintenance = new System.Windows.Forms.TabPage();
             this.CK_Flooring = new Rawr.CustomControls.ExtendedToolTipCheckBox();
@@ -173,20 +164,21 @@
             this.Tab_FAQ.SuspendLayout();
             this.Tab_Version.SuspendLayout();
             this.Page_03_FightInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_DisarmDur)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_DisarmFreq)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_MoveDur)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_Under20Perc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_RootDur)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_RootFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FearDur)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FearFreq)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CB_MoveTargsPerc)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CB_MoveTargsTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_MoveFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_SurvScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_StunDur)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_StunFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsPerc)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CB_DisarmingTargsPerc)).BeginInit();
             this.Page_02_Maintenance.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -516,20 +508,17 @@
             // 
             // Page_03_FightInfo
             // 
+            this.Page_03_FightInfo.Controls.Add(this.NUD_DisarmDur);
+            this.Page_03_FightInfo.Controls.Add(this.NUD_DisarmFreq);
+            this.Page_03_FightInfo.Controls.Add(this.NUD_MoveDur);
             this.Page_03_FightInfo.Controls.Add(this.LB_Under20Perc);
             this.Page_03_FightInfo.Controls.Add(this.LBUnder20Perc2);
             this.Page_03_FightInfo.Controls.Add(this.NUD_Under20Perc);
-            this.Page_03_FightInfo.Controls.Add(this.LB_Root0);
             this.Page_03_FightInfo.Controls.Add(this.NUD_RootDur);
             this.Page_03_FightInfo.Controls.Add(this.NUD_RootFreq);
-            this.Page_03_FightInfo.Controls.Add(this.LB_Root1);
-            this.Page_03_FightInfo.Controls.Add(this.LB_Root2);
             this.Page_03_FightInfo.Controls.Add(this.CK_RootingTargs);
-            this.Page_03_FightInfo.Controls.Add(this.LB_Fear0);
             this.Page_03_FightInfo.Controls.Add(this.NUD_FearDur);
             this.Page_03_FightInfo.Controls.Add(this.NUD_FearFreq);
-            this.Page_03_FightInfo.Controls.Add(this.LB_Fear1);
-            this.Page_03_FightInfo.Controls.Add(this.LB_Fear2);
             this.Page_03_FightInfo.Controls.Add(this.CK_FearingTargs);
             this.Page_03_FightInfo.Controls.Add(this.CB_React);
             this.Page_03_FightInfo.Controls.Add(this.CB_Lag);
@@ -540,16 +529,13 @@
             this.Page_03_FightInfo.Controls.Add(this.TB_BossInfo);
             this.Page_03_FightInfo.Controls.Add(this.LB_BossTitle);
             this.Page_03_FightInfo.Controls.Add(this.CB_BossList);
-            this.Page_03_FightInfo.Controls.Add(this.CB_MoveTargsPerc);
-            this.Page_03_FightInfo.Controls.Add(this.LB_MovePerc);
-            this.Page_03_FightInfo.Controls.Add(this.CB_MoveTargsTime);
+            this.Page_03_FightInfo.Controls.Add(this.NUD_MoveFreq);
             this.Page_03_FightInfo.Controls.Add(this.LB_SurvScale);
             this.Page_03_FightInfo.Controls.Add(this.NUD_SurvScale);
-            this.Page_03_FightInfo.Controls.Add(this.LB_Stun0);
+            this.Page_03_FightInfo.Controls.Add(this.LB_Freq);
             this.Page_03_FightInfo.Controls.Add(this.NUD_StunDur);
             this.Page_03_FightInfo.Controls.Add(this.NUD_StunFreq);
-            this.Page_03_FightInfo.Controls.Add(this.LB_Stun1);
-            this.Page_03_FightInfo.Controls.Add(this.LB_Stun2);
+            this.Page_03_FightInfo.Controls.Add(this.LB_Dur);
             this.Page_03_FightInfo.Controls.Add(this.LB_Max);
             this.Page_03_FightInfo.Controls.Add(this.CB_MultiTargsMax);
             this.Page_03_FightInfo.Controls.Add(this.LB_InBehindPerc);
@@ -558,11 +544,8 @@
             this.Page_03_FightInfo.Controls.Add(this.CK_MovingTargs);
             this.Page_03_FightInfo.Controls.Add(this.CK_InBack);
             this.Page_03_FightInfo.Controls.Add(this.CB_MultiTargsPerc);
-            this.Page_03_FightInfo.Controls.Add(this.LB_DisarmTargsPerc);
-            this.Page_03_FightInfo.Controls.Add(this.CB_DisarmingTargsPerc);
             this.Page_03_FightInfo.Controls.Add(this.LB_MultiTargsPerc);
             this.Page_03_FightInfo.Controls.Add(this.CK_DisarmTargs);
-            this.Page_03_FightInfo.Controls.Add(this.LB_MoveSec);
             this.Page_03_FightInfo.Controls.Add(this.CK_StunningTargs);
             this.Page_03_FightInfo.Controls.Add(this.LB_React);
             this.Page_03_FightInfo.Controls.Add(this.LB_Lag);
@@ -579,6 +562,82 @@
             this.Page_03_FightInfo.TabIndex = 2;
             this.Page_03_FightInfo.Text = "Fight Info";
             this.Page_03_FightInfo.UseVisualStyleBackColor = true;
+            // 
+            // NUD_DisarmDur
+            // 
+            this.NUD_DisarmDur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.NUD_DisarmDur.Enabled = false;
+            this.NUD_DisarmDur.Location = new System.Drawing.Point(220, 343);
+            this.NUD_DisarmDur.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.NUD_DisarmDur.Minimum = new decimal(new int[] {
+            1500,
+            0,
+            0,
+            0});
+            this.NUD_DisarmDur.Name = "NUD_DisarmDur";
+            this.NUD_DisarmDur.Size = new System.Drawing.Size(67, 20);
+            this.NUD_DisarmDur.TabIndex = 62;
+            this.NUD_DisarmDur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NUD_DisarmDur.Value = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.NUD_DisarmDur.ValueChanged += new System.EventHandler(this.NUD_DisarmDur_ValueChanged);
+            // 
+            // NUD_DisarmFreq
+            // 
+            this.NUD_DisarmFreq.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.NUD_DisarmFreq.Enabled = false;
+            this.NUD_DisarmFreq.Location = new System.Drawing.Point(164, 343);
+            this.NUD_DisarmFreq.Maximum = new decimal(new int[] {
+            1200,
+            0,
+            0,
+            0});
+            this.NUD_DisarmFreq.Name = "NUD_DisarmFreq";
+            this.NUD_DisarmFreq.Size = new System.Drawing.Size(50, 20);
+            this.NUD_DisarmFreq.TabIndex = 61;
+            this.NUD_DisarmFreq.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NUD_DisarmFreq.Value = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
+            this.NUD_DisarmFreq.ValueChanged += new System.EventHandler(this.NUD_DisarmFreq_ValueChanged);
+            // 
+            // NUD_MoveDur
+            // 
+            this.NUD_MoveDur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.NUD_MoveDur.Enabled = false;
+            this.NUD_MoveDur.Location = new System.Drawing.Point(220, 265);
+            this.NUD_MoveDur.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.NUD_MoveDur.Minimum = new decimal(new int[] {
+            1500,
+            0,
+            0,
+            0});
+            this.NUD_MoveDur.Name = "NUD_MoveDur";
+            this.NUD_MoveDur.Size = new System.Drawing.Size(67, 20);
+            this.NUD_MoveDur.TabIndex = 60;
+            this.NUD_MoveDur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NUD_MoveDur.Value = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.NUD_MoveDur.ValueChanged += new System.EventHandler(this.NUD_MoveDur_ValueChanged);
             // 
             // LB_Under20Perc
             // 
@@ -630,25 +689,14 @@
             0});
             this.NUD_Under20Perc.ValueChanged += new System.EventHandler(this.NUD_Under20Perc_ValueChanged);
             // 
-            // LB_Root0
-            // 
-            this.LB_Root0.BackColor = System.Drawing.Color.Transparent;
-            this.LB_Root0.Enabled = false;
-            this.LB_Root0.Location = new System.Drawing.Point(39, 377);
-            this.LB_Root0.Name = "LB_Root0";
-            this.LB_Root0.Size = new System.Drawing.Size(38, 20);
-            this.LB_Root0.TabIndex = 49;
-            this.LB_Root0.Text = "Every";
-            this.LB_Root0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // NUD_RootDur
             // 
             this.NUD_RootDur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.NUD_RootDur.Enabled = false;
-            this.NUD_RootDur.Location = new System.Drawing.Point(173, 377);
+            this.NUD_RootDur.Location = new System.Drawing.Point(220, 317);
             this.NUD_RootDur.Maximum = new decimal(new int[] {
-            20000,
+            100000,
             0,
             0,
             0});
@@ -658,7 +706,7 @@
             0,
             0});
             this.NUD_RootDur.Name = "NUD_RootDur";
-            this.NUD_RootDur.Size = new System.Drawing.Size(50, 20);
+            this.NUD_RootDur.Size = new System.Drawing.Size(67, 20);
             this.NUD_RootDur.TabIndex = 52;
             this.NUD_RootDur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.NUD_RootDur.Value = new decimal(new int[] {
@@ -673,7 +721,7 @@
             this.NUD_RootFreq.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.NUD_RootFreq.Enabled = false;
-            this.NUD_RootFreq.Location = new System.Drawing.Point(79, 377);
+            this.NUD_RootFreq.Location = new System.Drawing.Point(164, 317);
             this.NUD_RootFreq.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -690,63 +738,28 @@
             0});
             this.NUD_RootFreq.ValueChanged += new System.EventHandler(this.NUD_RootFreq_ValueChanged);
             // 
-            // LB_Root1
-            // 
-            this.LB_Root1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.LB_Root1.BackColor = System.Drawing.Color.Transparent;
-            this.LB_Root1.Enabled = false;
-            this.LB_Root1.Location = new System.Drawing.Point(131, 377);
-            this.LB_Root1.Name = "LB_Root1";
-            this.LB_Root1.Size = new System.Drawing.Size(39, 20);
-            this.LB_Root1.TabIndex = 51;
-            this.LB_Root1.Text = "sec for";
-            this.LB_Root1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LB_Root2
-            // 
-            this.LB_Root2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_Root2.BackColor = System.Drawing.Color.Transparent;
-            this.LB_Root2.Enabled = false;
-            this.LB_Root2.Location = new System.Drawing.Point(226, 377);
-            this.LB_Root2.Name = "LB_Root2";
-            this.LB_Root2.Size = new System.Drawing.Size(26, 20);
-            this.LB_Root2.TabIndex = 53;
-            this.LB_Root2.Text = "(ms)";
-            this.LB_Root2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // CK_RootingTargs
             // 
             this.CK_RootingTargs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.CK_RootingTargs.BackColor = System.Drawing.Color.Transparent;
-            this.CK_RootingTargs.Location = new System.Drawing.Point(3, 354);
+            this.CK_RootingTargs.Location = new System.Drawing.Point(3, 316);
             this.CK_RootingTargs.Name = "CK_RootingTargs";
-            this.CK_RootingTargs.Size = new System.Drawing.Size(284, 20);
+            this.CK_RootingTargs.Size = new System.Drawing.Size(149, 20);
             this.CK_RootingTargs.TabIndex = 48;
             this.CK_RootingTargs.Text = "Boss Snares/Roots You *";
             this.CK_RootingTargs.ToolTipText = resources.GetString("CK_RootingTargs.ToolTipText");
             this.CK_RootingTargs.UseVisualStyleBackColor = false;
             this.CK_RootingTargs.CheckedChanged += new System.EventHandler(this.RotChanges_Root_ChecksChanged);
             // 
-            // LB_Fear0
-            // 
-            this.LB_Fear0.BackColor = System.Drawing.Color.Transparent;
-            this.LB_Fear0.Enabled = false;
-            this.LB_Fear0.Location = new System.Drawing.Point(39, 331);
-            this.LB_Fear0.Name = "LB_Fear0";
-            this.LB_Fear0.Size = new System.Drawing.Size(38, 20);
-            this.LB_Fear0.TabIndex = 43;
-            this.LB_Fear0.Text = "Every";
-            this.LB_Fear0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // NUD_FearDur
             // 
             this.NUD_FearDur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.NUD_FearDur.Enabled = false;
-            this.NUD_FearDur.Location = new System.Drawing.Point(173, 331);
+            this.NUD_FearDur.Location = new System.Drawing.Point(220, 291);
             this.NUD_FearDur.Maximum = new decimal(new int[] {
-            20000,
+            100000,
             0,
             0,
             0});
@@ -756,7 +769,7 @@
             0,
             0});
             this.NUD_FearDur.Name = "NUD_FearDur";
-            this.NUD_FearDur.Size = new System.Drawing.Size(50, 20);
+            this.NUD_FearDur.Size = new System.Drawing.Size(67, 20);
             this.NUD_FearDur.TabIndex = 46;
             this.NUD_FearDur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.NUD_FearDur.Value = new decimal(new int[] {
@@ -771,7 +784,7 @@
             this.NUD_FearFreq.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.NUD_FearFreq.Enabled = false;
-            this.NUD_FearFreq.Location = new System.Drawing.Point(79, 331);
+            this.NUD_FearFreq.Location = new System.Drawing.Point(164, 291);
             this.NUD_FearFreq.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -788,37 +801,13 @@
             0});
             this.NUD_FearFreq.ValueChanged += new System.EventHandler(this.NUD_FearFreq_ValueChanged);
             // 
-            // LB_Fear1
-            // 
-            this.LB_Fear1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.LB_Fear1.BackColor = System.Drawing.Color.Transparent;
-            this.LB_Fear1.Enabled = false;
-            this.LB_Fear1.Location = new System.Drawing.Point(131, 331);
-            this.LB_Fear1.Name = "LB_Fear1";
-            this.LB_Fear1.Size = new System.Drawing.Size(39, 20);
-            this.LB_Fear1.TabIndex = 45;
-            this.LB_Fear1.Text = "sec for";
-            this.LB_Fear1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LB_Fear2
-            // 
-            this.LB_Fear2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_Fear2.BackColor = System.Drawing.Color.Transparent;
-            this.LB_Fear2.Enabled = false;
-            this.LB_Fear2.Location = new System.Drawing.Point(226, 331);
-            this.LB_Fear2.Name = "LB_Fear2";
-            this.LB_Fear2.Size = new System.Drawing.Size(26, 20);
-            this.LB_Fear2.TabIndex = 47;
-            this.LB_Fear2.Text = "(ms)";
-            this.LB_Fear2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // CK_FearingTargs
             // 
             this.CK_FearingTargs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.CK_FearingTargs.Location = new System.Drawing.Point(3, 308);
+            this.CK_FearingTargs.Location = new System.Drawing.Point(3, 290);
             this.CK_FearingTargs.Name = "CK_FearingTargs";
-            this.CK_FearingTargs.Size = new System.Drawing.Size(284, 20);
+            this.CK_FearingTargs.Size = new System.Drawing.Size(141, 20);
             this.CK_FearingTargs.TabIndex = 42;
             this.CK_FearingTargs.Text = "Boss Fears You *";
             this.CK_FearingTargs.ToolTipText = "While feared you cannot DPS. Fear Duration reducing effects can lower the duratio" +
@@ -881,13 +870,13 @@
             this.TB_BossInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.TB_BossInfo.Location = new System.Drawing.Point(3, 400);
+            this.TB_BossInfo.Location = new System.Drawing.Point(3, 369);
             this.TB_BossInfo.MaxLength = 65536;
             this.TB_BossInfo.Multiline = true;
             this.TB_BossInfo.Name = "TB_BossInfo";
             this.TB_BossInfo.ReadOnly = true;
             this.TB_BossInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TB_BossInfo.Size = new System.Drawing.Size(284, 147);
+            this.TB_BossInfo.Size = new System.Drawing.Size(284, 178);
             this.TB_BossInfo.TabIndex = 37;
             this.TB_BossInfo.Text = "Boss Information would normally be displayed here";
             // 
@@ -919,49 +908,27 @@
             this.CB_BossList.TabIndex = 7;
             this.CB_BossList.SelectedIndexChanged += new System.EventHandler(this.CB_BossList_SelectedIndexChanged);
             // 
-            // CB_MoveTargsPerc
+            // NUD_MoveFreq
             // 
-            this.CB_MoveTargsPerc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_MoveTargsPerc.Enabled = false;
-            this.CB_MoveTargsPerc.Location = new System.Drawing.Point(220, 262);
-            this.CB_MoveTargsPerc.Name = "CB_MoveTargsPerc";
-            this.CB_MoveTargsPerc.Size = new System.Drawing.Size(49, 20);
-            this.CB_MoveTargsPerc.TabIndex = 31;
-            this.CB_MoveTargsPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.CB_MoveTargsPerc.ValueChanged += new System.EventHandler(this.CB_MoveTargsPerc_ValueChanged);
-            // 
-            // LB_MovePerc
-            // 
-            this.LB_MovePerc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_MovePerc.BackColor = System.Drawing.Color.Transparent;
-            this.LB_MovePerc.Location = new System.Drawing.Point(271, 262);
-            this.LB_MovePerc.Name = "LB_MovePerc";
-            this.LB_MovePerc.Size = new System.Drawing.Size(15, 20);
-            this.LB_MovePerc.TabIndex = 32;
-            this.LB_MovePerc.Text = "%";
-            this.LB_MovePerc.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // CB_MoveTargsTime
-            // 
-            this.CB_MoveTargsTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.NUD_MoveFreq.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_MoveTargsTime.Enabled = false;
-            this.CB_MoveTargsTime.Location = new System.Drawing.Point(147, 262);
-            this.CB_MoveTargsTime.Maximum = new decimal(new int[] {
+            this.NUD_MoveFreq.Enabled = false;
+            this.NUD_MoveFreq.Location = new System.Drawing.Point(164, 265);
+            this.NUD_MoveFreq.Maximum = new decimal(new int[] {
             1200,
             0,
             0,
             0});
-            this.CB_MoveTargsTime.Name = "CB_MoveTargsTime";
-            this.CB_MoveTargsTime.Size = new System.Drawing.Size(50, 20);
-            this.CB_MoveTargsTime.TabIndex = 29;
-            this.CB_MoveTargsTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.CB_MoveTargsTime.Value = new decimal(new int[] {
+            this.NUD_MoveFreq.Name = "NUD_MoveFreq";
+            this.NUD_MoveFreq.Size = new System.Drawing.Size(50, 20);
+            this.NUD_MoveFreq.TabIndex = 29;
+            this.NUD_MoveFreq.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NUD_MoveFreq.Value = new decimal(new int[] {
             120,
             0,
             0,
             0});
-            this.CB_MoveTargsTime.ValueChanged += new System.EventHandler(this.RotChanges_Move_ValueChanged);
+            this.NUD_MoveFreq.ValueChanged += new System.EventHandler(this.NUD_MoveFreq_ValueChanged);
             // 
             // LB_SurvScale
             // 
@@ -999,25 +966,24 @@
             0});
             this.NUD_SurvScale.ValueChanged += new System.EventHandler(this.NUD_SurvScale_ValueChanged);
             // 
-            // LB_Stun0
+            // LB_Freq
             // 
-            this.LB_Stun0.BackColor = System.Drawing.Color.Transparent;
-            this.LB_Stun0.Enabled = false;
-            this.LB_Stun0.Location = new System.Drawing.Point(39, 239);
-            this.LB_Stun0.Name = "LB_Stun0";
-            this.LB_Stun0.Size = new System.Drawing.Size(38, 20);
-            this.LB_Stun0.TabIndex = 23;
-            this.LB_Stun0.Text = "Every";
-            this.LB_Stun0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_Freq.BackColor = System.Drawing.Color.Transparent;
+            this.LB_Freq.Location = new System.Drawing.Point(163, 215);
+            this.LB_Freq.Name = "LB_Freq";
+            this.LB_Freq.Size = new System.Drawing.Size(54, 20);
+            this.LB_Freq.TabIndex = 23;
+            this.LB_Freq.Text = "Freq (sec)";
+            this.LB_Freq.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // NUD_StunDur
             // 
             this.NUD_StunDur.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.NUD_StunDur.Enabled = false;
-            this.NUD_StunDur.Location = new System.Drawing.Point(173, 239);
+            this.NUD_StunDur.Location = new System.Drawing.Point(220, 239);
             this.NUD_StunDur.Maximum = new decimal(new int[] {
-            20000,
+            100000,
             0,
             0,
             0});
@@ -1027,7 +993,7 @@
             0,
             0});
             this.NUD_StunDur.Name = "NUD_StunDur";
-            this.NUD_StunDur.Size = new System.Drawing.Size(50, 20);
+            this.NUD_StunDur.Size = new System.Drawing.Size(67, 20);
             this.NUD_StunDur.TabIndex = 26;
             this.NUD_StunDur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.NUD_StunDur.Value = new decimal(new int[] {
@@ -1042,7 +1008,7 @@
             this.NUD_StunFreq.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.NUD_StunFreq.Enabled = false;
-            this.NUD_StunFreq.Location = new System.Drawing.Point(79, 239);
+            this.NUD_StunFreq.Location = new System.Drawing.Point(164, 239);
             this.NUD_StunFreq.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -1059,29 +1025,16 @@
             0});
             this.NUD_StunFreq.ValueChanged += new System.EventHandler(this.NUD_StunFreq_ValueChanged);
             // 
-            // LB_Stun1
+            // LB_Dur
             // 
-            this.LB_Stun1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.LB_Stun1.BackColor = System.Drawing.Color.Transparent;
-            this.LB_Stun1.Enabled = false;
-            this.LB_Stun1.Location = new System.Drawing.Point(131, 239);
-            this.LB_Stun1.Name = "LB_Stun1";
-            this.LB_Stun1.Size = new System.Drawing.Size(39, 20);
-            this.LB_Stun1.TabIndex = 25;
-            this.LB_Stun1.Text = "sec for";
-            this.LB_Stun1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LB_Stun2
-            // 
-            this.LB_Stun2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_Stun2.BackColor = System.Drawing.Color.Transparent;
-            this.LB_Stun2.Enabled = false;
-            this.LB_Stun2.Location = new System.Drawing.Point(226, 239);
-            this.LB_Stun2.Name = "LB_Stun2";
-            this.LB_Stun2.Size = new System.Drawing.Size(26, 20);
-            this.LB_Stun2.TabIndex = 27;
-            this.LB_Stun2.Text = "(ms)";
-            this.LB_Stun2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_Dur.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.LB_Dur.BackColor = System.Drawing.Color.Transparent;
+            this.LB_Dur.Location = new System.Drawing.Point(230, 215);
+            this.LB_Dur.Name = "LB_Dur";
+            this.LB_Dur.Size = new System.Drawing.Size(50, 20);
+            this.LB_Dur.TabIndex = 25;
+            this.LB_Dur.Text = "Dur (ms)";
+            this.LB_Dur.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LB_Max
             // 
@@ -1163,7 +1116,7 @@
             // CK_MovingTargs
             // 
             this.CK_MovingTargs.BackColor = System.Drawing.Color.Transparent;
-            this.CK_MovingTargs.Location = new System.Drawing.Point(3, 262);
+            this.CK_MovingTargs.Location = new System.Drawing.Point(3, 264);
             this.CK_MovingTargs.Name = "CK_MovingTargs";
             this.CK_MovingTargs.Size = new System.Drawing.Size(141, 20);
             this.CK_MovingTargs.TabIndex = 28;
@@ -1203,35 +1156,6 @@
             0});
             this.CB_MultiTargsPerc.ValueChanged += new System.EventHandler(this.RotChanges_Multi_ValueChanged);
             // 
-            // LB_DisarmTargsPerc
-            // 
-            this.LB_DisarmTargsPerc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_DisarmTargsPerc.BackColor = System.Drawing.Color.Transparent;
-            this.LB_DisarmTargsPerc.Enabled = false;
-            this.LB_DisarmTargsPerc.Location = new System.Drawing.Point(271, 285);
-            this.LB_DisarmTargsPerc.Name = "LB_DisarmTargsPerc";
-            this.LB_DisarmTargsPerc.Size = new System.Drawing.Size(15, 20);
-            this.LB_DisarmTargsPerc.TabIndex = 35;
-            this.LB_DisarmTargsPerc.Text = "%";
-            this.LB_DisarmTargsPerc.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // CB_DisarmingTargsPerc
-            // 
-            this.CB_DisarmingTargsPerc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_DisarmingTargsPerc.Enabled = false;
-            this.CB_DisarmingTargsPerc.Location = new System.Drawing.Point(147, 285);
-            this.CB_DisarmingTargsPerc.Name = "CB_DisarmingTargsPerc";
-            this.CB_DisarmingTargsPerc.Size = new System.Drawing.Size(122, 20);
-            this.CB_DisarmingTargsPerc.TabIndex = 34;
-            this.CB_DisarmingTargsPerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.CB_DisarmingTargsPerc.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.CB_DisarmingTargsPerc.ValueChanged += new System.EventHandler(this.RotChanges_Disarm_ValueChanged);
-            // 
             // LB_MultiTargsPerc
             // 
             this.LB_MultiTargsPerc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1246,7 +1170,7 @@
             // CK_DisarmTargs
             // 
             this.CK_DisarmTargs.Enabled = false;
-            this.CK_DisarmTargs.Location = new System.Drawing.Point(3, 285);
+            this.CK_DisarmTargs.Location = new System.Drawing.Point(3, 343);
             this.CK_DisarmTargs.Name = "CK_DisarmTargs";
             this.CK_DisarmTargs.Size = new System.Drawing.Size(141, 20);
             this.CK_DisarmTargs.TabIndex = 33;
@@ -1255,26 +1179,14 @@
             this.CK_DisarmTargs.UseVisualStyleBackColor = false;
             this.CK_DisarmTargs.CheckedChanged += new System.EventHandler(this.RotChanges_Disarm_ChecksChanged);
             // 
-            // LB_MoveSec
-            // 
-            this.LB_MoveSec.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_MoveSec.BackColor = System.Drawing.Color.Transparent;
-            this.LB_MoveSec.Enabled = false;
-            this.LB_MoveSec.Location = new System.Drawing.Point(196, 262);
-            this.LB_MoveSec.Name = "LB_MoveSec";
-            this.LB_MoveSec.Size = new System.Drawing.Size(24, 20);
-            this.LB_MoveSec.TabIndex = 30;
-            this.LB_MoveSec.Text = "sec";
-            this.LB_MoveSec.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // CK_StunningTargs
             // 
             this.CK_StunningTargs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.CK_StunningTargs.BackColor = System.Drawing.Color.Transparent;
-            this.CK_StunningTargs.Location = new System.Drawing.Point(3, 216);
+            this.CK_StunningTargs.Location = new System.Drawing.Point(3, 238);
             this.CK_StunningTargs.Name = "CK_StunningTargs";
-            this.CK_StunningTargs.Size = new System.Drawing.Size(284, 20);
+            this.CK_StunningTargs.Size = new System.Drawing.Size(141, 20);
             this.CK_StunningTargs.TabIndex = 22;
             this.CK_StunningTargs.Text = "Boss Stuns You *";
             this.CK_StunningTargs.ToolTipText = resources.GetString("CK_StunningTargs.ToolTipText");
@@ -1447,20 +1359,21 @@
             this.Tab_Version.ResumeLayout(false);
             this.Page_03_FightInfo.ResumeLayout(false);
             this.Page_03_FightInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_DisarmDur)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_DisarmFreq)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_MoveDur)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_Under20Perc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_RootDur)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_RootFreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FearDur)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FearFreq)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CB_MoveTargsPerc)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CB_MoveTargsTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_MoveFreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_SurvScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_StunDur)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_StunFreq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_MultiTargsPerc)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CB_DisarmingTargsPerc)).EndInit();
             this.Page_02_Maintenance.ResumeLayout(false);
             this.Page_02_Maintenance.PerformLayout();
             this.ResumeLayout(false);
@@ -1503,25 +1416,19 @@
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_MovingTargs;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_InBack;
         private System.Windows.Forms.NumericUpDown CB_MultiTargsPerc;
-        private System.Windows.Forms.Label LB_DisarmTargsPerc;
-        private System.Windows.Forms.NumericUpDown CB_MoveTargsTime;
-        private System.Windows.Forms.NumericUpDown CB_DisarmingTargsPerc;
+        private System.Windows.Forms.NumericUpDown NUD_MoveFreq;
         private System.Windows.Forms.Label LB_MultiTargsPerc;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_DisarmTargs;
-        private System.Windows.Forms.Label LB_MoveSec;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_StunningTargs;
         private System.Windows.Forms.NumericUpDown CB_MultiTargsMax;
         private System.Windows.Forms.Label LB_Max;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_PTRMode;
         private System.Windows.Forms.NumericUpDown NUD_StunDur;
-        private System.Windows.Forms.Label LB_Stun2;
-        private System.Windows.Forms.Label LB_Stun0;
+        private System.Windows.Forms.Label LB_Freq;
         private System.Windows.Forms.NumericUpDown NUD_StunFreq;
-        private System.Windows.Forms.Label LB_Stun1;
+        private System.Windows.Forms.Label LB_Dur;
         private System.Windows.Forms.NumericUpDown NUD_SurvScale;
         private System.Windows.Forms.Label LB_SurvScale;
-        private System.Windows.Forms.NumericUpDown CB_MoveTargsPerc;
-        private System.Windows.Forms.Label LB_MovePerc;
         private System.Windows.Forms.ComboBox CB_BossList;
 		private System.Windows.Forms.Label LB_BossTitle;
         private System.Windows.Forms.TextBox TB_BossInfo;
@@ -1532,20 +1439,17 @@
         private System.Windows.Forms.Label LB_FAQ;
         private System.Windows.Forms.ComboBox CB_FAQ_Questions;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideBadItems;
-        private System.Windows.Forms.Label LB_Root0;
         private System.Windows.Forms.NumericUpDown NUD_RootDur;
         private System.Windows.Forms.NumericUpDown NUD_RootFreq;
-        private System.Windows.Forms.Label LB_Root1;
-        private System.Windows.Forms.Label LB_Root2;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_RootingTargs;
-        private System.Windows.Forms.Label LB_Fear0;
         private System.Windows.Forms.NumericUpDown NUD_FearDur;
         private System.Windows.Forms.NumericUpDown NUD_FearFreq;
-        private System.Windows.Forms.Label LB_Fear1;
-        private System.Windows.Forms.Label LB_Fear2;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_FearingTargs;
         public Rawr.CustomControls.ExtendedToolTipLabel LB_Under20Perc;
         private System.Windows.Forms.Label LBUnder20Perc2;
         private System.Windows.Forms.NumericUpDown NUD_Under20Perc;
+        private System.Windows.Forms.NumericUpDown NUD_MoveDur;
+        private System.Windows.Forms.NumericUpDown NUD_DisarmDur;
+        private System.Windows.Forms.NumericUpDown NUD_DisarmFreq;
     }
 }

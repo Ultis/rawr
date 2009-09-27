@@ -30,6 +30,41 @@ namespace Rawr {
         /// <summary>The Attack Type (for AoE vs single-target Melee/Ranged)</summary>
         public ATTACK_TYPES AttackType;
     }
+    /// <summary>Stores a Stun that the Boss Performs</summary>
+    public struct Stun {
+        public float Frequency;
+        public float Duration;
+        public float Chance;
+        public bool Breakable;
+    }
+    /// <summary>Stores a Fear that the Boss Performs</summary>
+    public struct Fear {
+        public float Frequency;
+        public float Duration;
+        public float Chance;
+        public bool Breakable;
+    }
+    /// <summary>Stores a Root that the Boss Performs</summary>
+    public struct Root {
+        public float Frequency;
+        public float Duration;
+        public float Chance;
+        public bool Breakable;
+    }
+    /// <summary>Stores a Move that the Boss Performs</summary>
+    public struct Move {
+        public float Frequency;
+        public float Duration;
+        public float Chance;
+        public bool Breakable;
+    }
+    /// <summary>Stores a Disarm that the Boss Performs</summary>
+    public struct Disarm {
+        public float Frequency;
+        public float Duration;
+        public float Chance;
+        public bool Breakable;
+    }
     #endregion
     public class BossList {
         // Constructors
@@ -307,18 +342,27 @@ namespace Rawr {
                 }
             }*/
             // Situational Changes
-            value = 0f;                               foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
-            value = 0f;                               foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
-            value = passedList[0].MultiTargsPerc;     foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
-            value = passedList[0].MaxNumTargets;      foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MaxNumTargets     ); } retboss.MaxNumTargets      = value;
-            value = retboss.BerserkTimer;             foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.StunningTargsFreq ); } retboss.StunningTargsFreq  = value;
-            value = passedList[0].StunningTargsDur;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsDur  ); } retboss.StunningTargsDur   = value;
-            value = passedList[0].MovingTargsTime;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MovingTargsTime   ); } retboss.MovingTargsTime    = value;
-            value = passedList[0].DisarmingTargsPerc; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.DisarmingTargsPerc); } retboss.DisarmingTargsPerc = value;
-            value = retboss.BerserkTimer;             foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.FearingTargsFreq  ); } retboss.FearingTargsFreq   = value;
-            value = passedList[0].FearingTargsDur;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.FearingTargsDur   ); } retboss.FearingTargsDur    = value;
-            value = retboss.BerserkTimer;             foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.RootingTargsFreq  ); } retboss.RootingTargsFreq   = value;
-            value = passedList[0].RootingTargsDur;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.RootingTargsDur   ); } retboss.RootingTargsDur    = value;
+            // In Back
+            value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
+            value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
+            // Multi-targs
+            value = 0;      foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
+            value = 3;      foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MaxNumTargets     ); } retboss.MaxNumTargets      = value;
+            // Stun
+            value = 0;      foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.StunningTargsFreq ); } retboss.StunningTargsFreq  = value;
+            value = 10*1000;foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsDur  ); } retboss.StunningTargsDur   = value;
+            // Move
+            value = 0;      foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MovingTargsFreq   ); } retboss.MovingTargsFreq    = value;
+            value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MovingTargsDur    ); } retboss.MovingTargsDur     = value;
+            // Fear
+            value = 0;      foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.FearingTargsFreq  ); } retboss.FearingTargsFreq   = value;
+            value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.FearingTargsDur   ); } retboss.FearingTargsDur    = value;
+            // Root
+            value = 0;      foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.RootingTargsFreq  ); } retboss.RootingTargsFreq   = value;
+            value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.RootingTargsDur   ); } retboss.RootingTargsDur    = value;
+            // Disarm
+            value = 0;      foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.DisarmingTargsFreq); } retboss.DisarmingTargsFreq = value;
+            value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.DisarmingTargsDur ); } retboss.DisarmingTargsDur  = value;
             //
             return retboss;
         }
@@ -353,18 +397,27 @@ namespace Rawr {
             }*/
             #endregion
             // Situational Changes
+            // In Back
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Ranged; } value /= passedList.Length; retboss.InBackPerc_Ranged = value;
+            // Multi-targs
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.MultiTargsPerc; } value /= passedList.Length; retboss.MultiTargsPerc = value;
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.MaxNumTargets; } value /= passedList.Length; retboss.MaxNumTargets = (float)Math.Ceiling(value);
+            // Stun
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.StunningTargsFreq > 0 && boss.StunningTargsFreq < boss.BerserkTimer) ? boss.StunningTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.StunningTargsFreq = value;
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.StunningTargsDur; } value /= passedList.Length; retboss.StunningTargsDur = value;
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.MovingTargsTime / boss.BerserkTimer; } value /= passedList.Length; retboss.MovingTargsTime = value * retboss.BerserkTimer;
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.DisarmingTargsPerc; } value /= passedList.Length; retboss.DisarmingTargsPerc = value;
+            // Move
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.MovingTargsFreq > 0 && boss.MovingTargsFreq < boss.BerserkTimer) ? boss.MovingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.MovingTargsFreq = value;
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.MovingTargsDur; } value /= passedList.Length; retboss.MovingTargsDur = value;
+            // Fear
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.FearingTargsFreq > 0 && boss.FearingTargsFreq < boss.BerserkTimer) ? boss.FearingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.FearingTargsFreq = value;
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.FearingTargsDur; } value /= passedList.Length; retboss.FearingTargsDur = value;
+            // Root
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.RootingTargsFreq > 0 && boss.RootingTargsFreq < boss.BerserkTimer) ? boss.RootingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.RootingTargsFreq = value;
             value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.RootingTargsDur; } value /= passedList.Length; retboss.RootingTargsDur = value;
+            // Disarm
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.DisarmingTargsFreq > 0 && boss.DisarmingTargsFreq < boss.BerserkTimer) ? boss.DisarmingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.DisarmingTargsFreq = value;
+            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.DisarmingTargsDur; } value /= passedList.Length; retboss.DisarmingTargsDur = value;
             //
             return retboss;
         }
@@ -395,18 +448,27 @@ namespace Rawr {
             }*/
             #endregion
             // Situational Changes
-            value = passedList[0].InBackPerc_Melee; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
-            value = passedList[0].InBackPerc_Ranged;foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
-            value = 0f;                             foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
-            value = 0f;                             foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MaxNumTargets     ); } retboss.MaxNumTargets      = (float)Math.Ceiling(value);
-            value = passedList[0].BerserkTimer;     foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsFreq != 0 ? boss.StunningTargsFreq : value); } retboss.StunningTargsFreq  = value;
-            value = 0f;                             foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.StunningTargsDur  ); } retboss.StunningTargsDur   = value;
-            value = 0f;                             foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MovingTargsTime / boss.BerserkTimer); } retboss.MovingTargsTime = value * retboss.BerserkTimer;
-            value = 0f;                             foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.DisarmingTargsPerc); } retboss.DisarmingTargsPerc = value;
-            value = passedList[0].BerserkTimer;     foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.FearingTargsFreq != 0 ? boss.FearingTargsFreq : value); } retboss.FearingTargsFreq  = value;
-            value = 0f;                             foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.FearingTargsDur  ); } retboss.FearingTargsDur   = value;
-            value = passedList[0].BerserkTimer;     foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.RootingTargsFreq != 0 ? boss.RootingTargsFreq : value); } retboss.RootingTargsFreq  = value;
-            value = 0f;                             foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.RootingTargsDur  ); } retboss.RootingTargsDur   = value;
+            // In Back
+            value = 1.00f;      foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.InBackPerc_Melee   ); } retboss.InBackPerc_Melee  = value;
+            value = 1.00f;      foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.InBackPerc_Ranged  ); } retboss.InBackPerc_Ranged = value;
+            // Multi-targs
+            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MultiTargsPerc     ); } retboss.MultiTargsPerc    = value;
+            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MaxNumTargets      ); } retboss.MaxNumTargets     = (float)Math.Ceiling(value);
+            // Stun
+            value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsFreq  != 0 ? boss.StunningTargsFreq  : value); } retboss.StunningTargsFreq  = Math.Max(20,value);
+            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.StunningTargsDur   ); } retboss.StunningTargsDur  = Math.Min(10*1000,value);
+            // Move
+            value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MovingTargsFreq    != 0 ? boss.MovingTargsFreq    : value); } retboss.MovingTargsFreq    = Math.Max(20,value);
+            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MovingTargsDur     ); } retboss.MovingTargsDur    = Math.Min(10*1000,value);
+            // Fear
+            value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.FearingTargsFreq   != 0 ? boss.FearingTargsFreq   : value); } retboss.FearingTargsFreq   = Math.Max(20,value);
+            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.FearingTargsDur    ); } retboss.FearingTargsDur   = Math.Min(10*1000,value);
+            // Root
+            value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.RootingTargsFreq   != 0 ? boss.RootingTargsFreq   : value); } retboss.RootingTargsFreq   = Math.Max(20,value);
+            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.RootingTargsDur    ); } retboss.RootingTargsDur   = Math.Min(10*1000,value);
+            // Disarm
+            value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.DisarmingTargsFreq != 0 ? boss.DisarmingTargsFreq : value); } retboss.DisarmingTargsFreq = Math.Max(20,value);
+            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.DisarmingTargsDur  ); } retboss.DisarmingTargsDur = Math.Min(10*1000,value);
             //
             return retboss;
         }
@@ -436,16 +498,18 @@ namespace Rawr {
             InBackPerc_Melee   = 0.00f; // Default to never in back
             InBackPerc_Ranged  = 0.00f; // Default to never in back
             MultiTargsPerc     = 0.00f; // Default to 0% multiple targets
-            MaxNumTargets      =    1f; // Default to max 2 targets (though at 0%, this means nothing)
+            MaxNumTargets      =    1f; // Default to max 1 targets (though at 0%, this means nothing)
             StunningTargsFreq  =    0f; // Default to never stunning
             StunningTargsDur   = 5000f; // Default to stun durations of 5 seconds but since it's 0 stuns over dur, this means nothing
-            MovingTargsTime    =    0f; // Default to not moving at all during fight
-            DisarmingTargsPerc = 0.00f; // None of the bosses disarm
-            TimeBossIsInvuln   =    0f; // Default to never invulnerable (Invuln. like KT in Phase 1)
+            MovingTargsFreq    =    0f; // Default to never moving
+            MovingTargsDur     = 5000f; // Default to move durations of 5 seconds but since it's 0 moves over dur, this means nothing
+            DisarmingTargsFreq =    0f; // Default to never disarming
+            DisarmingTargsDur  = 5000f; // Default to disarm durations of 5 seconds but since it's 0 disarms over dur, this means nothing
             FearingTargsFreq   =    0f; // Default to never fearing
             FearingTargsDur    = 5000f; // Default to fear durations of 5 seconds but since it's 0 fears over dur, this means nothing
             RootingTargsFreq   =    0f; // Default to never rooting
             RootingTargsDur    = 5000f; // Default to root durations of 5 seconds but since it's 0 roots over dur, this means nothing
+            TimeBossIsInvuln   =    0f; // Default to never invulnerable (Invuln. like KT in Phase 1)
             // Fight Requirements
             Max_Players = 10;
             Min_Healers =  3;
@@ -463,14 +527,19 @@ namespace Rawr {
         // Attacks
         private List<Attack> ATTACKS;
         // Situational Changes
+        public List<Stun> Stuns = new List<Stun>();
+        public List<Fear> Fears = new List<Fear>();
+        public List<Root> Roots = new List<Root>();
+        public List<Move> Moves = new List<Move>();
+        public List<Disarm> Disarms = new List<Disarm>();
         private float INBACKPERC_MELEE, INBACKPERC_RANGED,
                       MULTITARGSPERC, MAXNUMTARGS,
                       STUNNINGTARGS_FREQ, STUNNINGTARGS_DUR,
-                      MOVINGTARGSTIME,
-                      DISARMINGTARGSPERC,
-                      TIMEBOSSISINVULN,
+                      MOVINGTARGS_FREQ, MOVINGTARGS_DUR,
+                      DISARMINGTARGS_FREQ, DISARMINGTARGS_DUR,
                       FEARINGTARGS_FREQ, FEARINGTARGS_DUR,
-                      ROOTINGTARGS_FREQ, ROOTINGTARGS_DUR;
+                      ROOTINGTARGS_FREQ, ROOTINGTARGS_DUR,
+                      TIMEBOSSISINVULN;
         // Fight Requirements
         private int MAX_PLAYERS, MIN_HEALERS, MIN_TANKS;
         #endregion
@@ -498,19 +567,192 @@ namespace Rawr {
         public float  MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = value; } }
         public float  MaxNumTargets      { get { return MAXNUMTARGS;        } set { MAXNUMTARGS        = value; } }
         // Stunning Targets
-        public float  StunningTargsFreq  { get { return STUNNINGTARGS_FREQ; } set { STUNNINGTARGS_FREQ = value; } }
-        public float  StunningTargsDur   { get { return STUNNINGTARGS_DUR ; } set { STUNNINGTARGS_DUR  = value; } }
+        public float  StunningTargsFreq  {
+            get {
+                if (Stuns.Count > 0) {
+                    // Adds up the total number of stuns and evens them out over the Berserk Timer
+                    float numStunsOverDur = 0;
+                    foreach (Stun s in Stuns) {
+                        numStunsOverDur += BerserkTimer / s.Frequency;
+                    }
+                    float freq = BerserkTimer / numStunsOverDur;
+                    return freq;
+                } else {
+                    return STUNNINGTARGS_FREQ;
+                }
+            }
+            set { STUNNINGTARGS_FREQ = value; }
+        }
+        public float  StunningTargsDur   {
+            get {
+                if (Stuns.Count > 0) {
+                    // Averages out the Stun Durations
+                    float TotalStunDur = 0;
+                    foreach (Stun s in Stuns) { TotalStunDur += s.Duration; }
+                    float dur = TotalStunDur / Stuns.Count;
+                    return dur;
+                } else {
+                    return STUNNINGTARGS_DUR ;
+                }
+            }
+            set { STUNNINGTARGS_DUR  = value; }
+        }
+        public float  StunningTargsTime {
+            get {
+                float time = StunningTargsFreq * StunningTargsDur / BerserkTimer;
+                return time;
+            }
+        }
         // Moving Targets
-        public float  MovingTargsTime    { get { return MOVINGTARGSTIME;    } set { MOVINGTARGSTIME    = value; } }
+        public float  MovingTargsFreq   {
+            get {
+                if (Moves.Count > 0) {
+                    // Adds up the total number of Moves and evens them out over the Berserk Timer
+                    float numMovesOverDur = 0;
+                    foreach (Move s in Moves) {
+                        numMovesOverDur += (BerserkTimer / s.Frequency) * s.Chance;
+                    }
+                    float freq = BerserkTimer / numMovesOverDur;
+                    return freq;
+                } else {
+                    return MOVINGTARGS_FREQ;
+                }
+            }
+            set { MOVINGTARGS_FREQ = value; }
+        }
+        public float  MovingTargsDur    {
+            get {
+                if (Moves.Count > 0) {
+                    // Averages out the Move Durations
+                    float TotalMoveDur = 0;
+                    foreach (Move s in Moves) { TotalMoveDur += s.Duration; }
+                    float dur = TotalMoveDur / Moves.Count;
+                    return dur;
+                } else {
+                    return MOVINGTARGS_DUR;
+                }
+            }
+            set { MOVINGTARGS_DUR = value; }
+        }
+        public float  MovingTargsTime {
+            get {
+                float time = MovingTargsFreq * MovingTargsDur / BerserkTimer;
+                return time;
+            }
+        }
         // Disarming Targets
-        public float  DisarmingTargsPerc { get { return DISARMINGTARGSPERC; } set { DISARMINGTARGSPERC = value; } }
-        public float  TimeBossIsInvuln   { get { return TIMEBOSSISINVULN;   } set { TIMEBOSSISINVULN   = value; } }
+        public float  DisarmingTargsFreq   {
+            get {
+                if (Disarms.Count > 0) {
+                    // Adds up the total number of Disarmes and evens them out over the Berserk Timer
+                    float numDisarmsOverDur = 0;
+                    foreach (Disarm s in Disarms) {
+                        numDisarmsOverDur += BerserkTimer / s.Frequency;
+                    }
+                    float freq = BerserkTimer / numDisarmsOverDur;
+                    return freq;
+                } else {
+                    return DISARMINGTARGS_FREQ;
+                }
+            }
+            set { DISARMINGTARGS_FREQ = value; }
+        }
+        public float  DisarmingTargsDur    {
+            get {
+                if (Disarms.Count > 0) {
+                    // Averages out the Disarme Durations
+                    float TotalDisarmeDur = 0;
+                    foreach (Disarm s in Disarms) { TotalDisarmeDur += s.Duration; }
+                    float dur = TotalDisarmeDur / Disarms.Count;
+                    return dur;
+                } else {
+                    return DISARMINGTARGS_DUR;
+                }
+            }
+            set { DISARMINGTARGS_DUR = value; }
+        }
+        public float  DisarmingTargsTime {
+            get {
+                float time = DisarmingTargsFreq * DisarmingTargsDur / BerserkTimer;
+                return time;
+            }
+        }
         // Fearing Targets
-        public float  FearingTargsFreq   { get { return FEARINGTARGS_FREQ;  } set { FEARINGTARGS_FREQ  = value; } }
-        public float  FearingTargsDur    { get { return FEARINGTARGS_DUR ;  } set { FEARINGTARGS_DUR   = value; } }
+        public float  FearingTargsFreq  {
+            get {
+                if (Fears.Count > 0) {
+                    // Adds up the total number of stuns and evens them out over the Berserk Timer
+                    float numFearsOverDur = 0;
+                    foreach (Fear s in Fears) {
+                        numFearsOverDur += BerserkTimer / s.Frequency;
+                    }
+                    float freq = BerserkTimer / numFearsOverDur;
+                    return freq;
+                } else {
+                    return FEARINGTARGS_FREQ;
+                }
+            }
+            set { FEARINGTARGS_FREQ = value; }
+        }
+        public float  FearingTargsDur   {
+            get {
+                if (Fears.Count > 0) {
+                    // Averages out the Fear Durations
+                    float TotalFearDur = 0;
+                    foreach (Fear s in Fears) { TotalFearDur += s.Duration; }
+                    float dur = TotalFearDur / Fears.Count;
+                    return dur;
+                } else {
+                    return FEARINGTARGS_DUR;
+                }
+            }
+            set { FEARINGTARGS_DUR = value; }
+        }
+        public float  FearingTargsTime {
+            get {
+                float time = FearingTargsFreq * FearingTargsDur / BerserkTimer;
+                return time;
+            }
+        }
         // Rooting Targets
-        public float  RootingTargsFreq   { get { return ROOTINGTARGS_FREQ;  } set { ROOTINGTARGS_FREQ  = value; } }
-        public float  RootingTargsDur    { get { return ROOTINGTARGS_DUR ;  } set { ROOTINGTARGS_DUR   = value; } }
+        public float  RootingTargsFreq  {
+            get {
+                if (Roots.Count > 0) {
+                    // Adds up the total number of Roots and evens them out over the Berserk Timer
+                    float numRootsOverDur = 0;
+                    foreach (Root s in Roots) {
+                        numRootsOverDur += BerserkTimer / s.Frequency;
+                    }
+                    float freq = BerserkTimer / numRootsOverDur;
+                    return freq;
+                } else {
+                    return ROOTINGTARGS_FREQ;
+                }
+            }
+            set { ROOTINGTARGS_FREQ = value; }
+        }
+        public float  RootingTargsDur   {
+            get {
+                if (Roots.Count > 0) {
+                    // Averages out the Root Durations
+                    float TotalRootDur = 0;
+                    foreach (Root s in Roots) { TotalRootDur += s.Duration; }
+                    float dur = TotalRootDur / Roots.Count;
+                    return dur;
+                } else {
+                    return ROOTINGTARGS_DUR;
+                }
+            }
+            set { ROOTINGTARGS_DUR = value; }
+        }
+        public float  RootingTargsTime {
+            get {
+                float time = RootingTargsFreq * RootingTargsDur / BerserkTimer;
+                return time;
+            }
+        }
+        // Other
+        public float  TimeBossIsInvuln   { get { return TIMEBOSSISINVULN;   } set { TIMEBOSSISINVULN   = value; } }
         // ==== Fight Requirements ====
         public int    Max_Players        { get { return MAX_PLAYERS;        } set { MAX_PLAYERS        = value; } }
         public int    Min_Healers        { get { return MIN_HEALERS;        } set { MIN_HEALERS        = value; } }
@@ -680,2107 +922,4 @@ namespace Rawr {
         public string GenInfoString() { return GenInfoString(0,0,0,0,0,0,0); }
         #endregion
     }
-    #region T7 Content
-    // ===== Naxxramas ================================
-    // Spider Wing
-    public class AnubRekhan_10 : BossHandler {
-        public AnubRekhan_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Anub'Rekhan";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 2230000f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // ==== Situational Changes ====
-            // When he Impales, he turns around and faces the raid
-            // simming this by using the activates over fight and having him facing raid for 2 seconds
-            float time = (BerserkTimer / Attacks[1].AttackSpeed) * 2f;
-            InBackPerc_Melee = 1f - time / BerserkTimer;
-            // Locust Swarm: Every 80-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (80f + 120f / 2f)) * (16f+4f);
-            // Every time he Locust Swarms he summons a Crypt Guard
-            // Let's assume it's up for 10 seconds
-            time  = (BerserkTimer / 60f) * 10f;
-            // Every time he spawns a Crypt Guard and it dies, x seconds
-            // after he summons 10 scarabs from it's body
-            // Assuming they are up for 8 sec
-            time += ((BerserkTimer-20f) / 60f) *  8f;
-            MaxNumTargets = 10f;
-            MultiTargsPerc = time / BerserkTimer;
-            // ==== Fight Requirements ====
-        }
-    }
-    public class GrandWidowFaerlina_10 : BossHandler {
-        public GrandWidowFaerlina_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Grand Widow Faerlina";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 2231200f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Poison Bold Volley",
-                DamageType = ItemDamageType.Nature,
-                DamagePerHit = (/*Initial*/(2625f + 3375f) / 2.0f) + (/*Dot*/((1480f+1720f)/2.0f)*8f/2f),
-                MaxNumTargets = 3,
-                AttackSpeed = (7.0f+15.0f)/2.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Rain of Fire",
-                DamageType = ItemDamageType.Fire,
-                DamagePerHit = (/*Dot*/((1750f+2750f)/2.0f)*6f/2f),
-                MaxNumTargets = 10,
-                AttackSpeed = (6.0f+18.0f)/2.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            // Every 6-18 seconds for 3 seconds she has to be moved to compensate for Rain of Fire
-            MovingTargsTime = (BerserkTimer / Attacks[2].AttackSpeed) * (3f);
-            // Fight Requirements
-            /* TODO:
-             * Frenzy
-             * Worshippers
-             */
-        }
-    }
-    public class Maexxna_10 : BossHandler {
-        public Maexxna_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Maexxna";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 2510000f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Web Spray",
-                DamageType = ItemDamageType.Nature,
-                DamagePerHit = (1750f + 2250f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.90f;
-            // 6 second stun every 40 seconds
-            StunningTargsFreq = 40f;
-            StunningTargsDur = 6000f;
-            // 8 Adds every 40 seconds for 8 seconds (only 7300 HP each)
-            MultiTargsPerc = ((BerserkTimer / 40f) * 8f) / BerserkTimer;
-            MaxNumTargets = 8;
-            // Fight Requirements
-            Min_Tanks = 1;
-            Min_Healers = 2;
-            /* TODO:
-             * Web Wrap
-             * Poison Shock
-             * Necrotic Poison
-             * Frenzy
-             */
-        }
-    }
-    // Plague Quarter
-    public class NoththePlaguebringer_10 : BossHandler {
-        public NoththePlaguebringer_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Noth the Plaguebringer";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 2500000f;
-            BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
-            MultiTargsPerc = (BerserkTimer / 30f) * (20f) / BerserkTimer;
-            // Fight Requirements
-            Min_Tanks   = 1;
-            Min_Healers = 2;
-            /* TODO:
-             * Phase 2
-             */
-        }
-    }
-    public class HeigantheUnclean_10 : BossHandler {
-        public HeigantheUnclean_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Heigan the Unclean";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 3060000f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Decrepit Fever",
-                DamageType = ItemDamageType.Nature,
-                DamagePerHit = 3000f / 3f * 21f,
-                MaxNumTargets = 1,
-                AttackSpeed = 30.0f,
-                AttackType = ATTACK_TYPES.AT_RANGED,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.25f;
-            // We are assuming you are using the corner trick so you don't have
-            // to dance as much in 10 man
-            // Every 90 seconds for 45 seconds you must do the safety dance
-            MovingTargsTime = (BerserkTimer / 90f) * 45f;
-            // Fight Requirements
-            Min_Tanks = 1;
-            /* TODO:
-             */
-        }
-    }
-    public class Loatheb_10 : BossHandler {
-        public Loatheb_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Loatheb";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 6693600f;
-            BerserkTimer = 5 * 60; // Inevitable Doom starts to get spammed every 15 seconds
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Deathbloom",
-                DamageType = ItemDamageType.Nature,
-                DamagePerHit = (/*DoT*/200f / 1f * 6f) + (/*Bloom*/1200f),
-                MaxNumTargets = 10,
-                AttackSpeed = 30.0f,
-                AttackType = ATTACK_TYPES.AT_RANGED,
-            });
-            Attacks.Add(new Attack {
-                Name = "Inevitable Doom",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = 4000 / 30 * 120,
-                MaxNumTargets = 10,
-                AttackSpeed = 120.0f,
-                AttackType = ATTACK_TYPES.AT_RANGED,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
-            // Initial 10 seconds to pop first Spore then every 3rd spore
-            // after that (90 seconds respawn then 10 sec moving to/back)
-            MovingTargsTime = 10 + (BerserkTimer / 90) * 10;
-            // Fight Requirements
-            Min_Tanks = 1;
-            /* TODO:
-             * Necrotic Aura
-             * Fungal Creep
-             */
-        }
-    }
-    // Military Quarter
-    public class InstructorRazuvious_10 : BossHandler {
-        public InstructorRazuvious_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Instructor Razuvious";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 3349000f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Disrupting Shout",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4275f + 4725f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 15.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Jagged Knife",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 5000 + (10000 / 5 * 5),
-                MaxNumTargets = 1,
-                AttackSpeed = 10.0f,
-                AttackType = ATTACK_TYPES.AT_RANGED,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Fight Requirements
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            /* TODO:
-             * Unbalancing Strike
-             * Using the Understudies
-             */
-        }
-    }
-    public class GothiktheHarvester_10 : BossHandler {
-        public GothiktheHarvester_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Gothik the Harvester";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 839000f;
-            BerserkTimer = BerserkTimer - (4 * 60 + 34);
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadowbolt",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (2880f + 3520f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 1.0f,
-                AttackType = ATTACK_TYPES.AT_RANGED,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Fight Requirements
-            /* TODO:
-             * Phase 1
-             * Harvest Soul
-             */
-        }
-    }
-    public class FourHorsemen_10 : BossHandler {
-        public FourHorsemen_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Four Horsemen";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 781000f * 4f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Korth'azz's Meteor",
-                DamageType = ItemDamageType.Fire,
-                DamagePerHit = (13775f + 15225f) / 2f,
-                MaxNumTargets = 8,
-                AttackSpeed = 15.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Rivendare's Unholy Shadow",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (2160f + 2640f) / 2f + (4800/2*4),
-                MaxNumTargets = 8,
-                AttackSpeed = 15.0f,
-                AttackType = ATTACK_TYPES.AT_RANGED,
-            });
-            Attacks.Add(new Attack {
-                Name = "Blaumeux's Shadow Bolt",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (2357f + 2643f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_RANGED,
-            });
-            Attacks.Add(new Attack {
-                Name = "Zeliek's Holy Bolt",
-                DamageType = ItemDamageType.Holy,
-                DamagePerHit = (2357f + 2643f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_RANGED,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.75f;
-            // Swap 1st 2 mobs once: 15
-            // Get to the back once: 10
-            // Bounce back and forth in the back: Every 30 sec for 10 sec but for only 40% of the fight
-            MovingTargsTime = 15f + 10f + ((BerserkTimer * 0.40f) / 30f) * 10f;
-            // Fight Requirements
-            Min_Tanks = 3; // simming 3rd to show that 2 dps have to OT the back
-            Min_Healers = 3;
-            /* TODO:
-             * Blaumeux's Void Zone
-             */
-        }
-    }
-    // Construct Quarter
-    public class Patchwerk_10 : BossHandler {
-        public Patchwerk_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Patchwerk";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            BerserkTimer = 6 * 60;
-            Health = 4320000f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Hateful Strike",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (19975f + 27025f) / 2f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 1.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
-            // Fight Requirements
-            /* TODO:
-             * Frenzy
-             */
-        }
-    }
-    public class Grobbulus_10 : BossHandler {
-        public Grobbulus_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Grobbulus";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 2928000f;
-            BerserkTimer = 12 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 8 seconds for 3 seconds Grob has to be kited to
-            // avoid Poison Cloud Farts. This goes on the entire fight
-            MovingTargsTime  = (BerserkTimer / 8f) * 3f;
-            // Every 20 seconds 1/10 chance to get hit with Mutating Injection
-            // You have to run off for 10 seconds then run back for 4-5
-            MovingTargsTime += ((BerserkTimer / 20f) * (10f+(4f+5f)/2f)) * 0.10f;
-            /* TODO:
-             * Slime Spray
-             * Occasional Poins Cloud Ticks that are unavoidable
-             */
-        }
-    }
-    public class Gluth_10 : BossHandler {
-        public Gluth_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Gluth";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 3230000f;
-            BerserkTimer = 8 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 40000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
-            /* TODO:
-             * Decimate
-             * Enrage
-             * Mortal Wound
-             * Zombie Chows
-             */
-        }
-    }
-    public class Thaddius_10 : BossHandler {
-        public Thaddius_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Thaddius";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 3850000f + 838300f; // one player only deals with one of the add's total health + thadd's health
-            BerserkTimer = 6 * 60; // Need to verify if starts at beg. of combat or beg. of Thadd
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Chain Lightning",
-                DamageType = ItemDamageType.Nature,
-                DamagePerHit = (3600f+4400f)/2f,
-                MaxNumTargets = 3f,
-                AttackSpeed = 15.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.50f;
-            // Every 30 seconds, polarity shift, 3 sec move
-            // 50% chance that your polarity will change
-            MovingTargsTime = ((BerserkTimer / 30f) * 3f) * 0.50f;
-            /* TODO:
-             * Better handle of Feugen and Stalagg
-             */
-        }
-    }
-    // Frostwyrm Lair
-    public class Sapphiron_10 : BossHandler {
-        public Sapphiron_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Sapphiron";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 4250000f;
-            BerserkTimer = 15 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Frost Aura",
-                DamageType = ItemDamageType.Frost,
-                DamagePerHit = 1200f,
-                MaxNumTargets = 10,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Life Drain",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (((4376f+5624f)/2f) * 3f) * 4f,
-                MaxNumTargets = 2,
-                AttackSpeed = 24.0f,
-                AttackType = ATTACK_TYPES.AT_RANGED,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 45(+30) seconds for 30 seconds Sapph is in the air
-            // He stops this at 10% hp
-            MovingTargsTime = ((BerserkTimer / (45f+30f)) * 30f) * 0.90f;
-            // Fight Requirements
-            Min_Tanks = 3;
-            /* TODO:
-             * Chill (The Blizzard)
-             * Ice Bolt
-             */
-        }
-    }
-    public class KelThuzad_10 : BossHandler {
-        public KelThuzad_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Kel'Thuzad";
-            Content = "T7";
-            Instance = "Naxxramas";
-            Version = "10 Man";
-            Health = 2230000f;
-            BerserkTimer = 19 * 60;
-            SpeedKillTimer = 6 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Phase 1, no damage to KT
-            MovingTargsTime = 3f*60f + 48f;
-            TimeBossIsInvuln = 3f * 60f + 48f;
-            // Phase 2 & 3, gotta move out of Shadow Fissures periodically
-            // We're assuming they pop every 30 seconds and you have to be
-            // moved for 6 seconds and there's a 1/10 chance he will select
-            // you over someone e;se
-            MovingTargsTime = (((BerserkTimer - MovingTargsTime) / 30f) * 6f) * 0.10f;
-            // Fight Requirements
-            /* TODO:
-             * The Mobs in Phase 1
-             */
-        }
-    }
-    // ===== The Obsidian Sanctum =====================
-    public class Shadron_10 : BossHandler {
-        public Shadron_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Shadron";
-            Content = "T7";
-            Instance = "The Obsidian Sanctum";
-            Version = "10 Man";
-            Health = 976150f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Fissure",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6188f + 8812f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Breath",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6938f + 8062f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 60 seconds for 20 seconds dps has to jump into the portal and kill the add
-            MovingTargsTime  = (BerserkTimer / (60f+20f)) * (20f);
-            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
-            // 1/10 chance he'll pick you
-            MovingTargsTime += ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
-            // Fight Requirements
-            Min_Tanks = 1;
-            Min_Healers = 2;
-            /* TODO:
-             * The Acolyte Add
-             */
-        }
-    }
-    public class Tenebron_10 : BossHandler {
-        public Tenebron_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Tenebron";
-            Content = "T7";
-            Instance = "The Obsidian Sanctum";
-            Version = "10 Man";
-            Health = 976150f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Fissure",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6188f + 8812f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Breath",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6938f + 8062f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
-            MovingTargsTime  = (BerserkTimer / (30f+20f)) * (20f);
-            MultiTargsPerc = (BerserkTimer / (30f + 20f)) * (20f) / BerserkTimer;
-            MaxNumTargets = 6f + 1f;
-            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
-            // 1/10 chance he'll pick you
-            MovingTargsTime += ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
-            // Fight Requirements
-            // Fight Requirements
-            Min_Healers = 2;
-            /* TODO:
-             * The Adds' abilities
-             */
-        }
-    }
-    public class Vesperon_10 : BossHandler {
-        public Vesperon_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Vesperon";
-            Content = "T7";
-            Instance = "The Obsidian Sanctum";
-            Version = "10 Man";
-            Health = 976150f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Fissure",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6188f + 8812f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Breath",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6938f + 8062f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
-            // 1/10 chance he'll pick you
-            MovingTargsTime = ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
-            // Fight Requirements
-            Min_Tanks = 1;
-            Min_Healers = 2;
-            /* TODO:
-             * The adds, which optimally you would ignore
-             */
-        }
-    }
-    public class Sartharion_10 : BossHandler {
-        public Sartharion_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Sartharion";
-            Content = "T7";
-            Instance = "The Obsidian Sanctum";
-            Version = "10 Man";
-            Health = 2510100f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Fire Breath",
-                DamageType = ItemDamageType.Fire,
-                DamagePerHit = (8750f + 11250f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 45 seconds for 10 seconds you gotta move for Lava Waves
-            MovingTargsTime = (BerserkTimer / 45f) * (10f);
-            // Fight Requirements
-            Min_Tanks = 1;
-            /* TODO:
-             */
-        }
-    }
-    // ===== The Vault of Archavon ====================
-    public class ArchavonTheStoneWatcher_10 : BossHandler {
-        public ArchavonTheStoneWatcher_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Archavon The Stone Watcher";
-            Content = "T7";
-            Instance = "The Vault of Archavon";
-            Version = "10 Man";
-            Health = 2300925f;
-            BerserkTimer = 5 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.75f;
-            // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
-            MovingTargsTime = (BerserkTimer / (30f)) * (5f);
-            // Fight Requirements
-            /* TODO:
-             * Rock Shards
-             * Crushing Leap
-             * Stomp (this also stuns)
-             * Impale (this also stuns)
-             */
-        }
-    }
-    // ===== The Eye of Eternity ======================
-    public class Malygos_10 : BossHandler {
-        public Malygos_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Malygos";
-            Content = "T7";
-            Instance = "The Eye of Eternity";
-            Version = "10 Man";
-            Health = 2230000f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-            });
-            Attacks.Add(new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-                AttackType = ATTACK_TYPES.AT_AOE,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
-            /* TODO:
-             */
-        }
-    }
-    #endregion
-    #region T7.5 Content
-    // ===== Naxxramas ================================
-    // Spider Wing
-    public class AnubRekhan_25 : AnubRekhan_10 {
-        public AnubRekhan_25() {
-            // If not listed here use values from 10 man version
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 6763325f;
-            // Resistance
-            // Attacks
-            //Attacks[0].DamagePerHit = 120000f;
-            //Attacks[1].DamagePerHit = (5688f + 7312f) / 2f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            // ==== Situational Changes ====
-            // When he Impales, he turns around and faces the raid
-            // simming this by using the activates over fight and having him facing raid for 2 seconds
-            float time = (BerserkTimer / Attacks[1].AttackSpeed) * 2f;
-            InBackPerc_Melee = 1f - time / BerserkTimer;
-            // Locust Swarm: Every 80-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (80f + 120f / 2f)) * (16f + 4f);
-            // Every time he Locust Swarms he summons 2 Crypt Guards
-            // Let's assume it's up for 10 seconds
-            time = (BerserkTimer / 60f) * 10f;
-            // Every time he spawns a Crypt Guard and it dies, x seconds
-            // after he summons 10 scarabs from each's body
-            // Assuming they are up for 8 sec
-            time += ((BerserkTimer - 20f) / 60f) * 8f;
-            MaxNumTargets = 20f;
-            MultiTargsPerc = time / BerserkTimer;
-            // ==== Fight Requirements ====
-        }
-    }
-    public class GrandWidowFaerlina_25 : GrandWidowFaerlina_10 {
-        public GrandWidowFaerlina_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 6763325;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Poison Bold Volley",
-                DamageType = ItemDamageType.Nature,
-                DamagePerHit = (/*Initial*/(33755f + 4125f) / 2.0f) + (/*Dot*/((1900f+2100f)/2.0f)*8f/2f),
-                MaxNumTargets = 3,
-                AttackSpeed = (7.0f+15.0f)/2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Rain of Fire",
-                DamageType = ItemDamageType.Fire,
-                DamagePerHit = (/*Dot*/((3700f+4300f)/2.0f)*6f/2f),
-                MaxNumTargets = 10,
-                AttackSpeed = (6.0f+18.0f)/2.0f,
-            });
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            // Situational Changes
-            // Fight Requirements
-            /* TODO:
-             * Frenzy
-             * Worshippers
-             */
-        }
-    }
-    public class Maexxna_25 : Maexxna_10 {
-        public Maexxna_25() {
-            // If not listed here use values from 10 man version
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 7600000f;
-            // Resistance
-            // Attacks
-            /*Attacks.Add(new Attack {
-                Name = MeleeAttack.Name,
-                DamageType = MeleeAttack.DamageType,
-                DamagePerHit = 120000f,
-                MaxNumTargets = MeleeAttack.MaxNumTargets,
-                AttackSpeed = MeleeAttack.AttackSpeed,
-            });
-            Attacks.Add(new Attack {
-                Name = SpecialAttack_1.Name,
-                DamageType = SpecialAttack_1.DamageType,
-                DamagePerHit = (2188f + 2812f) / 2f,
-                MaxNumTargets = 25,
-                AttackSpeed = SpecialAttack_1.AttackSpeed,
-            });*/
-            // Situational Changes
-            // 8 Adds every 40 seconds for 10 seconds (only 14000 HP each)
-            MultiTargsPerc = ((BerserkTimer / 40f) * 10f) / BerserkTimer;
-            MaxNumTargets = 8;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 1;
-            Min_Healers = 4;
-            /* TODO:
-             * Web Wrap
-             * Poison Shock
-             * Necrotic Poison
-             * Frenzy
-             */
-        }
-    }
-    // Plague Quarter
-    public class NoththePlaguebringer_25 : NoththePlaguebringer_10 {
-        public NoththePlaguebringer_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 2500000f;
-            BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-            });
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
-            MultiTargsPerc = (BerserkTimer / 30f) * (20f) / BerserkTimer;
-            // Fight Requirements
-            Min_Tanks   = 1;
-            Min_Healers = 2;
-            /* TODO:
-             * Phase 2
-             */
-        }
-    }
-    public class HeigantheUnclean_25 : HeigantheUnclean_10 {
-        public HeigantheUnclean_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 3060000f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Decrepit Fever",
-                DamageType = ItemDamageType.Nature,
-                DamagePerHit = 3000f / 3f * 21f,
-                MaxNumTargets = 1,
-                AttackSpeed = 30.0f,
-            });
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            // Situational Changes
-            InBackPerc_Melee = 0.25f;
-            // We are assuming you are using the corner trick so you don't have
-            // to dance as much in 10 man
-            // Every 90 seconds for 45 seconds you must do the safety dance
-            MovingTargsTime = (BerserkTimer / 90f) * 45f;
-            // Fight Requirements
-            Min_Tanks = 1;
-            /* TODO:
-             */
-        }
-    }
-    public class Loatheb_25 : Loatheb_10 {
-        public Loatheb_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 6693600f;
-            BerserkTimer = 5 * 60; // Inevitable Doom starts to get spammed every 15 seconds
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Deathbloom",
-                DamageType = ItemDamageType.Nature,
-                DamagePerHit = (/*DoT*/200f / 1f * 6f) + (/*Bloom*/1200f),
-                MaxNumTargets = 10,
-                AttackSpeed = 30.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Inevitable Doom",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = 4000 / 30 * 120,
-                MaxNumTargets = 10,
-                AttackSpeed = 120.0f,
-            });
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
-            // Initial 10 seconds to pop first Spore then every 3rd spore
-            // after that (90 seconds respawn then 10 sec moving to/back)
-            MovingTargsTime = 10 + (BerserkTimer / 90) * 10;
-            // Fight Requirements
-            Min_Tanks = 1;
-            /* TODO:
-             * Necrotic Aura
-             * Fungal Creep
-             */
-        }
-    }
-    // Military Quarter
-    public class InstructorRazuvious_25 : InstructorRazuvious_10 {
-        public InstructorRazuvious_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 3349000f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Disrupting Shout",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4275f + 4725f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 15.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Jagged Knife",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 5000 + (10000 / 5 * 5),
-                MaxNumTargets = 1,
-                AttackSpeed = 10.0f,
-            });
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Fight Requirements
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            /* TODO:
-             * Unbalancing Strike
-             * Using the Understudies
-             */
-        }
-    }
-    public class GothiktheHarvester_25 : GothiktheHarvester_10 {
-        public GothiktheHarvester_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 839000f;
-            //BerserkTimer = (8 * 60) - (4 * 60 + 34);
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadowbolt",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (2880f + 3520f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 1.0f,
-            });
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Fight Requirements
-            /* TODO:
-             * Phase 1
-             * Harvest Soul
-             */
-        }
-    }
-    public class FourHorsemen_25 : FourHorsemen_10 {
-        public FourHorsemen_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 781000f * 4f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Korth'azz's Meteor",
-                DamageType = ItemDamageType.Fire,
-                DamagePerHit = (13775f + 15225f) / 2f,
-                MaxNumTargets = 8,
-                AttackSpeed = 15.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Rivendare's Unholy Shadow",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (2160f + 2640f) / 2f + (4800/2*4),
-                MaxNumTargets = 8,
-                AttackSpeed = 15.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Blaumeux's Shadow Bolt",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (2357f + 2643f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Zeliek's Holy Bolt",
-                DamageType = ItemDamageType.Holy,
-                DamagePerHit = (2357f + 2643f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 2.0f,
-            });
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            // Situational Changes
-            InBackPerc_Melee = 0.75f;
-            // Swap 1st 2 mobs once: 15
-            // Get to the back once: 10
-            // Bounce back and forth in the back: Every 30 sec for 10 sec but for only 40% of the fight
-            MovingTargsTime = 15f + 10f + ((BerserkTimer * 0.40f) / 30f) * 10f;
-            // Fight Requirements
-            Min_Tanks = 3; // simming 3rd to show that 2 dps have to OT the back
-            Min_Healers = 3;
-            /* TODO:
-             * Blaumeux's Void Zone
-             */
-        }
-    }
-    // Construct Quarter
-    public class Patchwerk_25 : Patchwerk_10 {
-        public Patchwerk_25() {
-            // If not listed here use values from 10 man version
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 13000000f;
-            // Resistance
-            // Attacks
-            /*Attacks.Add(new Attack {
-                Name = MeleeAttack.Name,
-                DamageType = MeleeAttack.DamageType,
-                DamagePerHit = 120000f,
-                MaxNumTargets = MeleeAttack.MaxNumTargets,
-                AttackSpeed = MeleeAttack.AttackSpeed,
-            });
-            Attacks.Add(new Attack {
-                Name = SpecialAttack_1.Name,
-                DamageType = SpecialAttack_1.DamageType,
-                DamagePerHit = (79000f + 81000f) / 2f,
-                MaxNumTargets = SpecialAttack_1.MaxNumTargets,
-                AttackSpeed = SpecialAttack_1.AttackSpeed,
-            });*/
-            // Situational Changes
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 3;
-            Min_Healers = 4;
-            /* TODO:
-             * Frenzy
-             */
-        }
-    }
-    public class Grobbulus_25 : Grobbulus_10 {
-        public Grobbulus_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 2928000f;
-            BerserkTimer = 12 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 8 seconds for 3 seconds Grob has to be kited to
-            // avoid Poison Cloud Farts. This goes on the entire fight
-            MovingTargsTime  = (BerserkTimer / 8f) * 3f;
-            // Every 20 seconds 1/10 chance to get hit with Mutating Injection
-            // You have to run off for 10 seconds then run back for 4-5
-            MovingTargsTime += ((BerserkTimer / 20f) * (10f+(4f+5f)/2f)) * 0.10f;
-            /* TODO:
-             * Slime Spray
-             * Occasional Poins Cloud Ticks that are unavoidable
-             */
-        }
-    }
-    public class Gluth_25 : Gluth_10 {
-        public Gluth_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 3230000f;
-            BerserkTimer = 8 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 40000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            /* TODO:
-             * Decimate
-             * Enrage
-             * Mortal Wound
-             * Zombie Chows
-             */
-        }
-    }
-    public class Thaddius_25 : Thaddius_10 {
-        public Thaddius_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 3850000f + 838300f; // one player only deals with one of the add's total health + thadd's health
-            BerserkTimer = 6 * 60; // Need to verify if starts at beg. of combat or beg. of Thadd
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Chain Lightning",
-                DamageType = ItemDamageType.Nature,
-                DamagePerHit = (3600f+4400f)/2f,
-                MaxNumTargets = 3f,
-                AttackSpeed = 15.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.50f;
-            // Every 30 seconds, polarity shift, 3 sec move
-            // 50% chance that your polarity will change
-            MovingTargsTime = ((BerserkTimer / 30f) * 3f) * 0.50f;
-            /* TODO:
-             * Better handle of Feugen and Stalagg
-             */
-        }
-    }
-    // Frostwyrm Lair
-    public class Sapphiron_25 : Sapphiron_10 {
-        public Sapphiron_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 4250000f;
-            BerserkTimer = 15 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Frost Aura",
-                DamageType = ItemDamageType.Frost,
-                DamagePerHit = 1200f,
-                MaxNumTargets = 10,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Life Drain",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (((4376f+5624f)/2f) * 3f) * 4f,
-                MaxNumTargets = 2,
-                AttackSpeed = 24.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 45(+30) seconds for 30 seconds Sapph is in the air
-            // He stops this at 10% hp
-            MovingTargsTime = ((BerserkTimer / (45f+30f)) * 30f) * 0.90f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 3;
-            Min_Healers = 4;
-            /* TODO:
-             * Chill (The Blizzard)
-             * Ice Bolt
-             */
-        }
-    }
-    public class KelThuzad_25 : KelThuzad_10 {
-        public KelThuzad_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 2230000f;
-            BerserkTimer = 19 * 60;
-            SpeedKillTimer = 6 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Phase 1, no damage to KT
-            MovingTargsTime = 3f*60f + 48f;
-            TimeBossIsInvuln = 3f * 60f + 48f;
-            // Phase 2 & 3, gotta move out of Shadow Fissures periodically
-            // We're assuming they pop every 30 seconds and you have to be
-            // moved for 6 seconds and there's a 1/10 chance he will select
-            // you over someone e;se
-            MovingTargsTime = (((BerserkTimer - MovingTargsTime) / 30f) * 6f) * 0.10f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 3;
-            Min_Healers = 4;
-            /* TODO:
-             * The Mobs in Phase 1
-             */
-        }
-    }
-    // ===== The Obsidian Sanctum =====================
-    public class Shadron_25 : Shadron_10 {
-        public Shadron_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 976150f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Fissure",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6188f + 8812f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Breath",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6938f + 8062f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 60 seconds for 20 seconds dps has to jump into the portal and kill the add
-            MovingTargsTime  = (BerserkTimer / (60f+20f)) * (20f);
-            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
-            // 1/10 chance he'll pick you
-            MovingTargsTime += ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            /* TODO:
-             * The Acolyte Add
-             */
-        }
-    }
-    public class Tenebron_25 : Tenebron_10 {
-        public Tenebron_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 976150f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Fissure",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6188f + 8812f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Breath",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6938f + 8062f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
-            MovingTargsTime  = (BerserkTimer / (30f+20f)) * (20f);
-            MultiTargsPerc = (BerserkTimer / (30f + 20f)) * (20f) / BerserkTimer;
-            MaxNumTargets = 6f + 1f;
-            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
-            // 1/10 chance he'll pick you
-            MovingTargsTime += ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            /* TODO:
-             * The Adds' abilities
-             */
-        }
-    }
-    public class Vesperon_25 : Vesperon_10 {
-        public Vesperon_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 976150f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Fissure",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6188f + 8812f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Shadow Breath",
-                DamageType = ItemDamageType.Shadow,
-                DamagePerHit = (6938f + 8062f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
-            // 1/10 chance he'll pick you
-            MovingTargsTime = ((BerserkTimer / Attacks[1].AttackSpeed) * (5f + 1f)) * 0.10f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            /* TODO:
-             * The adds, which optimally you would ignore
-             */
-        }
-    }
-    public class Sartharion_25 : Sartharion_10 {
-        public Sartharion_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 2510100f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Fire Breath",
-                DamageType = ItemDamageType.Fire,
-                DamagePerHit = (8750f + 11250f) / 2f,
-                MaxNumTargets = 1,
-                AttackSpeed = 40.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 45 seconds for 10 seconds you gotta move for Lava Waves
-            MovingTargsTime = (BerserkTimer / 45f) * (10f);
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            /* TODO:
-             */
-        }
-    }
-    // ===== The Vault of Archavon ====================
-    public class ArchavonTheStoneWatcher_25 : ArchavonTheStoneWatcher_10 {
-        public ArchavonTheStoneWatcher_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 2300925f;
-            BerserkTimer = 5 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.75f;
-            // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
-            MovingTargsTime = (BerserkTimer / (30f)) * (5f);
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            /* TODO:
-             * Rock Shards
-             * Crushing Leap
-             * Stomp (this also stuns)
-             * Impale (this also stuns)
-             */
-        }
-    }
-    // ===== The Eye of Eternity ======================
-    public class Malygos_25 : Malygos_10 {
-        public Malygos_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T7.5";
-            Version = "25 Man";
-            Health = 2230000f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            Attacks.Add(new Attack {
-                Name = "Impale",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = (4813f + 6187f) / 2f,
-                MaxNumTargets = 10,
-                AttackSpeed = 40.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            MovingTargsTime = (BerserkTimer / (70f + 120f / 2f)) * (16f+4f);
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            /* TODO:
-             */
-        }
-    }
-    #endregion
-    #region T8 Content
-    // ===== The Vault of Archavon ====================
-    public class EmalonTheStormWatcher_10 : BossHandler {
-        public EmalonTheStormWatcher_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Emalon the Storm Watcher";
-            Content = "T8";
-            Instance = "The Vault of Archavon";
-            Version = "10 Man";
-            Health = 2789000f;
-            BerserkTimer = 6 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 90000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
-            // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
-            // Adding 5 seconds to the Duration for moving out before starts and then 5 for back in after
-            MovingTargsTime  = (BerserkTimer / (45f + 18f)) * (18f + 5f + 5f);
-            // Lightning Nova, usually happens a few seconds after the overcharged add dies
-            // (right when most melee reaches the boss again) Simming 4 to run out and 4 to get back
-            MovingTargsTime += (BerserkTimer / (45f + 18f)) * (4f + 4f);
-            // Fight Requirements
-            /* TODO:
-             * Adds Damage
-             * Chain Lightning Damage
-             * Lightning Nova Damage
-             */
-        }
-    }
-    // ===== Ulduar ===================================
-    // The Siege
-        // TODO: Flame Leviathan
-        // TODO: Ignis the Furnace Master
-        // TODO: Razorscale
-        // TODO: XT-002 Deconstructor
-    // The Antechamber
-        // TODO: Assembly of Iron
-        // TODO: Kologarn
-    public class Auriaya_10 : BossHandler {
-        public Auriaya_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Auriaya";
-            Content = "T8";
-            Instance = "Ulduar";
-            Version = "10 Man";
-            BerserkTimer = 10 * 60;
-            Health = 3137625f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
-            // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
-            // Guardian Swarm: Marks a player and summons a pack of 10 Swarming Guardians with low health around them soon after.
-            // Feral Defender: If you leave him alone, he's up about 90% of the fight
-            MultiTargsPerc = 0.90f; // need to sim this out
-            MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
-            // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
-            // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            FearingTargsFreq = 45f;
-            FearingTargsDur = 5f * 1000f;
-            // Fight Requirements
-            /* TODO:
-             */
-        }
-    }
-    // The Keepers
-        // TODO: Mimiron
-        // TODO: Freya
-        // TODO: Thorim
-    public class Hodir_10 : BossHandler {
-        public Hodir_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Hodir";
-            Content = "T8";
-            Instance = "Ulduar";
-            Version = "10 Man";
-            BerserkTimer = 8 * 60;
-            Health = 8115990f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.75f; // he moves A LOT so it's hard to stay behind him at all times
-            // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
-            // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
-            // Going to assume the CD is 45 sec for now
-            RootingTargsFreq = 45f;
-            RootingTargsDur = 10f * 1000f;
-            // Fight Requirements
-            Min_Tanks = 1;
-            /* TODO:
-             */
-        }
-    }
-    // The Descent into Madness
-        // TODO: General Vezax
-        // TODO: Yogg-Saron
-    // Supermassive
-    // TODO: Algalon the Observer
-    #endregion
-    #region T8.5 Content
-    // ===== The Vault of Archavon ====================
-    public class EmalonTheStormWatcher_25 : EmalonTheStormWatcher_10 {
-        public EmalonTheStormWatcher_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T8.5";
-            Version = "25 Man";
-            Health = 2789000f;
-            BerserkTimer = 6 * 60;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 90000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
-            // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
-            // Adding 5 seconds to the Duration for moving out before starts and then 5 for back in after
-            MovingTargsTime  = (BerserkTimer / (45f + 18f)) * (18f + 5f + 5f);
-            // Lightning Nova, usually happens a few seconds after the overcharged add dies
-            // (right when most melee reaches the boss again) Simming 4 to run out and 4 to get back
-            MovingTargsTime += (BerserkTimer / (45f + 18f)) * (4f + 4f);
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            /* TODO:
-             * Adds Damage
-             * Chain Lightning Damage
-             * Lightning Nova Damage
-             */
-        }
-    }
-    // ===== Ulduar ===================================
-    // The Siege
-        // TODO: Flame Leviathan
-        // TODO: Ignis the Furnace Master
-        // TODO: Razorscale
-        // TODO: XT-002 Deconstructor
-    // The Antechamber
-        // TODO: Assembly of Iron
-        // TODO: Kologarn
-    public class Auriaya_25 : Auriaya_10 {
-        public Auriaya_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T8.5";
-            Version = "25 Man";
-            BerserkTimer = 10 * 60;
-            Health = 16734000f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            // Situational Changes
-            //InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
-            // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
-            // Guardian Swarm: Marks a player and summons a pack of 10 Swarming Guardians with low health around them soon after.
-            // Feral Defender: If you leave him alone, he's up about 90% of the fight
-            //MultiTargsPerc = 0.90f; // need to sim this out
-            //MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
-            // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
-            // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            //FearingTargsFreq = 45f;
-            //FearingTargsDur = 5f * 1000f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            /* TODO:
-             */
-        }
-    }
-    // The Keepers
-        // TODO: Mimiron
-        // TODO: Freya
-        // TODO: Thorim
-    public class Hodir_25 : Hodir_10 {
-        public Hodir_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T8.5";
-            Version = "25 Man";
-            Health = 32477904f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            // Situational Changes
-            //InBackPerc_Melee = 0.75f; // he moves A LOT so it's hard to stay behind him at all times
-            // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
-            // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
-            // Going to assume the CD is 45 sec for now
-            //RootingTargsFreq = 45f;
-            //RootingTargsDur = 10f * 1000f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 1;
-            Min_Healers = 4;
-            /* TODO:
-             */
-        }
-    }
-    // The Descent into Madness
-        // TODO: General Vezax
-        // TODO: Yogg-Saron
-    // Supermassive
-    // TODO: Algalon the Observer
-    #endregion
-    #region T9 (10) Content
-    // ===== The Vault of Archavon ====================
-    public class KoralonTheFlameWatcher_10 : BossHandler {
-        public KoralonTheFlameWatcher_10() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Koralon the Flame Watcher";
-            Content = "T9";
-            Instance = "The Vault of Archavon";
-            Version = "10 Man";
-            Health = 4183500f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Fight Requirements
-            Min_Tanks = 2;
-            Min_Healers = 3;
-            /* TODO:
-             * I haven't done this fight yet so I can't really model it myself right now
-             */
-        }
-    }
-    #endregion
-    #region T9 (10) H Content
-    #endregion
-    #region T9 (25) Content
-    // ===== The Vault of Archavon ====================
-    public class KoralonTheFlameWatcher_25 : KoralonTheFlameWatcher_10 {
-        public KoralonTheFlameWatcher_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = "T9.5";
-            Version = "25 Man";
-            Health = 4183500f;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            /* TODO:
-             * I haven't done this fight yet so I can't really model it myself right now
-             */
-        }
-    }
-    #endregion
-    #region T9 (25) H Content
-    #endregion
 }
