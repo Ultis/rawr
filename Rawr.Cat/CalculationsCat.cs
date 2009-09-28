@@ -522,22 +522,23 @@ namespace Rawr.Cat
 			statsGearEnchantsBuffs.Strength += statsGearEnchantsBuffs.CatFormStrength;
 			
 			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
-            
-            Stats statsWeapon = character.MainHand == null ? new Stats() : character.MainHand.GetTotalStats(character).Clone();
-			statsWeapon.Strength *= (1f + statsTotal.BonusStrengthMultiplier);
-			statsWeapon.AttackPower += statsWeapon.Strength * 2f;
+
+			float predatoryStrikesAP = 0f;
+			float fap = 0f;
 			if (character.MainHand != null)
 			{
-				float fap = Math.Max(0f, (character.MainHand.Item.DPS - 54.8f) * 14f); //TODO Find a more accurate number for this?
-				statsTotal.AttackPower += fap;
-				statsWeapon.AttackPower += fap;
+				fap = Math.Max(0f, (character.MainHand.Item.DPS - 54.8f) * 14f); //TODO Find a more accurate number for this?
+				predatoryStrikesAP = (fap + character.MainHand.Item.Stats.AttackPower) * 0.2f * (talents.PredatoryStrikes / 3f);
+				if (character.MainHand.Enchant != null)
+				{
+					predatoryStrikesAP += character.MainHand.Enchant.Stats.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
+				}
 			}
 
 			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
 			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-			statsTotal.AttackPower += statsTotal.Strength * 2f + statsTotal.Agility;
-			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
+			statsTotal.AttackPower += statsTotal.Strength * 2f + statsTotal.Agility + fap + predatoryStrikesAP;
 			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f+ statsTotal.BonusAttackPowerMultiplier));
 			statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
 			statsTotal.Armor += 2f * statsTotal.Agility;
