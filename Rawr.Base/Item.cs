@@ -165,7 +165,7 @@ namespace Rawr
 		[XmlIgnore]
 		public string IconPath
 		{
-			get { return _iconPath.ToLower(System.Globalization.CultureInfo.InvariantCulture); }
+			get { return (_iconPath == null ? null : _iconPath.ToLower(System.Globalization.CultureInfo.InvariantCulture)); }
 			set { _iconPath = value.ToLower(System.Globalization.CultureInfo.InvariantCulture); }
 		}
 
