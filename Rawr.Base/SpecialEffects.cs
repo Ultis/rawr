@@ -1063,10 +1063,10 @@ namespace Rawr {
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShield, new Stats() { Resilience = (float)int.Parse(match.Groups["amount"].Value) }, 6f, 0f, 1f));
             }
-            else if (line == "Increases your block value by 272 for 20 sec sec each time you use Holy Shield.")
+            else if ((match = new Regex(@"Increases your block value by (?<blockValue>\d\d*) for (?<duration>\d\d*) sec each time you use Holy Shield.").Match(line)).Success)
             {
-                stats.ShieldOfRighteousnessBlockValue = 272;
-            }
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShield, new Stats() { BlockValue = (float)int.Parse(match.Groups["blockValue"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 0f, 1f));
+            } 
             else if (line == "Your Shield of Righteousness deals an additional 96 damage.")
             {
                 stats.ShieldOfRighteousnessBlockValue = 96;
