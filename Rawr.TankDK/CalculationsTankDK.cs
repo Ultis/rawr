@@ -5,6 +5,8 @@ using System.Text;
 using System.Xml.Serialization;
 #if RAWR3
 using System.Windows.Media;
+#else
+using System.Drawing;
 #endif
 
 namespace Rawr.TankDK {
@@ -113,36 +115,33 @@ namespace Rawr.TankDK {
             }
         }
 
-#if RAWR3
         private Dictionary<string, Color> _subPointNameColors = null;
-		public override Dictionary<string, Color> SubPointNameColors
+        private Dictionary<string, Color> _subPointNameColors_SMT = new Dictionary<string, Color>();
+        private Dictionary<string, Color> _subPointNameColors_Burst = new Dictionary<string, Color>();
+
+        public override Dictionary<string, Color> SubPointNameColors
 		{
 			get
 			{
 				if (_subPointNameColors == null)
 				{
-					_subPointNameColors = new Dictionary<string, Color>();
-					_subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 255));
-					_subPointNameColors.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
-					_subPointNameColors.Add("Threat", Color.FromArgb(255, 0, 255, 0));
+                    return _subPointNameColors_SMT;
 				}
 				return _subPointNameColors;
 			}
 		}
-#else
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors {
-            get {
-                if (_subPointNameColors == null) {
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Survival", System.Drawing.Color.FromArgb(255, 0, 0, 255));
-                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors.Add("Threat", System.Drawing.Color.FromArgb(255, 0, 128, 0));
-                }
-                return _subPointNameColors;
-            }
+
+        public CalculationsTankDK()
+        {
+            _subPointNameColors_SMT.Add("Survival", Color.FromArgb(255, 0, 0, 255));
+            _subPointNameColors_SMT.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
+            _subPointNameColors_SMT.Add("Threat", Color.FromArgb(255, 0, 255, 0));
+
+            _subPointNameColors_Burst.Add("BurstTime", Color.FromArgb(255, 0, 0, 255));
+            _subPointNameColors_Burst.Add("ReactionTime", Color.FromArgb(255, 255, 0, 0));
+
+            _subPointNameColors = _subPointNameColors_SMT;
         }
-#endif
 
         private string[] _characterDisplayCalculationLabels = null;
         /// <summary>
@@ -370,6 +369,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             CalculationOptionsTankDK opts = character.CalculationOptions as CalculationOptionsTankDK;
             // Validate opts 
             if (null == opts) { return calcs; }
+            calcs.cType = opts.cType;
 
             // Level differences.
             int iTargetLevel = opts.TargetLevel;
@@ -670,6 +670,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (float.IsNaN(calcs.Threat) ||
                 float.IsNaN(calcs.Survival) ||
                 float.IsNaN(calcs.Mitigation) ||
+                float.IsNaN(calcs.BurstTime) ||
+                float.IsNaN(calcs.ReactionTime) ||
                 float.IsNaN(calcs.OverallPoints) )
             {
 #if DEBUG
@@ -770,7 +772,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <returns>The data for the custom chart.</returns>
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) 
         {
-                return new ComparisonCalculationBase[0];
+            return new ComparisonCalculationBase[0];
         }
 
         private Stats GetRaceStats(Character character) {
@@ -1611,6 +1613,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fReactionTime = 1f / (1f - PercAvoidance);
             return fReactionTime;
         }
+        /// <summary>
+        /// Evaluate how many swings until the tank dies.
+        /// </summary>
+        /// <param name="PercAvoidance">a float values of Total avoidance 0-1 as a decimal percentage.</param>
+        /// <param name="EffectiveHealth">Survival score</param>
+        /// <param name="RawPerHit">What's the raw unmitigated damage coming in.</param>
+        /// <returns></returns>
         private float GetBurstTime(float PercAvoidance, float EffectiveHealth, float RawPerHit) {
             float fBurstTime = 0f;
             // check args.
@@ -1622,6 +1631,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             return fBurstTime;
         }
+
         /// <summary>Deserializes the model's CalculationOptions data object from xml</summary>
         /// <param name="xml">The serialized xml representing the model's CalculationOptions data object.</param>
         /// <returns>The model's CalculationOptions data object.</returns>

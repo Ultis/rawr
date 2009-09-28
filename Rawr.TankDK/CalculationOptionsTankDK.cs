@@ -25,6 +25,8 @@ namespace Rawr.TankDK
 		public Rotation m_Rotation = new Rotation();
 		public DeathKnightTalents talents;
 
+        public CalculationType cType = CalculationType.SMT;
+
 		public string GetXml()
 		{
 			System.Xml.Serialization.XmlSerializer serializer =

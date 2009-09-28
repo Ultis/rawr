@@ -30,6 +30,8 @@ namespace Rawr.TankDK {
                 }
             }
 
+            comboChartType.SelectedItem = comboChartType.Items[(int)options.cType];
+
             numThreatWeight.Value = (decimal)options.ThreatWeight;
             numSurvivalWeight.Value = (decimal)options.SurvivalWeight;
 
@@ -97,6 +99,15 @@ namespace Rawr.TankDK {
         private void numTargets_ValueChanged(object sender, EventArgs e) {
             if (!_loadingCalculationOptions) {
                 options.uNumberTargets = (uint)numTargets.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void comboChartType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.cType = (CalculationType)comboChartType.SelectedIndex;
                 Character.OnCalculationsInvalidated();
             }
         }

@@ -13,5 +13,6 @@ I do need to at some point, completely re-factor the whole thing, but I'm not th
 Current TODOs:
 * Fix defects
 * Fix shot rotation/threat modeling.
+* Completely re-work ability usage.
 * Add graphs for mapping Burst & Reaction Time.
 * Integrate a Paperdoll vs. Effective Stats model.

@@ -3,8 +3,31 @@ using System.Collections.Generic;
 
 namespace Rawr.TankDK {
     // Reminder: This is the character totals based on all gear and talents.  Apply the weights here.
-    class CharacterCalculationsTankDK : CharacterCalculationsBase {
-        public override float OverallPoints { get { return ((Survival * SurvivalWeight) + Mitigation + (Threat * ThreatWeight)); } set { } }
+    public enum CalculationType
+    {
+        SMT = 0,
+        Burst = 1,
+    }
+
+    class CharacterCalculationsTankDK : CharacterCalculationsBase 
+    {
+        public CalculationType cType;
+        public override float OverallPoints 
+        { 
+            get 
+            {
+                if (cType == CalculationType.Burst)
+                {
+                    return (BurstTime + ReactionTime);
+                }
+                else
+                {
+                    return ((Survival * SurvivalWeight) + Mitigation + (Threat * ThreatWeight)); 
+                }
+            } 
+            set 
+            { }
+        }
 
         public Stats BasicStats { get; set; }
         public int TargetLevel { get; set; }
@@ -40,9 +63,23 @@ namespace Rawr.TankDK {
         public float Expertise { get; set; }
 
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
-        public override float[] SubPoints {
-            get { return new float[] {  Survival * SurvivalWeight, Mitigation, Threat * ThreatWeight }; }
-            set { _subPoints = value; }
+        public override float[] SubPoints 
+        {
+            get 
+            {
+                if (cType == CalculationType.Burst)
+                {
+                    return new float[] {BurstTime, ReactionTime, 0f};
+                }
+                else
+                {
+                    return new float[] { Survival * SurvivalWeight, Mitigation, Threat * ThreatWeight };
+                }
+            }
+            set 
+            { 
+                _subPoints = value; 
+            }
         }
 
         private float _whiteDPS;

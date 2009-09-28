@@ -80,10 +80,10 @@ namespace Rawr.TankDK
 
                 float chanceAvoided = 0.335f;
 
-            float chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-character.Level];
+                float chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-character.Level];
 
-                calcs.DodgedMHAttacks = MH.chanceDodged;
-                calcs.DodgedOHAttacks = OH.chanceDodged;
+//                calcs.DodgedMHAttacks = MH.chanceDodged;
+//                calcs.DodgedOHAttacks = OH.chanceDodged;
 
                 if (character.MainHand != null)
                 {
@@ -132,8 +132,8 @@ namespace Rawr.TankDK
                 spellResist = Math.Max(0f, spellResist);
 
                 // Total physical misses
-                totalMHMiss = calcs.DodgedMHAttacks + chanceMiss;
-                totalOHMiss = calcs.DodgedOHAttacks + chanceMiss;
+                totalMHMiss = MH.chanceDodged + chanceMiss;
+                totalOHMiss = OH.chanceDodged + chanceMiss;
                 realDuration = calcOpts.m_Rotation.curRotationDuration;
                 realDuration += ((totalMeleeAbilities - calcOpts.m_Rotation.FrostStrike) * chanceDodged * (1.5f)) +
                     ((totalMeleeAbilities - calcOpts.m_Rotation.FrostStrike) * chanceMiss * (1.5f)) +
@@ -315,8 +315,6 @@ namespace Rawr.TankDK
                 Summon Gargoyle	0.4
                 Icy Touch	0.1
                 Pestilence	0.04
-                Strangulate	0.06
-                Unholy Blight	0.013
             */
 
             //spell AP multipliers, for diseases its per tick
@@ -331,7 +329,6 @@ namespace Rawr.TankDK
             float HowlingBlastAPMult = 0.1f;
             float IcyTouchAPMult = 0.1f;
             //float StrangulateAPMult = .06f;
-//            float UnholyBlightAPMult = 0.013f;
 
             //for estimating rotation pushback
 

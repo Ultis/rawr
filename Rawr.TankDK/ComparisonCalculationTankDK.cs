@@ -26,6 +26,18 @@ namespace Rawr.TankDK {
             set { _subPoints[2] = value; _overallPoints = Survival + Mitigation + Threat; }
         }
 
+        public float BurstTime
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = value; }
+        }
+
+        public float ReactionTime
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
+        }
+
         private float _overallPoints = 0f;
         public override float OverallPoints {
             // Reminder: this is for an individual item.  Do not apply weighting to this class.  
@@ -68,10 +80,11 @@ namespace Rawr.TankDK {
         /// <summary>
         /// User Option whether to use the Base Stat feature for relative stats calcs
         /// </summary>
-        public override bool getBaseStatOption(Character character) { return false; }
+        public override bool getBaseStatOption(Character character) { return true; }
 
         public override string ToString() {
             // So that the ToString() function can be used as a base-line comparison if all else fails.
+            // TODO: Update this for Burst/ReactionTime.
             return string.Format("{0}: ({1}O = {2}M {3}S {4}T)", Name, Math.Round(OverallPoints), Math.Round(Mitigation), Math.Round(Survival), Math.Round(Threat));
         }
     }
