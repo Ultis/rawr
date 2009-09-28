@@ -1182,7 +1182,7 @@ namespace Rawr {
             #region 3.2 Trinkets
             else if ((match = Regex.Match(line, @"Each time you hit with a melee or ranged attack, you have a chance to gain (?<amount>\d+) attack power for 10 sec.")).Success)
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 45f, 0.2f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 45f, 0.2f));
             }
             else if ((match = Regex.Match(line.Replace("nbsp;"," "), @"When you deal damage you have a chance to gain Paragon, increasing your Strength or Agility by (?<amount>\d+) for 15 sec.  Your highest stat is always chosen.")).Success)
             {
