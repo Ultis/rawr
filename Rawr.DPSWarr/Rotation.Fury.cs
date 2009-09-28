@@ -108,8 +108,8 @@ namespace Rawr.DPSWarr
                 //BS.hsActivates += newCLActivates;
                 if (CalcOpts.FuryStance)
                 {
-                    _HS_DPS = HS.DPS;
-                    _CL_DPS = CL.DPS;
+                    _HS_DPS = HS.GetDPS(newHSActivates);
+                    _CL_DPS = CL.GetDPS(newCLActivates);
                     _HS_PerHit = HS.DamageOnUse * hsPercOvd;
                     _CL_PerHit = CL.DamageOnUse * clPercOvd;
                 }
@@ -390,10 +390,10 @@ namespace Rawr.DPSWarr
                 _WhiteDPSOH = WhiteAtks.OhDPS;
                 _WhiteDPS = _WhiteDPSMH + _WhiteDPSOH;
                 _WhitePerHit = WhiteAtks.MhDamageOnUse; // MhAvgSwingDmg
-                _HS_DPS = HS.DPS;
+                /*_HS_DPS = HS.DPS;
                 _HS_PerHit = HS.DamageOnUse;
                 _CL_DPS = CL.DPS;
-                _CL_PerHit = CL.DamageOnUse;
+                _CL_PerHit = CL.DamageOnUse;*/
                 DPS_TTL += _WhiteDPS;
                 DPS_TTL += _HS_DPS;
                 DPS_TTL += _CL_DPS;

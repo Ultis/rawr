@@ -108,17 +108,17 @@ namespace Rawr.DPSWarr
                         - MHAtkTable.Miss   // no damage when being missed
                         - MHAtkTable.Dodge  // no damage when being dodged
                         - MHAtkTable.Parry  // no damage when being parried
-                        - MHAtkTable.Glance // glancing handled below
+                        //- MHAtkTable.Glance // glancing handled below
                         - MHAtkTable.Block  // blocked handled below
                         - MHAtkTable.Crit); // crits   handled below
 
-                    float dmgGlance = DamageMH * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                    //float dmgGlance = DamageMH * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                     float dmgBlock = DamageMH * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
                     float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                     DamageMH *= dmgDrop;
 
-                    DamageMH += dmgGlance + dmgBlock + dmgCrit;
+                    DamageMH += /*dmgGlance*/ + dmgBlock + dmgCrit;
 
                     // ==== OFF HAND ====
                     float DamageOH = GetDamage(false, true); // Base Damage
@@ -130,17 +130,17 @@ namespace Rawr.DPSWarr
                         - OHAtkTable.Miss   // no damage when being missed
                         - OHAtkTable.Dodge  // no damage when being dodged
                         - OHAtkTable.Parry  // no damage when being parried
-                        - OHAtkTable.Glance // glancing handled below
+                        //- OHAtkTable.Glance // glancing handled below
                         - OHAtkTable.Block  // blocked handled below
                         - OHAtkTable.Crit); // crits   handled below
 
-                    dmgGlance = DamageOH * OHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                    //dmgGlance = DamageOH * OHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                     dmgBlock = DamageOH * OHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
                     dmgCrit = DamageOH * OHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                     DamageOH *= dmgDrop;
 
-                    DamageOH += dmgGlance + dmgBlock + dmgCrit;
+                    DamageOH += /*dmgGlance*/ + dmgBlock + dmgCrit;
 
                     // ==== RESULT ====
                     float Damage = DamageMH + DamageOH;
@@ -253,48 +253,7 @@ namespace Rawr.DPSWarr
             }
             private float CalcSlamProcs(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
             {
-                float hsPercent = (hsActivates) / (FightDuration / Whiteattacks.MhEffectiveSpeed);
-                float numProcs = 0.0f;
-                int whiteTimer = 0;
-                int WWtimer = 0;
-                int BTtimer = 0;
-                const int GCD = 15;
-                float chanceWeDontProc = 1f; // temp value that keeps track of what the odds are we got a proc by SLAM time
-                int numWW = 0;
-                int numBT = 0;
-                for (int timeStamp = 0; timeStamp < FightDuration * 10f; timeStamp++)
-                {
-                    if (whiteTimer <= 0)
-                    {
-                        chanceWeDontProc *= (1f - hsPercent * procChance * chanceMHhit);
-                        whiteTimer = (int)Math.Ceiling(Whiteattacks.MhEffectiveSpeed * 10);
-                    }
-                    if (timeStamp % GCD == 0)
-                    {
-                        if (WWtimer <= 0)
-                        {
-                            chanceWeDontProc *= (1f - procChance * chanceMHhit) * (1f - procChance * chanceOHhit);
-                            WWtimer = 80;
-                            numWW++;
-                        }
-                        else if (BTtimer <= 0)
-                        {
-                            chanceWeDontProc *= (1f - procChance * chanceMHhit);
-                            BTtimer = 40;
-                            numBT++;
-                        }
-                        else
-                        {
-                            // We slam
-                            numProcs += (1f - chanceWeDontProc);
-                            chanceWeDontProc = 1f;
-                        }
-                    }
-                    whiteTimer--;
-                    WWtimer--;
-                    BTtimer--;
-                }
-                return numProcs;
+                return 0f;
             }
             protected override float ActivatesOverride
             {

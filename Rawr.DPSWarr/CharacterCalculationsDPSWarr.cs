@@ -5,7 +5,10 @@ using System.Text;
 namespace Rawr.DPSWarr {
     public class CharacterCalculationsDPSWarr : CharacterCalculationsBase {
         #region Variables
-        public Stats BasicStats { get; set; }
+        public Stats AverageStats { get; set; }
+        public Stats MaximumStats { get; set; }
+        public Stats UnbuffedStats { get; set; }
+        public Stats BuffedStats { get; set; }
         public CombatFactors combatFactors { get; set; }
         public Rotation Rot { get; set; }
         public List<Buff> ActiveBuffs { get; set; }
@@ -135,16 +138,16 @@ namespace Rawr.DPSWarr {
             // Base Stats
             dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
                                 Environment.NewLine + "{3:00,000} : Stam Bonus",
-                                BasicStats.Health, BasicStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
+                                AverageStats.Health, AverageStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(AverageStats.Stamina)));
             dictValues.Add("Armor",string.Format("{0}*Increases Attack Power by {1}",Armor,TeethBonus));
-            dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",BasicStats.Strength,BasicStats.Strength*2f));
-            dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)BasicStats.AttackPower,BasicStats.AttackPower/14f));
+            dictValues.Add("Strength",string.Format("{0}*Increases Attack Power by {1}",AverageStats.Strength,AverageStats.Strength*2f));
+            dictValues.Add("Attack Power", string.Format("{0}*Increases DPS by {1:0.0}", (int)AverageStats.AttackPower,AverageStats.AttackPower/14f));
             dictValues.Add("Agility",string.Format("{0}*3.192% : Base Crit at lvl 80"+
                                 Environment.NewLine + "{1:0.000%} : Crit Increase"+
                                 Environment.NewLine + "{2:0.000%} : Total Crit Increase"+
                                 Environment.NewLine + "Increases Armor by {3:0}",
-                                BasicStats.Agility, AgilityCritBonus, AgilityCritBonus + 0.03192f,
-                                StatConversion.GetArmorFromAgility(BasicStats.Agility)));
+                                AverageStats.Agility, AgilityCritBonus, AgilityCritBonus + 0.03192f,
+                                StatConversion.GetArmorFromAgility(AverageStats.Agility)));
             dictValues.Add("Crit", string.Format("{0:00.00%} : {1}*" +
                                                       "{2:00.00%} : Rating " +
                                 Environment.NewLine + "{3:00.00%} : MH Crit" +
@@ -152,23 +155,23 @@ namespace Rawr.DPSWarr {
                                 Environment.NewLine + "Target level affects this" +
                                 Environment.NewLine + "LVL 80 will match tooltip in game" +
                                 Environment.NewLine + "LVL 83 has a total of ~4.8% drop",
-                                CritPercent, BasicStats.CritRating,
-                                StatConversion.GetCritFromRating(BasicStats.CritRating),
+                                CritPercent, AverageStats.CritRating,
+                                StatConversion.GetCritFromRating(AverageStats.CritRating),
                                 MhCrit, OhCrit));
             dictValues.Add("Haste", string.Format("{0:00.00%} : {1}*" +
                                 "The percentage is affected both by Haste Rating and Blood Frenzy talent",
-                                HastePercent, BasicStats.HasteRating));
+                                HastePercent, (float)Math.Floor(AverageStats.HasteRating)));
             dictValues.Add("Armor Penetration", string.Format("{0:00.00%} : {1}*" +
                                                       "{2:0.00%} : Rating" +
                                 Environment.NewLine + "{3:0.00%} : Arms Stance" +
                                 Environment.NewLine + "{4:0.00%} : Mace Spec",
                                 ArmorPenetration,
-                                BasicStats.ArmorPenetrationRating, ArmorPenetrationRating2Perc,
+                                AverageStats.ArmorPenetrationRating, ArmorPenetrationRating2Perc,
                                 ArmorPenetrationStance,
                                 ArmorPenetrationMaceSpec));
             // old
             float HitPercent = StatConversion.GetHitFromRating(HitRating);
-            float HitPercBonus = BasicStats.PhysicalHit;
+            float HitPercBonus = AverageStats.PhysicalHit;
             // Hit Soft Cap ratings check, how far from it
             float capA1         = StatConversion.WHITE_MISS_CHANCE_CAP[combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level];
             float convcapA1     = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA1));
@@ -188,8 +191,8 @@ namespace Rawr.DPSWarr {
                                 Environment.NewLine + "White Dual Wield Cap: " +
                                 (sec2lastNumA2 > 0 ? "You can free {5:0} Rating"
                                                    : "You need {5:0} more Rating"),
-                                StatConversion.GetHitFromRating(BasicStats.HitRating),
-                                BasicStats.HitRating,
+                                StatConversion.GetHitFromRating(AverageStats.HitRating),
+                                AverageStats.HitRating,
                                 HitPercBonus,
                                 HitPercent + HitPercBonus,
                                 (sec2lastNumA1 > 0 ? sec2lastNumA1 : sec2lastNumA1 * -1),
@@ -220,7 +223,7 @@ namespace Rawr.DPSWarr {
                                              : "You need {10:0} more Expertise ({11:0} Rating)"),
                                 StatConversion.GetDodgeParryReducFromExpertise(Expertise),
                                 Expertise,
-                                BasicStats.ExpertiseRating,
+                                AverageStats.ExpertiseRating,
                                 WeapMastPerc,
                                 StatConversion.GetDodgeParryReducFromExpertise(MhExpertise), MhExpertise,
                                 StatConversion.GetDodgeParryReducFromExpertise(OhExpertise), OhExpertise,
@@ -286,14 +289,14 @@ namespace Rawr.DPSWarr {
 
         public override float GetOptimizableCalculationValue(string calculation) {
             switch (calculation) {
-                case "Health": return BasicStats.Health;
-                case "Armor": return BasicStats.Armor + BasicStats.BonusArmor;
-                case "Strength": return BasicStats.Strength;
-                case "Attack Power": return BasicStats.AttackPower;
-                case "Agility": return BasicStats.Agility;
+                case "Health": return AverageStats.Health;
+                case "Armor": return AverageStats.Armor + AverageStats.BonusArmor;
+                case "Strength": return AverageStats.Strength;
+                case "Attack Power": return AverageStats.AttackPower;
+                case "Agility": return AverageStats.Agility;
                 case "Crit %": return combatFactors._c_mhycrit * 100f;
                 case "Haste %": return combatFactors.TotalHaste * 100f;
-                case "Armor Penetration %": return BasicStats.ArmorPenetration * 100f;
+                case "Armor Penetration %": return AverageStats.ArmorPenetration * 100f;
                 case "% Chance to Miss (White)": return combatFactors._c_wmiss * 100f;
                 case "% Chance to Miss (Yellow)": return combatFactors._c_ymiss * 100f;
                 case "% Chance to be Dodged": return combatFactors._c_mhdodge * 100f;
