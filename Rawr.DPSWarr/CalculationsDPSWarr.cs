@@ -278,11 +278,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, Color>();
                     _subPointNameColors.Add("DPS", Color.FromArgb(255,255,0,0));
-#if RAWR3
+                    #if RAWR3
                     _subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
-#else
+                    #else
                     _subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
-#endif
+                    #endif
                 }
                 return _subPointNameColors;
             }
@@ -660,11 +660,19 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
         public Stats GetBuffsStats(Character character) {
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
+            List<Buff> removedBuffs = new List<Buff>();
+
+            // Draenei should always have this buff activated
+            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
+            if (character.Race == CharacterRace.Draenei
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+            {
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+            }
 
             // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blessing of Might (+Improved)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            List<Buff> removedBuffs = new List<Buff>();
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
                 Buff a = Buff.GetBuffByName("Commanding Presence (Attack Power)");
                 Buff b = Buff.GetBuffByName("Battle Shout");
@@ -728,8 +736,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            foreach (Buff b in removedBuffs)
-            {
+            foreach (Buff b in removedBuffs) {
                 character.ActiveBuffs.Add(b);
             }
 
@@ -948,7 +955,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
         #endregion
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
-#if RAWR3
+            #if RAWR3
+            // Forcing an error just to prove the stupid thing works
             try {
                 string isnull = null;
                 string check = isnull + "1";
@@ -956,7 +964,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 new ErrorBoxDPSWarr("Test Title", ex.Message, "GetCharacterCalculations()",
                     "This is a forced one, just making sure the frackin thing works", ex.StackTrace, 0);
             }
-#endif
+            #endif
             int line = 0;
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
             try {

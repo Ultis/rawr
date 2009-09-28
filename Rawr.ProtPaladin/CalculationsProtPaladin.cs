@@ -667,9 +667,6 @@ focus on Survival Points.",
                     statsBase.Spirit    += RaceStats[8, 4];
 
                     //Shadow Resistance : Reduces the chance you will be hit by Shadow spells by 2%.
-                    //Heroic Presence : Increases chance to hit with all spells and attacks by 1% for you and all party members within 30 yards.
-                    statsBase.PhysicalHit = 0.01f;
-                    statsBase.SpellHit = 0.01f;
                     break;
                 case CharacterRace.BloodElf:
 
@@ -703,7 +700,7 @@ focus on Survival Points.",
             PaladinTalents talents = character.PaladinTalents;
 
             Stats statsBase = GetRaceStats(character);
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character);
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsTalents = new Stats()
             {
@@ -1536,6 +1533,49 @@ focus on Survival Points.",
             bool relevant = HasRelevantStats(stats);
 
             return relevant;
+        }
+
+        public Stats GetBuffsStats(Character character) {
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            List<Buff> removedBuffs = new List<Buff>();
+
+            // Draenei should always have this buff activated
+            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
+            if (character.Race == CharacterRace.Draenei
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+            {
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+            }
+
+            /* NOTE: THIS CODE IS FROM DPSWARR, PROTPALADIN MAY MAKE USE OF IT EVENTUALLY TO HANDLE CONFLICTS LIKE CONCENTRATION AURA
+            // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
+            // Also removes their equivalent of Blessing of Might (+Improved)
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
+                Buff a = Buff.GetBuffByName("Commanding Presence (Attack Power)");
+                Buff b = Buff.GetBuffByName("Battle Shout");
+                Buff c = Buff.GetBuffByName("Improved Blessing of Might");
+                Buff d = Buff.GetBuffByName("Blessing of Might");
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
+            }*/
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            foreach (Buff b in removedBuffs) {
+                character.ActiveBuffs.Add(b);
+            }
+
+            return statsBuffs;
+        }
+        public override void SetDefaults(Character character) {
+            if (character.Race == CharacterRace.Draenei
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+            {
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+            }
         }
         #endregion
 
