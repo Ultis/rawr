@@ -291,12 +291,15 @@ namespace Rawr.DPSDK
             float OHExpertise = stats.Expertise;
 
             //damage multipliers
-            float spellPowerMult = 1f + stats.BonusSpellPowerMultiplier;
-            float frostSpellPowerMult = 1f + stats.BonusSpellPowerMultiplier + Math.Max((stats.BonusFrostDamageMultiplier - stats.BonusShadowDamageMultiplier), 0f);
+            float spellPowerMult = stats.BonusSpellPowerMultiplier;
+            float frostSpellPowerMult = stats.BonusSpellPowerMultiplier + Math.Max((stats.BonusFrostDamageMultiplier - stats.BonusShadowDamageMultiplier), 0f);
 
-            float physPowerMult = 1f + stats.BonusPhysicalDamageMultiplier;
+            float physPowerMult = stats.BonusPhysicalDamageMultiplier;
             // Covers all % physical damage increases.  Blood Frenzy, FI.
             float partialResist = 0.94f; // Average of 6% damage lost to partial resists on spells
+            physPowerMult *= 1f + stats.BonusDamageMultiplier;
+            spellPowerMult *= 1f + stats.BonusDamageMultiplier;
+            frostSpellPowerMult *= 1f + stats.BonusDamageMultiplier;
 
             //spell AP multipliers, for diseases its per tick
             float HowlingBlastAPMult = 0.2f;
@@ -1111,13 +1114,13 @@ namespace Rawr.DPSDK
                     dpsPlagueStrike *= physMit;
                     dpsBloodworms *= 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, stats.ArmorPenetration, 0f, 0f);
 
-                    WhiteMult += physPowerMult - 1f;
-                    BCBMult += physPowerMult - 1f;
-                    BloodStrikeMult += physPowerMult - 1f;
-                    HeartStrikeMult += physPowerMult - 1f;
-                    ObliterateMult += physPowerMult - 1f;
-                    DeathStrikeMult += physPowerMult - 1f;
-                    PlagueStrikeMult += physPowerMult - 1f;
+                    WhiteMult *= physPowerMult;
+                    BCBMult *= physPowerMult;
+                    BloodStrikeMult *= physPowerMult;
+                    HeartStrikeMult *= physPowerMult;
+                    ObliterateMult *= physPowerMult;
+                    DeathStrikeMult *= physPowerMult;
+                    PlagueStrikeMult *= physPowerMult;
                 }
                 #endregion
 
@@ -1420,12 +1423,6 @@ namespace Rawr.DPSDK
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
 
-            if (character.ActiveBuffsContains("Ferocious Inspiration"))
-            {
-                statsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsBuffs.BonusPhysicalDamageMultiplier) * (1f + (.01f * calcOpts.FerociousInspiration)));
-                statsBuffs.BonusSpellPowerMultiplier = ((1f + statsBuffs.BonusSpellPowerMultiplier) * (1f + (.01f * calcOpts.FerociousInspiration)));
-            }
-
             statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
@@ -1479,8 +1476,8 @@ namespace Rawr.DPSDK
 
             if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
             {
-                statsTotal.BonusPhysicalDamageMultiplier *= 1.15f;
-                statsTotal.BonusSpellPowerMultiplier *= 1.15f;
+                statsTotal.BonusPhysicalDamageMultiplier = (statsTotal.BonusPhysicalDamageMultiplier + 1f) * 1.15f;
+                statsTotal.BonusSpellPowerMultiplier = (statsTotal.BonusSpellPowerMultiplier +1f) * 1.15f;
             }
             else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
             {
@@ -1514,12 +1511,6 @@ namespace Rawr.DPSDK
             }
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
-
-            if (character.ActiveBuffsContains("Ferocious Inspiration"))
-            {
-                statsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsBuffs.BonusPhysicalDamageMultiplier) * (1f + (.01f * calcOpts.FerociousInspiration)));
-                statsBuffs.BonusSpellPowerMultiplier = ((1f + statsBuffs.BonusSpellPowerMultiplier) * (1f + (.01f * calcOpts.FerociousInspiration)));
-            }
 
             statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
@@ -1625,7 +1616,9 @@ namespace Rawr.DPSDK
                         comparisonList.Add(comparison);
                     }
                     return comparisonList.ToArray();
- /*               case "MH Weapon Speed":
+
+                #region weapon speed charts
+                /*               case "MH Weapon Speed":
                     string[] speedList = new String[] {"1.4", "1.6", "1.8", "2.0", "2.2", "2.4", "2.6", "2.8"};
                     Item MH = character.MainHand.Item;
                     Item MH14 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
@@ -1705,6 +1698,7 @@ namespace Rawr.DPSDK
                         comparisonList.Add(comparison);
                     }
                     return comparisonList.ToArray();*/
+                #endregion
                 default:
                     return new ComparisonCalculationBase[0];
             }
@@ -1881,7 +1875,8 @@ namespace Rawr.DPSDK
                 + stats.BonusPerDiseaseScourgeStrikeDamage + stats.BonusPlagueStrikeCrit + stats.BonusRPFromDeathStrike
                 + stats.BonusRPFromObliterate + stats.BonusRPFromScourgeStrike + stats.BonusRuneStrikeMultiplier + stats.BonusScourgeStrikeCrit
                 + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage + stats.DiseasesCanCrit + 
-                stats.HighestStat + stats.BonusCritMultiplier + stats.Paragon + stats.FireDamage + stats.Armor + stats.BonusArmor) != 0;
+                stats.HighestStat + stats.BonusCritMultiplier + stats.Paragon + stats.FireDamage + stats.Armor + stats.BonusArmor
+                + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier) != 0;
         }
 
 
