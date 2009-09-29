@@ -1855,7 +1855,12 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.RuneStrikeHit ||
                         effect.Trigger == Trigger.Use)
                     {
+                        foreach (SpecialEffect e in effect.Stats.SpecialEffects())
+                        {
+                            HasRelevantStats(e.Stats);
+                        }
                         return relevantStats(effect.Stats);
+                        
                     }
                 }
             }

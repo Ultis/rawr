@@ -25,6 +25,10 @@ namespace Rawr.DPSDK
             if (effect.Trigger == Trigger.Use)
             {
                 statsAverage += effect.GetAverageStats();
+                foreach (SpecialEffect e in effect.Stats.SpecialEffects())
+                {
+                    statsAverage += this.getSpecialEffects(calcOpts, e) * (effect.Duration / effect.Cooldown);
+                }
             }
             else
             {
@@ -35,14 +39,14 @@ namespace Rawr.DPSDK
                 {
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
-                        trigger = (1f / rotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
+                        trigger = (1f / ((rotation.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
                         chance = combatTable.physCrits;
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
                     case Trigger.DamageDone:
-                        trigger = (1f / rotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
+                        trigger = (1f / ((rotation.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
                         chance = 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial);
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
@@ -59,7 +63,7 @@ namespace Rawr.DPSDK
                         chance = combatTable.spellCrits;
                         break;
                     case Trigger.BloodStrikeHit:
-                        trigger = rotation.curRotationDuration / rotation.BloodStrike;
+                        trigger = rotation.curRotationDuration / (rotation.BloodStrike * (combatTable.DW ? 2f : 1f));
                         chance = 1f;
                         break;
                     case Trigger.HeartStrikeHit:
@@ -67,11 +71,11 @@ namespace Rawr.DPSDK
                         chance = 1f;
                         break;
                     case Trigger.BloodStrikeOrHeartStrikeHit :
-                        trigger = rotation.curRotationDuration / (rotation.BloodStrike + rotation.HeartStrike);
+                        trigger = rotation.curRotationDuration / ((rotation.BloodStrike + rotation.HeartStrike) * (combatTable.DW ? 2f : 1f));
                         chance = 1f;
                         break;
                     case Trigger.ObliterateHit:
-                        trigger = rotation.curRotationDuration / rotation.Obliterate;
+                        trigger = rotation.curRotationDuration / (rotation.Obliterate * (combatTable.DW ? 2f : 1f));
                         chance = 1f;
                         break;
                     case Trigger.ScourgeStrikeHit:
@@ -83,7 +87,7 @@ namespace Rawr.DPSDK
                         chance = 1f;
                         break;
                     case Trigger.PlagueStrikeHit:
-                        trigger = rotation.curRotationDuration / rotation.PlagueStrike;
+                        trigger = rotation.curRotationDuration / (rotation.PlagueStrike * (combatTable.DW ? 2f : 1f));
                         chance = 1f;
                         break;
                     case Trigger.DoTTick:
@@ -92,10 +96,23 @@ namespace Rawr.DPSDK
                         break;
 
                 }
+                foreach (SpecialEffect e in effect.Stats.SpecialEffects())
+                {
+                    statsAverage += this.getSpecialEffects(calcOpts, e);
+                }
                 if (effect.MaxStack > 1)
                 {
                     float timeToMax = (float)Math.Min(calcOpts.FightLength * 60, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
-                    statsAverage += effect.Stats * (effect.MaxStack * (((calcOpts.FightLength * 60) - .5f * timeToMax) / (calcOpts.FightLength * 60)));
+                    float buffDuration = calcOpts.FightLength * 60f;
+                    if (effect.Stats.AttackPower == 250f || effect.Stats.AttackPower == 215f || effect.Stats.HasteRating == 57f || effect.Stats.HasteRating == 64f)
+                    {
+                        buffDuration = 20f;
+                    }
+                    if (timeToMax * .5f > buffDuration)
+                    {
+                        timeToMax = 2 * buffDuration;
+                    }
+                    statsAverage += effect.Stats * (effect.MaxStack * (((buffDuration) - .5f * timeToMax) / (buffDuration)));
                 }
                 else
                 {
