@@ -1474,10 +1474,13 @@ namespace Rawr.DPSDK
 
             statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
 
+            statsTotal.BonusSpellPowerMultiplier++;
+            statsTotal.BonusPhysicalDamageMultiplier++;
+
             if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
             {
-                statsTotal.BonusPhysicalDamageMultiplier = (statsTotal.BonusPhysicalDamageMultiplier + 1f) * 1.15f;
-                statsTotal.BonusSpellPowerMultiplier = (statsTotal.BonusSpellPowerMultiplier +1f) * 1.15f;
+                statsTotal.BonusPhysicalDamageMultiplier *= 1.15f;
+                statsTotal.BonusSpellPowerMultiplier *= 1.15f;
             }
             else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
             {
