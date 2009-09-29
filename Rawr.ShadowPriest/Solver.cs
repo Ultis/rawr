@@ -164,20 +164,28 @@ namespace Rawr.ShadowPriest
         }
 
         public Spell GetCastSpell(float timer)
-        {
+        {   // FIXME: Rewrite this freaking crappy shit.
             foreach (Spell spell in SpellPriority)
             {
                 if ((spell.DebuffDuration > 0) && (spell.CastTime > 0) && (spell.SpellStatistics.CooldownReset < (spell.CastTime + timer)))
                     return spell;   // Special case for dots that have cast time (Holy Fire / Vampiric Touch)
-                if (spell.SpellStatistics.CooldownReset <= timer && spell.Cooldown > 0)
+                //if (spell.SpellStatistics.CooldownReset <= timer && spell.Cooldown > 0)
+                if (spell.SpellStatistics.CooldownReset <= timer)
                     return spell;
                 if (spell.SpellStatistics.CooldownReset > 0 
-                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < 2))// spell.GlobalCooldown))
+                    //&& (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < 2))// spell.GlobalCooldown))
+                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < spell.GlobalCooldown * 0.33f))
                     return null;
                 if (spell.SpellStatistics.CooldownReset <= timer)
                     return spell;
             }
             return null;
+        }
+
+        public void RecalculateHaste(Stats stats, float addedHasteRating)
+        {
+            foreach (Spell spell in SpellPriority)
+                spell.RecalcHaste(stats, addedHasteRating);
         }
 
         public Spell GetSpellByName(string name)
@@ -214,12 +222,12 @@ namespace Rawr.ShadowPriest
     public class SolverShadow : SolverBase
     {   // Models Full Rotation
         protected float ShadowHitChance { get; set; }
-        protected Spell SWP { get; set; }
-        protected Spell MF { get; set; }
-        protected Spell VE { get; set; }
-        protected Spell SWD { get; set; }
-        protected Spell MB { get; set; }
-        protected Spell DP { get; set; }
+        protected ShadowWordPain  SWP { get; set; }
+        protected MindFlay MF { get; set; }
+        protected VampiricEmbrace VE { get; set; }
+        protected ShadowWordDeath SWD { get; set; }
+        protected MindBlast MB { get; set; }
+        protected DevouringPlague DP { get; set; }
         protected bool bPnS { get; set; }
         
         public SolverShadow(Stats BasicStats, Character character)
@@ -232,12 +240,12 @@ namespace Rawr.ShadowPriest
                 if (spelltmp != null) SpellPriority.Add(spelltmp);
             }
 
-            SWP = GetSpellByName("Shadow Word: Pain");
-            MF = GetSpellByName("Mind Flay");
-            VE = GetSpellByName("Vampiric Embrace");
-            SWD = GetSpellByName("Shadow Word: Death");
-            MB = GetSpellByName("Mind Blast");
-            DP = GetSpellByName("Devouring Plague");
+            SWP = GetSpellByName("Shadow Word: Pain") as ShadowWordPain;
+            MF = GetSpellByName("Mind Flay") as MindFlay;
+            VE = GetSpellByName("Vampiric Embrace") as VampiricEmbrace;
+            SWD = GetSpellByName("Shadow Word: Death") as ShadowWordDeath;
+            MB = GetSpellByName("Mind Blast") as MindBlast;
+            DP = GetSpellByName("Devouring Plague") as DevouringPlague;
 
             if (VE != null)
             {   // Functional yet abysmal method of moving VE to bottom of priority.
@@ -270,6 +278,7 @@ namespace Rawr.ShadowPriest
             Stats simStats = PlayerStats.Clone();
             bool bTwistedFaith = character.PriestTalents.TwistedFaith > 0;
             float timer = 0;
+            float hasteProcTimer = 0;
             int sequence = SpellPriority.Count-1;
             List<Spell> CastList = new List<Spell>();
 
@@ -287,6 +296,9 @@ namespace Rawr.ShadowPriest
                 VE.SpellStatistics.ManaUsed = CalculationOptions.FightLength * VE.ManaCost;
             }
 
+            if (DP != null && DP.ImprovedDP != null)
+                SpellPriority.Add(DP.ImprovedDP);
+
             #region Pass 1: Create the cast sequence
             bool CleanBreak = false;
             while (timer < (60f * 60f)) // Instead of  CalculationOptions.FightLength, try to use a 60 minute fight.
@@ -296,6 +308,12 @@ namespace Rawr.ShadowPriest
                 {
                     timer += 0.1f;
                     continue;
+                }
+
+                if (hasteProcTimer > 0 && hasteProcTimer < timer)
+                {
+                    hasteProcTimer = 0f;
+                    RecalculateHaste(simStats, 0f);
                 }
 
                 CastList.Add(spell);
@@ -308,6 +326,12 @@ namespace Rawr.ShadowPriest
                     spell.SpellStatistics.CooldownReset = timer + (spell.DebuffDuration > spell.Cooldown ? spell.DebuffDuration : spell.Cooldown);
 
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
+
+                if (simStats.MindBlastHasteProc > 0 && spell == MB)
+                {
+                    RecalculateHaste(simStats, simStats.MindBlastHasteProc);
+                    hasteProcTimer = timer + 4f;
+                }
 
                 if (spell == SpellPriority[sequence])
                     sequence++;
@@ -416,8 +440,6 @@ namespace Rawr.ShadowPriest
                     case "Mind Flay":
                         // Reapplyable DoTs, a resist means you lose 1 GCD to reapply. (~= cost of 1 GCD worth of MF)
                         Damage -= MF.DpS * MF.GlobalCooldown * (1f - ShadowHitChance / 100f);
-                        if ((character.PriestTalents.GlyphofShadowWordPain) && (SWP != null))
-                            Damage *= 1.1f;
                         // Also invokes a mana penalty by needing to cast it again.
                         Cost *= (2f - ShadowHitChance / 100f);
                         break;
@@ -435,14 +457,18 @@ namespace Rawr.ShadowPriest
                         Damage *= ShadowHitChance / 100f;
                         break;
                     case "Devouring Plague":
-                        Damage *= ShadowHitChance / 100f;
+                        DevouringPlague dp = spell as DevouringPlague;
                         Damage *= (1f + simStats.BonusDiseaseDamageMultiplier);
+                        if (dp.ImprovedDP != null)
+                        {
+                            Damage += dp.ImprovedDP.AvgDamage;
+                            dp.ImprovedDP.SpellStatistics.DamageDone += dp.ImprovedDP.AvgDamage;
+                        }
+                        Damage *= ShadowHitChance / 100f;
                         break;
                     default:
                         break;
                 }
-                if (bTwistedFaith && (spell == MF || spell == MB))
-                    Damage *= (1f + character.PriestTalents.TwistedFaith * 0.02f);
                 Damage *= (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier);
                 spell.SpellStatistics.DamageDone += Damage;
                 spell.SpellStatistics.ManaUsed += Cost;

@@ -235,7 +235,7 @@ namespace Rawr.ShadowPriest
 						_subPointNameColors.Add(string.Format("MP5 Sources ({0} Total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 0, 0, 255));
                         break;
                     case "DPS Sources":
-						_subPointNameColors.Add(string.Format("DPS Sources ({0} total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 255, 0, 0));
+						_subPointNameColors.Add(string.Format("DPS Sources ({0}% total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 255, 0, 0));
                         break;
                     case "Mana Usage":
 						_subPointNameColors.Add(string.Format("Mana Usage ({0} total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 0, 0, 255));
@@ -281,6 +281,7 @@ namespace Rawr.ShadowPriest
                     "Shadow:Vampiric Touch",
                     "Shadow:SW Pain",
                     "Shadow:Devouring Plague",
+                    "Shadow:Imp. Devouring Plague",
 				    "Shadow:SW Death",
                     "Shadow:Mind Blast",
                     "Shadow:Mind Flay",
@@ -412,16 +413,19 @@ namespace Rawr.ShadowPriest
                     CharacterCalculationsShadowPriest dpscalcs = GetCharacterCalculations(character) as CharacterCalculationsShadowPriest;
                     SolverBase dpssolver = dpscalcs.GetSolver(character, dpscalcs.BasicStats);
                     dpssolver.Calculate(dpscalcs);
+                    float dpstotal = 0;
+                    foreach (Spell spell in dpssolver.SpellPriority)
+                        dpstotal += spell.SpellStatistics.DamageDone;
                     foreach (Spell spell in dpssolver.SpellPriority)
                     {
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = spell.Name;
-                        comparison.SubPoints[0] = spell.SpellStatistics.DamageDone;
-                        _currentChartTotal += comparison.SubPoints[0];
+                        comparison.SubPoints[0] = spell.SpellStatistics.DamageDone * 100f / dpstotal;
                         comparison.OverallPoints = comparison.SubPoints[0];
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
                     }
+                    _currentChartTotal = 100f;
                     return comparisonList.ToArray();
                 case "Mana Usage":
                     CharacterCalculationsShadowPriest mucalcs = GetCharacterCalculations(character) as CharacterCalculationsShadowPriest;

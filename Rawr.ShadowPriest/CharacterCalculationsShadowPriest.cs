@@ -202,7 +202,12 @@ namespace Rawr.ShadowPriest
             dictValues.Add("SustainDPS", string.Format("{0}*Mana restrained DPS", solver.SustainDPS.ToString("0")));
             
             dictValues.Add("SW Pain", new ShadowWordPain(BasicStats, character).ToString());
-            dictValues.Add("Devouring Plague", new DevouringPlague(BasicStats, character).ToString());
+            DevouringPlague dp = new DevouringPlague(BasicStats, character);
+            dictValues.Add("Devouring Plague", dp.ToString());
+            if (dp.ImprovedDP != null)
+                dictValues.Add("Imp. Devouring Plague", dp.ImprovedDP.ToString());
+            else
+                dictValues.Add("Imp. Devouring Plague", "- *No required talents");
             dictValues.Add("SW Death", new ShadowWordDeath(BasicStats, character).ToString());
             dictValues.Add("Mind Blast", new MindBlast(BasicStats, character).ToString());
             dictValues.Add("PW Shield", new PowerWordShield(BasicStats, character).ToString());
