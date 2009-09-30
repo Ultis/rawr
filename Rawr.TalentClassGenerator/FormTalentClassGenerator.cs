@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml;
+using System.Globalization;
 
 namespace Rawr.TalentClassGenerator
 {
@@ -65,22 +66,23 @@ namespace Rawr
         public string Icon { get { return _icon; } }
     }
 
-	public abstract class TalentsBase
-	{
-		public abstract int[] Data { get; }
+    public abstract class TalentsBase
+    {
+        public abstract int[] Data { get; }
         public virtual bool[] GlyphData { get { return null; } }
 
         protected void LoadString(string code)
         {
+            if (string.IsNullOrEmpty(code)) return;
             int[] _data = Data;
             string[] tmp = code.Split('.');
             string talents = tmp[0];
-            if (talents.Length == _data.Length)
+            if (talents.Length >= _data.Length)
             {
                 List<int> data = new List<int>();
                 foreach (Char digit in talents)
                     data.Add(int.Parse(digit.ToString()));
-                data.CopyTo(_data);
+				data.CopyTo(0, _data, 0, _data.Length);
             }
             if (tmp.Length > 1)
             {
@@ -96,11 +98,11 @@ namespace Rawr
             }
         }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in Data)
-				ret.Append(digit.ToString());
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in Data)
+                ret.Append(digit.ToString());
             if (GlyphData != null)
             {
                 ret.Append('.');
@@ -109,9 +111,27 @@ namespace Rawr
                     ret.Append(glyph ? '1' : '0');
                 }
             }
-			return ret.ToString();
+            return ret.ToString();
+        }
+
+        public CharacterClass GetClass()
+        {
+            if (this.GetType() == typeof(WarlockTalents)) return CharacterClass.Warlock;
+            else if (this.GetType() == typeof(MageTalents)) return CharacterClass.Mage;
+            else if (this.GetType() == typeof(PriestTalents)) return CharacterClass.Priest;
+            else if (this.GetType() == typeof(DruidTalents)) return CharacterClass.Druid;
+            else if (this.GetType() == typeof(RogueTalents)) return CharacterClass.Rogue;
+            else if (this.GetType() == typeof(HunterTalents)) return CharacterClass.Hunter;
+            else if (this.GetType() == typeof(ShamanTalents)) return CharacterClass.Shaman;
+            else if (this.GetType() == typeof(DeathKnightTalents)) return CharacterClass.DeathKnight;
+            else if (this.GetType() == typeof(PaladinTalents)) return CharacterClass.Paladin;
+            else return CharacterClass.Warrior;
 		}
-	}
+
+#if RAWR3
+		public abstract TalentsBase Clone();
+#endif
+    }
 
 ";
 
@@ -190,8 +210,24 @@ namespace Rawr
 
             //Generate the code
             StringBuilder code = new StringBuilder();
-            code.AppendFormat("public partial class {0} : TalentsBase, ICloneable\r\n", className);
-            code.Append("{\r\n");
+            code.AppendFormat(@"public partial class {0} : TalentsBase
+#if RAWR3
+	{{
+		public override TalentsBase Clone()
+#else
+		, ICloneable 
+	{{
+        public {0} Clone() {{ return ({0})((ICloneable)this).Clone(); }}
+		object ICloneable.Clone()
+#endif	
+		{{
+			{0} clone = ({0})MemberwiseClone();
+			clone._data = (int[])_data.Clone();
+			clone._glyphData = (bool[])_glyphData.Clone();
+			return clone;
+		}}
+", className);
+            code.Append("\r\n");
             code.AppendFormat("private int[] _data = new int[{0}];\r\n", talents.Count);
             code.Append("public override int[] Data { get { return _data; } }\r\n");
             code.AppendFormat("public {0}() {{ }}\r\n", className);
@@ -199,23 +235,13 @@ namespace Rawr
             code.Append("{\r\n");
             code.Append("LoadString(talents);\r\n");
             code.Append("}\r\n");
-            code.Append("object ICloneable.Clone()\r\n");
-            code.Append("{\r\n");
-            code.AppendFormat("{0} clone = ({0})MemberwiseClone();\r\n", className);
-            code.Append("clone._data = (int[])_data.Clone();\r\n");
-            code.Append("clone._glyphData = (bool[])_glyphData.Clone();\r\n");
-            code.Append("return clone;\r\n");
-            code.Append("}\r\n\r\n");
-            code.AppendFormat("public {0} Clone()\r\n", className);
-            code.Append("{\r\n");
-            code.AppendFormat("return ({0})((ICloneable)this).Clone();\r\n", className);
-            code.Append("}\r\n\r\n");
             code.Append("public static string[] TreeNames = new string[] {");
             foreach (XmlNode tree in trees)
                 code.AppendFormat("\r\n@\"{0}\",", tree.Attributes["name"].Value);
             code.Append("};\r\n\r\n");
             foreach (TalentData talent in talents)
             {
+                code.Append(GenerateComment(talent));
                 code.AppendFormat("\r\n[TalentData({0}, \"{1}\", {2}, {3}, {4}, {5}, {6}, new string[] {{",
                     talent.Index, talent.Name, talent.MaxPoints, talent.Tree, talent.Column, talent.Row, talent.Prerequisite == null ? -1 : talentDictionary[talent.Prerequisite].Index);
                 foreach (string descRank in talent.Description)
@@ -227,6 +253,79 @@ namespace Rawr
             code.Append("}\r\n\r\n");
 
             textBoxCode.Text += code.ToString();
+        }
+
+        /// <summary>
+        /// Generate a comment for the talent field, based on it's description( Replaceed changed value by [BaseNumber * Pts])
+        /// </summary>
+        /// <param name="Talent">Given talent</param>
+        /// <returns>The comment</returns>
+        private string GenerateComment(TalentData Talent)
+        {
+            string Comment = Talent.Description[Talent.Description.Length - 1];
+
+            if (Talent.Description.Length > 1)
+            {
+                char[] SplitCharacter = new char[] { ' ', '%' };
+                string[] FirstRank = Talent.Description[0].Split(SplitCharacter, StringSplitOptions.RemoveEmptyEntries);
+                string[] LastRank = Talent.Description[Talent.Description.Length - 1].Split(SplitCharacter, StringSplitOptions.RemoveEmptyEntries);
+
+                int ReplacePos = 0;
+
+                //Description contains the same count of words for all ranks, diference only in some values
+                for (int i = 0; i < Math.Min(FirstRank.Length,LastRank.Length); i++)
+                {
+                    if (FirstRank[i] != LastRank[i])
+                    {
+                        //To avoid string like "... increase by 5."
+                        if (FirstRank[i].Contains(".") == false) FirstRank[i] = FirstRank[i] + ".0";
+                        else FirstRank[i] = FirstRank[i] + "0";
+
+                        float BaseNumber = 0;
+                        if (float.TryParse(FirstRank[i], NumberStyles.Any, new NumberFormatInfo(), out BaseNumber))
+                        {
+                            float MaxNumber = 0;
+                            string Replaced = "[{0} * Pts]";
+                            if (float.TryParse(LastRank[i], NumberStyles.Any, new NumberFormatInfo(), out MaxNumber))
+                            {
+                                int Base = Convert.ToInt32(BaseNumber);
+                                int Max = Convert.ToInt32(MaxNumber);
+
+                                //Number like: BaseNumber - 7, MaxNumber - 20
+                                if ((Base > 0) && ((Max / Base) * Base) != Max)
+                                {
+                                    Replaced = "[" + MaxNumber + " / " + Talent.Description.Length + " * Pts]";
+                                }
+                            }
+                            
+                            Comment = Replace(Comment, LastRank[i], String.Format(Replaced, BaseNumber), ref ReplacePos);
+                        }
+                    }
+                }
+            }
+
+            Comment = @"        /// <summary>" + Environment.NewLine +
+                      @"        /// " + Comment + Environment.NewLine +
+                      @"        /// </summary>";
+            return Comment;
+        }
+
+        /// <summary>
+        /// Returns a new string in which first occurrences of a specified string after position in this input string are replaced with another specified string.
+        /// </summary>
+        /// <param name="Text">Input string</param>
+        /// <param name="OldValue">A string to be replaced</param>
+        /// <param name="NewValue">A string to replace first occurrences of OldValue</param>
+        /// <param name="Position">The starting character position, after wich, first occurences be replaced. 
+        /// When this method returns, contains the 32-bit signed integer value, indicates the position, after replaced string  </param>
+        /// <returns>A String equivalent to the input string but with first instance of OldValue replaced with NewValue</returns>
+        private string Replace(string Text, string OldValue, string NewValue, ref int Position)
+        {
+            int NewPosition = Text.IndexOf(OldValue, Position);
+            string Res = Text.Substring(0, NewPosition) + NewValue + Text.Substring(NewPosition + OldValue.Length);
+
+            Position = NewPosition + NewValue.Length;
+            return Res;
         }
 
         private string PropertyFromName(string name)
