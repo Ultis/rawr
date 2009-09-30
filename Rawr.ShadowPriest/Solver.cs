@@ -303,17 +303,17 @@ namespace Rawr.ShadowPriest
             bool CleanBreak = false;
             while (timer < (60f * 60f)) // Instead of  CalculationOptions.FightLength, try to use a 60 minute fight.
             {
+                if (hasteProcTimer > 0 && hasteProcTimer < timer)
+                {
+                    hasteProcTimer = 0f;
+                    RecalculateHaste(simStats, 0f);
+                }
+
                 Spell spell = GetCastSpell(timer);
                 if (spell == null)
                 {
                     timer += 0.1f;
                     continue;
-                }
-
-                if (hasteProcTimer > 0 && hasteProcTimer < timer)
-                {
-                    hasteProcTimer = 0f;
-                    RecalculateHaste(simStats, 0f);
                 }
 
                 CastList.Add(spell);
@@ -458,7 +458,7 @@ namespace Rawr.ShadowPriest
                         break;
                     case "Devouring Plague":
                         DevouringPlague dp = spell as DevouringPlague;
-                        Damage *= (1f + simStats.BonusDiseaseDamageMultiplier);
+                        //Damage *= (1f + simStats.BonusDiseaseDamageMultiplier);   // No longer workie.
                         if (dp.ImprovedDP != null)
                         {
                             Damage += dp.ImprovedDP.AvgDamage;

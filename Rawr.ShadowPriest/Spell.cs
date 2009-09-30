@@ -128,7 +128,12 @@ namespace Rawr.ShadowPriest {
 
         public void RecalcHaste(Stats stats, float addedHasteRating)
         {
-            float newHaste = 1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating + addedHasteRating);
+            float newHaste = 1f + stats.SpellHaste;
+            if (addedHasteRating > 0f)
+            {
+                newHaste += StatConversion.GetSpellHasteFromRating(stats.HasteRating + addedHasteRating)
+                            - StatConversion.GetSpellHasteFromRating(stats.HasteRating);
+            }
             if (CastTime > 0f)
                 CastTime = (float)Math.Max(1f, BaseCastTime / newHaste);
             GlobalCooldown = (float)Math.Max(1f, 1.5f / newHaste);
