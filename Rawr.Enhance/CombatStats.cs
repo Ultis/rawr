@@ -20,6 +20,8 @@ namespace Rawr.Enhance
         private float chanceCrit = 0f;
         private float chanceDodgeMH = 0f;
         private float chanceDodgeOH = 0f;
+        private float chanceParryMH = 0f;
+        private float chanceParryOH = 0f;
         private float expertiseBonusMH = 0f;
         private float expertiseBonusOH = 0f;
 
@@ -87,6 +89,8 @@ namespace Rawr.Enhance
         public float BloodlustHaste { get { return bloodlustHaste; } }
         public float ChanceDodgeMH { get { return chanceDodgeMH; } }
         public float ChanceDodgeOH { get { return chanceDodgeOH; } }
+        public float ChanceParryMH { get { return chanceParryMH; } }
+        public float ChanceParryOH { get { return chanceParryOH; } }
         public float ExpertiseBonusMH { get { return expertiseBonusMH; } }
         public float ExpertiseBonusOH { get { return expertiseBonusOH; } }
 
@@ -142,6 +146,9 @@ namespace Rawr.Enhance
         public float HitsPerSMHSS { get { return hitsPerSMHSS; } }
         public float HitsPerSWF { get { return hitsPerSWF; } }
         public float HitsPerSLL { get { return hitsPerSLL; } }
+
+        public float PecentageBehindBoss { get { return _calcOpts.InBackPerc / 100f; } }
+        public float PecentageInfrontBoss { get { return 1f - _calcOpts.InBackPerc / 100f; } }
 
         public float URUptime { get { return urUptime; } }
         public float EDUptime { get { return edUptime; } }
@@ -242,8 +249,8 @@ namespace Rawr.Enhance
             
             // Melee
             float hitBonus = _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating) + 0.02f * _talents.DualWieldSpecialization;
-            expertiseBonusMH = StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
-            expertiseBonusOH = StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
+            expertiseBonusMH = GetDPRfromExp(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
+            expertiseBonusOH = GetDPRfromExp(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
 
             // Need to modify expertiseBonusMH & OH if Orc and have racial bonus weapons
             if (_character.Race == CharacterRace.Orc)
@@ -260,12 +267,16 @@ namespace Rawr.Enhance
             float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritMeleeRating + _stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
             chanceCrit         = Math.Min(1 - glancingRate, (1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
-            chanceDodgeMH      = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level] - expertiseBonusMH);
-            chanceDodgeOH      = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level] - expertiseBonusOH);
-            chanceWhiteMissMH  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - _character.Level] - hitBonus) + chanceDodgeMH;
-            chanceWhiteMissOH  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - _character.Level] - hitBonus) + chanceDodgeOH;
-            chanceYellowMissMH = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level] - hitBonus) + chanceDodgeMH; // base miss 8% now
-            chanceYellowMissOH = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level] - hitBonus) + chanceDodgeOH; // base miss 8% now
+            chanceDodgeMH      = Math.Max(0f, DodgeChanceCap - expertiseBonusMH);
+            chanceDodgeOH      = Math.Max(0f, DodgeChanceCap - expertiseBonusOH);
+            float ParryChance = ParryChanceCap - expertiseBonusMH;
+            chanceParryMH = (float)Math.Max(0f, _calcOpts.InBack ? ParryChance * (1f - _calcOpts.InBackPerc / 100f) : ParryChance);
+            ParryChance = ParryChanceCap - expertiseBonusOH;
+            chanceParryOH = (float)Math.Max(0f, _calcOpts.InBack ? ParryChance * (1f - _calcOpts.InBackPerc / 100f) : ParryChance);
+            chanceWhiteMissMH = Math.Max(0f, WhiteHitCap - hitBonus) + chanceDodgeMH + chanceParryMH;
+            chanceWhiteMissOH = Math.Max(0f, WhiteHitCap - hitBonus) + chanceDodgeOH + chanceParryOH;
+            chanceYellowMissMH = Math.Max(0f, YellowHitCap - hitBonus) + chanceDodgeMH + chanceParryMH; // base miss 8% now
+            chanceYellowMissOH = Math.Max(0f, YellowHitCap - hitBonus) + chanceDodgeOH + chanceParryOH; // base miss 8% now
             chanceWhiteCritMH  = Math.Min(chanceCrit - whiteCritDepression , 1f - glancingRate - chanceWhiteMissMH);
             chanceWhiteCritOH  = Math.Min(chanceCrit - whiteCritDepression , 1f - glancingRate - chanceWhiteMissOH);
             chanceYellowCritMH = Math.Min(chanceCrit - yellowCritDepression, 1f - chanceYellowMissMH);
@@ -394,6 +405,12 @@ namespace Rawr.Enhance
             float staticShockChance = (.02f * _character.ShamanTalents.StaticShock + (_stats.Enhance2T9 == 1f ? 0.03f : 0f));
             staticShocksPerSecond = (HitsPerSMH + HitsPerSOH) * staticShockChance;
         }
+        
+        private float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Shaman);}
+        private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level]; } }
+        private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level]; } }
+        private float WhiteHitCap { get { return StatConversion.WHITE_MISS_CHANCE_CAP_DW[_calcOpts.TargetLevel - _character.Level]; } }
+        private float YellowHitCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level]; } }
 
         #region getters
         public float GetMeleeCritsPerSec()

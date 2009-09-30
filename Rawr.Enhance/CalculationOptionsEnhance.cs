@@ -19,9 +19,15 @@ namespace Rawr.Enhance
 			return xml.ToString();
 		}
 
-		public int TargetLevel = 83;
-		public int TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
-		public int AverageLag = 250;
+        // Boss parameters
+        private BossHandler Boss = new BossHandler();
+        public string BossName = "Custom";
+        public int TargetLevel = 83;
+        public float TargetArmor = StatConversion.NPC_ARMOR[83 - 80];
+        public bool InBack = true; 
+        public int InBackPerc = 100;
+		
+        public int AverageLag = 250;
 		public string MainhandImbue = "Windfury";
 		public string OffhandImbue = "Flametongue";
 		public float FightLength = 10.0f;
@@ -29,5 +35,14 @@ namespace Rawr.Enhance
 		public int TargetNatureResistance = 0;
 		public bool Magma = true;
 		public bool BaseStatOption = true;
+
+        public void SetBoss(BossHandler boss) {
+            Boss = boss;
+            BossName = boss.Name;
+            TargetLevel = boss.Level;
+            TargetArmor = (int)boss.Armor;
+            FightLength = boss.BerserkTimer / 60f;
+            InBack = ((InBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
+        }
 	}
 }

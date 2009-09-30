@@ -10,11 +10,14 @@ namespace Rawr.Enhance
 {
     public partial class CalculationOptionsPanelEnhance : CalculationOptionsPanelBase
     {
-        private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
-
+        /// <summary>This Model's local bosslist</summary>
+        private BossList bosslist = null;
+        
         public CalculationOptionsPanelEnhance()
         {
             InitializeComponent();
+            if (bosslist == null) { bosslist = new BossList(); }
+            comboBoxBoss.Items.AddRange(bosslist.GetBetterBossNamesAsArray());
         }
 
         protected override void LoadCalculationOptions()
@@ -24,8 +27,11 @@ namespace Rawr.Enhance
                 Character.CalculationOptions = new CalculationOptionsEnhance();
 
             CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-            comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
-            trackBarTargetArmor.Value = calcOpts.TargetArmor;
+            CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
+            CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
+            comboBoxBoss.Text = calcOpts.BossName;
+            CK_InBack.Checked = calcOpts.InBack;
+            CB_InBackPerc.Value = calcOpts.InBackPerc;
             trackBarAverageLag.Value = calcOpts.AverageLag;
             cmbLength.Value = (decimal) calcOpts.FightLength;
             comboBoxMainhandImbue.SelectedItem = calcOpts.MainhandImbue;
@@ -33,12 +39,12 @@ namespace Rawr.Enhance
             chbMagmaSearing.Checked = calcOpts.Magma;
             chbBaseStatOption.Checked = calcOpts.BaseStatOption;
 
-            labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
+      //      labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
             labelAverageLag.Text = trackBarAverageLag.Value.ToString();
 
             tbModuleNotes.Text = "The EnhSim export option exists for users that wish to have very detailed analysis of their stats. " +
                 "For most users the standard model should be quite sufficient.\r\n\r\n" +
-                "If you wish to use the EnhSim Simulator you will need to get the latest version from http://enhsim.wikidot.com\r\n\r\n" +
+                "If you wish to use the EnhSim Simulator you will need to get the latest version from http://enhsim.codeplex.com\r\n\r\n" +
                 "Once you have installed the simulator the easiest way to run it is to run EnhSimGUI and use the Clipboard copy functions.\r\n\r\n" +
                 "Press the button above to copy your current Rawr.Enhance data to the clipboard then in EnhSimGUI click on the 'Import from Clipboard' " + 
                 "button to replace the values in the EnhSimGUI with your Rawr values. Now all you need to do is click Simulate to get your results.\r\n\r\n" + 
@@ -52,13 +58,10 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
-                trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
-                labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
                 labelAverageLag.Text = trackBarAverageLag.Value.ToString();
 
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
-                calcOpts.TargetArmor = trackBarTargetArmor.Value;
+                calcOpts.SetBoss(bosslist.GetBossFromBetterName(comboBoxBoss.Text));
                 calcOpts.FightLength = (float)cmbLength.Value;
                 calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
                 calcOpts.OffhandImbue = (string)comboBoxOffhandImbue.SelectedItem;
@@ -125,5 +128,21 @@ namespace Rawr.Enhance
             }
         }
 
+        private void comboBoxBoss_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                _loadingCalculationOptions = true;
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.SetBoss(bosslist.GetBossFromBetterName(comboBoxBoss.Text));
+                CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
+                CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
+                cmbLength.Value = (int)calcOpts.FightLength;
+                CK_InBack.Checked = calcOpts.InBack;
+                CB_InBackPerc.Value = calcOpts.InBackPerc;
+                _loadingCalculationOptions = false;
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
 }
