@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 /*
 	**************************************************************************
 	**
@@ -1016,6 +1017,7 @@ namespace Rawr
             return q;
         }
 
+        [Serializable]
         private struct InterpolationData
         {
             public float[/*b*/] Y;
@@ -1030,8 +1032,47 @@ namespace Rawr
 
         static SpecialFunction()
         {
+            string cacheName = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + Path.DirectorySeparatorChar + "SpecialCache.bin");
 
-            ibetaCache = new InterpolationData[ibetaCacheSize][];
+#if !SILVERLIGHT
+            // TODO reevaluate the situation in Silverlight
+            var serializer = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+ 
+            try
+            {
+                if (File.Exists(cacheName))
+                {
+                    using (FileStream stream = new FileStream(cacheName, FileMode.Open, FileAccess.Read))
+                    {
+                        ibetaCache = (InterpolationData[][])serializer.Deserialize(stream);
+                    }
+                }
+            }
+            catch
+            {
+            }
+#endif
+            if (ibetaCache == null)
+            {
+                ibetaCache = CalculateIbetaCache();
+            }
+#if !SILVERLIGHT
+            try
+            {
+                using (FileStream stream = new FileStream(cacheName, FileMode.Create, FileAccess.Write))
+                {
+                    serializer.Serialize(stream, ibetaCache);
+                }
+            }
+            catch
+            {
+            }
+#endif
+        }
+
+        private static InterpolationData[][] CalculateIbetaCache()
+        {
+            InterpolationData[][] ibetaCache = new InterpolationData[ibetaCacheSize][];
 
             for (int a = 0; a < ibetaCacheSize; a++)
             {
@@ -1052,6 +1093,7 @@ namespace Rawr
                     }
                 }
             }
+            return ibetaCache;
         }
 
         private static double BisectIbeta(double a, double x, double y, double epsilon)
