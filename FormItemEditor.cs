@@ -27,6 +27,7 @@ namespace Rawr
 			}
 		}
 
+        private int selectedId;
 		private ListViewItem _selectedItem;
         public ListViewItem SelectedItem
 		{
@@ -47,11 +48,18 @@ namespace Rawr
 					_selectedItem.Group = listViewItems.Groups["listViewGroup" + slot];
 					//_selectedItem.ImageKey = oldItem.IconPath;
 					listViewItems.Sort();
+                    if (oldItem.Id != selectedId)
+                    {
+                        // we changed the id of the item, sanitize the item cache
+                        ItemCache.Items.Remove(selectedId); // clean the entry at old id
+                        ItemCache.AddItem(oldItem); // insert it at the new id and clear whatever was at that id before
+                    }
 				}
 
 				_selectedItem = value;
 
 				Item selectedItem = _selectedItem.Tag as Item;
+                selectedId = selectedItem.Id;
                 selectedItem.InvalidateCachedData();
                 if (selectedItem.IsGem) ItemCache.InvalidateCachedStats();
 				//selectedItem.IdsChanged += new EventHandler(Item_IdsChanged);
@@ -671,10 +679,19 @@ namespace Rawr
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            this.textBoxName.Focus(); //Force data changes to be applied through databinding...
+            this.textBoxIcon.Focus(); //databinding doesn't seem to set the new value until focus has left the control
             if (SelectedItem != null)
             {
                 Item selectedItem = SelectedItem.Tag as Item;
                 selectedItem.InvalidateCachedData();
+                // sanitize item cache
+                if (selectedItem.Id != selectedId)
+                {
+                    // we changed the id of the item, sanitize the item cache
+                    ItemCache.Items.Remove(selectedId); // clean the entry at old id
+                    ItemCache.AddItem(selectedItem); // insert it at the new id and clear whatever was at that id before
+                }
                 Character.OnCalculationsInvalidated();
             }
         }
