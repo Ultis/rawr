@@ -189,11 +189,11 @@ namespace Rawr.Optimizer
                 // however as a sanity check if it is null fetch the template from the model
                 for (int index = 0; index < models.Length; index++)
                 {
-                    if (GemmingTemplate.AllTemplates.Count == 0 || GemmingTemplate.AllTemplates[models[0].Name] == null)
+                    if (!GemmingTemplate.AllTemplates.ContainsKey(models[index].Name))
                     {
-                        GemmingTemplate.AllTemplates[models[0].Name] = new List<GemmingTemplate>(models[0].DefaultGemmingTemplates);
+                        GemmingTemplate.AllTemplates[models[index].Name] = new List<GemmingTemplate>(models[index].DefaultGemmingTemplates);
                     }
-                    foreach (GemmingTemplate template in GemmingTemplate.AllTemplates[models[0].Name])
+                    foreach (GemmingTemplate template in GemmingTemplate.AllTemplates[models[index].Name])
                     {
                         if (template.Enabled)
                         {
