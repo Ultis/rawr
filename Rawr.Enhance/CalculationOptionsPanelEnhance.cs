@@ -134,13 +134,57 @@ namespace Rawr.Enhance
             {
                 _loadingCalculationOptions = true;
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.SetBoss(bosslist.GetBossFromBetterName(comboBoxBoss.Text));
+                CalculationsEnhance calcs = new CalculationsEnhance();
+                BossHandler boss = bosslist.GetBossFromBetterName(comboBoxBoss.Text);
+                calcOpts.SetBoss(boss);
                 CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
                 CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
                 cmbLength.Value = (int)calcOpts.FightLength;
                 CK_InBack.Checked = calcOpts.InBack;
                 CB_InBackPerc.Value = calcOpts.InBackPerc;
+
+                Stats stats = calcs.GetCharacterStats(Character, null);
+                TB_BossInfo.Text = boss.GenInfoString(
+                    0, // The Boss' Damage bonuses against you (meaning YOU are debuffed)
+                    StatConversion.GetArmorDamageReduction(calcOpts.TargetLevel, stats.Armor, 0, 0, 0), // Your Armor's resulting Damage Reduction
+                    StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Miss, calcOpts.TargetLevel), // Your chance for Boss to Miss you
+                    StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Dodge, calcOpts.TargetLevel), // Your chance Dodge
+                    StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Parry, calcOpts.TargetLevel), // Your chance Parry
+                    0,  // Your Chance to Block
+                    0); // How much you Block when you Block
+                // Save the new names
+
                 _loadingCalculationOptions = false;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void comboBoxMainhandImbue_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+            calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void CK_InBack_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.InBack = CK_InBack.Checked;
+                CB_InBackPerc.Enabled = calcOpts.InBack;
+                comboBoxBoss.Text = "Custom";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void CB_InBackPerc_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
+                comboBoxBoss.Text = "Custom";
                 Character.OnCalculationsInvalidated();
             }
         }

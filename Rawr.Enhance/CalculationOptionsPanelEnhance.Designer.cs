@@ -41,6 +41,7 @@
             this.labelAverageLag = new System.Windows.Forms.Label();
             this.trackBarAverageLag = new System.Windows.Forms.TrackBar();
             this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.chbMagmaSearing = new System.Windows.Forms.CheckBox();
             this.chbBaseStatOption = new System.Windows.Forms.CheckBox();
@@ -52,7 +53,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
+            this.TB_BossInfo = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
@@ -74,6 +75,7 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.CB_InBackPerc);
+            this.tabPage1.Controls.Add(this.TB_BossInfo);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.CK_InBack);
             this.tabPage1.Controls.Add(this.LB_TargLvl);
@@ -99,13 +101,13 @@
             this.tabPage1.Size = new System.Drawing.Size(264, 525);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basics";
+            this.tabPage1.ToolTipText = "++";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // CB_InBackPerc
             // 
             this.CB_InBackPerc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_InBackPerc.Enabled = false;
             this.CB_InBackPerc.Location = new System.Drawing.Point(172, 69);
             this.CB_InBackPerc.Name = "CB_InBackPerc";
             this.CB_InBackPerc.Size = new System.Drawing.Size(75, 20);
@@ -116,6 +118,7 @@
             0,
             0,
             0});
+            this.CB_InBackPerc.ValueChanged += new System.EventHandler(this.CB_InBackPerc_ValueChanged);
             // 
             // label1
             // 
@@ -131,15 +134,15 @@
             this.CK_InBack.BackColor = System.Drawing.Color.Transparent;
             this.CK_InBack.Checked = true;
             this.CK_InBack.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CK_InBack.Enabled = false;
             this.CK_InBack.Location = new System.Drawing.Point(10, 69);
             this.CK_InBack.Name = "CK_InBack";
-            this.CK_InBack.Size = new System.Drawing.Size(141, 20);
+            this.CK_InBack.Size = new System.Drawing.Size(167, 20);
             this.CK_InBack.TabIndex = 45;
-            this.CK_InBack.Text = "You stand behind boss";
+            this.CK_InBack.Text = "You stand behind boss *";
             this.CK_InBack.ToolTipText = "This affects how often the Boss can Parry your attacks (no bosses in WotLK Block)" +
                 "";
             this.CK_InBack.UseVisualStyleBackColor = false;
+            this.CK_InBack.CheckedChanged += new System.EventHandler(this.CK_InBack_CheckedChanged);
             // 
             // LB_TargLvl
             // 
@@ -208,7 +211,7 @@
             // 
             this.labelAverageLag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelAverageLag.Location = new System.Drawing.Point(71, 156);
+            this.labelAverageLag.Location = new System.Drawing.Point(71, 298);
             this.labelAverageLag.Name = "labelAverageLag";
             this.labelAverageLag.Size = new System.Drawing.Size(192, 12);
             this.labelAverageLag.TabIndex = 39;
@@ -221,7 +224,7 @@
             this.trackBarAverageLag.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarAverageLag.Cursor = System.Windows.Forms.Cursors.Default;
             this.trackBarAverageLag.LargeChange = 25;
-            this.trackBarAverageLag.Location = new System.Drawing.Point(74, 123);
+            this.trackBarAverageLag.Location = new System.Drawing.Point(74, 265);
             this.trackBarAverageLag.Maximum = 750;
             this.trackBarAverageLag.Name = "trackBarAverageLag";
             this.trackBarAverageLag.Size = new System.Drawing.Size(184, 45);
@@ -234,11 +237,20 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 132);
+            this.label5.Location = new System.Drawing.Point(7, 274);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(71, 13);
             this.label5.TabIndex = 37;
             this.label5.Text = "Average Lag:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 97);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(69, 13);
+            this.label4.TabIndex = 36;
+            this.label4.Text = "Fight Length:";
             // 
             // cmbLength
             // 
@@ -274,7 +286,7 @@
             this.chbMagmaSearing.AutoSize = true;
             this.chbMagmaSearing.Checked = true;
             this.chbMagmaSearing.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbMagmaSearing.Location = new System.Drawing.Point(10, 266);
+            this.chbMagmaSearing.Location = new System.Drawing.Point(10, 408);
             this.chbMagmaSearing.Name = "chbMagmaSearing";
             this.chbMagmaSearing.Size = new System.Drawing.Size(237, 17);
             this.chbMagmaSearing.TabIndex = 30;
@@ -287,7 +299,7 @@
             this.chbBaseStatOption.AutoSize = true;
             this.chbBaseStatOption.Checked = true;
             this.chbBaseStatOption.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbBaseStatOption.Location = new System.Drawing.Point(10, 243);
+            this.chbBaseStatOption.Location = new System.Drawing.Point(10, 385);
             this.chbBaseStatOption.Name = "chbBaseStatOption";
             this.chbBaseStatOption.Size = new System.Drawing.Size(211, 17);
             this.chbBaseStatOption.TabIndex = 29;
@@ -305,7 +317,7 @@
             this.comboBoxOffhandImbue.Items.AddRange(new object[] {
             "Windfury",
             "Flametongue"});
-            this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 207);
+            this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 349);
             this.comboBoxOffhandImbue.Name = "comboBoxOffhandImbue";
             this.comboBoxOffhandImbue.Size = new System.Drawing.Size(159, 21);
             this.comboBoxOffhandImbue.TabIndex = 28;
@@ -319,15 +331,16 @@
             this.comboBoxMainhandImbue.Items.AddRange(new object[] {
             "Windfury",
             "Flametongue"});
-            this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 180);
+            this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 322);
             this.comboBoxMainhandImbue.Name = "comboBoxMainhandImbue";
             this.comboBoxMainhandImbue.Size = new System.Drawing.Size(159, 21);
             this.comboBoxMainhandImbue.TabIndex = 27;
+            this.comboBoxMainhandImbue.SelectedIndexChanged += new System.EventHandler(this.comboBoxMainhandImbue_SelectedIndexChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(7, 210);
+            this.label8.Location = new System.Drawing.Point(7, 352);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(80, 13);
             this.label8.TabIndex = 31;
@@ -336,7 +349,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 183);
+            this.label3.Location = new System.Drawing.Point(7, 325);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 30;
@@ -384,14 +397,20 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
-            // label4
+            // TB_BossInfo
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 97);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(69, 13);
-            this.label4.TabIndex = 36;
-            this.label4.Text = "Fight Length:";
+            this.TB_BossInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.TB_BossInfo.Location = new System.Drawing.Point(9, 121);
+            this.TB_BossInfo.MaxLength = 65536;
+            this.TB_BossInfo.Multiline = true;
+            this.TB_BossInfo.Name = "TB_BossInfo";
+            this.TB_BossInfo.ReadOnly = true;
+            this.TB_BossInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.TB_BossInfo.Size = new System.Drawing.Size(249, 135);
+            this.TB_BossInfo.TabIndex = 52;
+            this.TB_BossInfo.Text = "Boss Information would normally be displayed here";
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -440,6 +459,7 @@
         public System.Windows.Forms.ComboBox CB_TargArmor;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox TB_BossInfo;
 
     }
 }
