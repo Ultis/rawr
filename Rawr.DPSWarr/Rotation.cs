@@ -420,7 +420,7 @@ namespace Rawr.DPSWarr {
                 float dmg = CalcOpts.AoETargetsDMG;
                 float acts = FightDuration / freq;
                 damagePerSec = (acts * dmg) / FightDuration;
-                float RageMod = 2.5f / 453.3f;
+                float RageMod = 2.5f / 453.3f * (CalcOpts.FuryStance ? 1.05f : 1f);
                 // Add Berserker Rage's
                 float zerkerMOD = 1f;
                 if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_]) {

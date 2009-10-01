@@ -1345,6 +1345,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 float attemptedAtkInterval = fightDuration / Rot.GetAttemptedAtksOverDur();
                 float landedAtksInterval = fightDuration / Rot.GetLandedAtksOverDur();
                 float dmgDoneInterval = fightDuration / (Rot.GetLandedAtksOverDur() + (calcOpts.FuryStance ? 1f : 4f / 3f));
+                float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
 
                 float attempted = Rot.GetAttemptedAtksOverDur();
                 float land = Rot.GetLandedAtksOverDur();
@@ -1403,6 +1404,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                             break;
                         case Trigger.DamageDone: // physical and dots
                             if (dmgDoneInterval > 0f) statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                            break;
+                        case Trigger.DamageTaken: // physical and dots
+                            if (dmgTakenInterval > 0f) statsProcs += effect.GetAverageStats(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
                             break;
                         case Trigger.HSorSLHit: // Set bonus handler
                             //Rot._SL_GCDs = Rot._SL_GCDs;
