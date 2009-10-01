@@ -105,6 +105,7 @@ namespace Rawr.DPSWarr {
                 StanceOkArms = StanceOkDef = StanceOkFury = true;
                 HealingBase = StatS.Health * (0.30f + (Talents.GlyphOfEnragedRegeneration ? 0.10f : 0f));
                 UseHitTable = false;
+                UseReact = true;
                 //
                 InitializeB();
             }
@@ -296,7 +297,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 ReqMultiTargs = true;
-                Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration+(1.5f+CalcOpts.GetLatency()); // In Seconds
+                Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration+(1.5f+CalcOpts.GetLatency()+(UseReact?CalcOpts.GetReact():0f)); // In Seconds
                 Duration = 30f;
                 RageCost = 30f - (Talents.FocusedRage * 1f);
                 RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);
@@ -623,6 +624,7 @@ namespace Rawr.DPSWarr {
                 Cd = 2f * 60f;
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
                 UseHitTable = false;
+                UseReact = true;
                 //
                 InitializeB();
             }
@@ -645,6 +647,7 @@ namespace Rawr.DPSWarr {
                 Cd = 45f;
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
                 UseHitTable = false;
+                UseReact = true;
                 //
                 InitializeB();
             }

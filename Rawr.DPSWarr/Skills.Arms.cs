@@ -64,6 +64,7 @@ namespace Rawr.DPSWarr {
                 //Targets += StatS.BonusTargets;
                 Cd = Exec.Cd;
                 StanceOkArms = true;
+                UseReact = true;
                 //
                 InitializeB();
             }
@@ -79,7 +80,8 @@ namespace Rawr.DPSWarr {
 
                 float acts = rate * landedatksoverdur;
 
-                return (float)Math.Max(0f, acts * (1f - Whiteattacks.AvoidanceStreak));
+                //return (float)Math.Max(0f, acts * (1f - Whiteattacks.AvoidanceStreak));
+                return (float)Math.Max(0f, acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost)));
             }
             protected override float Damage {
                 get {
@@ -131,7 +133,7 @@ namespace Rawr.DPSWarr {
                 if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
 
                 float acts = 0f;
-                float LatentGCD = (1.5f + CalcOpts.GetLatency());
+                float LatentGCD = (1.5f + CalcOpts.GetLatency() + (UseReact ? CalcOpts.GetReact() : 0f));
 
                 float dodge = Whiteattacks.MHAtkTable.Dodge;
                 float parry = (Talents.GlyphOfOverpower ? Whiteattacks.MHAtkTable.Parry : 0f);
@@ -148,7 +150,8 @@ namespace Rawr.DPSWarr {
                         + (dodge > 0 ? YellowAttacksThatDodgeOverDur : 0)
                         + (parry > 0 ? YellowAttacksThatParryOverDur : 0);
 
-                    acts += (float)Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.AvoidanceStreak));
+                    //acts += (float)Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.AvoidanceStreak));
+                    acts += (float)Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.RageSlip(FightDuration/dodgesoverDur, RageCost)));
                 }
 
                 return acts;
@@ -183,13 +186,14 @@ namespace Rawr.DPSWarr {
                 DamageBase = combatFactors.NormalizedMhWeaponDmg;
                 DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
                 BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+                UseReact = true;
                 //
                 InitializeB();
             }
             protected override float ActivatesOverride {
                 get {
                     float acts = 0f;
-                    float LatentGCD = (1.5f + CalcOpts.GetLatency());
+                    float LatentGCD = (1.5f + CalcOpts.GetLatency() + (UseReact ? CalcOpts.GetReact() : 0f));
 
                     // Chance to activate Requires Rend
                     if (CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_]) {

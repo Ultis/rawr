@@ -305,10 +305,16 @@ namespace Rawr.DPSWarr {
                 }
             }
             // Other
+            public float RageSlip(float abilInterval, float rageCost)
+            {
+                //float whiteAtkInterval = (MhActivates + OhActivates) / FightDuration;
+                //return MHAtkTable.AnyNotLand / abilInterval / whiteAtkInterval * rageCost / MHSwingRage;
+                float whiteMod = (MhActivates * MHSwingRage + OhActivates * OHSwingRage) / FightDuration;
+                return (MHAtkTable.AnyNotLand * rageCost) / (abilInterval * whiteMod);
+            }
             public float AvoidanceStreak {
                 get {
                     bool useOH = combatFactors.useOH;
-
                     float mhRagePercent = MHRageRatio;
                     float ohRagePercent = 1f - mhRagePercent;
                     float missChance = mhRagePercent * MHAtkTable.AnyNotLand +
@@ -450,6 +456,7 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = false;
                 StanceOkArms = false;
                 StanceOkDef = false;
+                UseReact = false;
                 DamageBase = 0f;
                 DamageBonus = 1f;
                 HealingBase = 0f;
@@ -483,6 +490,7 @@ namespace Rawr.DPSWarr {
             private bool STANCEOKARMS; // The ability can be used in Battle Stance
             private bool STANCEOKFURY; // The ability can be used in Berserker Stance
             private bool STANCEOKDEF;  // The ability can be used in Defensive Stance
+            private bool USEREACT; // if this ability is used as a proc effect
             private Character CHARACTER;
             private WarriorTalents TALENTS;
             private Stats STATS;
@@ -544,6 +552,7 @@ namespace Rawr.DPSWarr {
             protected bool StanceOkFury { get { return STANCEOKFURY; } set { STANCEOKFURY = value; } }
             protected bool StanceOkArms { get { return STANCEOKARMS; } set { STANCEOKARMS = value; } }
             protected bool StanceOkDef { get { return STANCEOKDEF; } set { STANCEOKDEF = value; } }
+            protected bool UseReact { get { return USEREACT; } set { USEREACT = value; } }
             protected Character Char {
                 get { return CHARACTER; }
                 set {
@@ -603,10 +612,20 @@ namespace Rawr.DPSWarr {
             /// </summary>
             protected virtual float ActivatesOverride {
                 get {
-                    float LatentGCD = 1.5f + CalcOpts.GetLatency();
-                    float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.GetLatency());
+                    float LatentGCD = 1.5f + CalcOpts.GetLatency() + (UseReact ? CalcOpts.GetReact() : 0f);
+                    float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.GetLatency() + (UseReact ? CalcOpts.GetReact() : 0f));
                     float Every = LatentGCD / GCDPerc;
-                    return (float)Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));
+                    if (RageCost > 0f)
+                    {
+                        /*float rageSlip = (float)Math.Pow(Whiteattacks.MHAtkTable.AnyNotLand, Whiteattacks.AvoidanceStreak * Every);
+                        float rageSlip2 = Whiteattacks.MHAtkTable.AnyNotLand / Every / Whiteattacks.AvoidanceStreak * RageCost / Whiteattacks.MHSwingRage;
+                        float ret = FightDuration / Every * (1f - rageSlip);
+                        return ret;*/
+                        return (float)Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.RageSlip(Every, RageCost)));
+                    }
+                    else return FightDuration / Every;
+                    /*double test = Math.Pow((double)Whiteattacks.MHAtkTable.AnyNotLand, (double)Whiteattacks.AvoidanceStreak * Every);
+                    return (float)Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));*/
                 }
             }
             protected virtual float Healing { get { return !Validated ? 0f : HealingBase * HealingBonus; } }
@@ -761,9 +780,9 @@ namespace Rawr.DPSWarr {
             {
                 get
                 {
-                    if (!Validated) { return 0f; }
-                    float Acts = (float)Math.Max(0f, OverridesOverDur);
-                    return Acts * (1f - Whiteattacks.AvoidanceStreak);
+                    if (!Validated || OverridesOverDur <= 0f) { return 0f; }
+                    //return Acts * (1f - Whiteattacks.AvoidanceStreak);
+                    return OverridesOverDur * (1f - Whiteattacks.RageSlip(FightDuration / OverridesOverDur, RageCost));
                 }
             }
         };
