@@ -46,6 +46,12 @@ namespace Rawr.ShadowPriest
 
             trkSurvivability.Value = (int)calcOpts.Survivability;
             lblSurvivability.Text = trkSurvivability.Value + "% Focus on Survivability.";
+
+            trkMoveFrequency.Value = (int)calcOpts.MoveFrequency;
+            lblMoveFrequency.Text = trkMoveFrequency.Value + " seconds between each need for movement.";
+
+            trkMoveDuration.Value = (int)calcOpts.MoveDuration;
+            lblMoveDuration.Text = trkMoveDuration.Value + " seconds of movement each time.";
             
             cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
@@ -157,6 +163,28 @@ namespace Rawr.ShadowPriest
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.Survivability = trkSurvivability.Value;
                 lblSurvivability.Text = trkSurvivability.Value + "% Focus on Survivability.";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkMoveFrequency_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.MoveFrequency = trkMoveFrequency.Value;
+                lblMoveFrequency.Text = trkMoveFrequency.Value + " seconds between each need for Movement.";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkMoveDuration_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.MoveDuration = trkMoveDuration.Value;
+                lblMoveDuration.Text = trkMoveDuration.Value + " seconds of movement each time.";
                 Character.OnCalculationsInvalidated();
             }
         }

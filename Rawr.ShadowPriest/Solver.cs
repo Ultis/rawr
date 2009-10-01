@@ -11,6 +11,7 @@ namespace Rawr.ShadowPriest
         public float DPS { get; protected set; }
         public float OverallMana { get; protected set; }
         public float SustainDPS { get; protected set; }
+        public float MovementDamageLoss { get; protected set; }
         public Dictionary<float, Spell> Sequence { get; protected set; }
 
         public CalculationOptionsShadowPriest CalculationOptions { get; set; }
@@ -180,6 +181,43 @@ namespace Rawr.ShadowPriest
                     return spell;
             }
             return null;
+        }
+
+        public Spell NewGetCastSpell(float timer)
+        {
+            float[] nextRelativeCastTime = new float[SpellPriority.Count];
+            
+            int cnt = 0;
+            foreach (Spell spell in SpellPriority)
+            {
+                if (spell.DebuffDuration > 0)
+                    nextRelativeCastTime[cnt++] = spell.SpellStatistics.CooldownReset - spell.CastTime - timer;
+                else if (spell.Cooldown > 0)
+                    nextRelativeCastTime[cnt++] = spell.SpellStatistics.CooldownReset - timer;
+                else
+                {   // This is our filler.
+                    nextRelativeCastTime[cnt++] = 0;
+                    break;
+                }
+            }
+
+            for (int x = 0; x < cnt; x++)
+                if (nextRelativeCastTime[x] < 0)
+                    return SpellPriority[x];
+
+            Spell spellCastNext = SpellPriority[cnt - 1];
+            float fillerDPS = spellCastNext.DpCT;
+            float nextDelayCost = fillerDPS;
+            for (int x = 0; x < cnt - 1; x++)
+            {
+                float delayCost = SpellPriority[x].DpCT - nextRelativeCastTime[x] * fillerDPS;
+                if (delayCost > nextDelayCost)
+                {
+                    nextDelayCost = delayCost;
+                    spellCastNext = SpellPriority[x];
+                }
+            }
+            return spellCastNext;
         }
 
         public void RecalculateHaste(Stats stats, float addedHasteRating)
@@ -424,7 +462,8 @@ namespace Rawr.ShadowPriest
             #endregion
 
 
-            #region Pass 4: Calculate Damage and Mana Usage
+            #region Pass 4: Calculate Damage and Mana Usage         
+
             foreach (Spell spell in CastList)
             {
                 float Damage = spell.AvgDamage;
@@ -461,8 +500,12 @@ namespace Rawr.ShadowPriest
                         //Damage *= (1f + simStats.BonusDiseaseDamageMultiplier);   // No longer workie.
                         if (dp.ImprovedDP != null)
                         {
-                            Damage += dp.ImprovedDP.AvgDamage;
-                            dp.ImprovedDP.SpellStatistics.DamageDone += dp.ImprovedDP.AvgDamage;
+                            float lDamage = dp.ImprovedDP.AvgDamage
+                                * (1f + simStats.BonusShadowDamageMultiplier)
+                                * (1f + simStats.BonusDamageMultiplier)
+                                * (HitChance / 100f);       // Imp. DP might not receive shadow hit bonuses.
+                            dp.ImprovedDP.SpellStatistics.DamageDone += lDamage;
+                            OverallDamage += lDamage;
                         }
                         Damage *= ShadowHitChance / 100f;
                         break;
@@ -472,7 +515,6 @@ namespace Rawr.ShadowPriest
                 Damage *= (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier);
                 spell.SpellStatistics.DamageDone += Damage;
                 spell.SpellStatistics.ManaUsed += Cost;
-                OverallDamage += Damage;
                 OverallMana += Cost;
             }
             #endregion
@@ -481,7 +523,7 @@ namespace Rawr.ShadowPriest
                 Rotation += "\r\nWARNING: Did not find a clean rotation!\r\nThis may make Haste inaccurate!";
             Rotation += string.Format("\r\nRotation reset after {0} seconds.", Math.Round(timer, 2));
 
-            #region Pass 5: Do spell statistics.
+            #region Pass 5: Do spell statistics & handle movement.
             foreach (Spell spell in SpellPriority)
             {
                 spell.SpellStatistics.HitCount /= timer;
@@ -491,11 +533,30 @@ namespace Rawr.ShadowPriest
                 if (bPnS && spell == SWP)
                     spell.SpellStatistics.DamageDone = spell.DpS * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier);
                 else
+                {
+                    if (spell.CastTime > 0)
+                    {
+                        float realMoveDuration = CalculationOptions.MoveDuration / (1f + simStats.MovementSpeed);
+                        float spellWait = (spell.Cooldown + spell.DebuffDuration) * 0.5f;
+                        if (realMoveDuration > spellWait)
+                        {   // Apply movement penalty
+                            float DPSLossTime = spell.CastTime + realMoveDuration - spellWait;
+                            float DPSLoss = DPSLossTime / CalculationOptions.MoveFrequency;
+                            MovementDamageLoss += spell.SpellStatistics.DamageDone * DPSLoss;
+                            spell.SpellStatistics.DamageDone *= (1f - DPSLoss);
+                        }
+                    }
+                    OverallDamage += spell.SpellStatistics.DamageDone;
                     spell.SpellStatistics.DamageDone /= timer;
+                }
             }
+            MovementDamageLoss /= timer;
+            Rotation += "\r\nDPS lost to movement: " + MovementDamageLoss.ToString("0.00");
             #endregion
 
+
             DPS = OverallDamage / timer + (bPnS ? SWP.DpS * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) : 0);
+
 
             // Finalize Trinkets
            foreach (SpecialEffect se in simStats.SpecialEffects())

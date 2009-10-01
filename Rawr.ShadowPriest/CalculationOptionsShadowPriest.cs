@@ -17,6 +17,8 @@ namespace Rawr.ShadowPriest
 		public float Replenishment { get; set; }
 		public float JoW { get; set; }
 		public float Survivability { get; set; }
+        public float MoveFrequency { get; set; }
+        public float MoveDuration { get; set; }
 
 		public List<string> SpellPriority { get; set; }
 
@@ -37,6 +39,8 @@ namespace Rawr.ShadowPriest
 			Replenishment = 100f;
 			JoW = 100f;
 			Survivability = 2f;
+            MoveFrequency = 60f;
+            MoveDuration = 5f;
 
 			SpellPriority = null;
 			ManaPot = 4;

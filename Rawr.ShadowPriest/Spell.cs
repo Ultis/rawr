@@ -49,7 +49,7 @@ namespace Rawr.ShadowPriest {
             }
         }
 
-        public static readonly List<string> ShadowSpellList = new List<string>() { "Vampiric Embrace", "Vampiric Touch", "Mind Blast", "Devouring Plague", "Shadow Word: Pain", "Mind Flay", "Shadow Word: Death" };
+        public static readonly List<string> ShadowSpellList = new List<string>() { "Vampiric Embrace", "Vampiric Touch", "Devouring Plague", "Mind Blast", "Shadow Word: Pain", "Mind Flay", "Shadow Word: Death" };
         public static readonly List<string> HolySpellList = new List<string>() { "Penance", "Holy Fire", "Devouring Plague", "Shadow Word: Pain", "Mind Blast", "Shadow Word: Death", "Smite" };
 
         public string Name { get; protected set; }
@@ -131,8 +131,8 @@ namespace Rawr.ShadowPriest {
             float newHaste = 1f + stats.SpellHaste;
             if (addedHasteRating > 0f)
             {
-                newHaste += StatConversion.GetSpellHasteFromRating(stats.HasteRating + addedHasteRating)
-                            - StatConversion.GetSpellHasteFromRating(stats.HasteRating);
+                newHaste /= (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
+                newHaste *= (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating + addedHasteRating));
             }
             if (CastTime > 0f)
                 CastTime = (float)Math.Max(1f, BaseCastTime / newHaste);
@@ -520,9 +520,9 @@ namespace Rawr.ShadowPriest {
         public ImprovedDevouringPlague ImprovedDP;
 
         public DevouringPlague(Stats stats, Character character)
-            //: base("Devouring Plague", stats, character, SpellRankTable, 25, 0, 0, 24, 24f / 15f * 0.925f, 30, 24, Color.FromArgb(255, 128, 0, 128))
+            //: base("Devouring Plague", stats, character, SpellRankTable, 25, 0, 0, 24, 24f / 15f * 0.925f, 30, 0, Color.FromArgb(255, 128, 0, 128))
             // Testing shows coefficient to be between 1.479 and 1.480
-            : base("Devouring Plague", stats, character, SpellRankTable, 25, 0, 0, 24, 1.48f, 30, 24, Color.FromArgb(255, 128, 0, 128))
+            : base("Devouring Plague", stats, character, SpellRankTable, 25, 0, 0, 24, 1.48f, 30, 0, Color.FromArgb(255, 128, 0, 128))
         {
             if (character.PriestTalents.ImprovedDevouringPlague > 0)
                 ImprovedDP = new ImprovedDevouringPlague(stats, character, SpellRankTable);
