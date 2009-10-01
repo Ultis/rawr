@@ -8,8 +8,6 @@ using System.Xml;
 /* Things to add:
  * 
  * Custom Rotation Priority
- * Target Damage
- * Target Attack Speed
  * Threat Value/Weight
  * Pot Usage (Needs to pull GCDs)
  * Healing Recieved
@@ -243,6 +241,12 @@ FAQStuff.Add(
                 NUD_DisarmDur.Enabled = calcOpts.DisarmingTargets;
                 NUD_DisarmFreq.Value = (int)calcOpts.DisarmingTargetsFreq;
                 NUD_DisarmDur.Value = (int)calcOpts.DisarmingTargetsDur;
+
+                CK_AoETargs.Checked = calcOpts.AoETargets;
+                NUD_AoEFreq.Enabled = calcOpts.AoETargets;
+                NUD_AoEDMG.Enabled = calcOpts.AoETargets;
+                NUD_AoEFreq.Value = (int)calcOpts.AoETargetsFreq;
+                NUD_AoEDMG.Value = (int)calcOpts.AoETargetsDMG;
 
                 // Abilities to Maintain
                 CK_Flooring.Checked = calcOpts.AllowFlooring;
@@ -618,6 +622,19 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
+        private void RotChanges_AoE_ChecksChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                bool Checked        = CK_AoETargs.Checked;
+                calcOpts.AoETargets = Checked;
+                NUD_AoEFreq.Enabled = Checked;
+                NUD_AoEDMG.Enabled  = Checked;
+                //CB_BossList.Text = "Custom";
+                //
+                Character.OnCalculationsInvalidated();
+            }
+        }
         private void RotChanges_InBack_ValueChanged(object sender, EventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -748,6 +765,26 @@ FAQStuff.Add(
                 //
                 calcOpts.RootingTargetsDur = (float)NUD_RootDur.Value;
                 CB_BossList.Text = "Custom";
+                //
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void NUD_AoEFreq_ValueChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.AoETargetsFreq = (int)NUD_AoEFreq.Value;
+                //CB_BossList.Text = "Custom";
+                //
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void NUD_AoEDmg_ValueChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                //
+                calcOpts.AoETargetsDMG = (float)NUD_AoEDMG.Value;
+                //CB_BossList.Text = "Custom";
                 //
                 Character.OnCalculationsInvalidated();
             }

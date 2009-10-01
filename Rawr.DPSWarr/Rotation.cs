@@ -401,13 +401,37 @@ namespace Rawr.DPSWarr {
         public float MaintainCDs { get { return _Thunder_GCDs + _Sunder_GCDs + _Demo_GCDs + _Ham_GCDs + _Battle_GCDs + _Comm_GCDs + _ER_GCDs + _Death_GCDs + _Reck_GCDs; } }
         #endregion
         #region Rage Calcs
+        protected virtual float RageGenOverDur_IncDmg {
+            get {
+                // Invalidate bad things
+                if (!CalcOpts.AoETargets || CalcOpts.AoETargetsFreq < 1 || CalcOpts.AoETargetsDMG < 1) { return 0f; }
+                float FightDuration = CalcOpts.Duration;
+                float damagePerSec = 0f;
+                float freq = CalcOpts.AoETargetsFreq;
+                float dmg = CalcOpts.AoETargetsDMG;
+                float acts = FightDuration / freq;
+                damagePerSec = (acts * dmg) / FightDuration;
+                float RageMod = 2.5f / 453.3f;
+                // Add Berserker Rage's
+                float zerkerMOD = 1f;
+                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_]) {
+                    SpecialEffect effect = new SpecialEffect(Trigger.Use,
+                        new Stats() { BonusAgilityMultiplier = 1f }, // this is just so we can use a Perc Mod without having to make a new stat
+                        10f, 30f);
+                    Stats stats = effect.GetAverageStats(0, 1f, CombatFactors._c_mhItemSpeed, FightDuration);
+                    zerkerMOD *= (1f + stats.BonusAgilityMultiplier);
+                }
+                return damagePerSec * FightDuration * RageMod * zerkerMOD;
+            }
+        }
         protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
         protected virtual float RageGenOverDur_Wrath { get { return (Talents.UnbridledWrath * 3.0f / 60.0f) * CalcOpts.Duration; } }
         protected virtual float RageGenOverDur_Other {
             get {
                 if (Char.MainHand == null) { return 0f; }
                 float rage = RageGenOverDur_Anger
-                           + RageGenOverDur_Wrath;
+                           + RageGenOverDur_Wrath
+                           + RageGenOverDur_IncDmg;
 
                 // 4pcT7
                 if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {

@@ -837,7 +837,7 @@ namespace Rawr.DPSWarr {
                         GCDsused += (float)Math.Min(origNumGCDs, Abil_GCDs);
                         availGCDs = (float)Math.Max(0f, origNumGCDs - GCDsused);
                         float possibleFreeRage = availRage / (FightDuration * PercTimeUnder20);
-                        EX.FreeRage = possibleFreeRage;
+                        EX.FreeRage = possibleFreeRage;//50f
                         availRage -= EX.GetRageUseOverDur(_EX_GCDs);
                     }
 
@@ -878,13 +878,13 @@ namespace Rawr.DPSWarr {
             _ER_HPS = ER.GetHPS(_ER_GCDs);
             _Death_HPS = Death.GetHPS(_Death_GCDs);
 
-            _BLS_DPS=BLS.GetDPS(_BLS_GCDs);_BLS_HPS=BLS.GetHPS(_BLS_GCDs);
-            _MS_DPS = MS.GetDPS(_MS_GCDs); _MS_HPS = MS.GetHPS(_MS_GCDs);
+            _BLS_DPS = BLS.GetDPS(_BLS_GCDs/*, (1f - PercTimeUnder20)*/); _BLS_HPS = BLS.GetHPS(_BLS_GCDs);
+            _MS_DPS = MS.GetDPS(_MS_GCDs/*, (1f-PercTimeUnder20)*/); _MS_HPS = MS.GetHPS(_MS_GCDs);
             _RD_DPS = RD.GetDPS(_RD_GCDs); _RD_HPS = RD.GetHPS(_RD_GCDs);
             _OP_DPS = OP.GetDPS(_OP_GCDs); _OP_HPS = OP.GetHPS(_OP_GCDs);
             _TB_DPS = TB.GetDPS(_TB_GCDs); _TB_HPS = TB.GetHPS(_TB_GCDs);
-            _SD_DPS = SD.GetDPS(_SD_GCDs); _SD_HPS = SD.GetHPS(_SD_GCDs);
-            if (PercTimeUnder20 > 0) { _EX_DPS = EX.GetDPS(_EX_GCDs); _EX_HPS = EX.GetHPS(_EX_GCDs); }
+            _SD_DPS = SD.GetDPS(_SD_GCDs/*, (1f - PercTimeUnder20)*/); _SD_HPS = SD.GetHPS(_SD_GCDs);
+            if (PercTimeUnder20 > 0) { _EX_DPS = EX.GetDPS(_EX_GCDs/*, PercTimeUnder20*/); _EX_HPS = EX.GetHPS(_EX_GCDs); }
             _SL_DPS = SL.GetDPS(_SL_GCDs); _SL_HPS = SL.GetHPS(_SL_GCDs);
             if (Talents.SwordSpecialization > 0 && CombatFactors.MH.Type == ItemType.TwoHandSword) { _SS_DPS = SS.GetDPS(_SS_Acts); } else { _SS_DPS = 0f; }
 

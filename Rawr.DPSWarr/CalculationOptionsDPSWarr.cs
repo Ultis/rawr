@@ -27,6 +27,7 @@ namespace Rawr.DPSWarr {
         public bool FearingTargets   = false; public int FearingTargetsFreq   = 120; public float FearingTargetsDur   = 5000;
         public bool RootingTargets   = false; public int RootingTargetsFreq   = 120; public float RootingTargetsDur   = 5000;
 		public bool DisarmingTargets = false; public int DisarmingTargetsFreq = 120; public float DisarmingTargetsDur = 5000;// nonfunctional
+        public bool AoETargets       = false; public int AoETargetsFreq       =  20; public float AoETargetsDMG       = 5000;
 		// Abilities to Maintain
 		public bool[] Maintenance = new bool[] {
             true,  // == Rage Gen ==

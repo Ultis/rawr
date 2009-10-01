@@ -221,13 +221,10 @@ namespace Rawr.DPSWarr {
                     return result;
                 }
             }
-            public float MHRageGenOverDurNoHS
-            {
-                get
-                {
+            public float MHRageGenOverDurNoHS {
+                get {
                     float result = 0f;
-                    if (combatFactors.MH != null && combatFactors.MH.MaxDamage > 0)
-                    {
+                    if (combatFactors.MH != null && combatFactors.MH.MaxDamage > 0) {
                         float ragePer = MHSwingRage;
                         result = MhActivatesNoHS * ragePer;
                     }
@@ -681,6 +678,11 @@ namespace Rawr.DPSWarr {
                 if (!Validated) { return 0f; }
                 float adou = GetAvgDamageOnUse(acts);
                 return adou / FightDuration;
+            }
+            public virtual float GetDPS(float acts, float perc) {
+                if (!Validated) { return 0f; }
+                float adou = GetAvgDamageOnUse(acts);
+                return adou / (FightDuration * perc);
             }
             public virtual float GetAvgHealingOnUse(float acts) {
                 if (!Validated) { return 0f; }
