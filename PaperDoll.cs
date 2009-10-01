@@ -29,6 +29,7 @@ namespace Rawr
         }
 
         #region ItemSlots
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Head
         {
             get { return Character.Head ?? new ItemInstance(); }
@@ -41,6 +42,7 @@ namespace Rawr
             set { itemButtonHead.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Neck
         {
             get { return Character.Neck ?? new ItemInstance(); }
@@ -53,6 +55,7 @@ namespace Rawr
             set { itemButtonNeck.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Shoulders
         {
             get { return Character.Shoulders ?? new ItemInstance(); }
@@ -65,6 +68,7 @@ namespace Rawr
             set { itemButtonShoulders.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Back
         {
             get { return Character.Back ?? new ItemInstance(); }
@@ -77,6 +81,7 @@ namespace Rawr
             set { itemButtonBack.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Chest
         {
             get { return Character.Chest ?? new ItemInstance(); }
@@ -89,6 +94,7 @@ namespace Rawr
             set { itemButtonChest.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Shirt
         {
             get { return Character.Shirt ?? new ItemInstance(); }
@@ -101,6 +107,7 @@ namespace Rawr
             set { itemButtonShirt.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Tabard
         {
             get { return Character.Tabard ?? new ItemInstance(); }
@@ -113,6 +120,7 @@ namespace Rawr
             set { itemButtonTabard.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Wrist
         {
             get { return Character.Wrist ?? new ItemInstance(); }
@@ -125,6 +133,7 @@ namespace Rawr
             set { itemButtonWrist.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance MainHand
         {
             get { return Character.MainHand ?? new ItemInstance(); }
@@ -137,6 +146,7 @@ namespace Rawr
             set { itemButtonMainHand.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance OffHand
         {
             get { return Character.OffHand ?? new ItemInstance(); }
@@ -149,6 +159,7 @@ namespace Rawr
             set { itemButtonOffHand.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Ranged
         {
             get { return Character.Ranged ?? new ItemInstance(); }
@@ -161,6 +172,7 @@ namespace Rawr
             set { itemButtonRanged.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Projectile
         {
             get { return Character.Projectile ?? new ItemInstance(); }
@@ -173,6 +185,7 @@ namespace Rawr
             set { itemButtonProjectile.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance ProjectileBag
         {
             get { return Character.ProjectileBag ?? new ItemInstance(); }
@@ -185,6 +198,7 @@ namespace Rawr
             set { itemButtonProjectileBag.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Hands
         {
             get { return Character.Hands ?? new ItemInstance(); }
@@ -197,6 +211,7 @@ namespace Rawr
             set { itemButtonHands.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Waist
         {
             get { return Character.Waist ?? new ItemInstance(); }
@@ -209,6 +224,7 @@ namespace Rawr
             set { itemButtonWaist.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Legs
         {
             get { return Character.Legs ?? new ItemInstance(); }
@@ -221,6 +237,7 @@ namespace Rawr
             set { itemButtonLegs.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Feet
         {
             get { return Character.Feet ?? new ItemInstance(); }
@@ -233,6 +250,7 @@ namespace Rawr
             set { itemButtonFeet.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Finger1
         {
             get { return Character.Finger1 ?? new ItemInstance(); }
@@ -245,6 +263,7 @@ namespace Rawr
             set { itemButtonFinger1.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Finger2
         {
             get { return Character.Finger2 ?? new ItemInstance(); }
@@ -257,6 +276,7 @@ namespace Rawr
             set { itemButtonFinger2.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Trinket1
         {
             get { return Character.Trinket1 ?? new ItemInstance(); }
@@ -269,6 +289,7 @@ namespace Rawr
             set { itemButtonTrinket1.ItemHidden = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ItemInstance Trinket2
         {
             get { return Character.Trinket2 ?? new ItemInstance(); }
@@ -282,6 +303,7 @@ namespace Rawr
         }
         #endregion
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Character Character
         {
             get

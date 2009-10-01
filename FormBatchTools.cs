@@ -950,6 +950,26 @@ namespace Rawr
             {
                 formMain.LoadBatchCharacter(dataGridView.Rows[e.RowIndex].DataBoundItem as BatchCharacter);
             }
+            else if (e.ColumnIndex == diffBatchCharacterColumn.Index && e.RowIndex != dataGridView.NewRowIndex)
+            {
+                BatchCharacter character = (BatchCharacter)dataGridView.Rows[e.RowIndex].DataBoundItem;
+                Character before = Character.Load(character.AbsulutePath); // load clean version for comparison
+                Character after = character.Character;
+                FormOptimizeResult result = new FormOptimizeResult(before, after);
+                result.SetOptimizerScores(character.Score, character.NewScore.GetValueOrDefault(character.Score));
+                if (result.ShowDialog(this) == DialogResult.No)
+                {
+                    // we don't want the new character, reload the old one
+                    Character _character = character.Character;
+                    _character.IsLoading = true;
+                    _character.SetItems(before);
+                    _character.ActiveBuffs = before.ActiveBuffs;
+                    //_character.CurrentTalents = before.CurrentTalents; // let's not play with talents for now
+                    _character.IsLoading = false;
+                    _character.OnCalculationsInvalidated();
+                    character.UnsavedChanges = false; // reset the dirty flag and update ui
+                }
+            }
         }
 
         // based on http://mrpmorris.blogspot.com/2007/05/convert-absolute-path-to-relative-path.html

@@ -10,8 +10,6 @@ namespace Rawr
 {
     public partial class FormOptimizeResult : Form 
     {
-        private DialogResult result = DialogResult.No;
-
         public FormOptimizeResult(Character before, Character after)
         {
             InitializeComponent();
@@ -161,23 +159,6 @@ namespace Rawr
                 paperDollAfter.SetResultText(string.Format("Score After Optimization :\r\n{0}", scoreAfter));
             else
                 paperDollAfter.SetResultText("The Optimizer was not able to meet all the requirements. Would you like to equip the gear that is closest to meeting them?");
-        }
-
-        public DialogResult LoadOptimizerResult()
-        {
-            return result;
-        }
-
-        private void buttonKeep_Click(object sender, EventArgs e)
-        {
-            result = DialogResult.No;
-            this.Close();
-        }
-
-        private void buttonChange_Click(object sender, EventArgs e)
-        {
-            result = DialogResult.Yes;
-            this.Close();
         }
     }
 }
