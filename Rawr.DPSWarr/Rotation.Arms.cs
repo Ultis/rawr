@@ -235,8 +235,8 @@ namespace Rawr.DPSWarr {
                 float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Ceiling(movedActs) : movedActs;
                 _Move_GCDs = Abil_Acts;
                 float reduc = Math.Max(0f, BaseMoveDur);
-                GCDsused += (float)Math.Min(NumGCDs, (reduc * Abil_Acts) / LatentGCD);
-                GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : Spent Moving\n" : "");
+                GCDsused += (float)Math.Min(NumGCDs, (reduc * _Move_GCDs) / LatentGCD);
+                GCDUsage += (_Move_GCDs > 0 ? _Move_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : Spent Moving\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
 
                 /* = Now let's try and get some of those GCDs back =
@@ -246,31 +246,37 @@ namespace Rawr.DPSWarr {
                  * Ability (Charge, Intercept or  Intervene)
                  * Since some of these abilities are usable in combat
                  * only by talents, we have to make those checks first
+                 * Since some stuff is kind of weird, we're going to
+                 * enforce an ~3 sec est minimum move time before activating
+                 * Charge
                  */
                 // Recover By Charging
                 float MaxMovementTimeRegain = 0f;
                 if ((/*Talents.Warbringer > 0 ||*/ Talents.Juggernaut > 0) && _Move_GCDs > 0f && BaseMoveDur > (CH.MinRange / MovementSpeed)) {
                     MaxMovementTimeRegain = Math.Max(0f, Math.Min(BaseMoveDur - CalcOpts.React / 1000f, CH.MaxRange / MovementSpeed - CalcOpts.React / 1000f));
-                    float chActs = CalcOpts.AllowFlooring ? (float)Math.Floor(CH.Activates) : CH.Activates;
-                    _CH_Acts = (float)Math.Min(_Move_GCDs, chActs);
-                    reduc = MaxMovementTimeRegain;
-                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * _CH_Acts) / LatentGCD);
-                    GCDUsage += (_CH_Acts > 0 ? _CH_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + CH.Name + " (adds back to GCDs when moves are long)\n" : "");
-                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                    availRage += CH.GetRageUseOverDur(_CH_Acts);
-                    // Need to add the special effect from Juggernaut to Mortal Strike, not caring about Slam right now
-                    Stats stats = (new SpecialEffect(Trigger.Use,
-                                    new Stats() { BonusWarrior_T8_4P_MSBTCritIncrease = 0.25f }, 10, CH.Cd)
-                                    ).GetAverageStats(FightDuration / _CH_Acts, 1f, CombatFactors._c_mhItemSpeed, FightDuration);
-                    // I'm not sure if this is gonna work, but hell, who knows
-                    MS = new Skills.MortalStrike(CHARACTER, STATS + stats, COMBATFACTORS, WHITEATTACKS);
+                    //if (BaseMoveDur < MaxMovementTimeRegain) {
+                    //} else {
+                        float chActs = CalcOpts.AllowFlooring ? (float)Math.Floor(CH.Activates) : CH.Activates;
+                        _CH_Acts = (float)Math.Min(_Move_GCDs, chActs);
+                        reduc = MaxMovementTimeRegain;
+                        GCDsused -= (float)Math.Min(GCDsused, (reduc * _CH_Acts) / LatentGCD);
+                        GCDUsage += (_CH_Acts > 0 ? _CH_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + CH.Name + " (adds back to GCDs when moves are long)\n" : "");
+                        availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                        availRage += CH.GetRageUseOverDur(_CH_Acts);
+                        // Need to add the special effect from Juggernaut to Mortal Strike, not caring about Slam right now
+                        Stats stats = (new SpecialEffect(Trigger.Use,
+                                        new Stats() { BonusWarrior_T8_4P_MSBTCritIncrease = 0.25f }, 10, CH.Cd)
+                                        ).GetAverageStats(FightDuration / _CH_Acts, 1f, CombatFactors._c_mhItemSpeed, FightDuration);
+                        // I'm not sure if this is gonna work, but hell, who knows
+                        MS = new Skills.MortalStrike(CHARACTER, STATS + stats, COMBATFACTORS, WHITEATTACKS);
+                    //}
                 }
 
                 //float val = Abil_Acts * BaseMoveDur;
-                GCDsused -= (_Move_GCDs * BaseMoveDur) / LatentGCD;
+                //GCDsused = 0f;//-= (_Move_GCDs * BaseMoveDur) / LatentGCD;
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 timelostwhilemoving = _Move_GCDs * BaseMoveDur
-                                       - (BaseMoveDur - MaxMovementTimeRegain) * _CH_Acts;
+                                    - _CH_Acts * MaxMovementTimeRegain;
                 timelostwhilemoving = (CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilemoving) : timelostwhilemoving);
                 percTimeInMovement = timelostwhilemoving / FightDuration;
             }
