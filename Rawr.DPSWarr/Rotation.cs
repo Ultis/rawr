@@ -51,6 +51,9 @@ namespace Rawr.DPSWarr {
         // Anti-DeBuff
         public Skills.HeroicFury HF;
         public Skills.EveryManForHimself EM;
+        public Skills.Charge CH;
+        public Skills.Intercept IN;
+        public Skills.Intervene IV;
         // Rage Generators
         public Skills.SecondWind SndW;
         public Skills.BerserkerRage BZ;
@@ -103,6 +106,9 @@ namespace Rawr.DPSWarr {
             // Anti-Debuff
             calcs.HF = HF;
             calcs.EM = EM;
+            calcs.CH = CH;
+            calcs.IN = IN;
+            calcs.IV = IV;
             // Rage Generators
             calcs.SndW = SndW;
             calcs.BZ = BZ;
@@ -142,6 +148,9 @@ namespace Rawr.DPSWarr {
             // Anti-Debuff
             HF  = new Skills.HeroicFury(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             EM  = new Skills.EveryManForHimself(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            CH  = new Skills.Charge(            CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            IN  = new Skills.Intercept(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            IV  = new Skills.Intervene(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             // Rage Generators
             SndW= new Skills.SecondWind(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             BZ  = new Skills.BerserkerRage(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
@@ -161,12 +170,12 @@ namespace Rawr.DPSWarr {
             RK = new Skills.Recklessness(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
 
             // Slam used by Bloodsurge, WW used by Bladestorm, so they're shared
-            SL = new Skills.Slam(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS); // actually arms but BS needs it
-            WW = new Skills.WhirlWind(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SL = new Skills.Slam(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS); // actually arms but BS needs it
+            WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             
-            DW = new Skills.DeepWounds(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            CL = new Skills.Cleave(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            HS = new Skills.HeroicStrike(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
             EX = new Skills.Execute(            CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
         }
         protected virtual void doIterations() { }

@@ -40,6 +40,9 @@ namespace Rawr.DPSWarr {
         public float _Rooted_Acts = 0f;
         public float _HF_Acts = 0f;
         public float _EM_Acts = 0f;
+        public float _CH_Acts = 0f; // Charge
+        public float _IN_Acts = 0f; // Intercept
+        public float _IV_Acts = 0f; // Intervene
         #endregion
         #region Initialization
         public override void Initialize(CharacterCalculationsDPSWarr calcs) {
@@ -206,7 +209,27 @@ namespace Rawr.DPSWarr {
 
             // ==== Reasons GCDs would be lost ========
             #region Having to Move
-            if (CalcOpts.MovingTargets && CalcOpts.MovingTargetsFreq > 0) {
+            if (CalcOpts.MovingTargets && CalcOpts.MovingTargetsFreq > 0 && CalcOpts.MovingTargetsDur > 0) {
+                /* = Movement Speed =
+                 * According to a post I found on WoWWiki, Standard (Run) Movement
+                 * Speed is 7 yards per 1 sec.
+                 * Cat's Swiftness (and similar) bring this to 7.56 (7x1.08)
+                 * If you are moving for 5 seconds, this is 35 yards (37.8 w/ bonus)
+                 * All the movement effects have a min 8 yards, so you have to be
+                 * moving for 1.142857 seconds (1.08 seconds w/ bonus) before Charge
+                 * would be viable. If you had to be moving more than Charge's Max
+                 * Range (25 yards, editable by certain bonuses) then we'd benefit
+                 * again from move speed bonuses, etc.
+                 * 
+                 * Charge Max = 25
+                 * that's 25/7.00 = 3.571428571428571 seconds at 7.00 yards per sec
+                 * that's 25/7.56 = 3.306878306873070 seconds at 7.56 yards per sec
+                 * Charge (Glyph of Charge) Max = 25+5=30
+                 * that's 30/7.00 = 4.285714285714286 seconds at 7.00 yards per sec
+                 * that's 30/7.56 = 3.968253968253968 seconds at 7.56 yards per sec
+                 */
+                float MovementSpeed = (7/1) * (1f + StatS.MovementSpeed); // 7 yards per sec * 1.08 (if have bonus) = 7.56
+
                 float BaseMoveDur = (float)Math.Max(0f, (CalcOpts.MovingTargetsDur / 1000f * (1f - StatS.MovementSpeed)));
                 float movedActs = (float)Math.Max(0f, FightDuration / CalcOpts.MovingTargetsFreq);
                 float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Ceiling(movedActs) : movedActs;
@@ -216,8 +239,39 @@ namespace Rawr.DPSWarr {
                 GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : Spent Moving\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
 
-                float val = Abil_Acts * BaseMoveDur;
-                timelostwhilemoving = (CalcOpts.AllowFlooring ? (float)Math.Ceiling(val) : val);
+                /* = Now let's try and get some of those GCDs back =
+                 * Let's assume that if the movement duration is longer
+                 * than the before mentioned (1.142857|1.08) seconds,
+                 * you are far enough away that you can use a Movement
+                 * Ability (Charge, Intercept or  Intervene)
+                 * Since some of these abilities are usable in combat
+                 * only by talents, we have to make those checks first
+                 */
+                // Recover By Charging
+                float MaxMovementTimeRegain = 0f;
+                if ((/*Talents.Warbringer > 0 ||*/ Talents.Juggernaut > 0) && _Move_GCDs > 0f && BaseMoveDur > (CH.MinRange / MovementSpeed)) {
+                    MaxMovementTimeRegain = Math.Max(0f, Math.Min(BaseMoveDur - CalcOpts.React / 1000f, CH.MaxRange / MovementSpeed - CalcOpts.React / 1000f));
+                    float chActs = CalcOpts.AllowFlooring ? (float)Math.Floor(CH.Activates) : CH.Activates;
+                    _CH_Acts = (float)Math.Min(_Move_GCDs, chActs);
+                    reduc = MaxMovementTimeRegain;
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * _CH_Acts) / LatentGCD);
+                    GCDUsage += (_CH_Acts > 0 ? _CH_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + CH.Name + " (adds back to GCDs when moves are long)\n" : "");
+                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                    availRage += CH.GetRageUseOverDur(_CH_Acts);
+                    // Need to add the special effect from Juggernaut to Mortal Strike, not caring about Slam right now
+                    Stats stats = (new SpecialEffect(Trigger.Use,
+                                    new Stats() { BonusWarrior_T8_4P_MSBTCritIncrease = 0.25f }, 10, CH.Cd)
+                                    ).GetAverageStats(FightDuration / _CH_Acts, 1f, CombatFactors._c_mhItemSpeed, FightDuration);
+                    // I'm not sure if this is gonna work, but hell, who knows
+                    MS = new Skills.MortalStrike(CHARACTER, STATS + stats, COMBATFACTORS, WHITEATTACKS);
+                }
+
+                //float val = Abil_Acts * BaseMoveDur;
+                GCDsused -= (_Move_GCDs * BaseMoveDur) / LatentGCD;
+                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                timelostwhilemoving = _Move_GCDs * BaseMoveDur
+                                       - (BaseMoveDur - MaxMovementTimeRegain) * _CH_Acts;
+                timelostwhilemoving = (CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilemoving) : timelostwhilemoving);
                 percTimeInMovement = timelostwhilemoving / FightDuration;
             }
             #endregion
@@ -236,16 +290,16 @@ namespace Rawr.DPSWarr {
                 if (Talents.HeroicFury > 0 && _Stunned_Acts > 0f) {
                     float hfacts = CalcOpts.AllowFlooring ? (float)Math.Floor(HF.Activates) : HF.Activates;
                     _HF_Acts = (float)Math.Min(_Stunned_Acts, hfacts);
-                    reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)/1000f*/)));
-                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * hfacts) / LatentGCD);
+                    reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)*//1000f)));
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * _HF_Acts) / LatentGCD);
                     GCDUsage += (_HF_Acts > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + HF.Name + " (adds back to GCDs when stunned)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 }
                 if (CHARACTER.Race == CharacterRace.Human && (_Stunned_Acts - _HF_Acts > 0)) {
                     float emacts = CalcOpts.AllowFlooring ? (float)Math.Floor(EM.Activates) : EM.Activates;
                     _EM_Acts = (float)Math.Min(_Stunned_Acts - _HF_Acts, emacts);
-                    reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)/1000f*/)));
-                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * emacts) / LatentGCD);
+                    reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)*//1000f)));
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * _EM_Acts) / LatentGCD);
                     GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + EM.Name + " (adds back to GCDs when stunned)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 }
@@ -257,8 +311,8 @@ namespace Rawr.DPSWarr {
                 GCDsused -= (_Stunned_Acts * BaseStunDur) / LatentGCD;
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 timelostwhilestunned = _Stunned_Acts * BaseStunDur
-                                       - (BaseStunDur - LatentGCD) * _HF_Acts
-                                       - (BaseStunDur - LatentGCD) * _EM_Acts;
+                                       - (BaseStunDur - CalcOpts.React/1000f) * _HF_Acts
+                                       - (BaseStunDur - CalcOpts.React/1000f) * _EM_Acts;
                 timelostwhilestunned = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilestunned) : timelostwhilestunned;
                 percTimeInStun = timelostwhilestunned / FightDuration;
             }
@@ -278,8 +332,8 @@ namespace Rawr.DPSWarr {
                 if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_] && _Feared_Acts > 0f) {
                     float bzacts = CalcOpts.AllowFlooring ? (float)Math.Floor(BZ.Activates) : BZ.Activates;
                     _ZRage_GCDs = (float)Math.Min(_Feared_Acts, bzacts);
-                    reduc = Math.Max(0f, (BaseFearDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)/1000f*/)));
-                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * bzacts) / LatentGCD);
+                    reduc = Math.Max(0f, (BaseFearDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)*//1000f)));
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * _ZRage_GCDs) / LatentGCD);
                     GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + BZ.Name + " (adds back to GCDs when feared)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 }
@@ -310,8 +364,8 @@ namespace Rawr.DPSWarr {
                 /*if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_] && _Feared_Acts > 0f) {
                     float bzacts = BZ.Activates;
                     _ZRage_GCDs = (float)Math.Min(_Feared_Acts, bzacts);
-                    reduc = Math.Max(0f, (BaseRootDur - Math.Max(0f,/*(*//*CalcOpts.React/*-250)/1000f*//*)));
-                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * bzacts) / LatentGCD);
+                    reduc = Math.Max(0f, (BaseRootDur - Math.Max(0f,/*(*//*CalcOpts.React/*-250)*//*/1000f)));
+                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * _ZRage_GCDs) / LatentGCD);
                     GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + BZ.Name + " (adds back to GCDs when Rooted)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 }*/

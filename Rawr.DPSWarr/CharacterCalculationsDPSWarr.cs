@@ -71,6 +71,9 @@ namespace Rawr.DPSWarr {
         // Anti-Debuff
         public Skills.HeroicFury HF { get; set; }
         public Skills.EveryManForHimself EM { get; set; }
+        public Skills.Charge CH { get; set; }
+        public Skills.Intercept IN { get; set; }
+        public Skills.Intervene IV { get; set; }
         // Rage Generators
         public Skills.SecondWind SndW { get; set; }
         public Skills.BerserkerRage BZ { get; set; }

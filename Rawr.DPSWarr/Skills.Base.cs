@@ -474,7 +474,8 @@ namespace Rawr.DPSWarr {
             private bool REQMELEERRANGE;
             private bool REQMULTITARGS;
             private float TARGETS;
-            private float MAXRANGE; // In Yards 
+            private float MINRANGE; // In Yards 
+            private float MAXRANGE; // In Yards
             private float CD; // In Seconds
             private float DURATION; // In Seconds
             private float RAGECOST;
@@ -514,7 +515,8 @@ namespace Rawr.DPSWarr {
             public bool CanBeParried { get { return CANBEPARRIED; } set { CANBEPARRIED = value; } }
             public bool CanBeBlocked { get { return CANBEBLOCKED; } set { CANBEBLOCKED = value; } }
             public bool CanCrit { get { return CANCRIT; } set { CANCRIT = value; } }
-            protected float MaxRange { get { return MAXRANGE; } set { MAXRANGE = value; } } // In Yards 
+            public float MinRange { get { return MINRANGE; } set { MINRANGE = value; } } // In Yards 
+            public float MaxRange { get { return MAXRANGE; } set { MAXRANGE = value; } } // In Yards
             public float Cd { // In Seconds
                 get { return CD; }
                 set {

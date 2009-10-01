@@ -651,11 +651,10 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Movement Abilities
-        public class Charge : Ability
-        {
+        public class Charge : Ability {
             /// <summary>
-            /// Instant, 20 sec cd, 0 Rage, 8-25 yds, (Battle)
-            /// Charge an enemy, generate 25 rage, and stun it for 1.50 sec. Cannot be used in combat.
+            /// Instant, 15 sec cd, 0 Rage, 8-25 yds, (Battle)
+            /// Charge an enemy, generate 15 rage, and stun it for 1.50 sec. Cannot be used in combat.
             /// </summary>
             /// <TalentsAffecting>
             /// Warbringer [Usable in combat and any stance]
@@ -663,31 +662,28 @@ namespace Rawr.DPSWarr {
             /// Improved Charge [+(5*Pts) RageGen]
             /// </TalentsAffecting>
             /// <GlyphsAffecting>
-            /// Glyph of Rapid Charge [-20% Cd]
+            /// Glyph of Rapid Charge [-7% Cd]
             /// Glyph of Charge [+5 yds MaxRange]
             /// </GlyphsAffecting>
-            public Charge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public Charge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
+                Name = "Charge";
+                MinRange = 8f;
                 MaxRange = 25f + (Talents.GlyphOfCharge ? 5f : 0f); // In Yards 
-                Cd = (20f + Talents.Juggernaut * 5f) * (1f - (Talents.GlyphOfRapidCharge ? 0.20f : 0f)); // In Seconds
+                Cd = (15f + Talents.Juggernaut * 5f) * (1f - (Talents.GlyphOfRapidCharge ? 0.07f : 0f)); // In Seconds
                 Duration = 1.5f;
-                RageCost = 25f + (Talents.ImprovedCharge * 5f);
-                if (Talents.Warbringer == 1)
-                {
+                RageCost = 15f + (Talents.ImprovedCharge * 5f);
+                if (Talents.Warbringer == 1) {
                     StanceOkArms = StanceOkFury = StanceOkDef = true;
-                }
-                else if (Talents.Juggernaut == 1)
-                {
+                } else if (Talents.Juggernaut == 1) {
                     StanceOkArms = true;
                 }
                 //
                 InitializeB();
             }
         }
-        public class Intercept : Ability
-        {
+        public class Intercept : Ability {
             /// <summary>
             /// Instant, 30 sec Cd, 10 Rage, 8-25 yds, (Zerker)
             /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
@@ -697,10 +693,10 @@ namespace Rawr.DPSWarr {
             /// Improved Intercept [-[5*Pts] sec Cd]
             /// </TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Intercept(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public Intercept(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
+                MinRange = 8f;
                 MaxRange = 25f; // In Yards 
                 Cd = 30f * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
                 Duration = 3f;
@@ -711,8 +707,7 @@ namespace Rawr.DPSWarr {
                 InitializeB();
             }
         }
-        public class Intervene : Ability
-        {
+        public class Intervene : Ability {
             /// <summary>
             /// Instant, 30 sec Cd, 10 Rage, 8-25 yds, (Def)
             /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
@@ -723,10 +718,10 @@ namespace Rawr.DPSWarr {
             /// <GlyphsAffecting>
             /// Glyph of Intervene [Increases the number of attacks you intercept for your intervene target by 1.]
             /// </GlyphsAffecting>
-            public Intervene(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
-            {
+            public Intervene(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
+                MinRange = 8f;
                 MaxRange = 25f; // In Yards 
                 Cd = 30f * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
                 RageCost = 10f;
