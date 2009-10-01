@@ -117,17 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CK_RootingTargs.ToolTipText" xml:space="preserve">
-    <value>While Snared you cannot DPS (assume the target moves out of melee range). Snare/Root Duration reducing effects can lower the duration. Some abilities can negate Snares after they occur if they are not on cooldown.</value>
+  <data name="CK_HideSpellGear.ToolTipText" xml:space="preserve">
+    <value>This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.</value>
   </data>
-  <data name="CK_MultiTargs.ToolTipText" xml:space="preserve">
-    <value>How much of the fight is spend where more than one target is within Melee Range, allowing the use of MultiTarget abilities like Cleave and normal abilities like WhirlWind to do extra damage. Max is the highest number of targets over the fight, use to clip WhirlWind, etc. to 2 targets instead of the full 4</value>
+  <data name="CK_HidePvPGear.ToolTipText" xml:space="preserve">
+    <value>This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.</value>
   </data>
-  <data name="CK_MovingTargs.ToolTipText" xml:space="preserve">
-    <value>Time spent in movement where you cannot DPS the Boss. Either the boss has moved or you are in a situation where you can't stand where you are. There are no epix in the green! Movespeed buffs can reduce this time.</value>
-  </data>
-  <data name="CK_StunningTargs.ToolTipText" xml:space="preserve">
-    <value>While stunned, you cannot DPS. Iron Will and other Stun Duration reducing effects can lower the duration. Abilities like Heroic Fury and Every Man for Himself (Humans) can negate Stuns after they occur if they are not on cooldown.</value>
+  <data name="CK_HideDefGear.ToolTipText" xml:space="preserve">
+    <value>This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.</value>
   </data>
   <data name="RTB_Welcome.Text" xml:space="preserve">
     <value>Welcome to Rawr.DPSWarr!
@@ -492,10 +489,19 @@ v2.2.5 (May 25, 2009 16:25)
 - Enforced activation of buffs Trauma, Rampage and Blood Frenzy if you have the talents
 - Formulaic fixes and some Talent/Glyph improvements</value>
   </data>
+  <data name="CK_RootingTargs.ToolTipText" xml:space="preserve">
+    <value>While Snared you cannot DPS (assume the target moves out of melee range). Snare/Root Duration reducing effects can lower the duration. Some abilities can negate Snares after they occur if they are not on cooldown.</value>
+  </data>
+  <data name="CK_MultiTargs.ToolTipText" xml:space="preserve">
+    <value>How much of the fight is spend where more than one target is within Melee Range, allowing the use of MultiTarget abilities like Cleave and normal abilities like WhirlWind to do extra damage. Max is the highest number of targets over the fight, use to clip WhirlWind, etc. to 2 targets instead of the full 4</value>
+  </data>
+  <data name="CK_MovingTargs.ToolTipText" xml:space="preserve">
+    <value>Time spent in movement where you cannot DPS the Boss. Either the boss has moved or you are in a situation where you can't stand where you are. There are no epix in the green! Movespeed buffs can reduce this time.</value>
+  </data>
+  <data name="CK_StunningTargs.ToolTipText" xml:space="preserve">
+    <value>While stunned, you cannot DPS. Iron Will and other Stun Duration reducing effects can lower the duration. Abilities like Heroic Fury and Every Man for Himself (Humans) can negate Stuns after they occur if they are not on cooldown.</value>
+  </data>
   <data name="CK_Flooring.ToolTipText" xml:space="preserve">
     <value>Flooring changes the way Rotations are calculated. Normally, an ability can have 94.7 activates in a rotation, this allows a more smooth calc for things like Haste and Expertise (due to Overpower Procs). Flooring forces any partial activate off the table, 94.7 becomes 94. This is to better simulate reality, however it isn't fully factored in everywhere that it should be. Use Flooring at your own risk.</value>
-  </data>
-  <data name="CK_HideBadItems.ToolTipText" xml:space="preserve">
-    <value>This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.</value>
   </data>
 </root>

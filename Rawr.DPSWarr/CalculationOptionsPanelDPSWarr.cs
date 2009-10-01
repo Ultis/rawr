@@ -186,7 +186,9 @@ FAQStuff.Add(
                 NUD_MoveFreq.Maximum = CB_Duration.Value; line = 10;
                 RB_StanceArms.Checked = !calcOpts.FuryStance; line = 11;
                 CK_PTRMode.Checked = calcOpts.PTRMode; line = 12;
-                CK_HideBadItems.Checked = calcOpts.HideBadItems; CalculationsDPSWarr.HidingBadStuff = calcOpts.HideBadItems; line = 13;
+                CK_HideDefGear.Checked = calcOpts.HideBadItems_Def; CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def; line = 13;
+                CK_HideSpellGear.Checked = calcOpts.HideBadItems_Spl; CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl; line = 13;
+                CK_HidePvPGear.Checked = calcOpts.HideBadItems_PvP; CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP; line = 13;
                 NUD_SurvScale.Value = (decimal)calcOpts.SurvScale; line = 14;
                 // Boss Selector
                 // Save the new names
@@ -465,11 +467,29 @@ FAQStuff.Add(
             NUD_DisarmDur.ValueChanged += new System.EventHandler(this.NUD_DisarmDur_ValueChanged);
         }
         // Basics
-        private void CK_HideBadItems_CheckedChanged(object sender, EventArgs e) {
+        private void CK_HideBadItems_Def_CheckedChanged(object sender, EventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.HideBadItems = CK_HideBadItems.Checked;
-                CalculationsDPSWarr.HidingBadStuff = calcOpts.HideBadItems;
+                calcOpts.HideBadItems_Def = CK_HideDefGear.Checked;
+                CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def;
+                ItemCache.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void CK_HideBadItems_Spl_CheckedChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.HideBadItems_Spl = CK_HideSpellGear.Checked;
+                CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
+                ItemCache.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void CK_HideBadItems_PvP_CheckedChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.HideBadItems_PvP = CK_HidePvPGear.Checked;
+                CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
                 ItemCache.OnItemsChanged();
                 Character.OnCalculationsInvalidated();
             }

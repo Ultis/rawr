@@ -206,7 +206,12 @@ FAQStuff.Add(
                 CB_MoveTargsTime.Maximum = CB_Duration.Value; line = 10;
                 RB_StanceArms.IsChecked = !calcOpts.FuryStance; line = 11;
                 CK_PTRMode.IsChecked = calcOpts.PTRMode; line = 12;
-                CK_HideBadItems.IsChecked = calcOpts.HideBadItems; CalculationsDPSWarr.HidingBadStuff = calcOpts.HideBadItems; ItemCache.OnItemsChanged(); line = 13;
+                CK_HideBadItems.IsChecked = calcOpts.HideBadItems;
+                CalculationsDPSWarr.HidingBadStuff_Def
+                    = CalculationsDPSWarr.HidingBadStuff_Spl
+                    = CalculationsDPSWarr.HidingBadStuff_PvP
+                    = calcOpts.HideBadItems;
+                ItemCache.OnItemsChanged(); line = 13;
                 NUD_SurvScale.Value = (double)calcOpts.SurvScale; line = 14;
                 // Boss Selector
                 // Save the new names
@@ -479,7 +484,10 @@ FAQStuff.Add(
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.HideBadItems = (bool)CK_HideBadItems.IsChecked;
-                CalculationsDPSWarr.HidingBadStuff = calcOpts.HideBadItems;
+                CalculationsDPSWarr.HidingBadStuff_Def
+                    = CalculationsDPSWarr.HidingBadStuff_Spl
+                    = CalculationsDPSWarr.HidingBadStuff_PvP
+                    = calcOpts.HideBadItems;
                 ItemCache.OnItemsChanged();
                 //
                 Character.OnCalculationsInvalidated();

@@ -438,8 +438,13 @@ Don't forget your weapons used matched with races can affect these numbers.",
             return _relevantGlyphs;
         }
 
-        private static bool _HidingBadStuff = true;
-        internal static bool HidingBadStuff { get { return _HidingBadStuff; } set { _HidingBadStuff = value; } }
+        private bool HidingBadStuff { get { return HidingBadStuff_Def || HidingBadStuff_Spl || HidingBadStuff_PvP; } }
+        private static bool _HidingBadStuff_Def = true;
+        internal static bool HidingBadStuff_Def { get { return _HidingBadStuff_Def; } set { _HidingBadStuff_Def = value; } }
+        private static bool _HidingBadStuff_Spl = true;
+        internal static bool HidingBadStuff_Spl { get { return _HidingBadStuff_Spl; } set { _HidingBadStuff_Spl = value; } }
+        private static bool _HidingBadStuff_PvP = true;
+        internal static bool HidingBadStuff_PvP { get { return _HidingBadStuff_PvP; } set { _HidingBadStuff_PvP = value; } }
 
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats() {
@@ -603,14 +608,16 @@ Don't forget your weapons used matched with races can affect these numbers.",
             if (!HidingBadStuff) { return false; }
             return (
                 // Remove Spellcasting Stuff
-                stats.Mp5 + stats.SpellPower + stats.Mana + stats.Spirit + stats.Intellect
-                + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier
-                + stats.SpellPenetration + stats.BonusManaMultiplier
+                (HidingBadStuff_Spl ? stats.Mp5 + stats.SpellPower + stats.Mana + stats.Spirit + stats.Intellect
+                                    + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier
+                                    + stats.SpellPenetration + stats.BonusManaMultiplier
+                                    : 0f)
                 // Remove Defensive Stuff (until we do that special modelling)
-                + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
-                + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block +
+                + (HidingBadStuff_Def ? stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
+                                      + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block
+                                      : 0f)
                 // Remove PvP Items
-                stats.Resilience
+                + (HidingBadStuff_PvP ? stats.Resilience : 0f)
                 ) > 0;
         }
 

@@ -17,7 +17,10 @@ namespace Rawr.DPSWarr {
 		public bool AllowFlooring = false;
 		public bool PTRMode = false;
         public bool HideBadItems = true;
-		public float SurvScale = 1.0f;
+        public bool HideBadItems_Def = true;
+        public bool HideBadItems_Spl = true;
+        public bool HideBadItems_PvP = true;
+        public float SurvScale = 1.0f;
         public float Under20Perc = 0.17f;
 		// Rotational Changes
 		public bool InBack           = true ; public int InBackPerc           = 100;
