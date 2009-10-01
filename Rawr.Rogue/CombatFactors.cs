@@ -86,7 +86,9 @@ namespace Rawr.Rogue {
 
         public float MhNormalizedAttackSpeed { get { return MH.Type == ItemType.Dagger ? 1.7f : 2.4f; } }
         public float OhNormalizedAttackSpeed { get { return OH.Type == ItemType.Dagger ? 1.7f : 2.4f; } }
-        public float DamageReduction { get { return ArmorDamageReduction; } }
+        //  public float DamageReduction { get { return ArmorDamageReduction; } }
+        public float MhDamageReduction { get { return (MH.Type != ItemType.OneHandMace) ? ArmorDamageReduction : Math.Max(0f, ArmorDamageReduction - Talents.MaceSpecialization.Bonus); } }
+        public float OhDamageReduction { get { return (OH.Type != ItemType.OneHandMace) ? ArmorDamageReduction : Math.Max(0f, ArmorDamageReduction - Talents.MaceSpecialization.Bonus); } }
         public float ArmorDamageReduction {
             get {
                 float armorReduction;

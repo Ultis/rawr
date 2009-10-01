@@ -19,7 +19,7 @@ namespace Rawr.Rogue.SpecialAbilities {
             }
 
             float ssDPS = (ssHits * combatFactors.MhAvgDamage) * (1 - combatFactors.ProbMhCrit) + (ssHits * combatFactors.MhAvgDamage * combatFactors.BaseCritMultiplier) * combatFactors.ProbMhCrit;
-            ssDPS *= combatFactors.DamageReduction;
+            ssDPS *= combatFactors.MhDamageReduction;
             return ssDPS;
         }
     }

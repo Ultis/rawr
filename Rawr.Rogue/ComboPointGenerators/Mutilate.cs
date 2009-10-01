@@ -40,7 +40,7 @@ namespace Rawr.Rogue.ComboPointGenerators
             var baseDamage = BaseAttackDamage(combatFactors);
             baseDamage *= Talents.Add(Talents.FindWeakness, Talents.Murder, Talents.Opportunity, Talents.DirtyDeeds.DamageSpecialAbilities, Talents.HungerForBlood.Damage).Multiplier;
             baseDamage *= BonusIfTargetIsPoisoned(calcOpts);
-            baseDamage *= combatFactors.DamageReduction;
+            baseDamage *= combatFactors.MhDamageReduction;
 
             var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors, calcOpts);
             var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors, calcOpts), 0);

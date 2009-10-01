@@ -21,12 +21,6 @@ namespace Rawr.Rogue.FinishingMoves
             float missCost = (Talents.SurpriseAttacks.HasPoints) ? 0 : 35f * (1f - Talents.QuickRecovery.Bonus) * combatFactors.YellowMissChance;
 
             return baseCost - rsBonus + missCost;
-            /*
-            var baseCost = 35f - Talents.RelentlessStrikes.Bonus;
-            var missCost = baseCost * combatFactors.YellowMissChance * (1-Talents.QuickRecovery.Bonus);
-            var dodgeCost = baseCost * (Talents.SurpriseAttacks.HasPoints ? combatFactors.MhDodgeChance * (1 - Talents.QuickRecovery.Bonus) : 0);
-            return baseCost + missCost + dodgeCost;
-            */
         }
 
         public override float CalcFinisherDPS( CalculationOptionsRogue calcOpts, Stats stats, CombatFactors combatFactors, int rank, CycleTime cycleTime, WhiteAttacks whiteAttacks, CharacterCalculationsRogue displayValues )
@@ -48,7 +42,7 @@ namespace Rawr.Rogue.FinishingMoves
                 finisherDmg *= (1f - (combatFactors.MhDodgeChance));
             }
 
-            finisherDmg *= combatFactors.DamageReduction;
+            finisherDmg *= combatFactors.MhDamageReduction;
             return finisherDmg / cycleTime.Duration;
         }
 

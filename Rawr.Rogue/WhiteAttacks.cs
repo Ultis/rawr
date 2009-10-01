@@ -15,14 +15,14 @@ namespace Rawr.Rogue {
             float dps  = _combatFactors.MhAvgDamage * 0.70f * _combatFactors.ProbGlancingHit;
                   dps += _combatFactors.MhAvgDamage * _combatFactors.BaseCritMultiplier * _combatFactors.ProbMhCrit;
                   dps += _combatFactors.MhAvgDamage * _combatFactors.ProbMhWhiteHit;
-            float mhDps = dps * MhSwingsPerSecond * _combatFactors.DamageReduction;
+            float mhDps = dps * MhSwingsPerSecond * _combatFactors.MhDamageReduction;
             return mhDps * Talents.Add(Talents.FindWeakness, Talents.Murder, Talents.HungerForBlood.Damage).Multiplier;
         }
         public float CalcOhWhiteDps() {
             float dps  = _combatFactors.OhAvgDamage * 0.70f * _combatFactors.ProbGlancingHit;
                   dps += _combatFactors.OhAvgDamage * _combatFactors.BaseCritMultiplier * _combatFactors.ProbOhCrit;
                   dps += _combatFactors.OhAvgDamage * _combatFactors.ProbOhWhiteHit;
-            float ohDps = dps * OhSwingsPerSecond * _combatFactors.DamageReduction;
+            float ohDps = dps * OhSwingsPerSecond * _combatFactors.OhDamageReduction;
             return ohDps * Talents.Add(Talents.FindWeakness, Talents.Murder, Talents.HungerForBlood.Damage).Multiplier;
         }
         public float MhSwingsPerSecond { get { return _combatFactors.MH.Speed == 0 ? 0 : (1f / _combatFactors.MHSpeed); } }
