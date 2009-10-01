@@ -108,13 +108,13 @@ namespace Rawr.Enhance
                 float paragon = 0f;
                 if (_stats.Strength > _stats.Agility)
                 {
-                    paragon = (float)Math.Floor((float)(statsAverage.Paragon * (1 + _stats.BonusStrengthMultiplier)));
+                    paragon = statsAverage.Paragon * (1 + _stats.BonusStrengthMultiplier);
                     statsAverage.Strength += paragon;
                     statsAverage.AttackPower += paragon;
                 }
                 else
                 {
-                    paragon = (float)Math.Floor((float)(statsAverage.Paragon * (1 + _stats.BonusAgilityMultiplier)));
+                    paragon = statsAverage.Paragon * (1 + _stats.BonusAgilityMultiplier);
                     statsAverage.Agility += paragon;
                     statsAverage.AttackPower += paragon;
                 }
@@ -133,13 +133,13 @@ namespace Rawr.Enhance
                 {
                     if (_stats.Agility > _stats.Intellect)
                     {
-                        highestStat = (float)Math.Floor((float)(statsAverage.HighestStat * (1 + _stats.BonusAgilityMultiplier)));
+                        highestStat = statsAverage.HighestStat * (1 + _stats.BonusAgilityMultiplier);
                         statsAverage.Agility += highestStat;
                         statsAverage.AttackPower += highestStat;
                     }
                     else
                     {
-                        highestStat = (float)Math.Floor((float)(statsAverage.HighestStat * (1 + _stats.BonusIntellectMultiplier)));
+                        highestStat = statsAverage.HighestStat * (1 + _stats.BonusIntellectMultiplier);
                         statsAverage.Intellect += highestStat;
                         statsAverage.AttackPower += intfromAP * highestStat;
                     }
@@ -148,13 +148,13 @@ namespace Rawr.Enhance
                 {
                     if (_stats.Strength > _stats.Intellect)
                     {
-                        highestStat = (float)Math.Floor((float)(statsAverage.HighestStat * (1 + _stats.BonusStrengthMultiplier)));
+                        highestStat = statsAverage.HighestStat * (1 + _stats.BonusStrengthMultiplier);
                         statsAverage.Strength += highestStat;
                         statsAverage.AttackPower += highestStat;
                     }
                     else
                     {
-                        highestStat = (float)Math.Floor((float)(statsAverage.HighestStat * (1 + _stats.BonusIntellectMultiplier)));
+                        highestStat = statsAverage.HighestStat * (1 + _stats.BonusIntellectMultiplier);
                         statsAverage.Intellect += highestStat;
                         statsAverage.AttackPower += intfromAP * highestStat;
                     }
