@@ -921,8 +921,8 @@ threat and limited threat scaled by the threat scale.",
 
         public override bool IsItemRelevant(Item item)
         {
-            // Bone Fishing Pole, it loves to muck up the list!
-            if (item.Id == 45991)
+            // Fishing Poles, they love to muck up the list!
+            if (item.Id == 45991 || item.Id == 25978)
                 return false;
 
             return base.IsItemRelevant(item);
