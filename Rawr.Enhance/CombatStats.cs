@@ -124,6 +124,7 @@ namespace Rawr.Enhance
         public float OverSpellHitCap { get { return overSpellHitCap; } }
 
         public float AverageDodge { get { return (ChanceDodgeMH + ChanceDodgeOH) / 2; } }
+        public float AverageParry { get { return (ChanceParryMH + ChanceParryOH) / 2; } }
         public float AverageExpertise { get { return (ExpertiseBonusMH + ExpertiseBonusOH) / 2; } }
         public float AverageWhiteHit { get { return (ChanceWhiteHitMH + ChanceWhiteHitOH) / 2; } }
         public float AverageWhiteCrit { get { return (ChanceWhiteCritMH + ChanceWhiteCritOH) / 2; } }

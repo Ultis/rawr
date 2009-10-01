@@ -450,7 +450,8 @@ namespace Rawr.Enhance
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
 			calculatedStats.AvoidedAttacks = (1 - cs.AverageWhiteHit) * 100f;
 			calculatedStats.DodgedAttacks = cs.AverageDodge * 100f;
-			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks + calculatedStats.DodgedAttacks;
+            calculatedStats.ParriedAttacks = cs.AverageParry * 100f;
+            calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks + calculatedStats.DodgedAttacks;
             calculatedStats.YellowHit = (float)Math.Floor((float)(cs.AverageYellowHit * 10000f)) / 100f;
             calculatedStats.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
             calculatedStats.OverSpellHitCap = (float)Math.Floor((float)(cs.OverSpellHitCap * 10000f)) / 100f;

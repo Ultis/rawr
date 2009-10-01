@@ -91,7 +91,14 @@ namespace Rawr.Enhance
 			set { _dodgedAttacks = value; }
 		}
 
-		private float _missedAttacks;
+        private float _parriedAttacks;
+        public float ParriedAttacks
+        {
+            get { return _parriedAttacks; }
+            set { _parriedAttacks = value; }
+        }
+
+        private float _missedAttacks;
 		public float MissedAttacks
 		{
 			get { return _missedAttacks; }
@@ -316,7 +323,17 @@ namespace Rawr.Enhance
                     ratingRequired.ToString("F0", CultureInfo.InvariantCulture)));
             }
             else
-                dictValues.Add("Yellow Hit", YellowHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            {
+                if (ParriedAttacks > 0)
+                {
+                    float ratingRequired = (float)Math.Ceiling(4f * StatConversion.GetRatingFromExpertise(100f - YellowHit));
+                    dictValues.Add("Yellow Hit", String.Format("{0}%*Being in front of boss allows your attacks to be parried\r\nYou would need {1} more expertise to cap specials (WF,SS)",
+                       YellowHit.ToString("F2", CultureInfo.InvariantCulture),
+                       ratingRequired.ToString("F0", CultureInfo.InvariantCulture)));
+                }
+                else
+                    dictValues.Add("Yellow Hit", YellowHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            }
             if (OverSpellHitCap > 0.38f) // only warn if more than .38% over cap (equivalent to 10 hit rating)
                 dictValues.Add("Spell Hit", String.Format("{0}% (Over Cap)*Over Spell Hit Cap by {1}%",
                     SpellHit.ToString("F2", CultureInfo.InvariantCulture),
@@ -355,9 +372,10 @@ namespace Rawr.Enhance
                 BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             float spellMiss = 100 - SpellHit;
-            dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged\r\n{2}% Spell Misses\r\n{3}% White Misses",
+            dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged\r\n{2}% Boss Parried\r\n{3}% Spell Misses\r\n{4}% White Misses",
                         AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
                         DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture),
+                        ParriedAttacks.ToString("F2", CultureInfo.InvariantCulture),
                         spellMiss.ToString("F2", CultureInfo.InvariantCulture), 
                         MissedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Avg MH Speed", AvMHSpeed.ToString("F2", CultureInfo.InvariantCulture));
@@ -418,23 +436,24 @@ namespace Rawr.Enhance
             if (TotalExpertiseMH == TotalExpertiseOH)
             {
                 if (TotalExpertiseMH > 26)
-                    caps = "{0} (Over Cap)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged";
+                    caps = "{0} (Over Cap)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged\r\n{4}% Parried";
                 else
-                    caps = "{0}*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged";
+                    caps = "{0}*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged\r\n{4}% Parried";
                 return String.Format(caps,
                     TotalExpertiseMH.ToString("F0", CultureInfo.InvariantCulture),
                     BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
                     BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture),
-                    DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture));
+                    DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture),
+                    ParriedAttacks.ToString("F2", CultureInfo.InvariantCulture));
             }
             else
             {
                 if (TotalExpertiseMH > 26 && TotalExpertiseOH > 26)
-                    caps = "{0}/{1} (Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged";
+                    caps = "{0}/{1} (Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged\r\n{5}% Parried";
                 else if (TotalExpertiseMH > 26)
-                    caps = "{0}/{1} (MH Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% OH Dodged";
+                    caps = "{0}/{1} (MH Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% OH Dodged\r\n{5}% Parried";
                 else if (TotalExpertiseOH > 26)
-                    caps = "{0}/{1} (OH Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% MH Dodged";
+                    caps = "{0}/{1} (OH Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% MH Dodged\r\n{5}% Parried";
                 else
                     caps = "{0}/{1}*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged";
                return String.Format(caps,
@@ -442,7 +461,8 @@ namespace Rawr.Enhance
                     TotalExpertiseOH.ToString("F0", CultureInfo.InvariantCulture), 
                     BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
                     BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture),
-                    DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture));
+                    DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture),
+                    ParriedAttacks.ToString("F2", CultureInfo.InvariantCulture));
             }
         }
 
