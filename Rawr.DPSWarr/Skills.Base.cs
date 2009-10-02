@@ -164,7 +164,7 @@ namespace Rawr.DPSWarr {
                     // regular hit
                     d = based;
                     f = 3.5f;
-                    rage += RageFormula(d, s, f) * MHAtkTable.Hit;
+                    rage += RageFormula(d, s, f) * (MHAtkTable.Hit + MHAtkTable.Dodge + MHAtkTable.Parry);
 
                     // glance
                     d = based * combatFactors.ReducWhGlancedDmg;
@@ -195,7 +195,7 @@ namespace Rawr.DPSWarr {
                     // regular hit
                     d = based;
                     f = 1.75f;
-                    rage += RageFormula(d, s, f) * OHAtkTable.Hit;
+                    rage += RageFormula(d, s, f) * (OHAtkTable.Hit + OHAtkTable.Dodge + OHAtkTable.Parry);
 
                     // glance
                     d = based * combatFactors.ReducWhGlancedDmg;
@@ -310,15 +310,15 @@ namespace Rawr.DPSWarr {
                 //float whiteAtkInterval = (MhActivates + OhActivates) / FightDuration;
                 //return MHAtkTable.AnyNotLand / abilInterval / whiteAtkInterval * rageCost / MHSwingRage;
                 float whiteMod = (MhActivates * MHSwingRage + OhActivates * OHSwingRage) / FightDuration;
-                return (MHAtkTable.AnyNotLand * rageCost) / (abilInterval * whiteMod);
+                return (MHAtkTable.Miss * rageCost) / (abilInterval * whiteMod);
             }
             public float AvoidanceStreak {
                 get {
                     bool useOH = combatFactors.useOH;
                     float mhRagePercent = MHRageRatio;
                     float ohRagePercent = 1f - mhRagePercent;
-                    float missChance = mhRagePercent * MHAtkTable.AnyNotLand +
-                              (useOH ? ohRagePercent * OHAtkTable.AnyNotLand : 0f);
+                    float missChance = mhRagePercent * MHAtkTable.Miss +
+                              (useOH ? ohRagePercent * OHAtkTable.Miss : 0f);
                     float doubleChance = missChance * missChance;
                     float tripleChance = doubleChance * missChance;
                     float quadChance = doubleChance * doubleChance;
