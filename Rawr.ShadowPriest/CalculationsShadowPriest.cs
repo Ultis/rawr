@@ -707,7 +707,7 @@ namespace Rawr.ShadowPriest
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
-            statsTotal.BonusArmor += statsTotal.Agility * 2f + (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);    
+            statsTotal.BonusArmor += statsTotal.Agility * 2f + (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);
 
             return statsTotal;
         }

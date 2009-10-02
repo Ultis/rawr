@@ -20,6 +20,7 @@ namespace Rawr.ShadowPriest
         public float HitChance { get; set; }
         public List<Trinket> Trinkets { get; set; }
         public List<ManaSource> ManaSources { get; set; }
+        public SpecialEffect seSpiritTap, seGlyphofShadow;
 
         public string Name { get; protected set; }
         public string Rotation { get; protected set; }
@@ -155,6 +156,21 @@ namespace Rawr.ShadowPriest
             Sequence = new Dictionary<float, Spell>();
             ManaSources = new List<ManaSource>();
 
+            // Spirit Tap
+            if (character.PriestTalents.ImprovedSpiritTap > 0)
+                seSpiritTap = new SpecialEffect(Trigger.SpellHit,
+                                new Stats
+                                {
+                                    BonusSpiritMultiplier = 0.05f * character.PriestTalents.ImprovedSpiritTap,
+                                    SpellCombatManaRegeneration = 1f / 6f * character.PriestTalents.ImprovedSpiritTap
+                                },
+                                8f, 0f);
+            // Glyph of Shadow
+            if (character.PriestTalents.GlyphofShadow)
+                seGlyphofShadow = new SpecialEffect(Trigger.SpellHit,
+                                    new Stats { SpellDamageFromSpiritPercentage = 0.1f },
+                                    10f, 0f);
+
             PlayerStats = playerStats;      
         }
 
@@ -175,7 +191,7 @@ namespace Rawr.ShadowPriest
                     return spell;
                 if (spell.SpellStatistics.CooldownReset > 0 
                     //&& (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < 2))// spell.GlobalCooldown))
-                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < spell.GlobalCooldown * 0.33f))
+                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < spell.GlobalCooldown * 0.2f))
                     return null;
                 if (spell.SpellStatistics.CooldownReset <= timer)
                     return spell;
@@ -339,6 +355,7 @@ namespace Rawr.ShadowPriest
 
             #region Pass 1: Create the cast sequence
             bool CleanBreak = false;
+            float timeSequenceReset = 0f;
             while (timer < (60f * 60f)) // Instead of  CalculationOptions.FightLength, try to use a 60 minute fight.
             {
                 if (hasteProcTimer > 0 && hasteProcTimer < timer)
@@ -374,24 +391,28 @@ namespace Rawr.ShadowPriest
                 if (spell == SpellPriority[sequence])
                     sequence++;
                 else
+                {
                     sequence = 0;
+                    timeSequenceReset = timer;
+                }
                 if (SpellPriority[sequence] == MF)
                 {   // Spell sequence just reset, lets take advantage of that.
                     int i = SpellPriority.IndexOf(MF);
                     CastList.RemoveRange(CastList.Count - i, i);
                     CleanBreak = true;
+                    timer = timeSequenceReset;
                     break;
                 }
             }
             #endregion
 
             #region Pass 2: Calculate Statistics for Procs
-            timer = 0;
+            //timer = 0;
             float CastsPerSecond = 0, HitsPerSecond = 0, CritsPerSecond = 0;
             foreach (Spell spell in CastList)
             {
-                timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
-                timer += CalculationOptions.Delay / 1000f;
+                //timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
+                //timer += CalculationOptions.Delay / 1000f;
                 CastsPerSecond++;
                 HitsPerSecond += ShadowHitChance / 100f;
                 if (spell == SWD)
@@ -399,7 +420,7 @@ namespace Rawr.ShadowPriest
                 else if (spell == MB)
                     CritsPerSecond += MB.CritChance;
                 else if (spell == MF)
-                    CritsPerSecond += MF.CritChance * 3;
+                    CritsPerSecond += MF.CritChance * 3f * 0.5f;    // Only 50% chance to proc 
                 //if (spell == MF)
                 //    HitsPerSecond += 2;   // MF can hit 3 times / cast
             }
@@ -408,13 +429,21 @@ namespace Rawr.ShadowPriest
             HitsPerSecond /= timer;
 
             // Deal with Spirit Tap
-            float ImpSTUptime = 
-                Math.Min(1f, CritsPerSecond * 8f);    // Spirit Tap lasts 8 seconds. Very little overlap time due to CD on MB/SW:D
-            float NewSpirit = simStats.Spirit * ImpSTUptime * character.PriestTalents.ImprovedSpiritTap * 0.05f;
-            float NewSPP = NewSpirit * simStats.SpellDamageFromSpiritPercentage;
-            simStats.Spirit += NewSpirit;
-            simStats.SpellPower += NewSPP;
-            simStats.SpellPower += simStats.Spirit * (character.PriestTalents.GlyphofShadow ? 0.1f : 0f);
+            if (seSpiritTap != null)
+            {
+                float uptime = seSpiritTap.GetAverageUptime(1f / CritsPerSecond, 1f);
+                float NewSpirit = simStats.Spirit * seSpiritTap.Stats.BonusSpiritMultiplier * uptime; 
+                float NewSPP = NewSpirit * simStats.SpellDamageFromSpiritPercentage;
+                simStats.Spirit += NewSpirit;
+                simStats.SpellPower += NewSPP;
+                Rotation += string.Format("\r\nImp. Spirit Tap Uptime: {0}%", (uptime * 100f).ToString("0.0"));
+            }
+            if (seGlyphofShadow != null)
+            {
+                float uptime = seGlyphofShadow.GetAverageUptime(1f / CritsPerSecond, 1f);
+                simStats.SpellPower += simStats.Spirit * seGlyphofShadow.Stats.SpellDamageFromSpiritPercentage * uptime;
+                Rotation += string.Format("\r\nGlyph of Shadow Uptime: {0}%", (uptime * 100f).ToString("0.0"));
+            }
 
             // Deal with Twinkets
             foreach (SpecialEffect se in simStats.SpecialEffects())
@@ -521,7 +550,7 @@ namespace Rawr.ShadowPriest
 
             if (!CleanBreak)
                 Rotation += "\r\nWARNING: Did not find a clean rotation!\r\nThis may make Haste inaccurate!";
-            Rotation += string.Format("\r\nRotation reset after {0} seconds.", Math.Round(timer, 2));
+            Rotation += string.Format("\r\nRotation reset after {0} seconds.", timer.ToString("0.00"));
 
             #region Pass 5: Do spell statistics & handle movement.
             foreach (Spell spell in SpellPriority)
@@ -649,11 +678,14 @@ namespace Rawr.ShadowPriest
             tmpregen = simStats.Mp5 / 5;
             ManaSources.Add(new ManaSource("MP5", tmpregen));
             regen += tmpregen;
-            tmpregen = SpiritRegen * character.PriestTalents.ImprovedSpiritTap * 0.1f * ImpSTUptime;
-            if (tmpregen > 0f)
+            if (seSpiritTap != null)
             {
-                ManaSources.Add(new ManaSource("Imp. Spirit Tap", tmpregen));
-                regen += tmpregen;
+                tmpregen = SpiritRegen * seSpiritTap.GetAverageStats(1f / CritsPerSecond, 1f).SpellCombatManaRegeneration;
+                if (tmpregen > 0f)
+                {
+                    ManaSources.Add(new ManaSource("Imp. Spirit Tap", tmpregen));
+                    regen += tmpregen;
+                }
             }
             tmpregen = simStats.Mana / (CalculationOptions.FightLength * 60f);
             ManaSources.Add(new ManaSource("Intellect", tmpregen));
