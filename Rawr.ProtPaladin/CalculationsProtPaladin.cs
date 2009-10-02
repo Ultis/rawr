@@ -841,6 +841,7 @@ focus on Survival Points.",
             float chanceDamageDone = (intervalPhysical * chanceHitPhysical + intervalSpellCast * chanceHitSpell) / (intervalPhysical + intervalSpellCast);
             float intervalJudgement = (10.0f - character.PaladinTalents.ImprovedJudgements * 1.0f);
             float intervalShoR = 6.0f;
+            float intervalHotR = 6.0f;
             float intervalHolyShield = 9.0f;
 
             Stats effectsToAdd = new Stats();
@@ -890,6 +891,9 @@ focus on Survival Points.",
                             break;
                         case Trigger.ShieldofRighteousness:
                             statsSpecialEffects += effect.GetAverageStats(intervalShoR);
+                            break;
+                        case Trigger.HammeroftheRighteous:
+                            statsSpecialEffects += effect.GetAverageStats(intervalHotR);
                             break;
                         case Trigger.HolyShield:
                             statsSpecialEffects += effect.GetAverageStats(intervalHolyShield);
@@ -1394,8 +1398,8 @@ focus on Survival Points.",
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || 
                     effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick || 
                     effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield ||
-                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken)
+                    effect.Trigger == Trigger.ShieldofRighteousness || effect.Trigger == Trigger.HammeroftheRighteous || effect.Trigger == Trigger.SpellCast ||
+                    effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.DamageTaken)
                 {
                     if (HasRelevantStats(effect.Stats)) {
                         s.AddSpecialEffect(effect);
@@ -1511,7 +1515,8 @@ focus on Survival Points.",
                     effect.Trigger == Trigger.DamageDone   || effect.Trigger == Trigger.DamageTaken    ||
                     effect.Trigger == Trigger.SpellHit     || effect.Trigger == Trigger.DamageSpellHit ||
                     effect.Trigger == Trigger.JudgementHit || effect.Trigger == Trigger.HolyShield     ||
-                    effect.Trigger == Trigger.ShieldofRighteousness)
+                    effect.Trigger == Trigger.ShieldofRighteousness ||
+                    effect.Trigger == Trigger.HammeroftheRighteous)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                 }

@@ -1063,6 +1063,10 @@ namespace Rawr {
             {
                 stats.BonusShieldOfRighteousnessDamage = 96;
             }
+            else if ((match = new Regex(@"Each time you use your Hammer of The Righteous ability, you have a chance to gain (?<dodgeRating>\d\d*) dodge rating for (?<duration>\d\d*) sec.").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HammeroftheRighteous, new Stats() { DodgeRating = (float)int.Parse(match.Groups["dodgeRating"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 10f, 0.8f));
+            } 
             #endregion
             #region Added by Rawr.Enhance
             else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
