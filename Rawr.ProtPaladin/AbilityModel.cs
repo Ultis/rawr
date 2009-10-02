@@ -50,6 +50,8 @@ namespace Rawr.ProtPaladin {
                         baseDamage = 30 * Character.Level + (0.95f * 9.5f * Character.Level) - (0.000625f * (float)Math.Pow(9.5 * Character.Level, 2)) + 520;
                     }
 
+                    baseDamage += Stats.BonusShieldOfRighteousnessDamage;
+
                     DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
                     critMultiplier = 1.0f;
                     break;

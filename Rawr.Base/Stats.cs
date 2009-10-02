@@ -288,6 +288,7 @@ namespace Rawr {
         JudgementCrit,
         #endregion
         #region Added by Rawr.ProtPaladin
+        BonusShieldOfRighteousnessDamage,
         DivineProtectionDurationBonus,
         JudgementBlockValue,
         ShieldOfRighteousnessBlockValue,        
@@ -3319,7 +3320,23 @@ namespace Rawr {
         }
         #endregion
         #region Added by Rawr.ProtPaladin
-             
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Bonus ShoR Damage")]
+        [Category("ProtPaladin")]
+        public float BonusShieldOfRighteousnessDamage {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusShieldOfRighteousnessDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusShieldOfRighteousnessDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Divine Protection Duration Bonus")]
+        [Category("ProtPaladin")]
+        public float DivineProtectionDurationBonus {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus] = value; }
+        }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Judgement Block Value")]
         [Category("ProtPaladin")]
@@ -3338,15 +3355,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.ShieldOfRighteousnessBlockValue] = value; }
         }
         
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Divine Protection Duration Bonus")]
-        [Category("ProtPaladin")]
-        public float DivineProtectionDurationBonus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus] = value; }
-        }
-
         #endregion
         #region Added by Rawr.Moonkin
         // Starfire idol

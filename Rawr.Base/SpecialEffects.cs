@@ -1061,7 +1061,7 @@ namespace Rawr {
             } 
             else if (line == "Your Shield of Righteousness deals an additional 96 damage.")
             {
-                stats.ShieldOfRighteousnessBlockValue = 96;
+                stats.BonusShieldOfRighteousnessDamage = 96;
             }
             #endregion
             #region Added by Rawr.Enhance

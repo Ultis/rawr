@@ -1381,6 +1381,7 @@ focus on Survival Points.",
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
 
+                BonusShieldOfRighteousnessDamage = stats.BonusShieldOfRighteousnessDamage,
                 JudgementBlockValue = stats.JudgementBlockValue,
                 BonusHammerOfTheRighteousMultiplier = stats.BonusHammerOfTheRighteousMultiplier,
                 ShieldOfRighteousnessBlockValue = stats.ShieldOfRighteousnessBlockValue,
@@ -1460,6 +1461,7 @@ focus on Survival Points.",
                 stats.ExpertiseRating +
 
                 // Special Stats
+                stats.BonusShieldOfRighteousnessDamage +
                 stats.JudgementBlockValue +
                 stats.BonusHammerOfTheRighteousMultiplier +
                 stats.ShieldOfRighteousnessBlockValue +
