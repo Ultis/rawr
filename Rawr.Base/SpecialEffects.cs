@@ -274,14 +274,6 @@ namespace Rawr {
                 // Illustration of the Dragon Soul and similar
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { SpellPower = int.Parse(match.Groups["spellPower"].Value) }, int.Parse(match.Groups["duration"].Value), 0f, 1f, int.Parse(match.Groups["maxStack"].Value)));
             }
-            else if (line.Contains("Each time you strike an enemy, you gain 215 attack power. Stacks up to 5 times. entire effect lasts 20 sec."))
-            {
-                // Victor's Call and Vengeance of the Forsaken
-                SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats(), 20f, 2f * 60f);
-                SpecialEffect secondary = new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 215f }, 20f, 0f, 1f, 5);
-                primary.Stats.AddSpecialEffect(secondary);
-                stats.AddSpecialEffect(primary);
-            }
             else if (line.StartsWith("Each time you cast a damaging or healing spell you gain 25 spell power for the next 10 sec, stacking up to 5 times."))
             {
                 // Eye of the Broodmother
