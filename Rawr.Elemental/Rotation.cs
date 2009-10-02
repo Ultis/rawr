@@ -28,6 +28,28 @@ namespace Rawr.Elemental
             }
         }
 
+        SerializableDictionary<Type, float> spelldps = null;
+        public SerializableDictionary<Type, float> SpellDPS
+        {
+            get
+            {
+                if (spelldps == null)
+                    calculateProperties();
+                return spelldps;
+            }
+        }
+
+        SerializableDictionary<Type, Spell> spelltype = null;
+        public SerializableDictionary<Type, Spell> TypeToSpell
+        {
+            get
+            {
+                if (spelltype == null)
+                    calculateProperties();
+                return spelltype;
+            }
+        }
+
         float dps = float.PositiveInfinity;
         /// <summary>
         /// Damage per second from spell casts.
@@ -66,6 +88,7 @@ namespace Rawr.Elemental
 
         public LightningBolt LB;
         public ChainLightning CL;
+        public ChainLightning CL2;
         public ChainLightning CL3;
         public ChainLightning CL4;
         public LavaBurst LvB;
@@ -81,11 +104,13 @@ namespace Rawr.Elemental
             spells = new List<Spell>(15);
         }
 
-        public Rotation(ShamanTalents talents, LightningBolt lb, ChainLightning cl, ChainLightning cl3, ChainLightning cl4, LavaBurst lvb, LavaBurst lvbfs, FlameShock fs, EarthShock es, FrostShock frs) : this()
+        public Rotation(ShamanTalents talents, LightningBolt lb, ChainLightning cl, ChainLightning cl2, ChainLightning cl3, ChainLightning cl4, LavaBurst lvb, LavaBurst lvbfs, FlameShock fs, EarthShock es, FrostShock frs)
+            : this()
         {
             Talents = talents;
             LB = lb;
             CL = cl;
+            CL2 = cl2;
             CL3 = cl3;
             CL4 = cl4;
             LvB = lvb;
@@ -213,7 +238,7 @@ namespace Rawr.Elemental
 
         private float lastGetTime = float.PositiveInfinity;
         /// <summary>
-        /// Gets the time after the last spell has been cast and the GCD is done.
+        /// Gets the time after the last spell has been cast and the GCD is ready.
         /// </summary>
         /// <returns></returns>
         public float GetTime()
@@ -303,6 +328,8 @@ namespace Rawr.Elemental
             mps = 0f; //summing up total manacost
             dps = 0f; //summing up total damage
             cc = new SerializableDictionary<Type, float>(); //clear casting
+            spelldps = new SerializableDictionary<Type, float>(); //dps broken up per spell type
+            spelltype = new SerializableDictionary<Type, Spell>(); //all used spells by type
             Dictionary<Type, int> count = new Dictionary<Type, int>(); //counting spells
             Spell prev1 = null, prev2 = null;
             for (int i = -2; i < Casts.Count; i++)
@@ -310,9 +337,12 @@ namespace Rawr.Elemental
                 Spell s = getCast(i);
                 if(i>=0) //the first two are just saved in order to calculate clear casting
                 {
+                    float thisdps = 0f;
                     if(!cc.ContainsKey(s.GetType()))
                     {
                         cc.Add(s.GetType(), 0f);
+                        spelldps.Add(s.GetType(), 0f);
+                        spelltype.Add(s.GetType(), s);
                         count.Add(s.GetType(), 0);
                     }
                     float ccc = 0f;
@@ -323,10 +353,12 @@ namespace Rawr.Elemental
                     {
                         int j = getSpellNumber(i);
                         float durationActive = getNextCastTime(j) - (GetTime(j) + s.CastTimeWithoutGCD);
-                        dps += s.HitChance * (s.AvgDamage * (1 + .05f * Talents.ElementalOath * ccc) + s.PeriodicDamage(durationActive)); //bad for FS ticks.
+                        thisdps = s.HitChance * (s.AvgDamage * (1 + .05f * Talents.ElementalOath * ccc) + s.PeriodicDamage(durationActive)); //bad for FS ticks.
                     }
                     else
-                        dps += s.HitChance * s.TotalDamage * (1 + .05f * Talents.ElementalOath * ccc); //bad for FS ticks.
+                        thisdps = s.HitChance * s.TotalDamage * (1 + .05f * Talents.ElementalOath * ccc); //bad for FS ticks.
+                    dps += thisdps;
+                    spelldps[s.GetType()] += thisdps;
                     cc[s.GetType()] += ccc;
                     count[s.GetType()]++;
                 }
@@ -334,7 +366,10 @@ namespace Rawr.Elemental
                 prev1 = s;
             }
             foreach (Type t in count.Keys)
+            {
+                spelldps[t] /= GetTime();
                 cc[t] /= count[t];
+            }
             mps /= GetTime(); //divide by rotation time
             dps /= GetTime();
         }

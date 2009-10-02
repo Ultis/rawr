@@ -101,6 +101,7 @@
     <Compile Include="Spells\ElementalMastery.cs" />
     <Compile Include="Spells\FlameShock.cs" />
     <Compile Include="Spells\FrostShock.cs" />
+    <Compile Include="Spells\ILightningOverload.cs" />
     <Compile Include="Spells\LavaBurst.cs" />
     <Compile Include="Spells\LightningBolt.cs" />
     <Compile Include="Spells\Shock.cs" />

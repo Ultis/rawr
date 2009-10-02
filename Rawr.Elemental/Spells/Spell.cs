@@ -104,7 +104,7 @@ namespace Rawr.Elemental.Spells
             get
             {
                 if (castTime > gcd)
-                    return castTime;
+                    return gcd==0?castTime:Math.Max(castTime,1f);
                 else if (gcd > 1 || gcd == 0)
                     return gcd;
                 else
@@ -163,7 +163,7 @@ namespace Rawr.Elemental.Spells
         public virtual float TotalDamage
         { get { return AvgDamage + PeriodicDamage(); } }
 
-        public float DirectDpS
+        public virtual float DirectDpS
         { get { return AvgDamage / CastTime; } }
 
         public float PeriodicDpS

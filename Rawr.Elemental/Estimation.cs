@@ -10,6 +10,7 @@ namespace Rawr.Elemental
         #region Spells
         LightningBolt LB;
         ChainLightning CL;
+        ChainLightning CL2;
         ChainLightning CL3;
         ChainLightning CL4;
         LavaBurst LvB;
@@ -36,8 +37,9 @@ namespace Rawr.Elemental
 
             LB = new LightningBolt(addedStats, talents);
             CL = new ChainLightning(addedStats, talents, 0);
-            CL3 = new ChainLightning(addedStats, talents, 3);
-            CL4 = new ChainLightning(addedStats, talents, 4);
+            CL2 = new ChainLightning(addedStats, talents, 1);
+            CL3 = new ChainLightning(addedStats, talents, 2);
+            CL4 = new ChainLightning(addedStats, talents, 3);
             LvB = new LavaBurst(addedStats, talents, 0);
             LvBFS = new LavaBurst(addedStats, talents, 1);
             FS = new FlameShock(addedStats, talents);
@@ -56,6 +58,7 @@ namespace Rawr.Elemental
 
             LavaBurst LvBNoFS = (LavaBurst)this.LvB.Clone();
             ChainLightning CL = (ChainLightning)this.CL.Clone();
+            ChainLightning CL2 = (ChainLightning)this.CL2.Clone();
             ChainLightning CL3 = (ChainLightning)this.CL3.Clone();
             ChainLightning CL4 = (ChainLightning)this.CL4.Clone();
             EarthShock ES = (EarthShock)this.ES.Clone();
@@ -79,7 +82,7 @@ namespace Rawr.Elemental
             }
             #endregion
             
-            return new Rotation(talents, LB, CL, CL3, CL4, LvBNoFS, LvB, FS, ES, FrS);
+            return new Rotation(talents, LB, CL, CL2, CL3, CL4, LvBNoFS, LvB, FS, ES, FrS);
         }
 
         public static void solve(CharacterCalculationsElemental calculatedStats, CalculationOptionsElemental calcOpts)

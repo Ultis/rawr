@@ -2,7 +2,7 @@ using System;
 
 namespace Rawr.Elemental.Spells
 {
-public class ChainLightning : Spell
+public class ChainLightning : Spell, ILightningOverload
     {
         private int additionalTargets;
         private float loCoef, lightningSpellpower = 0f, lspCoef;
@@ -34,7 +34,7 @@ public class ChainLightning : Spell
                 additionalTargets = 0;
             if (additionalTargets > 3)
                 additionalTargets = 3;
-            shortName = "CL" + 1 + additionalTargets;
+            shortName = "CL" + (1 + additionalTargets);
             if (!shamanTalents.GlyphofChainLightning && additionalTargets > 2)
                 additionalTargets = 2;
             this.additionalTargets = additionalTargets;
@@ -99,19 +99,24 @@ public class ChainLightning : Spell
             get { return totalCoef * (baseMaxDamage * baseCoef + spellPower * spCoef + lightningSpellpower * lspCoef); }
         }
 
-        private float LOChance()
+        public float LOChance()
         {
             return .11f * lightningOverload / 3f * (1 + AdditionalTargets);
         }
 
         public override float TotalDamage
         {
-            get { return base.TotalDamage + LOChance() * LightningOverloadDamage; }
+            get { return base.TotalDamage + LOChance() * LightningOverloadDamage(); }
+        }
+        
+        public override float DirectDpS
+        {
+            get { return (AvgDamage + LOChance() * LightningOverloadDamage()) / CastTime; }
         }
 
-        public float LightningOverloadDamage
+        public float LightningOverloadDamage()
         {
-            get { return totalCoef * ((baseMinDamage + baseMaxDamage) / 4f * baseCoef + spellPower * loCoef + lightningSpellpower * lspCoef) * (1 + CritChance * critModifier); }
+            return totalCoef * ((baseMinDamage + baseMaxDamage) / 4f * baseCoef + spellPower * loCoef + lightningSpellpower * lspCoef) * (1 + CritChance * critModifier);
         }
     }
 }

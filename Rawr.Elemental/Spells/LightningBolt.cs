@@ -2,7 +2,7 @@ using System;
 
 namespace Rawr.Elemental.Spells
 {
-public class LightningBolt : Spell
+    public class LightningBolt : Spell, ILightningOverload
     {
         public LightningBolt()
         {
@@ -79,19 +79,24 @@ public class LightningBolt : Spell
             get { return totalCoef * (baseMaxDamage * baseCoef + spellPower * spCoef + lightningSpellpower * lspCoef); }
         }
 
-        private float LOChance()
+        public float LOChance()
         {
             return .11f * lightningOverload;
         }
 
         public override float TotalDamage
         {
-            get { return base.TotalDamage + LOChance() * LightningOverloadDamage; }
+            get { return base.TotalDamage + LOChance() * LightningOverloadDamage(); }
         }
 
-        public float LightningOverloadDamage
+        public override float DirectDpS
         {
-            get { return totalCoef * ((baseMinDamage + baseMaxDamage) / 4f * baseCoef + spellPower * loCoef + lightningSpellpower * lspCoef) * (1 + CritChance * critModifier); }
+            get { return (AvgDamage + LOChance() * LightningOverloadDamage()) / CastTime; }
+        }
+
+        public float LightningOverloadDamage()
+        {
+            return totalCoef * ((baseMinDamage + baseMaxDamage) / 4f * baseCoef + spellPower * loCoef + lightningSpellpower * lspCoef) * (1 + CritChance * critModifier);;
         }
     }
 }
