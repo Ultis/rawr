@@ -680,7 +680,11 @@ namespace Rawr.DPSWarr {
                 availGCDs = (float)Math.Max(0f, origNumGCDs - GCDsused);
 
                 // Slam for remainder of GCDs
-                acts = (float)Math.Min(availGCDs, availGCDs/*SL.Activates*/ * (1f - TotalPercTimeLost));
+                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_]) {
+                    acts = (float)Math.Min(availGCDs, availGCDs/*SL.Activates*/ * (1f - TotalPercTimeLost));
+                } else {
+                    acts = 0f;
+                }
                 Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                 _SL_GCDs = Abil_GCDs;
                 GCDsused += (float)Math.Min(origNumGCDs, _SL_GCDs);

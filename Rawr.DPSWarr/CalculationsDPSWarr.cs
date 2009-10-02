@@ -458,6 +458,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 // Ratings
                 CritRating = stats.CritRating,
                 HitRating = stats.HitRating,
+                SpellHitRating = stats.SpellHitRating,
                 HasteRating = stats.HasteRating,
                 ExpertiseRating = stats.ExpertiseRating,
 				ArmorPenetrationRating = stats.ArmorPenetrationRating,
@@ -469,6 +470,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
+                SpellHit = stats.SpellHit,
                 MovementSpeed = stats.MovementSpeed,
                 StunDurReduc = stats.StunDurReduc,
                 SnareRootDurReduc = stats.SnareRootDurReduc,
@@ -486,6 +488,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusCritChance = stats.BonusCritChance,
@@ -509,6 +512,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                      effect.Trigger == Trigger.DoTTick ||
                      effect.Trigger == Trigger.DamageDone ||
                      effect.Trigger == Trigger.DamageTaken ||
+                     effect.Trigger == Trigger.DamageAvoided ||
                      effect.Trigger == Trigger.HSorSLHit)
                     && HasRelevantStats(effect.Stats))
                 {
@@ -536,7 +540,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.ExpertiseRating +
                 stats.ArmorPenetrationRating +
                 stats.ArcaneDamage +
-                stats.SpellHit + // used for TClap/Demo Shout maintenance
                 // Bonuses
                 stats.BonusArmor +
                 stats.WeaponDamage +
@@ -544,6 +547,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.PhysicalCrit +
                 stats.PhysicalHaste +
                 stats.PhysicalHit +
+                stats.SpellHit + // used for TClap/Demo Shout maintenance
                 stats.MovementSpeed +
                 stats.StunDurReduc +
                 stats.SnareRootDurReduc +
@@ -559,6 +563,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 stats.BonusAttackPowerMultiplier +
                 stats.BonusBleedDamageMultiplier +
                 stats.BonusDamageMultiplier +
+                stats.DamageTakenMultiplier +
                 stats.BonusPhysicalDamageMultiplier +
                 stats.BonusCritMultiplier +
                 stats.BonusCritChance +
@@ -1168,6 +1173,13 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 float apBonusOther  = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower                   );
                 statsTotal.AttackPower = (float)Math.Floor(apBase + apBonusSTR + apBonusAttT + apBonusOther);
 
+                // Dodge (your dodging incoming attacks)
+                statsTotal.Dodge += StatConversion.GetDodgeFromAgility(statsTotal.Agility, CharacterClass.Warrior);
+                statsTotal.Dodge += StatConversion.GetDodgeFromRating(statsTotal.DodgeRating, CharacterClass.Warrior);
+
+                // Parry (your parrying incoming attacks)
+                statsTotal.Parry += StatConversion.GetParryFromRating(statsTotal.ParryRating, CharacterClass.Warrior);
+
                 // Crit
                 statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class);
 
@@ -1281,7 +1293,6 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     Stats maxSpecEffects = new Stats();
                     foreach (SpecialEffect effect in statsTotal.SpecialEffects()) maxSpecEffects += effect.Stats;
                     return UpdateStatsAndAdd(maxSpecEffects, combatFactors.StatS, character);
-
                 }
                 
                 //UpdateStatsAndAdd(statsProcs, statsTotal, character); // Already done in GetSpecialEffectStats
@@ -1358,16 +1369,13 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 float land = Rot.GetLandedAtksOverDur();
                 float crit = Rot.GetCriticalAtksOverDur();
 
-                float hitRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
+                float hitRate  = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
                 float critRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
 
                 //
-                foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess : specialEffects))
-                {
-
+                foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess : specialEffects)) {
                     float oldArp = effect.Stats.ArmorPenetrationRating;
-                    if (effect.Stats.ArmorPenetrationRating > 0)
-                    {
+                    if (effect.Stats.ArmorPenetrationRating > 0) {
                         float arpenBuffs =
                             ((combatFactors._c_mhItemType == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f) +
                             (!calcOpts.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
@@ -1376,12 +1384,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         float arpToHardCap = (1f - currentArp) * StatConversion.RATING_PER_ARMORPENETRATION;
                         if (arpToHardCap < effect.Stats.ArmorPenetrationRating) effect.Stats.ArmorPenetrationRating = arpToHardCap;
                     }
-                    switch (effect.Trigger)
-                    {
+                    switch (effect.Trigger) {
                         case Trigger.Use:
                             Stats _stats = new Stats();
-                            if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null)
-                            {
+                            if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null) {
                                 float uptime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
                                 //float uptime =  (effect.Cooldown / fightDuration);
                                 List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
@@ -1389,9 +1395,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                                 Stats _stats2 = IterativeSpecialEffectsStats(Char, Rot, combatFactors,
                                     null, nestedEffect, false, null, originalStats);
                                 _stats = _stats2 * uptime;
-                            }
-                            else
-                            {
+                            } else {
                                 _stats = effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
                             }
                             statsProcs += _stats;
@@ -1415,11 +1419,18 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         case Trigger.DamageTaken: // physical and dots
                             if (dmgTakenInterval > 0f) statsProcs += effect.GetAverageStats(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
                             break;
+                        case Trigger.DamageAvoided: // Boss AoE attacks we manage to avoid
+                            // 0.1f need to be replaced with the player's avoidance stats
+                            if (dmgTakenInterval > 0f) {
+                                float value = originalStats.Parry + originalStats.Dodge;
+                                Stats stats = effect.GetAverageStats(dmgTakenInterval, value, combatFactors._c_mhItemSpeed, fightDuration);
+                                statsProcs += stats;
+                            }
+                            break;
                         case Trigger.HSorSLHit: // Set bonus handler
                             //Rot._SL_GCDs = Rot._SL_GCDs;
                             //Rot._HS_Acts = Rot._HS_Acts;
-                            if (Rot.CritHsSlamOverDur > 0f)
-                            {
+                            if (Rot.CritHsSlamOverDur > 0f) {
                                 Stats addme = effect.GetAverageStats(fightDuration / Rot.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration);
                                 statsProcs += addme;
                             }
@@ -1430,8 +1441,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
 
                 combatFactors.StatS = UpdateStatsAndAdd(statsProcs, originalStats, Char);
 
-                if (iterate)
-                {
+                if (iterate) {
                     float precisionWhole = 0.01f;
                     float precisionDec = 0.0001f;
                     Stats temp = statsProcs - iterateOld;
@@ -1449,9 +1459,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 }
 
                 return statsProcs;
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 new ErrorBoxDPSWarr("Error in creating SpecialEffects Stats", ex.Message, "GetSpecialEffectsStats()");
                 return new Stats();
             }

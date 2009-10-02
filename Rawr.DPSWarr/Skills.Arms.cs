@@ -378,6 +378,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeRange = true;
                 CanCrit = false;
                 Duration = 15f + (Talents.GlyphOfRending ? 6f : 0f); // In Seconds
+                Cd = Duration;
                 TimeBtwnTicks = 3f; // In Seconds
                 RageCost = 10f - (Talents.FocusedRage * 1f);
                 StanceOkArms = StanceOkDef = true;
@@ -412,12 +413,22 @@ namespace Rawr.DPSWarr {
                 get {
                     if (!Validated) { return 0f; }
 
-                    float DmgBonusBase = ((StatS.AttackPower * Whiteattacks.MhEffectiveSpeed) / 14f + (combatFactors.MH.MaxDamage + combatFactors.MH.MinDamage) / 2f) * (743f / 300000f);
-                    float DmgBonusO75 = 0.25f * 1.35f * DmgBonusBase;
-                    float DmgBonusU75 = 0.75f * 1.00f * DmgBonusBase;
-                    float DmgMod = (1f + StatS.BonusBleedDamageMultiplier) * DamageBonus;
+                    float DmgBonusBase = (StatS.AttackPower * combatFactors.MH.Speed) / 14f
+                                       + (combatFactors.MH.MaxDamage + combatFactors.MH.MinDamage) / 2f;
+                    float DmgBonusU75 = 0.75f * 1.00f;
+                    float DmgBonusO75 = 0.25f * 1.35f;
+                    float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)
+                                 * (1f + StatS.BonusDamageMultiplier)
+                                 * DamageBonus;
+                    float GlyphMOD = Talents.GlyphOfRending ? 7f/5f : 1f;
 
-                    float TickSize = (DamageBase + DmgBonusO75 + DmgBonusU75) * DmgMod;
+                    float damageUnder75 = (DamageBase + DmgBonusBase) * DmgBonusU75;
+                    float damageOver75  = (DamageBase + DmgBonusBase) * DmgBonusO75;
+
+                    float TheDamage = (damageUnder75 + damageOver75) * DmgMod;
+
+                    float TickSize = (TheDamage * GlyphMOD) / NumTicks;
+
                     return TickSize;
                 }
             }

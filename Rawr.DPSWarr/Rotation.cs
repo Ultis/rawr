@@ -417,7 +417,7 @@ namespace Rawr.DPSWarr {
                 float FightDuration = CalcOpts.Duration;
                 float damagePerSec = 0f;
                 float freq = CalcOpts.AoETargetsFreq;
-                float dmg = CalcOpts.AoETargetsDMG;
+                float dmg = CalcOpts.AoETargetsDMG * (1f + STATS.DamageTakenMultiplier);
                 float acts = FightDuration / freq;
                 damagePerSec = (acts * dmg) / FightDuration;
                 float RageMod = 2.5f / 453.3f * (CalcOpts.FuryStance ? 1.05f : 1f);
@@ -440,7 +440,8 @@ namespace Rawr.DPSWarr {
                 if (Char.MainHand == null) { return 0f; }
                 float rage = RageGenOverDur_Anger
                            + RageGenOverDur_Wrath
-                           + RageGenOverDur_IncDmg;
+                           + RageGenOverDur_IncDmg
+                           + (100f * 100f * 100f * StatS.ManaorEquivRestore);
 
                 // 4pcT7
                 if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
