@@ -422,6 +422,7 @@ applied and result is scaled down by 100)",
                 BonusHealingReceived = resultNew.BonusHealingReceived,
                 SpellsManaReduction = resultNew.SpellsManaReduction,
                 HighestStat = resultNew.HighestStat,
+                ShieldFromHealed = resultNew.ShieldFromHealed,
                 
             };
         }
@@ -715,6 +716,18 @@ applied and result is scaled down by 100)",
 
             #region Convert to be ready for points
             float MaxHPS = hotsHPS + hpsHeal100 + wgHPS + swiftHPS;
+            #endregion
+
+            #region Apply bonus from Val'anyr
+            if (stats.ShieldFromHealed > 0)
+            {
+                MaxHPS *= (1 + stats.ShieldFromHealed);
+                hpsHealing *= (1 + stats.ShieldFromHealed);
+                hotsHPS *= (1 + stats.ShieldFromHealed);
+                trueHotsHPS *= (1 + stats.ShieldFromHealed);
+                wgHPS *= (1 + stats.ShieldFromHealed);
+                hps *= (1 + stats.ShieldFromHealed);
+            }
             #endregion
 
             return new Rotation() {
@@ -1417,7 +1430,8 @@ applied and result is scaled down by 100)",
         }
         public bool HasRelevantSpecialEffectStats(Stats stats) {
             return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore
-                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.SwiftmendBonus + stats.HealingOmenProc) > 0;
+                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.SwiftmendBonus + stats.HealingOmenProc
+                   + stats.ShieldFromHealed) > 0;
         }
         public override bool HasRelevantStats(Stats stats) {
             foreach (Rawr.SpecialEffect effect in stats.SpecialEffects()) {

@@ -1034,8 +1034,9 @@ namespace Rawr {
             {
                 stats.CrusaderStrikeMultiplier = .05f;
             }
-            else if (line == "Your healing spells have a chance to cause Blessing of Ancient Kings for 15 seconds allowing your heals to shield the target absorbing damage equal to 15% of the amount healed.")
+            else if (line == "Your healing spells have a chance to cause Blessing of Ancient Kings for 15 sec allowing your heals to shield the target absorbing damage equal to 15% of the amount healed.")
             {
+                // Val'anyr, Hammer of Ancient Kings effect
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { ShieldFromHealed = .15f }, 15f, 45f, .1f));
             }
             else if (line == "Each time your Seal of Vengeance or Seal of Corruption ability deals periodic damage, you have a chance to gain 200 Strength for 16 sec.")
