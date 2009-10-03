@@ -3757,6 +3757,7 @@ namespace Rawr
             Stats setEffect = new Stats() { SpellPower = 222f };
             // Guess at cooldown and proc chance, to be updated when more info available
             setEffect.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = 2521 }, 0, 45, 0.2f));
+			setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { FireDamage = 2862 }, 0, 45, 0.2f));
             // Not sure what the stat for this DoT effect would be for damage classes
 //            setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() {  }, 0, 45, 0.2f));
             defaultBuffs.Add(new Buff()
