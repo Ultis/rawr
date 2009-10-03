@@ -505,6 +505,29 @@ namespace Rawr
             return 1f - ArmorConstant / (ArmorConstant + TargetArmor);
         }
 
+        /// <summary>
+        /// Returns how much Armor Penetration rating gets you to a given Armor Reduction (inverse of GetArmorDamageReduction).
+        /// For use with GrimToll-style procs
+        /// </summary>
+        /// <param name="AttackerLevel">Level of Attacker</param>
+        /// <param name="TargetLevel">Level of Target</param>
+        /// <param name="TargetArmor">Armor of Target</param>
+        /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) -- These are Multiplied.</param>
+        /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) -- These are Added.</param>
+        /// <param name="TargetArmorReduction">How much Armor Reduction you are looking trying to find</param>
+        /// <returns>How much Armor Penetration Rating will have GetArmorDamageReduction() return TargetArmorReduction</returns>
+        public static float GetRatingFromArmorReduction(int AttackerLevel, float TargetArmor,
+            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float TargetArmorReduction)
+        {
+            float ArmorConstant = 400 + 85 * AttackerLevel + 4.5f * 85 * (AttackerLevel - 59);
+            TargetArmor *= (1f - ArmorIgnoreDebuffs);
+            float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
+
+            float ArpFromRating = (TargetArmor - ArPCap * ArmorIgnoreBuffs - TargetArmorReduction * ArmorConstant - TargetArmorReduction * TargetArmor + TargetArmor * ArPCap * ArmorIgnoreBuffs) /
+                (ArPCap - TargetArmorReduction * ArPCap);
+
+            return ArpFromRating * RATING_PER_ARMORPENETRATION;
+        }
 
         /// <summary>
         /// Returns the chance to miss (0.09 = 9% chance to miss)

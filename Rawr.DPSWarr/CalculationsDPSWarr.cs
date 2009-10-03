@@ -1047,6 +1047,11 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.UnbuffedStats = GetStatsType(character, additionalItem, StatType.Unbuffed);
                 calculatedStats.BuffedStats = GetStatsType(character, additionalItem, StatType.Buffed);
                 calculatedStats.MaximumStats = GetStatsType(character, additionalItem, StatType.Maximum);
+                
+                calculatedStats.MaxArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
+                    + calculatedStats.ArmorPenetrationStance
+                    + StatConversion.GetArmorPenetrationFromRating(calculatedStats.MaximumStats.ArmorPenetrationRating);
+                
 
             }catch (Exception ex){
                 new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations",
@@ -1346,12 +1351,12 @@ Don't forget your weapons used matched with races can affect these numbers.",
                     secondPass.Add(effect);
                 }
             }
-            Stats StatsFirstPass = IterativeSpecialEffectsStats(Char, Rot, combatFactors, firstPass, null, true, new Stats(), combatFactors.StatS);
-            Stats StatsSecondPass = IterativeSpecialEffectsStats(Char, Rot, combatFactors, secondPass, null, false, null, combatFactors.StatS);
+            Stats StatsFirstPass = IterativeSpecialEffectsStats(Char, Rot, combatFactors, firstPass, true, new Stats(), combatFactors.StatS);
+            Stats StatsSecondPass = IterativeSpecialEffectsStats(Char, Rot, combatFactors, secondPass, false, null, combatFactors.StatS);
         }
 
         private Stats IterativeSpecialEffectsStats(Character Char, Rotation Rot, CombatFactors combatFactors,
-            List<SpecialEffect> specialEffects, List<SpecialEffect> statsToProcess, bool iterate, Stats iterateOld, Stats originalStats)
+            List<SpecialEffect> specialEffects, bool iterate, Stats iterateOld, Stats originalStats)
         {
             CalculationOptionsDPSWarr calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
             WarriorTalents talents = Char.WarriorTalents;
@@ -1373,70 +1378,30 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 float critRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
 
                 //
-                foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess : specialEffects)) {
-                    float oldArp = effect.Stats.ArmorPenetrationRating;
-                    if (effect.Stats.ArmorPenetrationRating > 0) {
+                foreach (SpecialEffect effect in specialEffects) {
+                    if (effect.Stats.ArmorPenetrationRating > 0) {                    
                         float arpenBuffs =
                             ((combatFactors._c_mhItemType == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f) +
                             (!calcOpts.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
-                        float currentArp = arpenBuffs + StatConversion.GetArmorPenetrationFromRating(originalStats.ArmorPenetrationRating
-                            + (statsToProcess != null ? statsToProcess.ToArray()[0].Stats.ArmorPenetrationRating : 0f));
-                        float arpToHardCap = (1f - currentArp) * StatConversion.RATING_PER_ARMORPENETRATION;
-                        if (arpToHardCap < effect.Stats.ArmorPenetrationRating) effect.Stats.ArmorPenetrationRating = arpToHardCap;
+                        
+                        float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[83 - Char.Level], 
+                            originalStats.ArmorPenetration, arpenBuffs, originalStats.ArmorPenetrationRating);
+                        float ProccedArmorReduction  = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[83 - Char.Level], 
+                            originalStats.ArmorPenetration + effect.Stats.ArmorPenetration, arpenBuffs, originalStats.ArmorPenetrationRating + effect.Stats.ArmorPenetrationRating);
+
+                        Stats dummyStats = new Stats();
+                        float procUptime = ApplySpecialEffect(effect, Char, Rot, combatFactors, originalStats.Dodge + originalStats.Parry, ref dummyStats);
+
+                        float targetReduction = ProccedArmorReduction * procUptime + OriginalArmorReduction * (1f - procUptime);
+                        //float arpDiff = OriginalArmorReduction - targetReduction;
+                        float procArp = StatConversion.GetRatingFromArmorReduction(Char.Level, (int)StatConversion.NPC_ARMOR[83 - Char.Level],
+                            originalStats.ArmorPenetration, arpenBuffs, targetReduction);
+                        statsProcs.ArmorPenetrationRating += (procArp - originalStats.ArmorPenetrationRating);
                     }
-                    switch (effect.Trigger) {
-                        case Trigger.Use:
-                            Stats _stats = new Stats();
-                            if (effect.Stats._rawSpecialEffectDataSize == 1 && statsToProcess == null) {
-                                float uptime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
-                                //float uptime =  (effect.Cooldown / fightDuration);
-                                List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
-                                nestedEffect.Add(effect.Stats._rawSpecialEffectData[0]);
-                                Stats _stats2 = IterativeSpecialEffectsStats(Char, Rot, combatFactors,
-                                    null, nestedEffect, false, null, originalStats);
-                                _stats = _stats2 * uptime;
-                            } else {
-                                _stats = effect.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
-                            }
-                            statsProcs += _stats;
-                            break;
-                        case Trigger.MeleeHit:
-                        case Trigger.PhysicalHit:
-                            if (attemptedAtkInterval > 0f) statsProcs += effect.GetAverageStats(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration);
-                            //float i = effect.GetAverageUptime(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration);
-                            break;
-                        case Trigger.MeleeCrit:
-                        case Trigger.PhysicalCrit:
-                            if (attemptedAtkInterval > 0f) statsProcs += effect.GetAverageStats(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration);
-                            //float j = effect.GetAverageUptime(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration);
-                            break;
-                        case Trigger.DoTTick:
-                            if (bleedHitInterval > 0f) statsProcs += effect.GetAverageStats(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend
-                            break;
-                        case Trigger.DamageDone: // physical and dots
-                            if (dmgDoneInterval > 0f) statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
-                            break;
-                        case Trigger.DamageTaken: // physical and dots
-                            if (dmgTakenInterval > 0f) statsProcs += effect.GetAverageStats(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
-                            break;
-                        case Trigger.DamageAvoided: // Boss AoE attacks we manage to avoid
-                            // 0.1f need to be replaced with the player's avoidance stats
-                            if (dmgTakenInterval > 0f) {
-                                float value = originalStats.Parry + originalStats.Dodge;
-                                Stats stats = effect.GetAverageStats(dmgTakenInterval, value, combatFactors._c_mhItemSpeed, fightDuration);
-                                statsProcs += stats;
-                            }
-                            break;
-                        case Trigger.HSorSLHit: // Set bonus handler
-                            //Rot._SL_GCDs = Rot._SL_GCDs;
-                            //Rot._HS_Acts = Rot._HS_Acts;
-                            if (Rot.CritHsSlamOverDur > 0f) {
-                                Stats addme = effect.GetAverageStats(fightDuration / Rot.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration);
-                                statsProcs += addme;
-                            }
-                            break;
+                    else 
+                    {
+                        ApplySpecialEffect(effect, Char, Rot, combatFactors, originalStats.Dodge + originalStats.Parry, ref statsProcs);
                     }
-                    effect.Stats.ArmorPenetrationRating = oldArp;
                 }
 
                 combatFactors.StatS = UpdateStatsAndAdd(statsProcs, originalStats, Char);
@@ -1454,7 +1419,7 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         temp.PhysicalHit > precisionDec)
                     {
                         return IterativeSpecialEffectsStats(Char, Rot, combatFactors,
-                            specialEffects, null, true, statsProcs, originalStats);
+                            specialEffects, true, statsProcs, originalStats);
                     }
                 }
 
@@ -1464,6 +1429,85 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 return new Stats();
             }
         }
+
+        private enum SpecialEffectDataType { AverageStats, UpTime };
+        private float ApplySpecialEffect(SpecialEffect effect, Character character, Rotation rotation, CombatFactors combatFactors, float avoidedAttacks, ref Stats applyTo)
+        {
+            CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
+            float fightDuration = calcOpts.Duration;
+
+            float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
+            float attemptedAtkInterval = fightDuration / rotation.GetAttemptedAtksOverDur();
+            float landedAtksInterval = fightDuration / rotation.GetLandedAtksOverDur();
+            float dmgDoneInterval = fightDuration / (rotation.GetLandedAtksOverDur() + (calcOpts.FuryStance ? 1f : 4f / 3f));
+            float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
+
+            float attempted = rotation.GetAttemptedAtksOverDur();
+            float land = rotation.GetLandedAtksOverDur();
+            float crit = rotation.GetCriticalAtksOverDur();
+
+            float hitRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
+            float critRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
+
+            switch (effect.Trigger)
+            {
+                case Trigger.Use:
+                    Stats _stats = new Stats();
+                    float upTime;
+                    if (effect.Stats._rawSpecialEffectDataSize == 1)
+                    {
+                        upTime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                        //float uptime =  (effect.Cooldown / fightDuration);
+                        List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
+                        nestedEffect.Add(effect.Stats._rawSpecialEffectData[0]);
+                        Stats _stats2 = new Stats();
+                        ApplySpecialEffect(effect.Stats._rawSpecialEffectData[0], character, rotation, combatFactors, avoidedAttacks, ref _stats2);
+                        _stats = _stats2 * upTime;
+                    }
+                    else
+                    {
+                        _stats = effect.GetAverageStats( 0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                        upTime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                    }
+                    applyTo += _stats;
+                    return upTime;
+                case Trigger.MeleeHit:
+                case Trigger.PhysicalHit:
+                    if (attemptedAtkInterval > 0f) 
+                        applyTo += effect.GetAverageStats( attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration);
+                    return         effect.GetAverageUptime(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration);
+                case Trigger.MeleeCrit:
+                case Trigger.PhysicalCrit:
+                    if (attemptedAtkInterval > 0f) 
+                        applyTo += effect.GetAverageStats( attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration);
+                    return         effect.GetAverageUptime(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration);
+                case Trigger.DoTTick:
+                    if (bleedHitInterval > 0f) 
+                        applyTo += effect.GetAverageStats( bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend
+                    return         effect.GetAverageUptime(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend
+                case Trigger.DamageDone: // physical and dots
+                    if (dmgDoneInterval > 0f) 
+                        applyTo += effect.GetAverageStats( dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                    return         effect.GetAverageUptime(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                case Trigger.DamageTaken: // physical and dots
+                    if (dmgTakenInterval > 0f) 
+                        applyTo += effect.GetAverageStats( dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                    return         effect.GetAverageUptime(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                case Trigger.DamageAvoided: // Boss AoE attacks we manage to avoid
+                    // 0.1f need to be replaced with the player's avoidance stats
+                    if (dmgTakenInterval > 0f)
+                        applyTo += effect.GetAverageStats( dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration);
+                    return         effect.GetAverageUptime(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration);
+                case Trigger.HSorSLHit: // Set bonus handler
+                    //Rot._SL_GCDs = Rot._SL_GCDs;
+                    //Rot._HS_Acts = Rot._HS_Acts;
+                    if (rotation.CritHsSlamOverDur > 0f)
+                        applyTo += effect.GetAverageStats( fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration);
+                    return         effect.GetAverageUptime(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration);
+            }
+            return 0f;
+        }
+
         private Stats UpdateStatsAndAdd(Stats statsToAdd, Stats baseStats, Character character)
             //float totalBSTAM, float totalBSM, float totalBAM, float totalBAPM)
         {

@@ -52,6 +52,7 @@ namespace Rawr.DPSWarr {
         public float ArmorPenetrationRating { get; set; }
         public float ArmorPenetrationRating2Perc { get; set; }
         public float ArmorPenetration { get; set; }
+        public float MaxArmorPenetration { get; set; }
         public float buffedArmorPenetration { get; set; }
         public float HasteRating { get; set; }
         public float HastePercent { get; set; }
@@ -164,11 +165,15 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Haste", string.Format("{0:00.00%} : {1}*" +
                                 "The percentage is affected both by Haste Rating and Blood Frenzy talent",
                                 HastePercent, (float)Math.Floor(AverageStats.HasteRating)));
-            dictValues.Add("Armor Penetration", string.Format("{0:00.00%} : {1}*" +
-                                                      "{2:0.00%} : Rating" +
-                                Environment.NewLine + "{3:0.00%} : Arms Stance" +
-                                Environment.NewLine + "{4:0.00%} : Mace Spec",
+            dictValues.Add("Armor Penetration", string.Format("{0:00.00%} : {2}*" +
+                                                      "With Procs: {1:00.00%}" +
+                                Environment.NewLine + 
+                                Environment.NewLine + "Average Breakdown:" +
+                                Environment.NewLine + "{3:0.00%} : Rating (including proc averages)" +
+                                Environment.NewLine + "{4:0.00%} : Arms Stance" +
+                                Environment.NewLine + "{5:0.00%} : Mace Spec",
                                 ArmorPenetration,
+                                MaxArmorPenetration,
                                 AverageStats.ArmorPenetrationRating, ArmorPenetrationRating2Perc,
                                 ArmorPenetrationStance,
                                 ArmorPenetrationMaceSpec));
