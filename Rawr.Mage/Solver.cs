@@ -1327,7 +1327,7 @@ namespace Rawr.Mage
 #endif
 
                 #region Set LP Scaling
-                lp.SetRowScaleUnsafe(rowManaRegen, 0.1);
+                lp.SetRowScaleUnsafe(rowManaRegen, 0.01);
                 lp.SetRowScaleUnsafe(rowManaGem, 40.0);
                 lp.SetRowScaleUnsafe(rowPotion, 40.0);
                 lp.SetRowScaleUnsafe(rowManaGemMax, 40.0);
@@ -2446,6 +2446,7 @@ namespace Rawr.Mage
             {
                 lp.SetRHSUnsafe(rowIcyVeins, calculationOptions.AverageCooldowns ? (20.0 / calculationResult.IcyVeinsCooldown + 20.0 / calculationResult.ColdsnapCooldown) * calculationOptions.FightDuration : ivlength);
                 if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryIcyVeins, 40);
+                if (heroismAvailable) lp.SetRHSUnsafe(rowHeroismIcyVeins, 40);
             }
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFury, mflength);
             //if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryDestructionPotion, 15);
@@ -2464,7 +2465,6 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowCombustion, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 180.0 : combustionCount);
             lp.SetRHSUnsafe(rowMoltenFuryCombustion, 1);
             lp.SetRHSUnsafe(rowHeroismCombustion, 1);
-            lp.SetRHSUnsafe(rowHeroismIcyVeins, coldsnapAvailable ? 40 : 20);
             //lp.SetRHSUnsafe(rowMoltenFuryBerserking, 10);
             //lp.SetRHSUnsafe(rowHeroismBerserking, 10);
             //lp.SetRHSUnsafe(rowIcyVeinsDrumsOfBattle, drumsivlength);
@@ -3057,7 +3057,14 @@ namespace Rawr.Mage
             if (state.Combustion) lp.SetElementUnsafe(rowCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
             if (state.Combustion && state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
             if (state.Combustion && state.Heroism) lp.SetElementUnsafe(rowHeroismCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
-            if (state.IcyVeins && state.Heroism) lp.SetElementUnsafe(rowHeroismIcyVeins, column, 1.0);
+            if (coldsnapAvailable)
+            {
+                // VERY IMPORTANT!!!
+                // you're only allowed to set this for coldsnap case, because otherwise it's already handled
+                // by automatic constraints and those already include it
+                // otherwise you end with two identical entries in sparse matrix which creates problems
+                if (state.IcyVeins && state.Heroism) lp.SetElementUnsafe(rowHeroismIcyVeins, column, 1.0);
+            }
             if (state.Berserking) lp.SetElementUnsafe(rowBerserking, column, 1.0);
             //if (state.Berserking && state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryBerserking, column, 1.0);
             //if (state.Berserking && state.Heroism) lp.SetElementUnsafe(rowHeroismBerserking, column, 1.0);
