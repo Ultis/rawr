@@ -1058,7 +1058,7 @@ namespace Rawr {
             }
             else if ((match = new Regex(@"Increases your block value by (?<blockValue>\d\d*) for (?<duration>\d\d*) sec each time you use Holy Shield.").Match(line)).Success)
             {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShield, new Stats() { BlockValue = (float)int.Parse(match.Groups["blockValue"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 0f, 1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShield, new Stats() { HolyShieldBlockValue = (float)int.Parse(match.Groups["blockValue"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 0f, 1f));
             } 
             else if (line == "Your Shield of Righteousness deals an additional 96 damage.")
             {

@@ -40,7 +40,7 @@ namespace Rawr.ProtPaladin {
                     DamageMultiplier *= (1.0f - ArmorReduction);
                     break;               
                 case Ability.ShieldOfRighteousness:
-                    float blockValue = Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + Stats.JudgementBlockValue;
+                    float blockValue = Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + Stats.JudgementBlockValue + Stats.HolyShieldBlockValue;
 
                     if (blockValue < 30 * Character.Level) {
                         baseDamage = blockValue + 520;

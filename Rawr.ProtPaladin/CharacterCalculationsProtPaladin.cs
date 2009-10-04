@@ -139,7 +139,7 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Parry", string.Format("{0:0.0000%}*Parry Rating {1}", Parry, BasicStats.ParryRating));
             dictValues.Add("Block", string.Format("{0:0.0000%}*Block Rating {1}", Block, BasicStats.BlockRating));
             dictValues.Add("Miss", string.Format("{0:0.0000%}", Miss));
-            dictValues.Add("Block Value", string.Format("{0}*{1} Active Block Balue (Libram etc)", StaticBlockValue, ActiveBlockValue));
+            dictValues.Add("Block Value", string.Format("{0}*{1} Active Block Value (Libram etc)", StaticBlockValue, ActiveBlockValue));
             dictValues.Add("Guaranteed Reduction", string.Format("{0:0.00%}", GuaranteedReduction));
             dictValues.Add("Avoidance", string.Format("{0:0.0000%}*Avoidance Points {1}", DodgePlusMissPlusParry, (DodgePlusMissPlusParry * 10000f)));
             dictValues.Add("Avoidance + Block", string.Format("{0:0.0000%}", DodgePlusMissPlusParryPlusBlock));

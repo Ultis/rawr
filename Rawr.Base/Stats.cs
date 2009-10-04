@@ -290,6 +290,7 @@ namespace Rawr {
         #region Added by Rawr.ProtPaladin
         BonusShieldOfRighteousnessDamage,
         DivineProtectionDurationBonus,
+        HolyShieldBlockValue,
         JudgementBlockValue,
         ShieldOfRighteousnessBlockValue,        
         #endregion
@@ -3335,6 +3336,14 @@ namespace Rawr {
         public float DivineProtectionDurationBonus {
             get { return _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus]; }
             set { _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Holy Shield Block Value")]
+        [Category("ProtPaladin")]
+        public float HolyShieldBlockValue {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyShieldBlockValue]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyShieldBlockValue] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

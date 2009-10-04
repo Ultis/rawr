@@ -291,7 +291,7 @@ focus on Survival Points.",
 
             calculatedStats.Defense = stats.Defense + (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating,CharacterClass.Paladin));
             calculatedStats.StaticBlockValue = stats.BlockValue;
-            calculatedStats.ActiveBlockValue = stats.BlockValue + stats.JudgementBlockValue + stats.ShieldOfRighteousnessBlockValue;
+            calculatedStats.ActiveBlockValue = stats.BlockValue + stats.HolyShieldBlockValue + stats.JudgementBlockValue + stats.ShieldOfRighteousnessBlockValue;
 
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
@@ -783,11 +783,15 @@ focus on Survival Points.",
 
             if ((calcOpts.UseHolyShield) && character.OffHand != null && (character.OffHand.Type == ItemType.Shield))
             {
+                statsTotal.HolyShieldBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
+                statsTotal.HolyShieldBlockValue = (float)Math.Floor(statsTotal.HolyShieldBlockValue);
                 statsTotal.JudgementBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
                 statsTotal.JudgementBlockValue = (float)Math.Floor(statsTotal.JudgementBlockValue);
                 statsTotal.ShieldOfRighteousnessBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
                 statsTotal.ShieldOfRighteousnessBlockValue = (float)Math.Floor(statsTotal.ShieldOfRighteousnessBlockValue);
-            }else{
+            }
+            else {
+                statsTotal.HolyShieldBlockValue = 0.0f;
                 statsTotal.ShieldOfRighteousnessBlockValue = 0.0f;
                 statsTotal.JudgementBlockValue = 0.0f;
             }
@@ -1386,6 +1390,7 @@ focus on Survival Points.",
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
 
                 BonusShieldOfRighteousnessDamage = stats.BonusShieldOfRighteousnessDamage,
+                HolyShieldBlockValue = stats.HolyShieldBlockValue,
                 JudgementBlockValue = stats.JudgementBlockValue,
                 BonusHammerOfTheRighteousMultiplier = stats.BonusHammerOfTheRighteousMultiplier,
                 ShieldOfRighteousnessBlockValue = stats.ShieldOfRighteousnessBlockValue,
@@ -1466,6 +1471,7 @@ focus on Survival Points.",
 
                 // Special Stats
                 stats.BonusShieldOfRighteousnessDamage +
+                stats.HolyShieldBlockValue +
                 stats.JudgementBlockValue +
                 stats.BonusHammerOfTheRighteousMultiplier +
                 stats.ShieldOfRighteousnessBlockValue +

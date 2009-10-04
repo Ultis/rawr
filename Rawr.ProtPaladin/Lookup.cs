@@ -291,7 +291,7 @@ namespace Rawr.ProtPaladin
             PaladinTalents talents = character.PaladinTalents;
             
             // This formula assumes judging on cd, and needs to be modified as soon as we support custom rotations.
-            return (stats.BlockValue + stats.JudgementBlockValue + stats.ShieldOfRighteousnessBlockValue);
+            return (stats.BlockValue + stats.HolyShieldBlockValue + stats.JudgementBlockValue + stats.ShieldOfRighteousnessBlockValue);
         }
 
         public static float MagicReduction(Character character, Stats stats, DamageType school)
