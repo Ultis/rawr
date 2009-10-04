@@ -183,8 +183,6 @@ namespace Rawr.DPSWarr {
         protected virtual void calcDeepWounds() {
             // Main Hand
             float mhActivates =
-                /*OnAttack*/_HS_Acts * HS.MHAtkTable.Crit +
-                /*OnAttack*/_CL_Acts * CL.MHAtkTable.Crit +
                 /*Yellow  */GetCriticalYellowsOverDurMH() + 
                 /*White   */WhiteAtks.MhActivates * WhiteAtks.MHAtkTable.Crit;
 
@@ -196,7 +194,7 @@ namespace Rawr.DPSWarr {
                 : 0f);
 
             // Push to the Ability
-            DW.SetAllAbilityActivates(mhActivates, ohActivates);
+            DW.SetAllAbilityActivates(mhActivates, ohActivates); 
             _DW_PerHit = DW.TickSize;
             _DW_DPS = DW.DPS;
         }

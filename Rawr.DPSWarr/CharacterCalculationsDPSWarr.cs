@@ -291,7 +291,7 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Total Generated Rage",      string.Format("{0:00} = {1:0} + {2:0}",WhiteRage+OtherRage,WhiteRage,OtherRage));
             dictValues.Add("Needed Rage for Abilities", string.Format(format,NeedyRage));
             dictValues.Add("Available Free Rage",       string.Format(format,FreeRage ));
-            
+
             return dictValues;
         }
 

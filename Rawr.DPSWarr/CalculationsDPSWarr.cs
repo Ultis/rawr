@@ -1044,9 +1044,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv) * calcOpts.SurvScale; line++;
                 calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; line++;
 
-                calculatedStats.UnbuffedStats = GetStatsType(character, additionalItem, StatType.Unbuffed);
-                calculatedStats.BuffedStats = GetStatsType(character, additionalItem, StatType.Buffed);
-                calculatedStats.MaximumStats = GetStatsType(character, additionalItem, StatType.Maximum);
+                calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed);
+                calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed);
+                calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum);
                 
                 calculatedStats.MaxArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
                     + calculatedStats.ArmorPenetrationStance
@@ -1063,10 +1063,10 @@ Don't forget your weapons used matched with races can affect these numbers.",
         private enum StatType { Unbuffed, Buffed, Average, Maximum };
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
-            return GetStatsType(character, additionalItem, StatType.Average);
+            return GetCharacterStats(character, additionalItem, StatType.Average);
         }
 
-        private Stats GetStatsType(Character character, Item additionalItem, StatType statType)
+        private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType)
         {
             try {
                 CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;

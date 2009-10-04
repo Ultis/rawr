@@ -18,6 +18,8 @@ namespace Rawr.DPSWarr {
             _c_mhItemSpeed = MH.Speed;
             _c_mhRacialExpertise = GetRacialExpertiseFromWeaponType(_c_mhItemType);
             _c_mhexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(StatS.ExpertiseRating) + _c_mhRacialExpertise;
+            _c_ymiss = YwMissChance;
+            _c_wmiss = WhMissChance;
             _c_mhdodge = MhDodgeChance;
             _c_mhparry = MhParryChance;
             _c_mhblock = MhBlockChance;
@@ -45,8 +47,6 @@ namespace Rawr.DPSWarr {
                 _c_ohwcrit = 0.0f;
                 _c_ohycrit = 0.0f;
             }
-            _c_ymiss = YwMissChance;
-            _c_wmiss = WhMissChance;
         }
         #region Global Variables
         public Stats StatS;
