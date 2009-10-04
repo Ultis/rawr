@@ -47,16 +47,19 @@ namespace Rawr.ProtPaladin
                 DamagePerCrit * DefendTable.Critical +
                 DamagePerBlock * DefendTable.Block;
 
+            float reductionAD = 1.0f - Lookup.ArdentDefenderReduction(Character);
+            float healthAD = (0.65f + (0.35f / reductionAD)) * Stats.Health;
+
             DamagePerSecond     = AverageDamagePerAttack / attackSpeed;
             DamageTaken         = DamagePerSecond / baseDamagePerSecond;
             Mitigation          = (1.0f - (DamagePerSecond / baseDamagePerSecond));
-            TankPoints          = (Stats.Health / (1.0f - Mitigation));
-            EffectiveHealth     = (Stats.Health / guaranteedReduction);
+            TankPoints          = (healthAD / (1.0f - Mitigation));
+            EffectiveHealth     = (healthAD / guaranteedReduction);
             GuaranteedReduction = (1.0f - guaranteedReduction);
 
             
             double a = Convert.ToDouble(DefendTable.AnyMiss);
-            double h = Convert.ToDouble(Stats.Health);
+            double h = Convert.ToDouble(healthAD);
             double H = Convert.ToDouble(AverageDamagePerHit);
             double s = Convert.ToDouble(ParryModel.BossAttackSpeed / Options.BossAttackSpeed);
             BurstTime = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);

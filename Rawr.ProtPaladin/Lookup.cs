@@ -279,6 +279,11 @@ namespace Rawr.ProtPaladin
             return (lowEnd + highEnd) / 2.0f;
         }
 
+        public static float ArdentDefenderReduction(Character character)
+        {
+            return character.PaladinTalents.ArdentDefender * 0.20f / 3;
+        }
+
         public static float ArmorReduction(Character character, Stats stats) // incoming damage
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
