@@ -20,7 +20,6 @@ namespace Rawr.Mage
         EvocationIVHero,
         ManaPotion,
         ManaGem,
-        DrumsOfBattle,
         Drinking,
         TimeExtension,
         AfterFightRegen,
@@ -46,9 +45,9 @@ namespace Rawr.Mage
             }
         }
 
-        public bool IsMatch(Cooldown cooldown, VariableType cooldownType)
+        public bool IsMatch(int effects, VariableType cooldownType)
         {
-            return ((cooldown != Cooldown.None && State != null && State.GetCooldown(cooldown) && (cooldownType == VariableType.None || Type == cooldownType)) || (cooldown == Cooldown.None && Type == cooldownType));
+            return ((effects != 0 && State != null && State.EffectsActive(effects) && (cooldownType == VariableType.None || Type == cooldownType)) || (effects == 0 && Type == cooldownType));
         }
     }
 
@@ -112,13 +111,6 @@ namespace Rawr.Mage
         public double EvocationDurationIVHero;
         public double EvocationRegenIVHero;
         //public double ManaPotionTime = 0.1f;
-        public double Trinket1Duration;
-        public double Trinket1Cooldown;
-        public double Trinket2Duration;
-        public double Trinket2Cooldown;
-        public double ManaGemEffectDuration;
-        public string Trinket1Name;
-        public string Trinket2Name;
         public int MaxManaPotion;
         public int MaxManaGem;
         public double MaxEvocation;
@@ -139,6 +131,7 @@ namespace Rawr.Mage
         public double WaterElementalCooldown;
         public double WaterElementalDuration;
         public double EvocationCooldown;
+        public double ManaGemEffectDuration;
 
         public double[] Solution;
         public List<SolutionVariable> SolutionVariable;
@@ -146,6 +139,19 @@ namespace Rawr.Mage
         public double UpperBound = double.PositiveInfinity;
         public double LowerBound = 0;
         public List<Segment> SegmentList;
+        public List<EffectCooldown> CooldownList;
+        public Dictionary<int, EffectCooldown> EffectCooldown;
+
+        public List<EffectCooldown> GetEffectList(int effects)
+        {
+            return CooldownList.FindAll(effect => (effects & effect.Mask) == effect.Mask);
+        }
+
+        public string EffectsDescription(int effects)
+        {
+            List<string> buffList = GetEffectList(effects).ConvertAll(effect => effect.Name);
+            return string.Join("+", buffList.ToArray());
+        }
 
         public int ColumnIdleRegen = -1;
         public int ColumnWand = -1;
@@ -178,13 +184,7 @@ namespace Rawr.Mage
         public SpecialEffect[] DamageProcEffects { get; set; }
         public SpecialEffect[] ManaRestoreEffects { get; set; }
         public SpecialEffect[] Mp5Effects { get; set; }
-        public float Trinket1SpellPower { get; set; }
-        public float Trinket1HasteRating { get; set; }
-        public List<SpecialEffect> Trinket1SpecialEffects { get; set; }
-        public float Trinket2SpellPower { get; set; }
-        public float Trinket2HasteRating { get; set; }
-        public List<SpecialEffect> Trinket2SpecialEffects { get; set; }
-        public float ManaGemEffectSpellPower { get; set; }
+        public List<EffectCooldown> ItemBasedEffectCooldowns { get; set; }
 
         #region Base State Stats
         public float BaseSpellHit { get; set; }
@@ -809,8 +809,10 @@ namespace Rawr.Mage
             sequence.GroupArcanePower();
             sequence.GroupPotionOfWildMagic();
             sequence.GroupPotionOfSpeed();
-            sequence.GroupTrinket1();
-            sequence.GroupTrinket2();
+            foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
+            {
+                sequence.GroupSpecialEffect(cooldown);
+            }
             List<SequenceGroup> list = sequence.GroupManaGemEffect();
             if (list != null && ManaGemEffect && CalculationOptions.DisplaySegmentCooldowns && ColumnManaOverflow != -1)
             {
@@ -820,7 +822,7 @@ namespace Rawr.Mage
                     if (Solution[i] > 0.01 && SolutionVariable[i].Segment == 0 && SolutionVariable[i].Type == VariableType.Spell)
                     {
                         CastingState state = SolutionVariable[i].State;
-                        if (state != null && !state.GetCooldown(Cooldown.ManaGemEffect))
+                        if (state != null && !state.EffectsActive((int)StandardEffect.ManaGemEffect))
                         {
                             float burn = SolutionVariable[i].Cycle.ManaPerSecond;
                             if (burn > manaBurn) manaBurn = burn;
@@ -839,16 +841,16 @@ namespace Rawr.Mage
             }
             sequence.GroupIcyVeins(); // should come after trinkets because of coldsnap
             sequence.GroupWaterElemental();
-            sequence.GroupDrumsOfBattle();
+            sequence.GroupBerserking();
             list = sequence.GroupFlameCap();
             // very very special case for now
-            if (list.Count == 2 && CalculationOptions.FightDuration < 400 && totalGem >= 1)
+            if (list != null && list.Count == 2 && CalculationOptions.FightDuration < 400 && totalGem >= 1)
             {
                 foreach (SequenceGroup group in list)
                 {
                     foreach (CooldownConstraint constraint in group.Constraint)
                     {
-                        if (constraint.Type == Cooldown.FlameCap)
+                        if (constraint.EffectCooldown.StandardEffect == StandardEffect.FlameCap)
                         {
                             constraint.Cooldown = 300.0;
                         }
@@ -1078,7 +1080,7 @@ namespace Rawr.Mage
                             ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed * 1.2f;
                             if (segmentedOutput)
                             {
-                                if (SolutionVariable[i].State != null && SolutionVariable[i].State.GetCooldown(Cooldown.IcyVeins))
+                                if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.IcyVeins))
                                 {
                                     sb.AppendLine(String.Format("{2} {0}: {1:F}", "Icy Veins+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                                 }
@@ -1098,7 +1100,7 @@ namespace Rawr.Mage
                             ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed * 1.3f;
                             if (segmentedOutput)
                             {
-                                if (SolutionVariable[i].State != null && SolutionVariable[i].State.GetCooldown(Cooldown.Heroism))
+                                if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.Heroism))
                                 {
                                     sb.AppendLine(String.Format("{2} {0}: {1:F}", "Heroism+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                                 }
@@ -1118,7 +1120,7 @@ namespace Rawr.Mage
                             ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed * 1.2f * 1.3f;
                             if (segmentedOutput)
                             {
-                                if (SolutionVariable[i].State != null && SolutionVariable[i].State.GetCooldown(Cooldown.IcyVeins | Cooldown.Heroism))
+                                if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism))
                                 {
                                     sb.AppendLine(String.Format("{2} {0}: {1:F}", "Icy Veins+Heroism+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                                 }
@@ -1138,15 +1140,6 @@ namespace Rawr.Mage
                             manaGem += Solution[i];
                             ManaSources["Mana Gem"] += (float)(Solution[i] * (1 + BaseStats.BonusManaGem) * ManaGemValue);
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Gem", Solution[i], SegmentList[SolutionVariable[i].Segment]));
-                            break;
-                        case VariableType.DrumsOfBattle:
-                            drums += Solution[i];
-                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen * BaseStats.SpellCombatManaRegeneration);
-                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
-                            ManaSources["Innervate"] += (float)Solution[i] * (15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
-                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
-                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Drums of Battle", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.Drinking:
                             ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen);

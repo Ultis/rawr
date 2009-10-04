@@ -142,8 +142,8 @@ namespace Rawr.Mage
             Stats rawStats;
             Stats baseStats;
             CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
-            CastingState baseState = new CastingState(calculationResult, Cooldown.None, false);
-            CastingState apState = new CastingState(calculationResult, Cooldown.ArcanePower, false);
+            CastingState baseState = new CastingState(calculationResult, 0, false);
+            CastingState apState = new CastingState(calculationResult, (int)StandardEffect.ArcanePower, false);
 
             Cycle wand = null;
             if (Character.Ranged != null)
@@ -263,7 +263,7 @@ z = remaining time on Missile Barrage
             Stats rawStats;
             Stats baseStats;
             CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
-            CastingState baseState = new CastingState(calculationResult, Cooldown.None, false);
+            CastingState baseState = new CastingState(calculationResult, 0, false);
 
             Cycle wand = null;
             if (Character.Ranged != null)
@@ -316,7 +316,7 @@ z = actual count on Fingers of Frost
             Stats baseStats;
             CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
             calculationResult.NeedsDisplayCalculations = true;
-            CastingState baseState = new CastingState(calculationResult, Cooldown.None, false);
+            CastingState baseState = new CastingState(calculationResult, 0, false);
 
             FireCycleGenerator generator = new FireCycleGenerator(baseState);            
 

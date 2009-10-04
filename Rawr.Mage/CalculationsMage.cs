@@ -344,14 +344,14 @@ namespace Rawr.Mage
         private void StoreIncrementalSet(Character character, CharacterCalculationsMage calculations)
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            List<Cooldown> cooldownList = new List<Cooldown>();
+            List<int> cooldownList = new List<int>();
             List<CycleId> spellList = new List<CycleId>();
             List<int> segmentList = new List<int>();
             for (int i = 0; i < calculations.SolutionVariable.Count; i++)
             {
                 if (calculations.Solution[i] > 0 && calculations.SolutionVariable[i].Type == VariableType.Spell)
                 {
-                    Cooldown cooldown = calculations.SolutionVariable[i].State.Cooldown & Cooldown.NonItemBasedMask;
+                    int cooldown = calculations.SolutionVariable[i].State.Effects & (int)StandardEffect.NonItemBasedMask;
                     CycleId spellId = calculations.SolutionVariable[i].Cycle.CycleId;
                     int segment = calculations.SolutionVariable[i].Segment;
                     bool found = false;
@@ -383,7 +383,7 @@ namespace Rawr.Mage
                 calculationOptions.IncrementalSetArmor = null;
             }
 
-            List<Cooldown> filteredCooldowns = ListUtils.RemoveDuplicates(cooldownList);
+            List<int> filteredCooldowns = ListUtils.RemoveDuplicates(cooldownList);
             filteredCooldowns.Sort();
             calculationOptions.IncrementalSetSortedStates = filteredCooldowns.ToArray();
         }
@@ -448,38 +448,6 @@ namespace Rawr.Mage
                     effect.Stats.GenerateSparseData();
                     stats.Accumulate(effect.Stats, effect.MaxStack);
                 }                
-            }
-            for (CharacterSlot i = 0; i < (CharacterSlot)Character.OptimizableSlotCount; i++)
-            {
-                if (i != CharacterSlot.Trinket1 && i != CharacterSlot.Trinket2)
-                {
-                    ItemInstance item = character[i];
-                    if (item != null)
-                    {
-                        if (item.Item != null)
-                        {
-                            foreach (SpecialEffect effect in item.Item.Stats.SpecialEffects())
-                            {
-                                if (effect.Trigger == Trigger.Use)
-                                {
-                                    effect.Stats.GenerateSparseData();
-                                    stats.Accumulate(effect.Stats, effect.GetAverageUptime(0, 1, 3, calculationOptions.FightDuration));
-                                }
-                            }
-                        }
-                        if (item.Enchant != null)
-                        {
-                            foreach (SpecialEffect effect in item.Enchant.Stats.SpecialEffects())
-                            {
-                                if (effect.Trigger == Trigger.Use)
-                                {
-                                    effect.Stats.GenerateSparseData();
-                                    stats.Accumulate(effect.Stats, effect.GetAverageUptime(0, 1, 3, calculationOptions.FightDuration));
-                                }
-                            }
-                        }
-                    }
-                }
             }
 
             return stats;
@@ -1068,15 +1036,14 @@ namespace Rawr.Mage
         #region Legend
                         legendY = 2;
 
-                        Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.PotionOfWildMagic, Cooldown.PotionOfSpeed, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect, Cooldown.PowerInfusion };
-						string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Potion of Wild Magic", "Potion of Speed", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Item.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Item.Name : "Trinket 2", "Combustion", "Water Elemental", "Mana Gem Effect", "Power Infusion" };
-						Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.FromArgb(255, 128, 0, 128), Color.LemonChiffon, Color.FromArgb(255, 255, 165, 0), Color.Aqua, Color.FromArgb(255, 0, 0, 255), Color.FromArgb(255, 255, 69, 0), Color.DarkCyan, Color.DarkGreen, Color.FromArgb(255, 255, 255, 0) };
-                        brushSubPoints = new Brush[cooldownColors.Length];
-                        colorSubPointsA = new Color[cooldownColors.Length];
-                        colorSubPointsB = new Color[cooldownColors.Length];
-                        for (int i = 0; i < cooldownColors.Length; i++)
+                        List<EffectCooldown> cooldownList = calculationOptions.Calculations.CooldownList;
+
+                        brushSubPoints = new Brush[cooldownList.Count];
+                        colorSubPointsA = new Color[cooldownList.Count];
+                        colorSubPointsB = new Color[cooldownList.Count];
+                        for (int i = 0; i < cooldownList.Count; i++)
                         {
-                            Color baseColor = cooldownColors[i];
+                            Color baseColor = cooldownList[i].Color;
                             brushSubPoints[i] = new SolidBrush(Color.FromArgb(baseColor.R / 2, baseColor.G / 2, baseColor.B / 2));
                             colorSubPointsA[i] = Color.FromArgb(baseColor.A / 2, baseColor.R / 2, baseColor.G / 2, baseColor.B / 2);
                             colorSubPointsB[i] = Color.FromArgb(baseColor.A / 2, baseColor);
@@ -1086,15 +1053,15 @@ namespace Rawr.Mage
                         formatSubPoint.LineAlignment = StringAlignment.Center;
 
                         int maxWidth = 1;
-                        for (int i = 0; i < cooldownNames.Length; i++)
+                        for (int i = 0; i < cooldownList.Count; i++)
                         {
-                            string subPointName = cooldownNames[i];
+                            string subPointName = cooldownList[i].Name;
                             int widthSubPoint = (int)Math.Ceiling(g.MeasureString(subPointName, fontLegend).Width + 2f);
                             if (widthSubPoint > maxWidth) maxWidth = widthSubPoint;
                         }
-                        for (int i = 0; i < cooldownNames.Length; i++)
+                        for (int i = 0; i < cooldownList.Count; i++)
                         {
-                            string cooldownName = cooldownNames[i];
+                            string cooldownName = cooldownList[i].Name;
                             rectSubPoint = new Rectangle(2, legendY, maxWidth, 16);
                             blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
                             blendSubPoint.Colors = new Color[] { colorSubPointsA[i], colorSubPointsB[i], colorSubPointsA[i] };
@@ -1126,7 +1093,7 @@ namespace Rawr.Mage
                         graphStart = 20f;
                         graphWidth = width - 40f;
                         graphTop = legendY;
-                        graphBottom = height - 4 - 4 * cooldowns.Length;
+                        graphBottom = height - 4 - 4 * cooldownList.Count;
                         graphHeight = graphBottom - graphTop - 40;
                         maxScale = calculationOptions.FightDuration;
                         graphEnd = graphStart + graphWidth;
@@ -1275,7 +1242,7 @@ namespace Rawr.Mage
                         }
                         if (list.Count > 0) g.DrawLines(Pens.Red, list.ToArray());
 
-                        for (int cooldown = 0; cooldown < cooldownNames.Length; cooldown++)
+                        for (int cooldown = 0; cooldown < cooldownList.Count; cooldown++)
                         {
                             blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
                             blendSubPoint.Colors = new Color[] { colorSubPointsA[cooldown], colorSubPointsB[cooldown], colorSubPointsA[cooldown] };
@@ -1287,7 +1254,7 @@ namespace Rawr.Mage
                             {
                                 float duration = (float)sequence[i].Duration;
                                 if (sequence[i].IsManaPotionOrGem) duration = 0;
-                                if (on && !sequence[i].CastingState.GetCooldown(cooldowns[cooldown]) && !sequence[i].IsManaPotionOrGem)
+                                if (on && !sequence[i].CastingState.EffectsActive(cooldownList[cooldown]) && !sequence[i].IsManaPotionOrGem)
                                 {
                                     on = false;
                                     if (time > timeOn)
@@ -1302,7 +1269,7 @@ namespace Rawr.Mage
                                         g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
                                     }
                                 }
-                                else if (!on && sequence[i].CastingState.GetCooldown(cooldowns[cooldown]))
+                                else if (!on && sequence[i].CastingState.EffectsActive(cooldownList[cooldown]))
                                 {
                                     on = true;
                                     timeOn = time;

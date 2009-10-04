@@ -720,50 +720,48 @@ namespace Rawr.Mage
             if (segmentCooldowns && advancedConstraintsLevel >= 1)
             {
                 resolution = lowResolution;
-                // drums
-                if (calculationOptions.DrumsOfBattle && !ValidateIntegralConsumableOverall(VariableType.DrumsOfBattle, calculationResult.BaseGlobalCooldown)) return false;
-                // drums
-                if (calculationOptions.DrumsOfBattle && !ValidateCooldown(Cooldown.DrumsOfBattle, 30.0, 120.0, true, 30.0, rowSegmentDrumsOfBattle, VariableType.None)) return false;
+                // berserking
+                if (berserkingAvailable && !ValidateCooldown((int)StandardEffect.Berserking, 10.0, 180.0, true, 10.0, rowSegmentBerserking, VariableType.None)) return false;
                 // make sure all cooldowns are tightly packed and not fragmented
                 // mf is trivially satisfied
                 // ap
-                if (arcanePowerAvailable && !ValidateCooldown(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, true, calculationResult.ArcanePowerDuration, rowSegmentArcanePower, VariableType.None)) return false;
+                if (arcanePowerAvailable && !ValidateCooldown((int)StandardEffect.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, true, calculationResult.ArcanePowerDuration, rowSegmentArcanePower, VariableType.None)) return false;
                 // iv
-                if (icyVeinsAvailable && !ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0, rowSegmentIcyVeins, VariableType.None)) return false;
+                if (icyVeinsAvailable && !ValidateCooldown((int)StandardEffect.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0, rowSegmentIcyVeins, VariableType.None)) return false;
                 // pi
-                if (powerInfusionAvailable && !ValidateCooldown(Cooldown.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, true, calculationResult.PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
+                if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, true, calculationResult.PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
                 // water elemental
                 if (waterElementalAvailable && !ValidateIntegralConsumableOverall(VariableType.SummonWaterElemental, calculationResult.BaseGlobalCooldown)) return false;
-                if (waterElementalAvailable && !ValidateCooldown(Cooldown.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
+                if (waterElementalAvailable && !ValidateCooldown((int)StandardEffect.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
                 // combustion
-                if (combustionAvailable && !ValidateCooldown(Cooldown.Combustion, 15.0, 180.0 + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
+                if (combustionAvailable && !ValidateCooldown((int)StandardEffect.Combustion, 15.0, 180.0 + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 // flamecap
-                if (flameCapAvailable && !ValidateCooldown(Cooldown.FlameCap, 60.0, 180.0, integralMana, 60.0, rowSegmentFlameCap, VariableType.None)) return false;
-                // t1
-                if (trinket1Available && !ValidateCooldown(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown, true, trinket1Duration, rowSegmentTrinket1, VariableType.None)) return false;
-                // t2
-                if (trinket2Available && !ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown, true, trinket2Duration, rowSegmentTrinket2, VariableType.None)) return false;
+                if (flameCapAvailable && !ValidateCooldown((int)StandardEffect.FlameCap, 60.0, 180.0, integralMana, 60.0, rowSegmentFlameCap, VariableType.None)) return false;
+                foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
+                {
+                    if (!ValidateCooldown(cooldown.Mask, cooldown.Duration, cooldown.Cooldown, true, cooldown.Duration, cooldown.SegmentConstraints, VariableType.None)) return false;
+                }
                 // mana gem effect
-                if (manaGemEffectAvailable && !ValidateCooldown(Cooldown.ManaGemEffect, manaGemEffectDuration, 120f, true, manaGemEffectDuration, rowSegmentManaGemEffect, VariableType.None)) return false;
+                if (manaGemEffectAvailable && !ValidateCooldown((int)StandardEffect.ManaGemEffect, manaGemEffectDuration, 120f, true, manaGemEffectDuration, rowSegmentManaGemEffect, VariableType.None)) return false;
                 // evocation
-                if (evocationAvailable && !ValidateCooldown(Cooldown.Evocation, calculationResult.EvocationDuration, calculationResult.EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
+                if (evocationAvailable && !ValidateCooldown((int)StandardEffect.Evocation, calculationResult.EvocationDuration, calculationResult.EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
                 if (evocationAvailable && calculationOptions.EnableHastedEvocation)
                 {
                     if (!ValidateHastedEvocation()) return false;
-                    if (icyVeinsAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationIV, calculationResult.EvocationDurationIV, calculationResult.EvocationCooldown, VariableType.EvocationIV, Cooldown.Evocation | Cooldown.IcyVeins)) return false;
+                    if (icyVeinsAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIV, calculationResult.EvocationDurationIV, calculationResult.EvocationCooldown, VariableType.EvocationIV, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins)) return false;
                 }
                 // heroism
-                if (heroismAvailable && !ValidateCooldown(Cooldown.Heroism, 40, -1)) return false;
+                if (heroismAvailable && !ValidateCooldown((int)StandardEffect.Heroism, 40, -1)) return false;
                 if (evocationAvailable && calculationOptions.EnableHastedEvocation)
                 {
-                    if (heroismAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationHero, calculationResult.EvocationDurationHero, calculationResult.EvocationCooldown, VariableType.EvocationHero, Cooldown.Evocation | Cooldown.Heroism)) return false;
-                    if (icyVeinsAvailable && heroismAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationIVHero, calculationResult.EvocationDurationIVHero, calculationResult.EvocationCooldown, VariableType.EvocationIVHero, Cooldown.Evocation | Cooldown.IcyVeins | Cooldown.Heroism)) return false;
+                    if (heroismAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationHero, calculationResult.EvocationDurationHero, calculationResult.EvocationCooldown, VariableType.EvocationHero, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism)) return false;
+                    if (icyVeinsAvailable && heroismAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIVHero, calculationResult.EvocationDurationIVHero, calculationResult.EvocationCooldown, VariableType.EvocationIVHero, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism)) return false;
                 }
                 if (effectPotionAvailable && !ValidateEffectPotion()) return false;
                 // potion of wild magic
-                if (potionOfWildMagicAvailable && !ValidateCooldown(Cooldown.PotionOfWildMagic, 15, -1)) return false;
+                if (potionOfWildMagicAvailable && !ValidateCooldown((int)StandardEffect.PotionOfWildMagic, 15, -1)) return false;
                 // potion of speed
-                if (potionOfSpeedAvailable && !ValidateCooldown(Cooldown.PotionOfSpeed, 15, -1)) return false;
+                if (potionOfSpeedAvailable && !ValidateCooldown((int)StandardEffect.PotionOfSpeed, 15, -1)) return false;
             }
 
             // high resolution
@@ -771,50 +769,50 @@ namespace Rawr.Mage
             {
                 resolution = highResolution;
                 // drums
-                if (calculationOptions.DrumsOfBattle && !ValidateCooldown(Cooldown.DrumsOfBattle, 30.0, 120.0, true, 30.0, rowSegmentDrumsOfBattle, VariableType.None)) return false;
+                if (berserkingAvailable && !ValidateCooldown((int)StandardEffect.Berserking, 10.0, 180.0, true, 10.0, rowSegmentBerserking, VariableType.None)) return false;
                 // make sure all cooldowns are tightly packed and not fragmented
                 // mf is trivially satisfied
                 // ap
-                if (arcanePowerAvailable && !ValidateCooldown(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, true, calculationResult.ArcanePowerDuration, rowSegmentArcanePower, VariableType.None)) return false;
+                if (arcanePowerAvailable && !ValidateCooldown((int)StandardEffect.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, true, calculationResult.ArcanePowerDuration, rowSegmentArcanePower, VariableType.None)) return false;
                 // iv
-                if (icyVeinsAvailable && !ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0, rowSegmentIcyVeins, VariableType.None)) return false;
+                if (icyVeinsAvailable && !ValidateCooldown((int)StandardEffect.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0, rowSegmentIcyVeins, VariableType.None)) return false;
                 // ap
-                if (powerInfusionAvailable && !ValidateCooldown(Cooldown.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, true, calculationResult.PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
+                if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, true, calculationResult.PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
                 // water elemental
-                if (waterElementalAvailable && !ValidateCooldown(Cooldown.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
+                if (waterElementalAvailable && !ValidateCooldown((int)StandardEffect.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
                 // coldsnap
                 if (icyVeinsAvailable && coldsnapAvailable && !ValidateColdsnap()) return false;
                 // combustion
-                if (combustionAvailable && !ValidateCooldown(Cooldown.Combustion, 15.0, 180.0 + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
+                if (combustionAvailable && !ValidateCooldown((int)StandardEffect.Combustion, 15.0, 180.0 + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 // flamecap
-                if (flameCapAvailable && !ValidateCooldown(Cooldown.FlameCap, 60.0, 180.0, integralMana, 60.0, rowSegmentFlameCap, VariableType.None)) return false;
-                // t1
-                if (trinket1Available && !ValidateCooldown(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown, true, trinket1Duration, rowSegmentTrinket1, VariableType.None)) return false;
-                // t2
-                if (trinket2Available && !ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown, true, trinket2Duration, rowSegmentTrinket2, VariableType.None)) return false;
+                if (flameCapAvailable && !ValidateCooldown((int)StandardEffect.FlameCap, 60.0, 180.0, integralMana, 60.0, rowSegmentFlameCap, VariableType.None)) return false;
+                foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
+                {
+                    if (!ValidateCooldown(cooldown.Mask, cooldown.Duration, cooldown.Cooldown, true, cooldown.Duration, cooldown.SegmentConstraints, VariableType.None)) return false;
+                }
                 // mana gem effect
-                if (manaGemEffectAvailable && !ValidateCooldown(Cooldown.ManaGemEffect, manaGemEffectDuration, 120f, true, manaGemEffectDuration, rowSegmentManaGemEffect, VariableType.None)) return false;
+                if (manaGemEffectAvailable && !ValidateCooldown((int)StandardEffect.ManaGemEffect, manaGemEffectDuration, 120f, true, manaGemEffectDuration, rowSegmentManaGemEffect, VariableType.None)) return false;
                 // evocation
-                if (evocationAvailable && !ValidateCooldown(Cooldown.Evocation, calculationResult.EvocationDuration, calculationResult.EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
+                if (evocationAvailable && !ValidateCooldown((int)StandardEffect.Evocation, calculationResult.EvocationDuration, calculationResult.EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
                 if (evocationAvailable && calculationOptions.EnableHastedEvocation)
                 {
                     if (!ValidateHastedEvocation()) return false;
-                    if (icyVeinsAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationIV, calculationResult.EvocationDurationIV, calculationResult.EvocationCooldown, VariableType.EvocationIV, Cooldown.Evocation | Cooldown.IcyVeins)) return false;
+                    if (icyVeinsAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIV, calculationResult.EvocationDurationIV, calculationResult.EvocationCooldown, VariableType.EvocationIV, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins)) return false;
                 }
                 // mana
                 if (evocationAvailable && !ValidateEvocation()) return false;
                 if (manaGemEffectAvailable && !ValidateManaGemEffect()) return false;
                 // heroism
-                if (heroismAvailable && !ValidateCooldown(Cooldown.Heroism, 40, -1)) return false;
+                if (heroismAvailable && !ValidateCooldown((int)StandardEffect.Heroism, 40, -1)) return false;
                 if (evocationAvailable && calculationOptions.EnableHastedEvocation)
                 {
-                    if (heroismAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationHero, calculationResult.EvocationDurationHero, calculationResult.EvocationCooldown, VariableType.EvocationHero, Cooldown.Evocation | Cooldown.Heroism)) return false;
-                    if (icyVeinsAvailable && heroismAvailable && !ValidateActivation(Cooldown.Evocation, VariableType.EvocationIVHero, calculationResult.EvocationDurationIVHero, calculationResult.EvocationCooldown, VariableType.EvocationIVHero, Cooldown.Evocation | Cooldown.IcyVeins | Cooldown.Heroism)) return false;
+                    if (heroismAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationHero, calculationResult.EvocationDurationHero, calculationResult.EvocationCooldown, VariableType.EvocationHero, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism)) return false;
+                    if (icyVeinsAvailable && heroismAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIVHero, calculationResult.EvocationDurationIVHero, calculationResult.EvocationCooldown, VariableType.EvocationIVHero, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism)) return false;
                 }
                 // potion of wild magic
-                if (potionOfWildMagicAvailable && !ValidateCooldown(Cooldown.PotionOfWildMagic, 15, -1)) return false;
+                if (potionOfWildMagicAvailable && !ValidateCooldown((int)StandardEffect.PotionOfWildMagic, 15, -1)) return false;
                 // potion of speed
-                if (potionOfSpeedAvailable && !ValidateCooldown(Cooldown.PotionOfSpeed, 15, -1)) return false;
+                if (potionOfSpeedAvailable && !ValidateCooldown((int)StandardEffect.PotionOfSpeed, 15, -1)) return false;
             }
 
             if (integralMana && advancedConstraintsLevel >= 2)
@@ -832,9 +830,9 @@ namespace Rawr.Mage
 
                 if (evocationAvailable && calculationOptions.EnableHastedEvocation)
                 {
-                    if (icyVeinsAvailable && !ValidateActivationAdvanced(Cooldown.Evocation, VariableType.EvocationIV, calculationResult.EvocationDurationIV, calculationResult.EvocationCooldown, VariableType.EvocationIV, Cooldown.Evocation | Cooldown.IcyVeins)) return false;
-                    if (heroismAvailable && !ValidateActivationAdvanced(Cooldown.Evocation, VariableType.EvocationHero, calculationResult.EvocationDurationHero, calculationResult.EvocationCooldown, VariableType.EvocationHero, Cooldown.Evocation | Cooldown.Heroism)) return false;
-                    if (icyVeinsAvailable && heroismAvailable && !ValidateActivationAdvanced(Cooldown.Evocation, VariableType.EvocationIVHero, calculationResult.EvocationDurationIVHero, calculationResult.EvocationCooldown, VariableType.EvocationIVHero, Cooldown.Evocation | Cooldown.IcyVeins | Cooldown.Heroism)) return false;
+                    if (icyVeinsAvailable && !ValidateActivationAdvanced((int)StandardEffect.Evocation, VariableType.EvocationIV, calculationResult.EvocationDurationIV, calculationResult.EvocationCooldown, VariableType.EvocationIV, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins)) return false;
+                    if (heroismAvailable && !ValidateActivationAdvanced((int)StandardEffect.Evocation, VariableType.EvocationHero, calculationResult.EvocationDurationHero, calculationResult.EvocationCooldown, VariableType.EvocationHero, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism)) return false;
+                    if (icyVeinsAvailable && heroismAvailable && !ValidateActivationAdvanced((int)StandardEffect.Evocation, VariableType.EvocationIVHero, calculationResult.EvocationDurationIVHero, calculationResult.EvocationCooldown, VariableType.EvocationIVHero, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism)) return false;
                 }
 
             }
@@ -842,17 +840,18 @@ namespace Rawr.Mage
             if (segmentCooldowns && advancedConstraintsLevel >= 4)
             {
                 // advanced cooldown validation
-                if (arcanePowerAvailable && !ValidateCooldownAdvanced(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, VariableType.None)) return false;
-                if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced(Cooldown.IcyVeins, 20.0, calculationResult.IcyVeinsCooldown, VariableType.None)) return false;
-                if (powerInfusionAvailable && !ValidateCooldownAdvanced(Cooldown.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, VariableType.None)) return false;
-                if (trinket1Available && !ValidateCooldownAdvanced(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown, VariableType.None)) return false;
-                if (trinket2Available && !ValidateCooldownAdvanced(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown, VariableType.None)) return false;
-                if (manaGemEffectAvailable && !ValidateCooldownAdvanced(Cooldown.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
+                if (arcanePowerAvailable && !ValidateCooldownAdvanced((int)StandardEffect.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, VariableType.None)) return false;
+                if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced((int)StandardEffect.IcyVeins, 20.0, calculationResult.IcyVeinsCooldown, VariableType.None)) return false;
+                if (powerInfusionAvailable && !ValidateCooldownAdvanced((int)StandardEffect.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, VariableType.None)) return false;
+                foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
+                {
+                    if (!ValidateCooldownAdvanced(cooldown.Mask, cooldown.Duration, cooldown.Cooldown, VariableType.None)) return false;
+                }
+                if (manaGemEffectAvailable && !ValidateCooldownAdvanced((int)StandardEffect.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
             }
 
             if (segmentCooldowns && advancedConstraintsLevel >= 5)
             {
-                if (calculationOptions.DrumsOfBattle && !ValidateActivation(Cooldown.DrumsOfBattle, VariableType.None, 30.0, 120.0, VariableType.DrumsOfBattle, Cooldown.None)) return false;
                 if (waterElementalAvailable)
                 {
                     if (coldsnapAvailable)
@@ -861,17 +860,19 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        if (!ValidateActivation(Cooldown.WaterElemental, VariableType.None, calculationResult.WaterElementalDuration, calculationResult.WaterElementalCooldown, VariableType.SummonWaterElemental, Cooldown.None)) return false;
+                        if (!ValidateActivation((int)StandardEffect.WaterElemental, VariableType.None, calculationResult.WaterElementalDuration, calculationResult.WaterElementalCooldown, VariableType.SummonWaterElemental, 0)) return false;
                     }
                 }
 
                 // advanced cooldown validation 2
-                if (arcanePowerAvailable && !ValidateCooldownAdvanced2(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, VariableType.None)) return false;
-                if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced2(Cooldown.IcyVeins, 20.0, calculationResult.IcyVeinsCooldown, VariableType.None)) return false;
-                if (powerInfusionAvailable && !ValidateCooldownAdvanced2(Cooldown.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, VariableType.None)) return false;
-                if (trinket1Available && !ValidateCooldownAdvanced2(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown, VariableType.None)) return false;
-                if (trinket2Available && !ValidateCooldownAdvanced2(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown, VariableType.None)) return false;
-                if (manaGemEffectAvailable && !ValidateCooldownAdvanced2(Cooldown.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
+                if (arcanePowerAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, VariableType.None)) return false;
+                if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.IcyVeins, 20.0, calculationResult.IcyVeinsCooldown, VariableType.None)) return false;
+                if (powerInfusionAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, VariableType.None)) return false;
+                foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
+                {
+                    if (!ValidateCooldownAdvanced2(cooldown.Mask, cooldown.Duration, cooldown.Cooldown, VariableType.None)) return false;
+                }
+                if (manaGemEffectAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
             }
 
             return true;
@@ -906,48 +907,42 @@ namespace Rawr.Mage
 #endif
         }
 
-        private double[] GetSegmentCooldownCount(Cooldown cooldown, VariableType cooldownType)
+        private double[] GetSegmentCooldownCount(int effectsMask, VariableType cooldownType)
         {
             int ind = -1;
-            switch (cooldown)
+            switch (effectsMask)
             {
-                case Cooldown.ArcanePower:
+                case (int)StandardEffect.ArcanePower:
                     ind = 0;
                     break;
-                case Cooldown.Combustion:
+                case (int)StandardEffect.Combustion:
                     ind = 1;
                     break;
-                case Cooldown.DrumsOfBattle:
+                case (int)StandardEffect.Berserking:
                     ind = 2;
                     break;
-                case Cooldown.FlameCap:
+                case (int)StandardEffect.FlameCap:
                     ind = 3;
                     break;
-                case Cooldown.Heroism:
+                case (int)StandardEffect.Heroism:
                     ind = 4;
                     break;
-                case Cooldown.IcyVeins:
+                case (int)StandardEffect.IcyVeins:
                     ind = 5;
                     break;
-                case Cooldown.ManaGemEffect:
+                case (int)StandardEffect.ManaGemEffect:
                     ind = 6;
                     break;
-                case Cooldown.PotionOfSpeed:
+                case (int)StandardEffect.PotionOfSpeed:
                     ind = 7;
                     break;
-                case Cooldown.PotionOfWildMagic:
+                case (int)StandardEffect.PotionOfWildMagic:
                     ind = 8;
                     break;
-                case Cooldown.Trinket1:
-                    ind = 9;
-                    break;
-                case Cooldown.Trinket2:
-                    ind = 10;
-                    break;
-                case Cooldown.WaterElemental:
+                case (int)StandardEffect.WaterElemental:
                     ind = 11;
                     break;
-                case Cooldown.Evocation:
+                case (int)StandardEffect.Evocation:
                     switch (cooldownType)
                     {
                         case VariableType.None:
@@ -967,19 +962,32 @@ namespace Rawr.Mage
                             break;
                     }
                     break;
-                case Cooldown.Evocation | Cooldown.IcyVeins:
+                case (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins:
                     ind = 15;
                     break;
-                case Cooldown.Evocation | Cooldown.Heroism:
+                case (int)StandardEffect.Evocation | (int)StandardEffect.Heroism:
                     ind = 16;
                     break;
-                case Cooldown.Evocation | Cooldown.IcyVeins | Cooldown.Heroism:
+                case (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism:
                     ind = 17;
                     break;
-                case Cooldown.PowerInfusion:
+                case (int)StandardEffect.PowerInfusion:
                     ind = 22;
                     break;
                 default:
+                    for (int i = 0; i < calculationResult.ItemBasedEffectCooldowns.Count; i++)
+                    {
+                        EffectCooldown cooldown = calculationResult.ItemBasedEffectCooldowns[i];
+                        if (effectsMask == cooldown.Mask)
+                        {
+                            ind = 23 + i;
+                            break;
+                        }
+                    }
+                    if (ind != -1)
+                    {
+                        break;
+                    }
                     switch (cooldownType)
                     {
                         //case VariableType.Evocation:
@@ -999,14 +1007,14 @@ namespace Rawr.Mage
             {
                 segCount = new double[segmentList.Count];
                 segmentCooldownCount[ind] = segCount;
-                if (cooldown != Cooldown.None)
+                if (effectsMask != 0)
                 {
                     for (int outseg = 0; outseg < segmentList.Count; outseg++)
                     {
                         double s = 0.0;
                         for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
                         {
-                            if (solutionVariable[index].IsMatch(cooldown, cooldownType))
+                            if (solutionVariable[index].IsMatch(effectsMask, cooldownType))
                             {
                                 s += solution[index];
                             }
@@ -1016,7 +1024,7 @@ namespace Rawr.Mage
                 }
                 for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                 {
-                    if (solutionVariable[index].IsMatch(cooldown, cooldownType)) segCount[solutionVariable[index].Segment] += solution[index];
+                    if (solutionVariable[index].IsMatch(effectsMask, cooldownType)) segCount[solutionVariable[index].Segment] += solution[index];
                 }
             }
             return segCount;
@@ -1025,7 +1033,7 @@ namespace Rawr.Mage
         private void AnalyzeSolution()
         {
             manaList = new double[segmentList.Count];
-            segmentCooldownCount = new double[23][];
+            segmentCooldownCount = new double[22 + calculationResult.ItemBasedEffectCooldowns.Count][];
             hexList = new List<int>[segmentList.Count];
             segmentFilled = new double[segmentList.Count];
             hexMask = new int[segmentList.Count];
@@ -1047,7 +1055,7 @@ namespace Rawr.Mage
                 }
                 if (solution[index] > 0.00001 && state != null)
                 {
-                    int h = (int)state.Cooldown;
+                    int h = (int)state.Effects;
                     if (h != 0)
                     {
                         hexMask[iseg] |= h;
@@ -1058,23 +1066,23 @@ namespace Rawr.Mage
             }
         }
 
-        private int AddConstraint(SolverLP branchlp, Cooldown cooldown, int segment)
+        private int AddConstraint(SolverLP branchlp, int effects, int segment)
         {
-            return AddConstraint(branchlp, cooldown, VariableType.None, segment, segment);
+            return AddConstraint(branchlp, effects, VariableType.None, segment, segment);
         }
 
-        private int AddConstraint(SolverLP branchlp, Cooldown cooldown, int minSegment, int maxSegment)
+        private int AddConstraint(SolverLP branchlp, int effects, int minSegment, int maxSegment)
         {
-            return AddConstraint(branchlp, cooldown, VariableType.None, minSegment, maxSegment);
+            return AddConstraint(branchlp, effects, VariableType.None, minSegment, maxSegment);
         }
 
-        private int AddConstraint(SolverLP branchlp, Cooldown cooldown, VariableType cooldownType, int minSegment, int maxSegment)
+        private int AddConstraint(SolverLP branchlp, int effects, VariableType cooldownType, int minSegment, int maxSegment)
         {
             bool newConstraint;
-            int index = branchlp.AddConstraint(string.Format("{0}-{1}-{2}-{3}", cooldown, cooldownType, minSegment, maxSegment), out newConstraint);
+            int index = branchlp.AddConstraint(string.Format("{0}-{1}-{2}-{3}", effects, cooldownType, minSegment, maxSegment), out newConstraint);
             if (newConstraint)
             {
-                SetCooldownElements(branchlp, index, cooldown, cooldownType, minSegment, maxSegment, 1.0);
+                SetCooldownElements(branchlp, index, effects, cooldownType, minSegment, maxSegment, 1.0);
             }
             return index;
         }
@@ -1142,38 +1150,38 @@ namespace Rawr.Mage
                                     // do elimination
                                     // eliminate left
                                     SolverLP hexRemovedLP = lp.Clone();
-                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle " + (Cooldown)ind1 + "-" + (Cooldown)ind2 + " at " + seg + ", removing left " + ind1);
+                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle " + ind1 + "-" + ind2 + " at " + seg + ", removing left " + ind1);
                                     for (int index = 0; index < solutionVariable.Count; index++)
                                     {
                                         CastingState state = solutionVariable[index].State;
                                         int iseg = solutionVariable[index].Segment;
-                                        if (state != null && iseg == seg - 1 && ((int)state.Cooldown & ind1) != 0) hexRemovedLP.EraseColumn(index);
+                                        if (state != null && iseg == seg - 1 && ((int)state.Effects & ind1) != 0) hexRemovedLP.EraseColumn(index);
                                     }
                                     HeapPush(hexRemovedLP);
                                     // eliminate right
                                     hexRemovedLP = lp.Clone();
-                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle " + (Cooldown)ind1 + "-" + (Cooldown)ind2 + " at " + seg + ", removing right " + ind2);
+                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle " + ind1 + "-" + ind2 + " at " + seg + ", removing right " + ind2);
                                     for (int index = 0; index < solutionVariable.Count; index++)
                                     {
                                         CastingState state = solutionVariable[index].State;
                                         int iseg = solutionVariable[index].Segment;
-                                        if (state != null && iseg == seg + 1 && ((int)state.Cooldown & ind2) != 0) hexRemovedLP.EraseColumn(index);
+                                        if (state != null && iseg == seg + 1 && ((int)state.Effects & ind2) != 0) hexRemovedLP.EraseColumn(index);
                                     }
                                     HeapPush(hexRemovedLP);
                                     // eliminate middle
                                     hexRemovedLP = lp.Clone();
                                     int ind = ind1 | ind2;
-                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle " + (Cooldown)ind1 + "-" + (Cooldown)ind2 + " at " + seg + ", removing center " + ind);
+                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle " + ind1 + "-" + ind2 + " at " + seg + ", removing center " + ind);
                                     for (int index = 0; index < solutionVariable.Count; index++)
                                     {
                                         CastingState state = solutionVariable[index].State;
                                         int iseg = solutionVariable[index].Segment;
-                                        if (state != null && iseg == seg && ((int)state.Cooldown & ind) == ind) hexRemovedLP.EraseColumn(index);
+                                        if (state != null && iseg == seg && ((int)state.Effects & ind) == ind) hexRemovedLP.EraseColumn(index);
                                     }
                                     HeapPush(hexRemovedLP);
                                     // force to full
                                     // this is equivalent to disabling all that are not good (at least I think it is)
-                                    if (lp.Log != null) lp.Log.AppendLine("Breaking supergroup cycle " + (Cooldown)ind1 + "-" + (Cooldown)ind2 + " at " + seg + ", force to max");
+                                    if (lp.Log != null) lp.Log.AppendLine("Breaking supergroup cycle " + ind1 + "-" + ind2 + " at " + seg + ", force to max");
                                     //int row = lp.AddConstraint(false);
                                     for (int index = 0; index < solutionVariable.Count; index++)
                                     {
@@ -1181,8 +1189,8 @@ namespace Rawr.Mage
                                         int iseg = solutionVariable[index].Segment;
                                         if (state != null && iseg == seg && !solutionVariable[index].IsZeroTime)
                                         {
-                                            int hex = (int)state.Cooldown;
-                                            if (((int)state.Cooldown & (ind1 | ind2)) == 0) lp.EraseColumn(index);
+                                            int hex = (int)state.Effects;
+                                            if (((int)state.Effects & (ind1 | ind2)) == 0) lp.EraseColumn(index);
                                             //if ((state.GetHex() & (ind1 | ind2)) != 0) lp.SetConstraintElement(row, index, -1.0);
                                         }
                                     }
@@ -1266,7 +1274,7 @@ namespace Rawr.Mage
                                                 {
                                                     CastingState state = solutionVariable[index].State;
                                                     int iseg = solutionVariable[index].Segment;
-                                                    if (state != null && iseg == seg2 && ((int)state.Cooldown & c) != 0) hexRemovedLP.EraseColumn(index);
+                                                    if (state != null && iseg == seg2 && ((int)state.Effects & c) != 0) hexRemovedLP.EraseColumn(index);
                                                 }
                                                 HeapPush(hexRemovedLP);
 
@@ -1279,7 +1287,7 @@ namespace Rawr.Mage
                                                     {
                                                         CastingState state = solutionVariable[index].State;
                                                         int iseg = solutionVariable[index].Segment;
-                                                        if (state != null && iseg == seg2 && ((int)state.Cooldown & d) != 0) hexRemovedLP.EraseColumn(index);
+                                                        if (state != null && iseg == seg2 && ((int)state.Effects & d) != 0) hexRemovedLP.EraseColumn(index);
                                                     }
                                                     HeapPush(hexRemovedLP);
                                                 }
@@ -1292,7 +1300,7 @@ namespace Rawr.Mage
                                                 {
                                                     CastingState state = solutionVariable[index].State;
                                                     int iseg = solutionVariable[index].Segment;
-                                                    if (state != null && iseg == seg && ((int)state.Cooldown & bridge) == bridge) hexRemovedLP.EraseColumn(index);
+                                                    if (state != null && iseg == seg && ((int)state.Effects & bridge) == bridge) hexRemovedLP.EraseColumn(index);
                                                 }
                                                 HeapPush(hexRemovedLP);
 
@@ -1303,7 +1311,7 @@ namespace Rawr.Mage
                                                 {
                                                     CastingState state = solutionVariable[index].State;
                                                     int iseg = solutionVariable[index].Segment;
-                                                    if (state != null && iseg == seg && ((int)state.Cooldown & (v | z)) == v) hexRemovedLP.EraseColumn(index);
+                                                    if (state != null && iseg == seg && ((int)state.Effects & (v | z)) == v) hexRemovedLP.EraseColumn(index);
                                                 }
                                                 HeapPush(hexRemovedLP);
 
@@ -1314,7 +1322,7 @@ namespace Rawr.Mage
                                                 {
                                                     CastingState state = solutionVariable[index].State;
                                                     int iseg = solutionVariable[index].Segment;
-                                                    if (state != null && iseg == seg && ((int)state.Cooldown & (v | z)) == z) hexRemovedLP.EraseColumn(index);
+                                                    if (state != null && iseg == seg && ((int)state.Effects & (v | z)) == z) hexRemovedLP.EraseColumn(index);
                                                 }
                                                 HeapPush(hexRemovedLP);
 
@@ -1469,7 +1477,7 @@ namespace Rawr.Mage
                             {
                                 CastingState state = solutionVariable[index].State;
                                 int iseg = solutionVariable[index].Segment;
-                                if (state != null && iseg >= seg - 1 && iseg <= seg + 1 && (int)state.Cooldown == minHexChain[i]) hexRemovedLP.EraseColumn(index);
+                                if (state != null && iseg >= seg - 1 && iseg <= seg + 1 && (int)state.Effects == minHexChain[i]) hexRemovedLP.EraseColumn(index);
                             }
                             HeapPush(hexRemovedLP);
                         }
@@ -1479,7 +1487,7 @@ namespace Rawr.Mage
                         {
                             CastingState state = solutionVariable[index].State;
                             int iseg = solutionVariable[index].Segment;
-                            if (state != null && iseg == seg && (int)state.Cooldown == 0 && !solutionVariable[index].IsZeroTime) lp.EraseColumn(index);
+                            if (state != null && iseg == seg && (int)state.Effects == 0 && !solutionVariable[index].IsZeroTime) lp.EraseColumn(index);
                             //if (state != null && iseg == seg && state.GetHex() != 0) lp.SetConstraintElement(row, index, -1.0);
                         }
                         lp.SetLHS(rowSegment + seg, segmentList[seg].Duration);
@@ -1798,14 +1806,14 @@ namespace Rawr.Mage
                     {
                         int j = (i + 1) % M;
                         SolverLP hexRemovedLP = lp.Clone();
-                        if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking cycle " + (Cooldown)cycle + " at boundary " + seg + ", removing " + indicator[i] + "+" + indicator[j]);
+                        if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking cycle " + cycle + " at boundary " + seg + ", removing " + indicator[i] + "+" + indicator[j]);
                         for (int index = 0; index < solutionVariable.Count; index++)
                         {
                             CastingState state = solutionVariable[index].State;
                             int iseg = solutionVariable[index].Segment;
                             if (state != null && (iseg == seg || iseg == seg + 1))
                             {
-                                int h = (int)state.Cooldown;
+                                int h = (int)state.Effects;
                                 bool isindicated = (h & indicator[i]) != 0 && (h & indicator[j]) != 0;
                                 if (isindicated)
                                 {
@@ -1866,7 +1874,7 @@ namespace Rawr.Mage
                             int iseg = solutionVariable[index].Segment;
                             if (state != null && (iseg == seg || iseg == seg + 1))
                             {
-                                int h = (int)state.Cooldown;
+                                int h = (int)state.Effects;
                                 bool isindicated = (h & indicator[i]) != 0 && (h & indicator[j]) != 0;
                                 if (isindicated && i < M - 1) // for bridge it is indicated as long as it contains bridge connections
                                 {
@@ -1902,7 +1910,7 @@ namespace Rawr.Mage
                         int iseg = solutionVariable[index].Segment;
                         if (state != null && (iseg == seg || iseg == seg + 1))
                         {
-                            int h = (int)state.Cooldown;
+                            int h = (int)state.Effects;
                             bool isindicated = (h & mask) == (core & mask);
                             if (isindicated) hexRemovedLP.EraseColumn(index);
                         }
@@ -1918,7 +1926,7 @@ namespace Rawr.Mage
                             int iseg = solutionVariable[index].Segment;
                             if (state != null && (iseg == seg || iseg == seg + 1))
                             {
-                                int h = (int)state.Cooldown;
+                                int h = (int)state.Effects;
                                 bool isindicated = (h & mask) == (threeTail[i + 1] & mask);
                                 if (isindicated) hexRemovedLP.EraseColumn(index);
                             }
@@ -2020,7 +2028,7 @@ namespace Rawr.Mage
                         int iseg = solutionVariable[index].Segment;
                         if (state != null && iseg == seg1)
                         {
-                            int h = (int)state.Cooldown;
+                            int h = (int)state.Effects;
                             if ((h & c1) != 0 && (h & c2) == 0) elimLP.EraseColumn(index);
                         }
                     }
@@ -2034,7 +2042,7 @@ namespace Rawr.Mage
                         int iseg = solutionVariable[index].Segment;
                         if (state != null && iseg == seg1)
                         {
-                            int h = (int)state.Cooldown;
+                            int h = (int)state.Effects;
                             if ((h & c2) != 0 && (h & c1) == 0) elimLP.EraseColumn(index);
                         }
                     }
@@ -2048,7 +2056,7 @@ namespace Rawr.Mage
                         int iseg = solutionVariable[index].Segment;
                         if (state != null && iseg == seg2)
                         {
-                            int h = (int)state.Cooldown;
+                            int h = (int)state.Effects;
                             if ((h & c1) != 0) elimLP.EraseColumn(index);
                         }
                     }
@@ -2062,7 +2070,7 @@ namespace Rawr.Mage
                         int iseg = solutionVariable[index].Segment;
                         if (state != null && iseg == seg2)
                         {
-                            int h = (int)state.Cooldown;
+                            int h = (int)state.Effects;
                             if ((h & c2) != 0) elimLP.EraseColumn(index);
                         }
                     }
@@ -2153,9 +2161,6 @@ namespace Rawr.Mage
                 case VariableType.EvocationIVHero:
                     row = rowEvocationIVHero;
                     break;
-                case VariableType.DrumsOfBattle:
-                    row = rowDrumsOfBattle;
-                    break;
                 case VariableType.SummonWaterElemental:
                     row = rowSummonWaterElementalCount;
                     break;
@@ -2187,8 +2192,8 @@ namespace Rawr.Mage
         private bool ValidateColdsnap()
         {
             const double eps = 0.000001;
-            double[] ivCount = GetSegmentCooldownCount(Cooldown.IcyVeins, VariableType.None);
-            double[] weCount = GetSegmentCooldownCount(Cooldown.WaterElemental, VariableType.None);
+            double[] ivCount = GetSegmentCooldownCount((int)StandardEffect.IcyVeins, VariableType.None);
+            double[] weCount = GetSegmentCooldownCount((int)StandardEffect.WaterElemental, VariableType.None);
 
             // everything is valid, except possibly coldsnap so we can assume the effects are nicely packed
             // check where coldsnaps are needed, similar to evaluation in sequence reconstruction
@@ -2205,10 +2210,10 @@ namespace Rawr.Mage
             List<double> weStart = new List<double>();
             double e1t1 = double.NegativeInfinity;
             double e1t2 = double.NegativeInfinity;
-            Cooldown e1 = Cooldown.IcyVeins;
+            int e1 = (int)StandardEffect.IcyVeins;
             double e2t1 = double.NegativeInfinity;
             double e2t2 = double.NegativeInfinity;
-            Cooldown e2 = Cooldown.IcyVeins;
+            int e2 = (int)StandardEffect.IcyVeins;
             for (int seg = 0; seg < segmentList.Count; seg++)
             {
                 if (!ivActive && ivCount[seg] > eps)
@@ -2241,7 +2246,7 @@ namespace Rawr.Mage
                             e1 = e2;
                             e1t1 = e2t1;
                             e1t2 = e2t2;
-                            e2 = Cooldown.IcyVeins;
+                            e2 = (int)StandardEffect.IcyVeins;
                             e2t1 = ivStart[ivStart.Count - 2];
                             e2t2 = ivStart[ivStart.Count - 1];
                             valid = false;
@@ -2255,7 +2260,7 @@ namespace Rawr.Mage
                             e1 = e2;
                             e1t1 = e2t1;
                             e1t2 = e2t2;
-                            e2 = Cooldown.IcyVeins;
+                            e2 = (int)StandardEffect.IcyVeins;
                             e2t1 = ivStart[ivStart.Count - 2];
                             e2t2 = ivStart[ivStart.Count - 1];
                         }
@@ -2315,7 +2320,7 @@ namespace Rawr.Mage
                                 e1 = e2;
                                 e1t1 = e2t1;
                                 e1t2 = e2t2;
-                                e2 = Cooldown.IcyVeins;
+                                e2 = (int)StandardEffect.IcyVeins;
                                 e2t1 = ivStart[ivStart.Count - 2];
                                 e2t2 = ivStart[ivStart.Count - 1];
                                 ivCooldown += 20.0;
@@ -2327,7 +2332,7 @@ namespace Rawr.Mage
                                 e1 = e2;
                                 e1t1 = e2t1;
                                 e1t2 = e2t2;
-                                e2 = Cooldown.IcyVeins;
+                                e2 = (int)StandardEffect.IcyVeins;
                                 e2t1 = ivStart[ivStart.Count - 2];
                                 e2t2 = ivStart[ivStart.Count - 1];
                                 valid = false;
@@ -2370,7 +2375,7 @@ namespace Rawr.Mage
                             e1 = e2;
                             e1t1 = e2t1;
                             e1t2 = e2t2;
-                            e2 = Cooldown.WaterElemental;
+                            e2 = (int)StandardEffect.WaterElemental;
                             e2t1 = weStart[weStart.Count - 2];
                             e2t2 = weStart[weStart.Count - 1];
                             valid = false;
@@ -2384,7 +2389,7 @@ namespace Rawr.Mage
                             e1 = e2;
                             e1t1 = e2t1;
                             e1t2 = e2t2;
-                            e2 = Cooldown.WaterElemental;
+                            e2 = (int)StandardEffect.WaterElemental;
                             e2t1 = weStart[weStart.Count - 2];
                             e2t2 = weStart[weStart.Count - 1];
                         }
@@ -2436,7 +2441,7 @@ namespace Rawr.Mage
                                 e1 = e2;
                                 e1t1 = e2t1;
                                 e1t2 = e2t2;
-                                e2 = Cooldown.WaterElemental;
+                                e2 = (int)StandardEffect.WaterElemental;
                                 e2t1 = weStart[weStart.Count - 2];
                                 e2t2 = weStart[weStart.Count - 1];
                                 weCooldown += calculationResult.WaterElementalDuration;
@@ -2448,7 +2453,7 @@ namespace Rawr.Mage
                                 e1 = e2;
                                 e1t1 = e2t1;
                                 e1t2 = e2t2;
-                                e2 = Cooldown.WaterElemental;
+                                e2 = (int)StandardEffect.WaterElemental;
                                 e2t1 = weStart[weStart.Count - 2];
                                 e2t2 = weStart[weStart.Count - 1];
                                 valid = false;
@@ -2497,8 +2502,8 @@ namespace Rawr.Mage
                                     e1t2 = ivStart[firstColdsnap + 1];
                                     e2t1 = ivStart[i];
                                     e2t2 = ivStart[i + 1];
-                                    e1 = Cooldown.IcyVeins;
-                                    e2 = Cooldown.IcyVeins;
+                                    e1 = (int)StandardEffect.IcyVeins;
+                                    e2 = (int)StandardEffect.IcyVeins;
                                     break;
                                 }
                                 else
@@ -2528,8 +2533,8 @@ namespace Rawr.Mage
                                         e1t2 = weStart[firstColdsnap + 1];
                                         e2t1 = weStart[i];
                                         e2t2 = weStart[i + 1];
-                                        e1 = Cooldown.WaterElemental;
-                                        e2 = Cooldown.WaterElemental;
+                                        e1 = (int)StandardEffect.WaterElemental;
+                                        e2 = (int)StandardEffect.WaterElemental;
                                         break;
                                     }
                                     else
@@ -2549,9 +2554,9 @@ namespace Rawr.Mage
                     double t2 = e1t2;
                     double t3 = e2t1;
                     double t4 = e2t2;
-                    Cooldown e = e1;
-                    double c = (e == Cooldown.IcyVeins) ? calculationResult.IcyVeinsCooldown : calculationResult.WaterElementalCooldown;
-                    double d = (e == Cooldown.IcyVeins) ? 20.0 : calculationResult.WaterElementalDuration;
+                    int e = e1;
+                    double c = (e == (int)StandardEffect.IcyVeins) ? calculationResult.IcyVeinsCooldown : calculationResult.WaterElementalCooldown;
+                    double d = (e == (int)StandardEffect.IcyVeins) ? 20.0 : calculationResult.WaterElementalDuration;
 
                     // branch on one of the conditions responsible for infeasibility
                     // t2 - t1 < c1
@@ -2572,10 +2577,10 @@ namespace Rawr.Mage
                     double t2 = e1t2;
                     double t3 = e2t1;
                     double t4 = e2t2;
-                    double c1 = (e1 == Cooldown.IcyVeins) ? calculationResult.IcyVeinsCooldown : calculationResult.WaterElementalCooldown;
-                    double d1 = (e1 == Cooldown.IcyVeins) ? 20.0 : calculationResult.WaterElementalDuration;
-                    double c2 = (e2 == Cooldown.IcyVeins) ? calculationResult.IcyVeinsCooldown : calculationResult.WaterElementalCooldown;
-                    double d2 = (e2 == Cooldown.IcyVeins) ? 20.0 : calculationResult.WaterElementalDuration;
+                    double c1 = (e1 == (int)StandardEffect.IcyVeins) ? calculationResult.IcyVeinsCooldown : calculationResult.WaterElementalCooldown;
+                    double d1 = (e1 == (int)StandardEffect.IcyVeins) ? 20.0 : calculationResult.WaterElementalDuration;
+                    double c2 = (e2 == (int)StandardEffect.IcyVeins) ? calculationResult.IcyVeinsCooldown : calculationResult.WaterElementalCooldown;
+                    double d2 = (e2 == (int)StandardEffect.IcyVeins) ? 20.0 : calculationResult.WaterElementalDuration;
 
                     // branch on one of the conditions responsible for infeasibility
                     // t2 - t1 < c1
@@ -2602,7 +2607,7 @@ namespace Rawr.Mage
                     int row = branchlp.AddConstraint();
                     SetCooldownElements(branchlp, row, e1, seg3, 1.0);
                     SetCooldownElements(branchlp, row, e2, seg3, -1.0);
-                    if (e1 == Cooldown.WaterElemental)
+                    if (e1 == (int)StandardEffect.WaterElemental)
                     {
                         branchlp.SetConstraintRHS(row, -20.0);
                     }
@@ -2612,7 +2617,7 @@ namespace Rawr.Mage
                     }
                     branchlp.ForceRecalculation(true);
                     HeapPush(branchlp);
-                    if (e2 == Cooldown.IcyVeins)
+                    if (e2 == (int)StandardEffect.IcyVeins)
                     {
                         // in this case we have an additional option to nudge IV not to cross segments
                         branchlp = lp.Clone();
@@ -2633,7 +2638,7 @@ namespace Rawr.Mage
             return valid;
         }
 
-        private void EnforceRemoteEffectCooldown(int seg1, int seg3, int cooldowns, Cooldown effect, double effectCooldown, double effectDuration)
+        private void EnforceRemoteEffectCooldown(int seg1, int seg3, int cooldowns, int effect, double effectCooldown, double effectDuration)
         {
             const double eps = 0.000001;
             // example case:
@@ -2718,14 +2723,14 @@ namespace Rawr.Mage
             HeapPush(branchlp);
         }
 
-        private void BranchOnLeftPadding(ActivationConstraints act, Cooldown effect)
+        private void BranchOnLeftPadding(ActivationConstraints act, int effect)
         {
             SolverLP branchlp;
             int seg = act.Segment;
             // dropping right link: remove joint items with effect in seg1 or remove items in seg1+1 for each effect from right link
             for (int cool = 0; cool < cooldownCount; cool++)
             {
-                Cooldown cooldown = (Cooldown)(1 << cool);
+                int cooldown = (1 << cool);
                 if (cooldown != effect && (cooldown & act.RightLink) != 0)
                 {
                     branchlp = lp.Clone();
@@ -2743,7 +2748,7 @@ namespace Rawr.Mage
             // dropping left full link: remove items in seg1 or in seg1-1 for all effects from full left link that are not in left link
             for (int cool = 0; cool < cooldownCount; cool++)
             {
-                Cooldown cooldown = (Cooldown)(1 << cool);
+                int cooldown = (1 << cool);
                 if (cooldown != effect && (cooldown & act.FullLeftLink & ~act.LeftLink) != 0)
                 {
                     branchlp = lp.Clone();
@@ -2763,7 +2768,7 @@ namespace Rawr.Mage
             {
                 for (int cool = 0; cool < cooldownCount; cool++)
                 {
-                    Cooldown cooldown = (Cooldown)(1 << cool);
+                    int cooldown = (1 << cool);
                     if (cooldown != effect && (cooldown & availableCooldownMask & ~act.LeftLink) != 0)
                     {
                         // these are expensive branches, hopefully they die out quick
@@ -2782,14 +2787,14 @@ namespace Rawr.Mage
             }
         }
 
-        private void BranchOnRightPadding(ActivationConstraints act, Cooldown effect)
+        private void BranchOnRightPadding(ActivationConstraints act, int effect)
         {
             SolverLP branchlp;
             int seg = act.Segment;
             // dropping right link: remove joint items with effect in seg1 or remove items in seg1+1 for each effect from right link
             for (int cool = 0; cool < cooldownCount; cool++)
             {
-                Cooldown cooldown = (Cooldown)(1 << cool);
+                int cooldown = (1 << cool);
                 if (cooldown != effect && (cooldown & act.LeftLink) != 0)
                 {
                     branchlp = lp.Clone();
@@ -2807,7 +2812,7 @@ namespace Rawr.Mage
             // dropping left full link: remove items in seg1 or in seg1-1 for all effects from full left link that are not in left link
             for (int cool = 0; cool < cooldownCount; cool++)
             {
-                Cooldown cooldown = (Cooldown)(1 << cool);
+                int cooldown = (1 << cool);
                 if (cooldown != effect && (cooldown & act.FullRightLink & ~act.RightLink) != 0)
                 {
                     branchlp = lp.Clone();
@@ -2827,7 +2832,7 @@ namespace Rawr.Mage
             {
                 for (int cool = 0; cool < cooldownCount; cool++)
                 {
-                    Cooldown cooldown = (Cooldown)(1 << cool);
+                    int cooldown = (1 << cool);
                     if (cooldown != effect && (cooldown & availableCooldownMask & ~act.RightLink) != 0)
                     {
                         // these are expensive branches, hopefully they die out quick
@@ -2846,7 +2851,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void EnforceEffectCooldown(ActivationConstraints act1, ActivationConstraints act2, Cooldown effect, double effectCooldown, double effectDuration)
+        private void EnforceEffectCooldown(ActivationConstraints act1, ActivationConstraints act2, int effect, double effectCooldown, double effectDuration)
         {
             const double eps = 0.000001;
 
@@ -3031,7 +3036,7 @@ namespace Rawr.Mage
             HeapPush(branchlp);
         }
 
-        private void EnforceEffectCooldown(double firstEffectActivation, Cooldown effect, double effectCooldown, double effectDuration, bool needsToCleanCloseActivations)
+        private void EnforceEffectCooldown(double firstEffectActivation, int effect, double effectCooldown, double effectDuration, bool needsToCleanCloseActivations)
         {
             const double eps = 0.000001;
             int seg1 = segmentList.FindIndex(segment => segment.TimeEnd > firstEffectActivation + eps); //(int)((firstEffectActivation + eps) / segmentDuration);
@@ -3057,9 +3062,9 @@ namespace Rawr.Mage
             HeapPush(branchlp);
         }
 
-        private bool SegmentContainsEffect(int segment, Cooldown effect)
+        private bool SegmentContainsEffect(int segment, int effect)
         {
-            int hex = (int)effect;
+            int hex = effect;
             foreach (int h in hexList[segment])
             {
                 if ((hex & h) == hex)
@@ -3083,7 +3088,7 @@ namespace Rawr.Mage
             return false;
         }
 
-        private bool SegmentContainsCooldown(Cooldown cooldown, VariableType cooldownType, int minSegment, int maxSegment)
+        private bool SegmentContainsCooldown(int cooldown, VariableType cooldownType, int minSegment, int maxSegment)
         {
             const double eps = 0.000001;
             double[] segCount = GetSegmentCooldownCount(cooldown, cooldownType);
@@ -3095,7 +3100,7 @@ namespace Rawr.Mage
         }
 
 
-        private void RestrictConsecutiveActivation(Cooldown effect, double effectCooldown, double effectDuration, int firstActivationSegment, bool needsToCleanCloseActivations)
+        private void RestrictConsecutiveActivation(int effect, double effectCooldown, double effectDuration, int firstActivationSegment, bool needsToCleanCloseActivations)
         {
             const double eps = 0.000001;
             int seg2 = segmentList.FindIndex(segment => segment.TimeEnd > segmentList[firstActivationSegment].TimeStart + effectCooldown + eps); //firstActivationSegment + (int)((effectCooldown + eps) / segmentDuration);
@@ -3170,9 +3175,9 @@ namespace Rawr.Mage
                 // for example if the effect is IV and it happens together with WE and there is a WE summon in the same 
                 // segment and we don't have coldsnap, then we know the summon must happen before IV, so the actual start is a GCD after segment start
                 double buffer = 0.0;
-                if (effect == Cooldown.IcyVeins)
+                if (effect == (int)StandardEffect.IcyVeins)
                 {
-                    if (SegmentContainsEffect(firstActivationSegment, Cooldown.IcyVeins | Cooldown.WaterElemental))
+                    if (SegmentContainsEffect(firstActivationSegment, (int)StandardEffect.IcyVeins | (int)StandardEffect.WaterElemental))
                     {
                         if (SegmentContainsVariable(firstActivationSegment, VariableType.SummonWaterElemental))
                         {
@@ -3221,17 +3226,17 @@ namespace Rawr.Mage
             }
         }
 
-        private void SetCooldownElements(SolverLP branchlp, int row, Cooldown cooldown, int segment, double value)
+        private void SetCooldownElements(SolverLP branchlp, int row, int effects, int segment, double value)
         {
-            SetCooldownElements(branchlp, row, cooldown, segment, segment, value);
+            SetCooldownElements(branchlp, row, effects, segment, segment, value);
         }
 
-        private void SetCooldownElements(SolverLP branchlp, int row, Cooldown cooldown, int minSegment, int maxSegment, double value)
+        private void SetCooldownElements(SolverLP branchlp, int row, int effects, int minSegment, int maxSegment, double value)
         {
             for (int index = 0; index < solutionVariable.Count; index++)
             {
                 CastingState state = solutionVariable[index].State;
-                if (state != null && state.GetCooldown(cooldown))
+                if (state != null && state.EffectsActive(effects))
                 {
                     int seg = solutionVariable[index].Segment;
                     if (seg >= minSegment && seg <= maxSegment) branchlp.SetConstraintElement(row, index, value);
@@ -3239,12 +3244,12 @@ namespace Rawr.Mage
             }
         }
 
-        private void SetCooldownElements(SolverLP branchlp, int row, Cooldown cooldown, VariableType cooldownType, int minSegment, int maxSegment, double value)
+        private void SetCooldownElements(SolverLP branchlp, int row, int effects, VariableType cooldownType, int minSegment, int maxSegment, double value)
         {
             for (int index = 0; index < solutionVariable.Count; index++)
             {
                 int seg = solutionVariable[index].Segment;
-                if (seg >= minSegment && seg <= maxSegment && solutionVariable[index].IsMatch(cooldown, cooldownType)) branchlp.SetConstraintElement(row, index, value);
+                if (seg >= minSegment && seg <= maxSegment && solutionVariable[index].IsMatch(effects, cooldownType)) branchlp.SetConstraintElement(row, index, value);
             }
         }
 
@@ -3265,14 +3270,14 @@ namespace Rawr.Mage
             }
         }
 
-        private void SetLeftPaddingElements(SolverLP branchlp, int row, ActivationConstraints activation, Cooldown effect, double value)
+        private void SetLeftPaddingElements(SolverLP branchlp, int row, ActivationConstraints activation, int effect, double value)
         {
             for (int index = 0; index < solutionVariable.Count; index++)
             {
                 CastingState state = solutionVariable[index].State;
                 if (state != null && solutionVariable[index].Segment == activation.Segment && !solutionVariable[index].IsZeroTime)
                 {
-                    Cooldown c = state.Cooldown;
+                    int c = state.Effects;
                     // item is included for left padding if it doesn't include all right link
                     // or if it includes more than left link from full left link
                     if ((c & effect) == 0 && ((c & activation.RightLink) != activation.RightLink || ((c & activation.LeftLink) == activation.LeftLink && (c & activation.FullLeftLink) != activation.LeftLink)))
@@ -3283,14 +3288,14 @@ namespace Rawr.Mage
             }
         }
 
-        private void SetRightPaddingElements(SolverLP branchlp, int row, ActivationConstraints activation, Cooldown effect, double value)
+        private void SetRightPaddingElements(SolverLP branchlp, int row, ActivationConstraints activation, int effect, double value)
         {
             for (int index = 0; index < solutionVariable.Count; index++)
             {
                 CastingState state = solutionVariable[index].State;
                 if (state != null && solutionVariable[index].Segment == activation.Segment && !solutionVariable[index].IsZeroTime)
                 {
-                    Cooldown c = state.Cooldown;
+                    int c = state.Effects;
                     // item is included for left padding if it doesn't include all right link
                     // or if it includes more than left link from full left link
                     if ((c & effect) == 0 && ((c & activation.LeftLink) != activation.LeftLink || ((c & activation.RightLink) == activation.RightLink && (c & activation.FullRightLink) != activation.RightLink)))
@@ -3306,9 +3311,9 @@ namespace Rawr.Mage
             DisableVariable(branchlp, variable, segment, segment);
         }
 
-        private void DisableCooldown(SolverLP branchlp, Cooldown cooldown, int segment)
+        private void DisableCooldown(SolverLP branchlp, int effect, int segment)
         {
-            DisableCooldown(branchlp, cooldown, segment, segment);
+            DisableCooldown(branchlp, effect, segment, segment);
         }
 
         private void DisableVariable(SolverLP branchlp, VariableType variable, int minSegment, int maxSegment)
@@ -3323,12 +3328,12 @@ namespace Rawr.Mage
             }
         }
 
-        private void DisableCooldown(SolverLP branchlp, Cooldown cooldown, int minSegment, int maxSegment)
+        private void DisableCooldown(SolverLP branchlp, int effect, int minSegment, int maxSegment)
         {
             for (int index = 0; index < solutionVariable.Count; index++)
             {
                 CastingState state = solutionVariable[index].State;
-                if (state != null && state.GetCooldown(cooldown))
+                if (state != null && state.EffectsActive(effect))
                 {
                     int seg = solutionVariable[index].Segment;
                     if (seg >= minSegment && seg <= maxSegment) branchlp.EraseColumn(index);
@@ -3336,11 +3341,11 @@ namespace Rawr.Mage
             }
         }
 
-        private void DisableCooldown(SolverLP branchlp, Cooldown cooldown, VariableType cooldownType, int minSegment, int maxSegment)
+        private void DisableCooldown(SolverLP branchlp, int effect, VariableType cooldownType, int minSegment, int maxSegment)
         {
             for (int index = 0; index < solutionVariable.Count; index++)
             {
-                if (solutionVariable[index].IsMatch(cooldown, cooldownType))
+                if (solutionVariable[index].IsMatch(effect, cooldownType))
                 {
                     int seg = solutionVariable[index].Segment;
                     if (seg >= minSegment && seg <= maxSegment) branchlp.EraseColumn(index);
@@ -3348,11 +3353,11 @@ namespace Rawr.Mage
             }
         }
 
-        private void DisableCooldown(SolverLP branchlp, Cooldown cooldown, VariableType cooldownType, Predicate<int> includeSegment)
+        private void DisableCooldown(SolverLP branchlp, int effect, VariableType cooldownType, Predicate<int> includeSegment)
         {
             for (int index = 0; index < solutionVariable.Count; index++)
             {
-                if (solutionVariable[index].IsMatch(cooldown, cooldownType))
+                if (solutionVariable[index].IsMatch(effect, cooldownType))
                 {
                     int seg = solutionVariable[index].Segment;
                     if (includeSegment(seg)) branchlp.EraseColumn(index);
@@ -3360,21 +3365,21 @@ namespace Rawr.Mage
             }
         }
 
-        private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration)
+        private bool ValidateCooldown(int effect, double effectDuration, double cooldownDuration)
         {
-            return ValidateCooldown(cooldown, effectDuration, cooldownDuration, false, effectDuration, null, VariableType.None);
+            return ValidateCooldown(effect, effectDuration, cooldownDuration, false, effectDuration, null, VariableType.None);
         }
 
         private bool ValidateWaterElementalSummon()
         {
-            Cooldown cooldown = Cooldown.WaterElemental;
+            int cooldown = (int)StandardEffect.WaterElemental;
             double effectDuration = calculationResult.WaterElementalDuration;
             double cooldownDuration = calculationResult.WaterElementalCooldown;
             VariableType activation = VariableType.SummonWaterElemental;
 
             //const double eps = 0.00001;
             double[] segCount = GetSegmentCooldownCount(cooldown, VariableType.None);
-            double[] segActivation = GetSegmentCooldownCount(Cooldown.None, activation);
+            double[] segActivation = GetSegmentCooldownCount(0, activation);
 
             //int mindist = (int)Math.Ceiling(effectDuration / segmentDuration);
             //int mindist2 = (int)Math.Floor(effectDuration / segmentDuration);
@@ -3450,11 +3455,11 @@ namespace Rawr.Mage
             return true;
         }
 
-        private bool ValidateActivation(Cooldown cooldown, VariableType cooldownType, double effectDuration, double cooldownDuration, VariableType activation, Cooldown activationCooldown)
+        private bool ValidateActivation(int effect, VariableType cooldownType, double effectDuration, double cooldownDuration, VariableType activation, int activationEffect)
         {
             const double eps = 0.00001;
-            double[] segCount = GetSegmentCooldownCount(cooldown, cooldownType);
-            double[] segActivation = GetSegmentCooldownCount(activationCooldown, activation);
+            double[] segCount = GetSegmentCooldownCount(effect, cooldownType);
+            double[] segActivation = GetSegmentCooldownCount(activationEffect, activation);
 
             //int mindist = (int)Math.Ceiling(effectDuration / segmentDuration);
             //int mindist2 = (int)Math.Floor(effectDuration / segmentDuration);
@@ -3480,10 +3485,10 @@ namespace Rawr.Mage
                         SolverLP cooldownUsed = lp.Clone();
                         // activation not used
                         if (lp.Log != null) lp.Log.AppendLine("Disable activation of " + activation.ToString() + " at " + segmin + "-" + segmax);
-                        DisableCooldown(lp, activationCooldown, activation, segmin, segmax);
+                        DisableCooldown(lp, activationEffect, activation, segmin, segmax);
                         HeapPush(lp);
-                        if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("No " + cooldown.ToString() + " before activation at " + segmin);
-                        DisableCooldown(cooldownUsed, cooldown, cooldownType, segmentList.FindIndex(segment => InCooldownDistance(segmin, segmax, segment.Index, effectDuration, cooldownDuration)), segmin - 1);
+                        if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("No " + effect.ToString() + " before activation at " + segmin);
+                        DisableCooldown(cooldownUsed, effect, cooldownType, segmentList.FindIndex(segment => InCooldownDistance(segmin, segmax, segment.Index, effectDuration, cooldownDuration)), segmin - 1);
                         HeapPush(cooldownUsed);
                         return false;
                     }
@@ -3502,22 +3507,22 @@ namespace Rawr.Mage
                     prevsegmin = resolution[segmin - 1].MinSegment;
                     prevsegmax = resolution[segmin - 1].MaxSegment;
                 }
-                if (segCount[seg] > eps && (segmin == 0 || !SegmentContainsCooldown(cooldown, cooldownType, prevsegmin, prevsegmax)))
+                if (segCount[seg] > eps && (segmin == 0 || !SegmentContainsCooldown(effect, cooldownType, prevsegmin, prevsegmax)))
                 {
-                    if (!SegmentContainsCooldown(activationCooldown, activation, prevsegmin, segmax))
+                    if (!SegmentContainsCooldown(activationEffect, activation, prevsegmin, segmax))
                     {
                         // either there is no effect or there is activation
                         SolverLP cooldownUsed = lp.Clone();
                         // force activation
                         if (lp.Log != null) lp.Log.AppendLine("Force activation of " + activation + " at " + prevsegmin + "-" + segmax);
-                        int row = AddConstraint(lp, activationCooldown, activation, prevsegmin, segmax);
+                        int row = AddConstraint(lp, activationEffect, activation, prevsegmin, segmax);
                         lp.SetConstraintRHS(row, segmentList[segmax].TimeEnd - segmentList[prevsegmin].TimeStart);
                         lp.SetConstraintLHS(row, 0.1);
                         lp.ForceRecalculation(true);
                         HeapPush(lp);
                         // no effect
-                        if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("No " + cooldown + "-" + cooldownType + " without activation at " + segmin + "-" + segmax);
-                        DisableCooldown(cooldownUsed, cooldown, cooldownType, segmin, segmax);
+                        if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("No " + effect + "-" + cooldownType + " without activation at " + segmin + "-" + segmax);
+                        DisableCooldown(cooldownUsed, effect, cooldownType, segmin, segmax);
                         HeapPush(cooldownUsed);
                         return false;
                     }
@@ -3527,11 +3532,11 @@ namespace Rawr.Mage
             return true;
         }
 
-        private bool ValidateActivationAdvanced(Cooldown cooldown, VariableType cooldownType, double effectDuration, double cooldownDuration, VariableType activation, Cooldown activationCooldown)
+        private bool ValidateActivationAdvanced(int effect, VariableType cooldownType, double effectDuration, double cooldownDuration, VariableType activation, int activationEffect)
         {
             const double eps = 0.00001;
-            double[] segCount = GetSegmentCooldownCount(cooldown, cooldownType);
-            double[] segActivation = GetSegmentCooldownCount(activationCooldown, activation);
+            double[] segCount = GetSegmentCooldownCount(effect, cooldownType);
+            double[] segActivation = GetSegmentCooldownCount(activationEffect, activation);
 
             //int mindist = (int)Math.Ceiling(effectDuration / segmentDuration);
             //int mindist2 = (int)Math.Floor(effectDuration / segmentDuration);
@@ -3540,10 +3545,10 @@ namespace Rawr.Mage
 
             for (int i = 0; i < segmentColumn[0]; i++) // fix if variable ordering changes
             {
-                if (solutionVariable[i].IsMatch(activationCooldown, activation) && solution[i] > eps)
+                if (solutionVariable[i].IsMatch(activationEffect, activation) && solution[i] > eps)
                 {
                     int seg = solutionVariable[i].Segment;
-                    int seghex = (int)solutionVariable[i].State.Cooldown;
+                    int seghex = (int)solutionVariable[i].State.Effects;
                     // check all cooldowns that link to this drums activation
                     // if any of them is also before this segment we have a cycle if it's not present at activation
                     int linkedHex = 0;
@@ -3554,9 +3559,9 @@ namespace Rawr.Mage
                             for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                             {
                                 CastingState state = solutionVariable[index].State;
-                                if (solutionVariable[index].IsMatch(cooldown, cooldownType) && solution[index] > eps)
+                                if (solutionVariable[index].IsMatch(effect, cooldownType) && solution[index] > eps)
                                 {
-                                    linkedHex |= (int)state.Cooldown;
+                                    linkedHex |= (int)state.Effects;
                                 }
                             }
                         }
@@ -3564,9 +3569,9 @@ namespace Rawr.Mage
                     for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                     {
                         CastingState state = solutionVariable[index].State;
-                        if (InActivationDistance(seg, solutionVariable[index].Segment, effectDuration)/*Math.Abs(seg - solutionVariable[index].Segment) <= mindist*/ && solutionVariable[index].IsMatch(cooldown, cooldownType) && solution[index] > eps)
+                        if (InActivationDistance(seg, solutionVariable[index].Segment, effectDuration)/*Math.Abs(seg - solutionVariable[index].Segment) <= mindist*/ && solutionVariable[index].IsMatch(effect, cooldownType) && solution[index] > eps)
                         {
-                            linkedHex |= (int)state.Cooldown;
+                            linkedHex |= (int)state.Effects;
                         }
                     }
 
@@ -3580,7 +3585,7 @@ namespace Rawr.Mage
                                 CastingState state = solutionVariable[index].State;
                                 if (state != null && solution[index] > eps)
                                 {
-                                    int h = (int)state.Cooldown & linkedHex & ~seghex;
+                                    int h = (int)state.Effects & linkedHex & ~seghex;
                                     if (h != 0) brokenHex = h;
                                 }
                             }
@@ -3594,7 +3599,7 @@ namespace Rawr.Mage
                             int outseg = solutionVariable[index].Segment;
                             if (outseg == seg - 1)
                             {
-                                int h = (int)state.Cooldown & linkedHex & ~seghex;
+                                int h = (int)state.Effects & linkedHex & ~seghex;
                                 if (h != 0) brokenHex = h;
                             }
                         }
@@ -3603,7 +3608,7 @@ namespace Rawr.Mage
                     {
                         // either we don't have activation that is without broken hex or drums casting with hex or hex before activation
                         SolverLP drumsnohex = lp.Clone();
-                        if (drumsnohex.Log != null) drumsnohex.Log.AppendLine(cooldown.ToString() + " without hex");
+                        if (drumsnohex.Log != null) drumsnohex.Log.AppendLine(effect.ToString() + " without hex");
                         for (int s = 0; s < segmentList.Count; s++)
                         {
                             if (InActivationDistance(seg, s, effectDuration)/*Math.Abs(seg - s) <= mindist*/)
@@ -3611,7 +3616,7 @@ namespace Rawr.Mage
                                 for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                 {
                                     CastingState state = solutionVariable[index].State;
-                                    if (state != null && solutionVariable[index].IsMatch(cooldown, cooldownType) && ((int)state.Cooldown & brokenHex) != 0) drumsnohex.EraseColumn(index);
+                                    if (state != null && solutionVariable[index].IsMatch(effect, cooldownType) && ((int)state.Effects & brokenHex) != 0) drumsnohex.EraseColumn(index);
                                 }
                             }
                         }
@@ -3626,7 +3631,7 @@ namespace Rawr.Mage
                                 for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                 {
                                     CastingState state = solutionVariable[index].State;
-                                    if (state != null && ((int)state.Cooldown & brokenHex) != 0) nohex.EraseColumn(index);
+                                    if (state != null && ((int)state.Effects & brokenHex) != 0) nohex.EraseColumn(index);
                                 }
                             }
                         }
@@ -3635,7 +3640,7 @@ namespace Rawr.Mage
                         if (lp.Log != null) lp.Log.AppendLine("Disable activation of " + activation.ToString() + " at " + seg + " without hex");
                         for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                         {
-                            if (solutionVariable[index].IsMatch(activationCooldown, activation) && solutionVariable[index].Segment == seg && ((int)solutionVariable[index].State.Cooldown & brokenHex) != brokenHex) lp.EraseColumn(index);
+                            if (solutionVariable[index].IsMatch(activationEffect, activation) && solutionVariable[index].Segment == seg && ((int)solutionVariable[index].State.Effects & brokenHex) != brokenHex) lp.EraseColumn(index);
                         }
                         HeapPush(lp);
                         return false;
@@ -3650,7 +3655,7 @@ namespace Rawr.Mage
                     if (seg < segmentList.Count - 1)
                     {
                         bool cooldownInNext = false;
-                        int cooldownHex = (int)activationCooldown;
+                        int cooldownHex = (int)activationEffect;
                         for (int j = 0; j < hexList[seg + 1].Count; j++)
                         {
                             if ((hexList[seg + 1][j] & cooldownHex) != 0)
@@ -3665,7 +3670,7 @@ namespace Rawr.Mage
                             int extendedCooldown = (cooldownHex & hexMask[seg + 1]);
                             for (int j = 0; j < hexList[seg].Count; j++)
                             {
-                                if ((hexList[seg][j] & (int)cooldown) == (int)cooldown && (hexList[seg][j] & extendedCooldown) != extendedCooldown)
+                                if ((hexList[seg][j] & (int)effect) == (int)effect && (hexList[seg][j] & extendedCooldown) != extendedCooldown)
                                 {
                                     // we have a problem, extended cooldown is not present during effect even though it's present at activation and in next segment
                                     // identify which part of extended cooldown is responsible
@@ -3674,13 +3679,13 @@ namespace Rawr.Mage
                                     while ((ind & ~h & extendedCooldown) == 0) ind <<= 1;
                                     // either all effect has this cooldown or this effect is not present at activation or it is not present in next segment
                                     SolverLP branchlp = lp.Clone();
-                                    if (branchlp.Log != null) branchlp.Log.AppendLine("Disable " + cooldown + " without " + (Cooldown)ind + " at " + seg);
+                                    if (branchlp.Log != null) branchlp.Log.AppendLine("Disable " + effect + " without " + ind + " at " + seg);
                                     for (int index = 0; index < solutionVariable.Count; index++)
                                     {
                                         CastingState state = solutionVariable[index].State;
                                         if (solutionVariable[index].Segment == seg)
                                         {
-                                            if (state != null && state.GetCooldown(cooldown) && !state.GetCooldown((Cooldown)ind))
+                                            if (state != null && state.EffectsActive(effect) && !state.EffectsActive(ind))
                                             {
                                                 branchlp.EraseColumn(index);
                                             }
@@ -3688,13 +3693,13 @@ namespace Rawr.Mage
                                     }
                                     HeapPush(branchlp);
                                     branchlp = lp.Clone();
-                                    if (branchlp.Log != null) branchlp.Log.AppendLine("Disable " + (Cooldown)ind + " at activation of " + cooldown + " at " + seg);
+                                    if (branchlp.Log != null) branchlp.Log.AppendLine("Disable " + ind + " at activation of " + effect + " at " + seg);
                                     for (int index = 0; index < solutionVariable.Count; index++)
                                     {
                                         CastingState state = solutionVariable[index].State;
                                         if (solutionVariable[index].Segment == seg)
                                         {
-                                            if (state != null && solutionVariable[index].IsMatch(activationCooldown, activation) && state.GetCooldown((Cooldown)ind))
+                                            if (state != null && solutionVariable[index].IsMatch(activationEffect, activation) && state.EffectsActive(ind))
                                             {
                                                 branchlp.EraseColumn(index);
                                             }
@@ -3702,7 +3707,7 @@ namespace Rawr.Mage
                                     }
                                     HeapPush(branchlp);
                                     branchlp = lp;
-                                    DisableCooldown(branchlp, (Cooldown)ind, seg + 1);
+                                    DisableCooldown(branchlp, ind, seg + 1);
                                     HeapPush(branchlp);
                                     return false;
                                 }
@@ -3734,7 +3739,7 @@ namespace Rawr.Mage
                                                 for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                                 {
                                                     CastingState state = solutionVariable[index].State;
-                                                    if (state != null && !solutionVariable[index].IsMatch(cooldown, cooldownType) && ((int)state.Cooldown & ind) != 0) drumsnohex.EraseColumn(index);
+                                                    if (state != null && !solutionVariable[index].IsMatch(effect, cooldownType) && ((int)state.Effects & ind) != 0) drumsnohex.EraseColumn(index);
                                                 }
                                             }
                                         }
@@ -3750,7 +3755,7 @@ namespace Rawr.Mage
                                                 for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                                 {
                                                     CastingState state = solutionVariable[index].State;
-                                                    if (state != null && solutionVariable[index].IsMatch(cooldown, cooldownType) && ((int)state.Cooldown & ind) != 0) drumsnohex.EraseColumn(index);
+                                                    if (state != null && solutionVariable[index].IsMatch(effect, cooldownType) && ((int)state.Effects & ind) != 0) drumsnohex.EraseColumn(index);
                                                 }
                                             }
                                         }
@@ -3766,7 +3771,7 @@ namespace Rawr.Mage
                                                 for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                                 {
                                                     CastingState state = solutionVariable[index].State;
-                                                    if (state != null && solutionVariable[index].IsMatch(cooldown, cooldownType)) drumsnohex.EraseColumn(index);
+                                                    if (state != null && solutionVariable[index].IsMatch(effect, cooldownType)) drumsnohex.EraseColumn(index);
                                                 }
                                             }
                                         }
@@ -3776,7 +3781,7 @@ namespace Rawr.Mage
                                         if (lp.Log != null) lp.Log.AppendLine("Disable activation of " + activation.ToString() + " at " + seg + " without hex");
                                         for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                                         {
-                                            if (solutionVariable[index].Type == activation && solutionVariable[index].State.GetCooldown(activationCooldown) && solutionVariable[index].Segment == seg && ((int)solutionVariable[index].State.Cooldown & ind) == 0) lp.EraseColumn(index);
+                                            if (solutionVariable[index].Type == activation && solutionVariable[index].State.EffectsActive(activationEffect) && solutionVariable[index].Segment == seg && ((int)solutionVariable[index].State.Effects & ind) == 0) lp.EraseColumn(index);
                                         }
                                         HeapPush(lp);
                                         return false;
@@ -3871,10 +3876,10 @@ namespace Rawr.Mage
             return -1;
         }*/
 
-        private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration, bool needsFullEffect, double fullEffectDuration, List<SegmentConstraint> segmentConstraints, VariableType cooldownType)
+        private bool ValidateCooldown(int effect, double effectDuration, double cooldownDuration, bool needsFullEffect, double fullEffectDuration, List<SegmentConstraint> segmentConstraints, VariableType cooldownType)
         {
             const double eps = 0.00002;
-            double[] segCount = GetSegmentCooldownCount(cooldown, cooldownType);
+            double[] segCount = GetSegmentCooldownCount(effect, cooldownType);
             
             if (cooldownDuration < 0) cooldownDuration = 3 * calculationOptions.FightDuration;
 
@@ -3905,7 +3910,7 @@ namespace Rawr.Mage
                             // needs some heavy evaluation to determine when it is safe to restrict
                             // two branches, either force to full full total or restrict to just one
                             SolverLP cooldownUsed = lp.Clone();
-                            if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force total full " + cooldown.ToString() + " at " + seg);
+                            if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force total full " + effect.ToString() + " at " + seg);
                             int row = cooldownUsed.AddConstraint();
                             for (int s = 0; s < segmentList.Count; s++)
                             {
@@ -3913,13 +3918,13 @@ namespace Rawr.Mage
                                 {
                                     for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                     {
-                                        if (solutionVariable[index].IsMatch(cooldown, cooldownType)) cooldownUsed.SetConstraintElement(row, index, -1.0);
+                                        if (solutionVariable[index].IsMatch(effect, cooldownType)) cooldownUsed.SetConstraintElement(row, index, -1.0);
                                     }
                                 }
                             }
                             for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                             {
-                                if (solutionVariable[index].IsMatch(cooldown, cooldownType))
+                                if (solutionVariable[index].IsMatch(effect, cooldownType))
                                 {
                                     int outseg = solutionVariable[index].Segment;
                                     if (InActivationDistance(seg, outseg, effectDuration)/*Math.Abs(seg - outseg) <= mindist*/) cooldownUsed.SetConstraintElement(row, index, -1.0);
@@ -3929,7 +3934,7 @@ namespace Rawr.Mage
                             cooldownUsed.ForceRecalculation(true);
                             HeapPush(cooldownUsed);
                             cooldownUsed = lp;
-                            if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Limit total full " + cooldown.ToString() + " at " + seg);
+                            if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Limit total full " + effect.ToString() + " at " + seg);
                             row = cooldownUsed.AddConstraint();
                             for (int s = 0; s < segmentList.Count; s++)
                             {
@@ -3937,13 +3942,13 @@ namespace Rawr.Mage
                                 {
                                     for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                     {
-                                        if (solutionVariable[index].IsMatch(cooldown, cooldownType)) cooldownUsed.SetConstraintElement(row, index, 1.0);
+                                        if (solutionVariable[index].IsMatch(effect, cooldownType)) cooldownUsed.SetConstraintElement(row, index, 1.0);
                                     }
                                 }
                             }
                             for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                             {
-                                if (solutionVariable[index].IsMatch(cooldown, cooldownType))
+                                if (solutionVariable[index].IsMatch(effect, cooldownType))
                                 {
                                     int outseg = solutionVariable[index].Segment;
                                     if (InActivationDistance(seg, outseg, effectDuration)/*Math.Abs(seg - outseg) <= mindist*/) cooldownUsed.SetConstraintElement(row, index, 1.0);
@@ -3987,12 +3992,12 @@ namespace Rawr.Mage
                             if (foundConstraint && Math.Abs(lp.GetRHS(constraint.Row) - fullEffectDuration) < eps)
                             {
                                 SolverLP cooldownUsed = lp.Clone();
-                                if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force full " + cooldown.ToString() + " at " + segmin + "-" + segmax);
+                                if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force full " + effect.ToString() + " at " + segmin + "-" + segmax);
                                 cooldownUsed.SetLHS(constraint.Row, fullEffectDuration);
-                                if (constraint.MinSegment < minseg) DisableCooldown(cooldownUsed, cooldown, cooldownType, constraint.MinSegment, minseg - 1);
-                                if (constraint.MaxSegment > maxseg) DisableCooldown(cooldownUsed, cooldown, cooldownType, maxseg + 1, constraint.MaxSegment);
+                                if (constraint.MinSegment < minseg) DisableCooldown(cooldownUsed, effect, cooldownType, constraint.MinSegment, minseg - 1);
+                                if (constraint.MaxSegment > maxseg) DisableCooldown(cooldownUsed, effect, cooldownType, maxseg + 1, constraint.MaxSegment);
                                 // make sure something is in segmin-segmax or we're duplicating work
-                                int row = AddConstraint(cooldownUsed, cooldown, cooldownType, segmin, segmax);
+                                int row = AddConstraint(cooldownUsed, effect, cooldownType, segmin, segmax);
                                 cooldownUsed.SetConstraintRHS(row, segmentList[segmax].TimeEnd - segmentList[segmin].TimeStart);
                                 cooldownUsed.SetConstraintLHS(row, 0.1);
                                 cooldownUsed.ForceRecalculation(true);
@@ -4001,7 +4006,7 @@ namespace Rawr.Mage
                             else
                             {
                                 SolverLP cooldownUsed = lp.Clone();
-                                if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force full " + cooldown.ToString() + " at " + segmin + "-" + segmax);
+                                if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force full " + effect.ToString() + " at " + segmin + "-" + segmax);
                                 int row = cooldownUsed.AddConstraint();
                                 for (int s = 0; s < segmentList.Count; s++)
                                 {
@@ -4009,18 +4014,18 @@ namespace Rawr.Mage
                                     {
                                         for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                         {
-                                            if (solutionVariable[index].IsMatch(cooldown, cooldownType)) cooldownUsed.SetConstraintElement(row, index, -1.0);
+                                            if (solutionVariable[index].IsMatch(effect, cooldownType)) cooldownUsed.SetConstraintElement(row, index, -1.0);
                                         }
                                     }
                                 }
                                 for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                                 {
-                                    if (solutionVariable[index].IsMatch(cooldown, cooldownType))
+                                    if (solutionVariable[index].IsMatch(effect, cooldownType))
                                     {
                                         int outseg = solutionVariable[index].Segment;
                                         if (outseg >= minseg && outseg <= maxseg) cooldownUsed.SetConstraintElement(row, index, -1.0);
                                     }
-                                    if (cooldown == Cooldown.FlameCap && integralMana)
+                                    if (effect == (int)StandardEffect.FlameCap && integralMana)
                                     {
                                         // if we push flame cap to full in this segment then we can further restrict mana gems to eliminate unnecessary MIP branches
                                         if (solutionVariable[index].Type == VariableType.ManaGem)
@@ -4034,15 +4039,15 @@ namespace Rawr.Mage
                                 }
                                 cooldownUsed.SetConstraintRHS(row, -fullEffectDuration);
                                 // make sure something is in segmin-segmax or we're duplicating work
-                                row = AddConstraint(cooldownUsed, cooldown, cooldownType, segmin, segmax);
+                                row = AddConstraint(cooldownUsed, effect, cooldownType, segmin, segmax);
                                 cooldownUsed.SetConstraintRHS(row, segmentList[segmax].TimeEnd - segmentList[segmin].TimeStart);
                                 cooldownUsed.SetConstraintLHS(row, 0.1);
                                 cooldownUsed.ForceRecalculation(true);
                                 HeapPush(cooldownUsed);
                             }
                             // cooldown not used
-                            if (lp.Log != null) lp.Log.AppendLine("Disable " + cooldown.ToString() + " at " + segmin + "-" + segmax);
-                            DisableCooldown(lp, cooldown, cooldownType, segmin, segmax);
+                            if (lp.Log != null) lp.Log.AppendLine("Disable " + effect.ToString() + " at " + segmin + "-" + segmax);
+                            DisableCooldown(lp, effect, cooldownType, segmin, segmax);
                             HeapPush(lp);
                             return false;
                         }
@@ -4075,17 +4080,17 @@ namespace Rawr.Mage
                         // branch on whether cooldown is used in this segment
                         SolverLP cooldownUsed = lp.Clone();
                         // cooldown used
-                        if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Use " + cooldown.ToString() + " at " + segmin + "-" + segmax + ", disable around");
-                        DisableCooldown(cooldownUsed, cooldown, cooldownType, outseg => !InActivationDistance(segmin, segmax, outseg, effectDuration) && InCooldownDistance(segmin, segmax, outseg, effectDuration, cooldownDuration));
+                        if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Use " + effect.ToString() + " at " + segmin + "-" + segmax + ", disable around");
+                        DisableCooldown(cooldownUsed, effect, cooldownType, outseg => !InActivationDistance(segmin, segmax, outseg, effectDuration) && InCooldownDistance(segmin, segmax, outseg, effectDuration, cooldownDuration));
                         // make sure something is in segmin-segmax or we're duplicating work
-                        int row = AddConstraint(cooldownUsed, cooldown, cooldownType, segmin, segmax);
+                        int row = AddConstraint(cooldownUsed, effect, cooldownType, segmin, segmax);
                         cooldownUsed.SetConstraintRHS(row, segmentList[segmax].TimeEnd - segmentList[segmin].TimeStart);
                         cooldownUsed.SetConstraintLHS(row, 0.1);
                         cooldownUsed.ForceRecalculation(true);
                         HeapPush(cooldownUsed);
                         // cooldown not used
-                        if (lp.Log != null) lp.Log.AppendLine("Disable " + cooldown.ToString() + " at " + segmin + "-" + segmax);
-                        DisableCooldown(lp, cooldown, cooldownType, segmin, segmax);
+                        if (lp.Log != null) lp.Log.AppendLine("Disable " + effect.ToString() + " at " + segmin + "-" + segmax);
+                        DisableCooldown(lp, effect, cooldownType, segmin, segmax);
                         HeapPush(lp);
                         return false;
                     }
@@ -4121,7 +4126,7 @@ namespace Rawr.Mage
                             SolverLP leftDisabled = lp.Clone();
                             SolverLP rightDisabled = lp.Clone();
                             // do force to full first if all are equally good
-                            if (lp.Log != null) lp.Log.AppendLine("Force " + cooldown.ToString() + " to max from " + segmax + " to " + lastsegmin);
+                            if (lp.Log != null) lp.Log.AppendLine("Force " + effect.ToString() + " to max from " + segmax + " to " + lastsegmin);
                             // don't need extra constraints, can use the existing constraint that limits segment size
                             //int row = lp.AddConstraint(false); // need the extra constraint because just removing others won't force this one to full 30 sec
                             for (int outseg = 0; outseg < segmentList.Count; outseg++)
@@ -4131,7 +4136,7 @@ namespace Rawr.Mage
                                     for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
                                     {
                                         CastingState state = solutionVariable[index].State;
-                                        if (!solutionVariable[index].IsMatch(cooldown, cooldownType)) lp.EraseColumn(index);
+                                        if (!solutionVariable[index].IsMatch(effect, cooldownType)) lp.EraseColumn(index);
                                     }
                                 }
                             }
@@ -4141,7 +4146,7 @@ namespace Rawr.Mage
                                 int outseg = solutionVariable[index].Segment;
                                 if (outseg > segmax && outseg < lastsegmin)
                                 {
-                                    if (!solutionVariable[index].IsMatch(cooldown, cooldownType) && !solutionVariable[index].IsZeroTime) lp.EraseColumn(index); // don't remove zero-length variables
+                                    if (!solutionVariable[index].IsMatch(effect, cooldownType) && !solutionVariable[index].IsZeroTime) lp.EraseColumn(index); // don't remove zero-length variables
                                 }
                             }
                             //double spanDuration = 0.0;
@@ -4153,11 +4158,11 @@ namespace Rawr.Mage
                             //lp.SetConstraintRHS(row, -spanDuration /*segmentDuration * (lastseg - seg - 1)*/);
                             lp.ForceRecalculation(true);
                             HeapPush(lp);
-                            if (leftDisabled.Log != null) leftDisabled.Log.AppendLine("Disable left " + cooldown.ToString() + " at " + segmin + "-" + segmax);
-                            DisableCooldown(leftDisabled, cooldown, cooldownType, segmin, segmax);
+                            if (leftDisabled.Log != null) leftDisabled.Log.AppendLine("Disable left " + effect.ToString() + " at " + segmin + "-" + segmax);
+                            DisableCooldown(leftDisabled, effect, cooldownType, segmin, segmax);
                             HeapPush(leftDisabled);
-                            if (rightDisabled.Log != null) rightDisabled.Log.AppendLine("Disable right " + cooldown.ToString() + " at " + lastsegmin + "-" + lastsegmax);
-                            DisableCooldown(rightDisabled, cooldown, cooldownType, lastsegmin, lastsegmax);
+                            if (rightDisabled.Log != null) rightDisabled.Log.AppendLine("Disable right " + effect.ToString() + " at " + lastsegmin + "-" + lastsegmax);
+                            DisableCooldown(rightDisabled, effect, cooldownType, lastsegmin, lastsegmax);
                             HeapPush(rightDisabled);
                             return false;
                         }
@@ -4168,16 +4173,16 @@ namespace Rawr.Mage
             return valid;
         }
 
-        private bool ValidateCooldownAdvanced(Cooldown cooldown, double effectDuration, double cooldownDuration, VariableType cooldownType)
+        private bool ValidateCooldownAdvanced(int effect, double effectDuration, double cooldownDuration, VariableType cooldownType)
         {
             const double eps = 0.00001;
-            double[] segCount = GetSegmentCooldownCount(cooldown, cooldownType);
+            double[] segCount = GetSegmentCooldownCount(effect, cooldownType);
 
             // for irregular cooldown durations have to make a special pass verifying everything is in order
             // if cooldowns are broken need to add special constraints that ensure cooldowns are respected
             // do this only for effects that can't be coldsnapped as those don't have to respect cooldown always and are handled separately
 
-            if (cooldown != Cooldown.None && (!coldsnapAvailable || (cooldown != Cooldown.WaterElemental && cooldown != Cooldown.IcyVeins))) // TODO: consider extending for Cooldown.None, but for now we don't need it for evocation
+            if (effect != 0 && (!coldsnapAvailable || (effect != (int)StandardEffect.WaterElemental && effect != (int)StandardEffect.IcyVeins))) // TODO: consider extending for Cooldown.None, but for now we don't need it for evocation
             {
                 List<int> activations = new List<int>();
                 // validate consecutive activations
@@ -4191,7 +4196,7 @@ namespace Rawr.Mage
                         // make sure (seg + 1) * segmentDuration - segCount[seg] - lastStart >= cooldownDuration
                         if (segmentList[seg].TimeEnd - segCount[seg] - lastStart < cooldownDuration - eps)
                         {
-                            EnforceEffectCooldown(lastStart, cooldown, cooldownDuration, effectDuration, false);
+                            EnforceEffectCooldown(lastStart, effect, cooldownDuration, effectDuration, false);
                             //lp unused
                             lp.ReleaseConstraints();
                             return false;
@@ -4214,7 +4219,7 @@ namespace Rawr.Mage
                         // make sure (seg3 + 1) * segmentDuration - segCount[seg3] - firstActivation >= cooldowns * cooldownDuration
                         if (segmentList[seg3].TimeEnd - segCount[seg3] - firstActivation < cooldowns * cooldownDuration - eps)
                         {
-                            EnforceRemoteEffectCooldown(seg1, seg3, cooldowns, cooldown, cooldownDuration, effectDuration);
+                            EnforceRemoteEffectCooldown(seg1, seg3, cooldowns, effect, cooldownDuration, effectDuration);
                             // lp unused
                             lp.ReleaseConstraints();
                             return false;
@@ -4227,16 +4232,16 @@ namespace Rawr.Mage
             return true;
         }
 
-        private bool ValidateCooldownAdvanced2(Cooldown cooldown, double effectDuration, double cooldownDuration, VariableType cooldownType)
+        private bool ValidateCooldownAdvanced2(int effect, double effectDuration, double cooldownDuration, VariableType cooldownType)
         {
             const double eps = 0.00001;
-            double[] segCount = GetSegmentCooldownCount(cooldown, cooldownType);
+            double[] segCount = GetSegmentCooldownCount(effect, cooldownType);
 
             // for irregular cooldown durations have to make a special pass verifying everything is in order
             // if cooldowns are broken need to add special constraints that ensure cooldowns are respected
             // do this only for effects that can't be coldsnapped as those don't have to respect cooldown always and are handled separately
 
-            if (cooldown != Cooldown.None && (!coldsnapAvailable || (cooldown != Cooldown.WaterElemental && cooldown != Cooldown.IcyVeins))) // TODO: consider extending for Cooldown.None, but for now we don't need it for evocation
+            if (effect != 0 && (!coldsnapAvailable || (effect != (int)StandardEffect.WaterElemental && effect != (int)StandardEffect.IcyVeins))) // TODO: consider extending for Cooldown.None, but for now we don't need it for evocation
             {
                 List<ActivationConstraints> activations = new List<ActivationConstraints>();
                 // validate consecutive activations
@@ -4246,7 +4251,7 @@ namespace Rawr.Mage
                 {
                     if (segCount[seg] > eps && (seg == 0 || segCount[seg - 1] < eps))
                     {
-                        ActivationConstraints activation = GetActivationConstraints(cooldown, seg, segCount[seg]);
+                        ActivationConstraints activation = GetActivationConstraints(effect, seg, segCount[seg]);
                         activations.Add(activation);
                         // activation at the latest (seg + 1) * segmentDuration - segCount[seg]
                         // make sure (seg + 1) * segmentDuration - segCount[seg] - lastStart >= cooldownDuration
@@ -4254,7 +4259,7 @@ namespace Rawr.Mage
                         if (activation.MaxTime - lastStart < cooldownDuration - eps)
                         {
                             //EnforceEffectCooldown(lastStart, cooldown, cooldownDuration, effectDuration, false);
-                            EnforceEffectCooldown(lastActivation, activation, cooldown, cooldownDuration, effectDuration);
+                            EnforceEffectCooldown(lastActivation, activation, effect, cooldownDuration, effectDuration);
                             // lp unused
                             lp.ReleaseConstraints();
                             return false;
@@ -4296,16 +4301,16 @@ namespace Rawr.Mage
             public bool Loose;
             public double MinTime;
             public double MaxTime;
-            public Cooldown JointEffect;
-            public Cooldown LeftLink;
-            public Cooldown RightLink;
-            public Cooldown FullLeftLink;
-            public Cooldown FullRightLink;
+            public int JointEffect;
+            public int LeftLink;
+            public int RightLink;
+            public int FullLeftLink;
+            public int FullRightLink;
             public double LeftPaddding;
             public double RightPadding;
         }
 
-        private ActivationConstraints GetActivationConstraints(Cooldown effect, int segment, double effectInSegment)
+        private ActivationConstraints GetActivationConstraints(int effect, int segment, double effectInSegment)
         {
             ActivationConstraints result = new ActivationConstraints();
             result.Segment = segment;
@@ -4319,16 +4324,16 @@ namespace Rawr.Mage
                     hex |= hexList[segment][i];
                 }
             }
-            result.JointEffect = (Cooldown)hex;
+            result.JointEffect = hex;
             if (segment < segmentList.Count - 1)
             {
-                result.RightLink = (Cooldown)(hex & hexMask[segment + 1]);
-                result.FullRightLink = (Cooldown)(hexMask[segment] & hexMask[segment + 1]);
+                result.RightLink = (hex & hexMask[segment + 1]);
+                result.FullRightLink = (hexMask[segment] & hexMask[segment + 1]);
             }
             if (segment > 0)
             {
-                result.LeftLink = (Cooldown)(hex & hexMask[segment - 1]);
-                result.FullLeftLink = (Cooldown)(hexMask[segment] & hexMask[segment - 1]);
+                result.LeftLink = (hex & hexMask[segment - 1]);
+                result.FullLeftLink = (hexMask[segment] & hexMask[segment - 1]);
             }
             result.MaxTime = segmentList[segment].TimeEnd - effectInSegment;
             result.MinTime = segmentList[segment].TimeStart;
@@ -4343,10 +4348,10 @@ namespace Rawr.Mage
                 if (solution[index] > eps)
                 {
                     CastingState state = solutionVariable[index].State;
-                    if (state != null && !state.GetCooldown(effect))
+                    if (state != null && !state.EffectsActive(effect))
                     {
-                        bool hasToBeLeft = (state.Cooldown & result.RightLink) != result.RightLink || ((state.Cooldown & result.LeftLink) == result.LeftLink && (state.Cooldown & result.FullLeftLink) != result.LeftLink);
-                        bool hasToBeRight = (state.Cooldown & result.LeftLink) != result.LeftLink || ((state.Cooldown & result.RightLink) == result.RightLink && (state.Cooldown & result.FullRightLink) != result.RightLink);
+                        bool hasToBeLeft = (state.Effects & result.RightLink) != result.RightLink || ((state.Effects & result.LeftLink) == result.LeftLink && (state.Effects & result.FullLeftLink) != result.LeftLink);
+                        bool hasToBeRight = (state.Effects & result.LeftLink) != result.LeftLink || ((state.Effects & result.RightLink) == result.RightLink && (state.Effects & result.FullRightLink) != result.RightLink);
                         if (hasToBeLeft)
                         {
                             result.MinTime += solution[index];
@@ -4365,10 +4370,10 @@ namespace Rawr.Mage
                 if (solution[index] > eps && solutionVariable[index].Segment == segment && !solutionVariable[index].IsZeroTime)
                 {
                     CastingState state = solutionVariable[index].State;
-                    if (state != null && !state.GetCooldown(effect))
+                    if (state != null && !state.EffectsActive(effect))
                     {
-                        bool hasToBeLeft = (state.Cooldown & result.RightLink) != result.RightLink || ((state.Cooldown & result.LeftLink) == result.LeftLink && (state.Cooldown & result.FullLeftLink) != result.LeftLink);
-                        bool hasToBeRight = (state.Cooldown & result.LeftLink) != result.LeftLink || ((state.Cooldown & result.RightLink) == result.RightLink && (state.Cooldown & result.FullRightLink) != result.RightLink);
+                        bool hasToBeLeft = (state.Effects & result.RightLink) != result.RightLink || ((state.Effects & result.LeftLink) == result.LeftLink && (state.Effects & result.FullLeftLink) != result.LeftLink);
+                        bool hasToBeRight = (state.Effects & result.LeftLink) != result.LeftLink || ((state.Effects & result.RightLink) == result.RightLink && (state.Effects & result.FullRightLink) != result.RightLink);
                         if (hasToBeLeft)
                         {
                             result.MinTime += solution[index];
@@ -4392,7 +4397,7 @@ namespace Rawr.Mage
 
         private bool ValidateFlamecap()
         {
-            Cooldown cooldown = Cooldown.FlameCap;
+            int cooldown = (int)StandardEffect.FlameCap;
             //double effectDuration = 60.0;
             //double cooldownDuration = 180.0;
             const double eps = 0.00001;
@@ -4405,7 +4410,7 @@ namespace Rawr.Mage
 
             bool valid = true;
 
-            double[] manaGem = GetSegmentCooldownCount(Cooldown.None, VariableType.ManaGem);
+            double[] manaGem = GetSegmentCooldownCount(0, VariableType.ManaGem);
 
             float manaBurn = 80;
             if (calculationOptions.AoeDuration > 0)
@@ -4609,8 +4614,8 @@ namespace Rawr.Mage
         private bool ValidateManaGemEffect()
         {
             const double eps = 0.00001;
-            double[] trinketCount = GetSegmentCooldownCount(Cooldown.ManaGemEffect, VariableType.None);
-            double[] manaGem = GetSegmentCooldownCount(Cooldown.None, VariableType.ManaGem);
+            double[] trinketCount = GetSegmentCooldownCount((int)StandardEffect.ManaGemEffect, VariableType.None);
+            double[] manaGem = GetSegmentCooldownCount(0, VariableType.ManaGem);
 
             // make sure gem is activated together with SCB
             for (int i = 0; i < segmentList.Count; i++)
@@ -4639,7 +4644,7 @@ namespace Rawr.Mage
                             int row = gem.AddConstraint();
                             gem.SetConstraintRHS(row, segmentList[i - 1].Duration);
                             gem.SetConstraintLHS(row, 0.1);
-                            SetCooldownElements(gem, row, Cooldown.ManaGemEffect, i - 1, 1.0);
+                            SetCooldownElements(gem, row, (int)StandardEffect.ManaGemEffect, i - 1, 1.0);
                             gem.ForceRecalculation(true);
                             HeapPush(gem);
                         }
@@ -4648,7 +4653,7 @@ namespace Rawr.Mage
                         for (int index = segmentColumn[i]; index < segmentColumn[i + 1]; index++)
                         {
                             CastingState state = solutionVariable[index].State;
-                            if (state != null && state.GetCooldown(Cooldown.ManaGemEffect) && solutionVariable[index].Segment == i)
+                            if (state != null && state.EffectsActive((int)StandardEffect.ManaGemEffect) && solutionVariable[index].Segment == i)
                             {
                                 lp.EraseColumn(index);
                             }
@@ -4671,7 +4676,7 @@ namespace Rawr.Mage
                         if (solutionVariable[index].Segment == seg)
                         {
                             CastingState state = solutionVariable[index].State;
-                            if (solutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.GetCooldown(Cooldown.ManaGemEffect)))
+                            if (solutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.EffectsActive((int)StandardEffect.ManaGemEffect)))
                             {
                                 double mps = lp[rowManaRegen, index];
                                 manaChangeBeforeGem += mps * solution[index];
@@ -4701,7 +4706,7 @@ namespace Rawr.Mage
                                 double mps = lp[rowManaRegen, index];
                                 lp.SetConstraintElement(row, index, 0.1 * mps);
                             }
-                            else if (s == seg && solutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.GetCooldown(Cooldown.ManaGemEffect)))
+                            else if (s == seg && solutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.EffectsActive((int)StandardEffect.ManaGemEffect)))
                             {
                                 double mps = lp[rowManaRegen, index];
                                 if (mps > 0) lp.SetConstraintElement(row, index, 0.1 * mps);
@@ -4729,7 +4734,7 @@ namespace Rawr.Mage
                     }
 
                     // mana underflow guards, can only use if mana gem effect activation is fixed
-                    ActivationConstraints activation = GetActivationConstraints(Cooldown.ManaGemEffect, seg, trinketCount[seg]);
+                    ActivationConstraints activation = GetActivationConstraints((int)StandardEffect.ManaGemEffect, seg, trinketCount[seg]);
                     if (manaList[seg] - manaChangeBeforeGem < -0.001 && !activation.Loose)
                     {
                         // either make sure gem is popped soon enough
@@ -4747,7 +4752,7 @@ namespace Rawr.Mage
                                 double mps = branchlp[rowManaRegen, index];
                                 branchlp.SetConstraintElement(row, index, 0.1 * mps);
                             }
-                            else if (s == seg && solutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.GetCooldown(Cooldown.ManaGemEffect)))
+                            else if (s == seg && solutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.EffectsActive((int)StandardEffect.ManaGemEffect)))
                             {
                                 double mps = branchlp[rowManaRegen, index];
                                 branchlp.SetConstraintElement(row, index, 0.1 * mps);
@@ -4758,7 +4763,7 @@ namespace Rawr.Mage
                         // or make it loose
                         branchlp = lp.Clone();
                         if (branchlp.Log != null) branchlp.Log.AppendLine("Remove gem effect at " + (seg + 1));
-                        DisableCooldown(branchlp, Cooldown.ManaGemEffect, seg + 1);
+                        DisableCooldown(branchlp, (int)StandardEffect.ManaGemEffect, seg + 1);
                         branchlp.ForceRecalculation(true);
                         HeapPush(branchlp);
                         // or there is no activation here
@@ -4782,10 +4787,10 @@ namespace Rawr.Mage
         private bool ValidateEffectPotion()
         {
             const double eps = 0.00001;
-            double[] potionOfSpeedCount = GetSegmentCooldownCount(Cooldown.PotionOfSpeed, VariableType.None);
-            double[] potionOfWildMagicCount = GetSegmentCooldownCount(Cooldown.PotionOfWildMagic, VariableType.None);
+            double[] potionOfSpeedCount = GetSegmentCooldownCount((int)StandardEffect.PotionOfSpeed, VariableType.None);
+            double[] potionOfWildMagicCount = GetSegmentCooldownCount((int)StandardEffect.PotionOfWildMagic, VariableType.None);
             double[][] segCount = new double[][] { potionOfSpeedCount, potionOfWildMagicCount };
-            Cooldown[] effect = new Cooldown[] { Cooldown.PotionOfSpeed, Cooldown.PotionOfWildMagic };
+            int[] effect = new int[] { (int)StandardEffect.PotionOfSpeed, (int)StandardEffect.PotionOfWildMagic };
             double[] total = new double[2];
 
             for (int i = 0; i < total.Length; i++)
@@ -4824,10 +4829,10 @@ namespace Rawr.Mage
         private bool ValidateHastedEvocation()
         {
             const double eps = 0.00001;
-            double[] evoCount = GetSegmentCooldownCount(Cooldown.Evocation, VariableType.Evocation);
-            double[] evoIVCount = GetSegmentCooldownCount(Cooldown.Evocation, VariableType.EvocationIV);
-            double[] evoHeroCount = GetSegmentCooldownCount(Cooldown.Evocation, VariableType.EvocationHero);
-            double[] evoIVHeroCount = GetSegmentCooldownCount(Cooldown.Evocation, VariableType.EvocationIVHero);
+            double[] evoCount = GetSegmentCooldownCount((int)StandardEffect.Evocation, VariableType.Evocation);
+            double[] evoIVCount = GetSegmentCooldownCount((int)StandardEffect.Evocation, VariableType.EvocationIV);
+            double[] evoHeroCount = GetSegmentCooldownCount((int)StandardEffect.Evocation, VariableType.EvocationHero);
+            double[] evoIVHeroCount = GetSegmentCooldownCount((int)StandardEffect.Evocation, VariableType.EvocationIVHero);
             double[][] segCount = new double[][] { evoCount, evoIVCount, evoHeroCount, evoIVHeroCount };
             VariableType[] speedType = new VariableType[] { VariableType.Evocation, VariableType.EvocationIV, VariableType.EvocationHero, VariableType.EvocationIVHero };
 
@@ -4876,14 +4881,14 @@ namespace Rawr.Mage
                                     }
                                 }
                             }
-                            int row = AddConstraint(cooldownUsed, Cooldown.Evocation, speedType[speed], segmin, segmax);
+                            int row = AddConstraint(cooldownUsed, (int)StandardEffect.Evocation, speedType[speed], segmin, segmax);
                             cooldownUsed.SetConstraintRHS(row, calculationResult.EvocationDuration);
                             cooldownUsed.SetConstraintLHS(row, 0.1);
                             cooldownUsed.ForceRecalculation(true);
                             HeapPush(cooldownUsed);
                             // cooldown not used
                             if (lp.Log != null) lp.Log.AppendLine("Disable " + speedType[speed] + " at " + segmin + "-" + segmax);
-                            DisableCooldown(lp, Cooldown.Evocation, speedType[speed], segmin, segmax);
+                            DisableCooldown(lp, (int)StandardEffect.Evocation, speedType[speed], segmin, segmax);
                             HeapPush(lp);
                             return false;
                         }
@@ -4896,21 +4901,21 @@ namespace Rawr.Mage
         private bool ValidateEvocation()
         {
             const double eps = 0.00001;
-            double[] evoCount = GetSegmentCooldownCount(Cooldown.Evocation, VariableType.None);
+            double[] evoCount = GetSegmentCooldownCount((int)StandardEffect.Evocation, VariableType.None);
             double[][] evoHastedCount = new double[3][];
             double[][] evoHastedActivation = new double[3][];
             bool[][] cooldownPresent = new bool[3][];
-            Cooldown[] hastedCooldown = new Cooldown[] { Cooldown.IcyVeins, Cooldown.Heroism, Cooldown.IcyVeins | Cooldown.Heroism };
+            int[] hastedCooldown = new int[] { (int)StandardEffect.IcyVeins, (int)StandardEffect.Heroism, (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism };
             VariableType[] hastedCooldownType = new VariableType[] { VariableType.EvocationIV, VariableType.EvocationHero, VariableType.EvocationIVHero };
             if (calculationOptions.EnableHastedEvocation)
             {
                 for (int i = 0; i < hastedCooldown.Length; i++)
                 {
-                    evoHastedCount[i] = GetSegmentCooldownCount(Cooldown.Evocation, hastedCooldownType[i]);
-                    evoHastedActivation[i] = GetSegmentCooldownCount(Cooldown.Evocation | hastedCooldown[i], hastedCooldownType[i]);
+                    evoHastedCount[i] = GetSegmentCooldownCount((int)StandardEffect.Evocation, hastedCooldownType[i]);
+                    evoHastedActivation[i] = GetSegmentCooldownCount((int)StandardEffect.Evocation | hastedCooldown[i], hastedCooldownType[i]);
                 }
-                double[] ivCount = GetSegmentCooldownCount(Cooldown.IcyVeins, VariableType.None);
-                double[] heroCount = GetSegmentCooldownCount(Cooldown.Heroism, VariableType.None);
+                double[] ivCount = GetSegmentCooldownCount((int)StandardEffect.IcyVeins, VariableType.None);
+                double[] heroCount = GetSegmentCooldownCount((int)StandardEffect.Heroism, VariableType.None);
                 cooldownPresent[0] = new bool[segmentList.Count];
                 cooldownPresent[1] = new bool[segmentList.Count];
                 cooldownPresent[2] = new bool[segmentList.Count];
@@ -4972,7 +4977,7 @@ namespace Rawr.Mage
                         // or make it loose
                         branchlp = lp.Clone();
                         if (branchlp.Log != null) branchlp.Log.AppendLine("Remove evocation at " + (seg + 1));
-                        DisableCooldown(branchlp, Cooldown.Evocation, seg + 1);
+                        DisableCooldown(branchlp, (int)StandardEffect.Evocation, seg + 1);
                         branchlp.ForceRecalculation(true);
                         HeapPush(branchlp);
                         // or there is no activation here
@@ -4980,13 +4985,13 @@ namespace Rawr.Mage
                         branchlp = lp.Clone();
                         if (branchlp.Log != null) branchlp.Log.AppendLine("Evocation starts before " + seg);
                         row = branchlp.AddConstraint();
-                        SetCooldownElements(branchlp, row, Cooldown.Evocation, seg - 1, 1.0);
+                        SetCooldownElements(branchlp, row, (int)StandardEffect.Evocation, seg - 1, 1.0);
                         branchlp.SetConstraintRHS(row, segmentList[seg - 1].Duration);
                         branchlp.SetConstraintLHS(row, 0.1);
                         branchlp.ForceRecalculation(true);
                         HeapPush(branchlp);
                         if (lp.Log != null) lp.Log.AppendLine("No evocation at " + seg);
-                        DisableCooldown(lp, Cooldown.Evocation, seg);
+                        DisableCooldown(lp, (int)StandardEffect.Evocation, seg);
                         HeapPush(lp);
                         return false;
                     }
@@ -5037,11 +5042,11 @@ namespace Rawr.Mage
                         // otherwise it has to be loose
                         branchlp = lp.Clone();
                         if (branchlp.Log != null) branchlp.Log.AppendLine("No evocation before " + seg);
-                        DisableCooldown(branchlp, Cooldown.Evocation, seg - 1);
+                        DisableCooldown(branchlp, (int)StandardEffect.Evocation, seg - 1);
                         HeapPush(branchlp);
                         // or no evocation here
                         if (lp.Log != null) lp.Log.AppendLine("No evocation at " + seg);
-                        DisableCooldown(lp, Cooldown.Evocation, seg);
+                        DisableCooldown(lp, (int)StandardEffect.Evocation, seg);
                         HeapPush(lp);
                         return false;
                     }
@@ -5065,7 +5070,7 @@ namespace Rawr.Mage
                                     if (state == null || !state.Evocation)
                                     {
                                         double mps = lp[rowManaRegen, index];
-                                        if ((state != null && state.GetCooldown(hastedCooldown[i])) || mps < 0) // count what has to be before and what is benefitial to be before
+                                        if ((state != null && state.EffectsActive(hastedCooldown[i])) || mps < 0) // count what has to be before and what is benefitial to be before
                                         {
                                             manaChangeBefore += mps * solution[index];
                                         }
@@ -5093,7 +5098,7 @@ namespace Rawr.Mage
                                     else if (s == seg && (state == null || !state.Evocation))
                                     {
                                         double mps = branchlp[rowManaRegen, index];
-                                        if ((state != null && state.GetCooldown(hastedCooldown[i])) || mps < 0)
+                                        if ((state != null && state.EffectsActive(hastedCooldown[i])) || mps < 0)
                                         {
                                             branchlp.SetConstraintElement(row, index, 0.1 * mps);
                                         }
@@ -5105,7 +5110,7 @@ namespace Rawr.Mage
                                 if (lp.Log != null) lp.Log.AppendLine("No " + hastedCooldownType[i] + " without cooldown at " + seg);
                                 for (int index = 0; index < solutionVariable.Count; index++)
                                 {
-                                    if (solutionVariable[index].Type == hastedCooldownType[i] && !solutionVariable[index].State.GetCooldown(hastedCooldown[i]))
+                                    if (solutionVariable[index].Type == hastedCooldownType[i] && !solutionVariable[index].State.EffectsActive(hastedCooldown[i]))
                                     {
                                         if (solutionVariable[index].Segment == seg) lp.EraseColumn(index);
                                     }
@@ -5129,7 +5134,7 @@ namespace Rawr.Mage
                                     if (state == null || !state.Evocation)
                                     {
                                         double mps = lp[rowManaRegen, index];
-                                        if ((state != null && (state.Cooldown & hastedCooldown[i]) == 0) || mps < 0) // count what has to be before and what is benefitial to be before
+                                        if ((state != null && (state.Effects & hastedCooldown[i]) == 0) || mps < 0) // count what has to be before and what is benefitial to be before
                                         {
                                             manaChangeBefore += mps * solution[index];
                                         }
@@ -5157,7 +5162,7 @@ namespace Rawr.Mage
                                     else if (s == seg && (state == null || !state.Evocation))
                                     {
                                         double mps = branchlp[rowManaRegen, index];
-                                        if ((state != null && (state.Cooldown & hastedCooldown[i]) == 0) || mps < 0)
+                                        if ((state != null && (state.Effects & hastedCooldown[i]) == 0) || mps < 0)
                                         {
                                             branchlp.SetConstraintElement(row, index, 0.1 * mps);
                                         }
@@ -5170,7 +5175,7 @@ namespace Rawr.Mage
                                 for (int index = 0; index < solutionVariable.Count; index++)
                                 {
                                     CastingState state = solutionVariable[index].State;
-                                    if (state != null && (state.Cooldown & hastedCooldown[i]) != 0)
+                                    if (state != null && (state.Effects & hastedCooldown[i]) != 0)
                                     {
                                         if (solutionVariable[index].Segment == seg + 1) lp.EraseColumn(index);
                                     }

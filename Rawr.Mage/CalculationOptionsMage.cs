@@ -302,9 +302,9 @@ namespace Rawr.Mage
         }
 
         [XmlIgnore]
-        public Cooldown[] IncrementalSetStateIndexes;
+        public int[] IncrementalSetStateIndexes;
         [XmlIgnore]
-        public Cooldown[] IncrementalSetSortedStates;
+        public int[] IncrementalSetSortedStates;
         [XmlIgnore]
         public int[] IncrementalSetSegments;
         [XmlIgnore]
@@ -446,7 +446,7 @@ namespace Rawr.Mage
             {
                 if (segment.TimeStart >= restriction.TimeStart && segment.TimeEnd <= restriction.TimeEnd)
                 {
-                    if (!restriction.IsMatch(state.Cooldown)) return false;
+                    if (!restriction.IsMatch(state.Effects)) return false;
                 }
             }
             return true;

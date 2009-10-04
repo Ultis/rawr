@@ -6,11 +6,11 @@ namespace Rawr.Mage.SequenceReconstruction
 {
     public class CooldownConstraint
     {
-        public SequenceGroup Group;
-        public double Cooldown;
-        public double Duration;
-        public bool ColdSnap;
-        public Cooldown Type;
+        public SequenceGroup Group { get; set; }
+        public double Cooldown { get; set; }
+        public double Duration { get; set; }
+        public bool ColdSnap { get; set; }
+        public EffectCooldown EffectCooldown { get; set; }
     }
 
 #if RAWR3
@@ -64,11 +64,6 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 mps = 0.0;
                 tps = Calculations.ManaPotionTps;
-            }
-            else if (variableType == VariableType.DrumsOfBattle)
-            {
-                mps = -Calculations.BaseState.ManaRegen5SR;
-                tps = 0.0;
             }
             else if (variableType == VariableType.Drinking)
             {

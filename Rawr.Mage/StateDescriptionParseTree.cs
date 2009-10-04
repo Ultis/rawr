@@ -42,7 +42,7 @@ namespace Rawr.Mage.StateDescription
         }
     }
 
-    public delegate bool StateDescriptionDelegate(Cooldown cooldown);
+    public delegate bool StateDescriptionDelegate(int effects);
 
     // rootlevel of the node tree
     public partial class ParseTree : ParseNode
@@ -89,9 +89,9 @@ namespace Rawr.Mage.StateDescription
             return Nodes[0].Compile(this);
         }
 
-        public bool Interpret(Cooldown cooldown)
+        public bool Interpret(int effects)
         {
-            return Nodes[0].Interpret(this, cooldown);
+            return Nodes[0].Interpret(this, effects);
         }
     }
 
@@ -155,29 +155,29 @@ namespace Rawr.Mage.StateDescription
             return Value;
         }
 
-        internal bool Interpret(ParseTree tree, Cooldown cooldown)
+        internal bool Interpret(ParseTree tree, int effects)
         {
             bool Value = true;
 
             switch (Token.Type)
             {
                 case TokenType.Start:
-                    Value = EvalStart(tree, cooldown);
+                    Value = EvalStart(tree, effects);
                     break;
                 case TokenType.UnionExpr:
-                    Value = EvalUnionExpr(tree, cooldown);
+                    Value = EvalUnionExpr(tree, effects);
                     break;
                 case TokenType.DiffExpr:
-                    Value = EvalDiffExpr(tree, cooldown);
+                    Value = EvalDiffExpr(tree, effects);
                     break;
                 case TokenType.IntExpr:
-                    Value = EvalIntExpr(tree, cooldown);
+                    Value = EvalIntExpr(tree, effects);
                     break;
                 case TokenType.CompExpr:
-                    Value = EvalCompExpr(tree, cooldown);
+                    Value = EvalCompExpr(tree, effects);
                     break;
                 case TokenType.Atom:
-                    Value = EvalAtom(tree, cooldown);
+                    Value = EvalAtom(tree, effects);
                     break;
 
                 default:
@@ -187,32 +187,32 @@ namespace Rawr.Mage.StateDescription
             return Value;
         }
 
-        protected virtual bool EvalStart(ParseTree tree, Cooldown cooldown)
+        protected virtual bool EvalStart(ParseTree tree, int effects)
         {
             foreach (ParseNode node in nodes)
             {
                 if (node.Token.Type == TokenType.UnionExpr)
                 {
-                    return node.Interpret(tree, cooldown);
+                    return node.Interpret(tree, effects);
                 }
             }
             return true;
         }
 
-        protected virtual bool EvalUnionExpr(ParseTree tree, Cooldown cooldown)
+        protected virtual bool EvalUnionExpr(ParseTree tree, int effects)
         {
             foreach (ParseNode node in nodes)
             {
                 if (node.Token.Type == TokenType.DiffExpr)
                 {
-                    bool value = node.Interpret(tree, cooldown);
+                    bool value = node.Interpret(tree, effects);
                     if (value) return true;
                 }
             }
         	return false;
         }
 
-        protected virtual bool EvalDiffExpr(ParseTree tree, Cooldown cooldown)
+        protected virtual bool EvalDiffExpr(ParseTree tree, int effects)
         {
             int i = 0;
             for (; i < nodes.Count; i++)
@@ -220,7 +220,7 @@ namespace Rawr.Mage.StateDescription
                 ParseNode node = nodes[i];
                 if (node.Token.Type == TokenType.IntExpr)
                 {
-                    bool value = node.Interpret(tree, cooldown);
+                    bool value = node.Interpret(tree, effects);
                     if (!value) return false;
                     i++;
                     break;
@@ -231,26 +231,26 @@ namespace Rawr.Mage.StateDescription
                 ParseNode node = nodes[i];
                 if (node.Token.Type == TokenType.IntExpr)
                 {
-                    return !node.Interpret(tree, cooldown);
+                    return !node.Interpret(tree, effects);
                 }
             }
             return true;
         }
 
-        protected virtual bool EvalIntExpr(ParseTree tree, Cooldown cooldown)
+        protected virtual bool EvalIntExpr(ParseTree tree, int effects)
         {
             foreach (ParseNode node in nodes)
             {
                 if (node.Token.Type == TokenType.CompExpr)
                 {
-                    bool value = node.Interpret(tree, cooldown);
+                    bool value = node.Interpret(tree, effects);
                     if (!value) return false;
                 }
             }
             return true;
         }
 
-        protected virtual bool EvalCompExpr(ParseTree tree, Cooldown cooldown)
+        protected virtual bool EvalCompExpr(ParseTree tree, int effects)
         {
             bool complement = false;
             for (int i = 0; i < nodes.Count; i++)
@@ -262,37 +262,37 @@ namespace Rawr.Mage.StateDescription
                 }
                 else if (node.Token.Type == TokenType.Atom)
                 {
-                    return node.Interpret(tree, cooldown) ^ complement;
+                    return node.Interpret(tree, effects) ^ complement;
                 }
             }
             return true;
         }
 
-        private Cooldown EvalState(ParseNode node)
+        private int EvalState(ParseNode node)
         {
             string text = node.Token.Text.Replace(" ", "");
             if (text.ToUpper() == "ANY")
             {
-                return Cooldown.None;
+                return 0;
             }
             else
             {
-                return (Cooldown)Enum.Parse(typeof(Cooldown), text, true);
+                return (int)Enum.Parse(typeof(StandardEffect), text, true);
             }
         }
 
-        protected virtual bool EvalAtom(ParseTree tree, Cooldown cooldown)
+        protected virtual bool EvalAtom(ParseTree tree, int effects)
         {
             foreach (ParseNode node in nodes)
             {
                 if (node.Token.Type == TokenType.UnionExpr)
                 {
-                    return node.Interpret(tree, cooldown);
+                    return node.Interpret(tree, effects);
                 }
                 else if (node.Token.Type == TokenType.STATE)
                 {
-                    Cooldown state = EvalState(node);
-                    return (cooldown & state) == state;
+                    int stateEffects = EvalState(node);
+                    return (effects & stateEffects) == stateEffects;
                 }
             }
             return true;
@@ -322,11 +322,11 @@ namespace Rawr.Mage.StateDescription
             }
             StateDescriptionDelegate[] list = nodelist.ToArray();
             if (list.Length == 1) return list[0];
-            return delegate(Cooldown cooldown)
+            return delegate(int effects)
             {
                 for (int i = 0; i < list.Length; i++)
-                {
-                    if (list[i](cooldown)) return true;
+                {                    
+                    if (list[i](effects)) return true;
                 }
                 return false;
             };
@@ -358,9 +358,9 @@ namespace Rawr.Mage.StateDescription
             }
             if (b != null)
             {
-                return delegate(Cooldown cooldown)
+                return delegate(int effects)
                 {
-                    return a(cooldown) && !b(cooldown);
+                    return a(effects) && !b(effects);
                 };
             }
             else
@@ -373,14 +373,14 @@ namespace Rawr.Mage.StateDescription
         {
             bool allAtom = true;
             List<StateDescriptionDelegate> nodelist = new List<StateDescriptionDelegate>();
-            Cooldown state = Cooldown.None;
+            int stateEffects = 0;
             foreach (ParseNode node in nodes)
             {
                 if (node.Token.Type == TokenType.CompExpr)
                 {
                     if (node.nodes[0].Token.Type == TokenType.Atom && node.nodes[0].nodes[0].Token.Type == TokenType.STATE)
                     {
-                        state = state | EvalState(node.nodes[0].nodes[0]);
+                        stateEffects = stateEffects | EvalState(node.nodes[0].nodes[0]);
                     }
                     else
                     {
@@ -391,20 +391,20 @@ namespace Rawr.Mage.StateDescription
             }
             if (allAtom)
             {
-                return delegate(Cooldown cooldown)
+                return delegate(int effects)
                 {
-                    return (cooldown & state) == state;
+                    return (effects & stateEffects) == stateEffects;
                 };
             }
             else
             {
                 StateDescriptionDelegate[] list = nodelist.ToArray();
                 if (list.Length == 1) return list[0];
-                return delegate(Cooldown cooldown)
+                return delegate(int effects)
                 {
                     for (int i = 0; i < list.Length; i++)
                     {
-                        if (!list[i](cooldown)) return false;
+                        if (!list[i](effects)) return false;
                     }
                     return true;
                 };
@@ -426,9 +426,9 @@ namespace Rawr.Mage.StateDescription
                     StateDescriptionDelegate value = node.Compile(tree);
                     if (complement)
                     {
-                        return delegate(Cooldown cooldown)
+                        return delegate(int effects)
                         {
-                            return !value(cooldown);
+                            return !value(effects);
                         };
                     }
                     else
@@ -450,10 +450,10 @@ namespace Rawr.Mage.StateDescription
                 }
                 else if (node.Token.Type == TokenType.STATE)
                 {
-                    Cooldown state = EvalState(node);
-                    return delegate(Cooldown cooldown)
+                    int stateEffects = EvalState(node);
+                    return delegate(int effects)
                     {
-                        return (cooldown & state) == state;
+                        return (effects & stateEffects) == stateEffects;
                     };
                 }
             }

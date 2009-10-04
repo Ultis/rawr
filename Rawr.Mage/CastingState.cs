@@ -5,28 +5,23 @@ using System.Text;
 namespace Rawr.Mage
 {
     [Flags]
-    public enum Cooldown
+    public enum StandardEffect
     {
-        Evocation = 0x4000, // should always be the highest value
-        PowerInfusion = 0x2000,
-        PotionOfSpeed = 0x1000,
-        ArcanePower = 0x800,
-        Combustion = 0x400,
-        PotionOfWildMagic = 0x200,
-        DrumsOfBattle = 0x100,
+        None = 0,
+        WaterElemental = 0x1,
+        PowerInfusion = 0x2,
+        PotionOfSpeed = 0x4,
+        ArcanePower = 0x8,
+        Combustion = 0x10,
+        PotionOfWildMagic = 0x20,
+        Berserking = 0x40,
         FlameCap = 0x80,
-        Heroism = 0x40,
-        IcyVeins = 0x20,
-        MoltenFury = 0x10,
-        WaterElemental = 0x8,
-        ManaGemEffect = 0x4,
-        Trinket1 = 0x2,
-        Trinket2 = 0x1,
-        None = 0x0,
-        NonItemBasedMask = 0x3FF8,
-        ItemBasedMask = 0x7,
-        Mask = ItemBasedMask | NonItemBasedMask,
-        FullMask = Mask | Evocation,
+        Heroism = 0x100,
+        IcyVeins = 0x200,
+        MoltenFury = 0x400,
+        Evocation = 0x800,
+        ManaGemEffect = 0x1000, // make sure to update shifting of item based effects if this changes
+        NonItemBasedMask = PowerInfusion | PotionOfSpeed | PotionOfSpeed | ArcanePower | Combustion | PotionOfWildMagic | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | WaterElemental
     }
 
     public sealed class CastingState
@@ -107,29 +102,29 @@ namespace Rawr.Mage
 
         public float SnaredTime { get; set; }
 
-        public bool GetCooldown(Cooldown cooldown)
+        public bool EffectsActive(int effects)
         {
-            return (cooldown & Cooldown) == cooldown;
+            return (effects & Effects) == effects;
         }
 
-        public bool Evocation { get { return (Cooldown & Cooldown.Evocation) != 0; } }
-        public bool ArcanePower { get { return (Cooldown & Cooldown.ArcanePower) != 0; } }
-        public bool IcyVeins { get { return (Cooldown & Cooldown.IcyVeins) != 0; } }
-        public bool MoltenFury { get { return (Cooldown & Cooldown.MoltenFury) != 0; } }
-        public bool Heroism { get { return (Cooldown & Cooldown.Heroism) != 0; } }
-        public bool PotionOfWildMagic { get { return (Cooldown & Cooldown.PotionOfWildMagic) != 0; } }
-        public bool PotionOfSpeed { get { return (Cooldown & Cooldown.PotionOfSpeed) != 0; } }
-        public bool FlameCap { get { return (Cooldown & Cooldown.FlameCap) != 0; } }
-        public bool Trinket1 { get { return (Cooldown & Cooldown.Trinket1) != 0; } }
-        public bool Trinket2 { get { return (Cooldown & Cooldown.Trinket2) != 0; } }
-        public bool ManaGemEffect { get { return (Cooldown & Cooldown.ManaGemEffect) != 0; } }
-        public bool DrumsOfBattle { get { return (Cooldown & Cooldown.DrumsOfBattle) != 0; } }
-        public bool Combustion { get { return (Cooldown & Cooldown.Combustion) != 0; } }
-        public bool WaterElemental { get { return (Cooldown & Cooldown.WaterElemental) != 0; } }
-        public bool PowerInfusion { get { return (Cooldown & Cooldown.PowerInfusion) != 0; } }
+        public bool Evocation { get { return (Effects & (int)StandardEffect.Evocation) != 0; } }
+        public bool ArcanePower { get { return (Effects & (int)StandardEffect.ArcanePower) != 0; } }
+        public bool IcyVeins { get { return (Effects & (int)StandardEffect.IcyVeins) != 0; } }
+        public bool MoltenFury { get { return (Effects & (int)StandardEffect.MoltenFury) != 0; } }
+        public bool Heroism { get { return (Effects & (int)StandardEffect.Heroism) != 0; } }
+        public bool PotionOfWildMagic { get { return (Effects & (int)StandardEffect.PotionOfWildMagic) != 0; } }
+        public bool PotionOfSpeed { get { return (Effects & (int)StandardEffect.PotionOfSpeed) != 0; } }
+        public bool FlameCap { get { return (Effects & (int)StandardEffect.FlameCap) != 0; } }
+        //public bool Trinket1 { get { return (Effects & (int)Effect.Trinket1) != 0; } }
+        //public bool Trinket2 { get { return (Effects & (int)Effect.Trinket2) != 0; } }
+        public bool ManaGemEffect { get { return (Effects & (int)StandardEffect.ManaGemEffect) != 0; } }
+        public bool Berserking { get { return (Effects & (int)StandardEffect.Berserking) != 0; } }
+        public bool Combustion { get { return (Effects & (int)StandardEffect.Combustion) != 0; } }
+        public bool WaterElemental { get { return (Effects & (int)StandardEffect.WaterElemental) != 0; } }
+        public bool PowerInfusion { get { return (Effects & (int)StandardEffect.PowerInfusion) != 0; } }
         public bool Frozen { get; set; }
 
-        public Cooldown Cooldown { get; set; }
+        public int Effects { get; set; }
 
         public float CombustionDuration { get; set; }
         public float SpellHasteRating { get; set; }
@@ -141,23 +136,7 @@ namespace Rawr.Mage
             {
                 if (buffLabel == null)
                 {
-                    List<String> buffList = new List<string>();
-                    if (MoltenFury) buffList.Add("Molten Fury");
-                    if (Heroism) buffList.Add("Heroism");
-                    if (IcyVeins) buffList.Add("Icy Veins");
-                    if (ArcanePower) buffList.Add("Arcane Power");
-                    if (Combustion) buffList.Add("Combustion");
-                    if (DrumsOfBattle) buffList.Add("Drums of Battle");
-                    if (FlameCap) buffList.Add("Flame Cap");
-                    if (Trinket1) buffList.Add(Calculations.Trinket1Name);
-                    if (Trinket2) buffList.Add(Calculations.Trinket2Name);
-                    if (PotionOfWildMagic) buffList.Add("Potion of Wild Magic");
-                    if (PotionOfSpeed) buffList.Add("Potion of Speed");
-                    if (WaterElemental) buffList.Add("Water Elemental");
-                    if (ManaGemEffect) buffList.Add("Mana Gem Effect");
-                    if (PowerInfusion) buffList.Add("Power Infusion");
-
-                    buffLabel = string.Join("+", buffList.ToArray());
+                    buffLabel = Calculations.EffectsDescription(Effects);
                 }
                 return buffLabel;
             }
@@ -230,14 +209,14 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        frozenState = new CastingState(Calculations, Cooldown, true);
+                        frozenState = new CastingState(Calculations, Effects, true);
                     }
                 }
                 return frozenState;
             }
         }
 
-        public CastingState(CharacterCalculationsMage calculations, Cooldown cooldown, bool frozen)
+        public CastingState(CharacterCalculationsMage calculations, int effects, bool frozen)
         {
             //MageTalents = calculations.MageTalents;
             //BaseStats = calculations.BaseStats; // == characterStats
@@ -253,7 +232,7 @@ namespace Rawr.Mage
             float stateCritRating = 0.0f;
             SpellHasteRating = BaseStats.HasteRating;
 
-            Cooldown = cooldown;
+            Effects = effects;
 
             if (PotionOfWildMagic)
             {
@@ -265,23 +244,13 @@ namespace Rawr.Mage
                 SpellHasteRating += 500;
             }
 
-            if (Trinket1)
+            foreach (EffectCooldown effect in calculations.GetEffectList(effects))
             {
-                StateSpellPower += calculations.Trinket1SpellPower;
-                SpellHasteRating += calculations.Trinket1HasteRating;
-            }
-            if (Trinket2)
-            {
-                StateSpellPower += calculations.Trinket2SpellPower;
-                SpellHasteRating += calculations.Trinket2HasteRating;
-            }
-            if (ManaGemEffect)
-            {
-                StateSpellPower += calculations.ManaGemEffectSpellPower;
-            }
-            if (DrumsOfBattle)
-            {
-                SpellHasteRating += 80;
+                if (effect.SpecialEffect != null)
+                {
+                    StateSpellPower += effect.SpecialEffect.Stats.SpellPower;
+                    SpellHasteRating += effect.SpecialEffect.Stats.HasteRating;
+                }
             }
 
             CastingSpeed = (1 + SpellHasteRating / 995f * levelScalingFactor) * (1f + BaseStats.SpellHaste) * (1f + 0.02f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
@@ -299,6 +268,10 @@ namespace Rawr.Mage
             Frozen = frozen;
 
             if (IcyVeins)
+            {
+                CastingSpeed *= 1.2f;
+            }
+            if (Berserking)
             {
                 CastingSpeed *= 1.2f;
             }

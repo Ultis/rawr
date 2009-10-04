@@ -915,6 +915,14 @@ namespace Rawr.Mage.SequenceReconstruction
             CooldownBreak,
         }
 
+        private CharacterCalculationsMage Calculations
+        {
+            get
+            {
+                return SequenceItem.Calculations;
+            }
+        }
+
         private Stats BaseStats
         {
             get
@@ -947,22 +955,6 @@ namespace Rawr.Mage.SequenceReconstruction
             }
         }
 
-        private double Trinket1Duration
-        {
-            get
-            {
-                return SequenceItem.Calculations.Trinket1Duration;
-            }
-        }
-
-        private double Trinket2Duration
-        {
-            get
-            {
-                return SequenceItem.Calculations.Trinket2Duration;
-            }
-        }
-
         private double ManaGemEffectDuration
         {
             get
@@ -971,24 +963,14 @@ namespace Rawr.Mage.SequenceReconstruction
             }
         }
 
-        public List<SequenceGroup> GroupTrinket1()
+        public List<SequenceGroup> GroupSpecialEffect(EffectCooldown type)
         {
             List<SequenceItem> list = new List<SequenceItem>();
             foreach (SequenceItem item in sequence)
             {
-                if (item.CastingState.Trinket1) list.Add(item);
+                if (item.CastingState.EffectsActive(type)) list.Add(item);
             }
-            return GroupCooldown(list, Trinket1Duration, SequenceItem.Calculations.Trinket1Cooldown, Cooldown.Trinket1);
-        }
-
-        public List<SequenceGroup> GroupTrinket2()
-        {
-            List<SequenceItem> list = new List<SequenceItem>();
-            foreach (SequenceItem item in sequence)
-            {
-                if (item.CastingState.Trinket2) list.Add(item);
-            }
-            return GroupCooldown(list, Trinket2Duration, SequenceItem.Calculations.Trinket2Cooldown, Cooldown.Trinket2);
+            return GroupCooldown(list, type.Duration, type.Cooldown, type);
         }
 
         public List<SequenceGroup> GroupManaGemEffect()
@@ -998,7 +980,8 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.ManaGemEffect) list.Add(item);
             }
-            return GroupCooldown(list, ManaGemEffectDuration, 120f, Cooldown.ManaGemEffect);
+            if (list.Count > 0) return GroupCooldown(list, ManaGemEffectDuration, 120f, Calculations.EffectCooldown[(int)StandardEffect.ManaGemEffect]);
+            return null;
         }
 
         public void ConstrainTrinkets(List<SequenceGroup> t1, List<SequenceGroup> t2)
@@ -1021,7 +1004,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.Combustion) list.Add(item);
             }
-            GroupCooldown(list, 0, 180.0 + 15.0, true, false, Cooldown.Combustion, VariableType.None, 0.0);
+            if (list.Count > 0) GroupCooldown(list, 0, 180.0 + 15.0, true, false, Calculations.EffectCooldown[(int)StandardEffect.Combustion], VariableType.None, 0.0);
         }
 
         public void GroupArcanePower()
@@ -1031,7 +1014,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.ArcanePower) list.Add(item);
             }
-            GroupCooldown(list, SequenceItem.Calculations.ArcanePowerDuration, SequenceItem.Calculations.ArcanePowerCooldown, Cooldown.ArcanePower);
+            if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.ArcanePowerDuration, SequenceItem.Calculations.ArcanePowerCooldown, Calculations.EffectCooldown[(int)StandardEffect.ArcanePower]);
         }
 
         public void GroupPowerInfusion()
@@ -1041,7 +1024,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.PowerInfusion) list.Add(item);
             }
-            GroupCooldown(list, SequenceItem.Calculations.PowerInfusionDuration, SequenceItem.Calculations.PowerInfusionCooldown, Cooldown.PowerInfusion);
+            if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.PowerInfusionDuration, SequenceItem.Calculations.PowerInfusionCooldown, Calculations.EffectCooldown[(int)StandardEffect.PowerInfusion]);
         }
 
         public void GroupEvocation()
@@ -1051,19 +1034,19 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.VariableType == VariableType.EvocationIV) list.Add(item);
             }
-            GroupCooldown(list, SequenceItem.Calculations.EvocationDurationIV, SequenceItem.Calculations.EvocationCooldown, Cooldown.Evocation);
+            if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.EvocationDurationIV, SequenceItem.Calculations.EvocationCooldown, Calculations.EffectCooldown[(int)StandardEffect.Evocation]);
             list.Clear();
             foreach (SequenceItem item in sequence)
             {
                 if (item.VariableType == VariableType.EvocationHero) list.Add(item);
             }
-            GroupCooldown(list, SequenceItem.Calculations.EvocationDurationHero, SequenceItem.Calculations.EvocationCooldown, Cooldown.Evocation);
+            if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.EvocationDurationHero, SequenceItem.Calculations.EvocationCooldown, Calculations.EffectCooldown[(int)StandardEffect.Evocation]);
             list.Clear();
             foreach (SequenceItem item in sequence)
             {
                 if (item.VariableType == VariableType.EvocationIVHero) list.Add(item);
             }
-            GroupCooldown(list, SequenceItem.Calculations.EvocationDurationIVHero, SequenceItem.Calculations.EvocationCooldown, Cooldown.Evocation);
+            if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.EvocationDurationIVHero, SequenceItem.Calculations.EvocationCooldown, Calculations.EffectCooldown[(int)StandardEffect.Evocation]);
         }
 
         public void GroupIcyVeins()
@@ -1073,7 +1056,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.IcyVeins) list.Add(item);
             }
-            GroupCooldown(list, 20.0, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.IcyVeins, VariableType.None, 0.0);
+            if (list.Count > 0) GroupCooldown(list, 20.0, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Calculations.EffectCooldown[(int)StandardEffect.IcyVeins], VariableType.None, 0.0);
         }
 
         public void GroupWaterElemental()
@@ -1083,7 +1066,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.WaterElemental) list.Add(item);
             }
-            GroupCooldown(list, SequenceItem.Calculations.WaterElementalDuration, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.WaterElemental, VariableType.SummonWaterElemental, SequenceItem.Calculations.BaseGlobalCooldown);
+            if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.WaterElementalDuration, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Calculations.EffectCooldown[(int)StandardEffect.WaterElemental], VariableType.SummonWaterElemental, SequenceItem.Calculations.BaseGlobalCooldown);
         }
 
         public List<SequenceGroup> GroupFlameCap()
@@ -1093,7 +1076,8 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.FlameCap) list.Add(item);
             }
-            return GroupCooldown(list, 60, 180, Cooldown.FlameCap);
+            if (list.Count > 0) return GroupCooldown(list, 60, 180, Calculations.EffectCooldown[(int)StandardEffect.FlameCap]);
+            return null;
         }
 
         public void GroupPotionOfWildMagic()
@@ -1103,7 +1087,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.PotionOfWildMagic) list.Add(item);
             }
-            GroupCooldown(list, 15, 120, Cooldown.PotionOfWildMagic);
+            if (list.Count > 0) GroupCooldown(list, 15, 120, Calculations.EffectCooldown[(int)StandardEffect.PotionOfWildMagic]);
         }
 
         public void GroupPotionOfSpeed()
@@ -1113,20 +1097,20 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.PotionOfSpeed) list.Add(item);
             }
-            GroupCooldown(list, 15, 120, Cooldown.PotionOfSpeed);
+            if (list.Count > 0) GroupCooldown(list, 15, 120, Calculations.EffectCooldown[(int)StandardEffect.PotionOfSpeed]);
         }
 
-        public void GroupDrumsOfBattle()
+        public void GroupBerserking()
         {
             List<SequenceItem> list = new List<SequenceItem>();
             foreach (SequenceItem item in sequence)
             {
-                if (item.CastingState.DrumsOfBattle) list.Add(item);
+                if (item.CastingState.Berserking) list.Add(item);
             }
-            List<SequenceGroup> groups = GroupCooldown(list, 30, 120, false, false, Cooldown.DrumsOfBattle, VariableType.DrumsOfBattle, SequenceItem.Calculations.BaseGlobalCooldown);
+            if (list.Count > 0) GroupCooldown(list, 10, 180, false, false, Calculations.EffectCooldown[(int)StandardEffect.Berserking], VariableType.None, 0.0);
         }
 
-        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, Cooldown type)
+        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, EffectCooldown type)
         {
             return GroupCooldown(cooldownItems, maxDuration, cooldown, false, false, type, VariableType.None, 0.0);
         }
@@ -1181,7 +1165,7 @@ namespace Rawr.Mage.SequenceReconstruction
             return SequenceItem.Calculations.SegmentList[seg2].TimeStart - SequenceItem.Calculations.SegmentList[seg1].TimeEnd < effectDuration - 0.00001;
         }
 
-        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode, Cooldown type, VariableType activation, double activationDuration)
+        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode, EffectCooldown type, VariableType activation, double activationDuration)
         {
             const double eps = 0.00001;
             List<SequenceGroup> existingGroup = new List<SequenceGroup>();
@@ -1439,7 +1423,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (i != j)
                     {
-                        group.Constraint.Add(new CooldownConstraint() { Cooldown = cooldown, Duration = maxDuration, Group = partialGroups[j], ColdSnap = coldSnapMode, Type = type });
+                        group.Constraint.Add(new CooldownConstraint() { Cooldown = cooldown, Duration = maxDuration, Group = partialGroups[j], ColdSnap = coldSnapMode, EffectCooldown = type });
                     }
                 }
             }
@@ -1794,11 +1778,6 @@ namespace Rawr.Mage.SequenceReconstruction
                                             if (itemList[j].SuperIndex == item.SuperIndex)
                                             {
                                                 // make sure activations are placed before use
-                                                if (item.CastingState.DrumsOfBattle && item.VariableType != VariableType.DrumsOfBattle && itemList[j].VariableType == VariableType.DrumsOfBattle)
-                                                {
-                                                    tail = 0;
-                                                    break;
-                                                }
                                                 if (item.CastingState.WaterElemental && item.VariableType != VariableType.SummonWaterElemental && itemList[j].VariableType == VariableType.SummonWaterElemental)
                                                 {
                                                     tail = 0;
@@ -1806,11 +1785,6 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 }
                                                 if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
                                                 {
-                                                    if (itemList[index[i - 1]].CastingState.DrumsOfBattle && !item.CastingState.DrumsOfBattle && itemList[j].CastingState.DrumsOfBattle)
-                                                    {
-                                                        tail = 0;
-                                                        break;
-                                                    }
                                                     int intersectHexJ = HexCount(itemList[j].CooldownHex & activeTail);
                                                     if (intersectHexJ > intersectHex)
                                                     {
@@ -1909,8 +1883,8 @@ namespace Rawr.Mage.SequenceReconstruction
                                             {
                                                 // if we're in group with already placed item then no need to redo all this
                                                 if (i > 0 && itemList[index[i - 1]].Group.Contains(group)) continue;
-                                                if (constraint.Type == Cooldown.IcyVeins) icyVeinsGroup = group;
-                                                if (constraint.Type == Cooldown.WaterElemental) waterElementalGroup = group;
+                                                if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsGroup = group;
+                                                if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalGroup = group;
                                                 int minIndex = i;
                                                 foreach (SequenceItem coldsnapItem in constraint.Group.Item)
                                                 {
@@ -1921,8 +1895,8 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 }
                                                 if (minIndex < i)
                                                 {
-                                                    if (constraint.Type == Cooldown.IcyVeins) icyVeinsStarts.Add(minIndex);
-                                                    if (constraint.Type == Cooldown.WaterElemental) waterElementalStarts.Add(minIndex);
+                                                    if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsStarts.Add(minIndex);
+                                                    if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalStarts.Add(minIndex);
                                                 }
                                             }
                                         }
@@ -2812,6 +2786,15 @@ namespace Rawr.Mage.SequenceReconstruction
             return string.Format("{0:00}:{1:00}.{2:000}", span.Minutes, span.Seconds, span.Milliseconds);
         }
 
+        private class CooldownData
+        {
+            public EffectCooldown Effect;
+            public double Cooldown;
+            public double Time = double.NegativeInfinity;
+            public bool Active;
+            public bool Warning;
+        }
+
         public double Evaluate(StringBuilder timing, EvaluationMode mode, params double[] data)
         {
             const double eps = 0.00001;
@@ -2828,21 +2811,17 @@ namespace Rawr.Mage.SequenceReconstruction
             double potionCooldown = 0;
             double gemCooldown = 0;
             double flameCapCooldown = 0;
-            double trinket1Cooldown = 0;
-            double trinket2Cooldown = 0;
             bool heroismUsed = false;
             double evocationCooldown = 0;
-            double drumsCooldown = 0;
+            double berserkingCooldown = 0;
             double apCooldown = 0;
             double piCooldown = 0;
             double ivCooldown = 0;
             double weCooldown = 0;
             double combustionCooldown = 0;
 
-            double trinket1time = double.NegativeInfinity;
-            double trinket2time = double.NegativeInfinity;
             double flameCapTime = double.NegativeInfinity;
-            double drumsTime = double.NegativeInfinity;
+            double berserkingTime = double.NegativeInfinity;
             double potionOfWildMagicTime = double.NegativeInfinity;
             double potionOfSpeedTime = double.NegativeInfinity;
             double combustionTime = double.NegativeInfinity;
@@ -2854,10 +2833,8 @@ namespace Rawr.Mage.SequenceReconstruction
             double weTime = double.NegativeInfinity;
             double manaGemEffectTime = double.NegativeInfinity;
 
-            bool trinket1Active = false;
-            bool trinket2Active = false;
             bool flameCapActive = false;
-            bool drumsActive = false;
+            bool berserkingActive = false;
             bool potionOfWildMagicActive = false;
             bool potionOfSpeedActive = false;
             bool combustionActive = false;
@@ -2875,15 +2852,20 @@ namespace Rawr.Mage.SequenceReconstruction
             bool potionWarning = false;
             //bool gemWarning = false;
             bool flameCapWarning = false;
-            bool trinket1warning = false;
-            bool trinket2warning = false;
             bool apWarning = false;
             bool piWarning = false;
             bool ivWarning = false;
             bool weWarning = false;
             bool combustionWarning = false;
-            bool drumsWarning = false;
+            bool berserkingWarning = false;
             bool manaWarning = false;
+
+            CooldownData[] itemData = new CooldownData[Calculations.ItemBasedEffectCooldowns.Count];
+            for (int i = 0; i < itemData.Length; i++)
+            {
+                itemData[i] = new CooldownData();
+                itemData[i].Effect = Calculations.ItemBasedEffectCooldowns[i];
+            }
 
             double combustionLeft = 0;
 
@@ -2904,9 +2886,17 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (sequence[i].IsManaPotionOrGem) duration = 0;
                 double manabefore = mana;
                 bool cooldownContinuation = false;
-                if (drumsActive || flameCapActive || potionOfWildMagicActive || potionOfSpeedActive || trinket1Active || trinket2Active || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive || manaGemEffectActive || piActive)
+                if (berserkingActive || flameCapActive || potionOfWildMagicActive || potionOfSpeedActive || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive || manaGemEffectActive || piActive)
                 {
                     cooldownContinuation = true;
+                }
+                foreach (CooldownData d in itemData)
+                {
+                    if (d.Active)
+                    {
+                        cooldownContinuation = true;
+                        break;
+                    }
                 }
                 // Mana
                 if (mode == EvaluationMode.ManaBelow)
@@ -3051,7 +3041,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (i == 0 || sequence[i - 1].VariableType != VariableType.EvocationIV)
                     {
-                        if (!(sequence[i].CastingState != null && sequence[i].CastingState.GetCooldown(Cooldown.IcyVeins) || (i > 0 && sequence[i - 1].CastingState != null && sequence[i - 1].CastingState.GetCooldown(Cooldown.IcyVeins))))
+                        if (!(sequence[i].CastingState != null && sequence[i].CastingState.EffectsActive((int)StandardEffect.IcyVeins) || (i > 0 && sequence[i - 1].CastingState != null && sequence[i - 1].CastingState.EffectsActive((int)StandardEffect.IcyVeins))))
                         {
                             unexplained += duration;
                             if (timing != null) timing.AppendLine("WARNING: Evocation (Icy Veins) without Icy Veins to activate it!");
@@ -3082,7 +3072,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (i == 0 || sequence[i - 1].VariableType != VariableType.EvocationHero)
                     {
-                        if (!(sequence[i].CastingState != null && sequence[i].CastingState.GetCooldown(Cooldown.Heroism) || (i > 0 && sequence[i - 1].CastingState != null && sequence[i - 1].CastingState.GetCooldown(Cooldown.Heroism))))
+                        if (!(sequence[i].CastingState != null && sequence[i].CastingState.EffectsActive((int)StandardEffect.Heroism) || (i > 0 && sequence[i - 1].CastingState != null && sequence[i - 1].CastingState.EffectsActive((int)StandardEffect.Heroism))))
                         {
                             unexplained += duration;
                             if (timing != null) timing.AppendLine("WARNING: Evocation (Heroism) without Heroism to activate it!");
@@ -3113,7 +3103,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (i == 0 || sequence[i - 1].VariableType != VariableType.EvocationIVHero)
                     {
-                        if (!(sequence[i].CastingState != null && sequence[i].CastingState.GetCooldown(Cooldown.IcyVeins | Cooldown.Heroism) || (i > 0 && sequence[i - 1].CastingState != null && sequence[i - 1].CastingState.GetCooldown(Cooldown.IcyVeins | Cooldown.Heroism))))
+                        if (!(sequence[i].CastingState != null && sequence[i].CastingState.EffectsActive((int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism) || (i > 0 && sequence[i - 1].CastingState != null && sequence[i - 1].CastingState.EffectsActive((int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism))))
                         {
                             unexplained += duration;
                             if (timing != null) timing.AppendLine("WARNING: Evocation (Icy Veins+Heroism) without Icy Veins+Heroism to activate it!");
@@ -3147,46 +3137,41 @@ namespace Rawr.Mage.SequenceReconstruction
                     mana = BaseStats.Mana;
                 }
                 if (mana > 0) manaWarning = false;
-                // Drums of Battle
-                if (type == VariableType.DrumsOfBattle)
+                // Berserking
+                if (berserkingActive)
                 {
-                    if (drumsCooldown > eps)
+                    if (state != null && state.Berserking)
                     {
-                        unexplained += duration;
-                        if (timing != null && !drumsWarning) timing.AppendLine("WARNING: Drums of Battle cooldown not ready!");
-                        drumsWarning = true;
-                    }
-                    else
-                    {
-                        //if (timing != null) timing.AppendLine(TimeFormat(time) + ": Drums of Battle (" + Math.Round(manabefore).ToString() + " mana)");
-                        drumsCooldown = 120;
-                        drumsTime = time;
-                        drumsWarning = false;
-                        drumsActive = true;
-                    }
-                }
-                else if (drumsActive)
-                {
-                    if (state != null && state.DrumsOfBattle)
-                    {
-                        if (time + duration > drumsTime + 30 + eps)
+                        if (time + duration > berserkingTime + 10 + eps)
                         {
-                            unexplained += time + duration - drumsTime - 30;
-                            if (timing != null) timing.AppendLine("WARNING: Drums of Battle duration too long!");
+                            unexplained += time + duration - berserkingTime - 10;
+                            if (timing != null) timing.AppendLine("WARNING: Berserking duration too long!");
                         }
                     }
-                    else if (duration > 0 && 30 - (time - drumsTime) > eps)
+                    else if (duration > 0 && 10 - (time - berserkingTime) > eps)
                     {
-                        //unexplained += Math.Min(duration, 30 - (time - drumsTime));
-                        if (timing != null) timing.AppendLine("INFO: Drums of Battle is still up!");
+                        //unexplained += Math.Min(duration, 10 - (time - berserkingTime));
+                        if (timing != null) timing.AppendLine("INFO: Berserking is still up!");
                     }
                 }
                 else
                 {
-                    if (state != null && state.DrumsOfBattle)
+                    if (state != null && state.Berserking)
                     {
-                        unexplained += duration;
-                        if (timing != null) timing.AppendLine("WARNING: Drums of Battle not activated!");
+                        if (berserkingCooldown > eps)
+                        {
+                            unexplained += duration;
+                            if (timing != null && !berserkingWarning) timing.AppendLine("WARNING: Berserking cooldown not ready!");
+                            berserkingWarning = true;
+                        }
+                        else
+                        {
+                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Berserking (" + Math.Round(manabefore).ToString() + " mana)");
+                            berserkingCooldown = 180.0f;
+                            berserkingTime = time;
+                            berserkingWarning = false;
+                            berserkingActive = true;
+                        }
                     }
                 }
                 // Flame Cap
@@ -3317,77 +3302,43 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                     }
                 }
-                // Trinket1
-                if (trinket1Active)
+                // items
+                foreach (CooldownData d in itemData)
                 {
-                    if (state != null && state.Trinket1)
+                    if (d.Active)
                     {
-                        if (time + duration > trinket1time + Trinket1Duration + eps)
+                        if (state != null && state.EffectsActive(d.Effect))
                         {
-                            unexplained += time + duration - trinket1time - Trinket1Duration;
-                            if (timing != null) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket1Name + " duration too long!");
+                            if (time + duration > d.Time + d.Effect.Duration + eps)
+                            {
+                                unexplained += time + duration - d.Time - d.Effect.Duration;
+                                if (timing != null) timing.AppendLine("WARNING: " + d.Effect.Name + " duration too long!");
+                            }
+                        }
+                        else if (duration > 0 && d.Effect.Duration - (time - d.Time) > eps)
+                        {
+                            //unexplained += Math.Min(duration, Trinket1Duration - (time - trinket1time));
+                            if (timing != null) timing.AppendLine("INFO: " + d.Effect.Name + " is still up!");
                         }
                     }
-                    else if (duration > 0 && Trinket1Duration - (time - trinket1time) > eps)
+                    else
                     {
-                        //unexplained += Math.Min(duration, Trinket1Duration - (time - trinket1time));
-                        if (timing != null) timing.AppendLine("INFO: " + SequenceItem.Calculations.Trinket1Name + " is still up!");
-                    }
-                }
-                else
-                {
-                    if (state != null && state.Trinket1)
-                    {
-                        if (trinket1Cooldown > eps)
+                        if (state != null && state.EffectsActive(d.Effect))
                         {
-                            unexplained += duration;
-                            if (timing != null && !trinket1warning) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket1Name + " cooldown not ready!");
-                            trinket1warning = true;
-                        }
-                        else
-                        {
-                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": " + SequenceItem.Calculations.Trinket1Name + " (" + Math.Round(manabefore).ToString() + " mana)");
-                            trinket1Cooldown = SequenceItem.Calculations.Trinket1Cooldown;
-                            trinket1time = time;
-                            trinket1warning = false;
-                            trinket1Active = true;
-                        }
-                    }
-                }
-                // Trinket2
-                if (trinket2Active)
-                {
-                    if (state != null && state.Trinket2)
-                    {
-                        if (time + duration > trinket2time + Trinket2Duration + eps)
-                        {
-                            unexplained += time + duration - trinket2time - Trinket2Duration;
-                            if (timing != null) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket2Name + " duration too long!");
-                        }
-                    }
-                    else if (duration > 0 && Trinket2Duration - (time - trinket2time) > eps)
-                    {
-                        //unexplained += Math.Min(duration, Trinket2Duration - (time - trinket2time));
-                        if (timing != null) timing.AppendLine("INFO: " + SequenceItem.Calculations.Trinket2Name + " is still up!");
-                    }
-                }
-                else
-                {
-                    if (state != null && state.Trinket2)
-                    {
-                        if (trinket2Cooldown > eps)
-                        {
-                            unexplained += duration;
-                            if (timing != null && !trinket2warning) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket2Name + " cooldown not ready!");
-                            trinket2warning = true;
-                        }
-                        else
-                        {
-                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": " + SequenceItem.Calculations.Trinket2Name + " (" + Math.Round(manabefore).ToString() + " mana)");
-                            trinket2Cooldown = SequenceItem.Calculations.Trinket2Cooldown;
-                            trinket2time = time;
-                            trinket2warning = false;
-                            trinket2Active = true;
+                            if (d.Cooldown > eps)
+                            {
+                                unexplained += duration;
+                                if (timing != null && !d.Warning) timing.AppendLine("WARNING: " + d.Effect.Name + " cooldown not ready!");
+                                d.Warning = true;
+                            }
+                            else
+                            {
+                                if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": " + d.Effect.Name + " (" + Math.Round(manabefore).ToString() + " mana)");
+                                d.Cooldown = d.Effect.Cooldown;
+                                d.Time = time;
+                                d.Warning = false;
+                                d.Active = true;
+                            }
                         }
                     }
                 }
@@ -3737,9 +3688,21 @@ namespace Rawr.Mage.SequenceReconstruction
                     double aftertime = data[0];
                     if (aftertime >= time && aftertime <= time + duration)
                     {
-                        if (!drumsActive && !flameCapActive && !potionOfWildMagicActive && !trinket1Active && !trinket2Active && !heroismActive && !moltenFuryActive && !combustionActive && !apActive && !ivActive && !manaGemEffectActive)
+                        if (!berserkingActive && !flameCapActive && !potionOfWildMagicActive && !heroismActive && !moltenFuryActive && !combustionActive && !apActive && !ivActive && !manaGemEffectActive)
                         {
-                            return aftertime;
+                            bool valid = true;
+                            foreach (CooldownData d in itemData)
+                            {
+                                if (d.Active)
+                                {
+                                    valid = false;
+                                    break;
+                                }
+                            }
+                            if (valid)
+                            {
+                                return aftertime;
+                            }
                         }
                     }
                     if (time >= aftertime && !cooldownContinuation)
@@ -3755,10 +3718,6 @@ namespace Rawr.Mage.SequenceReconstruction
                 else if (type == VariableType.Wand)
                 {
                     label = "Wand";
-                }
-                else if (type == VariableType.DrumsOfBattle)
-                {
-                    label = "Activation";
                 }
                 else if (type == VariableType.SummonWaterElemental)
                 {
@@ -3807,10 +3766,12 @@ namespace Rawr.Mage.SequenceReconstruction
                 potionCooldown -= duration;
                 gemCooldown -= duration;
                 flameCapCooldown -= duration;
-                trinket1Cooldown -= duration;
-                trinket2Cooldown -= duration;
+                foreach (CooldownData d in itemData)
+                {
+                    d.Cooldown -= duration;
+                }
                 combustionCooldown -= duration;
-                drumsCooldown -= duration;
+                berserkingCooldown -= duration;
                 evocationCooldown -= duration;
                 if (apActive && SequenceItem.Calculations.ArcanePowerDuration - (time - apTime) <= eps) apActive = false;
                 if (piActive && SequenceItem.Calculations.PowerInfusionDuration - (time - piTime) <= eps) piActive = false;
@@ -3820,9 +3781,11 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (potionOfWildMagicActive && 15 - (time - potionOfWildMagicTime) <= eps) potionOfWildMagicActive = false;
                 if (potionOfSpeedActive && 15 - (time - potionOfSpeedTime) <= eps) potionOfSpeedActive = false;
                 if (flameCapActive && 60 - (time - flameCapTime) <= eps) flameCapActive = false;
-                if (trinket1Active && Trinket1Duration - (time - trinket1time) <= eps) trinket1Active = false;
-                if (trinket2Active && Trinket2Duration - (time - trinket2time) <= eps) trinket2Active = false;
-                if (drumsActive && 30 - (time - drumsTime) <= 0) drumsActive = false;
+                foreach (CooldownData d in itemData)
+                {
+                    if (d.Active && d.Effect.Duration - (time - d.Time) <= eps) d.Active = false;
+                }
+                if (berserkingActive && 10 - (time - berserkingTime) <= 0) berserkingActive = false;
                 if (manaGemEffectActive && SequenceItem.Calculations.ManaGemEffectDuration - (time - manaGemEffectTime) <= eps) manaGemEffectActive = false;
             }
             if (timing != null && unexplained > 0)
