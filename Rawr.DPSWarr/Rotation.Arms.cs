@@ -634,6 +634,14 @@ namespace Rawr.DPSWarr {
                 availRage -= Death.GetRageUseOverDur(Abil_GCDs);
 
                 // ==== Primary Ability Priorities ====
+                // Rend
+                acts = (float)Math.Min(availGCDs, RD.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
+                Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                _RD_GCDs = Abil_GCDs;
+                GCDsused += (float)Math.Min(origNumGCDs, Abil_GCDs);
+                availGCDs = (float)Math.Max(0f, origNumGCDs - GCDsused);
+                availRage -= RD.GetRageUseOverDur(Abil_GCDs);
+
                 // Bladestorm
                 acts = (float)Math.Min(availGCDs, BLS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                 Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
@@ -643,18 +651,27 @@ namespace Rawr.DPSWarr {
                 availRage -= BLS.GetRageUseOverDur(Abil_GCDs);
 
                 // Mortal Strike
-                {   // This is a test for MS Delays (idea coming from Landsoul's sheet 2.502)
-                    // ===== Delays in MS from Slam or Execute =====
+                #region Mortal Strike Delays
+                {   /* ===== Delays in MS from Slam or Execute =====
+                     * This is a test for MS Delays (idea coming from Landsoul's sheet 2.502)
+                     * Note: The numbers displayed are from a specific example, formula
+                     * results in Rawr may differ
+                     */ 
 
-                    // Exec procs in MS
-                    float atleast1 = 0.34f, atleast2 = 0.05f, atleast3 = 0.00f;
+                    float MSBaseCd = 6f - Talents.ImprovedMortalStrike / 3f;
+
+                    float MS_WeightedValue = MS.DamageOnUse + DW.TickSize * MS.MHAtkTable.Crit;
+                    float SD_WeightedValue = SD.DamageOnUse + DW.TickSize * SD.MHAtkTable.Crit;
+                    float SL_WeightedValue = SL.DamageOnUse + DW.TickSize * SL.MHAtkTable.Crit;
+
+                    float HPS = GetLandedAtksOverDur();
 
                     // In-Between MS is: 3.50 seconds
-                    float timeInBetween          = 6f - Talents.ImprovedMortalStrike / 3f - 1.5f;
+                    float timeInBetween = MSBaseCd - 1.5f;
                     //use exe if MS more than 0.320164 sec
-                    float useExeifMSHasMoreThan  = 0.320164f;
+                    float useExeifMSHasMoreThan  = LatentGCD * MS_WeightedValue / (MSBaseCd * (SD_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * GetLandedAtksOverDur() * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
                     //use slam if MS more than 0.413178 sec
-                    float useSlamifMSHasMoreThan = 0.413178f;
+                    float useSlamifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (SL_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * GetLandedAtksOverDur() * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
 
                     //1.5 and 1.0 global is 2.60 seconds
                     float OnePt5Plus1 = LatentGCD + (OP.Cd + CalcOpts.GetReact());
@@ -665,11 +682,10 @@ namespace Rawr.DPSWarr {
                     string canUse1 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe" : "nothing"));
                     //puts MS at extra 0.65 length for 5.70
                     float MSatExtra1 = LatentGCD - LeavingUntilNextMS_1,
-                        lengthFor1 = (6f - Talents.ImprovedMortalStrike / 3f + CalcOpts.GetReact() + MSatExtra1);
+                        lengthFor1 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra1);
                     //MS is normally at a length of 5.696
-                    float msNormally1 = (canUse1 == "exe or slam" ? lengthFor1 : 6f - Talents.TasteForBlood / 3f + CalcOpts.GetReact());
+                    float msNormally1 = (canUse1 == "exe or slam" ? lengthFor1 : MSBaseCd + CalcOpts.GetReact());
                     //Extended length is 100.00% of the time
-                    float extLength1 = (canUse1 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse1 == "exe or slam" ? 1f : 0f));
                     
                     //Two 1.5 globals are 3.10 seconds
                     float Two1pt5 = LatentGCD * 2f;
@@ -680,11 +696,10 @@ namespace Rawr.DPSWarr {
                     string canUse2 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe" : "nothing"));
                     //puts MS at extra 1.15	length for 6.20
                     float MSatExtra2 = LatentGCD - LeavingUntilNextMS_2,
-                        lengthFor2 = (6f - Talents.ImprovedMortalStrike / 3f + CalcOpts.GetReact() + MSatExtra2);
+                        lengthFor2 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra2);
                     //MS is normally at a length of 5.049
-                    float msNormally2 = (canUse2 == "exe or slam" ? lengthFor2 : 6f - Talents.TasteForBlood / 3f + CalcOpts.GetReact());
+                    float msNormally2 = (canUse2 == "exe or slam" ? lengthFor2 : MSBaseCd + CalcOpts.GetReact());
                     //Extended length is 19.25% of the time
-                    float extLength2 = (canUse2 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse2 == "exe or slam" ? 1f : 0f));
                     
                     //Two 1.0 globals are 2.10 seconds
                     float Two1pt0 = (OP.Cd + CalcOpts.GetReact()) * 2f;
@@ -695,16 +710,15 @@ namespace Rawr.DPSWarr {
                     string canUse3 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe" : "nothing"));
                     //puts MS at extra 0.15	length for 5.20
                     float MSatExtra3 = LatentGCD - LeavingUntilNextMS_3,
-                        lengthFor3 = (6f - Talents.ImprovedMortalStrike / 3f + CalcOpts.GetReact() + MSatExtra3);
+                        lengthFor3 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra3);
                     //MS is normally at a length of 5.196
-                    float msNormally3 = (canUse3 == "exe or slam" ? lengthFor3 : 6f - Talents.TasteForBlood / 3f + CalcOpts.GetReact());
+                    float msNormally3 = (canUse3 == "exe or slam" ? lengthFor3 : MSBaseCd + CalcOpts.GetReact());
                     //Extended length is 100.00% of the time
-                    float extLength3 = (canUse3 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse3 == "exe or slam" ? 1f : 0f));
                     
 
                     float TasteForBloodMOD = (Talents.TasteForBlood == 3 ? 1f / 6f : (Talents.TasteForBlood == 2 ? 0.144209288653733f : (Talents.TasteForBlood == 1 ? 0.104925207394343f : 0)));
                     float Abilities = ((_BLS_GCDs + _RD_GCDs + _SL_GCDs + acts + oldHSActivates + WhiteAtks.MhActivates + _SD_GCDs) / FightDuration);
-                    float OtherMOD = (6f - Talents.ImprovedMortalStrike / 3f + CalcOpts.GetLatency());
+                    float OtherMOD = (MSBaseCd + CalcOpts.GetLatency());
 
                     float OnePt5Plus1_Occurs = 0f;
                     float Two1PtZero_Occurs = TasteForBloodMOD
@@ -724,26 +738,34 @@ namespace Rawr.DPSWarr {
                                          - Two1PtZero_Occurs;
                     float Two1pt5_Occurs = 1f - OnePt5Plus1_Occurs - Two1PtZero_Occurs;
 
+                    // Exec procs in MS
+                    float SDMOD = 1f - 0.03f * Talents.SuddenDeath;
+                    float avoid = (1f - CombatFactors._c_mhdodge - CombatFactors._c_ymiss);
+                    float atleast1 = (1f-(float)Math.Pow(SDMOD,OnePt5Plus1_Occurs*((canUse1=="nothing"?1f:2f)*avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "niether" ? 2f : 3f) * avoid + Two1PtZero_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 2f * (1f - CombatFactors._c_ymiss)) + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed)),
+                          atleast2 = (1f-(float)Math.Pow(SDMOD,OnePt5Plus1_Occurs*((canUse1=="nothing"?1f:2f)*avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed))
+                                   * (1f-(float)Math.Pow(SDMOD,OnePt5Plus1_Occurs*((canUse1=="nothing"?0f:1f)*avoid + 1.5f / CombatFactors._c_mhItemSpeed) + Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed))),
+                          atleast3 = (1f-(float)Math.Pow(SDMOD,Two1pt5_Occurs    * (canUse2=="nothing"?2f:3f)*avoid + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed))
+                                   * (1f-(float)Math.Pow(SDMOD,Two1pt5_Occurs    *((canUse2=="nothing"?0f:1f)*avoid + 1.5f / CombatFactors._c_mhItemSpeed)))
+                                   * (1f-(float)Math.Pow(SDMOD,Two1pt5_Occurs    *((canUse2=="nothing"?0f:1f)*avoid)));
+
+                    float extLength1 = (canUse1 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse1 == "exe or slam" ? 1f : 0f));
+                    float extLength2 = (canUse2 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse2 == "exe or slam" ? 1f : 0f));
+                    float extLength3 = (canUse3 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse3 == "exe or slam" ? 1f : 0f));
+
+
                     //for avg of 5.628472631 between MS'es, from crowding
                     float averageTimeBetween = OnePt5Plus1_Occurs * (lengthFor1 * extLength1 + msNormally1 * (1f - extLength1))
                                              + Two1pt5_Occurs     * (lengthFor2 * extLength2 + msNormally2 * (1f - extLength2))
                                              + Two1PtZero_Occurs  * (lengthFor3 * extLength3 + msNormally3 * (1f - extLength3));
                     MS.Cd = averageTimeBetween;
                 }
+                #endregion
                 acts = (float)Math.Min(availGCDs, MS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                 Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                 _MS_GCDs = Abil_GCDs;
                 GCDsused += (float)Math.Min(origNumGCDs, Abil_GCDs);
                 availGCDs = (float)Math.Max(0f, origNumGCDs - GCDsused);
                 availRage -= MS.GetRageUseOverDur(Abil_GCDs);
-
-                // Rend
-                acts = (float)Math.Min(availGCDs, RD.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
-                Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
-                _RD_GCDs = Abil_GCDs;
-                GCDsused += (float)Math.Min(origNumGCDs, Abil_GCDs);
-                availGCDs = (float)Math.Max(0f, origNumGCDs - GCDsused);
-                availRage -= RD.GetRageUseOverDur(Abil_GCDs);
 
                 // Overpower
                 acts = (float)Math.Min(availGCDs, OP.GetActivates(GetDodgedYellowsOverDur(), GetParriedYellowsOverDur(), _SS_Acts) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
@@ -766,11 +788,7 @@ namespace Rawr.DPSWarr {
                     //float execSpace = 0.1035f;
                     //float attemptspersec = (true/*H35 == "Default"*/ ? execSpace / LatentGCD * (1f - 0f) : 0f/*K38 / G38*/);
                 //}
-                //if(true){
-                    acts = (float)Math.Min(availGCDs, SD.GetActivates(GetAttemptedAtksOverDur()) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
-                //}else{
-                    //acts = (float)Math.Min(availGCDs, SD.GetActivates(GetLandedAtksOverDur()) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
-                //}
+                acts = (float)Math.Min(availGCDs, SD.GetActivates(GetAttemptedAtksOverDur()) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                 Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                 _SD_GCDs = Abil_GCDs;
                 GCDsused += (float)Math.Min(origNumGCDs, Abil_GCDs);
