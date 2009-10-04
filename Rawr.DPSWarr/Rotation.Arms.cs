@@ -131,7 +131,7 @@ namespace Rawr.DPSWarr {
         }
         public override float GetLandedAtksOverDurMH() {
             float landednoss = GetLandedAtksOverDurNoSSMH();
-            float ssActs = SS.GetActivates(GetLandedYellowsOverDurMH());
+            float ssActs = SS.GetActivates(GetLandedYellowsOverDurMH(), WhiteAtks.HSOverridesOverDur, WhiteAtks.CLOverridesOverDur);
 
             ssActs *= WhiteAtks.MHAtkTable.AnyLand;
 
@@ -140,7 +140,7 @@ namespace Rawr.DPSWarr {
         public override float GetLandedAtksOverDurOH() {
             if (!CombatFactors.useOH) { return 0; }
             float landednoss = GetLandedAtksOverDurNoSSOH();
-            float ssActs = SS.GetActivates(GetLandedYellowsOverDurOH());
+            float ssActs = SS.GetActivates(GetLandedYellowsOverDurOH(), WhiteAtks.HSOverridesOverDur, WhiteAtks.CLOverridesOverDur);
 
             ssActs *= WhiteAtks.MHAtkTable.AnyLand;
 
@@ -457,6 +457,8 @@ namespace Rawr.DPSWarr {
              * Execute will get extra rage leftovers if there are any (since you won't use HS/CL <20%)
             */
 
+            float LatentGCD = 1.5f + CalcOpts.GetLatency();
+
             float preloopAvailGCDs = availGCDs, preloopGCDsUsed = GCDsused, preloopAvailRage = availRage;
 
             float FightDuration = CalcOpts.Duration;
@@ -526,7 +528,7 @@ namespace Rawr.DPSWarr {
                 // Reset a couple of items so we can keep iterating
                 availGCDs = origavailGCDs;
                 GCDsused = origGCDsused;
-                oldZRGCDs = _ZRage_GCDs; 
+                oldZRGCDs = _ZRage_GCDs;
                 oldBTSGCDs = _Battle_GCDs; oldCSGCDs = _Comm_GCDs; oldDemoGCDs = _Demo_GCDs; oldSNGCDs = _Sunder_GCDs; oldTHGCDs = _Thunder_GCDs;
                 oldHMSGCDs = _Ham_GCDs; oldSTGCDs = _Shatt_GCDs; oldERGCDs = _ER_GCDs; oldSWGCDs = _SW_GCDs; oldDeathGCDs = _Death_GCDs;
                 oldBLSGCDs = _BLS_GCDs; oldMSGCDs = _MS_GCDs; oldRDGCDs = _RD_GCDs; oldOPGCDs = _OP_GCDs; oldTBGCDs = _TB_GCDs;
@@ -548,7 +550,7 @@ namespace Rawr.DPSWarr {
                 availRage += BZ.GetRageUseOverDur(Abil_GCDs);
 
                 // Sword Spec, Doesn't eat GCDs
-                acts = SS.GetActivates(GetLandedYellowsOverDur());
+                acts = SS.GetActivates(GetLandedYellowsOverDur(), WhiteAtks.HSOverridesOverDur, WhiteAtks.CLOverridesOverDur);
                 _SS_Acts = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                 availRage += SS.GetRageUseOverDur(_SS_Acts);
 
@@ -641,6 +643,93 @@ namespace Rawr.DPSWarr {
                 availRage -= BLS.GetRageUseOverDur(Abil_GCDs);
 
                 // Mortal Strike
+                {   // This is a test for MS Delays (idea coming from Landsoul's sheet 2.502)
+                    // ===== Delays in MS from Slam or Execute =====
+
+                    // Exec procs in MS
+                    float atleast1 = 0.34f, atleast2 = 0.05f, atleast3 = 0.00f;
+
+                    // In-Between MS is: 3.50 seconds
+                    float timeInBetween          = 6f - Talents.ImprovedMortalStrike / 3f - 1.5f;
+                    //use exe if MS more than 0.320164 sec
+                    float useExeifMSHasMoreThan  = 0.320164f;
+                    //use slam if MS more than 0.413178 sec
+                    float useSlamifMSHasMoreThan = 0.413178f;
+
+                    //1.5 and 1.0 global is 2.60 seconds
+                    float OnePt5Plus1 = LatentGCD + (OP.Cd + CalcOpts.GetReact());
+                    //leaving until next MS 0.90 seconds
+                    float LeavingUntilNextMS_1 = timeInBetween - OnePt5Plus1;
+                    //Occurs 84.20% of the time
+                    //can use exe or slam for 3rd gcd before next ms
+                    string canUse1 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe" : "nothing"));
+                    //puts MS at extra 0.65 length for 5.70
+                    float MSatExtra1 = LatentGCD - LeavingUntilNextMS_1,
+                        lengthFor1 = (6f - Talents.ImprovedMortalStrike / 3f + CalcOpts.GetReact() + MSatExtra1);
+                    //MS is normally at a length of 5.696
+                    float msNormally1 = (canUse1 == "exe or slam" ? lengthFor1 : 6f - Talents.TasteForBlood / 3f + CalcOpts.GetReact());
+                    //Extended length is 100.00% of the time
+                    float extLength1 = (canUse1 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse1 == "exe or slam" ? 1f : 0f));
+                    
+                    //Two 1.5 globals are 3.10 seconds
+                    float Two1pt5 = LatentGCD * 2f;
+                    //leaving until next MS 0.40 seconds
+                    float LeavingUntilNextMS_2 = timeInBetween - Two1pt5;
+                    //Occurs 15.52% of the time
+                    //can use exe for 3rd gcd before next ms
+                    string canUse2 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe" : "nothing"));
+                    //puts MS at extra 1.15	length for 6.20
+                    float MSatExtra2 = LatentGCD - LeavingUntilNextMS_2,
+                        lengthFor2 = (6f - Talents.ImprovedMortalStrike / 3f + CalcOpts.GetReact() + MSatExtra2);
+                    //MS is normally at a length of 5.049
+                    float msNormally2 = (canUse2 == "exe or slam" ? lengthFor2 : 6f - Talents.TasteForBlood / 3f + CalcOpts.GetReact());
+                    //Extended length is 19.25% of the time
+                    float extLength2 = (canUse2 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse2 == "exe or slam" ? 1f : 0f));
+                    
+                    //Two 1.0 globals are 2.10 seconds
+                    float Two1pt0 = (OP.Cd + CalcOpts.GetReact()) * 2f;
+                    //leaving until next MS 1.40 seconds
+                    float LeavingUntilNextMS_3 = timeInBetween - Two1pt0;
+                    //Occurs 0.28% of the time
+                    //can use exe or slam for last gcd before next ms
+                    string canUse3 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe" : "nothing"));
+                    //puts MS at extra 0.15	length for 5.20
+                    float MSatExtra3 = LatentGCD - LeavingUntilNextMS_3,
+                        lengthFor3 = (6f - Talents.ImprovedMortalStrike / 3f + CalcOpts.GetReact() + MSatExtra3);
+                    //MS is normally at a length of 5.196
+                    float msNormally3 = (canUse3 == "exe or slam" ? lengthFor3 : 6f - Talents.TasteForBlood / 3f + CalcOpts.GetReact());
+                    //Extended length is 100.00% of the time
+                    float extLength3 = (canUse3 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse3 == "exe or slam" ? 1f : 0f));
+                    
+
+                    float TasteForBloodMOD = (Talents.TasteForBlood == 3 ? 1f / 6f : (Talents.TasteForBlood == 2 ? 0.144209288653733f : (Talents.TasteForBlood == 1 ? 0.104925207394343f : 0)));
+                    float Abilities = ((_BLS_GCDs + _RD_GCDs + _SL_GCDs + acts + oldHSActivates + WhiteAtks.MhActivates + _SD_GCDs) / FightDuration);
+                    float OtherMOD = (6f - Talents.ImprovedMortalStrike / 3f + CalcOpts.GetLatency());
+
+                    float OnePt5Plus1_Occurs = 0f;
+                    float Two1PtZero_Occurs = TasteForBloodMOD
+                                            * OtherMOD
+                                            * (
+                                                (1f - 3f * TasteForBloodMOD)
+                                                * Abilities
+                                                * WhiteAtks.MHAtkTable.Dodge
+                                               )
+                                            * OtherMOD;
+                    OnePt5Plus1_Occurs = (1f - 3f * TasteForBloodMOD)
+                                           * Abilities
+                                           * WhiteAtks.MHAtkTable.Dodge
+                                           * OtherMOD
+                                         + TasteForBloodMOD
+                                           * OtherMOD
+                                         - Two1PtZero_Occurs;
+                    float Two1pt5_Occurs = 1f - OnePt5Plus1_Occurs - Two1PtZero_Occurs;
+
+                    //for avg of 5.628472631 between MS'es, from crowding
+                    float averageTimeBetween = OnePt5Plus1_Occurs * (lengthFor1 * extLength1 + msNormally1 * (1f - extLength1))
+                                             + Two1pt5_Occurs     * (lengthFor2 * extLength2 + msNormally2 * (1f - extLength2))
+                                             + Two1PtZero_Occurs  * (lengthFor3 * extLength3 + msNormally3 * (1f - extLength3));
+                    MS.Cd = averageTimeBetween;
+                }
                 acts = (float)Math.Min(availGCDs, MS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                 Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                 _MS_GCDs = Abil_GCDs;
@@ -673,7 +762,15 @@ namespace Rawr.DPSWarr {
                 availRage -= TB.GetRageUseOverDur(Abil_GCDs);
 
                 // Sudden Death
-                acts = (float)Math.Min(availGCDs, SD.GetActivates(GetLandedAtksOverDur()) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
+                //{
+                    //float execSpace = 0.1035f;
+                    //float attemptspersec = (true/*H35 == "Default"*/ ? execSpace / LatentGCD * (1f - 0f) : 0f/*K38 / G38*/);
+                //}
+                //if(true){
+                    acts = (float)Math.Min(availGCDs, SD.GetActivates(GetAttemptedAtksOverDur()) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
+                //}else{
+                    //acts = (float)Math.Min(availGCDs, SD.GetActivates(GetLandedAtksOverDur()) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
+                //}
                 Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                 _SD_GCDs = Abil_GCDs;
                 GCDsused += (float)Math.Min(origNumGCDs, Abil_GCDs);
@@ -700,7 +797,7 @@ namespace Rawr.DPSWarr {
                 RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
                 RageForHS = hsok ? RageForHSCL - RageForCL : 0f;
 
-                float val1 = (RageForHS / HS.FullRageCost),val2 = (RageForCL / CL.FullRageCost);
+                float val1 = (RageForHS / HS.FullRageCost), val2 = (RageForCL / CL.FullRageCost);
                 if (CalcOpts.AllowFlooring) { val1 = (float)Math.Floor(val1); val2 = (float)Math.Floor(val2); }
                 HS.OverridesOverDur = WhiteAtks.HSOverridesOverDur = val1;
                 CL.OverridesOverDur = WhiteAtks.CLOverridesOverDur = val2;
@@ -779,7 +876,7 @@ namespace Rawr.DPSWarr {
                     availRage += BZ.GetRageUseOverDur(Abil_GCDs);
 
                     // Sword Spec, Doesn't eat GCDs
-                    float SS_Acts = SS.GetActivates(GetLandedYellowsOverDur());
+                    float SS_Acts = SS.GetActivates(GetLandedYellowsOverDur(), WhiteAtks.HSOverridesOverDur, WhiteAtks.CLOverridesOverDur);
                     _SS_Acts = SS_Acts;
                     availRage += SS.GetRageUseOverDur(_SS_Acts);
 

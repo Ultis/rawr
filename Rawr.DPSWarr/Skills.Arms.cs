@@ -39,8 +39,7 @@ namespace Rawr.DPSWarr {
                 InitializeB();
             }
         }
-        public class Suddendeath : Ability
-        {
+        public class Suddendeath : Ability {
             // Constructors
             /// <summary>
             /// Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of
@@ -75,13 +74,17 @@ namespace Rawr.DPSWarr {
             // Functions
             public float GetActivates(float landedatksoverdur) {
                 if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
-
+                float acts = 0f;
                 float rate = Talents.SuddenDeath * 0.03f;
 
-                float acts = rate * landedatksoverdur;
-
+                //if (true) {
+                    float avoid = MHAtkTable.Dodge + MHAtkTable.Parry + MHAtkTable.Miss;
+                    SpecialEffect e = new SpecialEffect(Trigger.MeleeHit, new Stats() { }, 0f, 1.5f, rate);
+                    acts = e.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f - avoid, combatFactors._c_mhItemSpeed, FightDuration);
+                    acts *= FightDuration;
+                //} else { acts = rate * landedatksoverdur; }
                 //return (float)Math.Max(0f, acts * (1f - Whiteattacks.AvoidanceStreak));
-                return (float)Math.Max(0f, acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost)));
+                return (float)Math.Max(0f, acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost + 15f)));
             }
             protected override float Damage {
                 get {
@@ -274,9 +277,11 @@ namespace Rawr.DPSWarr {
                 MHAtkTable = Whiteattacks.MHAtkTable;
             }
             // Functions
-            public float GetActivates(float YellowsThatLandOverDur) {
+            public float GetActivates(float YellowsThatLandOverDur, float heroic, float cleave) {
                 if (combatFactors._c_mhItemType != ItemType.TwoHandSword && combatFactors._c_mhItemType != ItemType.OneHandSword) { return 0.0f; }
                 // This attack doesnt consume GCDs and doesn't affect the swing timer
+                Whiteattacks.HSOverridesOverDur = heroic;
+                Whiteattacks.CLOverridesOverDur = cleave;
                 float rate = Talents.SwordSpecialization * 0.02f;
                 SpecialEffect ss = new SpecialEffect(Trigger.MeleeHit, new Stats() { }, 0f, Cd);
                 float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) / FightDuration;
@@ -412,7 +417,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeRange = true;
                 CanCrit = false;
                 Duration = 15f + (Talents.GlyphOfRending ? 6f : 0f); // In Seconds
-                Cd = Duration;
+                Cd = Duration + 3f;
                 TimeBtwnTicks = 3f; // In Seconds
                 RageCost = 10f - (Talents.FocusedRage * 1f);
                 StanceOkArms = StanceOkDef = true;

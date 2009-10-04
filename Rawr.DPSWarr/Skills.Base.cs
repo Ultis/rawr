@@ -98,10 +98,8 @@ namespace Rawr.DPSWarr {
                     else return 0f;
                 }
             }
-            public float MhActivatesNoHS
-            {
-                get
-                {
+            public float MhActivatesNoHS {
+                get {
                     if (MhEffectiveSpeed != 0)
                         return (float)Math.Max(0f, FightDuration / MhEffectiveSpeed);
                     else return 0f;
