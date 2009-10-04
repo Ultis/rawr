@@ -48,7 +48,36 @@ Of paramount importance in an app like this is how it handles items. Nobody want
 
 First, you can open an armory profile. Use File->Load from Armory..., type in a character name and server, and choose a region if necessary. It will load up and select all of the items used by that armory profile. Second, you can go to the item editor, choose add, and type in just the item id of an item you'd like to add. In both of these cases, the stats about each item is pulled from the Armory, so a web connection is required.
 
-When loading a character from the armory, or starting a new blank character, all buffs are turned off, so be sure to go check off what buffs you typicaly tank with, to ensure you get accurate ratings.
+When loading a character from the armory, or starting a new blank character, all buffs are turned off, so be sure to go check off what buffs you typicaly raid with, to ensure you get accurate ratings.
+
+How does Rawr work to calculate the values of items? (Or where are the relative stats setup?)
+---------------------------------------------------------------------------------------------
+Rawr looks at the total stats of your character, not the stats of an individual item to measure the value. This is perhaps best explained by an example: Take the example of a dps class and trying to calculate the graph showing helm values.
+
+With no helm equipped and raid buffed your stats are:
+1000 AP, 190 hit rating (this class actually needs 200 hit rating to be capped), 10% crit, etc.
+We calculate the optimal rotation to give 1000 dps, even though your missing 2% of the time.
+
+Now we equip Helm of Minor Hit (+10 hit rating), pushing your combined stats to:
+1000 AP, 200 hit rating (at cap), 10% crit, etc.
+Now we calculate the optimal rotation to give 1020 dps, with 0 misses.
+
+Now we equip Helm of Major Hit (+20 hit rating), pushing your combined stats to:
+1000 AP, 210 hit rating (over cap), 10% crit, etc.
+Now we calculate the optimal rotation to still give 1020 dps, with 0 misses.
+
+For both the 2 Helms of Hit, we calculate the difference in dps from an empty slot to be 1020 - 1000 = 20 dps. Thus both helms appear in the graph as giving 20 extra dps on top of your current equipment/buff setup.
+
+Now we equip Helm of AP, pushing your combined stats to:
+1020 AP, 190 hit rating (below cap), 10% crit, etc.
+Now we calculate the optimal rotation to give 1010 dps, with 2% misses. Thus its value is shown as 10 dps.
+
+If you then decide to replace your hit rating potion with a crit potion, your total stats while wearing each helm would again be calculated. Now that you have freed up some hit rating elsewhere, the Helm of Major Hit will be at the top of the list. The reason is that in this case you can fully use all the stats it provides. 
+This same effect will be visible in the displayed value of rings (or trinket), depending on which slot is being displayed. It isn't which slot is being used, but rather the extra stats being provided by the ring (or trinket) in the other slot. For example if your 2nd ring contains a lot of crit, rings that contain a lot of AP might complement it better and appear high in the list for ring 1. If you look at the list for ring 2, the ring with the highest crit is likely to be on top.  
+
+An important thing to realise is that we never decided a stat like hit rating has a relative weight compared to AP and then tried to calculate the score for an item using that weight and the stats of the item (That type of approach is used by many in-game addons but is extremely inaccurate when dealing with capped stats). We compared dps numbers while wearing each possible item. Using this combined stats approach we handle all capping effects.
+
+Frequently questions are posted on the discussion forums asking how relative weights can be adjusted. You will likely get flamed by long time users, so be warned! Relative stats weights are a quick way to judge gear you can use on the day of dinging 80, when your still far from any of the caps. But after being in more than a handful of heroics, it just becomes too unreliable to use on any stat that has a cap (i.e. expertise, hit, haste, armor penetration, armor and possibly even mana regen).
 
 Source Code
 -----------
