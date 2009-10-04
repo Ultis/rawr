@@ -7,8 +7,8 @@ public class EarthShock : Shock
         public EarthShock()
         {
             #region Base Values
-            baseMinDamage = 849;
-            baseMaxDamage = 895;
+            baseMinDamage = 854;
+            baseMaxDamage = 900;
             spCoef = 1.5f / 3.5f * .9f;
             manaCost = .18f * Constants.BaseMana;
             cooldown = 6f;

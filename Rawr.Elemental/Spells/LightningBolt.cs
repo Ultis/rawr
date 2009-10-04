@@ -7,8 +7,8 @@ namespace Rawr.Elemental.Spells
         public LightningBolt()
         {
             #region Base Values
-            baseMinDamage = 715;
-            baseMaxDamage = 815;
+            baseMinDamage = 719;
+            baseMaxDamage = 819;
             baseCastTime = 2.5f;
             castTime = 2.5f;
             spCoef = 2.5f / 3.5f;

@@ -7,8 +7,8 @@ public class FrostShock : Shock
         public FrostShock()
         {
             #region Base Values
-            baseMinDamage = 802;
-            baseMaxDamage = 848;
+            baseMinDamage = 812;
+            baseMaxDamage = 858;
             spCoef = 1.5f / 3.5f * .9f;
             manaCost = .18f * Constants.BaseMana;
             cooldown = 6f;
