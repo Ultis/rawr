@@ -198,6 +198,16 @@ namespace Rawr.ShadowPriest
             solver.Calculate(this);
 
             dictValues.Add("Rotation", string.Format("{0}*{1}", solver.Name, solver.Rotation));
+            if (solver.SpellSimulation != null)
+            {
+                String s = "Spell Cast List:";
+                foreach (Spell spell in solver.SpellSimulation)
+                    s += "\r\n" + spell.Name;
+                s += "\r\n---Repeat---";
+                dictValues.Add("Castlist", string.Format("{0}*{1}", solver.SpellSimulation.Count, s));
+            }
+            else
+                dictValues.Add("Castlist", "Empty");
             dictValues.Add("DPS", string.Format("{0}*Damage Pr Second", solver.DPS.ToString("0")));
             dictValues.Add("SustainDPS", string.Format("{0}*Mana restrained DPS", solver.SustainDPS.ToString("0")));
             

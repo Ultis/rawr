@@ -7,6 +7,7 @@ namespace Rawr.ShadowPriest
     public class SolverBase
     {
         public List<Spell> SpellPriority { get; protected set; }
+        public List<Spell> SpellSimulation { get; protected set; }
         public float OverallDamage { get; protected set; }
         public float DPS { get; protected set; }
         public float OverallMana { get; protected set; }
@@ -97,11 +98,11 @@ namespace Rawr.ShadowPriest
                     else if (se.Trigger == Trigger.DamageSpellCast
                         || se.Trigger == Trigger.SpellCast)
                     {
-                        if (se.Stats.HasteRating > 0)
+                        /*if (se.Stats.HasteRating > 0)
                         {
                             Twinkets += se.GetAverageStats(2f, 1f);
                         }
-                        else if (se.Stats.HighestStat > 0)
+                        else*/ if (se.Stats.HighestStat > 0)
                         {
                             float greatnessProc = se.GetAverageStats(2f, 1f).HighestStat;
                             if (playerStats.Spirit > playerStats.Intellect)
@@ -132,12 +133,13 @@ namespace Rawr.ShadowPriest
             Twinkets.SpellHaste += StatConversion.GetSpellHasteFromRating(Twinkets.HasteRating);
              */
             #endregion
+            /*
             if (Twinkets.HasteRating > 0)
             {
                 playerStats.SpellHaste -= StatConversion.GetSpellHasteFromRating(playerStats.HasteRating);
                 playerStats.SpellHaste += StatConversion.GetSpellHasteFromRating(playerStats.HasteRating + Twinkets.HasteRating);
             }
-
+            */
             Twinkets.Spirit = (float)Math.Round(Twinkets.Spirit * (1 + playerStats.BonusSpiritMultiplier));
             Twinkets.Intellect = (float)Math.Round(Twinkets.Intellect * (1 + playerStats.BonusIntellectMultiplier));
             Twinkets.SpellPower += (float)Math.Round(Twinkets.Spirit * playerStats.SpellDamageFromSpiritPercentage);
@@ -273,7 +275,7 @@ namespace Rawr.ShadowPriest
         }
     }
 
-    public class SolverShadow : SolverBase
+    public class solverShadow : SolverBase
     {   // Models Full Rotation
         protected float ShadowHitChance { get; set; }
         protected ShadowWordPain  SWP { get; set; }
@@ -284,7 +286,7 @@ namespace Rawr.ShadowPriest
         protected DevouringPlague DP { get; set; }
         protected bool bPnS { get; set; }
         
-        public SolverShadow(Stats BasicStats, Character character)
+        public solverShadow(Stats BasicStats, Character character)
             : base(BasicStats, character)
         {
             SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
@@ -325,9 +327,19 @@ namespace Rawr.ShadowPriest
         }
 
         public override void Calculate(CharacterCalculationsShadowPriest calculatedStats)
-        {         
+        {
+            Calculate(calculatedStats, true);
+        }
+
+        public void Calculate(CharacterCalculationsShadowPriest calculatedStats, bool bVerbal)
+        {
             if (SpellPriority.Count == 0)
                 return;
+
+            // Make sure calculations are properly reset.
+            foreach (Spell spell in SpellPriority)
+                spell.SpellStatistics.Reset();
+            RecalculateHaste(PlayerStats, 0);
 
             Stats simStats = PlayerStats.Clone();
             bool bTwistedFaith = character.PriestTalents.TwistedFaith > 0;
@@ -404,6 +416,7 @@ namespace Rawr.ShadowPriest
                     break;
                 }
             }
+            SpellSimulation = CastList;
             #endregion
 
             #region Pass 2: Calculate Statistics for Procs
@@ -436,13 +449,15 @@ namespace Rawr.ShadowPriest
                 float NewSPP = NewSpirit * simStats.SpellDamageFromSpiritPercentage;
                 simStats.Spirit += NewSpirit;
                 simStats.SpellPower += NewSPP;
-                Rotation += string.Format("\r\nImp. Spirit Tap Uptime: {0}%", (uptime * 100f).ToString("0.0"));
+                if (bVerbal)
+                    Rotation += string.Format("\r\nImp. Spirit Tap Uptime: {0}%", (uptime * 100f).ToString("0.0"));
             }
             if (seGlyphofShadow != null)
             {
                 float uptime = seGlyphofShadow.GetAverageUptime(1f / CritsPerSecond, 1f);
                 simStats.SpellPower += simStats.Spirit * seGlyphofShadow.Stats.SpellDamageFromSpiritPercentage * uptime;
-                Rotation += string.Format("\r\nGlyph of Shadow Uptime: {0}%", (uptime * 100f).ToString("0.0"));
+                if (bVerbal)
+                    Rotation += string.Format("\r\nGlyph of Shadow Uptime: {0}%", (uptime * 100f).ToString("0.0"));
             }
 
             // Deal with Twinkets
@@ -548,9 +563,12 @@ namespace Rawr.ShadowPriest
             }
             #endregion
 
-            if (!CleanBreak)
-                Rotation += "\r\nWARNING: Did not find a clean rotation!\r\nThis may make Haste inaccurate!";
-            Rotation += string.Format("\r\nRotation reset after {0} seconds.", timer.ToString("0.00"));
+            if (bVerbal)
+            {
+                if (!CleanBreak)
+                    Rotation += "\r\nWARNING: Did not find a clean rotation!\r\nThis may make Haste inaccurate!";
+                Rotation += string.Format("\r\nRotation reset after {0} seconds.", timer.ToString("0.00"));
+            }
 
             #region Pass 5: Do spell statistics & handle movement.
             foreach (Spell spell in SpellPriority)
@@ -580,7 +598,8 @@ namespace Rawr.ShadowPriest
                 }
             }
             MovementDamageLoss /= timer;
-            Rotation += "\r\nDPS lost to movement: " + MovementDamageLoss.ToString("0.00");
+            if (bVerbal)
+                Rotation += "\r\nDPS lost to movement: " + MovementDamageLoss.ToString("0.00");
             #endregion
 
 
@@ -657,7 +676,8 @@ namespace Rawr.ShadowPriest
                  */
             #endregion
 
-            Rotation += "\r\n\r\nMana Buffs:";
+            if (bVerbal)
+                Rotation += "\r\n\r\nMana Buffs:";
 
             SustainDPS = DPS;
             float MPS = OverallMana / timer;
@@ -733,7 +753,8 @@ namespace Rawr.ShadowPriest
                 tmpregen = simStats.Mana * 0.06f / 120f;
                 ManaSources.Add(new ManaSource("Arcane Torrent", tmpregen));
                 regen += tmpregen;
-                Rotation += "\r\n- Used Arcane Torrent";
+                if (bVerbal)
+                    Rotation += "\r\n- Used Arcane Torrent";
             }
 
             if (MPS > regen && CalculationOptions.ManaAmt > 0)
@@ -741,7 +762,8 @@ namespace Rawr.ShadowPriest
                 tmpregen = CalculationOptions.ManaAmt / (CalculationOptions.FightLength * 60f) * (1f + simStats.BonusManaPotion);
                 ManaSources.Add(new ManaSource("Mana Potion", tmpregen));
                 regen += tmpregen;
-                Rotation += "\r\n- Used Mana Potion";
+                if (bVerbal)
+                    Rotation += "\r\n- Used Mana Potion";
             }
 
             if (MPS > regen)
@@ -751,7 +773,8 @@ namespace Rawr.ShadowPriest
                 ManaSources.Add(new ManaSource("Shadowfiend", tmpregen));
                 regen += tmpregen;
                 //SustainDPS -= MF.DpS * sf_rat; You will actually gain dps from using it, so no reason to do this anymore.
-                Rotation += "\r\n- Used Shadowfiend";
+                if (bVerbal)
+                    Rotation += "\r\n- Used Shadowfiend";
             }
 
             if (MPS > regen && character.PriestTalents.Dispersion > 0)
@@ -761,19 +784,137 @@ namespace Rawr.ShadowPriest
                 ManaSources.Add(new ManaSource("Dispersion", tmpregen));
                 regen += tmpregen;
                 SustainDPS -= MF.DpS * disp_rat;
-                Rotation += "\r\n- Used Dispersion";
+                if (bVerbal)
+                    Rotation += "\r\n- Used Dispersion";
             }
 
             DPS *= (1f - StatConversion.GetAverageResistance(character.Level, character.Level + CalculationOptions.TargetLevel, 0, 0)); // Level based Partial resists.
             SustainDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
 
             SustainDPS = (MPS < regen) ? SustainDPS : (SustainDPS * regen / MPS);
+        }
+    }
+
+    public class SolverShadow : SolverBase
+    {   // A wrapper for solverShadow to handle haste properly.
+        public class SolverInfo
+        {
+            public solverShadow Solver { get; protected set; }
+            private float Duration;
+            private float Interval;
+
+            public SolverInfo(solverShadow solver, float duration, float interval)
+            {
+                Solver = solver;
+                Duration = duration;
+                Interval = interval;
+            }
+
+            public float Uptime(float totalTime)
+            {
+                if (Interval > 0f)
+                {
+                    float procs = (float)Math.Floor(totalTime / Interval) + 1f;
+                    return Duration * procs / totalTime;
+                }
+                return 1.0f;
+            }
+        }
+        List<SolverInfo> SSInfo = new List<SolverInfo>();
+
+        public SolverShadow(Stats BasicStats, Character character)
+            : base(BasicStats, character)
+        {
+            SolverInfo ssi;
+            ssi = new SolverInfo(new solverShadow(BasicStats, character), 0f, 0f);
+            SSInfo.Add(ssi);
+            Name = ssi.Solver.Name;
+            if (character.Race == CharacterRace.Troll)
+            {
+                Stats statsBerserking = BasicStats.Clone();
+                statsBerserking.SpellHaste = 1.2f * (1f + statsBerserking.SpellHaste) - 1f;
+                ssi = new SolverInfo(new solverShadow(statsBerserking, character), 10f, 180f);
+                SSInfo.Add(ssi);
+            }
+            if (BasicStats.Bloodlust > 0)
+            {
+                Stats statsBloodlust = BasicStats.Clone();
+                statsBloodlust.SpellHaste = (1f + statsBloodlust.Bloodlust) * (1f + statsBloodlust.SpellHaste) - 1f;
+                ssi = new SolverInfo(new solverShadow(statsBloodlust, character), 40f, 600f);
+                SSInfo.Add(ssi);
+            }
+
+            foreach (SpecialEffect se in BasicStats.SpecialEffects())
+            {
+                if (se.Stats.HasteRating > 0)
+                {
+                    if (se.Trigger == Trigger.Use)
+                    {
+                        Stats statsHasteUse = BasicStats.Clone();
+                        statsHasteUse.HasteRating += se.Stats.HasteRating;
+                        statsHasteUse.SpellHaste = (1f + statsHasteUse.SpellHaste)
+                            / (1f + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating))
+                            * (1f + StatConversion.GetSpellHasteFromRating(statsHasteUse.HasteRating))
+                            - 1f;
+                        ssi = new SolverInfo(new solverShadow(statsHasteUse, character), se.Duration, se.Cooldown);
+                        SSInfo.Add(ssi);
+                    }
+                    else if (se.Trigger == Trigger.SpellCast ||
+                        se.Trigger == Trigger.SpellHit ||
+                        se.Trigger == Trigger.DamageSpellCast ||
+                        se.Trigger == Trigger.DamageSpellHit)
+                    {
+                        Stats statsHasteProc = BasicStats.Clone();
+                        statsHasteProc.HasteRating += se.Stats.HasteRating;
+                        statsHasteProc.SpellHaste = (1f + statsHasteProc.SpellHaste)
+                            / (1f + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating))
+                            * (1f + StatConversion.GetSpellHasteFromRating(statsHasteProc.HasteRating))                            
+                            - 1f;
+                        float cooldown = se.Cooldown;
+                        if (cooldown >= 44f)
+                            cooldown += 10f;
+                        else
+                            cooldown += 15f;
+                        ssi = new SolverInfo(new solverShadow(statsHasteProc, character), se.Duration, cooldown);
+                        SSInfo.Add(ssi);
+                    }
+                }
+            }
+
+        }
+
+        public override void Calculate(CharacterCalculationsShadowPriest calculatedStats)
+        {
+            float fightLen = SSInfo[0].Solver.CalculationOptions.FightLength * 60f;
+            foreach (SolverInfo si in SSInfo)
+                si.Solver.Calculate(calculatedStats);
+
+            float normalUptime = 1.0f;
+            for (int x = 1; x < SSInfo.Count; x++)
+            {
+                SolverInfo si = SSInfo[x];
+                float uptime = si.Uptime(fightLen);
+                normalUptime -= uptime;
+                if (normalUptime < 0)
+                {
+                    uptime += normalUptime;
+                    normalUptime = 0;
+                }
+                DPS += si.Solver.DPS * uptime;
+                SustainDPS += si.Solver.SustainDPS * uptime;
+            }
+            DPS += SSInfo[0].Solver.DPS * normalUptime;
+            SustainDPS += SSInfo[0].Solver.SustainDPS * normalUptime;
+
+            SpellSimulation = SSInfo[0].Solver.SpellSimulation;
+            SpellPriority = SSInfo[0].Solver.SpellPriority;
+            Rotation = SSInfo[0].Solver.Rotation;
 
             calculatedStats.DpsPoints = DPS;
             calculatedStats.SustainPoints = SustainDPS;
 
             // Lets just say that 15% of resilience scales all health by 150%.
-            float Resilience = (float)Math.Min(15f, StatConversion.GetCritReductionFromResilience(simStats.Resilience) * 100f) / 15f;
+            float Resilience = (float)Math.Min(15f, StatConversion.GetCritReductionFromResilience(PlayerStats.Resilience) * 100f) / 15f;
             calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * CalculationOptions.Survivability / 100f;
         }
     }

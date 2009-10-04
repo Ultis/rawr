@@ -33,7 +33,17 @@ namespace Rawr.ShadowPriest {
         public float CooldownReset { get; set; }
         public float DamageDone { get; set; }
         public float ManaUsed { get; set; }
+        public void Reset()
+        {
+            CritCount = 0;
+            MissCount = 0;
+            HitCount = 0;
+            CooldownReset = 0;
+            DamageDone = 0;
+            ManaUsed = 0;
+        }
     }
+
     public class Spell {
         public class SpellData {
             public int Rank { get; protected set; }

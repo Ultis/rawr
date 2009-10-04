@@ -46,16 +46,16 @@
             this.trkSurvivability = new System.Windows.Forms.TrackBar();
             this.trkFSR = new System.Windows.Forms.TrackBar();
             this.trkDelay = new System.Windows.Forms.TrackBar();
+            this.trkMoveFrequency = new System.Windows.Forms.TrackBar();
+            this.trkMoveDuration = new System.Windows.Forms.TrackBar();
             this.lblShadowfiend = new System.Windows.Forms.Label();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.lblJoW = new System.Windows.Forms.Label();
             this.lblSurvivability = new System.Windows.Forms.Label();
             this.lblFSR = new System.Windows.Forms.Label();
             this.lblDelay = new System.Windows.Forms.Label();
-            this.trkMoveFrequency = new System.Windows.Forms.TrackBar();
             this.lblMoveFrequency = new System.Windows.Forms.Label();
             this.lblMoveDuration = new System.Windows.Forms.Label();
-            this.trkMoveDuration = new System.Windows.Forms.TrackBar();
             this.gbSpellPriority.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).BeginInit();
@@ -235,6 +235,33 @@
                     "al brain farts you expect to have.");
             this.trkDelay.Scroll += new System.EventHandler(this.trkDelay_Scroll);
             // 
+            // trkMoveFrequency
+            // 
+            this.trkMoveFrequency.Location = new System.Drawing.Point(12, 413);
+            this.trkMoveFrequency.Maximum = 300;
+            this.trkMoveFrequency.Minimum = 5;
+            this.trkMoveFrequency.Name = "trkMoveFrequency";
+            this.trkMoveFrequency.Size = new System.Drawing.Size(270, 42);
+            this.trkMoveFrequency.SmallChange = 5;
+            this.trkMoveFrequency.TabIndex = 57;
+            this.trkMoveFrequency.TickFrequency = 5;
+            this.toolTip1.SetToolTip(this.trkMoveFrequency, "In average, how often you need to move during a fight in Seconds.");
+            this.trkMoveFrequency.Value = 60;
+            this.trkMoveFrequency.Scroll += new System.EventHandler(this.trkMoveFrequency_Scroll);
+            // 
+            // trkMoveDuration
+            // 
+            this.trkMoveDuration.Location = new System.Drawing.Point(12, 458);
+            this.trkMoveDuration.Maximum = 60;
+            this.trkMoveDuration.Name = "trkMoveDuration";
+            this.trkMoveDuration.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.trkMoveDuration.Size = new System.Drawing.Size(270, 42);
+            this.trkMoveDuration.TabIndex = 60;
+            this.toolTip1.SetToolTip(this.trkMoveDuration, "In average, how long you move each time you need to move during a fight in second" +
+                    "s.");
+            this.trkMoveDuration.Value = 5;
+            this.trkMoveDuration.Scroll += new System.EventHandler(this.trkMoveDuration_Scroll);
+            // 
             // lblShadowfiend
             // 
             this.lblShadowfiend.AutoSize = true;
@@ -289,17 +316,6 @@
             this.lblDelay.TabIndex = 56;
             this.lblDelay.Text = "Delay";
             // 
-            // trkMoveFrequency
-            // 
-            this.trkMoveFrequency.Location = new System.Drawing.Point(12, 413);
-            this.trkMoveFrequency.Maximum = 60;
-            this.trkMoveFrequency.Name = "trkMoveFrequency";
-            this.trkMoveFrequency.Size = new System.Drawing.Size(270, 42);
-            this.trkMoveFrequency.TabIndex = 57;
-            this.toolTip1.SetToolTip(this.trkMoveFrequency, "In average, how often you need to move during a fight in Seconds.");
-            this.trkMoveFrequency.Value = 60;
-            this.trkMoveFrequency.Scroll += new System.EventHandler(this.trkMoveFrequency_Scroll);
-            // 
             // lblMoveFrequency
             // 
             this.lblMoveFrequency.AutoSize = true;
@@ -317,19 +333,6 @@
             this.lblMoveDuration.Size = new System.Drawing.Size(100, 13);
             this.lblMoveDuration.TabIndex = 59;
             this.lblMoveDuration.Text = "Movement Duration";
-            // 
-            // trkMoveDuration
-            // 
-            this.trkMoveDuration.Location = new System.Drawing.Point(12, 458);
-            this.trkMoveDuration.Maximum = 60;
-            this.trkMoveDuration.Name = "trkMoveDuration";
-            this.trkMoveDuration.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.trkMoveDuration.Size = new System.Drawing.Size(270, 42);
-            this.trkMoveDuration.TabIndex = 60;
-            this.toolTip1.SetToolTip(this.trkMoveDuration, "In average, how long you move each time you need to move during a fight in second" +
-                    "s.");
-            this.trkMoveDuration.Value = 5;
-            this.trkMoveDuration.Scroll += new System.EventHandler(this.trkMoveDuration_Scroll);
             // 
             // CalculationOptionsPanelShadowPriest
             // 
