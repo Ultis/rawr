@@ -2273,6 +2273,9 @@ namespace Rawr.Mage
             // u = u <- c_B*A_B^-1 ... dual solution
             // w_N <- c_N - u*A_N  ... dual solution
 
+            int limit = 5000;
+
+            RESTART:
             int i, j, k;
             bool feasible = false;
             int round = 0;
@@ -2281,6 +2284,7 @@ namespace Rawr.Mage
             int verificationAttempts = 0;
             double eps = highPrecision ? epsPrimal : epsPrimalLow;
             double lowestInfeasibility = double.PositiveInfinity;
+            int lastFeasible = 0;
 
             if (disabledDirty)
             {
@@ -2314,6 +2318,7 @@ namespace Rawr.Mage
 
                     if (feasible)
                     {
+                        lastFeasible = round;
                         // we have a feasible solution, initialize phase 2
                         ComputeReducedCosts();
                     }
@@ -2466,7 +2471,11 @@ namespace Rawr.Mage
                         flags[col] = (flags[col] | flagNLB) & ~flagNUB;
                     }
 
-                    if (!feasible) continue;
+                    if (!feasible)
+                    {
+                        round++; // still increment to avoid infinite cycles
+                        continue;
+                    }
 
                     minr = direction * (ub[col] - lb[col]);
                     for (i = 0; i < rows; i++)
@@ -2515,12 +2524,27 @@ namespace Rawr.Mage
                 flags[V[maxj]] = (flags[V[maxj]] | bound) & ~flagB;
 
                 round++;
-            } while ((round < 5000 && !shortLimit) || round < 100); // limit computation so we don't dead loop, if everything works it shouldn't take more than this
+            } while ((round < limit && !shortLimit) || round < 100); // limit computation so we don't dead loop, if everything works it shouldn't take more than this
             // when tuning dual feasibility limit to 100 rounds, we don't want to spend too much time on it
 
             // just in case
             // if feasible return the best we got
             if (feasible) return ComputeReturnSolution();
+            if (lastFeasible > 0 && !shortLimit)
+            {
+                limit = lastFeasible;
+                for (i = 0; i < rows; i++)
+                {
+                    B[i] = cols + i;
+                    flags[cols + i] = (flags[cols + i] | flagB) & ~flagN & ~flagDis;
+                }
+                for (j = 0; j < cols; j++)
+                {
+                    V[j] = j;
+                    flags[j] = (flags[j] | flagNLB) & ~flagB & ~flagDis;
+                }
+                goto RESTART;
+            }
             return new double[cols + 1];
         }
 

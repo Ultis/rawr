@@ -25,6 +25,14 @@ namespace Rawr.Mage
         public int MaxSegment;
     }
 
+    public struct StackingConstraint
+    {
+        public int Row;
+        public EffectCooldown Effect1;
+        public EffectCooldown Effect2;
+        public double MaximumStackingDuration;
+    }
+
     public class EffectCooldown
     {
         public int Mask { get; set; }
@@ -34,10 +42,11 @@ namespace Rawr.Mage
         public float Cooldown { get; set; }
         public float Duration { get; set; }
         public int Row { get; set; }
-        public int RowHeroism { get; set; }
-        public int RowMoltenFury { get; set; }
         public List<SegmentConstraint> SegmentConstraints { get; set; }
         public string Name { get; set; }
+        public double MaximumDuration { get; set; }
+        public bool AutomaticConstraints { get; set; }
+        public bool AutomaticStackingConstraints { get; set; }
 #if !SILVERLIGHT
         public System.Drawing.Color Color { get; set; }
 #endif
@@ -58,6 +67,7 @@ namespace Rawr.Mage
         private Dictionary<int, EffectCooldown> effectCooldown;
         private List<int> effectExclusionList;
         private List<SolutionVariable> solutionVariable;
+        private List<StackingConstraint> rowStackingConstraint;
 
         private List<CastingState> stateList;
         private List<CycleId> spellList;
@@ -125,18 +135,18 @@ namespace Rawr.Mage
         private int rowManaGemMax = -1;
         private int rowHeroism = -1;
         private int rowArcanePower = -1;
-        private int rowHeroismManaGemEffect = -1;
-        private int rowHeroismArcanePower = -1;
+        //private int rowHeroismManaGemEffect = -1;
+        //private int rowHeroismArcanePower = -1;
         private int rowIcyVeins = -1;
         private int rowWaterElemental = -1;
         private int rowMoltenFury = -1;
         //private int rowMoltenFuryDestructionPotion = -1;
         private int rowMoltenFuryIcyVeins = -1;
-        private int rowMoltenFuryManaGemEffect = -1;
+        //private int rowMoltenFuryManaGemEffect = -1;
         //private int rowHeroismDestructionPotion = -1;
         //private int rowIcyVeinsDestructionPotion = -1;
         private int rowFlameCap = -1;
-        private int rowMoltenFuryFlameCap = -1;
+        //private int rowMoltenFuryFlameCap = -1;
         //private int rowFlameCapDestructionPotion = -1;
         private int rowManaGemEffect = -1;
         private int rowManaGemEffectActivation = -1;
@@ -153,10 +163,10 @@ namespace Rawr.Mage
         private int rowHeroismIcyVeins = -1;
         private int rowSummonWaterElemental = -1;
         private int rowSummonWaterElementalCount = -1;
-        private int rowMoltenFuryBerserking = -1;
-        private int rowHeroismBerserking = -1;
-        private int rowIcyVeinsBerserking = -1;
-        private int rowArcanePowerBerserking = -1;
+        //private int rowMoltenFuryBerserking = -1;
+        //private int rowHeroismBerserking = -1;
+        //private int rowIcyVeinsBerserking = -1;
+        //private int rowArcanePowerBerserking = -1;
         private int rowThreat = -1;
         //private int rowManaPotionManaGem = -1;
         private int rowBerserking = -1;
@@ -326,6 +336,107 @@ namespace Rawr.Mage
             fightDuration -= effectCooldown - effectDuration;
             if (fightDuration > 0) total += fightDuration;
             return total;
+        }
+
+        private double MaximizeStackingDuration(double fightDuration, double effect1Duration, double effect1Cooldown, double effect2Duration, double effect2Cooldown)
+        {
+            if (effect1Duration > effect2Cooldown - effect2Duration || effect2Duration > effect1Cooldown - effect1Duration)
+            {
+                throw new ArgumentException("This combination of cooldowns is not supported!");
+            }
+            return MaximizeStackingDuration(fightDuration, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, 0, 0);
+        }
+
+        private double MaximizeStackingDuration(double fightDuration, double effect1Duration, double effect1Cooldown, double effect2Duration, double effect2Cooldown, double effect2ActiveDuration, double effect2ActiveCooldown)
+        {
+            if (fightDuration <= 0) return 0;
+            if (double.IsPositiveInfinity(effect2ActiveCooldown)) return 0;
+            effect2ActiveDuration = Math.Min(effect2ActiveDuration, fightDuration);
+
+            double slack = 0;
+            double f = fightDuration;
+
+            if (f < effect1Duration)
+            {
+                slack = 0;
+            }
+            else
+            {
+                f -= effect1Duration;
+                int count = (int)(f / effect1Cooldown);
+                f -= effect1Cooldown * count;
+                if (f - effect1Cooldown + effect1Duration > 0)
+                {
+                    slack = 0;
+                }
+                else
+                {
+                    slack = f;
+                }
+            }
+            if (!calculationOptions.MaxUseAssumption)
+            {
+                slack = effect2ActiveCooldown;
+            }
+
+
+            // ####........|
+            double best = 0;
+            double value = 0;
+            double min = 0;
+
+            if (effect2ActiveCooldown > effect1Duration)
+            {
+                // if optimal placement of effect1 is stacked with effect2 activation
+                // and it doesn't overlap two different activations
+                // or if optimal placement has effect1 activated and finished before effect2 gets off cooldown
+                // then we'll get as good or better stacking if we move effect1 all the way to the start
+                if (effect1Cooldown < effect2ActiveCooldown)
+                {
+                    // effect1 will be off cooldown first
+                    value = Math.Min(effect1Duration, effect2ActiveDuration) + MaximizeStackingDuration(fightDuration - effect1Cooldown, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, Math.Max(0, effect2ActiveDuration - effect1Cooldown), Math.Max(0, effect2ActiveCooldown - effect1Cooldown));
+                }
+                else
+                {
+                    // effect2 will be off cooldown first
+                    value = Math.Min(effect1Duration, effect2ActiveDuration) + MaximizeStackingDuration(fightDuration - effect2ActiveCooldown, effect2Duration, effect2Cooldown, effect1Duration, effect1Cooldown, Math.Max(0, effect1Duration - effect2ActiveCooldown), Math.Max(0, effect1Cooldown - effect2ActiveCooldown));
+                }
+                if (value > best)
+                {
+                    best = value;
+                }
+                // we're assuming effect can't overlap two activations, otherwise we would need another case here for the overlap
+            }
+            // the next case is if effect1 activation crosses over effect2 cooldown
+            // in this case it's just as good if effect2 starts right on cooldown
+            // now in this case moving effect1 earlier has negative effect so we can't do that
+            // we want however to push it as late as possible without affecting the optimum
+            // but just as long as it ends before effect2 ends
+            // ####........|#####
+            // ..........#######
+            // 0 <= offset <= effect2ActiveCooldown
+            // offset <= effect1Duration
+            // this can potentially still be optimized, I doubt we need to look at every option
+            // but it seems in practice it works well enough so don't waste time unless profiling shows need
+            for (int offset = Math.Max(0, (int)(effect2ActiveCooldown - slack)); offset <= Math.Min(effect1Duration, effect2ActiveCooldown); offset++)
+            {
+                min = Math.Min(effect1Duration - offset, effect2Duration);
+                if (effect1Cooldown - offset < effect2Cooldown)
+                {
+                    // effect1 will be off cooldown first
+                    value = Math.Min(min, fightDuration) + MaximizeStackingDuration(fightDuration - effect2ActiveCooldown - effect1Cooldown + offset, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, Math.Max(0, effect2Duration - effect1Cooldown + offset), Math.Max(0, effect2Cooldown - effect1Cooldown + offset));
+                }
+                else
+                {
+                    // effect2 will be off cooldown first
+                    value = Math.Min(min, fightDuration) + MaximizeStackingDuration(fightDuration - effect2ActiveCooldown - effect2Cooldown, effect2Duration, effect2Cooldown, effect1Duration, effect1Cooldown, Math.Max(0, effect1Duration - effect2Cooldown), Math.Max(0, effect1Cooldown - effect2Cooldown));
+                }
+                if (value > best)
+                {
+                    best = value;
+                }
+            }
+            return best;
         }
 
         public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
@@ -569,6 +680,8 @@ namespace Rawr.Mage
                 {
                     Cooldown = (float)calculationResult.PowerInfusionCooldown,
                     Duration = (float)calculationResult.PowerInfusionDuration,
+                    AutomaticConstraints = true,
+                    AutomaticStackingConstraints = true,
                     Mask = (int)StandardEffect.PowerInfusion,
                     Name = "Power Infusion",
                     StandardEffect = StandardEffect.PowerInfusion,
@@ -582,6 +695,9 @@ namespace Rawr.Mage
                 cooldownList.Add(new EffectCooldown()
                 {
                     Cooldown = float.PositiveInfinity,
+                    Duration = 15.0f,
+                    MaximumDuration = 15.0f,
+                    AutomaticStackingConstraints = true,
                     Mask = (int)StandardEffect.PotionOfSpeed,
                     Name = "Potion of Speed",
                     StandardEffect = StandardEffect.PotionOfSpeed,
@@ -596,6 +712,8 @@ namespace Rawr.Mage
                 {
                     Cooldown = (float)calculationResult.ArcanePowerCooldown,
                     Duration = (float)calculationResult.ArcanePowerDuration,
+                    AutomaticConstraints = true,
+                    AutomaticStackingConstraints = true,
                     Mask = (int)StandardEffect.ArcanePower,
                     Name = "Arcane Power",
                     StandardEffect = StandardEffect.ArcanePower,
@@ -622,6 +740,9 @@ namespace Rawr.Mage
                 cooldownList.Add(new EffectCooldown()
                 {
                     Cooldown = float.PositiveInfinity,
+                    Duration = 15.0f,
+                    MaximumDuration = 15.0f,
+                    AutomaticStackingConstraints = true,
                     Mask = (int)StandardEffect.PotionOfWildMagic,
                     Name = "Potion of Wild Magic",
                     StandardEffect = StandardEffect.PotionOfWildMagic,
@@ -636,6 +757,8 @@ namespace Rawr.Mage
                 {
                     Cooldown = 180.0f,
                     Duration = 10.0f,
+                    AutomaticConstraints = true,
+                    AutomaticStackingConstraints = true,
                     Mask = (int)StandardEffect.Berserking,
                     Name = "Berserking",
                     StandardEffect = StandardEffect.Berserking,
@@ -650,6 +773,8 @@ namespace Rawr.Mage
                 {
                     Cooldown = 180.0f,
                     Duration = 60.0f,
+                    AutomaticConstraints = true,
+                    AutomaticStackingConstraints = true,
                     Mask = (int)StandardEffect.FlameCap,
                     Name = "Flame Cap",
                     StandardEffect = StandardEffect.FlameCap,
@@ -664,6 +789,8 @@ namespace Rawr.Mage
                 {
                     Cooldown = float.PositiveInfinity,
                     Duration = 40.0f,
+                    AutomaticConstraints = true,
+                    AutomaticStackingConstraints = true,
                     Mask = (int)StandardEffect.Heroism,
                     Name = "Heroism",
                     StandardEffect = StandardEffect.Heroism,
@@ -678,6 +805,8 @@ namespace Rawr.Mage
                 {
                     Cooldown = (float)calculationResult.IcyVeinsCooldown,
                     Duration = 20.0f,
+                    AutomaticConstraints = (talents.ColdSnap == 0),
+                    AutomaticStackingConstraints = (talents.ColdSnap == 0),
                     Mask = (int)StandardEffect.IcyVeins,
                     Name = "Icy Veins",
                     StandardEffect = StandardEffect.IcyVeins,
@@ -690,6 +819,10 @@ namespace Rawr.Mage
             {
                 cooldownList.Add(new EffectCooldown()
                 {
+                    Cooldown = float.PositiveInfinity,
+                    Duration = calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration,
+                    MaximumDuration = calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration,
+                    AutomaticStackingConstraints = true,
                     Mask = (int)StandardEffect.MoltenFury,
                     Name = "Molten Fury",
                     StandardEffect = StandardEffect.MoltenFury,
@@ -755,6 +888,8 @@ namespace Rawr.Mage
                                     cooldown.Name = item.Item.Name;
                                     cooldown.Cooldown = effect.Cooldown;
                                     cooldown.Duration = effect.Duration;
+                                    cooldown.AutomaticConstraints = true;
+                                    cooldown.AutomaticStackingConstraints = true;
 #if !SILVERLIGHT
                                     cooldown.Color = itemColors[Math.Min(itemColors.Length - 1, colorIndex++)];
 #endif
@@ -778,6 +913,8 @@ namespace Rawr.Mage
                                     cooldown.Name = item.Enchant.Name;
                                     cooldown.Cooldown = effect.Cooldown;
                                     cooldown.Duration = effect.Duration;
+                                    cooldown.AutomaticConstraints = true;
+                                    cooldown.AutomaticStackingConstraints = true;
 #if !SILVERLIGHT
                                     cooldown.Color = itemColors[Math.Min(itemColors.Length - 1, colorIndex++)];
 #endif
@@ -801,6 +938,8 @@ namespace Rawr.Mage
                     cooldown.Name = "Mana Gem Effect";
                     cooldown.Cooldown = 120f;
                     cooldown.Duration = effect.Duration;
+                    cooldown.MaximumDuration = MaximizeEffectDuration(calculationOptions.FightDuration, effect.Duration, 120);
+                    cooldown.AutomaticStackingConstraints = true;
 #if !SILVERLIGHT
                     cooldown.Color = System.Drawing.Color.DarkGreen;
 #endif
@@ -1193,7 +1332,6 @@ namespace Rawr.Mage
                 lp.SetRowScaleUnsafe(rowPotion, 40.0);
                 lp.SetRowScaleUnsafe(rowManaGemMax, 40.0);
                 lp.SetRowScaleUnsafe(rowManaPotion, 40.0);
-                lp.SetRowScaleUnsafe(rowFlameCap, 40.0);
                 lp.SetRowScaleUnsafe(rowCombustion, 10.0);
                 lp.SetRowScaleUnsafe(rowHeroismCombustion, 10.0);
                 lp.SetRowScaleUnsafe(rowMoltenFuryCombustion, 10.0);
@@ -1880,7 +2018,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowArcanePower, column, calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown);
                     lp.SetElementUnsafe(rowIcyVeins, column, 20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0));
                     lp.SetElementUnsafe(rowMoltenFury, column, calculationOptions.MoltenFuryPercentage);
-                    lp.SetElementUnsafe(rowFlameCap, column, 1f / 120f);
+                    lp.SetElementUnsafe(rowFlameCap, column, 60f / 180f);
                     foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
                     {
                         lp.SetElementUnsafe(cooldown.Row, column, cooldown.Duration / cooldown.Cooldown);
@@ -2267,8 +2405,6 @@ namespace Rawr.Mage
                 ivlength = MaximizeEffectDuration(effectiveDuration, 20.0, calculationResult.IcyVeinsCooldown);
             }
 
-            double aplength = MaximizeEffectDuration(calculationOptions.FightDuration, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown);
-            double pilength = MaximizeEffectDuration(calculationOptions.FightDuration, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown);
             double mflength = calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration;
 
             lp.SetRHSUnsafe(rowManaRegen, calculationResult.StartingMana);
@@ -2284,9 +2420,17 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowManaGemMax, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             if (conjureManaGem) lp.SetRHSUnsafe(rowConjureManaGem, calculationResult.MaxConjureManaGem * calculationResult.ConjureManaGem.CastTime);
             if (wardsAvailable) lp.SetRHSUnsafe(rowWard, calculationResult.MaxWards * calculationResult.Ward.CastTime);
+
+            foreach (EffectCooldown cooldown in cooldownList)
+            {
+                if (cooldown.AutomaticConstraints)
+                {
+                    lp.SetRHSUnsafe(cooldown.Row, (calculationOptions.AverageCooldowns && !float.IsPositiveInfinity(cooldown.Cooldown)) ? calculationOptions.FightDuration * cooldown.Duration / cooldown.Cooldown : cooldown.MaximumDuration);
+                }
+            }
+
             if (heroismAvailable)
             {
-                lp.SetRHSUnsafe(rowHeroism, 40.0);
                 double minDuration = Math.Min(0.99 * calculationOptions.FightDuration * calculationOptions.DpsTime, 40.0);
                 if (moltenFuryAvailable && calculationOptions.HeroismControl == 3 && mflength < minDuration)
                 {
@@ -2294,29 +2438,26 @@ namespace Rawr.Mage
                 }
                 lp.SetLHSUnsafe(rowHeroism, minDuration); // if heroism is marked as available then this implies that it has to be used, not only that it can be used
             }
-            if (powerInfusionAvailable) lp.SetRHSUnsafe(rowPowerInfusion, calculationOptions.AverageCooldowns ? calculationResult.PowerInfusionDuration / calculationResult.PowerInfusionCooldown * calculationOptions.FightDuration : pilength);
-            if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown * calculationOptions.FightDuration : aplength);
-            if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, calculationResult.ArcanePowerDuration);
-            if (heroismAvailable && manaGemEffectAvailable) lp.SetRHSUnsafe(rowHeroismManaGemEffect, calculationResult.ManaGemEffectDuration);
-            if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeins, calculationOptions.AverageCooldowns ? (20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0)) * calculationOptions.FightDuration : ivlength);
+            //if (powerInfusionAvailable) lp.SetRHSUnsafe(rowPowerInfusion, calculationOptions.AverageCooldowns ? calculationResult.PowerInfusionDuration / calculationResult.PowerInfusionCooldown * calculationOptions.FightDuration : pilength);
+            //if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown * calculationOptions.FightDuration : aplength);
+            //if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, calculationResult.ArcanePowerDuration);
+            //if (heroismAvailable && manaGemEffectAvailable) lp.SetRHSUnsafe(rowHeroismManaGemEffect, calculationResult.ManaGemEffectDuration);
+            if (icyVeinsAvailable && coldsnapAvailable)
+            {
+                lp.SetRHSUnsafe(rowIcyVeins, calculationOptions.AverageCooldowns ? (20.0 / calculationResult.IcyVeinsCooldown + 20.0 / calculationResult.ColdsnapCooldown) * calculationOptions.FightDuration : ivlength);
+                if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryIcyVeins, 40);
+            }
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFury, mflength);
             //if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryDestructionPotion, 15);
-            if (moltenFuryAvailable && icyVeinsAvailable) lp.SetRHSUnsafe(rowMoltenFuryIcyVeins, coldsnapAvailable ? 40 : 20);
-            if (moltenFuryAvailable && manaGemEffectAvailable) lp.SetRHSUnsafe(rowMoltenFuryManaGemEffect, manaGemEffectDuration);
+            //if (moltenFuryAvailable && manaGemEffectAvailable) lp.SetRHSUnsafe(rowMoltenFuryManaGemEffect, manaGemEffectDuration);
             //if (heroismAvailable) lp.SetRHSUnsafe(rowHeroismDestructionPotion, 15);
             //if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeinsDestructionPotion, dpivlength);
-            if (flameCapAvailable)
-            {
-                lp.SetRHSUnsafe(rowFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : ((int)(calculationOptions.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0);
-            }
-            if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryFlameCap, 60);
+            //if (flameCapAvailable)
+            //{
+            //    lp.SetRHSUnsafe(rowFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : ((int)(calculationOptions.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0);
+            //}
+            //if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryFlameCap, 60);
             //lp.SetRHSUnsafe(rowFlameCapDestructionPotion, dpflamelength);
-            foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
-            {
-                lp.SetRHSUnsafe(cooldown.Row, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration * cooldown.Duration / cooldown.Cooldown : MaximizeEffectDuration(calculationOptions.FightDuration, cooldown.Duration, cooldown.Cooldown));
-                if (moltenFuryAvailable) lp.SetRHSUnsafe(cooldown.RowMoltenFury, cooldown.Duration);
-                if (heroismAvailable) lp.SetRHSUnsafe(cooldown.RowHeroism, cooldown.Duration);
-            }
             if (manaGemEffectAvailable) lp.SetRHSUnsafe(rowManaGemEffect, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration * manaGemEffectDuration / 120f : MaximizeEffectDuration(calculationOptions.FightDuration, manaGemEffectDuration, 120.0));
             lp.SetRHSUnsafe(rowDpsTime, -(1 - calculationOptions.DpsTime) * calculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowAoe, calculationOptions.AoeDuration * calculationOptions.FightDuration);
@@ -2324,8 +2465,8 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowMoltenFuryCombustion, 1);
             lp.SetRHSUnsafe(rowHeroismCombustion, 1);
             lp.SetRHSUnsafe(rowHeroismIcyVeins, coldsnapAvailable ? 40 : 20);
-            lp.SetRHSUnsafe(rowMoltenFuryBerserking, 10);
-            lp.SetRHSUnsafe(rowHeroismBerserking, 10);
+            //lp.SetRHSUnsafe(rowMoltenFuryBerserking, 10);
+            //lp.SetRHSUnsafe(rowHeroismBerserking, 10);
             //lp.SetRHSUnsafe(rowIcyVeinsDrumsOfBattle, drumsivlength);
             //lp.SetRHSUnsafe(rowArcanePowerDrumsOfBattle, drumsaplength);
             lp.SetRHSUnsafe(rowThreat, calculationOptions.TpsLimit * calculationOptions.FightDuration);
@@ -2348,6 +2489,11 @@ namespace Rawr.Mage
                 lp.SetRHSUnsafe(rowSummonWaterElementalCount, calculationResult.BaseGlobalCooldown * Math.Ceiling(duration / calculationResult.WaterElementalDuration));
             }
             lp.SetRHSUnsafe(rowTargetDamage, -calculationOptions.TargetDamage);
+
+            foreach (StackingConstraint constraint in rowStackingConstraint)
+            {
+                lp.SetRHSUnsafe(constraint.Row, constraint.MaximumStackingDuration);
+            }
 
             if (segmentCooldowns)
             {
@@ -2513,26 +2659,26 @@ namespace Rawr.Mage
             {
                 rowWard = rowCount++;
             }
-            if (heroismAvailable) rowHeroism = rowCount++;
-            if (arcanePowerAvailable) rowArcanePower = rowCount++;
-            if (powerInfusionAvailable) rowPowerInfusion = rowCount++;
-            if (heroismAvailable && arcanePowerAvailable) rowHeroismArcanePower = rowCount++;
-            if (heroismAvailable && manaGemEffectAvailable) rowHeroismManaGemEffect = rowCount++;
-            if (icyVeinsAvailable) rowIcyVeins = rowCount++;
+            //if (heroismAvailable) rowHeroism = rowCount++;
+            //if (arcanePowerAvailable) rowArcanePower = rowCount++;
+            //if (powerInfusionAvailable) rowPowerInfusion = rowCount++;
+            //if (heroismAvailable && arcanePowerAvailable) rowHeroismArcanePower = rowCount++;
+            //if (heroismAvailable && manaGemEffectAvailable) rowHeroismManaGemEffect = rowCount++;
             if (moltenFuryAvailable) rowMoltenFury = rowCount++;
             //if (moltenFuryAvailable && potionOfWildMagicAvailable) rowMoltenFuryDestructionPotion = rowCount++;
-            if (moltenFuryAvailable && icyVeinsAvailable) rowMoltenFuryIcyVeins = rowCount++;
-            if (moltenFuryAvailable && manaGemEffectAvailable) rowMoltenFuryManaGemEffect = rowCount++;
+            //if (moltenFuryAvailable && manaGemEffectAvailable) rowMoltenFuryManaGemEffect = rowCount++;
             //if (heroismAvailable && effectPotionAvailable) rowHeroismDestructionPotion = rowCount++;
             //if (icyVeinsAvailable && effectPotionAvailable) rowIcyVeinsDestructionPotion = rowCount++;
-            if (flameCapAvailable) rowFlameCap = rowCount++;
-            if (moltenFuryAvailable && flameCapAvailable) rowMoltenFuryFlameCap = rowCount++;
+            //if (flameCapAvailable) rowFlameCap = rowCount++;
+            //if (moltenFuryAvailable && flameCapAvailable) rowMoltenFuryFlameCap = rowCount++;
             //if (flameCapAvailable && destructionPotionAvailable) rowFlameCapDestructionPotion = rowCount++;
-            foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
+            foreach (EffectCooldown cooldown in cooldownList)
             {
-                cooldown.Row = rowCount++;
-                if (moltenFuryAvailable) cooldown.RowMoltenFury = rowCount++;
-                if (heroismAvailable) cooldown.RowHeroism = rowCount++;
+                if (cooldown.AutomaticConstraints)
+                {
+                    cooldown.Row = rowCount++;
+                    cooldown.MaximumDuration = MaximizeEffectDuration(calculationOptions.FightDuration, cooldown.Duration, cooldown.Cooldown);
+                }
             }
             if (manaGemEffectAvailable) rowManaGemEffectActivation = rowCount++;
             if (calculationOptions.AoeDuration > 0)
@@ -2546,13 +2692,12 @@ namespace Rawr.Mage
             if (combustionAvailable) rowCombustion = rowCount++;
             if (combustionAvailable && moltenFuryAvailable) rowMoltenFuryCombustion = rowCount++;
             if (combustionAvailable && heroismAvailable) rowHeroismCombustion = rowCount++;
-            if (icyVeinsAvailable && heroismAvailable) rowHeroismIcyVeins = rowCount++;
-            if (berserkingAvailable && moltenFuryAvailable) rowMoltenFuryBerserking = rowCount++;
-            if (berserkingAvailable && heroismAvailable) rowHeroismBerserking = rowCount++;
+            //if (berserkingAvailable && moltenFuryAvailable) rowMoltenFuryBerserking = rowCount++;
+            //if (berserkingAvailable && heroismAvailable) rowHeroismBerserking = rowCount++;
             //if (drumsOfBattleAvailable && icyVeinsAvailable) rowIcyVeinsDrumsOfBattle = rowCount++;
             //if (drumsOfBattleAvailable && arcanePowerAvailable) rowArcanePowerDrumsOfBattle = rowCount++;
             if (calculationOptions.TpsLimit > 0f) rowThreat = rowCount++;
-            if (berserkingAvailable) rowBerserking = rowCount++;
+            //if (berserkingAvailable) rowBerserking = rowCount++;
             if (needsTimeExtension) rowTimeExtension = rowCount++;
             if (afterFightRegen) rowAfterFightRegenMana = rowCount++;
             //if (afterFightRegen) rowAfterFightRegenHealth = rowCount++;
@@ -2564,6 +2709,66 @@ namespace Rawr.Mage
                 rowSummonWaterElementalCount = rowCount++;
             }
             rowDpsTime = rowCount++;
+
+            rowStackingConstraint = new List<StackingConstraint>();
+            for (int i = 0; i < cooldownList.Count; i++)
+            {
+                if (cooldownList[i].AutomaticStackingConstraints)
+                {
+                    for (int j = i + 1; j < cooldownList.Count; j++)
+                    {
+                        if (cooldownList[j].AutomaticStackingConstraints)
+                        {
+                            bool valid = true;
+                            foreach (int exclusionMask in effectExclusionList)
+                            {
+                                if (BitCount2((cooldownList[i].Mask | cooldownList[j].Mask) & exclusionMask))
+                                {
+                                    valid = false;
+                                    break;
+                                }
+                            }
+                            if (valid)
+                            {
+                                double maxDuration = MaximizeStackingDuration(calculationOptions.FightDuration, cooldownList[i].Duration, cooldownList[i].Cooldown, cooldownList[j].Duration, cooldownList[j].Cooldown);
+                                if (maxDuration < cooldownList[i].MaximumDuration && maxDuration < cooldownList[j].MaximumDuration)
+                                {
+                                    rowStackingConstraint.Add(new StackingConstraint()
+                                    {
+                                        Row = rowCount++,
+                                        Effect1 = cooldownList[i],
+                                        Effect2 = cooldownList[j],
+                                        MaximumStackingDuration = maxDuration,
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (coldsnapAvailable)
+            {
+                if (icyVeinsAvailable) rowIcyVeins = rowCount++;
+                if (icyVeinsAvailable && heroismAvailable) rowHeroismIcyVeins = rowCount++;
+                if (moltenFuryAvailable && icyVeinsAvailable) rowMoltenFuryIcyVeins = rowCount++;
+            }
+            else if (icyVeinsAvailable)
+            {
+                rowIcyVeins = effectCooldown[(int)StandardEffect.IcyVeins].Row;
+                if (heroismAvailable)
+                {
+                    StackingConstraint c = rowStackingConstraint.Find(sc => (sc.Effect1.StandardEffect == StandardEffect.Heroism && sc.Effect2.StandardEffect == StandardEffect.IcyVeins) || (sc.Effect2.StandardEffect == StandardEffect.Heroism && sc.Effect1.StandardEffect == StandardEffect.IcyVeins));
+                    rowHeroismIcyVeins = c.Row;
+                }
+            }
+            if (heroismAvailable) rowHeroism = effectCooldown[(int)StandardEffect.Heroism].Row;
+            if (arcanePowerAvailable) rowArcanePower = effectCooldown[(int)StandardEffect.ArcanePower].Row;
+            if (powerInfusionAvailable) rowPowerInfusion = effectCooldown[(int)StandardEffect.PowerInfusion].Row;
+            if (flameCapAvailable) rowFlameCap = effectCooldown[(int)StandardEffect.FlameCap].Row;
+            if (berserkingAvailable) rowBerserking = effectCooldown[(int)StandardEffect.Berserking].Row;
+
+
             //rowManaPotionManaGem = rowCount++;
             if (segmentCooldowns)
             {
@@ -2789,25 +2994,23 @@ namespace Rawr.Mage
             if (state.Heroism) lp.SetElementUnsafe(rowHeroism, column, 1.0);
             if (state.ArcanePower) lp.SetElementUnsafe(rowArcanePower, column, 1.0);
             if (state.PowerInfusion) lp.SetElementUnsafe(rowPowerInfusion, column, 1.0);
-            if (state.Heroism && state.ArcanePower) lp.SetElementUnsafe(rowHeroismArcanePower, column, 1.0);
-            if (state.Heroism && state.ManaGemEffect) lp.SetElementUnsafe(rowHeroismManaGemEffect, column, 1.0);
+            //if (state.Heroism && state.ArcanePower) lp.SetElementUnsafe(rowHeroismArcanePower, column, 1.0);
+            //if (state.Heroism && state.ManaGemEffect) lp.SetElementUnsafe(rowHeroismManaGemEffect, column, 1.0);
             if (state.IcyVeins) lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
             if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFury, column, 1.0);
             //if (state.MoltenFury && state.PotionOfWildMagic) lp.SetElementUnsafe(rowMoltenFuryDestructionPotion, column, 1.0);
             if (state.MoltenFury && state.IcyVeins) lp.SetElementUnsafe(rowMoltenFuryIcyVeins, column, 1.0);
-            if (state.MoltenFury && state.ManaGemEffect) lp.SetElementUnsafe(rowMoltenFuryManaGemEffect, column, 1.0);
+            //if (state.MoltenFury && state.ManaGemEffect) lp.SetElementUnsafe(rowMoltenFuryManaGemEffect, column, 1.0);
             //if (state.PotionOfWildMagic && state.Heroism) lp.SetElementUnsafe(rowHeroismDestructionPotion, column, 1.0);
             //if (state.PotionOfWildMagic && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsDestructionPotion, column, 1.0);
-            if (state.FlameCap) lp.SetElementUnsafe(rowFlameCap, column, 1.0 / 40.0);
-            if (state.MoltenFury && state.FlameCap) lp.SetElementUnsafe(rowMoltenFuryFlameCap, column, 1.0);
+            if (state.FlameCap) lp.SetElementUnsafe(rowFlameCap, column, 1.0);
+            //if (state.MoltenFury && state.FlameCap) lp.SetElementUnsafe(rowMoltenFuryFlameCap, column, 1.0);
             //if (state.PotionOfWildMagic && state.FlameCap) lp.SetElementUnsafe(rowFlameCapDestructionPotion, column, 1.0);
             foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
             {
                 if (state.EffectsActive(cooldown.Mask))
                 {
                     lp.SetElementUnsafe(cooldown.Row, column, 1.0);
-                    if (state.MoltenFury) lp.SetElementUnsafe(cooldown.RowMoltenFury, column, 1.0);
-                    if (state.Heroism) lp.SetElementUnsafe(cooldown.RowHeroism, column, 1.0);
                 }
             }
             lp.SetElementUnsafe(rowManaGemEffectActivation, column, ((state.ManaGemEffect) ? 1 / manaGemEffectDuration : 0));
@@ -2856,16 +3059,25 @@ namespace Rawr.Mage
             if (state.Combustion && state.Heroism) lp.SetElementUnsafe(rowHeroismCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
             if (state.IcyVeins && state.Heroism) lp.SetElementUnsafe(rowHeroismIcyVeins, column, 1.0);
             if (state.Berserking) lp.SetElementUnsafe(rowBerserking, column, 1.0);
-            if (state.Berserking && state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryBerserking, column, 1.0);
-            if (state.Berserking && state.Heroism) lp.SetElementUnsafe(rowHeroismBerserking, column, 1.0);
-            if (state.Berserking && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsBerserking, column, 1.0);
-            if (state.Berserking && state.ArcanePower) lp.SetElementUnsafe(rowArcanePowerBerserking, column, 1.0);
+            //if (state.Berserking && state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryBerserking, column, 1.0);
+            //if (state.Berserking && state.Heroism) lp.SetElementUnsafe(rowHeroismBerserking, column, 1.0);
+            //if (state.Berserking && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsBerserking, column, 1.0);
+            //if (state.Berserking && state.ArcanePower) lp.SetElementUnsafe(rowArcanePowerBerserking, column, 1.0);
             if (state.WaterElemental) lp.SetElementUnsafe(rowSummonWaterElemental, column, 1 / (calculationResult.WaterElementalDuration - calculationResult.BaseGlobalCooldown));
             lp.SetElementUnsafe(rowThreat, column, cycle.ThreatPerSecond);
             if (needsDisplayCalculations) tpsList.Add(cycle.ThreatPerSecond);
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
             lp.SetElementUnsafe(rowTargetDamage, column, -cycle.DamagePerSecond);
             lp.SetCostUnsafe(column, minimizeTime ? -1 : cycle.DamagePerSecond);
+
+            foreach (StackingConstraint constraint in rowStackingConstraint)
+            {
+                if (state.EffectsActive(constraint.Effect1.Mask | constraint.Effect2.Mask))
+                {
+                    lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                }
+            }
+
             if (segmentCooldowns)
             {
                 // mf, heroism, ap, iv, combustion, drums, flamecap, destro, t1, t2

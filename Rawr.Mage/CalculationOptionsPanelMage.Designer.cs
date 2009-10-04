@@ -269,6 +269,8 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.label85 = new System.Windows.Forms.Label();
+            this.checkBoxMaxUseAssumption = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -2324,6 +2326,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label85);
+            this.tabPage4.Controls.Add(this.checkBoxMaxUseAssumption);
             this.tabPage4.Controls.Add(this.label87);
             this.tabPage4.Controls.Add(this.checkBoxForceIncrementalOptimizations);
             this.tabPage4.Controls.Add(this.buttonHotStreakUtilization);
@@ -2831,6 +2835,28 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // label85
+            // 
+            this.label85.AutoSize = true;
+            this.label85.Location = new System.Drawing.Point(0, 107);
+            this.label85.Name = "label85";
+            this.label85.Size = new System.Drawing.Size(116, 13);
+            this.label85.TabIndex = 210;
+            this.label85.Text = "Max Use Assumption: *";
+            this.toolTipMage.SetToolTip(this.label85, "Add stacking constraints based under assumption that each effect must be used max" +
+                    "imum possible amount. You should only disable this when using maximum settings f" +
+                    "or advanced constraints.");
+            // 
+            // checkBoxMaxUseAssumption
+            // 
+            this.checkBoxMaxUseAssumption.AutoSize = true;
+            this.checkBoxMaxUseAssumption.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "MaxUseAssumption", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxMaxUseAssumption.Location = new System.Drawing.Point(185, 107);
+            this.checkBoxMaxUseAssumption.Name = "checkBoxMaxUseAssumption";
+            this.checkBoxMaxUseAssumption.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMaxUseAssumption.TabIndex = 209;
+            this.checkBoxMaxUseAssumption.UseVisualStyleBackColor = true;
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3101,6 +3127,8 @@
         private System.Windows.Forms.CheckBox checkBoxForceIncrementalOptimizations;
         private System.Windows.Forms.TextBox textBoxChanceToLiveAttenuation;
         private System.Windows.Forms.Label label90;
+        private System.Windows.Forms.Label label85;
+        private System.Windows.Forms.CheckBox checkBoxMaxUseAssumption;
 
     }
 }

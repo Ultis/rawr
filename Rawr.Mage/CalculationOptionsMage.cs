@@ -56,6 +56,13 @@ namespace Rawr.Mage
             set { _Mode322 = value; OnPropertyChanged("Mode322"); }
         }*/
 
+        private bool _MaxUseAssumption;
+        public bool MaxUseAssumption
+        {
+            get { return _MaxUseAssumption; }
+            set { _MaxUseAssumption = value; OnPropertyChanged("MaxUseAssumption"); }
+        }
+
         private int _TargetLevel;
         public int TargetLevel
         {
@@ -1043,6 +1050,7 @@ namespace Rawr.Mage
             EffectRegenMultiplier = 1.0f;
             EffectCostMultiplier = 1.0f;
             ChanceToLiveAttenuation = 0.1f;
+            MaxUseAssumption = true;
         }
 
         public CalculationOptionsMage(Character character)

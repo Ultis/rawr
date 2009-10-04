@@ -1033,7 +1033,7 @@ namespace Rawr.Mage
         private void AnalyzeSolution()
         {
             manaList = new double[segmentList.Count];
-            segmentCooldownCount = new double[22 + calculationResult.ItemBasedEffectCooldowns.Count][];
+            segmentCooldownCount = new double[23 + calculationResult.ItemBasedEffectCooldowns.Count][];
             hexList = new List<int>[segmentList.Count];
             segmentFilled = new double[segmentList.Count];
             hexMask = new int[segmentList.Count];
