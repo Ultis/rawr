@@ -271,20 +271,54 @@ namespace Rawr.DPSWarr {
                 RageCost = Whiteattacks.MHSwingRage;
                 //
                 InitializeB();
+                MHAtkTable = Whiteattacks.MHAtkTable;
             }
             // Functions
-            public float GetActivates(float YellowsThatLandOverDur)
-            {
+            public float GetActivates(float YellowsThatLandOverDur) {
                 if (combatFactors._c_mhItemType != ItemType.TwoHandSword && combatFactors._c_mhItemType != ItemType.OneHandSword) { return 0.0f; }
-
-                float rate = Talents.SwordSpecialization * 0.02f;
                 // This attack doesnt consume GCDs and doesn't affect the swing timer
-                float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) * rate;
+                float rate = Talents.SwordSpecialization * 0.02f;
+                SpecialEffect ss = new SpecialEffect(Trigger.MeleeHit, new Stats() { }, 0f, Cd);
+                float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) / FightDuration;
+                float effectActs = ss.GetAverageProcsPerSecond(rawActs, rate, combatFactors._c_mhItemSpeed, FightDuration);
+                effectActs *= FightDuration;
+                return (float)Math.Max(0f, effectActs);
+            }
+            public override string GenTooltip(float acts, float ttldpsperc) {
+                float misses = GetXActs(AttackTableSelector.Missed , acts), missesPerc = (acts == 0f ? 0f : misses/acts);
+                float dodges = GetXActs(AttackTableSelector.Dodged , acts), dodgesPerc = (acts == 0f ? 0f : dodges/acts);
+                float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys/acts);
+                float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = (acts == 0f ? 0f : blocks/acts);
+                float glance = GetXActs(AttackTableSelector.Glance , acts), glancePerc = (acts == 0f ? 0f : glance/acts);
+                float crits  = GetXActs(AttackTableSelector.Crit   , acts), critsPerc  = (acts == 0f ? 0f : crits /acts);
+                float hits   = GetXActs(AttackTableSelector.Hit    , acts), hitsPerc   = (acts == 0f ? 0f : hits  /acts);
 
-                // There is an internal cd of 6 seconds so AttacksThatCouldLandPerSec is capped by once every 6 sec.
-                float capActs = base.ActivatesOverride;
+                bool showmisss =                 misses > 0f;
+                bool showdodge = CanBeDodged  && dodges > 0f;
+                bool showparry = CanBeParried && parrys > 0f;
+                bool showblock = CanBeBlocked && blocks > 0f;
+                bool showglance= true         && glance > 0f;
+                bool showcrits = CanCrit      && crits > 0f;
+                
+                string tooltip = "*" + Name +
+                    Environment.NewLine +   "Cast Time: "   + (CastTime != -1 ? CastTime.ToString() : "Instant")
+                                        + ", CD: "          + (Cd       != -1 ? Cd.ToString()       : "None"   )
+                                        + ", Rage Generated: "    + (RageCost != -1 ? RageCost.ToString() : "None"   ) +
+                Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
+                (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed "  : "") +
+                (showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged "  : "") +
+                (showparry ? Environment.NewLine + "- " + parrys.ToString("000.00") + " : " + parrysPerc.ToString("00.00%") + " : Parried " : "") +
+                (showblock ? Environment.NewLine + "- " + blocks.ToString("000.00") + " : " + blocksPerc.ToString("00.00%") + " : Blocked " : "") +
+                (showglance? Environment.NewLine + "- " + glance.ToString("000.00") + " : " + glancePerc.ToString("00.00%") + " : Glanced " : "") +
+                (showcrits ? Environment.NewLine + "- " + crits.ToString( "000.00") + " : " + critsPerc.ToString( "00.00%") + " : Crit " : "") +
+                             Environment.NewLine + "- " + hits.ToString(  "000.00") + " : " + hitsPerc.ToString(  "00.00%") + " : Hit " +
+                    Environment.NewLine +
+                    //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
+                    Environment.NewLine + "Targets Hit: " + (Targets != -1 ? AvgTargets.ToString("0.00") : "None") +
+                    Environment.NewLine + "DPS: " + (GetDPS(acts) > 0 ? GetDPS(acts).ToString("0.00") : "None") +
+                    Environment.NewLine + "Percentage of Total DPS: " + (ttldpsperc > 0 ? ttldpsperc.ToString("00.00%") : "None");
 
-                return (float)Math.Max(0f, Math.Min(rawActs, capActs));
+                return tooltip;
             }
         }
         public class Execute : Ability {

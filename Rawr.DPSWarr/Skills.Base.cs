@@ -652,11 +652,11 @@ namespace Rawr.DPSWarr {
                         - MHAtkTable.Miss   // no damage when being missed
                         - MHAtkTable.Dodge  // no damage when being dodged
                         - MHAtkTable.Parry  // no damage when being parried
-                        //- MHAtkTable.Glance // glancing handled below
+                        - MHAtkTable.Glance // glancing handled below
                         - MHAtkTable.Block  // blocked handled below
                         - MHAtkTable.Crit); // crits   handled below
 
-                    //float dmgGlance = dmg * MHAtkTable.Glance *     combatFactors.ReducWhGlancedDmg ;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                    float dmgGlance = dmg * MHAtkTable.Glance *     combatFactors.ReducWhGlancedDmg ;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                     float dmgBlock  = dmg * MHAtkTable.Block  *     combatFactors.ReducYwBlockedDmg ;//Partial damage when blocked
                     float dmgCrit   = dmg * MHAtkTable.Crit   * (1f+combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
@@ -725,6 +725,7 @@ namespace Rawr.DPSWarr {
                     case AttackTableSelector.Dodged:  { retVal = acts * MHAtkTable.Dodge; break; }
                     case AttackTableSelector.Parried: { retVal = acts * MHAtkTable.Parry; break; }
                     case AttackTableSelector.Blocked: { retVal = acts * MHAtkTable.Block; break; }
+                    case AttackTableSelector.Glance : { retVal = acts * MHAtkTable.Glance;break; }
                     case AttackTableSelector.Crit:    { retVal = acts * MHAtkTable.Crit;  break; }
                     case AttackTableSelector.Hit:     { retVal = acts * MHAtkTable.Hit;   break; }
                     default: { break; }
