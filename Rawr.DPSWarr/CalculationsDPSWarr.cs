@@ -201,17 +201,29 @@ namespace Rawr.DPSWarr {
 1177-Battle(140)+T92P(084)
 1051-Battle(140)+Mace(210)
 0967-Battle(140)+T92P(084)+Mace(210)",
-                        @"Base Stats:Hit*8.00% chance to miss base for Yellow Attacks
+                        @"Base Stats:Hit*8.00% chance to miss base for Yellow Attacks (LVL 83 Targ)
 Precision 0- 8%-0%=8%=262 Rating soft cap
 Precision 1- 8%-1%=7%=230 Rating soft cap
 Precision 2- 8%-2%=6%=197 Rating soft cap
 Precision 3- 8%-3%=5%=164 Rating soft cap",
-                        @"Base Stats:Expertise*6.50% chance to dodge/parry for attacks
-Weapon Mastery 0- 6.50%-0%=6.50%=214 Rating Cap
-Weapon Mastery 1- 6.50%-1%=6.50%=181 Rating Cap
-Weapon Mastery 2- 6.50%-2%=6.50%=148 Rating Cap
+                        @"Base Stats:Expertise*Base 6.50% chance to be Dodged (LVL 83 Targ)
+X Axis is Weapon Mastery
+Y Axis is Strength of Arms
+x>| 0  |  1  |  2
+0 |213|180|147
+1 |197|164|131
+2 |180|147|115
 
-Don't forget your weapons used matched with races can affect these numbers.",
+0/2 in each the cap is 213 Rating
+2/2 in each the cap is 115 Rating
+
+Base 13.75% chance to be Parried (LVL 83 Targ)
+Strength of Arms
+0 |459
+1 |443
+2 |426
+
+These numbers to do not include racial bonuses.",
                         
                         @"DPS Breakdown (Fury):Description*1st Number is per second or per tick
 2nd Number is the average damage (factoring mitigation, hit/miss ratio and crits) per hit
@@ -224,8 +236,8 @@ Don't forget your weapons used matched with races can affect these numbers.",
                         "DPS Breakdown (Arms):Mortal Strike",
                         "DPS Breakdown (Arms):Rend",
                         "DPS Breakdown (Arms):Overpower",
-                        "DPS Breakdown (Arms):Taste for Blood*Does an Overpower",
-                        "DPS Breakdown (Arms):Sudden Death*Does a limited Execute",
+                        "DPS Breakdown (Arms):Taste for Blood*Perform an Overpower",
+                        "DPS Breakdown (Arms):Sudden Death*Perform an Execute",
                         "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
                         "DPS Breakdown (Arms):Sword Spec",
 
@@ -1040,8 +1052,9 @@ Don't forget your weapons used matched with races can affect these numbers.",
                 Rot.MakeRotationandDoDPS(true); line++;
 
                 float Health2Surv = stats.Health / 100f; line++;
+                float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * 100f;
                 calculatedStats.TotalHPS = Rot._HPS_TTL; line++;
-                calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv) * calcOpts.SurvScale; line++;
+                calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv + DmgTakenMods2Surv) * calcOpts.SurvScale; line++;
                 calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; line++;
 
                 calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed);

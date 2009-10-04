@@ -494,6 +494,26 @@ namespace Rawr.DPSWarr {
             int Iterator = 0;
             #region >20%
             // Run the loop for >20%
+            float MSBaseCd = 6f - Talents.ImprovedMortalStrike / 3f;
+            float MS_WeightedValue = MS.DamageOnUse + DW.TickSize * MS.MHAtkTable.Crit,
+                  SD_WeightedValue = SD.DamageOnUse + DW.TickSize * SD.MHAtkTable.Crit,
+                  SL_WeightedValue = SL.DamageOnUse + DW.TickSize * SL.MHAtkTable.Crit;
+            float OnePt5Plus1 = LatentGCD + (OP.Cd + CalcOpts.GetReact()),
+                  Two1pt5 = LatentGCD * 2f,
+                  Two1pt0 = (OP.Cd + CalcOpts.GetReact()) * 2f;
+            float TasteForBloodMOD = (Talents.TasteForBlood == 3 ? 1f / 6f : (Talents.TasteForBlood == 2 ? 0.144209288653733f : (Talents.TasteForBlood == 1 ? 0.104925207394343f : 0)));
+            float OtherMOD = (MSBaseCd + CalcOpts.GetLatency());
+            float SDMOD = 1f - 0.03f * Talents.SuddenDeath;
+            float avoid = (1f - CombatFactors._c_mhdodge - CombatFactors._c_ymiss);
+            float atleast1, atleast2, atleast3, extLength1, extLength2, extLength3, averageTimeBetween,
+                  OnePt5Plus1_Occurs, Two1pt5_Occurs, Two1PtZero_Occurs;
+            float LeavingUntilNextMS_1, MSatExtra1, msNormally1, lengthFor1;
+            float LeavingUntilNextMS_2, MSatExtra2, msNormally2, lengthFor2;
+            float LeavingUntilNextMS_3, MSatExtra3, msNormally3, lengthFor3;
+            float timeInBetween = MSBaseCd - 1.5f;
+            float useExeifMSHasMoreThan, useSlamifMSHasMoreThan;
+            string canUse1, canUse2, canUse3;
+            float HPS;
             while (
                     Iterator < 50 &&
                     (
@@ -652,113 +672,99 @@ namespace Rawr.DPSWarr {
 
                 // Mortal Strike
                 #region Mortal Strike Delays
-                {   /* ===== Delays in MS from Slam or Execute =====
-                     * This is a test for MS Delays (idea coming from Landsoul's sheet 2.502)
-                     * Note: The numbers displayed are from a specific example, formula
-                     * results in Rawr may differ
-                     */ 
+                /* ===== Delays in MS from Slam or Execute =====
+                 * This is a test for MS Delays (idea coming from Landsoul's sheet 2.502)
+                 * Note: The numbers displayed are from a specific example, formula
+                 * results in Rawr may differ
+                 */ 
+                HPS = GetLandedAtksOverDur();
 
-                    float MSBaseCd = 6f - Talents.ImprovedMortalStrike / 3f;
+                // In-Between MS is: 3.50 seconds
+                // moved up out of the loop
+                //use exe if MS more than 0.320164 sec
+                useExeifMSHasMoreThan  = LatentGCD * MS_WeightedValue / (MSBaseCd * (SD_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * GetLandedAtksOverDur() * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
+                //use slam if MS more than 0.413178 sec
+                useSlamifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (SL_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * GetLandedAtksOverDur() * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
 
-                    float MS_WeightedValue = MS.DamageOnUse + DW.TickSize * MS.MHAtkTable.Crit;
-                    float SD_WeightedValue = SD.DamageOnUse + DW.TickSize * SD.MHAtkTable.Crit;
-                    float SL_WeightedValue = SL.DamageOnUse + DW.TickSize * SL.MHAtkTable.Crit;
+                //1.5 and 1.0 global is 2.60 seconds
+                // moved out of the loop
+                //leaving until next MS 0.90 seconds
+                LeavingUntilNextMS_1 = timeInBetween - OnePt5Plus1;
+                //Occurs 84.20% of the time
+                //can use exe or slam for 3rd gcd before next ms
+                canUse1 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe" : "nothing"));
+                //puts MS at extra 0.65 length for 5.70
+                MSatExtra1 = LatentGCD - LeavingUntilNextMS_1;
+                lengthFor1 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra1);
+                //MS is normally at a length of 5.696
+                msNormally1 = (canUse1 == "exe or slam" ? lengthFor1 : MSBaseCd + CalcOpts.GetReact());
+                //Extended length is 100.00% of the time
 
-                    float HPS = GetLandedAtksOverDur();
+                //Two 1.5 globals are 3.10 seconds
+                // move up out of the loop
+                //leaving until next MS 0.40 seconds
+                LeavingUntilNextMS_2 = timeInBetween - Two1pt5;
+                //Occurs 15.52% of the time
+                //can use exe for 3rd gcd before next ms
+                canUse2 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe" : "nothing"));
+                //puts MS at extra 1.15	length for 6.20
+                MSatExtra2 = LatentGCD - LeavingUntilNextMS_2;
+                lengthFor2 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra2);
+                //MS is normally at a length of 5.049
+                msNormally2 = (canUse2 == "exe or slam" ? lengthFor2 : MSBaseCd + CalcOpts.GetReact());
+                //Extended length is 19.25% of the time
 
-                    // In-Between MS is: 3.50 seconds
-                    float timeInBetween = MSBaseCd - 1.5f;
-                    //use exe if MS more than 0.320164 sec
-                    float useExeifMSHasMoreThan  = LatentGCD * MS_WeightedValue / (MSBaseCd * (SD_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * GetLandedAtksOverDur() * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
-                    //use slam if MS more than 0.413178 sec
-                    float useSlamifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (SL_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * GetLandedAtksOverDur() * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
+                //Two 1.0 globals are 2.10 seconds
+                // moved up out of the loop
+                //leaving until next MS 1.40 seconds
+                LeavingUntilNextMS_3 = timeInBetween - Two1pt0;
+                //Occurs 0.28% of the time
+                //can use exe or slam for last gcd before next ms
+                canUse3 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe" : "nothing"));
+                //puts MS at extra 0.15	length for 5.20
+                MSatExtra3 = LatentGCD - LeavingUntilNextMS_3;
+                lengthFor3 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra3);
+                //MS is normally at a length of 5.196
+                msNormally3 = (canUse3 == "exe or slam" ? lengthFor3 : MSBaseCd + CalcOpts.GetReact());
+                //Extended length is 100.00% of the time
+                
+                float Abilities = ((_BLS_GCDs + _RD_GCDs + _SL_GCDs + acts + oldHSActivates + WhiteAtks.MhActivates + _SD_GCDs) / FightDuration);
 
-                    //1.5 and 1.0 global is 2.60 seconds
-                    float OnePt5Plus1 = LatentGCD + (OP.Cd + CalcOpts.GetReact());
-                    //leaving until next MS 0.90 seconds
-                    float LeavingUntilNextMS_1 = timeInBetween - OnePt5Plus1;
-                    //Occurs 84.20% of the time
-                    //can use exe or slam for 3rd gcd before next ms
-                    string canUse1 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe" : "nothing"));
-                    //puts MS at extra 0.65 length for 5.70
-                    float MSatExtra1 = LatentGCD - LeavingUntilNextMS_1,
-                        lengthFor1 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra1);
-                    //MS is normally at a length of 5.696
-                    float msNormally1 = (canUse1 == "exe or slam" ? lengthFor1 : MSBaseCd + CalcOpts.GetReact());
-                    //Extended length is 100.00% of the time
-                    
-                    //Two 1.5 globals are 3.10 seconds
-                    float Two1pt5 = LatentGCD * 2f;
-                    //leaving until next MS 0.40 seconds
-                    float LeavingUntilNextMS_2 = timeInBetween - Two1pt5;
-                    //Occurs 15.52% of the time
-                    //can use exe for 3rd gcd before next ms
-                    string canUse2 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe" : "nothing"));
-                    //puts MS at extra 1.15	length for 6.20
-                    float MSatExtra2 = LatentGCD - LeavingUntilNextMS_2,
-                        lengthFor2 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra2);
-                    //MS is normally at a length of 5.049
-                    float msNormally2 = (canUse2 == "exe or slam" ? lengthFor2 : MSBaseCd + CalcOpts.GetReact());
-                    //Extended length is 19.25% of the time
-                    
-                    //Two 1.0 globals are 2.10 seconds
-                    float Two1pt0 = (OP.Cd + CalcOpts.GetReact()) * 2f;
-                    //leaving until next MS 1.40 seconds
-                    float LeavingUntilNextMS_3 = timeInBetween - Two1pt0;
-                    //Occurs 0.28% of the time
-                    //can use exe or slam for last gcd before next ms
-                    string canUse3 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe" : "nothing"));
-                    //puts MS at extra 0.15	length for 5.20
-                    float MSatExtra3 = LatentGCD - LeavingUntilNextMS_3,
-                        lengthFor3 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra3);
-                    //MS is normally at a length of 5.196
-                    float msNormally3 = (canUse3 == "exe or slam" ? lengthFor3 : MSBaseCd + CalcOpts.GetReact());
-                    //Extended length is 100.00% of the time
-                    
+                OnePt5Plus1_Occurs = 0f;
+                Two1PtZero_Occurs = TasteForBloodMOD
+                                        * OtherMOD
+                                        * (
+                                            (1f - 3f * TasteForBloodMOD)
+                                            * Abilities
+                                            * WhiteAtks.MHAtkTable.Dodge
+                                           )
+                                        * OtherMOD;
+                OnePt5Plus1_Occurs = (1f - 3f * TasteForBloodMOD)
+                                       * Abilities
+                                       * WhiteAtks.MHAtkTable.Dodge
+                                       * OtherMOD
+                                     + TasteForBloodMOD
+                                       * OtherMOD
+                                     - Two1PtZero_Occurs;
+                Two1pt5_Occurs = 1f - OnePt5Plus1_Occurs - Two1PtZero_Occurs;
 
-                    float TasteForBloodMOD = (Talents.TasteForBlood == 3 ? 1f / 6f : (Talents.TasteForBlood == 2 ? 0.144209288653733f : (Talents.TasteForBlood == 1 ? 0.104925207394343f : 0)));
-                    float Abilities = ((_BLS_GCDs + _RD_GCDs + _SL_GCDs + acts + oldHSActivates + WhiteAtks.MhActivates + _SD_GCDs) / FightDuration);
-                    float OtherMOD = (MSBaseCd + CalcOpts.GetLatency());
+                // Exec procs in MS
+                atleast1 = (1f-(float)Math.Pow(SDMOD,OnePt5Plus1_Occurs*((canUse1=="nothing"?1f:2f)*avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "niether" ? 2f : 3f) * avoid + Two1PtZero_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 2f * (1f - CombatFactors._c_ymiss)) + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed));
+                atleast2 = (1f-(float)Math.Pow(SDMOD,OnePt5Plus1_Occurs*((canUse1=="nothing"?1f:2f)*avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed))
+                         * (1f-(float)Math.Pow(SDMOD,OnePt5Plus1_Occurs*((canUse1=="nothing"?0f:1f)*avoid + 1.5f / CombatFactors._c_mhItemSpeed) + Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed)));
+                atleast3 = (1f-(float)Math.Pow(SDMOD,Two1pt5_Occurs    * (canUse2=="nothing"?2f:3f)*avoid + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed))
+                         * (1f-(float)Math.Pow(SDMOD,Two1pt5_Occurs    *((canUse2=="nothing"?0f:1f)*avoid + 1.5f / CombatFactors._c_mhItemSpeed)))
+                         * (1f-(float)Math.Pow(SDMOD,Two1pt5_Occurs    *((canUse2=="nothing"?0f:1f)*avoid)));
 
-                    float OnePt5Plus1_Occurs = 0f;
-                    float Two1PtZero_Occurs = TasteForBloodMOD
-                                            * OtherMOD
-                                            * (
-                                                (1f - 3f * TasteForBloodMOD)
-                                                * Abilities
-                                                * WhiteAtks.MHAtkTable.Dodge
-                                               )
-                                            * OtherMOD;
-                    OnePt5Plus1_Occurs = (1f - 3f * TasteForBloodMOD)
-                                           * Abilities
-                                           * WhiteAtks.MHAtkTable.Dodge
-                                           * OtherMOD
-                                         + TasteForBloodMOD
-                                           * OtherMOD
-                                         - Two1PtZero_Occurs;
-                    float Two1pt5_Occurs = 1f - OnePt5Plus1_Occurs - Two1PtZero_Occurs;
+                extLength1 = (canUse1 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse1 == "exe or slam" ? 1f : 0f));
+                extLength2 = (canUse2 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse2 == "exe or slam" ? 1f : 0f));
+                extLength3 = (canUse3 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse3 == "exe or slam" ? 1f : 0f));
 
-                    // Exec procs in MS
-                    float SDMOD = 1f - 0.03f * Talents.SuddenDeath;
-                    float avoid = (1f - CombatFactors._c_mhdodge - CombatFactors._c_ymiss);
-                    float atleast1 = (1f-(float)Math.Pow(SDMOD,OnePt5Plus1_Occurs*((canUse1=="nothing"?1f:2f)*avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "niether" ? 2f : 3f) * avoid + Two1PtZero_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 2f * (1f - CombatFactors._c_ymiss)) + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed)),
-                          atleast2 = (1f-(float)Math.Pow(SDMOD,OnePt5Plus1_Occurs*((canUse1=="nothing"?1f:2f)*avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed))
-                                   * (1f-(float)Math.Pow(SDMOD,OnePt5Plus1_Occurs*((canUse1=="nothing"?0f:1f)*avoid + 1.5f / CombatFactors._c_mhItemSpeed) + Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed))),
-                          atleast3 = (1f-(float)Math.Pow(SDMOD,Two1pt5_Occurs    * (canUse2=="nothing"?2f:3f)*avoid + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed))
-                                   * (1f-(float)Math.Pow(SDMOD,Two1pt5_Occurs    *((canUse2=="nothing"?0f:1f)*avoid + 1.5f / CombatFactors._c_mhItemSpeed)))
-                                   * (1f-(float)Math.Pow(SDMOD,Two1pt5_Occurs    *((canUse2=="nothing"?0f:1f)*avoid)));
-
-                    float extLength1 = (canUse1 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse1 == "exe or slam" ? 1f : 0f));
-                    float extLength2 = (canUse2 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse2 == "exe or slam" ? 1f : 0f));
-                    float extLength3 = (canUse3 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse3 == "exe or slam" ? 1f : 0f));
-
-
-                    //for avg of 5.628472631 between MS'es, from crowding
-                    float averageTimeBetween = OnePt5Plus1_Occurs * (lengthFor1 * extLength1 + msNormally1 * (1f - extLength1))
-                                             + Two1pt5_Occurs     * (lengthFor2 * extLength2 + msNormally2 * (1f - extLength2))
-                                             + Two1PtZero_Occurs  * (lengthFor3 * extLength3 + msNormally3 * (1f - extLength3));
-                    MS.Cd = averageTimeBetween;
-                }
+                //for avg of 5.628472631 between MS'es, from crowding
+                averageTimeBetween = OnePt5Plus1_Occurs * (lengthFor1 * extLength1 + msNormally1 * (1f - extLength1))
+                                   + Two1pt5_Occurs     * (lengthFor2 * extLength2 + msNormally2 * (1f - extLength2))
+                                   + Two1PtZero_Occurs  * (lengthFor3 * extLength3 + msNormally3 * (1f - extLength3));
+                MS.Cd = averageTimeBetween;
                 #endregion
                 acts = (float)Math.Min(availGCDs, MS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                 Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
@@ -784,11 +790,17 @@ namespace Rawr.DPSWarr {
                 availRage -= TB.GetRageUseOverDur(Abil_GCDs);
 
                 // Sudden Death
-                //{
-                    //float execSpace = 0.1035f;
-                    //float attemptspersec = (true/*H35 == "Default"*/ ? execSpace / LatentGCD * (1f - 0f) : 0f/*K38 / G38*/);
-                //}
-                acts = (float)Math.Min(availGCDs, SD.GetActivates(GetAttemptedAtksOverDur()) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
+                #region Sudden Death Delays
+                // the atleast (1 to 3) comes from MS Delays, this does already factor talent rate in
+                float execSpace = LatentGCD * (atleast1 + atleast2 + atleast3) / MS.Cd;
+                float attemptspersec = execSpace / LatentGCD * (1f - 0f/*AB81 rage slip*/);
+                if (false) {
+                    acts = attemptspersec * FightDuration;
+                    acts *= (1f - TotalPercTimeLost) * (1f - PercTimeUnder20);
+                } else {
+                    acts = (float)Math.Min(availGCDs, SD.GetActivates(GetAttemptedAtksOverDur()) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
+                }
+                #endregion
                 Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                 _SD_GCDs = Abil_GCDs;
                 GCDsused += (float)Math.Min(origNumGCDs, Abil_GCDs);
