@@ -523,9 +523,27 @@ namespace Rawr
             TargetArmor *= (1f - ArmorIgnoreDebuffs);
             float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
 
-            float ArpFromRating = (TargetArmor - ArPCap * ArmorIgnoreBuffs - TargetArmorReduction * ArmorConstant - TargetArmorReduction * TargetArmor + TargetArmor * ArPCap * ArmorIgnoreBuffs) /
-                (ArPCap - TargetArmorReduction * ArPCap);
+            /*float ArpFromRating = (TargetArmor - ArPCap * ArmorIgnoreBuffs - TargetArmorReduction * ArmorConstant - TargetArmorReduction * TargetArmor + TargetArmor * ArPCap * ArmorIgnoreBuffs) /
+                (ArPCap - TargetArmorReduction * ArPCap);*/
+            float a = TargetArmorReduction, b = ArmorConstant, c = TargetArmor, d = ArPCap, e = ArmorIgnoreBuffs;
 
+            /*
+            TA2 = TA - ArPCap * (x + AIB)
+            TAR = 1 - AC/(AC + TA2)
+            TAR = 1 - AC/(AC+ TA - ArPCap * (x + AIB)) << base of formula
+
+            a = 1 - b/(b+c-d*(x+e))
+            b/(b+c-d*(x+e)) = (1 - a)
+            b = (1 - a)(b+c-dx-de))
+            0 = c-dx-de - ab - ac + adx + ade
+            dx - adx = c - de - ab - ac + ade
+            (d-ad)x = c - de - ab - ac + ade
+
+            x = (c - de - ab - ac + ade) / (d-ad)   << gives loss of precision when dealing with some floats
+              = (c*(1-a) + de(a-1) -ab) / (d(1-a))*/
+
+            float ArpFromRating = (c * (1 - a) + d * e * (a - 1) - a * b) / (d * (1 - a));
+            //if (/*first*/(  x  )/*br*/ - /*second*/(  (c * (1 - a) + d * e * (a - 1) - a * b) / (d * (1 - a))  ) <= 0.1)) return 0f;
             return ArpFromRating * RATING_PER_ARMORPENETRATION;
         }
 
