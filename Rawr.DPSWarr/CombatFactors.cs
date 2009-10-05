@@ -190,8 +190,8 @@ namespace Rawr.DPSWarr {
         #region Miss
         public float MissPrevBonuses {
             get {
-                return StatS.PhysicalHit        // Hit Perc bonuses like Draenei Racial
-                        + HitPerc;              // Bonus from Hit Rating
+                return StatS.PhysicalHit    // Hit Perc bonuses like Draenei Racial
+                        + HitPerc;          // Bonus from Hit Rating
             }
         }
         public float WhMissCap {
@@ -405,13 +405,10 @@ namespace Rawr.DPSWarr {
             float tableSize = 0f;
 
             // Miss
-            if (useSpellHit)
-            {
+            if (useSpellHit) {
                 float hitIncrease = StatConversion.GetHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit;
                 Miss = Math.Min(1f - tableSize, Math.Max(0.17f - hitIncrease, 0f));
-            }
-            else
-            {
+            } else {
                 Miss = Math.Min(1f - tableSize, isWhite ? combatFactors._c_wmiss : combatFactors._c_ymiss);
             }
             tableSize += Miss;
@@ -427,7 +424,7 @@ namespace Rawr.DPSWarr {
             } else { Parry = 0f; }
             // Block
             if (isWhite || Abil.CanBeBlocked) {
-                Block = Math.Min(1f - tableSize,isMH ?  combatFactors._c_mhblock : combatFactors._c_ohblock);
+                Block = Math.Min(1f - tableSize, isMH ?  combatFactors._c_mhblock : combatFactors._c_ohblock);
                 tableSize += Block;
             } else { Block = 0f; }
             // Glancing Blow

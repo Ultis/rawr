@@ -74,16 +74,12 @@ namespace Rawr.DPSWarr {
             // Functions
             public float GetActivates(float landedatksoverdur) {
                 if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
-                float acts = 0f;
                 float rate = Talents.SuddenDeath * 0.03f;
+                float avoid = MHAtkTable.Dodge + MHAtkTable.Parry + MHAtkTable.Miss;
+                SpecialEffect e = new SpecialEffect(Trigger.MeleeHit, new Stats() { }, 0f, 1.5f, rate);
+                float acts = e.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f - avoid, combatFactors._c_mhItemSpeed, FightDuration);
+                acts *= FightDuration;
 
-                //if (true) {
-                    float avoid = MHAtkTable.Dodge + MHAtkTable.Parry + MHAtkTable.Miss;
-                    SpecialEffect e = new SpecialEffect(Trigger.MeleeHit, new Stats() { }, 0f, 1.5f, rate);
-                    acts = e.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f - avoid, combatFactors._c_mhItemSpeed, FightDuration);
-                    acts *= FightDuration;
-                //} else { acts = rate * landedatksoverdur; }
-                //return (float)Math.Max(0f, acts * (1f - Whiteattacks.AvoidanceStreak));
                 return (float)Math.Max(0f, acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost + 15f)));
             }
             protected override float Damage {
@@ -207,8 +203,7 @@ namespace Rawr.DPSWarr {
                 }
             }
         }
-        public class Bladestorm : Ability
-        {
+        public class Bladestorm : Ability {
             // Constructors
             /// <summary>
             /// Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will
@@ -218,8 +213,7 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Bladestorm [Requires Talent]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Bladestorm [-15 sec Cd]</GlyphsAffecting>
-            public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, WhirlWind ww)
-            {
+            public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, WhirlWind ww) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 WW = ww;
@@ -241,10 +235,8 @@ namespace Rawr.DPSWarr {
             // Variables
             public WhirlWind WW;
             // Functions
-            public override float DamageOnUse
-            {
-                get
-                {
+            public override float DamageOnUse {
+                get {
                     if (!Validated) { return 0f; }
                     float Damage = WW.GetDamageOnUseOverride(); // WW.DamageOnUseOverride;
                     return (float)Math.Max(0f, Damage * 6f); // it WW's 6 times

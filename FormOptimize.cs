@@ -416,6 +416,7 @@ namespace Rawr
 			numericUpDownRequirementValue.Size = new System.Drawing.Size(60, 20);
 			numericUpDownRequirementValue.TabIndex = 6;
 			numericUpDownRequirementValue.ThousandsSeparator = true;
+            numericUpDownRequirementValue.DecimalPlaces = 2;
 			// 
 			// buttonRemoveRequirement
 			// 
