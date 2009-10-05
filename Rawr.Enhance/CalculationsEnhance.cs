@@ -620,6 +620,7 @@ namespace Rawr.Enhance
             character.ActiveBuffs.Add(Buff.GetBuffByName("Potion of Speed"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
 
+            character.EnforceGemRequirements = true; // set default to be true for Enhancement Shaman
         }
 
         private Item RemoveAddedBuffs(Stats addedBuffs)
