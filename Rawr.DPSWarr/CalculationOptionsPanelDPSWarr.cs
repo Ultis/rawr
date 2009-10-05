@@ -29,6 +29,75 @@ namespace Rawr.DPSWarr {
                 SetUpFAQ();
                 CTL_Maints.ExpandAll(); line = 10;
 
+#region Boss Selector
+LB_Under20Perc.ToolTipText =
+@"Time where Execute Spamming Rotation occurs.
+
+Only effective if Execute Spamming is active on the Ability Maintenance Tab";
+CK_InBack.ToolTipText =
+@"This affects how often the Boss can Parry your attacks
+
+Note: No bosses in WotLK Block";
+CK_MultiTargs.ToolTipText =
+@"How much of the fight is spend where more than one target is within Melee Range, allowing the use of MultiTarget abilities like Cleave and normal abilities like WhirlWind to do extra damage.
+
+Max is the highest number of targets over the fight, use to clip WhirlWind, etc. to 2 targets instead of the full 4.";
+CK_StunningTargs.ToolTipText =
+@"While stunned, you cannot DPS.
+Iron Will and other Stun Duration reducing effects can lower the duration.
+Abilities like Heroic Fury and Every Man for Himself (Humans) can negate Stuns after they occur if they are not on cooldown.";
+CK_MovingTargs.ToolTipText =
+@"Time spent in movement where you cannot DPS the Boss.
+Either the boss has moved or you are in a situation where you can't stand where you are.
+Movespeed buffs can reduce this time.";
+CK_FearingTargs.ToolTipText =
+@"While feared you cannot DPS.
+Fear Duration reducing effects can lower the duration.
+Abilities like Berserker Rage can negate Fears after they occur if they are not on cooldown.";
+CK_RootingTargs.ToolTipText =
+@"While Snared you cannot DPS (assume the target moves out of melee range).
+Snare/Root Duration reducing effects can lower the duration.
+Some abilities can negate Snares after they occur if they are not on cooldown.";
+CK_DisarmTargs.ToolTipText =
+@"This functionality is disabled as no bosses Disarm in WotLK";
+CK_AoETargs.ToolTipText =
+@"New testing for Rage Gains from Damage Taken.";
+#endregion
+#region Ability Maintenance
+CK_Flooring.ToolTipText =
+@"Flooring changes the way Rotations are calculated.
+                
+Normally, an ability can have 94.7 activates in a rotation, this allows a more smooth calc for things like Haste and Expertise (due to Overpower Procs).
+Flooring forces any partial activate off the table, 94.7 becomes 94. This is to better simulate reality, however it isn't fully factored in everywhere that it should be.
+
+Use Flooring at your own risk.";
+#endregion
+#region Misc
+CK_PTRMode.ToolTipText =
+@"Enables Patch 3.3.0 changes specific to DPSWarr.
+
+Change List:
+- None yet released that affect Rawr.DPSWarr";
+CK_HideDefGear.ToolTipText =
+@"This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis.
+
+If the object has Defense Related Stats (Defense, Dodge, Parry, Block) the object will be removed from the lists.
+
+Turn all three of these options off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.";
+CK_HideSpellGear.ToolTipText =
+@"This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis.
+
+If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Spell penetration) the object will be removed from the lists
+(unless it has a specific reason not to be, like Powerful Stats still should be shown).
+
+Turn all three of these options off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.";
+CK_HidePvPGear.ToolTipText =
+@"This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis.
+
+If the object has PvP Stats (Resilience) the object will be removed from the lists.
+
+Turn all three of these options off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.";
+#endregion
                 // Create our local Boss List
                 if (bosslist == null) { bosslist = new BossList(); }
                 // Populate the Boss List ComboBox
