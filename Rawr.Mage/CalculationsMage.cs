@@ -1398,7 +1398,7 @@ namespace Rawr.Mage
                         {
                             list.Add(new PointF(graphStart + X[j] / maxScale * graphWidth, graphBottom - graphHeight * Y[j][i].OverallPoints / dpsScale));
                         }
-                        if (list.Count > 0) g.DrawLines(new Pen(statColors[i]), list.ToArray());
+                        if (list.Count >= 2) g.DrawLines(new Pen(statColors[i]), list.ToArray());
                     }
 
                     // restore incremental base
@@ -1513,7 +1513,7 @@ namespace Rawr.Mage
                         {
                             list.Add(new PointF(graphStart + X[j] / maxScale * graphWidth, graphBottom - graphHeight * Y[j][i].OverallPoints / dpsScale));
                         }
-                        if (list.Count > 0) g.DrawLines(new Pen(statColors[i]), list.ToArray());
+                        if (list.Count >= 2) g.DrawLines(new Pen(statColors[i]), list.ToArray());
                     }
 
                     // restore incremental base
@@ -1629,7 +1629,7 @@ namespace Rawr.Mage
                         {
                             list.Add(new PointF(graphStart + X[j] / maxScale * graphWidth, graphBottom - graphHeight * Y[j][i].OverallPoints / dpsScale));
                         }
-                        if (list.Count > 0) g.DrawLines(new Pen(statColors[i]), list.ToArray());
+                        if (list.Count >= 2) g.DrawLines(new Pen(statColors[i]), list.ToArray());
                     }
 
                     // restore incremental base
@@ -1744,7 +1744,7 @@ namespace Rawr.Mage
                         {
                             list.Add(new PointF(graphStart + X[j] / maxScale * graphWidth, graphBottom - graphHeight * Y[j][i].OverallPoints / dpsScale));
                         }
-                        if (list.Count > 0) g.DrawLines(new Pen(statColors[i]), list.ToArray());
+                        if (list.Count >= 2) g.DrawLines(new Pen(statColors[i]), list.ToArray());
                     }
 
                     // restore incremental base
@@ -1860,7 +1860,7 @@ namespace Rawr.Mage
 						{
 							list.Add(new PointF(graphStart + X[j] / maxScale * graphWidth, graphBottom - graphHeight * Y[j][i].OverallPoints / dpsScale));
 						}
-						if (list.Count > 0) g.DrawLines(new Pen(statColors[i]), list.ToArray());
+                        if (list.Count >= 2) g.DrawLines(new Pen(statColors[i]), list.ToArray());
 					}
 
 					// restore incremental base

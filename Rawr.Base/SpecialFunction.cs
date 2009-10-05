@@ -45,6 +45,9 @@ using System.IO;
 
 // Adopted from the version available at http://www.codeproject.com/KB/cs/SpecialFunction.aspx
 // using more of the .NET provided versions where available and changed to .NET naming guidelines
+// most functions optimized for performance characteristics of .NET platform
+// added interpolation methods for Ibeta function
+// Kavan@Rawr
 
 namespace Rawr
 {
@@ -1017,7 +1020,9 @@ namespace Rawr
             return q;
         }
 
+#if !SILVERLIGHT
         [Serializable]
+#endif
         private struct InterpolationData
         {
             public float[/*b*/] Y;
