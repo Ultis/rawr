@@ -468,8 +468,8 @@ namespace Rawr.Enhance
             calculatedStats.URUptime = cs.URUptime  * 100f;
             calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
             calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
-            calculatedStats.TotalExpertiseMH = (float) Math.Floor((float)(cs.ExpertiseBonusMH * 400f));
-            calculatedStats.TotalExpertiseOH = (float)Math.Floor((float)(cs.ExpertiseBonusOH * 400f));
+            calculatedStats.TotalExpertiseMH = cs.ExpertiseBonusMH * 400f;
+            calculatedStats.TotalExpertiseOH = cs.ExpertiseBonusOH * 400f;
 
             calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHit, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCrit);
             calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHit, cs.AverageDodge, -1, cs.AverageYellowCrit);

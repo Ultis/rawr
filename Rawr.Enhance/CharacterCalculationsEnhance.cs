@@ -431,11 +431,11 @@ namespace Rawr.Enhance
         }
 
         private String getExpertiseString()
-        {
+        {   // using 26.5 for display purposes as its pointless warning over cap if 26.1 Expertise for example.
             String caps = "";
             if (TotalExpertiseMH == TotalExpertiseOH)
             {
-                if (TotalExpertiseMH > 26)
+                if (TotalExpertiseMH > 26.5f)
                     caps = "{0} (Over Cap)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged\r\n{4}% Parried";
                 else
                     caps = "{0}*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged\r\n{4}% Parried";
@@ -448,11 +448,11 @@ namespace Rawr.Enhance
             }
             else
             {
-                if (TotalExpertiseMH > 26 && TotalExpertiseOH > 26)
+                if (TotalExpertiseMH > 26.5f && TotalExpertiseOH > 26.5f)
                     caps = "{0}/{1} (Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged\r\n{5}% Parried";
-                else if (TotalExpertiseMH > 26)
+                else if (TotalExpertiseMH > 26.5f)
                     caps = "{0}/{1} (MH Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% OH Dodged\r\n{5}% Parried";
-                else if (TotalExpertiseOH > 26)
+                else if (TotalExpertiseOH > 26.5f)
                     caps = "{0}/{1} (OH Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% MH Dodged\r\n{5}% Parried";
                 else
                     caps = "{0}/{1}*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged";
