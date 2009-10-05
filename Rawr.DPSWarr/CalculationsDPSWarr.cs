@@ -495,7 +495,6 @@ These numbers to do not include racial bonuses.",
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
                 ManaorEquivRestore = stats.ManaorEquivRestore,
-                BloodlustProc = stats.BloodlustProc,
                 // Multipliers
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
@@ -576,7 +575,6 @@ These numbers to do not include racial bonuses.",
                 stats.HighestStat +
                 stats.Paragon +
                 stats.ManaorEquivRestore +
-                stats.BloodlustProc +
                 // Multipliers
                 stats.BonusAgilityMultiplier +
                 stats.BonusStrengthMultiplier +
