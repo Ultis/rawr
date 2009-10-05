@@ -848,6 +848,7 @@ namespace Rawr.Mage
                     if (!ValidateCooldownAdvanced(cooldown.Mask, cooldown.Duration, cooldown.Cooldown, VariableType.None)) return false;
                 }
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced((int)StandardEffect.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
+                if (berserkingAvailable && !ValidateCooldownAdvanced((int)StandardEffect.Berserking, 10.0, 180.0, VariableType.None)) return false;
             }
 
             if (segmentCooldowns && advancedConstraintsLevel >= 5)
@@ -873,6 +874,7 @@ namespace Rawr.Mage
                     if (!ValidateCooldownAdvanced2(cooldown.Mask, cooldown.Duration, cooldown.Cooldown, VariableType.None)) return false;
                 }
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
+                if (berserkingAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.Berserking, 10.0, 180.0, VariableType.None)) return false;
             }
 
             return true;

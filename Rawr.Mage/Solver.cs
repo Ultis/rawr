@@ -59,9 +59,8 @@ namespace Rawr.Mage
 
     public sealed partial class Solver
     {
-        private static int EffectCooldownCount = EnumHelper.GetValues(typeof(StandardEffect)).Length;
-
-        private const int cooldownCount = 15;
+        private const int standardEffectCount = 13; // can't just compute from enum, because that counts the combined masks also
+        private int cooldownCount;
         private List<Segment> segmentList;
         private List<EffectCooldown> cooldownList;
         private Dictionary<int, EffectCooldown> effectCooldown;
@@ -846,8 +845,8 @@ namespace Rawr.Mage
                 });
             }
 
-
-            int mask = 1 << EffectCooldownCount;
+            cooldownCount = standardEffectCount;
+            int mask = 1 << standardEffectCount;
 
             calculationResult.ItemBasedEffectCooldowns = new List<EffectCooldown>();
             int itemBasedMask = 0;
@@ -884,6 +883,7 @@ namespace Rawr.Mage
                                     cooldown.Mask = mask;
                                     itemBasedMask |= mask;
                                     mask <<= 1;
+                                    cooldownCount++;
                                     cooldown.ItemBased = true;
                                     cooldown.Name = item.Item.Name;
                                     cooldown.Cooldown = effect.Cooldown;
@@ -909,6 +909,7 @@ namespace Rawr.Mage
                                     cooldown.Mask = mask;
                                     itemBasedMask |= mask;
                                     mask <<= 1;
+                                    cooldownCount++;
                                     cooldown.ItemBased = true;
                                     cooldown.Name = item.Enchant.Name;
                                     cooldown.Cooldown = effect.Cooldown;
@@ -3493,10 +3494,10 @@ namespace Rawr.Mage
                     int incrementalSetIndex = calculationOptions.IncrementalSetSortedStates[incrementalSortedIndex];                    
                     bool mf = (incrementalSetIndex & (int)StandardEffect.MoltenFury) != 0;
                     bool heroism = (incrementalSetIndex & (int)StandardEffect.Heroism) != 0;
-                    int itemBasedMax = 1 << (calculationResult.ItemBasedEffectCooldowns.Count + 1);
+                    int itemBasedMax = 1 << calculationResult.ItemBasedEffectCooldowns.Count;
                     for (int index = 0; index < itemBasedMax; index++)
                     {
-                        int combinedIndex = incrementalSetIndex | (index << 12); // make sure to update this if StandardEffects enum changes
+                        int combinedIndex = incrementalSetIndex | (index << standardEffectCount);
                         if ((combinedIndex & availableCooldownMask) == combinedIndex) // make sure all are available
                         {
                             bool valid = true;
