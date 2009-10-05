@@ -52,6 +52,12 @@ When loading a character from the armory, or starting a new blank character, all
 
 How does Rawr work to calculate the values of items? (Or where are the relative stats setup?)
 ---------------------------------------------------------------------------------------------
+Each model in Rawr has a set of calculations that returns a number. This number can be dps/threat/hps etc depending on what is important to that model. To generate the charts Rawr takes your gear + enchants + buffs and asks the model to return a number for your current gear with the slot you are asking about empty. This gives the total score for your gear without that slot. It then takes each item in turn and asks the model for a new number (dps/threat/hps etc) for your gear including that item. The difference is what is displayed in the graph eg: dps value. 
+
+It is important to realise that every single time you see a line on any of the graphs that Rawr has asked the model to calculate everything from scratch again with that complete gear/enchant/buff setup. It is only because it does this really quickly that people assume that it must use stats weights.
+
+Rawr uses actual formulae to calculate your dps/threat/hps etc it does not use relative stats and try to multiply the stats together. It is just really quick at calculating. This is why the results you get in Rawr are comprehensive and far more accurate than using stats weights ever are.
+
 Rawr looks at the total stats of your character, not the stats of an individual item to measure the value. This is perhaps best explained by an example: Take the example of a dps class and trying to calculate the graph showing helm values.
 
 With no helm equipped and raid buffed your stats are:
