@@ -489,6 +489,7 @@ These numbers to do not include racial bonuses.",
                 FearDurReduc = stats.FearDurReduc,
                 // Target Debuffs
                 BossAttackPower = stats.BossAttackPower,
+                BossAttackSpeedMultiplier = stats.BossAttackSpeedMultiplier,
                 // Procs
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
                 HighestStat = stats.HighestStat,
@@ -568,6 +569,7 @@ These numbers to do not include racial bonuses.",
                 stats.FearDurReduc +
                 // Target Debuffs
                 stats.BossAttackPower +
+                stats.BossAttackSpeedMultiplier +
                 // Procs
                 stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
@@ -696,6 +698,24 @@ These numbers to do not include racial bonuses.",
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
             {
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+            }
+
+            // Removes the Thunder Clap & Improved Buffs if you are maintaining it yourself
+            // Also removes Judgements of the Just, Infected Wounds, Frost Fever, Improved Icy Touch
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_]) {
+                Buff a = Buff.GetBuffByName("Thunder Clap");
+                Buff b = Buff.GetBuffByName("Improved Thunder Clap");
+                Buff c = Buff.GetBuffByName("Judgements of the Just");
+                Buff d = Buff.GetBuffByName("Infected Wounds");
+                Buff e = Buff.GetBuffByName("Frost Fever");
+                Buff f = Buff.GetBuffByName("Improved Icy Touch");
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
+                if (character.ActiveBuffs.Contains(e)) { character.ActiveBuffs.Remove(e); removedBuffs.Add(e); }
+                if (character.ActiveBuffs.Contains(f)) { character.ActiveBuffs.Remove(f); removedBuffs.Add(f); }
             }
 
             // Removes the Demoralizing Shout & Improved Buffs if you are maintaining it yourself
@@ -1067,8 +1087,14 @@ These numbers to do not include racial bonuses.",
                 float Health2Surv = stats.Health / 100f; line++;
                 float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * 100f;
                 float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
+                float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedMultiplier) * 100f;
                 calculatedStats.TotalHPS = Rot._HPS_TTL; line++;
-                calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv + DmgTakenMods2Surv + BossAttackPower2Surv) * calcOpts.SurvScale; line++;
+                calculatedStats.Survivability = calcOpts.SurvScale * (calculatedStats.TotalHPS
+                                                                      + Health2Surv
+                                                                      + DmgTakenMods2Surv
+                                                                      + BossAttackPower2Surv
+                                                                      + BossAttackSpeedMods2Surv);
+                line++;
                 calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; line++;
 
                 calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed);
@@ -1279,7 +1305,14 @@ These numbers to do not include racial bonuses.",
                         Rot.DS.Duration, Rot.DS.Cd + 0.01f);
                     statsTotal.AddSpecialEffect(ds);
                 }
-                
+                if (Rot.TH.Validated) {
+                    float value = (0.10f * (1f + (float)Math.Ceiling(talents.ImprovedThunderClap * 10f / 3f) / 100f));
+                    SpecialEffect tc = new SpecialEffect(Trigger.Use,
+                        new Stats() { BossAttackSpeedMultiplier = value * -1f, },
+                        Rot.TH.Duration, Rot.TH.Cd + 0.01f, Rot.TH.MHAtkTable.AnyLand);
+                    statsTotal.AddSpecialEffect(tc);
+                }
+
                 float fightDuration = calcOpts.Duration;
 
                 bool useOH = combatFactors.useOH;
