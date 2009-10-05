@@ -31,8 +31,8 @@ namespace Rawr.Enhance
 		public string MainhandImbue = "Windfury";
 		public string OffhandImbue = "Flametongue";
 		public float FightLength = 10.0f;
-		public int TargetFireResistance = 0;
-		public int TargetNatureResistance = 0;
+		public float TargetFireResistance = 0;
+		public float TargetNatureResistance = 0;
 		public bool Magma = true;
 		public bool BaseStatOption = true;
 
@@ -43,6 +43,8 @@ namespace Rawr.Enhance
             TargetArmor = (int)boss.Armor;
             FightLength = boss.BerserkTimer / 60f;
             InBack = ((InBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
+            TargetFireResistance = boss.Resistance(ItemDamageType.Fire);
+            TargetNatureResistance = boss.Resistance(ItemDamageType.Nature);
         }
 	}
 }
