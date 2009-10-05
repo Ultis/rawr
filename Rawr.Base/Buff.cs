@@ -410,6 +410,34 @@ namespace Rawr
             });
             #endregion
 
+            #region Heroism/Bloodlust
+            defaultBuffs.Add(buff = new Buff
+            {
+                Name = "Heroism/Bloodlust",
+                Source = "Shaman",
+                Group = "Heroism/Bloodlust",
+                Stats = new Stats(),
+                Improvements = { 
+					new Buff {
+                        Name = "Heroism/Bloodlust (2)",
+                        Source = "Shaman (2nd)",
+                        Stats = new Stats(),
+                        Improvements = { 
+					        new Buff {
+                                Name = "Heroism/Bloodlust (3)",
+                                Source = "Shaman (3rd)",
+                                Stats = new Stats(),
+                            }
+				        }
+                    }
+				}
+            });
+            SpecialEffect effect = new SpecialEffect(Trigger.Use, new Stats() { PhysicalHaste = 0.30f, RangedHaste = 0.30f, SpellHaste = 0.30f }, 40f, 10f * 60f);
+            buff.Stats.AddSpecialEffect(effect);
+            buff.Improvements[0].Stats.AddSpecialEffect(effect);
+            buff.Improvements[0].Improvements[0].Stats.AddSpecialEffect(effect);
+            #endregion
+
             #region Haste (%)
             defaultBuffs.Add(new Buff
             {

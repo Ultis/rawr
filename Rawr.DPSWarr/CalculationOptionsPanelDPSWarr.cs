@@ -325,6 +325,11 @@ FAQStuff.Add(
                 // Latency
                 CB_Lag.Value = (int)calcOpts.Lag;
                 CB_React.Value = (int)calcOpts.React; line = 40;
+                // Special Effects Special Option
+                CK_SE_UseDur.Checked = calcOpts.SE_UseDur;
+                // Bloodlust
+                CK_Bloodlust.Checked = calcOpts.BL_Use;
+                NUD_Bloodlust.Value = calcOpts.BL_Count;
                 //
                 calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
                 RB_StanceFury.Checked = calcOpts.FuryStance;
@@ -1628,6 +1633,29 @@ FAQStuff.Add(
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.SurvScale = (float)NUD_SurvScale.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        // Special Effects Modifier
+        private void CK_SE_UseDur_CheckedChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.SE_UseDur = CK_SE_UseDur.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        // Bloodlust, Check says if it's used, Value says how many times in the fight
+        private void CK_Bloodlust_CheckedChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.BL_Use = CK_Bloodlust.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void NUD_Bloodlust_ValueChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.BL_Count = (int)NUD_Bloodlust.Value;
                 Character.OnCalculationsInvalidated();
             }
         }

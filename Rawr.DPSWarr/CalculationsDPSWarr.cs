@@ -495,6 +495,7 @@ These numbers to do not include racial bonuses.",
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
                 ManaorEquivRestore = stats.ManaorEquivRestore,
+                BloodlustProc = stats.BloodlustProc,
                 // Multipliers
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
@@ -575,6 +576,7 @@ These numbers to do not include racial bonuses.",
                 stats.HighestStat +
                 stats.Paragon +
                 stats.ManaorEquivRestore +
+                stats.BloodlustProc +
                 // Multipliers
                 stats.BonusAgilityMultiplier +
                 stats.BonusStrengthMultiplier +
@@ -1394,12 +1396,12 @@ These numbers to do not include racial bonuses.",
                 Stats bersStats = new Stats();
                 if (bersMainHand != null) {
                     // berserker enchant id
-                    bersStats += bersMainHand.GetAverageStats(fightDuration/Rot.GetAttemptedAtksOverDurMH(), Rot.GetLandedAtksOverDurMH() / Rot.GetAttemptedAtksOverDurMH(), combatFactors._c_mhItemSpeed, fightDuration);
-                    float f = bersMainHand.GetAverageUptime(fightDuration / Rot.GetAttemptedAtksOverDurMH(), Rot.GetLandedAtksOverDurMH() / Rot.GetAttemptedAtksOverDurMH(), combatFactors._c_mhItemSpeed, fightDuration);
+                    bersStats += bersMainHand.GetAverageStats(fightDuration/Rot.GetAttemptedAtksOverDurMH(), Rot.GetLandedAtksOverDurMH() / Rot.GetAttemptedAtksOverDurMH(), combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    float f = bersMainHand.GetAverageUptime(fightDuration / Rot.GetAttemptedAtksOverDurMH(), Rot.GetLandedAtksOverDurMH() / Rot.GetAttemptedAtksOverDurMH(), combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                 }
                 if (bersOffHand != null) {
-                    bersStats += bersOffHand.GetAverageStats(fightDuration / Rot.GetAttemptedAtksOverDurOH(), Rot.GetLandedAtksOverDurOH() / Rot.GetAttemptedAtksOverDurOH(), combatFactors._c_mhItemSpeed, fightDuration);
-                    float f = bersOffHand.GetAverageUptime(fightDuration / Rot.GetAttemptedAtksOverDurOH(), Rot.GetLandedAtksOverDurOH() / Rot.GetAttemptedAtksOverDurOH(), combatFactors._c_mhItemSpeed, fightDuration);
+                    bersStats += bersOffHand.GetAverageStats(fightDuration / Rot.GetAttemptedAtksOverDurOH(), Rot.GetLandedAtksOverDurOH() / Rot.GetAttemptedAtksOverDurOH(), combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    float f = bersOffHand.GetAverageUptime(fightDuration / Rot.GetAttemptedAtksOverDurOH(), Rot.GetLandedAtksOverDurOH() / Rot.GetAttemptedAtksOverDurOH(), combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                 }
                 float apBonusOtherProcs = (1f + totalBAPM) * (bersStats.AttackPower);
                 bersStats.AttackPower = (apBonusOtherProcs);
@@ -1521,7 +1523,8 @@ These numbers to do not include racial bonuses.",
         private float ApplySpecialEffect(SpecialEffect effect, Character character, Rotation rotation, CombatFactors combatFactors, float avoidedAttacks, ref Stats applyTo)
         {
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
-            float fightDuration = calcOpts.Duration;
+            float fightDuration = calcOpts.SE_UseDur ? calcOpts.Duration : 0;
+            float fightDuration2Pass = calcOpts.SE_UseDur ? fightDuration : 0;
 
             float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
             float attemptedAtkInterval = fightDuration / rotation.GetAttemptedAtksOverDur();
@@ -1541,56 +1544,53 @@ These numbers to do not include racial bonuses.",
                 case Trigger.Use:
                     Stats _stats = new Stats();
                     float upTime;
-                    if (effect.Stats._rawSpecialEffectDataSize == 1)
-                    {
-                        upTime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                    if (effect.Stats._rawSpecialEffectDataSize == 1) {
+                        upTime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                         //float uptime =  (effect.Cooldown / fightDuration);
                         List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
                         nestedEffect.Add(effect.Stats._rawSpecialEffectData[0]);
                         Stats _stats2 = new Stats();
                         ApplySpecialEffect(effect.Stats._rawSpecialEffectData[0], character, rotation, combatFactors, avoidedAttacks, ref _stats2);
                         _stats = _stats2 * upTime;
-                    }
-                    else
-                    {
-                        _stats = effect.GetAverageStats( 0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
-                        upTime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                    } else {
+                        _stats = effect.GetAverageStats( 0f, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                        upTime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     }
                     applyTo += _stats;
                     return upTime;
                 case Trigger.MeleeHit:
                 case Trigger.PhysicalHit:
-                    if (attemptedAtkInterval > 0f) 
-                        applyTo += effect.GetAverageStats( attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration);
-                    return         effect.GetAverageUptime(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration);
+                    if (attemptedAtkInterval > 0f)
+                        applyTo += effect.GetAverageStats(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    return effect.GetAverageUptime(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                 case Trigger.MeleeCrit:
                 case Trigger.PhysicalCrit:
-                    if (attemptedAtkInterval > 0f) 
-                        applyTo += effect.GetAverageStats( attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration);
-                    return         effect.GetAverageUptime(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration);
+                    if (attemptedAtkInterval > 0f)
+                        applyTo += effect.GetAverageStats(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    return effect.GetAverageUptime(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                 case Trigger.DoTTick:
-                    if (bleedHitInterval > 0f) 
-                        applyTo += effect.GetAverageStats( bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend
-                    return         effect.GetAverageUptime(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration); // 1/sec DeepWounds, 1/3sec Rend
+                    if (bleedHitInterval > 0f)
+                        applyTo += effect.GetAverageStats(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); // 1/sec DeepWounds, 1/3sec Rend
+                    return effect.GetAverageUptime(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); // 1/sec DeepWounds, 1/3sec Rend
                 case Trigger.DamageDone: // physical and dots
-                    if (dmgDoneInterval > 0f) 
-                        applyTo += effect.GetAverageStats( dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
-                    return         effect.GetAverageUptime(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                    if (dmgDoneInterval > 0f)
+                        applyTo += effect.GetAverageStats(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    return effect.GetAverageUptime(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                 case Trigger.DamageTaken: // physical and dots
-                    if (dmgTakenInterval > 0f) 
-                        applyTo += effect.GetAverageStats( dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
-                    return         effect.GetAverageUptime(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration);
+                    if (dmgTakenInterval > 0f)
+                        applyTo += effect.GetAverageStats(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    return effect.GetAverageUptime(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                 case Trigger.DamageAvoided: // Boss AoE attacks we manage to avoid
                     // 0.1f need to be replaced with the player's avoidance stats
                     if (dmgTakenInterval > 0f)
-                        applyTo += effect.GetAverageStats( dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration);
-                    return         effect.GetAverageUptime(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration);
+                        applyTo += effect.GetAverageStats(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    return effect.GetAverageUptime(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                 case Trigger.HSorSLHit: // Set bonus handler
                     //Rot._SL_GCDs = Rot._SL_GCDs;
                     //Rot._HS_Acts = Rot._HS_Acts;
                     if (rotation.CritHsSlamOverDur > 0f)
-                        applyTo += effect.GetAverageStats( fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration);
-                    return         effect.GetAverageUptime(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration);
+                        applyTo += effect.GetAverageStats(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    return effect.GetAverageUptime(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
             }
             return 0f;
         }
