@@ -1469,6 +1469,10 @@ These numbers to do not include racial bonuses.",
                         float procArp = StatConversion.GetRatingFromArmorReduction(Char.Level, (int)StatConversion.NPC_ARMOR[83 - Char.Level],
                             originalStats.ArmorPenetration, arpenBuffs, targetReduction);
                         statsProcs.ArmorPenetrationRating += (procArp - originalStats.ArmorPenetrationRating);
+                    } else if (effect.Stats.ManaorEquivRestore > 0f) {
+                        // effect.Duration = 0, so GetAverageStats won't work
+                        float numProcs = effect.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
+                        statsProcs.ManaorEquivRestore += effect.Stats.ManaorEquivRestore * numProcs;
                     } else {
                         ApplySpecialEffect(effect, Char, Rot, combatFactors, originalStats.Dodge + originalStats.Parry, ref statsProcs);
                     }
