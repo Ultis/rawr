@@ -86,8 +86,8 @@ namespace Rawr.DPSWarr
                 for (loopIterator = 0;
                      CalcOpts.FuryStance
                         && loopIterator < 50
-                        && (Math.Abs(newHSActivates - oldHSActivates) > 1f
-                            || Math.Abs(newCLActivates - oldCLActivates) > 1f);
+                        && (Math.Abs(oldHSActivates / newHSActivates - 1f)  > 0.001f
+                            || Math.Abs(oldCLActivates / newCLActivates - 1f) > 0.001f);
                       loopIterator++)
                 {
                     oldHSActivates = HS.Activates;
