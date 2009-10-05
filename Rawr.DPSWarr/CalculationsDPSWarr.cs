@@ -1093,6 +1093,7 @@ These numbers to do not include racial bonuses.",
                     PhysicalCrit = (calcOpts.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f)
                                 // handle boss level difference
                                 + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level],
+                    DamageTakenMultiplier = (calcOpts.FuryStance ? 0.05f : 0f),
                 };
                 Stats statsTalents = new Stats() {
                     // Offensive

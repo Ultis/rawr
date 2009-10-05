@@ -412,13 +412,12 @@ namespace Rawr.DPSWarr {
             get {
                 // Invalidate bad things
                 if (!CalcOpts.AoETargets || CalcOpts.AoETargetsFreq < 1 || CalcOpts.AoETargetsDMG < 1) { return 0f; }
+                float RageMod = 2.5f / 453.3f;
                 float FightDuration = CalcOpts.Duration;
                 float damagePerSec = 0f;
                 float freq = CalcOpts.AoETargetsFreq;
                 float dmg = CalcOpts.AoETargetsDMG * (1f + STATS.DamageTakenMultiplier);
                 float acts = FightDuration / freq;
-                damagePerSec = (acts * dmg) / FightDuration;
-                float RageMod = 2.5f / 453.3f * (CalcOpts.FuryStance ? 1.05f : 1f);
                 // Add Berserker Rage's
                 float zerkerMOD = 1f;
                 if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_]) {
@@ -428,7 +427,10 @@ namespace Rawr.DPSWarr {
                     Stats stats = effect.GetAverageStats(0, 1f, CombatFactors._c_mhItemSpeed, FightDuration);
                     zerkerMOD *= (1f + stats.BonusAgilityMultiplier);
                 }
-                return damagePerSec * FightDuration * RageMod * zerkerMOD;
+                float dmgCap = 100f / (RageMod * zerkerMOD); // Can't get any more rage than 100 at any given time
+                damagePerSec = (acts * (float)Math.Min(dmgCap, dmg)) / FightDuration;
+                
+                return (damagePerSec * RageMod * zerkerMOD) * FightDuration;
             }
         }
         protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
