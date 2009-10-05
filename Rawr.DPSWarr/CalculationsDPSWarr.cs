@@ -700,6 +700,18 @@ These numbers to do not include racial bonuses.",
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
             }
 
+            // Removes the Sunder Armor if you are maintaining it yourself
+            // Also removes Acid Spit and Expose Armor
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_]) {
+                Buff a = Buff.GetBuffByName("Sunder Armor");
+                Buff b = Buff.GetBuffByName("Acid Spit");
+                Buff c = Buff.GetBuffByName("Expose Armor");
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+            }
+
             // Removes the Thunder Clap & Improved Buffs if you are maintaining it yourself
             // Also removes Judgements of the Just, Infected Wounds, Frost Fever, Improved Icy Touch
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
@@ -1311,6 +1323,13 @@ These numbers to do not include racial bonuses.",
                         new Stats() { BossAttackSpeedMultiplier = value * -1f, },
                         Rot.TH.Duration, Rot.TH.Cd + 0.01f, Rot.TH.MHAtkTable.AnyLand);
                     statsTotal.AddSpecialEffect(tc);
+                }
+                if (Rot.SN.Validated) {
+                    float value = 0.04f;
+                    SpecialEffect sn = new SpecialEffect(Trigger.Use,
+                        new Stats() { ArmorPenetration = value, },
+                        Rot.SN.Duration, Rot.SN.Cd + 0.01f, Rot.SN.MHAtkTable.AnyLand, 5);
+                    statsTotal.AddSpecialEffect(sn);
                 }
 
                 float fightDuration = calcOpts.Duration;

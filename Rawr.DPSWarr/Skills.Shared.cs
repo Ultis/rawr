@@ -438,9 +438,9 @@ namespace Rawr.DPSWarr {
                 //
                 InitializeB();
                 //
-                Effect = new SpecialEffect(Trigger.Use,
+                /*Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.04f, },
-                    Duration, Cd, MHAtkTable.Hit, 5);
+                    Duration, Cd, MHAtkTable.Hit, 5);*/
             }
             protected override float ActivatesOverride {
                 get {
