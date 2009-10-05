@@ -4,10 +4,10 @@ using System.Text;
 using System.Reflection;
 using System.ComponentModel;
 using System.Reflection.Emit;
-using System.Xml.Serialization;
 #if RAWR3
 using System.Linq;
 #endif
+using System.Xml.Serialization;
 
 namespace Rawr {
     public enum AdditiveStat : int {
@@ -40,6 +40,7 @@ namespace Rawr {
 		BonusSavageRoarDuration,
         BonusShredDamage,
         BonusStreadyShotCrit,
+        BossAttackPower,
         ExtraSpiritWhileCasting,
         CatFormStrength,
 		ClearcastOnBleedChance,
@@ -755,6 +756,14 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Strength]; }
             set { _rawAdditiveData[(int)AdditiveStat.Strength] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Buffs / Debuffs")]
+        public float BossAttackPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BossAttackPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BossAttackPower] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

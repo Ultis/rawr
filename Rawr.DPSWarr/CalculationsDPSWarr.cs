@@ -487,6 +487,8 @@ These numbers to do not include racial bonuses.",
                 StunDurReduc = stats.StunDurReduc,
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
+                // Target Debuffs
+                BossAttackPower = stats.BossAttackPower,
                 // Procs
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
                 HighestStat = stats.HighestStat,
@@ -564,6 +566,8 @@ These numbers to do not include racial bonuses.",
                 stats.StunDurReduc +
                 stats.SnareRootDurReduc +
                 stats.FearDurReduc +
+                // Target Debuffs
+                stats.BossAttackPower +
                 // Procs
                 stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
@@ -692,6 +696,15 @@ These numbers to do not include racial bonuses.",
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
             {
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+            }
+
+            // Removes the Demoralizing Shout & Improved Buffs if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_]) {
+                Buff a = Buff.GetBuffByName("Demoralizing Shout");
+                Buff b = Buff.GetBuffByName("Improved Demoralizing Shout");
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
             }
 
             // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
@@ -1053,8 +1066,9 @@ These numbers to do not include racial bonuses.",
 
                 float Health2Surv = stats.Health / 100f; line++;
                 float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * 100f;
+                float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
                 calculatedStats.TotalHPS = Rot._HPS_TTL; line++;
-                calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv + DmgTakenMods2Surv) * calcOpts.SurvScale; line++;
+                calculatedStats.Survivability = (calculatedStats.TotalHPS + Health2Surv + DmgTakenMods2Surv + BossAttackPower2Surv) * calcOpts.SurvScale; line++;
                 calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; line++;
 
                 calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed);
@@ -1257,6 +1271,13 @@ These numbers to do not include racial bonuses.",
                         new Stats() { Health = value, },
                         Rot.CS.Duration, Rot.CS.Cd+0.01f);
                     statsTotal.AddSpecialEffect(cs);
+                }
+                if (Rot.DS.Validated) {
+                    float value = (410f * (1f + talents.ImprovedDemoralizingShout * 0.08f));
+                    SpecialEffect ds = new SpecialEffect(Trigger.Use,
+                        new Stats() { BossAttackPower = value * -1f, },
+                        Rot.DS.Duration, Rot.DS.Cd + 0.01f);
+                    statsTotal.AddSpecialEffect(ds);
                 }
                 
                 float fightDuration = calcOpts.Duration;

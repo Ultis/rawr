@@ -512,17 +512,17 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = false;
                 ReqMeleeRange = false;
                 MaxRange = 10f; // In Yards 
-                Duration = 30f;
+                Duration = 30f * (1f + 0.05f * Talents.BoomingVoice);
                 RageCost = 10f - (Talents.FocusedRage * 1f);
                 StanceOkArms = StanceOkFury = true;
                 UseSpellHit = true;
                 //
                 InitializeB();
                 //
-                Effect = new SpecialEffect(Trigger.Use,
-                    new Stats() { /*AttackPower = 411f,*/ }, // needs to be boss debuff
+                /*Effect = new SpecialEffect(Trigger.Use,
+                    new Stats() { /*AttackPower = 411f,*//* }, // needs to be boss debuff
                     Duration, Duration,
-                    MHAtkTable.Hit + MHAtkTable.Crit);
+                    MHAtkTable.Hit + MHAtkTable.Crit);*/
             }
             protected override float ActivatesOverride {
                 get {

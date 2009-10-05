@@ -1047,6 +1047,15 @@ namespace Rawr
             });
             #endregion
 
+            #region Target Attack Power
+            defaultBuffs.Add(new Buff() {
+                Name = "Demoralizing Shout",
+                Group = "Boss Attack Power",
+                Stats = { BossAttackPower = -410f }, // Base Demo Shout
+                Improvements = { new Buff { Name = "Improved Demoralizing Shout", Stats = new Stats() { BossAttackPower = -410f * 0.40f } } } // Fully Talented Demo Shout
+            });
+            #endregion
+
             #region Expose Weakness
             //defaultBuffs.Add(new Buff()
             //{
