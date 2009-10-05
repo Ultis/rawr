@@ -645,6 +645,28 @@ namespace Rawr.Mage
             calculationResult.Mp5Effects = list.ToArray();
         }
 
+        private bool IsRelevantOnUseEffect(SpecialEffect effect)
+        {
+            // check if it is a stacking use effect
+            bool hasStackingEffect = false;
+            foreach (SpecialEffect e in effect.Stats.SpecialEffects())
+            {
+                if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
+                {
+                    if (e.Stats.HasteRating > 0)
+                    {
+                        hasStackingEffect = true;
+                        break;
+                    }
+                }
+            }
+            if (hasStackingEffect)
+            {
+                return true;
+            }
+            return effect.Stats.SpellPower + effect.Stats.HasteRating > 0;
+        }
+
         private void InitializeEffectCooldowns()
         {
             cooldownList = new List<EffectCooldown>();
@@ -876,7 +898,7 @@ namespace Rawr.Mage
                         {
                             foreach (SpecialEffect effect in item.Item.Stats.SpecialEffects())
                             {
-                                if (effect.Trigger == Trigger.Use && effect.Stats.SpellPower + effect.Stats.HasteRating > 0)
+                                if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect))
                                 {
                                     EffectCooldown cooldown = new EffectCooldown();
                                     cooldown.SpecialEffect = effect;
@@ -902,7 +924,7 @@ namespace Rawr.Mage
                         {
                             foreach (SpecialEffect effect in item.Enchant.Stats.SpecialEffects())
                             {
-                                if (effect.Trigger == Trigger.Use)
+                                if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect))
                                 {
                                     EffectCooldown cooldown = new EffectCooldown();
                                     cooldown.SpecialEffect = effect;
