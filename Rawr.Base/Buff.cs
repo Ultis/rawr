@@ -334,7 +334,7 @@ namespace Rawr
                 Group = "Attack Power",
                 Stats = { AttackPower = 550 },
                 Improvements = { 
-					new Buff { Name = "Improved Blessing of Might", Stats = { AttackPower = (float)Math.Floor(550f * 0.25f) } }
+					new Buff { Name = "Improved Blessing of Might", Source = "Ret Paladin", Stats = { AttackPower = (float)Math.Floor(550f * 0.25f) } }
 				}
             });
             #endregion
@@ -452,7 +452,7 @@ namespace Rawr
                 Group = "Health",
                 Stats = { Health = 1330 },
                 Improvements = { 
-					new Buff { Name = "Improved Imp", Stats = { Health = (float)Math.Floor(1330f * 0.30f) } }
+					new Buff { Name = "Improved Imp", Source = "Warlock Imp", Stats = { Health = (float)Math.Floor(1330f * 0.30f) } }
 				}
             });
             defaultBuffs.Add(new Buff
@@ -462,7 +462,7 @@ namespace Rawr
                 Group = "Health",
                 Stats = { Health = 2250 },
                 Improvements = { 
-					new Buff { Name = "Commanding Presence (Health)", Stats = { Health = (float)Math.Floor(2250f * 0.25f) } }
+					new Buff { Name = "Commanding Presence (Health)", Source = "Warrior", Stats = { Health = (float)Math.Floor(2250f * 0.25f) } }
 				}
             });
             #endregion
@@ -696,7 +696,7 @@ namespace Rawr
                 Group = "Stamina",
                 Stats = { Stamina = 165f },
                 Improvements = { 
-					new Buff { Name = "Improved Power Word: Fortitude", Stats = { Stamina = (float)Math.Floor(165f * 0.3f) } } 
+					new Buff { Name = "Improved Power Word: Fortitude", Source = "Priest", Stats = { Stamina = (float)Math.Floor(165f * 0.3f) } } 
 				},
                 ConflictingBuffs = new List<string>(new string[] { "Stamina" }),
             });
@@ -731,7 +731,7 @@ namespace Rawr
                     ShadowResistanceBuff = 54
                 },
 				Improvements = { 
-					new Buff { Name = "Improved Mark of the Wild", Stats = {
+					new Buff { Name = "Improved Mark of the Wild", Source = "Druid", Stats = {
 					BonusArmor = (float)Math.Floor(750f * 0.4f),
 					Strength = (float)Math.Floor(37f * 0.4f),
 					Agility = (float)Math.Floor(37f * 0.4f),
@@ -1051,8 +1051,9 @@ namespace Rawr
             defaultBuffs.Add(new Buff() {
                 Name = "Demoralizing Shout",
                 Group = "Boss Attack Power",
+                Source = "Warrior",
                 Stats = { BossAttackPower = -410f }, // Base Demo Shout
-                Improvements = { new Buff { Name = "Improved Demoralizing Shout", Stats = new Stats() { BossAttackPower = -410f * 0.40f } } } // Fully Talented Demo Shout
+                Improvements = { new Buff { Name = "Improved Demoralizing Shout", Source = "Warrior", Stats = new Stats() { BossAttackPower = -410f * 0.40f } } } // Fully Talented Demo Shout
             });
             #endregion
 
@@ -3787,6 +3788,7 @@ namespace Rawr
             {
                 Name = "Toughness",
                 Group = "Profession Buffs",
+                Source = "Mining [450]",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Stamina = 60f }
             });
@@ -3794,6 +3796,7 @@ namespace Rawr
             {
                 Name = "Master of Anatomy",
                 Group = "Profession Buffs",
+                Source = "Alchemy [450]",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { CritRating = 40f }
             });
