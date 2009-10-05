@@ -177,7 +177,7 @@ namespace Rawr.DPSWarr
         }
 
         #region NewRotation
-        private float bloodsurge_percUsed;  // Since we can only bloodsurge once every
+        /*private float bloodsurge_percUsed;  // Since we can only bloodsurge once every
                                             // 8secs, this keeps track of how many times we
                                             // can actually slam vs refresh an ability
         private float rotationSlipTime = 0f;// for when maint abilities fail
@@ -239,13 +239,13 @@ namespace Rawr.DPSWarr
 
             gcdCounter = 0f; // where we are in the fight
 
-            /************************************************************************
-             * The following code block does two things in one pass:                *
-             * 1) Determines how long it takes to apply initial debuffs (stored in  *
-             *         gcdCounter)                                                  *
-             * 2) Determines how frequently we actually get to bloodsurge based on  *
-             *         free GCDs (stored in bloodsurge_percUsed)                    *
-             ************************************************************************/
+            //////////////////////////////////////////////////////////////////////////
+            // The following code block does two things in one pass:                //
+            // 1) Determines how long it takes to apply initial debuffs (stored in  //
+            //         gcdCounter)                                                  //
+            // 2) Determines how frequently we actually get to bloodsurge based on  //
+            //         free GCDs (stored in bloodsurge_percUsed)                    //
+            //////////////////////////////////////////////////////////////////////////
             Preprocess(SN, 5f);
             Preprocess(TH);
             Preprocess(DS);
@@ -257,6 +257,7 @@ namespace Rawr.DPSWarr
                 bloodsurge_percUsed = Math.Max(bloodsurge_percUsed, 0f);
 
         }
+         */
         #endregion
         public override void MakeRotationandDoDPS(bool setCalcs)
         {
