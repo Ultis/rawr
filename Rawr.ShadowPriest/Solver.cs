@@ -463,6 +463,65 @@ namespace Rawr.ShadowPriest
             return spellWait;
         }
 
+        public float NewGetCastSpell7(float timer, out Spell castSpell)
+        {
+            castSpell = null;
+            float bestWaitTime = 0;
+            float bestScore = float.NegativeInfinity;
+            // evaluate each spell
+            foreach (Spell spell in SpellPriority)
+            {
+                // how long do we have to wait to cast this spell
+                float waitTime = 0;
+                if (spell.DebuffDuration > 0)
+                {
+                    waitTime = spell.SpellStatistics.CooldownReset - spell.CastTime - timer;    // VT, SWP, DP
+                }
+                else if (spell.Cooldown > 0)
+                {
+                    waitTime = spell.SpellStatistics.CooldownReset - timer;                          // MB, SWD
+                }
+                // how long to cast it
+                float castTime = spell.CastTime;
+                if (castTime == 0)
+                {
+                    castTime = spell.GlobalCooldown;
+                }
+                // how much non-dot damage are we doing
+                float damage = 0;
+                if (spell.DebuffDuration == 0)
+                {
+                    damage = spell.AvgDamage;
+                }
+                // discount for delaying the dots
+                foreach (Spell dot in SpellPriority)
+                {
+                    if (dot != spell && dot.DebuffDuration > 0)
+                    {
+                        // we could have started casting this in
+                        float dotWait = dot.SpellStatistics.CooldownReset - dot.CastTime - timer;    // VT, SWP, DP
+                        if (waitTime + castTime > dotWait)
+                        {
+                            // but by casting that other spell we're lowering the uptime for this dot
+                            // we're losing waitTime + castTime - dotWait of dot dps
+                            float damageLost = dot.AvgDamage / dot.DebuffDuration * (waitTime + castTime - dotWait);
+                            damage -= damageLost;
+                        }
+                    }
+                }
+                // normalize for time
+                float score = damage / (waitTime + castTime);
+                // is it better than what we had so far?
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    bestWaitTime = waitTime;
+                    castSpell = spell;
+                }
+            }
+            return bestWaitTime;
+        }
+
         public class SpellInfo
         {
             public Spell Spell { get; protected set; }
