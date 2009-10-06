@@ -450,7 +450,7 @@ These numbers to do not include racial bonuses.",
         internal static bool HidingBadStuff_Spl { get { return _HidingBadStuff_Spl; } set { _HidingBadStuff_Spl = value; } }
         private static bool _HidingBadStuff_PvP = true;
         internal static bool HidingBadStuff_PvP { get { return _HidingBadStuff_PvP; } set { _HidingBadStuff_PvP = value; } }
-        private static bool _HidingBadStuff_Prof = true;
+        private static bool _HidingBadStuff_Prof = false;
         internal static bool HidingBadStuff_Prof { get { return _HidingBadStuff_Prof; } set { _HidingBadStuff_Prof = value; } }
 
         public override Stats GetRelevantStats(Stats stats) {
