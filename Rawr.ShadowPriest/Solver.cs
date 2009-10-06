@@ -465,58 +465,315 @@ namespace Rawr.ShadowPriest
 
         public float NewGetCastSpell7(float timer, out Spell castSpell)
         {
+            // estimates overall dps by estimating impact of collisions
+            // one downside of this particular implementation is that it assumes if
+            // collision is present in this case it'll be present on each cycle
+            // see #9 for alternative
             castSpell = null;
             float bestWaitTime = 0;
             float bestScore = float.NegativeInfinity;
             // evaluate each spell
             foreach (Spell spell in SpellPriority)
             {
-                // how long do we have to wait to cast this spell
-                float waitTime = 0;
-                if (spell.DebuffDuration > 0)
-                {
-                    waitTime = spell.SpellStatistics.CooldownReset - spell.CastTime - timer;    // VT, SWP, DP
-                }
-                else if (spell.Cooldown > 0)
-                {
-                    waitTime = spell.SpellStatistics.CooldownReset - timer;                          // MB, SWD
-                }
                 // how long to cast it
                 float castTime = spell.CastTime;
                 if (castTime == 0)
                 {
                     castTime = spell.GlobalCooldown;
                 }
-                // how much non-dot damage are we doing
-                float damage = 0;
-                if (spell.DebuffDuration == 0)
+                // how long do we have to wait to cast this spell
+                float timeShare = 1;
+                float waitTime = 0;
+                if (spell.DebuffDuration > 0)
                 {
-                    damage = spell.AvgDamage;
+                    waitTime = Math.Max(0, spell.SpellStatistics.CooldownReset - spell.CastTime - timer);    // VT, SWP, DP
+                    timeShare = (waitTime + castTime) / (spell.DebuffDuration);
                 }
-                // discount for delaying the dots
-                foreach (Spell dot in SpellPriority)
+                else if (spell.Cooldown > 0)
                 {
-                    if (dot != spell && dot.DebuffDuration > 0)
+                    waitTime = Math.Max(0, spell.SpellStatistics.CooldownReset - timer);                          // MB, SWD
+                    timeShare = (waitTime + castTime) / (spell.Cooldown + castTime);
+                }
+                // estimate overall dps
+                float dps = 0;
+                float timeShareLeft = 1;
+                foreach (Spell s in SpellPriority)
+                {
+                    float ct = s.CastTime;
+                    float realWait = 0;
+                    if (ct == 0)
                     {
-                        // we could have started casting this in
-                        float dotWait = dot.SpellStatistics.CooldownReset - dot.CastTime - timer;    // VT, SWP, DP
-                        if (waitTime + castTime > dotWait)
-                        {
-                            // but by casting that other spell we're lowering the uptime for this dot
-                            // we're losing waitTime + castTime - dotWait of dot dps
-                            float damageLost = dot.AvgDamage / dot.DebuffDuration * (waitTime + castTime - dotWait);
-                            damage -= damageLost;
-                        }
+                        ct = s.GlobalCooldown;
+                    }
+                    float t = 1;
+                    if (s == spell)
+                    {
+                        t = timeShare;
+                        realWait = waitTime;
+                    }
+                    else if (s.DebuffDuration > 0)
+                    {
+                        float sWait = Math.Max(0, s.SpellStatistics.CooldownReset - s.CastTime - timer);    // VT, SWP, DP
+                        float delay = Math.Max(0, waitTime + castTime - sWait);
+                        t = ct / (s.DebuffDuration + delay);
+                    }
+                    else if (s.Cooldown > 0)
+                    {
+                        float sWait = Math.Max(0, s.SpellStatistics.CooldownReset - timer);    // VT, SWP, DP
+                        float delay = Math.Max(0, waitTime + castTime - sWait);
+                        t = ct / (s.Cooldown + delay + ct);
+                    }
+                    if (t > timeShareLeft)
+                    {
+                        t = timeShareLeft;
+                    }
+                    dps += t * s.AvgDamage / (ct + realWait);
+                    timeShareLeft -= t;
+                    if (timeShareLeft <= 0)
+                    {
+                        break;
                     }
                 }
-                // normalize for time
-                float score = damage / (waitTime + castTime);
                 // is it better than what we had so far?
-                if (score > bestScore)
+                if (dps > bestScore)
                 {
-                    bestScore = score;
+                    bestScore = dps;
                     bestWaitTime = waitTime;
                     castSpell = spell;
+                }
+                if (spell.DebuffDuration == 0 && spell.Cooldown == 0)
+                {
+                    break;
+                }
+            }
+            return bestWaitTime;
+        }
+
+        public float NewGetCastSpell8(float timer, out Spell castSpell)
+        {
+            // this is same as #7, but extended for window > 1
+            // this method only makes sense for windows that are small enough that it is smaller than all debuff durations/cooldowns
+            // otherwise you need to complicate a lot more
+            // NOTE: turns out in practice this is not much smoother than #7, so probably not worth the computational effort
+            castSpell = null;
+            float bestWaitTime = 0;
+            float bestScore = float.NegativeInfinity;
+            int N = 0;
+            for (int i = 0; i < SpellPriority.Count; i++)
+            {
+                Spell spell = SpellPriority[i];
+                if (spell.DebuffDuration == 0 && spell.Cooldown == 0)
+                {
+                    N = i + 1;
+                    break;
+                }
+            }
+            int j;
+            const int window = 2;
+            int[] sequence = new int[window];
+            float[] waitTime = new float[window];
+            float[] timeShare = new float[window];
+            bool[] used = new bool[N];
+            // evaluate each spell
+            do
+            {
+                // is it a valid sequence?
+                bool valid = true;
+                Array.Clear(used, 0, N);
+                for (int i = 0; i < window; i++)
+                {
+                    if (sequence[i] != N - 1 && used[sequence[i]])
+                    {
+                        valid = false;
+                        break;
+                    }
+                    used[sequence[i]] = true;
+                }
+                if (valid)
+                {
+                    // calculate waits and delays on the spells in the window sequence
+                    float miniTimer = timer;
+                    for (int i = 0; i < window; i++)
+                    {
+                        Spell spell = SpellPriority[sequence[i]];
+                        // how long to cast it
+                        float castTime = spell.CastTime;
+                        if (castTime == 0)
+                        {
+                            castTime = spell.GlobalCooldown;
+                        }
+                        // how long do we have to wait to cast this spell
+                        timeShare[i] = 1;
+                        waitTime[i] = 0;
+                        if (spell.DebuffDuration > 0)
+                        {
+                            float minWaitTime = Math.Max(0, spell.SpellStatistics.CooldownReset - spell.CastTime - timer);
+                            float delay = Math.Max(0, miniTimer - timer - minWaitTime);
+                            waitTime[i] = Math.Max(0, spell.SpellStatistics.CooldownReset - spell.CastTime - miniTimer);    // VT, SWP, DP
+                            timeShare[i] = (waitTime[i] + castTime) / (spell.DebuffDuration + delay);
+                        }
+                        else if (spell.Cooldown > 0)
+                        {
+                            float minWaitTime = Math.Max(0, spell.SpellStatistics.CooldownReset - timer);
+                            float delay = Math.Max(0, miniTimer - timer - minWaitTime);
+                            waitTime[i] = Math.Max(0, spell.SpellStatistics.CooldownReset - miniTimer);                          // MB, SWD
+                            timeShare[i] = (waitTime[i] + castTime) / (spell.Cooldown + delay + castTime);
+                        }
+                        miniTimer += castTime + waitTime[i];
+                    }
+                    // estimate overall dps
+                    float dps = 0;
+                    float timeShareLeft = 1;
+                    for (int i = 0; i < N; i++)
+                    {
+                        Spell s = SpellPriority[i];
+                        float ct = s.CastTime;
+                        float realWait = 0;
+                        if (ct == 0)
+                        {
+                            ct = s.GlobalCooldown;
+                        }
+                        float t = 1;
+                        int index = Array.IndexOf(sequence, i);
+                        if (index >= 0)
+                        {
+                            t = timeShare[index];
+                            realWait = waitTime[index];
+                        }
+                        else if (s.DebuffDuration > 0)
+                        {
+                            float sWait = Math.Max(0, s.SpellStatistics.CooldownReset - s.CastTime - timer);    // VT, SWP, DP
+                            float delay = Math.Max(0, miniTimer - timer - sWait);
+                            t = ct / (s.DebuffDuration + delay);
+                        }
+                        else if (s.Cooldown > 0)
+                        {
+                            float sWait = Math.Max(0, s.SpellStatistics.CooldownReset - timer);    // VT, SWP, DP
+                            float delay = Math.Max(0, miniTimer - timer - sWait);
+                            t = ct / (s.Cooldown + delay + ct);
+                        }
+                        if (t > timeShareLeft)
+                        {
+                            t = timeShareLeft;
+                        }
+                        dps += t * s.AvgDamage / (ct + realWait);
+                        timeShareLeft -= t;
+                        if (timeShareLeft <= 0)
+                        {
+                            break;
+                        }
+                    }
+                    // is it better than what we had so far?
+                    if (dps > bestScore)
+                    {
+                        bestScore = dps;
+                        bestWaitTime = waitTime[0];
+                        castSpell = SpellPriority[sequence[0]];
+                    }
+                }
+                // increment spell combination
+                j = window - 1;
+                sequence[j]++;
+                while (sequence[j] >= N)
+                {
+                    sequence[j] = 0;
+                    j--;
+                    if (j < 0)
+                    {
+                        break;
+                    }
+                    sequence[j]++;
+                }
+            } while (j >= 0);
+            return bestWaitTime;
+        }
+
+        public float NewGetCastSpell9(float timer, out Spell castSpell)
+        {
+            castSpell = null;
+            float bestWaitTime = 0;
+            float bestScore = float.NegativeInfinity;
+            // evaluate each spell
+            foreach (Spell spell in SpellPriority)
+            {
+                // how long to cast it
+                float castTime = spell.CastTime;
+                if (castTime == 0)
+                {
+                    castTime = spell.GlobalCooldown;
+                }
+                // how long do we have to wait to cast this spell
+                float timeShare = 1;
+                float waitTime = 0;
+                float repeatInterval = 0;
+                if (spell.DebuffDuration > 0)
+                {
+                    waitTime = Math.Max(0, spell.SpellStatistics.CooldownReset - spell.CastTime - timer);    // VT, SWP, DP
+                    timeShare = (waitTime + castTime) / (spell.DebuffDuration);
+                    repeatInterval = spell.DebuffDuration;
+                }
+                else if (spell.Cooldown > 0)
+                {
+                    waitTime = Math.Max(0, spell.SpellStatistics.CooldownReset - timer);                          // MB, SWD
+                    timeShare = (waitTime + castTime) / (spell.Cooldown + castTime);
+                    repeatInterval = spell.Cooldown + castTime;
+                }
+                // estimate overall dps
+                float dps = 0;
+                float timeShareLeft = 1;
+                foreach (Spell s in SpellPriority)
+                {
+                    float ct = s.CastTime;
+                    float realWait = 0;
+                    if (ct == 0)
+                    {
+                        ct = s.GlobalCooldown;
+                    }
+                    float t = 1;
+                    if (s == spell)
+                    {
+                        t = timeShare;
+                        realWait = waitTime;
+                    }
+                    else if (s.DebuffDuration > 0)
+                    {
+                        float sWait = Math.Max(0, s.SpellStatistics.CooldownReset - s.CastTime - timer);    // VT, SWP, DP
+                        float delay = Math.Max(0, waitTime + castTime - sWait);
+                        // weight the delay by likelihood of collision
+                        // very crude estimate, but helps discount collision of short cooldowns by long cooldowns
+                        float collisionChance = (repeatInterval == 0) ? 1 : Math.Min(1, s.DebuffDuration / repeatInterval);
+                        t = ct / (s.DebuffDuration + collisionChance * delay);
+                    }
+                    else if (s.Cooldown > 0)
+                    {
+                        float sWait = Math.Max(0, s.SpellStatistics.CooldownReset - timer);    // VT, SWP, DP
+                        float delay = Math.Max(0, waitTime + castTime - sWait);
+                        // weight the delay by likelihood of collision
+                        // very crude estimate, but helps discount collision of short cooldowns by long cooldowns
+                        float collisionChance = (repeatInterval == 0) ? 1 : Math.Min(1, (s.Cooldown + ct) / repeatInterval);
+                        t = ct / (s.Cooldown + ct + collisionChance * delay);
+                    }
+                    if (t > timeShareLeft)
+                    {
+                        t = timeShareLeft;
+                    }
+                    dps += t * s.AvgDamage / (ct + realWait);
+                    timeShareLeft -= t;
+                    if (timeShareLeft <= 0)
+                    {
+                        break;
+                    }
+                }
+                // is it better than what we had so far?
+                if (dps > bestScore)
+                {
+                    bestScore = dps;
+                    bestWaitTime = waitTime;
+                    castSpell = spell;
+                }
+                if (spell.DebuffDuration == 0 && spell.Cooldown == 0)
+                {
+                    break;
                 }
             }
             return bestWaitTime;

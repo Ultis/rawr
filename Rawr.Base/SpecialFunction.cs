@@ -1037,9 +1037,9 @@ namespace Rawr
 
         static SpecialFunction()
         {
+#if !SILVERLIGHT
             string cacheName = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "SpecialCache.bin");
 
-#if !SILVERLIGHT
             // TODO reevaluate the situation in Silverlight
             var serializer = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
  
