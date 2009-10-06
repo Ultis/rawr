@@ -78,6 +78,9 @@
     <Compile Include="..\..\Rawr.Elemental\Spells\FrostShock.cs">
       <Link>FrostShock.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\ILightningOverload.cs">
+      <Link>ILightningOverload.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\LavaBurst.cs">
       <Link>LavaBurst.cs</Link>
     </Compile>
