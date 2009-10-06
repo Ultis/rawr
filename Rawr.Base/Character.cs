@@ -551,6 +551,9 @@ namespace Rawr //O O . .
         public bool HandsBlacksmithingSocketEnabled { get; set; }
         public bool WristBlacksmithingSocketEnabled { get; set; }
 
+        public Profession PrimaryProfession = Profession.None;
+        public Profession SecondaryProfession = Profession.None;
+
         [XmlIgnore]
         private Dictionary<CharacterSlot, List<ItemInstance>> _relevantItemInstances = new Dictionary<CharacterSlot, List<ItemInstance>>();
 

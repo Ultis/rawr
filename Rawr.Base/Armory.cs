@@ -34,6 +34,15 @@ namespace Rawr
                 CharacterRace race = (CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
                 CharacterClass charClass = (CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
 
+                XmlNodeList nodes = docCharacter.SelectNodes("page/characterInfo/characterTab/professions/skill");
+                Profession prof1 = Profession.None, prof2 = Profession.None;
+                if(nodes.Count > 0){
+                    prof1 = (Profession)Int32.Parse(nodes[0].Attributes["id"].Value);
+                    if (nodes.Count > 1) { // If there's only one profession, it doesn't have a second node so we don't have to worry about setting a NONE enum
+                        prof2 = (Profession)Int32.Parse(nodes[1].Attributes["id"].Value);
+                    }
+                }
+
 				Dictionary<CharacterSlot, string> items = new Dictionary<CharacterSlot, string>();
 				//Dictionary<CharacterSlot, int> enchants = new Dictionary<CharacterSlot, int>();
 
@@ -167,6 +176,9 @@ namespace Rawr
 					);
                 
                 character.Class = charClass;
+
+                character.PrimaryProfession = prof1;
+                character.SecondaryProfession = prof2;
 
 				XmlNode activeTalentGroup = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm)
 					.SelectSingleNode("page/characterInfo/talents/talentGroup[@active='1']");

@@ -237,4 +237,20 @@ namespace Rawr
         Potions,
         RaidBuffs
     }
+
+    public enum Profession
+    { // values are based upon what the armory returns for those profession id's
+        None=0,
+        Alchemy=171,
+        Enchanting=333,
+        Engineering=202,
+        Herbalism=182,
+        Inscription=773,
+        Jewelcrafting=755,
+        Leatherworking,
+        Skinning=393,
+        Tailoring=197,
+        Blacksmithing=164,
+        Mining=186,
+    }
 }
