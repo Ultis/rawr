@@ -898,7 +898,7 @@ FAQStuff.Add(
         }
         private void CTL_Maints_AfterCheck(object sender, TreeViewEventArgs e) {
             if (!isLoading) {
-                CTL_Maints.AfterCheck -= new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
+                CTL_Maints.AfterCheck -= new TreeViewEventHandler(CTL_Maints_AfterCheck);
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 // Work special changes for the tree
                 switch (e.Node.Text) {
@@ -1171,6 +1171,7 @@ FAQStuff.Add(
                             CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[3].Checked = false;
                             CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[4].Checked = false;
                             CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[5].Checked = false;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[6].Checked = false;
                         }else{
                             CTL_Maints.Nodes[currentNode].Nodes[subNode].Checked = false;
                             CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[0].Checked = false;
@@ -1183,6 +1184,7 @@ FAQStuff.Add(
                             CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[3].Checked = CTL_Maints.Nodes[currentNode].Checked;
                             CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[4].Checked = CTL_Maints.Nodes[currentNode].Checked;
                             CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[5].Checked = CTL_Maints.Nodes[currentNode].Checked;
+                            CTL_Maints.Nodes[currentNode].Nodes[subNode].Nodes[6].Checked = CTL_Maints.Nodes[currentNode].Checked;
                         }
                         CTL_Maints.Nodes[currentNode].Nodes[2].Checked = true;
                         break;
@@ -1293,6 +1295,7 @@ FAQStuff.Add(
                         CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
                         CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
                         CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
+                        CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[6].Checked = CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked;
                         break;
                     }
                     case "Bladestorm": {
@@ -1304,8 +1307,9 @@ FAQStuff.Add(
                             if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
-                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
-                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is TB checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[6].Checked    // is SL checked
                                 ) {
                                 CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
                             }
@@ -1329,8 +1333,9 @@ FAQStuff.Add(
                             if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
-                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
-                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is TB checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[6].Checked    // is SL checked
                                 ) {
                                 CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
                             }
@@ -1354,8 +1359,9 @@ FAQStuff.Add(
                             if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
-                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
-                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is TB checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[6].Checked    // is SL checked
                                 ) {
                                 CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
                             }
@@ -1379,8 +1385,35 @@ FAQStuff.Add(
                             if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
-                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
-                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is TB checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[6].Checked    // is SL checked
+                                ) {
+                                CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
+                            }
+                        }
+                        // Handle the parent's parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[1].Checked) {
+                            CTL_Maints.Nodes[currentNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[0].Checked) {
+                                CTL_Maints.Nodes[currentNode].Checked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case "Taste for Blood": {
+                        int currentNode = 3, currentSubNode = 1;
+                        // Handle the parent
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked) {      // is OP checked
+                            CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
+                        }else{
+                            if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[6].Checked    // is SL checked
                                 ) {
                                 CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
                             }
@@ -1398,14 +1431,15 @@ FAQStuff.Add(
                     case "Sudden Death": {
                         int currentNode = 3, currentSubNode = 1;
                         // Handle the parent
-                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked) {      // is SD checked
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked) {      // is SD checked
                             CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
                         }else{
                             if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is TB checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked && // is BLS checked
-                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked    // is SL checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[6].Checked    // is SL checked
                                 ) {
                                 CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
                             }
@@ -1423,13 +1457,14 @@ FAQStuff.Add(
                     case "Slam": {
                         int currentNode = 3, currentSubNode = 1;
                         // Handle the parent
-                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked) {      // is SL checked
+                        if (CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[6].Checked) {      // is SL checked
                             CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = true;
                         }else{
                             if (!CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[1].Checked && // is MS checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[2].Checked && // is RD checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[3].Checked && // is OP checked
-                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is SD checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[4].Checked && // is TB checked
+                                !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[5].Checked && // is SD checked
                                 !CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Nodes[0].Checked    // is BLS checked
                                 ) {
                                 CTL_Maints.Nodes[currentNode].Nodes[currentSubNode].Checked = false;
@@ -1530,8 +1565,9 @@ FAQStuff.Add(
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_]     = CTL_Maints.Nodes[3].Nodes[1].Nodes[1].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_]             = CTL_Maints.Nodes[3].Nodes[1].Nodes[2].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Overpower_]        = CTL_Maints.Nodes[3].Nodes[1].Nodes[3].Checked;
-            calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SuddenDeath_]      = CTL_Maints.Nodes[3].Nodes[1].Nodes[4].Checked;
-            calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Slam_]             = CTL_Maints.Nodes[3].Nodes[1].Nodes[5].Checked;
+            calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.TasteForBlood_]    = CTL_Maints.Nodes[3].Nodes[1].Nodes[4].Checked;
+            calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SuddenDeath_]      = CTL_Maints.Nodes[3].Nodes[1].Nodes[5].Checked;
+            calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Slam_]             = CTL_Maints.Nodes[3].Nodes[1].Nodes[6].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_]      = CTL_Maints.Nodes[3].Nodes[2].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageDumps__]      = CTL_Maints.Nodes[4].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Cleave_]           = CTL_Maints.Nodes[4].Nodes[0].Checked;
@@ -1571,6 +1607,7 @@ FAQStuff.Add(
                                 true,  // Mortal Strike
                                 true,  // Rend
                                 true,  // Overpower
+                                true,  // Taste for Blood
                                 true,  // Sudden Death
                                 true,  // Slam
                             true,  // <20% Execute Spamming
@@ -1608,8 +1645,9 @@ FAQStuff.Add(
                 CTL_Maints.Nodes[3].Nodes[1].Nodes[1].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_];
                 CTL_Maints.Nodes[3].Nodes[1].Nodes[2].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_];
                 CTL_Maints.Nodes[3].Nodes[1].Nodes[3].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Overpower_];
-                CTL_Maints.Nodes[3].Nodes[1].Nodes[4].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SuddenDeath_];
-                CTL_Maints.Nodes[3].Nodes[1].Nodes[5].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Slam_];
+                CTL_Maints.Nodes[3].Nodes[1].Nodes[4].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.TasteForBlood_];
+                CTL_Maints.Nodes[3].Nodes[1].Nodes[5].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SuddenDeath_];
+                CTL_Maints.Nodes[3].Nodes[1].Nodes[6].Checked   = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Slam_];
                 CTL_Maints.Nodes[3].Nodes[2].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_];
                 CTL_Maints.Nodes[4].Checked                     = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageDumps__];
                 CTL_Maints.Nodes[4].Nodes[0].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Cleave_];
@@ -1623,8 +1661,7 @@ FAQStuff.Add(
         }
         // Latency
         private void CB_Latency_ValueChanged(object sender, EventArgs e) {
-            if (!isLoading)
-            {
+            if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                 calcOpts.Lag = (int)CB_Lag.Value;
                 calcOpts.React = (int)CB_React.Value;

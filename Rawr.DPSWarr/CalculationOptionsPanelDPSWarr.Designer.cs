@@ -66,25 +66,27 @@
             System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Mortal Strike");
             System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Rend");
             System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Overpower");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Sudden Death");
-            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Slam");
-            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Arms", new System.Windows.Forms.TreeNode[] {
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Taste for Blood");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Sudden Death");
+            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Slam");
+            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Arms", new System.Windows.Forms.TreeNode[] {
             treeNode22,
             treeNode23,
             treeNode24,
             treeNode25,
             treeNode26,
-            treeNode27});
-            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("<20% Execute Spamming");
-            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Damage Dealers", new System.Windows.Forms.TreeNode[] {
+            treeNode27,
+            treeNode28});
+            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("<20% Execute Spamming");
+            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Damage Dealers", new System.Windows.Forms.TreeNode[] {
             treeNode21,
-            treeNode28,
-            treeNode29});
-            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Cleave");
-            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Heroic Strike");
-            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Rage Dumps", new System.Windows.Forms.TreeNode[] {
-            treeNode31,
-            treeNode32});
+            treeNode29,
+            treeNode30});
+            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Cleave");
+            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Heroic Strike");
+            System.Windows.Forms.TreeNode treeNode34 = new System.Windows.Forms.TreeNode("Rage Dumps", new System.Windows.Forms.TreeNode[] {
+            treeNode32,
+            treeNode33});
             this.CB_TargLvl = new System.Windows.Forms.ComboBox();
             this.LB_TargLvl = new System.Windows.Forms.Label();
             this.LB_TargArmor = new System.Windows.Forms.Label();
@@ -1319,28 +1321,30 @@
             treeNode24.Text = "Rend";
             treeNode25.Name = "Node21";
             treeNode25.Text = "Overpower";
-            treeNode26.Name = "Node22";
-            treeNode26.Text = "Sudden Death";
-            treeNode27.Name = "Node23";
-            treeNode27.Text = "Slam";
-            treeNode28.Name = "Node3";
-            treeNode28.Text = "Arms";
-            treeNode29.Name = "Node0";
-            treeNode29.Text = "<20% Execute Spamming";
-            treeNode30.Name = "Node4";
-            treeNode30.Text = "Damage Dealers";
-            treeNode31.Name = "Node27";
-            treeNode31.Text = "Cleave";
-            treeNode32.Name = "Node28";
-            treeNode32.Text = "Heroic Strike";
-            treeNode33.Name = "Node5";
-            treeNode33.Text = "Rage Dumps";
+            treeNode26.Name = "Node1";
+            treeNode26.Text = "Taste for Blood";
+            treeNode27.Name = "Node22";
+            treeNode27.Text = "Sudden Death";
+            treeNode28.Name = "Node23";
+            treeNode28.Text = "Slam";
+            treeNode29.Name = "Node3";
+            treeNode29.Text = "Arms";
+            treeNode30.Name = "Node0";
+            treeNode30.Text = "<20% Execute Spamming";
+            treeNode31.Name = "Node4";
+            treeNode31.Text = "Damage Dealers";
+            treeNode32.Name = "Node27";
+            treeNode32.Text = "Cleave";
+            treeNode33.Name = "Node28";
+            treeNode33.Text = "Heroic Strike";
+            treeNode34.Name = "Node5";
+            treeNode34.Text = "Rage Dumps";
             this.CTL_Maints.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode3,
             treeNode11,
             treeNode17,
-            treeNode30,
-            treeNode33});
+            treeNode31,
+            treeNode34});
             this.CTL_Maints.Size = new System.Drawing.Size(291, 547);
             this.CTL_Maints.TabIndex = 1;
             this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);

@@ -171,7 +171,7 @@ namespace Rawr.DPSWarr {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
                 //
                 Name = "Taste for Blood";
-                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
+                AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.TasteForBlood_;
                 ReqTalent = true;
                 Talent2ChksValue = Talents.TasteForBlood;
                 ReqMeleeWeap = true;

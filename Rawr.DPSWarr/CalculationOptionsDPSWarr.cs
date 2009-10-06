@@ -62,6 +62,7 @@ namespace Rawr.DPSWarr {
                     true,  // Mortal Strike
                     true,  // Rend
                     true,  // Overpower
+                    true,  // Taste for Blood
                     true,  // Sudden Death
                     true,  // Slam
                 true,  // <20% Execute Spamming
@@ -97,6 +98,7 @@ namespace Rawr.DPSWarr {
                     MortalStrike_,
                     Rend_,
                     Overpower_,
+                    TasteForBlood_,
                     SuddenDeath_,
                     Slam_,
                 ExecuteSpam_,
