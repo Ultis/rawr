@@ -1862,7 +1862,7 @@ namespace Rawr
 				ToString(); //Breakpoint Here
 
 				List<int> ids = new List<int>();
-				System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("http://www.wowhead.com/?latest=additions");
+				System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create("http://www.wowhead.com/?latest-additions");
 				Stream responseStream = request.GetResponse().GetResponseStream();
 				StreamReader reader = new StreamReader(responseStream);
 				string items32 = reader.ReadToEnd();
