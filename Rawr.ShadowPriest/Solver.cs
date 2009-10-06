@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+//using System.Diagnostics;
 
 namespace Rawr.ShadowPriest
 {
@@ -98,11 +99,7 @@ namespace Rawr.ShadowPriest
                     else if (se.Trigger == Trigger.DamageSpellCast
                         || se.Trigger == Trigger.SpellCast)
                     {
-                        /*if (se.Stats.HasteRating > 0)
-                        {
-                            Twinkets += se.GetAverageStats(2f, 1f);
-                        }
-                        else*/ if (se.Stats.HighestStat > 0)
+                        if (se.Stats.HighestStat > 0)
                         {
                             float greatnessProc = se.GetAverageStats(2f, 1f).HighestStat;
                             if (playerStats.Spirit > playerStats.Intellect)
@@ -114,32 +111,6 @@ namespace Rawr.ShadowPriest
                 }
             }
 
-            #region old
-            /*
-            if (playerStats.SpellPowerFor15SecOnUse90Sec > 0.0f)
-                Twinkets.SpellPower += playerStats.SpellPowerFor15SecOnUse90Sec * 15f / 90f;
-            if (playerStats.SpellPowerFor15SecOnUse2Min > 0.0f)
-                Twinkets.SpellPower += playerStats.SpellPowerFor15SecOnUse2Min * 15f / 120f;
-            if (playerStats.SpellPowerFor20SecOnUse2Min > 0.0f)
-                Twinkets.SpellPower += playerStats.SpellPowerFor20SecOnUse2Min * 20f / 120f;
-            if (playerStats.HasteRatingFor20SecOnUse2Min > 0.0f)
-                Twinkets.HasteRating += playerStats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
-            if (playerStats.HasteRatingFor20SecOnUse5Min > 0.0f)
-                Twinkets.HasteRating += playerStats.HasteRatingFor20SecOnUse5Min * 20f / 300f;
-            if (playerStats.SpellHasteFor10SecOnCast_10_45 > 0.0f)
-                // HACK FOR EMBRACE OF THE SPIDER. I HATE HASTE.
-                Twinkets.HasteRating += playerStats.SpellHasteFor10SecOnCast_10_45 * 10f / 75f;
-            // This is a very very wrong way of adding haste from Trinkets, due to the multiplicative nature of Haste.
-            Twinkets.SpellHaste += StatConversion.GetSpellHasteFromRating(Twinkets.HasteRating);
-             */
-            #endregion
-            /*
-            if (Twinkets.HasteRating > 0)
-            {
-                playerStats.SpellHaste -= StatConversion.GetSpellHasteFromRating(playerStats.HasteRating);
-                playerStats.SpellHaste += StatConversion.GetSpellHasteFromRating(playerStats.HasteRating + Twinkets.HasteRating);
-            }
-            */
             Twinkets.Spirit = (float)Math.Round(Twinkets.Spirit * (1 + playerStats.BonusSpiritMultiplier));
             Twinkets.Intellect = (float)Math.Round(Twinkets.Intellect * (1 + playerStats.BonusIntellectMultiplier));
             Twinkets.SpellPower += (float)Math.Round(Twinkets.Spirit * playerStats.SpellDamageFromSpiritPercentage);
@@ -192,7 +163,6 @@ namespace Rawr.ShadowPriest
                 if (spell.SpellStatistics.CooldownReset <= timer)
                     return spell;
                 if (spell.SpellStatistics.CooldownReset > 0 
-                    //&& (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < 2))// spell.GlobalCooldown))
                     && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < spell.GlobalCooldown * 0.2f))
                     return null;
                 if (spell.SpellStatistics.CooldownReset <= timer)
@@ -201,6 +171,31 @@ namespace Rawr.ShadowPriest
             return null;
         }
 
+        public float OldGetCastSpell(float timer, out Spell castSpell)
+        {   // FIXME: Rewrite this freaking crappy shit.
+            castSpell = null;
+            foreach (Spell spell in SpellPriority)
+            {
+                castSpell = spell;
+                if ((spell.DebuffDuration > 0) && (spell.CastTime > 0) && (spell.SpellStatistics.CooldownReset < (spell.CastTime + timer)))
+                    return 0;   // Special case for dots that have cast time (Holy Fire / Vampiric Touch)
+                //if (spell.SpellStatistics.CooldownReset <= timer && spell.Cooldown > 0)
+                if (spell.SpellStatistics.CooldownReset <= timer)
+                    return 0;
+                if (spell.SpellStatistics.CooldownReset > 0)
+                {
+                    float nextCast = spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer;
+                    if (nextCast < spell.GlobalCooldown * 0.2f)
+                        return nextCast;
+                }
+                if (spell.SpellStatistics.CooldownReset <= timer)
+                    return 0;
+            }
+            castSpell = null;
+            return 0;
+        }
+
+        
         public Spell NewGetCastSpell(float timer)
         {
             float[] nextRelativeCastTime = new float[SpellPriority.Count];
@@ -285,7 +280,241 @@ namespace Rawr.ShadowPriest
         protected MindBlast MB { get; set; }
         protected DevouringPlague DP { get; set; }
         protected bool bPnS { get; set; }
-        
+
+/*        public Spell GetCastSpell(float timer)
+        {   // FIXME: Rewrite this freaking crappy shit.
+            foreach (Spell spell in SpellPriority)
+            {
+                if ((spell.DebuffDuration > 0) && (spell.CastTime > 0) && (spell.SpellStatistics.CooldownReset < (spell.CastTime + timer)))
+                    return spell;   // Special case for dots that have cast time (Holy Fire / Vampiric Touch)
+                //if (spell.SpellStatistics.CooldownReset <= timer && spell.Cooldown > 0)
+                if (spell.SpellStatistics.CooldownReset <= timer)
+                    return spell;
+                if (spell.SpellStatistics.CooldownReset > 0
+                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < spell.GlobalCooldown * 0.2f))
+                    return null;
+                if (spell.SpellStatistics.CooldownReset <= timer)
+                    return spell;
+            }
+            return null;
+        }*/
+
+        public Spell NewGetCastSpell2(float timer)
+        {
+            bool bDoFlay = true;
+            foreach (Spell spell in SpellPriority)
+            {
+                if (spell == MF)
+                    break;
+                if ((spell.DebuffDuration > 0) && (spell.CastTime > 0) && (spell.SpellStatistics.CooldownReset < (spell.CastTime + timer)))
+                    return spell; // For Vampiric Touch, when VT is at or over time to cast
+                if (spell.SpellStatistics.CooldownReset <= timer)
+                    return spell; // For SWP, DP, MB
+                // This is where we gotta check if MF is better than waiting.
+                float needToBeCast = (spell.DebuffDuration > 0) ? 
+                    (spell.SpellStatistics.CooldownReset - spell.CastTime - timer) : // SWP, DP, VT
+                    spell.SpellStatistics.CooldownReset - timer;      // MB, SWD
+                if (needToBeCast < MF.CastTime)
+                {
+                    // Calculate how much DPS we lose by doing absolutely nothing
+                    float DPSLossDoNothing = spell.DpS * needToBeCast;
+                    float DPSLossDoFillerTime = MF.CastTime - needToBeCast;
+                    // Calculate how much DPS we gain by doing Mind Flay instead, postponing this spell
+                    float DPSLossDoFiller = MF.DpS * DPSLossDoFillerTime - spell.DpS * DPSLossDoFillerTime;
+                    // If we lose less DPS by doing nothing than doing a Mind Flay, then.. don't Mind Flay.
+                    if (DPSLossDoNothing < DPSLossDoFiller)
+                        bDoFlay = false;
+                }
+            }
+            if (bDoFlay)
+                return MF;
+            else
+                return null;
+        }
+
+        public float NewGetCastSpell3(float timer, out Spell castSpell)
+        {
+            castSpell = null;
+            foreach (Spell spell in SpellPriority)
+                if (spell.DebuffDuration == 0 && spell.Cooldown == 0)
+                {
+                    castSpell = spell;
+                    break;
+                }
+
+            int idx = SpellPriority.IndexOf(castSpell);
+            float spellDelay = 0f;
+
+            for (int x = idx - 1; x >= 0; x--)
+            {
+                Spell thisSpell = SpellPriority[x];
+                if ((thisSpell.DebuffDuration > 0) &&
+                    (thisSpell.CastTime > 0) &&
+                    (thisSpell.SpellStatistics.CooldownReset < (thisSpell.CastTime + timer)))
+                    castSpell = thisSpell;
+                else if (thisSpell.SpellStatistics.CooldownReset <= timer)
+                    castSpell = thisSpell;
+                else
+                {
+                    float nextTimeToCastThis = (thisSpell.DebuffDuration > 0) ?
+                        (thisSpell.SpellStatistics.CooldownReset - thisSpell.CastTime - timer) :    // VT, SWP, DP
+                        (thisSpell.SpellStatistics.CooldownReset - timer);                          // MB, SWD
+                    
+                    if (nextTimeToCastThis < MF.CastTime)
+                    {
+                        float completeTimeNext = (castSpell.CastTime > 0) ?
+                            (castSpell.CastTime) :                                              // VT, MB, MF
+                            (castSpell.GlobalCooldown)                                          // SWP, DP, SWD
+                            + castSpell.SpellStatistics.CooldownReset;
+                        float DPSLossDoNothing = castSpell.DpS * (float)Math.Max(castSpell.GlobalCooldown, nextTimeToCastThis);
+                        float DPSLossNextSpellTime = completeTimeNext - nextTimeToCastThis;
+                        float DPSLossDoNext = castSpell.DpS * DPSLossNextSpellTime - thisSpell.DpS * DPSLossNextSpellTime;
+                        if (DPSLossDoNothing < DPSLossDoNext)
+                        {
+                            spellDelay = nextTimeToCastThis;
+                            castSpell = thisSpell;
+                        }
+                    }
+                }
+            }
+
+            return spellDelay;
+        }
+
+        public float NewGetCastSpell4(float timer, out Spell castSpell)
+        {
+            float spellWait = 0f;
+            castSpell = null;
+            foreach (Spell spell in SpellPriority)
+                if (spell.DebuffDuration == 0 && spell.Cooldown == 0)
+                {
+                    castSpell = spell;
+                    break;  // We just found us a filler.
+                }
+
+            int idx = SpellPriority.IndexOf(castSpell);
+            float score = castSpell.GlobalCooldown;
+            for (int x = 0; x < idx; x++)
+            {
+                Spell thisSpell = SpellPriority[x];
+
+                float nextCast = 0f;
+                if (thisSpell.DebuffDuration > 0)   // VT, SWP, DP
+                    nextCast = thisSpell.SpellStatistics.CooldownReset - thisSpell.CastTime - timer;
+                else if (thisSpell.Cooldown > 0)    // SWD, MB
+                    nextCast = thisSpell.SpellStatistics.CooldownReset - timer;
+
+                if (nextCast <= 0)
+                {
+                    castSpell = thisSpell;
+                    return 0f;
+                }
+                else if (nextCast >= castSpell.CastTime)
+                    continue;
+
+                if (nextCast < score)
+                {
+                    castSpell = thisSpell;
+                    score = nextCast;
+                    spellWait = (float)Math.Max(0f, nextCast);
+                }
+            }
+            return spellWait;
+        }
+
+        public float NewGetCastSpell5(float timer, out Spell castSpell)
+        {
+            castSpell = null;
+            float castDpC = 0f;
+            float spellWait = 0f;
+            foreach (Spell spell in SpellPriority)
+            {
+                float intervalTime = 0, wait = 0;
+                if (spell.DebuffDuration > 0)   // SWP, VT, DP
+                {
+                    intervalTime = spell.DebuffDuration;
+                    wait = spell.SpellStatistics.CooldownReset - timer - spell.CastTime;
+                }
+                else if (spell.Cooldown > 0)
+                {
+                    if (spell.CastTime > 0)  // MB
+                        intervalTime = spell.Cooldown + spell.CastTime;
+                    else // SWD
+                        intervalTime = spell.Cooldown;
+                    wait = spell.SpellStatistics.CooldownReset - timer;                    
+                }
+                else // Mind Flay
+                    intervalTime = spell.CastTime;
+
+
+                float damagePerCooldown = spell.AvgDamage / intervalTime;
+                
+                if (castSpell == null)
+                {
+                    castSpell = spell;
+                    spellWait = wait;
+                    castDpC = damagePerCooldown;
+                }
+                else
+                {
+
+                }             
+            }
+            return spellWait;
+        }
+
+        public class SpellInfo
+        {
+            public Spell Spell { get; protected set; }
+            public float NextCast { get; protected set; }
+            public SpellInfo(Spell spell, float timer)
+            {
+                Spell = spell;
+                if (Spell.DebuffDuration > 0)
+                    NextCast = Spell.SpellStatistics.CooldownReset - spell.CastTime - timer;
+                else
+                    NextCast = spell.SpellStatistics.CooldownReset - timer;
+            }
+        }
+
+        public float NewGetCastSpell6(float timer, out Spell castSpell)
+        {
+            castSpell = null;
+            float wait = 0f;
+            List<SpellInfo> spellList = new List<SpellInfo>();
+
+            foreach (Spell spell in SpellPriority)
+            {
+                if (spell.DebuffDuration > 0 || spell.Cooldown > 0)
+                    spellList.Add(new SpellInfo(spell, timer));
+                else
+                {
+                    castSpell = spell;
+                    break;
+                }
+            }
+
+            foreach (SpellInfo si in spellList)
+            {
+                if (si.NextCast > castSpell.CastTime)
+                {
+                    spellList.Remove(si);
+                    continue;
+                }
+                else if (si.NextCast <= 0)
+                {
+                    castSpell = si.Spell;
+                    return 0f;
+                }
+                else
+                {
+
+                }
+            }
+
+            return wait;
+        }
+
         public solverShadow(Stats BasicStats, Character character)
             : base(BasicStats, character)
         {
@@ -368,15 +597,20 @@ namespace Rawr.ShadowPriest
             #region Pass 1: Create the cast sequence
             bool CleanBreak = false;
             float timeSequenceReset = 0f;
-            while (timer < (60f * 60f)) // Instead of  CalculationOptions.FightLength, try to use a 60 minute fight.
+            //Debug.Write(string.Format("\r\n\r\n----\r\nHaste: {0}, HasteRating: {1}", PlayerStats.SpellHaste.ToString("0.00"), PlayerStats.HasteRating));
+            while (timer < (60f * CalculationOptions.FightLength))
             {
                 if (hasteProcTimer > 0 && hasteProcTimer < timer)
                 {
                     hasteProcTimer = 0f;
                     RecalculateHaste(simStats, 0f);
                 }
-
-                Spell spell = GetCastSpell(timer);
+                Spell spell = null;
+                float castWait = OldGetCastSpell(timer, out spell);
+                //if (castWait > 0)
+                //    Debug.Write(string.Format("\r\n{0} : Wait {1}", timer.ToString("0.00"), castWait.ToString("0.00")));
+                timer += castWait;
+                //Debug.Write(string.Format("\r\n{0} : {1}", timer.ToString("0.00"), spell.Name));
                 if (spell == null)
                 {
                     timer += 0.1f;
@@ -476,26 +710,6 @@ namespace Rawr.ShadowPriest
                         simStats.SpellPower += se.GetAverageStats(1f / CastsPerSecond, simStats.SpellCrit, 0f, CalculationOptions.FightLength * 60).SpellPower;
                 }
             }
-            #region old
-                /*
-            // HASTE IS NOT REEVALUATED SO DONT EVEN TRY.
-            if (simStats.SpellPowerFor10SecOnHit_10_45 > 0)
-            {   // These have 10% Proc Chance (Sundial of the Exiled)
-                float ProcChance = 0.1f;
-//                float ProcCumulative = 1f / ProcChance / HitsPerSecond; // This is how many seconds you need if chance would be cumulative.
-                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
-                float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / HitsPerSecond / ProcActual; 
-                simStats.SpellPower += simStats.SpellPowerFor10SecOnHit_10_45 * 10f / EffCooldown;
-            }
-            if (simStats.SpellPowerFor10SecOnCast_15_45 > 0)
-            {   // 15% Proc Chance (Dying Curse)
-                float ProcChance = 0.15f;
-                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
-                float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / CastsPerSecond / ProcActual;
-                simStats.SpellPower += simStats.SpellPowerFor10SecOnCast_15_45 * 10f / EffCooldown;
-            }
-                 */
-            #endregion
             #endregion
 
             #region Pass 3: Redo Stats for all spells
@@ -829,32 +1043,20 @@ namespace Rawr.ShadowPriest
             ssi = new SolverInfo(new solverShadow(BasicStats, character), 0f, 0f);
             SSInfo.Add(ssi);
             Name = ssi.Solver.Name;
-            if (character.Race == CharacterRace.Troll)
-            {
-                Stats statsBerserking = BasicStats.Clone();
-                statsBerserking.SpellHaste = 1.2f * (1f + statsBerserking.SpellHaste) - 1f;
-                ssi = new SolverInfo(new solverShadow(statsBerserking, character), 10f, 180f);
-                SSInfo.Add(ssi);
-            }
-            if (BasicStats.Bloodlust > 0)
-            {
-                Stats statsBloodlust = BasicStats.Clone();
-                statsBloodlust.SpellHaste = (1f + statsBloodlust.Bloodlust) * (1f + statsBloodlust.SpellHaste) - 1f;
-                ssi = new SolverInfo(new solverShadow(statsBloodlust, character), 40f, 600f);
-                SSInfo.Add(ssi);
-            }
 
+            // Create an additional solver for each additional haste effect.
             foreach (SpecialEffect se in BasicStats.SpecialEffects())
             {
-                if (se.Stats.HasteRating > 0)
+                if (se.Stats.HasteRating > 0 || se.Stats.SpellHaste > 0)
                 {
                     if (se.Trigger == Trigger.Use)
-                    {
+                    {   // Heroism, Glove Enchants, Troll Racial + other Use trinkets.
                         Stats statsHasteUse = BasicStats.Clone();
                         statsHasteUse.HasteRating += se.Stats.HasteRating;
                         statsHasteUse.SpellHaste = (1f + statsHasteUse.SpellHaste)
                             / (1f + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating))
                             * (1f + StatConversion.GetSpellHasteFromRating(statsHasteUse.HasteRating))
+                            * (1f + se.Stats.SpellHaste)
                             - 1f;
                         ssi = new SolverInfo(new solverShadow(statsHasteUse, character), se.Duration, se.Cooldown);
                         SSInfo.Add(ssi);
@@ -863,12 +1065,13 @@ namespace Rawr.ShadowPriest
                         se.Trigger == Trigger.SpellHit ||
                         se.Trigger == Trigger.DamageSpellCast ||
                         se.Trigger == Trigger.DamageSpellHit)
-                    {
+                    {   // Procs.
                         Stats statsHasteProc = BasicStats.Clone();
                         statsHasteProc.HasteRating += se.Stats.HasteRating;
                         statsHasteProc.SpellHaste = (1f + statsHasteProc.SpellHaste)
                             / (1f + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating))
                             * (1f + StatConversion.GetSpellHasteFromRating(statsHasteProc.HasteRating))                            
+                            * (1f + se.Stats.SpellHaste)
                             - 1f;
                         float cooldown = se.Cooldown;
                         if (cooldown >= 44f)
@@ -880,7 +1083,6 @@ namespace Rawr.ShadowPriest
                     }
                 }
             }
-
         }
 
         public override void Calculate(CharacterCalculationsShadowPriest calculatedStats)
@@ -907,6 +1109,11 @@ namespace Rawr.ShadowPriest
             SustainDPS += SSInfo[0].Solver.SustainDPS * normalUptime;
 
             SpellSimulation = SSInfo[0].Solver.SpellSimulation;
+//            Debug.Write(string.Format("\r\n\r\nDPS: {0}, Casts: {1}", DPS, SpellSimulation.Count));
+//            foreach (Spell spell in SpellSimulation)
+//                Debug.Write(string.Format("\r\n- {0}", spell.Name));
+//            Debug.Write("\r\n-------------------");
+
             SpellPriority = SSInfo[0].Solver.SpellPriority;
             Rotation = SSInfo[0].Solver.Rotation;
 

@@ -760,7 +760,6 @@ namespace Rawr.ShadowPriest
                 //BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,    // Apparently no longer workie.
                 PriestInnerFire = stats.PriestInnerFire,
                 MovementSpeed = stats.MovementSpeed,
-                Bloodlust = stats.Bloodlust,
                 SWPDurationIncrease = stats.SWPDurationIncrease,
                 BonusMindBlastMultiplier = stats.BonusMindBlastMultiplier,
                 MindBlastCostReduction = stats.MindBlastCostReduction,
@@ -844,7 +843,6 @@ namespace Rawr.ShadowPriest
                 + stats.BonusShadowDamageMultiplier + stats.BonusHolyDamageMultiplier
                 // + stats.BonusDiseaseDamageMultiplier     // No longer workie.
                 + stats.PriestInnerFire + stats.MovementSpeed
-                + stats.Bloodlust
 
                 + stats.SWPDurationIncrease + stats.BonusMindBlastMultiplier
                 + stats.MindBlastCostReduction + stats.ShadowWordDeathCritIncrease
