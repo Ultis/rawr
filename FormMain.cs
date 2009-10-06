@@ -2004,6 +2004,8 @@ namespace Rawr
 			}
             character.AvailableItems.AddRange(reload.AvailableItems);
             character.AssignAllTalentsFromCharacter(reload, false);
+            character.PrimaryProfession = reload.PrimaryProfession;
+            character.SecondaryProfession = reload.SecondaryProfession;
 			character.IsLoading = false;
 			character.OnCalculationsInvalidated();
         }
