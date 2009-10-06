@@ -795,8 +795,8 @@ namespace Rawr.DPSWarr {
                 float execSpace = LatentGCD * (atleast1 + atleast2 + atleast3) / MS.Cd;
                 float attemptspersec = execSpace / LatentGCD * (1f - 0f/*AB81 rage slip*/);
                 if (false) {
-                    acts = attemptspersec * FightDuration;
-                    acts *= (1f - TotalPercTimeLost) * (1f - PercTimeUnder20);
+                    //acts = attemptspersec * FightDuration;
+                    //acts *= (1f - TotalPercTimeLost) * (1f - PercTimeUnder20);
                 } else {
                     acts = (float)Math.Min(availGCDs, SD.GetActivates(GetAttemptedAtksOverDur()) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                 }

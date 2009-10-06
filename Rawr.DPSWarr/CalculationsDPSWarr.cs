@@ -450,6 +450,8 @@ These numbers to do not include racial bonuses.",
         internal static bool HidingBadStuff_Spl { get { return _HidingBadStuff_Spl; } set { _HidingBadStuff_Spl = value; } }
         private static bool _HidingBadStuff_PvP = true;
         internal static bool HidingBadStuff_PvP { get { return _HidingBadStuff_PvP; } set { _HidingBadStuff_PvP = value; } }
+        private static bool _HidingBadStuff_Prof = true;
+        internal static bool HidingBadStuff_Prof { get { return _HidingBadStuff_Prof; } set { _HidingBadStuff_Prof = value; } }
 
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats() {
@@ -676,7 +678,67 @@ These numbers to do not include racial bonuses.",
             return retVal;
         }
 
-        public override bool IsEnchantRelevant(Enchant enchant) { return HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)); }
+        private static Character cacheChar = null;
+        public bool CheckHasProf(Profession p) {
+            if (cacheChar == null) { return false; }
+            if (cacheChar.PrimaryProfession == p
+                || cacheChar.SecondaryProfession == p)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public override bool IsEnchantRelevant(Enchant enchant) {
+            //bool test = base.IsEnchantRelevant(enchant);
+            string name = enchant.Name;
+            if (name.Contains("Rune of the Fallen Crusader")) {
+                return false; // Bad DK Enchant, Bad!
+            }else if(HidingBadStuff_Prof){
+                if      (!CheckHasProf(Profession.Enchanting)){
+                    if (enchant.Slot == ItemSlot.Finger &&
+                        (name.Contains("Assault" ) ||
+                         name.Contains("Stats"   ) ||
+                         name.Contains("Striking") ||
+                         name.Contains("Stamina" ))
+                        )
+                    {
+                        return false;
+                    }
+                }
+                if(!CheckHasProf(Profession.Engineering)){
+                    if (name.Contains("Mind Amplification Dish")
+                        || name.Contains("Flexweave Underlay")
+                        || name.Contains("Hyperspeed Accelerators")
+                        || name.Contains("Reticulated Armor Webbing")
+                        || name.Contains("Nitro Boosts"))
+                    {
+                        return false;
+                    }
+                }
+                if(!CheckHasProf(Profession.Inscription)){
+                    if (name.Contains("Master's")
+                        || name.Contains("Inscription of Triumph"))
+                    {
+                        return false;
+                    }
+                }
+                if(!CheckHasProf(Profession.Leatherworking)){
+                    if (name.Contains("Fur Lining - Attack Power")
+                        || name.Contains("Fur Lining - Stamina"))
+                    {
+                        return false;
+                    }
+                }
+                if(!CheckHasProf(Profession.Tailoring)){
+                    if (name.Contains("Swordguard Embroidery"))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats));
+        }
 
         public Stats GetBuffsStats(Character character) {
             CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -1126,6 +1188,7 @@ These numbers to do not include racial bonuses.",
 
         private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType) {
             try {
+                cacheChar = character;
                 CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
                 WarriorTalents talents = character.WarriorTalents;
 

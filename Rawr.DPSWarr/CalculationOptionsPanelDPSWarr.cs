@@ -327,9 +327,12 @@ FAQStuff.Add(
                 CB_React.Value = (int)calcOpts.React; line = 40;
                 // Special Effects Special Option
                 CK_SE_UseDur.Checked = calcOpts.SE_UseDur;
-                // Bloodlust
-                CK_Bloodlust.Checked = calcOpts.BL_Use;
-                NUD_Bloodlust.Value = calcOpts.BL_Count;
+                // Hiding Enchants based on Profession
+                CK_HideProfEnchants.Checked = calcOpts.HideProfEnchants;
+                CB_Prof1.Enabled = CK_HideProfEnchants.Checked;
+                CB_Prof2.Enabled = CK_HideProfEnchants.Checked;
+                CB_Prof1.Text = ProfessionToString(Character.PrimaryProfession);
+                CB_Prof2.Text = ProfessionToString(Character.SecondaryProfession);
                 //
                 calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
                 RB_StanceFury.Checked = calcOpts.FuryStance;
@@ -1644,20 +1647,59 @@ FAQStuff.Add(
                 Character.OnCalculationsInvalidated();
             }
         }
-        // Bloodlust, Check says if it's used, Value says how many times in the fight
-        private void CK_Bloodlust_CheckedChanged(object sender, EventArgs e) {
+        // Hiding Enchants based on Profession
+        private void CK_HideProfEnchants_CheckedChanged(object sender, EventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.BL_Use = CK_Bloodlust.Checked;
+                bool Checked = CK_HideProfEnchants.Checked;
+                calcOpts.HideProfEnchants = Checked;
+                CalculationsDPSWarr.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
+                CB_Prof1.Enabled = Checked;
+                CB_Prof2.Enabled = Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
-        private void NUD_Bloodlust_ValueChanged(object sender, EventArgs e) {
+        private void CB_Prof1_SelectedIndexChanged(object sender, EventArgs e) {
             if (!isLoading) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.BL_Count = (int)NUD_Bloodlust.Value;
+                Character.PrimaryProfession = StringToProfession(CB_Prof1.Text);
                 Character.OnCalculationsInvalidated();
             }
+        }
+        private void CB_Prof2_SelectedIndexChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                Character.SecondaryProfession = StringToProfession(CB_Prof2.Text);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        public Profession StringToProfession(string s) {
+            Profession                        p = Profession.None;
+            if      (s == "Alchemy"       ) { p = Profession.Alchemy;
+            }else if(s == "Blacksmithing" ) { p = Profession.Blacksmithing;
+            }else if(s == "Enchanting"    ) { p = Profession.Enchanting;
+            }else if(s == "Engineering"   ) { p = Profession.Engineering;
+            }else if(s == "Herbalism"     ) { p = Profession.Herbalism;
+            }else if(s == "Inscription"   ) { p = Profession.Inscription;
+            }else if(s == "Jewelcrafting" ) { p = Profession.Jewelcrafting;
+            }else if(s == "Leatherworking") { p = Profession.Leatherworking;
+            }else if(s == "Mining"        ) { p = Profession.Mining;
+            }else if(s == "Skinning"      ) { p = Profession.Skinning;
+            }else if(s == "Tailoring"     ) { p = Profession.Tailoring; }
+            return p;
+        }
+        public string ProfessionToString(Profession p) {
+            string                                     s = "None";
+            if      (p == Profession.Alchemy       ) { s = "Alchemy";
+            }else if(p == Profession.Blacksmithing ) { s = "Blacksmithing";
+            }else if(p == Profession.Enchanting    ) { s = "Enchanting";
+            }else if(p == Profession.Engineering   ) { s = "Engineering";
+            }else if(p == Profession.Herbalism     ) { s = "Herbalism";
+            }else if(p == Profession.Inscription   ) { s = "Inscription";
+            }else if(p == Profession.Jewelcrafting ) { s = "Jewelcrafting";
+            }else if(p == Profession.Leatherworking) { s = "Leatherworking";
+            }else if(p == Profession.Mining        ) { s = "Mining";
+            }else if(p == Profession.Skinning      ) { s = "Skinning";
+            }else if(p == Profession.Tailoring     ) { s = "Tailoring"; }
+            return s;
         }
     }
 }

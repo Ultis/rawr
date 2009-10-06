@@ -16,13 +16,12 @@ namespace Rawr.DPSWarr {
 		public bool FuryStance = true;
 		public bool AllowFlooring = false;
         public bool SE_UseDur = true;
-        public bool BL_Use = false;
-        public int BL_Count = 1;
 		public bool PTRMode = false;
         public bool HideBadItems = true;
         public bool HideBadItems_Def = true;
         public bool HideBadItems_Spl = true;
         public bool HideBadItems_PvP = true;
+        public bool HideProfEnchants = false;
         public float SurvScale = 1.0f;
         public float Under20Perc = 0.17f;
 		// Rotational Changes

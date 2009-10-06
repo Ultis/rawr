@@ -117,15 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CK_HideSpellGear.ToolTipText" xml:space="preserve">
-    <value>This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.</value>
-  </data>
-  <data name="CK_HidePvPGear.ToolTipText" xml:space="preserve">
-    <value>This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.</value>
-  </data>
-  <data name="CK_HideDefGear.ToolTipText" xml:space="preserve">
-    <value>This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.</value>
-  </data>
   <data name="RTB_Welcome.Text" xml:space="preserve">
     <value>Welcome to Rawr.DPSWarr!
 
