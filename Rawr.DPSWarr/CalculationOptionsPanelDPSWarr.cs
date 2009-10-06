@@ -1740,3 +1740,198 @@ FAQStuff.Add(
         }
     }
 }
+
+/* OLD PATCH NOTES
+
+v2.2.11 (Aug 5, 2009 05:40)
+
+- Rearranged the options panel to a series of tabs. Will be using this to spread out all the new systems to be added later (including boss handling)
+- Fixed a bug with HS's not using Incite correctly, also not capping the crit percentage from 0%-100%
+- Fixed a bug with Slam freq being zero and causing a divide by zero in certain calculations
+- Added Slam freq to Sudden Death proc handling (corrects white swing timer)
+- Changed the Health and Stamina stat displays to a single line (with more verbose tool tip). Re-aligned the tool tips on several others to make them more clean
+- Fixed the Strength, Stamina and Attack Power calculations. Over time these had become invalid and are now set properly to match in-game
+- Changed the Buff system to operate a little differently. When you have the relevant talent it will override the buffs selected. Eg- If you have Trauma, it will remove the Trauma buff and use the Talents' calculated version. Same for Battle Shout, Blood Frenzy and Rampage.
+- Trinkets that have Trigger.Use effects now pull GCDs (making them more accurate to how much dps they are actually adding)
+- Added a new section to the Options Panel: Instructions. This has 4 sub-panels.
+- - Basics: Basic information for immediate, simple setup of the DPSWarr module for your character
+- - Advanced: Information about advanced tweaking that can be done to the module
+- - F.A.Q.: A Frequently Asked Questions tab to help alleviate some of those head-scratchers
+- - Version Notes: The Raw patch notes for DPSWarr commits
+- Added Weapon Master Dodge Percentage line to the Expertise Tooltip
+- Fixed -x DPS value for defensive talents when Rampage Buff is selected
+- Changed the Overpower activates from dodges formula, should be technically more accurate than it was.
+- Split Overpower from Taste for Blood procs to two separate display lines (and activate as two separate abilities)
+- Changed the Expertise Tooltip to better display the values and corrected an issue where panel was showing SoA in one spot and not another
+- Changed the Total DPS Tooltip to show only the GCDs used, not abilities that use 0 (the list was getting too big to keep up at all times)
+- Changed the GCD usage of Overpower to absorb 2 GCDs instead of 1 to sim the attack that was used to activate it being dodged and doing no damage and then having to use another GCD to activate OP and do damage.
+- Cleaned up CombatFactors to newer naming convention
+- Cleaned up the Attack table for White attacks and reworked WhiteDPS to operate more like the yellow abilities do (in file and function structure, still uses all the white factors)
+- Fixed Overpower so it's no longer Block-able (as it should be)
+- Implemented a 3.2 Mode
+- Added Health as a Relevant Stat so you can select Commanding Shout as a Buff
+- First round of optimizations
+- Made a couple corrections to Ebs's optimization code to prevent null exceptions and show proper info on tooltips
+- Applied Astrylian's Special Effect Dual-Zerking changes, drastically improves optimize performace. Ebs needs to review for Fury.
+- Cleaned up a couple more Tooltips
+- Fixed bug in Astry's patch that was overvaluing non-Berserking Off-Hand enchants, and causing fury to crash while changing weapons. DPSWarr perf issues are officially considered fixed, thanks everyone!
+- Changed the Activates for Arms Warriors to be Floored (100.85 becomes 100). This is more accurate to # of times activated over fight duration. It was previously not floored due to rotation constraints, which have been removed. Most characters will see a slight difference in DPS, not major difference. NOTE: Abilities like Shattering Throw need an extra second to activate (will create a fix for this later). Eg- 5 Min cd so 300 sec is fine, but 600 seconds isn't, need 601 for the 2nd activate
+- Changed the Order of Text on the GCDs tooltip over Total DPS. This lines up better now and is easier to read
+- Reworked the Ability Maintenance List to a CheckList TreeView, easier to use and more obvious functionality added (Can now select Commanding Shout vs Battle Shout, and it will only allow you to select one at a time. Selecting Fury Stance enables the Fury abilities automagically, and disables Arms. +Vice-versa)
+- Added Fury abilities to maintenance (to function like the arms ones do, unchecking it means you never do that ability)
+- Fixed the Ability activation of Commanding Shout and actually added it's stats to the character (oops). Also added it to the buff override system (if you are puttingup CS yourself, it will remove the "Buff" CS and Warlock Imp Buff)
+- Fixed the new Ability Maintenance Tree saving/loading issues (oops again)
+- Fixed a bug where AvoidanceStreak was increasing DPS rather than decreasing it.
+- Added a new option to the panel for Allowing the Flooring changed (happened in the last couple commits). You can now turn this on or off.
+- Moved some more code to the Optimized method that Ebs was setting up (for uniformity). made the calculators for these private to enforce no outside use. Also did some optimization in the Skills.cs file to make some abilities that have sub-abilities take less memory.
+- Reworked the Haste system, not sure if it made any calculational differences overall, but it does walk through all the additive vs multiplicative stacking before and after procs.
+- Fixed some of the melee hit triggering for SpecialEffects, they will have less value now because they are affected by the hit table (landing vs not landing). Also verified that all SpecialEffects are using non-hasted values
+- Broke apart AvgMhWeapDamage, there are now all 3 values (ItemSpeed, ItemSpeed Hasted, NormalizedItemSpeed)
+- Migrated all weapon speed function calls to the same 2 in White Attacks to ensure uniformity on Slam_Freq adding to the swing timer in all things that need to know this
+- Fixed Rend to work off of unhasted ItemSpeed (gives positive value to Haste where it hadn't been due to other changes)
+- Migrated more functions to Probxxofhit/land to make some function calls easier to read and less intensive to work out.
+- Cleaned up the Skills List in Rotation to list everythign correctly and prevent duplicates
+- Added Sword Specialization, this is a new dps line and it procs from all landed attacks over duration of fight, must have 1h or 2h sword equipped and talent (of course). May be inaccurate for dual-wielding swords (but you shouldn't be in a spec that could do that anyways). Sword spec hits are white and should add rage but I have not added that in yet (coming soon). Please note that initial testing has shown SS still has far less total dps with equivalent items than the other 2 specs (Mace/Poleaxe), this was expected.
+- Changed Sudden Death to include offhand white hit procs and sword spec procs as hits that can proc SD.
+- Fixed a bug where Slam DPS was being added in place of SwordSpecDPS (counting Slam DPS twice)
+- Changed the Slam wing timer delay mechanic, should operate on it's proper per second theory
+- Fixed NormalizedWeaponDmg vs AvgWeaponDmg vs AvgWeaponDmgUnhasted for several abilities
+- Added Sword Spec attacks to OP procs
+- Added Armor as a relevant stat and buff (since it influences AttT)
+- Added new Tooltip format for Arms abilities, very verbose now (will add to Fury shortly)
+- Fixed a mistype with OH Blocks
+- Reworked the Arms proc'ing system: OP, SD, SS, Slam now settle their activates instead of using generics
+- Fixed BonusArmor to actually be added to calculations (Devo aura and other similar buffs now apply correctly).
+- Removed all References to 3.2 Mode and marked those items as actual (Patch Released Aug 4th, 2009)
+- Fixed a bug with the new Sudden Death Damage on Hit limitation
+
+v2.2.10.0 (Jul 17, 2009 22:27)
+
+- Fix for issue 13616 - One-Handed weapons in the main hand with Titans Grip was causing UpgradeList to crash due to the damage modifier being set to 0
+- Fix for issue 13607 regarding T8/T8.5 2pc bonus. The calculations still have inaccuracies as to the value of a 2pc set for arms
+- Added Relevant Glyphs to Arms (narrows glyphs list of all protection only glyphs)
+- Removed Rotation logic, replaced with only Priority Queues (Also changed Fury to a Priority Queue)
+- Cleaned up the Primary Stat display
+- Refactored Deep Wounds to calculate at a later time, correcting it's activates method. It is still only about 2/3's effective but better than 1/10
+- Considerable changes to Latency, should factor in a lot better
+- Cleaned up Jothay's changes to work with fury. Few random bugfixes (Rage Starvation now computed assuming you're HS/Cleaving, Deep Wounds triggers off of HS/Cleave, Recklessness was bugged and has been removed as it's a paltry DPS increase anyway, Glancing Blows can now push normal hits off of the table and dip into crits).
+- Stat Display Pane: Changed the display method for some of the stats and change the tool tips on some as well. You now see both the % gain and the Rating number for stats like Crit.
+- Made the Arms Rotation work a bit more dynamically (to prepare for custom rotation priorities)
+- Changed Overpower to operate with it's activates separately (Taste For Blood will have separate activates from the Dodges/Parries). This allows it to calculate correctly in extremes
+- Started Constructing some of the framework for incapacitation effects (back end only, you will not see this in calcs)
+- Fixed a bug with Death Wish not being activate-able for Fury Warriors
+
+v2.2.9 (July 2, 2009 03:02)
+
+- Added fury support for maintaining buffs/debuffs. Thunderclap isn't yet modeled, because TClap isn't usable in fury stance (additional work needed to calculate rage loss of switching back and forth). Possible that we'll just say Fury can't maintain TClap
+- Replaced Maintenance Checks with a new list that encompasses all the Arms abilities. You can now customize your rotation by removing certain abilities (will make it re-orderable later)
+- Combined a Couple of the Rage Details tooltips (will help prevent height issues)
+- Reworked the landed attacks per sec to take into account gcd users with no melee hits (corrects activates for Sudden Death)
+- Did heavy reworking on Latency for Arms, now operates almost like Landsoul's sheet instead of as a percent modifier (which was a faulty method)
+- Heavily recoded Heroic Strike handling for Arms, it now activates based upon the actual rage remaining after what is gen'd and iterates the number of white attacks vs overridden ones (Heroic Strike or Cleave)
+- Updated Rawr3.DPSWarr so that it can compile with the new changes
+- Fixed bug in Maintaining debuffs, Minor optimizations
+
+v2.2.8 (June 30, 2009 11:29)
+
+- We were double-dipping in glancing blows.
+- Fury has a rage-starvation factor.
+- Fixed a bug in racial calculations and PhysicalHit (all racial calculations now come from Base)
+- Cleaned up rage info in arms rotation
+- Fixed Darkmoon Card: Death
+- Removed unneeded Damage Reduction field
+- Fixed T8-2pc bonus
+- Renamed "CritPercBonus" to "BonusCritChance" to be more clear what it is storing
+- Many damage mods changed from Additive to Multiplicative
+- Agility is now affected by Kings
+- Yellow Attacks now use the 2-roll instead of 1-roll system
+- Yellow attacks now properly have a different MH and OH crit chance with respect to their expertise
+- Rage Starvation now impacts both arms and fury
+- Fixed armor penetration to use player level and not target level
+- Slight optimization in calculating hit/crit (don't pass weapon item on the fly, instead use MhCrit/OhCrit/MhHit/OhHit)
+- Fixed some discrepancies in how hit rating works. At this point, there are no known/glaring issues with the output of DPSWarr.Fury
+
+v2.2.7 (June 21, 2009 22:54)
+
+- Fixed Titansgrip having major negative dps for arms, was a miss chance issue
+- Added Heroic Strike back into Arms
+- Changed the Options panel for handling future edits
+- Corrected a couple of Tooltip errors
+- Fixed arpen calculations for arms, so Mace Spec and Battle Stance are counted as buffs instead of debuffs (additive towards arpen rating now)
+- Fixed double-counting of Heroic Strikes in overall DPS calculations
+- Added placements for additional war abils, not in use yet but placed
+- Added Incite working
+- Changed some things with HS for Arms
+- Fixed Staffs showing up for Titan's Grip (TY Droidicus)
+- Added T8 set bonuses (TY Droidicus)
+- Added some base type changes to abilities so they can work a little more in sync
+- Created a new Rotation object and pushed related functions and calls to it
+- Fix in Deep Wounds calculations, and put back in the HS fix from before (merge issue removed it)
+- Moved more stuff to Rot
+- Added to Rawr3 (Options Panel not ported)
+- Realized there was an issue with the port to v3 that broke existing v2 code
+- Refactored a lot of things out of Ability and into Rotation, where they belong. Should improve performance (less creating of Ability objects). Fixed bug in DeepWounds where its DPS was 6x as high as it should be :-x New number seems low though, and needs to be investigated
+- Added logic for maintaining buffs and debuffs (Thunderclap, Sunders, etc) these now pull GCDs off the Arms Rotation as needed. Also, if you are maintaining Sunder Armor, then the SetDefaults for buffs will enable Sunder as well (to show the dps boost). Still need to make it run the buff add(s) at time of change.
+- Beginning to rework the rage calcs for arms to better work abilities based upon rage gen (esp HS and cleave)
+- Added Cleave logic (if MultiTargsm use Cleave instead of HS, will create an option to *not* do this automatically later)
+- Added Multi-target laogic, abilities now multiply their damage out for # of targets. Eg- MS has 1 for base + ~.13 in a 600 sec Duration for Sweeping Strikes. Next step will be to add Sword Spec logic using this process
+- Added Latency (mimicks Landsoul's spreadsheet)
+- Added Inback check for Parry
+- Changed the Optmizer options, Can now set a lot more control on the optimizer and use "makes sense" options like "Chance to be Avoided %" which if set to "<=0" will make sure you are hit/exp capped including your racial and buff bonuses
+- Added a GCD Usage check for Arms, mouse over the TotalDPS for it's tooltip to read how your GCDs are being consumed
+- Lined up the COmbatFactors file to better distinguish the ind. parts of the attack table
+- Changed the DW calcs to work more off of the actual activates than the theoretical ones
+- Fixed a bug in OH Whtie DPS Calcs
+- Ported a lot of functionality to Rawr3, but have not activated it yet
+- Fixed SuddenDeath activates (latency handled wrong)
+- Fixed Hit Rating (Had it adding to Miss rate instead of reducing it)
+- Fixed a bug in Slam causing it to generate rage instead of use it
+- Minor fixes
+- Fixed a few bugs, and moved a lot of the GetFoo()-type methods to properties to help while debugging
+- Added Parry factoring, affected by the Standing in Back option on the Panel
+- Fixed/Added Parry and Block handling for the attack table
+- Added more info to the Hit Rating Tooltip
+- Added more Rage Calc info and corrected some of it's usage
+- Fixed Precision addage
+
+v2.2.6 (June 6, 2009 01:34)
+
+- Added stamina as a relevant stat
+- Fixed PoleaxeSpecialization (was applying regardless of having talent)
+- Fixed TasteforBlood so the talent shows it's DPS gain in talents comparison
+- Changed Hit Rating ToolTip to show amount of hit can be freed
+- Activated background usage of abilities like Deathwish, Recklessness, Shattering Throw
+- Arms rotation takes GCDs off for above abilities being used
+- Added 10643 armor as default in options, fixed bug in DeathWish, removed Recklessness for now (can't be modeled as a SpecialEffect)
+- BloodFrenzy now provides 5/10% haste (up from 3/6%), removed double-dipping of death wish
+- Default Stance Recognition
+- Better Berserking Logic (needs optimization)
+- Default target set to a level 83 boss with 13083 armor (configureable through options)
+- Fury Rotation changed due to BT's new cooldown/ragecost
+- Added Imp Berserker Stance to strength modifier
+- Procs now take into account misses/dodges/parries
+- Format issue in fury rotation
+- Rage formula modified based on blue post
+- Removed overpower calculations due to expertise temporarily because it was causing crashes in some situations
+- Known Issue: DeathWish is being counted twice
+
+v2.2.5 (May 25, 2009 16:25)
+
+- Rage Generation bugfix (below expertise cap will now calculate properly)
+- Deep Wounds bugfix (damage dealt is based off of number of abilities/white attacks done, still needs more work but is giving fairly accurate results)
+- More work on Arms, now does reasonable approximate dps counts. (ind skills may be off but ttl dps should be pretty close).
+- Rend now factors for the dmg difference for target hp level
+- Corrected DW and some issues with negative rage available killing SuddenDeath's damage (added a minimum freerage given since it was already reserved by the GCD process)
+- Minor modifications
+- Lots of bugfixes
+- WhiteMissChance was being calculated incorrectly.
+- Slight issue with double-dipping on damage modifiers for some abilities.
+- WhiteDmg displayed in character details is now the average damage for each MainHand swing (previously was unmitigated non-crit hit).
+- Reworked bloodsurge to be much more "smart", resulting in a lower number of procs per rotation. The old system was allowing slams as if it didn't share the GCD with any other ability. The new system won't try to slam until you have a free GCD.
+- Fixed OP
+- Changed Rotation length based upon Rend Glyph so it consumes GCDs correctly
+- Fixed some bugs in GetDamage on a few abilities
+- Corrected white-damage glance/miss issue
+- Enforced activation of buffs Trauma, Rampage and Blood Frenzy if you have the talents
+- Formulaic fixes and some Talent/Glyph improvements
+ * */
