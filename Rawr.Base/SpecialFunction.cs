@@ -1037,7 +1037,7 @@ namespace Rawr
 
         static SpecialFunction()
         {
-            string cacheName = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "Data" + Path.DirectorySeparatorChar + "SpecialCache.bin");
+            string cacheName = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "SpecialCache.bin");
 
 #if !SILVERLIGHT
             // TODO reevaluate the situation in Silverlight
