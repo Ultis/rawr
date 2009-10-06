@@ -332,8 +332,8 @@ namespace Rawr.DPSWarr
                 Targets += (CalcOpts.MultipleTargets ? 1f + (Talents.GlyphOfCleaving ? 1f : 0f) : 0f);
                 CastTime = 0f; // In Seconds // Replaces a white hit
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
-                DamageBase = Whiteattacks.MhDamage + 222f;
-                DamageBonus = 1f + Talents.ImprovedCleave * 0.40f;
+                DamageBase = Whiteattacks.MhDamage + (222f * (1f + Talents.ImprovedCleave * 0.40f));
+                //DamageBonus = 1f + Talents.ImprovedCleave * 0.40f; // Imp Cleave is only the "Bonus Damage", and not the whole attack
                 BonusCritChance = Talents.Incite * 0.05f;
                 //
                 InitializeB();

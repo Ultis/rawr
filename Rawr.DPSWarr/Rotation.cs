@@ -434,12 +434,10 @@ namespace Rawr.DPSWarr {
             }
         }
         protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
-        protected virtual float RageGenOverDur_Wrath { get { return (Talents.UnbridledWrath * 3.0f / 60.0f) * CalcOpts.Duration; } }
         protected virtual float RageGenOverDur_Other {
             get {
                 if (Char.MainHand == null) { return 0f; }
                 float rage = RageGenOverDur_Anger
-                           + RageGenOverDur_Wrath
                            + RageGenOverDur_IncDmg
                            + (100f * StatS.ManaorEquivRestore); // 0.02f becomes 2f
 
