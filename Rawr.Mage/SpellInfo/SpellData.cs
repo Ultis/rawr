@@ -1035,6 +1035,7 @@ namespace Rawr.Mage
             cycle.HitProcs += weight * rawSpell.HitProcs;
             cycle.CritProcs += weight * rawSpell.CritProcs;
             cycle.TargetProcs += weight * rawSpell.TargetProcs;
+            cycle.DamageProcs += weight * rawSpell.HitProcs;
 
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
             cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)));

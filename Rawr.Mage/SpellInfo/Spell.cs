@@ -126,6 +126,7 @@ namespace Rawr.Mage
             HitProcs = Ticks * HitRate;
             CritProcs = HitProcs * CritRate;
             TargetProcs = HitProcs;
+            DotProcs = DotDuration / DotTickInterval;
 
             if (Instant) InterruptProtection = 1;
             if (castingState.IcyVeins) InterruptProtection = 1;
@@ -202,6 +203,7 @@ namespace Rawr.Mage
         public float CritProcs;
         public float IgniteProcs;
         public float TargetProcs;
+        public float DotProcs;
 
         public float CastTime;
 
@@ -299,6 +301,7 @@ namespace Rawr.Mage
                 CritProcs = spell.CritProcs;
                 IgniteProcs = spell.IgniteProcs;
                 TargetProcs = spell.TargetProcs;
+                DamageProcs = spell.HitProcs + spell.DotProcs;
                 damagePerSecond = spell.DamagePerSecond;
                 threatPerSecond = spell.ThreatPerSecond;
                 costPerSecond = spell.CostPerSecond;
@@ -484,6 +487,18 @@ namespace Rawr.Mage
 
             float channelReduction;
             CastTime = template.CalculateCastTime(castingState, InterruptProtection, CritRate, pom, BaseCastTime, out channelReduction);
+
+            if (DotTickInterval > 0)
+            {
+                if (spammedDot)
+                {
+                    DotProcs = (float)Math.Floor(Math.Min(CastTime, DotDuration) / DotTickInterval);
+                }
+                else
+                {
+                    DotProcs = DotDuration / DotTickInterval;
+                }
+            }
 
             if (Ticks > 0)
             {
