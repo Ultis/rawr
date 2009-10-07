@@ -543,25 +543,6 @@ namespace Rawr.Moonkin
             statsTotal.Spirit = (float)Math.Floor(statsRace.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Spirit += (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
 
-            /*foreach (SpecialEffect s in statsTotal.SpecialEffects())
-            {
-                if (s.Stats.HighestStat > 0)
-                {
-                    if (statsTotal.Spirit > statsTotal.Intellect)
-                        statsTotal.Spirit += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
-                    else
-                        statsTotal.Intellect += s.Stats.HighestStat * s.GetAverageUptime(1.5f, 1f);
-                }
-                if (s.Stats.Spirit > 0 && s.MaxStack > 1)
-                {
-                    statsTotal.Spirit += s.Stats.Spirit * s.MaxStack;
-                }
-                else if (s.Stats.Spirit > 0)
-                {
-                    statsTotal.Spirit += s.Stats.Spirit * s.GetAverageUptime(0f, 1f);
-                }
-            }*/
-
             // Derived stats: Health, mana pool, armor
             statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 280;

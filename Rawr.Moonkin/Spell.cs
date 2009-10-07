@@ -1197,7 +1197,15 @@ namespace Rawr.Moonkin
                 sustainedDPS += trinketDPS + treeDPS + starfallDPS;
                 rot.RotationData.BurstDPS = burstDPS;
                 rot.RotationData.DPS = sustainedDPS;
-                if ((calcOpts.UserRotation == "None" && sustainedDPS > maxDamageDone) || calcOpts.UserRotation == rot.Name)
+
+                // Update the sustained DPS rotation if any one of the following three cases is true:
+                // 1) No user rotation is selected and sustained DPS is maximum
+                // 2) A user rotation is selected, Eclipse is not present, and the user rotation matches the current rotation
+                // 3) A user rotation is selected, Eclipse is present, and the user rotation's dot spells matches this rotation's
+                if ((calcOpts.UserRotation == "None" && sustainedDPS > maxDamageDone) ||
+                    (character.DruidTalents.Eclipse == 0 && calcOpts.UserRotation == rot.Name) ||
+                    (character.DruidTalents.Eclipse > 0 && (calcOpts.UserRotation == rot.Name.Replace("Filler", "SF") ||
+                    calcOpts.UserRotation == rot.Name.Replace("Filler", "W"))))
                 {
                     maxDamageDone = sustainedDPS;
                     maxRotation = rot;
@@ -1209,7 +1217,13 @@ namespace Rawr.Moonkin
                 }
                 rot.ManaGained += manaGained / (calcs.FightLength * 60.0f) * rot.Duration;
                 rot.RotationData.ManaGained += manaGained / (calcs.FightLength * 60.0f) * rot.Duration;
-                cachedResults[rot.Name] = rot.RotationData;
+                if (rot.Name.Contains("Filler"))
+                {
+                    cachedResults[rot.Name.Replace("Filler", "SF")] = rot.RotationData;
+                    cachedResults[rot.Name.Replace("Filler", "W")] = rot.RotationData;
+                }
+                else
+                    cachedResults[rot.Name] = rot.RotationData;
             }
             // Present the findings to the user.
             calcs.SelectedRotation = maxRotation;
@@ -1306,49 +1320,82 @@ namespace Rawr.Moonkin
         {
             ResetSpellList();
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            rotations = new List<SpellRotation>(new SpellRotation[]
+            if (character.DruidTalents.Eclipse == 0)
             {
-            new SpellRotation()
-            {
-                Name = "MF/SF",
-                SpellsUsed = new List<string>(new string[]{ "MF", "SF" })
-            },
-            new SpellRotation()
-            {
-                Name = "MF/W",
-                SpellsUsed = new List<string>(new string[]{ "MF", "W" })
-            },
-            new SpellRotation()
-            {
-                Name = "IS/SF",
-                SpellsUsed = new List<string>(new string[]{ "IS", "SF" })
-            },
-            new SpellRotation()
-            {
-                Name = "IS/W",
-                SpellsUsed = new List<string>(new string[]{ "IS", "W" })
-            },
-            new SpellRotation()
-            {
-                Name = "IS/MF/SF",
-                SpellsUsed = new List<string>(new string[]{ "IS", "MF", "SF" })
-            },
-            new SpellRotation()
-            {
-                Name = "IS/MF/W",
-                SpellsUsed = new List<string>(new string[]{ "IS", "MF", "W" })
-            },
-            new SpellRotation()
-            {
-                Name = "SF Spam",
-                SpellsUsed = new List<string>(new string[]{ "SF" })
-            },
-            new SpellRotation()
-            {
-                Name = "W Spam",
-                SpellsUsed = new List<string>(new string[]{ "W" })
+                rotations = new List<SpellRotation>(new SpellRotation[]
+                {
+                    new SpellRotation()
+                    {
+                        Name = "MF/SF",
+                        SpellsUsed = new List<string>(new string[]{ "MF", "SF" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "MF/W",
+                        SpellsUsed = new List<string>(new string[]{ "MF", "W" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "IS/SF",
+                        SpellsUsed = new List<string>(new string[]{ "IS", "SF" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "IS/W",
+                        SpellsUsed = new List<string>(new string[]{ "IS", "W" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "IS/MF/SF",
+                        SpellsUsed = new List<string>(new string[]{ "IS", "MF", "SF" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "IS/MF/W",
+                        SpellsUsed = new List<string>(new string[]{ "IS", "MF", "W" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "SF Spam",
+                        SpellsUsed = new List<string>(new string[]{ "SF" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "W Spam",
+                        SpellsUsed = new List<string>(new string[]{ "W" })
+                    }
+                });
             }
-            });
+            else
+            {
+                rotations = new List<SpellRotation>(new SpellRotation[] {
+                    new SpellRotation()
+                    {
+                        Name = "W Spam",
+                        SpellsUsed = new List<string>(new string[] { "W" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "SF Spam",
+                        SpellsUsed = new List<string>(new string[] { "SF" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "MF/Filler",
+                        SpellsUsed = new List<string>(new String[] { "MF", "SF" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "IS/Filler",
+                        SpellsUsed = new List<string>(new string[] { "IS", "W" })
+                    },
+                    new SpellRotation()
+                    {
+                        Name = "IS/MF/Filler",
+                        SpellsUsed = new List<string>(new string[] { "IS", "MF", "SF" })
+                    }
+                });
+            }
 
             UpdateSpells(character, ref calcs);
         }
