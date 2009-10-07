@@ -154,8 +154,8 @@ namespace Rawr.DPSWarr {
                 return totalHaste;
             }
         }
-        public float MHSpeed { get { return useMH ? MH.Speed / TotalHaste : 0f; } }
-        public float OHSpeed { get { return useOH ? OH.Speed / TotalHaste : 0f; } }
+        public float MHSpeed { get { return useMH ? _c_mhItemSpeed / TotalHaste : 0f; } }
+        public float OHSpeed { get { return useOH ? _c_ohItemSpeed / TotalHaste : 0f; } }
         #endregion
         #endregion
         #region Attack Table
@@ -335,14 +335,29 @@ namespace Rawr.DPSWarr {
         public float Crit { get; protected set; }
         public float Hit { get; protected set; }
 
-        public float AnyLand { get { return (1f - (Miss + Dodge + Parry)); } }
-        public float AnyNotLand { get { return (Miss + Dodge + Parry); } }
+        private float _anyLand = 0f;
+        private float _anyNotLand = 1f;
+        public float AnyLand {
+            get {
+                return _anyLand;
+            }
+        }
+        public float AnyNotLand {
+            get {
+                return _anyNotLand;
+            }
+        }
 
-        protected virtual void Calculate() { }
+        protected virtual void Calculate() {
+            _anyNotLand = Dodge + Parry + Miss;
+            _anyLand = 1f - _anyNotLand;
+        }
         protected virtual void CalculateAlwaysHit()
         {
             Miss = Dodge = Parry = Block = Glance = Crit = 0f;
             Hit = 1f;
+            _anyLand = 1f;
+            _anyNotLand = 0f;
         }
 
         protected void Initialize(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh, bool useSpellHit) {
@@ -395,6 +410,8 @@ namespace Rawr.DPSWarr {
             tableSize += Crit;
             // Normal Hit
             Hit = Math.Max(0f, 1f - tableSize);
+
+            base.Calculate();
         }
 
         public DefendTable(Character character, Stats stats, CombatFactors cf) { Initialize(character, stats, cf, null, true, useSpellHit); }
@@ -444,6 +461,7 @@ namespace Rawr.DPSWarr {
             }
             // Normal Hit
             Hit = Math.Max(0f, 1f - tableSize);
+            base.Calculate();
         }
 
         public AttackTable(Character character, Stats stats, CombatFactors cf, bool ismh, bool useSpellHit, bool alwaysHit) {

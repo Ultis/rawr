@@ -1249,8 +1249,8 @@ These numbers to do not include racial bonuses.",
                 line++;
                 calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; line++;
 
-                calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed);
-                calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed);
+                //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed);
+                //calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed);
                 calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum);
 
                 calculatedStats.MaxArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
@@ -1477,13 +1477,13 @@ These numbers to do not include racial bonuses.",
                 bool useOH = combatFactors.useOH;
 
                 float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
-                float attemptedAtksInterval = fightDuration / Rot.GetAttemptedAtksOverDur();
-                float landedAtksInterval = fightDuration / Rot.GetLandedAtksOverDur();
-                float dmgDoneInterval = fightDuration / (Rot.GetLandedAtksOverDur() + (calcOpts.FuryStance ? 1f : 4f / 3f));
+                float attemptedAtksInterval = fightDuration / Rot.AttemptedAtksOverDur;
+                float landedAtksInterval = fightDuration / Rot.LandedAtksOverDur;
+                float dmgDoneInterval = fightDuration / (Rot.LandedAtksOverDur + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
-                float attempted = Rot.GetAttemptedAtksOverDur();
-                float land = Rot.GetLandedAtksOverDur();
-                float crit = Rot.GetCriticalAtksOverDur();
+                float attempted = Rot.AttemptedAtksOverDur;
+                float land = Rot.LandedAtksOverDur;
+                float crit = Rot.CriticalAtksOverDur;
 
                 float hitRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
                 float critRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
@@ -1534,12 +1534,12 @@ These numbers to do not include racial bonuses.",
                 Stats bersStats = new Stats();
                 if (bersMainHand != null) {
                     // berserker enchant id
-                    bersStats += bersMainHand.GetAverageStats(fightDuration / Rot.GetAttemptedAtksOverDurMH(), Rot.GetLandedAtksOverDurMH() / Rot.GetAttemptedAtksOverDurMH(), combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
-                    float f = bersMainHand.GetAverageUptime(fightDuration / Rot.GetAttemptedAtksOverDurMH(), Rot.GetLandedAtksOverDurMH() / Rot.GetAttemptedAtksOverDurMH(), combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    bersStats += bersMainHand.GetAverageStats(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    float f = bersMainHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                 }
                 if (bersOffHand != null) {
-                    bersStats += bersOffHand.GetAverageStats(fightDuration / Rot.GetAttemptedAtksOverDurOH(), Rot.GetLandedAtksOverDurOH() / Rot.GetAttemptedAtksOverDurOH(), combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
-                    float f = bersOffHand.GetAverageUptime(fightDuration / Rot.GetAttemptedAtksOverDurOH(), Rot.GetLandedAtksOverDurOH() / Rot.GetAttemptedAtksOverDurOH(), combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    bersStats += bersOffHand.GetAverageStats(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    float f = bersOffHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                 }
                 float apBonusOtherProcs = (1f + totalBAPM) * (bersStats.AttackPower);
                 bersStats.AttackPower = (apBonusOtherProcs);
@@ -1585,14 +1585,14 @@ These numbers to do not include racial bonuses.",
             Stats statsProcs = new Stats();
             try {
                 float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
-                float attemptedAtkInterval = fightDuration / Rot.GetAttemptedAtksOverDur();
-                float landedAtksInterval = fightDuration / Rot.GetLandedAtksOverDur();
-                float dmgDoneInterval = fightDuration / (Rot.GetLandedAtksOverDur() + (calcOpts.FuryStance ? 1f : 4f / 3f));
+                float attemptedAtkInterval = fightDuration / Rot.AttemptedAtksOverDur;
+                float landedAtksInterval = fightDuration / Rot.LandedAtksOverDur;
+                float dmgDoneInterval = fightDuration / (Rot.LandedAtksOverDur + (calcOpts.FuryStance ? 1f : 4f / 3f));
                 float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
 
-                float attempted = Rot.GetAttemptedAtksOverDur();
-                float land = Rot.GetLandedAtksOverDur();
-                float crit = Rot.GetCriticalAtksOverDur();
+                float attempted = Rot.AttemptedAtksOverDur;
+                float land = Rot.LandedAtksOverDur;
+                float crit = Rot.CriticalAtksOverDur;
 
                 float hitRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
                 float critRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
@@ -1604,9 +1604,9 @@ These numbers to do not include racial bonuses.",
                             ((combatFactors._c_mhItemType == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f) +
                             (!calcOpts.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
 
-                        float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[83 - Char.Level],
+                        float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[calcOpts.TargetLevel - Char.Level],
                             originalStats.ArmorPenetration, arpenBuffs, originalStats.ArmorPenetrationRating);
-                        float ProccedArmorReduction = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[83 - Char.Level],
+                        float ProccedArmorReduction = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[calcOpts.TargetLevel - Char.Level],
                             originalStats.ArmorPenetration + effect.Stats.ArmorPenetration, arpenBuffs, originalStats.ArmorPenetrationRating + effect.Stats.ArmorPenetrationRating);
 
                         Stats dummyStats = new Stats();
@@ -1657,15 +1657,15 @@ These numbers to do not include racial bonuses.",
             float fightDuration = calcOpts.Duration;
             float fightDuration2Pass = calcOpts.SE_UseDur ? fightDuration : 0;
 
-            float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
-            float attemptedAtkInterval = fightDuration / rotation.GetAttemptedAtksOverDur();
-            float landedAtksInterval = fightDuration / rotation.GetLandedAtksOverDur();
-            float dmgDoneInterval = fightDuration / (rotation.GetLandedAtksOverDur() + (calcOpts.FuryStance ? 1f : 4f / 3f));
-            float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
+            float attempted = rotation.AttemptedAtksOverDur;
+            float land = rotation.LandedAtksOverDur;
+            float crit = rotation.CriticalAtksOverDur;
 
-            float attempted = rotation.GetAttemptedAtksOverDur();
-            float land = rotation.GetLandedAtksOverDur();
-            float crit = rotation.GetCriticalAtksOverDur();
+            float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
+            float attemptedAtkInterval = fightDuration / attempted;
+            float landedAtksInterval = fightDuration / land;
+            float dmgDoneInterval = fightDuration / (land + (calcOpts.FuryStance ? 1f : 4f / 3f));
+            float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
 
             float hitRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
             float critRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;

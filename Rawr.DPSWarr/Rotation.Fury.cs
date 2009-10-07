@@ -63,13 +63,13 @@ namespace Rawr.DPSWarr
         {
             // Main Hand
             float mhActivates =
-                /*Yellow  */GetCriticalYellowsOverDurMH() +
+                /*Yellow  */CriticalYellowsOverDurMH +
                 /*White   */WhiteAtks.MhActivates * (1f - timeLostPerc) * WhiteAtks.MHAtkTable.Crit;
 
             // Off Hand
             float ohActivates = (CombatFactors.useOH ?
                 // No OnAttacks for OH
-                /*Yellow*/GetCriticalYellowsOverDurOH() +
+                /*Yellow*/CriticalYellowsOverDurOH +
                 /*White */WhiteAtks.OhActivates * (1f - timeLostPerc) * WhiteAtks.OHAtkTable.Crit
                 : 0f);
 
@@ -141,49 +141,42 @@ namespace Rawr.DPSWarr
         }
 
         #region LandedAtks
-        protected override float GetLandedYellowsOverDurMH()
-        {
-            float ret = base.GetLandedYellowsOverDurMH();
-            ret += _BT_GCDs * BT.MHAtkTable.AnyLand * BT.AvgTargets
-                 + _BS_GCDs * BS.MHAtkTable.AnyLand * BS.AvgTargets;
-            return ret;
-                
+        protected override float LandedYellowsOverDurMH {
+            get {
+                float ret = base.LandedYellowsOverDurMH;
+                ret += _BT_GCDs * BT.MHAtkTable.AnyLand * BT.AvgTargets
+                     + _BS_GCDs * BS.MHAtkTable.AnyLand * BS.AvgTargets;
+                return ret;
+
+            }
         }
-        protected override float GetCriticalYellowsOverDurMH()
-        {
-            float ret = base.GetCriticalYellowsOverDurMH();
-            return ret + _BT_GCDs * BT.MHAtkTable.Crit * BT.AvgTargets
-                       + _BS_GCDs * BS.MHAtkTable.Crit * BS.AvgTargets;
+        protected override float CriticalYellowsOverDurMH {
+            get {
+                float ret = base.CriticalYellowsOverDurMH;
+                return ret + _BT_GCDs * BT.MHAtkTable.Crit * BT.AvgTargets
+                           + _BS_GCDs * BS.MHAtkTable.Crit * BS.AvgTargets;
+            }
         }
-        protected override float GetAttemptedYellowsOverDurMH()
-        {
-            return base.GetAttemptedYellowsOverDurMH()
-                + _BT_GCDs * BT.AvgTargets
-                + _BS_GCDs * BS.AvgTargets;
+        protected override float AttemptedYellowsOverDurMH {
+            get {
+                return base.AttemptedYellowsOverDurMH
+                    + _BT_GCDs * BT.AvgTargets
+                    + _BS_GCDs * BS.AvgTargets;
+            }
         }
-        protected override float GetAttemptedYellowsOverDurOH()
-        {
-            return base.GetAttemptedYellowsOverDurOH();
+        public override float ParriedYellowsOverDur {
+            get {
+                return base.ParriedYellowsOverDur
+                    + _BT_GCDs * BT.MHAtkTable.Parry * BT.AvgTargets
+                    + _BS_GCDs * BS.MHAtkTable.Parry * BS.AvgTargets;
+            }
         }
-        public override float GetParriedYellowsOverDur()
-        {
-            return base.GetParriedYellowsOverDur()
-                + _BT_GCDs * BT.MHAtkTable.Parry * BT.AvgTargets
-                + _BS_GCDs * BS.MHAtkTable.Parry * BS.AvgTargets;
-        }
-        protected override float GetCriticalYellowsOverDurOH()
-        {
-            return base.GetCriticalYellowsOverDurOH();
-        }
-        public override float GetDodgedYellowsOverDur()
-        {
-            return base.GetDodgedYellowsOverDur()
-                + _BT_GCDs * BT.MHAtkTable.Dodge * BT.AvgTargets
-                + _BS_GCDs * BS.MHAtkTable.Dodge * BS.AvgTargets;
-        }
-        protected override float GetLandedYellowsOverDurOH()
-        {
-            return base.GetLandedYellowsOverDurOH();
+        public override float DodgedYellowsOverDur {
+            get {
+                return base.DodgedYellowsOverDur
+                    + _BT_GCDs * BT.MHAtkTable.Dodge * BT.AvgTargets
+                    + _BS_GCDs * BS.MHAtkTable.Dodge * BS.AvgTargets;
+            }
         }
         #endregion
         protected override float RageNeededOverDur
