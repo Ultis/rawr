@@ -261,14 +261,14 @@ focus on Survival Points.",
         {
             CharacterCalculationsProtPaladin calculatedStats = new CharacterCalculationsProtPaladin();
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            Stats stats = GetCharacterStats(character, additionalItem);
+            Stats stats = GetCharacterStats(character, additionalItem, calcOpts);
 
             AttackModelMode amm = AttackModelMode.BasicSoV;            
             if (calcOpts.SealChoice == "Seal of Righteousness")
                 amm = AttackModelMode.BasicSoR;
 
-            DefendModel dm = new DefendModel(character, stats);
-            AttackModel am = new AttackModel(character, stats, amm);
+            DefendModel dm = new DefendModel(character, stats, calcOpts);
+            AttackModel am = new AttackModel(character, stats, amm, calcOpts);
 
             calculatedStats.BasicStats = stats;
 
@@ -276,8 +276,8 @@ focus on Survival Points.",
             calculatedStats.TargetLevel = calcOpts.TargetLevel;
             calculatedStats.TargetArmor = calcOpts.TargetArmor;
             calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
-            calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character, stats);
-            calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(character ,stats);
+            calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character, stats, calcOpts.TargetArmor);
+            calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(character, stats, calcOpts.TargetArmor, calcOpts.TargetLevel);
             calculatedStats.ArmorPenetrationCap = Lookup.GetArmorPenetrationCap(calcOpts.TargetLevel, calcOpts.TargetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
             
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
@@ -295,10 +295,10 @@ focus on Survival Points.",
 
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
-            calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit);
+            calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calcOpts.TargetLevel);
             calculatedStats.CritVulnerability = dm.DefendTable.Critical;
 
-            calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats);
+            calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, calcOpts.TargetLevel);
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
             calculatedStats.TotalMitigation = dm.Mitigation;
             calculatedStats.BaseAttackerSpeed = calcOpts.BossAttackSpeed;
@@ -310,22 +310,22 @@ focus on Survival Points.",
             calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
 
             calculatedStats.ResistanceTable = StatConversion.GetResistanceTable(calcOpts.TargetLevel, character.Level, stats.AllResist + stats.FrostResistance, 0.0f);
-            calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane));
-            calculatedStats.FireReduction   = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire));
-            calculatedStats.FrostReduction  = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost));
-            calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature));
-            calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow));
-            calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane);
-            calculatedStats.FireSurvivalPoints   = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire);
-            calculatedStats.FrostSurvivalPoints  = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost);
-            calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Nature);
-            calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow);
+            calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane, calcOpts.TargetLevel));
+            calculatedStats.FireReduction   = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire, calcOpts.TargetLevel));
+            calculatedStats.FrostReduction  = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost, calcOpts.TargetLevel));
+            calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature, calcOpts.TargetLevel));
+            calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow, calcOpts.TargetLevel));
+            calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane, calcOpts.TargetLevel);
+            calculatedStats.FireSurvivalPoints   = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire, calcOpts.TargetLevel);
+            calculatedStats.FrostSurvivalPoints  = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost, calcOpts.TargetLevel);
+            calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Nature, calcOpts.TargetLevel);
+            calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow, calcOpts.TargetLevel);
 
             // Offensive Stats
-            calculatedStats.Hit = Lookup.HitChance(character, stats);
-            calculatedStats.SpellHit = Lookup.SpellHitChance(character, stats);
-            calculatedStats.Crit = Lookup.CritChance(character, stats);
-            calculatedStats.SpellCrit = Lookup.SpellCritChance(character, stats);
+            calculatedStats.Hit = Lookup.HitChance(character, stats, calcOpts.TargetLevel);
+            calculatedStats.SpellHit = Lookup.SpellHitChance(character, stats, calcOpts.TargetLevel);
+            calculatedStats.Crit = Lookup.CritChance(character, stats, calcOpts.TargetLevel);
+            calculatedStats.SpellCrit = Lookup.SpellCritChance(character, stats, calcOpts.TargetLevel);
             calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);
             calculatedStats.PhysicalHaste = Lookup.BonusPhysicalHastePercentage(character, stats);
             calculatedStats.SpellHaste = Lookup.BonusSpellHastePercentage(character, stats);
@@ -343,7 +343,7 @@ focus on Survival Points.",
             calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
             calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
             calculatedStats.GlancingAttacks = am.Abilities[Ability.None].AttackTable.Glance;
-            calculatedStats.GlancingReduction = Lookup.GlancingReduction(character);
+            calculatedStats.GlancingReduction = Lookup.GlancingReduction(character, calcOpts.TargetLevel);
             calculatedStats.BlockedAttacks = am.Abilities[Ability.None].AttackTable.Block;
             calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
@@ -426,20 +426,31 @@ focus on Survival Points.",
 
         public override Stats GetItemStats(Character character, Item additionalItem)
         {
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            return GetItemStats(character, additionalItem, calcOpts);
+        }
+
+        public Stats GetItemStats(Character character, Item additionalItem, CalculationOptionsProtPaladin options)
+        {
             Stats statsItems = base.GetItemStats(character, additionalItem);
-            AttackTable attackTable= new AttackTable(character, statsItems);
+            AttackTable attackTable = new AttackTable(character, statsItems, options);
             return statsItems;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            int Lvl = character.Level;
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            return GetCharacterStats(character, additionalItem, calcOpts);            
+        }
+
+        public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtPaladin calcOpts)
+        {
+            int Lvl = character.Level;
             PaladinTalents talents = character.PaladinTalents;
 
             Stats statsBase = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
-            Stats statsBuffs = GetBuffsStats(character);
-            Stats statsItems = GetItemStats(character, additionalItem);
+            Stats statsBuffs = GetBuffsStats(character, calcOpts);
+            Stats statsItems = GetItemStats(character, additionalItem, calcOpts);
             Stats statsTalents = new Stats()
             {
                 Parry = talents.Deflection * 0.01f,
@@ -549,7 +560,7 @@ focus on Survival Points.",
             if (calcOpts.SealChoice == "Seal of Righteousness")
                 amm = AttackModelMode.BasicSoR;
 
-            AttackModel am = new AttackModel(character, stats, amm);
+            AttackModel am = new AttackModel(character, stats, amm, calcOpts);
             // temporary combat table, used for the implementation of special effects.
             float hitBonusPhysical = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.PhysicalHit;
             float hitBonusSpell = StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.SpellHit;
@@ -1286,8 +1297,7 @@ focus on Survival Points.",
             return relevant;
         }
 
-        public Stats GetBuffsStats(Character character) {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+        public Stats GetBuffsStats(Character character, CalculationOptionsProtPaladin calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
 
             // Draenei should always have this buff activated
@@ -1313,7 +1323,7 @@ focus on Survival Points.",
                 if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
             }*/
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = base.GetBuffsStats(character.ActiveBuffs);
 
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffs.Add(b);

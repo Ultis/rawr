@@ -125,30 +125,30 @@ namespace Rawr.ProtPaladin
             AttackerHitsPerSecond = attackerHits / modelLength;
         }
 
-        public AttackModel(Character character, Stats stats, AttackModelMode attackModelMode) //, RageModelMode rageModelMode)
+        public AttackModel(Character character, Stats stats, AttackModelMode attackModelMode, CalculationOptionsProtPaladin options) //, RageModelMode rageModelMode)
         {
             Character        = character;
-            Options          = Character.CalculationOptions as CalculationOptionsProtPaladin;
+            Options          = options;
             Stats            = stats;
-            DefendTable      = new DefendTable(character, stats);
-            ParryModel       = new ParryModel(character, stats);
+            DefendTable      = new DefendTable(character, stats, options);
+            ParryModel       = new ParryModel(character, stats, options);
             _attackModelMode = attackModelMode;
 
-            Abilities.Add(Ability.None, character, stats);
-            Abilities.Add(Ability.ShieldOfRighteousness, character, stats);
-            Abilities.Add(Ability.HammerOfTheRighteous, character, stats);
-            Abilities.Add(Ability.SealOfVengeance, character, stats);
-            Abilities.Add(Ability.HolyVengeance, character, stats);
-            Abilities.Add(Ability.JudgementOfVengeance, character, stats);
-            Abilities.Add(Ability.SealOfRighteousness, character, stats);
-            Abilities.Add(Ability.JudgementOfRighteousness, character, stats);
-            Abilities.Add(Ability.Exorcism, character, stats);
-            Abilities.Add(Ability.HammerOfWrath, character, stats);
-            Abilities.Add(Ability.AvengersShield, character, stats);
-            Abilities.Add(Ability.HolyShield, character, stats);
-            Abilities.Add(Ability.RetributionAura, character, stats);
-            Abilities.Add(Ability.HolyWrath, character, stats);
-            Abilities.Add(Ability.Consecration, character, stats);
+            Abilities.Add(Ability.None, character, stats, Options);
+            Abilities.Add(Ability.ShieldOfRighteousness, character, stats, Options);
+            Abilities.Add(Ability.HammerOfTheRighteous, character, stats, Options);
+            Abilities.Add(Ability.SealOfVengeance, character, stats, Options);
+            Abilities.Add(Ability.HolyVengeance, character, stats, Options);
+            Abilities.Add(Ability.JudgementOfVengeance, character, stats, Options);
+            Abilities.Add(Ability.SealOfRighteousness, character, stats, Options);
+            Abilities.Add(Ability.JudgementOfRighteousness, character, stats, Options);
+            Abilities.Add(Ability.Exorcism, character, stats, Options);
+            Abilities.Add(Ability.HammerOfWrath, character, stats, Options);
+            Abilities.Add(Ability.AvengersShield, character, stats, Options);
+            Abilities.Add(Ability.HolyShield, character, stats, Options);
+            Abilities.Add(Ability.RetributionAura, character, stats, Options);
+            Abilities.Add(Ability.HolyWrath, character, stats, Options);
+            Abilities.Add(Ability.Consecration, character, stats, Options);
 
             Calculate();
         }

@@ -35,7 +35,7 @@ namespace Rawr.ProtPaladin {
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false);
                     // Glancing blow reduction
                     DamageMultiplier *= (1.0f + Stats.BonusPhysicalDamageMultiplier);
-                    DamageMultiplier *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Glance));
+                    DamageMultiplier *= (1.0f - (Lookup.GlancingReduction(Character, Options.TargetLevel) * AttackTable.Glance));
                     critMultiplier = 1.0f;
                     DamageMultiplier *= (1.0f - ArmorReduction);
                     break;               
@@ -285,49 +285,33 @@ namespace Rawr.ProtPaladin {
             Threat = abilityThreat;
         }
 
-        public AbilityModel(Character character, Stats stats, Ability ability) {
+        public AbilityModel(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin options) {
             Character   = character;
             Stats       = stats;
             Ability     = ability;
-            Options     = Character.CalculationOptions as CalculationOptionsProtPaladin;
+            
+            Options     = options;
             Talents     = Character.PaladinTalents;
-            AttackTable = new AttackTable(character, stats, ability);
+            AttackTable = new AttackTable(character, stats, ability, Options);
 
+            if (!Lookup.IsSpell(Ability))
+            {
+                ArmorReduction  = Lookup.EffectiveTargetArmorReduction(Character, Stats, Options.TargetArmor, Options.TargetLevel);
+            }
             Name                = Lookup.Name(Ability);
-            ArmorReduction      = Lookup.EffectiveTargetArmorReduction(Character, Stats);//TODO: Separate spells, no need to calculate armor, if it doesn't affect the ability anyways
             DamageMultiplier    = Lookup.StanceDamageMultipler(Character, Stats);
-            DamageMultiplier   *= Lookup.CreatureTypeDamageMultiplier(Character);
+            DamageMultiplier   *= Lookup.CreatureTypeDamageMultiplier(Character, Options.TargetType);
 
             CalculateDamage();
             CalculateThreat();
         }
     }
 
-    public class AbilityModelList : Dictionary<Ability, AbilityModel> { // [Astryl] Changed this to a generic Dictionary<>, and commented out all but one of the members, since they were redundant
-		//public AbilityModel this[Ability ability]
-		//{
-		//    get { return ((AbilityModel)(Dictionary[ability])); }
-		//    set { Dictionary[ability] = value; }
-		//}
-
-		//public void Add(Ability ability, AbilityModel abilityModel)
-		//{
-		//    Dictionary.Add(ability, abilityModel);
-		//}
-
-		public void Add(Ability ability, Character character, Stats stats)
+    public class AbilityModelList : Dictionary<Ability, AbilityModel>
+    {
+		public void Add(Ability ability, Character character, Stats stats, CalculationOptionsProtPaladin options)
 		{
-			this.Add(ability, new AbilityModel(character, stats, ability));
+            this.Add(ability, new AbilityModel(character, stats, ability, options));
 		}
-
-		//public void Remove(Ability ability)
-		//{
-		//    Dictionary.Remove(ability);
-		//}
-
-		//public bool Contains(Ability ability)
-		//{
-		//    return Dictionary.Contains(ability);
-		//}
     }
 }

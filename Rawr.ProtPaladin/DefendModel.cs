@@ -30,7 +30,7 @@ namespace Rawr.ProtPaladin
         public void Calculate()
         {
             float attackSpeed           = ParryModel.BossAttackSpeed; // Options.BossAttackSpeed;
-            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats));
+            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, Options.TargetLevel));
             float baseDamagePerSecond   = Options.BossAttackValue / Options.BossAttackSpeed;
             float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
 
@@ -76,13 +76,13 @@ namespace Rawr.ProtPaladin
             */
         }
 
-        public DefendModel(Character character, Stats stats)
+        public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin options)
         {
             Character   = character;
             Stats       = stats;
-            Options     = Character.CalculationOptions as CalculationOptionsProtPaladin;
-            ParryModel  = new ParryModel(character, stats);
-            DefendTable = new DefendTable(character, stats); 
+            Options     = options;
+            ParryModel  = new ParryModel(character, stats, options);
+            DefendTable = new DefendTable(character, stats, options); 
             Calculate();
         }
     }

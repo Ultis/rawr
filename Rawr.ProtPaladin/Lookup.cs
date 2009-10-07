@@ -26,78 +26,51 @@ namespace Rawr.ProtPaladin
             TargetArmor *= (1f - ArmorIgnoreDebuffs) * (1f - ArmorIgnoreBuffs);
             float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
             
-            //float ArPCapRating = 100.0f * ProtPaladin.ArPToArmorPenetration; // 1231.62 rating = 100%
-
             return ArPCap;
         }
         
-        /// <summary>
-        /// A mob's or player's crit chance is modified by the difference between the attacker's Attack Rating 
-        /// and the defender's Defense. The attack rating equals the skill with the currently equipped weapon 
-        /// (WS = Weapon Skill), being level * 5 for mobs and the same for player chars with maximum weapon skill. 
-        /// Each point of AR exceeding the target's Defense will increase chance to crit by 0.04%.
-        /// </summary>
-        /// <returns>Returns the modifier of chance for two combatants. (0.006 = 0.6%)</returns>
-        /// <remarks>This is being handled in the Diminishing Returns avoidance function.</remarks>
-        /*public static float CombatRatingModifier(Character character, Stats stats)
+        public static float TargetArmorReduction(Character character, Stats stats, int targetArmor)
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            float AttackerAttackRating = calcOpts.TargetLevel * 5.0f;
-            float DefenderDefenseSkill = stats.Defense;
-            float Modifier = (AttackerAttackRating - DefenderDefenseSkill) * 0.0004f;
-            return Modifier;
-        }*/
-
-        public static float TargetArmorReduction(Character character, Stats stats)
-        {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            int targetArmor = calcOpts.TargetArmor;
             float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
                 stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating); 
             return damageReduction;
         }
 
-        public static float EffectiveTargetArmorReduction(Character character, Stats stats)
+        public static float EffectiveTargetArmorReduction(Character character, Stats stats, int targetArmor, int targetLevel)
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            float targetArmor = GetEffectiveTargetArmor(character.Level, calcOpts.TargetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
-            float damageReduction = StatConversion.GetArmorDamageReduction(calcOpts.TargetLevel, targetArmor, 0f, 0f, 0f); 
+            float effectiveTargetArmor = GetEffectiveTargetArmor(character.Level, targetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
+            float damageReduction = StatConversion.GetArmorDamageReduction(targetLevel, effectiveTargetArmor, 0f, 0f, 0f); 
             
             return damageReduction;
         }
 
-        public static float TargetCritChance(Character character, Stats stats)
+        public static float TargetCritChance(Character character, Stats stats, int targetLevel)
         {
-            //CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            return Math.Max(0.0f, (0.05f /*+ CombatRatingModifier(character, stats)*/) - AvoidanceChance(character, stats, HitResult.Crit));
+            return Math.Max(0.0f, 0.05f - AvoidanceChance(character, stats, HitResult.Crit, targetLevel));
         }
 
-        public static float TargetAvoidanceChance(Character character, Stats stats, HitResult avoidanceType)
+        public static float TargetAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-
             switch (avoidanceType)
             {
 
-                case HitResult.Miss  : return StatConversion.WHITE_MISS_CHANCE_CAP[  calcOpts.TargetLevel - 80];
-                case HitResult.Dodge : return StatConversion.WHITE_DODGE_CHANCE_CAP[ calcOpts.TargetLevel - 80];
-                case HitResult.Parry : return StatConversion.WHITE_PARRY_CHANCE_CAP[ calcOpts.TargetLevel - 80];
-                case HitResult.Glance: return StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - 80];
-                case HitResult.Block : return StatConversion.WHITE_BLOCK_CHANCE_CAP[ calcOpts.TargetLevel - 80];
+                case HitResult.Miss  : return StatConversion.WHITE_MISS_CHANCE_CAP[  targetLevel - 80];
+                case HitResult.Dodge : return StatConversion.WHITE_DODGE_CHANCE_CAP[ targetLevel - 80];
+                case HitResult.Parry : return StatConversion.WHITE_PARRY_CHANCE_CAP[ targetLevel - 80];
+                case HitResult.Glance: return StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
+                case HitResult.Block : return StatConversion.WHITE_BLOCK_CHANCE_CAP[ targetLevel - 80];
                 case HitResult.Resist:
                     // Patial resists don't belong in the combat table, they are a damage multiplier (reduction)
                     // The Chance to get any Partial Resist
-                    float partialChance = 1.0f - StatConversion.GetResistanceTable(character.Level, calcOpts.TargetLevel, 0.0f, stats.SpellPenetration)[0];
+                    float partialChance = 1.0f - StatConversion.GetResistanceTable(character.Level, targetLevel, 0.0f, stats.SpellPenetration)[0];
                     return partialChance;
                 default: return 0.0f;
             }
         }
 
         // Creature Type Damage Bonus from Crusade
-        public static float CreatureTypeDamageMultiplier(Character character) {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-
-            switch (calcOpts.TargetType) {
+        public static float CreatureTypeDamageMultiplier(Character character, string targetType) {
+            switch (targetType) {
                 case "Humanoid": case "Demon": case "Elemental": return (1f + character.PaladinTalents.Crusade * 0.01f);
                 case "Undead": return (1f + character.PaladinTalents.Crusade * 0.01f) * (1f + (character.PaladinTalents.GlyphOfSenseUndead ? 0.01f : 0f));
                 default: return 1f;
@@ -109,7 +82,6 @@ namespace Rawr.ProtPaladin
         public static float StanceDamageReduction(Character character, Stats stats) { return StanceDamageReduction(character, stats, DamageType.Physical); }
         public static float StanceDamageReduction(Character character, Stats stats, DamageType damageType) {
             PaladinTalents talents = character.PaladinTalents;
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
 
             float damageTaken = 1.0f * (1.0f + stats.DamageTakenMultiplier);
             //Talents
@@ -126,7 +98,6 @@ namespace Rawr.ProtPaladin
                     return damageTaken * (1.0f - talents.GuardedByTheLight * 0.03f);
                 default:
                     return damageTaken;
-
             }
         }
 
@@ -135,18 +106,15 @@ namespace Rawr.ProtPaladin
         public static float BonusPhysicalHastePercentage(Character character, Stats stats)    { return StatConversion.GetHasteFromRating(stats.HasteRating,CharacterClass.Paladin) + stats.PhysicalHaste; }
         public static float BonusSpellHastePercentage(Character character, Stats stats)       { return StatConversion.GetSpellHasteFromRating(stats.HasteRating,CharacterClass.Paladin) + stats.SpellHaste; }
 
-        public static float HitChance(Character character, Stats stats) {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+        public static float HitChance(Character character, Stats stats, int targetLevel) {
             float physicalHit = StatConversion.GetPhysicalHitFromRating(stats.HitRating,CharacterClass.Paladin) + stats.PhysicalHit;
-            return Math.Min(1f, (1f - StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel-80]) + physicalHit);
+            return Math.Min(1f, (1f - StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80]) + physicalHit);
         }
 
-        public static float SpellHitChance(Character character, Stats stats) {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-
+        public static float SpellHitChance(Character character, Stats stats, int targetLevel) {
             float spellHit = StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.SpellHit;
 
-            int DeltaLevel = calcOpts.TargetLevel - character.Level;
+            int DeltaLevel = targetLevel - character.Level;
 
             if      (DeltaLevel == 3) return Math.Min(1f, 0.83f + spellHit); // 83% chance to hit
             else if (DeltaLevel == 2) return Math.Min(1f, 0.94f + spellHit); // 94% chance to hit
@@ -154,45 +122,42 @@ namespace Rawr.ProtPaladin
             else                      return Math.Min(1f, 0.96f + spellHit); // 96% chance to hit
         }
 
-        public static float CritChance(Character character, Stats stats) {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-
+        public static float CritChance(Character character, Stats stats, int targetLevel) {
             return Math.Max(0f,Math.Min(1f,StatConversion.GetCritFromRating(stats.CritRating,CharacterClass.Paladin)
                                            + StatConversion.GetCritFromAgility(stats.Agility,CharacterClass.Paladin)
-                                           + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel-80]
+                                           + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]
                                            + stats.PhysicalCrit));
         }
 
-        public static float SpellCritChance(Character character, Stats stats) {
-            //CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+        /// <summary>
+        /// Unlike the melee combat system, spell crit makes absolutely no difference to hit chance. 
+        /// All spells, regardless of whether they are treated as binary or not, roll hit and crit separately. 
+        /// Conceptually, the game rolls for your hit chance first, and if the spell hits you have a separate roll for whether it crits. 
+        /// Overall chance to crit over all spells cast is thus affected by hit rate. 
+        /// To calculate overall crit rate, multiplying the two chances together: 
+        /// Crit rate over all spell casts = crit/// hit
+        /// 
+        /// For example, a caster with no spell hit rating gear or talents, 
+        /// against a mob 3 levels higher (83% hit chance), and 30% crit rating from gear and talents: 
+        /// crit rate over all spell casts = 30%/// 83% = 24.9%
+        /// 
+        /// A level 80 player against a level 83 boss needs +26.232*k hit rating, to achieve +k% chance to hit with spells.
+        /// In addition, direct damage spells suffer from partial resistance, but again, that has no effect on whether a spell hits or not.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="stats"></param>
+        /// <returns></returns>
+        public static float SpellCritChance(Character character, Stats stats, int targetLevel) {
             float spellCrit = Math.Min(1f, StatConversion.GetSpellCritFromRating(stats.CritRating,CharacterClass.Paladin) + StatConversion.GetSpellCritFromIntellect(stats.Intellect,CharacterClass.Paladin) + stats.SpellCrit);
-            
-            /*
-             * Unlike the melee combat system, spell crit makes absolutely no difference to hit chance. 
-             * All spells, regardless of whether they are treated as binary or not, roll hit and crit separately. 
-             * Conceptually, the game rolls for your hit chance first, and if the spell hits you have a separate roll for whether it crits. 
-             * Overall chance to crit over all spells cast is thus affected by hit rate. 
-             * To calculate overall crit rate, multiplying the two chances together: 
-             * Crit rate over all spell casts = crit * hit
-             * 
-             * For example, a caster with no spell hit rating gear or talents, 
-             * against a mob 3 levels higher (83% hit chance), and 30% crit rating from gear and talents: 
-             * crit rate over all spell casts = 30% * 83% = 24.9%
-             * 
-             * A level 80 player against a level 83 boss needs +26.232*k hit rating, to achieve +k% chance to hit with spells.
-             * In addition, direct damage spells suffer from partial resistance, but again, that has no effect on whether a spell hits or not.
-             */
 
-            return spellCrit * SpellHitChance(character, stats); //moved target level dependency to spell hit chance
+            return spellCrit * SpellHitChance(character, stats, targetLevel);
         }
         
-        public static float BonusCritPercentage(Character character, Stats stats, Ability ability)
+        public static float BonusCritPercentage(Character character, Stats stats, Ability ability, int targetLevel, string targetType)
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-
             // Grab base melee crit chance before adding ability-specific crit chance
-            float abilityCritChance = CritChance(character, stats);
-            float spellCritChance = SpellCritChance(character, stats);
+            float abilityCritChance = CritChance(character, stats, targetLevel);
+            float spellCritChance = SpellCritChance(character, stats, targetLevel);
             
             switch (ability)
             {                
@@ -219,9 +184,9 @@ namespace Rawr.ProtPaladin
                     abilityCritChance = spellCritChance;// crit chance = spell
                     break;
                 case Ability.Exorcism:
-                    if (calcOpts.TargetType == "Undead" || calcOpts.TargetType == "Demon") {
+                    if (targetType == "Undead" || targetType == "Demon") {
                         // 100% chance the spell will crit, if it hits.
-                        abilityCritChance = SpellHitChance(character, stats);
+                        abilityCritChance = SpellHitChance(character, stats, targetLevel);
                         break;
                     }
                     abilityCritChance = spellCritChance;// crit chance = spell
@@ -268,13 +233,12 @@ namespace Rawr.ProtPaladin
                 return Math.Max(1.0f, 2.0f/ (1.0f + BonusPhysicalHastePercentage(character, stats)));
         }
 
-        public static float GlancingReduction(Character character)
+        public static float GlancingReduction(Character character, int targetLevel)
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             // The character is a melee class, lowEnd is element of [0.01, 0.91]
-            float lowEnd = Math.Max(0.01f, Math.Min(0.91f, 1.3f - (0.05f * (float)(calcOpts.TargetLevel - character.Level) * 5.0f)));
+            float lowEnd = Math.Max(0.01f, Math.Min(0.91f, 1.3f - (0.05f * (float)(targetLevel - character.Level) * 5.0f)));
             // The character is a melee class, highEnd is element of [0.20, 0.99]
-            float highEnd = Math.Max(0.20f, Math.Min(0.99f, 1.2f - (0.03f * (float)(calcOpts.TargetLevel - character.Level) * 5.0f)));
+            float highEnd = Math.Max(0.20f, Math.Min(0.99f, 1.2f - (0.03f * (float)(targetLevel - character.Level) * 5.0f)));
             
             return (lowEnd + highEnd) / 2.0f;
         }
@@ -284,24 +248,19 @@ namespace Rawr.ProtPaladin
             return character.PaladinTalents.ArdentDefender * 0.20f / 3;
         }
 
-        public static float ArmorReduction(Character character, Stats stats) // incoming damage
+        public static float ArmorReduction(Character character, Stats stats, int targetLevel) // incoming damage
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            return Math.Max(0.0f, Math.Min(0.75f, stats.Armor / (stats.Armor + (467.5f * calcOpts.TargetLevel - 22167.5f))));
+            return Math.Max(0.0f, Math.Min(0.75f, stats.Armor / (stats.Armor + (467.5f * targetLevel - 22167.5f))));
         }
 
         public static float ActiveBlockReduction(Character character, Stats stats)
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            PaladinTalents talents = character.PaladinTalents;
-            
             // This formula assumes judging on cd, and needs to be modified as soon as we support custom rotations.
             return (stats.BlockValue + stats.HolyShieldBlockValue + stats.JudgementBlockValue + stats.ShieldOfRighteousnessBlockValue);
         }
 
-        public static float MagicReduction(Character character, Stats stats, DamageType school)
+        public static float MagicReduction(Character character, Stats stats, DamageType school, int targetLevel)
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             float damageReduction = Lookup.StanceDamageReduction(character, stats, school);
             float totalResist = stats.AllResist;
             float resistScale = 0.0f;
@@ -315,9 +274,9 @@ namespace Rawr.ProtPaladin
                 case DamageType.Shadow: totalResist += stats.ShadowResistance; break;
             }
 
-            if      ((calcOpts.TargetLevel - character.Level) == 0) resistScale = 400.0f;
-            else if ((calcOpts.TargetLevel - character.Level) == 1) resistScale = 405.0f;
-            else if ((calcOpts.TargetLevel - character.Level) == 2) resistScale = 410.0f;
+            if      ((targetLevel - character.Level) == 0) resistScale = 400.0f;
+            else if ((targetLevel - character.Level) == 1) resistScale = 405.0f;
+            else if ((targetLevel - character.Level) == 2) resistScale = 410.0f;
             else
                 // This number is still being tested by many and may be slightly higher
                 // update: it seems 510 is a more realistic value
@@ -327,10 +286,9 @@ namespace Rawr.ProtPaladin
             return Math.Max(0.0f, (1.0f - (totalResist / (resistScale + totalResist))) * damageReduction);
         }
 
-        public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType)
+        public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
         {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            return StatConversion.GetDRAvoidanceChance(character,stats,avoidanceType,calcOpts.TargetLevel);
+            return StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel);
         }
 
         // Combination nCk

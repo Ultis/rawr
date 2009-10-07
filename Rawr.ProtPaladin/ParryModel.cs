@@ -39,12 +39,12 @@ namespace Rawr.ProtPaladin {
             }
         }
 
-        public ParryModel(Character character, Stats stats) {
+        public ParryModel(Character character, Stats stats, CalculationOptionsProtPaladin options) {
             Character   = character;
             Stats       = stats;
-            Options     = character.CalculationOptions as CalculationOptionsProtPaladin;
-            AttackTable = new AttackTable(character, stats);
-            DefendTable = new DefendTable(character, stats);
+            Options     = options;
+            AttackTable = new AttackTable(character, stats, options);
+            DefendTable = new DefendTable(character, stats, options);
 
             Calculate();
         }
