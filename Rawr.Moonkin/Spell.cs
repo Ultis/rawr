@@ -124,25 +124,29 @@ namespace Rawr.Moonkin
         public ProcEffect(SpecialEffect effect)
         {
             this.Effect = effect;
-            // Currently only shadow damage procs use special effects system
+            // Shadow damage procs - most widely varied at the current moment
             if (effect.Stats.ShadowDamage > 0)
             {
                 CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
+                    float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                    float triggerInterval = 0.0f;
                     switch (Effect.Trigger)
                     {
                         case Trigger.DoTTick:       // Extract
-                            float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                            return effect.GetAverageStats(r.Duration / r.DotTicks).ShadowDamage * specialDamageModifier;
+                            triggerInterval = r.Duration / r.DotTicks;
+                            break;
                         case Trigger.SpellHit:      // Pendulum
-                            specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                            return effect.GetAverageStats(r.Duration / r.CastCount).ShadowDamage * specialDamageModifier;
+                            triggerInterval = r.Duration / r.CastCount;
+                            break;
                         case Trigger.DamageDone:    // DMC: Death
-                            specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                            return effect.GetAverageStats(r.Duration / (r.CastCount + r.DotTicks)).ShadowDamage * specialDamageModifier;
+                            triggerInterval = r.Duration / (r.CastCount + r.DotTicks);
+                            break;
                         default:
                             return 0.0f;
                     }
+                    float procsPerSecond = Effect.GetAverageProcsPerSecond(triggerInterval, 1.0f, 3.0f, c.FightLength * 60.0f);
+                    return Effect.Stats.ShadowDamage * specialDamageModifier * procsPerSecond;
                 };
             }
 			// Lightning Capacitor, Thunder Capacitor, Reign of the Unliving/Undead
@@ -153,15 +157,17 @@ namespace Rawr.Moonkin
 					CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
 					{
 						float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusNatureDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-						return effect.GetAverageStats(r.Duration / (r.CastCount * sc)).NatureDamage * specialDamageModifier;
+                        float procsPerSecond = Effect.GetAverageProcsPerSecond(r.Duration / (r.CastCount * sc), 1.0f, 3.0f, c.FightLength * 60.0f);
+                        return Effect.Stats.NatureDamage * specialDamageModifier * procsPerSecond;
 					};
 				}
 				else
 				{
 					CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
 					{
-						float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusFireDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-						return effect.GetAverageStats(r.Duration / (r.CastCount * sc)).FireDamage * specialDamageModifier;
+                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusFireDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                        float procsPerSecond = Effect.GetAverageProcsPerSecond(r.Duration / (r.CastCount * sc), 1.0f, 3.0f, c.FightLength * 60.0f);
+                        return Effect.Stats.FireDamage * specialDamageModifier * procsPerSecond;
 					};
 				}
 			}
@@ -169,9 +175,8 @@ namespace Rawr.Moonkin
             {
                 CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
-                    float procsPerRotation = Effect.Chance * r.CastCount;
-                    float timeBetweenProcs = r.Duration / procsPerRotation + Effect.Cooldown;
-                    return (Effect.Stats.Mp5 / 5.0f * Effect.Duration) / timeBetweenProcs * 5.0f;
+                    float procsPerSecond = Effect.GetAverageProcsPerSecond(r.Duration / r.CastCount, 1.0f, 3.0f, c.FightLength * 60f);
+                    return (Effect.Stats.Mp5 / 5.0f * Effect.Duration) * procsPerSecond * 5.0f;
                 };
             }
             // Moonkin 4T8 set bonus (15% chance on IS tick to proc an instant-cast Starfire)
@@ -217,26 +222,36 @@ namespace Rawr.Moonkin
             {
                 Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
-                    if (Effect.Stats.SpellPower > 0)
-                        sp += Effect.Stats.SpellPower * Effect.MaxStack;
-                    if (Effect.Stats.CritRating > 0)
-                        sc += StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
-                    if (Effect.Stats.HasteRating > 0)
-                        sHa += StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
-                    if (Effect.Stats.Spirit > 0)
+                    int maxStack = Effect.MaxStack;
+                    Stats st = Effect.Stats;
+                    float spellPower = st.SpellPower;
+                    float critRating = st.CritRating;
+                    float spellCrit = StatConversion.GetSpellCritFromRating(critRating);
+                    float hasteRating = st.HasteRating;
+                    float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating);
+                    float spirit = st.Spirit;
+                    float highestStat = st.HighestStat;
+
+                    if (spellPower > 0)
+                        sp += spellPower * maxStack;
+                    if (critRating > 0)
+                        sc += spellCrit;
+                    if (hasteRating > 0)
+                        sHa += spellHaste;
+                    if (spirit > 0)
                     {
                         Stats s = c.BasicStats.Clone();
-                        s.Spirit += Effect.Stats.Spirit * Effect.MaxStack;
+                        s.Spirit += spirit;
                         CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
                         storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
                         sp += storedStats.SpellPower;
                     }
-                    if (Effect.Stats.HighestStat > 0)
+                    if (highestStat > 0)
                     {
                         if (c.BasicStats.Spirit > c.BasicStats.Intellect)
                         {
                             Stats s = c.BasicStats.Clone();
-                            s.Spirit += Effect.Stats.HighestStat;
+                            s.Spirit += highestStat;
                             CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
                             storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
                             sp += storedStats.SpellPower;
@@ -244,7 +259,7 @@ namespace Rawr.Moonkin
                         else
                         {
                             Stats s = c.BasicStats.Clone();
-                            s.Intellect += Effect.Stats.HighestStat;
+                            s.Intellect += highestStat;
                             CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
                             storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
                             storedStats.SpellCrit = cNew.SpellCrit - c.SpellCrit;
@@ -255,27 +270,31 @@ namespace Rawr.Moonkin
                 };
                 Deactivate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
-                    if (Effect.Stats.SpellPower > 0)
-                        sp -= Effect.Stats.SpellPower * Effect.MaxStack;
-                    if (Effect.Stats.CritRating > 0)
-                        sc -= StatConversion.GetSpellCritFromRating(Effect.Stats.CritRating);
-                    if (Effect.Stats.HasteRating > 0)
-                        sHa -= StatConversion.GetSpellHasteFromRating(Effect.Stats.HasteRating);
-                    if (Effect.Stats.Spirit > 0)
+                    int maxStack = Effect.MaxStack;
+                    Stats st = Effect.Stats;
+                    float spellPower = st.SpellPower;
+                    float critRating = st.CritRating;
+                    float spellCrit = StatConversion.GetSpellCritFromRating(critRating);
+                    float hasteRating = st.HasteRating;
+                    float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating);
+                    float spirit = st.Spirit;
+                    float highestStat = st.HighestStat;
+
+                    if (spellPower > 0)
+                        sp -= spellPower * maxStack;
+                    if (critRating > 0)
+                        sc -= spellCrit;
+                    if (hasteRating > 0)
+                        sHa -= spellHaste;
+                    if (spirit > 0)
                     {
                         sp -= storedStats.SpellPower;
                     }
-                    if (Effect.Stats.HighestStat > 0)
+                    if (highestStat > 0)
                     {
-                        if (c.BasicStats.Spirit > c.BasicStats.Intellect)
-                        {
-                            sp -= storedStats.SpellPower;
-                        }
-                        else
-                        {
-                            sp -= storedStats.SpellPower;
+                        sp -= storedStats.SpellPower;
+                        if (c.BasicStats.Intellect >= c.BasicStats.Spirit)
                             sc -= storedStats.SpellCrit;
-                        }
                     }
                 };
                 UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
@@ -395,7 +414,7 @@ namespace Rawr.Moonkin
     public class SpellRotation
     {
         public MoonkinSolver Solver { get; set; }
-        private Spell LocateSpell(Spell[] SpellData, string name)
+        /*private Spell LocateSpell(Spell[] SpellData, string name)
         {
             foreach (Spell sp in SpellData)
             {
@@ -404,7 +423,7 @@ namespace Rawr.Moonkin
             }
             return null;
             //return Array.Find<Spell>(SpellData, delegate(Spell sp) { return sp.Name == name; });
-        }
+        }*/
         public List<string> SpellsUsed;
         public RotationData RotationData = new RotationData();
         public string Name { get; set; }
@@ -423,17 +442,19 @@ namespace Rawr.Moonkin
         private void DoMainNuke(Character character, CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
+            int naturesGrace = character.DruidTalents.NaturesGrace;
+            int starlightWrath = character.DruidTalents.StarlightWrath;
 
             float gcd = 1.5f / (1.0f + spellHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
             float ngGCD = (float)Math.Max(gcd / 1.2f, 1.0f);
             float instantCastNG = ngGCD + latency;
 
-            mainNuke.CastTime = mainNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
+            mainNuke.CastTime = mainNuke.BaseCastTime - 0.1f * starlightWrath;
             float totalCritChance = spellCrit + mainNuke.CriticalChanceModifier;
             float normalCastTime = (float)Math.Max(mainNuke.CastTime / (1 + spellHaste), instantCast);
-            mainNuke.NGCastTime = (float)Math.Max(mainNuke.CastTime / (1 + spellHaste) / (1 + 0.2f * character.DruidTalents.NaturesGrace / 3.0f), instantCastNG);
-            float NGProcChance = totalCritChance * character.DruidTalents.NaturesGrace / 3.0f;
+            mainNuke.NGCastTime = (float)Math.Max(mainNuke.CastTime / (1 + spellHaste) / (1 + 0.2f * naturesGrace / 3.0f), instantCastNG);
+            float NGProcChance = totalCritChance * naturesGrace / 3.0f;
             float NGUptime = 1.0f - (float)Math.Pow(1.0f - NGProcChance, Math.Floor(3.0f / normalCastTime) + 1.0f);
             mainNuke.CastTime = (1 - NGUptime) * normalCastTime + NGUptime * mainNuke.NGCastTime;
             // Damage calculations
@@ -517,7 +538,8 @@ namespace Rawr.Moonkin
             {
                 // Nuke only
                 case 1:
-                    Spell mainNuke = LocateSpell(Solver.SpellData, SpellsUsed[0]);
+                    Spell mainNuke = Solver.FindSpell(SpellsUsed[0]);
+                    //Spell mainNuke = LocateSpell(Solver.SpellData, SpellsUsed[0]);
                     DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
 
                     float omenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f : 0;
@@ -535,8 +557,10 @@ namespace Rawr.Moonkin
                 // Nuke + 1 DotEffect
                 case 2:
                     // Find the spells
-                    Spell DotEffectSpell = LocateSpell(Solver.SpellData, SpellsUsed[0]);
-                    mainNuke = LocateSpell(Solver.SpellData, SpellsUsed[1]);
+                    Spell DotEffectSpell = Solver.FindSpell(SpellsUsed[0]);
+                    mainNuke = Solver.FindSpell(SpellsUsed[1]);
+                    //Spell DotEffectSpell = LocateSpell(Solver.SpellData, SpellsUsed[0]);
+                    //mainNuke = LocateSpell(Solver.SpellData, SpellsUsed[1]);
                     // Do Starfire glyph calculations, if applicable; then do DoT spell calculations
                     if (starfireGlyph && mainNuke.Name == "SF" && DotEffectSpell.Name == "MF") DotEffectSpell.DotEffect.Duration += 9.0f;
                     DoDotSpell(character, calcs, ref DotEffectSpell, spellPower, spellHit, spellCrit, spellHaste);
@@ -602,9 +626,9 @@ namespace Rawr.Moonkin
                 // Nuke + both DotEffects
                 case 3:
                     // Find the spells
-                    Spell moonFire = LocateSpell(Solver.SpellData, SpellsUsed[0]);
-                    Spell insectSwarm = LocateSpell(Solver.SpellData, SpellsUsed[1]);
-                    mainNuke = LocateSpell(Solver.SpellData, SpellsUsed[2]);
+                    Spell moonFire = Solver.FindSpell(SpellsUsed[0]);
+                    Spell insectSwarm = Solver.FindSpell(SpellsUsed[1]);
+                    mainNuke = Solver.FindSpell(SpellsUsed[2]);
                     // Do Starfire glyph calculations, if applicable; then do DoT spell calculations
                     if (starfireGlyph && mainNuke.Name == "SF") moonFire.DotEffect.Duration += 9.0f;
                     DoDotSpell(character, calcs, ref moonFire, spellPower, spellHit, spellCrit, spellHaste);
@@ -687,8 +711,8 @@ namespace Rawr.Moonkin
             float moonfireCasts = SpellsUsed.Contains("MF") ? 2.0f : 0.0f;
             float insectSwarmCasts = SpellsUsed.Contains("IS") ? 2.0f : 0.0f;
 
-            Spell moonfire = moonfireCasts > 0 ? LocateSpell(solver.SpellData, "MF") : null;
-            Spell insectSwarm = insectSwarmCasts > 0 ? LocateSpell(solver.SpellData, "IS") : null;
+            Spell moonfire = moonfireCasts > 0 ? solver.FindSpell("MF") : null;
+            Spell insectSwarm = insectSwarmCasts > 0 ? solver.FindSpell("IS") : null;
 
             // Do SF glyph
             if (starfireGlyph && moonfire != null) moonfire.DotEffect.Duration += 9.0f;
@@ -698,13 +722,13 @@ namespace Rawr.Moonkin
             float eclipseDuration = 15.0f;
             //float eclipseCooldown = 30.0f;
 
-            Spell preLunarCast = LocateSpell(solver.SpellData, "W");
+            Spell preLunarCast = solver.FindSpell("W");
 
             // Do improved Insect Swarm
             if (insectSwarm != null)
                 preLunarCast.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
 
-            Spell solarEclipseCast = new Spell(LocateSpell(solver.SpellData, "W"));
+            Spell solarEclipseCast = new Spell(solver.FindSpell("W"));
 
             // Eclipse bonus and improved Insect Swarm
 			// NOTE: Eclipse bonus additive with Moonfury and 4T9; multiplicative with everything else
@@ -714,11 +738,11 @@ namespace Rawr.Moonkin
                 solarEclipseCast.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
             solarEclipseCast.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
-            Spell preSolarCast = LocateSpell(solver.SpellData, "SF");
+            Spell preSolarCast = solver.FindSpell("SF");
             if (moonfire != null)
                 preSolarCast.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
 
-            Spell lunarEclipseCast = new Spell(LocateSpell(solver.SpellData, "SF"));
+            Spell lunarEclipseCast = new Spell(solver.FindSpell("SF"));
             lunarEclipseCast.CriticalChanceModifier += eclipseMultiplier;
             if (moonfire != null)
                 lunarEclipseCast.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
@@ -841,7 +865,7 @@ namespace Rawr.Moonkin
         public List<ProcEffect> procEffects;
         // A list of all the damage spells
         private Spell[] _spellData = null;
-        public Spell[] SpellData
+        private Spell[] SpellData
         {
             get
             {
@@ -941,6 +965,22 @@ namespace Rawr.Moonkin
         {
             // Since the property rebuilding the array is based on this variable being null, this effectively forces a refresh
             _spellData = null;
+        }
+        public Spell FindSpell(string name)
+        {
+            switch (name)
+            {
+                case "SF":
+                    return Starfire;
+                case "MF":
+                    return Moonfire;
+                case "IS":
+                    return InsectSwarm;
+                case "W":
+                    return Wrath;
+                default:
+                    return null;
+            }
         }
 
         public float NaturesGrace = 0.0f;
