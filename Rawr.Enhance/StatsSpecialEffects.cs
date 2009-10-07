@@ -8,99 +8,123 @@ namespace Rawr.Enhance
     {
         private Character _character;
         private Stats _stats;
+        private CombatStats _cs;
 
         public StatsSpecialEffects(Character character, Stats stats)
         {
             _character = character;
             _stats = stats;
+            _cs = new CombatStats(_character, _stats);
         }
 
         public Stats getSpecialEffects()
         {
             Stats statsAverage = new Stats();
-            CombatStats cs = new CombatStats(_character, _stats);
             foreach (SpecialEffect effect in _stats.SpecialEffects())
             {
-                if (effect.Trigger == Trigger.Use)
-                {
-                    statsAverage += effect.GetAverageStats();
-                }
-                else
-                {
-                    float trigger = 0f;
-                    float chance = 1f;
-                    float unhastedAttackSpeed = 3f;
-                    switch (effect.Trigger)
-                    {
-                        case Trigger.DamageDone:
-                            trigger = 1f / (cs.GetMeleeAttacksPerSec() + cs.GetSpellAttacksPerSec());
-                            chance = (float) Math.Min(1.0f, cs.ChanceMeleeHit + cs.ChanceSpellHit); // limit to 100% chance
-                            unhastedAttackSpeed = cs.UnhastedMHSpeed;
-                            break;
-                        case Trigger.MeleeCrit:
-                        case Trigger.PhysicalCrit :
-                            trigger = 1f / cs.GetMeleeCritsPerSec();
-                            chance = cs.ChanceMeleeCrit;
-                            unhastedAttackSpeed = cs.UnhastedMHSpeed;
-                            break;
-                        case Trigger.MeleeHit:
-                        case Trigger.PhysicalHit :
-                            trigger = 1f / cs.GetMeleeAttacksPerSec();
-                            chance = cs.ChanceMeleeHit;
-                            unhastedAttackSpeed = cs.UnhastedMHSpeed;
-                            break;
-                        case Trigger.DamageSpellCast :
-                        case Trigger.SpellCast :
-                            trigger = 1f / cs.GetSpellCastsPerSec();
-                            chance = 1f;
-                            break;
-                        case Trigger.DamageSpellHit :
-                        case Trigger.SpellHit :
-                            trigger = 1f / cs.GetSpellAttacksPerSec();
-                            chance = cs.ChanceSpellHit;
-                            break;
-                        case Trigger.DamageSpellCrit :
-                        case Trigger.SpellCrit :
-                            trigger = 1f / cs.GetSpellCritsPerSec();
-                            chance = cs.ChanceSpellCrit;
-                            break;
-                        case Trigger.SpellMiss :
-                            trigger = 1f / cs.GetSpellMissesPerSec();
-                            chance = 1 - cs.ChanceSpellHit;
-                            break;
-                        case Trigger.ShamanLightningBolt :
-                            trigger = 1f / cs.AbilityCooldown("Lightning Bolt");
-                            chance = cs.ChanceSpellHit;
-                            break;
-                        case Trigger.ShamanStormStrike :
-                            trigger = 1f / cs.AbilityCooldown("Stormstrike");
-                            chance = cs.ChanceYellowHitMH;
-                            break;
-                        case Trigger.ShamanShock :
-                            trigger = 1f / cs.AbilityCooldown("Earth Shock");
-                            chance = cs.ChanceSpellHit;
-                            break;
-                        case Trigger.ShamanLavaLash :
-                            trigger = 1f / cs.AbilityCooldown("Lava Lash");
-                            chance = cs.ChanceYellowHitOH;
-                            break;
-                    }
-                    if (effect.MaxStack > 1)
-                    {
-                        float timeToMax = (float)Math.Min(cs.FightLength, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
-                        statsAverage += effect.Stats * (effect.MaxStack * ((cs.FightLength - .5f * timeToMax) / cs.FightLength));
-                    }
-                    else
-                    {
-                        statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed, cs.FightLength);
-                    }
-                }
+                statsAverage += getSpecialEffects(effect);
             }
             AddParagon(statsAverage);
             AddHighestStat(statsAverage);
             return statsAverage;
         }
 
+        public Stats getSpecialEffects(SpecialEffect effect)
+        {
+            Stats statsAverage = new Stats();
+            if (effect.Trigger == Trigger.Use)
+            {
+                statsAverage += effect.GetAverageStats();
+                foreach (SpecialEffect e in effect.Stats.SpecialEffects())
+                    statsAverage += this.getSpecialEffects(e) * (effect.Duration / effect.Cooldown);
+            }
+            else
+            {
+                float trigger = 0f;
+                float chance = 1f;
+                float unhastedAttackSpeed = 3f;
+                switch (effect.Trigger)
+                {
+                    case Trigger.DamageDone:
+                        trigger = 1f / (_cs.GetMeleeAttacksPerSec() + _cs.GetSpellAttacksPerSec());
+                        chance = (float) Math.Min(1.0f, _cs.ChanceMeleeHit + _cs.ChanceSpellHit); // limit to 100% chance
+                        unhastedAttackSpeed = _cs.UnhastedMHSpeed;
+                        break;
+                    case Trigger.MeleeCrit:
+                    case Trigger.PhysicalCrit :
+                        trigger = 1f / _cs.GetMeleeCritsPerSec();
+                        chance = _cs.ChanceMeleeCrit;
+                        unhastedAttackSpeed = _cs.UnhastedMHSpeed;
+                        break;
+                    case Trigger.MeleeHit:
+                    case Trigger.PhysicalHit :
+                        trigger = 1f / _cs.GetMeleeAttacksPerSec();
+                        chance = _cs.ChanceMeleeHit;
+                        unhastedAttackSpeed = _cs.UnhastedMHSpeed;
+                        break;
+                    case Trigger.DamageSpellCast :
+                    case Trigger.SpellCast :
+                        trigger = 1f / _cs.GetSpellCastsPerSec();
+                        chance = 1f;
+                        break;
+                    case Trigger.DamageSpellHit :
+                    case Trigger.SpellHit :
+                        trigger = 1f / _cs.GetSpellAttacksPerSec();
+                        chance = _cs.ChanceSpellHit;
+                        break;
+                    case Trigger.DamageSpellCrit :
+                    case Trigger.SpellCrit :
+                        trigger = 1f / _cs.GetSpellCritsPerSec();
+                        chance = _cs.ChanceSpellCrit;
+                        break;
+                    case Trigger.SpellMiss :
+                        trigger = 1f / _cs.GetSpellMissesPerSec();
+                        chance = 1 - _cs.ChanceSpellHit;
+                        break;
+                    case Trigger.ShamanLightningBolt :
+                        trigger = 1f / _cs.AbilityCooldown("Lightning Bolt");
+                        chance = _cs.ChanceSpellHit;
+                        break;
+                    case Trigger.ShamanStormStrike :
+                        trigger = 1f / _cs.AbilityCooldown("Stormstrike");
+                        chance = _cs.ChanceYellowHitMH;
+                        break;
+                    case Trigger.ShamanShock :
+                        trigger = 1f / _cs.AbilityCooldown("Earth Shock");
+                        chance = _cs.ChanceSpellHit;
+                        break;
+                    case Trigger.ShamanLavaLash :
+                        trigger = 1f / _cs.AbilityCooldown("Lava Lash");
+                        chance = _cs.ChanceYellowHitOH;
+                        break;
+                }
+                foreach (SpecialEffect e in effect.Stats.SpecialEffects())  // deal with secondary effects
+                {
+                    statsAverage += this.getSpecialEffects(e);
+                }
+                if (effect.MaxStack > 1)
+                {
+                    float timeToMax = (float)Math.Min(_cs.FightLength, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
+                    float buffDuration = _cs.FightLength;
+                    if (effect.Stats.AttackPower == 250f || effect.Stats.AttackPower == 215f || effect.Stats.HasteRating == 57f || effect.Stats.HasteRating == 64f)
+                    {
+                        buffDuration = 20f;
+                    }
+                    if (timeToMax * .5f > buffDuration)
+                    {
+                        timeToMax = 2 * buffDuration;
+                    }
+                    statsAverage += effect.Stats * (effect.MaxStack * (((buffDuration) - .5f * timeToMax) / (buffDuration)));
+                }
+                else
+                {
+                    statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed, _cs.FightLength);
+                }
+            }
+            return statsAverage;
+        }
+
+        // Handling for Paragon trinket procs
         private void AddParagon(Stats statsAverage)
         {
             if (statsAverage.Paragon > 0)

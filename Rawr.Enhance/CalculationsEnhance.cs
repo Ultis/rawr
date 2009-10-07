@@ -765,13 +765,14 @@ namespace Rawr.Enhance
             {
                 if (HasRelevantTrigger(effect.Trigger))
                 {
-                    foreach (SpecialEffect subEffect in effect.Stats.SpecialEffects())
-                    {
-                        if (HasRelevantTrigger(subEffect.Trigger) && relevantStats(subEffect.Stats))
-                            s.AddSpecialEffect(subEffect);
-                    }
                     if (relevantStats(effect.Stats))
                         s.AddSpecialEffect(effect);
+                    else 
+                    {
+                        foreach (SpecialEffect subEffect in effect.Stats.SpecialEffects())
+                            if (HasRelevantTrigger(subEffect.Trigger) && relevantStats(subEffect.Stats))
+                                s.AddSpecialEffect(effect);
+                    }
                 }
             }
             return s;
@@ -803,8 +804,14 @@ namespace Rawr.Enhance
                 return true;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (HasRelevantTrigger(effect.Trigger) && relevantStats(effect.Stats))
-                    return true;
+                if (HasRelevantTrigger(effect.Trigger))
+                    foreach (SpecialEffect subEffect in effect.Stats.SpecialEffects())
+                    {
+                        if (HasRelevantTrigger(subEffect.Trigger) && relevantStats(subEffect.Stats))
+                            return true;
+                    }
+                    if (relevantStats(effect.Stats))
+                        return true;
             }
             return false;
         }
