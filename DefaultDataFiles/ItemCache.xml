@@ -1,6 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ArrayOfItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_shirt_01</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Neophyte's Shirt</Name>
+    <Id>53</Id>
+    <Slot>Shirt</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_shirt_01</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Rugged Trapper's Shirt</Name>
+    <Id>148</Id>
+    <Slot>Shirt</Slot>
+  </Item>
+  <Item>
     <ItemLevel>17</ItemLevel>
     <IconPath>inv_shirt_02</IconPath>
     <Stats />
@@ -46,6 +70,18 @@
     <SocketBonus />
     <Name>Stylish Black Shirt</Name>
     <Id>3427</Id>
+    <Slot>Shirt</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>20</ItemLevel>
+    <IconPath>inv_shirt_grey_01</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Common Gray Shirt</Name>
+    <Id>3428</Id>
     <Slot>Shirt</Slot>
   </Item>
   <Item>
@@ -109,6 +145,20 @@
     <Slot>Shirt</Slot>
   </Item>
   <Item>
+    <ItemLevel>25</ItemLevel>
+    <IconPath>inv_misc_lantern_01</IconPath>
+    <Stats>
+      <Spirit>3</Spirit>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Everglow Lantern</Name>
+    <Id>5323</Id>
+    <Slot>OffHand</Slot>
+  </Item>
+  <Item>
     <ItemLevel>1</ItemLevel>
     <IconPath>inv_shirt_guildtabard_01</IconPath>
     <Stats />
@@ -133,6 +183,18 @@
     <Name>Fingerless Gloves</Name>
     <Id>6202</Id>
     <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>40</ItemLevel>
+    <IconPath>inv_shirt_orange_01</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Orange Martial Shirt</Name>
+    <Id>10052</Id>
+    <Slot>Shirt</Slot>
   </Item>
   <Item>
     <ItemLevel>55</ItemLevel>
@@ -207,31 +269,28 @@
     <Slot>Trinket</Slot>
   </Item>
   <Item>
-    <ItemLevel>71</ItemLevel>
-    <IconPath>spell_holy_dispelmagic</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <RequiredClasses>Hunter</RequiredClasses>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Mature Black Dragon Sinew</Name>
-    <Id>18705</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>1</ItemLevel>
-    <IconPath>inv_misc_stonetablet_03</IconPath>
+    <IconPath>inv_shirt_14</IconPath>
     <Stats />
     <Quality>Common</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <Unique>true</Unique>
     <SocketBonus />
-    <Name>Draconic for Dummies</Name>
-    <Id>21108</Id>
-    <Slot>None</Slot>
+    <Name>Scout's Shirt</Name>
+    <Id>23345</Id>
+    <Slot>Shirt</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_shirt_16</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Squire's Shirt</Name>
+    <Id>23476</Id>
+    <Slot>Shirt</Slot>
   </Item>
   <Item>
     <ItemLevel>60</ItemLevel>
@@ -507,6 +566,33 @@
     <Slot>Trinket</Slot>
   </Item>
   <Item>
+    <ItemLevel>145</ItemLevel>
+    <IconPath>inv_misc_ammo_bullet_02</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>Bullet</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>53</MinDamage>
+    <MaxDamage>53</MaxDamage>
+    <SocketBonus />
+    <Name>Timeless Shell</Name>
+    <Id>31735</Id>
+    <Slot>Projectile</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>20</ItemLevel>
+    <IconPath>inv_shirt_guildtabard_01</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Scryers Tabard</Name>
+    <Id>31780</Id>
+    <Slot>Tabard</Slot>
+  </Item>
+  <Item>
     <ItemLevel>136</ItemLevel>
     <IconPath>inv_shoulder_12</IconPath>
     <Stats>
@@ -559,6 +645,22 @@
     <Name>Badge of Tenacity</Name>
     <Id>32658</Id>
     <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>5</ItemLevel>
+    <IconPath>inv_misc_beer_04</IconPath>
+    <Stats />
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>1</MinDamage>
+    <MaxDamage>2</MaxDamage>
+    <Speed>2.5</Speed>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Filled Blue Brewfest Stein</Name>
+    <Id>33018</Id>
+    <Slot>OneHand</Slot>
   </Item>
   <Item>
     <ItemLevel>128</ItemLevel>
@@ -708,6 +810,48 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_chest_cloth_70</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <SetName>Brewfest Garb</SetName>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Brewfest Dress</Name>
+    <Id>33863</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_helmet_118</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <SetName>Brewfest Garb</SetName>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Brown Brewfest Hat</Name>
+    <Id>33864</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_boots_cloth_18</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <SetName>Brewfest Garb</SetName>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Brewfest Slippers</Name>
+    <Id>33966</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
     <ItemLevel>75</ItemLevel>
     <IconPath>inv_enchant_prismaticsphere</IconPath>
     <Stats>
@@ -782,6 +926,31 @@
     <Name>Brutal Gladiator's Dragonhide Gloves</Name>
     <Id>34998</Id>
     <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>20</ItemLevel>
+    <IconPath>inv_shirt_guildtabard_01</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <SocketBonus />
+    <Name>Tabard of the Shattered Sun</Name>
+    <Id>35221</Id>
+    <Slot>Tabard</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_misc_tabardsummer01</IconPath>
+    <Stats />
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Tabard of Summer Flames</Name>
+    <Id>35280</Id>
+    <Slot>Tabard</Slot>
   </Item>
   <Item>
     <ItemLevel>70</ItemLevel>
@@ -1121,78 +1290,6 @@
     <Name>Solid Dragon's Eye</Name>
     <Id>36767</Id>
     <Slot>Blue</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>inv_jewelcrafting_gem_32</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Cardinal Ruby</Name>
-    <Id>36919</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>inv_jewelcrafting_gem_36</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>King's Amber</Name>
-    <Id>36922</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>inv_jewelcrafting_gem_35</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Majestic Zircon</Name>
-    <Id>36925</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>inv_jewelcrafting_gem_31</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Dreadstone</Name>
-    <Id>36928</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>inv_jewelcrafting_gem_33</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Ametrine</Name>
-    <Id>36931</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>inv_jewelcrafting_gem_34</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Eye of Zul</Name>
-    <Id>36934</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>187</ItemLevel>
@@ -2884,36 +2981,6 @@
     <Name>King's Square Bracers</Name>
     <Id>37117</Id>
     <Slot>Wrist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>128</ItemLevel>
-    <IconPath>inv_drink_08</IconPath>
-    <Stats>
-      <Stamina>45</Stamina>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Brightbrew Charm</Name>
-    <Id>37127</Id>
-    <Slot>Trinket</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>128</ItemLevel>
-    <IconPath>inv_drink_04</IconPath>
-    <Stats>
-      <Stamina>45</Stamina>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Balebrew Charm</Name>
-    <Id>37128</Id>
-    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
@@ -7905,7 +7972,6 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <MaxDamage>3</MaxDamage>
     <Speed>2.5</Speed>
     <Unique>true</Unique>
     <SocketBonus />
@@ -7920,7 +7986,6 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <MaxDamage>3</MaxDamage>
     <Speed>2.5</Speed>
     <Unique>true</Unique>
     <SocketBonus />
@@ -7935,7 +8000,6 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <MaxDamage>3</MaxDamage>
     <Speed>2.5</Speed>
     <Unique>true</Unique>
     <SocketBonus />
@@ -7950,7 +8014,6 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <MaxDamage>3</MaxDamage>
     <Speed>2.5</Speed>
     <Unique>true</Unique>
     <SocketBonus />
@@ -7965,7 +8028,6 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
-    <MaxDamage>3</MaxDamage>
     <Speed>2.5</Speed>
     <Unique>true</Unique>
     <SocketBonus />
@@ -8027,6 +8089,18 @@
     <Name>Empty Mug of Direbrew</Name>
     <Id>38287</Id>
     <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_shirt_guildtabard_01</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Tabard of the Arcane</Name>
+    <Id>38310</Id>
+    <Slot>Tabard</Slot>
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
@@ -35102,6 +35176,20 @@
     <Slot>Projectile</Slot>
   </Item>
   <Item>
+    <ItemLevel>154</ItemLevel>
+    <IconPath>inv_misc_ammo_arrow_01</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>Arrow</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>46</MinDamage>
+    <MaxDamage>47</MaxDamage>
+    <SocketBonus />
+    <Name>Terrorshaft Arrow</Name>
+    <Id>41586</Id>
+    <Slot>Projectile</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <IconPath>inv_misc_cape_02</IconPath>
     <Stats>
@@ -44031,7 +44119,7 @@
       <Intellect>28</Intellect>
       <SpellPower>355</SpellPower>
       <Resilience>28</Resilience>
-      <Mp5>14</Mp5>
+      <Mp5>11</Mp5>
     </Stats>
     <Quality>Rare</Quality>
     <Type>OneHandMace</Type>
@@ -44058,7 +44146,7 @@
     <Type>Dagger</Type>
     <Faction>Neutral</Faction>
     <MinDamage>62</MinDamage>
-    <MaxDamage>202</MaxDamage>
+    <MaxDamage>201</MaxDamage>
     <Speed>1.6</Speed>
     <SocketBonus />
     <Name>Hateful Gladiator's Spellblade</Name>
@@ -44079,7 +44167,7 @@
     <Type>Dagger</Type>
     <Faction>Neutral</Faction>
     <MinDamage>69</MinDamage>
-    <MaxDamage>221</MaxDamage>
+    <MaxDamage>220</MaxDamage>
     <Speed>1.6</Speed>
     <SocketBonus />
     <Name>Deadly Gladiator's Spellblade</Name>
@@ -44142,13 +44230,13 @@
       <Intellect>32</Intellect>
       <SpellPower>408</SpellPower>
       <Resilience>32</Resilience>
-      <Mp5>16</Mp5>
+      <Mp5>13</Mp5>
     </Stats>
     <Quality>Epic</Quality>
     <Type>OneHandMace</Type>
     <Faction>Neutral</Faction>
     <MinDamage>62</MinDamage>
-    <MaxDamage>202</MaxDamage>
+    <MaxDamage>201</MaxDamage>
     <Speed>1.6</Speed>
     <SocketBonus />
     <Name>Hateful Gladiator's Gavel</Name>
@@ -44169,7 +44257,7 @@
     <Type>OneHandMace</Type>
     <Faction>Neutral</Faction>
     <MinDamage>69</MinDamage>
-    <MaxDamage>221</MaxDamage>
+    <MaxDamage>220</MaxDamage>
     <Speed>1.6</Speed>
     <SocketBonus />
     <Name>Deadly Gladiator's Gavel</Name>
@@ -44259,7 +44347,7 @@
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
     <MinDamage>176</MinDamage>
-    <MaxDamage>327</MaxDamage>
+    <MaxDamage>326</MaxDamage>
     <Speed>2</Speed>
     <SocketBonus />
     <Name>Hateful Gladiator's Battle Staff</Name>
@@ -44280,7 +44368,7 @@
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
     <MinDamage>192</MinDamage>
-    <MaxDamage>357</MaxDamage>
+    <MaxDamage>356</MaxDamage>
     <Speed>2</Speed>
     <SocketBonus />
     <Name>Deadly Gladiator's Battle Staff</Name>
@@ -44372,7 +44460,7 @@
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
     <MinDamage>176</MinDamage>
-    <MaxDamage>327</MaxDamage>
+    <MaxDamage>326</MaxDamage>
     <Speed>2</Speed>
     <SocketBonus />
     <Name>Hateful Gladiator's Energy Staff</Name>
@@ -44393,7 +44481,7 @@
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
     <MinDamage>192</MinDamage>
-    <MaxDamage>357</MaxDamage>
+    <MaxDamage>356</MaxDamage>
     <Speed>2</Speed>
     <SocketBonus />
     <Name>Deadly Gladiator's Energy Staff</Name>
@@ -44462,8 +44550,8 @@
     <Quality>Rare</Quality>
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
-    <MinDamage>270</MinDamage>
-    <MaxDamage>406</MaxDamage>
+    <MinDamage>160</MinDamage>
+    <MaxDamage>296</MaxDamage>
     <Speed>2</Speed>
     <RequiredClasses>Druid</RequiredClasses>
     <SocketBonus />
@@ -44483,8 +44571,8 @@
     <Quality>Epic</Quality>
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
-    <MinDamage>298</MinDamage>
-    <MaxDamage>448</MaxDamage>
+    <MinDamage>176</MinDamage>
+    <MaxDamage>326</MaxDamage>
     <Speed>2</Speed>
     <RequiredClasses>Druid</RequiredClasses>
     <SocketBonus />
@@ -44678,8 +44766,8 @@
     <Quality>Rare</Quality>
     <Type>Thrown</Type>
     <Faction>Neutral</Faction>
-    <MinDamage>257</MinDamage>
-    <MaxDamage>386</MaxDamage>
+    <MinDamage>178</MinDamage>
+    <MaxDamage>267</MaxDamage>
     <Speed>1.9</Speed>
     <SocketBonus />
     <Name>Savage Gladiator's War Edge</Name>
@@ -44780,8 +44868,8 @@
     <Quality>Epic</Quality>
     <Type>Thrown</Type>
     <Faction>Neutral</Faction>
-    <MinDamage>283</MinDamage>
-    <MaxDamage>425</MaxDamage>
+    <MinDamage>196</MinDamage>
+    <MaxDamage>295</MaxDamage>
     <Speed>1.9</Speed>
     <SocketBonus />
     <Name>Hateful Gladiator's War Edge</Name>
@@ -46031,7 +46119,7 @@
       <SpellPower>50</SpellPower>
       <BlockValue>204</BlockValue>
       <Resilience>28</Resilience>
-      <Mp5>15</Mp5>
+      <Mp5>12</Mp5>
     </Stats>
     <Quality>Rare</Quality>
     <Type>Shield</Type>
@@ -46051,7 +46139,7 @@
       <SpellPower>59</SpellPower>
       <BlockValue>211</BlockValue>
       <Resilience>33</Resilience>
-      <Mp5>18</Mp5>
+      <Mp5>14</Mp5>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Shield</Type>
@@ -48308,6 +48396,18 @@
     <SocketBonus />
     <Name>Tabard of the Explorer</Name>
     <Id>43348</Id>
+    <Slot>Tabard</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_chest_cloth_30</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Tabard of Brute Force</Name>
+    <Id>43349</Id>
     <Slot>Tabard</Slot>
   </Item>
   <Item>
@@ -52553,7 +52653,7 @@
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
     <MinDamage>176</MinDamage>
-    <MaxDamage>327</MaxDamage>
+    <MaxDamage>326</MaxDamage>
     <Speed>2</Speed>
     <SocketBonus />
     <Name>Hateful Gladiator's War Staff</Name>
@@ -52574,7 +52674,7 @@
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
     <MinDamage>176</MinDamage>
-    <MaxDamage>327</MaxDamage>
+    <MaxDamage>326</MaxDamage>
     <Speed>2</Speed>
     <SocketBonus />
     <Name>Hateful Gladiator's Focus Staff</Name>
@@ -52595,7 +52695,7 @@
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
     <MinDamage>192</MinDamage>
-    <MaxDamage>357</MaxDamage>
+    <MaxDamage>356</MaxDamage>
     <Speed>2</Speed>
     <SocketBonus />
     <Name>Deadly Gladiator's War Staff</Name>
@@ -52616,7 +52716,7 @@
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
     <MinDamage>192</MinDamage>
-    <MaxDamage>357</MaxDamage>
+    <MaxDamage>356</MaxDamage>
     <Speed>2</Speed>
     <SocketBonus />
     <Name>Deadly Gladiator's Focus Staff</Name>
@@ -52951,6 +53051,30 @@
     <Name>Time-Forward Talisman</Name>
     <Id>44682</Id>
     <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_misc_bandage_17</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Wound Dressing</Name>
+    <Id>44693</Id>
+    <Slot>Shirt</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>1</ItemLevel>
+    <IconPath>inv_misc_bandage_08</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Antiseptic-Soaked Dressing</Name>
+    <Id>44694</Id>
+    <Slot>Shirt</Slot>
   </Item>
   <Item>
     <ItemLevel>183</ItemLevel>
@@ -53721,18 +53845,6 @@
     <Name>Unbreakable Healing Amplifiers</Name>
     <Id>44949</Id>
     <Slot>Head</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>1</ItemLevel>
-    <IconPath>ability_paladin_artofwar</IconPath>
-    <Stats />
-    <Quality>Common</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Champion's Seal</Name>
-    <Id>44990</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>1</ItemLevel>
@@ -63205,18 +63317,6 @@
     <Slot>MainHand</Slot>
   </Item>
   <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>spell_holy_championsgrace</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Emblem of Conquest</Name>
-    <Id>45624</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>24</ItemLevel>
     <IconPath>inv_misc_cape_16</IconPath>
     <Stats>
@@ -64935,7 +65035,7 @@
     <Type>Gun</Type>
     <Faction>Neutral</Faction>
     <MinDamage>415</MinDamage>
-    <MaxDamage>708</MaxDamage>
+    <MaxDamage>707</MaxDamage>
     <Speed>3</Speed>
     <SocketColor1>Red</SocketColor1>
     <SocketBonus>
@@ -66382,6 +66482,18 @@
   </Item>
   <Item>
     <ItemLevel>80</ItemLevel>
+    <IconPath>inv_shirt_guildtabard_01</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <Name>Furious Gladiator's Tabard</Name>
+    <Id>45983</Id>
+    <Slot>Tabard</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>80</ItemLevel>
     <IconPath>inv_jewelcrafting_gem_38</IconPath>
     <Stats>
       <HitRating>20</HitRating>
@@ -66774,7 +66886,7 @@
     <Type>OneHandMace</Type>
     <Faction>Neutral</Faction>
     <MinDamage>97</MinDamage>
-    <MaxDamage>311</MaxDamage>
+    <MaxDamage>310</MaxDamage>
     <Speed>1.8</Speed>
     <SocketBonus />
     <Name>Val'anyr, Hammer of Ancient Kings</Name>
@@ -67057,7 +67169,7 @@
     <Type>OneHandMace</Type>
     <Faction>Neutral</Faction>
     <MinDamage>94</MinDamage>
-    <MaxDamage>289</MaxDamage>
+    <MaxDamage>288</MaxDamage>
     <Speed>1.8</Speed>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
@@ -75294,30 +75406,6 @@
     <Slot>Hands</Slot>
   </Item>
   <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>spell_holy_summonchampion</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Emblem of Triumph</Name>
-    <Id>47241</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>inv_misc_trophy_argent</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Trophy of the Crusade</Name>
-    <Id>47242</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>219</ItemLevel>
     <IconPath>inv_jewelry_ring_60</IconPath>
     <Stats>
@@ -79964,18 +80052,6 @@
     <Slot>Back</Slot>
   </Item>
   <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>spell_holy_rune</IconPath>
-    <Stats />
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Crusader Orb</Name>
-    <Id>47556</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>219</ItemLevel>
     <IconPath>inv_boots_cloth_22</IconPath>
     <Stats>
@@ -81342,438 +81418,6 @@
     <Name>Girdle of the Farseer</Name>
     <Id>47621</Id>
     <Slot>Waist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Plans: Breastplate of the White Knight</Name>
-    <Id>47622</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Plans: Saronite Swordbreakers</Name>
-    <Id>47623</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Plans: Titanium Razorplate</Name>
-    <Id>47624</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Plans: Titanium Spikeguards</Name>
-    <Id>47625</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Plans: Sunforged Breastplate</Name>
-    <Id>47626</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Plans: Sunforged Bracers</Name>
-    <Id>47627</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Ensorcelled Nerubian Breastplate</Name>
-    <Id>47628</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Black Chitin Bracers</Name>
-    <Id>47629</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Crusader's Dragonscale Breastplate</Name>
-    <Id>47630</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Crusader's Dragonscale Bracers</Name>
-    <Id>47631</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Lunar Eclipse Chestguard</Name>
-    <Id>47632</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Moonshadow Armguards</Name>
-    <Id>47633</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Knightbane Carapace</Name>
-    <Id>47634</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Bracers of Swift Death</Name>
-    <Id>47635</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Royal Moonshroud Robe</Name>
-    <Id>47636</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Royal Moonshroud Bracers</Name>
-    <Id>47637</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Merlin's Robe</Name>
-    <Id>47638</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Bejeweled Wizard's Bracers</Name>
-    <Id>47639</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Plans: Breastplate of the White Knight</Name>
-    <Id>47640</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Plans: Saronite Swordbreakers</Name>
-    <Id>47641</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Plans: Sunforged Bracers</Name>
-    <Id>47642</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Plans: Sunforged Breastplate</Name>
-    <Id>47643</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Plans: Titanium Razorplate</Name>
-    <Id>47644</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Plans: Titanium Spikeguards</Name>
-    <Id>47645</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Black Chitin Bracers</Name>
-    <Id>47646</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Bracers of Swift Death</Name>
-    <Id>47647</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Crusader's Dragonscale Bracers</Name>
-    <Id>47648</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Crusader's Dragonscale Breastplate</Name>
-    <Id>47649</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Ensorcelled Nerubian Breastplate</Name>
-    <Id>47650</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Knightbane Carapace</Name>
-    <Id>47651</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Lunar Eclipse Chestguard</Name>
-    <Id>47652</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <SocketBonus />
-    <Name>Pattern: Moonshadow Armguards</Name>
-    <Id>47653</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Bejeweled Wizard's Bracers</Name>
-    <Id>47654</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Merlin's Robe</Name>
-    <Id>47655</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Royal Moonshroud Bracers</Name>
-    <Id>47656</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>85</ItemLevel>
-    <IconPath>inv_scroll_04</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <SocketBonus />
-    <Name>Pattern: Royal Moonshroud Robe</Name>
-    <Id>47657</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>245</ItemLevel>
@@ -98399,19 +98043,6 @@
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
-    <ItemLevel>1</ItemLevel>
-    <IconPath>inv_inscription_pigment_ebon</IconPath>
-    <Stats />
-    <Quality>Common</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Fragment of the Black Knight's Soul</Name>
-    <Id>48418</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>258</ItemLevel>
     <IconPath>inv_weapon_bow_54</IconPath>
     <Stats>
@@ -99899,7 +99530,7 @@
       <CritRating>82</CritRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Koltira's Battlegear</SetName>
+    <SetName>Thassarian's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Horde</Faction>
     <RequiredClasses>Death Knight</RequiredClasses>
@@ -99947,7 +99578,7 @@
       <HitRating>59</HitRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Koltira's Battlegear</SetName>
+    <SetName>Thassarian's Battlegear</SetName>
     <Type>Plate</Type>
     <Faction>Horde</Faction>
     <RequiredClasses>Death Knight</RequiredClasses>
@@ -100018,7 +99649,7 @@
       <HitRating>52</HitRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Koltira's Battlegear</SetName>
+    <SetName>Thassarian's Battlegear	</SetName>
     <Type>Plate</Type>
     <Faction>Horde</Faction>
     <RequiredClasses>Death Knight</RequiredClasses>
@@ -100065,7 +99696,7 @@
       <CritRating>72</CritRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Koltira's Battlegear</SetName>
+    <SetName>Thassarian's Battlegear	</SetName>
     <Type>Plate</Type>
     <Faction>Horde</Faction>
     <RequiredClasses>Death Knight</RequiredClasses>
@@ -100842,7 +100473,7 @@
       <DefenseRating>65</DefenseRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Koltira's Plate</SetName>
+    <SetName>Thassarian's Plate</SetName>
     <Type>Plate</Type>
     <Faction>Horde</Faction>
     <RequiredClasses>Death Knight</RequiredClasses>
@@ -100892,7 +100523,7 @@
       <DefenseRating>53</DefenseRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Koltira's Plate</SetName>
+    <SetName>Thassarian's Plate</SetName>
     <Type>Plate</Type>
     <Faction>Horde</Faction>
     <RequiredClasses>Death Knight</RequiredClasses>
@@ -100966,7 +100597,7 @@
       <DefenseRating>47</DefenseRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Koltira's Plate</SetName>
+    <SetName>Thassarian's Plate</SetName>
     <Type>Plate</Type>
     <Faction>Horde</Faction>
     <RequiredClasses>Death Knight</RequiredClasses>
@@ -101015,7 +100646,7 @@
       <DefenseRating>57</DefenseRating>
     </Stats>
     <Quality>Epic</Quality>
-    <SetName>Koltira's Plate</SetName>
+    <SetName>Thassarian's Plate</SetName>
     <Type>Plate</Type>
     <Faction>Horde</Faction>
     <RequiredClasses>Death Knight</RequiredClasses>
@@ -103479,6 +103110,7 @@
     <ItemLevel>1</ItemLevel>
     <IconPath>inv_chest_chain_07</IconPath>
     <Stats>
+      <Armor>1171</Armor>
       <Agility>68</Agility>
       <Stamina>68</Stamina>
       <AttackPower>137</AttackPower>
@@ -103496,10 +103128,11 @@
     <ItemLevel>1</ItemLevel>
     <IconPath>inv_chest_chain_11</IconPath>
     <Stats>
+      <Armor>1171</Armor>
       <Stamina>52</Stamina>
       <Intellect>52</Intellect>
       <SpellPower>80</SpellPower>
-      <Mp5>172</Mp5>
+      <Mp5>34</Mp5>
     </Stats>
     <Quality>Heirloom</Quality>
     <Type>Mail</Type>
@@ -103513,6 +103146,7 @@
     <ItemLevel>1</ItemLevel>
     <IconPath>inv_chest_plate03</IconPath>
     <Stats>
+      <Armor>2093</Armor>
       <Stamina>78</Stamina>
       <Strength>78</Strength>
       <CritRating>68</CritRating>
@@ -103529,6 +103163,7 @@
     <ItemLevel>1</ItemLevel>
     <IconPath>inv_chest_leather_06</IconPath>
     <Stats>
+      <Armor>527</Armor>
       <Stamina>52</Stamina>
       <Intellect>52</Intellect>
       <Spirit>68</Spirit>
@@ -103546,6 +103181,7 @@
     <ItemLevel>1</ItemLevel>
     <IconPath>inv_chest_leather_07</IconPath>
     <Stats>
+      <Armor>527</Armor>
       <Stamina>103</Stamina>
       <AttackPower>137</AttackPower>
       <HitRating>68</HitRating>
@@ -103562,6 +103198,7 @@
     <ItemLevel>1</ItemLevel>
     <IconPath>inv_chest_cloth_49</IconPath>
     <Stats>
+      <Armor>280</Armor>
       <Stamina>52</Stamina>
       <Intellect>52</Intellect>
       <Spirit>68</Spirit>
@@ -103922,6 +103559,7 @@
       <Agility>29</Agility>
       <Stamina>44</Stamina>
       <AttackPower>39</AttackPower>
+      <SpellPower>343</SpellPower>
       <CritRating>19</CritRating>
     </Stats>
     <Quality>Heirloom</Quality>
@@ -103943,6 +103581,8 @@
       <Stamina>103</Stamina>
       <AttackPower>91</AttackPower>
       <ArmorPenetrationRating>45</ArmorPenetrationRating>
+      <SpellPower>343</SpellPower>
+      <FireResistance>15</FireResistance>
     </Stats>
     <Quality>Heirloom</Quality>
     <Type>TwoHandMace</Type>
@@ -104025,7 +103665,7 @@
     <Quality>Epic</Quality>
     <SetName>Malfurion's Regalia</SetName>
     <Type>Leather</Type>
-    <Faction>Neutral</Faction>
+    <Faction>Horde</Faction>
     <RequiredClasses>Druid</RequiredClasses>
     <SocketColor1>Yellow</SocketColor1>
     <SocketBonus>
@@ -104949,7 +104589,7 @@
     <Type>Dagger</Type>
     <Faction>Neutral</Faction>
     <MinDamage>55</MinDamage>
-    <MaxDamage>179</MaxDamage>
+    <MaxDamage>178</MaxDamage>
     <Speed>1.7</Speed>
     <SocketBonus />
     <Name>Skoll's Fang</Name>
@@ -105127,31 +104767,6 @@
     <Name>Boots of Tortured Space</Name>
     <Id>49238</Id>
     <Slot>Feet</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>1</ItemLevel>
-    <IconPath>inv_misc_bag_10_black</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Ashen Sack of Gems</Name>
-    <Id>49294</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>55</ItemLevel>
-    <IconPath>inv_misc_bag_22</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Enlarged Onyxia Hide Backpack</Name>
-    <Id>49295</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -106800,45 +106415,6 @@
     <Name>Tempered Vis'kag the Bloodletter</Name>
     <Id>49501</Id>
     <Slot>OneHand</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>70</ItemLevel>
-    <IconPath>achievement_boss_onyxia</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Reins of the Onyxian Drake</Name>
-    <Id>49636</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>inv_misc_head_dragon_01</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Horde</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Head of Onyxia</Name>
-    <Id>49643</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>80</ItemLevel>
-    <IconPath>inv_misc_head_dragon_01</IconPath>
-    <Stats />
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <Unique>true</Unique>
-    <SocketBonus />
-    <Name>Head of Onyxia</Name>
-    <Id>49644</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>219</ItemLevel>
