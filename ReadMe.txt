@@ -1,17 +1,29 @@
-Rawr v2.2.19.0
+Rawr v2.2.20.0
 ------------
-Welcome to Rawr 2.2.19.0.
+Welcome to Rawr 2.2.20.0.
    
 Recent Changes:
- - Those were not the filters that you were looking for. v2.2.18 accidentally included some horrible inbreed of a filters file, not the one it was supposed to have. Now it has the one it's supposed to have.
- - Added consumables that provide low end raid buffs.
- - Rawr.Mage: Adjustments for 3.2.2.
- - Rawr.ProtPaladin: Adjustments for 3.2.2.
- - Rawr.Elemental: Adjustments for 3.2.2.
- - Rawr.ShadowPriest: Fix for DoT crit damage with metagem.
- - Rawr.Enhance: Fix for a totem drop rate.
- 
-
+ - Further improvements to the default filters and item cache.
+ - Updated parsing of proc effects from Onyxia items, and a few other stray items.
+ - Added a contextual menu item to open an item in the Armory.
+ - Improved optimizer availability for items when loading from Character Profiler.
+ - Fix for changing item IDs.
+ - Fix for available gems in batch optimizations. Also added a comparison to saved version feature for batch optimizations.
+ - Rawr.Bear: Updated Predatory Strikes mechanics for 3.2.
+ - Rawr.Cat: Updated Predatory Strikes mechanics for 3.2.
+ - Rawr.DPSDK: Added armor and bonus armor as relevant stats. Reworked some damage multipliers for improved accuracy, especially for blood. Support for nested special effects.
+ - Rawr.DPSWarr: Tons of improvements, including 3.2.2 changes, fixes to maintaining buffs, cooldown usage, stat display, boss handlers, cleave DPS, whirlwind DPS, special effects tweaks, rage generation, armor penetration, rend damage, sword specialization, and tweaks to the rounding of hit.
+ - Rawr.Elemental: Improved support for some trinkets. Fix for haste dropping spells below 1sec. Fixed base damage values for Earth and Frost Shock, and Lightning Bolt.
+ - Rawr.Enhance: Support for Boss Handler features. Support for nested special effects.
+ - Rawr.Mage: Updates to 3.2.2 cycles. Improvement to Arcane Cycles feature. Support for cooldown stacking for all on use spell power and haste effects, and berserking.
+ - Rawr.ProtPaladin: More 3.2.2 updates. Better support for special effects, as well as some set bonuses and librams. Improved modeling of Shield of Righteousness. Added damage reduction from Ardent Defender. Fix for slightly off base stats.
+ - Rawr.ProtWarr: Fix for Devastate threat, and other minor tweaks.
+ - Rawr.RestoSham: Support for more special effects.
+ - Rawr.Rogue: Added poison-affecting stats as relevant. Added more set bonuses. Fix for Backstab, Mutilate, poison, and Envenom damage. Fix for several energy costs and energy-related talents. Fix for Murder, Hunger for Blood, and Mace Specialization talents. 
+ - Rawr.ShadowPriest: Lots of fixes to haste/rotation interaction. Fixes for spell coefficients and modifiers. Added support for more set bonuses. 
+ - Rawr.TankDK: More 3.2.2 updates. Fix for damage reduction buffs. Fix for white damage from offhands. Added option to display ratings in Burst & Reaction Time.
+ - Rawr.Tree: More 3.2.2 updates. Basic Val'anyr modeling. Support for a few more set bonuses.
+ - Rawr.Warlock: Updated formulae for Empowered Imp, Backlash, and Cataclysm, and physical buff support for pets.
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -19,7 +31,7 @@ Instructions
 ------------
 There's no installer for Rawr. Just unzip the zip anywhere you like, that you have full permissions to (that means NOT Program Files on Vista+), and run Rawr.exe. (If you have any concern about Rawr doing anything malicious, the full source code is available at http://www.codeplex.com/Rawr/ for you to review and/or to build yourself)
 
-Once you've got it running, you should see a basic character-screen-like layout of items. All slots will start out blank, so you can either start filling in items, or open an Armory profile. You'll probably want to open your own Armory profile, so you can get some familiar items. Goto File->Load from Armory..., and type in your character name and server (exactly, and choose a region if necessary), and hit OK. After a few sec, it should load your profile. You can mouse over an item to see the stats for it, and click on an item to get a dropdown of all of the other items available for that slot. It'll be missing your buffs, so fill those out on the main screen. If you'd like to edit the gems in an item, right click on it, hit edit, and change the gems.
+Once you've got it running, you should see a basic character-screen-like layout of items. All slots will start out blank, so you can either start filling in items, or open an Armory profile. You'll probably want to open your own Armory profile, so you can get some familiar items. Goto File->Load from Armory..., and type in your character name and server (exactly, and choose a region if necessary), and hit OK. After a few sec, it should load your profile. You can mouse over an item to see the stats for it, and click on an item to get a dropdown of all of the other items available for that slot. It'll be missing your buffs, so fill those out on the main screen.
 
 Now that you have your current character fairly well defined, use the item comparison are on the right side of the main window. You can choose a slot and a sort method at the top. The ratings calculated in this graph will update as you make changes to your gear/enchants/buffs, to always be as accurate as possible.
 
@@ -37,6 +49,8 @@ FAQ
  Q: There's an item missing! Can you please add [Some Item]?
  A: No, Rawr is designed so that we wouldn't need to update it with new items every time a new item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
 
+ Q: Where can I edit the relative stat values (or weights) that Rawr uses?
+ A: You can't, because Rawr doesn't use stat weights, or anything like that. See below.
 
 Overview of Rawr
 ----------------
@@ -48,21 +62,21 @@ Of paramount importance in an app like this is how it handles items. Nobody want
 
 First, you can open an armory profile. Use File->Load from Armory..., type in a character name and server, and choose a region if necessary. It will load up and select all of the items used by that armory profile. Second, you can go to the item editor, choose add, and type in just the item id of an item you'd like to add. In both of these cases, the stats about each item is pulled from the Armory, so a web connection is required.
 
-When loading a character from the armory, or starting a new blank character, all buffs are turned off, so be sure to go check off what buffs you typicaly raid with, to ensure you get accurate ratings.
+When loading a character from the armory, or starting a new blank character, be sure to go check off what buffs you typicaly raid with, to ensure you get accurate ratings.
 
 How does Rawr work to calculate the values of items? (Or where are the relative stats setup?)
 ---------------------------------------------------------------------------------------------
-Each model in Rawr has a set of calculations that returns a number. This number can be dps/threat/hps etc depending on what is important to that model. To generate the charts Rawr takes your gear + enchants + buffs and asks the model to return a number for your current gear with the slot you are asking about empty. This gives the total score for your gear without that slot. It then takes each item in turn and asks the model for a new number (dps/threat/hps etc) for your gear including that item. The difference is what is displayed in the graph eg: dps value. 
+Each model in Rawr has a set of calculations that returns one or more rating numbers. These numbers can be DPS/TPS/HPS/Survival/Mitigation/etc, depending on what is important to that model. To generate the charts and other calculations that you see in Rawr, it takes your race, gear, enchants, talents, glyphs, buffs, and any model-specific options, and asks the model to return ratings for your current gear with the slot you are asking about *empty*. This gives the total score for your character without that slot, which is used as a baseline. It then takes each item to be displayed in the chart, and asks the model for a new set of ratings for your character including that item. The difference between those numbers, and the baseline, is what is displayed in the graph (ie, the DPS value of an item). 
 
-It is important to realise that every single time you see a line on any of the graphs that Rawr has asked the model to calculate everything from scratch again with that complete gear/enchant/buff setup. It is only because it does this really quickly that people assume that it must use stats weights.
+It is important to realise that every single time you see a line on any of the graphs in Rawr, that it has asked the model to calculate everything from scratch again with that complete character setup. Despite it doing so quickly, it is doing all of these calculations, and never uses any relative stat values (weights), as you may expect.
 
-Rawr uses actual formulae to calculate your dps/threat/hps etc it does not use relative stats and try to multiply the stats together. It is just really quick at calculating. This is why the results you get in Rawr are comprehensive and far more accurate than using stats weights ever are.
+Rawr uses actual formulae to calculate your ratings; it does not use relative stats and try to multiply the stats together. Rawr is designed to be able to do these calculations quickly and efficiently. This is why the results you get in Rawr are comprehensive and far more accurate than using stats weights ever are. Stat weights are inaccurate, by their very definition, and should not be used when an accurate tool such as Rawr is available.
 
-Rawr looks at the total stats of your character, not the stats of an individual item to measure the value. This is perhaps best explained by an example: Take the example of a dps class and trying to calculate the graph showing helm values.
+Rawr looks at the total stats of your character, not the stats of an individual item to measure the value. This is perhaps best explained by an example: Take the example of a DPS class and trying to calculate the graph showing helm values. (NOTE: Not actual calculations, and big round numbers are used for simplicity.)
 
-With no helm equipped and raid buffed your stats are:
+With no helm equipped, and raid buffed, your stats are:
 1000 AP, 190 hit rating (this class actually needs 200 hit rating to be capped), 10% crit, etc.
-We calculate the optimal rotation to give 1000 dps, even though your missing 2% of the time.
+We calculate the optimal rotation to give 1000 dps, even though you're missing 2% of the time.
 
 Now we equip Helm of Minor Hit (+10 hit rating), pushing your combined stats to:
 1000 AP, 200 hit rating (at cap), 10% crit, etc.
@@ -81,9 +95,9 @@ Now we calculate the optimal rotation to give 1010 dps, with 2% misses. Thus its
 If you then decide to replace your hit rating potion with a crit potion, your total stats while wearing each helm would again be calculated. Now that you have freed up some hit rating elsewhere, the Helm of Major Hit will be at the top of the list. The reason is that in this case you can fully use all the stats it provides. 
 This same effect will be visible in the displayed value of rings (or trinket), depending on which slot is being displayed. It isn't which slot is being used, but rather the extra stats being provided by the ring (or trinket) in the other slot. For example if your 2nd ring contains a lot of crit, rings that contain a lot of AP might complement it better and appear high in the list for ring 1. If you look at the list for ring 2, the ring with the highest crit is likely to be on top.  
 
-An important thing to realise is that we never decided a stat like hit rating has a relative weight compared to AP and then tried to calculate the score for an item using that weight and the stats of the item (That type of approach is used by many in-game addons but is extremely inaccurate when dealing with capped stats). We compared dps numbers while wearing each possible item. Using this combined stats approach we handle all capping effects.
+An important thing to realize is that we never decide that a stat like hit rating has a relative weight compared to AP and then tried to calculate the score for an item using that weight and the stats of the item (that type of approach is used by many in-game addons but is extremely inaccurate when dealing with capped stats). We simply compare DPS numbers while wearing each possible item. Using this combined stats approach we handle all capping effects.
 
-Frequently questions are posted on the discussion forums asking how relative weights can be adjusted. You will likely get flamed by long time users, so be warned! Relative stats weights are a quick way to judge gear you can use on the day of dinging 80, when your still far from any of the caps. But after being in more than a handful of heroics, it just becomes too unreliable to use on any stat that has a cap (i.e. expertise, hit, haste, armor penetration, armor and possibly even mana regen).
+Frequently, questions are posted on the discussion forums asking how relative weights can be adjusted. There is no way to adjust this, because there are no relative weights to adjust. Relative stats weights are a quick way to judge gear you can use on the day of hitting 80, when you're still far from any of the caps. But after being in more than a handful of heroics, it just becomes too unreliable to use on any stat that has a cap (i.e. expertise, hit, haste, armor penetration, armor and possibly even mana regen).
 
 Source Code
 -----------
@@ -117,6 +131,15 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.19.0
+ - Those were not the filters that you were looking for. v2.2.18 accidentally included some horrible inbreed of a filters file, not the one it was supposed to have. Now it has the one it's supposed to have.
+ - Added consumables that provide low end raid buffs.
+ - Rawr.Mage: Adjustments for 3.2.2.
+ - Rawr.ProtPaladin: Adjustments for 3.2.2.
+ - Rawr.Elemental: Adjustments for 3.2.2.
+ - Rawr.ShadowPriest: Fix for DoT crit damage with metagem.
+ - Rawr.Enhance: Fix for a totem drop rate.
+
 v2.2.18.0
  - UI updates! Added optional display of item slot in tooltips. Also improved wrapping on tooltips. Charts should provide more intuitive sorting. You can now view charts for gems by color.
  - Improved the default item filters somewhat.
