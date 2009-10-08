@@ -361,7 +361,7 @@ namespace Rawr.DPSWarr {
                 GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : Feared\n" : "");
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 // Now let's try and get some of those GCDs back
-                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_] && _Feared_Acts > 0f) {
+                if (/*CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_] &&*/ _Feared_Acts > 0f) {
                     float bzacts = CalcOpts.AllowFlooring ? (float)Math.Floor(BZ.Activates) : BZ.Activates;
                     _ZRage_GCDs = (float)Math.Min(_Feared_Acts, bzacts);
                     reduc = Math.Max(0f, (BaseFearDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)*//1000f)));
@@ -587,7 +587,7 @@ namespace Rawr.DPSWarr {
                 float acts, Abil_GCDs;
                 if (BZ.Validated) {
                     acts = (float)Math.Min(availGCDs, BZ.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
-                    Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                    Abil_GCDs = (CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts) - (_Feared_Acts * PercTimeUnder20); // prevent double-dipping
                     _ZRage_GCDs = Abil_GCDs;
                     GCDsused += (float)Math.Min(origNumGCDs, Abil_GCDs);
                     availGCDs = (float)Math.Max(0f, origNumGCDs - GCDsused);
@@ -853,11 +853,7 @@ namespace Rawr.DPSWarr {
                 }
                 // Slam for remainder of GCDs
                 if (SL.Validated) {
-                                        acts = (float)Math.Min(availGCDs, availGCDs/*SL.Activates*/ * (1f - TotalPercTimeLost));
-                    //                } else {
-                    //                    acts = 0f;
-                    //                }
-
+                    acts = (float)Math.Min(availGCDs, availGCDs/*SL.Activates*/ * (1f - TotalPercTimeLost));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _SL_GCDs = Abil_GCDs;
                     GCDsused += (float)Math.Min(origNumGCDs, _SL_GCDs);
@@ -961,7 +957,7 @@ namespace Rawr.DPSWarr {
                     // Berserker Rage
                     if (BZ.Validated) {
                         acts = (float)Math.Min(availGCDs, BZ.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
-                        Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                        Abil_GCDs = (CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts) - (_Feared_Acts * PercTimeUnder20);// prevent double-dipping
                         _ZRage_GCDs = oldZRGCDs + Abil_GCDs;
                         GCDsused += (float)Math.Min(origNumGCDs, Abil_GCDs);
                         availGCDs = (float)Math.Max(0f, origNumGCDs - GCDsused);
@@ -1114,6 +1110,7 @@ namespace Rawr.DPSWarr {
             #endregion
             int bah = Iterator;
             // Add each of the abilities' DPS and HPS values and other aesthetics
+            GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + BZ.Name + "\n" : "");
             GCDUsage += (_Battle_GCDs > 0 ? _Battle_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + BTS.Name + "\n" : "");
             GCDUsage += (_Comm_GCDs > 0 ? _Comm_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + CS.Name + "\n" : "");
             GCDUsage += (_Demo_GCDs > 0 ? _Demo_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + DS.Name + "\n" : "");
@@ -1134,6 +1131,7 @@ namespace Rawr.DPSWarr {
             GCDUsage += (_SL_GCDs > 0 ? _SL_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + SL.Name + "\n" : "");
             GCDUsage += (_EX_GCDs > 0 ? _EX_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + EX.Name + "\n" : "");
 
+            _ZRage_HPS = BZ.GetHPS(_ZRage_GCDs);
             _Battle_HPS = BTS.GetHPS(_Battle_GCDs);
             _Comm_HPS = CS.GetHPS(_Comm_GCDs);
             _Demo_HPS = DS.GetHPS(_Demo_GCDs);
@@ -1156,7 +1154,7 @@ namespace Rawr.DPSWarr {
             if (Talents.SwordSpecialization > 0 && CombatFactors.MH.Type == ItemType.TwoHandSword) { _SS_DPS = SS.GetDPS(_SS_Acts); } else { _SS_DPS = 0f; }
 
             DPS_TTL += _TH_DPS + _Ham_DPS + _Shatt_DPS + _BLS_DPS + _MS_DPS + _RD_DPS + _OP_DPS + _TB_DPS + _SD_DPS + _EX_DPS + _SL_DPS + _SS_DPS;
-            HPS_TTL += _Battle_HPS + _Comm_HPS + _Demo_HPS + _Sunder_HPS + _Sunder_HPS + _TH_HPS + _Ham_HPS + _Shatt_HPS + _SW_HPS + _ER_HPS + _Death_HPS + _BLS_HPS + _MS_HPS + _RD_HPS + _OP_HPS + _TB_HPS + _SD_HPS + _EX_HPS + _SL_HPS + _SS_HPS;
+            HPS_TTL += _ZRage_HPS + _Battle_HPS + _Comm_HPS + _Demo_HPS + _Sunder_HPS + _Sunder_HPS + _TH_HPS + _Ham_HPS + _Shatt_HPS + _SW_HPS + _ER_HPS + _Death_HPS + _BLS_HPS + _MS_HPS + _RD_HPS + _OP_HPS + _TB_HPS + _SD_HPS + _EX_HPS + _SL_HPS + _SS_HPS;
 
             RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - TotalPercTimeLost);
             RageNeeded += 0f
@@ -1181,6 +1179,7 @@ namespace Rawr.DPSWarr {
                         + SL.GetRageUseOverDur(_SL_GCDs);
             RageGenOther += 0f
                         + BZ.GetRageUseOverDur(_ZRage_GCDs)
+                        + BR.GetRageUseOverDur(_Blood_GCDs)
                         + SS.GetRageUseOverDur(_SS_Acts);
             // Add HS dps
             _HS_Acts = numHSOverDur;
