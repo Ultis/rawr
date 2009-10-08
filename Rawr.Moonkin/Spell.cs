@@ -129,9 +129,10 @@ namespace Rawr.Moonkin
             {
                 CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
+                    SpecialEffect e = Effect;
                     float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
                     float triggerInterval = 0.0f;
-                    switch (Effect.Trigger)
+                    switch (e.Trigger)
                     {
                         case Trigger.DoTTick:       // Extract
                             triggerInterval = r.Duration / r.DotTicks;
@@ -145,8 +146,8 @@ namespace Rawr.Moonkin
                         default:
                             return 0.0f;
                     }
-                    float procsPerSecond = Effect.GetAverageProcsPerSecond(triggerInterval, 1.0f, 3.0f, c.FightLength * 60.0f);
-                    return Effect.Stats.ShadowDamage * specialDamageModifier * procsPerSecond;
+                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, 1.0f, 3.0f, c.FightLength * 60.0f);
+                    return e.Stats.ShadowDamage * specialDamageModifier * procsPerSecond;
                 };
             }
 			// Lightning Capacitor, Thunder Capacitor, Reign of the Unliving/Undead
@@ -175,8 +176,9 @@ namespace Rawr.Moonkin
             {
                 CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
-                    float procsPerSecond = Effect.GetAverageProcsPerSecond(r.Duration / r.CastCount, 1.0f, 3.0f, c.FightLength * 60f);
-                    return (Effect.Stats.Mp5 / 5.0f * Effect.Duration) * procsPerSecond * 5.0f;
+                    SpecialEffect e = Effect;
+                    float procsPerSecond = e.GetAverageProcsPerSecond(r.Duration / r.CastCount, 1.0f, 3.0f, c.FightLength * 60f);
+                    return (e.Stats.Mp5 / 5.0f * e.Duration) * procsPerSecond * 5.0f;
                 };
             }
             // Moonkin 4T8 set bonus (15% chance on IS tick to proc an instant-cast Starfire)
@@ -222,8 +224,9 @@ namespace Rawr.Moonkin
             {
                 Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
-                    int maxStack = Effect.MaxStack;
-                    Stats st = Effect.Stats;
+                    SpecialEffect e = Effect;
+                    int maxStack = e.MaxStack;
+                    Stats st = e.Stats;
                     float spellPower = st.SpellPower;
                     float critRating = st.CritRating;
                     float spellCrit = StatConversion.GetSpellCritFromRating(critRating);
@@ -270,8 +273,9 @@ namespace Rawr.Moonkin
                 };
                 Deactivate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
-                    int maxStack = Effect.MaxStack;
-                    Stats st = Effect.Stats;
+                    SpecialEffect e = Effect;
+                    int maxStack = e.MaxStack;
+                    Stats st = e.Stats;
                     float spellPower = st.SpellPower;
                     float critRating = st.CritRating;
                     float spellCrit = StatConversion.GetSpellCritFromRating(critRating);
@@ -439,11 +443,11 @@ namespace Rawr.Moonkin
         public float MoonfireTicks { get; set; }
 
         // Calculate damage and casting time for a single, direct-damage spell.
-        private void DoMainNuke(Character character, CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        private void DoMainNuke(DruidTalents talents, CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
-            int naturesGrace = character.DruidTalents.NaturesGrace;
-            int starlightWrath = character.DruidTalents.StarlightWrath;
+            int naturesGrace = talents.NaturesGrace;
+            int starlightWrath = talents.StarlightWrath;
 
             float gcd = 1.5f / (1.0f + spellHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
@@ -481,16 +485,16 @@ namespace Rawr.Moonkin
         }
 
         // Calculate damage and casting time for a damage-over-time effect.
-        private void DoDotSpell(Character character, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        private void DoDotSpell(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             if (dotSpell.Name == "MF")
-                DoMoonfire(character, calcs, ref dotSpell, spellPower, spellHit, spellCrit, spellHaste);
+                DoMoonfire(calcs, ref dotSpell, spellPower, spellHit, spellCrit, spellHaste);
             else
-                DoInsectSwarm(character, calcs, ref dotSpell, spellPower, spellHit, spellCrit, spellHaste);
+                DoInsectSwarm(calcs, ref dotSpell, spellPower, spellHit, spellCrit, spellHaste);
         }
 
         // Calculate damage and casting time for the Moonfire effect.
-        private void DoMoonfire(Character character, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        private void DoMoonfire(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
             dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f + latency) + latency;
@@ -513,7 +517,7 @@ namespace Rawr.Moonkin
         }
 
         // Calculate damage and casting time for the Insect Swarm effect.
-        private void DoInsectSwarm(Character character, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        private void DoInsectSwarm(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
             dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f + latency) + latency;
@@ -522,27 +526,26 @@ namespace Rawr.Moonkin
         }
 
         // Perform damage and mana calculations for all spells in the given rotation.  Returns damage done over the total duration.
-        public float DamageDone(Character character, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        public float DamageDone(DruidTalents talents, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
-            if (character.DruidTalents.Eclipse > 0)
+            if (talents.Eclipse > 0)
             {
-                return DoEclipseCalcs(character, calcs, Solver, spellPower, spellHit, spellCrit, spellHaste);
+                return DoEclipseCalcs(talents, calcs, Solver, spellPower, spellHit, spellCrit, spellHaste);
             }
             float latency = calcs.Latency;
 
-            float moonkinFormProc = (character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
-            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            bool starfireGlyph = character.DruidTalents.GlyphOfStarfire;
+            float moonkinFormProc = (talents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
+            bool starfireGlyph = talents.GlyphOfStarfire;
+            int impInsectSwarm = talents.ImprovedInsectSwarm;
 
             switch (SpellsUsed.Count)
             {
                 // Nuke only
                 case 1:
                     Spell mainNuke = Solver.FindSpell(SpellsUsed[0]);
-                    //Spell mainNuke = LocateSpell(Solver.SpellData, SpellsUsed[0]);
-                    DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
+                    DoMainNuke(talents, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
 
-                    float omenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f : 0;
+                    float omenProcChance = talents.OmenOfClarity == 1 ? 0.06f : 0;
                     mainNuke.ManaCost = mainNuke.BaseManaCost - mainNuke.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana * spellHit - (spellCrit + mainNuke.CriticalChanceModifier) * moonkinFormProc - mainNuke.BaseManaCost * omenProcChance * spellHit;
                     Duration = mainNuke.CastTime;
                     RotationData.ManaUsed = ManaUsed = mainNuke.ManaCost;
@@ -559,22 +562,20 @@ namespace Rawr.Moonkin
                     // Find the spells
                     Spell DotEffectSpell = Solver.FindSpell(SpellsUsed[0]);
                     mainNuke = Solver.FindSpell(SpellsUsed[1]);
-                    //Spell DotEffectSpell = LocateSpell(Solver.SpellData, SpellsUsed[0]);
-                    //mainNuke = LocateSpell(Solver.SpellData, SpellsUsed[1]);
                     // Do Starfire glyph calculations, if applicable; then do DoT spell calculations
                     if (starfireGlyph && mainNuke.Name == "SF" && DotEffectSpell.Name == "MF") DotEffectSpell.DotEffect.Duration += 9.0f;
-                    DoDotSpell(character, calcs, ref DotEffectSpell, spellPower, spellHit, spellCrit, spellHaste);
+                    DoDotSpell(calcs, ref DotEffectSpell, spellPower, spellHit, spellCrit, spellHaste);
 
                     // Do iIS calculations, if applicable
-                    if (character.DruidTalents.ImprovedInsectSwarm > 0)
+                    if (impInsectSwarm > 0)
                     {
                         if (mainNuke.Name == "SF" && DotEffectSpell.Name == "MF")
-                            mainNuke.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            mainNuke.CriticalChanceModifier += 0.01f * impInsectSwarm;
                         else if (mainNuke.Name == "W" && DotEffectSpell.Name == "IS")
-                            mainNuke.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            mainNuke.AllDamageModifier *= 1 + 0.01f * impInsectSwarm;
                     }
                     // Calculate main nuke damage
-                    DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
+                    DoMainNuke(talents, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
 
                     // Set rotation duration
                     Duration = DotEffectSpell.DotEffect.Duration;
@@ -605,19 +606,19 @@ namespace Rawr.Moonkin
                         + (0.06f) * DotEffectSpell.BaseManaCost) * spellHit;
                     float manaFromMoonkin = moonkinFormProc * spellHit * ((spellCrit + mainNuke.CriticalChanceModifier) * numNukeCasts + DotEffectSpell.CriticalChanceModifier);
 
-                    float actualManaSpent = totalManaSpent - manaFromJoW - manaFromMoonkin - (character.DruidTalents.OmenOfClarity == 1 ? manaFromOoC : 0.0f);
+                    float actualManaSpent = totalManaSpent - manaFromJoW - manaFromMoonkin - (talents.OmenOfClarity == 1 ? manaFromOoC : 0.0f);
 
                     RotationData.ManaUsed = ManaUsed = actualManaSpent;
                     RotationData.ManaGained = ManaGained = totalManaSpent - actualManaSpent;
                     RotationData.DPM = (nukeDamageDone + DotEffectSpell.DamagePerHit + DotEffectSpell.DotEffect.DamagePerHit) / totalManaSpent;
                     
                     // Undo iIS, if applicable
-                    if (character.DruidTalents.ImprovedInsectSwarm > 0)
+                    if (impInsectSwarm > 0)
                     {
                         if (mainNuke.Name == "SF" && DotEffectSpell.Name == "MF")
-                            mainNuke.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            mainNuke.CriticalChanceModifier -= 0.01f * impInsectSwarm;
                         else if (mainNuke.Name == "W" && DotEffectSpell.Name == "IS")
-                            mainNuke.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            mainNuke.AllDamageModifier /= 1 + 0.01f * impInsectSwarm;
                     }
                     // Undo SF glyph, if applicable
                     if (starfireGlyph && mainNuke.Name == "SF" && DotEffectSpell.Name == "MF") DotEffectSpell.DotEffect.Duration -= 9.0f;
@@ -631,19 +632,19 @@ namespace Rawr.Moonkin
                     mainNuke = Solver.FindSpell(SpellsUsed[2]);
                     // Do Starfire glyph calculations, if applicable; then do DoT spell calculations
                     if (starfireGlyph && mainNuke.Name == "SF") moonFire.DotEffect.Duration += 9.0f;
-                    DoDotSpell(character, calcs, ref moonFire, spellPower, spellHit, spellCrit, spellHaste);
-                    DoDotSpell(character, calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
+                    DoDotSpell(calcs, ref moonFire, spellPower, spellHit, spellCrit, spellHaste);
+                    DoDotSpell(calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
 
                     // Do iIS calculations, if applicable
-                    if (character.DruidTalents.ImprovedInsectSwarm > 0)
+                    if (impInsectSwarm > 0)
                     {
                         if (mainNuke.Name == "SF")
-                            mainNuke.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            mainNuke.CriticalChanceModifier += 0.01f * impInsectSwarm;
                         else if (mainNuke.Name == "W")
-                            mainNuke.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            mainNuke.AllDamageModifier *= 1 + 0.01f * impInsectSwarm;
                     }
                     // Calculate main nuke damage
-                    DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
+                    DoMainNuke(talents, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
 
                     // Set rotation duration
                     Duration = moonFire.DotEffect.Duration;
@@ -676,19 +677,19 @@ namespace Rawr.Moonkin
                         + (0.06f) * numISCasts * mainNuke.BaseManaCost) * spellHit;
                     manaFromMoonkin = moonkinFormProc * spellHit * ((spellCrit + mainNuke.CriticalChanceModifier) * numNukeCasts + moonFire.CriticalChanceModifier);
 
-                    actualManaSpent = totalManaSpent - manaFromJoW - manaFromMoonkin - (character.DruidTalents.OmenOfClarity == 1 ? manaFromOoC : 0.0f);
+                    actualManaSpent = totalManaSpent - manaFromJoW - manaFromMoonkin - (talents.OmenOfClarity == 1 ? manaFromOoC : 0.0f);
 
                     RotationData.ManaUsed = ManaUsed = actualManaSpent;
                     RotationData.ManaGained = ManaGained = totalManaSpent - actualManaSpent;
                     RotationData.DPM = (nukeDamageDone + moonFire.DamagePerHit + moonFire.DotEffect.DamagePerHit + insectSwarm.DotEffect.DamagePerHit) / totalManaSpent;
 
                     // Undo iIS, if applicable
-                    if (character.DruidTalents.ImprovedInsectSwarm > 0)
+                    if (impInsectSwarm > 0)
                     {
                         if (mainNuke.Name == "SF")
-                            mainNuke.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            mainNuke.CriticalChanceModifier -= 0.01f * impInsectSwarm;
                         else if (mainNuke.Name == "W")
-                            mainNuke.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            mainNuke.AllDamageModifier /= 1 + 0.01f * impInsectSwarm;
                     }
                     // Undo SF glyph
                     if (starfireGlyph && mainNuke.Name == "SF") moonFire.DotEffect.Duration -= 9.0f;
@@ -699,14 +700,14 @@ namespace Rawr.Moonkin
             }
         }
 
-        private float DoEclipseCalcs(Character character, CharacterCalculationsMoonkin calcs, MoonkinSolver solver, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        private float DoEclipseCalcs(DruidTalents talents, CharacterCalculationsMoonkin calcs, MoonkinSolver solver, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
 
-            float omenOfClarityProcChance = character.DruidTalents.OmenOfClarity * 0.06f;
-            float moonkinFormProc = (character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
-            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            bool starfireGlyph = character.DruidTalents.GlyphOfStarfire;
+            float omenOfClarityProcChance = talents.OmenOfClarity * 0.06f;
+            float moonkinFormProc = (talents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
+            bool starfireGlyph = talents.GlyphOfStarfire;
+            int impInsectSwarm = talents.ImprovedInsectSwarm;
 
             float moonfireCasts = SpellsUsed.Contains("MF") ? 2.0f : 0.0f;
             float insectSwarmCasts = SpellsUsed.Contains("IS") ? 2.0f : 0.0f;
@@ -726,42 +727,42 @@ namespace Rawr.Moonkin
 
             // Do improved Insect Swarm
             if (insectSwarm != null)
-                preLunarCast.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                preLunarCast.AllDamageModifier *= 1 + 0.01f * impInsectSwarm;
 
             Spell solarEclipseCast = new Spell(solver.FindSpell("W"));
 
             // Eclipse bonus and improved Insect Swarm
 			// NOTE: Eclipse bonus additive with Moonfury and 4T9; multiplicative with everything else
-            solarEclipseCast.AllDamageModifier = 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f + calcs.BasicStats.BonusMoonkinNukeDamage + eclipseMultiplier;
+            solarEclipseCast.AllDamageModifier = 1 + (float)Math.Floor(talents.Moonfury * 10 / 3.0f) / 100.0f + calcs.BasicStats.BonusMoonkinNukeDamage + eclipseMultiplier;
             solarEclipseCast.AllDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
             if (insectSwarm != null)
-                solarEclipseCast.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                solarEclipseCast.AllDamageModifier *= 1 + 0.01f * impInsectSwarm;
             solarEclipseCast.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             Spell preSolarCast = solver.FindSpell("SF");
             if (moonfire != null)
-                preSolarCast.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                preSolarCast.CriticalChanceModifier += 0.01f * impInsectSwarm;
 
             Spell lunarEclipseCast = new Spell(solver.FindSpell("SF"));
             lunarEclipseCast.CriticalChanceModifier += eclipseMultiplier;
             if (moonfire != null)
-                lunarEclipseCast.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                lunarEclipseCast.CriticalChanceModifier += 0.01f * impInsectSwarm;
 
-            DoMainNuke(character, calcs, ref preSolarCast, spellPower, spellHit, spellCrit, spellHaste);
-            DoMainNuke(character, calcs, ref solarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
-            DoMainNuke(character, calcs, ref preLunarCast, spellPower, spellHit, spellCrit, spellHaste);
-            DoMainNuke(character, calcs, ref lunarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(talents, calcs, ref preSolarCast, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(talents, calcs, ref solarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(talents, calcs, ref preLunarCast, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(talents, calcs, ref lunarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
 
             if (moonfire != null)
-                DoDotSpell(character, calcs, ref moonfire, spellPower, spellHit, spellCrit, spellHaste);
+                DoDotSpell(calcs, ref moonfire, spellPower, spellHit, spellCrit, spellHaste);
             if (insectSwarm != null)
-                DoDotSpell(character, calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
+                DoDotSpell(calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
 
-            float lunarProcChance = (spellCrit + preLunarCast.CriticalChanceModifier) * spellHit * character.DruidTalents.Eclipse / 3.0f * 0.6f;
+            float lunarProcChance = (spellCrit + preLunarCast.CriticalChanceModifier) * spellHit * talents.Eclipse / 3.0f * 0.6f;
             float castsToProcLunar = 1.0f / lunarProcChance;
             float timeToProcLunar = preLunarCast.CastTime * (castsToProcLunar - 0.5f);
 
-            float solarProcChance = (spellCrit + preSolarCast.CriticalChanceModifier) * spellHit * character.DruidTalents.Eclipse / 3.0f;
+            float solarProcChance = (spellCrit + preSolarCast.CriticalChanceModifier) * spellHit * talents.Eclipse / 3.0f;
             float castsToProcSolar = 1.0f / solarProcChance;
             float timeToProcSolar = preSolarCast.CastTime * (castsToProcSolar - 0.5f);
 
@@ -847,11 +848,11 @@ namespace Rawr.Moonkin
             // Undo improved Insect Swarm
             if (insectSwarm != null)
             {
-                preLunarCast.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                preLunarCast.AllDamageModifier /= 1 + 0.01f * impInsectSwarm;
             }
             if (moonfire != null)
             {
-                preSolarCast.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                preSolarCast.CriticalChanceModifier -= 0.01f * impInsectSwarm;
             }
 
             return damageDone;
@@ -1019,8 +1020,9 @@ namespace Rawr.Moonkin
         public void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
         {
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+            DruidTalents talents = character.DruidTalents;
             procEffects = new List<ProcEffect>();
-            RecreateSpells(character, ref calcs);
+            RecreateSpells(talents, ref calcs);
             cachedResults = new Dictionary<string, RotationData>();
 
             float trinketDPS = 0.0f;
@@ -1036,10 +1038,10 @@ namespace Rawr.Moonkin
             SpellRotation maxBurstRotation = rotations[0];
             SpellRotation maxRotation = rotations[0];
 
-            float manaPool = GetEffectiveManaPool(character, calcs);
+            float manaPool = GetEffectiveManaPool(character, calcOpts, calcs);
 
             // Do tree calculations: Calculate damage per cast.
-            float treeDamage = (character.DruidTalents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.ArmorPenetration, calcs.BasicStats.PhysicalCrit, calcs.BasicStats.Bloodlust, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0.0f;
+            float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.ArmorPenetration, calcs.BasicStats.PhysicalCrit, calcs.BasicStats.Bloodlust, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0.0f;
             // Extend that to number of casts per fight.
             float treeCasts = (float)Math.Floor(calcOpts.FightLength / 3) + 1.0f;
             // Partial cast: If the fight lasts 3.x minutes and x is less than 0.5 (30 sec tree duration), calculate a partial cast
@@ -1052,11 +1054,11 @@ namespace Rawr.Moonkin
             float treeDPS = treeDamage / (calcOpts.FightLength * 60.0f);
             // Calculate mana usage for trees.
             float treeManaUsage = (float)Math.Ceiling(treeCasts) * CalculationsMoonkin.BaseMana * 0.12f;
-            manaPool -= character.DruidTalents.ForceOfNature == 1 ? treeManaUsage : 0.0f;
+            manaPool -= talents.ForceOfNature == 1 ? treeManaUsage : 0.0f;
 
 			// Do Starfall calculations.
-            bool starfallGlyph = character.DruidTalents.GlyphOfStarfall;
-			float starfallDamage = (character.DruidTalents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit, Wrath.CriticalDamageModifier) : 0.0f;
+            bool starfallGlyph = talents.GlyphOfStarfall;
+            float starfallDamage = (talents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit, Wrath.CriticalDamageModifier) : 0.0f;
             float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f);
             float numStarfallCasts = (float)Math.Floor(calcOpts.FightLength / starfallCD) + 1.0f;
             // Partial cast: If the difference between fight length and total starfall CD time is less than 10 seconds (duration),
@@ -1068,19 +1070,19 @@ namespace Rawr.Moonkin
 			starfallDamage *= (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
 			float starfallDPS = starfallDamage / (calcOpts.FightLength * 60.0f);
             float starfallManaUsage = (float)Math.Ceiling(numStarfallCasts) * CalculationsMoonkin.BaseMana * 0.39f;
-            manaPool -= character.DruidTalents.Starfall == 1 ? starfallManaUsage : 0.0f;
+            manaPool -= talents.Starfall == 1 ? starfallManaUsage : 0.0f;
 
             // Simple faerie fire mana calc
             float faerieFireCasts = (float)Math.Floor(calcOpts.FightLength / 5) + (calcOpts.FightLength % 5 != 0 ? 1.0f : 0.0f);
             float faerieFireMana = faerieFireCasts * CalculationsMoonkin.BaseMana * 0.08f;
-            if (character.DruidTalents.ImprovedFaerieFire > 0)
+            if (talents.ImprovedFaerieFire > 0)
                 manaPool -= faerieFireMana;
 
             // Calculate effect of casting Starfall/Treants/ImpFF (regular FF is assumed to be provided by a feral)
             float globalCooldown = 1.5f / (1 + baseHaste) + calcs.Latency;
-            float treantTime = (character.DruidTalents.ForceOfNature == 1) ? globalCooldown * (float)Math.Ceiling(treeCasts) : 0.0f;
-            float starfallTime = (character.DruidTalents.Starfall == 1) ? globalCooldown * (float)Math.Ceiling(numStarfallCasts) : 0.0f;
-            float faerieFireTime = (character.DruidTalents.ImprovedFaerieFire > 0) ? globalCooldown * faerieFireCasts : 0.0f;
+            float treantTime = (talents.ForceOfNature == 1) ? globalCooldown * (float)Math.Ceiling(treeCasts) : 0.0f;
+            float starfallTime = (talents.Starfall == 1) ? globalCooldown * (float)Math.Ceiling(numStarfallCasts) : 0.0f;
+            float faerieFireTime = (talents.ImprovedFaerieFire > 0) ? globalCooldown * faerieFireCasts : 0.0f;
 
             float totalTimeInRotation = calcs.FightLength * 60.0f - (treantTime + starfallTime + faerieFireTime);
             float percentTimeInRotation = totalTimeInRotation / (calcs.FightLength * 60.0f);
@@ -1100,7 +1102,7 @@ namespace Rawr.Moonkin
                     if (proc.CalculateDPS != null)
                     {
                         if (rot.Duration == 0.0f)
-                            rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                            rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                         accumulatedDamage += proc.CalculateDPS(rot, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) * rot.Duration;
                     }
                     else if (proc.Activate != null)
@@ -1110,7 +1112,7 @@ namespace Rawr.Moonkin
                     if (proc.CalculateMP5 != null)
                     {
                         if (rot.Duration == 0.0f)
-                            rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                            rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                         manaGained += proc.CalculateMP5(rot, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / 5.0f * calcs.FightLength * 60.0f;
                     }
                 }
@@ -1118,24 +1120,29 @@ namespace Rawr.Moonkin
                 int sign = 1;
                 Dictionary<List<int>, float> cachedDamages = new Dictionary<List<int>, float>();
                 Dictionary<List<int>, float> cachedUptimes = new Dictionary<List<int>, float>();
+                // Iterate over the entire set of trinket combinations (each trinket by itself, 2 at a time, ...)
                 for (int i = 1; i <= activatedEffects.Count; ++i)
                 {
+                    // Create a new combination generator for this "level" of trinket interaction
                     CombinationGenerator gen = new CombinationGenerator(activatedEffects.Count, i);
+                    // Iterate over all combinations
                     while (gen.HasNext())
                     {
                         float tempUpTime = 1.0f;
                         int[] vals = gen.GetNext();
+                        // Activate the trinkets, calculate the damage and uptime, then deactivate them
                         foreach (int idx in vals)
                         {
                             activatedEffects[idx].Activate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
-                        float tempDPS = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
+                        float tempDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
                             activatedEffects[idx].Deactivate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
                         List<int> pairs = new List<int>(vals);
+                        // Cache the results to be calculated later
                         cachedUptimes[pairs] = tempUpTime;
                         cachedDamages[pairs] = tempDPS;
                         totalUpTime += sign * tempUpTime;
@@ -1153,6 +1160,7 @@ namespace Rawr.Moonkin
                     foreach (List<int> innerVals in keys)
                     {
                         if (innerVals == vals) continue;
+                        if (innerVals.Count <= vals.Count) continue;
                         if (innerVals.Count > keyCount)
                         {
                             keyCount = innerVals.Count;
@@ -1180,7 +1188,7 @@ namespace Rawr.Moonkin
                 {
                     accumulatedDPS += kvp.Value * cachedDamages[kvp.Key];
                 }
-                float damageDone = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                float damageDone = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.Duration;
 
                 accumulatedDamage += accumulatedDPS * rot.Duration;
@@ -1244,7 +1252,7 @@ namespace Rawr.Moonkin
         }
 
         // Non-rotation-specific mana calculations
-        private float GetEffectiveManaPool(Character character, CharacterCalculationsMoonkin calcs)
+        private float GetEffectiveManaPool(Character character, CalculationOptionsMoonkin calcOpts, CharacterCalculationsMoonkin calcs)
         {
             float fightLength = calcs.FightLength * 60.0f;
 
@@ -1253,7 +1261,6 @@ namespace Rawr.Moonkin
             // Mana/5 calculations
             float totalManaRegen = calcs.ManaRegen5SR * fightLength;
 
-            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Mana pot calculations
             int numPots = calcOpts.ManaPots ? 1 : 0;
             float manaRestoredByPots = 0.0f;
@@ -1288,7 +1295,6 @@ namespace Rawr.Moonkin
         // Now returns damage per cast to allow adjustments for fight length
         private float DoTreeCalcs(float effectiveNatureDamage, float meleeHaste, float armorPen, float meleeCrit, float bloodLust, float treantLifespan, int bramblesLevel)
         {
-            //CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // 642 = base AP, 57% spell power scaling
             float attackPower = 642.0f + (float)Math.Floor(0.57f * effectiveNatureDamage);
             // 398.8 = base DPS, 1.7 = best observed swing speed
@@ -1316,11 +1322,10 @@ namespace Rawr.Moonkin
 		}
 
         // Redo the spell calculations
-        private void RecreateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
+        private void RecreateSpells(DruidTalents talents, ref CharacterCalculationsMoonkin calcs)
         {
             ResetSpellList();
-            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            if (character.DruidTalents.Eclipse == 0)
+            if (talents.Eclipse == 0)
             {
                 rotations = new List<SpellRotation>(new SpellRotation[]
                 {
@@ -1397,19 +1402,18 @@ namespace Rawr.Moonkin
                 });
             }
 
-            UpdateSpells(character, ref calcs);
+            UpdateSpells(talents, ref calcs);
         }
 
         // Add talented effects to the spells
-        private void UpdateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
+        private void UpdateSpells(DruidTalents talents, ref CharacterCalculationsMoonkin calcs)
         {
             Stats stats = calcs.BasicStats;
-            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Add (possibly talented) +spelldmg
             // Starfire: Damage +(0.04 * Wrath of Cenarius)
             // Wrath: Damage +(0.02 * Wrath of Cenarius)
-            Wrath.SpellDamageModifier += 0.02f * character.DruidTalents.WrathOfCenarius;
-            Starfire.SpellDamageModifier += 0.04f * character.DruidTalents.WrathOfCenarius;
+            Wrath.SpellDamageModifier += 0.02f * talents.WrathOfCenarius;
+            Starfire.SpellDamageModifier += 0.04f * talents.WrathOfCenarius;
 
             // Add spell damage from idols
             //Starfire.IdolExtraSpellPower += stats.StarfireDmg;
@@ -1420,31 +1424,31 @@ namespace Rawr.Moonkin
             //InsectSwarm.IdolExtraSpellPower += stats.InsectSwarmDmg;
             InsectSwarm.DotEffect.TickDamage += stats.InsectSwarmDmg / InsectSwarm.DotEffect.NumberOfTicks;
 
-            float moonfireDDGlyph = character.DruidTalents.GlyphOfMoonfire ? -0.9f : 0.0f;
-            float moonfireDotGlyph = character.DruidTalents.GlyphOfMoonfire ? 0.75f : 0.0f;
-            float insectSwarmGlyph = character.DruidTalents.GlyphOfInsectSwarm ? 0.3f : 0.0f;
+            float moonfireDDGlyph = talents.GlyphOfMoonfire ? -0.9f : 0.0f;
+            float moonfireDotGlyph = talents.GlyphOfMoonfire ? 0.75f : 0.0f;
+            float insectSwarmGlyph = talents.GlyphOfInsectSwarm ? 0.3f : 0.0f;
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.03 * Moonfury) (Additive with 4T9?)
             // Moonfire: Damage +(0.05 * Imp Moonfire) (Additive with Moonfury/Genesis/Glyph)
             // Moonfire, Insect Swarm: Dot Damage +(0.01 * Genesis) (Additive with Moonfury/Imp. Moonfire/Glyph/Set bonus)
-            Wrath.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f + stats.BonusMoonkinNukeDamage;
-            Moonfire.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f
-                                            + 0.05f * character.DruidTalents.ImprovedMoonfire
+            Wrath.AllDamageModifier *= 1 + (float)Math.Floor(talents.Moonfury * 10 / 3.0f) / 100.0f + stats.BonusMoonkinNukeDamage;
+            Moonfire.AllDamageModifier *= 1 + (float)Math.Floor(talents.Moonfury * 10 / 3.0f) / 100.0f
+                                            + 0.05f * talents.ImprovedMoonfire
                                             + moonfireDDGlyph;
-            Moonfire.DotEffect.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f
-                                                      + 0.01f * character.DruidTalents.Genesis
-                                                      + 0.05f * character.DruidTalents.ImprovedMoonfire
+            Moonfire.DotEffect.AllDamageModifier *= 1 + (float)Math.Floor(talents.Moonfury * 10 / 3.0f) / 100.0f
+                                                      + 0.01f * talents.Genesis
+                                                      + 0.05f * talents.ImprovedMoonfire
                                                       + moonfireDotGlyph;
-            Starfire.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f + stats.BonusMoonkinNukeDamage;
-            InsectSwarm.DotEffect.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.Genesis
+            Starfire.AllDamageModifier *= 1 + (float)Math.Floor(talents.Moonfury * 10 / 3.0f) / 100.0f + stats.BonusMoonkinNukeDamage;
+            InsectSwarm.DotEffect.AllDamageModifier *= 1 + 0.01f * talents.Genesis
                                                          + insectSwarmGlyph
                                                          + stats.BonusInsectSwarmDamage;
 
             // Moonfire, Insect Swarm: One extra tick (Nature's Splendor)
-            Moonfire.DotEffect.Duration += 3.0f * character.DruidTalents.NaturesSplendor;
-            InsectSwarm.DotEffect.Duration += 2.0f * character.DruidTalents.NaturesSplendor;
+            Moonfire.DotEffect.Duration += 3.0f * talents.NaturesSplendor;
+            InsectSwarm.DotEffect.Duration += 2.0f * talents.NaturesSplendor;
             // Moonfire: Crit chance +(0.05 * Imp Moonfire)
-            Moonfire.CriticalChanceModifier += 0.05f * character.DruidTalents.ImprovedMoonfire;
+            Moonfire.CriticalChanceModifier += 0.05f * talents.ImprovedMoonfire;
 
             // Wrath, Insect Swarm: Nature spell damage multipliers
             Wrath.AllDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
@@ -1463,8 +1467,8 @@ namespace Rawr.Moonkin
 
             // Add spell-specific crit chance
             // Wrath, Starfire: Crit chance +(0.02 * Nature's Majesty)
-            Wrath.CriticalChanceModifier += 0.02f * character.DruidTalents.NaturesMajesty;
-            Starfire.CriticalChanceModifier += 0.02f * character.DruidTalents.NaturesMajesty;
+            Wrath.CriticalChanceModifier += 0.02f * talents.NaturesMajesty;
+            Starfire.CriticalChanceModifier += 0.02f * talents.NaturesMajesty;
 
             // Add spell-specific critical strike damage
             // Chaotic Skyfire Diamond
@@ -1472,15 +1476,15 @@ namespace Rawr.Moonkin
             Wrath.CriticalDamageModifier = stats.BonusCritMultiplier > 0 ? 1.5f * (1 + stats.BonusCritMultiplier) : 1.5f;
             Moonfire.CriticalDamageModifier = stats.BonusCritMultiplier > 0 ? 1.5f * (1 + stats.BonusCritMultiplier) : 1.5f;
             // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)
-            Starfire.CriticalDamageModifier = (Starfire.CriticalDamageModifier - 1.0f) * (1 + 0.2f * character.DruidTalents.Vengeance) + 1.0f;
-            Wrath.CriticalDamageModifier = (Wrath.CriticalDamageModifier - 1.0f) * (1 + 0.2f * character.DruidTalents.Vengeance) + 1.0f;
-            Moonfire.CriticalDamageModifier = (Moonfire.CriticalDamageModifier - 1.0f) * (1 + 0.2f * character.DruidTalents.Vengeance) + 1.0f;
+            Starfire.CriticalDamageModifier = (Starfire.CriticalDamageModifier - 1.0f) * (1 + 0.2f * talents.Vengeance) + 1.0f;
+            Wrath.CriticalDamageModifier = (Wrath.CriticalDamageModifier - 1.0f) * (1 + 0.2f * talents.Vengeance) + 1.0f;
+            Moonfire.CriticalDamageModifier = (Moonfire.CriticalDamageModifier - 1.0f) * (1 + 0.2f * talents.Vengeance) + 1.0f;
 
             // Reduce spell-specific mana costs
             // Starfire, Moonfire, Wrath: Mana cost -(0.03 * Moonglow)
-            Starfire.BaseManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
-            Moonfire.BaseManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
-            Wrath.BaseManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
+            Starfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
+            Moonfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
+            Wrath.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
 
             // Add set bonuses
             // 2T6
@@ -1494,7 +1498,7 @@ namespace Rawr.Moonkin
             Moonfire.DotEffect.CanCrit = stats.MoonfireDotCrit == 1;
 
             // Nature's Grace
-            NaturesGrace = character.DruidTalents.NaturesGrace;
+            NaturesGrace = talents.NaturesGrace;
         }
 
     }
