@@ -18,28 +18,14 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.20.0
- - Further improvements to the default filters and item cache.
- - Updated parsing of proc effects from Onyxia items, and a few other stray items.
- - Added a contextual menu item to open an item in the Armory.
- - Improved optimizer availability for items when loading from Character Profiler.
- - Fix for changing item IDs.
- - Fix for available gems in batch optimizations. Also added a comparison to saved version feature for batch optimizations.
- - Rawr.Bear: Updated Predatory Strikes mechanics for 3.2.
- - Rawr.Cat: Updated Predatory Strikes mechanics for 3.2.
- - Rawr.DPSDK: Added armor and bonus armor as relevant stats. Reworked some damage multipliers for improved accuracy, especially for blood. Support for nested special effects.
- - Rawr.DPSWarr: Tons of improvements, including 3.2.2 changes, fixes to maintaining buffs, cooldown usage, stat display, boss handlers, cleave DPS, whirlwind DPS, special effects tweaks, rage generation, armor penetration, rend damage, sword specialization, and tweaks to the rounding of hit.
- - Rawr.Elemental: Improved support for some trinkets. Fix for haste dropping spells below 1sec. Fixed base damage values for Earth and Frost Shock, and Lightning Bolt.
- - Rawr.Enhance: Support for Boss Handler features. Support for nested special effects.
- - Rawr.Mage: Updates to 3.2.2 cycles. Improvement to Arcane Cycles feature. Support for cooldown stacking for all on use spell power and haste effects, and berserking.
- - Rawr.ProtPaladin: More 3.2.2 updates. Better support for special effects, as well as some set bonuses and librams. Improved modeling of Shield of Righteousness. Added damage reduction from Ardent Defender. Fix for slightly off base stats.
- - Rawr.ProtWarr: Fix for Devastate threat, and other minor tweaks.
- - Rawr.RestoSham: Support for more special effects.
- - Rawr.Rogue: Added poison-affecting stats as relevant. Added more set bonuses. Fix for Backstab, Mutilate, poison, and Envenom damage. Fix for several energy costs and energy-related talents. Fix for Murder, Hunger for Blood, and Mace Specialization talents. 
- - Rawr.ShadowPriest: Lots of fixes to haste/rotation interaction. Fixes for spell coefficients and modifiers. Added support for more set bonuses. 
- - Rawr.TankDK: More 3.2.2 updates. Fix for damage reduction buffs. Fix for white damage from offhands. Added option to display ratings in Burst & Reaction Time.
- - Rawr.Tree: More 3.2.2 updates. Basic Val'anyr modeling. Support for a few more set bonuses.
- - Rawr.Warlock: Updated formulae for Empowered Imp, Backlash, and Cataclysm, and physical buff support for pets.";
+			labelVersionHistory.Text = @"v2.2.21.0
+ - More improvements to default filters. Sorry for all the confusion and problems with filters lately, everyone. We realize that filtering is a very important, but complex, part of Rawr, and are working toward a much more understandable and reliable system for filtering. Please bear with us!
+ - Fix for crashing on saving and loading characters from Armory with Leatherworking.
+ - Mage: Fix for crash with Hyperspeed Accellerators, and other cooldown stacking issues.
+ - Enhance: Fix for nested special effect calculations.
+ - Moonkin: Significant performance improvement.
+ - ProtPaladin: Significant performance improvement.
+ - DPSWarr: Significant performance improvement.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
