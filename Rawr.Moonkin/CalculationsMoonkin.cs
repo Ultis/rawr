@@ -927,7 +927,6 @@ namespace Rawr.Moonkin
                 SpellCrit = stats.SpellCrit,
                 SpellHit = stats.SpellHit,
                 ArmorPenetration = stats.ArmorPenetration,
-                Bloodlust = stats.Bloodlust,
                 EclipseBonus = stats.EclipseBonus,
                 InsectSwarmDmg = stats.InsectSwarmDmg,
                 MoonfireDotCrit = stats.MoonfireDotCrit,
@@ -959,6 +958,7 @@ namespace Rawr.Moonkin
                     if (effect.Stats.SpellPower > 0 ||
                         effect.Stats.CritRating > 0 ||
                         effect.Stats.HasteRating > 0 ||
+                        effect.Stats.SpellHaste > 0 ||
                         effect.Stats.HighestStat > 0 ||
                         effect.Stats.ShadowDamage > 0 ||
                         effect.Stats.NatureDamage > 0 ||
@@ -1002,6 +1002,7 @@ namespace Rawr.Moonkin
                     if (effect.Stats.SpellPower > 0 ||
                         effect.Stats.CritRating > 0 ||
                         effect.Stats.HasteRating > 0 ||
+                        effect.Stats.SpellHaste > 0 ||
                         effect.Stats.HighestStat > 0 ||
                         effect.Stats.ShadowDamage > 0 ||
                         effect.Stats.NatureDamage > 0 ||
@@ -1025,7 +1026,7 @@ namespace Rawr.Moonkin
                 + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus
                 + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
                 + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
-                + stats.Bloodlust + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
+                + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
                 + stats.MoonfireDotCrit + stats.BonusMoonkinNukeDamage) > 0;
         }
     }

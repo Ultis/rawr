@@ -232,6 +232,7 @@ namespace Rawr.Moonkin
                     float spellCrit = StatConversion.GetSpellCritFromRating(critRating);
                     float hasteRating = st.HasteRating;
                     float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating);
+                    spellHaste += st.SpellHaste;
                     float spirit = st.Spirit;
                     float highestStat = st.HighestStat;
 
@@ -239,7 +240,7 @@ namespace Rawr.Moonkin
                         sp += spellPower * maxStack;
                     if (critRating > 0)
                         sc += spellCrit;
-                    if (hasteRating > 0)
+                    if (spellHaste > 0)
                         sHa += spellHaste;
                     if (spirit > 0)
                     {
@@ -281,6 +282,7 @@ namespace Rawr.Moonkin
                     float spellCrit = StatConversion.GetSpellCritFromRating(critRating);
                     float hasteRating = st.HasteRating;
                     float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating);
+                    spellHaste += st.SpellHaste;
                     float spirit = st.Spirit;
                     float highestStat = st.HighestStat;
 
@@ -288,7 +290,7 @@ namespace Rawr.Moonkin
                         sp -= spellPower * maxStack;
                     if (critRating > 0)
                         sc -= spellCrit;
-                    if (hasteRating > 0)
+                    if (spellHaste > 0)
                         sHa -= spellHaste;
                     if (spirit > 0)
                     {
