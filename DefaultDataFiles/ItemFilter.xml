@@ -2616,7 +2616,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -2630,7 +2630,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -2644,7 +2644,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -2658,13 +2658,13 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Jewelcrafting</Name>
+          <Name>Jewelcrafting (non-gem)</Name>
           <Pattern>Jewelcrafting</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
@@ -2672,7 +2672,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -2686,7 +2686,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -2700,7 +2700,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -2714,7 +2714,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -2727,7 +2727,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -3088,7 +3088,7 @@
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>BoP (Requires Option Enabled)</Name>
+          <Name>Jewelcrafter BoP</Name>
           <Pattern>BoP</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
@@ -3167,7 +3167,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -3181,7 +3181,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -3195,7 +3195,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -3209,13 +3209,13 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Name>Disable BoP Jewelcrafting</Name>
+          <Name>Disable BoP Jewelcrafting (non-gem)</Name>
           <Pattern>BoP crafted Jewelcrafting</Pattern>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
@@ -3237,7 +3237,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -3251,7 +3251,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -3264,7 +3264,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>false</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>false</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
