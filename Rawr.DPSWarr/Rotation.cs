@@ -146,37 +146,37 @@ namespace Rawr.DPSWarr {
             // Whites
             //WhiteAtks = new Skills.WhiteAttacks(CHARACTER, STATS, COMBATFACTORS);
             // Anti-Debuff
-            HF  = new Skills.HeroicFury(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            EM  = new Skills.EveryManForHimself(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            CH  = new Skills.Charge(            CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            IN  = new Skills.Intercept(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            IV  = new Skills.Intervene(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            HF  = new Skills.HeroicFury(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            EM = new Skills.EveryManForHimself(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            CH = new Skills.Charge(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            IN = new Skills.Intercept(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            IV = new Skills.Intervene(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
             // Rage Generators
-            SndW= new Skills.SecondWind(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            BZ  = new Skills.BerserkerRage(     CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            BR  = new Skills.Bloodrage(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SndW = new Skills.SecondWind(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            BZ = new Skills.BerserkerRage(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            BR = new Skills.Bloodrage(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
             // Maintenance
-            BTS = new Skills.BattleShout(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            CS  = new Skills.CommandingShout(   CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            DS  = new Skills.DemoralizingShout( CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SN  = new Skills.SunderArmor(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            TH  = new Skills.ThunderClap(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            HMS = new Skills.Hamstring(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            ER  = new Skills.EnragedRegeneration(CHARACTER,STATS, COMBATFACTORS, WHITEATTACKS);
+            BTS = new Skills.BattleShout(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            CS = new Skills.CommandingShout(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            DS = new Skills.DemoralizingShout(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            SN = new Skills.SunderArmor(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            TH = new Skills.ThunderClap(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            HMS = new Skills.Hamstring(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            ER = new Skills.EnragedRegeneration(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
             // Periodics
-            ST = new Skills.ShatteringThrow(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SW = new Skills.SweepingStrikes(    CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            Death = new Skills.DeathWish(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            RK = new Skills.Recklessness(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            ST = new Skills.ShatteringThrow(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            SW = new Skills.SweepingStrikes(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            Death = new Skills.DeathWish(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            RK = new Skills.Recklessness(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
 
             // Slam used by Bloodsurge, WW used by Bladestorm, so they're shared
-            SL = new Skills.Slam(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS); // actually arms but BS needs it
-            WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            SL = new Skills.Slam(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS); // actually arms but BS needs it
+            WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
             
-            DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            EX = new Skills.Execute(            CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            EX = new Skills.Execute(            CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
         }
         protected virtual void doIterations() { }
 

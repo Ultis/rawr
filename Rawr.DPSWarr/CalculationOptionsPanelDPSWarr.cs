@@ -1529,14 +1529,14 @@ FAQStuff.Add(
                     default: { break; }
                 }
                 // Assign the new values to the program
-                setAbilBools();
+                setAbilBools(calcOpts);
                 // Run a new dps calc
                 Character.OnCalculationsInvalidated();
                 CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
             }
         }
-        private void setAbilBools() {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+        private void setAbilBools(CalculationOptionsDPSWarr calcOpts) {
+            //CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
 
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageGen__]        = CTL_Maints.Nodes[0].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BerserkerRage_]    = CTL_Maints.Nodes[0].Nodes[0].Checked;

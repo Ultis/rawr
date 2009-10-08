@@ -17,9 +17,9 @@ namespace Rawr.DPSWarr
             /// </summary>
             /// <TalentsAffecting>Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Bloodthirst [+100% from healing effect]</GlyphsAffecting>
-            public BloodThirst(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public BloodThirst(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Bloodthirst";
                 AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_;
@@ -38,7 +38,7 @@ namespace Rawr.DPSWarr
                 HealingBase = StatS.Health / 100.0f * 3f * (Talents.GlyphOfBloodthirst ? 2f : 1f);
                 //HealingBonus = 1f;
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         public class WhirlWind : Ability
@@ -50,9 +50,9 @@ namespace Rawr.DPSWarr
             /// </summary>
             /// <TalentsAffecting>Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Whirlwind [-2 sec Cooldown]</GlyphsAffecting>
-            public WhirlWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public WhirlWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "WhirlWind";
                 AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_;
@@ -66,7 +66,7 @@ namespace Rawr.DPSWarr
                 StanceOkFury = true;
                 DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
                 //
-                InitializeB();
+                InitializeB(co);
             }
             // Variables
             // Get/Set
@@ -210,9 +210,9 @@ namespace Rawr.DPSWarr
             /// </summary>
             /// <TalentsAffecting>Bloodsurge (Requires Talent) [(7%/13%/20%) chance]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public BloodSurge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, Ability slam, Ability whirlwind, Ability bloodthirst)
+            public BloodSurge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Ability slam, Ability whirlwind, Ability bloodthirst)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Bloodsurge";
                 AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_;
@@ -230,7 +230,7 @@ namespace Rawr.DPSWarr
                 BT = bloodthirst;
                 UseReact = true;
                 //
-                InitializeB();
+                InitializeB(co);
             }
             #region Variables
             public float hsActivates;
@@ -285,9 +285,9 @@ namespace Rawr.DPSWarr
             /// </summary>
             /// <TalentsAffecting>Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Heroic Strike [+10 rage on crits]</GlyphsAffecting>
-            public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Heroic Strike";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_;
@@ -301,7 +301,7 @@ namespace Rawr.DPSWarr
                 DamageBase = Whiteattacks.MhDamage + 495f;
                 BonusCritChance = Talents.Incite * 0.05f + StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
                 //
-                InitializeB();
+                InitializeB(co);
             }
             public override float FullRageCost
             {
@@ -320,9 +320,9 @@ namespace Rawr.DPSWarr
             /// </summary>
             /// <TalentsAffecting>Improved Cleave [+(40*Pts)% Damage], Incite [+(5*Pts)% Crit Perc]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Cleaving [+1 targets hit]</GlyphsAffecting>
-            public Cleave(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public Cleave(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Cleave";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_;
@@ -336,7 +336,7 @@ namespace Rawr.DPSWarr
                 //DamageBonus = 1f + Talents.ImprovedCleave * 0.40f; // Imp Cleave is only the "Bonus Damage", and not the whole attack
                 BonusCritChance = Talents.Incite * 0.05f;
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         #endregion

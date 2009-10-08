@@ -14,9 +14,9 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Deep Wounds (Requires Talent) [(16*Pts)% damage dealt]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public DeepWounds(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public DeepWounds(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Deep Wounds";
                 ReqTalent = true;
@@ -30,7 +30,7 @@ namespace Rawr.DPSWarr {
                 mhActivates = ohActivates = 0f;
                 UseHitTable = false;
                 //
-                InitializeB();
+                InitializeB(co);
             }
             private float mhActivates, ohActivates;
             public void SetAllAbilityActivates(float mh, float oh) { mhActivates = mh; ohActivates = oh; }
@@ -71,9 +71,9 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Berserker Rage [+(10*Pts) Rage Generated]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public BerserkerRage(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public BerserkerRage(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Berserker Rage";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
@@ -82,7 +82,7 @@ namespace Rawr.DPSWarr {
                 StanceOkArms = StanceOkDef = StanceOkFury = true;
                 UseHitTable = false;
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         public class EnragedRegeneration : BuffEffect
@@ -94,9 +94,9 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Enraged Regeneration [+10% to effect]</GlyphsAffecting>
-            public EnragedRegeneration(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public EnragedRegeneration(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Enraged Regeneration";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_;
@@ -107,7 +107,7 @@ namespace Rawr.DPSWarr {
                 UseHitTable = false;
                 UseReact = true;
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         public class LastStand : BuffEffect
@@ -127,9 +127,9 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Bloodrge [+(25*Pts)% Rage Generated], Intensify Rage [-(1/9*Pts]% Cooldown]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Bloodrage [-100% Health Cost]</GlyphsAffecting>
-            public Bloodrage(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public Bloodrage(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Bloodrage";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_;
@@ -146,7 +146,7 @@ namespace Rawr.DPSWarr {
                     new Stats() { BonusRageGen = 1f * (1f + Talents.ImprovedBloodrage * 0.25f), },
                     Duration, Cd);*/
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         public class BattleShout : BuffEffect
@@ -160,9 +160,9 @@ namespace Rawr.DPSWarr {
             /// Commanding Presence [+(5*Pts)% to the AP Bonus]
             /// </TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Battle [+1 min duration]</GlyphsAffecting>
-            public BattleShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public BattleShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Battle Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
@@ -176,7 +176,7 @@ namespace Rawr.DPSWarr {
                     new Stats() { AttackPower = (548f*(1f+Talents.CommandingPresence*0.05f)), },
                     Duration, Cd);*/
                 //
-                InitializeB();
+                InitializeB(co);
             }
             public override Stats AverageStats
             {
@@ -199,9 +199,9 @@ namespace Rawr.DPSWarr {
             /// Commanding Presence [+(5*Pts)% to the Health Bonus]
             /// </TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public CommandingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public CommandingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Commanding Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_;
@@ -215,7 +215,7 @@ namespace Rawr.DPSWarr {
                     new Stats() { Health = (2255f*(1f+Talents.CommandingPresence*0.05f)), },
                     Duration, Cd);*/
                 //
-                InitializeB();
+                InitializeB(co);
             }
             public override Stats AverageStats
             {
@@ -236,9 +236,9 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Death Wish [Requires Talent], Intensify Rage [-(1/9*Pts)% Cooldown]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public DeathWish(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public DeathWish(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Death Wish";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_;
@@ -253,7 +253,7 @@ namespace Rawr.DPSWarr {
                         new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
                         Duration, Cd);*/
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         public class Recklessness : BuffEffect {
@@ -264,8 +264,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Recklessness(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+            public Recklessness(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Recklessness";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Recklessness_;
@@ -276,7 +276,7 @@ namespace Rawr.DPSWarr {
                     new Stats { PhysicalCrit = 1f, DamageTakenMultiplier = 0.20f, },
                     Duration, Cd);
                 UseHitTable = false;
-                InitializeB();
+                InitializeB(co);
             }
         }
         public class SweepingStrikes : BuffEffect
@@ -287,8 +287,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Sweeping Strikes [-100% Rage cost]</GlyphsAffecting>
-            public SweepingStrikes(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+            public SweepingStrikes(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Sweeping Strikes";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
@@ -304,7 +304,7 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = StanceOkArms = true;
                 UseHitTable = false;
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         public class SecondWind : BuffEffect
@@ -316,9 +316,9 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Sweeping Strikes [-100% Rage cost]</GlyphsAffecting>
-            public SecondWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public SecondWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Second Wind";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
@@ -333,7 +333,7 @@ namespace Rawr.DPSWarr {
                 HealingBase = StatS.Health * 0.05f * Talents.SecondWind;
                 UseHitTable = false;
                 //
-                InitializeB();
+                InitializeB(co);
             }
             private float NUMSTUNSOVERDUR;
             public float NumStunsOverDur
@@ -363,8 +363,8 @@ namespace Rawr.DPSWarr {
             /// Glyph of Thunder Clap [+2 yds MaxRange]
             /// Glyph of Resonating Power [-5 RageCost]
             /// </GlyphsAffecting>
-            public ThunderClap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+            public ThunderClap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Thunder Clap";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_;
@@ -389,7 +389,7 @@ namespace Rawr.DPSWarr {
                 BonusCritChance = Talents.Incite * 0.05f;
                 UseSpellHit = true;
                 //
-                InitializeB();
+                InitializeB(co);
             }
             protected override float ActivatesOverride {
                 get {
@@ -422,8 +422,8 @@ namespace Rawr.DPSWarr {
             /// <summary></summary>
             /// <TalentsAffecting>Focused Rage [-(Pts) Rage Cost], Puncture [-(Pts) Rage Cost], </TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Sunder Armor [+1 Targets]</GlyphsAffecting>
-            public SunderArmor(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+            public SunderArmor(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Sunder Armor";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_;
@@ -436,7 +436,7 @@ namespace Rawr.DPSWarr {
                 Targets = 1f + (Talents.GlyphOfSunderArmor ? 1f : 0f);
                 StanceOkFury = StanceOkArms = StanceOkDef = true;
                 //
-                InitializeB();
+                InitializeB(co);
                 //
                 /*Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.04f, },
@@ -473,8 +473,8 @@ namespace Rawr.DPSWarr {
             /// Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power),
             /// reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.
             /// </summary>
-            public ShatteringThrow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+            public ShatteringThrow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Shattering Throw";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_;
@@ -489,7 +489,7 @@ namespace Rawr.DPSWarr {
                 StanceOkArms = true;
                 DamageBase = 12f + StatS.AttackPower * 0.50f;
                 //
-                InitializeB();
+                InitializeB(co);
                 //
                 /*Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.20f, },
@@ -504,8 +504,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public DemoralizingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+            public DemoralizingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Demoralizing Shout";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_;
@@ -517,7 +517,7 @@ namespace Rawr.DPSWarr {
                 StanceOkArms = StanceOkFury = true;
                 UseSpellHit = true;
                 //
-                InitializeB();
+                InitializeB(co);
                 //
                 /*Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { /*AttackPower = 411f,*//* }, // needs to be boss debuff
@@ -557,8 +557,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Hamstring [Gives a [5*Pts]% chance to immobilize the target for 5 sec.]</TalentsAffecting>
             /// <GlyphsAffecting>Glyph of Hamstring [Gives a 10% chance to immobilize the target for 5 sec.]</GlyphsAffecting>
-            public Hamstring(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+            public Hamstring(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Hamstring";
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Hamstring_;
@@ -576,7 +576,7 @@ namespace Rawr.DPSWarr {
                     new Stats() { AttackPower = 0f, /*TargetStunned = 0.50f,*/ },
                     5f, Duration, Chance);
                 //
-                InitializeB();
+                InitializeB(co);
             }
             protected override float ActivatesOverride {
                 get {
@@ -615,9 +615,9 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public EveryManForHimself(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public EveryManForHimself(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Every Man for Himself";
                 if (c.Race != CharacterRace.Human) { return; }
@@ -626,7 +626,7 @@ namespace Rawr.DPSWarr {
                 UseHitTable = false;
                 UseReact = true;
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         public class HeroicFury : Ability
@@ -637,9 +637,9 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting></TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public HeroicFury(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public HeroicFury(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Heroic Fury";
                 ReqTalent = true;
@@ -649,7 +649,7 @@ namespace Rawr.DPSWarr {
                 UseHitTable = false;
                 UseReact = true;
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         #endregion
@@ -668,8 +668,8 @@ namespace Rawr.DPSWarr {
             /// Glyph of Rapid Charge [-7% Cd]
             /// Glyph of Charge [+5 yds MaxRange]
             /// </GlyphsAffecting>
-            public Charge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+            public Charge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Charge";
                 MinRange = 8f;
@@ -683,7 +683,7 @@ namespace Rawr.DPSWarr {
                     StanceOkArms = true;
                 }
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         public class Intercept : Ability {
@@ -696,8 +696,8 @@ namespace Rawr.DPSWarr {
             /// Improved Intercept [-[5*Pts] sec Cd]
             /// </TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Intercept(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+            public Intercept(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 MinRange = 8f;
                 MaxRange = 25f; // In Yards 
@@ -707,7 +707,7 @@ namespace Rawr.DPSWarr {
                 StanceOkFury = true; StanceOkArms = StanceOkDef = (Talents.Warbringer == 1);
                 DamageBase = 380f;
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         public class Intervene : Ability {
@@ -721,8 +721,8 @@ namespace Rawr.DPSWarr {
             /// <GlyphsAffecting>
             /// Glyph of Intervene [Increases the number of attacks you intercept for your intervene target by 1.]
             /// </GlyphsAffecting>
-            public Intervene(Character c, Stats s, CombatFactors cf, WhiteAttacks wa) {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+            public Intervene(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 MinRange = 8f;
                 MaxRange = 25f; // In Yards 
@@ -731,7 +731,7 @@ namespace Rawr.DPSWarr {
                 StanceOkDef = true; StanceOkArms = StanceOkFury = (Talents.Warbringer == 1);
                 UseHitTable = false;
                 //
-                InitializeB();
+                InitializeB(co);
             }
         }
         #endregion
@@ -745,9 +745,9 @@ namespace Rawr.DPSWarr {
             /// </summary>
             /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Retaliation(Character c, Stats s, CombatFactors cf, WhiteAttacks wa)
+            public Retaliation(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
             {
-                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA();
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Retaliation";
                 StanceOkArms = true;
@@ -759,7 +759,7 @@ namespace Rawr.DPSWarr {
                 StackCap = 20f;
                 UseHitTable = false;
                 //
-                InitializeB();
+                InitializeB(co);
             }
             public float StackCap;
         }

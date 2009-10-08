@@ -9,12 +9,12 @@ namespace Rawr.DPSWarr
 {
     public class FuryRotation : Rotation
     {
-        public FuryRotation(Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa) {
+        public FuryRotation(Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co) {
             Char = character;
             StatS = stats;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CombatFactors = cf;
-            CalcOpts = Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() : Char.CalculationOptions as CalculationOptionsDPSWarr;
+            CalcOpts = (co == null ? new CalculationOptionsDPSWarr() : co);
             WhiteAtks = wa;
             // Initialize();
         }
@@ -43,8 +43,8 @@ namespace Rawr.DPSWarr
         protected override void initAbilities()
         {
             base.initAbilities();
-            BT = new Skills.BloodThirst(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            BS = new Skills.BloodSurge(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, SL, WW, BT);
+            BT = new Skills.BloodThirst(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            BS = new Skills.BloodSurge(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS, SL, WW, BT);
         }
 
         protected void new_doIterations()

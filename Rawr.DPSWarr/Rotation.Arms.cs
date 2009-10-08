@@ -7,12 +7,12 @@ using System.Text;
 
 namespace Rawr.DPSWarr {
     public class ArmsRotation : Rotation {
-        public ArmsRotation(Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa) {
+        public ArmsRotation(Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co) {
             Char = character;
             StatS = stats;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CombatFactors = cf;
-            CalcOpts = Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() : Char.CalculationOptions as CalculationOptionsDPSWarr;
+            CalcOpts = (co == null ? new CalculationOptionsDPSWarr() : co);
             WhiteAtks = wa;
             // Initialize();
         }
@@ -58,14 +58,14 @@ namespace Rawr.DPSWarr {
         }
         protected override void initAbilities() {
             base.initAbilities();
-            WW = new Skills.WhirlWind(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            BLS = new Skills.Bladestorm(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, WW);
-            MS = new Skills.MortalStrike(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            RD = new Skills.Rend(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SS = new Skills.Swordspec(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            OP = new Skills.OverPower(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, SS);
-            TB = new Skills.TasteForBlood(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
-            SD = new Skills.Suddendeath(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS);
+            WW = new Skills.WhirlWind(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            BLS = new Skills.Bladestorm(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS, WW);
+            MS = new Skills.MortalStrike(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            RD = new Skills.Rend(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            SS = new Skills.Swordspec(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            OP = new Skills.OverPower(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS, SS);
+            TB = new Skills.TasteForBlood(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            SD = new Skills.Suddendeath(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
         }
         #endregion
         #region Various Attacks Over Dur
@@ -294,7 +294,7 @@ namespace Rawr.DPSWarr {
                         };
                         stats.Accumulate(STATS);
                         // I'm not sure if this is gonna work, but hell, who knows
-                        MS = new Skills.MortalStrike(CHARACTER, stats, COMBATFACTORS, WHITEATTACKS);
+                        MS = new Skills.MortalStrike(CHARACTER, stats, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
                     //}
                 }
 

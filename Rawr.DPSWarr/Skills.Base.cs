@@ -10,14 +10,14 @@ namespace Rawr.DPSWarr {
         // White Damage + White Rage Generated
         public class WhiteAttacks {
             // Constructors
-            public WhiteAttacks(Character character, Stats stats, CombatFactors cf) {
+            public WhiteAttacks(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr calcOpts) {
                 Char = character;
                 StatS = stats;
                 Talents = Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
                 combatFactors = cf;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
-                MHAtkTable = new AttackTable(Char, StatS, combatFactors, true, false, false);
-                OHAtkTable = new AttackTable(Char, StatS, combatFactors, false, false, false);
+                CalcOpts = calcOpts;
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, true, false, false);
+                OHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, false, false, false);
                 FightDuration = CalcOpts.Duration;
                 //
                 Targets = 1f;
@@ -548,7 +548,7 @@ namespace Rawr.DPSWarr {
                         //StatS = CalculationsDPSWarr.GetCharacterStats(CHARACTER, null);
                         //combatFactors = new CombatFactors(CHARACTER, StatS);
                         //Whiteattacks = Whiteattacks;
-                        CalcOpts = CHARACTER.CalculationOptions as CalculationOptionsDPSWarr;
+                        //CalcOpts = CHARACTER.CalculationOptions as CalculationOptionsDPSWarr;
                     }else{
                         Talents = null;
                         StatS = null;
@@ -686,13 +686,13 @@ namespace Rawr.DPSWarr {
             public virtual float DPS { get { return AvgDamageOnUse / FightDuration; } }
             #endregion
             #region Functions
-            protected void InitializeA() {
+            protected void InitializeA(CalculationOptionsDPSWarr calcOpts) {
                 Talents = Char.WarriorTalents;
-                CalcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+                CalcOpts = calcOpts;
             }
-            protected void InitializeB() {
-                MHAtkTable = new AttackTable(Char, StatS, combatFactors, this, true,  UseSpellHit, !UseHitTable);
-                OHAtkTable = new AttackTable(Char, StatS, combatFactors, this, false, UseSpellHit, !UseHitTable);
+            protected void InitializeB(CalculationOptionsDPSWarr co) {
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, co, this, true,  UseSpellHit, !UseHitTable);
+                OHAtkTable = new AttackTable(Char, StatS, combatFactors, co, this, false, UseSpellHit, !UseHitTable);
             }
             public virtual float GetRageUseOverDur(float acts) {
                 if (!Validated) { return 0f; }

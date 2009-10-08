@@ -2,13 +2,13 @@ using System;
 
 namespace Rawr.DPSWarr {
     public class CombatFactors {
-        public CombatFactors(Character character, Stats stats) {
+        public CombatFactors(Character character, Stats stats, CalculationOptionsDPSWarr calcOpts) {
             Char = character;
             StatS = stats;
             MH = Char == null || Char.MainHand == null ? new Knuckles() : Char.MainHand.Item;
             OH = Char == null || Char.OffHand  == null || Char.WarriorTalents.TitansGrip == 0 ? null : Char.OffHand.Item;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
-            CalcOpts = Char == null || Char.CalculationOptions == null ? new CalculationOptionsDPSWarr() : Char.CalculationOptions as CalculationOptionsDPSWarr;
+            CalcOpts = (calcOpts == null ? new CalculationOptionsDPSWarr() : calcOpts);
 
             useMH = _useMH; // public variable gets set once
             useOH = _useOH; // public variable gets set once
@@ -360,10 +360,10 @@ namespace Rawr.DPSWarr {
             _anyNotLand = 0f;
         }
 
-        protected void Initialize(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh, bool useSpellHit) {
+        protected void Initialize(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, Skills.Ability ability, bool ismh, bool useSpellHit) {
             Char = character;
             StatS = stats;
-            calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts = co;
             combatFactors = cf;
             Abil = ability;
             isWhite = (Abil == null);
@@ -414,7 +414,7 @@ namespace Rawr.DPSWarr {
             base.Calculate();
         }
 
-        public DefendTable(Character character, Stats stats, CombatFactors cf) { Initialize(character, stats, cf, null, true, useSpellHit); }
+        public DefendTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co) { Initialize(character, stats, cf, co, null, true, useSpellHit); }
     }
 
     public class AttackTable : CombatTable {
@@ -464,14 +464,14 @@ namespace Rawr.DPSWarr {
             base.Calculate();
         }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, bool ismh, bool useSpellHit, bool alwaysHit) {
+        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, bool ismh, bool useSpellHit, bool alwaysHit) {
         
-            Initialize(character, stats, cf, null, ismh, useSpellHit);
+            Initialize(character, stats, cf, co, null, ismh, useSpellHit);
             if (alwaysHit) base.CalculateAlwaysHit();
         }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, Skills.Ability ability, bool ismh, bool useSpellHit, bool alwaysHit) {
-            Initialize(character, stats, cf, ability, ismh, useSpellHit);
+        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, Skills.Ability ability, bool ismh, bool useSpellHit, bool alwaysHit) {
+            Initialize(character, stats, cf, co, ability, ismh, useSpellHit);
             if (alwaysHit) base.CalculateAlwaysHit();
         }
     }

@@ -740,8 +740,7 @@ These numbers to do not include racial bonuses.",
             return HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats));
         }
 
-        public Stats GetBuffsStats(Character character) {
-            CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
+        public Stats GetBuffsStats(Character character, CalculationOptionsDPSWarr calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
 
             // Draenei should always have this buff activated
@@ -1181,11 +1180,11 @@ These numbers to do not include racial bonuses.",
                 Stats stats = GetCharacterStats(character, additionalItem); line++;
                 WarriorTalents talents = character.WarriorTalents; line++;
 
-                CombatFactors combatFactors = new CombatFactors(character, stats); line++;
-                Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors); line++;
+                CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts); line++;
+                Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors, calcOpts); line++;
                 Rotation Rot; line++;
-                if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks);
-                else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks); line++;
+                if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
+                else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts); line++;
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race); line++;
 
                 calculatedStats.Duration = calcOpts.Duration; line++;
@@ -1278,7 +1277,7 @@ These numbers to do not include racial bonuses.",
                 WarriorTalents talents = character.WarriorTalents;
 
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Warrior, character.Race);
-                Stats statsBuffs = (statType == StatType.Unbuffed ? new Stats() : GetBuffsStats(character));
+                Stats statsBuffs = (statType == StatType.Unbuffed ? new Stats() : GetBuffsStats(character, calcOpts));
                 Stats statsItems = GetItemStats(character, additionalItem);
                 Stats statsOptionsPanel = new Stats() {
                     BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
@@ -1416,11 +1415,11 @@ These numbers to do not include racial bonuses.",
                 if (statType == StatType.Unbuffed || statType == StatType.Buffed) return statsTotal;
 
                 // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
-                CombatFactors combatFactors = new CombatFactors(character, statsTotal);
-                Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors);
+                CombatFactors combatFactors = new CombatFactors(character, statsTotal, calcOpts);
+                Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors, calcOpts);
                 Rotation Rot;
-                if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks);
-                else Rot = new ArmsRotation(character, statsTotal, combatFactors, whiteAttacks);
+                if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts);
+                else Rot = new ArmsRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts);
                 Rot.Initialize();
                 Rot.MakeRotationandDoDPS(false);
 
@@ -1526,7 +1525,7 @@ These numbers to do not include racial bonuses.",
                     if (ohEffects.MoveNext()) { bersOffHand = ohEffects.Current; }
                 }
 
-                if (statType == StatType.Average) DoSpecialEffects(character, Rot, combatFactors, bersMainHand, bersOffHand, statsTotal);
+                if (statType == StatType.Average) DoSpecialEffects(character, Rot, combatFactors, calcOpts, bersMainHand, bersOffHand, statsTotal);
                 else // statType == StatType.Maximum
                 {
                     Stats maxSpecEffects = new Stats();
@@ -1560,7 +1559,7 @@ These numbers to do not include racial bonuses.",
             return new Stats();
         }
 
-        private void DoSpecialEffects(Character Char, Rotation Rot, CombatFactors combatFactors,
+        private void DoSpecialEffects(Character Char, Rotation Rot, CombatFactors combatFactors, CalculationOptionsDPSWarr calcOpts,
             SpecialEffect bersMainHand, SpecialEffect bersOffHand,
             Stats statsTotal) {
 
@@ -1580,13 +1579,13 @@ These numbers to do not include racial bonuses.",
                     secondPass.Add(effect);
                 }
             }
-            Stats StatsFirstPass = IterativeSpecialEffectsStats(Char, Rot, combatFactors, firstPass, true, new Stats(), combatFactors.StatS);
-            Stats StatsSecondPass = IterativeSpecialEffectsStats(Char, Rot, combatFactors, secondPass, false, null, combatFactors.StatS);
+            Stats StatsFirstPass = IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts, firstPass, true, new Stats(), combatFactors.StatS);
+            Stats StatsSecondPass = IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts, secondPass, false, null, combatFactors.StatS);
         }
 
-        private Stats IterativeSpecialEffectsStats(Character Char, Rotation Rot, CombatFactors combatFactors,
-            List<SpecialEffect> specialEffects, bool iterate, Stats iterateOld, Stats originalStats) {
-            CalculationOptionsDPSWarr calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
+        private Stats IterativeSpecialEffectsStats(Character Char, Rotation Rot, CombatFactors combatFactors, 
+            CalculationOptionsDPSWarr calcOpts, List<SpecialEffect> specialEffects, bool iterate, Stats iterateOld, Stats originalStats) {
+            
             WarriorTalents talents = Char.WarriorTalents;
             float fightDuration = calcOpts.Duration;
             Stats statsProcs = new Stats();
@@ -1617,7 +1616,7 @@ These numbers to do not include racial bonuses.",
                             originalStats.ArmorPenetration + effect.Stats.ArmorPenetration, arpenBuffs, originalStats.ArmorPenetrationRating + effect.Stats.ArmorPenetrationRating);
 
                         Stats dummyStats = new Stats();
-                        float procUptime = ApplySpecialEffect(effect, Char, Rot, combatFactors, originalStats.Dodge + originalStats.Parry, ref dummyStats);
+                        float procUptime = ApplySpecialEffect(effect, Char, Rot, combatFactors, calcOpts, originalStats.Dodge + originalStats.Parry, ref dummyStats);
 
                         float targetReduction = ProccedArmorReduction * procUptime + OriginalArmorReduction * (1f - procUptime);
                         //float arpDiff = OriginalArmorReduction - targetReduction;
@@ -1629,7 +1628,7 @@ These numbers to do not include racial bonuses.",
                         float numProcs = effect.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
                         statsProcs.ManaorEquivRestore += effect.Stats.ManaorEquivRestore * numProcs;
                     } else {
-                        ApplySpecialEffect(effect, Char, Rot, combatFactors, originalStats.Dodge + originalStats.Parry, ref statsProcs);
+                        ApplySpecialEffect(effect, Char, Rot, combatFactors, calcOpts, originalStats.Dodge + originalStats.Parry, ref statsProcs);
                     }
                 }
 
@@ -1646,7 +1645,7 @@ These numbers to do not include racial bonuses.",
                         temp.PhysicalHaste > precisionDec ||
                         temp.PhysicalCrit > precisionDec ||
                         temp.PhysicalHit > precisionDec) {
-                        return IterativeSpecialEffectsStats(Char, Rot, combatFactors,
+                        return IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts,
                             specialEffects, true, statsProcs, originalStats);
                     }
                 }
@@ -1659,8 +1658,7 @@ These numbers to do not include racial bonuses.",
         }
 
         private enum SpecialEffectDataType { AverageStats, UpTime };
-        private float ApplySpecialEffect(SpecialEffect effect, Character character, Rotation rotation, CombatFactors combatFactors, float avoidedAttacks, ref Stats applyTo) {
-            CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
+        private float ApplySpecialEffect(SpecialEffect effect, Character character, Rotation rotation, CombatFactors combatFactors, CalculationOptionsDPSWarr calcOpts, float avoidedAttacks, ref Stats applyTo) {
             float fightDuration = calcOpts.Duration;
             float fightDuration2Pass = calcOpts.SE_UseDur ? fightDuration : 0;
 
@@ -1688,7 +1686,7 @@ These numbers to do not include racial bonuses.",
                         List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
                         nestedEffect.Add(effect.Stats._rawSpecialEffectData[0]);
                         Stats _stats2 = new Stats();
-                        ApplySpecialEffect(effect.Stats._rawSpecialEffectData[0], character, rotation, combatFactors, avoidedAttacks, ref _stats2);
+                        ApplySpecialEffect(effect.Stats._rawSpecialEffectData[0], character, rotation, combatFactors, calcOpts, avoidedAttacks, ref _stats2);
                         effectStats = _stats2;
                     } else {
                         upTime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
