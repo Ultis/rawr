@@ -456,32 +456,32 @@ FAQStuff.Add(
                         CK_StunningTargs.Checked = calcOpts.StunningTargets;
                         NUD_StunFreq.Enabled = calcOpts.StunningTargets;
                         NUD_StunDur.Enabled = calcOpts.StunningTargets;
-                        NUD_StunFreq.Value = (int)calcOpts.StunningTargetsFreq;
-                        NUD_StunDur.Value = (int)calcOpts.StunningTargetsDur; line = 35;
+                        NUD_StunFreq.Value = (int)Math.Max(NUD_StunFreq.Minimum, Math.Min(NUD_StunFreq.Maximum, calcOpts.StunningTargetsFreq));
+                        NUD_StunDur.Value  = (int)Math.Max(NUD_StunDur.Minimum , Math.Min(NUD_StunDur.Maximum , (decimal)calcOpts.StunningTargetsDur)); line = 35;
 
                         CK_MovingTargs.Checked = calcOpts.MovingTargets;
                         NUD_MoveFreq.Enabled = calcOpts.MovingTargets;
                         NUD_MoveDur.Enabled = calcOpts.MovingTargets;
-                        NUD_MoveFreq.Value = (int)calcOpts.MovingTargetsFreq;
-                        NUD_MoveDur.Value = (int)calcOpts.MovingTargetsDur; line = 40;
+                        NUD_MoveFreq.Value = (int)Math.Max(NUD_MoveFreq.Minimum, Math.Min(NUD_MoveFreq.Maximum, calcOpts.MovingTargetsFreq));
+                        NUD_MoveDur.Value  = (int)Math.Max(NUD_MoveDur.Minimum , Math.Min(NUD_MoveDur.Maximum , (decimal)calcOpts.MovingTargetsDur)); line = 40;
 
                         CK_FearingTargs.Checked = calcOpts.FearingTargets;
                         NUD_FearFreq.Enabled = calcOpts.FearingTargets;
                         NUD_FearDur.Enabled = calcOpts.FearingTargets;
-                        NUD_FearFreq.Value = (int)calcOpts.FearingTargetsFreq;
-                        NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur; line = 45;
+                        NUD_FearFreq.Value = (int)Math.Max(NUD_FearFreq.Minimum, Math.Min(NUD_FearFreq.Maximum, calcOpts.FearingTargetsFreq));
+                        NUD_FearDur.Value  = (int)Math.Max(NUD_FearDur.Minimum , Math.Min(NUD_FearDur.Maximum , (decimal)calcOpts.FearingTargetsDur)); line = 45;
 
                         CK_RootingTargs.Checked = calcOpts.RootingTargets;
                         NUD_RootFreq.Enabled = calcOpts.RootingTargets;
                         NUD_RootDur.Enabled = calcOpts.RootingTargets;
-                        NUD_RootFreq.Value = (int)calcOpts.RootingTargetsFreq;
-                        NUD_RootDur.Value = (int)calcOpts.RootingTargetsDur; line = 50;
+                        NUD_RootFreq.Value = (int)Math.Max(NUD_RootFreq.Minimum, Math.Min(NUD_RootFreq.Maximum, calcOpts.RootingTargetsFreq));
+                        NUD_RootDur.Value  = (int)Math.Max(NUD_RootDur.Minimum , Math.Min(NUD_RootDur.Maximum , (decimal)calcOpts.RootingTargetsDur)); line = 50;
 
                         CK_DisarmTargs.Checked = calcOpts.DisarmingTargets;
                         NUD_DisarmFreq.Enabled = calcOpts.DisarmingTargets;
                         NUD_DisarmDur.Enabled = calcOpts.DisarmingTargets;
-                        NUD_DisarmFreq.Value = (int)calcOpts.DisarmingTargetsFreq;
-                        NUD_DisarmDur.Value = (int)calcOpts.DisarmingTargetsDur; line = 55;
+                        NUD_DisarmFreq.Value = (int)Math.Max(NUD_DisarmFreq.Minimum, Math.Min(NUD_DisarmFreq.Maximum, calcOpts.DisarmingTargetsFreq));
+                        NUD_DisarmDur.Value  = (int)Math.Max(NUD_DisarmDur.Minimum , Math.Min(NUD_DisarmDur.Maximum , (decimal)calcOpts.DisarmingTargetsDur)); line = 55;
 
                         Stats stats = calcs.GetCharacterStats(Character, null);
                         TB_BossInfo.Text = boss.GenInfoString(

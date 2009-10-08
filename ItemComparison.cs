@@ -145,7 +145,7 @@ namespace Rawr
                 if (countItem[itemId]++ < maxGemmings ||
                     itemCalculation.Equipped || itemCalculation.ItemInstance.ForceDisplay)
                 {
-                    Debug.Print("Itemid: " + itemId + " Instances of that item : " + countItem[itemId]);
+                    //Debug.Print("Itemid: " + itemId + " Instances of that item : " + countItem[itemId]);
                     filteredItemCalculations.Add(itemCalculation);
                 }
             }

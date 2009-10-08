@@ -166,21 +166,21 @@ namespace Rawr.DPSWarr {
 
         #region Variables and Properties
 
-#if RAWR3
+        #if RAWR3
             public ICalculationOptionsPanel _calculationOptionsPanel = null;
             public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        public CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
- {
-            get {
-                if (_calculationOptionsPanel == null) {
-                    _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
+        #else
+            public CalculationOptionsPanelBase _calculationOptionsPanel = null;
+            public override CalculationOptionsPanelBase CalculationOptionsPanel
+        #endif
+            {
+                get {
+                    if (_calculationOptionsPanel == null) {
+                        _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
+                    }
+                    return _calculationOptionsPanel;
                 }
-                return _calculationOptionsPanel;
             }
-        }
 
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels {
@@ -290,11 +290,11 @@ These numbers to do not include racial bonuses.",
                 if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, Color>();
                     _subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
-#if RAWR3
-                    _subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
-#else
-                    _subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
-#endif
+                    #if RAWR3
+                        _subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
+                    #else
+                        _subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
+                    #endif
                 }
                 return _subPointNameColors;
             }
@@ -1163,16 +1163,16 @@ These numbers to do not include racial bonuses.",
         #region Character Calcs
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
-#if RAWR3
-            // Forcing an error just to prove the stupid thing works
-            try {
-                string isnull = null;
-                string check = isnull + "1";
-            }catch (Exception ex) {
-                new ErrorBoxDPSWarr("Test Title", ex.Message, "GetCharacterCalculations()",
-                    "This is a forced one, just making sure the frackin thing works", ex.StackTrace, 0);
-            }
-#endif
+            #if RAWR3
+                // Forcing an error just to prove the stupid thing works
+                try {
+                    string isnull = null;
+                    string check = isnull + "1";
+                }catch (Exception ex) {
+                    new ErrorBoxDPSWarr("Test Title", ex.Message, "GetCharacterCalculations()",
+                        "This is a forced one, just making sure the frackin thing works", ex.StackTrace, 0);
+                }
+            #endif
             int line = 0;
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
             try {
@@ -1561,8 +1561,8 @@ These numbers to do not include racial bonuses.",
 
         private void DoSpecialEffects(Character Char, Rotation Rot, CombatFactors combatFactors, CalculationOptionsDPSWarr calcOpts,
             SpecialEffect bersMainHand, SpecialEffect bersOffHand,
-            Stats statsTotal) {
-
+            Stats statsTotal)
+        {
             List<SpecialEffect> firstPass = new List<SpecialEffect>();
             List<SpecialEffect> secondPass = new List<SpecialEffect>();
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
@@ -1735,7 +1735,6 @@ These numbers to do not include racial bonuses.",
             float totalBSM = baseStats.BonusStrengthMultiplier;
             float totalBAM = baseStats.BonusAgilityMultiplier;
             float totalBAPM = baseStats.BonusAttackPowerMultiplier;
-
 
             // Base Stats
             statsToAdd.Stamina = (statsToAdd.Stamina * (1f + totalBSTAM) * (1f + statsToAdd.BonusStaminaMultiplier));
