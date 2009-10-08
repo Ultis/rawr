@@ -67,8 +67,7 @@ namespace Rawr.Elemental
             #region Elemental Mastery
             if (talents.ElementalMastery > 0)
             {
-                SpecialEffect em = new SpecialEffect(Trigger.Use, new Stats { SpellCrit = 0.2f }, 15f, talents.GlyphofElementalMastery ? 150f : 180f);
-                float EMmod = em.GetAverageUptime(talents.GlyphofElementalMastery ? 150f : 180f, 1f);
+                float EMmod = ElementalMastery.getAverageUptime(talents.GlyphofElementalMastery, calcOpts.FightDuration);
                 LB.ApplyEM(EMmod);
                 CL.ApplyEM(EMmod);
                 LvB.ApplyEM(EMmod);
@@ -269,9 +268,9 @@ namespace Rawr.Elemental
                     continue;
                 
                 if (effect.MaxStack > 1)
-                    statsAverage += effect.Stats * effect.GetAverageStackSize(trigger, procChance, 3f, FightDuration);
+                    statsAverage.Accumulate(effect.Stats, effect.GetAverageStackSize(trigger, procChance, 3f, FightDuration));
                 else
-                    statsAverage += effect.GetAverageStats(trigger, procChance, 3f, FightDuration);
+                    statsAverage.Accumulate( effect.GetAverageStats(trigger, procChance, 3f, FightDuration) );
                 //float chance = effect.GetAverageUptime(trigger, procChance, 3f, FightDuration);
             }
             return statsAverage;

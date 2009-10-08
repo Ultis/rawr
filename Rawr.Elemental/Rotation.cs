@@ -126,6 +126,9 @@ namespace Rawr.Elemental
         {
             casts = null;
             lastGetTime = float.PositiveInfinity;
+            lastBaseCastTime = float.PositiveInfinity;
+            lastWeightedCritchance = float.PositiveInfinity;
+            lastWeightedHitchance = float.PositiveInfinity;
             cc = null;
             mps = float.PositiveInfinity;
             dps = float.PositiveInfinity;
@@ -261,12 +264,15 @@ namespace Rawr.Elemental
             return time;
         }
 
+        private float lastBaseCastTime = float.PositiveInfinity;
         public float GetBaseCastTime()
         {
+            if (lastBaseCastTime != float.PositiveInfinity)
+                return lastBaseCastTime;
             float time = 0f;
             for (int j = 0; j < spells.Count; j++)
                 time += spells[j].BaseCastTime;
-            return time;
+            return lastBaseCastTime = time;
         }
 
         public float getCastsPerSecond()
@@ -284,26 +290,32 @@ namespace Rawr.Elemental
             return spells.FindAll(delegate(Spell spell) { return spellType.IsInstanceOfType(spell); });
         }
 
+        private float lastWeightedHitchance = float.PositiveInfinity;
         public float getWeightedHitchance()
         {
+            if (lastWeightedHitchance != float.PositiveInfinity)
+                return lastWeightedHitchance;
             float hitchance = 0f;
             foreach (Spell s in Casts)
                 hitchance += s.HitChance;
-            return hitchance / Casts.Count;
+            return lastWeightedHitchance = hitchance / Casts.Count;
         }
 
+        private float lastWeightedCritchance = float.PositiveInfinity;
         /// <summary>
         /// Returns the average Critchance with Hitchance factored in.
         /// </summary>
         /// <returns></returns>
         public float getWeightedCritchance()
         {
+            if (lastWeightedCritchance != float.PositiveInfinity)
+                return lastWeightedCritchance;
             float critLB = LB.CritChance;
             float critCL = LB.CritChance * (1f + .11f * Talents.LightningOverload);
             float critchance = 0f;
             foreach (Spell s in Casts)
                 critchance += s.HitChance * s.CCCritChance;
-            return critchance / Casts.Count;
+            return lastWeightedCritchance = critchance / Casts.Count;
         }
 
         public float waitingPercentage()

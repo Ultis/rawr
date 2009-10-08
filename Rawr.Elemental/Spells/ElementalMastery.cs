@@ -28,6 +28,25 @@ public class ElementalMastery : Spell
             Initialize(stats, shamanTalents);
         }
 
+        public static float getAverageUptime(bool glyphed, int fightDuration)
+        {
+            if (glyphed)
+            {
+                if (uptimeGlyphed == null)
+                    uptimeGlyphed = new SpecialEffect(Trigger.Use, new Stats { SpellCrit = 0.2f }, 15f, 150f);
+                return uptimeGlyphed.GetAverageUptime(150f, 1f, 1f, fightDuration);
+            }
+            else
+            {
+                if (uptimeUnglyphed == null)
+                    uptimeUnglyphed = new SpecialEffect(Trigger.Use, new Stats { SpellCrit = 0.2f }, 15f, 180f);
+                return uptimeUnglyphed.GetAverageUptime(180f, 1f, 1f, fightDuration);
+            }
+        }
+
+        private static SpecialEffect uptimeGlyphed = null;
+        private static SpecialEffect uptimeUnglyphed = null;
+
 
         public static ElementalMastery operator +(ElementalMastery A, ElementalMastery B)
         {
