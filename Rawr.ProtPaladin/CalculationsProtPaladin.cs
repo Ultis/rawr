@@ -246,6 +246,8 @@ focus on Survival Points.",
         }
 
         public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
+        #endregion
+
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationProtPaladin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsProtPaladin(); }
 
@@ -255,7 +257,6 @@ focus on Survival Points.",
             CalculationOptionsProtPaladin calcOpts = serializer.Deserialize(reader) as CalculationOptionsProtPaladin;
             return calcOpts;
         }
-        #endregion
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
@@ -433,7 +434,6 @@ focus on Survival Points.",
         public Stats GetItemStats(Character character, Item additionalItem, CalculationOptionsProtPaladin options)
         {
             Stats statsItems = base.GetItemStats(character, additionalItem);
-            AttackTable attackTable = new AttackTable(character, statsItems, options);
             return statsItems;
         }
 
@@ -445,7 +445,6 @@ focus on Survival Points.",
 
         public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtPaladin calcOpts)
         {
-            int Lvl = character.Level;
             PaladinTalents talents = character.PaladinTalents;
 
             Stats statsBase = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);

@@ -77,7 +77,7 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        public static float StanceDamageMultipler(Character character, Stats stats) { return (1.0f) * (1.0f + stats.BonusDamageMultiplier); }
+        public static float StanceDamageMultipler(Character character, Stats stats) { return (1.0f + stats.BonusDamageMultiplier); }
         public static float StanceThreatMultipler(Character character, Stats stats) { return (1.42f * (1.0f + stats.ThreatIncreaseMultiplier)); }
         public static float StanceDamageReduction(Character character, Stats stats) { return StanceDamageReduction(character, stats, DamageType.Physical); }
         public static float StanceDamageReduction(Character character, Stats stats, DamageType damageType) {
@@ -197,8 +197,6 @@ namespace Rawr.ProtPaladin
 
         public static float WeaponDamage(Character character, Stats stats, bool normalized)
         {
-            float weaponDamage = 0.0f;
-            float normalizedSpeed = 2.4f;
             float weaponSpeed     = 0.0f;
             float weaponMinDamage = 0.0f;
             float weaponMaxDamage = 0.0f;
@@ -208,29 +206,27 @@ namespace Rawr.ProtPaladin
                 weaponSpeed     = 2.0f;
                 weaponMinDamage = 1.0f;
                 weaponMaxDamage = 2.0f;
-            } else {
+            }
+            else
+            {
                 weaponSpeed     = character.MainHand.Speed;
                 weaponMinDamage = character.MainHand.MinDamage;
                 weaponMaxDamage = character.MainHand.MaxDamage;
-                
-                if (character.MainHand.Type == ItemType.Dagger)
-                    normalizedSpeed = 1.7f;
             }
             // Non-Normalized Hits
             if (!normalized)
-                weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (weaponSpeed * stats.AttackPower / 14.0f));
+                return ((weaponMinDamage + weaponMaxDamage) / 2.0f + (weaponSpeed * stats.AttackPower / 14.0f));
             // Normalized Hits
+            // Protection paladins currently do not have normalized instant attacks.
             else
-                weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (normalizedSpeed * stats.AttackPower / 14.0f));
-
-            return weaponDamage;
+                return ((weaponMinDamage + weaponMaxDamage) / 2.0f + (2.4f * stats.AttackPower / 14.0f));
         }
 
         public static float WeaponSpeed(Character character, Stats stats) {
             if (character.MainHand != null)
                 return Math.Max(1.0f, character.MainHand.Speed / (1.0f + BonusPhysicalHastePercentage(character, stats)));
             else
-                return Math.Max(1.0f, 2.0f/ (1.0f + BonusPhysicalHastePercentage(character, stats)));
+                return Math.Max(1.0f, 2.0f / (1.0f + BonusPhysicalHastePercentage(character, stats)));
         }
 
         public static float GlancingReduction(Character character, int targetLevel)

@@ -32,117 +32,151 @@ namespace Rawr.ProtPaladin {
             switch (Ability) {
                 // White Damage
                 case Ability.None:
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, false);
-                    // Glancing blow reduction
-                    DamageMultiplier *= (1.0f + Stats.BonusPhysicalDamageMultiplier);
-                    DamageMultiplier *= (1.0f - (Lookup.GlancingReduction(Character, Options.TargetLevel) * AttackTable.Glance));
-                    critMultiplier = 1.0f;
-                    DamageMultiplier *= (1.0f - ArmorReduction);
+                    baseDamage        = Stats.WeaponDamage;
+
+                    DamageMultiplier *= (1.0f + Stats.BonusPhysicalDamageMultiplier)
+                                      * (1.0f - (Lookup.GlancingReduction(Character, Options.TargetLevel) * AttackTable.Glance))
+                                      * (1.0f - ArmorReduction);
+
+                    critMultiplier    = 1.0f;
                     break;               
                 case Ability.ShieldOfRighteousness:
-                    float blockValue = Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + Stats.JudgementBlockValue + Stats.HolyShieldBlockValue;
+                    float blockValue  = Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + Stats.JudgementBlockValue + Stats.HolyShieldBlockValue;
 
-                    if (blockValue < 30 * Character.Level) {
-                        baseDamage = blockValue + 520;
+                    float blockValueDRStart = 30 * Character.Level;
+
+                    if (blockValue < blockValueDRStart) {
+                        baseDamage    = blockValue;
                     } else if (blockValue < 39.5 * Character.Level) {
-                        baseDamage = 30 * Character.Level + (0.95f * (blockValue - 30 * Character.Level)) - (0.000625f * (float)Math.Pow(blockValue - 30 * Character.Level, 2)) + 520;
+                        baseDamage    = blockValueDRStart + (0.95f * (blockValue - blockValueDRStart)) - (0.000625f * (float)Math.Pow(blockValue - blockValueDRStart, 2));
                     } else {
-                        baseDamage = 30 * Character.Level + (0.95f * 9.5f * Character.Level) - (0.000625f * (float)Math.Pow(9.5 * Character.Level, 2)) + 520;
+                        baseDamage    = blockValueDRStart + (0.95f * 9.5f * Character.Level) - (0.000625f * (float)Math.Pow(9.5 * Character.Level, 2));
                     }
 
-                    baseDamage += Stats.BonusShieldOfRighteousnessDamage;
+                    baseDamage       += 520f
+                                      + Stats.BonusShieldOfRighteousnessDamage;
 
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
-                    critMultiplier = 1.0f;
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
+                    critMultiplier    = 1.0f;
                     break;
                 case Ability.HammerOfTheRighteous:
-                    if (Talents.HammerOfTheRighteous > 0 && Character.MainHand != null)
+                    if (Talents.HammerOfTheRighteous == 0 || Character.MainHand == null)
                     {
-                        baseDamage = (AP / 14 + (Character.MainHand.MinDamage + Character.MainHand.MaxDamage) / 2 / Character.MainHand.Speed) * 4f;
-                        DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + Stats.BonusHammerOfTheRighteousMultiplier);
-                        critMultiplier = 1.0f;
+                        Damage = 0.0f;
+                        return;
                     }
+
+                    baseDamage        = Stats.WeaponDamage / Character.MainHand.Speed;
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (1.0f + Stats.BonusHammerOfTheRighteousMultiplier);
+
+                    critMultiplier    = 1.0f;
                     break;
                 // Seal of Vengeance is the tiny damage that applies on each swing; Holy Vengeance is the DoT
                 // While trivial threat and damage, it's modeled for compatibility with Seal of Righteousness
                 case Ability.SealOfVengeance:
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, false) * 0.33f;
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure) *
-                        (1f + Stats.BonusSealOfVengeanceDamageMultiplier);
-                    critMultiplier = 1.0f;
-                    break;
-                // Judgement of Vengeance assumes 5 stacks of Holy Vengeance
-                case Ability.JudgementOfVengeance:
-                    baseDamage = (0.22f * SP + 0.14f * AP) * (1.0f + 0.5f);
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
-                    if (Talents.GlyphOfJudgement) { DamageMultiplier *= (1.0f + 0.10f); }                    
-                    critMultiplier = 1.0f;
-                    break;
-                case Ability.SealOfRighteousness:
-                    baseDamage = (Lookup.WeaponSpeed(Character, Stats) * 0.022f * AP) + 
-                                 (Lookup.WeaponSpeed(Character, Stats) * 0.044f * SP);
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure) * 
-                        (1f + Stats.BonusSealOfRighteousnessDamageMultiplier);
-                    if (Talents.GlyphOfSealOfRighteousness) { DamageMultiplier *= (1.0f + 0.10f); }
-                    critMultiplier = 0.0f;
-                    break;
-                case Ability.JudgementOfRighteousness:
-                    baseDamage = (1.0f + 0.2f * AP + 0.32f * SP);
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure);
-                    if (Talents.GlyphOfJudgement) { DamageMultiplier *= (1.0f + 0.10f); }
-                    critMultiplier = 1.0f;
+                    baseDamage        = Stats.WeaponDamage * 0.33f;
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (1.0f + 0.03f * Talents.SealsOfThePure)
+                                      * (1.0f + Stats.BonusSealOfVengeanceDamageMultiplier);
+
+                    critMultiplier    = 1.0f;
                     break;
                 // 5 stacks of Holy Vengeance are assumed
                 // TODO: implement stacking mechanic for beginning-of-fight TPS
                 case Ability.HolyVengeance:
-                    baseDamage = 5f * (0.016f * SP + 0.032f * AP);
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1.0f + 0.03f * Talents.SealsOfThePure) *
-                        (1f + Stats.BonusSealOfVengeanceDamageMultiplier);
-                    critMultiplier = 0.0f;
+                    baseDamage        = 5f * (0.016f * SP + 0.032f * AP);
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (1.0f + 0.03f * Talents.SealsOfThePure)
+                                      * (1.0f + Stats.BonusSealOfVengeanceDamageMultiplier);
+
+                    critMultiplier    = 0.0f;
+                    break;
+                // Judgement of Vengeance assumes 5 stacks of Holy Vengeance
+                case Ability.JudgementOfVengeance:
+                    float holyVengeanceStacks = 5;
+
+                    baseDamage        = (0.22f * SP + 0.14f * AP) * (1.0f + 0.1f * holyVengeanceStacks);
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (1.0f + 0.03f * Talents.SealsOfThePure)
+                                      * (Talents.GlyphOfJudgement ? 1.1f : 1.0f);
+
+                    critMultiplier    = 1.0f;
+                    break;
+                case Ability.SealOfRighteousness:
+                    baseDamage        = Lookup.WeaponSpeed(Character, Stats) * ((0.022f * AP) + (0.044f * SP));
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (1.0f + 0.03f * Talents.SealsOfThePure)
+                                      * (1.0f + Stats.BonusSealOfRighteousnessDamageMultiplier)
+                                      * (Talents.GlyphOfSealOfRighteousness ? 1.1f : 1.0f);
+
+                    critMultiplier    = 0.0f;
+                    break;
+                case Ability.JudgementOfRighteousness:
+                    baseDamage        = 1.0f + (0.2f * AP) + (0.32f * SP);
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (1.0f + 0.03f * Talents.SealsOfThePure)
+                                      * (Talents.GlyphOfJudgement ? 1.1f : 1.0f);
+
+                    critMultiplier    = 1.0f;
                     break;
                 case Ability.HolyShield:
-                    if (Talents.HolyShield > 0) {
-                        baseDamage = (211f + (0.056f * AP) + (0.09f * SP)) * 1.3f;
-                        DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
-                        critMultiplier = 0.0f;
+                    if (Talents.HolyShield == 0)
+                    {
+                        Damage = 0.0f;
+                        return;
                     }
+
+                    baseDamage        = (211f + (0.056f * AP) + (0.09f * SP)) * 1.3f;
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
+                    critMultiplier    = 0.0f;
                     break;
                 case Ability.Consecration:
-                    baseDamage = 113f + 0.04f * (SP + Stats.ConsecrationSpellPower) + 0.04f * AP;
-                    duration = 8.0f;
-                    if (Talents.GlyphOfConsecration) { duration += 2.0f; }
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
-                    critMultiplier = 0.0f;
+                    baseDamage        = 113f + (0.04f * (SP + Stats.ConsecrationSpellPower)) + (0.04f * AP);
+                    duration          = (Talents.GlyphOfConsecration ? 10.0f : 8.0f);
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
+                    critMultiplier    = 0.0f;
                     break;
                 case Ability.Exorcism:
-                    baseDamage = (1028f + 0.15f * SP + 0.15f * AP);
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1f + Talents.SanctityOfBattle * 0.05f);
-                    if (Talents.GlyphOfExorcism) { DamageMultiplier *= (1.0f + 0.20f); }
-                    critMultiplier = 0.5f;
+                    baseDamage        = 1087f + (0.15f * SP) + (0.15f * AP);
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (1.0f + Talents.SanctityOfBattle * 0.05f)
+                                      * (Talents.GlyphOfExorcism ? 1.2f : 1.0f);
+
+                    critMultiplier    = 0.5f;
                     break;
                 case Ability.AvengersShield:
-                    baseDamage = (846f + 0.07f * SP + 0.07f * AP) * 1.3f;// it has a range though: 846.14-1034.14
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
-                    critMultiplier = 1.0f;
+                    baseDamage        = 1222f + (0.07f * SP) + (0.07f * AP);
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (Talents.GlyphOfAvengersShield ? 2.0f : 1.0f);
+
+                    critMultiplier    = 1.0f;
                     break;
-                case Ability.HolyWrath:// what about aoe cap of max 10 targets ?
-                    baseDamage = 1050f;//1050 - 1234
-                    // holy *= Lookup.CreatureTypeDamageMultiplier(Character);//, holy);
-                    baseDamage += (AP * 0.07f) + (SP * 0.07f); 
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);//any other ?
-                    critMultiplier = 0.5f;
+                case Ability.HolyWrath:
+                    baseDamage        = 1142f + (AP * 0.07f) + (SP * 0.07f); 
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
+                    critMultiplier    = 0.5f;
                     break;
                 case Ability.HammerOfWrath:
-                    baseDamage = 1139f;//1139.3 to 1257.3
-                    baseDamage += (AP * 0.15f) + (SP * 0.15f);
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier);
-                    critMultiplier = 1.0f;
+                    baseDamage        = 1198f + (AP * 0.15f) + (SP * 0.15f);
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
+                    critMultiplier    = 1.0f;
                     break;
                 case Ability.RetributionAura:
-                    baseDamage = 112f;
-                    baseDamage += (SP * 0.0666f); 
-                    DamageMultiplier *= (1f + Stats.BonusHolyDamageMultiplier) * (1f + Talents.SanctifiedRetribution * 0.5f);
-                    critMultiplier = 0.0f;
+                    baseDamage        = 112f + (SP * 0.0666f);
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (1.0f + Talents.SanctifiedRetribution * 0.5f);
+
+                    critMultiplier    = 0.0f;
                     break;
             }
             #endregion
@@ -151,12 +185,15 @@ namespace Rawr.ProtPaladin {
             baseDamage *= DamageMultiplier;
 
             #region Miss Chance, Avoidance Chance
-            if (Lookup.IsSpell(Ability)) {
-                // Probability calculation, since each tick can be resisted individually.
-                if (Ability == Ability.Consecration) {
+            if (Lookup.IsSpell(Ability))
+            {
+                if (Ability == Ability.Consecration)
+                    // Probability calculation, since each tick can be resisted individually.
                     baseDamage = Lookup.GetConsecrationTickChances(duration, baseDamage, AttackTable.Miss);
-                } // Missed spell attacks TODO: expand Ability Model to include a check for damage type, not only spell.
-                else { baseDamage *= (1.0f - AttackTable.Miss); }
+                else
+                    // Missed spell attacks
+                    // TODO: expand Ability Model to include a check for damage type, not only spell.
+                    baseDamage *= (1.0f - AttackTable.Miss);
             } else {
                 // Missed attacks
                 if (Lookup.IsAvoidable(Ability))
@@ -170,87 +207,22 @@ namespace Rawr.ProtPaladin {
             // Partial Resists
             if (Lookup.HasPartials(Ability))
             {
-                // Magical Damage Resisted when a partial happens, averaged over all slices. DIRTY
-                //float averagePartialReduction = StatConversion.GetAverageResistance(Character.Level, Options.TargetLevel, 0, Stats.SpellPenetration);
-                
-                // Detailed table of Partial slices. CLEAN
+                // Detailed table of Partial slices.
                 float[] partialChanceTable = StatConversion.GetResistanceTable(Character.Level, Options.TargetLevel, 0.0f, Stats.SpellPenetration);
                 
                 // Here goes nothing, Damage averaged over the different partial slices that can happen.
                 float partialDamage = 0.0f;
                 
                 for (int i = 0; i < 11; i++)
-                {
                     partialDamage += partialChanceTable[i] * (1.0f - 0.1f * (float)i) * baseDamage;
-                }
-                // Chance a Patial happens. ANY PARTIAL
-                //float partialChance = Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist);
-                // Rough average over all hits that fall into partial chance. DIRTY
-                //float partialDamage1 = partialChance * (1.0f - averagePartialReduction) * baseDamage;
-                // Those hits that don't have a chance to get a partial. CLEAN
-                //float restDamage1 = (1.0f - partialChance) * baseDamage;
                 
                 baseDamage = partialDamage;
-
-                  // Magic damage, Spell resist
-                  //   if (!DamageType.Physical)
-                  //    {
-                  //        // Get Targets base resistance for DamageType
-                  //        float tmpvalue2 = (float)GetResistance(DamageType);
-                  //        // Ignore resistance by self SPELL_AURA_MOD_TARGET_RESISTANCE aura
-                  //        tmpvalue2 += (float)GetTotalAuraModifierByMiscMask(SPELL_AURA_MOD_TARGET_RESISTANCE, schoolMask);
-                  //
-                  //        tmpvalue2 *= (float)(0.15f / getLevel());
-                  //        if (tmpvalue2 < 0.0f)
-                  //            tmpvalue2 = 0.0f;
-                  //        if (tmpvalue2 > 0.75f)
-                  //            tmpvalue2 = 0.75f;
-                  //        int ran = urand(0, 100);
-                  //        int faq[4] = {24,6,4,6};
-                  //        int m = 0;
-                  //        float Binom = 0.0f;
-                  //        for (int i = 0; i < 4; i++)
-                  //        {
-                  //            Binom += 2400 *( Math.Pow(tmpvalue2, i) * Math.Pow( (1-tmpvalue2), (4-i)))/faq[i];
-                  //            if (ran > Binom )
-                  //                ++m;
-                  //            else
-                  //                break;
-                  //        }
-                  //        if (AttackType == DOT && m == 4)
-                  //            resist += (int)(damage - 1);
-                  //        else
-                  //            resist += (int)(damage * m / 4);
-                  //        if(resist > damage)
-                  //            resist = damage;
-                  //    }
-                  //    else
-                  //        resist = 0;
-                  //
-                  //    int RemainingDamage = damage - resist;
             }
             #endregion
 
-            #region Critical Damage
             // Average critical strike bonuses
             if (Lookup.CanCrit(Ability))
-            {
-            //switch (AttackType)
-            //{
-            //    case (AttackType.Melee):
-            //        critMultiplier = 1.0f;
-            //    case (AttackType.Spell):
-            //        critMultiplier = 0.5f;
-            //    case (AttackType.Ranged):
-            //        critMultiplier = 0.5f;
-            //    case (AttackType.DOT):
-            //        critMultiplier = 0.0f;
-            //}
 				baseDamage += baseDamage * critMultiplier * AttackTable.Critical;
-            }
-            //else
-            //    baseDamage *= 1.0f;
-            #endregion
 
             // Final Damage the Ability deals
             Damage = baseDamage;
@@ -289,15 +261,14 @@ namespace Rawr.ProtPaladin {
             Character   = character;
             Stats       = stats;
             Ability     = ability;
-            
             Options     = options;
+            
             Talents     = Character.PaladinTalents;
             AttackTable = new AttackTable(character, stats, ability, Options);
 
             if (!Lookup.IsSpell(Ability))
-            {
                 ArmorReduction  = Lookup.EffectiveTargetArmorReduction(Character, Stats, Options.TargetArmor, Options.TargetLevel);
-            }
+
             Name                = Lookup.Name(Ability);
             DamageMultiplier    = Lookup.StanceDamageMultipler(Character, Stats);
             DamageMultiplier   *= Lookup.CreatureTypeDamageMultiplier(Character, Options.TargetType);
