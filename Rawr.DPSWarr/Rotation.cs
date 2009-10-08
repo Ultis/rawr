@@ -448,8 +448,8 @@ namespace Rawr.DPSWarr {
                     SpecialEffect effect = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusAgilityMultiplier = 1f }, // this is just so we can use a Perc Mod without having to make a new stat
                         10f, 30f);
-                    Stats stats = effect.GetAverageStats(0, 1f, CombatFactors._c_mhItemSpeed, (CalcOpts.SE_UseDur ? FightDuration : 0f));
-                    zerkerMOD *= (1f + stats.BonusAgilityMultiplier);
+                    float upTime = effect.GetAverageUptime(0, 1f, CombatFactors._c_mhItemSpeed, (CalcOpts.SE_UseDur ? FightDuration : 0f));
+                    zerkerMOD *= (1f + upTime);
                 }
                 float dmgCap = 100f / (RageMod * zerkerMOD); // Can't get any more rage than 100 at any given time
                 damagePerSec = (acts * (float)Math.Min(dmgCap, dmg)) / FightDuration;

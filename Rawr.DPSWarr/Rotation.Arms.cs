@@ -287,11 +287,14 @@ namespace Rawr.DPSWarr {
                         availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                         availRage += CH.GetRageUseOverDur(_CH_Acts);
                         // Need to add the special effect from Juggernaut to Mortal Strike, not caring about Slam right now
-                        Stats stats = (new SpecialEffect(Trigger.Use,
-                                        new Stats() { BonusWarrior_T8_4P_MSBTCritIncrease = 0.25f }, 10, CH.Cd)
-                                        ).GetAverageStats(FightDuration / _CH_Acts, 1f, CombatFactors._c_mhItemSpeed, FightDuration);
+                        Stats stats = new Stats {
+                            BonusWarrior_T8_4P_MSBTCritIncrease = 0.25f * 
+                                (new SpecialEffect(Trigger.Use, null, 10, CH.Cd)
+                                 ).GetAverageUptime(FightDuration / _CH_Acts, 1f, CombatFactors._c_mhItemSpeed, FightDuration)
+                        };
+                        stats.Accumulate(STATS);
                         // I'm not sure if this is gonna work, but hell, who knows
-                        MS = new Skills.MortalStrike(CHARACTER, STATS + stats, COMBATFACTORS, WHITEATTACKS);
+                        MS = new Skills.MortalStrike(CHARACTER, stats, COMBATFACTORS, WHITEATTACKS);
                     //}
                 }
 
