@@ -95,21 +95,7 @@ namespace Rawr
                     if (!seenEquippedItem)
                         listItemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
 
-					listItemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(comparisonGraph1.CompareItemCalculations));
-					Dictionary<int, int> countItem = new Dictionary<int, int>();
-					List<ComparisonCalculationBase> filteredItemCalculations = new List<ComparisonCalculationBase>();
-
-					foreach (ComparisonCalculationBase itemCalculation in listItemCalculations)
-					{
-						int itemId = itemCalculation.ItemInstance.Id;
-						if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
-						if (countItem[itemId]++ < Properties.GeneralSettings.Default.CountGemmingsShown ||
-							itemCalculation.Equipped || itemCalculation.ItemInstance.ForceDisplay)
-						{
-							filteredItemCalculations.Add(itemCalculation);
-						}
-					}
-					_itemCalculations = filteredItemCalculations.ToArray();
+					_itemCalculations = FilterTopXGemmings(listItemCalculations);
                 }
                 else
                 { //Gems/Metas
@@ -145,6 +131,26 @@ namespace Rawr
 				CharacterSlot.None : slot;
         }
 
+        // takes a list of items and returns a sorted filtered array of the top X gemmings
+        private ComparisonCalculationBase[] FilterTopXGemmings(List<ComparisonCalculationBase> listItemCalculations)
+        {
+            List<ComparisonCalculationBase> filteredItemCalculations = new List<ComparisonCalculationBase>();
+            int maxGemmings = Properties.GeneralSettings.Default.CountGemmingsShown;
+            listItemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(comparisonGraph1.CompareItemCalculations));
+            Dictionary<int, int> countItem = new Dictionary<int, int>();
+            foreach (ComparisonCalculationBase itemCalculation in listItemCalculations)
+            {
+                int itemId = itemCalculation.ItemInstance.Id;
+                if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
+                if (countItem[itemId]++ < maxGemmings ||
+                    itemCalculation.Equipped || itemCalculation.ItemInstance.ForceDisplay)
+                {
+                    Debug.Print("Itemid: " + itemId + " Instances of that item : " + countItem[itemId]);
+                    filteredItemCalculations.Add(itemCalculation);
+                }
+            }
+            return filteredItemCalculations.ToArray();
+        }
 
 		private void GetItemInstanceCalculations(object item)
 		{
@@ -316,15 +322,12 @@ namespace Rawr
                     catch (Exception)
                     {
                     }
-
-
                 }
             }
-
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.DisplayMode = ComparisonGraph.GraphDisplayMode.Overall;
-            comparisonGraph1.ItemCalculations = itemCalculations.ToArray();
+            comparisonGraph1.ItemCalculations = FilterTopXGemmings(itemCalculations);
             comparisonGraph1.EquipSlot = CharacterSlot.AutoSelect;
 			comparisonGraph1.SlotMap = slotMap;
 			_characterSlot = CharacterSlot.None;
