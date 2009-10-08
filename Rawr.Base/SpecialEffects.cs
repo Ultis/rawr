@@ -1204,6 +1204,9 @@ namespace Rawr {
              Sigil of Deflection
                Your Rune Strike ability grants 136 dodge rating for 5 sec.
              * Your [ability] ability also grants you [amount] [stat] for [duration] sec.
+             Sigil of Insolence
+               Each time you use your Rune Strike ability, you have a chance to gain 200 dodge rating for 20 sec.
+             * Each time you use your [ability] ability, you have a chance to gain [amount] [stat] for [duration] sec.
              Sigil of the Vengeful Heart
                Increases the damage done by your Death Coil and Frost Strike abilities by 380.
              * Increases the damage done by your [ability] and [ability] abilities by [amount].
@@ -1304,6 +1307,20 @@ namespace Rawr {
                     {
                         stats.AddSpecialEffect(SE3);
                     }
+                }
+
+                // Each time you use your [ability] ability, you have a chance to gain [amount] [stat] for [duration] sec.
+                regex = new Regex(@"Each time you use your (?<ability>\w+\s*\w*) ability, you have a chance to gain (?<amount>\d*) (?<stat>\w+[\s\w]*) for (?<duration>\d*) sec.");
+                match = regex.Match(line);
+                if (match.Success)
+                {
+                    string statName = match.Groups["stat"].Value;
+                    float amount = int.Parse(match.Groups["amount"].Value);
+                    float duration = int.Parse(match.Groups["duration"].Value);
+                    string ability = match.Groups["ability"].Value;
+
+                    SpecialEffect SE1 = EvalRegex(statName, amount, duration, ability, 0f, 0.8f);
+                    stats.AddSpecialEffect(SE1);
                 }
 
                 // Single Ability damage increase.
