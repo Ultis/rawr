@@ -14,6 +14,7 @@ namespace Rawr.ProtPaladin
     [Rawr.Calculations.RawrModelInfo("ProtPaladin", "Ability_Paladin_JudgementsOfTheJust", CharacterClass.Paladin)]
     public class CalculationsProtPaladin : CalculationsBase
     {
+        #region Variables and Properties
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -57,7 +58,7 @@ namespace Rawr.ProtPaladin
                 string[] groupNames = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" };
                 int[,][] gemmingTemplates = new int[,][]
                 {
-                    //Red       Yellow      Blue        Prismatic   Meta
+                    //Red           Yellow      Blue        Prismatic   Meta
                     { sovereign,    enduring,   solid,      solid,      austere },  // Balanced Threat + Avoidance, Austere
                     { sovereign,    enduring,   solid,      solid,      eternal },  // Balanced Threat + Avoidance, Eternal
                     { solid,        solid,      solid,      solid,      austere },  // Max Stam, Austere
@@ -87,7 +88,6 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        #region Variables and Properties
 #if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
@@ -1072,8 +1072,8 @@ focus on Survival Points.",
             if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
             // Filters out Death Knight and Two-Hander Enchants
             if (enchant.Name.StartsWith("Rune of the") || enchant.Slot == ItemSlot.TwoHand) return false;
-            // Warrior ZG enchant
-            if (enchant.Name.Contains("Presence of Might") && (enchant.Slot == ItemSlot.Legs || enchant.Slot == ItemSlot.Head)) return false;
+            // Paladin ZG enchant
+            if (enchant.Name.Contains("Syncretist's Sigil") && (enchant.Slot == ItemSlot.Legs || enchant.Slot == ItemSlot.Head)) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
@@ -1339,14 +1339,5 @@ focus on Survival Points.",
             }
         }
         #endregion
-
-        /// <summary>
-        /// Saves the talents for the character
-        /// </summary>
-        /// <param name="character">The character for whom the talents should be saved</param>
-        public void GetTalents(Character character) {
-            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            calcOpts.talents = character.PaladinTalents;
-        }
     }
 }
