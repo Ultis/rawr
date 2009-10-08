@@ -225,10 +225,9 @@ namespace Rawr
         }
 
         public Stats GetTotalStats() {
-            Stats ret = new Stats();
-            ret += this.Stats;
+            Stats ret = this.Stats.Clone();
             foreach (Buff buff in Improvements)
-                ret += buff.Stats;
+                ret.Accumulate(buff.Stats);
             return ret;
         }
 
