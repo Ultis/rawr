@@ -1741,9 +1741,14 @@ These numbers to do not include racial bonuses.",
             statsToAdd.Stamina = (statsToAdd.Stamina * (1f + totalBSTAM) * (1f + statsToAdd.BonusStaminaMultiplier));
             statsToAdd.Strength = (statsToAdd.Strength * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
             statsToAdd.Strength += (statsToAdd.HighestStat * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
-            statsToAdd.Strength += (statsToAdd.Paragon * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
             statsToAdd.Agility = (statsToAdd.Agility * (1f + totalBAM) * (1f + statsToAdd.BonusAgilityMultiplier));
             statsToAdd.Health += (statsToAdd.Stamina * 10f);
+            // Paragon
+            if (baseStats.Strength + statsToAdd.Strength > baseStats.Agility + statsToAdd.Agility) {
+                statsToAdd.Strength += (statsToAdd.Paragon * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
+            } else {
+                statsToAdd.Agility += (statsToAdd.Paragon * (1f + totalBAM) * (1f + statsToAdd.BonusAgilityMultiplier));
+            }
 
             // Armor
             statsToAdd.Armor = (statsToAdd.Armor * (1f + baseStats.BaseArmorMultiplier + statsToAdd.BaseArmorMultiplier));

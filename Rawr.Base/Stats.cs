@@ -86,6 +86,7 @@ namespace Rawr {
         ManaRestoreOnCrit_25_45,
         ManaorEquivRestore,
         MangleCostReduction,
+        Paragon,
         RakeCostReduction,
         ShredCostReduction,
         Miss,
@@ -497,7 +498,6 @@ namespace Rawr {
         MovementSpeed,
         GreatnessProc,
         HighestStat,
-        Paragon,
         ManacostReduceWithin15OnUse1Min,
         ShieldFromHealed,
         RighteousVengeanceCanCrit,
@@ -2159,8 +2159,8 @@ namespace Rawr {
         [Category("Equipment Effects")]
         public float Paragon
         {
-            get { return _rawNoStackData[(int)NonStackingStat.Paragon]; }
-            set { _rawNoStackData[(int)NonStackingStat.Paragon] = value; }
+            get { return _rawAdditiveData[(int) AdditiveStat.Paragon]; }
+            set { _rawNoStackData[(int)AdditiveStat.Paragon] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
