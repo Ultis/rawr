@@ -2160,7 +2160,7 @@ namespace Rawr {
         public float Paragon
         {
             get { return _rawAdditiveData[(int) AdditiveStat.Paragon]; }
-            set { _rawNoStackData[(int)AdditiveStat.Paragon] = value; }
+            set { _rawAdditiveData[(int)AdditiveStat.Paragon] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
