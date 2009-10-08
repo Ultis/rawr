@@ -34,15 +34,16 @@ namespace Rawr.DPSWarr {
         public float _SS_DPS  = 0f, _SS_HPS  = 0f, _SS_Acts  = 0f;
         public float _BLS_DPS = 0f, _BLS_HPS = 0f, _BLS_GCDs = 0f;
         // GCD Losses
-        public float _Move_GCDs = 0f;
-        public float _Stunned_Acts = 0f;
-        public float _Feared_Acts = 0f;
-        public float _Rooted_Acts = 0f;
-        public float _HF_Acts = 0f;
-        public float _EM_Acts = 0f;
-        public float _CH_Acts = 0f; // Charge
-        public float _IN_Acts = 0f; // Intercept
-        public float _IV_Acts = 0f; // Intervene
+        public float _Move_GCDs    = 0f, _Move_Per    = 0f, _Move_Eaten    = 0f;
+        public float _Stunned_Acts = 0f, _Stunned_Per = 0f, _Stunned_Eaten = 0f;
+        public float _Feared_Acts  = 0f, _Feared_Per  = 0f, _Feared_Eaten  = 0f;
+        public float _Rooted_Acts  = 0f, _Rooted_Per  = 0f, _Rooted_Eaten  = 0f;
+        public float _Disarm_Acts  = 0f, _Disarm_Per  = 0f, _Disarm_Eaten  = 0f;
+        public float _HF_Acts = 0f, _HF_RecovPer = 0f, _HF_RecovTTL = 0f; // Heroic Fury (Fury Talent)
+        public float _EM_Acts = 0f, _EM_RecovPer = 0f, _EM_RecovTTL = 0f; // Every Man for Himself (Humans)
+        public float _CH_Acts = 0f, _CH_RecovPer = 0f, _CH_RecovTTL = 0f; // Charge (Juggernaught, Warbringer)
+        public float _IN_Acts = 0f, _IN_RecovPer = 0f, _IN_RecovTTL = 0f; // Intercept (Warbringer)
+        public float _IV_Acts = 0f, _IV_RecovPer = 0f, _IV_RecovTTL = 0f; // Intervene (Warbringer)
         #endregion
         #region Initialization
         public override void Initialize(CharacterCalculationsDPSWarr calcs) {
@@ -213,7 +214,7 @@ namespace Rawr.DPSWarr {
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
             float FightDuration = CalcOpts.Duration;
-            float LatentGCD = 1.5f + CalcOpts.GetLatency();
+            float LatentGCD = 1.5f + CalcOpts.Latency;
             float NumGCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(FightDuration / LatentGCD) : FightDuration / LatentGCD;
             GCDUsage += NumGCDs.ToString("000") + " : Total GCDs\n\n";
             float GCDsused = 0f;
@@ -314,39 +315,38 @@ namespace Rawr.DPSWarr {
                 //float acts = (float)Math.Min(availGCDs, stunnedGCDs);
                 float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Ceiling(stunnedActs) : stunnedActs;
                 _Stunned_Acts = Abil_Acts;
-                float reduc = Math.Max(0f, BaseStunDur);
-                GCDsused += (float)Math.Min(NumGCDs, (reduc * Abil_Acts) / LatentGCD);
-                GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : Stunned\n" : "");
-                availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                _Stunned_Per = Math.Max(0f, BaseStunDur);
+                _Stunned_Eaten = (float)Math.Min(NumGCDs, (_Stunned_Per * _Stunned_Acts) / LatentGCD);
                 // Now let's try and get some of those GCDs back
                 if (Talents.HeroicFury > 0 && _Stunned_Acts > 0f) {
                     float hfacts = CalcOpts.AllowFlooring ? (float)Math.Floor(HF.Activates) : HF.Activates;
                     _HF_Acts = (float)Math.Min(_Stunned_Acts, hfacts);
-                    reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)*//1000f)));
-                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * _HF_Acts) / LatentGCD);
-                    GCDUsage += (_HF_Acts > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + HF.Name + " (adds back to GCDs when stunned)\n" : "");
-                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                    _HF_RecovPer = Math.Max(0f, (_Stunned_Per - Math.Max(0f, CalcOpts.React / 1000f)));
+                    _HF_RecovTTL = (float)Math.Min(NumGCDs, (_HF_RecovPer * _HF_Acts) / LatentGCD);
                 }
-                if (CHARACTER.Race == CharacterRace.Human && (_Stunned_Acts - _HF_Acts > 0)) {
+                if (Char.Race == CharacterRace.Human && (_Stunned_Acts - _HF_Acts > 0)) {
                     float emacts = CalcOpts.AllowFlooring ? (float)Math.Floor(EM.Activates) : EM.Activates;
                     _EM_Acts = (float)Math.Min(_Stunned_Acts - _HF_Acts, emacts);
-                    reduc = Math.Max(0f, (BaseStunDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)*//1000f)));
-                    GCDsused -= (float)Math.Min(NumGCDs, (reduc * _EM_Acts) / LatentGCD);
-                    GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + EM.Name + " (adds back to GCDs when stunned)\n" : "");
-                    availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+                    _EM_RecovPer = Math.Max(0f, (_Stunned_Per - Math.Max(0f, CalcOpts.React / 1000f)));
+                    _EM_RecovTTL = (float)Math.Min(NumGCDs, (_EM_RecovPer * _EM_Acts) / LatentGCD);
                 }
 
                 // Now to give Stunned GCDs back and later we'll use %
                 // of time lost to stuns to affect each ability equally
                 // othwerwise we are only seriously affecting things at
                 // the bottom of priorities, which isn't fair (poor Slam)
-                GCDsused -= (_Stunned_Acts * BaseStunDur) / LatentGCD;
+                GCDsused -= Math.Max(0f, _Stunned_Eaten - _HF_RecovTTL - _EM_RecovTTL);
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
-                timelostwhilestunned = _Stunned_Acts * BaseStunDur
-                                       - (BaseStunDur - CalcOpts.React/1000f) * _HF_Acts
-                                       - (BaseStunDur - CalcOpts.React/1000f) * _EM_Acts;
+                //
+                timelostwhilestunned = _Stunned_Acts * _Stunned_Per
+                                       - _HF_Acts * _HF_RecovPer
+                                       - _EM_Acts * _EM_RecovPer;
                 timelostwhilestunned = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilestunned) : timelostwhilestunned;
                 percTimeInStun = timelostwhilestunned / FightDuration;
+                //
+                GCDUsage += (_Stunned_Acts > 0 ? _Stunned_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + _Stunned_Per.ToString() + "secs : Stunned\n" : "");
+                GCDUsage += (_HF_Acts      > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + _HF_RecovPer.ToString() + "secs : " + HF.Name + " (adds back to GCDs when Stunned)\n" : "");
+                GCDUsage += (_EM_Acts      > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + _EM_RecovPer.ToString() + "secs : " + EM.Name + " (adds back to GCDs when Stunned)\n" : "");
             }
             #endregion
             #region Being Feared
@@ -364,7 +364,7 @@ namespace Rawr.DPSWarr {
                 if (/*CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_] &&*/ _Feared_Acts > 0f) {
                     float bzacts = CalcOpts.AllowFlooring ? (float)Math.Floor(BZ.Activates) : BZ.Activates;
                     _ZRage_GCDs = (float)Math.Min(_Feared_Acts, bzacts);
-                    reduc = Math.Max(0f, (BaseFearDur - Math.Max(0f,/*(*/CalcOpts.React/*-250)*//1000f)));
+                    reduc = Math.Max(0f, (BaseFearDur - Math.Max(0f,CalcOpts.React/1000f)));
                     GCDsused -= (float)Math.Min(NumGCDs, (reduc * _ZRage_GCDs) / LatentGCD);
                     GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + BZ.Name + " (adds back to GCDs when feared)\n" : "");
                     availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
@@ -376,7 +376,7 @@ namespace Rawr.DPSWarr {
                 GCDsused -= (_Feared_Acts * BaseFearDur) / LatentGCD;
                 availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
                 timelostwhilefeared = _Feared_Acts * BaseFearDur
-                                      - (BaseFearDur - LatentGCD) * _ZRage_GCDs;
+                                      - (BaseFearDur - (LatentGCD+CalcOpts.React/1000f)) * _ZRage_GCDs;
                 timelostwhilefeared = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilefeared) : timelostwhilefeared;
                 percTimeInFear = timelostwhilefeared / FightDuration;
             }
@@ -483,7 +483,7 @@ namespace Rawr.DPSWarr {
              * Execute will get extra rage leftovers if there are any (since you won't use HS/CL <20%)
             */
 
-            float LatentGCD = 1.5f + CalcOpts.GetLatency();
+            float LatentGCD = 1.5f + CalcOpts.Latency;
 
             float preloopAvailGCDs = availGCDs, preloopGCDsUsed = GCDsused, preloopAvailRage = availRage;
 
@@ -524,11 +524,11 @@ namespace Rawr.DPSWarr {
             float MS_WeightedValue = MS.DamageOnUse + DW.TickSize * MS.MHAtkTable.Crit,
                   SD_WeightedValue = SD.DamageOnUse + DW.TickSize * SD.MHAtkTable.Crit,
                   SL_WeightedValue = SL.DamageOnUse + DW.TickSize * SL.MHAtkTable.Crit;
-            float OnePt5Plus1 = LatentGCD + (OP.Cd + CalcOpts.GetReact()),
+            float OnePt5Plus1 = LatentGCD + (OP.Cd + CalcOpts.AllowedReact),
                   Two1pt5 = LatentGCD * 2f,
-                  Two1pt0 = (OP.Cd + CalcOpts.GetReact()) * 2f;
+                  Two1pt0 = (OP.Cd + CalcOpts.AllowedReact) * 2f;
             float TasteForBloodMOD = (Talents.TasteForBlood == 3 ? 1f / 6f : (Talents.TasteForBlood == 2 ? 0.144209288653733f : (Talents.TasteForBlood == 1 ? 0.104925207394343f : 0)));
-            float OtherMOD = (MSBaseCd + CalcOpts.GetLatency());
+            float OtherMOD = (MSBaseCd + CalcOpts.Latency);
             float SDMOD = 1f - 0.03f * Talents.SuddenDeath;
             float avoid = (1f - CombatFactors._c_mhdodge - CombatFactors._c_ymiss);
             float atleast1=0f, atleast2=0f, atleast3=0f, extLength1, extLength2, extLength3, averageTimeBetween,
@@ -735,9 +735,9 @@ namespace Rawr.DPSWarr {
                     canUse1 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe" : "nothing"));
                     //puts MS at extra 0.65 length for 5.70
                     MSatExtra1 = LatentGCD - LeavingUntilNextMS_1;
-                    lengthFor1 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra1);
+                    lengthFor1 = (MSBaseCd + CalcOpts.AllowedReact + MSatExtra1);
                     //MS is normally at a length of 5.696
-                    msNormally1 = (canUse1 == "exe or slam" ? lengthFor1 : MSBaseCd + CalcOpts.GetReact());
+                    msNormally1 = (canUse1 == "exe or slam" ? lengthFor1 : MSBaseCd + CalcOpts.AllowedReact);
                     //Extended length is 100.00% of the time
 
                     //Two 1.5 globals are 3.10 seconds
@@ -749,9 +749,9 @@ namespace Rawr.DPSWarr {
                     canUse2 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe" : "nothing"));
                     //puts MS at extra 1.15	length for 6.20
                     MSatExtra2 = LatentGCD - LeavingUntilNextMS_2;
-                    lengthFor2 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra2);
+                    lengthFor2 = (MSBaseCd + CalcOpts.AllowedReact + MSatExtra2);
                     //MS is normally at a length of 5.049
-                    msNormally2 = (canUse2 == "exe or slam" ? lengthFor2 : MSBaseCd + CalcOpts.GetReact());
+                    msNormally2 = (canUse2 == "exe or slam" ? lengthFor2 : MSBaseCd + CalcOpts.AllowedReact);
                     //Extended length is 19.25% of the time
 
                     //Two 1.0 globals are 2.10 seconds
@@ -763,9 +763,9 @@ namespace Rawr.DPSWarr {
                     canUse3 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe" : "nothing"));
                     //puts MS at extra 0.15	length for 5.20
                     MSatExtra3 = LatentGCD - LeavingUntilNextMS_3;
-                    lengthFor3 = (MSBaseCd + CalcOpts.GetReact() + MSatExtra3);
+                    lengthFor3 = (MSBaseCd + CalcOpts.AllowedReact + MSatExtra3);
                     //MS is normally at a length of 5.196
-                    msNormally3 = (canUse3 == "exe or slam" ? lengthFor3 : MSBaseCd + CalcOpts.GetReact());
+                    msNormally3 = (canUse3 == "exe or slam" ? lengthFor3 : MSBaseCd + CalcOpts.AllowedReact);
                     //Extended length is 100.00% of the time
 
                     float Abilities = ((_BLS_GCDs + _RD_GCDs + _SL_GCDs + acts + oldHSActivates + WhiteAtks.MhActivates + _SD_GCDs) / FightDuration);
@@ -789,10 +789,10 @@ namespace Rawr.DPSWarr {
                     Two1pt5_Occurs = 1f - OnePt5Plus1_Occurs - Two1PtZero_Occurs;
 
                     // Exec procs in MS
-                    atleast1 = (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 1f : 2f) * avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "niether" ? 2f : 3f) * avoid + Two1PtZero_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 2f * (1f - CombatFactors._c_ymiss)) + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed));
-                    atleast2 = (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 1f : 2f) * avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed))
+                    atleast1 = (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 1f : 2f) * avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "niether" ? 2f : 3f) * avoid + Two1PtZero_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 2f * (1f - CombatFactors._c_ymiss)) + (MSBaseCd - (1.5f + CalcOpts.AllowedReact)) / CombatFactors._c_mhItemSpeed));
+                    atleast2 = (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 1f : 2f) * avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.AllowedReact)) / CombatFactors._c_mhItemSpeed))
                              * (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed) + Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed)));
-                    atleast3 = (1f - (float)Math.Pow(SDMOD, Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.GetReact())) / CombatFactors._c_mhItemSpeed))
+                    atleast3 = (1f - (float)Math.Pow(SDMOD, Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.AllowedReact)) / CombatFactors._c_mhItemSpeed))
                              * (1f - (float)Math.Pow(SDMOD, Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed)))
                              * (1f - (float)Math.Pow(SDMOD, Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid)));
 

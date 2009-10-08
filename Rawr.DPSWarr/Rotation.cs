@@ -501,6 +501,7 @@ namespace Rawr.DPSWarr {
         #region AddAnItem(s)
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, Add DPS, Pull Rage, Don't Use GCD Multiplier</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float DPS_TTL, ref float HPS_TTL, ref float _Abil_DPS, ref float _Abil_HPS, Skills.Ability abil) {
+            if (!abil.Validated) { return; }
             float acts = (float)Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
@@ -517,6 +518,7 @@ namespace Rawr.DPSWarr {
         }
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, Add DPS, Pull Rage, Use GCD Multiplier</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float DPS_TTL, ref float HPS_TTL, ref float _Abil_DPS, ref float _Abil_HPS, Skills.Ability abil, float GCDMulti) {
+            if (!abil.Validated) { return; }
             float acts = (float)Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
@@ -533,6 +535,7 @@ namespace Rawr.DPSWarr {
         }
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, No DPS, Pull Rage, Don't Use GCD Multiplier</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil) {
+            if (!abil.Validated) { return; }
             float acts = (float)Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
@@ -547,6 +550,7 @@ namespace Rawr.DPSWarr {
         }
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, No DPS, Add Rage, Don't Use GCD Multiplier</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil, bool flag) {
+            if (!abil.Validated) { return; }
             float acts = (float)Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
@@ -561,6 +565,7 @@ namespace Rawr.DPSWarr {
         }
         /// <summary>Adds an Ability alteration schtuff. Flags: No GCDs, No DPS, Add Rage, Don't Use GCD Multiplier</summary>
         public void AddAnItem(ref float availRage, float TotalPercTimeLost, ref float _Abil_Acts, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil) {
+            if (!abil.Validated) { return; }
             float acts = abil.Activates * (1f - TotalPercTimeLost);
             float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_Acts = Abil_Acts;

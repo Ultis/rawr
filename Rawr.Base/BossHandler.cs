@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace Rawr {
     #region Subclasses
     /// <summary>Enumerator for creating a list of possible values for the Level box</summary>
-    public enum POSSIBLE_LEVELS { NPC_80 = 80, NPC_81, NPC_82, NPC_83, }
+    public enum POSSIBLE_LEVELS { LVLP0 = 80, LVLP1, LVLP2, LVLP3, }
     /// <summary>
     /// Enumerator for attack types, this mostly is for raid members that aren't
     /// being directly attacked to know when AoE damage is coming from the boss
@@ -326,7 +326,7 @@ namespace Rawr {
                 }
                 retboss.Resistance(t, value);
             }
-            // Attacks
+            #region Attacks
             /*if (passedList[0].Attacks.Count > 0) {
                 foreach (Attack a in passedList[0].Attacks) {
                     float perhit = passedList[0].Attacks[0].DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Min(perhit, boss.Attacks[0].Name == "Invalid" ? perhit : boss.Attacks[0].DamagePerHit); }
@@ -341,6 +341,7 @@ namespace Rawr {
                     });
                 }
             }*/
+            #endregion
             // Situational Changes
             // In Back
             value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
@@ -485,7 +486,7 @@ namespace Rawr {
             Comment = "No comments have been written for this Boss.";
             BerserkTimer = 8 * 60; // The longest noted Enrage timer is 19 minutes, and seriously, if the fight is taking that long, then fail... just fail.
             SpeedKillTimer = 3 * 60; // Lots of Achievements run on this timer, so using it for generic
-            Level = (int)POSSIBLE_LEVELS.NPC_83;
+            Level = (int)POSSIBLE_LEVELS.LVLP3;
             Health = 1000000f;
             Armor = (float)StatConversion.NPC_ARMOR[Level - NormCharLevel];
             UseParryHaste = false;

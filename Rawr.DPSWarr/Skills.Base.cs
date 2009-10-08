@@ -620,8 +620,8 @@ namespace Rawr.DPSWarr {
             /// </summary>
             protected virtual float ActivatesOverride {
                 get {
-                    float LatentGCD = 1.5f + CalcOpts.GetLatency() + (UseReact ? CalcOpts.GetReact() : 0f);
-                    float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.GetLatency() + (UseReact ? CalcOpts.GetReact() : 0f));
+                    float LatentGCD = 1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f);
+                    float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f));
                     float Every = LatentGCD / GCDPerc;
                     if (RageCost > 0f)
                     {

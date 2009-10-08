@@ -281,7 +281,7 @@ namespace Rawr.DPSWarr
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
             float FightDuration = CalcOpts.Duration;
-            float LatentGCD = 1.5f + CalcOpts.GetLatency();
+            float LatentGCD = 1.5f + CalcOpts.Latency;
             float NumGCDs = FightDuration / LatentGCD;
             GCDUsage += "NumGCDs: " + NumGCDs.ToString() + "\n\n";
             float GCDsused = 0f;
@@ -348,13 +348,13 @@ namespace Rawr.DPSWarr
                 {
                     float numUses = (float)Math.Min(numStuns, HF.Activates);
                     numStuns -= numUses;
-                    timeLost += numUses * (CalcOpts.React / 1000f + CalcOpts.GetLatency()); // not using GetReact because it's not on the GCD
+                    timeLost += numUses * (CalcOpts.React / 1000f + CalcOpts.Latency); // not using GetReact because it's not on the GCD
                 }
                 if (Char.Race == CharacterRace.Human)
                 {
                     float numUses = (float)Math.Min(numStuns, EM.Activates);
                     numStuns -= numUses;
-                    timeLost += numUses * CalcOpts.React / 1000f + CalcOpts.GetLatency(); // not using GetReact because it's not on the GCD
+                    timeLost += numUses * CalcOpts.React / 1000f + CalcOpts.Latency; // not using GetReact because it's not on the GCD
                 }
 
                 if (numStuns > 0f)

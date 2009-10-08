@@ -297,7 +297,7 @@ namespace Rawr.DPSWarr {
                 ReqMeleeWeap = true;
                 ReqMeleeRange = true;
                 ReqMultiTargs = true;
-                Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration+(1.5f+CalcOpts.GetLatency()+(UseReact?CalcOpts.GetReact():0f)); // In Seconds
+                Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : 0f)); // In Seconds
                 Duration = 30f;
                 RageCost = 30f - (Talents.FocusedRage * 1f);
                 RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);
@@ -326,7 +326,7 @@ namespace Rawr.DPSWarr {
                 Talent2ChksValue = Talents.SecondWind;
                 NumStunsOverDur = 1f;
                 Duration = 10f; // Using 4 seconds to sim consume time
-                Cd = 1.5f + CalcOpts.GetLatency();
+                Cd = 1.5f + CalcOpts.Latency;
                 RageCost = 10f * Talents.SecondWind;
                 StanceOkDef = StanceOkFury = StanceOkArms = true;
                 //Effect = new SpecialEffect(Trigger.Use, new Stats() { BonusRageGen = 10f * Talents.SecondWind, }, Duration, Cd);

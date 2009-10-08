@@ -132,7 +132,7 @@ namespace Rawr.DPSWarr {
                 if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
 
                 float acts = 0f;
-                float LatentGCD = (1.5f + CalcOpts.GetLatency() + (UseReact ? CalcOpts.GetReact() : 0f));
+                float LatentGCD = (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React : 0f));
 
                 float dodge = Whiteattacks.MHAtkTable.Dodge;
                 float parry = (Talents.GlyphOfOverpower ? Whiteattacks.MHAtkTable.Parry : 0f);
@@ -192,7 +192,6 @@ namespace Rawr.DPSWarr {
             protected override float ActivatesOverride {
                 get {
                     float acts = 0f;
-                    float LatentGCD = (1.5f + CalcOpts.GetLatency() + (UseReact ? CalcOpts.GetReact() : 0f));
 
                     // Chance to activate Requires Rend
                     if (CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_]) {
