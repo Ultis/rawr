@@ -415,6 +415,10 @@ namespace Rawr.Mage
             // offset <= effect1Duration
             // this can potentially still be optimized, I doubt we need to look at every option
             // but it seems in practice it works well enough so don't waste time unless profiling shows need
+            // TODO ok it works well enough, but still costs a significant amount, time to improve this
+            // ok in practice it's never optimal to use offset higher than minimum
+            // this would indicate that it should always be optimal to push effect1 as far as possible
+            // can we prove this?
             if (!double.IsPositiveInfinity(effect2ActiveCooldown))
             {
                 for (int offset = Math.Max(0, (int)(effect2ActiveCooldown - slack)); offset <= Math.Min(effect1Duration, effect2ActiveCooldown); offset++)
@@ -430,7 +434,7 @@ namespace Rawr.Mage
                     else
                     {
                         // effect2 will be off cooldown first
-                        value = leftover + Math.Min(min, fightDuration) + MaximizeStackingDuration(fightDuration - effect2ActiveCooldown - effect2Cooldown, effect2Duration, effect2Cooldown, effect1Duration, effect1Cooldown, Math.Max(0, effect1Duration - effect2Cooldown), Math.Max(0, effect1Cooldown - effect2Cooldown));
+                        value = leftover + Math.Min(min, fightDuration) + MaximizeStackingDuration(fightDuration - effect2ActiveCooldown - effect2Cooldown, effect2Duration, effect2Cooldown, effect1Duration, effect1Cooldown, Math.Max(0, effect1Duration - offset - effect2Cooldown), Math.Max(0, effect1Cooldown - offset - effect2Cooldown));
                     }
                     if (value > best)
                     {
@@ -894,12 +898,13 @@ namespace Rawr.Mage
             {
                 for (CharacterSlot i = 0; i < (CharacterSlot)Character.OptimizableSlotCount; i++)
                 {
-                    ItemInstance item = character[i];
-                    if (item != null)
+                    ItemInstance itemInstance = character[i];
+                    if (itemInstance != null)
                     {
-                        if (item.Item != null)
+                        Item item = itemInstance.Item;
+                        if (item != null)
                         {
-                            foreach (SpecialEffect effect in item.Item.Stats.SpecialEffects())
+                            foreach (SpecialEffect effect in item.Stats.SpecialEffects())
                             {
                                 if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect))
                                 {
@@ -910,7 +915,7 @@ namespace Rawr.Mage
                                     mask <<= 1;
                                     cooldownCount++;
                                     cooldown.ItemBased = true;
-                                    cooldown.Name = item.Item.Name;
+                                    cooldown.Name = item.Name;
                                     cooldown.Cooldown = effect.Cooldown;
                                     cooldown.Duration = effect.Duration;
                                     cooldown.AutomaticConstraints = true;
@@ -923,9 +928,10 @@ namespace Rawr.Mage
                                 }
                             }
                         }
-                        if (item.Enchant != null)
+                        Enchant enchant = itemInstance.Enchant;
+                        if (enchant != null)
                         {
-                            foreach (SpecialEffect effect in item.Enchant.Stats.SpecialEffects())
+                            foreach (SpecialEffect effect in enchant.Stats.SpecialEffects())
                             {
                                 if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect))
                                 {
@@ -936,7 +942,7 @@ namespace Rawr.Mage
                                     mask <<= 1;
                                     cooldownCount++;
                                     cooldown.ItemBased = true;
-                                    cooldown.Name = item.Enchant.Name;
+                                    cooldown.Name = enchant.Name;
                                     cooldown.Cooldown = effect.Cooldown;
                                     cooldown.Duration = effect.Duration;
                                     cooldown.AutomaticConstraints = true;

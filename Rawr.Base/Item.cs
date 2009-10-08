@@ -1352,36 +1352,41 @@ namespace Rawr
         public unsafe Stats AccumulateTotalStats(Character character, Stats unsafeStatsAccumulator)
 #endif
 		{
-            if (cachedTotalStats != null && Item.LastChange <= cachedTime)
+            Item item = Item;
+            if ((object)cachedTotalStats != null && item.LastChange <= cachedTime)
             {
-                if (unsafeStatsAccumulator != null)
+                if ((object)unsafeStatsAccumulator != null)
                 {
                     unsafeStatsAccumulator.AccumulateUnsafe(cachedTotalStats);
                 }
                 return cachedTotalStats;
             }
-			bool volatileGem = false, volatileItem = false;
+            Item g1 = Gem1;
+            Item g2 = Gem2;
+            Item g3 = Gem3;
+            Enchant enchant = Enchant;
+            bool volatileGem = false, volatileItem = false;
             bool gem1 = false;
             bool gem2 = false;
             bool gem3 = false;
-            bool eligibleForSocketBonus = Item.GemMatchesSlot(Gem1, Item.SocketColor1) &&
-                                            Item.GemMatchesSlot(Gem2, Item.SocketColor2) &&
-                                            Item.GemMatchesSlot(Gem3, Item.SocketColor3);
-            if (Gem1 != null && Gem1.MeetsRequirements(character, out volatileGem)) gem1 = true;
+            bool eligibleForSocketBonus = Item.GemMatchesSlot(g1, item.SocketColor1) &&
+                                            Item.GemMatchesSlot(g2, item.SocketColor2) &&
+                                            Item.GemMatchesSlot(g3, item.SocketColor3);
+            if (g1 != null && g1.MeetsRequirements(character, out volatileGem)) gem1 = true;
             volatileItem = volatileItem || volatileGem;
-            if (Gem2 != null && Gem2.MeetsRequirements(character, out volatileGem)) gem2 = true;
+            if (g2 != null && g2.MeetsRequirements(character, out volatileGem)) gem2 = true;
             volatileItem = volatileItem || volatileGem;
-            if (Gem3 != null && Gem3.MeetsRequirements(character, out volatileGem)) gem3 = true;
+            if (g3 != null && g3.MeetsRequirements(character, out volatileGem)) gem3 = true;
             volatileItem = volatileItem || volatileGem;
             if (volatileItem && unsafeStatsAccumulator != null)
             {
-                unsafeStatsAccumulator.AccumulateUnsafe(Item.Stats, true);
-                if (gem1) unsafeStatsAccumulator.AccumulateUnsafe(Gem1.Stats, true);
-                if (gem2) unsafeStatsAccumulator.AccumulateUnsafe(Gem2.Stats, true);
-                if (gem3) unsafeStatsAccumulator.AccumulateUnsafe(Gem3.Stats, true);
-                if (eligibleForSocketBonus) unsafeStatsAccumulator.AccumulateUnsafe(Item.SocketBonus, true);
+                unsafeStatsAccumulator.AccumulateUnsafe(item.Stats, true);
+                if (gem1) unsafeStatsAccumulator.AccumulateUnsafe(g1.Stats, true);
+                if (gem2) unsafeStatsAccumulator.AccumulateUnsafe(g2.Stats, true);
+                if (gem3) unsafeStatsAccumulator.AccumulateUnsafe(g3.Stats, true);
+                if (eligibleForSocketBonus) unsafeStatsAccumulator.AccumulateUnsafe(item.SocketBonus, true);
                 bool eligibleForEnchant = false;
-                if (Enchant.Slot == ItemSlot.OneHand)
+                if (enchant.Slot == ItemSlot.OneHand)
                 {
                     eligibleForEnchant = (this.Slot == ItemSlot.OneHand ||
                                         (this.Slot == ItemSlot.OffHand &&
@@ -1390,15 +1395,15 @@ namespace Rawr
                                         this.Slot == ItemSlot.MainHand ||
                                         this.Slot == ItemSlot.TwoHand);
                 }
-                else if (Enchant.Slot == ItemSlot.OffHand)
+                else if (enchant.Slot == ItemSlot.OffHand)
                 {
                     eligibleForEnchant = this.Type == ItemType.Shield;
                 }
                 else
                 {
-                    eligibleForEnchant = (Enchant.Slot == this.Slot);
+                    eligibleForEnchant = (enchant.Slot == this.Slot);
                 }
-                if (eligibleForEnchant) unsafeStatsAccumulator.AccumulateUnsafe(Enchant.Stats, true);
+                if (eligibleForEnchant) unsafeStatsAccumulator.AccumulateUnsafe(enchant.Stats, true);
                 return null;
             }
             else
@@ -1409,13 +1414,13 @@ namespace Rawr
                 {
                     totalItemStats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
 #endif
-                    totalItemStats.AccumulateUnsafe(Item.Stats, true);
-                    if (gem1) totalItemStats.AccumulateUnsafe(Gem1.Stats, true);
-                    if (gem2) totalItemStats.AccumulateUnsafe(Gem2.Stats, true);
-                    if (gem3) totalItemStats.AccumulateUnsafe(Gem3.Stats, true);
-                    if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(Item.SocketBonus, true);
+                    totalItemStats.AccumulateUnsafe(item.Stats, true);
+                    if (gem1) totalItemStats.AccumulateUnsafe(g1.Stats, true);
+                    if (gem2) totalItemStats.AccumulateUnsafe(g2.Stats, true);
+                    if (gem3) totalItemStats.AccumulateUnsafe(g3.Stats, true);
+                    if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(item.SocketBonus, true);
                     bool eligibleForEnchant = false;
-                    if (Enchant.Slot == ItemSlot.OneHand)
+                    if (enchant.Slot == ItemSlot.OneHand)
                     {
                         eligibleForEnchant = (this.Slot == ItemSlot.OneHand ||
                                             (this.Slot == ItemSlot.OffHand &&
@@ -1424,15 +1429,15 @@ namespace Rawr
                                             this.Slot == ItemSlot.MainHand ||
                                             this.Slot == ItemSlot.TwoHand);
                     }
-                    else if (Enchant.Slot == ItemSlot.OffHand)
+                    else if (enchant.Slot == ItemSlot.OffHand)
                     {
                         eligibleForEnchant = this.Type == ItemType.Shield;
                     }
                     else
                     {
-                        eligibleForEnchant = (Enchant.Slot == this.Slot);
+                        eligibleForEnchant = (enchant.Slot == this.Slot);
                     }
-                    if (eligibleForEnchant) totalItemStats.AccumulateUnsafe(Enchant.Stats, true);
+                    if (eligibleForEnchant) totalItemStats.AccumulateUnsafe(enchant.Stats, true);
                     if (!volatileItem)
                     {
                         cachedTime = DateTime.Now;
