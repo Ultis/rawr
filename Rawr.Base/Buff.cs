@@ -3807,7 +3807,7 @@ namespace Rawr
             {
                 Name = "Master of Anatomy",
                 Group = "Profession Buffs",
-                Source = "Alchemy [450]",
+                Source = "Skinning [450]",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { CritRating = 40f }
             });
