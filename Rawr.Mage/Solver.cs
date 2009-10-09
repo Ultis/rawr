@@ -3534,7 +3534,7 @@ namespace Rawr.Mage
                             bool valid = true;
                             foreach (int exclusionMask in effectExclusionList)
                             {
-                                if (BitCount2(incrementalSetIndex & exclusionMask))
+                                if (BitCount2(combinedIndex & exclusionMask))
                                 {
                                     valid = false;
                                     break;
@@ -3542,7 +3542,7 @@ namespace Rawr.Mage
                             }
                             if (valid)
                             {
-                                if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == (int)StandardEffect.Heroism && index == 0)) && (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
+                                if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (combinedIndex == (int)StandardEffect.Heroism && index == 0)) && (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                 {
                                     list.Add(new CastingState(calculationResult, combinedIndex, false));
                                     if (combinedIndex == 0)
