@@ -348,7 +348,7 @@ namespace Rawr.Mage
                 var cache = calculationOptions.CooldownStackingCache;
                 lock (cache)
                 {
-                    for (int i = 0; i < cache.Count; i++)
+                    /*for (int i = 0; i < cache.Count; i++)
                     {
                         var entry = cache[i];
                         if ((entry.Effect1Cooldown == effect1Cooldown && entry.Effect2Cooldown == effect2Cooldown && entry.Effect1Duration == effect1Duration && entry.Effect2Duration == effect2Duration) ||
@@ -356,7 +356,65 @@ namespace Rawr.Mage
                         {
                             return entry.MaximumStackingDuration;
                         }
+                    }*/
+                    // do binary search
+                    int num = 0;
+                    int num2 = cache.Count - 1;
+                    while (num <= num2)
+                    {
+                        int num3 = num + ((num2 - num) >> 1);
+                        var entry = cache[num3];
+                        double key = entry.Effect1Duration;
+                        if (key < effect1Duration)
+                        {
+                            num = num3 + 1;
+                        }
+                        else if (key > effect1Duration)
+                        {
+                            num2 = num3 - 1;
+                        }
+                        else
+                        {
+                            key = entry.Effect1Cooldown;
+                            if (key < effect1Cooldown)
+                            {
+                                num = num3 + 1;
+                            }
+                            else if (key > effect1Cooldown)
+                            {
+                                num2 = num3 - 1;
+                            }
+                            else
+                            {
+                                key = entry.Effect2Duration;
+                                if (key < effect2Duration)
+                                {
+                                    num = num3 + 1;
+                                }
+                                else if (key > effect2Duration)
+                                {
+                                    num2 = num3 - 1;
+                                }
+                                else
+                                {
+                                    key = entry.Effect2Cooldown;
+                                    if (key < effect2Cooldown)
+                                    {
+                                        num = num3 + 1;
+                                    }
+                                    else if (key > effect2Cooldown)
+                                    {
+                                        num2 = num3 - 1;
+                                    }
+                                    else
+                                    {
+                                        return entry.MaximumStackingDuration;
+                                    }
+                                }
+                            }
+                        }
                     }
+
                     double value;
                     //System.Diagnostics.Stopwatch clock = new System.Diagnostics.Stopwatch();
                     //clock.Reset();
@@ -377,7 +435,7 @@ namespace Rawr.Mage
                         //clock.Stop();
                         //System.Diagnostics.Trace.WriteLine("cache = " + clock.ElapsedTicks);
                     }
-                    cache.Add(new CooldownStackingCacheEntry()
+                    cache.Insert(num, new CooldownStackingCacheEntry()
                     {
                         Effect1Duration = effect1Duration,
                         Effect1Cooldown = effect1Cooldown,
