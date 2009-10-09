@@ -931,7 +931,8 @@ namespace Rawr.Moonkin
                 EclipseBonus = stats.EclipseBonus,
                 InsectSwarmDmg = stats.InsectSwarmDmg,
                 MoonfireDotCrit = stats.MoonfireDotCrit,
-                BonusMoonkinNukeDamage = stats.BonusMoonkinNukeDamage
+                BonusMoonkinNukeDamage = stats.BonusMoonkinNukeDamage,
+                MoonkinT10CritDot = stats.MoonkinT10CritDot
             };
             // Add special effects that meet the following criteria:
             // 1) On-use OR
@@ -966,7 +967,9 @@ namespace Rawr.Moonkin
                         effect.Stats.FireDamage > 0 ||
                         effect.Stats.StarfireProc > 0 ||
                         effect.Stats.Spirit > 0 ||
-                        effect.Stats.Mp5 > 0)
+                        effect.Stats.Mp5 > 0 ||
+                        effect.Stats.BonusArcaneDamageMultiplier > 0 ||
+                        effect.Stats.BonusNatureDamageMultiplier > 0)
                     {
                         s.AddSpecialEffect(effect);
                     }
@@ -1010,7 +1013,9 @@ namespace Rawr.Moonkin
                         effect.Stats.FireDamage > 0 ||
                         effect.Stats.StarfireProc > 0 ||
                         effect.Stats.Spirit > 0 ||
-                        effect.Stats.Mp5 > 0)
+                        effect.Stats.Mp5 > 0 ||
+                        effect.Stats.BonusArcaneDamageMultiplier > 0 ||
+                        effect.Stats.BonusNatureDamageMultiplier > 0)
                     {
                         return true;
                     }
@@ -1028,7 +1033,7 @@ namespace Rawr.Moonkin
                 + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
                 + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
                 + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
-                + stats.MoonfireDotCrit + stats.BonusMoonkinNukeDamage) > 0;
+                + stats.MoonfireDotCrit + stats.BonusMoonkinNukeDamage + stats.MoonkinT10CritDot) > 0;
         }
     }
 }

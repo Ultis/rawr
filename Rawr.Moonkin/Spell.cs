@@ -235,6 +235,8 @@ namespace Rawr.Moonkin
                     spellHaste += st.SpellHaste;
                     float spirit = st.Spirit;
                     float highestStat = st.HighestStat;
+                    float arcaneModifier = st.BonusArcaneDamageMultiplier;
+                    float natureModifier = st.BonusNatureDamageMultiplier;
 
                     if (spellPower > 0)
                         sp += spellPower * maxStack;
@@ -242,6 +244,10 @@ namespace Rawr.Moonkin
                         sc += spellCrit;
                     if (spellHaste > 0)
                         sHa += spellHaste;
+                    if (arcaneModifier > 0)
+                        c.BasicStats.BonusArcaneDamageMultiplier += arcaneModifier;
+                    if (natureModifier > 0)
+                        c.BasicStats.BonusNatureDamageMultiplier += natureModifier;
                     if (spirit > 0)
                     {
                         Stats s = c.BasicStats.Clone();
@@ -285,7 +291,13 @@ namespace Rawr.Moonkin
                     spellHaste += st.SpellHaste;
                     float spirit = st.Spirit;
                     float highestStat = st.HighestStat;
+                    float arcaneModifier = st.BonusArcaneDamageMultiplier;
+                    float natureModifier = st.BonusNatureDamageMultiplier;
 
+                    if (arcaneModifier > 0)
+                        c.BasicStats.BonusArcaneDamageMultiplier -= arcaneModifier;
+                    if (natureModifier > 0)
+                        c.BasicStats.BonusNatureDamageMultiplier -= natureModifier;
                     if (spellPower > 0)
                         sp -= spellPower * maxStack;
                     if (critRating > 0)
@@ -465,7 +477,7 @@ namespace Rawr.Moonkin
             mainNuke.CastTime = (1 - NGUptime) * normalCastTime + NGUptime * mainNuke.NGCastTime;
             // Damage calculations
             float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * (spellPower + mainNuke.IdolExtraSpellPower)) * mainNuke.AllDamageModifier;
-            float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier;
+            float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier * (1 + calcs.BasicStats.MoonkinT10CritDot);
             mainNuke.DamagePerHit = (totalCritChance * damagePerCrit + (1 - totalCritChance) * damagePerNormalHit) * spellHit;
         }
         // Modified version of above function specifically for use in calculating Moonkin 4T8 proc.
@@ -482,7 +494,7 @@ namespace Rawr.Moonkin
             mainNuke.CastTime = (1 - NGUptime) * normalCastTime + NGUptime * mainNuke.NGCastTime;
             // Damage calculations
             float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * (spellPower + mainNuke.IdolExtraSpellPower)) * mainNuke.AllDamageModifier;
-            float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier;
+            float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier * (1 + calcs.BasicStats.MoonkinT10CritDot);
             mainNuke.DamagePerHit = (totalCritChance * damagePerCrit + (1 - totalCritChance) * damagePerNormalHit) * spellHit;
         }
 

@@ -2388,6 +2388,27 @@ namespace Rawr
                 SetThreshold = 4
             });
             #endregion
+            #region Moonkin Tier 10 set bonuses
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Moonkin T10 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats(),
+                SetName = "Moonkin T10",
+                SetThreshold = 2
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { BonusArcaneDamageMultiplier = 0.15f, BonusNatureDamageMultiplier = 0.15f }, 6.0f, 0f, 0.06f, 1));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Moonkin T10 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MoonkinT10CritDot = 0.05f },
+                SetName = "Moonkin T10",
+                SetThreshold = 4
+            });
+            #endregion
             #region Tree Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {

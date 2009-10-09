@@ -301,6 +301,7 @@ namespace Rawr {
         EclipseBonus,
         MoonfireDotCrit,
         BonusMoonkinNukeDamage,
+        MoonkinT10CritDot,
         #endregion
         #region Added by Rawr.DPSWarr
         BonusTargets,
@@ -3543,6 +3544,16 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusMoonkinNukeDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusMoonkinNukeDamage] = value; }
+        }
+        // Moonkin 4-piece T10 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Crit Damage As Dot")]
+        [Percentage]
+        [Category("Moonkin")]
+        public float MoonkinT10CritDot
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MoonkinT10CritDot]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MoonkinT10CritDot] = value; }
         }
         #endregion
         #endregion
