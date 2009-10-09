@@ -595,6 +595,7 @@ focus on Survival Points.",
             float intervalShoR = 6.0f;
             float intervalHotR = 6.0f;
             float intervalHolyShield = 9.0f;
+            float intervalDivinePlea = 60.0f;
 
             Stats effectsToAdd = new Stats();
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
@@ -649,6 +650,9 @@ focus on Survival Points.",
                             break;
                         case Trigger.HolyShield:
                             statsSpecialEffects += effect.GetAverageStats(intervalHolyShield);
+                            break;
+                        case Trigger.DivinePlea:
+                            statsSpecialEffects += effect.GetAverageStats(intervalDivinePlea);
                             break;
                         case Trigger.SpellCast:
                             statsSpecialEffects += effect.GetAverageStats(intervalSpellCast);

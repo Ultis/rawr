@@ -3579,6 +3579,62 @@ namespace Rawr
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.ShieldofRighteousness, new Stats() { ShieldOfRighteousnessBlockValue = 225f }, 6.0f, 0.0f, 1.0f));
 
+            //Protection T9
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Turalyon's Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusHammerOfTheRighteousMultiplier = .05f,
+                    // HandOfReckoningCooldownReduction = 2f // Hand of Reckoning is currently unmodeled.
+                },
+                SetName = "Turalyon's Plate",
+                SetThreshold = 2
+            });
+
+            /* Divine Protection and Forbearance are currently unmodeled.
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Turalyon's Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    DivineProtectionCooldownReduction = 30f,
+                    ForbearanceDurationReduction = 30f,
+                },
+                SetName = "Turalyon's Plate",
+                SetThreshold = 2
+            });
+            */
+
+            //Protection T10
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Paladin Tank T10 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusHammerOfTheRighteousMultiplier = .2f
+                },
+                SetName = "Paladin Tank T10",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Paladin Tank T10 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats(),
+                SetName = "Paladin Tank T10",
+                SetThreshold = 4
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivinePlea, new Stats() { Dodge = .12f }, 10.0f, 0.0f, 1.0f));
+
             //Retribution T8
             defaultBuffs.Add(new Buff()
             {

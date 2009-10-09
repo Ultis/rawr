@@ -32,6 +32,7 @@ namespace Rawr
         HolyShield,
         HammeroftheRighteous,
         ShieldofRighteousness,
+        DivinePlea,
         CrusaderStrikeHit,
         InsectSwarmTick,
         MoonfireCast,
