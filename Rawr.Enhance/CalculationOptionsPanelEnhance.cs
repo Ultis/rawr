@@ -12,6 +12,7 @@ namespace Rawr.Enhance
     {
         /// <summary>This Model's local bosslist</summary>
         private BossList bosslist = null;
+        CalculationOptionsEnhance _calcOpts;
         
         public CalculationOptionsPanelEnhance()
         {
@@ -26,18 +27,18 @@ namespace Rawr.Enhance
             if (Character.CalculationOptions == null)
                 Character.CalculationOptions = new CalculationOptionsEnhance();
 
-            CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-            CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
-            CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
-            comboBoxBoss.Text = calcOpts.BossName;
-            CK_InBack.Checked = calcOpts.InBack;
-            CB_InBackPerc.Value = calcOpts.InBackPerc;
-            trackBarAverageLag.Value = calcOpts.AverageLag;
-            cmbLength.Value = (decimal) calcOpts.FightLength;
-            comboBoxMainhandImbue.SelectedItem = calcOpts.MainhandImbue;
-            comboBoxOffhandImbue.SelectedItem = calcOpts.OffhandImbue;
-            chbMagmaSearing.Checked = calcOpts.Magma;
-            chbBaseStatOption.Checked = calcOpts.BaseStatOption;
+            _calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+            CB_TargLvl.Text = _calcOpts.TargetLevel.ToString();
+            CB_TargArmor.Text = _calcOpts.TargetArmor.ToString();
+            comboBoxBoss.Text = _calcOpts.BossName;
+            CK_InBack.Checked = _calcOpts.InBack;
+            CB_InBackPerc.Value = _calcOpts.InBackPerc;
+            trackBarAverageLag.Value = _calcOpts.AverageLag;
+            cmbLength.Value = (decimal) _calcOpts.FightLength;
+            comboBoxMainhandImbue.SelectedItem = _calcOpts.MainhandImbue;
+            comboBoxOffhandImbue.SelectedItem = _calcOpts.OffhandImbue;
+            chbMagmaSearing.Checked = _calcOpts.Magma;
+            chbBaseStatOption.Checked = _calcOpts.BaseStatOption;
 
       //      labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
             labelAverageLag.Text = trackBarAverageLag.Value.ToString();
@@ -60,14 +61,13 @@ namespace Rawr.Enhance
             {
                 labelAverageLag.Text = trackBarAverageLag.Value.ToString();
 
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.SetBoss(bosslist.GetBossFromBetterName(comboBoxBoss.Text));
-                calcOpts.FightLength = (float)cmbLength.Value;
-                calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
-                calcOpts.OffhandImbue = (string)comboBoxOffhandImbue.SelectedItem;
+                _calcOpts.SetBoss(bosslist.GetBossFromBetterName(comboBoxBoss.Text));
+                _calcOpts.FightLength = (float)cmbLength.Value;
+                _calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
+                _calcOpts.OffhandImbue = (string)comboBoxOffhandImbue.SelectedItem;
 
-                calcOpts.BaseStatOption = chbBaseStatOption.Checked;
-                calcOpts.Magma = chbMagmaSearing.Checked;
+                _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
+                _calcOpts.Magma = chbMagmaSearing.Checked;
 
                 Character.OnCalculationsInvalidated();
             }
@@ -82,8 +82,7 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.BaseStatOption = chbBaseStatOption.Checked;
+                _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -92,8 +91,7 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.Magma = chbMagmaSearing.Checked;
+                _calcOpts.Magma = chbMagmaSearing.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -102,7 +100,7 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
-                Enhance.EnhSim simExport = new Enhance.EnhSim(Character);
+                Enhance.EnhSim simExport = new Enhance.EnhSim(Character, _calcOpts);
                 simExport.copyToClipboard();
             }
         }
@@ -111,8 +109,7 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.FightLength = (float)cmbLength.Value;
+                _calcOpts.FightLength = (float)cmbLength.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -121,9 +118,8 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
                 labelAverageLag.Text = trackBarAverageLag.Value.ToString();
-                calcOpts.AverageLag = trackBarAverageLag.Value;
+                _calcOpts.AverageLag = trackBarAverageLag.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -133,23 +129,22 @@ namespace Rawr.Enhance
             if (!_loadingCalculationOptions)
             {
                 _loadingCalculationOptions = true;
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
                 CalculationsEnhance calcs = new CalculationsEnhance();
                 BossHandler boss = bosslist.GetBossFromBetterName(comboBoxBoss.Text);
-                calcOpts.SetBoss(boss);
-                CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
-                CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
-                cmbLength.Value = (int)calcOpts.FightLength;
-                CK_InBack.Checked = calcOpts.InBack;
-                CB_InBackPerc.Value = calcOpts.InBackPerc;
+                _calcOpts.SetBoss(boss);
+                CB_TargLvl.Text = _calcOpts.TargetLevel.ToString();
+                CB_TargArmor.Text = _calcOpts.TargetArmor.ToString();
+                cmbLength.Value = (int)_calcOpts.FightLength;
+                CK_InBack.Checked = _calcOpts.InBack;
+                CB_InBackPerc.Value = _calcOpts.InBackPerc;
 
                 Stats stats = calcs.GetCharacterStats(Character, null);
                 TB_BossInfo.Text = boss.GenInfoString(
                     0, // The Boss' Damage bonuses against you (meaning YOU are debuffed)
-                    StatConversion.GetArmorDamageReduction(calcOpts.TargetLevel, stats.Armor, 0, 0, 0), // Your Armor's resulting Damage Reduction
-                    StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Miss, calcOpts.TargetLevel), // Your chance for Boss to Miss you
-                    StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Dodge, calcOpts.TargetLevel), // Your chance Dodge
-                    StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Parry, calcOpts.TargetLevel), // Your chance Parry
+                    StatConversion.GetArmorDamageReduction(_calcOpts.TargetLevel, stats.Armor, 0, 0, 0), // Your Armor's resulting Damage Reduction
+                    StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Miss, _calcOpts.TargetLevel), // Your chance for Boss to Miss you
+                    StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Dodge, _calcOpts.TargetLevel), // Your chance Dodge
+                    StatConversion.GetDRAvoidanceChance(Character, stats, HitResult.Parry, _calcOpts.TargetLevel), // Your chance Parry
                     0,  // Your Chance to Block
                     0); // How much you Block when you Block
                 // Save the new names
@@ -161,8 +156,7 @@ namespace Rawr.Enhance
 
         private void comboBoxMainhandImbue_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-            calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
+            _calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
             Character.OnCalculationsInvalidated();
         }
 
@@ -170,9 +164,8 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.InBack = CK_InBack.Checked;
-                CB_InBackPerc.Enabled = calcOpts.InBack;
+                _calcOpts.InBack = CK_InBack.Checked;
+                CB_InBackPerc.Enabled = _calcOpts.InBack;
                 comboBoxBoss.Text = "Custom";
                 Character.OnCalculationsInvalidated();
             }
@@ -182,8 +175,7 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
+                _calcOpts.InBackPerc = (int)CB_InBackPerc.Value;
                 comboBoxBoss.Text = "Custom";
                 Character.OnCalculationsInvalidated();
             }

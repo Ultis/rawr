@@ -72,11 +72,11 @@ namespace Rawr.Enhance
 
         private List<Ability> abilities = new List<Ability>();
 
-        public CombatStats(Character character, Stats stats)
+        public CombatStats(Character character, Stats stats, CalculationOptionsEnhance calcOpts)
         {
             _stats = stats;
             _character = character;
-            _calcOpts = _character.CalculationOptions as CalculationOptionsEnhance;
+            _calcOpts = calcOpts;
             _talents = _character.ShamanTalents;
             UpdateCalcs();
             SetupAbilities();

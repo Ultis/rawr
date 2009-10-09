@@ -209,7 +209,7 @@ namespace Rawr.Enhance
             float initialAP = stats.AttackPower;
             
             // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
-            StatsSpecialEffects se = new StatsSpecialEffects(character, stats);
+            StatsSpecialEffects se = new StatsSpecialEffects(character, stats, calcOpts);
             Stats specialEffects = se.getSpecialEffects();
             stats += specialEffects;
             //Set up some talent variables
@@ -257,7 +257,7 @@ namespace Rawr.Enhance
             // Main calculation Block //
             ////////////////////////////
 
-            CombatStats cs = new CombatStats(character, stats); // calculate the combat stats using modified stats
+            CombatStats cs = new CombatStats(character, stats, calcOpts); // calculate the combat stats using modified stats
             // only apply unleashed rage talent if not already applied Unleashed Rage buff.
             float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f : 
                                                     (stats.AttackPower * unleashedRage * cs.URUptime);
@@ -500,8 +500,7 @@ namespace Rawr.Enhance
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs; // +statsEnchants;
 
-			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            int AK = character.ShamanTalents.AncestralKnowledge;
+			int AK = character.ShamanTalents.AncestralKnowledge;
             float agiBase = (float)Math.Floor((float)(statsBase.Agility));
             float agiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Agility));
 			float strBase = (float)Math.Floor((float)(statsBase.Strength));

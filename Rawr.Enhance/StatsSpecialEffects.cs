@@ -10,11 +10,11 @@ namespace Rawr.Enhance
         private Stats _stats;
         private CombatStats _cs;
 
-        public StatsSpecialEffects(Character character, Stats stats)
+        public StatsSpecialEffects(Character character, Stats stats, CalculationOptionsEnhance calcOpts)
         {
             _character = character;
             _stats = stats;
-            _cs = new CombatStats(_character, _stats);
+            _cs = new CombatStats(_character, _stats, calcOpts);
         }
 
         public Stats getSpecialEffects()

@@ -16,16 +16,15 @@ namespace Rawr.Enhance
         private String _trinket1name = String.Empty;
         private String _trinket2name = String.Empty;
         private String _totemname = String.Empty;
-      
-        public EnhSim(Character character)
+
+        public EnhSim(Character character, CalculationOptionsEnhance calcOpts)
         {
             CalculationsEnhance ce = new CalculationsEnhance();
-            CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.EnhSimStats;
             if(isMasterOfAnatomy(character))
                 stats.CritRating += 32;
-            CombatStats cs = new CombatStats(character, stats);
+            CombatStats cs = new CombatStats(character, stats, calcOpts);
             
             getSpecialsNames(character, stats);
 
