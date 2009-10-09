@@ -69,7 +69,12 @@ namespace Rawr.Mage
         public bool MaxUseAssumption
         {
             get { return _MaxUseAssumption; }
-            set { _MaxUseAssumption = value; OnPropertyChanged("MaxUseAssumption"); }
+            set 
+            { 
+                _MaxUseAssumption = value;
+                UpdateCooldownStackingCache();
+                OnPropertyChanged("MaxUseAssumption"); 
+            }
         }
 
         private int _TargetLevel;
@@ -168,6 +173,7 @@ namespace Rawr.Mage
             }
         }
 
+        private static Dictionary<float, List<CooldownStackingCacheEntry>> cooldownStackingCacheMapNoMaxUseAssumption = new Dictionary<float, List<CooldownStackingCacheEntry>>();
         private static Dictionary<float, List<CooldownStackingCacheEntry>> cooldownStackingCacheMap = new Dictionary<float, List<CooldownStackingCacheEntry>>();
 
         [XmlIgnore]
@@ -175,14 +181,15 @@ namespace Rawr.Mage
 
         private void UpdateCooldownStackingCache()
         {
-            lock(cooldownStackingCacheMap)
+            var map = MaxUseAssumption ? cooldownStackingCacheMap : cooldownStackingCacheMapNoMaxUseAssumption;
+            lock(map)
             {
                 List<CooldownStackingCacheEntry> cache;
-                cooldownStackingCacheMap.TryGetValue(_FightDuration, out cache);
+                map.TryGetValue(_FightDuration, out cache);
                 if (cache == null)
                 {
                     cache = new List<CooldownStackingCacheEntry>();
-                    cooldownStackingCacheMap[_FightDuration] = cache;
+                    map[_FightDuration] = cache;
                 }
                 CooldownStackingCache = cache;
             }
