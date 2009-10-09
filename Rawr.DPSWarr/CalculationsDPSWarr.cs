@@ -1265,8 +1265,10 @@ These numbers to do not include racial bonuses.",
                     ex.Message, "GetCharacterCalculations()", "No Additional Info", ex.StackTrace, line);
             }
             sw.Stop();
+#if (!RAWR3 && DEBUG)
             long elapsedTime = sw.Elapsed.Ticks;
             calculatedStats.calculationTime = elapsedTime;
+#endif
             return calculatedStats;
         }
 
