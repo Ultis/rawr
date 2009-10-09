@@ -164,6 +164,9 @@ namespace Rawr {
 		BonusRipCrit,
         BonusObliterateDamage,
         BonusScourgeStrikeDamage,
+        BonusHeartStrikeMultiplier,
+        BonusScourgeStrikeMultiplier,
+        BonusObliterateMultiplier,
         BonusInsectSwarmDamage,
         BonusNukeCritChance,
         BonusHoTOnDirectHeals,
@@ -1583,6 +1586,33 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DiseasesCanCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.DiseasesCanCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        public float BonusHeartStrikeMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHeartStrikeMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHeartStrikeMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        public float BonusScourgeStrikeMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Death Knight")]
+        public float BonusObliterateMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusObliterateMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusObliterateMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

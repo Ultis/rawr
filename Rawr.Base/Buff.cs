@@ -3752,6 +3752,36 @@ namespace Rawr
                 SetThreshold = 4
             });
 
+            // DK DPS T10
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "DK DPS 2T10",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusHeartStrikeMultiplier = .07f,
+                    BonusScourgeStrikeMultiplier = .1f,
+                    BonusObliterateMultiplier = .1f
+                },
+                SetName = "DK DPS T10",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "DK DPS 4T10",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusPhysicalDamageMultiplier = .03f,
+                    BonusSpellPowerMultiplier = .03f
+                },
+                SetName = "DK DPS T10",
+                SetThreshold = 4
+            });
+
             // DK Tank T7
             defaultBuffs.Add(new Buff()
             {

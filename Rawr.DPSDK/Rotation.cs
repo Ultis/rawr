@@ -81,7 +81,7 @@ namespace Rawr.DPSDK
                 ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * (DeathStrike)) +
                 ((10 + 2.5f * talents.Dirge) * (PlagueStrike)) +
                 (10 * (BloodStrike + HeartStrike + Pestilence + GhoulFrenzy)) +
-                ((10 + (GlyphofIT ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * (IcyTouch)) +
+                ((10 + (GlyphofIT && !PTRCalcs ? 10 : 0) + 2.5f * talents.ChillOfTheGrave) * (IcyTouch)) +
                 ((15 + 2.5f * talents.ChillOfTheGrave) * HowlingBlast) +
                 (10 * Horn) +
                 ((curRotationDuration / 5f)*talents.Butchery);
