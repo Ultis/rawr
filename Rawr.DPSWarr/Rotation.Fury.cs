@@ -178,6 +178,13 @@ namespace Rawr.DPSWarr
                     + _BS_GCDs * BS.MHAtkTable.Dodge * BS.AvgTargets;
             }
         }
+        public override float CritHsSlamOverDur {
+            get {
+                float f = HS.Activates * HS.MHAtkTable.Crit;
+                return base.CritHsSlamOverDur
+                    + _BS_GCDs * BS.MHAtkTable.Crit;
+            }
+        }
         #endregion
         protected override float RageNeededOverDur
         {

@@ -413,7 +413,7 @@ namespace Rawr.DPSWarr {
                 return result;
             }
         }
-        public float CritHsSlamOverDur {
+        public virtual float CritHsSlamOverDur {
             get {
                 float critsPerRot = 0;
                 if (CalcOpts.FuryStance) {

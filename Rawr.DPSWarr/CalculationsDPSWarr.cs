@@ -255,6 +255,8 @@ These numbers to do not include racial bonuses.",
                         "Rage Details:Total Generated Rage",
                         "Rage Details:Needed Rage for Abilities",
                         "Rage Details:Available Free Rage*For Heroic Strikes and Cleaves",
+                        
+                        "Debug:Calculation Time"
                     };
                 }
                 return _characterDisplayCalculationLabels;
@@ -1173,20 +1175,21 @@ These numbers to do not include racial bonuses.",
                         "This is a forced one, just making sure the frackin thing works", ex.StackTrace, 0);
                 }
             #endif
+            System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
             int line = 0;
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
             try {
                 CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr; line++;
-                Stats stats = GetCharacterStats(character, additionalItem); line++;
+                Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts); line++;
                 WarriorTalents talents = character.WarriorTalents; line++;
-
+                
                 CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts); line++;
                 Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors, calcOpts); line++;
                 Rotation Rot; line++;
                 if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
                 else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts); line++;
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race); line++;
-
+                
                 calculatedStats.Duration = calcOpts.Duration; line++;
                 calculatedStats.AverageStats = stats; line++;
                 calculatedStats.combatFactors = combatFactors; line++;
@@ -1224,8 +1227,8 @@ These numbers to do not include racial bonuses.",
                 calculatedStats.HastePercent = stats.PhysicalHaste; //talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
                 line++;
                 // DPS
-
                 Rot.Initialize(calculatedStats);
+                
                 line++;
                 // Neutral
                 // Defensive
@@ -1248,9 +1251,9 @@ These numbers to do not include racial bonuses.",
                 line++;
                 calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; line++;
 
-                //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed);
-                //calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed);
-                calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum);
+                //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts);
+                //calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts);
+                calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts);
 
                 calculatedStats.MaxArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
                     + calculatedStats.ArmorPenetrationStance
@@ -1261,19 +1264,23 @@ These numbers to do not include racial bonuses.",
                 new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations",
                     ex.Message, "GetCharacterCalculations()", "No Additional Info", ex.StackTrace, line);
             }
+            sw.Stop();
+            long elapsedTime = sw.Elapsed.Ticks;
+            calculatedStats.calculationTime = elapsedTime;
             return calculatedStats;
         }
 
         private enum StatType { Unbuffed, Buffed, Average, Maximum };
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
-            return GetCharacterStats(character, additionalItem, StatType.Average);
+            return GetCharacterStats(character, additionalItem, StatType.Average, null);
         }
 
-        private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType) {
+        private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts) {
             try {
                 cacheChar = character;
-                CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
+                if (calcOpts == null) 
+                    calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
                 WarriorTalents talents = character.WarriorTalents;
 
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Warrior, character.Race);
@@ -1524,15 +1531,13 @@ These numbers to do not include racial bonuses.",
                     Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
                     if (ohEffects.MoveNext()) { bersOffHand = ohEffects.Current; }
                 }
-
                 if (statType == StatType.Average) DoSpecialEffects(character, Rot, combatFactors, calcOpts, bersMainHand, bersOffHand, statsTotal);
                 else // statType == StatType.Maximum
-                {
+                { 
                     Stats maxSpecEffects = new Stats();
                     foreach (SpecialEffect effect in statsTotal.SpecialEffects()) maxSpecEffects.Accumulate(effect.Stats);
                     return UpdateStatsAndAdd(maxSpecEffects, combatFactors.StatS, character);
                 }
-
                 //UpdateStatsAndAdd(statsProcs, statsTotal, character); // Already done in GetSpecialEffectStats
 
                 // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
@@ -1550,7 +1555,7 @@ These numbers to do not include racial bonuses.",
                 float apBonusOtherProcs = (1f + totalBAPM) * (bersStats.AttackPower);
                 bersStats.AttackPower = (apBonusOtherProcs);
                 combatFactors.StatS.Accumulate(bersStats);
-
+ 
                 return combatFactors.StatS;
             } catch (Exception ex) {
                 new ErrorBoxDPSWarr("Error in creating Character Stats",
@@ -1566,6 +1571,7 @@ These numbers to do not include racial bonuses.",
             List<SpecialEffect> firstPass = new List<SpecialEffect>();
             List<SpecialEffect> secondPass = new List<SpecialEffect>();
             foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
+                effect.Stats.GenerateSparseData();
                 if (effect != bersMainHand && effect != bersOffHand &&
                    (effect.Stats.Agility > 0f ||
                     effect.Stats.HasteRating > 0f ||
@@ -1645,6 +1651,7 @@ These numbers to do not include racial bonuses.",
                         temp.PhysicalHaste > precisionDec ||
                         temp.PhysicalCrit > precisionDec ||
                         temp.PhysicalHit > precisionDec) {
+                        Rot.MakeRotationandDoDPS(false);
                         return IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts,
                             specialEffects, true, statsProcs, originalStats);
                     }
