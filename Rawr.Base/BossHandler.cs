@@ -127,8 +127,19 @@ namespace Rawr {
                 // Vault of Archavon
                 new EmalonTheStormWatcher_10(),
                 // Ulduar
+                new IgnistheFurnaceMaster_10(),
+                new Razorscale_10(),
+                new XT002Deconstructor_10(),
+                new AssemblyofIron_10(),
+                new Kologarn_10(),
                 new Auriaya_10(),
+                new Mimiron_10(),
+                new Freya_10(),
+                new Thorim_10(),
                 new Hodir_10(),
+                new GeneralVezax_10(),
+                new YoggSaron_10(),
+                new AlgalontheObserver_10(),
                 // ==== Tier 8.5 Content ====
                 // Vault of Archavon
                 new EmalonTheStormWatcher_25(),
@@ -534,6 +545,22 @@ namespace Rawr {
         }
 
         #region Variables
+        public enum TierLevels : int {
+            T7_0 = 0,
+            T7_5,
+            T8_0,
+            T8_5,
+            T9_0,
+            T9_5,
+        }
+        public readonly float[] StandardMeleePerHit = new float[] {
+              5000f*2f, //T7_0,
+             10000f*2f, //T7_5,
+             20000f*2f, //T8_0,
+             30000f*2f, //T8_5,
+             40000f*2f, //T9_0,
+             50000f*2f, //T9_5,
+        };
         // Basics
         private string NAME,CONTENT,INSTANCE,VERSION,COMMENT;
         private float HEALTH,ARMOR;
