@@ -22,36 +22,37 @@ namespace Rawr.Enhance
             _character = character;
             _stats = stats;
             _talents = talents;
-            _abilities = new List<Ability>();
             fightLength = _calcOpts.FightLength * 60f;
             averageFightLength = fightLength;
-            SetupAbilities(_abilities);
+            _abilities = SetupAbilities();
         }
 
-        private void SetupAbilities(List<Ability> abilities)
+        private List<Ability> SetupAbilities()
         {
             int priority = 0;
+            List<Ability> abilities = new List<Ability>();
             float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
             if (_talents.FeralSpirit == 1)
-                abilities.Add(new Ability("Feral Spirits", 180f, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, gcd, ++priority));
             if (_talents.MaelstromWeapon > 0)
-                abilities.Add(new Ability("Lightning Bolt", _cs.SecondsToFiveStack, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.LightningBolt, _cs.SecondsToFiveStack, gcd, ++priority));
             if (_talents.Stormstrike == 1)
-                abilities.Add(new Ability("Stormstrike", 8f, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, gcd, ++priority));
             if (_character.ShamanTalents.GlyphofShocking)
-                abilities.Add(new Ability("Earth Shock", _cs.BaseShockSpeed, 1.0f, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, ++priority));
             else
-                abilities.Add(new Ability("Earth Shock", _cs.BaseShockSpeed, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, ++priority));
             if (_talents.LavaLash == 1)
-                abilities.Add(new Ability("Lava Lash", 6f, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, gcd, ++priority));
             if (_talents.StaticShock > 0)
-                abilities.Add(new Ability("Lightning Shield", _cs.StaticShockAvDuration, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.LightningShield, _cs.StaticShockAvDuration, gcd, ++priority));
             if (_calcOpts.Magma)
-                abilities.Add(new Ability("Magma Totem", 20f, 1.0f, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.MagmaTotem, 20f, 1.0f, ++priority));
             else
-                abilities.Add(new Ability("Searing Totem", 60f, 1.0f, ++priority));
-            abilities.Add(new Ability("Refresh Totems", 300f, 1.0f, ++priority)); // patch 3.2 takes just 1 second GCD to refresh totems.
+                abilities.Add(new Ability(EnhanceAbility.SearingTotem, 60f, 1.0f, ++priority));
+            abilities.Add(new Ability(EnhanceAbility.RefreshTotems, 300f, 1.0f, ++priority)); // patch 3.2 takes just 1 second GCD to refresh totems.
             abilities.Sort();
+            return abilities;
         }
 
         public void CalculateAbilities()
@@ -63,11 +64,12 @@ namespace Rawr.Enhance
             int totalIterations = 10;
             List<Ability> tempAbilities = new List<Ability>();
         
-//            for (int iteration = 1; iteration <= totalIterations; iteration++)
+ //           for (int iteration = 1; iteration <= totalIterations; iteration++)
             {
                 float deltaDuration = 1f; // 0.995f + .01f * (float)random.NextDouble();  // varies fight duration +/- 0.5%
                 float currentFightDuration = fightLength * deltaDuration;
                 totalFightDuration += currentFightDuration;
+ //               tempAbilities = SetupAbilities();
                 for (float timeElapsed = 0f; timeElapsed < currentFightDuration; timeElapsed += gcd)
                 {
                     gcd = 0.1f; // set GCD to small value step for dead time as dead time doesn't use a GCD its just waiting time
@@ -112,11 +114,11 @@ namespace Rawr.Enhance
                    abilities[6].Uses, abilities[6].CooldownOver, name);
         }
 
-        public float AbilityCooldown(string name)
+        public float AbilityCooldown(EnhanceAbility abilityType)
         {
             foreach (Ability ability in _abilities)
             {
-                if (ability.Name.Equals(name))
+                if (ability.AbilityType == abilityType)
                     return ability.Uses == 0 ? ability.Duration : averageFightLength / ability.Uses;
             }
             return averageFightLength;
@@ -128,6 +130,7 @@ namespace Rawr.Enhance
     #region Ability class
     public class Ability : IComparable<Ability>
     {
+        private EnhanceAbility _abilityType;
         private string _name;
         private float _duration;
         private int _priority;
@@ -135,9 +138,10 @@ namespace Rawr.Enhance
         private float _uses;
         private float _gcd = 1.5f;
 
-        public Ability(string name, float duration, float gcd, int priority)
+        public Ability(EnhanceAbility abilityType, float duration, float gcd, int priority)
         {
-            _name = name;
+            _abilityType = abilityType;
+            _name = abilityType.ToString();
             _duration = duration;
             _priority = priority;
             _gcd = gcd;
@@ -145,6 +149,7 @@ namespace Rawr.Enhance
             _uses = 0;
         }
 
+        public EnhanceAbility AbilityType { get { return _abilityType; } }
         public string Name { get { return _name; } }
         public float Duration { get { return _duration; } }
         public float GCD { get { return _gcd; } }
@@ -179,4 +184,18 @@ namespace Rawr.Enhance
 
     }
     #endregion
+
+    public enum EnhanceAbility
+    {
+        FeralSpirits = 1,
+        LightningBolt = 2,
+        StormStrike = 3,
+        EarthShock = 4,
+        FlameShock = 5,
+        LavaLash = 6,
+        LightningShield = 7,
+        MagmaTotem = 8,
+        SearingTotem = 9,
+        RefreshTotems = 10,
+    }
 }

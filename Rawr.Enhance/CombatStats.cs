@@ -143,7 +143,7 @@ namespace Rawr.Enhance
         public float EDUptime { get { return edUptime; } }
         public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
-        public float AbilityCooldown(string name) { return _rotation.AbilityCooldown(name); }
+        public float AbilityCooldown(EnhanceAbility abilityType) { return _rotation.AbilityCooldown(abilityType); }
 
         public float DisplayMeleeCrit { get { return chanceCrit; } }
         public float DisplayYellowCrit { get { return AverageYellowCrit + yellowCritDepression; } }
@@ -242,9 +242,9 @@ namespace Rawr.Enhance
             flurryUptime = 1f;
             edUptime = 0f;
             urUptime = 0f;
-            float stormstrikeSpeed = firstPass ? (_talents.Stormstrike == 1 ? 8f : 0f) : AbilityCooldown("Stormstrike");
-            float shockSpeed = firstPass ? BaseShockSpeed : AbilityCooldown("Earth Shock");
-            float lavaLashSpeed = firstPass ? (_talents.LavaLash == 1 ? 6f : 0f) : AbilityCooldown("Lava Lash");
+            float stormstrikeSpeed = firstPass ? (_talents.Stormstrike == 1 ? 8f : 0f) : AbilityCooldown(EnhanceAbility.StormStrike);
+            float shockSpeed = firstPass ? BaseShockSpeed : AbilityCooldown(EnhanceAbility.EarthShock);
+            float lavaLashSpeed = firstPass ? (_talents.LavaLash == 1 ? 6f : 0f) : AbilityCooldown(EnhanceAbility.LavaLash);
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.BonusMWFreq);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
             float edCritBonus = .03f * _talents.ElementalDevastation;

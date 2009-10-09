@@ -82,19 +82,19 @@ namespace Rawr.Enhance
                         chance = 1 - _cs.ChanceSpellHit;
                         break;
                     case Trigger.ShamanLightningBolt :
-                        trigger = 1f / _cs.AbilityCooldown("Lightning Bolt");
+                        trigger = 1f / _cs.AbilityCooldown(EnhanceAbility.LightningBolt);
                         chance = _cs.ChanceSpellHit;
                         break;
                     case Trigger.ShamanStormStrike :
-                        trigger = 1f / _cs.AbilityCooldown("Stormstrike");
+                        trigger = 1f / _cs.AbilityCooldown(EnhanceAbility.StormStrike);
                         chance = _cs.ChanceYellowHitMH;
                         break;
                     case Trigger.ShamanShock :
-                        trigger = 1f / _cs.AbilityCooldown("Earth Shock");
+                        trigger = 1f / _cs.AbilityCooldown(EnhanceAbility.EarthShock);
                         chance = _cs.ChanceSpellHit;
                         break;
                     case Trigger.ShamanLavaLash :
-                        trigger = 1f / _cs.AbilityCooldown("Lava Lash");
+                        trigger = 1f / _cs.AbilityCooldown(EnhanceAbility.LavaLash);
                         chance = _cs.ChanceYellowHitOH;
                         break;
                 }

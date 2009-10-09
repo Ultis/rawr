@@ -346,7 +346,7 @@ namespace Rawr.Enhance
             float damageESBase = 872f;
             float coefES = .3858f;
             float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellPower);
-            float shockdps = damageES / cs.AbilityCooldown("Earth Shock");
+            float shockdps = damageES / cs.AbilityCooldown(EnhanceAbility.EarthShock);
             float shockNormal = shockdps * cs.SpellHitModifier;
             float shockCrit = shockdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
             float dpsES = (shockNormal + shockCrit) * bonusNatureDamage * bossNatureResistance * shockBonus;
@@ -356,7 +356,7 @@ namespace Rawr.Enhance
             float coefLB = .7143f;
             // LightningSpellPower is for totem of hex/the void/ancestral guidance
             float damageLB = stormstrikeMultiplier * concussionMultiplier * (damageLBBase + coefLB * (spellPower + stats.LightningSpellPower));
-            float lbdps = damageLB / cs.AbilityCooldown("Lightning Bolt");
+            float lbdps = damageLB / cs.AbilityCooldown(EnhanceAbility.LightningBolt);
             float lbNormal = lbdps * cs.LBHitModifier;
             float lbCrit = lbdps * cs.LBCritModifier * cs.CritMultiplierSpell;
             float dpsLB = (lbNormal + lbCrit) * bonusNatureDamage * bossNatureResistance;
