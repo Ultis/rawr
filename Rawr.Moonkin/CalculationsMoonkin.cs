@@ -636,7 +636,8 @@ namespace Rawr.Moonkin
                             float manaGain = 0.0f;
                             foreach (KeyValuePair<string, RotationData> pairs in calcsTalented.Rotations)
                             {
-                                if (pairs.Key == maxRot.Name)
+                                if (pairs.Key == maxRot.Name.Replace("Filler", "SF") ||
+                                    pairs.Key == maxRot.Name.Replace("Filler", "W"))
                                 {
                                     mp5 = (pairs.Value.ManaUsed - maxRot.ManaUsed) / maxRot.Duration * 5.0f;
                                     manaGain = (maxRot.ManaGained - pairs.Value.ManaGained) / maxRot.Duration * 5.0f;
@@ -672,7 +673,7 @@ namespace Rawr.Moonkin
                     c2.DruidTalents.MoonkinForm = 1;
                     foreach (KeyValuePair<string, RotationData> pairs in calcsManaMoonkin.Rotations)
                     {
-                        if (pairs.Key == manaGainsRot.Name)
+                        if (pairs.Key == manaGainsRot.Name.Replace("Filler", "SF"))
                         {
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
@@ -700,7 +701,7 @@ namespace Rawr.Moonkin
                     }
                     foreach (KeyValuePair<string, RotationData> pairs in calcsManaJoW.Rotations)
                     {
-                        if (pairs.Key == manaGainsRot.Name)
+                        if (pairs.Key == manaGainsRot.Name.Replace("Filler", "SF"))
                         {
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
@@ -720,7 +721,7 @@ namespace Rawr.Moonkin
                     calcOpts.ReplenishmentUptime = oldReplenishmentUptime;
                     foreach (KeyValuePair<string, RotationData> pairs in calcsManaReplenishment.Rotations)
                     {
-                        if (pairs.Key == manaGainsRot.Name)
+                        if (pairs.Key == manaGainsRot.Name.Replace("Filler", "SF"))
                         {
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
@@ -739,7 +740,7 @@ namespace Rawr.Moonkin
                     calcOpts.Innervate = innervate;
                     foreach (KeyValuePair<string, RotationData> pairs in calcsManaInnervate.Rotations)
                     {
-                        if (pairs.Key == manaGainsRot.Name)
+                        if (pairs.Key == manaGainsRot.Name.Replace("Filler", "SF"))
                         {
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
@@ -767,7 +768,7 @@ namespace Rawr.Moonkin
                     }
                     foreach (KeyValuePair<string, RotationData> pairs in calcsManaManaSpring.Rotations)
                     {
-                        if (pairs.Key == manaGainsRot.Name)
+                        if (pairs.Key == manaGainsRot.Name.Replace("Filler", "SF"))
                         {
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
