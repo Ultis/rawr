@@ -87,7 +87,7 @@ namespace Rawr.Rogue.ClassAbilities
             //public static readonly Talents Dodge = new TalentBonusPulledFromList(() => _talents.LightningReflexes, 0.02f, 0.04f, 0.06f);
         //}
 
-        public static readonly Talents MaceSpecialization = new TalentBonusPulledFromList(() => _talents.MaceSpecialization, .03f, .06f, .9f, .12f, .15f);
+        public static readonly Talents MaceSpecialization = new TalentBonusPulledFromList(() => _talents.MaceSpecialization, .03f, .06f, .09f, .12f, .15f);
 		
         public class BladeFlurry
         {
