@@ -339,7 +339,55 @@ namespace Rawr.Mage
 
         private double MaximizeStackingDuration(double fightDuration, double effect1Duration, double effect1Cooldown, double effect2Duration, double effect2Cooldown)
         {
-            return MaximizeStackingDuration(fightDuration, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, 0, 0);
+            /*if (double.IsPositiveInfinity(effect1Cooldown) || double.IsPositiveInfinity(effect2Cooldown))
+            {
+                return MaximizeStackingDuration(fightDuration, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, 0, 0);
+            }
+            else*/
+            {
+                var cache = calculationOptions.CooldownStackingCache;
+                lock (cache)
+                {
+                    for (int i = 0; i < cache.Count; i++)
+                    {
+                        var entry = cache[i];
+                        if ((entry.Effect1Cooldown == effect1Cooldown && entry.Effect2Cooldown == effect2Cooldown && entry.Effect1Duration == effect1Duration && entry.Effect2Duration == effect2Duration) ||
+                            (entry.Effect1Cooldown == effect2Cooldown && entry.Effect2Cooldown == effect1Cooldown && entry.Effect1Duration == effect2Duration && entry.Effect2Duration == effect1Duration))
+                        {
+                            return entry.MaximumStackingDuration;
+                        }
+                    }
+                    double value;
+                    //System.Diagnostics.Stopwatch clock = new System.Diagnostics.Stopwatch();
+                    //clock.Reset();
+                    if (fightDuration <= 600 || double.IsPositiveInfinity(effect1Cooldown) || double.IsPositiveInfinity(effect2Cooldown))
+                    {
+                        //clock.Start();
+                        value = MaximizeStackingDuration(fightDuration, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, 0, 0);
+                        //clock.Stop();
+                        //System.Diagnostics.Trace.WriteLine("noncache = " + clock.ElapsedTicks);
+                        //clock.Reset();
+                    }
+                    else
+                    {
+                        //clock.Start();
+                        memoizationCache = new List<StackingMemoizationEntry>[(int)fightDuration + 1];
+                        value = MaximizeStackingDuration2((int)fightDuration, (int)effect1Duration, (int)effect1Cooldown, (int)effect2Duration, (int)effect2Cooldown, 0, 0, 0);
+                        memoizationCache = null;
+                        //clock.Stop();
+                        //System.Diagnostics.Trace.WriteLine("cache = " + clock.ElapsedTicks);
+                    }
+                    cache.Add(new CooldownStackingCacheEntry()
+                    {
+                        Effect1Duration = effect1Duration,
+                        Effect1Cooldown = effect1Cooldown,
+                        Effect2Duration = effect2Duration,
+                        Effect2Cooldown = effect2Cooldown,
+                        MaximumStackingDuration = value
+                    });
+                    return value;
+                }
+            }
         }
 
         private double MaximizeStackingDuration(double fightDuration, double effect1Duration, double effect1Cooldown, double effect2Duration, double effect2Cooldown, double effect2ActiveDuration, double effect2ActiveCooldown)
@@ -416,12 +464,16 @@ namespace Rawr.Mage
             // this can potentially still be optimized, I doubt we need to look at every option
             // but it seems in practice it works well enough so don't waste time unless profiling shows need
             // TODO ok it works well enough, but still costs a significant amount, time to improve this
-            // ok in practice it's never optimal to use offset higher than minimum
-            // this would indicate that it should always be optimal to push effect1 as far as possible
-            // can we prove this?
             if (!double.IsPositiveInfinity(effect2ActiveCooldown))
             {
-                for (int offset = Math.Max(0, (int)(effect2ActiveCooldown - slack)); offset <= Math.Min(effect1Duration, effect2ActiveCooldown); offset++)
+                int minOffset = Math.Max(0, (int)(effect2ActiveCooldown - slack));
+                int maxOffset = (int)Math.Min(effect1Duration, effect2ActiveCooldown);
+                int endAlignedOffset = (int)(effect1Duration - effect2Duration);
+                if (endAlignedOffset > minOffset)
+                {
+                    minOffset = Math.Min(endAlignedOffset, maxOffset);
+                }
+                for (int offset = minOffset; offset <= maxOffset; offset++)
                 {
                     // is there any stacking left from current effect2 activation?
                     double leftover = Math.Max(0, effect2ActiveDuration - (effect2ActiveCooldown - offset));
@@ -442,6 +494,144 @@ namespace Rawr.Mage
                     }
                 }
             }
+            return best;
+        }
+
+        private struct StackingMemoizationEntry
+        {
+            public int Order;
+            public int Effect2ActiveDuration;
+            public int Effect2ActiveCooldown;
+            public int MaximizeStackingDuration;
+        }
+
+        private List<StackingMemoizationEntry>[] memoizationCache;
+
+        private int MaximizeStackingDuration2(int fightDuration, int effect1Duration, int effect1Cooldown, int effect2Duration, int effect2Cooldown, int effect2ActiveDuration, int effect2ActiveCooldown, int order)
+        {
+            if (fightDuration <= 0) return 0;
+            effect2ActiveDuration = Math.Min(effect2ActiveDuration, fightDuration);
+
+            List<StackingMemoizationEntry> list = memoizationCache[fightDuration];
+            if (list == null)
+            {
+                list = new List<StackingMemoizationEntry>();
+                memoizationCache[fightDuration] = list;
+            }
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                StackingMemoizationEntry entry = list[i];
+                if (entry.Effect2ActiveCooldown == effect2ActiveCooldown && entry.Order == order && entry.Effect2ActiveDuration == effect2ActiveDuration)
+                {
+                    return entry.MaximizeStackingDuration;
+                }
+            }
+
+            int slack = 0;
+            int f = fightDuration;
+
+            if (f < effect1Duration)
+            {
+                slack = 0;
+            }
+            else
+            {
+                f -= effect1Duration;
+                int count = f / effect1Cooldown;
+                if (count > 0)
+                {
+                    f -= effect1Cooldown * count;
+                }
+                if (f - effect1Cooldown + effect1Duration > 0)
+                {
+                    slack = 0;
+                }
+                else
+                {
+                    slack = f;
+                }
+            }
+            if (!calculationOptions.MaxUseAssumption)
+            {
+                slack = effect2ActiveCooldown;
+            }
+
+
+            // ####........|
+            int best = 0;
+            int value = 0;
+            int min = 0;
+
+            if (effect2ActiveCooldown > effect1Duration)
+            {
+                // if optimal placement of effect1 is stacked with effect2 activation
+                // and it doesn't overlap two different activations
+                // or if optimal placement has effect1 activated and finished before effect2 gets off cooldown
+                // then we'll get as good or better stacking if we move effect1 all the way to the start
+                if (effect1Cooldown < effect2ActiveCooldown)
+                {
+                    // effect1 will be off cooldown first
+                    value = Math.Min(effect1Duration, effect2ActiveDuration) + MaximizeStackingDuration2(fightDuration - effect1Cooldown, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, Math.Max(0, effect2ActiveDuration - effect1Cooldown), Math.Max(0, effect2ActiveCooldown - effect1Cooldown), order);
+                }
+                else
+                {
+                    // effect2 will be off cooldown first
+                    value = Math.Min(effect1Duration, effect2ActiveDuration) + MaximizeStackingDuration2(fightDuration - effect2ActiveCooldown, effect2Duration, effect2Cooldown, effect1Duration, effect1Cooldown, Math.Max(0, effect1Duration - effect2ActiveCooldown), Math.Max(0, effect1Cooldown - effect2ActiveCooldown), 1 - order);
+                }
+                if (value > best)
+                {
+                    best = value;
+                }
+            }
+            // the next case is if effect1 activation crosses over effect2 cooldown
+            // in this case it's just as good if effect2 starts right on cooldown
+            // now in this case moving effect1 earlier has negative effect so we can't do that
+            // we want however to push it as late as possible without affecting the optimum
+            // but just as long as it ends before effect2 ends
+            // ####........|#####
+            // ..........#######
+            // 0 <= offset <= effect2ActiveCooldown
+            // offset <= effect1Duration
+            // this can potentially still be optimized, I doubt we need to look at every option
+            // but it seems in practice it works well enough so don't waste time unless profiling shows need
+            // TODO ok it works well enough, but still costs a significant amount, time to improve this
+            int minOffset = Math.Max(0, effect2ActiveCooldown - slack);
+            int maxOffset = Math.Min(effect1Duration, effect2ActiveCooldown);
+            int endAlignedOffset = effect1Duration - effect2Duration;
+            if (endAlignedOffset > minOffset)
+            {
+                minOffset = Math.Min(endAlignedOffset, maxOffset);
+            }
+            for (int offset = minOffset; offset <= maxOffset; offset++)
+            {
+                // is there any stacking left from current effect2 activation?
+                int leftover = Math.Max(0, effect2ActiveDuration - (effect2ActiveCooldown - offset));
+                min = Math.Min(effect1Duration - offset, effect2Duration);
+                if (effect1Cooldown - offset < effect2Cooldown)
+                {
+                    // effect1 will be off cooldown first
+                    value = leftover + Math.Min(min, fightDuration) + MaximizeStackingDuration2(fightDuration - effect2ActiveCooldown - effect1Cooldown + offset, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, Math.Max(0, effect2Duration - effect1Cooldown + offset), Math.Max(0, effect2Cooldown - effect1Cooldown + offset), order);
+                }
+                else
+                {
+                    // effect2 will be off cooldown first
+                    value = leftover + Math.Min(min, fightDuration) + MaximizeStackingDuration2(fightDuration - effect2ActiveCooldown - effect2Cooldown, effect2Duration, effect2Cooldown, effect1Duration, effect1Cooldown, Math.Max(0, effect1Duration - offset - effect2Cooldown), Math.Max(0, effect1Cooldown - offset - effect2Cooldown), 1 - order);
+                }
+                if (value > best)
+                {
+                    best = value;
+                }
+            }
+
+            list.Add(new StackingMemoizationEntry()
+            {
+                Order = order,
+                Effect2ActiveDuration = effect2ActiveDuration,
+                Effect2ActiveCooldown = effect2ActiveCooldown,
+                MaximizeStackingDuration = best
+            });
+
             return best;
         }
 
@@ -899,7 +1089,7 @@ namespace Rawr.Mage
                 for (CharacterSlot i = 0; i < (CharacterSlot)Character.OptimizableSlotCount; i++)
                 {
                     ItemInstance itemInstance = character[i];
-                    if (itemInstance != null)
+                    if ((object)itemInstance != null)
                     {
                         Item item = itemInstance.Item;
                         if (item != null)

@@ -4697,18 +4697,10 @@ namespace Rawr {
 
         public struct SpecialEffectEnumerator : IEnumerator<SpecialEffect>, IDisposable, System.Collections.IEnumerator, IEnumerable<SpecialEffect>
         {
-            private Stats stats;
+            internal Stats stats;
             private int index;
             private SpecialEffect current;
-            private Predicate<SpecialEffect> match;
-
-            internal SpecialEffectEnumerator(Stats stats, Predicate<SpecialEffect> match)
-            {
-                this.stats = stats;
-                this.match = match;
-                index = 0;
-                current = null;
-            }
+            internal Predicate<SpecialEffect> match;
 
             public void Dispose()
             {
@@ -4771,12 +4763,12 @@ namespace Rawr {
 
         public SpecialEffectEnumerator SpecialEffects()
         {
-            return new SpecialEffectEnumerator(this, null);
+            return new SpecialEffectEnumerator() { stats = this };
         }
 
         public SpecialEffectEnumerator SpecialEffects(Predicate<SpecialEffect> match)
         {
-            return new SpecialEffectEnumerator(this, match);
+            return new SpecialEffectEnumerator() { stats = this, match = match };
         }
 
         public bool ContainsSpecialEffect(Predicate<SpecialEffect> match)

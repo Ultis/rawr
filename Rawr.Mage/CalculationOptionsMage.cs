@@ -20,6 +20,15 @@ namespace Rawr.Mage
         public StateDescription.StateDescriptionDelegate IsMatch { get; set; }
     }
 
+    public struct CooldownStackingCacheEntry
+    {
+        public double Effect1Duration;
+        public double Effect1Cooldown;
+        public double Effect2Duration;
+        public double Effect2Cooldown;
+        public double MaximumStackingDuration;
+    }
+
     public sealed class CalculationOptionsMage : ICalculationOptionBase, INotifyPropertyChanged
     {
         private int playerLevel;
@@ -151,7 +160,32 @@ namespace Rawr.Mage
         public float FightDuration
         {
             get { return _FightDuration; }
-            set { _FightDuration = value; OnPropertyChanged("FightDuration"); }
+            set 
+            {
+                _FightDuration = value;
+                UpdateCooldownStackingCache();
+                OnPropertyChanged("FightDuration");
+            }
+        }
+
+        private static Dictionary<float, List<CooldownStackingCacheEntry>> cooldownStackingCacheMap = new Dictionary<float, List<CooldownStackingCacheEntry>>();
+
+        [XmlIgnore]
+        public List<CooldownStackingCacheEntry> CooldownStackingCache { get; private set; }
+
+        private void UpdateCooldownStackingCache()
+        {
+            lock(cooldownStackingCacheMap)
+            {
+                List<CooldownStackingCacheEntry> cache;
+                cooldownStackingCacheMap.TryGetValue(_FightDuration, out cache);
+                if (cache == null)
+                {
+                    cache = new List<CooldownStackingCacheEntry>();
+                    cooldownStackingCacheMap[_FightDuration] = cache;
+                }
+                CooldownStackingCache = cache;
+            }
         }
 
         private float _TpsLimit;
