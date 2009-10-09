@@ -80,8 +80,15 @@ namespace Rawr.Forms
 					}
 				}
 
-                Invoke((MethodInvoker)RefreshTaskList);
-				//InvokeHelper.BeginInvoke(this, "RefreshTaskList", null);
+                if (InvokeRequired)
+                {
+                    Invoke((MethodInvoker)RefreshTaskList);
+                    //InvokeHelper.BeginInvoke(this, "RefreshTaskList", null);
+                }
+                else
+                {
+                    RefreshTaskList();
+                }
 			}
 		}
 

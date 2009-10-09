@@ -860,6 +860,7 @@ namespace Rawr
                 }
                 _batchCharacter = character;
                 _characterPath = character.AbsulutePath;
+                EnsureItemsLoaded(character.Character.GetAllEquippedAndAvailableGearIds());
                 LoadCharacterIntoForm(character.Character, character.UnsavedChanges);
             }
         }
