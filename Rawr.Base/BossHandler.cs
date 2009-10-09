@@ -371,7 +371,6 @@ namespace Rawr {
             BossHandler retboss = new BossHandler();
             if (passedList.Length < 1) { return retboss; }
             float value = 0f;
-            int count = 0;
             bool use = false;
             // Basics
             retboss.Name = "The Average Boss";
@@ -399,26 +398,26 @@ namespace Rawr {
             #endregion
             // Situational Changes
             // In Back
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Ranged; } value /= passedList.Length; retboss.InBackPerc_Ranged = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Ranged; } value /= passedList.Length; retboss.InBackPerc_Ranged = value;
             // Multi-targs
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.MultiTargsPerc; } value /= passedList.Length; retboss.MultiTargsPerc = value;
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.MaxNumTargets; } value /= passedList.Length; retboss.MaxNumTargets = (float)Math.Ceiling(value);
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.MultiTargsPerc; } value /= passedList.Length; retboss.MultiTargsPerc = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.MaxNumTargets; } value /= passedList.Length; retboss.MaxNumTargets = (float)Math.Ceiling(value);
             // Stun
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.StunningTargsFreq > 0 && boss.StunningTargsFreq < boss.BerserkTimer) ? boss.StunningTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.StunningTargsFreq = value;
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.StunningTargsDur; } value /= passedList.Length; retboss.StunningTargsDur = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += (boss.StunningTargsFreq > 0 && boss.StunningTargsFreq < boss.BerserkTimer) ? boss.StunningTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.StunningTargsFreq = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.StunningTargsDur; } value /= passedList.Length; retboss.StunningTargsDur = value;
             // Move
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.MovingTargsFreq > 0 && boss.MovingTargsFreq < boss.BerserkTimer) ? boss.MovingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.MovingTargsFreq = value;
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.MovingTargsDur; } value /= passedList.Length; retboss.MovingTargsDur = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += (boss.MovingTargsFreq > 0 && boss.MovingTargsFreq < boss.BerserkTimer) ? boss.MovingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.MovingTargsFreq = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.MovingTargsDur; } value /= passedList.Length; retboss.MovingTargsDur = value;
             // Fear
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.FearingTargsFreq > 0 && boss.FearingTargsFreq < boss.BerserkTimer) ? boss.FearingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.FearingTargsFreq = value;
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.FearingTargsDur; } value /= passedList.Length; retboss.FearingTargsDur = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += (boss.FearingTargsFreq > 0 && boss.FearingTargsFreq < boss.BerserkTimer) ? boss.FearingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.FearingTargsFreq = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.FearingTargsDur; } value /= passedList.Length; retboss.FearingTargsDur = value;
             // Root
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.RootingTargsFreq > 0 && boss.RootingTargsFreq < boss.BerserkTimer) ? boss.RootingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.RootingTargsFreq = value;
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.RootingTargsDur; } value /= passedList.Length; retboss.RootingTargsDur = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += (boss.RootingTargsFreq > 0 && boss.RootingTargsFreq < boss.BerserkTimer) ? boss.RootingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.RootingTargsFreq = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.RootingTargsDur; } value /= passedList.Length; retboss.RootingTargsDur = value;
             // Disarm
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += (boss.DisarmingTargsFreq > 0 && boss.DisarmingTargsFreq < boss.BerserkTimer) ? boss.DisarmingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.DisarmingTargsFreq = value;
-            value = 0f; count = 0; foreach (BossHandler boss in passedList) { value += boss.DisarmingTargsDur; } value /= passedList.Length; retboss.DisarmingTargsDur = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += (boss.DisarmingTargsFreq > 0 && boss.DisarmingTargsFreq < boss.BerserkTimer) ? boss.DisarmingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.DisarmingTargsFreq = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.DisarmingTargsDur; } value /= passedList.Length; retboss.DisarmingTargsDur = value;
             //
             return retboss;
         }
@@ -439,6 +438,23 @@ namespace Rawr {
                     value = Math.Max(value, boss.Resistance(t));
                 }
                 retboss.Resistance(t, value);
+            }
+            // Fight Requirements
+            bool is25 = false;
+            foreach (BossHandler boss in passedList) {
+                if (boss.Version.Contains("25")) {
+                    is25 = true;
+                    break;
+                }
+            }
+            if (is25) {
+                retboss.Max_Players = 25;
+                retboss.Min_Tanks = 3;
+                retboss.Min_Healers = 5;
+            } else {
+                retboss.Max_Players = 10;
+                retboss.Min_Tanks = 3;
+                retboss.Min_Healers = 3;
             }
             #region Attacks
             /*{
@@ -600,7 +616,11 @@ namespace Rawr {
         }
         public float  StunningTargsTime {
             get {
-                float time = StunningTargsFreq * StunningTargsDur / BerserkTimer;
+                float time = 0f;
+                if (StunningTargsFreq != 0f && StunningTargsFreq < BerserkTimer)
+                {
+                    time = (BerserkTimer / StunningTargsFreq) * (StunningTargsDur / 1000f);
+                }
                 return time;
             }
         }
@@ -637,7 +657,10 @@ namespace Rawr {
         }
         public float  MovingTargsTime {
             get {
-                float time = MovingTargsFreq * MovingTargsDur / BerserkTimer;
+                float time = 0f;
+                if(MovingTargsFreq != 0f && MovingTargsFreq < BerserkTimer) {
+                    time = (BerserkTimer / MovingTargsFreq) * (MovingTargsDur / 1000f);
+                }
                 return time;
             }
         }
@@ -674,7 +697,11 @@ namespace Rawr {
         }
         public float  DisarmingTargsTime {
             get {
-                float time = DisarmingTargsFreq * DisarmingTargsDur / BerserkTimer;
+                float time = 0f;
+                if (DisarmingTargsFreq != 0f && DisarmingTargsFreq < BerserkTimer)
+                {
+                    time = (BerserkTimer / DisarmingTargsFreq) * (DisarmingTargsDur / 1000f);
+                }
                 return time;
             }
         }
@@ -711,7 +738,11 @@ namespace Rawr {
         }
         public float  FearingTargsTime {
             get {
-                float time = FearingTargsFreq * FearingTargsDur / BerserkTimer;
+                float time = 0f;
+                if (FearingTargsFreq != 0f && FearingTargsFreq < BerserkTimer)
+                {
+                    time = (BerserkTimer / FearingTargsFreq) * (FearingTargsDur / 1000f);
+                }
                 return time;
             }
         }
@@ -748,7 +779,11 @@ namespace Rawr {
         }
         public float  RootingTargsTime {
             get {
-                float time = RootingTargsFreq * RootingTargsDur / BerserkTimer;
+                float time = 0f;
+                if (RootingTargsFreq != 0f && RootingTargsFreq < BerserkTimer)
+                {
+                    time = (BerserkTimer / RootingTargsFreq) * (RootingTargsDur / 1000f);
+                }
                 return time;
             }
         }
@@ -879,9 +914,9 @@ namespace Rawr {
             retVal += "Content: " + Content + "\r\n";
             retVal += "Instance: " + Instance + " (" + Version + ")\r\n";
             retVal += "Health: " + Health.ToString("#,##0") + "\r\n";
-            TimeSpan ts = TimeSpan.FromMinutes(BerserkTimer/60);
+            TimeSpan ts = TimeSpan.FromMinutes(BerserkTimer/60d);
             retVal += "Enrage Timer: " + ts.Minutes.ToString("00") + " Min " + ts.Seconds.ToString("00") + " Sec\r\n";
-            ts = TimeSpan.FromMinutes(SpeedKillTimer/60);
+            ts = TimeSpan.FromMinutes(SpeedKillTimer/60d);
             retVal += "Speed Kill Timer: " + ts.Minutes.ToString("00") + " Min " + ts.Seconds.ToString("00") + " Sec\r\n";
             retVal += "\r\n";
             retVal += "Fight Requirements:" + "\r\n";
