@@ -328,6 +328,17 @@ namespace Rawr {
                 // Abyssal Rune
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = 590f }, 10f, 45f, 0.25f));
             }
+            else if (line.Contains("Each time you cast a helpful spell, you gain 16 mana per 5 sec. for 10 sec.  Stacks up to 8 times"))
+                                 //"Each time you cast a helpful spell, you gain 18 mana per 5 sec. for 10 sec.  Stacks up to 8 times"
+            {
+                // Solace of the Defeated
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { Mp5 = 16f, }, 10f, 0f, 1.00f, 8));
+            }
+            else if (line.Contains("Each time you cast a helpful spell, you gain 16 mana per 5 sec. for 10 sec.  Stacks up to 8 times."))
+            {
+                // Solace of the Defeated (Heroic)
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { Mp5 = 18f, }, 10f, 0f, 1.00f, 8));
+            }
             // Idol of the Raven Goddess (already added)
             else if (line.Contains(" critical strike rating to the Leader of the Pack aura"))
             {
