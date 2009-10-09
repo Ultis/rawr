@@ -8,14 +8,16 @@ namespace Rawr.Enhance
     class CombatStats
     {
 
-        private CalculationOptionsEnhance _calcOpts = new CalculationOptionsEnhance();
-        private Character _character = new Character();
-        private Stats _stats = new Stats();
-        private ShamanTalents _talents = new ShamanTalents();
+        private CalculationOptionsEnhance _calcOpts;
+        private Character _character;
+        private Stats _stats;
+        private ShamanTalents _talents;
+        private Priorities _rotation;
 
         private float glancingRate = 0.24f;
         private float whiteCritDepression = 0.048f;
         private float yellowCritDepression = 0.018f;
+        private float fightLength = 0f;
         private float bloodlustHaste = 0f;
         private float chanceCrit = 0f;
         private float chanceDodgeMH = 0f;
@@ -70,22 +72,8 @@ namespace Rawr.Enhance
         private float callOfThunder = 0f;
         private float staticShocksPerSecond = 0f;
 
-        private List<Ability> abilities = new List<Ability>();
-
-        public CombatStats(Character character, Stats stats, CalculationOptionsEnhance calcOpts)
-        {
-            _stats = stats;
-            _character = character;
-            _calcOpts = calcOpts;
-            _talents = _character.ShamanTalents;
-            UpdateCalcs();
-            SetupAbilities();
-            CalculateAbilities();
-            UpdateCalcs(); // second pass to revise calcs based on new ability cooldowns
-        }
-
         public float GlancingRate { get { return glancingRate; } }
-        public float FightLength { get { return _calcOpts.FightLength * 60f; } }
+        public float FightLength { get { return fightLength; } }
         public float BloodlustHaste { get { return bloodlustHaste; } }
         public float ChanceDodgeMH { get { return chanceDodgeMH; } }
         public float ChanceDodgeOH { get { return chanceDodgeOH; } }
@@ -155,6 +143,7 @@ namespace Rawr.Enhance
         public float EDUptime { get { return edUptime; } }
         public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
+        public float AbilityCooldown(string name) { return _rotation.AbilityCooldown(name); }
 
         public float DisplayMeleeCrit { get { return chanceCrit; } }
         public float DisplayYellowCrit { get { return AverageYellowCrit + yellowCritDepression; } }
@@ -166,85 +155,23 @@ namespace Rawr.Enhance
 
         private static readonly float SPELL_MISS  = 0.17f;
 
-        private void SetupAbilities()
+        public CombatStats(Character character, Stats stats, CalculationOptionsEnhance calcOpts)
         {
-            int priority = 0;
-            float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
-            if (_talents.FeralSpirit == 1)
-                abilities.Add(new Ability("Feral Spirits", 180f, 1.5f, ++priority));
-            if (_talents.MaelstromWeapon > 0)
-                abilities.Add(new Ability("Lightning Bolt", SecondsToFiveStack, gcd, ++priority));
-            if (_talents.Stormstrike == 1)
-                abilities.Add(new Ability("Stormstrike", 8f, 1.5f, ++priority));
-            if (_character.ShamanTalents.GlyphofShocking)
-                abilities.Add(new Ability("Earth Shock", BaseShockSpeed, 1.0f, ++priority));
-            else
-                abilities.Add(new Ability("Earth Shock", BaseShockSpeed, gcd, ++priority));
-            if (_talents.LavaLash == 1)
-                abilities.Add(new Ability("Lava Lash", 6f, 1.5f, ++priority));
-            if (_talents.StaticShock > 0)
-                abilities.Add(new Ability("Lightning Shield", StaticShockAvDuration, gcd, ++priority));
-            if (_calcOpts.Magma)
-                abilities.Add(new Ability("Magma Totem", 20f, 1.0f, ++priority));
-            else
-                abilities.Add(new Ability("Searing Totem", 60f, 1.0f, ++priority));
-            abilities.Add(new Ability("Refresh Totems", 300f, 1.0f, ++priority)); // patch 3.2 takes just 1 second GCD to refresh totems.
-            abilities.Sort();
+            _stats = stats;
+            _character = character;
+            _calcOpts = calcOpts;
+            _talents = _character.ShamanTalents;
+            fightLength = _calcOpts.FightLength * 60f;
+            UpdateCalcs(true);
+            _rotation = new Priorities(this, _calcOpts, _character, _stats, _talents);
+            _rotation.CalculateAbilities();
+            UpdateCalcs(false); // second pass to revise calcs based on new ability cooldowns
         }
 
-        private void CalculateAbilities()
-        {
-            float gcd = 1.5f;
-            string name = "";
-            for (float timeElapsed = 0f; timeElapsed < FightLength; timeElapsed += gcd)
-            {
-                gcd = 0.1f; // set GCD to small value step for dead time as dead time doesn't use a GCD its just waiting time
-                name = "deadtime";
-                foreach (Ability ability in abilities)
-                {
-                    if (ability.OffCooldown(timeElapsed))
-                    {
-                        ability.AddUse(timeElapsed, _calcOpts.AverageLag / 1000f);
-                        gcd = ability.GCD;
-                        name = ability.Name;
-                        break;
-                    }
-                }
-/*
-                   System.Diagnostics.Debug.Print("Time: {0} - FS {1}, {2} - LB {3}, {4} - SS {5}, {6} - ES {7}, {8} - LL {9}, {10} - LS {11}, {12} - MT {13}, {14} - used {15}",
-                   timeElapsed,
-                   abilities[0].Uses, abilities[0].CooldownOver,
-                   abilities[1].Uses, abilities[1].CooldownOver,
-                   abilities[2].Uses, abilities[2].CooldownOver,
-                   abilities[3].Uses, abilities[3].CooldownOver,
-                   abilities[4].Uses, abilities[4].CooldownOver,
-                   abilities[5].Uses, abilities[5].CooldownOver,
-                   abilities[6].Uses, abilities[6].CooldownOver, name);
- */
-            }
-            // at this stage abilities now contains the number of procs per fight for each ability as a whole number
-            // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
-            // use beyond fight duration.
-            foreach (Ability ability in abilities)
-            {
-                ability.AddRemainder((ability.CooldownOver - FightLength)/ ability.Duration);
-            }
-        }
-
-        public float AbilityCooldown(string name)
-        {
-            foreach (Ability ability in abilities)
-            {
-                if (ability.Name.Equals(name))
-                    return ability.Uses == 0 ? ability.Duration : FightLength / ability.Uses;
-            }
-            return FightLength;
-        }
-
-        public void UpdateCalcs()
+        public void UpdateCalcs(bool firstPass)
         {
             // talents
-            callOfThunder = .05f * _character.ShamanTalents.CallOfThunder;
+            callOfThunder = .05f * _talents.CallOfThunder;
             critMultiplierMelee = 2f * (1 + _stats.BonusCritMultiplier);
             critMultiplierSpell = (1.5f + .1f * _character.ShamanTalents.ElementalFury) * (1 + _stats.BonusSpellCritMultiplier);
             
@@ -315,19 +242,13 @@ namespace Rawr.Enhance
             flurryUptime = 1f;
             edUptime = 0f;
             urUptime = 0f;
-            float stormstrikeSpeed = AbilityCooldown("Stormstrike");
-            float shockSpeed = AbilityCooldown("Earth Shock");
-            float lavaLashSpeed = AbilityCooldown("Lava Lash");
-            if (stormstrikeSpeed == FightLength && _talents.Stormstrike == 1) // first time round loop so abilities not initialised
-            {
-                stormstrikeSpeed = 8f;
-                shockSpeed = BaseShockSpeed;
-                lavaLashSpeed = 6f;
-            }
+            float stormstrikeSpeed = firstPass ? (_talents.Stormstrike == 1 ? 8f : 0f) : AbilityCooldown("Stormstrike");
+            float shockSpeed = firstPass ? BaseShockSpeed : AbilityCooldown("Earth Shock");
+            float lavaLashSpeed = firstPass ? (_talents.LavaLash == 1 ? 6f : 0f) : AbilityCooldown("Lava Lash");
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.BonusMWFreq);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
             float edCritBonus = .03f * _talents.ElementalDevastation;
-            float bloodlustUptime = 40f / FightLength;
+            float bloodlustUptime = 40f / fightLength;
             bloodlustHaste = 1 + (bloodlustUptime * _stats.Bloodlust);
             hastedMHSpeed = baseHastedMHSpeed / bloodlustHaste;
             hastedOHSpeed = baseHastedOHSpeed / bloodlustHaste;
@@ -355,10 +276,10 @@ namespace Rawr.Enhance
                 float hitsThatProcWFPerS = (1f - chanceWhiteMissMH) * swingsPerSMHMelee + hitsPerSMHSS;
 
                 // new WF model - slighly curved Windfury Society
-                float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * FightLength;
+                float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * fightLength;
                 float ineligibleSeconds = maxExpectedWFPerFight * (3f - hastedMHSpeed);
-                float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (FightLength - ineligibleSeconds);
-                wfProcsPerSecond = expectedWFPerFight / FightLength;
+                float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (fightLength - ineligibleSeconds);
+                wfProcsPerSecond = expectedWFPerFight / fightLength;
                 hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
                 
                 //Due to attack table, a white swing has the same chance to crit as a yellow hit
@@ -495,53 +416,4 @@ namespace Rawr.Enhance
     }
     #endregion
 
-    #region Ability class
-    public class Ability : IComparable<Ability>
-    {
-        private string _name;
-        private float _duration;
-        private int _priority;
-        private float _cooldownOver;
-        private float _uses;
-        private float _gcd = 1.5f;
-
-        public Ability(string name, float duration, float gcd, int priority)
-        {
-            _name = name;
-            _duration = duration;
-            _priority = priority;
-            _gcd = gcd;
-            _cooldownOver = 0f;
-            _uses = 0;
-        }
-
-        public string Name { get { return _name; } }
-        public float Duration { get { return _duration; } }
-        public float GCD { get { return _gcd; } }
-        public float CooldownOver { get { return _cooldownOver; } }
-        public float Uses { get { return _uses; } }
-
-        public void AddUse(float useTime, float lag)
-        {
-            _uses++;
-            _cooldownOver = useTime + _duration + lag;
-        }
-
-        public void AddRemainder(float remainder)
-        {
-            _uses += remainder;
-        }
-
-        public bool OffCooldown(float starttime)
-        {
-            return starttime >= _cooldownOver;
-        }
-
-        public int CompareTo(Ability other)
-        {
-            return _priority.CompareTo(other._priority);
-        }
-
-    }
-    #endregion
 }
