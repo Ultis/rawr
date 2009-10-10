@@ -1330,7 +1330,7 @@ These numbers to do not include racial bonuses.",
                     BaseArmorMultiplier = talents.Toughness * 0.02f,
                 };
                 // Add Talents that give SpecialEffects
-                if (talents.Rampage > 0 && statType != StatType.Unbuffed) {
+                if (talents.Rampage > 0 && calcOpts.FuryStance && statType != StatType.Unbuffed) {
                     /*SpecialEffect rampage = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalCrit = 0.05f, }, 10, 0);
                     statsTalents.AddSpecialEffect(rampage);*/
                     statsTalents.PhysicalCrit += 0.05f;
@@ -1509,13 +1509,13 @@ These numbers to do not include racial bonuses.",
                         (float)Math.Min(Rot.SW.Duration, landedAtksInterval * 5f), Rot.SW.Cd);
                     statsTotal.AddSpecialEffect(sweep);
                 }
-                if (Rot.RK.Validated) {
+                if (Rot.RK.Validated && calcOpts.FuryStance) {
                     SpecialEffect reck = new SpecialEffect(Trigger.Use,
                         new Stats() { PhysicalCrit = 1f - critRate, },
                         (float)Math.Min(Rot.RK.Duration, landedAtksInterval * 3f), Rot.RK.Cd);
                     statsTotal.AddSpecialEffect(reck);
                 }
-                if (talents.Flurry > 0) {
+                if (talents.Flurry > 0 && calcOpts.FuryStance) {
                     float value = talents.Flurry * 0.05f;
                     SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit,
                         new Stats() { PhysicalHaste = value, }, landedAtksInterval * 3f, 0f);

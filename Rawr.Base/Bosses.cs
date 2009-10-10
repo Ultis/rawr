@@ -2252,8 +2252,7 @@ namespace Rawr {
     /* JOTHAY NOTE: Most of these bosses were duplicated off
      * Auriya so they have a whole lot of values that they
      * aren't supposed to. They need to be set up before I
-     * make 25 Man versions.
-     */
+     * make 25 Man versions.*/
     // The Siege
     public class IgnistheFurnaceMaster_10 : BossHandler {
         public IgnistheFurnaceMaster_10() {
@@ -2277,18 +2276,49 @@ namespace Rawr {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
+            {
+                /* Flame Jets - Inflicts 5,655 to 6,345 (Heroic: 8,483 to 9,517)
+                 *      Fire damage and interrupts spellcasting for 6 seconds. Affected
+                 *      targets take additional 1,000 (Heroic: 2,000) Fire damage
+                 *      every 1 second, for 6 seconds.
+                 */
+                Attack a = new Attack() {
+                    Name = "Flame Jets",
+                    AttackSpeed = 25f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = (5655f - 6345f) / 2f,
+                    DamageType = ItemDamageType.Fire,
+                    MaxNumTargets = Max_Players,
+                };
+                Attacks.Add(a);
+            }
+            {
+                /* Scorch - Inflicts 2,357 to 2,643 (Heroic: 3,770 to 4,230)
+                 *  Fire damage every half-second to targets in front of the caster
+                 *  within 30 yards. In addition, the ground within 13 yards becomes
+                 *  scorched, inflicting 1,885 to 2,115 (Heroic: 3,016 to 3,384)
+                 *  Fire damage every 1 second. Iron Constructs gain Heat while
+                 *  standing on scorched ground.
+                 */
+                Attack a = new Attack() {
+                    Name = "Scorch",
+                    AttackSpeed = 25f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = (2357f - 2643f) / 2f,
+                    DamageType = ItemDamageType.Fire,
+                    MaxNumTargets = Max_Players,
+                };
+                Attacks.Add(a);
+                Moves.Add(new Move() {
+                    Frequency = a.AttackSpeed,
+                    Duration = 5 * 1000,
+                    Chance = 1f,
+                    Breakable = false,
+                });
+            }
             // Situational Changes
-            InBackPerc_Melee = 0.90f; // Lots of movement and can't always stay behind as boss get rotated
-            // move on Flame Jets
-            Moves.Add(new Move() {
-                Frequency = 25,
-                Duration = 5 * 1000,
-                Chance = 1f,
-                Breakable = false,
-            });
+            InBackPerc_Melee = 0.90f;
             /* TODO:
-             * Flame Jets - Inflicts 5,655 to 6,345 (Heroic: 8,483 to 9,517) Fire damage and interrupts spellcasting for 6 seconds. Affected targets take additional 1,000 (Heroic: 2,000) Fire damage every 1 second, for 6 seconds. 
-             * Scorch - Inflicts 2,357 to 2,643 (Heroic: 3,770 to 4,230) Fire damage every half-second to targets in front of the caster within 30 yards. In addition, the ground within 13 yards becomes scorched, inflicting 1,885 to 2,115 (Heroic: 3,016 to 3,384) Fire damage every 1 second. Iron Constructs gain Heat while standing on scorched ground.
              * Slag Pot - Charges and grabs a random target and incapacitates them, inflicting 4,500 (Heroic: 6,000) Fire damage every 1 second for 10 seconds. If the target survives, they will gain 100% (Heroic: 150%) haste for 10 seconds.
              * Iron Constructs - Iron Constructs brought to ground scorched by Scorch, will gain stackable Heat buff, which increases their movement speed and haste by 5 per application. If Iron Constructs gain 10 stacks of Heat, they will become Molten, increasing their haste by 100% and inflicting 1,885 to 2,115 Fire damage every 1 second to enemies within 7 yards. Molten Iron Constructs can be brought to water, which causes them to become Brittle and unable to perform any action for 20 seconds. Critical strike chance against Brittle Iron Constructs is increased by 50%. If a single attack deals more than 5,000 damage to a Brittle Iron Construct, it will Shatter, inflicting 18,850 to 21,150 Physical damage not mitigated by armor, to enemies within 10 yards. Shattering the Construct causes Ignis to lose a stack of Strength of the Creator.
              * Strength of the Creator - For every Iron Construct active and alive, Ignis gains 15% damage, stacking up to 99 times.
@@ -2303,8 +2333,8 @@ namespace Rawr {
             Content = "T8";
             Instance = "Ulduar";
             Version = "10 Man";
-            BerserkTimer = 10 * 60;
-            Health = 3137625f;
+            BerserkTimer = 15 * 60;
+            Health = 3555975f;
             // Fight Requirements
             Max_Players = 10;
             Min_Tanks   =  2;
@@ -2323,22 +2353,22 @@ namespace Rawr {
             MultiTargsPerc = 0.50f; // need to sim this out
             MaxNumTargets  = 5f; // need to drop this down to only when the swarm is up
             /* TODO:
-                Phase 1: Air Phase
-                1. (Spell #63014) - Inflicts 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage to a player, and additional 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage every 1 second to anyone within 6 yards of the initial impact, for 25 seconds.
-                2. Fireball - Inflicts 6,660 to 7,740 (Heroic: 9,713 to 11,287) Fire damage.
-                3. Flame Breath - Inflicts 13,125 to 16,875 (Heroic: 17,500 to 22,500) Fire damage to enemies in a cone in front of the caster. Used just before Razorscale goes back to the air.
-                4. Wing Buffet - Knocks back enemies in 35 yards radius around the caster. Used right after Flame Breath.
-                5. Dark Rune Adds - Adds will come in waves from mole machines. One mole can spawn a Dark Rune Watcher with 1-2 Guardians, or a lone Sentinel. Up to 4 mole machines can spawn adds at any given time.
-                    1. Dark Rune Watchers - Cast Lightning Bolt, inflicting 5,950 to 8,050 (Heroic: 8,075 to 10,925) Nature damage and Chain Lightning, inflicting 5,088 to 5,912 (Heroic: 8,788 to 10,212)
-                    2. Dark Rune Sentinels - Cast Whirlwind, hitting for ~9,000 Physical damage on plate.
-                    3. Dark Rune Guardians - Cast Stormstrike, which increases the Nature damage done to the target by 20% for 12 seconds.
-                Phase 2: Ground Phase
-                1. Flame Buffet - Increases the Fire damage an enemy takes by 1,000 (Heroic: 1,500) for 1 minute, stacking up to 99 times.
-                2. Wing Buffet - Knocks back enemies in 35 yards radius around the caster. Used in the beginning of the phase.
-                3. Fuse Armor - Reduces armor, attack and movement speed by 20% for 20 seconds, stacking up to 5 times. 5 stacks of Fused Armor will stun the tank for several seconds.
-                4. Flame Breath - Inflicts 13,125 to 16,875 (Heroic: 17,500 to 22,500) Fire damage to enemies in a cone in front of the caster. Affected by Flame Buffet.
-                5. (Spell #63014) - Inflicts 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage to a player, and additional 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage every 1 second to anyone within 6 yards of the initial impact, for 25 seconds. Affected by Flame Buffet.
-                */
+             * Phase 1: Air Phase
+             * 1. (Spell #63014) - Inflicts 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage to a player, and additional 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage every 1 second to anyone within 6 yards of the initial impact, for 25 seconds.
+             * 2. Fireball - Inflicts 6,660 to 7,740 (Heroic: 9,713 to 11,287) Fire damage.
+             * 3. Flame Breath - Inflicts 13,125 to 16,875 (Heroic: 17,500 to 22,500) Fire damage to enemies in a cone in front of the caster. Used just before Razorscale goes back to the air.
+             * 4. Wing Buffet - Knocks back enemies in 35 yards radius around the caster. Used right after Flame Breath.
+             * 5. Dark Rune Adds - Adds will come in waves from mole machines. One mole can spawn a Dark Rune Watcher with 1-2 Guardians, or a lone Sentinel. Up to 4 mole machines can spawn adds at any given time.
+             *     1. Dark Rune Watchers - Cast Lightning Bolt, inflicting 5,950 to 8,050 (Heroic: 8,075 to 10,925) Nature damage and Chain Lightning, inflicting 5,088 to 5,912 (Heroic: 8,788 to 10,212)
+             *     2. Dark Rune Sentinels - Cast Whirlwind, hitting for ~9,000 Physical damage on plate.
+             *     3. Dark Rune Guardians - Cast Stormstrike, which increases the Nature damage done to the target by 20% for 12 seconds.
+             * Phase 2: Ground Phase
+             * 1. Flame Buffet - Increases the Fire damage an enemy takes by 1,000 (Heroic: 1,500) for 1 minute, stacking up to 99 times.
+             * 2. Wing Buffet - Knocks back enemies in 35 yards radius around the caster. Used in the beginning of the phase.
+             * 3. Fuse Armor - Reduces armor, attack and movement speed by 20% for 20 seconds, stacking up to 5 times. 5 stacks of Fused Armor will stun the tank for several seconds.
+             * 4. Flame Breath - Inflicts 13,125 to 16,875 (Heroic: 17,500 to 22,500) Fire damage to enemies in a cone in front of the caster. Affected by Flame Buffet.
+             * 5. (Spell #63014) - Inflicts 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage to a player, and additional 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage every 1 second to anyone within 6 yards of the initial impact, for 25 seconds. Affected by Flame Buffet.
+             */
         }
     }
     public class XT002Deconstructor_10 : BossHandler {
@@ -2350,7 +2380,7 @@ namespace Rawr {
             Instance = "Ulduar";
             Version = "10 Man";
             BerserkTimer = 10 * 60;
-            Health = 3137625f;
+            Health = 5000008f;
             // Fight Requirements
             Max_Players = 10;
             Min_Tanks   =  2;
@@ -2364,17 +2394,75 @@ namespace Rawr {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
+            {
+                /* Gravity Bomb - Causes the target to spawn a Gravity Bomb
+                 * after 9 seconds, which damages the target for 12,000
+                 * (Heroic: 15,000) and pulls other players within 12 yards
+                 * and inflicts them with 11,700 to 12,300 (Heroic: 14,625
+                 * to 15,375) Shadow damage.*/
+                Attack a = new Attack {
+                    Name = "Gravity Bomb",
+                    DamageType = ItemDamageType.Shadow,
+                    DamagePerHit = 12000f,
+                    MaxNumTargets = Max_Players,
+                    AttackSpeed = 25,
+                };
+                Attacks.Add(a);
+                Moves.Add(new Move() {
+                    Frequency = a.AttackSpeed,
+                    Duration = (9 + 5) * 1000,
+                    Chance = 1f / Max_Players,
+                    Breakable = false,
+                });
+            }
+            {
+                /* Searing Light - Causes the target to inflict 3,000
+                 * (Heroic: 3,500) damage to the target and other players
+                 * within 10 yards every 1 second, for 9 seconds.*/
+                Attack a = new Attack {
+                    Name = "Searing Light",
+                    DamageType = ItemDamageType.Holy,
+                    DamagePerHit = 3000f,
+                    MaxNumTargets = Max_Players,
+                    AttackSpeed = 25,
+                };
+                Attacks.Add(a);
+                Moves.Add(new Move() {
+                    Frequency = a.AttackSpeed,
+                    Duration = (9 + 5) * 1000,
+                    Chance = 1f / Max_Players,
+                    Breakable = false,
+                });
+            }
+            {
+                /* Tympanic Tantrum - Damages everybody for 10% of their
+                 * maximum hit points every 1 second, for 8 seconds. This
+                 * is a channeled spell, which also dazes the affected
+                 * targets for 2 seconds.*/
+                Attack a = new Attack {
+                    Name = "Tympanic Tantrum",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = 22000f * 0.10f * 8f,
+                    MaxNumTargets = Max_Players,
+                    AttackSpeed = 25,
+                };
+                Attacks.Add(a);
+            }
             // Situational Changes
             InBackPerc_Melee = 1.00f;
-            /* TODO:
-              Tympanic Tantrum - Damages everybody for 10% of their maximum hit points every 1 second, for 8 seconds. This is a channeled spell, which also dazes the affected targets for 2 seconds.
-              Searing Light - Causes the target to inflict 3,000 (Heroic: 3,500) damage to the target and other players within 10 yards every 1 second, for 9 seconds.
-              Gravity Bomb - Causes the target to spawn a Gravity Bomb after 9 seconds, which damages the target for 12,000 (Heroic: 15,000) and pulls other players within 12 yards and inflicts them with 11,700 to 12,300 (Heroic: 14,625 to 15,375) Shadow damage.
-              Heart Phase: At 75%, 50%, and 25% XT's Heart of the Deconstructor will become exposed and attackable. It will leak energy, which summons adds - Pummellers, Scrapbots and Boombots. During this 30-second Phase XT will take 100% extra damage through his heart and won't attack.
-                  o XM-024 Pummellers - Attack with Arcing Smash, Trample, and Uppercut.
-                  o XS-013 Scrapbots - Run to XT and cause him to restore 1% health per Scrapbot, through Scrap Repair.
-                  o XE-321 Boombots - Explode on death, inflicting damage to nearby players and NPCs.
-             */
+            // TODO:
+            /* Heart Phase: At 75%, 50%, and 25% XT's Heart of the
+             * Deconstructor will become exposed and attackable. It
+             * will leak energy, which summons adds - Pummellers,
+             * Scrapbots and Boombots. During this 30-second Phase XT
+             * will take 100% extra damage through his heart and won't
+             * attack.
+             * o XM-024 Pummellers - Attack with Arcing Smash, Trample,
+             *   and Uppercut.
+             * o XS-013 Scrapbots - Run to XT and cause him to restore
+             *   1% health per Scrapbot, through Scrap Repair.
+             * o XE-321 Boombots - Explode on death, inflicting damage
+             *   to nearby players and NPCs.*/
         }
     }
     // The Antechamber
@@ -2386,8 +2474,8 @@ namespace Rawr {
             Content = "T8";
             Instance = "Ulduar";
             Version = "10 Man";
-            BerserkTimer = 10 * 60;
-            Health = 3137625f;
+            BerserkTimer = 15 * 60;
+            Health = 2998175f;
             // Fight Requirements
             Max_Players = 10;
             Min_Tanks   =  2;
@@ -2403,26 +2491,62 @@ namespace Rawr {
             });
             // Situational Changes
             InBackPerc_Melee = 0.75f;
-            /* TODO:
-                Steelbreaker
-                    * High Voltage - An aura that inflicts 1,500 (Heroic: 3,000) to the whole raid every 3 seconds.
-                    * Fusion Punch - Inflicts 18,850 to 21,150 (Heroic: 35,000) Nature damage to his target, and deals additional 15,000 (Heroic: 20,000) Nature damage every 1 second, for 4 seconds.
-                    * [1 Supercharge] Static Disruption - Inflicts 3,500 (Heroic: 7,000) Nature damage to enemies in 6 yards radius area. Also increases Nature damage taken by 25% (Heroic: 75%) for 20 seconds.
-                    * [2 Supercharges] Overwhelming Power - Increases the size and damage done by his target by 200%, and affects it with Meltdown after 60 (Heroic: 30) seconds .
-                    * [2 Supercharges] Meltdown - Causes the target to die, dealing 29,250 to 30,750 Nature damage to friendly units within 15 yards.
-                    * [2 Supercharges] Electrical Charge - Increases Steelbreaker's damage by 25% and heals him for 20% of his maximum hit points whenever a player or a pet dies. Affected by healing reduction effects.
-                Runemaster Molgeim
-                    * Shield of Runes - Absorbs 20,000 (Heroic: 50,000) damage. When the Shield is broken by damage, it increases Molgeim's damage by 50% for 15 seconds. Using Spellsteal bypasses the damage increase.
-                    * Rune of Power - Summons a Rune of Power under the feet of a random target. Rune of Power increases the damage of everybody who stands on it by 50%. Lasts 1 minute.
-                    * [1 Supercharge] Rune of Death - Summons a Rune of Death under the feet of a random player. Rune of Death inflicts 2,750 (Heroic: 3,500) Shadow damage to players within 13 yards of it, every half-second for 30 seconds
-                    * [2 Supercharges] Rune of Summoning - Summons a Rune of Summoning near a random player. Rune of Summoning periodically spawns Lightning Elementals, which will rush towards random players and cast Lightning Blast.
-                    * [2 Supercharges] Lightning Blast - Inflicts 9,425 to 10,575 (Heroic: 14,138 to 15,862) Nature damage to all players within 30 yards of the caster. The Lightning Elemental dies after the spell goes off.
-                Stormcaller Brundir
-                    * Chain Lightning - Inflicts 4,163 to 4,837 (Heroic: 5,550 to 6,450) Nature damage to its main target, and arcs to nearby players. Interruptible.
-                    * Overload - Inflicts 20,000 (Heroic: 25,000) Nature damage to players within 30 yards of the caster, after 6 seconds of channeling. Also applies knockback.
-                    * [1 Supercharge] Lightning Whirl - Inflicts 3,770 to 4,230 (Heroic: 5,655 to 6,345) Nature damage to random players every 1 second for 5 seconds. Interruptible.
-                    * [2 Supercharges] Lightning Tendrils - Chooses a random target and starts flying towards it. Players near Brundir take 3,000 (Heroic: 5,000) Nature damage every 1 second until they get away. Brundir cannot be stunned or interrupted while casting Lightning Tendrils.
-            */
+            // TODO:
+            /* Steelbreaker
+             * - High Voltage - An aura that inflicts 1,500 (Heroic: 3,000)
+             *   to the whole raid every 3 seconds.
+             * - Fusion Punch - Inflicts 18,850 to 21,150 (Heroic: 35,000)
+             *   Nature damage to his target, and deals additional 15,000
+             *   (Heroic: 20,000) Nature damage every 1 second, for 4 seconds.
+             * - [1 Supercharge] Static Disruption - Inflicts 3,500 (Heroic:
+             *   7,000) Nature damage to enemies in 6 yards radius area. Also
+             *   increases Nature damage taken by 25% (Heroic: 75%) for 20
+             *   seconds.
+             * - [2 Supercharges] Overwhelming Power - Increases the size and
+             *   damage done by his target by 200%, and affects it with
+             *   Meltdown after 60 (Heroic: 30) seconds.
+             * - [2 Supercharges] Meltdown - Causes the target to die, dealing
+             *   29,250 to 30,750 Nature damage to friendly units within 15
+             *   yards.
+             * - [2 Supercharges] Electrical Charge - Increases Steelbreaker's
+             *   damage by 25% and heals him for 20% of his maximum hit points
+             *   whenever a player or a pet dies. Affected by healing
+             *   reduction effects.*/
+            /* Runemaster Molgeim
+             * - Shield of Runes - Absorbs 20,000 (Heroic: 50,000) damage.
+             *   When the Shield is broken by damage, it increases Molgeim's
+             *   damage by 50% for 15 seconds. Using Spellsteal bypasses the
+             *   damage increase.
+             * - Rune of Power - Summons a Rune of Power under the feet of a
+             *   random target. Rune of Power increases the damage of everybody
+             *   who stands on it by 50%. Lasts 1 minute.
+             * - [1 Supercharge] Rune of Death - Summons a Rune of Death
+             *   under the feet of a random player. Rune of Death inflicts
+             *   2,750 (Heroic: 3,500) Shadow damage to players within 13
+             *   yards of it, every half-second for 30 seconds
+             * - [2 Supercharges] Rune of Summoning - Summons a Rune of
+             *   Summoning near a random player. Rune of Summoning periodically
+             *   spawns Lightning Elementals, which will rush towards random
+             *   players and cast Lightning Blast.
+             * - [2 Supercharges] Lightning Blast - Inflicts 9,425 to 10,575
+             *   (Heroic: 14,138 to 15,862) Nature damage to all players within
+             *   30 yards of the caster. The Lightning Elemental dies after
+             *   the spell goes off.*/
+            /* Stormcaller Brundir
+             * - Chain Lightning - Inflicts 4,163 to 4,837 (Heroic: 5,550 to
+             *   6,450) Nature damage to its main target, and arcs to nearby
+             *   players. Interruptible.
+             * - Overload - Inflicts 20,000 (Heroic: 25,000) Nature damage to
+             *   players within 30 yards of the caster, after 6 seconds of
+             *   channeling. Also applies knockback.
+             * - [1 Supercharge] Lightning Whirl - Inflicts 3,770 to 4,230
+             *   (Heroic: 5,655 to 6,345) Nature damage to random players
+             *   every 1 second for 5 seconds. Interruptible.
+             * - [2 Supercharges] Lightning Tendrils - Chooses a random
+             *   target and starts flying towards it. Players near Brundir
+             *   take 3,000 (Heroic: 5,000) Nature damage every 1 second
+             *   until they get away. Brundir cannot be stunned or interrupted
+             *   while casting Lightning Tendrils.*/
         }
     }
     public class Kologarn_10 : BossHandler {
@@ -2433,8 +2557,7 @@ namespace Rawr {
             Content = "T8";
             Instance = "Ulduar";
             Version = "10 Man";
-            BerserkTimer = 10 * 60;
-            Health = 3137625f;
+            Health = 3625700f;
             // Fight Requirements
             Max_Players = 10;
             Min_Tanks   =  2;
@@ -2514,8 +2637,8 @@ namespace Rawr {
             Content = "T8";
             Instance = "Ulduar";
             Version = "10 Man";
-            BerserkTimer = 10 * 60;
-            Health = 3137625f;
+            BerserkTimer = 15 * 60;
+            Health = 1742400f*3f;
             // Fight Requirements
             Max_Players = 10;
             Min_Tanks   =  2;
@@ -2567,7 +2690,7 @@ namespace Rawr {
             Instance = "Ulduar";
             Version = "10 Man";
             BerserkTimer = 10 * 60;
-            Health = 3137625f;
+            Health = 1394500f;
             // Fight Requirements
             Max_Players = 10;
             Min_Tanks   =  2;
@@ -2622,8 +2745,8 @@ namespace Rawr {
             Content = "T8";
             Instance = "Ulduar";
             Version = "10 Man";
-            BerserkTimer = 10 * 60;
-            Health = 3137625f;
+            BerserkTimer = 5 * 60 * 2;
+            Health = 1742400f;
             // Fight Requirements
             Max_Players = 10;
             Min_Tanks   =  2;
@@ -2735,7 +2858,7 @@ namespace Rawr {
             Instance = "Ulduar";
             Version = "10 Man";
             BerserkTimer = 10 * 60;
-            Health = 3137625f;
+            Health = 6275250f;
             // Fight Requirements
             Max_Players = 10;
             Min_Tanks   =  2;
@@ -2774,8 +2897,8 @@ namespace Rawr {
             Content = "T8";
             Instance = "Ulduar";
             Version = "10 Man";
-            BerserkTimer = 10 * 60;
-            Health = 3137625f;
+            BerserkTimer = 15 * 60;
+            Health = 10999997f;
             // Fight Requirements
             Max_Players = 10;
             Min_Tanks   =  2;
@@ -2827,8 +2950,8 @@ namespace Rawr {
             Content = "T8";
             Instance = "Ulduar";
             Version = "10 Man";
-            BerserkTimer = 10 * 60;
-            Health = 3137625f;
+            BerserkTimer = 6 * 60;
+            Health = 8367000f;
             // Fight Requirements
             Max_Players = 10;
             Min_Tanks   =  2;
