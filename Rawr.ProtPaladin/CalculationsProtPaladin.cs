@@ -527,7 +527,7 @@ focus on Survival Points.",
             // either way, TODO: 9696 Rotation trigger intervals, change these values once custom rotations are supported.
 
             // Calculate Procs and Special Effects
-            statsTotal += GetSpecialEffectStats(character, statsTotal, calcOpts);
+            statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, calcOpts));
 
             if ((calcOpts.UseHolyShield) && character.OffHand != null && (character.OffHand.Type == ItemType.Shield))
             {
@@ -602,69 +602,69 @@ focus on Survival Points.",
                 if (effect.Trigger == Trigger.Use) {
                     if (calcOpts.TrinketOnUseHandling != "Ignore") {
                         if (calcOpts.TrinketOnUseHandling == "Active") {
-                            statsSpecialEffects += effect.Stats;
+                            statsSpecialEffects.Accumulate(effect.Stats);
                         } else {
-                            effectsToAdd += effect.GetAverageStats();
+                            effectsToAdd.Accumulate(effect.GetAverageStats());
                             effectsToAdd.Health = 0.0f; // Health on Use Effects are never averaged.
-                            statsSpecialEffects += effectsToAdd;
+                            statsSpecialEffects.Accumulate(effectsToAdd);
                         }
                     }
 
                     // Trial of the Crusader Stacking Use Effect Trinkets
                     foreach (SpecialEffect childEffect in effect.Stats.SpecialEffects()) {
                         if (childEffect.Trigger == Trigger.DamageTaken) {
-                            statsSpecialEffects += childEffect.Stats * effect.GetAverageUptime(0.0f, 1.0f) *
-                                childEffect.GetAverageStackSize((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed, effect.Duration);
+                            statsSpecialEffects.Accumulate(childEffect.Stats,
+                                                           effect.GetAverageUptime(0.0f, 1.0f)
+                                                               * childEffect.GetAverageStackSize(1.0f / am.AttackerHitsPerSecond, 1.0f, weaponSpeed, effect.Duration));
                         }
                     }
                 } else {
                     switch (effect.Trigger) {
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit:
-                            effectsToAdd += effect.GetAverageStats(intervalPhysical, chanceHitPhysical, weaponSpeed);
+                            effectsToAdd.Accumulate(effect.GetAverageStats(intervalPhysical, chanceHitPhysical, weaponSpeed));
                             effectsToAdd.Armor = (float)Math.Floor(2.0f * effectsToAdd.Agility); // mongoose agi
-                            statsSpecialEffects += effectsToAdd;
+                            statsSpecialEffects.Accumulate(effectsToAdd);
                             break;
                         case Trigger.MeleeCrit:
                         case Trigger.PhysicalCrit:
-                            statsSpecialEffects += effect.GetAverageStats(intervalPhysical, chanceCritPhysical, weaponSpeed);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalPhysical, chanceCritPhysical, weaponSpeed));
                             break;
                         case Trigger.DoTTick:
-                            statsSpecialEffects += effect.GetAverageStats(intervalDoTTick, chanceDoTTick);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDoTTick, chanceDoTTick));
                             break;
                         case Trigger.DamageDone:
-                            statsSpecialEffects += effect.GetAverageStats(intervalDamageDone, chanceDamageDone);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDamageDone, chanceDamageDone));
                             break;
                         case Trigger.DamageTaken:
-                            statsSpecialEffects += effect.GetAverageStats((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed));
                             break;
                         case Trigger.JudgementHit:
-                            //Stats test = new Stats();
-                            statsSpecialEffects += effect.GetAverageStats(intervalJudgement);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalJudgement));
                             break;
                         case Trigger.ShieldofRighteousness:
-                            statsSpecialEffects += effect.GetAverageStats(intervalShoR);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalShoR));
                             break;
                         case Trigger.HammeroftheRighteous:
-                            statsSpecialEffects += effect.GetAverageStats(intervalHotR);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalHotR));
                             break;
                         case Trigger.HolyShield:
-                            statsSpecialEffects += effect.GetAverageStats(intervalHolyShield);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalHolyShield));
                             break;
                         case Trigger.DivinePlea:
-                            statsSpecialEffects += effect.GetAverageStats(intervalDivinePlea);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDivinePlea));
                             break;
                         case Trigger.SpellCast:
-                            statsSpecialEffects += effect.GetAverageStats(intervalSpellCast);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalSpellCast));
                             break;
                         case Trigger.DamageSpellCast:
-                            statsSpecialEffects += effect.GetAverageStats(intervalDamageSpellCast);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDamageSpellCast));
                             break;
                         case Trigger.DamageSpellHit:
-                            statsSpecialEffects += effect.GetAverageStats(intervalDamageSpellCast, chanceHitSpell);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDamageSpellCast, chanceHitSpell));
                             break;
                         case Trigger.DamageSpellCrit:
-                            statsSpecialEffects += effect.GetAverageStats(intervalDamageSpellCast, chanceCritSpell);
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDamageSpellCast, chanceCritSpell));
                             break;
                     }
                 }
