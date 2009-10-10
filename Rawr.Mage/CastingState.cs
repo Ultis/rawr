@@ -336,8 +336,9 @@ namespace Rawr.Mage
             //if (c != null) return c;
             Cycle c = null;
             //if (Cycles.TryGetValue((int)cycleId, out c)) return c;
-            foreach (Cycle cycle in Cycles)
+            for (int i = 0; i < Cycles.Count; i++)
             {
+                Cycle cycle = Cycles[i];
                 if (cycle.CycleId == cycleId) return cycle;
             }
 
@@ -663,8 +664,9 @@ namespace Rawr.Mage
             //if (s != null) return s;
             Spell s = null;
             //if (Spells.TryGetValue((int)spellId, out s)) return s;
-            foreach (Spell spell in Spells)
+            for (int i = 0; i < Spells.Count; i++)
             {
+                Spell spell = Spells[i];
                 if (spell.SpellId == spellId) return spell;
             }
 

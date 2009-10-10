@@ -226,19 +226,16 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label85 = new System.Windows.Forms.Label();
+            this.checkBoxMaxUseAssumption = new System.Windows.Forms.CheckBox();
             this.label87 = new System.Windows.Forms.Label();
             this.checkBoxForceIncrementalOptimizations = new System.Windows.Forms.CheckBox();
-            this.buttonHotStreakUtilization = new System.Windows.Forms.Button();
-            this.buttonComputeOptimalFrostCycles = new System.Windows.Forms.Button();
-            this.buttonEditTalentScores = new System.Windows.Forms.Button();
             this.numericUpDownMaxThreads = new System.Windows.Forms.NumericUpDown();
             this.label108 = new System.Windows.Forms.Label();
             this.numericUpDownDisplayAdvancedConstraintsLevel = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownComparisonAdvancedConstraintsLevel = new System.Windows.Forms.NumericUpDown();
-            this.buttonAdvancedSolverLog = new System.Windows.Forms.Button();
             this.label102 = new System.Windows.Forms.Label();
             this.checkBoxEnableHastedEvocation = new System.Windows.Forms.CheckBox();
-            this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.label101 = new System.Windows.Forms.Label();
             this.textBoxLowerBoundHint = new System.Windows.Forms.TextBox();
             this.label100 = new System.Windows.Forms.Label();
@@ -248,7 +245,6 @@
             this.label96 = new System.Windows.Forms.Label();
             this.comboBoxSegmentDuration = new System.Windows.Forms.ComboBox();
             this.label95 = new System.Windows.Forms.Label();
-            this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.label99 = new System.Windows.Forms.Label();
             this.checkBoxDebugCooldownSegmentation = new System.Windows.Forms.CheckBox();
             this.comboBoxMIPMethod = new System.Windows.Forms.ComboBox();
@@ -269,8 +265,17 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label85 = new System.Windows.Forms.Label();
-            this.checkBoxMaxUseAssumption = new System.Windows.Forms.CheckBox();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.buttonHotStreakUtilization = new System.Windows.Forms.Button();
+            this.buttonComputeOptimalFrostCycles = new System.Windows.Forms.Button();
+            this.buttonEditTalentScores = new System.Windows.Forms.Button();
+            this.buttonAdvancedSolverLog = new System.Windows.Forms.Button();
+            this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
+            this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
+            this.label92 = new System.Windows.Forms.Label();
+            this.label93 = new System.Windows.Forms.Label();
+            this.label104 = new System.Windows.Forms.Label();
+            this.buttonCalculationTiming = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -282,6 +287,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
+            this.tabPage7.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -292,6 +298,7 @@
             this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
@@ -2330,17 +2337,12 @@
             this.tabPage4.Controls.Add(this.checkBoxMaxUseAssumption);
             this.tabPage4.Controls.Add(this.label87);
             this.tabPage4.Controls.Add(this.checkBoxForceIncrementalOptimizations);
-            this.tabPage4.Controls.Add(this.buttonHotStreakUtilization);
-            this.tabPage4.Controls.Add(this.buttonComputeOptimalFrostCycles);
-            this.tabPage4.Controls.Add(this.buttonEditTalentScores);
             this.tabPage4.Controls.Add(this.numericUpDownMaxThreads);
             this.tabPage4.Controls.Add(this.label108);
             this.tabPage4.Controls.Add(this.numericUpDownDisplayAdvancedConstraintsLevel);
             this.tabPage4.Controls.Add(this.numericUpDownComparisonAdvancedConstraintsLevel);
-            this.tabPage4.Controls.Add(this.buttonAdvancedSolverLog);
             this.tabPage4.Controls.Add(this.label102);
             this.tabPage4.Controls.Add(this.checkBoxEnableHastedEvocation);
-            this.tabPage4.Controls.Add(this.buttonCooldownRestrictionsEditor);
             this.tabPage4.Controls.Add(this.label101);
             this.tabPage4.Controls.Add(this.textBoxLowerBoundHint);
             this.tabPage4.Controls.Add(this.label100);
@@ -2350,7 +2352,6 @@
             this.tabPage4.Controls.Add(this.label96);
             this.tabPage4.Controls.Add(this.comboBoxSegmentDuration);
             this.tabPage4.Controls.Add(this.label95);
-            this.tabPage4.Controls.Add(this.buttonComputeOptimalArcaneCycles);
             this.tabPage4.Controls.Add(this.label99);
             this.tabPage4.Controls.Add(this.checkBoxDebugCooldownSegmentation);
             this.tabPage4.Controls.Add(this.comboBoxMIPMethod);
@@ -2378,6 +2379,28 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // label85
+            // 
+            this.label85.AutoSize = true;
+            this.label85.Location = new System.Drawing.Point(0, 107);
+            this.label85.Name = "label85";
+            this.label85.Size = new System.Drawing.Size(116, 13);
+            this.label85.TabIndex = 210;
+            this.label85.Text = "Max Use Assumption: *";
+            this.toolTipMage.SetToolTip(this.label85, "Add stacking constraints based under assumption that each effect must be used max" +
+                    "imum possible amount. You should only disable this when using maximum settings f" +
+                    "or advanced constraints.");
+            // 
+            // checkBoxMaxUseAssumption
+            // 
+            this.checkBoxMaxUseAssumption.AutoSize = true;
+            this.checkBoxMaxUseAssumption.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "MaxUseAssumption", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxMaxUseAssumption.Location = new System.Drawing.Point(185, 107);
+            this.checkBoxMaxUseAssumption.Name = "checkBoxMaxUseAssumption";
+            this.checkBoxMaxUseAssumption.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMaxUseAssumption.TabIndex = 209;
+            this.checkBoxMaxUseAssumption.UseVisualStyleBackColor = true;
+            // 
             // label87
             // 
             this.label87.AutoSize = true;
@@ -2398,36 +2421,6 @@
             this.checkBoxForceIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
             this.checkBoxForceIncrementalOptimizations.TabIndex = 207;
             this.checkBoxForceIncrementalOptimizations.UseVisualStyleBackColor = true;
-            // 
-            // buttonHotStreakUtilization
-            // 
-            this.buttonHotStreakUtilization.Location = new System.Drawing.Point(3, 425);
-            this.buttonHotStreakUtilization.Name = "buttonHotStreakUtilization";
-            this.buttonHotStreakUtilization.Size = new System.Drawing.Size(197, 23);
-            this.buttonHotStreakUtilization.TabIndex = 204;
-            this.buttonHotStreakUtilization.Text = "Hot Streak Utilization";
-            this.buttonHotStreakUtilization.UseVisualStyleBackColor = true;
-            this.buttonHotStreakUtilization.Click += new System.EventHandler(this.buttonHotStreakUtilization_Click);
-            // 
-            // buttonComputeOptimalFrostCycles
-            // 
-            this.buttonComputeOptimalFrostCycles.Location = new System.Drawing.Point(104, 396);
-            this.buttonComputeOptimalFrostCycles.Name = "buttonComputeOptimalFrostCycles";
-            this.buttonComputeOptimalFrostCycles.Size = new System.Drawing.Size(96, 23);
-            this.buttonComputeOptimalFrostCycles.TabIndex = 201;
-            this.buttonComputeOptimalFrostCycles.Text = "Frost Cycles";
-            this.buttonComputeOptimalFrostCycles.UseVisualStyleBackColor = true;
-            this.buttonComputeOptimalFrostCycles.Click += new System.EventHandler(this.buttonComputeOptimalFrostCycles_Click);
-            // 
-            // buttonEditTalentScores
-            // 
-            this.buttonEditTalentScores.Location = new System.Drawing.Point(105, 454);
-            this.buttonEditTalentScores.Name = "buttonEditTalentScores";
-            this.buttonEditTalentScores.Size = new System.Drawing.Size(95, 23);
-            this.buttonEditTalentScores.TabIndex = 200;
-            this.buttonEditTalentScores.Text = "Talent Scores";
-            this.buttonEditTalentScores.UseVisualStyleBackColor = true;
-            this.buttonEditTalentScores.Click += new System.EventHandler(this.buttonEditTalentScores_Click);
             // 
             // numericUpDownMaxThreads
             // 
@@ -2489,16 +2482,6 @@
             this.numericUpDownComparisonAdvancedConstraintsLevel.Size = new System.Drawing.Size(29, 20);
             this.numericUpDownComparisonAdvancedConstraintsLevel.TabIndex = 196;
             // 
-            // buttonAdvancedSolverLog
-            // 
-            this.buttonAdvancedSolverLog.Location = new System.Drawing.Point(3, 483);
-            this.buttonAdvancedSolverLog.Name = "buttonAdvancedSolverLog";
-            this.buttonAdvancedSolverLog.Size = new System.Drawing.Size(197, 23);
-            this.buttonAdvancedSolverLog.TabIndex = 193;
-            this.buttonAdvancedSolverLog.Text = "Advanced Solver Log";
-            this.buttonAdvancedSolverLog.UseVisualStyleBackColor = true;
-            this.buttonAdvancedSolverLog.Click += new System.EventHandler(this.buttonAdvancedSolverLog_Click);
-            // 
             // label102
             // 
             this.label102.AutoSize = true;
@@ -2519,16 +2502,6 @@
             this.checkBoxEnableHastedEvocation.Size = new System.Drawing.Size(15, 14);
             this.checkBoxEnableHastedEvocation.TabIndex = 191;
             this.checkBoxEnableHastedEvocation.UseVisualStyleBackColor = true;
-            // 
-            // buttonCooldownRestrictionsEditor
-            // 
-            this.buttonCooldownRestrictionsEditor.Location = new System.Drawing.Point(3, 454);
-            this.buttonCooldownRestrictionsEditor.Name = "buttonCooldownRestrictionsEditor";
-            this.buttonCooldownRestrictionsEditor.Size = new System.Drawing.Size(95, 23);
-            this.buttonCooldownRestrictionsEditor.TabIndex = 190;
-            this.buttonCooldownRestrictionsEditor.Text = "Cooldown Editor";
-            this.buttonCooldownRestrictionsEditor.UseVisualStyleBackColor = true;
-            this.buttonCooldownRestrictionsEditor.Click += new System.EventHandler(this.buttonCooldownRestrictionsEditor_Click);
             // 
             // label101
             // 
@@ -2622,16 +2595,6 @@
             this.label95.TabIndex = 178;
             this.label95.Text = "Segment Duration: *";
             this.toolTipMage.SetToolTip(this.label95, "Duration of segments when variable segment duration is not used.");
-            // 
-            // buttonComputeOptimalArcaneCycles
-            // 
-            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(3, 396);
-            this.buttonComputeOptimalArcaneCycles.Name = "buttonComputeOptimalArcaneCycles";
-            this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(95, 23);
-            this.buttonComputeOptimalArcaneCycles.TabIndex = 177;
-            this.buttonComputeOptimalArcaneCycles.Text = "Arcane Cycles";
-            this.buttonComputeOptimalArcaneCycles.UseVisualStyleBackColor = true;
-            this.buttonComputeOptimalArcaneCycles.Click += new System.EventHandler(this.buttonComputeOptimalArcaneCycles_Click);
             // 
             // label99
             // 
@@ -2835,27 +2798,116 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label85
+            // tabPage7
             // 
-            this.label85.AutoSize = true;
-            this.label85.Location = new System.Drawing.Point(0, 107);
-            this.label85.Name = "label85";
-            this.label85.Size = new System.Drawing.Size(116, 13);
-            this.label85.TabIndex = 210;
-            this.label85.Text = "Max Use Assumption: *";
-            this.toolTipMage.SetToolTip(this.label85, "Add stacking constraints based under assumption that each effect must be used max" +
-                    "imum possible amount. You should only disable this when using maximum settings f" +
-                    "or advanced constraints.");
+            this.tabPage7.Controls.Add(this.buttonCalculationTiming);
+            this.tabPage7.Controls.Add(this.label104);
+            this.tabPage7.Controls.Add(this.label93);
+            this.tabPage7.Controls.Add(this.label92);
+            this.tabPage7.Controls.Add(this.buttonHotStreakUtilization);
+            this.tabPage7.Controls.Add(this.buttonComputeOptimalFrostCycles);
+            this.tabPage7.Controls.Add(this.buttonEditTalentScores);
+            this.tabPage7.Controls.Add(this.buttonAdvancedSolverLog);
+            this.tabPage7.Controls.Add(this.buttonCooldownRestrictionsEditor);
+            this.tabPage7.Controls.Add(this.buttonComputeOptimalArcaneCycles);
+            this.tabPage7.Location = new System.Drawing.Point(4, 40);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(252, 507);
+            this.tabPage7.TabIndex = 6;
+            this.tabPage7.Text = "Tools";
+            this.tabPage7.UseVisualStyleBackColor = true;
             // 
-            // checkBoxMaxUseAssumption
+            // buttonHotStreakUtilization
             // 
-            this.checkBoxMaxUseAssumption.AutoSize = true;
-            this.checkBoxMaxUseAssumption.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "MaxUseAssumption", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxMaxUseAssumption.Location = new System.Drawing.Point(185, 107);
-            this.checkBoxMaxUseAssumption.Name = "checkBoxMaxUseAssumption";
-            this.checkBoxMaxUseAssumption.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxMaxUseAssumption.TabIndex = 209;
-            this.checkBoxMaxUseAssumption.UseVisualStyleBackColor = true;
+            this.buttonHotStreakUtilization.Location = new System.Drawing.Point(6, 91);
+            this.buttonHotStreakUtilization.Name = "buttonHotStreakUtilization";
+            this.buttonHotStreakUtilization.Size = new System.Drawing.Size(197, 23);
+            this.buttonHotStreakUtilization.TabIndex = 210;
+            this.buttonHotStreakUtilization.Text = "Hot Streak Utilization";
+            this.buttonHotStreakUtilization.UseVisualStyleBackColor = true;
+            // 
+            // buttonComputeOptimalFrostCycles
+            // 
+            this.buttonComputeOptimalFrostCycles.Location = new System.Drawing.Point(6, 60);
+            this.buttonComputeOptimalFrostCycles.Name = "buttonComputeOptimalFrostCycles";
+            this.buttonComputeOptimalFrostCycles.Size = new System.Drawing.Size(197, 23);
+            this.buttonComputeOptimalFrostCycles.TabIndex = 209;
+            this.buttonComputeOptimalFrostCycles.Text = "Frost Cycles";
+            this.buttonComputeOptimalFrostCycles.UseVisualStyleBackColor = true;
+            // 
+            // buttonEditTalentScores
+            // 
+            this.buttonEditTalentScores.Location = new System.Drawing.Point(6, 179);
+            this.buttonEditTalentScores.Name = "buttonEditTalentScores";
+            this.buttonEditTalentScores.Size = new System.Drawing.Size(197, 23);
+            this.buttonEditTalentScores.TabIndex = 208;
+            this.buttonEditTalentScores.Text = "Talent Score Editor";
+            this.buttonEditTalentScores.UseVisualStyleBackColor = true;
+            // 
+            // buttonAdvancedSolverLog
+            // 
+            this.buttonAdvancedSolverLog.Location = new System.Drawing.Point(6, 233);
+            this.buttonAdvancedSolverLog.Name = "buttonAdvancedSolverLog";
+            this.buttonAdvancedSolverLog.Size = new System.Drawing.Size(197, 23);
+            this.buttonAdvancedSolverLog.TabIndex = 207;
+            this.buttonAdvancedSolverLog.Text = "Advanced Solver Log";
+            this.buttonAdvancedSolverLog.UseVisualStyleBackColor = true;
+            // 
+            // buttonCooldownRestrictionsEditor
+            // 
+            this.buttonCooldownRestrictionsEditor.Location = new System.Drawing.Point(6, 148);
+            this.buttonCooldownRestrictionsEditor.Name = "buttonCooldownRestrictionsEditor";
+            this.buttonCooldownRestrictionsEditor.Size = new System.Drawing.Size(197, 23);
+            this.buttonCooldownRestrictionsEditor.TabIndex = 206;
+            this.buttonCooldownRestrictionsEditor.Text = "Cooldown Editor";
+            this.buttonCooldownRestrictionsEditor.UseVisualStyleBackColor = true;
+            // 
+            // buttonComputeOptimalArcaneCycles
+            // 
+            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(6, 29);
+            this.buttonComputeOptimalArcaneCycles.Name = "buttonComputeOptimalArcaneCycles";
+            this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(197, 23);
+            this.buttonComputeOptimalArcaneCycles.TabIndex = 205;
+            this.buttonComputeOptimalArcaneCycles.Text = "Arcane Cycles";
+            this.buttonComputeOptimalArcaneCycles.UseVisualStyleBackColor = true;
+            // 
+            // label92
+            // 
+            this.label92.AutoSize = true;
+            this.label92.Location = new System.Drawing.Point(6, 13);
+            this.label92.Name = "label92";
+            this.label92.Size = new System.Drawing.Size(77, 13);
+            this.label92.TabIndex = 211;
+            this.label92.Text = "Cycle Analysis:";
+            // 
+            // label93
+            // 
+            this.label93.AutoSize = true;
+            this.label93.Location = new System.Drawing.Point(6, 132);
+            this.label93.Name = "label93";
+            this.label93.Size = new System.Drawing.Size(42, 13);
+            this.label93.TabIndex = 212;
+            this.label93.Text = "Editors:";
+            // 
+            // label104
+            // 
+            this.label104.AutoSize = true;
+            this.label104.Location = new System.Drawing.Point(6, 217);
+            this.label104.Name = "label104";
+            this.label104.Size = new System.Drawing.Size(70, 13);
+            this.label104.TabIndex = 213;
+            this.label104.Text = "Performance:";
+            // 
+            // buttonCalculationTiming
+            // 
+            this.buttonCalculationTiming.Location = new System.Drawing.Point(6, 262);
+            this.buttonCalculationTiming.Name = "buttonCalculationTiming";
+            this.buttonCalculationTiming.Size = new System.Drawing.Size(197, 23);
+            this.buttonCalculationTiming.TabIndex = 214;
+            this.buttonCalculationTiming.Text = "Calculation Timing";
+            this.buttonCalculationTiming.UseVisualStyleBackColor = true;
+            this.buttonCalculationTiming.Click += new System.EventHandler(this.buttonCalculationTiming_Click);
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2882,6 +2934,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxThreads)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -3071,7 +3125,6 @@
         private System.Windows.Forms.Label label97;
         private System.Windows.Forms.Label label99;
         private System.Windows.Forms.CheckBox checkBoxDebugCooldownSegmentation;
-        private System.Windows.Forms.Button buttonComputeOptimalArcaneCycles;
         private System.Windows.Forms.CheckBox checkBoxVariableSegmentDuration;
         private System.Windows.Forms.Label label96;
         private System.Windows.Forms.ComboBox comboBoxSegmentDuration;
@@ -3081,12 +3134,10 @@
         private System.Windows.Forms.TextBox textBoxLowerBoundHint;
         private System.Windows.Forms.Label label100;
         private System.Windows.Forms.Label label101;
-        private System.Windows.Forms.Button buttonCooldownRestrictionsEditor;
         private System.Windows.Forms.Label label102;
         private System.Windows.Forms.CheckBox checkBoxEnableHastedEvocation;
         private System.Windows.Forms.Label label103;
         private System.Windows.Forms.CheckBox checkBoxPowerInfusion;
-        private System.Windows.Forms.Button buttonAdvancedSolverLog;
         private System.Windows.Forms.NumericUpDown numericUpDownComparisonAdvancedConstraintsLevel;
         private System.Windows.Forms.NumericUpDown numericUpDownDisplayAdvancedConstraintsLevel;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxThreads;
@@ -3102,7 +3153,6 @@
         private System.Windows.Forms.TextBox textBoxEffectFrost;
         private System.Windows.Forms.TextBox textBoxEffectFire;
         private System.Windows.Forms.TextBox textBoxEffectArcane;
-        private System.Windows.Forms.Button buttonEditTalentScores;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label82;
         private System.Windows.Forms.TextBox textBox2;
@@ -3113,10 +3163,8 @@
         private System.Windows.Forms.Label label83;
         private System.Windows.Forms.Label label84;
         private System.Windows.Forms.CheckBox checkBoxEffectDisableManaSources;
-        private System.Windows.Forms.Button buttonComputeOptimalFrostCycles;
         private System.Windows.Forms.TextBox textBoxBonusCritDamage;
         private System.Windows.Forms.Label label86;
-        private System.Windows.Forms.Button buttonHotStreakUtilization;
         private System.Windows.Forms.TextBox textBoxChannelLatency;
         private System.Windows.Forms.Label label89;
         private System.Windows.Forms.TextBox textBoxGCDLatency;
@@ -3129,6 +3177,17 @@
         private System.Windows.Forms.Label label90;
         private System.Windows.Forms.Label label85;
         private System.Windows.Forms.CheckBox checkBoxMaxUseAssumption;
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.Label label93;
+        private System.Windows.Forms.Label label92;
+        private System.Windows.Forms.Button buttonHotStreakUtilization;
+        private System.Windows.Forms.Button buttonComputeOptimalFrostCycles;
+        private System.Windows.Forms.Button buttonEditTalentScores;
+        private System.Windows.Forms.Button buttonAdvancedSolverLog;
+        private System.Windows.Forms.Button buttonCooldownRestrictionsEditor;
+        private System.Windows.Forms.Button buttonComputeOptimalArcaneCycles;
+        private System.Windows.Forms.Button buttonCalculationTiming;
+        private System.Windows.Forms.Label label104;
 
     }
 }

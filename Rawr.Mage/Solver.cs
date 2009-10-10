@@ -66,7 +66,7 @@ namespace Rawr.Mage
         private Dictionary<int, EffectCooldown> effectCooldown;
         private List<int> effectExclusionList;
         private List<SolutionVariable> solutionVariable;
-        private List<StackingConstraint> rowStackingConstraint;
+        private StackingConstraint[] rowStackingConstraint;
 
         private List<CastingState> stateList;
         private List<CycleId> spellList;
@@ -1125,7 +1125,7 @@ namespace Rawr.Mage
             cooldownCount = standardEffectCount;
             int mask = 1 << standardEffectCount;
 
-            calculationResult.ItemBasedEffectCooldowns = new List<EffectCooldown>();
+            List<EffectCooldown> itemBasedEffectCooldowns = new List<EffectCooldown>();
             int itemBasedMask = 0;
 
 #if !SILVERLIGHT
@@ -1172,7 +1172,7 @@ namespace Rawr.Mage
                                     cooldown.Color = itemColors[Math.Min(itemColors.Length - 1, colorIndex++)];
 #endif
                                     cooldownList.Add(cooldown);
-                                    calculationResult.ItemBasedEffectCooldowns.Add(cooldown);
+                                    itemBasedEffectCooldowns.Add(cooldown);
                                 }
                             }
                         }
@@ -1199,13 +1199,15 @@ namespace Rawr.Mage
                                     cooldown.Color = itemColors[Math.Min(itemColors.Length - 1, colorIndex++)];
 #endif
                                     cooldownList.Add(cooldown);
-                                    calculationResult.ItemBasedEffectCooldowns.Add(cooldown);
+                                    itemBasedEffectCooldowns.Add(cooldown);
                                 }
                             }
                         }
                     }
                 }
             }
+
+            calculationResult.ItemBasedEffectCooldowns = itemBasedEffectCooldowns.ToArray();
 
             if (manaGemEffectAvailable)
             {
@@ -2990,7 +2992,7 @@ namespace Rawr.Mage
             }
             rowDpsTime = rowCount++;
 
-            rowStackingConstraint = new List<StackingConstraint>();
+            List<StackingConstraint> rowStackingConstraintList = new List<StackingConstraint>();
             for (int i = 0; i < cooldownList.Count; i++)
             {
                 if (cooldownList[i].AutomaticStackingConstraints)
@@ -3013,7 +3015,7 @@ namespace Rawr.Mage
                                 double maxDuration = MaximizeStackingDuration(calculationOptions.FightDuration, cooldownList[i].Duration, cooldownList[i].Cooldown, cooldownList[j].Duration, cooldownList[j].Cooldown);
                                 if (maxDuration < cooldownList[i].MaximumDuration && maxDuration < cooldownList[j].MaximumDuration)
                                 {
-                                    rowStackingConstraint.Add(new StackingConstraint()
+                                    rowStackingConstraintList.Add(new StackingConstraint()
                                     {
                                         Row = rowCount++,
                                         Effect1 = cooldownList[i],
@@ -3026,6 +3028,7 @@ namespace Rawr.Mage
                     }
                 }
             }
+            rowStackingConstraint = rowStackingConstraintList.ToArray();
 
             if (coldsnapAvailable)
             {
@@ -3038,7 +3041,7 @@ namespace Rawr.Mage
                 rowIcyVeins = effectCooldown[(int)StandardEffect.IcyVeins].Row;
                 if (heroismAvailable)
                 {
-                    StackingConstraint c = rowStackingConstraint.Find(sc => (sc.Effect1.StandardEffect == StandardEffect.Heroism && sc.Effect2.StandardEffect == StandardEffect.IcyVeins) || (sc.Effect2.StandardEffect == StandardEffect.Heroism && sc.Effect1.StandardEffect == StandardEffect.IcyVeins));
+                    StackingConstraint c = rowStackingConstraintList.Find(sc => (sc.Effect1.StandardEffect == StandardEffect.Heroism && sc.Effect2.StandardEffect == StandardEffect.IcyVeins) || (sc.Effect2.StandardEffect == StandardEffect.Heroism && sc.Effect1.StandardEffect == StandardEffect.IcyVeins));
                     rowHeroismIcyVeins = c.Row;
                 }
             }
@@ -3270,16 +3273,31 @@ namespace Rawr.Mage
             {
                 lp.SetElementUnsafe(rowPotion, column, 1.0 / 15.0);
             }
-            if (state.WaterElemental) lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
+            if (state.WaterElemental)
+            {
+                lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
+                lp.SetElementUnsafe(rowSummonWaterElemental, column, 1 / (calculationResult.WaterElementalDuration - calculationResult.BaseGlobalCooldown));
+            }
             if (state.Heroism) lp.SetElementUnsafe(rowHeroism, column, 1.0);
             if (state.ArcanePower) lp.SetElementUnsafe(rowArcanePower, column, 1.0);
             if (state.PowerInfusion) lp.SetElementUnsafe(rowPowerInfusion, column, 1.0);
+            if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFury, column, 1.0);
             //if (state.Heroism && state.ArcanePower) lp.SetElementUnsafe(rowHeroismArcanePower, column, 1.0);
             //if (state.Heroism && state.ManaGemEffect) lp.SetElementUnsafe(rowHeroismManaGemEffect, column, 1.0);
-            if (state.IcyVeins) lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
-            if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFury, column, 1.0);
+            if (state.IcyVeins)
+            {
+                lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
+                if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryIcyVeins, column, 1.0);
+                if (coldsnapAvailable && state.Heroism)
+                {
+                    // VERY IMPORTANT!!!
+                    // you're only allowed to set this for coldsnap case, because otherwise it's already handled
+                    // by automatic constraints and those already include it
+                    // otherwise you end with two identical entries in sparse matrix which creates problems
+                    lp.SetElementUnsafe(rowHeroismIcyVeins, column, 1.0);
+                }
+            }
             //if (state.MoltenFury && state.PotionOfWildMagic) lp.SetElementUnsafe(rowMoltenFuryDestructionPotion, column, 1.0);
-            if (state.MoltenFury && state.IcyVeins) lp.SetElementUnsafe(rowMoltenFuryIcyVeins, column, 1.0);
             //if (state.MoltenFury && state.ManaGemEffect) lp.SetElementUnsafe(rowMoltenFuryManaGemEffect, column, 1.0);
             //if (state.PotionOfWildMagic && state.Heroism) lp.SetElementUnsafe(rowHeroismDestructionPotion, column, 1.0);
             //if (state.PotionOfWildMagic && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsDestructionPotion, column, 1.0);
@@ -3293,10 +3311,10 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(cooldown.Row, column, 1.0);
                 }
             }
-            lp.SetElementUnsafe(rowManaGemEffectActivation, column, ((state.ManaGemEffect) ? 1 / manaGemEffectDuration : 0));
-            if (cycle.AreaEffect) lp.SetElementUnsafe(rowAoe, column, 1.0);
+            if (state.ManaGemEffect) lp.SetElementUnsafe(rowManaGemEffectActivation, column, 1 / manaGemEffectDuration);
             if (cycle.AreaEffect)
             {
+                lp.SetElementUnsafe(rowAoe, column, 1.0);
                 Spell fs = cycle.AoeSpell;
                 if (fs.SpellTemplate is FlamestrikeTemplate)
                 {
@@ -3334,23 +3352,17 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowDragonsBreath, column, -1.0);
                 }
             }
-            if (state.Combustion) lp.SetElementUnsafe(rowCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
-            if (state.Combustion && state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
-            if (state.Combustion && state.Heroism) lp.SetElementUnsafe(rowHeroismCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
-            if (coldsnapAvailable)
+            if (state.Combustion)
             {
-                // VERY IMPORTANT!!!
-                // you're only allowed to set this for coldsnap case, because otherwise it's already handled
-                // by automatic constraints and those already include it
-                // otherwise you end with two identical entries in sparse matrix which creates problems
-                if (state.IcyVeins && state.Heroism) lp.SetElementUnsafe(rowHeroismIcyVeins, column, 1.0);
+                lp.SetElementUnsafe(rowCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
+                if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
+                if (state.Heroism) lp.SetElementUnsafe(rowHeroismCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
             }
             if (state.Berserking) lp.SetElementUnsafe(rowBerserking, column, 1.0);
             //if (state.Berserking && state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryBerserking, column, 1.0);
             //if (state.Berserking && state.Heroism) lp.SetElementUnsafe(rowHeroismBerserking, column, 1.0);
             //if (state.Berserking && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsBerserking, column, 1.0);
             //if (state.Berserking && state.ArcanePower) lp.SetElementUnsafe(rowArcanePowerBerserking, column, 1.0);
-            if (state.WaterElemental) lp.SetElementUnsafe(rowSummonWaterElemental, column, 1 / (calculationResult.WaterElementalDuration - calculationResult.BaseGlobalCooldown));
             lp.SetElementUnsafe(rowThreat, column, cycle.ThreatPerSecond);
             if (needsDisplayCalculations) tpsList.Add(cycle.ThreatPerSecond);
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
@@ -3367,96 +3379,102 @@ namespace Rawr.Mage
 
             if (segmentCooldowns)
             {
-                // mf, heroism, ap, iv, combustion, drums, flamecap, destro, t1, t2
-                //lp[rowOffset + 1 * segments + seg, index] = 1;
-                if (state.ArcanePower)
+                bound = SetSpellColumnSegment(segment, state, column, cycle, bound, manaRegen);
+            }
+            lp.SetColumnUpperBound(column, bound);
+        }
+
+        private double SetSpellColumnSegment(int segment, CastingState state, int column, Cycle cycle, double bound, double manaRegen)
+        {
+            // mf, heroism, ap, iv, combustion, drums, flamecap, destro, t1, t2
+            //lp[rowOffset + 1 * segments + seg, index] = 1;
+            if (state.ArcanePower)
+            {
+                bound = Math.Min(bound, calculationResult.ArcanePowerDuration);
+                foreach (SegmentConstraint constraint in rowSegmentArcanePower)
                 {
-                    bound = Math.Min(bound, calculationResult.ArcanePowerDuration);
-                    foreach (SegmentConstraint constraint in rowSegmentArcanePower)
+                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                }
+            }
+            if (state.PowerInfusion)
+            {
+                bound = Math.Min(bound, calculationResult.PowerInfusionDuration);
+                foreach (SegmentConstraint constraint in rowSegmentPowerInfusion)
+                {
+                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                }
+            }
+            if (state.IcyVeins)
+            {
+                bound = Math.Min(bound, (coldsnapAvailable) ? 40.0 : 20.0);
+                foreach (SegmentConstraint constraint in rowSegmentIcyVeins)
+                {
+                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                }
+            }
+            if (state.WaterElemental)
+            {
+                foreach (SegmentConstraint constraint in rowSegmentWaterElemental)
+                {
+                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                }
+            }
+            if (state.Combustion)
+            {
+                foreach (SegmentConstraint constraint in rowSegmentCombustion)
+                {
+                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                }
+            }
+            if (state.Berserking)
+            {
+                foreach (SegmentConstraint constraint in rowSegmentBerserking)
+                {
+                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                }
+            }
+            if (state.FlameCap)
+            {
+                foreach (SegmentConstraint constraint in rowSegmentFlameCap)
+                {
+                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                }
+            }
+            if (state.PotionOfWildMagic || state.PotionOfSpeed)
+            {
+                bound = Math.Min(bound, 15.0);
+                /*for (int ss = 0; ss < segments; ss++)
+                {
+                    double cool = 120;
+                    int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                    if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                    if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentPotion + ss, column, 1.0);
+                    if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                }*/
+            }
+            foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
+            {
+                if (state.EffectsActive(cooldown.Mask))
+                {
+                    bound = Math.Min(bound, cooldown.Duration);
+                    foreach (SegmentConstraint constraint in cooldown.SegmentConstraints)
                     {
                         if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                     }
                 }
-                if (state.PowerInfusion)
+            }
+            if (state.ManaGemEffect)
+            {
+                bound = Math.Min(bound, manaGemEffectDuration);
+                foreach (SegmentConstraint constraint in rowSegmentManaGemEffect)
                 {
-                    bound = Math.Min(bound, calculationResult.PowerInfusionDuration);
-                    foreach (SegmentConstraint constraint in rowSegmentPowerInfusion)
-                    {
-                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                    }
+                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                 }
-                if (state.IcyVeins)
-                {
-                    bound = Math.Min(bound, (coldsnapAvailable) ? 40.0 : 20.0);
-                    foreach (SegmentConstraint constraint in rowSegmentIcyVeins)
-                    {
-                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                    }
-                }
-                if (state.WaterElemental)
-                {
-                    foreach (SegmentConstraint constraint in rowSegmentWaterElemental)
-                    {
-                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                    }
-                }
-                if (state.Combustion)
-                {
-                    foreach (SegmentConstraint constraint in rowSegmentCombustion)
-                    {
-                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                    }
-                }
-                if (state.Berserking)
-                {
-                    foreach (SegmentConstraint constraint in rowSegmentBerserking)
-                    {
-                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                    }
-                }
-                if (state.FlameCap)
-                {
-                    foreach (SegmentConstraint constraint in rowSegmentFlameCap)
-                    {
-                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                    }
-                }
-                if (state.PotionOfWildMagic || state.PotionOfSpeed)
-                {
-                    bound = Math.Min(bound, 15.0); 
-                    /*for (int ss = 0; ss < segments; ss++)
-                    {
-                        double cool = 120;
-                        int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
-                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                        if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentPotion + ss, column, 1.0);
-                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
-                    }*/
-                }
-                foreach (EffectCooldown cooldown in calculationResult.ItemBasedEffectCooldowns)
-                {
-                    if (state.EffectsActive(cooldown.Mask))
-                    {
-                        bound = Math.Min(bound, cooldown.Duration);
-                        foreach (SegmentConstraint constraint in cooldown.SegmentConstraints)
-                        {
-                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                        }
-                    }
-                }
-                if (state.ManaGemEffect)
-                {
-                    bound = Math.Min(bound, manaGemEffectDuration);
-                    foreach (SegmentConstraint constraint in rowSegmentManaGemEffect)
-                    {
-                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                    }
-                }
-                if (segmentNonCooldowns || state != calculationResult.BaseState)
-                {
-                    bound = Math.Min(bound, segmentList[segment].Duration);
-                    lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                }
+            }
+            if (segmentNonCooldowns || state != calculationResult.BaseState)
+            {
+                bound = Math.Min(bound, segmentList[segment].Duration);
+                lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
             }
             if (restrictManaUse)
             {
@@ -3473,7 +3491,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowSegmentThreat + ss, column, cycle.ThreatPerSecond);
                 }
             }
-            lp.SetColumnUpperBound(column, bound);
+            return bound;
         }
 
         private List<CycleId> GetSpellList()
@@ -3773,7 +3791,7 @@ namespace Rawr.Mage
                     int incrementalSetIndex = calculationOptions.IncrementalSetSortedStates[incrementalSortedIndex];                    
                     bool mf = (incrementalSetIndex & (int)StandardEffect.MoltenFury) != 0;
                     bool heroism = (incrementalSetIndex & (int)StandardEffect.Heroism) != 0;
-                    int itemBasedMax = 1 << calculationResult.ItemBasedEffectCooldowns.Count;
+                    int itemBasedMax = 1 << calculationResult.ItemBasedEffectCooldowns.Length;
                     for (int index = 0; index < itemBasedMax; index++)
                     {
                         int combinedIndex = incrementalSetIndex | (index << standardEffectCount);

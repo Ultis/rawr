@@ -345,5 +345,19 @@ z = actual count on Fingers of Frost
 
             MessageBox.Show(sb.ToString());
         }
-	}
+
+        private void buttonCalculationTiming_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Stopwatch clock = new System.Diagnostics.Stopwatch();
+            CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
+            Character character = Character;
+            clock.Start();
+            for (int i = 0; i < 10000; i++)
+            {
+                calculations.GetCharacterCalculations(character);
+            }
+            clock.Stop();
+            MessageBox.Show("Calculating 10000 characters takes " + clock.Elapsed.TotalSeconds + " seconds.");
+        }
+    }
 }

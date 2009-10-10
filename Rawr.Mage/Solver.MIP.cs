@@ -977,7 +977,7 @@ namespace Rawr.Mage
                     ind = 22;
                     break;
                 default:
-                    for (int i = 0; i < calculationResult.ItemBasedEffectCooldowns.Count; i++)
+                    for (int i = 0; i < calculationResult.ItemBasedEffectCooldowns.Length; i++)
                     {
                         EffectCooldown cooldown = calculationResult.ItemBasedEffectCooldowns[i];
                         if (effectsMask == cooldown.Mask)
@@ -1035,7 +1035,7 @@ namespace Rawr.Mage
         private void AnalyzeSolution()
         {
             manaList = new double[segmentList.Count];
-            segmentCooldownCount = new double[23 + calculationResult.ItemBasedEffectCooldowns.Count][];
+            segmentCooldownCount = new double[23 + calculationResult.ItemBasedEffectCooldowns.Length][];
             hexList = new List<int>[segmentList.Count];
             segmentFilled = new double[segmentList.Count];
             hexMask = new int[segmentList.Count];

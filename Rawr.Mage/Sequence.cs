@@ -2860,7 +2860,7 @@ namespace Rawr.Mage.SequenceReconstruction
             bool berserkingWarning = false;
             bool manaWarning = false;
 
-            CooldownData[] itemData = new CooldownData[Calculations.ItemBasedEffectCooldowns.Count];
+            CooldownData[] itemData = new CooldownData[Calculations.ItemBasedEffectCooldowns.Length];
             for (int i = 0; i < itemData.Length; i++)
             {
                 itemData[i] = new CooldownData();
