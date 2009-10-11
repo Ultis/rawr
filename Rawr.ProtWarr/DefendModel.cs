@@ -28,7 +28,7 @@ namespace Rawr.ProtWarr
         public void Calculate()
         {
             float attackSpeed           = ParryModel.BossAttackSpeed; // Options.BossAttackSpeed;
-            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats));
+            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, Options.TargetLevel));
             float baseDamagePerSecond   = Options.BossAttackValue / Options.BossAttackSpeed;
             float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
 
@@ -60,13 +60,13 @@ namespace Rawr.ProtWarr
             BurstTime = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);
         }
 
-        public DefendModel(Character character, Stats stats)
+        public DefendModel(Character character, Stats stats, CalculationOptionsProtWarr options)
         {
             Character   = character;
             Stats       = stats;
-            Options     = Character.CalculationOptions as CalculationOptionsProtWarr;
-            ParryModel  = new ParryModel(character, stats);
-            DefendTable = new DefendTable(character, stats); 
+            Options     = options;
+            ParryModel  = new ParryModel(character, stats, options);
+            DefendTable = new DefendTable(character, stats, options); 
             Calculate();
         }
     }

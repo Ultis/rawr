@@ -6,16 +6,13 @@ namespace Rawr.ProtWarr
 {
     public static class Lookup
     {
-        public static float LevelModifier(Character character)
+        public static float LevelModifier(Character character, int targetLevel)
         {
-            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-            return (calcOpts.TargetLevel - character.Level) * 0.2f;
+            return (targetLevel - character.Level) * 0.2f;
         }
 
-        public static float TargetArmorReduction(Character character, Stats stats)
+        public static float TargetArmorReduction(Character character, Stats stats, int targetArmor)
         {
-            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-			int targetArmor = calcOpts.TargetArmor;
             float ignoreArmor = 0.0f;
             if (character.MainHand != null && (character.MainHand.Type == ItemType.OneHandMace))
                 ignoreArmor += character.WarriorTalents.MaceSpecialization * 0.03f;
@@ -23,25 +20,23 @@ namespace Rawr.ProtWarr
 			return StatConversion.GetArmorDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, ignoreArmor, stats.ArmorPenetrationRating);
         }
 
-        public static float TargetCritChance(Character character, Stats stats)
+        public static float TargetCritChance(Character character, Stats stats, int targetLevel)
         {
-            return Math.Max(0.0f, 0.05f - AvoidanceChance(character, stats, HitResult.Crit));
+            return Math.Max(0.0f, 0.05f - AvoidanceChance(character, stats, HitResult.Crit, targetLevel));
         }
 
-        public static float TargetAvoidanceChance(Character character, Stats stats, HitResult avoidanceType)
+        public static float TargetAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
         {
-            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-
             switch (avoidanceType)
             {
-                case HitResult.Miss: 
-                    return StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80];
+                case HitResult.Miss:
+                    return StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80];
                 case HitResult.Dodge:
-                    return StatConversion.YELLOW_DODGE_CHANCE_CAP[calcOpts.TargetLevel - 80] - (0.01f * character.WarriorTalents.WeaponMastery);
+                    return StatConversion.YELLOW_DODGE_CHANCE_CAP[targetLevel - 80] - (0.01f * character.WarriorTalents.WeaponMastery);
                 case HitResult.Parry:
-                    return StatConversion.YELLOW_PARRY_CHANCE_CAP[calcOpts.TargetLevel - 80];
+                    return StatConversion.YELLOW_PARRY_CHANCE_CAP[targetLevel - 80];
                 case HitResult.Glance:
-                    return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);
+                    return 0.06f + ((targetLevel - character.Level) * 0.06f);
                 default:
                     return 0.0f;
             }
@@ -112,20 +107,18 @@ namespace Rawr.ProtWarr
                 return (2.0f * (1.0f + stats.BonusCritMultiplier) - 1.0f) * (1.0f + character.WarriorTalents.Impale * 0.1f);
         }
 
-        public static float BonusCritPercentage(Character character, Stats stats)
+        public static float BonusCritPercentage(Character character, Stats stats, int targetLevel)
         {
-            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-
             return Math.Max(0.0f, Math.Min(1.0f, 
                 StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Warrior) + 
-                StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Warrior) + 
-                stats.PhysicalCrit - StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - character.Level]));
+                StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Warrior) +
+                stats.PhysicalCrit - StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - character.Level]));
         }
 
-        public static float BonusCritPercentage(Character character, Stats stats, Ability ability)
+        public static float BonusCritPercentage(Character character, Stats stats, Ability ability, int targetLevel)
         {
             // Grab base melee crit chance before adding ability-specific crit chance
-            float abilityCritChance = BonusCritPercentage(character, stats);
+            float abilityCritChance = BonusCritPercentage(character, stats, targetLevel);
 
             switch (ability)
             {
@@ -189,22 +182,19 @@ namespace Rawr.ProtWarr
                 return 1.0f;
         }
 
-        public static float GlancingReduction(Character character)
+        public static float GlancingReduction(Character character, int targetLevel)
         {
-            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-            return (Math.Min(0.91f, 1.3f - (0.05f * (calcOpts.TargetLevel - character.Level) * 5.0f)) +
-                    Math.Max(0.99f, 1.2f - (0.03f * (calcOpts.TargetLevel - character.Level) * 5.0f))) / 2;
+            return (Math.Min(0.91f, 1.3f - (0.05f * (targetLevel - character.Level) * 5.0f)) +
+                    Math.Max(0.99f, 1.2f - (0.03f * (targetLevel - character.Level) * 5.0f))) / 2;
         }
 
-        public static float ArmorReduction(Character character, Stats stats)
+        public static float ArmorReduction(Character character, Stats stats, int targetLevel)
         {
-            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-            return StatConversion.GetArmorDamageReduction(calcOpts.TargetLevel, stats.Armor, 0.0f, 0.0f, 0.0f);
+            return StatConversion.GetArmorDamageReduction(targetLevel, stats.Armor, 0.0f, 0.0f, 0.0f);
         }
 
-        public static float MagicReduction(Character character, Stats stats, DamageType school)
+        public static float MagicReduction(Character character, Stats stats, DamageType school, int targetLevel)
         {
-            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
             float totalResist = 0.0f;
             switch (school)
             {
@@ -216,15 +206,14 @@ namespace Rawr.ProtWarr
             }
 
             float damageReduction = Lookup.StanceDamageReduction(character, stats, school);
-            float averageResistance = StatConversion.GetAverageResistance(calcOpts.TargetLevel, character.Level, totalResist, 0.0f);
+            float averageResistance = StatConversion.GetAverageResistance(targetLevel, character.Level, totalResist, 0.0f);
 
             return Math.Max(0.0f, (1.0f - averageResistance) * damageReduction);
         }
 
-        public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType)
+        public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
         {
-            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-            return StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, calcOpts.TargetLevel);
+            return StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel);
         }
 
         public static bool IsAvoidable(Ability ability)

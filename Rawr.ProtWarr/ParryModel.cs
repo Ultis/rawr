@@ -49,13 +49,13 @@ namespace Rawr.ProtWarr
             }
         }
 
-        public ParryModel(Character character, Stats stats)
+        public ParryModel(Character character, Stats stats, CalculationOptionsProtWarr options)
         {
             Character   = character;
             Stats       = stats;
-            Options     = character.CalculationOptions as CalculationOptionsProtWarr;
-            AttackTable = new AttackTable(character, stats);
-            DefendTable = new DefendTable(character, stats);
+            Options     = options;
+            AttackTable = new AttackTable(character, stats, options);
+            DefendTable = new DefendTable(character, stats, options);
 
             Calculate();
         }

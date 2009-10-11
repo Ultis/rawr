@@ -104,7 +104,7 @@ namespace Rawr.ProtWarr
             // Average critical strike bonuses
             baseDamage = (baseDamage * (1.0f - AttackTable.Critical)) + (baseDamage * critMultiplier * AttackTable.Critical);
             // Average glancing blow reduction
-            baseDamage *= (1.0f - (Lookup.GlancingReduction(Character) * AttackTable.Glance));
+            baseDamage *= (1.0f - (Lookup.GlancingReduction(Character, Options.TargetLevel) * AttackTable.Glance));
             // Armor reduction
             baseDamage *= (1.0f - ArmorReduction);
             // Missed attacks
@@ -169,17 +169,17 @@ namespace Rawr.ProtWarr
             Threat = abilityThreat;
         }
 
-        public AbilityModel(Character character, Stats stats, Ability ability)
+        public AbilityModel(Character character, Stats stats, CalculationOptionsProtWarr options, Ability ability)
         {
             Character   = character;
             Stats       = stats;
             Ability     = ability;
-            Options     = Character.CalculationOptions as CalculationOptionsProtWarr;
+            Options     = options;
             Talents     = Character.WarriorTalents;
-            AttackTable = new AttackTable(character, stats, ability);
+            AttackTable = new AttackTable(character, stats, options, ability);
 
             Name                = Lookup.Name(Ability);
-            ArmorReduction      = Lookup.TargetArmorReduction(Character, Stats);
+            ArmorReduction      = Lookup.TargetArmorReduction(Character, Stats, Options.TargetArmor);
             DamageMultiplier    = Lookup.StanceDamageMultipler(Character, Stats);
 
             CalculateDamage();
@@ -194,9 +194,9 @@ namespace Rawr.ProtWarr
             return abilityModel.Ability;
         }
 
-        public void Add(Ability ability, Character character, Stats stats)
+        public void Add(Ability ability, Character character, Stats stats, CalculationOptionsProtWarr options)
         {
-            this.Add(new AbilityModel(character, stats, ability));
+            this.Add(new AbilityModel(character, stats, options, ability));
         }
     }
 }
