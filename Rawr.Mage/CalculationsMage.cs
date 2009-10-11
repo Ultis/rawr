@@ -393,6 +393,12 @@ namespace Rawr.Mage
             return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraintsLevel, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
         }
 
+        public static readonly Buff ImprovedScorchBuff = Buff.GetBuffByName("Improved Scorch");
+        public static readonly Buff WintersChillBuff = Buff.GetBuffByName("Winter's Chill");
+        public static readonly Buff MoltenArmorBuff = Buff.GetBuffByName("Molten Armor");
+        public static readonly Buff MageArmorBuff = Buff.GetBuffByName("Mage Armor");
+        public static readonly Buff IceArmorBuff = Buff.GetBuffByName("Ice Armor");
+
         public Stats GetRawStats(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<Buff> autoActivatedBuffs, string armor, out List<Buff> activeBuffs)
         {
             Stats stats = new Stats();
@@ -403,33 +409,42 @@ namespace Rawr.Mage
 
             if (!character.DisableBuffAutoActivation)
             {
-                Buff improvedScorch = Buff.GetBuffByName("Improved Scorch");
-                Buff wintersChill = Buff.GetBuffByName("Winter's Chill");
-
                 if (calculationOptions.MaintainScorch)
                 {
                     if (character.MageTalents.ImprovedScorch > 0)
                     {
-                        if (!character.ActiveBuffs.Contains(improvedScorch) && !character.ActiveBuffs.Contains(wintersChill))
+                        if (!character.ActiveBuffs.Contains(ImprovedScorchBuff) && !character.ActiveBuffs.Contains(WintersChillBuff))
                         {
-                            activeBuffs.Add(improvedScorch);
-                            autoActivatedBuffs.Add(improvedScorch);
-                            RemoveConflictingBuffs(activeBuffs, improvedScorch);
+                            activeBuffs.Add(ImprovedScorchBuff);
+                            autoActivatedBuffs.Add(ImprovedScorchBuff);
+                            RemoveConflictingBuffs(activeBuffs, ImprovedScorchBuff);
                         }
                     }
                 }
                 if (character.MageTalents.WintersChill > 0)
                 {
-                    if (!character.ActiveBuffs.Contains(wintersChill) && !character.ActiveBuffs.Contains(improvedScorch))
+                    if (!character.ActiveBuffs.Contains(WintersChillBuff) && !character.ActiveBuffs.Contains(ImprovedScorchBuff))
                     {
-                        activeBuffs.Add(wintersChill);
-                        autoActivatedBuffs.Add(wintersChill);
-                        RemoveConflictingBuffs(activeBuffs, wintersChill);
+                        activeBuffs.Add(WintersChillBuff);
+                        autoActivatedBuffs.Add(WintersChillBuff);
+                        RemoveConflictingBuffs(activeBuffs, WintersChillBuff);
                     }
                 }
                 if (armor != null)
                 {
-                    Buff armorBuff = Buff.GetBuffByName(armor);
+                    Buff armorBuff = null;
+                    switch (armor)
+                    {
+                        case "Molten Armor":
+                            armorBuff = MoltenArmorBuff;
+                            break;
+                        case "Mage Armor":
+                            armorBuff = MageArmorBuff;
+                            break;
+                        case "Ice Armor":
+                            armorBuff = IceArmorBuff;
+                            break;
+                    }
                     if (!character.ActiveBuffs.Contains(armorBuff))
                     {
                         activeBuffs.Add(armorBuff);

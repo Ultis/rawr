@@ -819,9 +819,9 @@ namespace Rawr.Mage
 
             if (armor == null)
             {
-                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Mage Armor"))) armor = "Mage Armor";
-                else if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Molten Armor"))) armor = "Molten Armor";
-                else if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Ice Armor"))) armor = "Ice Armor";
+                if (character.ActiveBuffs.Contains(CalculationsMage.MageArmorBuff)) armor = "Mage Armor";
+                else if (character.ActiveBuffs.Contains(CalculationsMage.MoltenArmorBuff)) armor = "Molten Armor";
+                else if (character.ActiveBuffs.Contains(CalculationsMage.IceArmorBuff)) armor = "Ice Armor";
             }
 
             CalculateBaseStateStats(baseStats);
