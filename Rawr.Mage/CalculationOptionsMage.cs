@@ -112,6 +112,20 @@ namespace Rawr.Mage
             set { _LatencyChannel = value; OnPropertyChanged("LatencyChannel"); }
         }
 
+        private float _MovementFrequency;
+        public float MovementFrequency
+        {
+            get { return _MovementFrequency; }
+            set { _MovementFrequency = value; OnPropertyChanged("MovementFrequency"); }
+        }
+
+        private float _MovementDuration;
+        public float MovementDuration
+        {
+            get { return _MovementDuration; }
+            set { _MovementDuration = value; OnPropertyChanged("MovementDuration"); }
+        }
+
         private int _AoeTargets;
         public int AoeTargets
         {

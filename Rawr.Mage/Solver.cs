@@ -116,6 +116,8 @@ namespace Rawr.Mage
         private float manaGemEffectDuration;
         private int availableCooldownMask = 0;
 
+        private float dpsTime;
+
         #region LP rows
         private int rowManaRegen = -1;
         private int rowFightDuration = -1;
@@ -1646,9 +1648,14 @@ namespace Rawr.Mage
                 #endregion
 
                 float threatFactor = (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
-                float dpsTime = calculationOptions.DpsTime;
+                dpsTime = calculationOptions.DpsTime;
                 float silenceTime = calculationOptions.EffectShadowSilenceFrequency * calculationOptions.EffectShadowSilenceDuration * Math.Max(1 - baseStats.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
                 if (1 - silenceTime < dpsTime) dpsTime = 1 - silenceTime;
+                if (calculationOptions.MovementFrequency > 0)
+                {
+                    float movementShare = calculationOptions.MovementDuration / calculationOptions.MovementFrequency / (1 + baseStats.MovementSpeed);
+                    dpsTime -= movementShare;
+                }
 
                 #region Formulate LP
                 #region Idle Regen
@@ -2724,7 +2731,7 @@ namespace Rawr.Mage
 
             if (heroismAvailable)
             {
-                double minDuration = Math.Min(0.99 * calculationOptions.FightDuration * calculationOptions.DpsTime, 40.0);
+                double minDuration = Math.Min(0.99 * calculationOptions.FightDuration * dpsTime, 40.0);
                 if (moltenFuryAvailable && calculationOptions.HeroismControl == 3 && mflength < minDuration)
                 {
                     minDuration = 0.99 * mflength;
@@ -2753,7 +2760,7 @@ namespace Rawr.Mage
             //if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryFlameCap, 60);
             //lp.SetRHSUnsafe(rowFlameCapDestructionPotion, dpflamelength);
             if (manaGemEffectAvailable) lp.SetRHSUnsafe(rowManaGemEffect, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration * manaGemEffectDuration / 120f : MaximizeEffectDuration(calculationOptions.FightDuration, manaGemEffectDuration, 120.0));
-            lp.SetRHSUnsafe(rowDpsTime, -(1 - calculationOptions.DpsTime) * calculationOptions.FightDuration);
+            lp.SetRHSUnsafe(rowDpsTime, -(1 - dpsTime) * calculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowAoe, calculationOptions.AoeDuration * calculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowCombustion, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 180.0 : combustionCount);
             lp.SetRHSUnsafe(rowMoltenFuryCombustion, 1);
