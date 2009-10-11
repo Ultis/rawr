@@ -18,7 +18,6 @@ namespace Rawr.Enhance
         private float whiteCritDepression = 0.048f;
         private float yellowCritDepression = 0.018f;
         private float fightLength = 0f;
-        private float bloodlustHaste = 0f;
         private float chanceCrit = 0f;
         private float chanceDodgeMH = 0f;
         private float chanceDodgeOH = 0f;
@@ -74,7 +73,6 @@ namespace Rawr.Enhance
 
         public float GlancingRate { get { return glancingRate; } }
         public float FightLength { get { return fightLength; } }
-        public float BloodlustHaste { get { return bloodlustHaste; } }
         public float ChanceDodgeMH { get { return chanceDodgeMH; } }
         public float ChanceDodgeOH { get { return chanceDodgeOH; } }
         public float ChanceParryMH { get { return chanceParryMH; } }
@@ -248,10 +246,8 @@ namespace Rawr.Enhance
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.BonusMWFreq);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
             float edCritBonus = .03f * _talents.ElementalDevastation;
-            float bloodlustUptime = 40f / fightLength;
-            bloodlustHaste = 1 + (bloodlustUptime * _stats.Bloodlust);
-            hastedMHSpeed = baseHastedMHSpeed / bloodlustHaste;
-            hastedOHSpeed = baseHastedOHSpeed / bloodlustHaste;
+            hastedMHSpeed = baseHastedMHSpeed;
+            hastedOHSpeed = baseHastedOHSpeed;
             hitsPerSMHSS = (1f - chanceYellowMissMH) / stormstrikeSpeed;
             hitsPerSOHSS = _character.ShamanTalents.DualWield == 1 ? ((1f - 2 * chanceYellowMissOH) / stormstrikeSpeed) : 0f; //OH only swings if MH connects
             hitsPerSLL = (1f - chanceYellowMissOH) / lavaLashSpeed;
@@ -267,7 +263,7 @@ namespace Rawr.Enhance
             hitsPerSWF = 0f;
             for (int i = 0; i < 5; i++)
             {
-                float bonusHaste = (1f + (flurryUptime * flurryHasteBonus)) * bloodlustHaste;
+                float bonusHaste = (1f + (flurryUptime * flurryHasteBonus));
                 hastedMHSpeed = baseHastedMHSpeed / bonusHaste;
                 hastedOHSpeed = baseHastedOHSpeed / bonusHaste;
                 swingsPerSMHMelee = 1f / hastedMHSpeed;

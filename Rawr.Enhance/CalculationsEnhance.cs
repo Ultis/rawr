@@ -429,7 +429,7 @@ namespace Rawr.Enhance
                 float dogsMissrate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel-80] - hitBonus) + cs.AverageDodge; 
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
                 float dogsBaseSpeed = 1.5f;
-                float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste) / cs.BloodlustHaste);
+                float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste));
                 float dogsBaseDamage = (206.17f + dogsAP / 14f) * dogsBaseSpeed;
 
                 float dogsMeleeNormal = dogsBaseDamage * (1 - dogsMissrate - dogsCrit - cs.GlancingRate);
@@ -579,7 +579,7 @@ namespace Rawr.Enhance
             // add shaman buffs
             character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Flametongue Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Bloodlust"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Heroism/Bloodlust"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
 
             if (character.ShamanTalents.ImprovedWindfuryTotem == 2)
@@ -739,7 +739,6 @@ namespace Rawr.Enhance
                     Health = stats.Health,
                     Mana = stats.Mana,
 					ExposeWeakness = stats.ExposeWeakness,
-					Bloodlust = stats.Bloodlust,
 					SpellPower = stats.SpellPower,
                     CritMeleeRating = stats.CritMeleeRating,
                     LightningSpellPower = stats.LightningSpellPower,
@@ -825,7 +824,7 @@ namespace Rawr.Enhance
                 stats.BonusStrengthMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusIntellectMultiplier + 
                 stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
-                stats.ExposeWeakness + stats.Bloodlust + stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
+                stats.ExposeWeakness + stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + 
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
                 stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
