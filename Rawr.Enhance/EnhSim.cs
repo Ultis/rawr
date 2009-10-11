@@ -318,7 +318,7 @@ namespace Rawr.Enhance
                 sb.AppendLine("intellect_buff                  60/60");
             else
                 sb.AppendLine("intellect_buff                  0/60");
-            if (isBuffChecked(buffs, "Bloodlust"))
+            if (isBuffChecked(buffs, "Heroism/Bloodlust"))
                 sb.AppendLine("bloodlust_casters               1");
             else
                 sb.AppendLine("bloodlust_casters               0");
