@@ -86,6 +86,7 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.Shockwave:
                     baseDamage = Stats.AttackPower * 0.75f;
+                    DamageMultiplier *= (1.0f + Stats.BonusShockwaveDamage);
                     break;
                 case Ability.Slam:
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false) + 250.0f;

@@ -943,6 +943,7 @@ threat and limited threat scaled by the threat scale.",
                     buff.Name.StartsWith("Dreadnaught") || 
                     buff.Name.StartsWith("Siegebreaker") || 
                     buff.Name.StartsWith("Wrynn") ||
+                    buff.Name.StartsWith("Warrior Tanking") ||
                     buff.Name.Contains("Gladiator")
                 ));
 
@@ -1006,8 +1007,8 @@ threat and limited threat scaled by the threat scale.",
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
 
                 HighestStat = stats.HighestStat,
-                BonusCommandingShoutHP = stats.BonusCommandingShoutHP,
                 BonusShieldSlamDamage = stats.BonusShieldSlamDamage,
+                BonusShockwaveDamage = stats.BonusShockwaveDamage,
                 DevastateCritIncrease = stats.DevastateCritIncrease,
                 BonusDevastateDamage = stats.BonusDevastateDamage
             };
@@ -1049,8 +1050,8 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusCritMultiplier + stats.CritChanceReduction +
                     stats.ThreatIncreaseMultiplier + stats.BonusDamageMultiplier + stats.BonusBlockValueMultiplier +
                     stats.BonusBleedDamageMultiplier +
-                    stats.HighestStat + 
-                    stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage
+                    stats.HighestStat +
+                    stats.BonusShieldSlamDamage + stats.BonusShockwaveDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage
                 ) != 0;
 
             if (!relevant) // No reason to check effects if it's already known as relevant

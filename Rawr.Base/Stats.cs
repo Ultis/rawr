@@ -476,6 +476,7 @@ namespace Rawr {
         #region Added by Rawr.Warrior
         BonusShieldSlamDamage,
         BonusDevastateDamage,
+        BonusShockwaveDamage,
         BonusWarrior_T7_2P_SlamDamage,
         #endregion
         #region Boss Stats
@@ -3885,6 +3886,7 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusRageOnCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusRageOnCrit] = value; }
         }
+        
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Shield Slam Damage")]
@@ -3913,6 +3915,16 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDevastateDamage]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDevastateDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Shockwave Damage")]
+        public float BonusShockwaveDamage
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShockwaveDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShockwaveDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

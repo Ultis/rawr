@@ -2605,6 +2605,15 @@ namespace Rawr
                 SetName = "Wrynn's Plate",
                 SetThreshold = 2
             });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Warrior Tanking (T10) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusShieldSlamDamage = 0.2f, BonusShockwaveDamage = 0.2f },
+                SetName = "Warrior Tank T10",
+                SetThreshold = 2
+            });
             #endregion
 
             #region Resto Shammy set bonuses: Removed BC sets as we push to Ulduar
