@@ -187,8 +187,8 @@ namespace Rawr.Mage
                         //maintainSnareState.Cycles = new Cycle[CycleIdCount];
                         //maintainSnareState.Spells = new Dictionary<int, Spell>();
                         //maintainSnareState.Cycles = new Dictionary<int, Cycle>();
-                        maintainSnareState.Spells = new List<Spell>();
-                        maintainSnareState.Cycles = new List<Cycle>();
+                        maintainSnareState.Spells = new Spell[8];
+                        maintainSnareState.Cycles = new Cycle[8];
                         maintainSnareState.SnaredTime = 1.0f;
                     }
                 }
@@ -327,8 +327,10 @@ namespace Rawr.Mage
 
         // typical sizes are below 10, so it is more efficient to just have a list
         // and look through the entries already stored for a match
-        private List<Spell> Spells = new List<Spell>();
-        private List<Cycle> Cycles = new List<Cycle>();
+        private Spell[] Spells = new Spell[8];
+        private int SpellsCount;
+        private Cycle[] Cycles = new Cycle[8];
+        private int CyclesCount;
 
         public Cycle GetCycle(CycleId cycleId)
         {
@@ -336,7 +338,7 @@ namespace Rawr.Mage
             //if (c != null) return c;
             Cycle c = null;
             //if (Cycles.TryGetValue((int)cycleId, out c)) return c;
-            for (int i = 0; i < Cycles.Count; i++)
+            for (int i = 0; i < CyclesCount; i++)
             {
                 Cycle cycle = Cycles[i];
                 if (cycle.CycleId == cycleId) return cycle;
@@ -652,7 +654,15 @@ namespace Rawr.Mage
             {
                 c.CycleId = cycleId;
                 //Cycles[(int)cycleId] = c;
-                Cycles.Add(c);
+                //Cycles.Add(c);
+                if (CyclesCount >= Cycles.Length)
+                {
+                    int length = 2 * Cycles.Length;
+                    Cycle[] destinationArray = new Cycle[length];
+                    Array.Copy(Cycles, 0, destinationArray, 0, CyclesCount);
+                    Cycles = destinationArray;
+                }
+                Cycles[CyclesCount++] = c;
             }
 
             return c;
@@ -664,7 +674,7 @@ namespace Rawr.Mage
             //if (s != null) return s;
             Spell s = null;
             //if (Spells.TryGetValue((int)spellId, out s)) return s;
-            for (int i = 0; i < Spells.Count; i++)
+            for (int i = 0; i < SpellsCount; i++)
             {
                 Spell spell = Spells[i];
                 if (spell.SpellId == spellId) return spell;
@@ -866,7 +876,15 @@ namespace Rawr.Mage
             {
                 s.SpellId = spellId;
                 //Spells[(int)spellId] = s;
-                Spells.Add(s);
+                //Spells.Add(s);
+                if (SpellsCount >= Spells.Length)
+                {
+                    int length = 2 * Spells.Length;
+                    Spell[] destinationArray = new Spell[length];
+                    Array.Copy(Spells, 0, destinationArray, 0, SpellsCount);
+                    Spells = destinationArray;
+                }
+                Spells[SpellsCount++] = s;
             }
 
             return s;

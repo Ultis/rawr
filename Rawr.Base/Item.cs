@@ -109,7 +109,7 @@ namespace Rawr
 		{
 			get 
             {
-                if (!Rawr.Properties.GeneralSettings.Default.Locale.Equals("en") && _localizedName != null)
+                if (_localizedName != null && !Rawr.Properties.GeneralSettings.Default.Locale.Equals("en"))
                 {
                     return _localizedName;
                 }

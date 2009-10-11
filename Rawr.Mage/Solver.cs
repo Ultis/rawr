@@ -64,7 +64,7 @@ namespace Rawr.Mage
         private List<Segment> segmentList;
         private List<EffectCooldown> cooldownList;
         private Dictionary<int, EffectCooldown> effectCooldown;
-        private List<int> effectExclusionList;
+        private int[] effectExclusionList;
         private List<SolutionVariable> solutionVariable;
         private StackingConstraint[] rowStackingConstraint;
 
@@ -922,6 +922,19 @@ namespace Rawr.Mage
             return effect.Stats.SpellPower + effect.Stats.HasteRating > 0;
         }
 
+#if !SILVERLIGHT
+        private static readonly System.Drawing.Color[] itemColors = new System.Drawing.Color[] {
+                System.Drawing.Color.Aqua,
+                System.Drawing.Color.FromArgb(255, 0, 0, 255),
+                System.Drawing.Color.Coral,
+                System.Drawing.Color.DarkKhaki,
+                System.Drawing.Color.DarkSlateGray,
+                System.Drawing.Color.Firebrick,
+                System.Drawing.Color.Gold,
+                System.Drawing.Color.Ivory
+            };
+#endif
+
         private void InitializeEffectCooldowns()
         {
             cooldownList = new List<EffectCooldown>();
@@ -1129,16 +1142,6 @@ namespace Rawr.Mage
             int itemBasedMask = 0;
 
 #if !SILVERLIGHT
-            System.Drawing.Color[] itemColors = new System.Drawing.Color[] {
-                System.Drawing.Color.Aqua,
-                System.Drawing.Color.FromArgb(255, 0, 0, 255),
-                System.Drawing.Color.Coral,
-                System.Drawing.Color.DarkKhaki,
-                System.Drawing.Color.DarkSlateGray,
-                System.Drawing.Color.Firebrick,
-                System.Drawing.Color.Gold,
-                System.Drawing.Color.Ivory
-            };
             int colorIndex = 0;
 #endif
 
@@ -1240,10 +1243,11 @@ namespace Rawr.Mage
                 }
             }
 
-            effectExclusionList = new List<int>();
-            effectExclusionList.Add((int)(StandardEffect.ArcanePower | StandardEffect.PowerInfusion));
-            effectExclusionList.Add((int)(StandardEffect.PotionOfSpeed | StandardEffect.PotionOfWildMagic));
-            effectExclusionList.Add(itemBasedMask);
+            effectExclusionList = new int[] {
+                (int)(StandardEffect.ArcanePower | StandardEffect.PowerInfusion),
+                (int)(StandardEffect.PotionOfSpeed | StandardEffect.PotionOfWildMagic),
+                itemBasedMask
+            };
 
             calculationResult.CooldownList = cooldownList;
             calculationResult.EffectCooldown = effectCooldown;
