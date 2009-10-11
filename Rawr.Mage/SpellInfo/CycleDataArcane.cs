@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Rawr.Mage
 {
-    class ABAM : DynamicCycle
+    public static class ABAM
     {
-        public ABAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            Name = "ABAM";
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "ABAM";
 
             Spell AB = castingState.GetSpell(SpellId.ArcaneBlast0);
             Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles1);
@@ -21,9 +21,9 @@ namespace Rawr.Mage
             if (MB == 0.0)
             {
                 // if we don't have barrage then this degenerates to AB-AM
-                AddSpell(needsDisplayCalculations, AB, 1);
-                AddSpell(needsDisplayCalculations, AM, 1);
-                Calculate();
+                cycle.AddSpell(needsDisplayCalculations, AB, 1);
+                cycle.AddSpell(needsDisplayCalculations, AM, 1);
+                cycle.Calculate();
             }
             else
             {
@@ -43,21 +43,22 @@ namespace Rawr.Mage
                 float S0 = (1 - T8) / (1 - (1 - MB) * T8);
                 float K1 = 1 - MB;
                 
-                AddSpell(needsDisplayCalculations, AB, 1);
-                AddSpell(needsDisplayCalculations, AM, S0 * K1);
-                AddSpell(needsDisplayCalculations, MBAM, 1 - S0 * K1);
+                cycle.AddSpell(needsDisplayCalculations, AB, 1);
+                cycle.AddSpell(needsDisplayCalculations, AM, S0 * K1);
+                cycle.AddSpell(needsDisplayCalculations, MBAM, 1 - S0 * K1);
 
-                Calculate();
+                cycle.Calculate();
             }
+            return cycle;
         }
     }
 
-    public class AB3AM : DynamicCycle
+    public static class AB3AM
     {
-        public AB3AM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            Name = "AB3AM";
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB3AM";
 
             // S0: no proc
             // AB0-AB1-AB2-AM3    => S0   (1 - MB) * (1 - MB) * (1 - MB)
@@ -84,28 +85,29 @@ namespace Rawr.Mage
                 Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
                 Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
-                AddSpell(needsDisplayCalculations, AB0, 1);
-                AddSpell(needsDisplayCalculations, AB1, 1);
-                AddSpell(needsDisplayCalculations, AB2, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB0, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB1, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB2, 1);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, 1, 1, 1, 0);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, 1, 1, 1, 0);
             }
-            AddSpell(needsDisplayCalculations, AM3, S0 * K1);
-            AddSpell(needsDisplayCalculations, MBAM3, 1 - S0 * K1);
+            cycle.AddSpell(needsDisplayCalculations, AM3, S0 * K1);
+            cycle.AddSpell(needsDisplayCalculations, MBAM3, 1 - S0 * K1);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    public class AB4AM234MBAM : DynamicCycle
+    public static class AB4AM234MBAM
     {
-        public AB4AM234MBAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            Name = "AB4AM234MBAM";
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB4AM234MBAM";
 
             // S0: no proc
             // AB0-AB1-AB2-AB3-AM4    => S0    (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
@@ -150,31 +152,32 @@ namespace Rawr.Mage
                 Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
                 Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
-                AddSpell(needsDisplayCalculations, AB0, 1);
-                AddSpell(needsDisplayCalculations, AB1, 1);
-                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB3, K1 + K2);
+                cycle.AddSpell(needsDisplayCalculations, AB0, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB1, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, 1, 1, K1 + K2 + K3, K1 + K2);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, 1, 1, K1 + K2 + K3, K1 + K2);
             }
-            AddSpell(needsDisplayCalculations, AM4, K1);
-            AddSpell(needsDisplayCalculations, MBAM4, K2);
-            AddSpell(needsDisplayCalculations, MBAM3, K3);
-            AddSpell(needsDisplayCalculations, MBAM2, K4);
+            cycle.AddSpell(needsDisplayCalculations, AM4, K1);
+            cycle.AddSpell(needsDisplayCalculations, MBAM4, K2);
+            cycle.AddSpell(needsDisplayCalculations, MBAM3, K3);
+            cycle.AddSpell(needsDisplayCalculations, MBAM2, K4);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    public class AB4AM0234MBAM : DynamicCycle
+    public static class AB4AM0234MBAM
     {
-        public AB4AM0234MBAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            Name = "AB4AM0234MBAM";
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB4AM0234MBAM";
 
             // S0: no proc
             // AB0-AB1-AB2-AB3-AM4    => S0    (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
@@ -220,32 +223,33 @@ namespace Rawr.Mage
                 Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
                 Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
-                AddSpell(needsDisplayCalculations, AB0, S0);
-                AddSpell(needsDisplayCalculations, AB1, S0);
-                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB3, K1 + K2);
+                cycle.AddSpell(needsDisplayCalculations, AB0, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB1, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, S0, S0, K1 + K2 + K3, K1 + K2);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, S0, S0, K1 + K2 + K3, K1 + K2);
             }
-            AddSpell(needsDisplayCalculations, AM4, K1);
-            AddSpell(needsDisplayCalculations, MBAM4, K2);
-            AddSpell(needsDisplayCalculations, MBAM3, K3);
-            AddSpell(needsDisplayCalculations, MBAM2, K4);
-            AddSpell(needsDisplayCalculations, MBAM0, S1);
+            cycle.AddSpell(needsDisplayCalculations, AM4, K1);
+            cycle.AddSpell(needsDisplayCalculations, MBAM4, K2);
+            cycle.AddSpell(needsDisplayCalculations, MBAM3, K3);
+            cycle.AddSpell(needsDisplayCalculations, MBAM2, K4);
+            cycle.AddSpell(needsDisplayCalculations, MBAM0, S1);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    public class AB3AM23MBAM : DynamicCycle
+    public static class AB3AM23MBAM
     {
-        public AB3AM23MBAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            Name = "AB3AM23MBAM";
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB3AM23MBAM";
 
             // S0: no proc
             // AB0-AB1-AB2-AM3    => S0    (1 - MB) * (1 - MB) * (1 - MB)
@@ -285,29 +289,30 @@ namespace Rawr.Mage
                 Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
                 Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
-                AddSpell(needsDisplayCalculations, AB0, 1);
-                AddSpell(needsDisplayCalculations, AB1, 1);
-                AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+                cycle.AddSpell(needsDisplayCalculations, AB0, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB1, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, 1, 1, K1 + K2, 0);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, 1, 1, K1 + K2, 0);
             }
-            AddSpell(needsDisplayCalculations, AM3, K1);
-            AddSpell(needsDisplayCalculations, MBAM3, K2);
-            AddSpell(needsDisplayCalculations, MBAM2, K4);
+            cycle.AddSpell(needsDisplayCalculations, AM3, K1);
+            cycle.AddSpell(needsDisplayCalculations, MBAM3, K2);
+            cycle.AddSpell(needsDisplayCalculations, MBAM2, K4);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    public class AB3AM023MBAM : DynamicCycle
+    public static class AB3AM023MBAM
     {
-        public AB3AM023MBAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            Name = "AB3AM023MBAM";
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB3AM023MBAM";
 
             // S0: no proc
             // AB0-AB1-AB2-AM3    => S0    (1 - MB) * (1 - MB) * (1 - MB)
@@ -348,30 +353,31 @@ namespace Rawr.Mage
                 Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
                 Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
-                AddSpell(needsDisplayCalculations, AB0, S0);
-                AddSpell(needsDisplayCalculations, AB1, S0);
-                AddSpell(needsDisplayCalculations, AB2, K1 + K2);
+                cycle.AddSpell(needsDisplayCalculations, AB0, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB1, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, S0, S0, K1 + K2, 0);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, S0, S0, K1 + K2, 0);
             }
-            AddSpell(needsDisplayCalculations, AM3, K1);
-            AddSpell(needsDisplayCalculations, MBAM3, K2);
-            AddSpell(needsDisplayCalculations, MBAM2, K4);
-            AddSpell(needsDisplayCalculations, MBAM0, S1);
+            cycle.AddSpell(needsDisplayCalculations, AM3, K1);
+            cycle.AddSpell(needsDisplayCalculations, MBAM3, K2);
+            cycle.AddSpell(needsDisplayCalculations, MBAM2, K4);
+            cycle.AddSpell(needsDisplayCalculations, MBAM0, S1);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class AB2AM : DynamicCycle
+    public static class AB2AM
     {
-        public AB2AM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            Name = "AB2AM";
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB2AM";
 
             // S0: no proc
             // AB0-AB1-AM2    => S0   (1 - MB) * (1 - MB)
@@ -397,27 +403,28 @@ namespace Rawr.Mage
             {
                 Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
                 Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-                AddSpell(needsDisplayCalculations, AB0, 1);
-                AddSpell(needsDisplayCalculations, AB1, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB0, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB1, 1);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, 1, 1, 0, 0);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, 1, 1, 0, 0);
             }
-            AddSpell(needsDisplayCalculations, AM2, S0 * K1);
-            AddSpell(needsDisplayCalculations, MBAM2, 1 - S0 * K1);
+            cycle.AddSpell(needsDisplayCalculations, AM2, S0 * K1);
+            cycle.AddSpell(needsDisplayCalculations, MBAM2, 1 - S0 * K1);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class AB3AMABar : DynamicCycle
+    public static class AB3AMABar
     {
-        public AB3AMABar(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            Name = "AB3AMABar";
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB3AMABar";
 
             // S0: no proc
             // ABar-AB0-AB1-AB2-AM3    => S0   (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
@@ -443,14 +450,15 @@ namespace Rawr.Mage
             float K1 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
             float S0 = (1 - T8) / (1 - K1 * T8);
 
-            AddSpell(needsDisplayCalculations, AB0, 1);
-            AddSpell(needsDisplayCalculations, AB1, 1);
-            AddSpell(needsDisplayCalculations, AB2, 1);
-            AddSpell(needsDisplayCalculations, AM3, S0 * K1);
-            AddSpell(needsDisplayCalculations, MBAM3, 1 - S0 * K1);
-            AddSpell(needsDisplayCalculations, ABar, 1);
+            cycle.AddSpell(needsDisplayCalculations, AB0, 1);
+            cycle.AddSpell(needsDisplayCalculations, AB1, 1);
+            cycle.AddSpell(needsDisplayCalculations, AB2, 1);
+            cycle.AddSpell(needsDisplayCalculations, AM3, S0 * K1);
+            cycle.AddSpell(needsDisplayCalculations, MBAM3, 1 - S0 * K1);
+            cycle.AddSpell(needsDisplayCalculations, ABar, 1);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
@@ -983,13 +991,13 @@ namespace Rawr.Mage
         }
     }
 
-    public class ABSpam4MBAM : DynamicCycle
+    public static class ABSpam4MBAM
     {
-        public ABSpam4MBAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, S0, S1;
-            Name = "ABSpam4MBAM";
+            cycle.Name = "ABSpam4MBAM";
 
             // always ramp up to 4 AB before using MBAM
 
@@ -1035,30 +1043,31 @@ namespace Rawr.Mage
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
                 Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
                 Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
-                AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+                cycle.AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
             }
-            AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
+            cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    public class ABSpam04MBAM : DynamicCycle
+    public static class ABSpam04MBAM
     {
-        public ABSpam04MBAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, S0, S1;
-            Name = "ABSpam04MBAM";
+            cycle.Name = "ABSpam04MBAM";
 
             // always ramp up to 4 AB before using MBAM
 
@@ -1105,31 +1114,32 @@ namespace Rawr.Mage
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
                 Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
                 Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
-                AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+                cycle.AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
             }
-            AddSpell(needsDisplayCalculations, MBAM0, S2);
-            AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
+            cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
+            cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    public class ABSpam24MBAM : DynamicCycle
+    public static class ABSpam24MBAM
     {
-        public ABSpam24MBAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, K6, S0, S1;
-            Name = "ABSpam24MBAM";
+            cycle.Name = "ABSpam24MBAM";
 
             // always ramp up to 4 AB before using MBAM
 
@@ -1179,31 +1189,32 @@ namespace Rawr.Mage
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
                 Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
                 Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
-                AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3 + K6);
-                AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3 + K6);
-                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+                cycle.AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3 + K6);
+                cycle.AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3 + K6);
+                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2 + K3 + K6, K1 + K2 + K3 + K6, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, K1 + K2 + K3 + K6, K1 + K2 + K3 + K6, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
             }
-            AddSpell(needsDisplayCalculations, MBAM2, K6);
-            AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
+            cycle.AddSpell(needsDisplayCalculations, MBAM2, K6);
+            cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    public class ABSpam024MBAM : DynamicCycle
+    public static class ABSpam024MBAM
     {
-        public ABSpam024MBAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, K6, S0, S1;
-            Name = "ABSpam024MBAM";
+            cycle.Name = "ABSpam024MBAM";
 
             // always ramp up to 4 AB before using MBAM
 
@@ -1254,32 +1265,33 @@ namespace Rawr.Mage
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
                 Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
                 Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
-                AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3 + K6);
-                AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3 + K6);
-                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+                cycle.AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3 + K6);
+                cycle.AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3 + K6);
+                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2 + K3 + K6, K1 + K2 + K3 + K6, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, K1 + K2 + K3 + K6, K1 + K2 + K3 + K6, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
             }
-            AddSpell(needsDisplayCalculations, MBAM0, S2);
-            AddSpell(needsDisplayCalculations, MBAM2, K6);
-            AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
+            cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
+            cycle.AddSpell(needsDisplayCalculations, MBAM2, K6);
+            cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    public class ABSpam0234MBAM : DynamicCycle
+    public static class ABSpam0234MBAM
     {
-        public ABSpam0234MBAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, K6, K7, S0, S1;
-            Name = "ABSpam0234MBAM";
+            cycle.Name = "ABSpam0234MBAM";
 
             // always ramp up to 4 AB before using MBAM
 
@@ -1334,33 +1346,34 @@ namespace Rawr.Mage
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
                 Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
                 Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
-                AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3 + K6 + K7);
-                AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3 + K6 + K7);
-                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3 + K7);
-                AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+                cycle.AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3 + K6 + K7);
+                cycle.AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3 + K6 + K7);
+                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3 + K7);
+                cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K7, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K7, K1 + K2 + K3, K2 + 2 * K4 + K5);
             }
-            AddSpell(needsDisplayCalculations, MBAM0, S2);
-            AddSpell(needsDisplayCalculations, MBAM2, K6);
-            AddSpell(needsDisplayCalculations, MBAM3, K7);
-            AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
+            cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
+            cycle.AddSpell(needsDisplayCalculations, MBAM2, K6);
+            cycle.AddSpell(needsDisplayCalculations, MBAM3, K7);
+            cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    public class ABSpam234MBAM : DynamicCycle
+    public static class ABSpam234MBAM
     {
-        public ABSpam234MBAM(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, K6, K7, S0, S1;
-            Name = "ABSpam234MBAM";
+            cycle.Name = "ABSpam234MBAM";
 
             // always ramp up to 4 AB before using MBAM
 
@@ -1414,22 +1427,23 @@ namespace Rawr.Mage
                 Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
                 Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
                 Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
-                AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3 + K6 + K7);
-                AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3 + K6 + K7);
-                AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3 + K7);
-                AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
-                AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+                cycle.AddSpell(needsDisplayCalculations, AB0, K1 + K2 + K3 + K6 + K7);
+                cycle.AddSpell(needsDisplayCalculations, AB1, K1 + K2 + K3 + K6 + K7);
+                cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3 + K7);
+                cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
+                cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, this, AB, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K7, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K7, K1 + K2 + K3, K2 + 2 * K4 + K5);
             }
-            AddSpell(needsDisplayCalculations, MBAM2, K6);
-            AddSpell(needsDisplayCalculations, MBAM3, K7);
-            AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
+            cycle.AddSpell(needsDisplayCalculations, MBAM2, K6);
+            cycle.AddSpell(needsDisplayCalculations, MBAM3, K7);
+            cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
 
-            Calculate();
+            cycle.Calculate();
+            return cycle;
         }
     }
 

@@ -181,6 +181,39 @@ namespace Rawr.Mage
 
         public SpellTemplate SpellTemplate { get { return template; } }
 
+        public void Initialize(SpellTemplate template)
+        {
+            this.template = template;
+            DamagePerSecond = 0;
+            ThreatPerSecond = 0;
+            CostPerSecond = 0;
+            SpammedDot = false;
+            HitProcs = 0;
+            CritProcs = 0;
+            IgniteProcs = 0;
+            TargetProcs = 0;
+            DotProcs = 0;
+            CastTime = 0;
+            BaseCastTime = 0;
+            cycle = null;
+            CostModifier = 0;
+            CostAmplifier = 0;
+            SpellModifier = 0;
+            AdditiveSpellModifier = 0;
+            DirectDamageModifier = 0;
+            DotDamageModifier = 0;
+            CritRate = 0;
+            CritBonus = 0;
+            RawSpellDamage = 0;
+            AverageDamage = 0;
+            IgniteDamagePerSecond = 0;
+            IgniteDpsPerSpellPower = 0;
+            DpsPerSpellPower = 0;
+            InterruptProtection = 0;
+            castingState = null;
+            OO5SR = 0;
+        }
+
         public string Name { get { return template.Name; } }
 
         public float DamagePerSecond;
@@ -292,7 +325,6 @@ namespace Rawr.Mage
             {
                 this.spell = spell;
                 Name = spell.Name;
-                sequence = spell.Name;
                 Ticks = spell.Ticks;
                 CastTime = spell.CastTime;
                 HitProcs = spell.HitProcs;
@@ -333,9 +365,29 @@ namespace Rawr.Mage
             return spell.cycle;
         }
 
+        public Spell()
+        {
+        }
+
         public Spell(SpellTemplate template)
         {
             this.template = template;
+        }
+
+        public static Spell New(SpellTemplate template, CastingState castingState)
+        {
+            var calc = castingState.Calculations;
+            Spell spell;
+            if (calc.NeedsDisplayCalculations || calc.ArraySet == null)
+            {
+                spell = new Spell(template);
+            }
+            else
+            {
+                spell = calc.ArraySet.NewSpell(template);
+            }
+            spell.Calculate(castingState);
+            return spell;
         }
 
         public float CostModifier;
@@ -378,7 +430,7 @@ namespace Rawr.Mage
 
         private CastingState castingState;
 
-        public float OO5SR = 0;
+        public float OO5SR;
 
         public virtual void Calculate(CastingState castingState)
         {

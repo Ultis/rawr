@@ -4,18 +4,17 @@ using System.Text;
 
 namespace Rawr.Mage
 {
-    class FBPyro : DynamicCycle
+    public static class FBPyro
     {
-        public FBPyro(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             float K;
-            Name = "FBPyro";
-            AffectedByFlameCap = true;
+            cycle.Name = "FBPyro";
+            cycle.AffectedByFlameCap = true;
 
             Spell FB = castingState.GetSpell(SpellId.Fireball);
             DotSpell Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
-            sequence = "Fireball";
 
             // S0: no proc, 0 count
             // FB   => S0   1-c
@@ -169,32 +168,32 @@ namespace Rawr.Mage
 
             // ignite ticks
 
-            
 
-            AddSpell(needsDisplayCalculations, FB, 1);
-            AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
-            Calculate();
+
+            cycle.AddSpell(needsDisplayCalculations, FB, 1);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class FBLBPyro : DynamicCycle
+    public static class FBLBPyro
     {
-        public FBLBPyro(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FB;
             Spell LB;
             DotSpell Pyro;
             float X;
             float K;
             float C;
-            Name = "FBLBPyro";
-            AffectedByFlameCap = true;
+            cycle.Name = "FBLBPyro";
+            cycle.AffectedByFlameCap = true;
 
             FB = castingState.GetSpell(SpellId.Fireball);
             LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
-            sequence = "Fireball";
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             float H = castingState.MageTalents.HotStreak / 3.0f;
@@ -309,30 +308,30 @@ namespace Rawr.Mage
             }
             averageTicks += 4 * (1 - T8) * (1 - totalChance);
 
-            AddSpell(needsDisplayCalculations, FB, X);
-            AddSpell(needsDisplayCalculations, LB, 1 - X);
-            AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FB, X);
+            cycle.AddSpell(needsDisplayCalculations, LB, 1 - X);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class FFBLBPyro : DynamicCycle
+    public static class FFBLBPyro
     {
-        public FFBLBPyro(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
             Spell LB;
             DotSpell Pyro;
             float X;
             float K;
-            Name = "FFBLBPyro";
-            AffectedByFlameCap = true;
+            cycle.Name = "FFBLBPyro";
+            cycle.AffectedByFlameCap = true;
 
             FFB = castingState.GetSpell(SpellId.FrostfireBolt);
             LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
-            sequence = "Frostfire Bolt";
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
@@ -399,31 +398,31 @@ namespace Rawr.Mage
             }
             averageTicks += 4 * (1 - T8) * (1 - totalChance);
 
-            AddSpell(needsDisplayCalculations, FFB, X);
-            AddSpell(needsDisplayCalculations, LB, 1 - X);
-            AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FFB, X);
+            cycle.AddSpell(needsDisplayCalculations, LB, 1 - X);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class ScLBPyro : DynamicCycle
+    public static class ScLBPyro
     {
-        public ScLBPyro(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell Sc;
             Spell LB;
             DotSpell Pyro;
             float X;
             float K;
-            Name = "ScLBPyro";
-            ProvidesScorch = (castingState.MageTalents.ImprovedScorch > 0);
-            AffectedByFlameCap = true;
+            cycle.Name = "ScLBPyro";
+            cycle.ProvidesScorch = (castingState.MageTalents.ImprovedScorch > 0);
+            cycle.AffectedByFlameCap = true;
 
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
-            sequence = "Scorch";
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
@@ -487,26 +486,26 @@ namespace Rawr.Mage
             }
             averageTicks += 4 * (1 - T8) * (1 - totalChance);
 
-            AddSpell(needsDisplayCalculations, Sc, X);
-            AddSpell(needsDisplayCalculations, LB, 1 - X);
-            AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, Sc, X);
+            cycle.AddSpell(needsDisplayCalculations, LB, 1 - X);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class FFBPyro : DynamicCycle
+    public static class FFBPyro
     {
-        public FFBPyro(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
             float K;
-            Name = "FFBPyro";
-            AffectedByFlameCap = true;
+            cycle.Name = "FFBPyro";
+            cycle.AffectedByFlameCap = true;
 
             FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
             DotSpell Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
-            sequence = "Frostfire Bolt";
 
             // no Pyro
             // FB => no Pyro 1 - c*c/(1+c)
@@ -552,31 +551,31 @@ namespace Rawr.Mage
             }
             averageTicks += 4 * (1 - T8) * (1 - totalChance);
 
-            AddSpell(needsDisplayCalculations, FFB, 1);
-            AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FFB, 1);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class FBScPyro : DynamicCycle
+    public static class FBScPyro
     {
-        public FBScPyro(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FB;
             Spell Sc;
             DotSpell Pyro;
             float K;
             float X;
-            Name = "FBScPyro";
-            ProvidesScorch = true;
-            AffectedByFlameCap = true;
+            cycle.Name = "FBScPyro";
+            cycle.ProvidesScorch = true;
+            cycle.AffectedByFlameCap = true;
 
             FB = castingState.GetSpell(SpellId.Fireball);
             Sc = castingState.GetSpell(SpellId.Scorch);
             Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
             Spell PyroSpam = castingState.GetSpell(SpellId.PyroblastPOMSpammed);
-            sequence = "Fireball";
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
@@ -662,7 +661,7 @@ namespace Rawr.Mage
             float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
             if (castingState.MageTalents.ImprovedScorch == 0)
             {
-                ProvidesScorch = false;
+                cycle.ProvidesScorch = false;
                 gap = 1.0f;
             }
             float FBcrit = FB.CritRate;
@@ -710,18 +709,19 @@ namespace Rawr.Mage
             }
             averageTicks += 4 * (1 - T8) * (1 - totalChance);
 
-            AddSpell(needsDisplayCalculations, FB, X);
-            AddSpell(needsDisplayCalculations, Sc, 1 - X);
-            AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FB, X);
+            cycle.AddSpell(needsDisplayCalculations, Sc, 1 - X);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class FBScLBPyro : DynamicCycle
+    public static class FBScLBPyro
     {
-        public FBScLBPyro(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FB;
             Spell Sc;
             Spell LB;
@@ -729,15 +729,14 @@ namespace Rawr.Mage
             float K;
             float X;
             float Y;
-            Name = "FBScLBPyro";
-            ProvidesScorch = true;
-            AffectedByFlameCap = true;
+            cycle.Name = "FBScLBPyro";
+            cycle.ProvidesScorch = true;
+            cycle.AffectedByFlameCap = true;
 
             FB = castingState.GetSpell(SpellId.Fireball);
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
-            sequence = "Fireball";
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
@@ -818,7 +817,7 @@ namespace Rawr.Mage
                 float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
                 if (castingState.MageTalents.ImprovedScorch == 0)
                 {
-                    ProvidesScorch = false;
+                    cycle.ProvidesScorch = false;
                     gap = 1.0f;
                 }
                 if (gap == 1.0f)
@@ -937,19 +936,20 @@ namespace Rawr.Mage
             }
             averageTicks += 4 * (1 - T8) * (1 - totalChance);
 
-            AddSpell(needsDisplayCalculations, FB, X);
-            AddSpell(needsDisplayCalculations, Sc, Y);
-            AddSpell(needsDisplayCalculations, LB, 1 - X - Y);
-            AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FB, X);
+            cycle.AddSpell(needsDisplayCalculations, Sc, Y);
+            cycle.AddSpell(needsDisplayCalculations, LB, 1 - X - Y);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class FFBScLBPyro : DynamicCycle
+    public static class FFBScLBPyro
     {
-        public FFBScLBPyro(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
             Spell Sc;
             Spell LB;
@@ -957,15 +957,14 @@ namespace Rawr.Mage
             float K;
             float X;
             float Y;
-            Name = "FFBScLBPyro";
-            ProvidesScorch = true;
-            AffectedByFlameCap = true;
+            cycle.Name = "FFBScLBPyro";
+            cycle.ProvidesScorch = true;
+            cycle.AffectedByFlameCap = true;
 
             FFB = castingState.GetSpell(SpellId.FrostfireBolt);
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
-            sequence = "Frostfire Bolt";
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
@@ -981,7 +980,7 @@ namespace Rawr.Mage
             float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
             if (castingState.MageTalents.ImprovedScorch == 0)
             {
-                ProvidesScorch = false;
+                cycle.ProvidesScorch = false;
                 gap = 1.0f;
             }
             float C, H, averageCastTime;
@@ -1098,32 +1097,32 @@ namespace Rawr.Mage
             }
             averageTicks += 4 * (1 - T8) * (1 - totalChance);
 
-            AddSpell(needsDisplayCalculations, FFB, X);
-            AddSpell(needsDisplayCalculations, Sc, Y);
-            AddSpell(needsDisplayCalculations, LB, 1 - X - Y);
-            AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FFB, X);
+            cycle.AddSpell(needsDisplayCalculations, Sc, Y);
+            cycle.AddSpell(needsDisplayCalculations, LB, 1 - X - Y);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class FFBScPyro : DynamicCycle
+    public static class FFBScPyro
     {
-        public FFBScPyro(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
             Spell Sc;
             DotSpell Pyro;
             float K;
             float X;
-            Name = "FFBScPyro";
-            ProvidesScorch = true;
-            AffectedByFlameCap = true;
+            cycle.Name = "FFBScPyro";
+            cycle.ProvidesScorch = true;
+            cycle.AffectedByFlameCap = true;
 
             FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
             Sc = castingState.GetSpell(SpellId.Scorch);
             Pyro = (DotSpell)castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
-            sequence = "Frostfire Bolt";
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
@@ -1139,7 +1138,7 @@ namespace Rawr.Mage
             float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
             if (castingState.MageTalents.ImprovedScorch == 0)
             {
-                ProvidesScorch = false;
+                cycle.ProvidesScorch = false;
                 gap = 1.0f;
             }
             float FFBcrit = FFB.CritRate;
@@ -1187,10 +1186,11 @@ namespace Rawr.Mage
             }
             averageTicks += 4 * (1 - T8) * (1 - totalChance);
 
-            AddSpell(needsDisplayCalculations, FFB, X);
-            AddSpell(needsDisplayCalculations, Sc, 1 - X);
-            AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FFB, X);
+            cycle.AddSpell(needsDisplayCalculations, Sc, 1 - X);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
@@ -1236,8 +1236,6 @@ namespace Rawr.Mage
                 }
 
                 Calculate(castingState);
-
-                sequence = string.Format("{0}x Fireball : {1}x Scorch", fbCount, averageScorchesNeeded);
             }
         }
     }

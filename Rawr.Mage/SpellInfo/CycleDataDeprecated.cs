@@ -273,14 +273,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     class FrBABarSlow : DynamicCycle
@@ -351,14 +343,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     class ABABarY : DynamicCycle
@@ -589,14 +573,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     class AB3ABarX : DynamicCycle
@@ -683,14 +659,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     class AB3ABarY : DynamicCycle
@@ -771,14 +739,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     class AB2ABar : DynamicCycle
@@ -869,14 +829,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     class FB2ABar : DynamicCycle
@@ -954,14 +906,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     class FrB2ABar : DynamicCycle
@@ -1038,14 +982,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     class FBABar : DynamicCycle
@@ -1106,14 +1042,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     class FrBABar : DynamicCycle
@@ -1173,14 +1101,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     class FFBABar : DynamicCycle
@@ -1241,14 +1161,6 @@ namespace Rawr.Mage
         }
 
         private StaticCycle commonChain;
-
-        public override string Sequence
-        {
-            get
-            {
-                return commonChain.Sequence;
-            }
-        }
     }
 
     /*class AB : Cycle
@@ -1994,7 +1906,6 @@ namespace Rawr.Mage
 
             ABABar = castingState.GetCycle(CycleId.ABABar0C);
             Sc = castingState.GetSpell(SpellId.Scorch);
-            sequence = ABABar.Sequence;
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
@@ -2040,7 +1951,6 @@ namespace Rawr.Mage
 
             ABABarC = castingState.GetCycle(CycleId.ABABar1C);
             Sc = castingState.GetSpell(SpellId.Scorch);
-            sequence = ABABarC.Sequence;
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
@@ -2086,7 +1996,6 @@ namespace Rawr.Mage
 
             ABAMABar = castingState.GetCycle(CycleId.ABAMABar);
             Sc = castingState.GetSpell(SpellId.Scorch);
-            sequence = ABAMABar.Sequence;
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
@@ -2132,7 +2041,6 @@ namespace Rawr.Mage
 
             AB3AMABar = castingState.GetCycle(CycleId.AB3AMABar);
             Sc = castingState.GetSpell(SpellId.Scorch);
-            sequence = AB3AMABar.Sequence;
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
@@ -2178,7 +2086,6 @@ namespace Rawr.Mage
 
             AB3ABarC = castingState.GetCycle(CycleId.AB3ABar3C);
             Sc = castingState.GetSpell(SpellId.Scorch);
-            sequence = AB3ABarC.Sequence;
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;
@@ -2224,7 +2131,6 @@ namespace Rawr.Mage
 
             AB3MBAMABar = castingState.GetCycle(CycleId.ABSpam3C);
             Sc = castingState.GetSpell(SpellId.Scorch);
-            sequence = AB3MBAMABar.Sequence;
 
             int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
             int extraScorches = 1;

@@ -92,6 +92,89 @@ namespace Rawr.Mage
         public double[] rowScale;
         public double[] columnScale;
 
+        public Spell[] spellPool;
+        public int spellIndex;
+
+        public Spell NewSpell(SpellTemplate template)
+        {
+            if (spellPool == null)
+            {
+                spellPool = new Spell[64];
+            }
+            else if (spellIndex >= spellPool.Length)
+            {
+                Spell[] arr = new Spell[spellPool.Length * 2];
+                Array.Copy(spellPool, arr, spellPool.Length);
+                spellPool = arr;
+            }
+            Spell spell = spellPool[spellIndex];
+            if (spell == null)
+            {
+                spell = new Spell(template);
+                spellPool[spellIndex] = spell;
+            }
+            else
+            {
+                spell.Initialize(template);
+            }
+            spellIndex++;
+            return spell;
+        }
+
+        public DynamicCycle[] cyclePool;
+        public int cycleIndex;
+
+        public DynamicCycle NewDynamicCycle(CastingState castingState)
+        {
+            if (cyclePool == null)
+            {
+                cyclePool = new DynamicCycle[64];
+            }
+            else if (cycleIndex >= cyclePool.Length)
+            {
+                DynamicCycle[] arr = new DynamicCycle[cyclePool.Length * 2];
+                Array.Copy(cyclePool, arr, cyclePool.Length);
+                cyclePool = arr;
+            }
+            DynamicCycle cycle = cyclePool[cycleIndex];
+            if (cycle == null)
+            {
+                cycle = new DynamicCycle(false, castingState);
+                cyclePool[cycleIndex] = cycle;
+            }
+            else
+            {
+                cycle.Initialize(castingState);
+            }
+            cycleIndex++;
+            return cycle;
+        }
+
+        public CastingState[] statePool;
+        public int stateIndex;
+
+        public CastingState NewCastingState()
+        {
+            if (statePool == null)
+            {
+                statePool = new CastingState[32];
+            }
+            else if (stateIndex >= statePool.Length)
+            {
+                CastingState[] arr = new CastingState[statePool.Length * 2];
+                Array.Copy(statePool, arr, statePool.Length);
+                statePool = arr;
+            }
+            CastingState state = statePool[stateIndex];
+            if (state == null)
+            {
+                state = new CastingState();
+                statePool[stateIndex] = state;
+            }
+            stateIndex++;
+            return state;
+        }
+
         public int MaxSize
         {
             get
@@ -291,6 +374,9 @@ namespace Rawr.Mage
                     }
                 }
                 ArraySet result = pool[bestIndex];
+                result.spellIndex = 0;
+                result.cycleIndex = 0;
+                result.stateIndex = 0;
                 pool.RemoveAt(bestIndex);
                 return result;
             }

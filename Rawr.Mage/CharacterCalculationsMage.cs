@@ -149,9 +149,20 @@ namespace Rawr.Mage
 
         public string EffectsDescription(int effects)
         {
-            List<string> buffList = GetEffectList(effects).ConvertAll(effect => effect.Name);
+            List<string> buffList = new List<string>();
+            List<EffectCooldown> cooldownList = CooldownList;
+            for (int i = 0; i < cooldownList.Count; i++)
+            {
+                EffectCooldown effect = cooldownList[i];
+                if ((effects & effect.Mask) == effect.Mask)
+                {
+                    buffList.Add(effect.Name);
+                }
+            }
             return string.Join("+", buffList.ToArray());
         }
+
+        public ArraySet ArraySet { get; set; }
 
         public int ColumnIdleRegen = -1;
         public int ColumnWand = -1;
@@ -965,7 +976,7 @@ namespace Rawr.Mage
                 Cycle s = BaseState.GetCycle(cycle);
                 if (s != null)
                 {
-                    dictValues.Add(s.Name, string.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\nAverage Cast Time: {3:F} sec\r\n{4}", s.DamagePerSecond, s.ManaPerSecond, s.ThreatPerSecond, s.CastTime, s.Sequence));
+                    dictValues.Add(s.Name, string.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\nAverage Cast Time: {3:F} sec", s.DamagePerSecond, s.ManaPerSecond, s.ThreatPerSecond, s.CastTime));
                 }
             }
             Spell bs;

@@ -196,8 +196,9 @@ namespace Rawr.Mage
 
         public override Spell GetSpell(CastingState castingState)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.CastTime = speed;
             spell.CritRate = castingState.CritRate;
 
@@ -281,8 +282,9 @@ namespace Rawr.Mage
 
         public virtual Spell GetSpell(CastingState castingState, bool clearcastingActive)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.CalculateManualClearcasting(true, false, clearcastingActive);
             spell.CalculateDerivedStats(castingState);
             spell.CalculateManualClearcastingCost(castingState.Calculations, false, true, false, clearcastingActive);
@@ -511,8 +513,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, bool manualClearcasting, bool clearcastingActive, bool pom, bool averageFingersOfFrost)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             if (manualClearcasting) spell.CalculateManualClearcasting(true, false, clearcastingActive);
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (averageFingersOfFrost)
@@ -529,8 +532,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, bool averageFingersOfFrost)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (averageFingersOfFrost)
             {
@@ -591,8 +595,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, bool pom, bool brainFreeze)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             if (brainFreeze)
             {
                 spell.CostAmplifier = 0;
@@ -653,8 +658,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, bool pom, bool averageFingersOfFrost)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.SpellModifier *= (1 + tormentFactor * castingState.SnaredTime);
             if (averageFingersOfFrost)
             {
@@ -710,8 +716,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, bool pom, bool spammedDot)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.CalculateDerivedStats(castingState, false, pom, spammedDot);
             return spell;
         }
@@ -759,8 +766,9 @@ namespace Rawr.Mage
 
         public override Spell GetSpell(CastingState castingState)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             if (castingState.MageTalents.GlyphOfLivingBomb)
             {
                 spell.DotDamageModifier = (1 + Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * (castingState.FireCritBonus - 1));
@@ -885,8 +893,9 @@ namespace Rawr.Mage
 
         public override Spell GetSpell(CastingState castingState)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             if (castingState.Frozen)
             {
                 if (castingState.MageTalents.GlyphOfIceLance && castingState.CalculationOptions.TargetLevel > castingState.CalculationOptions.PlayerLevel)
@@ -934,8 +943,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, float arcaneBlastDebuff)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * arcaneBlastDebuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState);
@@ -982,8 +992,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, int debuff, bool manualClearcasting, bool clearcastingActive, bool pom)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             if (manualClearcasting) spell.CalculateManualClearcasting(true, false, clearcastingActive);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
@@ -995,8 +1006,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, int debuff, bool forceHit)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CostModifier += 1.75f * debuff;
@@ -1006,8 +1018,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, int debuff)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CostModifier += 1.75f * debuff;
@@ -1017,8 +1030,9 @@ namespace Rawr.Mage
 
         public override Spell GetSpell(CastingState castingState)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
             return spell;
@@ -1208,9 +1222,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing, int arcaneBlastDebuff, float ticks)
         {
-            Spell spell = new Spell(this);
-            //spell.ClearcastingProccing = clearcastingProccing;
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.CalculateManualClearcasting(true, clearcastingAveraged, clearcastingActive);
             spell.BaseCastTime = ticks;
             if (barrage)
@@ -1233,8 +1247,9 @@ namespace Rawr.Mage
 
         public Spell GetSpell(CastingState castingState, bool barrage, int arcaneBlastDebuff, int ticks)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            //Spell spell = new Spell(this);
+            //spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             spell.BaseCastTime = ticks;
             if (barrage)
             {

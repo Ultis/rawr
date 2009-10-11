@@ -164,11 +164,6 @@ namespace Rawr.Mage
             return duration;
         }
 
-        public CastingState Clone()
-        {
-            return (CastingState)MemberwiseClone();
-        }
-
         private CastingState maintainSnareState;
         public CastingState MaintainSnareState
         {
@@ -209,15 +204,56 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        frozenState = new CastingState(Calculations, Effects, true);
+                        frozenState = CastingState.New(Calculations, Effects, true);
                     }
                 }
                 return frozenState;
             }
         }
 
+        public CastingState()
+        {
+        }
+
         public CastingState(CharacterCalculationsMage calculations, int effects, bool frozen)
         {
+            Initialize(calculations, effects, frozen);
+        }
+
+        public static CastingState New(CharacterCalculationsMage calculations, int effects, bool frozen)
+        {
+            CastingState state;
+            if (calculations.NeedsDisplayCalculations || calculations.ArraySet == null)
+            {
+                state = new CastingState();
+            }
+            else
+            {
+                state = calculations.ArraySet.NewCastingState();
+            }
+            state.Initialize(calculations, effects, frozen);
+            return state;
+        }
+
+        public static CastingState NewRaw(CharacterCalculationsMage calculations, int effects)
+        {
+            CastingState state = calculations.NeedsDisplayCalculations ? new CastingState() : calculations.ArraySet.NewCastingState();
+            state.Calculations = calculations;
+            state.Effects = effects;
+            state.buffLabel = null;
+            state.SpellsCount = 0;
+            state.CyclesCount = 0;
+            return state;
+        }
+
+        public void Initialize(CharacterCalculationsMage calculations, int effects, bool frozen)
+        {
+            frozenState = null;
+            maintainSnareState = null;
+            StateSpellPower = 0;
+            StateAdditiveSpellModifier = 0;
+            buffLabel = null;
+
             //MageTalents = calculations.MageTalents;
             //BaseStats = calculations.BaseStats; // == characterStats
             //CalculationOptions = calculations.CalculationOptions;
@@ -244,9 +280,11 @@ namespace Rawr.Mage
                 SpellHasteRating += 500;
             }
 
-            foreach (EffectCooldown effect in calculations.GetEffectList(effects))
+            List<EffectCooldown> cooldownList = calculations.CooldownList;
+            for (int i = 0; i < cooldownList.Count; i++)
             {
-                if (effect.SpecialEffect != null)
+                EffectCooldown effect = cooldownList[i];
+                if (effect.SpecialEffect != null && (effects & effect.Mask) == effect.Mask)
                 {
                     StateSpellPower += effect.SpecialEffect.Stats.SpellPower;
                     SpellHasteRating += effect.SpecialEffect.Stats.HasteRating;
@@ -261,6 +299,10 @@ namespace Rawr.Mage
             if (Combustion)
             {
                 CombustionDuration = ComputeCombustion(calculations.BaseFireCritRate + StateCritRate);
+            }
+            else
+            {
+                CombustionDuration = 0;
             }
 
             // spell calculations
@@ -293,6 +335,9 @@ namespace Rawr.Mage
             {
                 StateSpellModifier *= (1 + 0.06f * MageTalents.MoltenFury);
             }
+
+            SpellsCount = 0;
+            CyclesCount = 0;
 
             //ResilienceCritDamageReduction = 1;
             //ResilienceCritRateReduction = 0;
@@ -353,25 +398,25 @@ namespace Rawr.Mage
                     c = GetSpell(SpellId.Fireball);
                     break;
                 case CycleId.FBPyro:
-                    c = new FBPyro(Calculations.NeedsDisplayCalculations, this);
+                    c = FBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FBLBPyro:
-                    c = new FBLBPyro(Calculations.NeedsDisplayCalculations, this);
+                    c = FBLBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FFBLBPyro:
-                    c = new FFBLBPyro(Calculations.NeedsDisplayCalculations, this);
+                    c = FFBLBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FBScPyro:
-                    c = new FBScPyro(Calculations.NeedsDisplayCalculations, this);
+                    c = FBScPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FFBPyro:
-                    c = new FFBPyro(Calculations.NeedsDisplayCalculations, this);
+                    c = FFBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FFBScPyro:
-                    c = new FFBScPyro(Calculations.NeedsDisplayCalculations, this);
+                    c = FFBScPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FFBScLBPyro:
-                    c = new FFBScLBPyro(Calculations.NeedsDisplayCalculations, this);
+                    c = FFBScLBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrostfireBoltFOF:
                     c = GetSpell(SpellId.FrostfireBoltFOF);
@@ -398,34 +443,34 @@ namespace Rawr.Mage
                     c = GetSpell(SpellId.ArcaneBlast4);
                     break;
                 case CycleId.ABSpam04MBAM:
-                    c = new ABSpam04MBAM(Calculations.NeedsDisplayCalculations, this);
+                    c = ABSpam04MBAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABSpam024MBAM:
-                    c = new ABSpam024MBAM(Calculations.NeedsDisplayCalculations, this);
+                    c = ABSpam024MBAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABSpam0234MBAM:
-                    c = new ABSpam0234MBAM(Calculations.NeedsDisplayCalculations, this);
+                    c = ABSpam0234MBAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABSpam4MBAM:
-                    c = new ABSpam4MBAM(Calculations.NeedsDisplayCalculations, this);
+                    c = ABSpam4MBAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABSpam24MBAM:
-                    c = new ABSpam24MBAM(Calculations.NeedsDisplayCalculations, this);
+                    c = ABSpam24MBAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABSpam234MBAM:
-                    c = new ABSpam234MBAM(Calculations.NeedsDisplayCalculations, this);
+                    c = ABSpam234MBAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB4AM234MBAM:
-                    c = new AB4AM234MBAM(Calculations.NeedsDisplayCalculations, this);
+                    c = AB4AM234MBAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AM23MBAM:
-                    c = new AB3AM23MBAM(Calculations.NeedsDisplayCalculations, this);
+                    c = AB3AM23MBAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB4AM0234MBAM:
-                    c = new AB4AM0234MBAM(Calculations.NeedsDisplayCalculations, this);
+                    c = AB4AM0234MBAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AM023MBAM:
-                    c = new AB3AM023MBAM(Calculations.NeedsDisplayCalculations, this);
+                    c = AB3AM023MBAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABarAM:
                     c = new ABarAM(Calculations.NeedsDisplayCalculations, this);
@@ -434,7 +479,7 @@ namespace Rawr.Mage
                     c = new ABP(this);
                     break;
                 case CycleId.ABAM:
-                    c = new ABAM(Calculations.NeedsDisplayCalculations, this);
+                    c = ABAM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABSpamMBAM:
                     c = new ABSpamMBAM(Calculations.NeedsDisplayCalculations, this);
@@ -464,10 +509,10 @@ namespace Rawr.Mage
                     c = new AB3ABar3MBAM(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AM:
-                    c = new AB3AM(Calculations.NeedsDisplayCalculations, this);
+                    c = AB3AM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2AM:
-                    c = new AB2AM(Calculations.NeedsDisplayCalculations, this);
+                    c = AB2AM.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AM2MBAM:
                     c = new AB3AM2MBAM(Calculations.NeedsDisplayCalculations, this);
@@ -494,7 +539,7 @@ namespace Rawr.Mage
                     c = new AB2AMABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AMABar:
-                    c = new AB3AMABar(Calculations.NeedsDisplayCalculations, this);
+                    c = AB3AMABar.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB3AMABar2C:
                     c = new AB3AMABar2C(Calculations.NeedsDisplayCalculations, this);
@@ -587,19 +632,19 @@ namespace Rawr.Mage
                     c = new FBFBlast(this);
                     break;
                 case CycleId.FrBFBIL:
-                    c = new FrBFBIL(Calculations.NeedsDisplayCalculations, this);
+                    c = FrBFBIL.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrBILFB:
-                    c = new FrBILFB(Calculations.NeedsDisplayCalculations, this);
+                    c = FrBILFB.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrBIL:
-                    c = new FrBIL(Calculations.NeedsDisplayCalculations, this);
+                    c = FrBIL.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrBFB:
-                    c = new FrBFB(Calculations.NeedsDisplayCalculations, this);
+                    c = FrBFB.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FBScLBPyro:
-                    c = new FBScLBPyro(Calculations.NeedsDisplayCalculations, this);
+                    c = FBScLBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FB2ABar:
                     c = new FB2ABar(Calculations.NeedsDisplayCalculations, this);
@@ -608,7 +653,7 @@ namespace Rawr.Mage
                     c = new FrB2ABar(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ScLBPyro:
-                    c = new ScLBPyro(Calculations.NeedsDisplayCalculations, this);
+                    c = ScLBPyro.GetCycle(Calculations.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.ABABarSlow:
                     c = new ABABarSlow(Calculations.NeedsDisplayCalculations, this);

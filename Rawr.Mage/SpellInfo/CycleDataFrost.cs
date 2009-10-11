@@ -4,18 +4,17 @@ using System.Text;
 
 namespace Rawr.Mage
 {
-    class FrBFB : DynamicCycle
+    public static class FrBFB
     {
-        public FrBFB(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FrB;
             float K;
-            Name = "FrBFB";
+            cycle.Name = "FrBFB";
 
             FrB = castingState.GetSpell(SpellId.FrostboltFOF);
             Spell FB = castingState.GetSpell(SpellId.FireballBF);
-            sequence = "Frostbolt";
 
             // FrB      1 - brainFreeze
             // FrB-FB   brainFreeze
@@ -24,20 +23,21 @@ namespace Rawr.Mage
 
             K = 0.05f * castingState.MageTalents.BrainFreeze / (1 - T8);
 
-            AddSpell(needsDisplayCalculations, FrB, 1);
-            AddSpell(needsDisplayCalculations, FB, K);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FrB, 1);
+            cycle.AddSpell(needsDisplayCalculations, FB, K);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class FrBFBIL : DynamicCycle
+    public static class FrBFBIL
     {
-        public FrBFBIL(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FrB, FrBS, FB, FBS, ILS;
             float KFrB, KFrBS, KFB, KFBS, KILS;
-            Name = "FrBFBIL";
+            cycle.Name = "FrBFBIL";
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
@@ -125,25 +125,25 @@ namespace Rawr.Mage
             FB = castingState.GetSpell(SpellId.FireballBF);
             FBS = castingState.FrozenState.GetSpell(SpellId.FireballBF);
             ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
-            sequence = "Frostbolt";
 
-            AddSpell(needsDisplayCalculations, FrB, KFrB);
-            AddSpell(needsDisplayCalculations, FB, KFB);
-            AddSpell(needsDisplayCalculations, FrBS, KFrBS);
-            AddSpell(needsDisplayCalculations, FBS, KFBS);
-            AddSpell(needsDisplayCalculations, ILS, KILS);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FrB, KFrB);
+            cycle.AddSpell(needsDisplayCalculations, FB, KFB);
+            cycle.AddSpell(needsDisplayCalculations, FrBS, KFrBS);
+            cycle.AddSpell(needsDisplayCalculations, FBS, KFBS);
+            cycle.AddSpell(needsDisplayCalculations, ILS, KILS);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class FrBILFB : DynamicCycle
+    public static class FrBILFB
     {
-        public FrBILFB(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FrB, FrBS, FB, ILS;
             float KFrB, KFrBS, KFB, KILS;
-            Name = "FrBILFB";
+            cycle.Name = "FrBILFB";
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
@@ -226,24 +226,24 @@ namespace Rawr.Mage
             FrBS = castingState.FrozenState.GetSpell(SpellId.Frostbolt);
             FB = castingState.GetSpell(SpellId.FireballBF);
             ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
-            sequence = "Frostbolt";
 
-            AddSpell(needsDisplayCalculations, FrB, KFrB);
-            AddSpell(needsDisplayCalculations, FB, KFB);
-            AddSpell(needsDisplayCalculations, FrBS, KFrBS);
-            AddSpell(needsDisplayCalculations, ILS, KILS);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FrB, KFrB);
+            cycle.AddSpell(needsDisplayCalculations, FB, KFB);
+            cycle.AddSpell(needsDisplayCalculations, FrBS, KFrBS);
+            cycle.AddSpell(needsDisplayCalculations, ILS, KILS);
+            cycle.Calculate();
+            return cycle;
         }
     }
 
-    class FrBIL : DynamicCycle
+    public static class FrBIL
     {
-        public FrBIL(bool needsDisplayCalculations, CastingState castingState)
-            : base(needsDisplayCalculations, castingState)
+        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
+            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             Spell FrB, FrBS, ILS;
             float KFrB, KFrBS, KILS;
-            Name = "FrBIL";
+            cycle.Name = "FrBIL";
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
@@ -278,12 +278,12 @@ namespace Rawr.Mage
             FrB = castingState.GetSpell(SpellId.Frostbolt);
             FrBS = castingState.FrozenState.GetSpell(SpellId.Frostbolt);
             ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
-            sequence = "Frostbolt";
 
-            AddSpell(needsDisplayCalculations, FrB, KFrB);
-            AddSpell(needsDisplayCalculations, FrBS, KFrBS);
-            AddSpell(needsDisplayCalculations, ILS, KILS);
-            Calculate();
+            cycle.AddSpell(needsDisplayCalculations, FrB, KFrB);
+            cycle.AddSpell(needsDisplayCalculations, FrBS, KFrBS);
+            cycle.AddSpell(needsDisplayCalculations, ILS, KILS);
+            cycle.Calculate();
+            return cycle;
         }
     }
 

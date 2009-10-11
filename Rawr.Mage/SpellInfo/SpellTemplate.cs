@@ -76,8 +76,9 @@ namespace Rawr.Mage
             }
             else
             {
-                Spell spell = new Spell(this);
-                spell.Calculate(castingState);
+                //Spell spell = new Spell(this);
+                //spell.Calculate(castingState);
+                Spell spell = Spell.New(this, castingState);
                 spell.CalculateDerivedStats(castingState);
                 return spell;
             }

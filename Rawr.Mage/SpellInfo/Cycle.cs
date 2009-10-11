@@ -125,11 +125,48 @@ namespace Rawr.Mage
         public string Name;
         public CycleId CycleId;
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public CastingState CastingState;
 
         protected Cycle(CastingState castingState)
         {
             CastingState = castingState;
+        }
+
+        public void Initialize(CastingState castingState)
+        {
+            CastingState = castingState;
+            calculated = false;
+            damagePerSecond = 0;
+            effectDamagePerSecond = 0;
+            effectSpellPower = 0;
+            threatPerSecond = 0;
+            effectThreatPerSecond = 0;
+            costPerSecond = 0;
+            manaRegenPerSecond = 0;
+            DpsPerSpellPower = 0;
+
+            AffectedByFlameCap = false;
+            ProvidesSnare = false;
+            ProvidesScorch = false;
+
+            AreaEffect = false;
+            AoeSpell = null;
+
+            HitProcs = 0;
+            Ticks = 0;
+            CastProcs = 0;
+            NukeProcs = 0;
+            CritProcs = 0;
+            IgniteProcs = 0;
+            CastTime = 0;
+            TargetProcs = 0;
+            DamageProcs = 0;
+            OO5SR = 0;
         }
 
         private bool calculated;
@@ -194,15 +231,6 @@ namespace Rawr.Mage
         public bool AreaEffect;
         public Spell AoeSpell;
 
-        protected string sequence = null;
-        public virtual string Sequence
-        {
-            get
-            {
-                return sequence;
-            }
-        }
-
         public float HitProcs;
         public float Ticks;
         public float CastProcs;
@@ -212,7 +240,7 @@ namespace Rawr.Mage
         public float CastTime;
         public float TargetProcs;
         public float DamageProcs;
-        public float OO5SR = 0;
+        public float OO5SR;
 
         public void AddDamageContribution(Dictionary<string, SpellContribution> dict, float duration)
         {
@@ -767,7 +795,6 @@ namespace Rawr.Mage
         public SpellCustomMix(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
         {
-            sequence = "Custom Mix";
             Name = "Custom Mix";
             if (castingState.CalculationOptions.CustomSpellMix == null) return;
             for (int i = 0; i < castingState.CalculationOptions.CustomSpellMix.Count; i++)
@@ -781,15 +808,6 @@ namespace Rawr.Mage
 
     public class StaticCycle : Cycle
     {
-        public override string Sequence
-        {
-            get
-            {
-                if (sequence == null) sequence = string.Join("-", spellList.ConvertAll(spell => (spell != null) ? spell.Name : "Pause").ToArray());
-                return sequence;
-            }
-        }
-
         public bool recalc5SR;
 
         private List<Spell> spellList;
@@ -918,7 +936,7 @@ namespace Rawr.Mage
         private List<Cycle> Cycle;
         private List<float> Weight;
 
-        protected DynamicCycle(bool needsDisplayCalculations, CastingState castingState)
+        public DynamicCycle(bool needsDisplayCalculations, CastingState castingState)
             : base(castingState)
         {
             if (needsDisplayCalculations)
@@ -928,7 +946,20 @@ namespace Rawr.Mage
             }
         }
 
-        protected void AddCycle(bool needsDisplayCalculations, Cycle cycle, float weight)
+        public static DynamicCycle New(bool needsDisplayCalculations, CastingState castingState)
+        {
+            ArraySet arraySet = castingState.Calculations.ArraySet;
+            if (needsDisplayCalculations || arraySet == null)
+            {
+                return new DynamicCycle(needsDisplayCalculations, castingState);
+            }
+            else
+            {
+                return arraySet.NewDynamicCycle(castingState);
+            }
+        }
+
+        public void AddCycle(bool needsDisplayCalculations, Cycle cycle, float weight)
         {
             if (needsDisplayCalculations)
             {
@@ -950,7 +981,7 @@ namespace Rawr.Mage
             DpsPerSpellPower += weight * cycle.CastTime * cycle.DpsPerSpellPower;
         }
 
-        protected void AddSpell(bool needsDisplayCalculations, Spell spell, float weight)
+        public void AddSpell(bool needsDisplayCalculations, Spell spell, float weight)
         {
             if (needsDisplayCalculations)
             {
@@ -972,7 +1003,7 @@ namespace Rawr.Mage
             DpsPerSpellPower += weight * spell.CastTime * spell.DpsPerSpellPower;
         }
 
-        protected void AddSpell(bool needsDisplayCalculations, DotSpell spell, float weight, float dotUptime)
+        public void AddSpell(bool needsDisplayCalculations, DotSpell spell, float weight, float dotUptime)
         {
             if (needsDisplayCalculations)
             {
@@ -994,12 +1025,12 @@ namespace Rawr.Mage
             DpsPerSpellPower += weight * spell.CastTime * (spell.DpsPerSpellPower + dotUptime * spell.DotDpsPerSpellPower);
         }
 
-        protected void AddPause(float duration, float weight)
+        public void AddPause(float duration, float weight)
         {
             CastTime += weight * duration;
         }
 
-        protected void Calculate()
+        public void Calculate()
         {
             costPerSecond /= CastTime;
             damagePerSecond /= CastTime;
