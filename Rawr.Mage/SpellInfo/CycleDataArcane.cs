@@ -1093,7 +1093,6 @@ namespace Rawr.Mage
             // S0 + S1 + S2 = 1
 
             Spell MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
-            Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
 
             float MB = 0.08f * castingState.MageTalents.MissileBarrage;
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
@@ -1119,14 +1118,18 @@ namespace Rawr.Mage
                 cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
                 cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
                 cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+
+                Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
+                cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
+                cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                CharacterCalculationsMage calc = castingState.Calculations;
+                calc.ArcaneBlastTemplate.AddToCycle(calc, cycle, AB, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                calc.ArcaneMissilesTemplate.AddToCycle(calc, cycle, MBAM0, S2, 0, 0, 0, K1 + K2 + K4);
             }
-            cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
-            cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
 
             cycle.Calculate();
             return cycle;
@@ -1242,8 +1245,6 @@ namespace Rawr.Mage
             // S0 + S1 + S2 = 1
 
             Spell MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
-            Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
-            Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
 
             float MB = 0.08f * castingState.MageTalents.MissileBarrage;
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
@@ -1270,15 +1271,20 @@ namespace Rawr.Mage
                 cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3);
                 cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
                 cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+
+                Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
+                cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2, K6);
+                cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, K1 + K2 + K3 + K6, K1 + K2 + K3 + K6, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                CharacterCalculationsMage calc = castingState.Calculations;
+                calc.ArcaneBlastTemplate.AddToCycle(calc, cycle, AB, K1 + K2 + K3 + K6, K1 + K2 + K3 + K6, K1 + K2 + K3, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                calc.ArcaneMissilesTemplate.AddToCycle(calc, cycle, MBAM0, S2, 0, K6, 0, K1 + K2 + K4);
             }
-            cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
-            cycle.AddSpell(needsDisplayCalculations, MBAM2, K6);
-            cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
 
             cycle.Calculate();
             return cycle;
@@ -1321,9 +1327,6 @@ namespace Rawr.Mage
             // S0 + S1 + S2 = 1
 
             Spell MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
-            Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
-            Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
-            Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
 
             float MB = 0.08f * castingState.MageTalents.MissileBarrage;
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
@@ -1351,16 +1354,22 @@ namespace Rawr.Mage
                 cycle.AddSpell(needsDisplayCalculations, AB2, K1 + K2 + K3 + K7);
                 cycle.AddSpell(needsDisplayCalculations, AB3, K1 + K2 + K3);
                 cycle.AddSpell(needsDisplayCalculations, AB4, K2 + 2 * K4 + K5);
+
+                Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+                Spell MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
+                cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
+                cycle.AddSpell(needsDisplayCalculations, MBAM2, K6);
+                cycle.AddSpell(needsDisplayCalculations, MBAM3, K7);
+                cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
             }
             else
             {
                 Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
-                castingState.Calculations.ArcaneBlastTemplate.AddToCycle(castingState.Calculations, cycle, AB, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K7, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                CharacterCalculationsMage calc = castingState.Calculations;
+                calc.ArcaneBlastTemplate.AddToCycle(calc, cycle, AB, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K7, K1 + K2 + K3, K2 + 2 * K4 + K5);
+                calc.ArcaneMissilesTemplate.AddToCycle(calc, cycle, MBAM0, S2, 0, K6, K7, K1 + K2 + K4);
             }
-            cycle.AddSpell(needsDisplayCalculations, MBAM0, S2);
-            cycle.AddSpell(needsDisplayCalculations, MBAM2, K6);
-            cycle.AddSpell(needsDisplayCalculations, MBAM3, K7);
-            cycle.AddSpell(needsDisplayCalculations, MBAM4, K1 + K2 + K4);
 
             cycle.Calculate();
             return cycle;

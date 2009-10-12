@@ -382,20 +382,16 @@ namespace Rawr.Mage
             this.template = template;
         }
 
-        public static Spell New(SpellTemplate template, CastingState castingState)
+        public static Spell New(SpellTemplate template, CharacterCalculationsMage calculations)
         {
-            var calc = castingState.Calculations;
-            Spell spell;
-            if (calc.NeedsDisplayCalculations || calc.ArraySet == null)
+            if (calculations.NeedsDisplayCalculations || calculations.ArraySet == null)
             {
-                spell = new Spell(template);
+                return new Spell(template);
             }
             else
             {
-                spell = calc.ArraySet.NewSpell(template);
+                return calculations.ArraySet.NewSpell(template);
             }
-            spell.Calculate(castingState);
-            return spell;
         }
 
         public virtual void Calculate(CastingState castingState)

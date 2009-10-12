@@ -76,9 +76,8 @@ namespace Rawr.Mage
             }
             else
             {
-                //Spell spell = new Spell(this);
-                //spell.Calculate(castingState);
-                Spell spell = Spell.New(this, castingState);
+                Spell spell = Spell.New(this, castingState.Calculations);
+                spell.Calculate(castingState);
                 spell.CalculateDerivedStats(castingState);
                 return spell;
             }
@@ -86,7 +85,8 @@ namespace Rawr.Mage
 
         public virtual float GetEffectAverageDamage(CastingState castingState)
         {
-            Spell spell = Spell.New(this, castingState);
+            Spell spell = Spell.New(this, castingState.Calculations);
+            spell.Calculate(castingState);
             float damagePerSpellPower;
             float igniteDamage;
             float igniteDamagePerSpellPower;           
