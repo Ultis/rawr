@@ -222,25 +222,25 @@ namespace Rawr.DPSWarr {
             float lastNumB2     = StatConversion.GetRatingFromExpertise((convcapB2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
             dictValues.Add("Expertise",
                 string.Format("{0:00.00%} : {1:00.00} : {2}*" +
-                                                      "Following includes Racial bonus and Strength of Arms" +
-                                Environment.NewLine + "{3:00.00%} Weapon Mastery (Dodge Only)" +
-                                Environment.NewLine + "{4:00.00%} : {5:00.00} : MH" +
-                                Environment.NewLine + "{6:00.00%} : {7:00.00} : OH" +
-                                Environment.NewLine + Environment.NewLine + "Dodge Cap: " +
-                                (lastNumB1 > 0 ? "You can free {8:0} Expertise ({9:0} Rating)"
-                                             : "You need {8:0} more Expertise ({9:0} Rating)") +
-                                Environment.NewLine + "Parry Cap: " +
-                                (lastNumB2 > 0 ? "You can free {10:0} Expertise ({11:0} Rating)"
-                                             : "You need {10:0} more Expertise ({11:0} Rating)"),
-                                StatConversion.GetDodgeParryReducFromExpertise(Expertise),
-                                Expertise,
-                                AverageStats.ExpertiseRating,
-                                WeapMastPerc,
-                                StatConversion.GetDodgeParryReducFromExpertise(MhExpertise), MhExpertise,
-                                StatConversion.GetDodgeParryReducFromExpertise(OhExpertise), OhExpertise,
-                                (sec2lastNumB1 > 0 ? sec2lastNumB1 : sec2lastNumB1 * -1), (lastNumB1 > 0 ? lastNumB1 : lastNumB1 * -1),
-                                (sec2lastNumB2 > 0 ? sec2lastNumB2 : sec2lastNumB2 * -1), (lastNumB2 > 0 ? lastNumB2 : lastNumB2 * -1)
-                            ));
+                                      "Following includes Racial bonus and Strength of Arms" +
+                Environment.NewLine + "{3:00.00%} Weapon Mastery (Dodge Only)" +
+                Environment.NewLine + "{4:00.00%} : {5:00.00} : MH" +
+                Environment.NewLine + "{6:00.00%} : {7:00.00} : OH" +
+                Environment.NewLine + Environment.NewLine + "Dodge Cap: " +
+                (lastNumB1 > 0 ? "You can free {8:0} Expertise ({9:0} Rating)"
+                             : "You need {8:0} more Expertise ({9:0} Rating)") +
+                Environment.NewLine + "Parry Cap: " +
+                (lastNumB2 > 0 ? "You can free {10:0} Expertise ({11:0} Rating)"
+                             : "You need {10:0} more Expertise ({11:0} Rating)"),
+                StatConversion.GetDodgeParryReducFromExpertise(Expertise),
+                Expertise,
+                AverageStats.ExpertiseRating,
+                WeapMastPerc,
+                StatConversion.GetDodgeParryReducFromExpertise(MhExpertise), MhExpertise,
+                StatConversion.GetDodgeParryReducFromExpertise(OhExpertise), OhExpertise,
+                (sec2lastNumB1 > 0 ? sec2lastNumB1 : sec2lastNumB1 * -1), (lastNumB1 > 0 ? lastNumB1 : lastNumB1 * -1),
+                (sec2lastNumB2 > 0 ? sec2lastNumB2 : sec2lastNumB2 * -1), (lastNumB2 > 0 ? lastNumB2 : lastNumB2 * -1)
+            ));
 
             dictValues.Add("Description", string.Format("DPS : PerHit : #ActsD"));
             // DPS Fury

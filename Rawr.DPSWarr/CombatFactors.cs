@@ -338,16 +338,8 @@ namespace Rawr.DPSWarr {
 
         private float _anyLand = 0f;
         private float _anyNotLand = 1f;
-        public float AnyLand {
-            get {
-                return _anyLand;
-            }
-        }
-        public float AnyNotLand {
-            get {
-                return _anyNotLand;
-            }
-        }
+        public float AnyLand { get { return _anyLand; } }
+        public float AnyNotLand { get { return _anyNotLand; } }
 
         protected virtual void Calculate() {
             _anyNotLand = Dodge + Parry + Miss;

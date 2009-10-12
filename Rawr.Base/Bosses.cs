@@ -2318,10 +2318,26 @@ namespace Rawr {
             }
             // Situational Changes
             InBackPerc_Melee = 0.90f;
-            /* TODO:
-             * Slag Pot - Charges and grabs a random target and incapacitates them, inflicting 4,500 (Heroic: 6,000) Fire damage every 1 second for 10 seconds. If the target survives, they will gain 100% (Heroic: 150%) haste for 10 seconds.
-             * Iron Constructs - Iron Constructs brought to ground scorched by Scorch, will gain stackable Heat buff, which increases their movement speed and haste by 5 per application. If Iron Constructs gain 10 stacks of Heat, they will become Molten, increasing their haste by 100% and inflicting 1,885 to 2,115 Fire damage every 1 second to enemies within 7 yards. Molten Iron Constructs can be brought to water, which causes them to become Brittle and unable to perform any action for 20 seconds. Critical strike chance against Brittle Iron Constructs is increased by 50%. If a single attack deals more than 5,000 damage to a Brittle Iron Construct, it will Shatter, inflicting 18,850 to 21,150 Physical damage not mitigated by armor, to enemies within 10 yards. Shattering the Construct causes Ignis to lose a stack of Strength of the Creator.
-             * Strength of the Creator - For every Iron Construct active and alive, Ignis gains 15% damage, stacking up to 99 times.
+            // TODO:
+            /* Slag Pot - Charges and grabs a random target and incapacitates them,
+             *   inflicting 4,500 (Heroic: 6,000) Fire damage every 1 second for 10
+             *   seconds. If the target survives, they will gain 100% (Heroic: 150%)
+             *   haste for 10 seconds.
+             * Iron Constructs - Iron Constructs brought to ground scorched by
+             *   Scorch, will gain stackable Heat buff, which increases their movement
+             *   speed and haste by 5 per application. If Iron Constructs gain 10
+             *   stacks of Heat, they will become Molten, increasing their haste by
+             *   100% and inflicting 1,885 to 2,115 Fire damage every 1 second to
+             *   enemies within 7 yards. Molten Iron Constructs can be brought to
+             *   water, which causes them to become Brittle and unable to perform any
+             *   action for 20 seconds. Critical strike chance against Brittle Iron
+             *   Constructs is increased by 50%. If a single attack deals more than
+             *   5,000 damage to a Brittle Iron Construct, it will Shatter, inflicting
+             *   18,850 to 21,150 Physical damage not mitigated by armor, to enemies
+             *   within 10 yards. Shattering the Construct causes Ignis to lose a
+             *   stack of Strength of the Creator.
+             * Strength of the Creator - For every Iron Construct active and alive,
+             *   Ignis gains 15% damage, stacking up to 99 times.
              */
         }
     }
@@ -2352,8 +2368,11 @@ namespace Rawr {
             InBackPerc_Melee = 0.90f;
             MultiTargsPerc = 0.50f; // need to sim this out
             MaxNumTargets  = 5f; // need to drop this down to only when the swarm is up
-            /* TODO:
-             * Phase 1: Air Phase
+            {
+
+            }
+            // TODO:
+            /* Phase 1: Air Phase
              * 1. (Spell #63014) - Inflicts 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage to a player, and additional 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage every 1 second to anyone within 6 yards of the initial impact, for 25 seconds.
              * 2. Fireball - Inflicts 6,660 to 7,740 (Heroic: 9,713 to 11,287) Fire damage.
              * 3. Flame Breath - Inflicts 13,125 to 16,875 (Heroic: 17,500 to 22,500) Fire damage to enemies in a cone in front of the caster. Used just before Razorscale goes back to the air.

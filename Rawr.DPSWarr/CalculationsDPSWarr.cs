@@ -626,7 +626,7 @@ These numbers to do not include racial bonuses.",
             if (!HidingBadStuff) { return false; }
             return (
                 // Remove Spellcasting Stuff
-                (HidingBadStuff_Spl ? stats.Mp5 + stats.SpellPower + stats.Mana + stats.Spirit + stats.Intellect
+                (HidingBadStuff_Spl ? stats.Mp5 + stats.SpellPower + stats.Mana + stats.Spirit
                                     + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier
                                     + stats.SpellPenetration + stats.BonusManaMultiplier
                                     : 0f)
@@ -663,12 +663,13 @@ These numbers to do not include racial bonuses.",
             if (name.Contains("Potion of Wild Magic")) {
                 return true;
             }
-                // Force some buffs to go away
+            // Force some buffs to go away
             else if (name.Contains("Malorne")
                  || name.Contains("Duskweaver")
                  || name.Contains("Primalstrike")
                  || name.Contains("Clefthoof")
                  || name.Contains("Dreamwalker")
+                 || name.Contains("DK DPS 4T10")
                  || name.Contains("Skyshatter")
             ) {
                 return false;
