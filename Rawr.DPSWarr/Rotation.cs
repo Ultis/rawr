@@ -178,7 +178,7 @@ namespace Rawr.DPSWarr {
             HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
             EX = new Skills.Execute(            CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
         }
-        protected virtual void doIterations() { }
+        public virtual void doIterations() { }
 
         protected virtual void calcDeepWounds() {
             // Main Hand
@@ -458,20 +458,24 @@ namespace Rawr.DPSWarr {
             }
         }
         protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
+        
+        private float _RageGenOverDur_Other = -1f;
         protected virtual float RageGenOverDur_Other {
             get {
-                if (Char.MainHand == null) { return 0f; }
-                float rage = RageGenOverDur_Anger
-                           + RageGenOverDur_IncDmg
-                           + (100f * StatS.ManaorEquivRestore); // 0.02f becomes 2f
+                if (_RageGenOverDur_Other == -1f) {
+                    float rage = RageGenOverDur_Anger
+                               + RageGenOverDur_IncDmg
+                               + (100f * StatS.ManaorEquivRestore); // 0.02f becomes 2f
 
-                // 4pcT7
-                if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
-                    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * CalcOpts.Duration;
-                    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f) * CalcOpts.Duration;
+                    // 4pcT7
+                    if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
+                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * CalcOpts.Duration;
+                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f) * CalcOpts.Duration;
+                    }
+                    _RageGenOverDur_Other = rage;
                 }
 
-                return rage;
+                return _RageGenOverDur_Other;
             }
         }
         protected virtual float RageNeededOverDur {

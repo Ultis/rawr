@@ -154,7 +154,7 @@ namespace Rawr.DPSWarr {
                     // f = hit factor
                     //float d, s, f, rage;
                     
-                    float rage = 0.0f;
+                    //float rage = 0.0f;
                     float s = combatFactors._c_mhItemSpeed;
                     //s = combatFactors._c_mhItemSpeed;
                     float based = combatFactors.AvgMhWeaponDmg(s) * combatFactors.DamageBonus * combatFactors.DamageReduction;
@@ -162,23 +162,24 @@ namespace Rawr.DPSWarr {
                     // regular hit
                     //d = based;
                     //f = 3.5f;
-                    rage += RageFormula(based, 
-                        s, 3.5f) * (MHAtkTable.Hit + MHAtkTable.Dodge + MHAtkTable.Parry);
+                    return RageFormula(based, 
+                        3.5f * s) * (MHAtkTable.Hit + MHAtkTable.Dodge + MHAtkTable.Parry) +
 
                     // glance
                     //d = based * combatFactors.ReducWhGlancedDmg;
-                    rage += RageFormula(based * combatFactors.ReducWhGlancedDmg, 
-                        s, 3.5f) * MHAtkTable.Glance;
+                            RageFormula(based * combatFactors.ReducWhGlancedDmg, 
+                        3.5f * s) * MHAtkTable.Glance +
 
                     // crit
                     //d = based * (1f + combatFactors.BonusWhiteCritDmg);
                     //f = 7.0f;
-                    rage += RageFormula(based * (1f + combatFactors.BonusWhiteCritDmg),
-                        s, 7f) * MHAtkTable.Crit;
+                    
+                            RageFormula(based * (1f + combatFactors.BonusWhiteCritDmg),
+                        7.0f * s) * MHAtkTable.Crit +
 
-                    rage += s * (3f * Talents.UnbridledWrath) / 60.0f * (1.0f - MHAtkTable.AnyLand);
+                            s * (3f * Talents.UnbridledWrath) / 60.0f * (1.0f - MHAtkTable.AnyLand);
 
-                    return rage;
+                    //return rage;
                 }
             }
             public float OHSwingRage {
@@ -189,29 +190,29 @@ namespace Rawr.DPSWarr {
                     //float d, s, f, rage;
                     float based;
 
-                    float rage = 0.0f;
+                    //float rage = 0.0f;
                     float s = combatFactors._c_ohItemSpeed;
                     based = combatFactors.AvgOhWeaponDmg(s) * combatFactors.DamageBonus * combatFactors.DamageReduction;
 
                     // regular hit
                     //d = based;
                     //f = 1.75f;
-                    rage += RageFormula(based, s, 1.75f) * (OHAtkTable.Hit + OHAtkTable.Dodge + OHAtkTable.Parry);
+                    return RageFormula(based, 1.75f * s) * (OHAtkTable.Hit + OHAtkTable.Dodge + OHAtkTable.Parry) +
 
                     // glance
                     //d = based * combatFactors.ReducWhGlancedDmg;
-                    rage += RageFormula(based * combatFactors.ReducWhGlancedDmg, 
-                        s, 1.75f) * OHAtkTable.Glance;
+                            RageFormula(based * combatFactors.ReducWhGlancedDmg, 
+                        1.75f * s) * OHAtkTable.Glance +
 
                     // crit
                     //d = based * (1f + combatFactors.BonusWhiteCritDmg);
                     //f = 3.5f;
-                    rage += RageFormula(based * (1f + combatFactors.BonusWhiteCritDmg),
-                        s, 3.5f) * OHAtkTable.Crit;
+                            RageFormula(based * (1f + combatFactors.BonusWhiteCritDmg),
+                        3.5f*s) * OHAtkTable.Crit +
 
-                    rage += s * (3f * Talents.UnbridledWrath) / 60.0f * (1.0f - OHAtkTable.AnyLand);
+                        s * (3f * Talents.UnbridledWrath) / 60.0f * (1.0f - OHAtkTable.AnyLand);
                     
-                    return rage;
+                    //return rage;
                 }
             }
             public float MHRageGenOverDur { get { return MhActivates * MHSwingRage; } }
@@ -235,7 +236,8 @@ namespace Rawr.DPSWarr {
             
             private const float c_const = 0.016545334215751158173395102581072f; //7.5f / 453.3f;
             private const float c_const2 = 0.033090668431502316346790205162144f; // 2*c_const
-            private float RageFormula(float d, float s, float f) {
+            private const float c_const3 = 0.049636002647253474520185307743216f; // 3*c_const
+            private float RageFormula(float d, float fs) {
                 /* R = Rage Generated
                  * d = damage amount
                  * c = rage conversion value
@@ -248,7 +250,8 @@ namespace Rawr.DPSWarr {
                 
                 //R = 3.75f * d / c + f * s / 2.0f;
                 //R *= (1.0f + 0.25f * Talents.EndlessRage);
-                return System.Math.Min( (c_const * d + f * s) / 2.0f, c_const2 * d) * (1.0f + 0.25f * Talents.EndlessRage);
+                return (4f + Talents.EndlessRage) / 4f * ((fs > c_const3 * d) ? (c_const2 * d) : (c_const * d + fs) / 2.0f);
+                //return System.Math.Min( (c_const * d + fs) / 2.0f, c_const2 * d) * (1.0f + 0.25f * Talents.EndlessRage);
             }
             // Attacks Over Fight Duration
             public float LandedAtksOverDur {
@@ -493,15 +496,19 @@ namespace Rawr.DPSWarr {
             protected bool ReqMeleeWeap { get { return REQMELEEWEAP; } set { REQMELEEWEAP = value; } }
             protected bool ReqMeleeRange { get { return REQMELEERRANGE; } set { REQMELEERRANGE = value; } }
             protected bool ReqMultiTargs { get { return REQMULTITARGS; } set { REQMULTITARGS = value; } }
+            private float _AvgTargets = -1f;
             public float AvgTargets {
                 get {
                         //float extraTargetsHit = (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
-                        return 1f + 
-                            (CalcOpts.MultipleTargets ? 
-                                StatS.BonusTargets +
-                                CalcOpts.MultipleTargetsPerc / 100f *
-                                ((float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
-                                : 0f);
+                    if (_AvgTargets == -1f) {
+                        _AvgTargets = 1f +
+                           (CalcOpts.MultipleTargets ?
+                               StatS.BonusTargets +
+                               CalcOpts.MultipleTargetsPerc / 100f *
+                               ((float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
+                               : 0f);
+                    }
+                    return _AvgTargets;
                 }
             }
             protected float Targets { get { return TARGETS; } set { TARGETS = value; } }

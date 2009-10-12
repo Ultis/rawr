@@ -55,8 +55,8 @@ namespace Rawr.DPSWarr
             WhiteAtks.HSOverridesOverDur = 0f;
             WhiteAtks.CLOverridesOverDur = 0f;
 
-            float bsBaseRage = BS.RageUseOverDur;
-            float hsRageUsed = (FreeRageOverDur - bsBaseRage) / (1f + HS.FullRageCost * (Talents.Bloodsurge * 0.20f / 3f));
+            //float bsBaseRage = BS.RageUseOverDur;
+            float hsRageUsed = (FreeRageOverDur - BS.RageUseOverDur) / (1f + HS.FullRageCost * (Talents.Bloodsurge * 0.20f / 3f));
             
         }
         protected override void calcDeepWounds()
@@ -78,7 +78,7 @@ namespace Rawr.DPSWarr
             _DW_PerHit = DW.TickSize;
             _DW_DPS = DW.DPS;
         }
-        protected override void doIterations() {
+        public override void doIterations() {
             int line = 0;
             try {
                 base.doIterations();
@@ -100,30 +100,30 @@ namespace Rawr.DPSWarr
                 WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = hsRageUsed / HS.FullRageCost;
                 WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = clRageUsed / CL.FullRageCost;
 
-                float oldHSActivates = 0f, newHSActivates = HS.Activates;
-                float oldCLActivates = 0f, newCLActivates = CL.Activates;
+                float /*oldHSActivates = 0f,*/ newHSActivates = HS.Activates;
+                float /*oldCLActivates = 0f,*/ newCLActivates = CL.Activates;
                 BS.maintainActs = MaintainCDs;
-                int loopIterator;
+                /*int loopIterator;
                 for (loopIterator = 0;
                      CalcOpts.FuryStance
                         && loopIterator < 50
-                        && (Math.Abs(oldHSActivates / newHSActivates - 1f)  > 0.001f
-                            || Math.Abs(oldCLActivates / newCLActivates - 1f) > 0.001f);
+                        && (Math.Abs(oldHSActivates / newHSActivates - 1f)  > 0.01f
+                            || Math.Abs(oldCLActivates / newCLActivates - 1f) > 0.01f);
                       loopIterator++)
                 {
                     oldHSActivates = HS.Activates;
-                    oldCLActivates = CL.Activates;
+                    oldCLActivates = CL.Activates;*/
                     //
-                    BS.hsActivates = oldHSActivates; // bloodsurge only cares about HSes, not Cleaves
+                    BS.hsActivates = newHSActivates; // bloodsurge only cares about HSes, not Cleaves
                     _bloodsurgeRPS = (BS.RageUseOverDur);
                     hsRageUsed = FreeRageOverDur * hsPercOvd;
                     clRageUsed = FreeRageOverDur * clPercOvd;
                     WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = hsRageUsed / HS.FullRageCost;
                     WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = clRageUsed / CL.FullRageCost;
                     //
-                    newHSActivates = HS.Activates;
+                    /*newHSActivates = HS.Activates;
                     newCLActivates = CL.Activates;
-                }
+                }*/
 
                 BS.hsActivates = newHSActivates;
                 //BS.hsActivates += newCLActivates;
@@ -143,18 +143,16 @@ namespace Rawr.DPSWarr
         #region LandedAtks
         protected override float LandedYellowsOverDurMH {
             get {
-                float ret = base.LandedYellowsOverDurMH;
-                ret += _BT_GCDs * BT.MHAtkTable.AnyLand * BT.AvgTargets
-                     + _BS_GCDs * BS.MHAtkTable.AnyLand * BS.AvgTargets;
-                return ret;
-
+                return base.LandedYellowsOverDurMH +
+                    _BT_GCDs * BT.MHAtkTable.AnyLand * BT.AvgTargets +
+                    _BS_GCDs * BS.MHAtkTable.AnyLand * BS.AvgTargets;
             }
         }
         protected override float CriticalYellowsOverDurMH {
             get {
-                float ret = base.CriticalYellowsOverDurMH;
-                return ret + _BT_GCDs * BT.MHAtkTable.Crit * BT.AvgTargets
-                           + _BS_GCDs * BS.MHAtkTable.Crit * BS.AvgTargets;
+                return base.CriticalYellowsOverDurMH
+                    + _BT_GCDs * BT.MHAtkTable.Crit * BT.AvgTargets
+                    + _BS_GCDs * BS.MHAtkTable.Crit * BS.AvgTargets;
             }
         }
         protected override float AttemptedYellowsOverDurMH {
@@ -180,9 +178,9 @@ namespace Rawr.DPSWarr
         }
         public override float CritHsSlamOverDur {
             get {
-                float f = HS.Activates * HS.MHAtkTable.Crit;
                 return base.CritHsSlamOverDur
-                    + _BS_GCDs * BS.MHAtkTable.Crit;
+                    + _BS_GCDs * BS.MHAtkTable.Crit
+                    + HS.Activates * HS.MHAtkTable.Crit;
             }
         }
         #endregion
@@ -190,10 +188,8 @@ namespace Rawr.DPSWarr
         {
             get
             {
-                float BTRage         = BT.GetRageUseOverDur(_BT_GCDs);
-                float BloodSurgeRage = _bloodsurgeRPS;// BS.RageUsePerSecond;
-
-                return (base.RageNeededOverDur + BTRage + BloodSurgeRage) * (1f - timeLostPerc);
+                return (base.RageNeededOverDur + BT.GetRageUseOverDur(_BT_GCDs) + _bloodsurgeRPS) * 
+                    (1f - timeLostPerc);
             }
         }
 
@@ -284,6 +280,7 @@ namespace Rawr.DPSWarr
         #endregion
         public override void MakeRotationandDoDPS(bool setCalcs)
         {
+            base.MakeRotationandDoDPS(setCalcs);
             //new_MakeRotationandDoDPS(setCalcs);
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
@@ -299,7 +296,6 @@ namespace Rawr.DPSWarr
             float percTimeInStun = 0f;
 
             if (Char.MainHand == null) { return; }
-
             //doIterations();
 
             // ==== Rage Generation Priorities ========
@@ -496,12 +492,15 @@ namespace Rawr.DPSWarr
         {
             get
             {
-                if (Char.MainHand == null) { return 0f; }
+                /*if (Char.MainHand == null) { return 0f; }
                 float white = WHITEATTACKS.whiteRageGenOverDurNoHS * (1f - timeLostPerc);
                 //float sword = SS.GetRageUseOverDur(_SS_Acts);
                 float other = RageGenOverDur_Other;
                 float needy = RageNeededOverDur;
-                return white + other - needy;
+                return white + other - needy;*/
+                return WHITEATTACKS.whiteRageGenOverDurNoHS * (1f - timeLostPerc) +
+                       RageGenOverDur_Other -
+                       RageNeededOverDur;
             }
         }
     }
