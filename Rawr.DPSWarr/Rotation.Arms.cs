@@ -558,7 +558,7 @@ namespace Rawr.DPSWarr {
                      (PercTimeUnder20 > 0
                         && (float)Math.Abs(_EX_GCDs - oldEXGCDs) > 0.1f) ||
                      (Talents.SwordSpecialization > 0
-                        && CombatFactors.MH.Type == ItemType.TwoHandSword
+                        && CombatFactors._c_mhItemType == ItemType.TwoHandSword
                         && (float)Math.Abs(_SS_Acts - oldSSActs) > 0.1f)
                     )
                   )
@@ -928,7 +928,7 @@ namespace Rawr.DPSWarr {
                          (PercTimeUnder20 > 0
                             && (float)Math.Abs(_EX_GCDs - newoldEXGCDs) > 0.1f) ||
                          (Talents.SwordSpecialization > 0
-                            && CombatFactors.MH.Type == ItemType.TwoHandSword
+                            && CombatFactors._c_mhItemType == ItemType.TwoHandSword
                             && (float)Math.Abs(_SS_Acts - newoldSSActs) > 0.1f)
                         )
                       )
@@ -1145,7 +1145,7 @@ namespace Rawr.DPSWarr {
             _SD_DPS = SD.GetDPS(_SD_GCDs/*, (1f - PercTimeUnder20)*/); _SD_HPS = SD.GetHPS(_SD_GCDs);
             if (PercTimeUnder20 > 0) { _EX_DPS = EX.GetDPS(_EX_GCDs/*, PercTimeUnder20*/); _EX_HPS = EX.GetHPS(_EX_GCDs); }
             _SL_DPS = SL.GetDPS(_SL_GCDs); _SL_HPS = SL.GetHPS(_SL_GCDs);
-            if (Talents.SwordSpecialization > 0 && CombatFactors.MH.Type == ItemType.TwoHandSword) { _SS_DPS = SS.GetDPS(_SS_Acts); } else { _SS_DPS = 0f; }
+            if (Talents.SwordSpecialization > 0 && CombatFactors._c_mhItemType == ItemType.TwoHandSword) { _SS_DPS = SS.GetDPS(_SS_Acts); } else { _SS_DPS = 0f; }
 
             DPS_TTL += _TH_DPS + _Ham_DPS + _Shatt_DPS + _BLS_DPS + _MS_DPS + _RD_DPS + _OP_DPS + _TB_DPS + _SD_DPS + _EX_DPS + _SL_DPS + _SS_DPS;
             HPS_TTL += _ZRage_HPS + _Battle_HPS + _Comm_HPS + _Demo_HPS + _Sunder_HPS + _Sunder_HPS + _TH_HPS + _Ham_HPS + _Shatt_HPS + _SW_HPS + _ER_HPS + _Death_HPS + _BLS_HPS + _MS_HPS + _RD_HPS + _OP_HPS + _TB_HPS + _SD_HPS + _EX_HPS + _SL_HPS + _SS_HPS;

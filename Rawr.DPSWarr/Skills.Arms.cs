@@ -443,7 +443,7 @@ namespace Rawr.DPSWarr {
                 get {
                     if (!Validated) { return 0f; }
 
-                    float DmgBonusBase = (StatS.AttackPower * combatFactors.MH.Speed) / 14f
+                    float DmgBonusBase = (StatS.AttackPower * combatFactors._c_mhItemSpeed) / 14f
                                        + (combatFactors.MH.MaxDamage + combatFactors.MH.MinDamage) / 2f;
                     float DmgBonusU75 = 0.75f * 1.00f;
                     float DmgBonusO75 = 0.25f * 1.35f;

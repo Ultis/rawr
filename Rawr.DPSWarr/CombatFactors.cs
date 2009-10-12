@@ -10,12 +10,13 @@ namespace Rawr.DPSWarr {
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CalcOpts = (calcOpts == null ? new CalculationOptionsDPSWarr() : calcOpts);
 
-            useMH = _useMH; // public variable gets set once
-            useOH = _useOH; // public variable gets set once
-
             // Optimizations
             _c_mhItemType = MH.Type;
             _c_mhItemSpeed = MH.Speed;
+
+            useMH = _useMH; // public variable gets set once
+            useOH = _useOH; // public variable gets set once
+
             _c_mhRacialExpertise = GetRacialExpertiseFromWeaponType(_c_mhItemType);
             _c_mhexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(StatS.ExpertiseRating) + _c_mhRacialExpertise;
             _c_ymiss = YwMissChance;
@@ -68,8 +69,8 @@ namespace Rawr.DPSWarr {
         public readonly float    _c_mhycrit,           _c_ohycrit;
         #endregion
 
-        public bool useMH; private bool _useMH { get { return MH != null && MH.Speed > 0; } }
-        public bool useOH; private bool _useOH { get { return Talents.TitansGrip > 0 && OH != null && OH.Speed > 0; } }
+        public bool useMH; private bool _useMH { get { return MH != null && _c_mhItemSpeed > 0; } }
+        public bool useOH; private bool _useOH { get { return Talents.TitansGrip > 0 && OH != null && _c_ohItemSpeed > 0; } }
 
         #region Weapon Damage Calcs
         #region Major Damage Factors
@@ -114,8 +115,8 @@ namespace Rawr.DPSWarr {
                   baseDamage += StatS.AttackPower / 14f * 3.3f;
             return baseDamage + StatS.WeaponDamage;
         }
-        public float AvgMhWeaponDmgUnhasted              { get { return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * MH.Speed                 + StatS.WeaponDamage : 0f); } }
-        public float AvgOhWeaponDmgUnhasted              { get { return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * OH.Speed * OHDamageReduc + StatS.WeaponDamage : 0f); } }
+        public float AvgMhWeaponDmgUnhasted              { get { return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * _c_mhItemSpeed                 + StatS.WeaponDamage : 0f); } }
+        public float AvgOhWeaponDmgUnhasted              { get { return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * _c_ohItemSpeed * OHDamageReduc + StatS.WeaponDamage : 0f); } }
         public float AvgMhWeaponDmg(        float speed) {       return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * speed                    + StatS.WeaponDamage : 0f); }
         public float AvgOhWeaponDmg(        float speed) {       return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * speed    * OHDamageReduc + StatS.WeaponDamage : 0f); }
         #endregion
