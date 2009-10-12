@@ -12,20 +12,25 @@ namespace Rawr.TankDK {
             stats = s;
             combatTable = t;
         }
+
         public Stats getSpecialEffects(CalculationOptionsTankDK calcOpts, SpecialEffect effect) {
             Stats statsAverage = new Stats();
             Rotation rRotation = calcOpts.m_Rotation;
-            if (effect.Trigger == Trigger.Use) {
+            if (effect.Trigger == Trigger.Use) 
+            {
                 statsAverage += effect.GetAverageStats();
-            }else{
+            }
+            else
+            {
                 float trigger = 0f;
-                float chance = 0f;
+                float chance = effect.Chance;
                 float unhastedAttackSpeed = 2f;
-                switch (effect.Trigger) {
+                switch (effect.Trigger) 
+                {
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
                         trigger = (1f /  rRotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
-                        chance = combatTable.physCrits;
+                        chance = combatTable.physCrits * effect.Chance;
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
                     case Trigger.MeleeHit:
@@ -44,32 +49,48 @@ namespace Rawr.TankDK {
                     case Trigger.DamageSpellCrit:
                     case Trigger.SpellCrit:
                         trigger = 1f / rRotation.getSpellSpecialsPerSecond();
-                        chance = combatTable.spellCrits;
-                        break;
-                    case Trigger.BloodStrikeHit:
-                    case Trigger.HeartStrikeHit:
-                        trigger = ( rRotation.BloodStrike +  rRotation.HeartStrike) /  rRotation.curRotationDuration;
-                        chance = 0.15f;
-                        break;
-                    case Trigger.PlagueStrikeHit:
-                        trigger =  rRotation.PlagueStrike /  rRotation.curRotationDuration;
-                        chance = 1f;
-                        break;
-                    case Trigger.RuneStrikeHit:
-                        trigger =  rRotation.RuneStrike /  rRotation.curRotationDuration;
-                        chance = 1f;
+                        chance = combatTable.spellCrits * effect.Chance;
                         break;
                     case Trigger.DoTTick:
                         trigger = ( rRotation.BloodPlague +  rRotation.FrostFever) / 3;
-                        chance = 1f;
                         break;
-
+                    case Trigger.DamageTaken:
+                        trigger = calcOpts.BossAttackSpeed;
+                        chance *= 1f - ((combatTable.calcs.Dodge + combatTable.calcs.Parry + combatTable.calcs.Miss)/100f);
+                        unhastedAttackSpeed = calcOpts.BossAttackSpeed;
+                        break;
+                    //////////////////////////////////
+                    // DK specific triggers:
+                    case Trigger.BloodStrikeHit:
+                    case Trigger.HeartStrikeHit:
+                        trigger = rRotation.curRotationDuration / (rRotation.BloodStrike + rRotation.HeartStrike);
+                        break;
+                    case Trigger.PlagueStrikeHit:
+                        trigger =  rRotation.curRotationDuration / rRotation.PlagueStrike;
+                        break;
+                    case Trigger.RuneStrikeHit:
+                        trigger =  rRotation.curRotationDuration / rRotation.RuneStrike ;
+                        break;
+                    case Trigger.IcyTouchHit:
+                        trigger = rRotation.curRotationDuration / rRotation.IcyTouch ;
+                        break;
+                    case Trigger.DeathStrikeHit:
+                        trigger = rRotation.curRotationDuration / rRotation.DeathStrike;
+                        break;
+                    case Trigger.ObliterateHit:
+                        trigger = rRotation.curRotationDuration / rRotation.Obliterate;
+                        break;
+                    case Trigger.ScourgeStrikeHit:
+                        trigger = rRotation.curRotationDuration / rRotation.ScourgeStrike;
+                        break;
                 }
                 if (effect.MaxStack > 1) {
                     float timeToMax = (float)Math.Min(calcOpts.FightLength * 60, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
                     statsAverage += effect.Stats * (effect.MaxStack * (((calcOpts.FightLength * 60) - .5f * timeToMax) / (calcOpts.FightLength * 60)));
-                } else {
-                    statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
+                } 
+                else 
+                {
+                        statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
                 }
             }
         
