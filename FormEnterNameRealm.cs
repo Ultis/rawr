@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Text;
 using System;
 
 namespace Rawr
@@ -8,7 +11,23 @@ namespace Rawr
         public FormEnterNameRealm()
         {
             InitializeComponent();
-			comboBoxRegion.SelectedIndex = 0;
+            if (Rawr.Properties.Recent.Default.RecentChars != null) {
+                int count = Rawr.Properties.Recent.Default.RecentChars.Count;
+                string[] autocomplete = new string[count];
+                Rawr.Properties.Recent.Default.RecentChars.CopyTo(autocomplete, 0);
+                textBoxName.AutoCompleteCustomSource.AddRange(autocomplete);
+                textBoxName.Text = Rawr.Properties.Recent.Default.RecentChars[count - 1];
+            } else { Rawr.Properties.Recent.Default.RecentChars = new System.Collections.Specialized.StringCollection(); }
+            if (Rawr.Properties.Recent.Default.RecentServers != null) {
+                int count = Rawr.Properties.Recent.Default.RecentServers.Count;
+                string[] autocomplete = new string[count];
+                Rawr.Properties.Recent.Default.RecentServers.CopyTo(autocomplete, 0);
+                textBoxRealm.AutoCompleteCustomSource.AddRange(autocomplete);
+                textBoxRealm.Text = Rawr.Properties.Recent.Default.RecentServers[count - 1];
+            } else { Rawr.Properties.Recent.Default.RecentServers = new System.Collections.Specialized.StringCollection(); }
+            if (Rawr.Properties.Recent.Default.RecentRegion != null) {
+                comboBoxRegion.Text = Rawr.Properties.Recent.Default.RecentRegion;
+            } else { Rawr.Properties.Recent.Default.RecentRegion = "US"; }
         }
 
         public string CharacterName

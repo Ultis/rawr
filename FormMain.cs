@@ -951,7 +951,18 @@ namespace Rawr
 				form.Icon = this.Icon;
 				if (form.ShowDialog(this) == DialogResult.OK)
 				{
-					StartProcessing();
+                    // The removes force it to put those items at the end.
+                    // So we can use that for recall later on what was last used
+                    if (Rawr.Properties.Recent.Default.RecentChars.Contains(form.textBoxName.Text)) {
+                        Rawr.Properties.Recent.Default.RecentChars.Remove(form.textBoxName.Text);
+                    }
+                    if (Rawr.Properties.Recent.Default.RecentServers.Contains(form.textBoxRealm.Text)) {
+                        Rawr.Properties.Recent.Default.RecentServers.Remove(form.textBoxRealm.Text);
+                    }
+                    Rawr.Properties.Recent.Default.RecentChars.Add(form.textBoxName.Text);
+                    Rawr.Properties.Recent.Default.RecentServers.Add(form.textBoxRealm.Text);
+                    Rawr.Properties.Recent.Default.RecentRegion = form.comboBoxRegion.Text;
+                    StartProcessing();
 					BackgroundWorker bw = new BackgroundWorker();
 					bw.DoWork += new DoWorkEventHandler(bw_ArmoryGetCharacter);
 					bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_ArmoryGetCharacterComplete);

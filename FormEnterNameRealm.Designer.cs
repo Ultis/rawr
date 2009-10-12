@@ -69,6 +69,8 @@ namespace Rawr
             // 
             // textBoxName
             // 
+            this.textBoxName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.textBoxName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.textBoxName.Location = new System.Drawing.Point(105, 12);
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(113, 20);
@@ -85,6 +87,8 @@ namespace Rawr
             // 
             // textBoxRealm
             // 
+            this.textBoxRealm.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.textBoxRealm.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.textBoxRealm.Location = new System.Drawing.Point(105, 38);
             this.textBoxRealm.Name = "textBoxRealm";
             this.textBoxRealm.Size = new System.Drawing.Size(113, 20);
@@ -144,10 +148,10 @@ namespace Rawr
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxName;
         private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.TextBox textBoxRealm;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.ComboBox comboBoxRegion;
+        private System.Windows.Forms.Label label3;
+        public System.Windows.Forms.TextBox textBoxName;
+        public System.Windows.Forms.TextBox textBoxRealm;
+        public System.Windows.Forms.ComboBox comboBoxRegion;
     }
 }
