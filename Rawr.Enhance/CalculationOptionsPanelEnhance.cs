@@ -39,6 +39,8 @@ namespace Rawr.Enhance
             comboBoxOffhandImbue.SelectedItem = _calcOpts.OffhandImbue;
             chbMagmaSearing.Checked = _calcOpts.Magma;
             chbBaseStatOption.Checked = _calcOpts.BaseStatOption;
+            LoadPriorities();
+
 
       //      labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
             labelAverageLag.Text = trackBarAverageLag.Value.ToString();
@@ -70,6 +72,16 @@ namespace Rawr.Enhance
                 _calcOpts.Magma = chbMagmaSearing.Checked;
 
                 Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void LoadPriorities()
+        {
+            PriorityDisplay pd = new PriorityDisplay(_calcOpts.Magma);
+            CLBPriorities.Items.Clear();
+            foreach (PriorityDisplay.Priority p in pd.getPriorities())
+            {
+                CLBPriorities.Items.Add(p.Name, p.Checked);
             }
         }
 
@@ -179,6 +191,59 @@ namespace Rawr.Enhance
                 comboBoxBoss.Text = "Custom";
                 Character.OnCalculationsInvalidated();
             }
+        }
+
+        private void CLBPriorities_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            // one of the priorities changed. TODO Update the Priority Display object with new status
+        }
+    }
+
+    public class PriorityDisplay
+    {
+        private List<Priority> priorities;
+
+        public PriorityDisplay(bool magma)
+        {
+            priorities = new List<Priority>();
+            priorities.Add(new Priority("Shamanistic Rage", EnhanceAbility.ShamanisticRage, "Use Shamanistic Rage", true));
+            priorities.Add(new Priority("Feral Spirits", EnhanceAbility.FeralSpirits, "Use Feral Sprirts", true));
+            priorities.Add(new Priority("Lightning Bolt on 5 stacks of MW", EnhanceAbility.FlameShock, "Use Lightning Bolt when you have 5 stacks of Maelstrom Weapon", true));
+            priorities.Add(new Priority("Flame Shock", EnhanceAbility.FlameShock, "Use Flame Shock if no Flame Shock debuff on target", false));
+            priorities.Add(new Priority("Earth Shock if SS debuff", EnhanceAbility.EarthShock, "Use Earth Shock if Stormstrike debuff on target", true));
+            priorities.Add(new Priority("Lava Lash if Quaking Earth", EnhanceAbility.LavaLash, "Use Lava Lash if Volcanic Fury buff about to run out", false));
+            priorities.Add(new Priority("Stormstrike", EnhanceAbility.StormStrike, "Use Stormstrike", true));
+            priorities.Add(new Priority("Earth Shock", EnhanceAbility.EarthShock, "Use Earth Shock", true));
+            priorities.Add(new Priority("Lava Lash", EnhanceAbility.LavaLash, "Use Stormstrike", true));
+            priorities.Add(new Priority("Magma Totem", EnhanceAbility.MagmaTotem, "Refresh Magma Totem", magma));
+            priorities.Add(new Priority("Searing Totem", EnhanceAbility.SearingTotem, "Refresh Searing Totem", ! magma));
+            priorities.Add(new Priority("Lightning Shield", EnhanceAbility.LightningShield, "Refresh Lightning Shield", true));
+        }
+
+        public List<Priority> getPriorities()
+        {
+            return priorities;
+        }
+
+        public class Priority : TextBox
+        {
+            private EnhanceAbility _abilityType;
+            private string _priorityName;
+            private string _description;
+            private bool _inUse;
+
+            public Priority (string priorityName, EnhanceAbility abilityType, string desc, bool onByDefault)
+            {
+                _abilityType = abilityType;
+                _priorityName = priorityName;
+                _description = desc;
+                _inUse = onByDefault;
+            }
+
+            public string Name { get { return _priorityName; } }
+            public EnhanceAbility  AbilityType { get { return _abilityType; } }
+            public string Description { get { return _description; } }
+            public bool Checked { get { return _inUse; } } 
         }
     }
 }

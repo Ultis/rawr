@@ -31,6 +31,7 @@
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.CB_InBackPerc = new System.Windows.Forms.NumericUpDown();
+            this.TB_BossInfo = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.CK_InBack = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.LB_TargLvl = new System.Windows.Forms.Label();
@@ -50,21 +51,26 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.CLBPriorities = new System.Windows.Forms.CheckedListBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.TB_BossInfo = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tabPage1);
+            this.tabControl.Controls.Add(this.tabPage2);
             this.tabControl.Controls.Add(this.tabPage3);
             this.tabControl.Location = new System.Drawing.Point(0, 3);
             this.tabControl.Name = "tabControl";
@@ -119,6 +125,21 @@
             0,
             0});
             this.CB_InBackPerc.ValueChanged += new System.EventHandler(this.CB_InBackPerc_ValueChanged);
+            // 
+            // TB_BossInfo
+            // 
+            this.TB_BossInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.TB_BossInfo.Location = new System.Drawing.Point(9, 121);
+            this.TB_BossInfo.MaxLength = 65536;
+            this.TB_BossInfo.Multiline = true;
+            this.TB_BossInfo.Name = "TB_BossInfo";
+            this.TB_BossInfo.ReadOnly = true;
+            this.TB_BossInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.TB_BossInfo.Size = new System.Drawing.Size(249, 135);
+            this.TB_BossInfo.TabIndex = 52;
+            this.TB_BossInfo.Text = "Boss Information would normally be displayed here";
             // 
             // label1
             // 
@@ -364,6 +385,37 @@
             this.label2.TabIndex = 17;
             this.label2.Text = "Boss: ";
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.CLBPriorities);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(264, 525);
+            this.tabPage2.TabIndex = 3;
+            this.tabPage2.Text = "Priorities";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // CLBPriorities
+            // 
+            this.CLBPriorities.FormattingEnabled = true;
+            this.CLBPriorities.Location = new System.Drawing.Point(5, 25);
+            this.CLBPriorities.Name = "CLBPriorities";
+            this.CLBPriorities.Size = new System.Drawing.Size(249, 184);
+            this.CLBPriorities.TabIndex = 2;
+            this.CLBPriorities.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CLBPriorities_ItemCheck);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 8);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(73, 13);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "Priority Queue";
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.tbModuleNotes);
@@ -397,20 +449,17 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
-            // TB_BossInfo
+            // label7
             // 
-            this.TB_BossInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.TB_BossInfo.Location = new System.Drawing.Point(9, 121);
-            this.TB_BossInfo.MaxLength = 65536;
-            this.TB_BossInfo.Multiline = true;
-            this.TB_BossInfo.Name = "TB_BossInfo";
-            this.TB_BossInfo.ReadOnly = true;
-            this.TB_BossInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TB_BossInfo.Size = new System.Drawing.Size(249, 135);
-            this.TB_BossInfo.TabIndex = 52;
-            this.TB_BossInfo.Text = "Boss Information would normally be displayed here";
+            this.label7.CausesValidation = false;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(6, 226);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(247, 227);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "Please note none of the priority options above actually do anything at the presen" +
+                "t time. They are required to be in place as the first step to allowing user conf" +
+                "igurable priority queues.";
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -426,6 +475,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
@@ -460,6 +511,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox TB_BossInfo;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckedListBox CLBPriorities;
+        private System.Windows.Forms.Label label7;
 
     }
 }

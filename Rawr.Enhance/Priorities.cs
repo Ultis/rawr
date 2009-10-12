@@ -31,26 +31,30 @@ namespace Rawr.Enhance
         {
             int priority = 0;
             List<Ability> abilities = new List<Ability>();
+            float convection = 1f - _talents.Convection * 0.02f;
+            float shockMana = _talents.ShamanisticFocus == 1 ? 0.55f * 0.18f : 0.18f; // 45% reduction if Shamanistic Focus
             float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
+            if (_talents.ShamanisticRage == 1)
+                abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, gcd, 0f, ++priority));
             if (_talents.FeralSpirit == 1)
-                abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, gcd, 0.12f, ++priority));
             if (_talents.MaelstromWeapon > 0)
-                abilities.Add(new Ability(EnhanceAbility.LightningBolt, _cs.SecondsToFiveStack, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.LightningBolt, _cs.SecondsToFiveStack, gcd, 0.1f * convection, ++priority));
             if (_talents.Stormstrike == 1)
-                abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, gcd, 0.08f, ++priority));
             if (_character.ShamanTalents.GlyphofShocking)
-                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, shockMana * convection, ++priority));
             else
-                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, shockMana * convection, ++priority));
             if (_talents.LavaLash == 1)
-                abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, gcd, 0.04f, ++priority));
             if (_talents.StaticShock > 0)
-                abilities.Add(new Ability(EnhanceAbility.LightningShield, _cs.StaticShockAvDuration, gcd, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.LightningShield, _cs.StaticShockAvDuration, gcd, 0f, ++priority));
             if (_calcOpts.Magma)
-                abilities.Add(new Ability(EnhanceAbility.MagmaTotem, 20f, 1.0f, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.MagmaTotem, 20f, 1.0f, 0.27f, ++priority));
             else
-                abilities.Add(new Ability(EnhanceAbility.SearingTotem, 60f, 1.0f, ++priority));
-            abilities.Add(new Ability(EnhanceAbility.RefreshTotems, 300f, 1.0f, ++priority)); // patch 3.2 takes just 1 second GCD to refresh totems.
+                abilities.Add(new Ability(EnhanceAbility.SearingTotem, 60f, 1.0f, 0.07f, ++priority));
+            abilities.Add(new Ability(EnhanceAbility.RefreshTotems, 300f, 1.0f, 0.24f, ++priority)); // patch 3.2 takes just 1 second GCD to refresh totems.
             abilities.Sort();
             return abilities;
         }
@@ -66,7 +70,7 @@ namespace Rawr.Enhance
         
  //           for (int iteration = 1; iteration <= totalIterations; iteration++)
             {
-                float deltaDuration = 1f; // 0.995f + .01f * (float)random.NextDouble();  // varies fight duration +/- 0.5%
+                float deltaDuration = 1f; // 0.995f + .001f * iteration;  // varies fight duration +/- 0.5%
                 float currentFightDuration = fightLength * deltaDuration;
                 totalFightDuration += currentFightDuration;
  //               tempAbilities = SetupAbilities();
@@ -123,8 +127,6 @@ namespace Rawr.Enhance
             }
             return averageFightLength;
         }
-
-
     }
 
     #region Ability class
@@ -136,16 +138,20 @@ namespace Rawr.Enhance
         private int _priority;
         private float _cooldownOver;
         private float _uses;
+        private float _manacost;
         private float _gcd = 1.5f;
+        private int baseMana = 4386;
 
-        public Ability(EnhanceAbility abilityType, float duration, float gcd, int priority)
+        public Ability(EnhanceAbility abilityType, float duration, float gcd, float manacost, int priority)
         {
             _abilityType = abilityType;
             _name = abilityType.ToString();
             _duration = duration;
             _priority = priority;
+            _manacost = baseMana * manacost; 
             _gcd = gcd;
-            _cooldownOver = 0f;
+            //TODO initial cooldown on SR is when you are almost out of mana for now use its duration ie: 60 seconds
+            _cooldownOver = abilityType == EnhanceAbility.ShamanisticRage ? duration : 0f; 
             _uses = 0;
         }
 
@@ -155,6 +161,7 @@ namespace Rawr.Enhance
         public float GCD { get { return _gcd; } }
         public float CooldownOver { get { return _cooldownOver; } }
         public float Uses { get { return _uses; } }
+        public float ManaCost { get { return _manacost; } }
 
         public void AddUse(float useTime, float lag)
         {
@@ -197,5 +204,6 @@ namespace Rawr.Enhance
         MagmaTotem = 8,
         SearingTotem = 9,
         RefreshTotems = 10,
+        ShamanisticRage = 11,
     }
 }
