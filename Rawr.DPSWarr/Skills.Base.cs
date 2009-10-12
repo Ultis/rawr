@@ -41,8 +41,10 @@ namespace Rawr.DPSWarr {
             private float AvgTargets {
                 get {
                     if (CalcOpts.MultipleTargets) {
-                        float extraTargetsHit = (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
-                        return 1f + (extraTargetsHit) * CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets;
+                        //float extraTargetsHit = (float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
+                        return 1f +
+                            ((float)Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f) * 
+                            CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets;
                     }
                     else { return 1f; }
                 }
@@ -59,9 +61,9 @@ namespace Rawr.DPSWarr {
             public float MhEffectiveSpeed { get { return combatFactors.MHSpeed + SlamFreqSpdMod; } }
             public float MhDamage {
                 get {
-                    float DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
-                    float DamageBonus = 1f + 0f;
-                    return (float)Math.Max(0f, DamageBase * DamageBonus * AvgTargets);
+                    //float DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
+                    //float DamageBonus = 1f + 0f;
+                    return (float)Math.Max(0f, combatFactors.AvgMhWeaponDmgUnhasted * AvgTargets);
                 }
             }
             public float MhDamageOnUse {
@@ -110,9 +112,9 @@ namespace Rawr.DPSWarr {
             public float OhEffectiveSpeed { get { return combatFactors.OHSpeed + SlamFreqSpdMod; } }
             public float OhDamage {
                 get {
-                    float DamageBase = combatFactors.AvgOhWeaponDmgUnhasted;
-                    float DamageBonus = 1f + 0f;
-                    return (float)Math.Max(0f, DamageBase * DamageBonus * AvgTargets);
+                    //float DamageBase = combatFactors.AvgOhWeaponDmgUnhasted;
+                    //float DamageBonus = 1f + 0f;
+                    return (float)Math.Max(0f, combatFactors.AvgOhWeaponDmgUnhasted * AvgTargets);
                 }
             }
             public float OhDamageOnUse {
@@ -256,38 +258,32 @@ namespace Rawr.DPSWarr {
             // Attacks Over Fight Duration
             public float LandedAtksOverDur {
                 get {
-                    float whiteLands = LandedAtksOverDurMH + LandedAtksOverDurOH;
-                    return whiteLands;
+                    return LandedAtksOverDurMH + LandedAtksOverDurOH;
                 }
             }
             public float LandedAtksOverDurMH {
                 get {
-                    float whiteLands = MhActivates * MHAtkTable.AnyLand;
-                    return whiteLands;
+                    return MhActivates * MHAtkTable.AnyLand;
                 }
             }
             public float LandedAtksOverDurOH {
                 get {
-                    float whiteLands = (combatFactors.useOH ? OhActivates * OHAtkTable.AnyLand : 0f);
-                    return whiteLands;
+                    return (combatFactors.useOH ? OhActivates * OHAtkTable.AnyLand : 0f);
                 }
             }
             private float CriticalAtksOverDur {
                 get {
-                    float whiteLands = CriticalAtksOverDurMH + CriticalAtksOverDurOH;
-                    return whiteLands;
+                    return CriticalAtksOverDurMH + CriticalAtksOverDurOH;
                 }
             }
             public float CriticalAtksOverDurMH {
                 get {
-                    float whiteLands = MhActivates * MHAtkTable.Crit;
-                    return whiteLands;
+                    return MhActivates * MHAtkTable.Crit;
                 }
             }
             public float CriticalAtksOverDurOH {
                 get {
-                    float whiteLands = (combatFactors.useOH ? OhActivates * OHAtkTable.Crit : 0f);
-                    return whiteLands;
+                    return (combatFactors.useOH ? OhActivates * OHAtkTable.Crit : 0f);
                 }
             }
             // Other
@@ -295,8 +291,8 @@ namespace Rawr.DPSWarr {
             {
                 //float whiteAtkInterval = (MhActivates + OhActivates) / FightDuration;
                 //return MHAtkTable.AnyNotLand / abilInterval / whiteAtkInterval * rageCost / MHSwingRage;
-                float whiteMod = (MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / FightDuration;
-                return (MHAtkTable.Miss * rageCost) / (abilInterval * whiteMod);
+                //float whiteMod = (MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / FightDuration;
+                return (MHAtkTable.Miss * rageCost) / (abilInterval * ((MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / FightDuration));
             }
             /*public float AvoidanceStreak {
                 get {
@@ -629,16 +625,16 @@ namespace Rawr.DPSWarr {
                 get {
                     float LatentGCD = 1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f);
                     float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f));
-                    float Every = LatentGCD / GCDPerc;
+                    //float Every = LatentGCD / GCDPerc;
                     if (RageCost > 0f)
                     {
                         /*float rageSlip = (float)Math.Pow(Whiteattacks.MHAtkTable.AnyNotLand, Whiteattacks.AvoidanceStreak * Every);
                         float rageSlip2 = Whiteattacks.MHAtkTable.AnyNotLand / Every / Whiteattacks.AvoidanceStreak * RageCost / Whiteattacks.MHSwingRage;
                         float ret = FightDuration / Every * (1f - rageSlip);
                         return ret;*/
-                        return (float)Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.RageSlip(Every, RageCost)));
+                        return (float)Math.Max(0f, FightDuration / (LatentGCD / GCDPerc) * (1f - Whiteattacks.RageSlip(LatentGCD / GCDPerc, RageCost)));
                     }
-                    else return FightDuration / Every;
+                    else return FightDuration / (LatentGCD / GCDPerc);
                     /*double test = Math.Pow((double)Whiteattacks.MHAtkTable.AnyNotLand, (double)Whiteattacks.AvoidanceStreak * Every);
                     return (float)Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));*/
                 }
@@ -646,10 +642,7 @@ namespace Rawr.DPSWarr {
             protected virtual float Healing { get { return !Validated ? 0f : HealingBase * HealingBonus; } }
             protected virtual float HealingOnUse {
                 get {
-                    float hp = Healing; // Base Healing
-                    hp *= combatFactors.HealthBonus; // Global Healing Bonuses
-                    //hp *= combatFactors.HealthReduction; // Global Healing Penalties
-                    return hp;
+                    return Healing * combatFactors.HealthBonus;
                 }
             }
             protected virtual float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
@@ -712,13 +705,13 @@ namespace Rawr.DPSWarr {
             }
             public virtual float GetDPS(float acts) {
                 if (!Validated) { return 0f; }
-                float adou = GetAvgDamageOnUse(acts);
-                return adou / FightDuration;
+                //float adou = GetAvgDamageOnUse(acts);
+                return GetAvgDamageOnUse(acts) / FightDuration;
             }
             public virtual float GetDPS(float acts, float perc) {
                 if (!Validated) { return 0f; }
-                float adou = GetAvgDamageOnUse(acts);
-                return adou / (FightDuration * perc);
+                //float adou = GetAvgDamageOnUse(acts);
+                return GetAvgDamageOnUse(acts) / (FightDuration * perc);
             }
             public virtual float GetAvgHealingOnUse(float acts) {
                 if (!Validated) { return 0f; }
@@ -726,12 +719,12 @@ namespace Rawr.DPSWarr {
             }
             public virtual float GetHPS(float acts) {
                 if (!Validated) { return 0f; }
-                float adou = GetAvgHealingOnUse(acts);
-                return adou / FightDuration;
+                //float adou = GetAvgHealingOnUse(acts);
+                return GetAvgHealingOnUse(acts) / FightDuration;
             }
             public virtual float ContainCritValue(bool IsMH) {
-                float BaseCrit = IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit;
-                return (float)Math.Min(1f, Math.Max(0f, BaseCrit + BonusCritChance));
+                //float BaseCrit = IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit;
+                return (float)Math.Min(1f, Math.Max(0f, (IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit) + BonusCritChance));
             }
             protected virtual float GetXActs(AttackTableSelector i,float acts) {
                 float retVal = 0f;
@@ -819,10 +812,10 @@ namespace Rawr.DPSWarr {
             public virtual float GetDmgOverTickingTime(float acts) { return TickSize * (NumTicks * acts); }
             public override float GetDPS(float acts)
             {
-                float dmgonuse = TickSize;
-                float numticks = NumTicks * acts;
-                float result = GetDmgOverTickingTime(acts) / FightDuration;
-                return result;
+                //float dmgonuse = TickSize;
+                //float numticks = NumTicks * acts;
+                return GetDmgOverTickingTime(acts) / FightDuration;
+                //return result;
             }
             public override float DPS { get { return TickSize / TickLength; } }
         }

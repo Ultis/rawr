@@ -752,7 +752,7 @@ These numbers to do not include racial bonuses.",
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence"))) {
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
             }
-
+            float hasRelevantBuff;
             // Removes the Sunder Armor if you are maintaining it yourself
             // Also removes Acid Spit and Expose Armor
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
@@ -823,7 +823,7 @@ These numbers to do not include racial bonuses.",
             // Removes the Trauma Buff and it's equivalent Mangle if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             {
-                float hasRelevantBuff = character.WarriorTalents.Trauma;
+                hasRelevantBuff = character.WarriorTalents.Trauma;
                 Buff a = Buff.GetBuffByName("Trauma");
                 Buff b = Buff.GetBuffByName("Mangle");
                 if (hasRelevantBuff > 0) {
@@ -835,7 +835,7 @@ These numbers to do not include racial bonuses.",
             // Removes the Blood Frenzy Buff and it's equivalent of Savage Combat if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             {
-                float hasRelevantBuff = character.WarriorTalents.BloodFrenzy;
+                hasRelevantBuff = character.WarriorTalents.BloodFrenzy;
                 Buff a = Buff.GetBuffByName("Blood Frenzy");
                 Buff b = Buff.GetBuffByName("Savage Combat");
                 if (hasRelevantBuff > 0) {
@@ -847,7 +847,7 @@ These numbers to do not include racial bonuses.",
             // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.FuryStance) {
-                float hasRelevantBuff = character.WarriorTalents.Rampage;
+                hasRelevantBuff = character.WarriorTalents.Rampage;
                 Buff a = Buff.GetBuffByName("Rampage");
                 Buff b = Buff.GetBuffByName("Leader of the Pack");
                 if (hasRelevantBuff == 1) {
@@ -1221,10 +1221,7 @@ These numbers to do not include racial bonuses.",
                     calculatedStats.OhCrit = combatFactors._c_ohycrit;
                 } line++;
                 // Offensive
-                float teethbonus = stats.Armor;
-                teethbonus *= (float)character.WarriorTalents.ArmoredToTheTeeth;
-                teethbonus /= 108f;
-                calculatedStats.TeethBonus = (int)teethbonus;
+                calculatedStats.TeethBonus = (int)(stats.Armor * talents.ArmoredToTheTeeth / 108f);
                 calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && combatFactors._c_mhItemType == ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
                 calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? (0.10f + stats.BonusWarrior_T9_2P_ArP) : 0.00f);
                 calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
@@ -1350,13 +1347,13 @@ These numbers to do not include racial bonuses.",
                     statsTalents.PhysicalCrit += 0.05f;
                 }
                 if (talents.WreckingCrew > 0) {
-                    float value = talents.WreckingCrew * 0.02f;
-                    SpecialEffect wrecking = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = value, }, 12, 0);
+                    //float value = talents.WreckingCrew * 0.02f;
+                    SpecialEffect wrecking = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = talents.WreckingCrew * 0.02f, }, 12, 0);
                     statsTalents.AddSpecialEffect(wrecking);
                 }
                 if (talents.Trauma > 0 && character.MainHand != null) {
-                    float value = talents.Trauma * 0.15f;
-                    SpecialEffect trauma = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = value, }, 15, 0);
+                    //float value = talents.Trauma * 0.15f;
+                    SpecialEffect trauma = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = talents.Trauma * 0.15f, }, 15, 0);
                     statsTalents.AddSpecialEffect(trauma);
                 }
                 if (talents.DeathWish > 0 && calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) {
@@ -1379,9 +1376,9 @@ These numbers to do not include racial bonuses.",
 
                 // Stamina
                 float totalBSTAM = statsTotal.BonusStaminaMultiplier;
-                float staBase = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina);
-                float staBonus = (float)Math.Floor((1f + totalBSTAM) * (statsItems.Stamina + statsBuffs.Stamina));
-                statsTotal.Stamina = staBase + staBonus;
+                statsTotal.Stamina = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina) +
+                                     (float)Math.Floor((1f + totalBSTAM) * (statsItems.Stamina + statsBuffs.Stamina));
+                //statsTotal.Stamina = staBase + staBonus;
 
                 // Health
                 statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
@@ -1389,15 +1386,15 @@ These numbers to do not include racial bonuses.",
 
                 // Strength
                 float totalBSM = statsTotal.BonusStrengthMultiplier;
-                float strBase = (float)Math.Floor((1f + totalBSM) * statsRace.Strength);
-                float strBonus = (float)Math.Floor((1f + totalBSM) * (statsItems.Strength + statsBuffs.Strength));
-                statsTotal.Strength = strBase + strBonus;
+                statsTotal.Strength = (float)Math.Floor((1f + totalBSM) * statsRace.Strength) +
+                                      (float)Math.Floor((1f + totalBSM) * (statsItems.Strength + statsBuffs.Strength));
+                //statsTotal.Strength = strBase + strBonus;
 
                 // Agility
                 float totalBAM = statsTotal.BonusAgilityMultiplier;
-                float agiBase = (float)Math.Floor((1f + totalBAM) * statsRace.Agility);
-                float agiBonus = (float)Math.Floor((1f + totalBAM) * (statsItems.Agility + statsBuffs.Agility));
-                statsTotal.Agility = agiBase + agiBonus;
+                statsTotal.Agility = (float)Math.Floor((1f + totalBAM) * statsRace.Agility) +
+                                     (float)Math.Floor((1f + totalBAM) * (statsItems.Agility + statsBuffs.Agility));
+                //statsTotal.Agility = agiBase + agiBonus;
 
                 // Armor
                 statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier));
@@ -1407,11 +1404,12 @@ These numbers to do not include racial bonuses.",
 
                 // Attack Power
                 float totalBAPM = statsTotal.BonusAttackPowerMultiplier;
-                float apBase = (1f + totalBAPM) * (statsRace.AttackPower);
-                float apBonusSTR = (1f + totalBAPM) * (statsTotal.Strength * 2f);
-                float apBonusAttT = (1f + totalBAPM) * ((statsTotal.Armor / 108f) * talents.ArmoredToTheTeeth);
-                float apBonusOther = (1f + totalBAPM) * (statsItems.AttackPower + statsBuffs.AttackPower);
-                statsTotal.AttackPower = (float)Math.Floor(apBase + apBonusSTR + apBonusAttT + apBonusOther);
+                statsTotal.AttackPower = (float)Math.Floor((1f + totalBAPM) * 
+                    (statsRace.AttackPower + 
+                     statsTotal.Strength * 2f + 
+                    ((statsTotal.Armor / 108f) * talents.ArmoredToTheTeeth) +
+                     statsItems.AttackPower + statsBuffs.AttackPower));
+                //statsTotal.AttackPower = (float)Math.Floor(apBase + apBonusSTR + apBonusAttT + apBonusOther);
 
                 // Dodge (your dodging incoming attacks)
                 statsTotal.Dodge += StatConversion.GetDodgeFromAgility(statsTotal.Agility, CharacterClass.Warrior);
@@ -1475,30 +1473,30 @@ These numbers to do not include racial bonuses.",
                     statsTotal.AddSpecialEffect(bs);
                 }
                 if (Rot.CS.Validated) {
-                    float value = (2255f * (1f + talents.CommandingPresence * 0.05f));
+                    //float value = (2255f * (1f + talents.CommandingPresence * 0.05f));
                     SpecialEffect cs = new SpecialEffect(Trigger.Use,
-                        new Stats() { Health = value, },
+                        new Stats() { Health = 2255f * (1f + talents.CommandingPresence * 0.05f), },
                         Rot.CS.Duration, Rot.CS.Cd + 0.01f);
                     statsTotal.AddSpecialEffect(cs);
                 }
                 if (Rot.DS.Validated) {
-                    float value = (410f * (1f + talents.ImprovedDemoralizingShout * 0.08f));
+                    //float value = (410f * (1f + talents.ImprovedDemoralizingShout * 0.08f));
                     SpecialEffect ds = new SpecialEffect(Trigger.Use,
-                        new Stats() { BossAttackPower = value * -1f, },
+                        new Stats() { BossAttackPower = 410f * (1f + talents.ImprovedDemoralizingShout * 0.08f) * -1f, },
                         Rot.DS.Duration, Rot.DS.Cd + 0.01f);
                     statsTotal.AddSpecialEffect(ds);
                 }
                 if (Rot.TH.Validated) {
-                    float value = (0.10f * (1f + (float)Math.Ceiling(talents.ImprovedThunderClap * 10f / 3f) / 100f));
+                    //float value = (0.10f * (1f + (float)Math.Ceiling(talents.ImprovedThunderClap * 10f / 3f) / 100f));
                     SpecialEffect tc = new SpecialEffect(Trigger.Use,
-                        new Stats() { BossAttackSpeedMultiplier = value * -1f, },
+                        new Stats() { BossAttackSpeedMultiplier = (0.10f * (1f + (float)Math.Ceiling(talents.ImprovedThunderClap * 10f / 3f) / 100f)) * -1f, },
                         Rot.TH.Duration, Rot.TH.Cd + 0.01f, Rot.TH.MHAtkTable.AnyLand);
                     statsTotal.AddSpecialEffect(tc);
                 }
                 if (Rot.SN.Validated) {
-                    float value = 0.04f;
+                    //float value = 0.04f;
                     SpecialEffect sn = new SpecialEffect(Trigger.Use,
-                        new Stats() { ArmorPenetration = value, },
+                        new Stats() { ArmorPenetration = 0.04f, },
                         Rot.SN.Duration, Rot.SN.Cd + 0.01f, Rot.SN.MHAtkTable.AnyLand, 5);
                     statsTotal.AddSpecialEffect(sn);
                 }
@@ -1507,16 +1505,16 @@ These numbers to do not include racial bonuses.",
 
                 bool useOH = combatFactors.useOH;
 
-                float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
-                float attemptedAtksInterval = fightDuration / Rot.AttemptedAtksOverDur;
-                float landedAtksInterval = fightDuration / Rot.LandedAtksOverDur;
-                float dmgDoneInterval = fightDuration / (Rot.LandedAtksOverDur + (calcOpts.FuryStance ? 1f : 4f / 3f));
-
                 float attempted = Rot.AttemptedAtksOverDur;
                 float land = Rot.LandedAtksOverDur;
                 float crit = Rot.CriticalAtksOverDur;
 
-                float hitRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
+                //float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
+                float attemptedAtksInterval = fightDuration / attempted;
+                float landedAtksInterval = fightDuration / land;
+                float dmgDoneInterval = fightDuration / (land + (calcOpts.FuryStance ? 1f : 4f / 3f));
+
+                //float hitRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
                 float critRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
 
                 if (Rot.SW.Validated) {
@@ -1532,9 +1530,9 @@ These numbers to do not include racial bonuses.",
                     statsTotal.AddSpecialEffect(reck);
                 }
                 if (talents.Flurry > 0 && calcOpts.FuryStance) {
-                    float value = talents.Flurry * 0.05f;
+                    //float value = talents.Flurry * 0.05f;
                     SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit,
-                        new Stats() { PhysicalHaste = value, }, landedAtksInterval * 3f, 0f);
+                        new Stats() { PhysicalHaste = talents.Flurry * 0.05f, }, landedAtksInterval * 3f, 0f);
                     statsTotal.AddSpecialEffect(flurry);
                 }
 
@@ -1570,8 +1568,8 @@ These numbers to do not include racial bonuses.",
                     bersStats.Accumulate(bersOffHand.Stats, bersOffHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0));
                     //float f = bersOffHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                 }
-                float apBonusOtherProcs = (1f + totalBAPM) * (bersStats.AttackPower);
-                bersStats.AttackPower = (apBonusOtherProcs);
+                //float apBonusOtherProcs = (1f + totalBAPM) * (bersStats.AttackPower);
+                bersStats.AttackPower = (1f + totalBAPM) * (bersStats.AttackPower);
                 combatFactors.StatS.Accumulate(bersStats);
  
                 return combatFactors.StatS;
@@ -1603,8 +1601,8 @@ These numbers to do not include racial bonuses.",
                     secondPass.Add(effect);
                 }
             }
-            Stats StatsFirstPass = IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts, firstPass, true, new Stats(), combatFactors.StatS);
-            Stats StatsSecondPass = IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts, secondPass, false, null, combatFactors.StatS);
+            IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts, firstPass, true, new Stats(), combatFactors.StatS);
+            IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts, secondPass, false, null, combatFactors.StatS);
         }
 
         private Stats IterativeSpecialEffectsStats(Character Char, Rotation Rot, CombatFactors combatFactors, 
@@ -1614,10 +1612,10 @@ These numbers to do not include racial bonuses.",
             float fightDuration = calcOpts.Duration;
             Stats statsProcs = new Stats();
             try {
-                float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
-                float attemptedAtkInterval = fightDuration / Rot.AttemptedAtksOverDur;
-                float landedAtksInterval = fightDuration / Rot.LandedAtksOverDur;
-                float dmgDoneInterval = fightDuration / (Rot.LandedAtksOverDur + (calcOpts.FuryStance ? 1f : 4f / 3f));
+                //float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
+                //float attemptedAtkInterval = fightDuration / Rot.AttemptedAtksOverDur;
+                //float landedAtksInterval = fightDuration / Rot.LandedAtksOverDur;
+                //float dmgDoneInterval = fightDuration / (Rot.LandedAtksOverDur + (calcOpts.FuryStance ? 1f : 4f / 3f));
                 float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
 
                 float attempted = Rot.AttemptedAtksOverDur;
@@ -1764,14 +1762,15 @@ These numbers to do not include racial bonuses.",
             // Base Stats
             statsToAdd.Stamina = (statsToAdd.Stamina * (1f + totalBSTAM) * (1f + statsToAdd.BonusStaminaMultiplier));
             statsToAdd.Strength = (statsToAdd.Strength * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
-            statsToAdd.Strength += (statsToAdd.HighestStat * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
             statsToAdd.Agility = (statsToAdd.Agility * (1f + totalBAM) * (1f + statsToAdd.BonusAgilityMultiplier));
             statsToAdd.Health += (statsToAdd.Stamina * 10f);
             // Paragon
             if (baseStats.Strength + statsToAdd.Strength > baseStats.Agility + statsToAdd.Agility) {
                 statsToAdd.Strength += (statsToAdd.Paragon * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
+                statsToAdd.Strength += (statsToAdd.HighestStat * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
             } else {
                 statsToAdd.Agility += (statsToAdd.Paragon * (1f + totalBAM) * (1f + statsToAdd.BonusAgilityMultiplier));
+                statsToAdd.Agility += (statsToAdd.HighestStat * (1f + totalBAM) * (1f + statsToAdd.BonusAgilityMultiplier));
             }
 
             // Armor
@@ -1783,10 +1782,11 @@ These numbers to do not include racial bonuses.",
 
             // Attack Power
             float totalBAPMProcs = (1f + baseStats.BonusAttackPowerMultiplier) * (1f + statsToAdd.BonusAttackPowerMultiplier) - 1f;
-            float apBonusSTRProcs = (1f + totalBAPM) * (statsToAdd.Strength * 2f);
-            float apBonusAttTProcs = (1f + totalBAPM) * ((statsToAdd.Armor / 108f) * character.WarriorTalents.ArmoredToTheTeeth);
-            float apBonusOtherProcs = (1f + totalBAPM) * (statsToAdd.AttackPower);
-            statsToAdd.AttackPower = (apBonusSTRProcs + apBonusAttTProcs + apBonusOtherProcs);
+            statsToAdd.AttackPower = (1f + totalBAPM) * (
+                (statsToAdd.Strength * 2f) +
+                ((statsToAdd.Armor / 108f) * character.WarriorTalents.ArmoredToTheTeeth) + 
+                (statsToAdd.AttackPower));
+            //statsToAdd.AttackPower = (apBonusSTRProcs + apBonusAttTProcs + apBonusOtherProcs);
 
             // Crit
             statsToAdd.PhysicalCrit += StatConversion.GetCritFromAgility(statsToAdd.Agility, character.Class);

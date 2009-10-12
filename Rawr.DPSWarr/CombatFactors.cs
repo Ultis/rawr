@@ -120,9 +120,7 @@ namespace Rawr.DPSWarr {
         public float NormalizedMhWeaponDmg { get { return useMH ? CalcNormalizedWeaponDamage(MH)                 : 0f; } }
         public float NormalizedOhWeaponDmg { get { return useOH ? CalcNormalizedWeaponDamage(OH) * OHDamageReduc : 0f; } }
         private float CalcNormalizedWeaponDamage(Item weapon) {
-            float baseDamage  = weapon.Speed * weapon.DPS;
-                  baseDamage += StatS.AttackPower / 14f * 3.3f;
-            return baseDamage + StatS.WeaponDamage;
+            return weapon.Speed * weapon.DPS + StatS.AttackPower / 14f * 3.3f + StatS.WeaponDamage;
         }
         public float AvgMhWeaponDmgUnhasted              { get { return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * _c_mhItemSpeed                 + StatS.WeaponDamage : 0f); } }
         public float AvgOhWeaponDmgUnhasted              { get { return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * _c_ohItemSpeed * OHDamageReduc + StatS.WeaponDamage : 0f); } }
@@ -134,9 +132,8 @@ namespace Rawr.DPSWarr {
         public float BonusWhiteCritDmg {
             get {
                 if (_BonusWhiteCritDmg == -1f) {
-                    float baseCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f);
-                    baseCritDmg *= 1f + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
-                    _BonusWhiteCritDmg = baseCritDmg;
+                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f)* 
+                        (1f + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
                 }
                 return _BonusWhiteCritDmg;
             }
@@ -146,8 +143,7 @@ namespace Rawr.DPSWarr {
         #region Weapon Blocked Damage
         public float ReducWhBlockedDmg {
             get {
-                float baseBlockedDmg = 0.70f;// 70% damage
-                return baseBlockedDmg;
+                return 0.70f;// 70% damage
             }
         }
         public float ReducYwBlockedDmg { get { return ReducWhBlockedDmg; } }
@@ -223,17 +219,15 @@ namespace Rawr.DPSWarr {
         }
         private float WhMissCap {
             get {
-                float twoHandCheck = (useOH
+                return (useOH
                         && MH.Slot == ItemSlot.TwoHand
                         && OH.Slot == ItemSlot.TwoHand ?
                        StatConversion.WHITE_MISS_CHANCE_CAP_DW[CalcOpts.TargetLevel - Char.Level] : StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]);
-                return twoHandCheck;
             }
         }
         private float WhMissChance {
             get {
-                float missChance = WhMissCap - MissPrevBonuses;
-                return (float)Math.Max(0f, missChance); 
+                return (float)Math.Max(0f, WhMissCap - MissPrevBonuses); 
             }
         }
         private float YwMissCap {get {return StatConversion.YELLOW_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level];}}
@@ -273,35 +267,32 @@ namespace Rawr.DPSWarr {
         private float MhWhCritChance {
             get {
                 if (!useMH) { return 0f; }
-                float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
-                crit += (_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
-                return crit;
+                return StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating) +
+                 ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+                //return crit;
             }
         }
         private float MhYwCritChance {
             get {
                 if (!useMH) { return 0f; }
-                float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
-                crit += (_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
-                crit *= (1f - _c_ymiss - _c_mhdodge);
-                return crit;
+                return (StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating)) +
+                       ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f)
+                 * (1f - _c_ymiss - _c_mhdodge);
             }
         }
         private float OhWhCritChance {
             get {
                 if (!useOH) { return 0f; }
-                float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
-                crit += (_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
-                return crit;
+                return StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating) +
+                ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
             }
         }
         private float OhYwCritChance {
             get {
                 if (!useOH) { return 0f; }
-                float crit = StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating);
-                crit += (_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f;
-                crit *= (1f - _c_ymiss - _c_ohdodge);
-                return crit;
+                return (StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating)) +
+                ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f)
+                * (1f - _c_ymiss - _c_ohdodge);
             }
         }
         #endregion
@@ -443,8 +434,8 @@ namespace Rawr.DPSWarr {
 
             // Miss
             if (useSpellHit) {
-                float hitIncrease = StatConversion.GetHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit;
-                Miss = Math.Min(1f - tableSize, Math.Max(0.17f - hitIncrease, 0f));
+                //float hitIncrease = StatConversion.GetHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit;
+                Miss = Math.Min(1f - tableSize, Math.Max(0.17f - (StatConversion.GetHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit), 0f));
             } else {
                 Miss = Math.Min(1f - tableSize, isWhite ? combatFactors._c_wmiss : combatFactors._c_ymiss);
             }
