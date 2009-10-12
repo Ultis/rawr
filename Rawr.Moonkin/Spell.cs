@@ -1132,8 +1132,8 @@ namespace Rawr.Moonkin
                 }
                 // Calculate stat-boosting trinkets, taking into effect interactions with other stat-boosting procs
                 int sign = 1;
-                Dictionary<List<int>, float> cachedDamages = new Dictionary<List<int>, float>();
-                Dictionary<List<int>, float> cachedUptimes = new Dictionary<List<int>, float>();
+                Dictionary<int, float> cachedDamages = new Dictionary<int, float>();
+                Dictionary<int, float> cachedUptimes = new Dictionary<int, float>();
                 // Iterate over the entire set of trinket combinations (each trinket by itself, 2 at a time, ...)
                 for (int i = 1; i <= activatedEffects.Count; ++i)
                 {
@@ -1144,9 +1144,13 @@ namespace Rawr.Moonkin
                     {
                         float tempUpTime = 1.0f;
                         int[] vals = gen.GetNext();
+                        int pairs = 0;
+                        int lengthCounter = 0;
                         // Activate the trinkets, calculate the damage and uptime, then deactivate them
                         foreach (int idx in vals)
                         {
+                            pairs |= 1 << idx;
+                            ++lengthCounter;
                             activatedEffects[idx].Activate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
                         float tempDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
@@ -1155,7 +1159,32 @@ namespace Rawr.Moonkin
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
                             activatedEffects[idx].Deactivate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
-                        List<int> pairs = new List<int>(vals);
+                        // Adjust previous probability tables by the current factor
+                        // At the end of the algorithm, this ensures that the probability table will contain the individual
+                        // probabilities of each effect or set of effects.
+                        // These adjustments only need to be made for higher levels of the table, and if the current probability is > 0.
+                        if (tempUpTime > 0 && lengthCounter > 1)
+                        {
+                            List<int> keys = new List<int>(cachedUptimes.Keys);
+                            foreach (int subset in keys)
+                            {
+                                // Calculate the "layer" of the current subset by getting the set bit count.
+                                int subsetLength = 0;
+                                for (int j = 0; j < 32; ++j)
+                                    if ((subset & (1 << j)) > 0)
+                                        ++subsetLength;
+                                // Entries that are in the current "layer" or higher in the table are not subsets, by definition
+                                if (subsetLength >= lengthCounter) break;
+                                // Set the sign of the operation: Evenly separated layers are added, oddly separated layers are subtracted
+                                int newSign = ((lengthCounter - subsetLength) % 2 == 0) ? 1 : -1;
+                                // Check for subset.
+                                // If it is a subset, adjust by current uptime * sign of operation.
+                                if ((pairs & subset) == subset)
+                                {
+                                    cachedUptimes[subset] += newSign * tempUpTime;
+                                }
+                            }
+                        }
                         // Cache the results to be calculated later
                         cachedUptimes[pairs] = tempUpTime;
                         cachedDamages[pairs] = tempDPS;
@@ -1163,42 +1192,9 @@ namespace Rawr.Moonkin
                     }
                     sign = -sign;
                 }
-                // Iterate through the probability table and adjust probabilities relative to each other
-                // This accomplishes the effect of finding the probability that any proc or combination of procs,
-                // and ONLY that particular set of procs, will be active at a given time.
-                List<List<int>> keys = new List<List<int>>(cachedUptimes.Keys);
-                foreach (List<int> vals in keys)
-                {
-                    int newSign = 1;
-                    int keyCount = vals.Count;
-                    foreach (List<int> innerVals in keys)
-                    {
-                        if (innerVals == vals) continue;
-                        if (innerVals.Count <= vals.Count) continue;
-                        if (innerVals.Count > keyCount)
-                        {
-                            keyCount = innerVals.Count;
-                            newSign = -newSign;
-                        }
-
-                        bool containsAll = true;
-                        foreach (int val in vals)
-                        {
-                            if (!innerVals.Contains(val))
-                            {
-                                containsAll = false;
-                                break;
-                            }
-                        }
-                        if (containsAll)
-                        {
-                            cachedUptimes[vals] += newSign * cachedUptimes[innerVals];
-                        }
-                    }
-                }
                 float accumulatedDPS = 0.0f;
                 // Apply the above-calculated probabilities to the previously stored damage calculations and add to the result.
-                foreach (KeyValuePair<List<int>, float> kvp in cachedUptimes)
+                foreach (KeyValuePair<int, float> kvp in cachedUptimes)
                 {
                     accumulatedDPS += kvp.Value * cachedDamages[kvp.Key];
                 }
