@@ -176,69 +176,92 @@ namespace Rawr.Mage
 
     public class Spell
     {
-        public SpellId SpellId;
-        private SpellTemplate template;
+        public SpellId SpellId; // set in CastingState.GetSpell
+        private SpellTemplate template; // set in constructor/Intitialize
 
         public SpellTemplate SpellTemplate { get { return template; } }
 
         public void Initialize(SpellTemplate template)
         {
             this.template = template;
-            DamagePerSecond = 0;
-            ThreatPerSecond = 0;
-            CostPerSecond = 0;
-            SpammedDot = false;
-            HitProcs = 0;
-            CritProcs = 0;
-            IgniteProcs = 0;
-            TargetProcs = 0;
-            DotProcs = 0;
-            CastTime = 0;
-            BaseCastTime = 0;
             cycle = null;
-            CostModifier = 0;
-            CostAmplifier = 0;
-            SpellModifier = 0;
-            AdditiveSpellModifier = 0;
-            DirectDamageModifier = 0;
-            DotDamageModifier = 0;
-            CritRate = 0;
-            CritBonus = 0;
-            RawSpellDamage = 0;
-            AverageDamage = 0;
-            IgniteDamagePerSecond = 0;
-            IgniteDpsPerSpellPower = 0;
-            DpsPerSpellPower = 0;
-            InterruptProtection = 0;
-            castingState = null;
-            OO5SR = 0;
         }
 
-        public string Name { get { return template.Name; } }
+        // Variables that have to be initialized in Calculate and can be modifier between Calculate and CalculateDerivedStats
+        private CastingState castingState;
+        public float BaseCastTime;
+        public float CostModifier;
+        public float CostAmplifier;
+        public float SpellModifier;
+        public float AdditiveSpellModifier;
+        public float DirectDamageModifier;
+        public float DotDamageModifier;
+        public float CritRate;
+        public float CritBonus;
+        public float RawSpellDamage;
+        public float InterruptProtection;
 
+        // Variables that have to be initialized in CalculateDerivedStats and can be modified after
         public float DamagePerSecond;
         public float ThreatPerSecond;
         public float CostPerSecond;
-
-        public bool AffectedByFlameCap { get { return template.AffectedByFlameCap; } }
-        public bool ProvidesSnare { get { return template.ProvidesSnare; } }
-        public bool ProvidesScorch { get { return template.ProvidesScorch; } }
-        public bool AreaEffect { get { return template.AreaEffect; } }
-
-        public bool Channeled { get { return template.Channeled; } }
-        public float Ticks { get { return template.Ticks; } }
-        public float CastProcs { get { return template.CastProcs; } }
-        public float NukeProcs { get { return template.NukeProcs; } }
-
-        public bool SpammedDot { get; set; }
-
+        public bool SpammedDot;
         public float HitProcs;
         public float CritProcs;
         public float IgniteProcs;
         public float TargetProcs;
         public float DotProcs;
-
         public float CastTime;
+        public float OO5SR;
+        public float AverageDamage;
+        public float IgniteDamagePerSecond;
+        public float IgniteDpsPerSpellPower;
+        public float DpsPerSpellPower;
+
+        // Properties pulling data directly from template
+        public string Name { get { return template.Name; } }
+        public bool AffectedByFlameCap { get { return template.AffectedByFlameCap; } }
+        public bool ProvidesSnare { get { return template.ProvidesSnare; } }
+        public bool ProvidesScorch { get { return template.ProvidesScorch; } }
+        public bool AreaEffect { get { return template.AreaEffect; } }
+        public bool Channeled { get { return template.Channeled; } }
+        public float Ticks { get { return template.Ticks; } }
+        public float CastProcs { get { return template.CastProcs; } }
+        public float NukeProcs { get { return template.NukeProcs; } }
+        public bool Instant { get { return template.Instant; } }
+        public int BaseCost { get { return template.BaseCost; } }
+        public float BaseCooldown { get { return template.BaseCooldown; } }
+        public MagicSchool MagicSchool { get { return template.MagicSchool; } }
+        public float BaseMinDamage { get { return template.BaseMinDamage; } }
+        public float BaseMaxDamage { get { return template.BaseMaxDamage; } }
+        public float BasePeriodicDamage { get { return template.BasePeriodicDamage; } }
+        public float SpellDamageCoefficient { get { return template.SpellDamageCoefficient; } }
+        public float DotDamageCoefficient { get { return template.DotDamageCoefficient; } }
+        public float DotDuration { get { return template.DotDuration; } }
+        public float DotTickInterval { get { return template.DotTickInterval; } }
+        public float AoeDamageCap { get { return template.AoeDamageCap; } }
+        public float Range { get { return template.Range; } }
+        public float RealResistance { get { return template.RealResistance; } }
+        public float ThreatMultiplier { get { return template.ThreatMultiplier; } }
+        public float HitRate { get { return template.HitRate; } }
+        public float PartialResistFactor { get { return template.PartialResistFactor; } }
+        public float Cooldown { get { return template.Cooldown; } }
+
+        public float Cost
+        {
+            get
+            {
+                return (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
+            }
+        }
+
+        public float ABCost
+        {
+            get
+            {
+                return (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
+            }
+        }
 
         public float Latency
         {
@@ -258,21 +281,6 @@ namespace Rawr.Mage
                 }
             }
         }
-
-        public bool Instant { get { return template.Instant; } }
-        public int BaseCost { get { return template.BaseCost; } }
-        public float BaseCastTime;
-        public float BaseCooldown { get { return template.BaseCooldown; } }
-        public MagicSchool MagicSchool { get { return template.MagicSchool; } }
-        public float BaseMinDamage { get { return template.BaseMinDamage; } }
-        public float BaseMaxDamage { get { return template.BaseMaxDamage; } }
-        public float BasePeriodicDamage { get { return template.BasePeriodicDamage; } }
-        public float SpellDamageCoefficient { get { return template.SpellDamageCoefficient; } }
-        public float DotDamageCoefficient { get { return template.DotDamageCoefficient; } }
-        public float DotDuration { get { return template.DotDuration; } }
-        public float DotTickInterval { get { return template.DotTickInterval; } }
-        public float AoeDamageCap { get { return template.AoeDamageCap; } }
-        public float Range { get { return template.Range; } }
 
         public float MinHitDamage
         {
@@ -390,48 +398,6 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public float CostModifier;
-        public float CostAmplifier;
-        public float SpellModifier;
-        public float AdditiveSpellModifier;
-        public float DirectDamageModifier;
-        public float DotDamageModifier;
-        public float RealResistance { get { return template.RealResistance; } }
-        public float CritRate;
-        public float ThreatMultiplier { get { return template.ThreatMultiplier; } }
-        public float CritBonus;
-        public float HitRate { get { return template.HitRate; } }
-        public float PartialResistFactor { get { return template.PartialResistFactor; } }
-        public float RawSpellDamage;
-        public float AverageDamage;
-        public float IgniteDamagePerSecond;
-        public float IgniteDpsPerSpellPower;
-        public float DpsPerSpellPower;
-
-        public float InterruptProtection;
-
-        public float Cooldown { get { return template.Cooldown; } }
-
-        public float Cost
-        {
-            get
-            {
-                return (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
-            }
-        }
-
-        public float ABCost
-        {
-            get
-            {
-                return (float)Math.Floor(Math.Round(BaseCost * CostAmplifier) * CostModifier);
-            }
-        }
-
-        private CastingState castingState;
-
-        public float OO5SR;
-
         public virtual void Calculate(CastingState castingState)
         {
             this.castingState = castingState;
@@ -532,6 +498,10 @@ namespace Rawr.Mage
             {
                 IgniteProcs = CritProcs;
             }
+            else
+            {
+                IgniteProcs = 0;
+            }
             TargetProcs = HitProcs;
 
             if (Instant) InterruptProtection = 1;
@@ -551,25 +521,35 @@ namespace Rawr.Mage
                     DotProcs = DotDuration / DotTickInterval;
                 }
             }
-
-            if (Ticks > 0)
+            else
             {
-                SpammedDot = spammedDot;
-                if (!forceMiss)
-                {
-                    float damagePerSpellPower;
-                    float igniteDamage;
-                    float igniteDamagePerSpellPower;
+                DotProcs = 0;
+            }
 
-                    AverageDamage = CalculateAverageDamage(castingState.Calculations, RawSpellDamage, spammedDot, forceHit, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
+            SpammedDot = spammedDot;
+            if (Ticks > 0 && !forceMiss)
+            {
+                float damagePerSpellPower;
+                float igniteDamage;
+                float igniteDamagePerSpellPower;
 
-                    DamagePerSecond = AverageDamage / CastTime;
-                    ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
-                    DpsPerSpellPower = damagePerSpellPower / CastTime;
+                AverageDamage = CalculateAverageDamage(castingState.Calculations, RawSpellDamage, spammedDot, forceHit, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
 
-                    IgniteDamagePerSecond = igniteDamage / CastTime;
-                    IgniteDpsPerSpellPower = igniteDamagePerSpellPower / CastTime;
-                }
+                DamagePerSecond = AverageDamage / CastTime;
+                ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
+                DpsPerSpellPower = damagePerSpellPower / CastTime;
+
+                IgniteDamagePerSecond = igniteDamage / CastTime;
+                IgniteDpsPerSpellPower = igniteDamagePerSpellPower / CastTime;
+            }
+            else
+            {
+                AverageDamage = 0;
+                DamagePerSecond = 0;
+                ThreatPerSecond = 0;
+                DpsPerSpellPower = 0;
+                IgniteDamagePerSecond = 0;
+                IgniteDpsPerSpellPower = 0;
             }
             CastTime *= (1 - channelReduction);
             CostPerSecond = CalculateCost(castingState.Calculations, round) / CastTime;
@@ -577,6 +557,10 @@ namespace Rawr.Mage
             if (outOfFiveSecondRule)
             {
                 OO5SR = 1;
+            }
+            else
+            {
+                OO5SR = 0;
             }
         }
 

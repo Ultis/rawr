@@ -86,8 +86,7 @@ namespace Rawr.Mage
 
         public virtual float GetEffectAverageDamage(CastingState castingState)
         {
-            Spell spell = new Spell(this);
-            spell.Calculate(castingState);
+            Spell spell = Spell.New(this, castingState);
             float damagePerSpellPower;
             float igniteDamage;
             float igniteDamagePerSpellPower;           

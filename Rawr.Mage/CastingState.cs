@@ -28,9 +28,9 @@ namespace Rawr.Mage
     {
         public CharacterCalculationsMage Calculations { get; private set; }
 
-        public CalculationOptionsMage CalculationOptions { get { return Calculations.CalculationOptions; } }
-        public MageTalents MageTalents { get { return Calculations.MageTalents; } }
-        public Stats BaseStats { get { return Calculations.BaseStats; } }
+        public CalculationOptionsMage CalculationOptions { get; set; }
+        public MageTalents MageTalents { get; set; }
+        public Stats BaseStats { get; set; }
 
         public float SpellHit { get { return Calculations.BaseSpellHit; } }
         public float ArcaneHitRate { get { return Calculations.BaseArcaneHitRate; } }
@@ -107,24 +107,46 @@ namespace Rawr.Mage
             return (effects & Effects) == effects;
         }
 
-        public bool Evocation { get { return (Effects & (int)StandardEffect.Evocation) != 0; } }
-        public bool ArcanePower { get { return (Effects & (int)StandardEffect.ArcanePower) != 0; } }
-        public bool IcyVeins { get { return (Effects & (int)StandardEffect.IcyVeins) != 0; } }
-        public bool MoltenFury { get { return (Effects & (int)StandardEffect.MoltenFury) != 0; } }
-        public bool Heroism { get { return (Effects & (int)StandardEffect.Heroism) != 0; } }
-        public bool PotionOfWildMagic { get { return (Effects & (int)StandardEffect.PotionOfWildMagic) != 0; } }
-        public bool PotionOfSpeed { get { return (Effects & (int)StandardEffect.PotionOfSpeed) != 0; } }
-        public bool FlameCap { get { return (Effects & (int)StandardEffect.FlameCap) != 0; } }
-        //public bool Trinket1 { get { return (Effects & (int)Effect.Trinket1) != 0; } }
-        //public bool Trinket2 { get { return (Effects & (int)Effect.Trinket2) != 0; } }
-        public bool ManaGemEffect { get { return (Effects & (int)StandardEffect.ManaGemEffect) != 0; } }
-        public bool Berserking { get { return (Effects & (int)StandardEffect.Berserking) != 0; } }
-        public bool Combustion { get { return (Effects & (int)StandardEffect.Combustion) != 0; } }
-        public bool WaterElemental { get { return (Effects & (int)StandardEffect.WaterElemental) != 0; } }
-        public bool PowerInfusion { get { return (Effects & (int)StandardEffect.PowerInfusion) != 0; } }
+        public bool Evocation { get; private set; }
+        public bool ArcanePower { get; private set; }
+        public bool IcyVeins { get; private set; }
+        public bool MoltenFury { get; private set; }
+        public bool Heroism { get; private set; }
+        public bool PotionOfWildMagic { get; private set; }
+        public bool PotionOfSpeed { get; private set; }
+        public bool FlameCap { get; private set; }
+        public bool ManaGemEffect { get; private set; }
+        public bool Berserking { get; private set; }
+        public bool Combustion { get; private set; }
+        public bool WaterElemental { get; private set; }
+        public bool PowerInfusion { get; private set; }
         public bool Frozen { get; set; }
 
-        public int Effects { get; set; }
+        private int effects;
+        public int Effects
+        {
+            get
+            {
+                return effects;
+            }
+            set
+            {
+                effects = value;
+                Evocation = (value & (int)StandardEffect.Evocation) != 0;
+                ArcanePower = (value & (int)StandardEffect.ArcanePower) != 0;
+                IcyVeins = (value & (int)StandardEffect.IcyVeins) != 0;
+                MoltenFury = (value & (int)StandardEffect.MoltenFury) != 0;
+                Heroism = (value & (int)StandardEffect.Heroism) != 0;
+                PotionOfWildMagic = (value & (int)StandardEffect.PotionOfWildMagic) != 0;
+                PotionOfSpeed = (value & (int)StandardEffect.PotionOfSpeed) != 0;
+                FlameCap = (value & (int)StandardEffect.FlameCap) != 0;
+                ManaGemEffect = (value & (int)StandardEffect.ManaGemEffect) != 0;
+                Berserking = (value & (int)StandardEffect.Berserking) != 0;
+                Combustion = (value & (int)StandardEffect.Combustion) != 0;
+                WaterElemental = (value & (int)StandardEffect.WaterElemental) != 0;
+                PowerInfusion = (value & (int)StandardEffect.PowerInfusion) != 0;
+            }
+        }
 
         public float CombustionDuration { get; set; }
         public float SpellHasteRating { get; set; }
@@ -258,7 +280,10 @@ namespace Rawr.Mage
             //BaseStats = calculations.BaseStats; // == characterStats
             //CalculationOptions = calculations.CalculationOptions;
             Character character = calculations.Character;
-            this.Calculations = calculations;
+            Calculations = calculations;
+            CalculationOptions = calculations.CalculationOptions;
+            MageTalents = calculations.MageTalents;
+            BaseStats = calculations.BaseStats;
 
             float levelScalingFactor = CalculationOptions.LevelScalingFactor;
 
