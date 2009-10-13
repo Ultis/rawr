@@ -144,8 +144,7 @@ namespace Rawr.ProtWarr
 					//"Offensive Stats:Weapon Damage",
                     "Offensive Stats:Missed Attacks",
                     "Offensive Stats:Total Damage/sec",
-                    "Offensive Stats:Limited Threat/sec",
-                    "Offensive Stats:Unlimited Threat/sec*All white damage converted to Heroic Strikes.",
+                    "Offensive Stats:Total Threat/sec",
 
                     "Resistances:Nature Resist",
 					"Resistances:Fire Resist",
@@ -199,9 +198,9 @@ threat and limited threat scaled by the threat scale.",
 					"% Chance to be Crit",
                     "% Chance to be Avoided", 
                     "% Chance to be Dodged",
+                    "% Chance to be Parried",
                     "% Chance to Miss",
                     "Hit %",
-                    "Expertise %",
                     "Burst Time", 
                     "TankPoints", 
                     "Nature Survival",
@@ -359,40 +358,50 @@ threat and limited threat scaled by the threat scale.",
             DefendModel dm = new DefendModel(character, stats, options);
             AttackModel am = new AttackModel(character, stats, options, amm);
 
-            calculatedStats.BasicStats = stats;
+            if (needsDisplayCalculations)
+            {
+                calculatedStats.Defense = (float)Math.Floor(stats.Defense + StatConversion.GetDefenseFromRating(stats.DefenseRating, CharacterClass.Warrior));
+                calculatedStats.BlockValue = stats.BlockValue;
+                calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
+                calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, options.TargetLevel);
+                calculatedStats.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, options.TargetLevel);
+                calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, options.TargetLevel);
+
+                calculatedStats.BaseAttackerSpeed = options.BossAttackSpeed;
+                calculatedStats.AttackerSpeed = dm.ParryModel.BossAttackSpeed;
+                calculatedStats.DamageTaken = dm.DamagePerSecond;
+                calculatedStats.DamageTakenPerHit = dm.DamagePerHit;
+                calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
+                calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
+
+                calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane, options.TargetLevel));
+                calculatedStats.FireReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire, options.TargetLevel));
+                calculatedStats.FrostReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost, options.TargetLevel));
+                calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature, options.TargetLevel));
+                calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow, options.TargetLevel));
+
+                calculatedStats.Crit = Lookup.BonusCritPercentage(character, stats, options.TargetLevel);
+                calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);
+                calculatedStats.Haste = Lookup.BonusHastePercentage(character, stats);
+                calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
+                calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
+                calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
+            }
+
             calculatedStats.TargetLevel = options.TargetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calculatedStats.Abilities = am.Abilities;
+            calculatedStats.BasicStats = stats;
 
             calculatedStats.Miss = dm.DefendTable.Miss;
             calculatedStats.Dodge = dm.DefendTable.Dodge;
             calculatedStats.Parry = dm.DefendTable.Parry;
             calculatedStats.Block = dm.DefendTable.Block;
-
-            calculatedStats.Defense = (float)Math.Floor(stats.Defense + StatConversion.GetDefenseFromRating(stats.DefenseRating, CharacterClass.Warrior));
-            calculatedStats.BlockValue = stats.BlockValue;
-
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
-            calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
-            calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, options.TargetLevel);
             calculatedStats.CritVulnerability = dm.DefendTable.Critical;
-            calculatedStats.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, options.TargetLevel);
-
-            calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, options.TargetLevel);
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
             calculatedStats.TotalMitigation = dm.Mitigation;
-            calculatedStats.BaseAttackerSpeed = options.BossAttackSpeed;
-            calculatedStats.AttackerSpeed = dm.ParryModel.BossAttackSpeed;
-            calculatedStats.DamageTaken = dm.DamagePerSecond;
-            calculatedStats.DamageTakenPerHit = dm.DamagePerHit;
-            calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
-            calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
 
-            calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane, options.TargetLevel));
-            calculatedStats.FireReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire, options.TargetLevel));
-            calculatedStats.FrostReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost, options.TargetLevel));
-            calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature, options.TargetLevel));
-            calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow, options.TargetLevel));
             calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane, options.TargetLevel);
             calculatedStats.FireSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire, options.TargetLevel);
             calculatedStats.FrostSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost, options.TargetLevel);
@@ -400,26 +409,19 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow, options.TargetLevel);
 
             calculatedStats.Hit = Lookup.BonusHitPercentage(character, stats);
-            calculatedStats.Crit = Lookup.BonusCritPercentage(character, stats, options.TargetLevel);
-            calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);
-            calculatedStats.Haste = Lookup.BonusHastePercentage(character, stats);
-            calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
             calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyMiss;
             calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
             calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
             calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
-            calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
-            calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
 
-            calculatedStats.UnlimitedThreat = am.ThreatPerSecond;
-            am.RageModelMode = RageModelMode.Limited;
-            calculatedStats.LimitedThreat = am.ThreatPerSecond;
+            calculatedStats.HeroicStrikeFrequency = options.HeroicStrikeFrequency;
+            calculatedStats.ThreatPerSecond = am.ThreatPerSecond;
             calculatedStats.ThreatModel = am.Name + "\n" + am.Description;
 
             calculatedStats.TankPoints = dm.TankPoints;
             calculatedStats.BurstTime = dm.BurstTime;
             calculatedStats.RankingMode = options.RankingMode;
-            calculatedStats.ThreatPoints = (options.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f));
+            calculatedStats.ThreatPoints = (options.ThreatScale * am.ThreatPerSecond);
             switch (options.RankingMode)
             {
                 case 2:
@@ -570,7 +572,7 @@ threat and limited threat scaled by the threat scale.",
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
-                        statsSpecialEffects.Accumulate(effect.GetAverageStats(0.0f, 1.0f, weaponSpeed));
+                        effect.AccumulateAverageStats(statsSpecialEffects, 0.0f, 1.0f, weaponSpeed);
                         // Trial of the Crusader Stacking Use Effect Trinkets
                         foreach (SpecialEffect childEffect in effect.Stats.SpecialEffects())
                         {
@@ -583,21 +585,21 @@ threat and limited threat scaled by the threat scale.",
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
-                        statsSpecialEffects.Accumulate(effect.GetAverageStats((1.0f / am.AttacksPerSecond), 1.0f, weaponSpeed));
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttacksPerSecond), 1.0f, weaponSpeed);
                         break;
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
-                        statsSpecialEffects.Accumulate(effect.GetAverageStats((1.0f / am.CritsPerSecond), 1.0f, weaponSpeed));
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.CritsPerSecond), 1.0f, weaponSpeed);
                         break;
                     case Trigger.DoTTick:
                         if (character.WarriorTalents.DeepWounds > 0)
-                            statsSpecialEffects.Accumulate(effect.GetAverageStats(2.0f, 1.0f, weaponSpeed));
+                            effect.AccumulateAverageStats(statsSpecialEffects, 2.0f, 1.0f, weaponSpeed);
                         break;
                     case Trigger.DamageDone:
-                        statsSpecialEffects.Accumulate(effect.GetAverageStats((1.0f / am.AttacksPerSecond), 1.0f, weaponSpeed));
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttacksPerSecond), 1.0f, weaponSpeed);
                         break;
                     case Trigger.DamageTaken:
-                        statsSpecialEffects.Accumulate(effect.GetAverageStats((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed));
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed);
                         break;
                 }
             }
@@ -703,7 +705,7 @@ threat and limited threat scaled by the threat scale.",
                             calcParry.OverallPoints = calcParry.MitigationPoints = calculations.Parry * 100.0f;
                             calcBlock.OverallPoints = calcBlock.MitigationPoints = calculations.Block * 100.0f;
                             calcCrit.OverallPoints = calcCrit.SurvivalPoints = calculations.CritVulnerability * 100.0f;
-                            calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - (calculations.DodgePlusMissPlusParryPlusBlock + calculations.CritVulnerability)) * 100.0f;
+                            calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - calculations.DodgePlusMissPlusParry - calculations.Block - calculations.CritVulnerability) * 100.0f;
                         }
                         return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcBlock, calcCrit, calcCrush, calcHit };
                     }

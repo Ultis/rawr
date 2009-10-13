@@ -30,11 +30,6 @@ namespace Rawr.ProtWarr
 		{
             this.LB_TargetLevel = new System.Windows.Forms.Label();
             this.CB_TargetLevel = new System.Windows.Forms.ComboBox();
-            this.GB_WarriorSkills = new System.Windows.Forms.GroupBox();
-            this.CB_UseShieldBlock = new System.Windows.Forms.CheckBox();
-            this.LB_ShieldBlockUptimeValue = new System.Windows.Forms.Label();
-            this.LB_ShieldBlockUptime = new System.Windows.Forms.Label();
-            this.Bar_ShieldBlockUptime = new System.Windows.Forms.TrackBar();
             this.LB_BossAttack = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.Bar_BossAttackValue = new System.Windows.Forms.TrackBar();
             this.LB_BossAttackValue = new System.Windows.Forms.Label();
@@ -66,8 +61,9 @@ namespace Rawr.ProtWarr
             this.Bar_VigilanceValue = new System.Windows.Forms.TrackBar();
             this.LB_UseVigilance = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.CB_UseVigilance = new System.Windows.Forms.CheckBox();
-            this.GB_WarriorSkills.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Bar_ShieldBlockUptime)).BeginInit();
+            this.LB_HSFrequency = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.LB_HSFrequencyValue = new System.Windows.Forms.Label();
+            this.Bar_HSFrequency = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.Bar_BossAttackValue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Bar_ThreatScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Bar_MitigationScale)).BeginInit();
@@ -76,6 +72,7 @@ namespace Rawr.ProtWarr
             ((System.ComponentModel.ISupportInitialize)(this.Bar_BossAttackSpeed)).BeginInit();
             this.GB_Vigilance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Bar_VigilanceValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_HSFrequency)).BeginInit();
             this.SuspendLayout();
             // 
             // LB_TargetLevel
@@ -104,78 +101,13 @@ namespace Rawr.ProtWarr
             this.CB_TargetLevel.TabIndex = 1;
             this.CB_TargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // GB_WarriorSkills
-            // 
-            this.GB_WarriorSkills.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.GB_WarriorSkills.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.GB_WarriorSkills.Controls.Add(this.CB_UseShieldBlock);
-            this.GB_WarriorSkills.Controls.Add(this.LB_ShieldBlockUptimeValue);
-            this.GB_WarriorSkills.Controls.Add(this.LB_ShieldBlockUptime);
-            this.GB_WarriorSkills.Controls.Add(this.Bar_ShieldBlockUptime);
-            this.GB_WarriorSkills.Location = new System.Drawing.Point(3, 502);
-            this.GB_WarriorSkills.Name = "GB_WarriorSkills";
-            this.GB_WarriorSkills.Size = new System.Drawing.Size(254, 91);
-            this.GB_WarriorSkills.TabIndex = 4;
-            this.GB_WarriorSkills.TabStop = false;
-            this.GB_WarriorSkills.Text = "Warrior Skills";
-            this.GB_WarriorSkills.Visible = false;
-            // 
-            // CB_UseShieldBlock
-            // 
-            this.CB_UseShieldBlock.AutoSize = true;
-            this.CB_UseShieldBlock.Enabled = false;
-            this.CB_UseShieldBlock.Location = new System.Drawing.Point(86, 68);
-            this.CB_UseShieldBlock.Name = "CB_UseShieldBlock";
-            this.CB_UseShieldBlock.Size = new System.Drawing.Size(107, 17);
-            this.CB_UseShieldBlock.TabIndex = 5;
-            this.CB_UseShieldBlock.Text = "Use Shield Block";
-            this.CB_UseShieldBlock.UseVisualStyleBackColor = true;
-            this.CB_UseShieldBlock.CheckedChanged += new System.EventHandler(this.checkBoxUseShieldBlock_CheckedChanged);
-            // 
-            // LB_ShieldBlockUptimeValue
-            // 
-            this.LB_ShieldBlockUptimeValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.LB_ShieldBlockUptimeValue.AutoSize = true;
-            this.LB_ShieldBlockUptimeValue.Location = new System.Drawing.Point(92, 49);
-            this.LB_ShieldBlockUptimeValue.Name = "LB_ShieldBlockUptimeValue";
-            this.LB_ShieldBlockUptimeValue.Size = new System.Drawing.Size(33, 13);
-            this.LB_ShieldBlockUptimeValue.TabIndex = 0;
-            this.LB_ShieldBlockUptimeValue.Text = "100%";
-            // 
-            // LB_ShieldBlockUptime
-            // 
-            this.LB_ShieldBlockUptime.Location = new System.Drawing.Point(3, 17);
-            this.LB_ShieldBlockUptime.Name = "LB_ShieldBlockUptime";
-            this.LB_ShieldBlockUptime.Size = new System.Drawing.Size(83, 45);
-            this.LB_ShieldBlockUptime.TabIndex = 0;
-            this.LB_ShieldBlockUptime.Text = "Shield Block Uptime %:";
-            this.LB_ShieldBlockUptime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // Bar_ShieldBlockUptime
-            // 
-            this.Bar_ShieldBlockUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.Bar_ShieldBlockUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.Bar_ShieldBlockUptime.Enabled = false;
-            this.Bar_ShieldBlockUptime.LargeChange = 10;
-            this.Bar_ShieldBlockUptime.Location = new System.Drawing.Point(86, 17);
-            this.Bar_ShieldBlockUptime.Maximum = 100;
-            this.Bar_ShieldBlockUptime.Name = "Bar_ShieldBlockUptime";
-            this.Bar_ShieldBlockUptime.Size = new System.Drawing.Size(161, 45);
-            this.Bar_ShieldBlockUptime.TabIndex = 2;
-            this.Bar_ShieldBlockUptime.TickFrequency = 10;
-            this.Bar_ShieldBlockUptime.Value = 100;
-            this.Bar_ShieldBlockUptime.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-            // 
             // LB_BossAttack
             // 
             this.LB_BossAttack.Location = new System.Drawing.Point(3, 67);
             this.LB_BossAttack.Name = "LB_BossAttack";
             this.LB_BossAttack.Size = new System.Drawing.Size(83, 45);
             this.LB_BossAttack.TabIndex = 0;
-            this.LB_BossAttack.Text = "Base Attack: * (Default: 60000)";
+            this.LB_BossAttack.Text = "Base Attack: * (Default: 80000)";
             this.LB_BossAttack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.LB_BossAttack.ToolTipText = "Base attacker damage before armor.";
             // 
@@ -186,14 +118,14 @@ namespace Rawr.ProtWarr
             this.Bar_BossAttackValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.Bar_BossAttackValue.LargeChange = 5000;
             this.Bar_BossAttackValue.Location = new System.Drawing.Point(86, 67);
-            this.Bar_BossAttackValue.Maximum = 100000;
+            this.Bar_BossAttackValue.Maximum = 120000;
             this.Bar_BossAttackValue.Minimum = 500;
             this.Bar_BossAttackValue.Name = "Bar_BossAttackValue";
             this.Bar_BossAttackValue.Size = new System.Drawing.Size(161, 45);
             this.Bar_BossAttackValue.SmallChange = 500;
             this.Bar_BossAttackValue.TabIndex = 2;
             this.Bar_BossAttackValue.TickFrequency = 5000;
-            this.Bar_BossAttackValue.Value = 60000;
+            this.Bar_BossAttackValue.Value = 80000;
             this.Bar_BossAttackValue.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // LB_BossAttackValue
@@ -205,7 +137,7 @@ namespace Rawr.ProtWarr
             this.LB_BossAttackValue.Name = "LB_BossAttackValue";
             this.LB_BossAttackValue.Size = new System.Drawing.Size(37, 13);
             this.LB_BossAttackValue.TabIndex = 0;
-            this.LB_BossAttackValue.Text = "60000";
+            this.LB_BossAttackValue.Text = "80000";
             // 
             // LB_ThreatScaleText
             // 
@@ -284,7 +216,7 @@ namespace Rawr.ProtWarr
             this.GB_Ranking.Controls.Add(this.LB_ThreatScaleText);
             this.GB_Ranking.Controls.Add(this.Bar_MitigationScale);
             this.GB_Ranking.Controls.Add(this.RB_MitigationScale);
-            this.GB_Ranking.Location = new System.Drawing.Point(3, 203);
+            this.GB_Ranking.Location = new System.Drawing.Point(3, 345);
             this.GB_Ranking.Name = "GB_Ranking";
             this.GB_Ranking.Size = new System.Drawing.Size(254, 199);
             this.GB_Ranking.TabIndex = 5;
@@ -492,23 +424,26 @@ namespace Rawr.ProtWarr
             this.GB_Vigilance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.GB_Vigilance.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.GB_Vigilance.Controls.Add(this.LB_HSFrequency);
+            this.GB_Vigilance.Controls.Add(this.LB_HSFrequencyValue);
+            this.GB_Vigilance.Controls.Add(this.Bar_HSFrequency);
             this.GB_Vigilance.Controls.Add(this.LB_VigilanceThreat);
             this.GB_Vigilance.Controls.Add(this.LB_VigilanceValue);
             this.GB_Vigilance.Controls.Add(this.Bar_VigilanceValue);
             this.GB_Vigilance.Controls.Add(this.LB_UseVigilance);
             this.GB_Vigilance.Controls.Add(this.CB_UseVigilance);
-            this.GB_Vigilance.Location = new System.Drawing.Point(3, 408);
+            this.GB_Vigilance.Location = new System.Drawing.Point(3, 203);
             this.GB_Vigilance.MinimumSize = new System.Drawing.Size(244, 88);
             this.GB_Vigilance.Name = "GB_Vigilance";
-            this.GB_Vigilance.Size = new System.Drawing.Size(254, 88);
+            this.GB_Vigilance.Size = new System.Drawing.Size(254, 136);
             this.GB_Vigilance.TabIndex = 6;
             this.GB_Vigilance.TabStop = false;
-            this.GB_Vigilance.Text = "Vigilance";
+            this.GB_Vigilance.Text = "Warrior Abilities";
             this.GB_Vigilance.UseCompatibleTextRendering = true;
             // 
             // LB_VigilanceThreat
             // 
-            this.LB_VigilanceThreat.Location = new System.Drawing.Point(6, 34);
+            this.LB_VigilanceThreat.Location = new System.Drawing.Point(3, 34);
             this.LB_VigilanceThreat.Name = "LB_VigilanceThreat";
             this.LB_VigilanceThreat.Size = new System.Drawing.Size(83, 45);
             this.LB_VigilanceThreat.TabIndex = 12;
@@ -521,7 +456,7 @@ namespace Rawr.ProtWarr
             this.LB_VigilanceValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.LB_VigilanceValue.AutoSize = true;
-            this.LB_VigilanceValue.Location = new System.Drawing.Point(95, 66);
+            this.LB_VigilanceValue.Location = new System.Drawing.Point(92, 66);
             this.LB_VigilanceValue.Name = "LB_VigilanceValue";
             this.LB_VigilanceValue.Size = new System.Drawing.Size(31, 13);
             this.LB_VigilanceValue.TabIndex = 11;
@@ -567,20 +502,51 @@ namespace Rawr.ProtWarr
             this.CB_UseVigilance.UseVisualStyleBackColor = true;
             this.CB_UseVigilance.CheckedChanged += new System.EventHandler(this.checkBoxUseVigilance_CheckedChanged);
             // 
+            // LB_HSFrequency
+            // 
+            this.LB_HSFrequency.Location = new System.Drawing.Point(6, 85);
+            this.LB_HSFrequency.Name = "LB_HSFrequency";
+            this.LB_HSFrequency.Size = new System.Drawing.Size(80, 45);
+            this.LB_HSFrequency.TabIndex = 15;
+            this.LB_HSFrequency.Text = "Heroic Strike Frequency: * (Default: 90%)";
+            this.LB_HSFrequency.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LB_HSFrequency.ToolTipText = "How often (in seconds) the boss attacks with the damage above.";
+            // 
+            // LB_HSFrequencyValue
+            // 
+            this.LB_HSFrequencyValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.LB_HSFrequencyValue.AutoSize = true;
+            this.LB_HSFrequencyValue.Location = new System.Drawing.Point(92, 117);
+            this.LB_HSFrequencyValue.Name = "LB_HSFrequencyValue";
+            this.LB_HSFrequencyValue.Size = new System.Drawing.Size(27, 13);
+            this.LB_HSFrequencyValue.TabIndex = 14;
+            this.LB_HSFrequencyValue.Text = "90%";
+            // 
+            // Bar_HSFrequency
+            // 
+            this.Bar_HSFrequency.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.Bar_HSFrequency.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Bar_HSFrequency.Location = new System.Drawing.Point(86, 85);
+            this.Bar_HSFrequency.Maximum = 100;
+            this.Bar_HSFrequency.Name = "Bar_HSFrequency";
+            this.Bar_HSFrequency.Size = new System.Drawing.Size(161, 45);
+            this.Bar_HSFrequency.TabIndex = 16;
+            this.Bar_HSFrequency.TickFrequency = 5;
+            this.Bar_HSFrequency.Value = 90;
+            this.Bar_HSFrequency.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
             // CalculationOptionsPanelProtWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.Controls.Add(this.GB_WarriorSkills);
             this.Controls.Add(this.GB_Vigilance);
             this.Controls.Add(this.GB_Ranking);
             this.Controls.Add(this.GB_AttackerStats);
             this.Name = "CalculationOptionsPanelProtWarr";
-            this.Size = new System.Drawing.Size(260, 631);
-            this.GB_WarriorSkills.ResumeLayout(false);
-            this.GB_WarriorSkills.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Bar_ShieldBlockUptime)).EndInit();
+            this.Size = new System.Drawing.Size(260, 551);
             ((System.ComponentModel.ISupportInitialize)(this.Bar_BossAttackValue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Bar_ThreatScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Bar_MitigationScale)).EndInit();
@@ -592,6 +558,7 @@ namespace Rawr.ProtWarr
             this.GB_Vigilance.ResumeLayout(false);
             this.GB_Vigilance.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Bar_VigilanceValue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Bar_HSFrequency)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -600,7 +567,6 @@ namespace Rawr.ProtWarr
 
 		private System.Windows.Forms.Label LB_TargetLevel;
         private System.Windows.Forms.ComboBox CB_TargetLevel;
-		private System.Windows.Forms.GroupBox GB_WarriorSkills;
         private Rawr.CustomControls.ExtendedToolTipLabel LB_BossAttack;
 		private System.Windows.Forms.TrackBar Bar_BossAttackValue;
 		private System.Windows.Forms.Label LB_BossAttackValue;
@@ -608,11 +574,7 @@ namespace Rawr.ProtWarr
 		private System.Windows.Forms.TrackBar Bar_ThreatScale;
         private System.Windows.Forms.Label LB_ThreatScale;
 		private System.Windows.Forms.TrackBar Bar_MitigationScale;
-		private System.Windows.Forms.Label LB_MitigationScaleValue;
-        private System.Windows.Forms.Label LB_ShieldBlockUptime;
-        private System.Windows.Forms.Label LB_ShieldBlockUptimeValue;
-        private System.Windows.Forms.TrackBar Bar_ShieldBlockUptime;
-        private System.Windows.Forms.CheckBox CB_UseShieldBlock;
+        private System.Windows.Forms.Label LB_MitigationScaleValue;
         private System.Windows.Forms.GroupBox GB_Ranking;
         private System.Windows.Forms.GroupBox GB_AttackerStats;
         private Rawr.CustomControls.ExtendedToolTipLabel LB_BossSpeed;
@@ -636,5 +598,8 @@ namespace Rawr.ProtWarr
         private System.Windows.Forms.TrackBar Bar_VigilanceValue;
         public System.Windows.Forms.Label LB_TargArmor;
         public System.Windows.Forms.ComboBox CB_TargetArmor;
+        private Rawr.CustomControls.ExtendedToolTipLabel LB_HSFrequency;
+        private System.Windows.Forms.Label LB_HSFrequencyValue;
+        private System.Windows.Forms.TrackBar Bar_HSFrequency;
 	}
 }

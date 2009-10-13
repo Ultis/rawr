@@ -214,11 +214,9 @@ namespace Rawr.ProtWarr
                     }
             }
 
-            // Weapon Swings
+            // Weapon Swings/Heroic Strike
             float weaponHits = modelLength / ParryModel.WeaponSpeed;
-            float heroicStrikePercentage = 0.0f;
-            if (RageModelMode == RageModelMode.Infinite)
-                heroicStrikePercentage = 0.9f;
+            float heroicStrikePercentage = Math.Max(0.0f, Math.Min(1.0f, Options.HeroicStrikeFrequency));
 
             AbilityModel heroicStrike = Abilities[Ability.HeroicStrike];
             modelThreat += heroicStrike.Threat * weaponHits * heroicStrikePercentage;

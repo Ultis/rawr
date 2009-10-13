@@ -24,22 +24,17 @@ namespace Rawr.ProtWarr
 		{
 			TargetLevel = 83;
 			TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
-			BossAttackValue = 60000;
+			BossAttackValue = 80000;
 			BossAttackSpeed = 2.0f;
 			UseParryHaste = false;
 			ThreatScale = 8.0f;
 			MitigationScale = 0.125f;
 			RankingMode = 1;
 			UseVigilance = true;
-			VigilanceValue = 2500;
-			ShieldBlockUptime = 100;
-			UseShieldBlock = false;
-			talents = null;
+			VigilanceValue = 5000;
+            HeroicStrikeFrequency = 0.9f;
 		}
 		
-		//TODO: Why is this here? The character object already stores talents.
-		public WarriorTalents talents = null;
-
 		private int _targetLevel;
 		public int TargetLevel
 		{
@@ -110,18 +105,11 @@ namespace Rawr.ProtWarr
 			set { _vigilanceValue = value; OnPropertyChanged("VigilanceValue"); }
 		}
 
-		private float _shieldBlockUptime;
-		public float ShieldBlockUptime
+        private float _heroicStrikeFrequency;
+		public float HeroicStrikeFrequency
 		{
-			get { return _shieldBlockUptime; }
-			set { _shieldBlockUptime = value; OnPropertyChanged("ShieldBlockUptime"); }
-		}
-
-		private bool _useShieldBlock;
-		public bool UseShieldBlock
-		{
-			get { return _useShieldBlock; }
-			set { _useShieldBlock = value; OnPropertyChanged("UseShieldBlock"); }
+            get { return _heroicStrikeFrequency; }
+            set { _heroicStrikeFrequency = value; OnPropertyChanged("HeroicStrikeFrequency"); }
 		}
 
 		#region INotifyPropertyChanged Members

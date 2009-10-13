@@ -94,8 +94,8 @@ namespace Rawr.ProtWarr
         public float WeaponSpeed { get; set; }
         public float TotalDamagePerSecond { get; set; }
         
-        public float LimitedThreat { get; set; }
-        public float UnlimitedThreat { get; set; }
+        public float ThreatPerSecond { get; set; }
+        public float HeroicStrikeFrequency { get; set; }
         public string ThreatModel { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -171,8 +171,7 @@ namespace Rawr.ProtWarr
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine + 
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
             dictValues.Add("Total Damage/sec", string.Format("{0:0.0}", TotalDamagePerSecond) + "*" + ThreatModel);
-            dictValues.Add("Limited Threat/sec", string.Format("{0:0.0}", LimitedThreat) + "*" + ThreatModel);
-            dictValues.Add("Unlimited Threat/sec", string.Format("{0:0.0}", UnlimitedThreat) + "*" + ThreatModel);
+            dictValues.Add("Total Threat/sec", string.Format("{0:0.0}*{1:0%} of Swings converted to Heroic Strikes", ThreatPerSecond, HeroicStrikeFrequency));
 
             switch (RankingMode)
             {
@@ -205,10 +204,8 @@ namespace Rawr.ProtWarr
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;
-                case "Unlimited TPS": return UnlimitedThreat;
-                case "Limited TPS": return LimitedThreat;
+                case "Total Threat/sec": return ThreatPerSecond;
                 case "Hit %": return Hit * 100.0f;
-                case "Expertise %": return Expertise * 100.0f;
 
                 case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
                 case "% Total Mitigation": return TotalMitigation * 100.0f;
@@ -216,6 +213,7 @@ namespace Rawr.ProtWarr
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
+                case "% Chance to be Parried": return ParriedAttacks * 100.0f;
                 case "% Chance to be Dodged": return DodgedAttacks * 100.0f;
                 case "% Chance to Miss": return MissedAttacks * 100.0f;
                 
