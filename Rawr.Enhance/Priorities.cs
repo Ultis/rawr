@@ -63,31 +63,49 @@ namespace Rawr.Enhance
         {
             float gcd = 1.5f;
             string name = "";
-            for (float timeElapsed = 0f; timeElapsed < fightLength; timeElapsed += gcd)
+            int totalIterations = 1;
+            List<Ability>[] tempAbilities = new List<Ability>[totalIterations];
+            for (int iteration = 0; iteration < totalIterations; iteration++)
             {
-                gcd = 0.1f; // set GCD to small value step for dead time as dead time doesn't use a GCD its just waiting time
-                name = "deadtime";
-                float averageLag = _calcOpts.AverageLag;
-                foreach (Ability ability in _abilities)
+                float currentFightLength = fightLength * (1f + .02f * iteration);
+                tempAbilities[iteration] = SetupAbilities();
+                for (float timeElapsed = 0f; timeElapsed < currentFightLength; timeElapsed += gcd)
                 {
-                    if (ability.OffCooldown(timeElapsed))
+                    gcd = 0.1f; // set GCD to small value step for dead time as dead time doesn't use a GCD its just waiting time
+                    name = "deadtime";
+                    float averageLag = _calcOpts.AverageLag;
+                    foreach (Ability ability in tempAbilities[iteration])
                     {
-                        ability.AddUse(timeElapsed, averageLag / 1000f);
-                        gcd = ability.GCD;
-                        name = ability.Name;
-                        break;
+                        if (ability.OffCooldown(timeElapsed))
+                        {
+                            ability.AddUse(timeElapsed, averageLag / 1000f);
+                            gcd = ability.GCD;
+                            name = ability.Name;
+                            break;
+                        }
+                    }
+                    // DebugPrint(abilities, timeElapsed, name);
+                }
+                // at this stage abilities now contains the number of procs per fight for each ability as a whole number
+                // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
+                // use beyond fight duration.
+                foreach (Ability ability in tempAbilities[iteration])
+                {
+                    float overrun = ability.Duration - (ability.CooldownOver - currentFightLength);
+                    ability.AddUses(overrun / ability.Duration);
+                    foreach (Ability a in _abilities)
+                    {
+                        if (a.AbilityType == ability.AbilityType)
+                        {
+                            a.AddUses(ability.Uses);
+                            break;
+                        }
                     }
                 }
-                // DebugPrint(abilities, timeElapsed, name);
             }
-            // at this stage abilities now contains the number of procs per fight for each ability as a whole number
-            // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
-            // use beyond fight duration.
+            // we now have "totalIterations" iterations +/- 10% combat duration average them out 
             foreach (Ability ability in _abilities)
-            {
-                float overrun = ability.Duration - (ability.CooldownOver - fightLength);
-                ability.AddRemainder(overrun / ability.Duration);
-            }
+                ability.AverageUses(totalIterations);
         }
 
         private void DebugPrint(List<Ability> abilities, float timeElapsed, string name)
@@ -127,7 +145,7 @@ namespace Rawr.Enhance
         private float _manacost;
         private float _gcd = 1.5f;
         private int baseMana = 4386;
-
+        
         public Ability(EnhanceAbility abilityType, float duration, float gcd, float manacost, int priority)
         {
             _abilityType = abilityType;
@@ -155,14 +173,14 @@ namespace Rawr.Enhance
             _cooldownOver = useTime + _duration + lag;
         }
 
-        public void AddRemainder(float remainder)
+        public void AddUses(float uses)
         {
-            _uses += remainder;
+            _uses += uses;
         }
 
-        public void AverageUses(int iterrations)
+        public void AverageUses(float iterations)
         {
-            _uses /= iterrations;
+            _uses /= iterations;
         }
 
         public bool OffCooldown(float starttime)

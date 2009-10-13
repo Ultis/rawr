@@ -211,7 +211,7 @@ namespace Rawr.Enhance
             // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
             StatsSpecialEffects se = new StatsSpecialEffects(character, stats, calcOpts);
             Stats specialEffects = se.getSpecialEffects();
-            stats += specialEffects;
+            stats.Accumulate(specialEffects);
             //Set up some talent variables
             float concussionMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
