@@ -275,9 +275,28 @@ namespace Rawr
         /// <summary>
         /// Computes average stats given the frequency of triggers.
         /// </summary>
+        /// <param name="stats">Stats object into which the average stats will be accumulated.</param>
+        public void AccumulateAverageStats(Stats stats)
+        {
+            AccumulateAverageStats(stats, 0.0f);
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
         public Stats GetAverageStats()
         {
             return GetAverageStats(0.0f);
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="stats">Stats object into which the average stats will be accumulated.</param>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        public void AccumulateAverageStats(Stats stats, float triggerInterval)
+        {
+            AccumulateAverageStats(stats, triggerInterval, 1.0f, 3.0f, 0.0f);
         }
 
         /// <summary>
@@ -292,6 +311,19 @@ namespace Rawr
         /// <summary>
         /// Computes average stats given the frequency of triggers.
         /// </summary>
+        /// <param name="stats">Stats object into which the average stats will be accumulated.</param>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        public void AccumulateAverageStats(Stats stats, float triggerInterval, float triggerChance)
+        {
+            AccumulateAverageStats(stats, triggerInterval, triggerChance, 3.0f, 0.0f); ;
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
         /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
         /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
         /// SpellCrit trigger you would set triggerInterval to average time between hits and set
@@ -299,6 +331,20 @@ namespace Rawr
         public Stats GetAverageStats(float triggerInterval, float triggerChance)
         {
             return GetAverageStats(triggerInterval, triggerChance, 3.0f, 0.0f); ;
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="stats">Stats object into which the average stats will be accumulated.</param>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        public void AccumulateAverageStats(Stats stats, float triggerInterval, float triggerChance, float attackSpeed)
+        {
+            AccumulateAverageStats(stats, triggerInterval, triggerChance, attackSpeed, 0.0f); ;
         }
 
         /// <summary>
@@ -325,17 +371,35 @@ namespace Rawr
         /// <param name="fightDuration">Duration of fight in seconds.</param>
         public Stats GetAverageStats(float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
         {
+            Stats stats = new Stats();
+            AccumulateAverageStats(stats, triggerInterval, triggerChance, attackSpeed, fightDuration);
+            return stats;
+        }
+
+        /// <summary>
+        /// Computes average stats given the frequency of triggers.
+        /// </summary>
+        /// <param name="stats">Stats object into which the average stats will be accumulated.</param>
+        /// <param name="triggerInterval">Average time interval between triggers in seconds.</param>
+        /// <param name="triggerChance">Chance that trigger of correct type is produced (for example for
+        /// SpellCrit trigger you would set triggerInterval to average time between hits and set
+        /// triggerChance to crit chance)</param>
+        /// <param name="attackSpeed">Average unhasted attack speed, used in PPM calculations.</param>
+        /// <param name="fightDuration">Duration of fight in seconds.</param>
+        public void AccumulateAverageStats(Stats stats, float triggerInterval, float triggerChance, float attackSpeed, float fightDuration)
+        {
+            Stats.GenerateSparseData();
             if (MaxStack > 1)
             {
-                return Stats * GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration);
+                stats.Accumulate(Stats, GetAverageStackSize(triggerInterval, triggerChance, attackSpeed, fightDuration));
             }
             else if (Duration == 0f)
             {
-                return Stats * GetAverageProcsPerSecond(triggerInterval, triggerChance, attackSpeed, fightDuration);
+                stats.Accumulate(Stats, GetAverageProcsPerSecond(triggerInterval, triggerChance, attackSpeed, fightDuration));
             }
             else
             {
-                return Stats * GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration);
+                stats.Accumulate(Stats, GetAverageUptime(triggerInterval, triggerChance, attackSpeed, fightDuration));
             }
         }
 
