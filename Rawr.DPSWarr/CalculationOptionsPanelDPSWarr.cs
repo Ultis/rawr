@@ -1535,8 +1535,52 @@ FAQStuff.Add(
                 CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
             }
         }
+        public static void CheckSize(CalculationOptionsDPSWarr calcOpts)
+        {
+            if (calcOpts.Maintenance.Length != (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_ + 1)
+            {
+                bool[] newArray = new bool[] {
+                        true,  // == Rage Gen ==
+                            false,  // Berserker Rage
+                            true,   // Bloodrage
+                        false, // == Maintenance ==
+                            false, // Shout Choice
+                                false, // Battle Shout
+                                false, // Commanding Shout
+                            false, // Demoralizing Shout
+                            false, // Sunder Armor
+                            false, // Thunder Clap
+                            false, // Hamstring
+                        true,  // == Periodics ==
+                            true,  // Shattering Throw
+                            true,  // Sweeping Strikes
+                            true,  // DeathWish
+                            true,  // Recklessness
+                            false,  // Enraged Regeneration
+                        true,  // == Damage Dealers ==
+                            true,  // Fury
+                                true,  // Whirlwind
+                                true,  // Bloodthirst
+                                true,  // Bloodsurge
+                            true,  // Arms
+                                true,  // Bladestorm
+                                true,  // Mortal Strike
+                                true,  // Rend
+                                true,  // Overpower
+                                true,  // Taste for Blood
+                                true,  // Sudden Death
+                                true,  // Slam
+                            true,  // <20% Execute Spamming
+                        true,  // == Rage Dumps ==
+                            true,  // Cleave
+                            true   // Heroic Strike
+                    };
+                calcOpts.Maintenance = newArray;
+            }
+        }
         private void setAbilBools(CalculationOptionsDPSWarr calcOpts) {
             //CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            CalculationOptionsPanelDPSWarr.CheckSize(calcOpts);
 
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageGen__]        = CTL_Maints.Nodes[0].Checked;
             calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BerserkerRage_]    = CTL_Maints.Nodes[0].Nodes[0].Checked;
@@ -1578,45 +1622,7 @@ FAQStuff.Add(
             try {
                 CTL_Maints.AfterCheck -= new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
                 // Bounds Check
-                if (calcOpts.Maintenance.Length != (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_ + 1) {
-		            bool[] newArray = new bool[] {
-                        true,  // == Rage Gen ==
-                            true,  // Berserker Rage
-                            true,  // Bloodrage
-                        false, // == Maintenance ==
-                            false, // Shout Choice
-                                false, // Battle Shout
-                                false, // Commanding Shout
-                            false, // Demoralizing Shout
-                            false, // Sunder Armor
-                            false, // Thunder Clap
-                            false, // Hamstring
-                        true,  // == Periodics ==
-                            true,  // Shattering Throw
-                            true,  // Sweeping Strikes
-                            true,  // DeathWish
-                            true,  // Recklessness
-                            true,  // Enraged Regeneration
-                        true,  // == Damage Dealers ==
-                            true,  // Fury
-                                true,  // Whirlwind
-                                true,  // Bloodthirst
-                                true,  // Bloodsurge
-                            true,  // Arms
-                                true,  // Bladestorm
-                                true,  // Mortal Strike
-                                true,  // Rend
-                                true,  // Overpower
-                                true,  // Taste for Blood
-                                true,  // Sudden Death
-                                true,  // Slam
-                            true,  // <20% Execute Spamming
-                        true,  // == Rage Dumps ==
-                            true,  // Cleave
-                            true   // Heroic Strike
-                    };
-                    calcOpts.Maintenance = newArray;
-                }
+                CalculationOptionsPanelDPSWarr.CheckSize(calcOpts);
                 //
                 CTL_Maints.Nodes[0].Checked                     = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances._RageGen__];
                 CTL_Maints.Nodes[0].Nodes[0].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BerserkerRage_];
