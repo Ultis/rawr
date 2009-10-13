@@ -1,15 +1,18 @@
-Rawr v2.2.21.0
+Rawr v2.2.22.0
 ------------
-Welcome to Rawr 2.2.21.0.
+Welcome to Rawr 2.2.22.0.
    
 Recent Changes:
- - More improvements to default filters. Sorry for all the confusion and problems with filters lately, everyone. We realize that filtering is a very important, but complex, part of Rawr, and are working toward a much more understandable and reliable system for filtering. Please bear with us!
- - Fix for crashing on saving and loading characters from Armory with Leatherworking.
- - Mage: Fix for crash with Hyperspeed Accellerators, and other cooldown stacking issues.
- - Enhance: Fix for nested special effect calculations.
- - Moonkin: Significant performance improvement.
- - ProtPaladin: Significant performance improvement.
- - DPSWarr: Significant performance improvement.
+ - Significant performance improvements across a wide variety of models
+ - Fix for Direct Upgrades chart only showing the specified # of gemming templates
+ - Rawr now remembers the last loaded charater from the Armory in the Load from Armory dialog
+ - Updated the parry chance of lvl83 bosses to 14%, per recent testing
+ - Rawr.Bear: Added support for Parry Haste
+ - Rawr.Mage: Fix for bug with incremental optimization. Added very simple movement model. Fix for Arcane Power + Missile Barrage interaction
+ - Rawr.Moonkin: Fix for mana gains chart
+ - Rawr.ProtPaladin: Added support for T9 and T10 set bonuses
+ - Rawr.Rogue: Fix for Mace Spec calculations
+ - Rawr.DPSWarr: Fix for intellect blocking gear from being considered relevant
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -117,6 +120,15 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.21.0
+ - More improvements to default filters. Sorry for all the confusion and problems with filters lately, everyone. We realize that filtering is a very important, but complex, part of Rawr, and are working toward a much more understandable and reliable system for filtering. Please bear with us!
+ - Fix for crashing on saving and loading characters from Armory with Leatherworking.
+ - Mage: Fix for crash with Hyperspeed Accellerators, and other cooldown stacking issues.
+ - Enhance: Fix for nested special effect calculations.
+ - Moonkin: Significant performance improvement.
+ - ProtPaladin: Significant performance improvement.
+ - DPSWarr: Significant performance improvement.
+
 v2.2.20.0
  - Further improvements to the default filters and item cache.
  - Updated parsing of proc effects from Onyxia items, and a few other stray items.

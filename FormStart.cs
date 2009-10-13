@@ -18,14 +18,17 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.21.0
- - More improvements to default filters. Sorry for all the confusion and problems with filters lately, everyone. We realize that filtering is a very important, but complex, part of Rawr, and are working toward a much more understandable and reliable system for filtering. Please bear with us!
- - Fix for crashing on saving and loading characters from Armory with Leatherworking.
- - Mage: Fix for crash with Hyperspeed Accellerators, and other cooldown stacking issues.
- - Enhance: Fix for nested special effect calculations.
- - Moonkin: Significant performance improvement.
- - ProtPaladin: Significant performance improvement.
- - DPSWarr: Significant performance improvement.";
+			labelVersionHistory.Text = @"v2.2.22.0
+ - Significant performance improvements across a wide variety of models
+ - Fix for Direct Upgrades chart only showing the specified # of gemming templates
+ - Rawr now remembers the last loaded charater from the Armory in the Load from Armory dialog
+ - Updated the parry chance of lvl83 bosses to 14%, per recent testing
+ - Rawr.Bear: Added support for Parry Haste
+ - Rawr.Mage: Fix for bug with incremental optimization. Added very simple movement model. Fix for Arcane Power + Missile Barrage interaction
+ - Rawr.Moonkin: Fix for mana gains chart
+ - Rawr.ProtPaladin: Added support for T9 and T10 set bonuses
+ - Rawr.Rogue: Fix for Mace Spec calculations
+ - Rawr.DPSWarr: Fix for intellect blocking gear from being considered relevant";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
