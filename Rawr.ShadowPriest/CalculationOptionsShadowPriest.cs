@@ -19,6 +19,7 @@ namespace Rawr.ShadowPriest
 		public float Survivability { get; set; }
         public float MoveFrequency { get; set; }
         public float MoveDuration { get; set; }
+        public bool PTR { get; set; }
 
 		public List<string> SpellPriority { get; set; }
 
@@ -41,6 +42,7 @@ namespace Rawr.ShadowPriest
 			Survivability = 2f;
             MoveFrequency = 60f;
             MoveDuration = 5f;
+            PTR = false;
 
 			SpellPriority = null;
 			ManaPot = 4;

@@ -78,6 +78,7 @@ namespace Rawr.ShadowPriest
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             CalculationOptionsShadowPriest calcOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
             Stats baseStats = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+            bool Ptr = calcOptions.PTR;
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             float ResilienceCap = 0.15f, ResilienceFromRating = StatConversion.GetCritReductionFromResilience(1);
@@ -201,8 +202,13 @@ namespace Rawr.ShadowPriest
             if (solver.SpellSimulation != null)
             {
                 String s = "Spell Cast List:";
+                int i = 0;
                 foreach (Spell spell in solver.SpellSimulation)
-                    s += "\r\n" + spell.Name;
+                {
+                    if (i++ % 10 == 0)
+                        s += "\r\n";
+                    s += ", " + spell.Name;
+                }
                 s += "\r\n---Repeat---";
                 dictValues.Add("Castlist", string.Format("{0}*{1}", solver.SpellSimulation.Count, s));
             }
@@ -211,38 +217,41 @@ namespace Rawr.ShadowPriest
             dictValues.Add("DPS", string.Format("{0}*Damage Pr Second", solver.DPS.ToString("0")));
             dictValues.Add("SustainDPS", string.Format("{0}*Mana restrained DPS", solver.SustainDPS.ToString("0")));
             
-            dictValues.Add("SW Pain", new ShadowWordPain(BasicStats, character).ToString());
-            DevouringPlague dp = new DevouringPlague(BasicStats, character);
+            dictValues.Add("SW Pain", new ShadowWordPain(BasicStats, character, Ptr).ToString());
+            DevouringPlague dp = new DevouringPlague(BasicStats, character, Ptr);
             dictValues.Add("Devouring Plague", dp.ToString());
             if (dp.ImprovedDP != null)
                 dictValues.Add("Imp. Devouring Plague", dp.ImprovedDP.ToString());
             else
                 dictValues.Add("Imp. Devouring Plague", "- *No required talents");
-            dictValues.Add("SW Death", new ShadowWordDeath(BasicStats, character).ToString());
-            dictValues.Add("Mind Blast", new MindBlast(BasicStats, character).ToString());
-            dictValues.Add("PW Shield", new PowerWordShield(BasicStats, character).ToString());
+            dictValues.Add("SW Death", new ShadowWordDeath(BasicStats, character, Ptr).ToString());
+            dictValues.Add("Mind Blast", new MindBlast(BasicStats, character, Ptr).ToString());
+            dictValues.Add("PW Shield", new PowerWordShield(BasicStats, character, Ptr).ToString());
 
-            if (character.PriestTalents.VampiricEmbrace > 0)
-                dictValues.Add("Vampiric Embrace", new VampiricEmbrace(BasicStats, character).ToString());
-            else
-                dictValues.Add("Vampiric Embrace", "- *No required talents");
+            if (!Ptr)
+            {
+                if (character.PriestTalents.VampiricEmbrace > 0)
+                    dictValues.Add("Vampiric Embrace", new VampiricEmbrace(BasicStats, character, Ptr).ToString());
+                else
+                    dictValues.Add("Vampiric Embrace", "- *No required talents");
+            }
 
             if (character.PriestTalents.VampiricTouch > 0)
-                dictValues.Add("Vampiric Touch", new VampiricTouch(BasicStats, character).ToString());
+                dictValues.Add("Vampiric Touch", new VampiricTouch(BasicStats, character, Ptr).ToString());
             else
                 dictValues.Add("Vampiric Touch", "- *No required talents");
 
             if (character.PriestTalents.MindFlay > 0)
-                dictValues.Add("Mind Flay", new MindFlay(BasicStats, character).ToString());
+                dictValues.Add("Mind Flay", new MindFlay(BasicStats, character, Ptr).ToString());
             else
                 dictValues.Add("Mind Flay", "- *No required talents");
 
-            dictValues.Add("Shadowfiend", new Shadowfiend(BasicStats, character).ToString());
+            dictValues.Add("Shadowfiend", new Shadowfiend(BasicStats, character, Ptr).ToString());
 
-            dictValues.Add("Smite", new Smite(BasicStats, character).ToString());
-            dictValues.Add("Holy Fire", new HolyFire(BasicStats, character).ToString());
+            dictValues.Add("Smite", new Smite(BasicStats, character, Ptr).ToString());
+            dictValues.Add("Holy Fire", new HolyFire(BasicStats, character, Ptr).ToString());
             if (character.PriestTalents.Penance > 0)
-                dictValues.Add("Penance", new Penance(BasicStats, character).ToString());
+                dictValues.Add("Penance", new Penance(BasicStats, character, Ptr).ToString());
             else
                 dictValues.Add("Penance", "- *No required talents");
 
@@ -259,9 +268,9 @@ namespace Rawr.ShadowPriest
                 case "Haste Rating": return basicStats.HasteRating;
                 case "Haste %": return basicStats.SpellHaste * 100f;
                 case "Crit Rating": return basicStats.CritRating;
-                case "MB Crit %": return new MindBlast(basicStats, character).CritChance * 100f;
+                case "MB Crit %": return new MindBlast(basicStats, character, (character.CalculationOptions as CalculationOptionsShadowPriest).PTR).CritChance * 100f;
                 case "Hit Rating": return basicStats.HitRating;
-                case "MF cast time (ms)": return new MindFlay(basicStats, character).CastTime * 1000f;
+                case "MF cast time (ms)": return new MindFlay(basicStats, character, (character.CalculationOptions as CalculationOptionsShadowPriest).PTR).CastTime * 1000f;
                 case "Armor": return basicStats.Armor + basicStats.BonusArmor;
                 case "Arcane Resistance": return basicStats.ArcaneResistance + basicStats.ArcaneResistanceBuff;
                 case "Fire Resistance": return basicStats.FireResistance + basicStats.FireResistanceBuff;

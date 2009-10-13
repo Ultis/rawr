@@ -171,7 +171,7 @@ namespace Rawr.ShadowPriest
             return null;
         }
 
-        public float OldGetCastSpell(float timer, out Spell castSpell)
+        public float OldGetCastSpell(float timer, out Spell castSpell, Spell SWD)
         {   // FIXME: Rewrite this freaking crappy shit.
             castSpell = null;
             foreach (Spell spell in SpellPriority)
@@ -185,8 +185,13 @@ namespace Rawr.ShadowPriest
                 if (spell.SpellStatistics.CooldownReset > 0)
                 {
                     float nextCast = spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer;
-                    if (nextCast < spell.GlobalCooldown * 0.2f)
+                    if (nextCast < 0.5f)
                         return nextCast;
+                    /*if (nextCast <= spell.GlobalCooldown && SWD != null & SWD.SpellStatistics.CooldownReset <= timer)
+                    {
+                        castSpell = SWD;
+                        return 0f;
+                    }*/
                 }
                 if (spell.SpellStatistics.CooldownReset <= timer)
                     return 0;
@@ -837,7 +842,7 @@ namespace Rawr.ShadowPriest
             SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
             foreach (string spellname in CalculationOptions.SpellPriority)
             {
-                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character);
+                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character, CalculationOptions.PTR);
                 if (spelltmp != null) SpellPriority.Add(spelltmp);
             }
 
@@ -922,7 +927,7 @@ namespace Rawr.ShadowPriest
                     RecalculateHaste(simStats, 0f);
                 }
                 Spell spell = null;
-                float castWait = OldGetCastSpell(timer, out spell);
+                float castWait = OldGetCastSpell(timer, out spell, SWD);
                 //if (castWait > 0)
                 //    Debug.Write(string.Format("\r\n{0} : Wait {1}", timer.ToString("0.00"), castWait.ToString("0.00")));
                 timer += castWait;
@@ -937,10 +942,11 @@ namespace Rawr.ShadowPriest
                 timer += CalculationOptions.Delay / 1000f;
                 spell.SpellStatistics.HitCount++;
 
+
                 if (bPnS && spell == MF)
                     SWP.SpellStatistics.CooldownReset = timer + SWP.DebuffDuration;
                 else if (spell.DebuffDuration > 0f || spell.Cooldown > 0f)
-                    spell.SpellStatistics.CooldownReset = timer + (spell.DebuffDuration > spell.Cooldown ? spell.DebuffDuration : spell.Cooldown);
+                    spell.SpellStatistics.CooldownReset = timer + (spell.DebuffDuration > spell.Cooldown ? spell.DebuffDuration : spell.Cooldown) + spell.CastTime;
 
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
 
@@ -960,10 +966,23 @@ namespace Rawr.ShadowPriest
                 if (SpellPriority[sequence] == MF)
                 {   // Spell sequence just reset, lets take advantage of that.
                     int i = SpellPriority.IndexOf(MF);
+                    for (int x = CastList.Count - i; x < CastList.Count; x++)
+                        CastList[x].SpellStatistics.HitCount--;
                     CastList.RemoveRange(CastList.Count - i, i);
                     CleanBreak = true;
                     timer = timeSequenceReset;
                     break;
+                }
+            }
+            if (!CleanBreak)
+            {   // Cut down on excess DoT damage.
+                foreach (Spell spell in SpellPriority)
+                {
+                    if (spell == MF) break;
+                    if (spell.DebuffDuration > 0)
+                        spell.SpellStatistics.HitCount -= (spell.SpellStatistics.CooldownReset - timer) / spell.DebuffDuration;
+                    else if (spell.Cooldown > 0)
+                        spell.SpellStatistics.HitCount -= (spell.SpellStatistics.CooldownReset - timer) / spell.Cooldown;
                 }
             }
             SpellSimulation = CastList;
@@ -1005,7 +1024,7 @@ namespace Rawr.ShadowPriest
             if (seGlyphofShadow != null)
             {
                 float uptime = seGlyphofShadow.GetAverageUptime(1f / CritsPerSecond, 1f);
-                simStats.SpellPower += simStats.Spirit * seGlyphofShadow.Stats.SpellDamageFromSpiritPercentage * uptime;
+                simStats.SpellPower += simStats.Spirit * (CalculationOptions.PTR ? 0.3f : seGlyphofShadow.Stats.SpellDamageFromSpiritPercentage) * uptime;
                 if (bVerbal)
                     Rotation += string.Format("\r\nGlyph of Shadow Uptime: {0}%", (uptime * 100f).ToString("0.0"));
             }
@@ -1028,18 +1047,11 @@ namespace Rawr.ShadowPriest
             }
             #endregion
 
-            #region Pass 3: Redo Stats for all spells
+            #region Pass3 + Pass 4: Redo Spell Stats and Calculate Damage and Mana Usage
+
             foreach (Spell spell in SpellPriority)
             {
-                spell.Calculate(simStats, character);
-            }
-            #endregion
-
-
-            #region Pass 4: Calculate Damage and Mana Usage         
-
-            foreach (Spell spell in CastList)
-            {
+                spell.Calculate(simStats, character);   // Redo stats for spell (with new spell power as result of procs)
                 float Damage = spell.AvgDamage;
                 float Cost = spell.ManaCost;
                 switch (spell.Name)
@@ -1086,12 +1098,16 @@ namespace Rawr.ShadowPriest
                     default:
                         break;
                 }
+                Damage *= spell.SpellStatistics.HitCount;
+                Cost *= spell.SpellStatistics.HitCount;
                 Damage *= (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier);
                 spell.SpellStatistics.DamageDone += Damage;
                 spell.SpellStatistics.ManaUsed += Cost;
                 OverallMana += Cost;
             }
             #endregion
+
+
 
             if (bVerbal)
             {
@@ -1243,7 +1259,7 @@ namespace Rawr.ShadowPriest
             tmpregen = simStats.Mana * 0.002f * (CalculationOptions.Replenishment / 100f);
             ManaSources.Add(new ManaSource("Replenishment", tmpregen));
             regen += tmpregen;
-            tmpregen = SWP.BaseMana * (simStats.ManaRestoreFromBaseManaPPM > 0 ? 0.02f * 0.25f : 0f) * HitsPerSecond * (CalculationOptions.JoW / 100f);
+            tmpregen = BaseStats.GetBaseStats(character).Mana * (simStats.ManaRestoreFromBaseManaPPM > 0 ? 0.02f * 0.25f : 0f) * HitsPerSecond * (CalculationOptions.JoW / 100f);
             if (tmpregen > 0)
             {
                 ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
@@ -1460,7 +1476,7 @@ namespace Rawr.ShadowPriest
             SpellComparerDpM _scDpM = new SpellComparerDpM();
             foreach (string spellname in Spell.HolySpellList)
             {
-                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character);
+                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character, CalculationOptions.PTR);
                 if (spelltmp != null) SpellPriority.Add(spelltmp);
             }
 
@@ -1583,7 +1599,7 @@ namespace Rawr.ShadowPriest
                 int dots = (PE != null) ? 3 : 0;
                 foreach (Spell spell in SpellPriority)
                     if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
-                Spell Timbal = new TimbalProc(simStats, character);
+                Spell Timbal = new TimbalProc(simStats, character, CalculationOptions.PTR);
 
                 DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
             }

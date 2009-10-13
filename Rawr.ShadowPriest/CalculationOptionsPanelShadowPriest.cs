@@ -52,6 +52,8 @@ namespace Rawr.ShadowPriest
 
             trkMoveDuration.Value = (int)calcOpts.MoveDuration;
             lblMoveDuration.Text = trkMoveDuration.Value + " seconds of movement each time.";
+
+            cbPtr.Checked = calcOpts.PTR;
             
             cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
@@ -185,6 +187,16 @@ namespace Rawr.ShadowPriest
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.MoveDuration = trkMoveDuration.Value;
                 lblMoveDuration.Text = trkMoveDuration.Value + " seconds of movement each time.";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void cbPtr_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.PTR = cbPtr.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }

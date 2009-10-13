@@ -56,6 +56,7 @@
             this.lblDelay = new System.Windows.Forms.Label();
             this.lblMoveFrequency = new System.Windows.Forms.Label();
             this.lblMoveDuration = new System.Windows.Forms.Label();
+            this.cbPtr = new System.Windows.Forms.CheckBox();
             this.gbSpellPriority.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).BeginInit();
@@ -334,11 +335,23 @@
             this.lblMoveDuration.TabIndex = 59;
             this.lblMoveDuration.Text = "Movement Duration";
             // 
+            // cbPtr
+            // 
+            this.cbPtr.AutoSize = true;
+            this.cbPtr.Location = new System.Drawing.Point(146, 64);
+            this.cbPtr.Name = "cbPtr";
+            this.cbPtr.Size = new System.Drawing.Size(72, 17);
+            this.cbPtr.TabIndex = 61;
+            this.cbPtr.Text = "PTR (3.3)";
+            this.cbPtr.UseVisualStyleBackColor = true;
+            this.cbPtr.CheckedChanged += new System.EventHandler(this.cbPtr_CheckedChanged);
+            // 
             // CalculationOptionsPanelShadowPriest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.cbPtr);
             this.Controls.Add(this.trkMoveDuration);
             this.Controls.Add(this.lblMoveDuration);
             this.Controls.Add(this.lblMoveFrequency);
@@ -407,5 +420,6 @@
         private System.Windows.Forms.Label lblMoveFrequency;
         private System.Windows.Forms.Label lblMoveDuration;
         private System.Windows.Forms.TrackBar trkMoveDuration;
+        private System.Windows.Forms.CheckBox cbPtr;
     }
 }
