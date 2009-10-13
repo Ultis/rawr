@@ -16,7 +16,7 @@ namespace Rawr.Elemental.Spells
         protected float crit = 0f;
         protected float critModifier = 1f;
         protected float cooldown = 0f;
-        protected float missChance = 0.17f;
+        protected float missChance = .17f;
 
         protected float totalCoef = 1f;
         protected float baseCoef = 1f;
@@ -25,6 +25,45 @@ namespace Rawr.Elemental.Spells
         protected float dotSpCoef = 0f;
         protected float dotCanCrit = 0f;
         protected float spellPower = 0f;
+
+        /// <summary>
+        /// This Constructor calls SetBaseValues.
+        /// </summary>
+        public Spell()
+        {
+            SetBaseValues();
+        }
+
+        protected virtual void SetBaseValues()
+        {
+            baseMinDamage = 0f;
+            baseMaxDamage = 0f;
+            baseCastTime = 0f;
+            castTime = 0f;
+            periodicTick = 0f;
+            periodicTicks = 0f;
+            periodicTickTime = 3f;
+            manaCost = 0f;
+            gcd = 1.5f;
+            crit = 0f;
+            critModifier = 1f;
+            cooldown = 0f;
+            missChance = .17f;
+
+            totalCoef = 1f;
+            baseCoef = 1f;
+            spCoef = 0f;
+            dotBaseCoef = 1f;
+            dotSpCoef = 0f;
+            dotCanCrit = 0f;
+            spellPower = 0f;
+        }
+
+        public void Update(Stats stats, ShamanTalents talents)
+        {
+            SetBaseValues();
+            Initialize(stats, talents);
+        }
 
         protected string shortName = "Spell";
 
@@ -203,7 +242,7 @@ namespace Rawr.Elemental.Spells
         public float ManaCost
         { get { return manaCost; } }
 
-        public void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public virtual void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
             float Speed = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
             gcd = (float)Math.Round(gcd / Speed, 4);

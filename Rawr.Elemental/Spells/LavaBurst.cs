@@ -2,11 +2,17 @@ using System;
 
 namespace Rawr.Elemental.Spells
 {
-public class LavaBurst : Spell
+    public class LavaBurst : Spell
     {
-        public LavaBurst()
+        private float fs = 0f;
+        public LavaBurst() : base()
         {
-            #region Base Values
+        }
+
+        protected override void SetBaseValues()
+        {
+            base.SetBaseValues();
+
             baseMinDamage = 1192;
             baseMaxDamage = 1518;
             baseCastTime = 2f;
@@ -15,7 +21,11 @@ public class LavaBurst : Spell
             manaCost = .1f * Constants.BaseMana;
             cooldown = 8f;
             shortName = "LvB";
-            #endregion
+        }
+
+        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
+        {
+            Initialize(stats, shamanTalents, fs);
         }
 
         public void Initialize(Stats stats, ShamanTalents shamanTalents, float fs)
@@ -37,12 +47,14 @@ public class LavaBurst : Spell
 
             base.Initialize(stats, shamanTalents);
 
+            this.fs = fs;
             crit = (1 - fs) * crit + fs;
         }
 
         public LavaBurst(Stats stats, ShamanTalents shamanTalents, float fs)
             : this()
         {
+            this.fs = fs;
             Initialize(stats, shamanTalents, fs);
         }
 

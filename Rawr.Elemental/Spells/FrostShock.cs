@@ -4,19 +4,23 @@ namespace Rawr.Elemental.Spells
 {
 public class FrostShock : Shock
     {
-        public FrostShock()
+        public FrostShock() : base()
         {
-            #region Base Values
+        }
+
+        protected override void SetBaseValues()
+        {
+            base.SetBaseValues();
+
             baseMinDamage = 812;
             baseMaxDamage = 858;
             spCoef = 1.5f / 3.5f * .9f;
             manaCost = .18f * Constants.BaseMana;
             cooldown = 6f;
             shortName = "FrS";
-            #endregion
         }
 
-        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
             totalCoef += .01f * shamanTalents.Concussion;
             spCoef *= 1f + .1f * shamanTalents.BoomingEchoes;

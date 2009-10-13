@@ -4,9 +4,14 @@ namespace Rawr.Elemental.Spells
 {
     public class LightningBolt : Spell, ILightningOverload
     {
-        public LightningBolt()
+        public LightningBolt() : base()
         {
-            #region Base Values
+        }
+
+        protected override void SetBaseValues()
+        {
+            base.SetBaseValues();
+
             baseMinDamage = 719;
             baseMaxDamage = 819;
             baseCastTime = 2.5f;
@@ -16,10 +21,9 @@ namespace Rawr.Elemental.Spells
             loCoef = spCoef / 2f;
             manaCost = 0.1f * Constants.BaseMana;
             shortName = "LB";
-            #endregion
         }
 
-        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
             castTime -= .1f * shamanTalents.LightningMastery;
             manaCost *= 1f - .02f * shamanTalents.Convection;

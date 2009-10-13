@@ -104,20 +104,20 @@ namespace Rawr.Elemental
             spells = new List<Spell>(15);
         }
 
-        public Rotation(ShamanTalents talents, LightningBolt lb, ChainLightning cl, ChainLightning cl2, ChainLightning cl3, ChainLightning cl4, LavaBurst lvb, LavaBurst lvbfs, FlameShock fs, EarthShock es, FrostShock frs)
+        public Rotation(ShamanTalents talents, SpellBox spellBox)
             : this()
         {
             Talents = talents;
-            LB = lb;
-            CL = cl;
-            CL2 = cl2;
-            CL3 = cl3;
-            CL4 = cl4;
-            LvB = lvb;
-            LvBFS = lvbfs;
-            FS = fs;
-            ES = es;
-            FrS = frs;
+            LB = spellBox.LB;
+            CL = spellBox.CL;
+            CL2 = spellBox.CL2;
+            CL3 = spellBox.CL3;
+            CL4 = spellBox.CL4;
+            LvB = spellBox.LvB;
+            LvBFS = spellBox.LvBFS;
+            FS = spellBox.FS;
+            ES = spellBox.ES;
+            FrS = spellBox.FrS;
 
             CalculateRotation();
         }
@@ -471,6 +471,9 @@ namespace Rawr.Elemental
             return r.Substring(1);
         }
 
+        /// <summary>
+        /// An always positive Modulo.
+        /// </summary>
         private static int Mod(int a, int n)
         {
             a = a % n;

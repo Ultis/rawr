@@ -4,17 +4,20 @@ namespace Rawr.Elemental.Spells
 {
 public class ElementalMastery : Spell
     {
-        public ElementalMastery()
+        public ElementalMastery() : base()
         {
-            #region Base Values
+        }
+
+        protected override void SetBaseValues()
+        {
+            base.SetBaseValues();
             missChance = 0;
             cooldown = 180f;
             gcd = 0; // no global cooldown ;)
             shortName = "EM";
-            #endregion
         }
 
-        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
             if (shamanTalents.GlyphofElementalMastery)
                 cooldown -= 30f;

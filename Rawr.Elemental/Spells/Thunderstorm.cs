@@ -4,9 +4,14 @@ namespace Rawr.Elemental.Spells
 {
 public class Thunderstorm : Spell
     {
-        public Thunderstorm()
+        public Thunderstorm() : base()
         {
-            #region Base Values
+        }
+
+        protected override void SetBaseValues()
+        {
+            base.SetBaseValues();
+
             baseMinDamage = 1450;
             baseMaxDamage = 1656;
             castTime = 0f;
@@ -14,10 +19,9 @@ public class Thunderstorm : Spell
             manaCost = 0f;
             cooldown = 45f;
             shortName = "TS";
-            #endregion
         }
 
-        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
             totalCoef += .01f * shamanTalents.Concussion;
             crit += .05f * shamanTalents.CallOfThunder;

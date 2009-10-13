@@ -4,9 +4,14 @@ namespace Rawr.Elemental.Spells
 {
 public class FlameShock : Shock
     {
-        public FlameShock()
+        public FlameShock() : base()
         {
-            #region Base Values
+        }
+
+        protected override void SetBaseValues()
+        {
+            base.SetBaseValues();
+
             baseMinDamage = 500;
             baseMaxDamage = 500;
             spCoef = 1.5f / 3.5f / 2f;
@@ -16,10 +21,9 @@ public class FlameShock : Shock
             manaCost = .17f * Constants.BaseMana;
             cooldown = 6f;
             shortName = "FS";
-            #endregion
         }
 
-        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
             //for reference
             //dotTick = (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)

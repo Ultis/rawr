@@ -4,8 +4,14 @@ namespace Rawr.Elemental.Spells
 {
     public class Wait : Spell
     {
-        public Wait()
+        public Wait() : base()
         {
+        }
+
+        protected override void SetBaseValues()
+        {
+            base.SetBaseValues();
+
             gcd = 0f;
             missChance = 0f;
             totalCoef = 0f;

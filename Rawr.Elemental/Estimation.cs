@@ -7,19 +7,7 @@ namespace Rawr.Elemental
 {
     public class Estimation
     {
-        #region Spells
-        LightningBolt LB;
-        ChainLightning CL;
-        ChainLightning CL2;
-        ChainLightning CL3;
-        ChainLightning CL4;
-        LavaBurst LvB;
-        LavaBurst LvBFS;
-        FlameShock FS;
-        EarthShock ES;
-        FrostShock FrS;
-        Thunderstorm TS;
-        #endregion
+        SpellBox spellbox;
 
         private Stats baseStats, procStats;
         private ShamanTalents talents;
@@ -31,57 +19,39 @@ namespace Rawr.Elemental
             this.procStats = procStats;
             this.talents = talents;
             this.calcOpts = calcOpts;
-            #region Spells
+
             Stats addedStats = baseStats.Clone();
             addedStats.Accumulate(procStats);
+            spellbox = new SpellBox(addedStats, talents);
+        }
 
-            LB = new LightningBolt(addedStats, talents);
-            CL = new ChainLightning(addedStats, talents, 0);
-            CL2 = new ChainLightning(addedStats, talents, 1);
-            CL3 = new ChainLightning(addedStats, talents, 2);
-            CL4 = new ChainLightning(addedStats, talents, 3);
-            LvB = new LavaBurst(addedStats, talents, 0);
-            LvBFS = new LavaBurst(addedStats, talents, 1);
-            FS = new FlameShock(addedStats, talents);
-            ES = new EarthShock(addedStats, talents);
-            FrS = new FrostShock(addedStats, talents);
-            TS = new Thunderstorm(addedStats, talents);
-            #endregion
+        /// <summary>
+        /// Beware when updating: The spells from an earlier returned Rotation are references to the SpellBox from this Estimation.
+        /// </summary>
+        /// <param name="baseStats"></param>
+        /// <param name="procStats"></param>
+        /// <param name="talents"></param>
+        /// <param name="calcOpts"></param>
+        public void Update(Stats baseStats, Stats procStats, ShamanTalents talents, CalculationOptionsElemental calcOpts)
+        {
+            this.baseStats = baseStats;
+            this.procStats = procStats;
+            this.talents = talents;
+            this.calcOpts = calcOpts;
+
+            Stats addedStats = baseStats.Clone();
+            addedStats.Accumulate(procStats);
+            spellbox.Update(addedStats, talents);
         }
 
         private Rotation getPriorityRotation(int type)
         {
-            LightningBolt LB = (LightningBolt)this.LB.Clone();
-            LavaBurst LvB = (LavaBurst)this.LvBFS.Clone();
-            Thunderstorm TS = (Thunderstorm)this.TS.Clone();
-            FlameShock FS = (FlameShock)this.FS.Clone();
-
-            LavaBurst LvBNoFS = (LavaBurst)this.LvB.Clone();
-            ChainLightning CL = (ChainLightning)this.CL.Clone();
-            ChainLightning CL2 = (ChainLightning)this.CL2.Clone();
-            ChainLightning CL3 = (ChainLightning)this.CL3.Clone();
-            ChainLightning CL4 = (ChainLightning)this.CL4.Clone();
-            EarthShock ES = (EarthShock)this.ES.Clone();
-            FrostShock FrS = (FrostShock)this.FrS.Clone();
-
             #region Elemental Mastery
             if (talents.ElementalMastery > 0)
-            {
-                float EMmod = ElementalMastery.getAverageUptime(talents.GlyphofElementalMastery, calcOpts.FightDuration);
-                LB.ApplyEM(EMmod);
-                CL.ApplyEM(EMmod);
-                LvB.ApplyEM(EMmod);
-                TS.ApplyEM(EMmod);
-                FS.ApplyEM(EMmod);
-                CL3.ApplyEM(EMmod);
-                CL4.ApplyEM(EMmod);
-                ES.ApplyEM(EMmod);
-                FrS.ApplyEM(EMmod);
-                LvBNoFS.ApplyEM(EMmod);
-            }
+                spellbox.ApplyEM(ElementalMastery.getAverageUptime(talents.GlyphofElementalMastery, calcOpts.FightDuration));
             #endregion
             
-            return new Rotation(talents, LB, CL, CL2, CL3, CL4, LvBNoFS, LvB, FS, ES, FrS);
+            return new Rotation(talents, spellbox);
         }
 
         public static void solve(CharacterCalculationsElemental calculatedStats, CalculationOptionsElemental calcOpts)
@@ -99,8 +69,7 @@ namespace Rawr.Elemental
              * 
              * Assume LvB used on CD and FS either after LvB, on dot drop or before LvB
              * Filler: LB 
-             * NYI Optional: use CL after every LB
-             * Optional: finish LB cast, or wait until LvB available
+             * NYI Optional: use of CL
              */
             Estimation e;
             Rotation rot;
@@ -120,7 +89,7 @@ namespace Rawr.Elemental
             for (k = 0; k < nPasses; k++)
             {
                 procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
-                e = new Estimation(stats, procStats, talents, calcOpts);
+                e.Update(stats, procStats, talents, calcOpts);
                 rot = e.getPriorityRotation(calcOpts.rotationType);
             }
 
@@ -267,11 +236,7 @@ namespace Rawr.Elemental
                 else
                     continue;
                 
-                if (effect.MaxStack > 1)
-                    statsAverage.Accumulate(effect.Stats, effect.GetAverageStackSize(trigger, procChance, 3f, FightDuration));
-                else
-                    statsAverage.Accumulate( effect.GetAverageStats(trigger, procChance, 3f, FightDuration) );
-                //float chance = effect.GetAverageUptime(trigger, procChance, 3f, FightDuration);
+                effect.AccumulateAverageStats(statsAverage, trigger, procChance, 3f, FightDuration);
             }
             return statsAverage;
         }

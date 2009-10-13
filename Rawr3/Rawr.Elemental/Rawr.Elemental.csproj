@@ -93,6 +93,9 @@
     <Compile Include="..\..\Rawr.Elemental\Spells\Spell.cs">
       <Link>Spell.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\SpellBox.cs">
+      <Link>SpellBox.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\Thunderstorm.cs">
       <Link>Thunderstorm.cs</Link>
     </Compile>

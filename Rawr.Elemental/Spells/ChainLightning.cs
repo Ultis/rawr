@@ -4,11 +4,16 @@ namespace Rawr.Elemental.Spells
 {
 public class ChainLightning : Spell, ILightningOverload
     {
-        private int additionalTargets;
+        private int additionalTargets = 0;
         private float loCoef, lightningSpellpower = 0f, lspCoef;
-        public ChainLightning()
+        public ChainLightning() : base()
         {
-            #region Base Values
+        }
+
+        protected override void SetBaseValues()
+        {
+            base.SetBaseValues();
+
             baseMinDamage = 973;
             baseMaxDamage = 1111;
             baseCastTime = 2f;
@@ -18,14 +23,13 @@ public class ChainLightning : Spell, ILightningOverload
             loCoef = spCoef / 2f;
             manaCost = 0.26f * Constants.BaseMana;
             cooldown = 6f;
-            #endregion
+            lightningSpellpower = 0f;
         }
 
-        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
             Initialize(stats, shamanTalents, 0);
         }
-    
 
         public void Initialize(Stats stats, ShamanTalents shamanTalents, int additionalTargets)
         {

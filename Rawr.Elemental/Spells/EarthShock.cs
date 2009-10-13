@@ -4,19 +4,22 @@ namespace Rawr.Elemental.Spells
 {
 public class EarthShock : Shock
     {
-        public EarthShock()
+        public EarthShock() : base()
         {
-            #region Base Values
+        }
+
+        protected override void SetBaseValues()
+        {
+            base.SetBaseValues();
             baseMinDamage = 854;
             baseMaxDamage = 900;
             spCoef = 1.5f / 3.5f * .9f;
             manaCost = .18f * Constants.BaseMana;
             cooldown = 6f;
             shortName = "ES";
-            #endregion
         }
 
-        public new void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
             totalCoef += .01f * shamanTalents.Concussion;
             manaCost *= 1 - .02f * shamanTalents.Convection;

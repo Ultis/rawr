@@ -106,6 +106,7 @@
     <Compile Include="Spells\LightningBolt.cs" />
     <Compile Include="Spells\Shock.cs" />
     <Compile Include="Spells\Spell.cs" />
+    <Compile Include="Spells\SpellBox.cs" />
     <Compile Include="Spells\Thunderstorm.cs" />
     <Compile Include="Spells\Wait.cs" />
   </ItemGroup>
