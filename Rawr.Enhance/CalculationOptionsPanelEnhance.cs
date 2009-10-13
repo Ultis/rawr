@@ -240,7 +240,7 @@ namespace Rawr.Enhance
                 _inUse = onByDefault;
             }
 
-            public string Name { get { return _priorityName; } }
+            public string PriorityName { get { return _priorityName; } }
             public EnhanceAbility  AbilityType { get { return _abilityType; } }
             public string Description { get { return _description; } }
             public bool Checked { get { return _inUse; } } 

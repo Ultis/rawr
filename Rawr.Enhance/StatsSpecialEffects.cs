@@ -22,7 +22,7 @@ namespace Rawr.Enhance
             Stats statsAverage = new Stats();
             foreach (SpecialEffect effect in _stats.SpecialEffects())
             {
-                statsAverage += getSpecialEffects(effect);
+                statsAverage.Accumulate(getSpecialEffects(effect));
             }
             AddParagon(statsAverage);
             AddHighestStat(statsAverage);
@@ -34,9 +34,9 @@ namespace Rawr.Enhance
             Stats statsAverage = new Stats();
             if (effect.Trigger == Trigger.Use)
             {
-                statsAverage += effect.GetAverageStats();
+                effect.AccumulateAverageStats(statsAverage);
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())
-                    statsAverage += this.getSpecialEffects(e) * (effect.Duration / effect.Cooldown);
+                    statsAverage.Accumulate(this.getSpecialEffects(e) * (effect.Duration / effect.Cooldown));
             }
             else
             {
@@ -100,7 +100,7 @@ namespace Rawr.Enhance
                 }
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())  // deal with secondary effects
                 {
-                    statsAverage += this.getSpecialEffects(e);
+                    statsAverage.Accumulate(this.getSpecialEffects(e));
                 }
                 if (effect.MaxStack > 1)
                 {
@@ -114,11 +114,11 @@ namespace Rawr.Enhance
                     {
                         timeToMax = 2 * buffDuration;
                     }
-                    statsAverage += effect.Stats * (effect.MaxStack * (((buffDuration) - .5f * timeToMax) / (buffDuration)));
+                    statsAverage.Accumulate(effect.Stats * (effect.MaxStack * (((buffDuration) - .5f * timeToMax) / (buffDuration))));
                 }
                 else
                 {
-                    statsAverage += effect.GetAverageStats(trigger, chance, unhastedAttackSpeed, _cs.FightLength);
+                    effect.AccumulateAverageStats(statsAverage, trigger, chance, unhastedAttackSpeed, _cs.FightLength);
                 }
             }
             return statsAverage;

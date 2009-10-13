@@ -63,47 +63,31 @@ namespace Rawr.Enhance
         {
             float gcd = 1.5f;
             string name = "";
-            float totalFightDuration = 0f;
-            int totalIterations = 10;
-            List<Ability> tempAbilities = new List<Ability>();
-        
- //           for (int iteration = 1; iteration <= totalIterations; iteration++)
+            for (float timeElapsed = 0f; timeElapsed < fightLength; timeElapsed += gcd)
             {
-                float deltaDuration = 1f; // 0.995f + .001f * iteration;  // varies fight duration +/- 0.5%
-                float currentFightDuration = fightLength * deltaDuration;
-                totalFightDuration += currentFightDuration;
- //               tempAbilities = SetupAbilities();
-                for (float timeElapsed = 0f; timeElapsed < currentFightDuration; timeElapsed += gcd)
-                {
-                    gcd = 0.1f; // set GCD to small value step for dead time as dead time doesn't use a GCD its just waiting time
-                    name = "deadtime";
-                    float averageLag = _calcOpts.AverageLag;
-                    foreach (Ability ability in _abilities)
-                    {
-                        if (ability.OffCooldown(timeElapsed))
-                        {
-                            ability.AddUse(timeElapsed, averageLag / 1000f);
-                            gcd = ability.GCD;
-                            name = ability.Name;
-                            break;
-                        }
-                    }
-                    // DebugPrint(abilities, timeElapsed, name);
-                }
-                // at this stage abilities now contains the number of procs per fight for each ability as a whole number
-                // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
-                // use beyond fight duration.
+                gcd = 0.1f; // set GCD to small value step for dead time as dead time doesn't use a GCD its just waiting time
+                name = "deadtime";
+                float averageLag = _calcOpts.AverageLag;
                 foreach (Ability ability in _abilities)
                 {
-                    float overrun = ability.Duration - (ability.CooldownOver - currentFightDuration);
-                    ability.AddRemainder(overrun / ability.Duration);
+                    if (ability.OffCooldown(timeElapsed))
+                    {
+                        ability.AddUse(timeElapsed, averageLag / 1000f);
+                        gcd = ability.GCD;
+                        name = ability.Name;
+                        break;
+                    }
                 }
+                // DebugPrint(abilities, timeElapsed, name);
             }
-            // at this stage we have done X iterations with random adjustments to fight duration
-            // now the uses are divided by X to average out over the fights
- //           foreach (Ability ability in abilities)
- //               ability.AverageUses(totalIterations);
- //           averageFightLength = totalFightDuration / totalIterrations;
+            // at this stage abilities now contains the number of procs per fight for each ability as a whole number
+            // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
+            // use beyond fight duration.
+            foreach (Ability ability in _abilities)
+            {
+                float overrun = ability.Duration - (ability.CooldownOver - fightLength);
+                ability.AddRemainder(overrun / ability.Duration);
+            }
         }
 
         private void DebugPrint(List<Ability> abilities, float timeElapsed, string name)
