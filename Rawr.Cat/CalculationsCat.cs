@@ -520,8 +520,10 @@ namespace Rawr.Cat
 			Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 			statsGearEnchantsBuffs.Strength += statsGearEnchantsBuffs.CatFormStrength;
-			
-			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
+
+			Stats statsTotal = statsRace + statsItems;
+			statsTotal.Accumulate(statsBuffs);
+			statsTotal.Accumulate(statsTalents);
 
 			float predatoryStrikesAP = 0f;
 			float fap = 0f;
@@ -594,7 +596,7 @@ namespace Rawr.Cat
 			Stats statsProcs = new Stats();
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating == 0))
 			{ //Calculate all non-ArPen procs first.
-				statsProcs += effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration);
+				statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration));
 			}
 
 			statsProcs.Agility += statsProcs.HighestStat + statsProcs.Paragon;
@@ -606,7 +608,7 @@ namespace Rawr.Cat
 			statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
 			statsProcs.Armor += 2f * statsProcs.Agility;
 			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
-			statsTotal += statsProcs;
+			statsTotal.Accumulate(statsProcs);
 
 			//Handle ArPen procs
 			tempArPenRatings = new List<float>();

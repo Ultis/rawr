@@ -25,6 +25,7 @@ namespace Rawr.Bear
 		public int SurvivalSoftCap = 160000;
 		public int TargetDamage = 65000;
 		public float TargetAttackSpeed = 2.0f;
+		public bool TargetParryHastes = true;
 
 		public bool? CustomUseMaul = null;
 		public bool CustomUseMangle = false;

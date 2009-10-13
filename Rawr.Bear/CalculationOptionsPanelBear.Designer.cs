@@ -51,6 +51,7 @@
 			this.numericUpDownTargetAttackSpeed = new System.Windows.Forms.NumericUpDown();
 			this.comboBoxTargetDamage = new System.Windows.Forms.ComboBox();
 			this.comboBoxSurvivalSoftCap = new System.Windows.Forms.ComboBox();
+			this.checkBoxTargetParryHastes = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreatValue)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
 			this.groupBox1.SuspendLayout();
@@ -419,11 +420,23 @@
 			this.comboBoxSurvivalSoftCap.TabIndex = 1;
 			this.comboBoxSurvivalSoftCap.SelectedIndexChanged += new System.EventHandler(this.comboBoxSurvivalSoftCap_SelectedIndexChanged);
 			// 
+			// checkBoxTargetParryHastes
+			// 
+			this.checkBoxTargetParryHastes.AutoSize = true;
+			this.checkBoxTargetParryHastes.Location = new System.Drawing.Point(10, 336);
+			this.checkBoxTargetParryHastes.Name = "checkBoxTargetParryHastes";
+			this.checkBoxTargetParryHastes.Size = new System.Drawing.Size(120, 17);
+			this.checkBoxTargetParryHastes.TabIndex = 1;
+			this.checkBoxTargetParryHastes.Text = "Target Parry Hastes";
+			this.checkBoxTargetParryHastes.UseVisualStyleBackColor = true;
+			this.checkBoxTargetParryHastes.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
 			// CalculationOptionsPanelBear
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.checkBoxTargetParryHastes);
 			this.Controls.Add(this.numericUpDownSurvivalSoftCap);
 			this.Controls.Add(this.numericUpDownTargetAttackSpeed);
 			this.Controls.Add(this.numericUpDownTargetDamage);
@@ -440,7 +453,7 @@
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
 			this.Name = "CalculationOptionsPanelBear";
-			this.Size = new System.Drawing.Size(260, 338);
+			this.Size = new System.Drawing.Size(260, 363);
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreatValue)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).EndInit();
 			this.groupBox1.ResumeLayout(false);
@@ -478,5 +491,6 @@
 		private System.Windows.Forms.NumericUpDown numericUpDownTargetAttackSpeed;
 		private System.Windows.Forms.ComboBox comboBoxTargetDamage;
 		private System.Windows.Forms.ComboBox comboBoxSurvivalSoftCap;
+		private System.Windows.Forms.CheckBox checkBoxTargetParryHastes;
 	}
 }

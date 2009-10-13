@@ -42,6 +42,7 @@ namespace Rawr.Bear
 			checkBoxSwipe.Checked = calcOpts.CustomUseSwipe;
 			checkBoxFaerieFire.Checked = calcOpts.CustomUseFaerieFire;
 			checkBoxLacerate.Checked = calcOpts.CustomUseLacerate;
+			checkBoxTargetParryHastes.Checked = calcOpts.TargetParryHastes;
 			
 			switch (numericUpDownThreatValue.Value.ToString())
 			{
@@ -109,6 +110,7 @@ namespace Rawr.Bear
 				calcOpts.CustomUseSwipe = checkBoxSwipe.Checked;
 				calcOpts.CustomUseFaerieFire = checkBoxFaerieFire.Checked;
 				calcOpts.CustomUseLacerate = checkBoxLacerate.Checked;
+				calcOpts.TargetParryHastes = checkBoxTargetParryHastes.Checked;
 
 				Character.OnCalculationsInvalidated();
 			}

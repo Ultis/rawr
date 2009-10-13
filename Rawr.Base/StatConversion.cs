@@ -68,7 +68,7 @@ namespace Rawr
         public static readonly float[] YELLOW_DODGE_CHANCE_CAP          = WHITE_DODGE_CHANCE_CAP;
         //public static readonly float[] YELLOW_DODGE_CHANCE_CAP_BEHIND   = WHITE_DODGE_CHANCE_CAP_BEHIND;
 
-        public static readonly float[] WHITE_PARRY_CHANCE_CAP           = new float[] { 0.0500f, 0.0550f, 0.0600f, 0.1375f }; // 13.75%
+        public static readonly float[] WHITE_PARRY_CHANCE_CAP           = new float[] { 0.0500f, 0.0550f, 0.0600f, 0.14f }; // 14%
         //public static readonly float[] WHITE_PARRY_CHANCE_CAP_BEHIND    = new float[] { 0.0000f, 0.0000f, 0.0000f, 0.0000f }; //  0% Attacks from behind can't be parried
         public static readonly float[] YELLOW_PARRY_CHANCE_CAP          = WHITE_PARRY_CHANCE_CAP;
         //public static readonly float[] YELLOW_PARRY_CHANCE_CAP_BEHIND   = WHITE_PARRY_CHANCE_CAP_BEHIND;

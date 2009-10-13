@@ -460,6 +460,20 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.SavageDefenseValue = (float)Math.Floor(blockValue);
 			calculatedStats.SavageDefensePercent = (float)Math.Round(blockedPercent, 5);
 
+			float parryHasteDamageMuliplier = 1.0f;
+			if (calcOpts.TargetParryHastes)
+			{
+				float parryableAttacksPerSecond = 7f / 13.5f + 1f / attackSpeed; //In every 13.5sec period (9 GCDs), 2 should be FFF, so only 7 parryable instants per 13.5sec
+				//Target parries within the first 40% of their swing timer advances their swing timer by 40%
+				//...Within the next 40%, it advances their swing timer to 20% remaining.
+				//So, we average that as a 60% window (since the last 40% only provides half as much haste on average), with a 40% swing advance
+				float parryWindow = calcOpts.TargetAttackSpeed * 0.6f; 
+				float parryableAttacksPerParryWindow = parryableAttacksPerSecond * parryWindow;
+				float chanceParryPerWindow = 1f - (float)Math.Pow(1f - chanceParry, parryableAttacksPerParryWindow);
+				float parryBonusDPSMultiplier = 1f / 0.6f - 1f; //When a parry happens, boss DPS gets muliplied by 1/0.6 for that swing
+				parryHasteDamageMuliplier = 1f + (parryBonusDPSMultiplier * chanceParryPerWindow);
+			}
+
 			//Out of 100 attacks, you'll take...
 			float crits = Math.Min(Math.Max(0f, 1f - calculatedStats.AvoidancePostDR), (0.05f + levelDifference) - calculatedStats.CappedCritReduction);
 			//float crushes = targetLevel == 73 ? Math.Max(0f, Math.Min(15f, 100f - (crits + calculatedStats.AvoidancePreDR)) - stats.CritChanceReduction) : 0f;
@@ -468,7 +482,7 @@ the Threat Scale defined on the Options tab.",
 			crits *= (1f - calculatedStats.ConstantDamageReduction) * 2f;
 			//crushes *= (100f - calculatedStats.Mitigation) * .015f;
 			hits *= (1f - calculatedStats.ConstantDamageReduction);
-			calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent);
+			calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent) * parryHasteDamageMuliplier;
 			calculatedStats.TotalMitigation = 1f - calculatedStats.DamageTaken;
 
 			calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - calculatedStats.ConstantDamageReduction));
