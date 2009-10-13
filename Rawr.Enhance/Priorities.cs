@@ -94,7 +94,10 @@ namespace Rawr.Enhance
                 // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
                 // use beyond fight duration.
                 foreach (Ability ability in _abilities)
-                    ability.AddRemainder((ability.Duration - ability.CooldownOver - currentFightDuration) / ability.Duration);
+                {
+                    float overrun = ability.Duration - (ability.CooldownOver - currentFightDuration);
+                    ability.AddRemainder(overrun / ability.Duration);
+                }
             }
             // at this stage we have done X iterations with random adjustments to fight duration
             // now the uses are divided by X to average out over the fights
