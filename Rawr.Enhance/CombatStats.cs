@@ -22,6 +22,7 @@ namespace Rawr.Enhance
         private float chanceDodgeMH = 0f;
         private float chanceDodgeOH = 0f;
         private float chanceParryMH = 0f;
+        
         private float chanceParryOH = 0f;
         private float expertiseBonusMH = 0f;
         private float expertiseBonusOH = 0f;
