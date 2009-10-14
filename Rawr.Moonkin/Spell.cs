@@ -182,7 +182,7 @@ namespace Rawr.Moonkin
                 };
             }
             // Moonkin 4T8 set bonus (15% chance on IS tick to proc an instant-cast Starfire)
-            else if (effect.Trigger == Trigger.InsectSwarmTick)
+            else if (effect.Stats.StarfireProc == 1)
             {
                 CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
@@ -220,7 +220,8 @@ namespace Rawr.Moonkin
                 Effect.Trigger == Trigger.SpellMiss ||
                 Effect.Trigger == Trigger.Use ||
                 Effect.Trigger == Trigger.MoonfireCast ||
-                Effect.Trigger == Trigger.MoonfireTick)
+                Effect.Trigger == Trigger.MoonfireTick ||
+				Effect.Trigger == Trigger.InsectSwarmTick)
             {
                 Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
@@ -229,9 +230,9 @@ namespace Rawr.Moonkin
                     Stats st = e.Stats;
                     float spellPower = st.SpellPower;
                     float critRating = st.CritRating;
-                    float spellCrit = StatConversion.GetSpellCritFromRating(critRating);
+                    float spellCrit = StatConversion.GetSpellCritFromRating(critRating * maxStack);
                     float hasteRating = st.HasteRating;
-                    float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating);
+                    float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating * maxStack);
                     spellHaste += st.SpellHaste;
                     float spirit = st.Spirit;
                     float highestStat = st.HighestStat;
@@ -285,9 +286,9 @@ namespace Rawr.Moonkin
                     Stats st = e.Stats;
                     float spellPower = st.SpellPower;
                     float critRating = st.CritRating;
-                    float spellCrit = StatConversion.GetSpellCritFromRating(critRating);
+                    float spellCrit = StatConversion.GetSpellCritFromRating(critRating * maxStack);
                     float hasteRating = st.HasteRating;
-                    float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating);
+                    float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating * maxStack);
                     spellHaste += st.SpellHaste;
                     float spirit = st.Spirit;
                     float highestStat = st.HighestStat;
