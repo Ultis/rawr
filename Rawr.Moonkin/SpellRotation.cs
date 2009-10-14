@@ -334,7 +334,7 @@ namespace Rawr.Moonkin
                 preSolarCast.CriticalChanceModifier += 0.01f * impInsectSwarm;
 
             Spell lunarEclipseCast = new Spell(preSolarCast);
-            lunarEclipseCast.CriticalChanceModifier = (float)Math.Min(1.0f, lunarEclipseCast.CriticalChanceModifier + eclipseMultiplier);
+            lunarEclipseCast.CriticalChanceModifier = (float)Math.Min(1.0f - spellCrit, lunarEclipseCast.CriticalChanceModifier + eclipseMultiplier);
 
             DoMainNuke(talents, calcs, ref preSolarCast, spellPower, spellHit, spellCrit, spellHaste);
             DoMainNuke(talents, calcs, ref solarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
