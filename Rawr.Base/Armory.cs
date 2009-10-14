@@ -412,6 +412,9 @@ namespace Rawr
                 ItemLocation location = LocationFactory.Create(docItem, id.ToString());
                 if (docItem == null || docItem.SelectSingleNode("/page/itemTooltips/itemTooltip[1]") == null)
                 {
+                    Item wowhead = null;
+                    wowhead = Wowhead.GetItem(id);
+                    if (wowhead != null) { return wowhead; }// else we throw the error as we didn't get it from Wowhead either
                     StatusMessaging.ReportError("Get Item", null, "No item returned from Armory for " + id);
                     return null;
                 }
