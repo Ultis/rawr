@@ -97,6 +97,7 @@ namespace Rawr.DPSWarr {
         #region Functions
         public virtual void Initialize(CharacterCalculationsDPSWarr calcs) {
             this.calcs = calcs;
+            StatS = calcs.AverageStats;
 
             initAbilities();
             //doIterations();
