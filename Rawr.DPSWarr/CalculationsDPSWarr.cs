@@ -1700,6 +1700,7 @@ These numbers to do not include racial bonuses.",
 
             Stats effectStats = effect.Stats;
             float upTime = 0f;
+            float avgStack = 1f;
 
             switch (effect.Trigger) {
                 case Trigger.Use:
@@ -1713,37 +1714,45 @@ These numbers to do not include racial bonuses.",
                         effectStats = _stats2;
                     } else {
                         upTime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                        if (effect.MaxStack > 1f) { avgStack *= effect.GetAverageStackSize(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
                     }
                     break;
                 case Trigger.MeleeHit:
                 case Trigger.PhysicalHit:
                     upTime = effect.GetAverageUptime(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    if (effect.MaxStack > 1f) { avgStack *= effect.GetAverageStackSize(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
                     break;
                 case Trigger.MeleeCrit:
                 case Trigger.PhysicalCrit:
                     upTime = effect.GetAverageUptime(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    if (effect.MaxStack > 1f) { avgStack *= effect.GetAverageStackSize(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
                     break;
                 case Trigger.DoTTick:
                     upTime = effect.GetAverageUptime(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); // 1/sec DeepWounds, 1/3sec Rend
+                    if (effect.MaxStack > 1f) { avgStack *= effect.GetAverageStackSize(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
                     break;
                 case Trigger.DamageDone: // physical and dots
                     upTime = effect.GetAverageUptime(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    if (effect.MaxStack > 1f) { avgStack *= effect.GetAverageStackSize(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
                     break;
                 case Trigger.DamageTaken: // physical and dots
                     upTime = effect.GetAverageUptime(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    if (effect.MaxStack > 1f) { avgStack *= effect.GetAverageStackSize(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
                     break;
                 case Trigger.DamageAvoided: // Boss AoE attacks we manage to avoid
                     // 0.1f need to be replaced with the player's avoidance stats
                     upTime = effect.GetAverageUptime(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    if (effect.MaxStack > 1f) { avgStack *= effect.GetAverageStackSize(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
                     break;
                 case Trigger.HSorSLHit: // Set bonus handler
                     //Rot._SL_GCDs = Rot._SL_GCDs;
                     //Rot._HS_Acts = Rot._HS_Acts;
                     upTime = effect.GetAverageUptime(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    if (effect.MaxStack > 1f) { avgStack *= effect.GetAverageStackSize(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
                     break;
             }
             if (upTime > 0f && upTime <= 1f) {
-                applyTo.Accumulate(effectStats, upTime);
+                applyTo.Accumulate(effectStats, upTime * avgStack);
                 return upTime;
             }
             return 0f;

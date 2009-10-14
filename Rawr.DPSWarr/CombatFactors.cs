@@ -275,9 +275,9 @@ namespace Rawr.DPSWarr {
         private float MhYwCritChance {
             get {
                 if (!useMH) { return 0f; }
-                return (StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating)) +
-                       ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f)
-                 * (1f - _c_ymiss - _c_mhdodge);
+                return ((StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating)) +
+                       ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f))
+                        * (1f - _c_ymiss - _c_mhdodge);
             }
         }
         private float OhWhCritChance {
@@ -290,8 +290,8 @@ namespace Rawr.DPSWarr {
         private float OhYwCritChance {
             get {
                 if (!useOH) { return 0f; }
-                return (StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating)) +
-                ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f)
+                return ((StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating)) +
+                ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f))
                 * (1f - _c_ymiss - _c_ohdodge);
             }
         }
