@@ -78,6 +78,7 @@
     <Compile Include="EnhSim.cs" />
     <Compile Include="Gemming.cs" />
     <Compile Include="OldCode.cs" />
+    <Compile Include="PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Priorities.cs" />
     <Compile Include="StatsSpecialEffects.cs" />

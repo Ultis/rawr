@@ -198,3 +198,89 @@ CombatStats.cs
              };
         }
 */
+
+/* Priorities
+
+        public void CalculateAbilities()
+        {
+            float gcd = 1.5f;
+            string name = "";
+            int deadtimes = 0;
+            int totalAbilityUses = 0;
+            float timeElapsed = 0f;
+            float averageLag = _calcOpts.AverageLag / 1000f;
+            PriorityQueue<Ability> queue = new PriorityQueue<Ability>();
+            foreach (Ability ability in _abilities)
+                queue.Enqueue(ability);
+            while (queue.Count > 0)
+            {
+                Ability ability = queue.Dequeue();
+                if (ability.MissedCooldown(timeElapsed))
+                {   // we missed a cooldown so set new cooldown to current time
+                    ability.UpdateCooldown(timeElapsed);
+                    deadtimes++;
+                    name = "deadtime for " + ability.Name;
+                }
+                else
+                {
+                    // do something to ability
+                    ability.Use(timeElapsed); // 
+                    gcd = ability.GCD;
+                    name = ability.Name;
+                    timeElapsed += gcd + averageLag;
+                    totalAbilityUses++;
+                }
+                if (ability.CooldownOver < fightLength)
+                {  // adds ability back into queue if its available again before end of fight
+                    queue.Enqueue(ability);
+                }
+     //           DebugPrint(_abilities, timeElapsed - gcd - averageLag, name);
+            }
+            // at this stage abilities now contains the number of procs per fight for each ability as a whole number
+            // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
+            // use beyond fight duration.
+            foreach (Ability ability in _abilities)
+            {
+                float overrun = ability.Duration - (ability.CooldownOver - fightLength);
+                ability.AddUses(overrun / ability.Duration);
+            }
+         //   DebugPrint(_abilities, timeElapsed - gcd - averageLag, "Final uses");
+        }
+        
+        public void OldCalculateAbilities()
+        {
+            float gcd = 1.5f;
+            string name = "";
+            int totalAbilityUses = 0;
+            int deadtimes = 0;
+            float averageLag = _calcOpts.AverageLag / 1000f;
+            for (float timeElapsed = 0f; timeElapsed < fightLength; timeElapsed += gcd) 
+            {
+                gcd = 0.1f; // set GCD to small value step for dead time as dead time doesn't use a GCD its just waiting time
+                name = "deadtime";
+                foreach (Ability ability in _abilities)
+                {
+                    if (ability.OffCooldown(timeElapsed))
+                    {
+                        ability.Use(timeElapsed);
+                        gcd = ability.GCD;
+                        name = ability.Name;
+                        totalAbilityUses++;
+                        timeElapsed += averageLag;
+                        break;
+                    }
+                }
+                if (name.Equals("deadtime")) deadtimes++;
+                DebugPrint(_abilities, timeElapsed, name);
+            }
+            // at this stage abilities now contains the number of procs per fight for each ability as a whole number
+            // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
+            // use beyond fight duration.
+            foreach (Ability ability in _abilities)
+            {
+                float overrun = ability.Duration - (ability.CooldownOver - fightLength);
+                ability.AddUses(overrun / ability.Duration);
+            }
+            DebugPrint(_abilities, fightLength, "Final uses");
+        }
+*/

@@ -35,26 +35,26 @@ namespace Rawr.Enhance
             float shockMana = _talents.ShamanisticFocus == 1 ? 0.55f * 0.18f : 0.18f; // 45% reduction if Shamanistic Focus
             float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
             if (_talents.ShamanisticRage == 1)
-                abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, gcd, 0f, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, gcd, 0f, ++priority, true));
             if (_talents.FeralSpirit == 1)
-                abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, gcd, 0.12f, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, gcd, 0.12f, ++priority, false));
             if (_talents.MaelstromWeapon > 0)
-                abilities.Add(new Ability(EnhanceAbility.LightningBolt, _cs.SecondsToFiveStack, gcd, 0.1f * convection, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.LightningBolt, _cs.SecondsToFiveStack, gcd, 0.1f * convection, ++priority, false));
             if (_talents.Stormstrike == 1)
-                abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, gcd, 0.08f, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, gcd, 0.08f, ++priority, false));
             if (_character.ShamanTalents.GlyphofShocking)
-                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, shockMana * convection, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, shockMana * convection, ++priority, false));
             else
-                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, shockMana * convection, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, shockMana * convection, ++priority, false));
             if (_talents.LavaLash == 1)
-                abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, gcd, 0.04f, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, gcd, 0.04f, ++priority, false));
             if (_talents.StaticShock > 0)
-                abilities.Add(new Ability(EnhanceAbility.LightningShield, _cs.StaticShockAvDuration, gcd, 0f, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.LightningShield, _cs.StaticShockAvDuration, gcd, 0f, ++priority, true));
             if (_calcOpts.Magma)
-                abilities.Add(new Ability(EnhanceAbility.MagmaTotem, 20f, 1.0f, 0.27f, ++priority));
+                abilities.Add(new Ability(EnhanceAbility.MagmaTotem, 20f, 1.0f, 0.27f, ++priority, false));
             else
-                abilities.Add(new Ability(EnhanceAbility.SearingTotem, 60f, 1.0f, 0.07f, ++priority));
-            abilities.Add(new Ability(EnhanceAbility.RefreshTotems, 300f, 1.0f, 0.24f, ++priority)); // patch 3.2 takes just 1 second GCD to refresh totems.
+                abilities.Add(new Ability(EnhanceAbility.SearingTotem, 60f, 1.0f, 0.07f, ++priority, false));
+            abilities.Add(new Ability(EnhanceAbility.RefreshTotems, 300f, 1.0f, 0.24f, ++priority, true)); // patch 3.2 takes just 1 second GCD to refresh totems.
             abilities.Sort();
             return abilities;
         }
@@ -62,56 +62,47 @@ namespace Rawr.Enhance
         public void CalculateAbilities()
         {
             float gcd = 1.5f;
-            string name = "";
-            int totalIterations = 1;
-            List<Ability>[] tempAbilities = new List<Ability>[totalIterations];
-            for (int iteration = 0; iteration < totalIterations; iteration++)
-            {
-                float currentFightLength = fightLength * (1f + .02f * iteration);
-                tempAbilities[iteration] = SetupAbilities();
-                for (float timeElapsed = 0f; timeElapsed < currentFightLength; timeElapsed += gcd)
-                {
-                    gcd = 0.1f; // set GCD to small value step for dead time as dead time doesn't use a GCD its just waiting time
-                    name = "deadtime";
-                    float averageLag = _calcOpts.AverageLag;
-                    foreach (Ability ability in tempAbilities[iteration])
-                    {
-                        if (ability.OffCooldown(timeElapsed))
-                        {
-                            ability.AddUse(timeElapsed, averageLag / 1000f);
-                            gcd = ability.GCD;
-                            name = ability.Name;
-                            break;
-                        }
-                    }
-                    // DebugPrint(abilities, timeElapsed, name);
-                }
-                // at this stage abilities now contains the number of procs per fight for each ability as a whole number
-                // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
-                // use beyond fight duration.
-                foreach (Ability ability in tempAbilities[iteration])
-                {
-                    float overrun = ability.Duration - (ability.CooldownOver - currentFightLength);
-                    ability.AddUses(overrun / ability.Duration);
-                    foreach (Ability a in _abilities)
-                    {
-                        if (a.AbilityType == ability.AbilityType)
-                        {
-                            a.AddUses(ability.Uses);
-                            break;
-                        }
-                    }
-                }
-            }
-            // we now have "totalIterations" iterations +/- 10% combat duration average them out 
+            float timeElapsed = 0f;
+            float averageLag = _calcOpts.AverageLag / 1000f;
+            PriorityQueue<Ability> queue = new PriorityQueue<Ability>();
             foreach (Ability ability in _abilities)
-                ability.AverageUses(totalIterations);
+                queue.Enqueue(ability);
+            while (queue.Count > 0)
+            {
+                Ability ability = queue.Dequeue();
+                if (ability.MissedCooldown(timeElapsed))
+                {   // we missed a cooldown so set new cooldown to current time
+                    ability.UpdateCooldown(timeElapsed);
+                }
+                else
+                {
+                    // do something to ability
+                    ability.Use(timeElapsed); // 
+                    gcd = ability.GCD;
+                    timeElapsed += gcd + averageLag;
+                }
+                if (ability.CooldownOver < fightLength)
+                {  // adds ability back into queue if its available again before end of fight
+                    queue.Enqueue(ability);
+                }
+     //           DebugPrint(_abilities, timeElapsed - gcd - averageLag, name);
+            }
+            // at this stage abilities now contains the number of procs per fight for each ability as a whole number
+            // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
+            // use beyond fight duration.
+            foreach (Ability ability in _abilities)
+            {
+                float overrun = ability.Duration - (ability.CooldownOver - fightLength);
+                ability.AddUses(overrun / ability.Duration);
+            }
+         //   DebugPrint(_abilities, timeElapsed - gcd - averageLag, "Final uses");
         }
-
+        
         private void DebugPrint(List<Ability> abilities, float timeElapsed, string name)
         {
-            System.Diagnostics.Debug.Print(
-                "Time: {0} - FS {1}, {2} - LB {3}, {4} - SS {5}, {6} - ES {7}, {8} - LL {9}, {10} - LS {11}, {12} - MT {13}, {14} - used {15}",
+            if (abilities.Count > 3)
+                System.Diagnostics.Debug.Print(
+                    "Time: {0} - FS {1}, {2} - LB {3}, {4} - SS {5}, {6} - ES {7}, {8} - LL {9}, {10} - LS {11}, {12} - MT {13}, {14} - used {15}",
                    timeElapsed,
                    abilities[0].Uses, abilities[0].CooldownOver,
                    abilities[1].Uses, abilities[1].CooldownOver,
@@ -144,9 +135,10 @@ namespace Rawr.Enhance
         private float _uses;
         private float _manacost;
         private float _gcd = 1.5f;
-        private int baseMana = 4386;
+        private int baseMana = 4396;
+        private float timedrift = 0.25f;
         
-        public Ability(EnhanceAbility abilityType, float duration, float gcd, float manacost, int priority)
+        public Ability(EnhanceAbility abilityType, float duration, float gcd, float manacost, int priority, bool useBeforeCombat)
         {
             _abilityType = abilityType;
             _name = abilityType.ToString();
@@ -155,7 +147,10 @@ namespace Rawr.Enhance
             _manacost = baseMana * manacost; 
             _gcd = gcd;
             //TODO initial cooldown on SR is when you are almost out of mana for now use its duration ie: 60 seconds
-            _cooldownOver = abilityType == EnhanceAbility.ShamanisticRage ? duration : 0f; 
+            if (useBeforeCombat)  // if ability is to be used before start of combat refresh is after first duration over (eg: totems)
+                _cooldownOver = duration;
+            else
+                _cooldownOver = 0f;
             _uses = 0;
         }
 
@@ -167,10 +162,10 @@ namespace Rawr.Enhance
         public float Uses { get { return _uses; } }
         public float ManaCost { get { return _manacost; } }
 
-        public void AddUse(float useTime, float lag)
+        public void Use(float useTime)
         {
             _uses++;
-            _cooldownOver = useTime + _duration + lag;
+            _cooldownOver = useTime + _duration;
         }
 
         public void AddUses(float uses)
@@ -183,6 +178,16 @@ namespace Rawr.Enhance
             _uses /= iterations;
         }
 
+        public void UpdateCooldown(float time)
+        {
+            _cooldownOver = time;
+        }
+
+        public bool MissedCooldown(float starttime)
+        {
+            return _cooldownOver < starttime;
+        }
+
         public bool OffCooldown(float starttime)
         {
             return starttime >= _cooldownOver;
@@ -190,9 +195,14 @@ namespace Rawr.Enhance
 
         public int CompareTo(Ability other)
         {
-            return _priority.CompareTo(other._priority);
+            float diff = _cooldownOver - other._cooldownOver;
+            if (diff < -timedrift)  // current ability is off cooldown earlier than other ability
+                return -1;
+            else if (diff > timedrift) // current ability is off cooldown later than other ability
+                return 1;
+            else  // off cooldown at same time so use highest priority ability
+               return _priority.CompareTo(other._priority);
         }
-
     }
     #endregion
 
