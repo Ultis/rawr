@@ -744,7 +744,7 @@ namespace Rawr.Moonkin
             if (insectSwarm != null)
                 preLunarCast.AllDamageModifier *= 1 + 0.01f * impInsectSwarm;
 
-            Spell solarEclipseCast = new Spell(solver.FindSpell("W"));
+            Spell solarEclipseCast = new Spell(preLunarCast);
 
             // Eclipse bonus and improved Insect Swarm
 			// NOTE: Eclipse bonus additive with Moonfury and 4T9; multiplicative with everything else
@@ -758,10 +758,10 @@ namespace Rawr.Moonkin
             if (moonfire != null)
                 preSolarCast.CriticalChanceModifier += 0.01f * impInsectSwarm;
 
-            Spell lunarEclipseCast = new Spell(solver.FindSpell("SF"));
+            Spell lunarEclipseCast = new Spell(preSolarCast);
             lunarEclipseCast.CriticalChanceModifier += eclipseMultiplier;
-            if (moonfire != null)
-                lunarEclipseCast.CriticalChanceModifier += 0.01f * impInsectSwarm;
+            /*if (moonfire != null)
+                lunarEclipseCast.CriticalChanceModifier += 0.01f * impInsectSwarm;*/
 
             DoMainNuke(talents, calcs, ref preSolarCast, spellPower, spellHit, spellCrit, spellHaste);
             DoMainNuke(talents, calcs, ref solarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
