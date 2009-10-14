@@ -109,13 +109,7 @@ namespace Rawr
 
         void _menuItemEquipCustomizedItem_Click(object sender, EventArgs e)
         {
-            FormItemInstance form = new FormItemInstance();
-            form.CharacterSlot = _equipSlot;
-            form.ItemInstance = _item.Clone();
-            if (form.ShowDialog(FormMain.Instance) == DialogResult.OK)
-            {
-                Character[_equipSlot] = form.ItemInstance == null ? null : form.ItemInstance.Clone();
-            }
+            EquipCustomisedItem(_item, _equipSlot);
         }
 
         void _menuItemCustomizeItem_Click(object sender, EventArgs e)
@@ -143,6 +137,19 @@ namespace Rawr
                 FormUpgradeComparison.Instance.BringToFront();
             }
             optimize.Dispose();
+        }
+
+        public void EquipCustomisedItem(ItemInstance item, CharacterSlot equipSlot)
+        {
+            _item = item;
+            _equipSlot = equipSlot;
+            FormItemInstance form = new FormItemInstance();
+            form.CharacterSlot = _equipSlot;
+            form.ItemInstance = _item.Clone();
+            if (form.ShowDialog(FormMain.Instance) == DialogResult.OK)
+            {
+                Character[_equipSlot] = form.ItemInstance == null ? null : form.ItemInstance.Clone();
+            }
         }
 
         public void Show(Character character, ItemInstance item, CharacterSlot equipSlot, bool allowDelete)
