@@ -70,14 +70,16 @@ namespace Rawr.Enhance
             while (queue.Count > 0)
             {
                 Ability ability = queue.Dequeue();
-                if (ability.MissedCooldown(timeElapsed))
-                {   // we missed a cooldown so set new cooldown to current time
+                if (ability.MissedCooldown(timeElapsed)) // we missed a cooldown so set new cooldown to current time
                     ability.UpdateCooldown(timeElapsed);
-                }
                 else
                 {
-                    // do something to ability
-                    ability.Use(timeElapsed); // 
+                    // if we have chosen to wait a fraction of a second for next ability 
+                    // then we need to ensure that the current time starts when ability is 
+                    // actually off cooldown
+                    if (ability.CooldownOver > timeElapsed)
+                        timeElapsed = ability.CooldownOver; 
+                    ability.Use(timeElapsed); // consider adding human delay factor to time elapsed as to when next comes off CD
                     gcd = ability.GCD;
                     timeElapsed += gcd + averageLag;
                 }
@@ -85,7 +87,7 @@ namespace Rawr.Enhance
                 {  // adds ability back into queue if its available again before end of fight
                     queue.Enqueue(ability);
                 }
-     //           DebugPrint(_abilities, timeElapsed - gcd - averageLag, name);
+                // DebugPrint(_abilities, timeElapsed - gcd - averageLag, name);
             }
             // at this stage abilities now contains the number of procs per fight for each ability as a whole number
             // to avoid big stepping problems work out the fraction of the ability use based on how long until next 
@@ -95,7 +97,7 @@ namespace Rawr.Enhance
                 float overrun = ability.Duration - (ability.CooldownOver - fightLength);
                 ability.AddUses(overrun / ability.Duration);
             }
-         //   DebugPrint(_abilities, timeElapsed - gcd - averageLag, "Final uses");
+            // DebugPrint(_abilities, timeElapsed - gcd - averageLag, "Final uses");
         }
         
         private void DebugPrint(List<Ability> abilities, float timeElapsed, string name)
@@ -136,7 +138,7 @@ namespace Rawr.Enhance
         private float _manacost;
         private float _gcd = 1.5f;
         private int baseMana = 4396;
-        private float timedrift = 0.25f;
+        private float timedrift = 0.1f;
         
         public Ability(EnhanceAbility abilityType, float duration, float gcd, float manacost, int priority, bool useBeforeCombat)
         {
