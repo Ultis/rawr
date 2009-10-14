@@ -299,8 +299,8 @@ namespace Rawr.Moonkin
             bool starfireGlyph = talents.GlyphOfStarfire;
             int impInsectSwarm = talents.ImprovedInsectSwarm;
 
-            float moonfireCasts = SpellsUsed.Contains("MF") ? 2.0f : 0.0f;
-            float insectSwarmCasts = SpellsUsed.Contains("IS") ? 2.0f : 0.0f;
+            float moonfireCasts = SpellsUsed.Contains("MF") ? 1.0f : 0.0f;
+            float insectSwarmCasts = SpellsUsed.Contains("IS") ? 1.0f : 0.0f;
 
             Spell moonfire = moonfireCasts > 0 ? solver.FindSpell("MF") : null;
             Spell insectSwarm = insectSwarmCasts > 0 ? solver.FindSpell("IS") : null;
@@ -341,10 +341,20 @@ namespace Rawr.Moonkin
             DoMainNuke(talents, calcs, ref preLunarCast, spellPower, spellHit, spellCrit, spellHaste);
             DoMainNuke(talents, calcs, ref lunarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
 
+            float moonfireRatio = 0.0f;
+            float insectSwarmRatio = 0.0f;
             if (moonfire != null)
+            {
                 DoDotSpell(calcs, ref moonfire, spellPower, spellHit, spellCrit, spellHaste);
+                moonfireRatio = moonfire.CastTime / moonfire.DotEffect.Duration;
+            }
             if (insectSwarm != null)
+            {
                 DoDotSpell(calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
+                insectSwarmRatio = insectSwarm.CastTime / insectSwarm.DotEffect.Duration;
+            }
+
+            float castRatio = moonfireRatio + (1 - moonfireRatio) * insectSwarmRatio;
 
             float lunarProcChance = (spellCrit + preLunarCast.CriticalChanceModifier) * spellHit * talents.Eclipse / 3.0f * 0.6f;
             float castsToProcLunar = 1.0f / lunarProcChance;
@@ -354,8 +364,6 @@ namespace Rawr.Moonkin
             float castsToProcSolar = 1.0f / solarProcChance;
             float timeToProcSolar = preSolarCast.CastTime * (castsToProcSolar - 0.5f);
 
-            float rotationLength = 2 * eclipseDuration + timeToProcLunar + timeToProcSolar + 2 * insectSwarmCasts + 2 * moonfireCasts;
-
             float preLunarTime = timeToProcLunar + (preLunarCast.CastTime * 0.5f) + preLunarCast.NGCastTime * 1.5f;
             float preLunarDPS = preLunarCast.DamagePerHit / preLunarCast.CastTime;
             float preLunarManaUsed = preLunarCast.BaseManaCost / preLunarCast.CastTime * preLunarTime;
@@ -363,7 +371,7 @@ namespace Rawr.Moonkin
                 ((spellCrit + preLunarCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
                 (preLunarCast.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana);
 
-            float lunarTime = eclipseDuration - (preLunarCast.NGCastTime * 1.5f) - lunarEclipseCast.CastTime * 0.5f;
+            float lunarTime = (eclipseDuration - (preLunarCast.NGCastTime * 1.5f) - lunarEclipseCast.CastTime * 0.5f) * (1.0f - castRatio);
             float lunarDPS = lunarEclipseCast.DamagePerHit / lunarEclipseCast.CastTime;
             float lunarManaUsed = lunarEclipseCast.BaseManaCost / lunarEclipseCast.CastTime * lunarTime;
             float lunarManaGained = (lunarEclipseCast.BaseManaCost * omenOfClarityProcChance) +
@@ -377,31 +385,49 @@ namespace Rawr.Moonkin
                 ((spellCrit + preSolarCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
                 (preSolarCast.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana);
 
-            float solarTime = eclipseDuration - (preSolarCast.NGCastTime) - (preLunarCast.CastTime * 0.5f);
+            float solarTime = (eclipseDuration - (preSolarCast.NGCastTime) - (preLunarCast.CastTime * 0.5f)) * (1.0f - castRatio);
             float solarDPS = solarEclipseCast.DamagePerHit / solarEclipseCast.CastTime;
             float solarManaUsed = solarEclipseCast.BaseManaCost / solarEclipseCast.CastTime * solarTime;
             float solarManaGained = (solarEclipseCast.BaseManaCost * omenOfClarityProcChance) +
                 ((spellCrit + solarEclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
                 (solarEclipseCast.BaseCastTime / 60.0f * calcs.BasicStats.ManaRestoreFromBaseManaPPM * CalculationsMoonkin.BaseMana);
 
-            // Moonfire tick calculation:
-            // Min(rotationLength, SFglyph + regMF + regMF) / tickLength if 100% uptime specified
-            float preSolarMfTicks = moonfire != null ? (float)Math.Min(moonfire.CastTime + ((insectSwarm != null ? insectSwarm.CastTime : 0.0f) + preSolarTime + solarTime) / 3, moonfire.DotEffect.NumberOfTicks) : 0.0f;
-            float preLunarMfTicks = moonfire != null ? (float)Math.Min(moonfire.CastTime + ((insectSwarm != null ? insectSwarm.CastTime : 0.0f) + preLunarTime + lunarTime) / 3, moonfire.DotEffect.NumberOfTicks) : 0.0f;
-            float moonfireTicks = preSolarMfTicks + preLunarMfTicks;
+            float rotationLength = (solarTime + lunarTime + preSolarTime + preLunarTime) / (1 - castRatio);
+
+            float etSpentOnMFMFPriority = rotationLength * moonfireRatio;
+            float etSpentOnISMFPriority = rotationLength * castRatio - etSpentOnMFMFPriority;
+            float etSpentOnISISPriority = rotationLength * insectSwarmRatio;
+            float etSpentOnMFISPriority = rotationLength * castRatio - etSpentOnISISPriority;
+
+            float moonfireDamagePerCastTime = moonfireRatio > 0 ? (moonfire.DamagePerHit + moonfire.DotEffect.DamagePerHit) / moonfire.CastTime : 0.0f;
+            float insectSwarmDamagePerCastTime = insectSwarmRatio > 0 ? insectSwarm.DotEffect.DamagePerHit / insectSwarm.CastTime : 0.0f;
+
+            float dotDamageMoonfirePriority = etSpentOnMFMFPriority * moonfireDamagePerCastTime + etSpentOnISMFPriority * insectSwarmDamagePerCastTime;
+            float dotDamageInsectSwarmPriority = etSpentOnISISPriority * insectSwarmDamagePerCastTime + etSpentOnMFISPriority * moonfireDamagePerCastTime;
+
+            float totalDotDamage = 0.0f;
+
+            if (dotDamageMoonfirePriority > dotDamageInsectSwarmPriority)
+            {
+                moonfireCasts = moonfireRatio > 0 ? etSpentOnMFMFPriority / moonfire.CastTime : 0.0f;
+                insectSwarmCasts = insectSwarmRatio > 0 ? etSpentOnISMFPriority / insectSwarm.CastTime : 0.0f;
+                totalDotDamage = dotDamageMoonfirePriority;
+            }
+            else
+            {
+                moonfireCasts = moonfireRatio > 0 ? etSpentOnMFISPriority / moonfire.CastTime : 0.0f;
+                insectSwarmCasts = insectSwarmRatio > 0 ? etSpentOnISISPriority / insectSwarm.CastTime : 0.0f;
+                totalDotDamage = dotDamageInsectSwarmPriority;
+            }
+
+            float moonfireTicks = moonfire != null ? moonfireCasts * moonfire.DotEffect.NumberOfTicks : 0.0f;
             float insectSwarmTicks = insectSwarm != null ? insectSwarmCasts * insectSwarm.DotEffect.NumberOfTicks : 0.0f;
-
-            float moonfireDamage = moonfire != null ? moonfireCasts * moonfire.DamagePerHit + (moonfire.DotEffect.DamagePerHit / moonfire.DotEffect.NumberOfTicks) * moonfireTicks : 0.0f;
-            float insectSwarmDamage = insectSwarm != null ? insectSwarmCasts * insectSwarm.DotEffect.DamagePerHit : 0.0f;
-
-            float moonfireTime = moonfire != null ? moonfireCasts * moonfire.CastTime : 0.0f;
-            float insectSwarmTime = insectSwarm != null ? insectSwarmCasts * insectSwarm.CastTime : 0.0f;
 
             float moonfireManaUsed = moonfire != null ? moonfireCasts * moonfire.BaseManaCost : 0.0f;
             float insectSwarmManaUsed = insectSwarm != null ? insectSwarmCasts * insectSwarm.BaseManaCost : 0.0f;
 
             float damageDone = preSolarTime * preSolarDPS + solarTime * solarDPS + preLunarTime * preLunarDPS + lunarTime * lunarDPS +
-                moonfireDamage + insectSwarmDamage;
+                totalDotDamage;
 
             Duration = rotationLength;
             DotTicks = moonfireTicks + insectSwarmTicks;
