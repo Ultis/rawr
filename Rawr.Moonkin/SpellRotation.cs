@@ -75,19 +75,31 @@ namespace Rawr.Moonkin
         }
 
         // Calculate damage and casting time for a damage-over-time effect.
-        private void DoDotSpell(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        private void DoDotSpell(DruidTalents talents, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             if (dotSpell.Name == "MF")
-                DoMoonfire(calcs, ref dotSpell, spellPower, spellHit, spellCrit, spellHaste);
+                DoMoonfire(talents, calcs, ref dotSpell, spellPower, spellHit, spellCrit, spellHaste);
             else
-                DoInsectSwarm(calcs, ref dotSpell, spellPower, spellHit, spellCrit, spellHaste);
+                DoInsectSwarm(talents, calcs, ref dotSpell, spellPower, spellHit, spellCrit, spellHaste);
         }
 
         // Calculate damage and casting time for the Moonfire effect.
-        private void DoMoonfire(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        private void DoMoonfire(DruidTalents talents, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
-            dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f + latency) + latency;
+
+			float naturesGrace = talents.NaturesGrace;
+
+            float gcd = 1.5f / (1.0f + spellHaste);
+            float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
+            float ngGCD = (float)Math.Max(gcd / 1.2f, 1.0f);
+            float instantCastNG = ngGCD + latency;
+            float normalCastTime = (float)Math.Max(dotSpell.CastTime / (1 + spellHaste), instantCast);
+            float NGCastTime = (float)Math.Max(dotSpell.CastTime / (1 + spellHaste) / (1 + 0.2f * naturesGrace / 3.0f), instantCastNG);
+            float NGProcChance = spellCrit * naturesGrace / 3.0f;
+            float NGUptime = 1.0f - (float)Math.Pow(1.0f - NGProcChance, Math.Floor(3.0f / normalCastTime) + 1.0f);
+            dotSpell.CastTime = (1 - NGUptime) * normalCastTime + NGUptime * NGCastTime;
+
             float mfDirectDamage = (dotSpell.BaseDamage + dotSpell.SpellDamageModifier * (spellPower + dotSpell.IdolExtraSpellPower)) * dotSpell.AllDamageModifier;
             float mfCritDamage = mfDirectDamage * dotSpell.CriticalDamageModifier;
             float totalCritChance = spellCrit + dotSpell.CriticalChanceModifier;
@@ -107,10 +119,21 @@ namespace Rawr.Moonkin
         }
 
         // Calculate damage and casting time for the Insect Swarm effect.
-        private void DoInsectSwarm(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        private void DoInsectSwarm(DruidTalents talents, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
-            dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f + latency) + latency;
+
+			float naturesGrace = talents.NaturesGrace;
+
+            float gcd = 1.5f / (1.0f + spellHaste);
+            float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
+            float ngGCD = (float)Math.Max(gcd / 1.2f, 1.0f);
+            float instantCastNG = ngGCD + latency;
+            float normalCastTime = (float)Math.Max(dotSpell.CastTime / (1 + spellHaste), instantCast);
+            float NGCastTime = (float)Math.Max(dotSpell.CastTime / (1 + spellHaste) / (1 + 0.2f * naturesGrace / 3.0f), instantCastNG);
+            float NGProcChance = spellCrit * naturesGrace / 3.0f;
+            float NGUptime = 1.0f - (float)Math.Pow(1.0f - NGProcChance, Math.Floor(3.0f / normalCastTime) + 1.0f);
+            dotSpell.CastTime = (1 - NGUptime) * normalCastTime + NGUptime * NGCastTime;
             float damagePerTick = (dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * (spellPower + dotSpell.IdolExtraSpellPower)) * dotSpell.DotEffect.AllDamageModifier;
             dotSpell.DotEffect.DamagePerHit = dotSpell.DotEffect.NumberOfTicks * damagePerTick * spellHit;
         }
@@ -154,7 +177,7 @@ namespace Rawr.Moonkin
                     mainNuke = Solver.FindSpell(SpellsUsed[1]);
                     // Do Starfire glyph calculations, if applicable; then do DoT spell calculations
                     if (starfireGlyph && mainNuke.Name == "SF" && DotEffectSpell.Name == "MF") DotEffectSpell.DotEffect.Duration += 9.0f;
-                    DoDotSpell(calcs, ref DotEffectSpell, spellPower, spellHit, spellCrit, spellHaste);
+                    DoDotSpell(talents, calcs, ref DotEffectSpell, spellPower, spellHit, spellCrit, spellHaste);
 
                     // Do iIS calculations, if applicable
                     if (impInsectSwarm > 0)
@@ -222,8 +245,8 @@ namespace Rawr.Moonkin
                     mainNuke = Solver.FindSpell(SpellsUsed[2]);
                     // Do Starfire glyph calculations, if applicable; then do DoT spell calculations
                     if (starfireGlyph && mainNuke.Name == "SF") moonFire.DotEffect.Duration += 9.0f;
-                    DoDotSpell(calcs, ref moonFire, spellPower, spellHit, spellCrit, spellHaste);
-                    DoDotSpell(calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
+                    DoDotSpell(talents, calcs, ref moonFire, spellPower, spellHit, spellCrit, spellHaste);
+                    DoDotSpell(talents, calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
 
                     // Do iIS calculations, if applicable
                     if (impInsectSwarm > 0)
@@ -345,12 +368,12 @@ namespace Rawr.Moonkin
             float insectSwarmRatio = 0.0f;
             if (moonfire != null)
             {
-                DoDotSpell(calcs, ref moonfire, spellPower, spellHit, spellCrit, spellHaste);
+                DoDotSpell(talents, calcs, ref moonfire, spellPower, spellHit, spellCrit, spellHaste);
                 moonfireRatio = moonfire.CastTime / moonfire.DotEffect.Duration;
             }
             if (insectSwarm != null)
             {
-                DoDotSpell(calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
+                DoDotSpell(talents, calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
                 insectSwarmRatio = insectSwarm.CastTime / insectSwarm.DotEffect.Duration;
             }
 
