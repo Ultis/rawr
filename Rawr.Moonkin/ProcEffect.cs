@@ -120,7 +120,8 @@ namespace Rawr.Moonkin
                 Effect.Trigger == Trigger.Use ||
                 Effect.Trigger == Trigger.MoonfireCast ||
                 Effect.Trigger == Trigger.MoonfireTick ||
-                Effect.Trigger == Trigger.InsectSwarmTick)
+                Effect.Trigger == Trigger.InsectSwarmTick ||
+				Effect.Trigger == Trigger.DoTTick)
             {
                 Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
@@ -240,6 +241,9 @@ namespace Rawr.Moonkin
                             break;
                         case Trigger.MoonfireTick:
                             upTime = Effect.GetAverageUptime(r.Duration / r.MoonfireTicks, 1f);
+                            break;
+                        case Trigger.DoTTick:
+                            upTime = Effect.GetAverageUptime(r.Duration / (r.MoonfireTicks + r.InsectSwarmTicks), 1f);
                             break;
                         default:
                             break;
