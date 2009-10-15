@@ -362,7 +362,7 @@ namespace Rawr.Enhance
             float usesCooldown = cs.AbilityCooldown(EnhanceAbility.FlameShock);
             float flameShockdps = damageFS / usesCooldown;
             float flameShockDoTdps = damageFTDoT / usesCooldown;
-            float flameShockNormal = flameShockDoTdps + flameShockdps;
+            float flameShockNormal = (flameShockdps + flameShockDoTdps) * cs.ChanceSpellHit;
             float flameShockCrit = 0f;
             if (character.ShamanTalents.GlyphofFlameShock)
             {
