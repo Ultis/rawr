@@ -70,10 +70,10 @@ namespace Rawr.ProtPaladin
             // Ranking System
             if (calcOpts.ThreatScale > 30.0f) // Old scale value being saved, reset to default
                 calcOpts.ThreatScale = 10.0f;
-            trackBarThreatScale.Value = Convert.ToInt32(calcOpts.ThreatScale / 10.0f / 0.1f);
+            trackBarThreatScale.Value = Convert.ToInt32(calcOpts.ThreatScale * 10.0f);
             if (calcOpts.MitigationScale > 51000.0f) // Old scale value being saved, reset to default
                 calcOpts.MitigationScale = 17000.0f;
-            trackBarMitigationScale.Value = Convert.ToInt32((calcOpts.MitigationScale / 17000.0f / 0.1f)); 
+            trackBarMitigationScale.Value = Convert.ToInt32((calcOpts.MitigationScale / 170.0f)); 
             radioButtonMitigationScale.Checked = (calcOpts.RankingMode == 1);
             radioButtonTankPoints.Checked = (calcOpts.RankingMode == 2);
             radioButtonBurstTime.Checked = (calcOpts.RankingMode == 3);
@@ -96,8 +96,8 @@ namespace Rawr.ProtPaladin
 
             labelBossMagicalDamage.Text = trackBarBossAttackValueMagic.Value.ToString(); ;
             labelBossMagicSpeed.Text = String.Format("{0:0.00}s", ((float)(trackBarBossAttackSpeedMagic.Value) * 0.25f));
-            labelThreatScale.Text = String.Format("{0:0.0}", ((float)(trackBarThreatScale.Value) * 0.1f));
-            labelMitigationScale.Text = String.Format("{0:0.0}", ((float)(trackBarMitigationScale.Value) * 0.1f));
+            labelThreatScale.Text = String.Format("{0:0.00}", ((float)(trackBarThreatScale.Value) * 0.01f));
+            labelMitigationScale.Text = String.Format("{0:0.00}", ((float)(trackBarMitigationScale.Value) * 0.01f));
 
 			_loadingCalculationOptions = false;
 		}
@@ -117,16 +117,16 @@ namespace Rawr.ProtPaladin
                 labelBossMagicalDamage.Text = trackBarBossAttackValueMagic.Value.ToString(); ;
                 labelBossMagicSpeed.Text = String.Format("{0:0.00}s", ((float)(trackBarBossAttackSpeedMagic.Value) * 0.25f));
                 // Ranking System
-                labelThreatScale.Text = String.Format("{0:0.0}", ((float)(trackBarThreatScale.Value) * 0.1f));
-				labelMitigationScale.Text = String.Format("{0:0.0}", ((float)(trackBarMitigationScale.Value) * 0.1f));
+                labelThreatScale.Text = String.Format("{0:0.00}", ((float)(trackBarThreatScale.Value) * 0.01f));
+				labelMitigationScale.Text = String.Format("{0:0.00}", ((float)(trackBarMitigationScale.Value) * 0.01f));
 
 				//c alcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
                 calcOpts.TargetLevel = (int)numericUpDownTargetLevel.Value;
 				calcOpts.TargetArmor = trackBarTargetArmor.Value;
                 calcOpts.BossAttackValue = trackBarBossAttackValue.Value;
                 calcOpts.BossAttackSpeed = ((float)(trackBarBossAttackSpeed.Value) * 0.25f);
-                calcOpts.ThreatScale = ((float)(trackBarThreatScale.Value) * 0.1f * 10.0f);
-                calcOpts.MitigationScale = ((float)(trackBarMitigationScale.Value) * 0.1f  * 17000.0f);
+                calcOpts.ThreatScale = ((float)(trackBarThreatScale.Value / 10.0f));
+                calcOpts.MitigationScale = ((float)(trackBarMitigationScale.Value) * 170.0f);
 
 				Character.OnCalculationsInvalidated();
 			}
@@ -150,7 +150,7 @@ namespace Rawr.ProtPaladin
                 if (radioButtonTankPoints.Checked)
                 {
                     calcOpts.RankingMode = 2;
-                    trackBarThreatScale.Value = 10;
+                    trackBarThreatScale.Value = 100;
                 }
                 else if (radioButtonBurstTime.Checked)
                 {
@@ -160,22 +160,22 @@ namespace Rawr.ProtPaladin
                 else if (radioButtonDamageOutput.Checked)
                 {
                     calcOpts.RankingMode = 4;
-                    trackBarThreatScale.Value = 10;
+                    trackBarThreatScale.Value = 100;
                 }
                 else if (radioButtonProtWarrMode.Checked)
                 {
                     calcOpts.RankingMode = 5;
-                    trackBarThreatScale.Value = 10;
+                    trackBarThreatScale.Value = 100;
                 }
                 else if (radioButtonDamageTakenMode.Checked)
                 {
                     calcOpts.RankingMode = 6;
-                    trackBarThreatScale.Value = 10;
+                    trackBarThreatScale.Value = 100;
                 }
                 else
                 {
                     calcOpts.RankingMode = 1;
-                    trackBarThreatScale.Value = 10;
+                    trackBarThreatScale.Value = 100;
                 }
                 trackBarThreatScale.Enabled = labelThreatScale.Enabled = (calcOpts.RankingMode != 4);
                 trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1) || (calcOpts.RankingMode == 5);

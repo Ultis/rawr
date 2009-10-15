@@ -231,12 +231,14 @@ namespace Rawr.ProtPaladin
             this.trackBarThreatScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarThreatScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarThreatScale.LargeChange = 50;
             this.trackBarThreatScale.Location = new System.Drawing.Point(86, 16);
-            this.trackBarThreatScale.Maximum = 30;
+            this.trackBarThreatScale.Maximum = 300;
             this.trackBarThreatScale.Name = "trackBarThreatScale";
             this.trackBarThreatScale.Size = new System.Drawing.Size(178, 42);
             this.trackBarThreatScale.TabIndex = 1;
-            this.trackBarThreatScale.Value = 10;
+            this.trackBarThreatScale.TickFrequency = 10;
+            this.trackBarThreatScale.Value = 100;
             this.trackBarThreatScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // labelThreatScale
@@ -255,12 +257,14 @@ namespace Rawr.ProtPaladin
             this.trackBarMitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarMitigationScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarMitigationScale.LargeChange = 50;
             this.trackBarMitigationScale.Location = new System.Drawing.Point(86, 67);
-            this.trackBarMitigationScale.Maximum = 30;
+            this.trackBarMitigationScale.Maximum = 300;
             this.trackBarMitigationScale.Name = "trackBarMitigationScale";
             this.trackBarMitigationScale.Size = new System.Drawing.Size(178, 42);
             this.trackBarMitigationScale.TabIndex = 3;
-            this.trackBarMitigationScale.Value = 10;
+            this.trackBarMitigationScale.TickFrequency = 10;
+            this.trackBarMitigationScale.Value = 100;
             this.trackBarMitigationScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // labelMitigationScale
