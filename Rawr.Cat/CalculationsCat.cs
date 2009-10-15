@@ -51,22 +51,22 @@ namespace Rawr.Cat
 						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
 					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Crit
 						RedId = delicate[0], YellowId = deadly[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
-					//new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Hit
-					//    RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Hit
+					    RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
 
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Max Agility
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Max Agility
 						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Agi/Crit 
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Crit 
 						RedId = delicate[1], YellowId = deadly[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
-					//new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Agi/Hit
-					//    RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Hit
+					    RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
 						
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", //Max Agility
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Max Agility
 						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", //Agi/Crit 
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Crit 
 						RedId = delicate[2], YellowId = deadly[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
-					//new GemmingTemplate() { Model = "Cat", Group = "Epic", //Agi/Hit
-					//    RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Hit
+					    RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
 						
 					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max Agility
 						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
@@ -291,6 +291,7 @@ namespace Rawr.Cat
                 + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Druid)
                 + stats.PhysicalCrit
                 + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel-80];
+			float chanceCritWhite = Math.Min(chanceCrit, 1f - chanceGlance - chanceAvoided);
 			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCrit : 0f;
 			float chanceHit = 1f - chanceCrit - chanceAvoided;
 			float chanceHitNonGlance = 1f - chanceCrit - chanceAvoided - chanceGlance;
@@ -328,7 +329,7 @@ namespace Rawr.Cat
 			float biteCPDamageRaw = (290f + stats.AttackPower * 0.07f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
 
 			float meleeDamageAverage =	chanceGlance * meleeDamageRaw * glanceMultiplier +
-										chanceCrit * meleeDamageRaw * critMultiplier +
+										chanceCritWhite * meleeDamageRaw * critMultiplier +
 										chanceHitNonGlance * meleeDamageRaw;
 			float mangleDamageAverage = (1f - chanceCrit) * mangleDamageRaw + chanceCrit * mangleDamageRaw * critMultiplier;
 			float shredDamageAverage = (1f - chanceCrit) * shredDamageRaw + chanceCrit * shredDamageRaw * critMultiplier;

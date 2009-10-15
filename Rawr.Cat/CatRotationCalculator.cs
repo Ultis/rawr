@@ -122,9 +122,10 @@ namespace Rawr.Cat
 
 		public CatRotationCalculation GetRotationCalculations(bool useRake, bool useShred, bool useRip, int biteCP, int roarCP)
 		{
-			float totalEnergyAvailable = 100f + (10f * Duration) + ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
+			float totalEnergyAvailable = 100f + (10f * Duration);
+			totalEnergyAvailable += ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
 			if (BerserkDuration > 0)
-				totalEnergyAvailable += (BerserkDuration + 7f) * 10f; //Assume 70 energy when you activate Berserk
+				totalEnergyAvailable += (float)Math.Ceiling((Duration - 10f) / 180f ) * (BerserkDuration + 7f) * 10f; //Assume 70 energy when you activate Berserk
 			if (OmenOfClarity)
 			{
 				float oocProcs = ((3.5f * (Duration / 60f)) / AttackSpeed) * (1f - AvoidedAttacks); //Counts all OOCs as being used on the CPG. Should be made more accurate than that, but that's close at least

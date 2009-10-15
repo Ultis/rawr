@@ -1351,7 +1351,23 @@ namespace Rawr
 					Agility = 4, Strength = 4, Stamina = 4, Intellect = 4, Spirit = 4, 
 					ArcaneResistance = 4, FireResistance = 4, FrostResistance = 4, ShadowResistance = 4, NatureResistance = 4 } } }
             });
-            defaultBuffs.Add(new Buff()
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Lesser Flask of Resistance",
+				Group = "Elixirs and Flasks",
+				Stats =
+				{
+					ArcaneResistance = 50,
+					FireResistance = 50,
+					FrostResistance = 50,
+					ShadowResistance = 50,
+					NatureResistance = 50
+				},
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Lesser Flask of Resistance (Mixology)", Stats = {
+					ArcaneResistance = 40, FireResistance = 40, FrostResistance = 40, ShadowResistance = 40, NatureResistance = 40 } } }
+			});
+			defaultBuffs.Add(new Buff()
             {
                 Name = "Flask of Distilled Wisdom",
                 Group = "Elixirs and Flasks",
