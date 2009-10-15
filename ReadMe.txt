@@ -1,18 +1,17 @@
-Rawr v2.2.22.0
+Rawr v2.2.23.0
 ------------
-Welcome to Rawr 2.2.22.0.
+Welcome to Rawr 2.2.23.0.
    
 Recent Changes:
- - Significant performance improvements across a wide variety of models
- - Fix for Direct Upgrades chart only showing the specified # of gemming templates
- - Rawr now remembers the last loaded charater from the Armory in the Load from Armory dialog
- - Updated the parry chance of lvl83 bosses to 14%, per recent testing
- - Rawr.Bear: Added support for Parry Haste
- - Rawr.Mage: Fix for bug with incremental optimization. Added very simple movement model. Fix for Arcane Power + Missile Barrage interaction
- - Rawr.Moonkin: Fix for mana gains chart
- - Rawr.ProtPaladin: Added support for T9 and T10 set bonuses
- - Rawr.Rogue: Fix for Mace Spec calculations
- - Rawr.DPSWarr: Fix for intellect blocking gear from being considered relevant
+ - Shift+Right-Click will now allow you to custom gem an item. This mirrors in-game functionality.
+ - Added a Lesser Flask of Resistance to default Buffs.
+ - Rawr.Cat: Updated default gemming templates. Fixed a bug with white miss rate at extremely high crit rates. Fixed a bug with Berserk uptime calculations.
+ - Rawr.Moonkin: Tier 10 Idol should now be properly modeled. Lunar Eclipse now properly caps at 100% crit.
+ - Rawr.Enhance: Smoothed out priority calculations. This module should now be faster, and more accurate.
+ - Rawr.ShadowPriest: 3.3 "PTR Mode" checkbox added in the options tab to model the SPriest changes in 3.3.
+ - Rawr.DPSWarr: Fixed a bug in uptime calculations with stacking special effects.
+ - Rawr.ProtWarr: You may now specify how often you are using heroic strike in the options panel. (Was previously just Limited/Unlimited) Average Vigilance threat and Base Boss attack values updated for Heroic TotC values.
+
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
  
@@ -120,6 +119,18 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.22.0
+ - Significant performance improvements across a wide variety of models
+ - Fix for Direct Upgrades chart only showing the specified # of gemming templates
+ - Rawr now remembers the last loaded charater from the Armory in the Load from Armory dialog
+ - Updated the parry chance of lvl83 bosses to 14%, per recent testing
+ - Rawr.Bear: Added support for Parry Haste
+ - Rawr.Mage: Fix for bug with incremental optimization. Added very simple movement model. Fix for Arcane Power + Missile Barrage interaction
+ - Rawr.Moonkin: Fix for mana gains chart
+ - Rawr.ProtPaladin: Added support for T9 and T10 set bonuses
+ - Rawr.Rogue: Fix for Mace Spec calculations
+ - Rawr.DPSWarr: Fix for intellect blocking gear from being considered relevant
+
 v2.2.21.0
  - More improvements to default filters. Sorry for all the confusion and problems with filters lately, everyone. We realize that filtering is a very important, but complex, part of Rawr, and are working toward a much more understandable and reliable system for filtering. Please bear with us!
  - Fix for crashing on saving and loading characters from Armory with Leatherworking.
