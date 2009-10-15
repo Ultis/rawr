@@ -242,6 +242,9 @@ namespace Rawr.Moonkin
                         case Trigger.MoonfireTick:
                             upTime = Effect.GetAverageUptime(r.Duration / r.MoonfireTicks, 1f);
                             break;
+                        case Trigger.InsectSwarmTick:
+                            upTime = Effect.GetAverageUptime(r.Duration / r.InsectSwarmTicks, 1f);
+                            break;
                         case Trigger.DoTTick:
                             upTime = Effect.GetAverageUptime(r.Duration / (r.MoonfireTicks + r.InsectSwarmTicks), 1f);
                             break;
