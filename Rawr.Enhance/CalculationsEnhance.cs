@@ -81,6 +81,7 @@ namespace Rawr.Enhance
                     "Attacks:Lava Lash",
                     "Attacks:Searing/Magma Totem",
                     "Attacks:Earth Shock",
+                    "Attacks:Flame Shock",
                     "Attacks:Lightning Bolt",
                     "Attacks:Lightning Shield",
                     "Attacks:Spirit Wolf",
@@ -351,6 +352,25 @@ namespace Rawr.Enhance
             float shockCrit = shockdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
             float dpsES = (shockNormal + shockCrit) * bonusNatureDamage * bossNatureResistance * shockBonus;
 
+            //4.5: Flame Shock DPS
+            float damageFSBase = 500f;
+            float damageFSDoTBase = 834f;
+            float coefFS = .2142f;
+            float coefFSDoT = .6f;
+            float damageFS = (damageFSBase + coefFS * spellPower) * concussionMultiplier;
+            float damageFTDoT = (damageFSDoTBase + coefFSDoT * spellPower) * concussionMultiplier;
+            float usesCooldown = cs.AbilityCooldown(EnhanceAbility.FlameShock);
+            float flameShockdps = damageFS / usesCooldown;
+            float flameShockDoTdps = damageFTDoT / usesCooldown;
+            float flameShockNormal = flameShockDoTdps + flameShockdps;
+            float flameShockCrit = 0f;
+            if (character.ShamanTalents.GlyphofFlameShock)
+            {
+                flameShockNormal = (flameShockdps + flameShockDoTdps) * cs.SpellHitModifier;
+                flameShockCrit = (flameShockdps + flameShockDoTdps) * cs.SpellCritModifier * cs.CritMultiplierSpell;
+            }
+            float dpsFS = (flameShockNormal + flameShockCrit) * bonusFireDamage * bossFireResistance * shockBonus;
+
             //5: Lightning Bolt DPS
             float damageLBBase = 765f;
             float coefLB = .7143f;
@@ -445,7 +465,7 @@ namespace Rawr.Enhance
             #endregion
 
             #region Set CalculatedStats
-            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsSTMT + dpsFT + dpsDogs;
+            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsWF + dpsLS + dpsSTMT + dpsFT + dpsDogs;
 			calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
 			calculatedStats.AvoidedAttacks = (1 - cs.AverageWhiteHit) * 100f;
@@ -475,6 +495,10 @@ namespace Rawr.Enhance
             calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHit, cs.AverageDodge, -1, cs.AverageYellowCrit);
             calculatedStats.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH);
             calculatedStats.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
+            if (character.ShamanTalents.GlyphofFlameShock)
+                calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
+            else
+                calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, 0);
             calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
             calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH);
             calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, -1);
@@ -660,6 +684,7 @@ namespace Rawr.Enhance
                 _relevantGlyphs.Add("Glyph of Lightning Shield");
                 _relevantGlyphs.Add("Glyph of Lightning Bolt");
                 _relevantGlyphs.Add("Glyph of Shocking");
+                _relevantGlyphs.Add("Glyph of Flame Shock");
                 _relevantGlyphs.Add("Glyph of Stormstrike");
                 _relevantGlyphs.Add("Glyph of Windfury Weapon");
             }

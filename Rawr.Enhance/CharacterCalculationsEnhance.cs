@@ -259,6 +259,13 @@ namespace Rawr.Enhance
             set { _earthShock = value; }
         }
 
+        private DPSAnalysis _flameShock;
+        public DPSAnalysis FlameShock
+        {
+            get { return _flameShock; }
+            set { _flameShock = value; }
+        }
+
         private DPSAnalysis _searingMagma;
         public DPSAnalysis SearingMagma
         {
@@ -398,7 +405,8 @@ namespace Rawr.Enhance
             dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack,DPSPoints));
             dictValues.Add("Lightning Bolt", dpsOutputFormat(LightningBolt,DPSPoints));
             dictValues.Add("Earth Shock", dpsOutputFormat(EarthShock,DPSPoints));
-            dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma,DPSPoints));
+            dictValues.Add("Flame Shock", dpsOutputFormat(FlameShock, DPSPoints));
+            dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma, DPSPoints));
             dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike,DPSPoints));
             dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf,DPSPoints));
             dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield,DPSPoints));

@@ -13,7 +13,6 @@ namespace Rawr.Enhance
         private ShamanTalents _talents;
         private List<Ability> _abilities;
         private float fightLength;
-        private float averageFightLength;
 
         public Priorities(CombatStats cs, CalculationOptionsEnhance calcOpts, Character character, Stats stats, ShamanTalents talents)
         {
@@ -23,7 +22,6 @@ namespace Rawr.Enhance
             _stats = stats;
             _talents = talents;
             fightLength = _calcOpts.FightLength * 60f;
-            averageFightLength = fightLength;
             _abilities = SetupAbilities();
         }
 
@@ -32,7 +30,8 @@ namespace Rawr.Enhance
             int priority = 0;
             List<Ability> abilities = new List<Ability>();
             float convection = 1f - _talents.Convection * 0.02f;
-            float shockMana = _talents.ShamanisticFocus == 1 ? 0.55f * 0.18f : 0.18f; // 45% reduction if Shamanistic Focus
+            float ESMana = _talents.ShamanisticFocus == 1 ? 0.55f * 0.18f : 0.18f; // 45% reduction if Shamanistic Focus
+            float FSMana = _talents.ShamanisticFocus == 1 ? 0.55f * 0.17f : 0.17f; // 45% reduction if Shamanistic Focus
             float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
             if (_talents.ShamanisticRage == 1)
                 abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, gcd, 0f, ++priority, true));
@@ -40,12 +39,16 @@ namespace Rawr.Enhance
                 abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, gcd, 0.12f, ++priority, false));
             if (_talents.MaelstromWeapon > 0)
                 abilities.Add(new Ability(EnhanceAbility.LightningBolt, _cs.SecondsToFiveStack, gcd, 0.1f * convection, ++priority, false));
+            if (_character.ShamanTalents.GlyphofShocking)
+                abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, 1.0f, FSMana * convection, ++priority, false));
+            else
+                abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, gcd, FSMana * convection, ++priority, false));
             if (_talents.Stormstrike == 1)
                 abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, gcd, 0.08f, ++priority, false));
             if (_character.ShamanTalents.GlyphofShocking)
-                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, shockMana * convection, ++priority, false));
+                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, ESMana * convection, ++priority, false));
             else
-                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, shockMana * convection, ++priority, false));
+                abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, ESMana * convection, ++priority, false));
             if (_talents.LavaLash == 1)
                 abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, gcd, 0.04f, ++priority, false));
             if (_talents.StaticShock > 0)
@@ -62,26 +65,40 @@ namespace Rawr.Enhance
         public void CalculateAbilities()
         {
             float gcd = 1.5f;
-            float timeElapsed = 0f;
+            float currentTime = 0f;
             float averageLag = _calcOpts.AverageLag / 1000f;
+            float shockOffCooldown = 0f;
+            float shockCooldown = _cs.BaseShockSpeed;
             PriorityQueue<Ability> queue = new PriorityQueue<Ability>();
             foreach (Ability ability in _abilities)
                 queue.Enqueue(ability);
             while (queue.Count > 0)
             {
                 Ability ability = queue.Dequeue();
-                if (ability.MissedCooldown(timeElapsed)) // we missed a cooldown so set new cooldown to current time
-                    ability.UpdateCooldown(timeElapsed);
+                if (ability.MissedCooldown(currentTime)) // we missed a cooldown so set new cooldown to current time
+                    ability.UpdateCooldown(currentTime);
                 else
                 {
-                    // if we have chosen to wait a fraction of a second for next ability 
-                    // then we need to ensure that the current time starts when ability is 
-                    // actually off cooldown
-                    if (ability.CooldownOver > timeElapsed)
-                        timeElapsed = ability.CooldownOver; 
-                    ability.Use(timeElapsed); // consider adding human delay factor to time elapsed as to when next comes off CD
-                    gcd = ability.GCD;
-                    timeElapsed += gcd + averageLag;
+                    // if we have chosen to wait a fraction of a second for next ability then we need
+                    // to ensure that the current time starts when ability is actually off cooldown
+                    if (ability.CooldownOver > currentTime)
+                        currentTime = ability.CooldownOver;
+                    if ((ability.AbilityType == EnhanceAbility.EarthShock || ability.AbilityType == EnhanceAbility.FlameShock) &&
+                        currentTime < shockOffCooldown)
+                    {
+                        // this is a shock and previous shock is still on cooldown
+                        // so we update the attempted shock's cooldown to when the shock is next available
+                        ability.UpdateCooldown(shockOffCooldown);
+                    }
+                    else
+                    {
+                        // all is ok so use the ability
+                        if (ability.AbilityType == EnhanceAbility.EarthShock || ability.AbilityType == EnhanceAbility.FlameShock)
+                            shockOffCooldown = currentTime + shockCooldown;
+                        ability.Use(currentTime); // consider adding human delay factor to time elapsed as to when next comes off CD
+                        gcd = ability.GCD;
+                        currentTime += gcd + averageLag;
+                    }
                 }
                 if (ability.CooldownOver < fightLength)
                 {  // adds ability back into queue if its available again before end of fight
@@ -120,9 +137,9 @@ namespace Rawr.Enhance
             foreach (Ability ability in _abilities)
             {
                 if (ability.AbilityType == abilityType)
-                    return ability.Uses == 0 ? ability.Duration : averageFightLength / ability.Uses;
+                    return ability.Uses == 0 ? ability.Duration : fightLength / ability.Uses;
             }
-            return averageFightLength;
+            return fightLength;
         }
     }
 
