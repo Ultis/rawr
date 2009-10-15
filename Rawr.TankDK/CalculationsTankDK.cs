@@ -352,71 +352,49 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
         /// CharacterCalculationsBase comments for more details.</returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) 
+        {
             #region Setup what we need and validate.
             // Since calcs is what we return at the end.  And the caller can't handle null value returns - 
             // Lets only return null if calcs is null, otherwise, let's return an empty calcs on other fails.
             CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
             if (null == calcs) { return null; }
 
+            // Ok, this is the initial gathering of our information... we haven't processed the multipliers or anything.
             Stats stats = GetCharacterStats(character, additionalItem);
             // validate that we get a stats object;
             if (null == stats) { return calcs; }
 
-            calcs.BasicStats = stats.Clone() as Stats;
+            // Apply the Multipliers
+            ProcessStatModifiers(stats, character.DeathKnightTalents.BladedArmor);
 
             // Import the option values from the options tab on the UI.
             CalculationOptionsTankDK opts = character.CalculationOptions as CalculationOptionsTankDK;
             // Validate opts 
             if (null == opts) { return calcs; }
-            calcs.cType = opts.cType;
+            // Get the shotrotation/combat model here.
+            if (opts.m_Rotation == null) { return calcs; }
 
+            calcs.cType = opts.cType;
             // Level differences.
             int iTargetLevel = opts.TargetLevel;
-            // The full character data.
-            calcs.TargetLevel = iTargetLevel;
-            float fLevelDiffModifier = (iTargetLevel - character.Level) * 0.2f;
+            int iLevelDiff = iTargetLevel - character.Level;
+            float fLevelDiffModifier = iLevelDiff * 0.2f;
+
+            // Apply the ratings to actual stats.
+            ProcessRatings(stats);
+
+            // Need to save off the base avoidance stats before having their ratings applied to them.
+            float fBaseDodge = stats.Dodge;
+            float fBaseParry = stats.Parry;
+            float fBaseDef = stats.Defense;
+            float fBaseMiss = stats.Miss;
+
+            ProcessAvoidance(stats, iTargetLevel);
+
             #endregion
 
-            #region Avoidance Numbers
-            float fChanceToGetHit = 100f;
-
-            // Get all the character avoidance numbers including deminishing returns.
-            // Iterate through each hit type. and use fAvoidance array w/ the hitresult enum.
-            float[] fAvoidance = new float[(uint)HitResult.NUM_HitResult];
-            for (uint i = 0; i < (uint)HitResult.NUM_HitResult; i++) {
-                // GetDRAvoidanceChance returns a dec. percentage.
-                // Since CurrentAvoidance is a percent, need to multiply by 100.
-                fAvoidance[i] = (StatConversion.GetDRAvoidanceChance(character, stats, (HitResult)i, iTargetLevel));
-            }
-
-            // So let's populate the miss, dodge and parry values for the UI display as well as pulling them out of the avoidance number.
-            stats.Miss = fAvoidance[(int)HitResult.Miss];
-            calcs.Miss = stats.Miss * 100f;
-            fChanceToGetHit -= calcs.Miss;
-            // Dodge needs to be factored in here.
-            stats.Dodge = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Dodge]);
-            calcs.Dodge = stats.Dodge * 100f;
-            fChanceToGetHit -= calcs.Dodge;
-            // Pary factors
-            stats.Parry = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Parry]);
-            calcs.Parry = stats.Parry * 100f;
-            fChanceToGetHit -= calcs.Parry;
-
-            // 5% + Level difference crit chance.  
-            float attackerCrit = Math.Max(0.0f, ((.05f) - fAvoidance[(int)HitResult.Crit]));
-            calcs.Crit = attackerCrit * 100f;
-            calcs.DefenseRating = stats.DefenseRating;
-            calcs.Defense = (StatConversion.GetDefenseFromRating(stats.DefenseRating, character.Class) + stats.Defense);
-            calcs.Resilience = stats.Resilience;
-            calcs.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, iTargetLevel);
-            #endregion 
-
-            // Get the shotrotation/combat model here.
-            if (opts.m_Rotation == null) 
-            { 
-                return calcs; 
-            }
+            float fChanceToGetHit = 1f - (stats.Miss + stats.Dodge + stats.Parry);
 
             #region TargetDodge/Parry/Miss & Expertise - finish populating totalstats.
             bool bDualWielding = false;
@@ -425,82 +403,152 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float chanceTargetParry = 0f;
             float chanceTargetDodge = 0f;
             float chanceTargetMiss = 0f;
-            if (character.MainHand != null) {
+            if (character.MainHand != null) 
+            {
                 // 2-hander weapon specialization.
-                if (character.MainHand.Slot == ItemSlot.TwoHand) {
+                if (character.MainHand.Slot == ItemSlot.TwoHand)
+                {
                     f2hWeaponDamageMultiplier = (0.02f * character.DeathKnightTalents.TwoHandedWeaponSpecialization);
-                }else{
-                    // Toon is not using a 2h, meaning that he's DW if he's got something in his off hand.
-                    bDualWielding = (character.OffHand != null);
                 }
-                float hitBonus = StatConversion.GetHitFromRating(stats.HitRating, character.Class) + stats.PhysicalHit;
+                else
+                {
+                    // Toon is not using a 2h, meaning that he's DW if he's got something in his off hand.
+                    bDualWielding = (character.OffHand != null && character.MainHand != null);
+                }
                 // 8% default miss rate vs lvl 83
-                chanceTargetMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[opts.TargetLevel - character.Level] - hitBonus);
-                if (bDualWielding) {
+                chanceTargetMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[iLevelDiff] - stats.PhysicalHit);
+                if (bDualWielding) 
+                {
                     // Talent: Nerves of Cold Steel
                     // +hit changes only.  See damage buff change further down.
-                    chanceTargetMiss = (StatConversion.WHITE_MISS_CHANCE_CAP_DW[opts.TargetLevel - character.Level]
-                                     - (0.01f * character.DeathKnightTalents.NervesOfColdSteel));
+                    chanceTargetMiss = (StatConversion.WHITE_MISS_CHANCE_CAP_DW[iLevelDiff]
+                                     - (0.01f * character.DeathKnightTalents.NervesOfColdSteel) - stats.PhysicalHit);
                 }
                 if (character.Race == CharacterRace.Dwarf &&
-                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace)) {
+                    (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace)) 
+                {
                     stats.Expertise += 5;
                 }
                 if (character.Race == CharacterRace.Human &&
                     (character.MainHand.Type == ItemType.TwoHandMace || character.MainHand.Type == ItemType.OneHandMace ||
-                    character.MainHand.Type == ItemType.TwoHandSword || character.MainHand.Type == ItemType.OneHandSword)) {
+                    character.MainHand.Type == ItemType.TwoHandSword || character.MainHand.Type == ItemType.OneHandSword)) 
+                {
                     stats.Expertise += 3;
                 }
                 if (character.Race == CharacterRace.Orc &&
-                    (character.MainHand.Type == ItemType.TwoHandAxe || character.MainHand.Type == ItemType.OneHandAxe)) {
+                    (character.MainHand.Type == ItemType.TwoHandAxe || character.MainHand.Type == ItemType.OneHandAxe)) 
+                {
                     stats.Expertise += 5;
                 }
                 // 6.5 % for a boss mob to dodge.
-                // 15% for a boss mob to parry.
-                chanceTargetParry = Math.Max(0.0f, StatConversion.WHITE_PARRY_CHANCE_CAP[opts.TargetLevel - character.Level] - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
-                chanceTargetDodge = Math.Max(0.0f, StatConversion.WHITE_DODGE_CHANCE_CAP[opts.TargetLevel - character.Level] - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
+                // 14% for a boss mob to parry.
+                chanceTargetParry = Math.Max(0.0f, StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff] - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
+                chanceTargetDodge = Math.Max(0.0f, StatConversion.WHITE_DODGE_CHANCE_CAP[iLevelDiff] - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
                 hitChance = 1.0f - (chanceTargetMiss + chanceTargetDodge + chanceTargetParry);
                 // Can't have more than 100% hit chance.
                 hitChance = Math.Min(1f, hitChance);
-
-                calcs.TargetDodge = chanceTargetDodge;
-                calcs.TargetMiss = chanceTargetMiss;
-                calcs.TargetParry = chanceTargetParry;
             }
-            calcs.Expertise = stats.Expertise;
             #endregion
 
-            
             // need to calculate the rotation after we have the DR values for Dodge/Parry/Miss/haste.
             opts.m_Rotation.m_fDodge = stats.Dodge;
             opts.m_Rotation.m_fParry = stats.Parry;
             opts.m_Rotation.m_fPhysicalHaste = stats.PhysicalHaste;
 
-            CombatTable ct = new CombatTable(character, calcs, stats, opts);
-
-            /*
-             * StatsSpecialEffects sse = new StatsSpecialEffects(character, stats, ct);
-            Stats SSEStat = new Stats();
-
-            foreach (SpecialEffect e in stats.SpecialEffects())
+            if (character.DeathKnightTalents.SpellDeflection > 0)
             {
-                SSEStat += sse.getSpecialEffects(opts, e);
+                Stats newStats = new Stats();
+                newStats.SpellDamageTakenMultiplier -= 0.15f * character.DeathKnightTalents.SpellDeflection;
+                SpecialEffect se = new SpecialEffect(Trigger.DamageSpellHit, newStats, 0f, 0f, stats.Parry);
+                stats.AddSpecialEffect(se);
             }
 
-            // Move the Bonus values and rating values to the main stat.
-            SSEStat.Armor += SSEStat.BonusArmor;
-            SSEStat.Dodge = StatConversion.GetDodgeFromRating(SSEStat.DodgeRating);
-            SSEStat.Defense = StatConversion.GetDefenseFromRating(SSEStat.DefenseRating);
+            CombatTable ct = new CombatTable(character, calcs, stats, opts);
 
-            stats += SSEStat;
-            */
+            // Now that we have the combat table, we should be able to integrate the Special effects.
+            // However, the special effects will modify the incoming stats for all aspects, so we have 
+            // ensure that as we iterate, we don't count whole sets of stats twice.
 
-//            calcs.Defense = stats.Defense;
-//            calcs.Dodge = stats.Dodge;
-//            calcs.Armor = stats.Armor;
+            // For now we just factor them in once.
+            StatsSpecialEffects sse = new StatsSpecialEffects(character, stats, ct);
+            Stats statSE = new Stats();
+            foreach (SpecialEffect e in stats.SpecialEffects())
+            {
+                statSE.Accumulate(sse.getSpecialEffects(opts, e));
+            }
+            // Any Modifiers from stats need to be applied to statSE
+            statSE.Strength = StatConversion.ApplyMultiplier(statSE.Strength, stats.BonusStrengthMultiplier);
+            statSE.Agility = StatConversion.ApplyMultiplier(statSE.Agility, stats.BonusAgilityMultiplier);
+            statSE.Stamina = StatConversion.ApplyMultiplier(statSE.Stamina, stats.BonusStaminaMultiplier);
+            statSE.Stamina = (float)Math.Floor(statSE.Stamina);
+            statSE.Armor = StatConversion.ApplyMultiplier(statSE.Armor, stats.BaseArmorMultiplier);
+            statSE.AttackPower = StatConversion.ApplyMultiplier(statSE.AttackPower, stats.BonusAttackPowerMultiplier);
+            statSE.BonusArmor = StatConversion.ApplyMultiplier(statSE.BonusArmor, stats.BonusArmorMultiplier);
+
+            float AgiArmor = StatConversion.GetArmorFromAgility(statSE.Agility); // Don't multiply the armor from agility.
+            statSE.Armor += statSE.BonusArmor + AgiArmor;
+            statSE.Health += StatConversion.GetHealthFromStamina(statSE.Stamina);
+            StatConversion.ApplyMultiplier(statSE.Health, stats.BonusHealthMultiplier);
+            if (character.DeathKnightTalents.BladedArmor > 0)
+            {
+                statSE.AttackPower += (statSE.Armor / 180f) * (float)character.DeathKnightTalents.BladedArmor;
+            }
+            statSE.AttackPower += StatConversion.ApplyMultiplier((statSE.Strength * 2), stats.BonusAttackPowerMultiplier);
+            statSE.ParryRating += statSE.Strength * 0.25f;
+            statSE.CritRating += statSE.CritMeleeRating;
+
+            // Any Modifiers from statSE need to be applied to stats
+            stats.Strength = StatConversion.ApplyMultiplier(stats.Strength, statSE.BonusStrengthMultiplier);
+            stats.Agility = StatConversion.ApplyMultiplier(stats.Agility, statSE.BonusAgilityMultiplier);
+            stats.Stamina = StatConversion.ApplyMultiplier(stats.Stamina, statSE.BonusStaminaMultiplier);
+            stats.Stamina = (float)Math.Floor(stats.Stamina);
+            stats.Armor = StatConversion.ApplyMultiplier(stats.Armor, statSE.BaseArmorMultiplier);
+            stats.AttackPower = StatConversion.ApplyMultiplier(stats.AttackPower, statSE.BonusAttackPowerMultiplier);
+            stats.BonusArmor = StatConversion.ApplyMultiplier(stats.BonusArmor, statSE.BonusArmorMultiplier);
+
+            // Refresh the base avoidance values
+            stats.Dodge = fBaseDodge;
+            stats.Parry = fBaseParry;
+            stats.Defense = fBaseDef;
+            stats.Miss = fBaseMiss;
+
+            stats.Accumulate(statSE);
+
+            // refresh avoidance w/ the new stats.
+            float[] fAvoidance = new float[(uint)HitResult.NUM_HitResult];
+            for (uint i = 0; i < (uint)HitResult.NUM_HitResult; i++)
+            {
+                // GetDRAvoidanceChance returns a dec. percentage.
+                // Since CurrentAvoidance is a percent, need to multiply by 100.
+                fAvoidance[i] = (StatConversion.GetDRAvoidanceChance(character, stats, (HitResult)i, iTargetLevel));
+            }
+
+            // So let's populate the miss, dodge and parry values pulling them out of the avoidance number.
+            fChanceToGetHit = 1f;
+            stats.Miss = fAvoidance[(int)HitResult.Miss];
+            fChanceToGetHit -= stats.Miss;
+            // Dodge needs to be factored in here.
+            stats.Dodge = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Dodge]);
+            fChanceToGetHit -= stats.Dodge;
+            // Pary factors
+            stats.Parry = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Parry]);
+            float fChanceToGetCrit = fAvoidance[(int)HitResult.Crit];
+            // The next call expect Defense rating to NOT be factored into the defense stat
+            calcs.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, iTargetLevel);
+
+            stats.Defense += StatConversion.GetDefenseFromRating(stats.DefenseRating, character.Class);
+
+
+            // 5% + Level difference crit chance.
+            // Level difference is already factored in above.
+            fChanceToGetCrit = Math.Max(0.0f, (.05f - fChanceToGetCrit));
+
+            // refresh Combat table w/ the new stats.
+            ct = new CombatTable(character, calcs, stats, opts);
 
             #region Talents with general reach that aren't already in stats.
             // Talent: Bone Shield 
+            // TODO: Change this to a Special Effect.
             float bsDR = 0.0f;
             float bsUptime = 0f;
             if (character.DeathKnightTalents.BoneShield > 0) {
@@ -508,8 +556,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 if (character.DeathKnightTalents.GlyphofBoneShield == true) { BSStacks += 2; }
 
                 bsUptime = Math.Min(1f,                         // Can't be up for longer than 100% of the time. 
-                            (BSStacks * 2f) /                   // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death. 
-                            ((100f - fChanceToGetHit) / 100f)   // Loose a bone every time we get hit.
+                            (BSStacks * 2f)                   // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death. 
+                            / (1 - fChanceToGetHit)   // Loose a bone every time we get hit.
                             / 60.0f);                          // 60 sec cooldown.
                 // 20% damage reduction while active.
                 bsDR = 0.2f * bsUptime;
@@ -521,20 +569,20 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // From http://www.skeletonjack.com/2009/05/14/dk-tanking-armor-cap/#comments
             // 75% armor cap.  Not sure if this is for DK or for all Tanks.  So I'm just going to handle it here.
             // I'll do more research and see if it needs to go into the general function.
-            calcs.ArmorDamageReduction = (float)Math.Min(0.75f, StatConversion.GetArmorDamageReduction(iTargetLevel, stats.Armor, 0f, 0f, 0f));
+            float ArmorDamageReduction = (float)Math.Min(0.75f, StatConversion.GetArmorDamageReduction(iTargetLevel, stats.Armor, 0f, 0f, 0f));
 
             #region ***** Survival Rating *****
-            // The extra 10% health for Frost presence is now include in the character by default.
-            float hp = calcs.BasicStats.Health;
+            // For right now Survival Rating == Effective Health will be HP + Armor/Resistance mitigation values.
+            // Everything else is really mitigating damage based on RNG.
+
+            // The health bonus from Frost presence is now include in the character by default.
+            float hp = stats.Health;
             float fPhysicalSurvival = hp;
             float fMagicalSurvival = hp;
 
-            // For right now Effective Health will be HP + Armor/Resistance mitigation values.
-            // Everything else is really mitigating damage based on RNG.
-
             // Physical damage:
             // So need the percent that is NOT from magic.
-            fPhysicalSurvival = hp / (1f - calcs.ArmorDamageReduction);
+            fPhysicalSurvival = hp / (1f - ArmorDamageReduction);
 
             // Magical damage:
             // if there is a max resistance, then it's likely they are stacking for that resistance.  So factor in that Max resistance.
@@ -543,10 +591,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fMaxResist = Math.Max(fMaxResist, stats.NatureResistance);
             fMaxResist = Math.Max(fMaxResist, stats.ShadowResistance);
 
-            fMagicalSurvival = hp / (1f - StatConversion.GetAverageResistance(iTargetLevel, character.Level, fMaxResist, 0f) * opts.PercentIncomingFromMagic);
+            fMagicalSurvival = hp / (1f - StatConversion.GetAverageResistance(iTargetLevel, character.Level, fMaxResist, 0f));
 
-            calcs.Survival = (fPhysicalSurvival * (1f - opts.PercentIncomingFromMagic)) + (fMagicalSurvival * opts.PercentIncomingFromMagic);
-            float fEffectiveHealth = calcs.Survival;
+            float fEffectiveHealth = (fPhysicalSurvival * (1f - opts.PercentIncomingFromMagic)) + (fMagicalSurvival * opts.PercentIncomingFromMagic);
+            // EffHealth is used further down for Burst/Reaction Times.
+            calcs.Survival = fEffectiveHealth;
             calcs.SurvivalWeight = opts.SurvivalWeight;
             #endregion
 
@@ -617,12 +666,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
             }
 
-            if (character.DeathKnightTalents.SpellDeflection > 0) {
-                Stats newStats = new Stats();
-                newStats.SpellDamageTakenMultiplier -= 0.15f * character.DeathKnightTalents.SpellDeflection;
-                stats += new SpecialEffect(Trigger.DamageSpellHit, newStats, 0f, 0f).GetAverageStats(3f, stats.Parry);
-            }
-
             #region Anti-Magic Shell
             // Anti-Magic Shell. ////////////////////////////////////////////////////////
             // Talent: MagicSuppression increases AMS by 8/16/25% per point.
@@ -637,13 +680,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float amsDRvalue = (Math.Min(amsReductionMax, fIncMagicalDamage * amsReduction) * amsUptime);
             #endregion 
 
-
-
             // For any physical only damage reductions. 
             // Adjust the damage by chance of crit getting through
-            fPerShotPhysical += (fPerShotPhysical * attackerCrit) * 2f;
+            fPerShotPhysical += (fPerShotPhysical * fChanceToGetCrit) * 2f;
             // Factor in armor Damage Reduction
-            fPerShotPhysical *= (1f - calcs.ArmorDamageReduction);
+            fPerShotPhysical *= (1f - ArmorDamageReduction);
 
             // Four T8 : AMS grants 10% damage reductions.
             stats.DamageTakenMultiplier -= (stats.BonusAntiMagicShellDamageReduction * amsUptime); 
@@ -702,6 +743,33 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
             #endregion
 
+            #region Display only work
+//            if (needsDisplayCalculations)
+//            {
+                // TODO: not sure if I want this here...
+                calcs.BasicStats = stats.Clone() as Stats;
+                // The full character data.
+                calcs.TargetLevel = iTargetLevel;
+
+                calcs.Miss = stats.Miss * 100f;
+                calcs.Dodge = stats.Dodge * 100f;
+                calcs.Parry = stats.Parry * 100f;
+                calcs.Crit = fChanceToGetCrit * 100f;
+
+                calcs.DefenseRating = stats.DefenseRating;
+                calcs.Defense = stats.Defense;
+                calcs.Resilience = stats.Resilience;
+
+                calcs.TargetDodge = chanceTargetDodge;
+                calcs.TargetMiss = chanceTargetMiss;
+                calcs.TargetParry = chanceTargetParry;
+                calcs.Expertise = stats.Expertise;
+                calcs.BasicStats.ArmorPenetration = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating) * 100f;
+
+                calcs.ArmorDamageReduction = ArmorDamageReduction;
+//            }
+            #endregion
+
             return calcs;
         }
         /// <summary>
@@ -730,6 +798,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             
             // Start populating data w/ Basic racial & class baseline.
             statsTotal = BaseStats.GetBaseStats(character);
+            statsTotal.BaseAgility = BaseStats.GetBaseStats(character).Agility;
+
             if (statsTotal.Defense < 400f)
                 // Adding in the base 400 Defense skill all tanks are expected to have.  
                 // There are too many places where this just kinda stuck in.  It should be attached to the toon.
@@ -744,49 +814,89 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             /* At this point, we're combined all the data from gear and talents and all that happy jazz.
              * However, we haven't applied any special effects nor have we applied any multipliers.
+             * Also many special effects are now getting dependant upon combat info (rotations).
              */ 
 
-            // Adding in Special Effects. 
-            // Moving Special Effects modifiers to the base calculation area. 
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects()) {
-                statsTotal += effect.GetAverageStats();
-            }
+            return (statsTotal);
+        }
 
-            // Apply Stat modifiers
+        private void ProcessStatModifiers( Stats statsTotal, int iBladedArmor )
+        {
             statsTotal.Strength = StatConversion.ApplyMultiplier(statsTotal.Strength, statsTotal.BonusStrengthMultiplier);
             statsTotal.Agility = StatConversion.ApplyMultiplier(statsTotal.Agility, statsTotal.BonusAgilityMultiplier);
-            // The stamina value is floor in game for the calcul.
-            statsTotal.Stamina = (float)Math.Floor(StatConversion.ApplyMultiplier(statsTotal.Stamina, statsTotal.BonusStaminaMultiplier));
+            // The stamina value is floor in game for the calculation
+            statsTotal.Stamina = StatConversion.ApplyMultiplier(statsTotal.Stamina, statsTotal.BonusStaminaMultiplier);
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina);
             statsTotal.Armor = StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier);
-            statsTotal.Armor += StatConversion.GetArmorFromAgility(statsTotal.Agility); // Don't multiply the armor from agility.
-            statsTotal.Armor += StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier);
-            statsTotal.Health = StatConversion.ApplyMultiplier((statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina)), statsTotal.BonusHealthMultiplier);
+            statsTotal.AttackPower = StatConversion.ApplyMultiplier(statsTotal.AttackPower, statsTotal.BonusAttackPowerMultiplier);
+            statsTotal.BonusArmor = StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier);
+
+            float AgiArmor = StatConversion.GetArmorFromAgility(statsTotal.Agility); // Don't multiply the armor from agility.
+            statsTotal.Armor += statsTotal.BonusArmor + AgiArmor;
+            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+
+            StatConversion.ApplyMultiplier(statsTotal.Health, statsTotal.BonusHealthMultiplier);
 
             // Talent: BladedArmor //////////////////////////////////////////////////////////////
-            if (character.DeathKnightTalents.BladedArmor > 0) {
-                statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)character.DeathKnightTalents.BladedArmor;
+            if (iBladedArmor > 0)
+            {
+                statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)iBladedArmor;
             }
             // AP, crit, etc.  already being factored in w/ multiplier.
-            statsTotal.AttackPower  = StatConversion.ApplyMultiplier((statsTotal.AttackPower + (statsTotal.Strength * 2)), statsTotal.BonusAttackPowerMultiplier);
-            statsTotal.CritRating   = StatConversion.ApplyMultiplier((statsTotal.CritRating + statsTotal.CritMeleeRating), statsTotal.BonusCritMultiplier);
-            statsTotal.PhysicalCrit = StatConversion.ApplyMultiplier(statsTotal.PhysicalCrit 
-                                        + StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class)
+            statsTotal.AttackPower += StatConversion.ApplyMultiplier((statsTotal.Strength * 2), statsTotal.BonusAttackPowerMultiplier);
+            statsTotal.CritRating += statsTotal.CritMeleeRating;
+
+            // Parry from str. is only available to DKs.
+            statsTotal.ParryRating += statsTotal.Strength * 0.25f;
+
+        }
+
+        /// <summary>
+        /// Process All the ratings score to their base values.
+        /// </summary>
+        /// <param name="s"></param>
+        private void ProcessRatings(Stats statsTotal)
+        {
+            statsTotal.PhysicalCrit = StatConversion.ApplyMultiplier(statsTotal.PhysicalCrit
+                                        + StatConversion.GetCritFromAgility(statsTotal.Agility, CharacterClass.DeathKnight)
                                         + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusCritMultiplier);
             statsTotal.SpellCrit = StatConversion.ApplyMultiplier(statsTotal.SpellCrit
                                         + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusSpellCritMultiplier);
 
             statsTotal.PhysicalCrit += statsTotal.LotPCritRating;
-            statsTotal.SpellCrit    += statsTotal.LotPCritRating;
+            statsTotal.SpellCrit += statsTotal.LotPCritRating;
 
+            statsTotal.PhysicalHit += StatConversion.GetHitFromRating(statsTotal.HitRating, CharacterClass.DeathKnight);
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
-
-            // Parry from str. is only available to DKs.
-            statsTotal.ParryRating += statsTotal.Strength * 0.25f;
 
             // Expertise Rating -> Expertise:
             statsTotal.Expertise += StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
 
-            return (statsTotal);
+        }
+
+        private void ProcessAvoidance(Stats statsTotal, int iTargetLevel)
+        {
+            // Get all the character avoidance numbers including deminishing returns.
+            // Iterate through each hit type. and use fAvoidance array w/ the hitresult enum.
+            float[] fAvoidance = new float[(uint)HitResult.NUM_HitResult];
+            Character c = new Character();
+            c.Class = CharacterClass.DeathKnight;
+            float fChanceToGetHit = 1f;
+            for (uint i = 0; i < (uint)HitResult.NUM_HitResult; i++)
+            {
+                // GetDRAvoidanceChance returns a dec. percentage.
+                // Since CurrentAvoidance is a percent, need to multiply by 100.
+                fAvoidance[i] = (StatConversion.GetDRAvoidanceChance(c, statsTotal, (HitResult)i, iTargetLevel));
+            }
+
+            // So let's populate the miss, dodge and parry values for the UI display as well as pulling them out of the avoidance number.
+            statsTotal.Miss = fAvoidance[(int)HitResult.Miss];
+            fChanceToGetHit -= statsTotal.Miss;
+            // Dodge needs to be factored in here.
+            statsTotal.Dodge = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Dodge]);
+            fChanceToGetHit -= statsTotal.Dodge;
+            // Pary factors
+            statsTotal.Parry = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Parry]);
         }
 
         /// <summary>
@@ -799,14 +909,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         {
             return new ComparisonCalculationBase[0];
         }
-
-        /*
-        private Stats GetRaceStats(Character character) {
-            Stats Base = new Stats();
-            Base = BaseStats.GetBaseStats(character);
-            return Base;
-        }
-         */
   
         /// <summary>
         /// Filters a Stats object to just the stats relevant to the model.
@@ -859,7 +961,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
@@ -1032,7 +1133,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.BonusSpellCritMultiplier != 0);
             bResults |= (stats.BonusAttackPowerMultiplier != 0);
             bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
-            bResults |= (stats.BonusSpellPowerMultiplier != 0);
             bResults |= (stats.BonusDamageMultiplier != 0);
             bResults |= (stats.DamageTakenMultiplier != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);

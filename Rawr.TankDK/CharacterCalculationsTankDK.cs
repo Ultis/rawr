@@ -82,6 +82,7 @@ namespace Rawr.TankDK {
             }
         }
 
+        /*
         private float _whiteDPS;
         public float WhiteDPS {
             get { return _whiteDPS; }
@@ -267,6 +268,7 @@ namespace Rawr.TankDK {
             get { return _OHExpertise; }
             set { _OHExpertise = value; }
         }
+        */
 
         public override float GetOptimizableCalculationValue(string calculation) {
             switch (calculation) {

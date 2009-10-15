@@ -68,6 +68,7 @@ namespace Rawr.TankDK {
                 hastedSpeed /= 1f + 0.05f * (float)calcOpts.talents.ImprovedIcyTalons;
 
                 if (calcOpts.Bloodlust) {
+                    // TODO: Update this bloodlust value to be a special effect
                     //float bloodlustUptime = (calcOpts.Bloodlust * 40f);
 
                     //if (bloodlustUptime > fightDuration) bloodlustUptime = 1f;

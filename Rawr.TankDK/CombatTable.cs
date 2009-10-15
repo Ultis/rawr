@@ -7,7 +7,7 @@ namespace Rawr.TankDK
     class CombatTable
     {
         public Character character;
-        public CharacterCalculationsTankDK calcs;
+//        public CharacterCalculationsTankDK calcs;
         public DeathKnightTalents talents;
         public Stats stats;
         public CalculationOptionsTankDK calcOpts;
@@ -21,7 +21,8 @@ namespace Rawr.TankDK
             spellCrits, spellResist, 
             totalMHMiss, totalOHMiss,
             realDuration, totalMeleeAbilities, totalParryableAbilities, 
-        totalSpellAbilities, normalizationFactor;
+            totalSpellAbilities, normalizationFactor,
+            chanceAvoided, chanceMissed, chanceDodged, chanceParried;
         /// <summary>
         /// Used as Total GCD time - usually hasted, but need to confirm that.
         /// </summary>
@@ -36,7 +37,7 @@ namespace Rawr.TankDK
         public CombatTable(Character c, CharacterCalculationsTankDK calcs, Stats stats, CalculationOptionsTankDK calcOpts)
         {
             this.character = c;
-            this.calcs = calcs;
+//            this.calcs = calcs;
             this.calcOpts = calcOpts;
             this.calcOpts.talents = character.DeathKnightTalents;
             this.talents = character.DeathKnightTalents;
@@ -76,11 +77,11 @@ namespace Rawr.TankDK
                 // Crit: Base .65%
                 physCrits = .0065f;
                 physCrits += stats.PhysicalCrit;
-                calcs.CritChance = physCrits;
+//                calcs.CritChance = physCrits;
 
-                float chanceAvoided = 0.335f;
+                chanceAvoided = 0.335f;
 
-                float chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-character.Level];
+                chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-character.Level];
 
 //                calcs.DodgedMHAttacks = MH.chanceDodged;
 //                calcs.DodgedOHAttacks = OH.chanceDodged;
@@ -103,7 +104,7 @@ namespace Rawr.TankDK
                     }
                 }
 
-                calcs.TargetDodge = chanceDodged;
+//                calcs.TargetDodge = chanceDodged;
 
                 float chanceMiss = StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel-character.Level];
                 if (character.OffHand != null)
@@ -112,10 +113,10 @@ namespace Rawr.TankDK
                 }
                 chanceMiss -= stats.PhysicalHit;
                 chanceMiss = Math.Max(0f, chanceMiss);
-                calcs.TargetMiss = chanceMiss;
+//                calcs.TargetMiss = chanceMiss;
 
                 chanceAvoided = chanceDodged + chanceMiss;
-                calcs.AvoidedAttacks = chanceDodged + chanceMiss;
+//                chanceAvoided = chanceDodged + chanceMiss;
 
                 chanceDodged = MH.chanceDodged;
                 missedSpecial = chanceMiss;
@@ -124,7 +125,7 @@ namespace Rawr.TankDK
 
                 spellCrits = 0f;
                 spellCrits += stats.SpellCrit;
-                calcs.SpellCritChance = spellCrits;
+//                calcs.SpellCritChance = spellCrits;
 
                 // Resists: Base 17%
                 spellResist = .17f;
@@ -148,63 +149,15 @@ namespace Rawr.TankDK
             float MHExpertise = stats.Expertise;
             float OHExpertise = stats.Expertise;
 
-            if (character.Race == CharacterRace.Dwarf)
-            {
-                if (character.MainHand != null &&
-                    (character.MainHand.Item.Type == ItemType.OneHandMace ||
-                     character.MainHand.Item.Type == ItemType.TwoHandMace))
-                {
-                    MHExpertise += 5f;
-                }
-
-                if (character.OffHand != null && character.OffHand.Item.Type == ItemType.OneHandMace)
-                {
-                    OHExpertise += 5f;
-                }
-            }
-            else if (character.Race == CharacterRace.Orc)
-            {
-                if (character.MainHand != null &&
-                    (character.MainHand.Item.Type == ItemType.OneHandAxe ||
-                     character.MainHand.Item.Type == ItemType.TwoHandAxe))
-                {
-                    MHExpertise += 5f;
-                }
-
-                if (character.OffHand != null && character.OffHand.Item.Type == ItemType.OneHandAxe)
-                {
-                    OHExpertise += 5f;
-                }
-            }
-            if (character.Race == CharacterRace.Human)
-            {
-                if (character.MainHand != null &&
-                    (character.MainHand.Item.Type == ItemType.OneHandSword ||
-                     character.MainHand.Item.Type == ItemType.TwoHandSword ||
-                     character.MainHand.Item.Type == ItemType.OneHandMace ||
-                     character.MainHand.Item.Type == ItemType.TwoHandMace))
-                {
-                    MHExpertise += 3f;
-                }
-
-                if (character.OffHand != null &&
-                    (character.OffHand.Item.Type == ItemType.OneHandSword ||
-                    character.OffHand.Item.Type == ItemType.OneHandMace))
-                {
-                    OHExpertise += 3f;
-                }
-            }
-
-
             MH = new Weapon(null, stats, calcOpts, 0f);
             OH = new Weapon(null, stats, calcOpts, 0f);
 
             if (character.MainHand != null)
             {
                 MH = new Weapon(character.MainHand.Item, stats, calcOpts, MHExpertise);
-                calcs.MHAttackSpeed = MH.hastedSpeed;
-                calcs.MHWeaponDamage = MH.damage;
-                calcs.MHExpertise = MH.effectiveExpertise;
+//                calcs.MHAttackSpeed = MH.hastedSpeed;
+//                calcs.MHWeaponDamage = MH.damage;
+//                calcs.MHExpertise = MH.effectiveExpertise;
                 if (character.MainHand.Item.Type == ItemType.TwoHandAxe
                     || character.MainHand.Item.Type == ItemType.TwoHandMace
                     || character.MainHand.Item.Type == ItemType.TwoHandSword
@@ -213,9 +166,9 @@ namespace Rawr.TankDK
                     normalizationFactor = 3.3f;
                     MH.damage *= 1f + .02f * talents.TwoHandedWeaponSpecialization;
                     combinedSwingTime = MH.hastedSpeed;
-                    calcs.OHAttackSpeed = 0f;
-                    calcs.OHWeaponDamage = 0f;
-                    calcs.OHExpertise = 0f;
+//                    calcs.OHAttackSpeed = 0f;
+//                    calcs.OHWeaponDamage = 0f;
+//                    calcs.OHExpertise = 0f;
                 }
                 else normalizationFactor = 2.4f;
             }
@@ -231,9 +184,9 @@ namespace Rawr.TankDK
                 //combinedSwingTime = 1f / MH.hastedSpeed + 1f / OH.hastedSpeed;
                 //combinedSwingTime = 1f / combinedSwingTime;
                 combinedSwingTime = (MH.hastedSpeed + OH.hastedSpeed) / 4;
-                calcs.OHAttackSpeed = OH.hastedSpeed;
-                calcs.OHWeaponDamage = OH.damage;
-                calcs.OHExpertise = OH.effectiveExpertise;
+//                calcs.OHAttackSpeed = OH.hastedSpeed;
+//                calcs.OHWeaponDamage = OH.damage;
+//                calcs.OHExpertise = OH.effectiveExpertise;
             }
 
             if (character.MainHand == null && character.OffHand == null)
@@ -277,7 +230,7 @@ namespace Rawr.TankDK
             float fDamOtherShadow = 0f;
             float fDamOtherArcane = 0f;
             float fDamOtherFrost = 0f;
-            float fDamBloodworms = 0f;
+            //float fDamBloodworms = 0f;
             float fDamRuneStrike = 0f;
 
             float missedSpecial = 0f;
@@ -463,8 +416,8 @@ namespace Rawr.TankDK
                 mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
                 stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
 
-                calcs.EnemyMitigation = 1f - mitigation;
-                calcs.EffectiveArmor = mitigation;
+//                calcs.EnemyMitigation = 1f - mitigation;
+//                calcs.EffectiveArmor = mitigation;
             }
             #endregion
 
@@ -476,7 +429,7 @@ namespace Rawr.TankDK
                 #region Main Hand
                 {
                     float fDamMHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel-character.Level] * MH.damage) * 0.75f;
-                    float fDamMHBeforeArmor = ((MH.damage * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level])) * (1f + physCrits)) + fDamMHglancing;
+                    float fDamMHBeforeArmor = ((MH.damage * (1f - chanceAvoided - StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level])) * (1f + physCrits)) + fDamMHglancing;
                     fDamWhiteMinusGlancing = fDamMHBeforeArmor - fDamMHglancing;
                     fDamWhiteBeforeArmor = fDamMHBeforeArmor;
                     MHDam = fDamMHBeforeArmor * mitigation;
@@ -491,7 +444,7 @@ namespace Rawr.TankDK
                     if (this.OH.damage > 0)
                     {
                         float fDamOHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level] * this.OH.damage) * 0.75f;
-                        float fDamOHBeforeArmor = ((this.OH.damage * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level])) * (1f + this.physCrits)) + fDamOHglancing;
+                        float fDamOHBeforeArmor = ((this.OH.damage * (1f - chanceAvoided - StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level])) * (1f + this.physCrits)) + fDamOHglancing;
                         fDamWhiteMinusGlancing += fDamOHBeforeArmor - fDamOHglancing;
                         fDamWhiteBeforeArmor += fDamOHBeforeArmor;
                         OHDam = fDamOHBeforeArmor * mitigation;
@@ -720,13 +673,13 @@ namespace Rawr.TankDK
 
                 if (this.MH != null) {
                     float dpsMHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level] * MH.DPS) * 0.75f;
-                    float dpsMHBeforeArmor = ((MH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level])) * (1f + physCrits)) + dpsMHglancing;
+                    float dpsMHBeforeArmor = ((MH.DPS * (1f - chanceAvoided - StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level])) * (1f + physCrits)) + dpsMHglancing;
                     fDamOtherFrost += (dpsMHBeforeArmor - dpsMHglancing);   // presumably doesn't proc off of glancings, like necrosis
                 }
 
                 if (this.OH != null) {
                     float dpsOHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level] * OH.DPS) * 0.75f;
-                    float dpsOHBeforeArmor = ((OH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level])) * (1f + physCrits)) + dpsOHglancing;
+                    float dpsOHBeforeArmor = ((OH.DPS * (1f - chanceAvoided - StatConversion.WHITE_GLANCE_CHANCE_CAP[calcOpts.TargetLevel - character.Level])) * (1f + physCrits)) + dpsOHglancing;
                     fDamOtherFrost += (dpsOHBeforeArmor - dpsOHglancing);
                 }
 
@@ -1088,54 +1041,53 @@ namespace Rawr.TankDK
             #endregion
 
             //feed variables for output
-            calcs.BCBDPS = fDamBCB * BCBMult;
-            calcs.BloodPlagueDPS = fDamBloodPlague * BloodPlagueMult;
-            calcs.BloodStrikeDPS = fDamBloodStrike * BloodStrikeMult;
-            calcs.DeathCoilDPS = fDamDeathCoil * DeathCoilMult;
-            calcs.DRWDPS = fDamDancingRuneWeapon * DancingRuneWeaponMult;
-            calcs.FrostFeverDPS = fDamFrostFever * FrostFeverMult;
-            calcs.FrostStrikeDPS = fDamFrostStrike * FrostStrikeMult;
-            calcs.BloodwormsDPS = fDamBloodworms * BloodwormsMult;
-            calcs.HeartStrikeDPS = fDamHeartStrike * HeartStrikeMult;
-            calcs.HowlingBlastDPS = fDamHowlingBlast * HowlingBlastMult;
-            calcs.DeathNDecayDPS = fDamDeathNDecay * DeathNDecayMult;
-            calcs.IcyTouchDPS = fDamIcyTouch * IcyTouchMult;
-            calcs.NecrosisDPS = fDamNecrosis * NecrosisMult;
-            calcs.ObliterateDPS = fDamObliterate * ObliterateMult;
-            calcs.DeathStrikeDPS = fDamDeathStrike * DeathStrikeMult;
-            calcs.PlagueStrikeDPS = fDamPlagueStrike * PlagueStrikeMult;
-            calcs.ScourgeStrikeDPS = fDamScourgeStrike * ScourgeStrikeMult;
-            calcs.UnholyBlightDPS = fDamUnholyBlight * UnholyBlightMult;
-            calcs.WhiteDPS = fDamWhite * WhiteMult;
-            calcs.WanderingPlagueDPS = fDamWanderingPlague * WanderingPlagueMult;
-            calcs.RuneStrikeDPS = fDamRuneStrike;
-            calcs.OtherDPS = fDamOtherShadow * otherShadowMult +
+            fDamBCB *= BCBMult;
+            fDamBloodPlague *= BloodPlagueMult;
+            fDamBloodStrike *= BloodStrikeMult;
+            fDamDeathCoil *= DeathCoilMult;
+            fDamDancingRuneWeapon *= DancingRuneWeaponMult;
+            fDamFrostFever *= FrostFeverMult;
+            fDamFrostStrike *= FrostStrikeMult;
+            //fDamBloodworms *= BloodwormsMult;
+            fDamHeartStrike *= HeartStrikeMult;
+            fDamHowlingBlast *= HowlingBlastMult;
+            fDamDeathNDecay *= DeathNDecayMult;
+            fDamIcyTouch *= IcyTouchMult;
+            fDamNecrosis *= NecrosisMult;
+            fDamObliterate *= ObliterateMult;
+            fDamDeathStrike *= DeathStrikeMult;
+            fDamPlagueStrike *= PlagueStrikeMult;
+            fDamScourgeStrike *= ScourgeStrikeMult;
+            fDamUnholyBlight *= UnholyBlightMult;
+            fDamWhite *= WhiteMult;
+            fDamWanderingPlague *= WanderingPlagueMult;
+            fDamRuneStrike += fDamOtherShadow * otherShadowMult +
                 fDamOtherArcane * otherArcaneMult +
                 fDamOtherFrost * otherFrostMult;
 
             float DPSPoints = 0;
-            DPSPoints += calcs.BCBDPS;
-            DPSPoints += calcs.BloodPlagueDPS;
-            DPSPoints += calcs.BloodStrikeDPS;
-            DPSPoints += calcs.DeathCoilDPS;
-            DPSPoints += calcs.FrostFeverDPS;
-            DPSPoints += calcs.FrostStrikeDPS;
-            DPSPoints += calcs.WanderingPlagueDPS;
-            DPSPoints += calcs.HeartStrikeDPS;
-            DPSPoints += calcs.HowlingBlastDPS;
-            DPSPoints += calcs.IcyTouchDPS;
-            DPSPoints += calcs.NecrosisDPS;
-            DPSPoints += calcs.ObliterateDPS;
-            DPSPoints += calcs.DeathStrikeDPS;
-            DPSPoints += calcs.PlagueStrikeDPS;
-            DPSPoints += calcs.ScourgeStrikeDPS;
-            DPSPoints += calcs.UnholyBlightDPS;
-            DPSPoints += calcs.WhiteDPS;
-            DPSPoints += calcs.OtherDPS;
-            DPSPoints += calcs.BloodwormsDPS;
-            DPSPoints += calcs.RuneStrikeDPS;
-            DPSPoints += calcs.DeathNDecayDPS;
+            DPSPoints += fDamBCB;
+            DPSPoints += fDamBloodPlague;
+            DPSPoints += fDamBloodStrike;
+            DPSPoints += fDamDeathCoil;
+            DPSPoints += fDamDancingRuneWeapon;
+            DPSPoints += fDamFrostFever;
+            DPSPoints += fDamFrostStrike;
+            DPSPoints += fDamHeartStrike;
+            DPSPoints += fDamHowlingBlast;
+            DPSPoints += fDamDeathNDecay;
+            DPSPoints += fDamIcyTouch;
+            DPSPoints += fDamNecrosis;
+            DPSPoints += fDamObliterate;
+            DPSPoints += fDamDeathStrike;
+            DPSPoints += fDamPlagueStrike;
+            DPSPoints += fDamScourgeStrike;
+            DPSPoints += fDamUnholyBlight;
+            DPSPoints += fDamWhite;
+            DPSPoints += fDamWanderingPlague;
+            DPSPoints += fDamRuneStrike;
 
+            // Magic Number?!?
             DPSPoints *= 2.0735f;
 
 #if DEBUG
