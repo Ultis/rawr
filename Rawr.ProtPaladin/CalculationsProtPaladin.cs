@@ -39,49 +39,94 @@ namespace Rawr.ProtPaladin
 
                 // Green
                 int[] enduring = { 39976, 40089, 40167, 40167 };    // Defense + Stamina
+                int[] vivid = { 39975, 40088, 40166, 40166 };       // Hit + Stamina
 
                 // Yellow
                 int[] thick = { 39916, 40015, 40126, 42157 };       // Defense
+                int[] rigid = { 39915, 40014, 40125, 42156 };       // Hit
 
                 // Orange
-                int[] etched = { 39948, 40038, 40143, 40143 };      // Strength + Hit
                 int[] champion = { 39949, 40039, 40144, 40144 };    // Strength + Defense
+                int[] etched = { 39948, 40038, 40143, 40143 };      // Strength + Hit
+                int[] glinting = { 39953, 40044, 40148, 40148 };    // Agility + Hit
                 int[] stalwart = { 39964, 40056, 40160, 40160 };    // Dodge + Defense
                 int[] glimmering = { 39965, 40057, 40161, 40161 };  // Parry + Defense
                 int[] accurate = { 39966, 40058, 40162, 40162 };    // Expertise + Hit
                 int[] resolute = { 39967, 40059, 40163, 40163 };    // Expertise + Defense
 
                 // Meta
-                int[] austere = { 41380 };
-                int[] eternal = { 41396 };
+                int austere = 41380;
+                int eternal = 41396;
 
-                string[] groupNames = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" };
-                int[,][] gemmingTemplates = new int[,][]
-                {
-                    //Red           Yellow      Blue        Prismatic   Meta
-                    { sovereign,    enduring,   solid,      solid,      austere },  // Balanced Threat + Avoidance, Austere
-                    { sovereign,    enduring,   solid,      solid,      eternal },  // Balanced Threat + Avoidance, Eternal
-                    { solid,        solid,      solid,      solid,      austere },  // Max Stam, Austere
-                    { solid,        solid,      solid,      solid,      eternal },  // Max Stam, Eternal
+                string[] qualityGroupNames = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" };
+                string[] typeGroupNames = new string[] { "Survivability", "Mitigation (Agility)", "Mitigation (Dodge)", "Mitigation (Parry)", "Threat" };
+                
+                int[] metaTemplates = new int[] { austere, eternal };
+
+                //    Red           Yellow      Blue        Prismatic
+                int[,][] survivabilityTemplates = new int[,][]
+                { // Survivability
+                    { solid,        solid,      solid,      solid },
                 };
+
+                int[,][] agilityTemplates = new int[,][]
+                { // Mitigation (Agility)
+                    { delicate,     delicate,   delicate,   delicate },
+                    { delicate,     glinting,   shifting,   delicate },
+                    { glinting,     thick,      enduring,   delicate },
+                    { shifting,     enduring,   solid,      delicate },
+                };
+
+                int[,][] dodgeTemplates = new int[,][]
+                { // Mitigation (Dodge)
+                    { subtle,       subtle,     subtle,     subtle },
+                    { subtle,       stalwart,   regal,      subtle },
+                    { stalwart,     thick,      enduring,   subtle },
+                    { regal,        enduring,   solid,      subtle },
+                };
+
+                int[,][] parryTemplates = new int[,][]
+                { // Mitigation (Parry)
+                    { flashing,     flashing,   flashing,   flashing },
+                    { flashing,     glimmering, defender,   flashing },
+                    { glimmering,   thick,      enduring,   flashing },
+                    { defender,     enduring,   solid,      flashing },
+                };
+
+                int[,][] threatTemplates = new int[,][]
+                { // Threat
+                    { bold,         bold,       bold,       bold },
+                    { bold,         champion,   sovereign,  bold },
+                    { champion,     thick,      enduring,   bold },
+                    { sovereign,    enduring,   solid,      bold },
+                };
+
+                int[][,][] gemmingTemplates = new int[][,][]
+                { survivabilityTemplates, agilityTemplates, dodgeTemplates, parryTemplates, threatTemplates };
 
                 // Generate List of Gemming Templates
                 List<GemmingTemplate> gemmingTemplate = new List<GemmingTemplate>();
-                for (int j = 0; j <= groupNames.GetUpperBound(0); j++)
+                for (int qualityId = 0; qualityId <= qualityGroupNames.GetUpperBound(0); qualityId++)
                 {
-                    for (int i = 0; i <= gemmingTemplates.GetUpperBound(0); i++)
+                    for (int typeId = 0; typeId <= typeGroupNames.GetUpperBound(0); typeId++)
                     {
-                        gemmingTemplate.Add(new GemmingTemplate()
+                        for (int templateId = 0; templateId <= gemmingTemplates[typeId].GetUpperBound(0); templateId++)
                         {
-                            Model = "ProtPaladin",
-                            Group = groupNames[j],
-                            RedId = gemmingTemplates[i, 0][j],
-                            YellowId = gemmingTemplates[i, 1][j],
-                            BlueId = gemmingTemplates[i, 2][j],
-                            PrismaticId = gemmingTemplates[i, 3][j],
-                            MetaId = gemmingTemplates[i, 4][0],
-                            Enabled = j == 1
-                        });
+                            for (int metaId = 0; metaId <= metaTemplates.GetUpperBound(0); metaId++)
+                            {
+                                gemmingTemplate.Add(new GemmingTemplate()
+                                {
+                                    Model       = "ProtPaladin",
+                                    Group       = string.Format("{0} - {1}", qualityGroupNames[qualityId], typeGroupNames[typeId]),
+                                    RedId       = gemmingTemplates[typeId][templateId, 0][qualityId],
+                                    YellowId    = gemmingTemplates[typeId][templateId, 1][qualityId],
+                                    BlueId      = gemmingTemplates[typeId][templateId, 2][qualityId],
+                                    PrismaticId = gemmingTemplates[typeId][templateId, 3][qualityId],
+                                    MetaId      = metaTemplates[metaId],
+                                    Enabled     = qualityGroupNames[qualityId] == "Epic" && typeGroupNames[typeId] != "Threat",
+                                });
+                            }
+                        }
                     }
                 }
                 return gemmingTemplate;
