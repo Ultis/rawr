@@ -454,6 +454,11 @@ namespace Rawr.Enhance
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    earth_shock");
             }
+            if (character.ShamanTalents.GlyphofFlameShock)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    flame_shock");
+            }
             if (character.ShamanTalents.GlyphofStormstrike)
             {
                 glyphNumber += 1;

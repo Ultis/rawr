@@ -13,6 +13,7 @@ namespace Rawr.Enhance
         /// <summary>This Model's local bosslist</summary>
         private BossList bosslist = null;
         CalculationOptionsEnhance _calcOpts;
+        PriorityDisplay _pd;
         
         public CalculationOptionsPanelEnhance()
         {
@@ -77,11 +78,12 @@ namespace Rawr.Enhance
 
         private void LoadPriorities()
         {
-            PriorityDisplay pd = new PriorityDisplay(_calcOpts.Magma);
+            _pd = new PriorityDisplay(_calcOpts.Magma);
             CLBPriorities.Items.Clear();
-            foreach (PriorityDisplay.Priority p in pd.getPriorities())
+            foreach (PriorityDisplay.Priority p in _pd.getPriorities())
             {
-                CLBPriorities.Items.Add(p.Name, p.Checked);
+                CLBPriorities.Items.Add(p.PriorityName, p.Checked);
+                _calcOpts.SetAbilityPriority(p.AbilityType, CLBPriorities.Items.Count);
             }
         }
 
@@ -195,7 +197,26 @@ namespace Rawr.Enhance
 
         private void CLBPriorities_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            // one of the priorities changed. TODO Update the Priority Display object with new status
+            if (!_loadingCalculationOptions)
+            {
+                // one of the priorities changed. TODO Update the Priority Display object with new status
+                List<PriorityDisplay.Priority> priorities = _pd.getPriorities();
+                PriorityDisplay.Priority selected = priorities[e.Index];
+                selected.SetChecked(e.NewValue);
+                if (selected.Checked)
+                    _calcOpts.SetAbilityPriority(selected.AbilityType, e.Index + 1); // index is zero based priorities are 1 based
+                else
+                    _calcOpts.SetAbilityPriority(selected.AbilityType, 0);
+                if (selected.AbilityType == EnhanceAbility.MagmaTotem)
+                {  // toggle status of fire totems - TODO needs to toggle status of checkbox
+                    _calcOpts.SetAbilityPriority(EnhanceAbility.SearingTotem, 0);
+                }
+                if (selected.AbilityType == EnhanceAbility.SearingTotem)
+                {
+                    _calcOpts.SetAbilityPriority(EnhanceAbility.MagmaTotem, 0);
+                }
+                Character.OnCalculationsInvalidated();
+            }
         }
     }
 
@@ -208,10 +229,10 @@ namespace Rawr.Enhance
             priorities = new List<Priority>();
             priorities.Add(new Priority("Shamanistic Rage", EnhanceAbility.ShamanisticRage, "Use Shamanistic Rage", true));
             priorities.Add(new Priority("Feral Spirits", EnhanceAbility.FeralSpirits, "Use Feral Sprirts", true));
-            priorities.Add(new Priority("Lightning Bolt on 5 stacks of MW", EnhanceAbility.FlameShock, "Use Lightning Bolt when you have 5 stacks of Maelstrom Weapon", true));
-            priorities.Add(new Priority("Flame Shock", EnhanceAbility.FlameShock, "Use Flame Shock if no Flame Shock debuff on target", false));
-            priorities.Add(new Priority("Earth Shock if SS debuff", EnhanceAbility.EarthShock, "Use Earth Shock if Stormstrike debuff on target", true));
-            priorities.Add(new Priority("Lava Lash if Quaking Earth", EnhanceAbility.LavaLash, "Use Lava Lash if Volcanic Fury buff about to run out", false));
+            priorities.Add(new Priority("Lightning Bolt on 5 stacks of MW", EnhanceAbility.LightningBolt, "Use Lightning Bolt when you have 5 stacks of Maelstrom Weapon", true));
+            priorities.Add(new Priority("Flame Shock", EnhanceAbility.FlameShock, "Use Flame Shock if no Flame Shock debuff on target", true));
+     //       priorities.Add(new Priority("Earth Shock if SS debuff", EnhanceAbility.EarthShock, "Use Earth Shock if Stormstrike debuff on target", true));
+     //       priorities.Add(new Priority("Lava Lash if Quaking Earth", EnhanceAbility.LavaLash, "Use Lava Lash if Volcanic Fury buff about to run out", false));
             priorities.Add(new Priority("Stormstrike", EnhanceAbility.StormStrike, "Use Stormstrike", true));
             priorities.Add(new Priority("Earth Shock", EnhanceAbility.EarthShock, "Use Earth Shock", true));
             priorities.Add(new Priority("Lava Lash", EnhanceAbility.LavaLash, "Use Stormstrike", true));
@@ -232,18 +253,24 @@ namespace Rawr.Enhance
             private string _description;
             private bool _inUse;
 
-            public Priority (string priorityName, EnhanceAbility abilityType, string desc, bool onByDefault)
+            public Priority (string priorityName, EnhanceAbility abilityType, string description, bool onByDefault)
             {
                 _abilityType = abilityType;
                 _priorityName = priorityName;
-                _description = desc;
+                _description = description;
                 _inUse = onByDefault;
+                this.Text = priorityName;
             }
 
             public string PriorityName { get { return _priorityName; } }
             public EnhanceAbility  AbilityType { get { return _abilityType; } }
             public string Description { get { return _description; } }
             public bool Checked { get { return _inUse; } } 
+
+            public void SetChecked(CheckState isChecked)
+            {
+                _inUse = isChecked == CheckState.Checked;
+            }
         }
     }
 }

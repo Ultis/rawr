@@ -35,8 +35,10 @@ namespace Rawr.Enhance
 		public float TargetNatureResistance = 0;
 		public bool Magma = true;
 		public bool BaseStatOption = true;
-
-        public void SetBoss(BossHandler boss) {
+        private Dictionary<EnhanceAbility, int> priorityList = new Dictionary<EnhanceAbility, int>();
+        
+        public void SetBoss(BossHandler boss) 
+        {
             Boss = boss;
             BossName = boss.Name;
             TargetLevel = boss.Level;
@@ -46,5 +48,21 @@ namespace Rawr.Enhance
             TargetFireResistance = boss.Resistance(ItemDamageType.Fire);
             TargetNatureResistance = boss.Resistance(ItemDamageType.Nature);
         }
+
+        public int GetAbilityPriority(EnhanceAbility abilityType)
+        { 
+            int value = -1; 
+            priorityList.TryGetValue(abilityType, out value); 
+            return value;
+        }
+
+        public void SetAbilityPriority(EnhanceAbility abilityType, int priority)
+        {
+            int value = GetAbilityPriority(abilityType);
+            if (value != -1)
+                priorityList.Remove(abilityType);
+            if (priority > 0)
+                priorityList.Add(abilityType, priority);
+        }        
 	}
 }

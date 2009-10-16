@@ -208,7 +208,7 @@ namespace Rawr.Enhance
             calculatedStats.TargetLevel = calcOpts.TargetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             float initialAP = stats.AttackPower;
-            
+
             // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
             StatsSpecialEffects se = new StatsSpecialEffects(character, stats, calcOpts);
             Stats specialEffects = se.getSpecialEffects();
@@ -221,19 +221,22 @@ namespace Rawr.Enhance
             float shockBonus = stats.Enhance4T9 == 1f ? 1.25f : 1f;
             float windfuryWeaponBonus = 1250f + stats.BonusWFAttackPower;
             float windfuryDamageBonus = 1f;
-            switch (character.ShamanTalents.ElementalWeapons){
+            switch (character.ShamanTalents.ElementalWeapons)
+            {
                 case 1: windfuryDamageBonus = 1.13f; break;
                 case 2: windfuryDamageBonus = 1.27f; break;
                 case 3: windfuryDamageBonus = 1.40f; break;
             }
             float weaponMastery = 1f;
-            switch (character.ShamanTalents.WeaponMastery){
+            switch (character.ShamanTalents.WeaponMastery)
+            {
                 case 1: weaponMastery = 1.04f; break;
                 case 2: weaponMastery = 1.07f; break;
                 case 3: weaponMastery = 1.10f; break;
             }
             float unleashedRage = 0f;
-            switch (character.ShamanTalents.UnleashedRage) {
+            switch (character.ShamanTalents.UnleashedRage)
+            {
                 case 1: unleashedRage = .04f; break;
                 case 2: unleashedRage = .07f; break;
                 case 3: unleashedRage = .10f; break;
@@ -244,7 +247,7 @@ namespace Rawr.Enhance
                 stats.SpellPower += FTspellpower;
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
                 stats.SpellPower += FTspellpower;
-            
+
             float addedAttackPower = stats.AttackPower - initialAP;
             float MQSpellPower = mentalQuickness * addedAttackPower * (1 + stats.BonusAttackPowerMultiplier);
             // make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
@@ -260,27 +263,27 @@ namespace Rawr.Enhance
 
             CombatStats cs = new CombatStats(character, stats, calcOpts); // calculate the combat stats using modified stats
             // only apply unleashed rage talent if not already applied Unleashed Rage buff.
-            float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f : 
+            float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f :
                                                     (stats.AttackPower * unleashedRage * cs.URUptime);
             stats.AttackPower += URattackPower; // no need to multiply by bonus attack power as the whole point is its zero if we need to add Unleashed rage
             stats.SpellPower += mentalQuickness * URattackPower * (1f + stats.BonusSpellPowerMultiplier);
-            
+
             // assign basic variables for calcs
             float attackPower = stats.AttackPower;
             float spellPower = stats.SpellPower;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
-            float AP_SP_Ratio = (spellPower-274f-211f) / attackPower;
+            float AP_SP_Ratio = (spellPower - 274f - 211f) / attackPower;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier);
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             float bonusLSDamage = 1f + stats.BonusLSDamage; // 2 piece T7 set bonus
             float bonusLLSSDamage = 1f + stats.BonusLLSSDamage;
             float bonusSSDamage = stats.BonusSSDamage;
-            int   baseResistance =  Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
+            int baseResistance = Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
             float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
             float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
-            
+
             #endregion
 
             #region Individual DPS
@@ -316,8 +319,10 @@ namespace Rawr.Enhance
 
             //2: Stormstrike DPS
             float dpsSS = 0f;
-            if (character.ShamanTalents.Stormstrike == 1)
+            float stormstrikeMultiplier = 0f;
+            if (character.ShamanTalents.Stormstrike == 1 && calcOpts.GetAbilityPriority(EnhanceAbility.StormStrike) > 0)
             {
+                stormstrikeMultiplier = 1.2f + (character.ShamanTalents.GlyphofStormstrike ? .08f : 0f);
                 float swingDPSMH = (damageMHSwing + bonusSSDamage) * cs.HitsPerSMHSS;
                 float swingDPSOH = (damageOHSwing + bonusSSDamage) * cs.HitsPerSOHSS;
                 float SSnormal = (swingDPSMH * cs.YellowHitModifierMH) + (swingDPSOH * cs.YellowHitModifierOH);
@@ -327,7 +332,7 @@ namespace Rawr.Enhance
 
             //3: Lavalash DPS
             float dpsLL = 0f;
-            if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1)
+            if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1 && calcOpts.GetAbilityPriority(EnhanceAbility.LavaLash) > 0)
             {
                 float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
                 float LLnormal = lavalashDPS * cs.YellowHitModifierOH;
@@ -343,46 +348,55 @@ namespace Rawr.Enhance
             }
 
             //4: Earth Shock DPS
-            float stormstrikeMultiplier = 1.2f + (character.ShamanTalents.GlyphofStormstrike ? .08f : 0f);
-            float damageESBase = 872f;
-            float coefES = .3858f;
-            float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellPower);
-            float shockdps = damageES / cs.AbilityCooldown(EnhanceAbility.EarthShock);
-            float shockNormal = shockdps * cs.SpellHitModifier;
-            float shockCrit = shockdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-            float dpsES = (shockNormal + shockCrit) * bonusNatureDamage * bossNatureResistance * shockBonus;
+            float dpsES = 0f;
+            if (calcOpts.GetAbilityPriority(EnhanceAbility.EarthShock) > 0)
+            {
+                float damageESBase = 872f;
+                float coefES = .3858f;
+                float damageES = stormstrikeMultiplier * concussionMultiplier * (damageESBase + coefES * spellPower);
+                float shockdps = damageES / cs.AbilityCooldown(EnhanceAbility.EarthShock);
+                float shockNormal = shockdps * cs.SpellHitModifier;
+                float shockCrit = shockdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
+                dpsES = (shockNormal + shockCrit) * bonusNatureDamage * bossNatureResistance * shockBonus;
+            }
 
             //4.5: Flame Shock DPS
-            float damageFSBase = 500f;
-            float damageFSDoTBase = 834f;
-            float coefFS = .2142f;
-            float coefFSDoT = .6f;
-            float damageFS = (damageFSBase + coefFS * spellPower) * concussionMultiplier;
-            float damageFTDoT = (damageFSDoTBase + coefFSDoT * spellPower) * concussionMultiplier;
-            float usesCooldown = cs.AbilityCooldown(EnhanceAbility.FlameShock);
-            float flameShockdps = damageFS / usesCooldown;
-            float flameShockDoTdps = damageFTDoT / usesCooldown;
-            float flameShockNormal = (flameShockdps + flameShockDoTdps) * cs.ChanceSpellHit;
-            float flameShockCrit = 0f;
-            if (character.ShamanTalents.GlyphofFlameShock)
+            float dpsFS = 0f;
+            if (calcOpts.GetAbilityPriority(EnhanceAbility.FlameShock) > 0)
             {
-                flameShockNormal = (flameShockdps + flameShockDoTdps) * cs.SpellHitModifier;
-                flameShockCrit = (flameShockdps + flameShockDoTdps) * cs.SpellCritModifier * cs.CritMultiplierSpell;
+                float damageFSBase = 500f;
+                float damageFSDoTBase = 834f;
+                float coefFS = .2142f;
+                float coefFSDoT = .6f;
+                float damageFS = (damageFSBase + coefFS * spellPower) * concussionMultiplier;
+                float damageFTDoT = (damageFSDoTBase + coefFSDoT * spellPower) * concussionMultiplier;
+                float usesCooldown = cs.AbilityCooldown(EnhanceAbility.FlameShock);
+                float flameShockdps = (damageFS + damageFTDoT) / usesCooldown;
+                float flameShockNormal = flameShockdps * cs.ChanceSpellHit;
+                float flameShockCrit = 0f;
+                if (character.ShamanTalents.GlyphofFlameShock)
+                {
+                    flameShockNormal = flameShockdps * cs.SpellHitModifier;
+                    flameShockCrit = flameShockdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
+                }
+                dpsFS = (flameShockNormal + flameShockCrit) * bonusFireDamage * bossFireResistance * shockBonus;
             }
-            float dpsFS = (flameShockNormal + flameShockCrit) * bonusFireDamage * bossFireResistance * shockBonus;
-
             //5: Lightning Bolt DPS
-            float damageLBBase = 765f;
-            float coefLB = .7143f;
-            // LightningSpellPower is for totem of hex/the void/ancestral guidance
-            float damageLB = stormstrikeMultiplier * concussionMultiplier * (damageLBBase + coefLB * (spellPower + stats.LightningSpellPower));
-            float lbdps = damageLB / cs.AbilityCooldown(EnhanceAbility.LightningBolt);
-            float lbNormal = lbdps * cs.LBHitModifier;
-            float lbCrit = lbdps * cs.LBCritModifier * cs.CritMultiplierSpell;
-            float dpsLB = (lbNormal + lbCrit) * bonusNatureDamage * bossNatureResistance;
-            if (character.ShamanTalents.GlyphofLightningBolt)
-                dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
-            
+            float dpsLB = 0f;
+            if (calcOpts.GetAbilityPriority(EnhanceAbility.LightningBolt) > 0)
+            {
+                float damageLBBase = 765f;
+                float coefLB = .7143f;
+                // LightningSpellPower is for totem of hex/the void/ancestral guidance
+                float damageLB = stormstrikeMultiplier * concussionMultiplier * (damageLBBase + coefLB * (spellPower + stats.LightningSpellPower));
+                float lbdps = damageLB / cs.AbilityCooldown(EnhanceAbility.LightningBolt);
+                float lbNormal = lbdps * cs.LBHitModifier;
+                float lbCrit = lbdps * cs.LBCritModifier * cs.CritMultiplierSpell;
+                dpsLB = (lbNormal + lbCrit) * bonusNatureDamage * bossNatureResistance;
+                if (character.ShamanTalents.GlyphofLightningBolt)
+                    dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
+            }
+
             //6: Windfury DPS
             float dpsWF = 0f;
             if (calcOpts.MainhandImbue == "Windfury")
@@ -395,13 +409,17 @@ namespace Rawr.Enhance
             }
 
             //7: Lightning Shield DPS
-            float damageLSBase = 380;
-            float damageLSCoef = 0.33f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
-            float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellPower);
-            // no crit needed as LS can't crit
-            float dpsLS = cs.ChanceSpellHit * cs.StaticShockProcsPerS * damageLS * bonusNatureDamage * bonusLSDamage * bossNatureResistance;
-            if (character.ShamanTalents.GlyphofLightningShield)
-                dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
+            float dpsLS = 0f;
+            if (calcOpts.GetAbilityPriority(EnhanceAbility.LightningShield) > 0)
+            {
+                float damageLSBase = 380;
+                float damageLSCoef = 0.33f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
+                float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellPower);
+                // no crit needed as LS can't crit
+                dpsLS = cs.ChanceSpellHit * cs.StaticShockProcsPerS * damageLS * bonusNatureDamage * bonusLSDamage * bossNatureResistance;
+                if (character.ShamanTalents.GlyphofLightningShield)
+                    dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
+            }
 
             //8: Searing/Magma Totem DPS
             float damageSTMTBase = calcOpts.Magma ? 371f : 105f;
@@ -421,7 +439,7 @@ namespace Rawr.Enhance
                 float damageFT = damageFTBase + damageFTCoef * spellPower;
                 float FTdps = damageFT * cs.HitsPerSMH;
                 float FTNormal = FTdps * cs.SpellHitModifier;
-                float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell; 
+                float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
             }
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
@@ -433,12 +451,12 @@ namespace Rawr.Enhance
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
-            } 
+            }
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
             // my analysis reveals they get 31% of shaman AP + 2 * their STR and base 206.17 dps.
             float dpsDogs = 0f;
-            if (character.ShamanTalents.FeralSpirit == 1)
+            if (character.ShamanTalents.FeralSpirit == 1 && calcOpts.GetAbilityPriority(EnhanceAbility.FeralSpirits) > 0)
             {
                 float hitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + .02f * character.ShamanTalents.DualWieldSpecialization;
                 float FSglyphAP = character.ShamanTalents.GlyphofFeralSpirit ? attackPower * .3f : 0f;
@@ -446,7 +464,7 @@ namespace Rawr.Enhance
                 float enhTotems = IsBuffChecked(character.ActiveBuffs, "Enhancing Totems (Agility/Strength)") ? 23f : 0f;
                 float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 plus SoE totem if active giving extra 178 str buff
                 float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * cs.URUptime * (1f + unleashedRage);
-                float dogsMissrate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel-80] - hitBonus) + cs.AverageDodge; 
+                float dogsMissrate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - hitBonus) + cs.AverageDodge;
                 float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
                 float dogsBaseSpeed = 1.5f;
                 float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste));
@@ -460,57 +478,62 @@ namespace Rawr.Enhance
                 float dogsMultipliers = cs.DamageReduction * bonusPhysicalDamage;
 
                 dpsDogs = 2 * (45f / 180f) * dogsTotalDPS * dogsHitsPerS * dogsMultipliers;
-                calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, 0.065f, cs.GlancingRate, dogsCrit);
-            } else { calculatedStats.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0); }
+                calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, 0.065f, cs.GlancingRate, dogsCrit, cs.AbilityCooldown(EnhanceAbility.FeralSpirits));
+            }
+            else 
+            { 
+                calculatedStats.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0, 0); 
+            }
             #endregion
 
             #region Set CalculatedStats
             calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsWF + dpsLS + dpsSTMT + dpsFT + dpsDogs;
-			calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
+            calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
-			calculatedStats.AvoidedAttacks = (1 - cs.AverageWhiteHit) * 100f;
-			calculatedStats.DodgedAttacks = cs.AverageDodge * 100f;
+            calculatedStats.AvoidedAttacks = (1 - cs.AverageWhiteHit) * 100f;
+            calculatedStats.DodgedAttacks = cs.AverageDodge * 100f;
             calculatedStats.ParriedAttacks = cs.AverageParry * 100f;
             calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks + calculatedStats.DodgedAttacks;
             calculatedStats.YellowHit = (float)Math.Floor((float)(cs.AverageYellowHit * 10000f)) / 100f;
             calculatedStats.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
             calculatedStats.OverSpellHitCap = (float)Math.Floor((float)(cs.OverSpellHitCap * 10000f)) / 100f;
-            calculatedStats.WhiteHit = (float)Math.Floor((float)(cs.AverageWhiteHit * 10000f)) / 100f; 
+            calculatedStats.WhiteHit = (float)Math.Floor((float)(cs.AverageWhiteHit * 10000f)) / 100f;
             calculatedStats.MeleeCrit = (float)Math.Floor((float)((cs.DisplayMeleeCrit)) * 10000f) / 100f;
             calculatedStats.YellowCrit = (float)Math.Floor((float)((cs.DisplayYellowCrit)) * 10000f) / 100f;
             calculatedStats.SpellCrit = (float)Math.Floor((float)(cs.ChanceSpellCrit * 10000f)) / 100f;
-		    calculatedStats.GlancingBlows = cs.GlancingRate * 100f;
+            calculatedStats.GlancingBlows = cs.GlancingRate * 100f;
             calculatedStats.ArmorMitigation = (1f - cs.DamageReduction) * 100f;
             calculatedStats.AvMHSpeed = cs.HastedMHSpeed;
             calculatedStats.AvOHSpeed = cs.HastedOHSpeed;
             calculatedStats.EDBonusCrit = cs.EDBonusCrit * 100f;
             calculatedStats.EDUptime = cs.EDUptime * 100f;
-            calculatedStats.URUptime = cs.URUptime  * 100f;
+            calculatedStats.URUptime = cs.URUptime * 100f;
             calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
             calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
             calculatedStats.TotalExpertiseMH = cs.ExpertiseBonusMH * 400f;
             calculatedStats.TotalExpertiseOH = cs.ExpertiseBonusOH * 400f;
 
-            calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHit, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCrit);
-            calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHit, cs.AverageDodge, -1, cs.AverageYellowCrit);
-            calculatedStats.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH);
-            calculatedStats.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
+            calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHit, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCrit, cs.HastedMHSpeed);
+            calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHit, cs.AverageDodge, -1, cs.AverageYellowCrit, cs.AbilityCooldown(EnhanceAbility.StormStrike));
+            calculatedStats.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH, cs.AbilityCooldown(EnhanceAbility.LavaLash));
+            calculatedStats.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.AbilityCooldown(EnhanceAbility.EarthShock));
             if (character.ShamanTalents.GlyphofFlameShock)
-                calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
+                calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.AbilityCooldown(EnhanceAbility.FlameShock));
             else
-                calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, 0);
-            calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
-            calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH);
-            calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, -1);
-            calculatedStats.SearingMagma = new DPSAnalysis(dpsSTMT, 1 - cs.AverageYellowHit, -1, -1, cs.AverageYellowCrit);
-            calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit);
+                calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, 0, cs.AbilityCooldown(EnhanceAbility.FlameShock));
+            calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.AbilityCooldown(EnhanceAbility.LightningBolt));
+            calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, cs.WFCooldown);
+            calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, -1, cs.AbilityCooldown(EnhanceAbility.LightningShield));
+            calculatedStats.SearingMagma = new DPSAnalysis(dpsSTMT, 1 - cs.AverageYellowHit, -1, -1, cs.AverageYellowCrit,
+                calcOpts.Magma ? cs.AbilityCooldown(EnhanceAbility.MagmaTotem) : cs.AbilityCooldown(EnhanceAbility.SearingTotem));
+            calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTCooldown);
 
 #if RAWR3
             calculatedStats.Version = VERSION;
 #else
             calculatedStats.Version = typeof(CalculationsEnhance).Assembly.GetName().Version.ToString();
 #endif
-			return calculatedStats;
+            return calculatedStats;
             #endregion
         }
         #endregion
