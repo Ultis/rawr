@@ -45,16 +45,34 @@ namespace Rawr.Rogue {
         public float BaseExpertise { get { return Talents.WeaponExpertise.Bonus + _stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating, CharacterClass.Rogue); } }
         public float MhExpertise { get { return CalcExpertise(MH); } }
         public float OhExpertise { get { return CalcExpertise(OH); } }
+        private float GetRacialExpertiseFromWeaponType(ItemType weapon) {
+            CharacterRace r = _character.Race;
+            if (weapon != ItemType.None) {
+                if (r == CharacterRace.Human) {
+                    if (weapon == ItemType.OneHandSword || weapon == ItemType.OneHandMace
+                        || weapon == ItemType.TwoHandSword || weapon == ItemType.TwoHandMace)
+                    {
+                        return 3f;
+                    }
+                } else if (r == CharacterRace.Dwarf) {
+                    if (weapon == ItemType.OneHandMace || weapon == ItemType.TwoHandMace) {
+                        return 5f;
+                    }
+                } else if (r == CharacterRace.Orc) {
+                    if (weapon == ItemType.OneHandAxe || weapon == ItemType.TwoHandAxe) {
+                        return 5f;
+                    }
+                }
+            }
+            return 0f;
+        }
         private float CalcExpertise(Item weapon) {
             // Base + Rating
             float baseExpertise = BaseExpertise;
             // Talent and Racial Bonuses
-            if (_character.Race == CharacterRace.Human) {
-                if (weapon != null && (weapon.Type == ItemType.OneHandSword || weapon.Type == ItemType.OneHandMace)) {
-                    baseExpertise += 5f;
-                }
-            }
-            return baseExpertise;
+            float racial = GetRacialExpertiseFromWeaponType(weapon._type);
+            //
+            return baseExpertise + racial;
         }
         public float MhDodgeChance { get { return CalcDodgeChance(MhExpertise); } }
         public float OhDodgeChance { get { return CalcDodgeChance(OhExpertise); } }
