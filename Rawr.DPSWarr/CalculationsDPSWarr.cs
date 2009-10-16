@@ -288,18 +288,19 @@ These numbers to do not include racial bonuses.",
         }
 
         private Dictionary<string, Color> _subPointNameColors = null;
+        private Dictionary<string, Color> _subPointNameColors_Normal = null;
+        private Dictionary<string, Color> _subPointNameColors_DPSDMG = null;
         public override Dictionary<string, Color> SubPointNameColors {
             get {
-                if (_subPointNameColors == null) {
-                    _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
-                    #if RAWR3
-                        _subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
-                    #else
-                        _subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
-                    #endif
+                if (_subPointNameColors_Normal == null) {
+                    _subPointNameColors_Normal = new Dictionary<string, Color>();
+                    _subPointNameColors_Normal.Add("DPS", Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors_Normal.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
                 }
-                return _subPointNameColors;
+                if (_subPointNameColors == null) { _subPointNameColors = _subPointNameColors_Normal; }
+                Dictionary<string, Color> ret = _subPointNameColors;
+                _subPointNameColors = _subPointNameColors_Normal;
+                return ret;
             }
         }
 
@@ -957,6 +958,12 @@ These numbers to do not include racial bonuses.",
             switch (chartName) {
                 #region Ability DPS+Damage
                 case "Ability DPS+Damage": {
+                    if(_subPointNameColors_DPSDMG == null){
+                        _subPointNameColors_DPSDMG = new Dictionary<string, Color>();
+                        _subPointNameColors_DPSDMG.Add("DPS", Color.FromArgb(255, 255, 0, 0));
+                        _subPointNameColors_DPSDMG.Add("Damage Per Hit", Color.FromArgb(255, 0, 0, 255));
+                    }
+                    _subPointNameColors = _subPointNameColors_DPSDMG;
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     if (calculations.Rot.GetType() == typeof(FuryRotation)) {
                         #region Fury

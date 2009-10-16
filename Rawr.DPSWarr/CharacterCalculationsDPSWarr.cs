@@ -260,13 +260,13 @@ namespace Rawr.DPSWarr {
             if (Rot.GetType() == typeof(ArmsRotation)) {
                 ArmsRotation ar = (ArmsRotation)Rot;
                 dictValues.Add("Bladestorm",        string.Format(format,ar._BLS_DPS,BLS.DamageOnUse/6f,ar._BLS_GCDs)+BLS.GenTooltip(ar._BLS_GCDs,ar._BLS_DPS/TotalDPS));
-                dictValues.Add("Mortal Strike",     string.Format(format,ar._MS_DPS ,MS.DamageOnUse ,ar._MS_GCDs    )+MS.GenTooltip( ar._MS_GCDs, ar._MS_DPS /TotalDPS));
-                dictValues.Add("Rend",              string.Format(format,ar._RD_DPS ,RD.TickSize    ,ar._RD_GCDs    )+RD.GenTooltip( ar._RD_GCDs, ar._RD_DPS /TotalDPS));
-                dictValues.Add("Overpower",         string.Format(format,ar._OP_DPS ,OP.DamageOnUse ,ar._OP_GCDs    )+OP.GenTooltip( ar._OP_GCDs, ar._OP_DPS /TotalDPS));
-                dictValues.Add("Taste for Blood",   string.Format(format,ar._TB_DPS ,TB.DamageOnUse ,ar._TB_GCDs    )+TB.GenTooltip( ar._TB_GCDs, ar._TB_DPS /TotalDPS));
-                dictValues.Add("Sudden Death",      string.Format(format,ar._SD_DPS ,SD.DamageOnUse ,ar._SD_GCDs    )+SD.GenTooltip( ar._SD_GCDs, ar._SD_DPS /TotalDPS));
-                dictValues.Add("Slam",              string.Format(format,ar._SL_DPS ,SL.DamageOnUse ,Rot._SL_GCDs    )+SL.GenTooltip( ar._SL_GCDs, ar._SL_DPS /TotalDPS));
-                dictValues.Add("Sword Spec",        string.Format(format,ar._SS_DPS ,SS.DamageOnUse ,ar._SS_Acts    )+SS.GenTooltip( ar._SS_Acts, ar._SS_DPS /TotalDPS));
+                dictValues.Add("Mortal Strike",     string.Format(format,ar._MS_DPS ,MS.DamageOnUse    ,ar._MS_GCDs )+MS.GenTooltip( ar._MS_GCDs, ar._MS_DPS /TotalDPS));
+                dictValues.Add("Rend",              string.Format(format,ar._RD_DPS ,RD.TickSize       ,ar._RD_GCDs )+RD.GenTooltip( ar._RD_GCDs, ar._RD_DPS /TotalDPS));
+                dictValues.Add("Overpower",         string.Format(format,ar._OP_DPS ,OP.DamageOnUse    ,ar._OP_GCDs )+OP.GenTooltip( ar._OP_GCDs, ar._OP_DPS /TotalDPS));
+                dictValues.Add("Taste for Blood",   string.Format(format,ar._TB_DPS ,TB.DamageOnUse    ,ar._TB_GCDs )+TB.GenTooltip( ar._TB_GCDs, ar._TB_DPS /TotalDPS));
+                dictValues.Add("Sudden Death",      string.Format(format,ar._SD_DPS ,SD.DamageOnUse    ,ar._SD_GCDs )+SD.GenTooltip( ar._SD_GCDs, ar._SD_DPS /TotalDPS));
+                dictValues.Add("Slam",              string.Format(format,ar._SL_DPS ,SL.DamageOnUse    ,Rot._SL_GCDs)+SL.GenTooltip( ar._SL_GCDs, ar._SL_DPS /TotalDPS));
+                dictValues.Add("Sword Spec",        string.Format(format,ar._SS_DPS ,SS.DamageOnUse    ,ar._SS_Acts )+SS.GenTooltip( ar._SS_Acts, ar._SS_DPS /TotalDPS));
             } else {
                 dictValues.Add("Bladestorm",        string.Format(format, 0, 0, 0));
                 dictValues.Add("Mortal Strike",     string.Format(format, 0, 0, 0));

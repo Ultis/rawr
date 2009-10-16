@@ -1151,7 +1151,7 @@ namespace Rawr.DPSWarr {
             HPS_TTL += _ZRage_HPS + _Battle_HPS + _Comm_HPS + _Demo_HPS + _Sunder_HPS + _Sunder_HPS + _TH_HPS + _Ham_HPS + _Shatt_HPS + _SW_HPS + _ER_HPS + _Death_HPS + _BLS_HPS + _MS_HPS + _RD_HPS + _OP_HPS + _TB_HPS + _SD_HPS + _EX_HPS + _SL_HPS + _SS_HPS;
 
             RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - TotalPercTimeLost);
-            RageNeeded += 0f
+            RageNeeded = 0f
                         + BTS.GetRageUseOverDur(_Battle_GCDs)
                         + CS.GetRageUseOverDur(_Comm_GCDs)
                         + DS.GetRageUseOverDur(_Demo_GCDs)

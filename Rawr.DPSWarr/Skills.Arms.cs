@@ -242,17 +242,14 @@ namespace Rawr.DPSWarr {
                 }
             }
         }
-        public class Swordspec : Ability
-        {
-            // Constructors
+        public class Swordspec : Ability {
             /// <summary>
             /// Gives a (1*Pts)% chance to get an extra attack on the same target after hitting
             /// your target with your Sword. This effect cannot occur more than once every 6 seconds.
             /// </summary>
             /// <TalentsAffecting>Sword Specialization (Requires Talent)</TalentsAffecting>
             /// <GlyphsAffecting></GlyphsAffecting>
-            public Swordspec(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
-            {
+            public Swordspec(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
                 Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
                 //
                 Name = "Sword Specialization";
@@ -267,7 +264,13 @@ namespace Rawr.DPSWarr {
                 InitializeB(co);
                 MHAtkTable = Whiteattacks.MHAtkTable;
             }
-            // Functions
+            public override bool Validated {
+                get {
+                    return base.Validated &&
+                          (combatFactors._c_mhItemType == ItemType.TwoHandSword ||
+                           combatFactors._c_mhItemType == ItemType.OneHandSword);
+                }
+            }
             public float GetActivates(float YellowsThatLandOverDur, float heroic, float cleave) {
                 if (combatFactors._c_mhItemType != ItemType.TwoHandSword && combatFactors._c_mhItemType != ItemType.OneHandSword) { return 0.0f; }
                 // This attack doesnt consume GCDs and doesn't affect the swing timer
