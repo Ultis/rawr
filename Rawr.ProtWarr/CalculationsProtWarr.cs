@@ -383,7 +383,6 @@ threat and limited threat scaled by the threat scale.",
                 calculatedStats.Haste = Lookup.BonusHastePercentage(character, stats);
                 calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
                 calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
-                calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
             }
 
             calculatedStats.TargetLevel = options.TargetLevel;
@@ -416,6 +415,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.HeroicStrikeFrequency = options.HeroicStrikeFrequency;
             calculatedStats.ThreatPerSecond = am.ThreatPerSecond;
             calculatedStats.ThreatModel = am.Name + "\n" + am.Description;
+            calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
 
             calculatedStats.TankPoints = dm.TankPoints;
             calculatedStats.BurstTime = dm.BurstTime;
