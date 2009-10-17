@@ -42,6 +42,7 @@ namespace Rawr.Mage
         [Description("Frostbolt")]
         FrostboltFOF,
         Frostbolt,
+        FrostboltFC,
         [Description("POM+Frostbolt")]
         FrostboltPOM,
         FrostboltNoCC,
@@ -53,6 +54,7 @@ namespace Rawr.Mage
         [Description("Frostfire Bolt")]
         FrostfireBoltFOF,
         FrostfireBolt,
+        FrostfireBoltFC,
         [Description("Pyroblast")]
         Pyroblast,
         [Description("POM+Pyroblast")]
@@ -527,11 +529,15 @@ namespace Rawr.Mage
         float fingersOfFrostCritRate;
         float tormentTheWeak;
 
-        public Spell GetSpell(CastingState castingState, bool averageFingersOfFrost)
+        public Spell GetSpell(CastingState castingState, bool averageFingersOfFrost, bool frozenCore)
         {
             Spell spell = Spell.New(this, castingState.Calculations);
             spell.Calculate(castingState);
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
+            if (frozenCore && castingState.MageTalents.FrozenCore > 0)
+            {
+                spell.BaseCastTime -= 0.1f + 0.3f * castingState.MageTalents.FrozenCore;
+            }
             if (averageFingersOfFrost)
             {
                 spell.CritRate += fingersOfFrostCritRate;
@@ -542,7 +548,7 @@ namespace Rawr.Mage
 
         public override Spell GetSpell(CastingState castingState)
         {
-            return GetSpell(castingState, false);
+            return GetSpell(castingState, false, false);
         }
 
         public FrostboltTemplate(CharacterCalculationsMage calculations)
@@ -651,7 +657,7 @@ namespace Rawr.Mage
         private float tormentFactor;
         private float fingersOfFrostCritRate;
 
-        public Spell GetSpell(CastingState castingState, bool pom, bool averageFingersOfFrost)
+        public Spell GetSpell(CastingState castingState, bool pom, bool averageFingersOfFrost, bool frozenCore)
         {
             Spell spell = Spell.New(this, castingState.Calculations);
             spell.Calculate(castingState);
@@ -659,6 +665,10 @@ namespace Rawr.Mage
             if (averageFingersOfFrost)
             {
                 spell.CritRate += fingersOfFrostCritRate;
+            }
+            if (frozenCore && castingState.MageTalents.FrozenCore > 0)
+            {
+                spell.BaseCastTime -= 0.1f + 0.3f * castingState.MageTalents.FrozenCore;
             }
             spell.CalculateDerivedStats(castingState, false, pom, true);
             return spell;

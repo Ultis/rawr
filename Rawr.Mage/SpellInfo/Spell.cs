@@ -218,6 +218,8 @@ namespace Rawr.Mage
         public float IgniteDpsPerSpellPower;
         public float DpsPerSpellPower;
 
+        public string Label { get; set; }
+
         // Properties pulling data directly from template
         public string Name { get { return template.Name; } }
         public bool AffectedByFlameCap { get { return template.AffectedByFlameCap; } }

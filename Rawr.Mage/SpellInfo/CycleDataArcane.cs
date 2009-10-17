@@ -1914,49 +1914,70 @@ namespace Rawr.Mage
             public float MissileBarrageDuration { get; set; }
             public float ArcaneBarrageCooldown { get; set; }
             public int ArcaneBlastStack { get; set; }
+            public float Tier10TwoPieceDuration { get; set; }
         }
 
-        public Spell AB0, AB1, AB2, AB3, AB4, ABar0, ABar1, ABar2, ABar3, ABar4, AM0, AM1, AM2, AM3, AM4, MBAM0, MBAM1, MBAM2, MBAM3, MBAM4;
+        public Spell[,] AB, ABar, AM, MBAM;
 
         private float ABMB;
         private float MB;
         private float T8;
         private int maxStack;
+        private bool T10;
 
-        public ArcaneCycleGenerator(CastingState castingState)
+        private bool ABarAllowed;
+        private bool ABarOnCooldownOnly;
+        private bool MBDurationCollapsed;
+        private bool ABarCooldownCollapsed;
+        private bool Tier10TwoPieceCollapsed;
+
+        public ArcaneCycleGenerator(CastingState castingState, bool ABarAllowed, bool ABarOnCooldownOnly, bool MBDurationCollapsed, bool ABarCooldownCollapsed, bool Tier10TwoPieceCollapsed)
         {
-            AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
-            AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
-            AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
-            AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
-            AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
-            ABar0 = castingState.GetSpell(SpellId.ArcaneBarrage);
-            ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
-            ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
-            ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
-            ABar4 = castingState.GetSpell(SpellId.ArcaneBarrage4);
-            AM0 = castingState.GetSpell(SpellId.ArcaneMissiles);
-            AM1 = castingState.GetSpell(SpellId.ArcaneMissiles1);
-            AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
-            AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
-            AM4 = castingState.GetSpell(SpellId.ArcaneMissiles4);
-            MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
-            MBAM1 = castingState.GetSpell(SpellId.ArcaneMissilesMB1);
-            MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
-            MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
-            MBAM4 = castingState.GetSpell(SpellId.ArcaneMissilesMB4);
+            this.ABarAllowed = ABarAllowed;
+            this.ABarOnCooldownOnly = ABarOnCooldownOnly;
+            this.MBDurationCollapsed = MBDurationCollapsed;
+            this.ABarCooldownCollapsed = ABarCooldownCollapsed;
+            this.Tier10TwoPieceCollapsed = Tier10TwoPieceCollapsed;
+
+            var calc = castingState.Calculations;
+            maxStack = 4;
+
+            AB = new Spell[maxStack + 1, 2];
+            ABar = new Spell[maxStack + 1, 2];
+            AM = new Spell[maxStack + 1, 2];
+            MBAM = new Spell[maxStack + 1, 2];
+
+            for (int stack = 0; stack <= maxStack; stack++)
+            {
+                AB[stack, 0] = calc.ArcaneBlastTemplate.GetSpell(castingState, stack);
+                AB[stack, 0].Label = "ArcaneBlast" + stack;
+                ABar[stack, 0] = calc.ArcaneBarrageTemplate.GetSpell(castingState, stack);
+                ABar[stack, 0].Label = "ArcaneBarrage" + stack;
+                AM[stack, 0] = calc.ArcaneMissilesTemplate.GetSpell(castingState, false, stack);
+                AM[stack, 0].Label = "ArcaneMissiles" + stack;
+                MBAM[stack, 0] = calc.ArcaneMissilesTemplate.GetSpell(castingState, true, stack);
+                MBAM[stack, 0].Label = "MBAM" + stack;
+                AB[stack, 1] = calc.ArcaneBlastTemplate.GetSpell(castingState.Tier10TwoPieceState, stack);
+                AB[stack, 1].Label = "2T10:ArcaneBlast" + stack;
+                ABar[stack, 1] = calc.ArcaneBarrageTemplate.GetSpell(castingState.Tier10TwoPieceState, stack);
+                ABar[stack, 1].Label = "2T10:ArcaneBarrage" + stack;
+                AM[stack, 1] = calc.ArcaneMissilesTemplate.GetSpell(castingState.Tier10TwoPieceState, false, stack);
+                AM[stack, 1].Label = "2T10:ArcaneMissiles" + stack;
+                MBAM[stack, 1] = calc.ArcaneMissilesTemplate.GetSpell(castingState.Tier10TwoPieceState, true, stack);
+                MBAM[stack, 1].Label = "2T10:MBAM" + stack;
+            }
 
             ABMB = 0.08f * castingState.MageTalents.MissileBarrage;
-            maxStack = 4;
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            T10 = castingState.BaseStats.Mage2T10 > 0;
 
             GenerateStateDescription();
         }
 
         protected override CycleState GetInitialState()
         {
-            return GetState(false, 0.0f, 0.0f, 0);
+            return GetState(false, 0.0f, 0.0f, 0, 0.0f);
         }
 
         protected override List<CycleControlledStateTransition> GetStateTransitions(CycleState state)
@@ -1966,33 +1987,15 @@ namespace Rawr.Mage
             Spell AB = null;
             Spell AM = null;
             Spell ABar = null;
-            switch (s.ArcaneBlastStack)
+            AB = this.AB[s.ArcaneBlastStack, s.Tier10TwoPieceDuration > 0 ? 1 : 0];
+            ABar = this.ABar[s.ArcaneBlastStack, s.Tier10TwoPieceDuration - s.ArcaneBarrageCooldown > 0 ? 1 : 0];
+            if (s.MissileBarrageDuration > 0)
             {
-                case 0:
-                    AB = AB0;
-                    ABar = ABar0;
-                    AM = (s.MissileBarrageDuration > 0) ? MBAM0 : AM0;
-                    break;
-                case 1:
-                    AB = AB1;
-                    ABar = ABar1;
-                    AM = (s.MissileBarrageDuration > 0) ? MBAM1 : AM1;
-                    break;
-                case 2:
-                    AB = AB2;
-                    ABar = ABar2;
-                    AM = (s.MissileBarrageDuration > 0) ? MBAM2 : AM2;
-                    break;
-                case 3:
-                    AB = AB3;
-                    ABar = ABar3;
-                    AM = (s.MissileBarrageDuration > 0) ? MBAM3 : AM3;
-                    break;
-                case 4:
-                    AB = AB4;
-                    ABar = ABar4;
-                    AM = (s.MissileBarrageDuration > 0) ? MBAM4 : AM4;
-                    break;
+                AM = this.MBAM[s.ArcaneBlastStack, s.Tier10TwoPieceDuration > 0 ? 1 : 0];
+            }
+            else
+            {
+                AM = this.AM[s.ArcaneBlastStack, s.Tier10TwoPieceDuration > 0 ? 1 : 0];
             }
             if (MB > 0)
             {
@@ -2003,7 +2006,8 @@ namespace Rawr.Mage
                         s.MissileBarrageDuration > AB.CastTime,
                         15.0f,
                         Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime),
-                        Math.Min(maxStack, s.ArcaneBlastStack + 1)
+                        Math.Min(maxStack, s.ArcaneBlastStack + 1),
+                        Math.Max(0.0f, s.Tier10TwoPieceDuration - AB.CastTime)
                     ),
                     TransitionProbability = ABMB
                 });
@@ -2015,11 +2019,39 @@ namespace Rawr.Mage
                     s.MissileBarrageDuration > AB.CastTime,
                     Math.Max(0.0f, s.MissileBarrageDuration - AB.CastTime),
                     Math.Max(0.0f, s.ArcaneBarrageCooldown - AB.CastTime),
-                    Math.Min(maxStack, s.ArcaneBlastStack + 1)
+                    Math.Min(maxStack, s.ArcaneBlastStack + 1),
+                    Math.Max(0.0f, s.Tier10TwoPieceDuration - AB.CastTime)
                 ),
                 TransitionProbability = 1.0f - ABMB
             });
-            //if (s.ArcaneBarrageCooldown == 0)
+            if (s.MissileBarrageDuration > 0 && T8 > 0)
+            {
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = AM,
+                    TargetState = GetState(
+                        s.MissileBarrageDuration > AM.CastTime,
+                        Math.Max(0.0f, s.MissileBarrageDuration - AM.CastTime),
+                        Math.Max(0.0f, s.ArcaneBarrageCooldown - AM.CastTime),
+                        0,
+                        Math.Max(0.0f, s.Tier10TwoPieceDuration - AM.CastTime) // cannot have 4T8 and 2T10 at the same time
+                    ),
+                    TransitionProbability = T8
+                });
+            }
+            list.Add(new CycleControlledStateTransition()
+            {
+                Spell = AM,
+                TargetState = GetState(
+                    false,
+                    0.0f,
+                    Math.Max(0.0f, s.ArcaneBarrageCooldown - AM.CastTime),
+                    0,
+                    Math.Max(0.0f, (s.MissileBarrageDuration > 0 && T10) ? 5.0f - AM.CastTime : s.Tier10TwoPieceDuration - AM.CastTime)
+                ),
+                TransitionProbability = s.MissileBarrageDuration > 0 ? 1.0f - T8 : 1.0f
+            });
+            if (ABarAllowed && (!ABarOnCooldownOnly || s.ArcaneBarrageCooldown == 0))
             {
                 if (MB > 0)
                 {
@@ -2031,7 +2063,8 @@ namespace Rawr.Mage
                             true,
                             15.0f - ABar.CastTime,
                             3.0f - ABar.CastTime,
-                            0
+                            0,
+                            Math.Max(0.0f, s.Tier10TwoPieceDuration - ABar.CastTime - s.ArcaneBarrageCooldown)
                         ),
                         TransitionProbability = MB
                     });
@@ -2044,49 +2077,25 @@ namespace Rawr.Mage
                         s.MissileBarrageDuration > ABar.CastTime,
                         Math.Max(0.0f, s.MissileBarrageDuration - ABar.CastTime),
                         3.0f - ABar.CastTime,
-                        0
+                        0,
+                        Math.Max(0.0f, s.Tier10TwoPieceDuration - ABar.CastTime - s.ArcaneBarrageCooldown)
                     ),
                     TransitionProbability = 1.0f - MB
                 });
             }
-            if (s.MissileBarrageDuration > 0 && T8 > 0)
-            {
-                list.Add(new CycleControlledStateTransition()
-                {
-                    Spell = AM,
-                    TargetState = GetState(
-                        s.MissileBarrageDuration > AM.CastTime,
-                        Math.Max(0.0f, s.MissileBarrageDuration - AM.CastTime),
-                        Math.Max(0.0f, s.ArcaneBarrageCooldown - AM.CastTime),
-                        0
-                    ),
-                    TransitionProbability = T8
-                });
-            }
-            list.Add(new CycleControlledStateTransition()
-            {
-                Spell = AM,
-                TargetState = GetState(
-                    false,
-                    0.0f,
-                    Math.Max(0.0f, s.ArcaneBarrageCooldown - AM.CastTime),
-                    0
-                ),
-                TransitionProbability = s.MissileBarrageDuration > 0 ? 1.0f - T8 : 1.0f
-            });
 
             return list;
         }
 
         private Dictionary<string, State> stateDictionary = new Dictionary<string, State>();
 
-        private State GetState(bool missileBarrageRegistered, float missileBarrageDuration, float arcaneBarrageCooldown, int arcaneBlastStack)
+        private State GetState(bool missileBarrageRegistered, float missileBarrageDuration, float arcaneBarrageCooldown, int arcaneBlastStack, float tier10TwoPieceDuration)
         {
-            string name = string.Format("AB{0},ABar{1},MB{2}{3}", arcaneBlastStack, arcaneBarrageCooldown, missileBarrageDuration, missileBarrageRegistered ? "+" : "-");
+            string name = string.Format("AB{0},ABar{1},MB{2}{3},2T10={4}", arcaneBlastStack, arcaneBarrageCooldown, missileBarrageDuration, missileBarrageRegistered ? "+" : "-", tier10TwoPieceDuration);
             State state;
             if (!stateDictionary.TryGetValue(name, out state))
             {
-                state = new State() { Name = name, MissileBarrageRegistered = missileBarrageRegistered, MissileBarrageDuration = missileBarrageDuration, ArcaneBarrageCooldown = arcaneBarrageCooldown, ArcaneBlastStack = arcaneBlastStack };
+                state = new State() { Name = name, MissileBarrageRegistered = missileBarrageRegistered, MissileBarrageDuration = missileBarrageDuration, ArcaneBarrageCooldown = arcaneBarrageCooldown, ArcaneBlastStack = arcaneBlastStack, Tier10TwoPieceDuration = tier10TwoPieceDuration };
                 stateDictionary[name] = state;
             }
             return state;
@@ -2096,20 +2105,26 @@ namespace Rawr.Mage
         {
             State a = (State)state1;
             State b = (State)state2;
-            return (a.ArcaneBlastStack != b.ArcaneBlastStack || a.ArcaneBarrageCooldown != b.ArcaneBarrageCooldown || a.MissileBarrageRegistered != b.MissileBarrageRegistered/* || (a.MissileBarrageRegistered == true && b.MissileBarrageRegistered == true && a.MissileBarrageDuration != b.MissileBarrageDuration)*/);
+            return (a.ArcaneBlastStack != b.ArcaneBlastStack ||
+                (!ABarCooldownCollapsed && a.ArcaneBarrageCooldown != b.ArcaneBarrageCooldown) ||
+                ((a.ArcaneBarrageCooldown > 0) != (b.ArcaneBarrageCooldown > 0)) ||
+                a.MissileBarrageRegistered != b.MissileBarrageRegistered
+                || (!Tier10TwoPieceCollapsed && a.Tier10TwoPieceDuration != b.Tier10TwoPieceDuration)
+                || (!MBDurationCollapsed && a.MissileBarrageRegistered == true && b.MissileBarrageRegistered == true && a.MissileBarrageDuration != b.MissileBarrageDuration));
         }
 
         public override string StateDescription
         {
             get
             {
-                return @"Cycle Code Legend: 0 = AB, 1 = ABar, 2 = AM
-State Descriptions: ABx,ABary,MBz+-
+                return @"Cycle Code Legend: 0 = AB, 1 = AM, 2 = ABar
+State Descriptions: ABx,ABary,MBz+-,2T10=w
 x = number of AB stacks
 y = remaining cooldown on Arcane Barrage
 z = remaining time on Missile Barrage
 + = Missile Barrage proc visible
-- = Missile Barrage proc not visible";
+- = Missile Barrage proc not visible
+w = remaining time on 2T10 effect";
             }
         }
     }

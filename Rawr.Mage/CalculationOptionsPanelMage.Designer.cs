@@ -91,6 +91,10 @@
             this.label13 = new System.Windows.Forms.Label();
             this.checkBoxHeroism = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.textBoxMovementDuration = new System.Windows.Forms.TextBox();
+            this.label106 = new System.Windows.Forms.Label();
+            this.textBoxMovementFrequency = new System.Windows.Forms.TextBox();
+            this.label105 = new System.Windows.Forms.Label();
             this.textBoxHolyResist = new System.Windows.Forms.TextBox();
             this.label97 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
@@ -269,17 +273,14 @@
             this.label93 = new System.Windows.Forms.Label();
             this.label92 = new System.Windows.Forms.Label();
             this.buttonHotStreakUtilization = new System.Windows.Forms.Button();
-            this.buttonComputeOptimalFrostCycles = new System.Windows.Forms.Button();
             this.buttonEditTalentScores = new System.Windows.Forms.Button();
             this.buttonAdvancedSolverLog = new System.Windows.Forms.Button();
             this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxMovementFrequency = new System.Windows.Forms.TextBox();
-            this.label105 = new System.Windows.Forms.Label();
             this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.textBoxMovementDuration = new System.Windows.Forms.TextBox();
-            this.label106 = new System.Windows.Forms.Label();
+            this.label107 = new System.Windows.Forms.Label();
+            this.checkBoxMode33 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -1022,6 +1023,44 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Fight";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // textBoxMovementDuration
+            // 
+            this.textBoxMovementDuration.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MovementDuration", true));
+            this.textBoxMovementDuration.Location = new System.Drawing.Point(128, 212);
+            this.textBoxMovementDuration.Name = "textBoxMovementDuration";
+            this.textBoxMovementDuration.Size = new System.Drawing.Size(75, 20);
+            this.textBoxMovementDuration.TabIndex = 189;
+            // 
+            // label106
+            // 
+            this.label106.AutoSize = true;
+            this.label106.Location = new System.Drawing.Point(0, 215);
+            this.label106.Name = "label106";
+            this.label106.Size = new System.Drawing.Size(110, 13);
+            this.label106.TabIndex = 188;
+            this.label106.Text = "Movement Duration: *";
+            this.toolTipMage.SetToolTip(this.label106, resources.GetString("label106.ToolTip"));
+            // 
+            // textBoxMovementFrequency
+            // 
+            this.textBoxMovementFrequency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MovementFrequency", true));
+            this.textBoxMovementFrequency.Location = new System.Drawing.Point(128, 186);
+            this.textBoxMovementFrequency.Name = "textBoxMovementFrequency";
+            this.textBoxMovementFrequency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxMovementFrequency.TabIndex = 187;
+            // 
+            // label105
+            // 
+            this.label105.AutoSize = true;
+            this.label105.Location = new System.Drawing.Point(0, 189);
+            this.label105.Name = "label105";
+            this.label105.Size = new System.Drawing.Size(120, 13);
+            this.label105.TabIndex = 186;
+            this.label105.Text = "Movement Frequency: *";
+            this.toolTipMage.SetToolTip(this.label105, "Frequency of movement events (expressed as average time between movement events, " +
+                    "only includes movement that prevents you from attacking such as being out of ran" +
+                    "ge).");
             // 
             // textBoxHolyResist
             // 
@@ -2336,6 +2375,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label107);
+            this.tabPage4.Controls.Add(this.checkBoxMode33);
             this.tabPage4.Controls.Add(this.label85);
             this.tabPage4.Controls.Add(this.checkBoxMaxUseAssumption);
             this.tabPage4.Controls.Add(this.label87);
@@ -2427,7 +2468,7 @@
             // 
             // numericUpDownMaxThreads
             // 
-            this.numericUpDownMaxThreads.Location = new System.Drawing.Point(171, 252);
+            this.numericUpDownMaxThreads.Location = new System.Drawing.Point(171, 276);
             this.numericUpDownMaxThreads.Maximum = new decimal(new int[] {
             10,
             0,
@@ -2451,7 +2492,7 @@
             // label108
             // 
             this.label108.AutoSize = true;
-            this.label108.Location = new System.Drawing.Point(-3, 254);
+            this.label108.Location = new System.Drawing.Point(-3, 278);
             this.label108.Name = "label108";
             this.label108.Size = new System.Drawing.Size(140, 13);
             this.label108.TabIndex = 198;
@@ -2462,7 +2503,7 @@
             // numericUpDownDisplayAdvancedConstraintsLevel
             // 
             this.numericUpDownDisplayAdvancedConstraintsLevel.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.calculationOptionsMageBindingSource, "DisplayAdvancedConstraintsLevel", true));
-            this.numericUpDownDisplayAdvancedConstraintsLevel.Location = new System.Drawing.Point(171, 231);
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Location = new System.Drawing.Point(171, 255);
             this.numericUpDownDisplayAdvancedConstraintsLevel.Maximum = new decimal(new int[] {
             5,
             0,
@@ -2475,7 +2516,7 @@
             // numericUpDownComparisonAdvancedConstraintsLevel
             // 
             this.numericUpDownComparisonAdvancedConstraintsLevel.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.calculationOptionsMageBindingSource, "ComparisonAdvancedConstraintsLevel", true));
-            this.numericUpDownComparisonAdvancedConstraintsLevel.Location = new System.Drawing.Point(137, 231);
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Location = new System.Drawing.Point(137, 255);
             this.numericUpDownComparisonAdvancedConstraintsLevel.Maximum = new decimal(new int[] {
             5,
             0,
@@ -2509,7 +2550,7 @@
             // label101
             // 
             this.label101.AutoSize = true;
-            this.label101.Location = new System.Drawing.Point(-3, 233);
+            this.label101.Location = new System.Drawing.Point(-3, 257);
             this.label101.Name = "label101";
             this.label101.Size = new System.Drawing.Size(121, 13);
             this.label101.TabIndex = 189;
@@ -2519,7 +2560,7 @@
             // textBoxLowerBoundHint
             // 
             this.textBoxLowerBoundHint.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LowerBoundHint", true));
-            this.textBoxLowerBoundHint.Location = new System.Drawing.Point(132, 370);
+            this.textBoxLowerBoundHint.Location = new System.Drawing.Point(132, 394);
             this.textBoxLowerBoundHint.Name = "textBoxLowerBoundHint";
             this.textBoxLowerBoundHint.Size = new System.Drawing.Size(68, 20);
             this.textBoxLowerBoundHint.TabIndex = 186;
@@ -2527,7 +2568,7 @@
             // label100
             // 
             this.label100.AutoSize = true;
-            this.label100.Location = new System.Drawing.Point(-4, 373);
+            this.label100.Location = new System.Drawing.Point(-4, 397);
             this.label100.Name = "label100";
             this.label100.Size = new System.Drawing.Size(102, 13);
             this.label100.TabIndex = 185;
@@ -2538,7 +2579,7 @@
             // textBoxAdditionalSegmentSplits
             // 
             this.textBoxAdditionalSegmentSplits.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AdditionalSegmentSplits", true));
-            this.textBoxAdditionalSegmentSplits.Location = new System.Drawing.Point(132, 344);
+            this.textBoxAdditionalSegmentSplits.Location = new System.Drawing.Point(132, 368);
             this.textBoxAdditionalSegmentSplits.Name = "textBoxAdditionalSegmentSplits";
             this.textBoxAdditionalSegmentSplits.Size = new System.Drawing.Size(68, 20);
             this.textBoxAdditionalSegmentSplits.TabIndex = 184;
@@ -2546,7 +2587,7 @@
             // label98
             // 
             this.label98.AutoSize = true;
-            this.label98.Location = new System.Drawing.Point(-4, 347);
+            this.label98.Location = new System.Drawing.Point(-4, 371);
             this.label98.Name = "label98";
             this.label98.Size = new System.Drawing.Size(136, 13);
             this.label98.TabIndex = 183;
@@ -2558,7 +2599,7 @@
             // 
             this.checkBoxVariableSegmentDuration.AutoSize = true;
             this.checkBoxVariableSegmentDuration.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "VariableSegmentDuration", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxVariableSegmentDuration.Location = new System.Drawing.Point(185, 324);
+            this.checkBoxVariableSegmentDuration.Location = new System.Drawing.Point(185, 348);
             this.checkBoxVariableSegmentDuration.Name = "checkBoxVariableSegmentDuration";
             this.checkBoxVariableSegmentDuration.Size = new System.Drawing.Size(15, 14);
             this.checkBoxVariableSegmentDuration.TabIndex = 182;
@@ -2567,7 +2608,7 @@
             // label96
             // 
             this.label96.AutoSize = true;
-            this.label96.Location = new System.Drawing.Point(-3, 325);
+            this.label96.Location = new System.Drawing.Point(-3, 349);
             this.label96.Name = "label96";
             this.label96.Size = new System.Drawing.Size(143, 13);
             this.label96.TabIndex = 181;
@@ -2584,7 +2625,7 @@
             "15",
             "20",
             "30"});
-            this.comboBoxSegmentDuration.Location = new System.Drawing.Point(125, 298);
+            this.comboBoxSegmentDuration.Location = new System.Drawing.Point(125, 322);
             this.comboBoxSegmentDuration.Name = "comboBoxSegmentDuration";
             this.comboBoxSegmentDuration.Size = new System.Drawing.Size(75, 21);
             this.comboBoxSegmentDuration.TabIndex = 179;
@@ -2592,7 +2633,7 @@
             // label95
             // 
             this.label95.AutoSize = true;
-            this.label95.Location = new System.Drawing.Point(-3, 301);
+            this.label95.Location = new System.Drawing.Point(-3, 325);
             this.label95.Name = "label95";
             this.label95.Size = new System.Drawing.Size(102, 13);
             this.label95.TabIndex = 178;
@@ -2602,7 +2643,7 @@
             // label99
             // 
             this.label99.AutoSize = true;
-            this.label99.Location = new System.Drawing.Point(-3, 278);
+            this.label99.Location = new System.Drawing.Point(-3, 302);
             this.label99.Name = "label99";
             this.label99.Size = new System.Drawing.Size(117, 13);
             this.label99.TabIndex = 176;
@@ -2612,7 +2653,7 @@
             // checkBoxDebugCooldownSegmentation
             // 
             this.checkBoxDebugCooldownSegmentation.AutoSize = true;
-            this.checkBoxDebugCooldownSegmentation.Location = new System.Drawing.Point(185, 278);
+            this.checkBoxDebugCooldownSegmentation.Location = new System.Drawing.Point(185, 302);
             this.checkBoxDebugCooldownSegmentation.Name = "checkBoxDebugCooldownSegmentation";
             this.checkBoxDebugCooldownSegmentation.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDebugCooldownSegmentation.TabIndex = 175;
@@ -2624,7 +2665,7 @@
             this.comboBoxMIPMethod.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.calculationOptionsMageBindingSource, "MIPMethod", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.comboBoxMIPMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMIPMethod.FormattingEnabled = true;
-            this.comboBoxMIPMethod.Location = new System.Drawing.Point(115, 153);
+            this.comboBoxMIPMethod.Location = new System.Drawing.Point(115, 177);
             this.comboBoxMIPMethod.Name = "comboBoxMIPMethod";
             this.comboBoxMIPMethod.Size = new System.Drawing.Size(85, 21);
             this.comboBoxMIPMethod.TabIndex = 174;
@@ -2632,7 +2673,7 @@
             // label78
             // 
             this.label78.AutoSize = true;
-            this.label78.Location = new System.Drawing.Point(0, 156);
+            this.label78.Location = new System.Drawing.Point(0, 180);
             this.label78.Name = "label78";
             this.label78.Size = new System.Drawing.Size(116, 13);
             this.label78.TabIndex = 173;
@@ -2644,7 +2685,7 @@
             // label77
             // 
             this.label77.AutoSize = true;
-            this.label77.Location = new System.Drawing.Point(-3, 193);
+            this.label77.Location = new System.Drawing.Point(-3, 217);
             this.label77.Name = "label77";
             this.label77.Size = new System.Drawing.Size(148, 13);
             this.label77.TabIndex = 172;
@@ -2655,7 +2696,7 @@
             // 
             this.checkBoxDisplayIntegralMana.AutoSize = true;
             this.checkBoxDisplayIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "DisplayIntegralMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxDisplayIntegralMana.Location = new System.Drawing.Point(185, 193);
+            this.checkBoxDisplayIntegralMana.Location = new System.Drawing.Point(185, 217);
             this.checkBoxDisplayIntegralMana.Name = "checkBoxDisplayIntegralMana";
             this.checkBoxDisplayIntegralMana.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDisplayIntegralMana.TabIndex = 171;
@@ -2665,7 +2706,7 @@
             // 
             this.checkBoxComparisonIntegralMana.AutoSize = true;
             this.checkBoxComparisonIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ComparisonIntegralMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(151, 193);
+            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(151, 217);
             this.checkBoxComparisonIntegralMana.Name = "checkBoxComparisonIntegralMana";
             this.checkBoxComparisonIntegralMana.Size = new System.Drawing.Size(15, 14);
             this.checkBoxComparisonIntegralMana.TabIndex = 170;
@@ -2674,7 +2715,7 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(-3, 213);
+            this.label32.Location = new System.Drawing.Point(-3, 237);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(114, 13);
             this.label32.TabIndex = 169;
@@ -2684,7 +2725,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(83, 177);
+            this.label31.Location = new System.Drawing.Point(83, 201);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(117, 13);
             this.label31.TabIndex = 168;
@@ -2694,7 +2735,7 @@
             // textBoxSMPComputationLimit
             // 
             this.textBoxSMPComputationLimit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MaxHeapLimit", true));
-            this.textBoxSMPComputationLimit.Location = new System.Drawing.Point(132, 127);
+            this.textBoxSMPComputationLimit.Location = new System.Drawing.Point(132, 151);
             this.textBoxSMPComputationLimit.Name = "textBoxSMPComputationLimit";
             this.textBoxSMPComputationLimit.Size = new System.Drawing.Size(68, 20);
             this.textBoxSMPComputationLimit.TabIndex = 167;
@@ -2702,7 +2743,7 @@
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(0, 130);
+            this.label38.Location = new System.Drawing.Point(0, 154);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(126, 13);
             this.label38.TabIndex = 166;
@@ -2713,7 +2754,7 @@
             // 
             this.checkBoxDisplaySegmentCoodlowns.AutoSize = true;
             this.checkBoxDisplaySegmentCoodlowns.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "DisplaySegmentCooldowns", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxDisplaySegmentCoodlowns.Location = new System.Drawing.Point(185, 213);
+            this.checkBoxDisplaySegmentCoodlowns.Location = new System.Drawing.Point(185, 237);
             this.checkBoxDisplaySegmentCoodlowns.Name = "checkBoxDisplaySegmentCoodlowns";
             this.checkBoxDisplaySegmentCoodlowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDisplaySegmentCoodlowns.TabIndex = 162;
@@ -2724,7 +2765,7 @@
             // 
             this.checkBoxComparisonSegmentCooldowns.AutoSize = true;
             this.checkBoxComparisonSegmentCooldowns.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ComparisonSegmentCooldowns", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxComparisonSegmentCooldowns.Location = new System.Drawing.Point(151, 213);
+            this.checkBoxComparisonSegmentCooldowns.Location = new System.Drawing.Point(151, 237);
             this.checkBoxComparisonSegmentCooldowns.Name = "checkBoxComparisonSegmentCooldowns";
             this.checkBoxComparisonSegmentCooldowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxComparisonSegmentCooldowns.TabIndex = 160;
@@ -2802,7 +2843,6 @@
             this.tabPage7.Controls.Add(this.label93);
             this.tabPage7.Controls.Add(this.label92);
             this.tabPage7.Controls.Add(this.buttonHotStreakUtilization);
-            this.tabPage7.Controls.Add(this.buttonComputeOptimalFrostCycles);
             this.tabPage7.Controls.Add(this.buttonEditTalentScores);
             this.tabPage7.Controls.Add(this.buttonAdvancedSolverLog);
             this.tabPage7.Controls.Add(this.buttonCooldownRestrictionsEditor);
@@ -2817,7 +2857,7 @@
             // 
             // buttonCalculationTiming
             // 
-            this.buttonCalculationTiming.Location = new System.Drawing.Point(6, 262);
+            this.buttonCalculationTiming.Location = new System.Drawing.Point(6, 229);
             this.buttonCalculationTiming.Name = "buttonCalculationTiming";
             this.buttonCalculationTiming.Size = new System.Drawing.Size(197, 23);
             this.buttonCalculationTiming.TabIndex = 214;
@@ -2828,7 +2868,7 @@
             // label104
             // 
             this.label104.AutoSize = true;
-            this.label104.Location = new System.Drawing.Point(6, 217);
+            this.label104.Location = new System.Drawing.Point(6, 184);
             this.label104.Name = "label104";
             this.label104.Size = new System.Drawing.Size(70, 13);
             this.label104.TabIndex = 213;
@@ -2837,7 +2877,7 @@
             // label93
             // 
             this.label93.AutoSize = true;
-            this.label93.Location = new System.Drawing.Point(6, 132);
+            this.label93.Location = new System.Drawing.Point(6, 99);
             this.label93.Name = "label93";
             this.label93.Size = new System.Drawing.Size(42, 13);
             this.label93.TabIndex = 212;
@@ -2854,48 +2894,43 @@
             // 
             // buttonHotStreakUtilization
             // 
-            this.buttonHotStreakUtilization.Location = new System.Drawing.Point(6, 91);
+            this.buttonHotStreakUtilization.Location = new System.Drawing.Point(6, 58);
             this.buttonHotStreakUtilization.Name = "buttonHotStreakUtilization";
             this.buttonHotStreakUtilization.Size = new System.Drawing.Size(197, 23);
             this.buttonHotStreakUtilization.TabIndex = 210;
             this.buttonHotStreakUtilization.Text = "Hot Streak Utilization";
             this.buttonHotStreakUtilization.UseVisualStyleBackColor = true;
-            // 
-            // buttonComputeOptimalFrostCycles
-            // 
-            this.buttonComputeOptimalFrostCycles.Location = new System.Drawing.Point(6, 60);
-            this.buttonComputeOptimalFrostCycles.Name = "buttonComputeOptimalFrostCycles";
-            this.buttonComputeOptimalFrostCycles.Size = new System.Drawing.Size(197, 23);
-            this.buttonComputeOptimalFrostCycles.TabIndex = 209;
-            this.buttonComputeOptimalFrostCycles.Text = "Frost Cycles";
-            this.buttonComputeOptimalFrostCycles.UseVisualStyleBackColor = true;
+            this.buttonHotStreakUtilization.Click += new System.EventHandler(this.buttonHotStreakUtilization_Click);
             // 
             // buttonEditTalentScores
             // 
-            this.buttonEditTalentScores.Location = new System.Drawing.Point(6, 179);
+            this.buttonEditTalentScores.Location = new System.Drawing.Point(6, 146);
             this.buttonEditTalentScores.Name = "buttonEditTalentScores";
             this.buttonEditTalentScores.Size = new System.Drawing.Size(197, 23);
             this.buttonEditTalentScores.TabIndex = 208;
             this.buttonEditTalentScores.Text = "Talent Score Editor";
             this.buttonEditTalentScores.UseVisualStyleBackColor = true;
+            this.buttonEditTalentScores.Click += new System.EventHandler(this.buttonEditTalentScores_Click);
             // 
             // buttonAdvancedSolverLog
             // 
-            this.buttonAdvancedSolverLog.Location = new System.Drawing.Point(6, 233);
+            this.buttonAdvancedSolverLog.Location = new System.Drawing.Point(6, 200);
             this.buttonAdvancedSolverLog.Name = "buttonAdvancedSolverLog";
             this.buttonAdvancedSolverLog.Size = new System.Drawing.Size(197, 23);
             this.buttonAdvancedSolverLog.TabIndex = 207;
             this.buttonAdvancedSolverLog.Text = "Advanced Solver Log";
             this.buttonAdvancedSolverLog.UseVisualStyleBackColor = true;
+            this.buttonAdvancedSolverLog.Click += new System.EventHandler(this.buttonAdvancedSolverLog_Click);
             // 
             // buttonCooldownRestrictionsEditor
             // 
-            this.buttonCooldownRestrictionsEditor.Location = new System.Drawing.Point(6, 148);
+            this.buttonCooldownRestrictionsEditor.Location = new System.Drawing.Point(6, 115);
             this.buttonCooldownRestrictionsEditor.Name = "buttonCooldownRestrictionsEditor";
             this.buttonCooldownRestrictionsEditor.Size = new System.Drawing.Size(197, 23);
             this.buttonCooldownRestrictionsEditor.TabIndex = 206;
             this.buttonCooldownRestrictionsEditor.Text = "Cooldown Editor";
             this.buttonCooldownRestrictionsEditor.UseVisualStyleBackColor = true;
+            this.buttonCooldownRestrictionsEditor.Click += new System.EventHandler(this.buttonCooldownRestrictionsEditor_Click);
             // 
             // buttonComputeOptimalArcaneCycles
             // 
@@ -2903,8 +2938,9 @@
             this.buttonComputeOptimalArcaneCycles.Name = "buttonComputeOptimalArcaneCycles";
             this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(197, 23);
             this.buttonComputeOptimalArcaneCycles.TabIndex = 205;
-            this.buttonComputeOptimalArcaneCycles.Text = "Arcane Cycles";
+            this.buttonComputeOptimalArcaneCycles.Text = "Cycle Analyzer";
             this.buttonComputeOptimalArcaneCycles.UseVisualStyleBackColor = true;
+            this.buttonComputeOptimalArcaneCycles.Click += new System.EventHandler(this.buttonComputeOptimalCycles_Click);
             // 
             // toolTipMage
             // 
@@ -2912,48 +2948,30 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // textBoxMovementFrequency
-            // 
-            this.textBoxMovementFrequency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MovementFrequency", true));
-            this.textBoxMovementFrequency.Location = new System.Drawing.Point(128, 186);
-            this.textBoxMovementFrequency.Name = "textBoxMovementFrequency";
-            this.textBoxMovementFrequency.Size = new System.Drawing.Size(75, 20);
-            this.textBoxMovementFrequency.TabIndex = 187;
-            // 
-            // label105
-            // 
-            this.label105.AutoSize = true;
-            this.label105.Location = new System.Drawing.Point(0, 189);
-            this.label105.Name = "label105";
-            this.label105.Size = new System.Drawing.Size(120, 13);
-            this.label105.TabIndex = 186;
-            this.label105.Text = "Movement Frequency: *";
-            this.toolTipMage.SetToolTip(this.label105, "Frequency of movement events (expressed as average time between movement events, " +
-                    "only includes movement that prevents you from attacking such as being out of ran" +
-                    "ge).");
-            // 
             // calculationOptionsMageBindingSource
             // 
             this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
             this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
-            // textBoxMovementDuration
+            // label107
             // 
-            this.textBoxMovementDuration.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MovementDuration", true));
-            this.textBoxMovementDuration.Location = new System.Drawing.Point(128, 212);
-            this.textBoxMovementDuration.Name = "textBoxMovementDuration";
-            this.textBoxMovementDuration.Size = new System.Drawing.Size(75, 20);
-            this.textBoxMovementDuration.TabIndex = 189;
+            this.label107.AutoSize = true;
+            this.label107.Location = new System.Drawing.Point(0, 127);
+            this.label107.Name = "label107";
+            this.label107.Size = new System.Drawing.Size(63, 13);
+            this.label107.TabIndex = 212;
+            this.label107.Text = "Patch 3.3: *";
+            this.toolTipMage.SetToolTip(this.label107, "Enable calculations changes for patch 3.3.");
             // 
-            // label106
+            // checkBoxMode33
             // 
-            this.label106.AutoSize = true;
-            this.label106.Location = new System.Drawing.Point(0, 215);
-            this.label106.Name = "label106";
-            this.label106.Size = new System.Drawing.Size(110, 13);
-            this.label106.TabIndex = 188;
-            this.label106.Text = "Movement Duration: *";
-            this.toolTipMage.SetToolTip(this.label106, resources.GetString("label106.ToolTip"));
+            this.checkBoxMode33.AutoSize = true;
+            this.checkBoxMode33.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Mode33", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxMode33.Location = new System.Drawing.Point(185, 127);
+            this.checkBoxMode33.Name = "checkBoxMode33";
+            this.checkBoxMode33.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMode33.TabIndex = 211;
+            this.checkBoxMode33.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelMage
             // 
@@ -3227,7 +3245,6 @@
         private System.Windows.Forms.Label label93;
         private System.Windows.Forms.Label label92;
         private System.Windows.Forms.Button buttonHotStreakUtilization;
-        private System.Windows.Forms.Button buttonComputeOptimalFrostCycles;
         private System.Windows.Forms.Button buttonEditTalentScores;
         private System.Windows.Forms.Button buttonAdvancedSolverLog;
         private System.Windows.Forms.Button buttonCooldownRestrictionsEditor;
@@ -3238,6 +3255,8 @@
         private System.Windows.Forms.Label label105;
         private System.Windows.Forms.TextBox textBoxMovementDuration;
         private System.Windows.Forms.Label label106;
+        private System.Windows.Forms.Label label107;
+        private System.Windows.Forms.CheckBox checkBoxMode33;
 
     }
 }

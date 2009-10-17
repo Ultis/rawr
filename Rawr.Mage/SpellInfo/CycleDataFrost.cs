@@ -296,18 +296,26 @@ namespace Rawr.Mage
             public int FingersOfFrostRegistered { get; set; }
             public int FingersOfFrostActual { get; set; }
             public bool LatentFingersOfFrostWindow { get; set; }
+            public bool FrozenCore { get; set; }
         }
 
-        public Spell FrB, FrBS, FB, FBS, IL, ILS;
+        public Spell FrB, FrBS, FB, FBS, IL, ILS, FrBFC, FrBSFC;
 
         private float BF;
         private float FOF;
         private float T8;
 
-        public FrostCycleGenerator(CastingState castingState)
+        private bool frozenCore;
+        private bool useLatencyCombos;
+
+        public FrostCycleGenerator(CastingState castingState, bool useLatencyCombos)
         {
+            this.useLatencyCombos = useLatencyCombos;
+
             FrB = castingState.GetSpell(SpellId.Frostbolt);
             FrBS = castingState.FrozenState.GetSpell(SpellId.Frostbolt);
+            FrBFC = castingState.GetSpell(SpellId.FrostboltFC);
+            FrBSFC = castingState.FrozenState.GetSpell(SpellId.FrostboltFC);
             FB = castingState.GetSpell(SpellId.FireballBF);
             FBS = castingState.FrozenState.GetSpell(SpellId.FireballBF);
             IL = castingState.GetSpell(SpellId.IceLance);
@@ -316,13 +324,14 @@ namespace Rawr.Mage
             BF = 0.05f * castingState.MageTalents.BrainFreeze;
             FOF = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
             T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            frozenCore = castingState.CalculationOptions.Mode33 && castingState.MageTalents.FrozenCore > 0;
 
             GenerateStateDescription();
         }
 
         protected override CycleState GetInitialState()
         {
-            return GetState(false, 0.0f, 0, 0, false);
+            return GetState(false, 0.0f, 0, 0, false, false);
         }
 
         protected override List<CycleControlledStateTransition> GetStateTransitions(CycleState state)
@@ -332,15 +341,29 @@ namespace Rawr.Mage
             Spell FrB = null;
             Spell IL = null;
             Spell FB = null;
-            if (s.FingersOfFrostActual > 0)
+            if (s.FrozenCore)
             {
-                FrB = this.FrBS;
+                if (s.FingersOfFrostActual > 0)
+                {
+                    FrB = this.FrBSFC;
+                }
+                else
+                {
+                    FrB = this.FrBFC;
+                }
             }
             else
             {
-                FrB = this.FrB;
+                if (s.FingersOfFrostActual > 0)
+                {
+                    FrB = this.FrBS;
+                }
+                else
+                {
+                    FrB = this.FrB;
+                }
             }
-            if (s.FingersOfFrostActual > 0 || s.LatentFingersOfFrostWindow)
+            if (s.FingersOfFrostActual > 0 || (useLatencyCombos && s.LatentFingersOfFrostWindow))
             {
                 IL = this.ILS;
                 FB = this.FBS;
@@ -360,7 +383,8 @@ namespace Rawr.Mage
                         15.0f,
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         2,
-                        s.FingersOfFrostActual > 0
+                        s.FingersOfFrostActual > 0,
+                        false
                     ),
                     TransitionProbability = FOF * BF
                 });
@@ -375,7 +399,8 @@ namespace Rawr.Mage
                         Math.Max(0.0f, s.BrainFreezeDuration - FrB.CastTime),
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         2,
-                        s.FingersOfFrostActual > 0
+                        s.FingersOfFrostActual > 0,
+                        false
                     ),
                     TransitionProbability = FOF * (1 - BF)
                 });
@@ -390,7 +415,8 @@ namespace Rawr.Mage
                         15.0f,
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         Math.Max(0, s.FingersOfFrostActual - 1),
-                        s.FingersOfFrostActual > 0
+                        s.FingersOfFrostActual > 0,
+                        false
                     ),
                     TransitionProbability = (1 - FOF) * BF
                 });
@@ -403,23 +429,43 @@ namespace Rawr.Mage
                     Math.Max(0.0f, s.BrainFreezeDuration - FrB.CastTime),
                     Math.Max(0, s.FingersOfFrostActual - 1),
                     Math.Max(0, s.FingersOfFrostActual - 1),
-                    s.FingersOfFrostActual > 0
+                    s.FingersOfFrostActual > 0,
+                    false
                 ),
                 TransitionProbability = (1 - FOF) * (1 - BF)
             });
-
-            list.Add(new CycleControlledStateTransition()
+            if (frozenCore)
             {
-                Spell = IL,
-                TargetState = GetState(
-                    s.BrainFreezeDuration > IL.CastTime,
-                    Math.Max(0.0f, s.BrainFreezeDuration - IL.CastTime),
-                    Math.Max(0, s.FingersOfFrostActual - 1),
-                    Math.Max(0, s.FingersOfFrostActual - 1),
-                    s.FingersOfFrostActual > 1
-                ),
-                TransitionProbability = 1
-            });
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = IL,
+                    TargetState = GetState(
+                        s.BrainFreezeDuration > IL.CastTime,
+                        Math.Max(0.0f, s.BrainFreezeDuration - IL.CastTime),
+                        Math.Max(0, s.FingersOfFrostActual - 1),
+                        Math.Max(0, s.FingersOfFrostActual - 1),
+                        s.FingersOfFrostActual > 1,
+                        true
+                    ),
+                    TransitionProbability = s.FrozenCore ? 1 : IL.CritRate
+                });
+            }
+            if (!s.FrozenCore)
+            {
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = IL,
+                    TargetState = GetState(
+                        s.BrainFreezeDuration > IL.CastTime,
+                        Math.Max(0.0f, s.BrainFreezeDuration - IL.CastTime),
+                        Math.Max(0, s.FingersOfFrostActual - 1),
+                        Math.Max(0, s.FingersOfFrostActual - 1),
+                        s.FingersOfFrostActual > 1,
+                        false
+                    ),
+                    TransitionProbability = frozenCore ? 1 - IL.CritRate : 1
+                });
+            }
             if (s.BrainFreezeRegistered)
             {
                 if (T8 > 0)
@@ -432,7 +478,8 @@ namespace Rawr.Mage
                             Math.Max(0.0f, s.BrainFreezeDuration - FB.CastTime),
                             Math.Max(0, s.FingersOfFrostActual - 1),
                             Math.Max(0, s.FingersOfFrostActual - 1),
-                            s.FingersOfFrostActual > 1
+                            s.FingersOfFrostActual > 1,
+                            s.FrozenCore
                         ),
                         TransitionProbability = T8
                     });
@@ -445,7 +492,8 @@ namespace Rawr.Mage
                         0.0f,
                         Math.Max(0, s.FingersOfFrostActual - 1),
                         Math.Max(0, s.FingersOfFrostActual - 1),
-                        s.FingersOfFrostActual > 1
+                        s.FingersOfFrostActual > 1,
+                        s.FrozenCore
                     ),
                     TransitionProbability = 1 - T8
                 });
@@ -456,13 +504,17 @@ namespace Rawr.Mage
 
         private Dictionary<string, State> stateDictionary = new Dictionary<string, State>();
 
-        private State GetState(bool brainFreezeRegistered, float brainFreezeDuration, int fingersOfFrostRegistered, int fingersOfFrostActual, bool latentFingersOfFrostWindow)
+        private State GetState(bool brainFreezeRegistered, float brainFreezeDuration, int fingersOfFrostRegistered, int fingersOfFrostActual, bool latentFingersOfFrostWindow, bool frozenCore)
         {
-            string name = string.Format("BF{0}{1},FOF{2}{3}({4})", brainFreezeDuration, brainFreezeRegistered ? "+" : "-", fingersOfFrostRegistered, latentFingersOfFrostWindow ? "+" : "-", fingersOfFrostActual);
+            if (!useLatencyCombos)
+            {
+                latentFingersOfFrostWindow = false;
+            }
+            string name = string.Format("BF{0}{1},FOF{2}{3}({4}){5}", brainFreezeDuration, brainFreezeRegistered ? "+" : "-", fingersOfFrostRegistered, latentFingersOfFrostWindow ? "+" : "-", fingersOfFrostActual, frozenCore ? ",FC" : "");
             State state;
             if (!stateDictionary.TryGetValue(name, out state))
             {
-                state = new State() { Name = name, BrainFreezeDuration = brainFreezeDuration, BrainFreezeRegistered = brainFreezeRegistered, FingersOfFrostActual = fingersOfFrostActual, FingersOfFrostRegistered = fingersOfFrostRegistered, LatentFingersOfFrostWindow = latentFingersOfFrostWindow };
+                state = new State() { Name = name, BrainFreezeDuration = brainFreezeDuration, BrainFreezeRegistered = brainFreezeRegistered, FingersOfFrostActual = fingersOfFrostActual, FingersOfFrostRegistered = fingersOfFrostRegistered, LatentFingersOfFrostWindow = latentFingersOfFrostWindow, FrozenCore = frozenCore };
                 stateDictionary[name] = state;
             }
             return state;
@@ -472,7 +524,28 @@ namespace Rawr.Mage
         {
             State a = (State)state1;
             State b = (State)state2;
-            return (a.FingersOfFrostRegistered != b.FingersOfFrostRegistered || a.LatentFingersOfFrostWindow != b.LatentFingersOfFrostWindow || a.BrainFreezeRegistered != b.BrainFreezeRegistered);
+            return (
+                a.FingersOfFrostRegistered != b.FingersOfFrostRegistered || 
+                a.LatentFingersOfFrostWindow != b.LatentFingersOfFrostWindow || 
+                a.FrozenCore != b.FrozenCore ||
+                a.BrainFreezeRegistered != b.BrainFreezeRegistered);
+        }
+
+        public override string StateDescription
+        {
+            get
+            {
+                return @"Cycle Code Legend: 0 = FrB, 1 = IL, 2 = FB
+State Descriptions: BFx+-,FOFy+-(z),FC
+x = remaining time on Brain Freeze
++ = Brain Freeze proc visible
+- = Brain Freeze proc not visible
+y = visible count on Fingers of Frost
++ = ghost Fingers of Frost charge for instant available
+- = ghost Fingers of Frost charge for instant not available
+z = actual count on Fingers of Frost
+FC = Frozen Core effect active";
+            }
         }
     }
 }

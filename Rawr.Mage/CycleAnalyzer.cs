@@ -10,39 +10,25 @@ namespace Rawr.Mage
 {
     public partial class CycleAnalyzer : Form
     {
+        Character character;
         CycleGenerator generator;
         CastingState castingState;
         Cycle wand;
 
-        public CycleAnalyzer(CastingState castingState, CycleGenerator generator, Cycle wand)
+        public CycleAnalyzer(Character character)
         {
             InitializeComponent();
 
-            this.castingState = castingState;
-            this.generator = generator;
-            this.wand = wand;
-
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine(generator.StateDescription);
-
-            sb.AppendLine("");
-            for (int i = 0; i < generator.ControlOptions.Length; i++)
-            {
-                sb.AppendLine(i + ": " + generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
-            }
-
-            textBoxDescription.Text = sb.ToString();
-            textBoxControlString.Text = new string('0', generator.ControlOptions.Length);
-
-            //textBoxControlString.SelectAll();
-            textBoxControlString.Focus();
-
-            buttonCalculate_Click(null, EventArgs.Empty);
+            this.character = character;
+            comboBoxCycleGenerator.SelectedIndex = 0;
         }
 
         private void buttonCalculate_Click(object sender, EventArgs e)
         {
+            if (castingState == null || generator == null)
+            {
+                return;
+            }
             string name = textBoxControlString.Text;
             if (name.Length != generator.ControlOptions.Length) return;
 
@@ -68,6 +54,10 @@ namespace Rawr.Mage
 
         private void buttonOptimal_Click(object sender, EventArgs e)
         {
+            if (castingState == null || generator == null)
+            {
+                return;
+            }
             if (buttonOptimal.Text == "Cancel")
             {
                 backgroundWorker.CancelAsync();
@@ -100,12 +90,81 @@ namespace Rawr.Mage
                 textBoxResult.Text = "";
             }
             buttonOptimal.Text = "Optimal";
+            statusLabel.Text = "";
+            statusProgressBar.Value = 0;
         }
 
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             statusLabel.Text = (string)e.UserState;
             statusProgressBar.Value = e.ProgressPercentage;
+        }
+
+        private void comboBoxCycleGenerator_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string armor = "Molten Armor";
+            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+            CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
+            Solver solver = new Solver(character, calculationOptions, false, false, 0, armor, false, false, false, false);
+            Stats rawStats;
+            Stats baseStats;
+            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
+
+            switch (comboBoxCycleGenerator.Text)
+            {
+                case "Arcane (MB/2T10 duration collapsed)":
+                    castingState = new CastingState(calculationResult, 0, false);
+                    generator = new ArcaneCycleGenerator(castingState, true, false, true, false, true);
+                    break;
+                case "Arcane (Arcane Power, MB/2T10 duration collapsed)":
+                    castingState = new CastingState(calculationResult, (int)StandardEffect.ArcanePower, false);
+                    generator = new ArcaneCycleGenerator(castingState, true, false, true, false, true);
+                    break;
+                case "Arcane (ABar on cooldown only, MB/2T10 duration/ABar cooldown collapsed)":
+                    castingState = new CastingState(calculationResult, 0, false);
+                    generator = new ArcaneCycleGenerator(castingState, true, true, true, true, true);
+                    break;
+                case "Arcane (no ABar, MB duration collapsed)":
+                    castingState = new CastingState(calculationResult, 0, false);
+                    generator = new ArcaneCycleGenerator(castingState, false, true, true, true, false);
+                    break;
+                case "Frost":
+                    castingState = new CastingState(calculationResult, 0, false);
+                    generator = new FrostCycleGenerator(castingState, true);
+                    break;
+                case "Frost (no latency combos)":
+                    castingState = new CastingState(calculationResult, 0, false);
+                    generator = new FrostCycleGenerator(castingState, false);
+                    break;
+            }
+
+            if (castingState == null || generator == null)
+            {
+                return;
+            }
+
+            if (character.Ranged != null)
+            {
+                wand = new WandTemplate(calculationResult, (MagicSchool)character.Ranged.Item.DamageType, character.Ranged.Item.MinDamage, character.Ranged.Item.MaxDamage, character.Ranged.Item.Speed).GetSpell(castingState);
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine(generator.StateDescription);
+
+            sb.AppendLine("");
+            for (int i = 0; i < generator.ControlOptions.Length; i++)
+            {
+                sb.AppendLine(i + ": " + generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
+            }
+
+            textBoxDescription.Text = sb.ToString();
+            textBoxControlString.Text = new string('0', generator.ControlOptions.Length);
+
+            //textBoxControlString.SelectAll();
+            textBoxControlString.Focus();
+
+            buttonCalculate_Click(null, EventArgs.Empty);
         }
     }
 }

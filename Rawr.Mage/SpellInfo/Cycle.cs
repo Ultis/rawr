@@ -1222,7 +1222,7 @@ namespace Rawr.Mage
             foreach (KeyValuePair<Spell, double> kvp in SpellWeight)
             {
                 AddSpell(needsDisplayCalculations, kvp.Key, (float)kvp.Value);
-                if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.SpellId, 100.0 * kvp.Value);
+                if (kvp.Value > 0) sb.AppendFormat("{0}:\t{1:F}%\r\n", kvp.Key.Label ?? kvp.Key.SpellId.ToString(), 100.0 * kvp.Value);
             }
             foreach (KeyValuePair<Cycle, double> kvp in CycleWeight)
             {

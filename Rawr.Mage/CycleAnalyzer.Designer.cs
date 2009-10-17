@@ -38,6 +38,7 @@
             this.textBoxResult = new System.Windows.Forms.TextBox();
             this.buttonCalculate = new System.Windows.Forms.Button();
             this.buttonOptimal = new System.Windows.Forms.Button();
+            this.comboBoxCycleGenerator = new System.Windows.Forms.ComboBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,7 +47,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusProgressBar,
             this.statusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 463);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 544);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(520, 22);
             this.statusStrip1.TabIndex = 0;
@@ -76,12 +77,12 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxDescription.Location = new System.Drawing.Point(12, 12);
+            this.textBoxDescription.Location = new System.Drawing.Point(12, 34);
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ReadOnly = true;
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDescription.Size = new System.Drawing.Size(492, 162);
+            this.textBoxDescription.Size = new System.Drawing.Size(492, 221);
             this.textBoxDescription.TabIndex = 1;
             this.textBoxDescription.TabStop = false;
             // 
@@ -89,7 +90,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 181);
+            this.label1.Location = new System.Drawing.Point(12, 262);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 2;
@@ -99,7 +100,7 @@
             // 
             this.textBoxControlString.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxControlString.Location = new System.Drawing.Point(92, 181);
+            this.textBoxControlString.Location = new System.Drawing.Point(92, 262);
             this.textBoxControlString.Name = "textBoxControlString";
             this.textBoxControlString.Size = new System.Drawing.Size(250, 20);
             this.textBoxControlString.TabIndex = 0;
@@ -109,7 +110,7 @@
             this.textBoxResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxResult.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxResult.Location = new System.Drawing.Point(12, 207);
+            this.textBoxResult.Location = new System.Drawing.Point(12, 288);
             this.textBoxResult.Multiline = true;
             this.textBoxResult.Name = "textBoxResult";
             this.textBoxResult.ReadOnly = true;
@@ -121,7 +122,7 @@
             // buttonCalculate
             // 
             this.buttonCalculate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCalculate.Location = new System.Drawing.Point(348, 181);
+            this.buttonCalculate.Location = new System.Drawing.Point(348, 262);
             this.buttonCalculate.Name = "buttonCalculate";
             this.buttonCalculate.Size = new System.Drawing.Size(75, 23);
             this.buttonCalculate.TabIndex = 1;
@@ -132,7 +133,7 @@
             // buttonOptimal
             // 
             this.buttonOptimal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOptimal.Location = new System.Drawing.Point(429, 181);
+            this.buttonOptimal.Location = new System.Drawing.Point(429, 262);
             this.buttonOptimal.Name = "buttonOptimal";
             this.buttonOptimal.Size = new System.Drawing.Size(75, 23);
             this.buttonOptimal.TabIndex = 2;
@@ -140,11 +141,31 @@
             this.buttonOptimal.UseVisualStyleBackColor = true;
             this.buttonOptimal.Click += new System.EventHandler(this.buttonOptimal_Click);
             // 
+            // comboBoxCycleGenerator
+            // 
+            this.comboBoxCycleGenerator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxCycleGenerator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCycleGenerator.FormattingEnabled = true;
+            this.comboBoxCycleGenerator.Items.AddRange(new object[] {
+            "Arcane (MB/2T10 duration collapsed)",
+            "Arcane (Arcane Power, MB/2T10 duration collapsed)",
+            "Arcane (ABar on cooldown only, MB/2T10 duration/ABar cooldown collapsed)",
+            "Arcane (no ABar, MB duration collapsed)",
+            "Frost",
+            "Frost (no latency combos)"});
+            this.comboBoxCycleGenerator.Location = new System.Drawing.Point(12, 7);
+            this.comboBoxCycleGenerator.Name = "comboBoxCycleGenerator";
+            this.comboBoxCycleGenerator.Size = new System.Drawing.Size(492, 21);
+            this.comboBoxCycleGenerator.TabIndex = 5;
+            this.comboBoxCycleGenerator.SelectedIndexChanged += new System.EventHandler(this.comboBoxCycleGenerator_SelectedIndexChanged);
+            // 
             // CycleAnalyzer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(520, 485);
+            this.ClientSize = new System.Drawing.Size(520, 566);
+            this.Controls.Add(this.comboBoxCycleGenerator);
             this.Controls.Add(this.buttonOptimal);
             this.Controls.Add(this.buttonCalculate);
             this.Controls.Add(this.textBoxResult);
@@ -174,5 +195,6 @@
         private System.Windows.Forms.TextBox textBoxResult;
         private System.Windows.Forms.Button buttonCalculate;
         private System.Windows.Forms.Button buttonOptimal;
+        private System.Windows.Forms.ComboBox comboBoxCycleGenerator;
     }
 }

@@ -133,91 +133,6 @@ namespace Rawr.Mage
             if (Character != null) Character.OnCalculationsInvalidated();
         }
 
-        private void buttonComputeOptimalArcaneCycles_Click(object sender, EventArgs e)
-        {
-            string armor = "Molten Armor";
-            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
-            CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
-            Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, false, false);
-            Stats rawStats;
-            Stats baseStats;
-            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
-            CastingState baseState = new CastingState(calculationResult, 0, false);
-            CastingState apState = new CastingState(calculationResult, (int)StandardEffect.ArcanePower, false);
-
-            Cycle wand = null;
-            if (Character.Ranged != null)
-            {
-                wand = new WandTemplate(calculationResult, (MagicSchool)Character.Ranged.Item.DamageType, Character.Ranged.Item.MinDamage, Character.Ranged.Item.MaxDamage, Character.Ranged.Item.Speed).GetSpell(baseState);
-            }
-
-
-            /*StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine("Optimal Cycle Palette:");
-            sb.AppendLine("");
-            sb.AppendLine("Cycle Code Legend: 0 = AB, 1 = ABar, 2 = AM");
-            sb.AppendLine(@"State Descriptions: ABx,ABary,MBz+-
-x = number of AB stacks
-y = remaining cooldown on Arcane Barrage
-z = remaining time on Missile Barrage
-+ = Missile Barrage proc visible
-- = Missile Barrage proc not visible
-");
-    
-            //sb.AppendLine("Base:");
-
-            //ComputeOptimalCycles(baseState, sb);
-
-            //sb.AppendLine("");
-            //sb.AppendLine("Arcane Power:");
-
-            //ComputeOptimalCycles(apState, sb);
-
-            //MessageBox.Show(sb.ToString());
-
-            //sb.Length = 0;
-            //sb.AppendLine("Extended Model");
-            sb.AppendLine("Base:");
-
-            ArcaneCycleGenerator generator = new ArcaneCycleGenerator(baseState);
-
-            sb.AppendLine("");
-            for (int i = 0; i < generator.ControlOptions.Length; i++)
-            {
-                sb.AppendLine(i + ": " + generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
-            }
-            sb.AppendLine("");
-
-            foreach (Cycle cycle in generator.Analyze(baseState, wand))
-            {
-                sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
-            }
-
-            sb.AppendLine("");
-            sb.AppendLine("Arcane Power:");
-
-            generator = new ArcaneCycleGenerator(apState);
-
-            sb.AppendLine("");
-            for (int i = 0; i < generator.ControlOptions.Length; i++)
-            {
-                sb.AppendLine(i + ": " + generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
-            }
-            sb.AppendLine("");
-
-            foreach (Cycle cycle in generator.Analyze(apState, wand))
-            {
-                sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
-            }
-
-            MessageBox.Show(sb.ToString());*/
-
-            ArcaneCycleGenerator generator = new ArcaneCycleGenerator(baseState);
-            CycleAnalyzer analyzer = new CycleAnalyzer(baseState, generator, wand);
-            analyzer.Show();
-        }
-
         private void buttonCooldownRestrictionsEditor_Click(object sender, EventArgs e)
         {
             if (cooldownRestrictions == null || cooldownRestrictions.IsDisposed)
@@ -252,58 +167,6 @@ z = remaining time on Missile Barrage
             }
             TalentScoreForm form = new TalentScoreForm(calculationOptions.TalentScore);
             form.ShowDialog(this);
-        }
-
-        private void buttonComputeOptimalFrostCycles_Click(object sender, EventArgs e)
-        {
-            string armor = "Molten Armor";
-            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
-            CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
-            Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, false, false);
-            Stats rawStats;
-            Stats baseStats;
-            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
-            CastingState baseState = new CastingState(calculationResult, 0, false);
-
-            Cycle wand = null;
-            if (Character.Ranged != null)
-            {
-                wand = new WandTemplate(calculationResult, (MagicSchool)Character.Ranged.Item.DamageType, Character.Ranged.Item.MinDamage, Character.Ranged.Item.MaxDamage, Character.Ranged.Item.Speed).GetSpell(baseState);
-            }
-
-
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine("Optimal Cycle Palette:");
-            sb.AppendLine("");
-            sb.AppendLine("Cycle Code Legend: 0 = FrB, 1 = IL, 2 = FB");
-            sb.AppendLine(@"State Descriptions: BFx+-,FOFy+-(z)
-x = remaining time on Brain Freeze
-+ = Brain Freeze proc visible
-- = Brain Freeze proc not visible
-y = visible count on Fingers of Frost
-+ = ghost Fingers of Frost charge for instant available
-- = ghost Fingers of Frost charge for instant not available
-z = actual count on Fingers of Frost
-");
-
-            sb.AppendLine("Base:");
-
-            FrostCycleGenerator generator = new FrostCycleGenerator(baseState);
-
-            sb.AppendLine("");
-            for (int i = 0; i < generator.ControlOptions.Length; i++)
-            {
-                sb.AppendLine(i + ": " + generator.StateList[Array.IndexOf(generator.ControlIndex, i)]);
-            }
-            sb.AppendLine("");
-
-            foreach (Cycle cycle in generator.Analyze(baseState, wand))
-            {
-                sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
-            }
-
-            MessageBox.Show(sb.ToString());
         }
 
         private void buttonHotStreakUtilization_Click(object sender, EventArgs e)
@@ -358,6 +221,12 @@ z = actual count on Fingers of Frost
             }
             clock.Stop();
             MessageBox.Show("Calculating 10000 characters takes " + clock.Elapsed.TotalSeconds + " seconds.");
+        }
+
+        private void buttonComputeOptimalCycles_Click(object sender, EventArgs e)
+        {
+            CycleAnalyzer analyzer = new CycleAnalyzer(Character);
+            analyzer.Show();
         }
     }
 }

@@ -233,6 +233,20 @@ namespace Rawr.Mage
             }
         }
 
+        private CastingState tier10TwoPieceState;
+        public CastingState Tier10TwoPieceState
+        {
+            get
+            {
+                if (tier10TwoPieceState == null)
+                {
+                    tier10TwoPieceState = CastingState.New(Calculations, Effects, Frozen);
+                    tier10TwoPieceState.CastingSpeed *= 1.12f;
+                }
+                return tier10TwoPieceState;
+            }
+        }
+
         public CastingState()
         {
         }
@@ -272,6 +286,8 @@ namespace Rawr.Mage
         {
             frozenState = null;
             maintainSnareState = null;
+            tier10TwoPieceState = null;
+
             StateSpellPower = 0;
             StateAdditiveSpellModifier = 0;
             buffLabel = null;
@@ -756,7 +772,7 @@ namespace Rawr.Mage
                     s = Calculations.FrostboltTemplate.GetSpell(this, false, false, false, true);
                     break;
                 case SpellId.FrostfireBoltFOF:
-                    s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, true);
+                    s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, true, false);
                     break;
                 case SpellId.ArcaneMissiles:
                     s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 0);
@@ -797,6 +813,9 @@ namespace Rawr.Mage
                 case SpellId.FrostboltNoCC:
                     s = Calculations.FrostboltTemplate.GetSpell(this, true, false, false, false);
                     break;
+                case SpellId.FrostboltFC:
+                    s = Calculations.FrostboltTemplate.GetSpell(this, false, true);
+                    break;
                 case SpellId.Fireball:
                     s = Calculations.FireballTemplate.GetSpell(this, false, false);
                     break;
@@ -804,7 +823,10 @@ namespace Rawr.Mage
                     s = Calculations.FireballTemplate.GetSpell(this, false, true);
                     break;
                 case SpellId.FrostfireBolt:
-                    s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false);
+                    s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false, false);
+                    break;
+                case SpellId.FrostfireBoltFC:
+                    s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false, true);
                     break;
                 case SpellId.Pyroblast:
                     s = Calculations.PyroblastTemplate.GetSpell(this, false, false);
