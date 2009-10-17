@@ -319,6 +319,8 @@ threat and limited threat scaled by the threat scale.",
             character.ActiveBuffs.Add(Buff.GetBuffByName("Trauma"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Insect Swarm"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Thunder Clap"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Thunder Clap"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood"));
             if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood (Mixology)"));
@@ -994,6 +996,7 @@ threat and limited threat scaled by the threat scale.",
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
+                BossAttackSpeedMultiplier = stats.BossAttackSpeedMultiplier,
 
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
@@ -1038,7 +1041,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.WeaponDamage +
                     stats.BonusCritMultiplier + stats.CritChanceReduction +
                     stats.ThreatIncreaseMultiplier + stats.BonusDamageMultiplier + stats.BonusBlockValueMultiplier +
-                    stats.BonusBleedDamageMultiplier +
+                    stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedMultiplier + 
                     stats.HighestStat + stats.Paragon + 
                     stats.BonusShieldSlamDamage + stats.BonusShockwaveDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage
                 ) != 0;

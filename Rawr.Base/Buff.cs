@@ -1302,8 +1302,8 @@ namespace Rawr
             {
                 Name = "Frost Fever",
                 Group = "Boss Attack Speed",
-                Stats = { BossAttackSpeedMultiplier = -0.15f },
-                Improvements = { new Buff { Name = "Improved Icy Touch", Stats = { BossAttackSpeedMultiplier = -0.06f } } }
+                Stats = { BossAttackSpeedMultiplier = -0.14f },
+                Improvements = { new Buff { Name = "Improved Icy Touch", Stats = { BossAttackSpeedMultiplier = -(1.0f - (0.8f / 0.86f)) } } }
             });
 
             defaultBuffs.Add(new Buff()
@@ -1311,7 +1311,7 @@ namespace Rawr
                 Name = "Thunder Clap",
                 Group = "Boss Attack Speed",
                 Stats = { BossAttackSpeedMultiplier = -0.10f },
-                Improvements = { new Buff { Name = "Improved Thunder Clap", Stats = { BossAttackSpeedMultiplier = -0.06f } } }
+                Improvements = { new Buff { Name = "Improved Thunder Clap", Stats = { BossAttackSpeedMultiplier = -(1.0f - (0.8f/0.9f)) } } }
             });
             #endregion
 

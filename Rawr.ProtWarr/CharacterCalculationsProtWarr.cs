@@ -121,8 +121,7 @@ namespace Rawr.ProtWarr
             if(AttackerSpeed == BaseAttackerSpeed)
                 dictValues.Add("Attacker Speed", string.Format("{0:0.00}s", AttackerSpeed));
             else
-                dictValues.Add("Attacker Speed", string.Format("{0:0.00}s*Base speed of {1:0.00}s (reduced by parry haste)", AttackerSpeed, BaseAttackerSpeed));
-            
+                dictValues.Add("Attacker Speed", string.Format("{0:0.00}s*Base speed of {1:0.00}s (modified by haste)", AttackerSpeed, BaseAttackerSpeed));
 
             dictValues.Add("Damage Taken", 
                 string.Format("{0:0.0} DPS*{1:0} damage per normal attack" + Environment.NewLine +

@@ -18,7 +18,7 @@ namespace Rawr.ProtWarr
 
         private void Calculate()
         {
-            float baseBossAttackSpeed   = Options.BossAttackSpeed;
+            float baseBossAttackSpeed   = Options.BossAttackSpeed / (1.0f + Stats.BossAttackSpeedMultiplier);
             float baseWeaponSpeed       = Lookup.WeaponSpeed(Character, Stats);
             float bossAttackHaste       = 0.0f;
             float weaponHaste           = 0.0f;
