@@ -4004,6 +4004,13 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
+                Name = "Expose Weakness",
+                Group = "Temporary Buffs",
+                Stats = { PhysicalDamageTakenMultiplier = 2.25f },
+                ConflictingBuffs = new List<string>(new string[] { })
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Improved Lay On Hands",
                 Group = "Temporary Buffs",
                 Stats = { BonusArmorMultiplier = 0.3f },

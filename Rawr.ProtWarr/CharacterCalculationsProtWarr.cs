@@ -65,6 +65,7 @@ namespace Rawr.ProtWarr
         public float DamageTaken { get; set; }
         public float DamageTakenPerHit { get; set; }
         public float DamageTakenPerBlock { get; set; }
+        public float DamageTakenPerCritBlock { get; set; }
         public float DamageTakenPerCrit { get; set; }
 
         public float TankPoints { get; set; }
@@ -122,10 +123,12 @@ namespace Rawr.ProtWarr
             else
                 dictValues.Add("Attacker Speed", string.Format("{0:0.00}s*Base speed of {1:0.00}s (reduced by parry haste)", AttackerSpeed, BaseAttackerSpeed));
             
+
             dictValues.Add("Damage Taken", 
                 string.Format("{0:0.0} DPS*{1:0} damage per normal attack" + Environment.NewLine +
                                 "{2:0} damage per blocked attack" + Environment.NewLine +
-                                "{3:0} damage per critical attack", DamageTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCrit));
+                                "{3:0} damage per critically blocked attack" + Environment.NewLine +
+                                "{4:0} damage per critical attack", DamageTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCritBlock, DamageTakenPerCrit));
             
             dictValues.Add("Resilience",
                 string.Format(@"{0}*Reduces the damage of critical strikes and chance to be critically hit by {1}%.",
@@ -204,21 +207,20 @@ namespace Rawr.ProtWarr
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;
-                case "Total Threat/sec": return ThreatPerSecond;
-                case "Hit %": return Hit * 100.0f;
-
-                case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
-                case "% Total Mitigation": return TotalMitigation * 100.0f;
-                case "% Chance to Avoid Attacks": return DodgePlusMissPlusParry * 100.0f;
-                case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 
+                case "% Total Mitigation": return TotalMitigation * 100.0f;
+                case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
+                case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
+                case "% Avoidance": return DodgePlusMissPlusParry * 100.0f;
+                case "% Avoidance+Block": return DodgePlusMissPlusParryPlusBlock * 100.0f;
+
+                case "Threat/sec": return ThreatPerSecond;
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
                 case "% Chance to be Parried": return ParriedAttacks * 100.0f;
                 case "% Chance to be Dodged": return DodgedAttacks * 100.0f;
                 case "% Chance to Miss": return MissedAttacks * 100.0f;
                 
                 case "Burst Time": return BurstTime;
-                case "TankPoints": return TankPoints;
                 case "Nature Survival": return NatureSurvivalPoints;
                 case "Fire Survival": return FireSurvivalPoints;
                 case "Frost Survival": return FrostSurvivalPoints;

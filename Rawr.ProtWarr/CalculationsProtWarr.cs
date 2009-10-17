@@ -52,8 +52,8 @@ namespace Rawr.ProtWarr
                 int[,][] gemmingTemplates = new int[,][]
                 {
                     //Red       Yellow      Blue        Prismatic   Meta
-                    { flashing, flashing,   flashing,   flashing,   austere },  // Max Avoidance (Parry)
-                    { subtle,   subtle,     subtle,     subtle,     austere },  // Max Avoidance (Dodge)
+                    { thick,    thick,      thick,      thick,      austere },  // Max Avoidance (Defense)
+                    { stalwart, enduring,   enduring,   enduring,   austere },  // Avoidance Heavy (Dodge/Defense)
                     { flashing, glimmering, defender,   flashing,   austere },  // Avoidance Heavy (Parry)
                     { subtle,   stalwart,   regal,      subtle,     austere },  // Avoidance Heavy (Dodge)
                     { defender, enduring,   solid,      solid,      austere },  // Balanced Avoidance (Parry)
@@ -190,19 +190,17 @@ threat and limited threat scaled by the threat scale.",
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
 					"Health",
-                    "Unlimited TPS",
-                    "Limited TPS",
                     "% Total Mitigation",
 					"% Guaranteed Reduction",
-					"% Chance to Avoid Attacks",
-					"% Chance to be Crit",
+                    "% Chance to be Crit",
+                    "% Avoidance",
+                    "% Avoidance+Block",
+                    "Threat/sec",
                     "% Chance to be Avoided", 
                     "% Chance to be Dodged",
                     "% Chance to be Parried",
                     "% Chance to Miss",
-                    "Hit %",
                     "Burst Time", 
-                    "TankPoints", 
                     "Nature Survival",
                     "Fire Survival",
                     "Frost Survival",
@@ -362,17 +360,17 @@ threat and limited threat scaled by the threat scale.",
             {
                 calculatedStats.Defense = (float)Math.Floor(stats.Defense + StatConversion.GetDefenseFromRating(stats.DefenseRating, CharacterClass.Warrior));
                 calculatedStats.BlockValue = stats.BlockValue;
-                calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
                 calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, options.TargetLevel);
                 calculatedStats.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, options.TargetLevel);
                 calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, options.TargetLevel);
 
                 calculatedStats.BaseAttackerSpeed = options.BossAttackSpeed;
                 calculatedStats.AttackerSpeed = dm.ParryModel.BossAttackSpeed;
-                calculatedStats.DamageTaken = dm.DamagePerSecond;
                 calculatedStats.DamageTakenPerHit = dm.DamagePerHit;
                 calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
+                calculatedStats.DamageTakenPerCritBlock = dm.DamagePerCritBlock;
                 calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
+                calculatedStats.DamageTaken = dm.DamagePerSecond;
 
                 calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane, options.TargetLevel));
                 calculatedStats.FireReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire, options.TargetLevel));
@@ -398,6 +396,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Parry = dm.DefendTable.Parry;
             calculatedStats.Block = dm.DefendTable.Block;
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
+            calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.DodgePlusMissPlusParry + calculatedStats.Block;
             calculatedStats.CritVulnerability = dm.DefendTable.Critical;
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
             calculatedStats.TotalMitigation = dm.Mitigation;
@@ -519,6 +518,9 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina, CharacterClass.Warrior);
             statsTotal.Health *= (float)Math.Floor(1.0f + statsTotal.BonusHealthMultiplier);
 
+            // Calculate Procs and Special Effects
+            statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, options));
+
             // Defensive Stats
             statsTotal.Armor = (float)Math.Ceiling(statsTotal.Armor * (1.0f + statsTotal.BaseArmorMultiplier));
             statsTotal.BonusArmor += statsTotal.Agility * 2.0f;
@@ -533,18 +535,15 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 
-            // Offensive Stats
-            statsTotal.AttackPower += statsTotal.Strength * 2.0f + (float)Math.Floor(talents.ArmoredToTheTeeth * statsTotal.Armor / 108.0f);
-            statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
-
-            // Calculate Procs and Special Effects
-            statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, options));
-
-            // Greatness/Highest Stat Effect
+            // Highest Stat Effects
             if(statsTotal.Strength > statsTotal.Agility)
-                statsTotal.Strength += (float)Math.Floor(statsTotal.HighestStat * (1.0f + statsTotal.BonusStrengthMultiplier));
+                statsTotal.Strength += (float)Math.Floor((statsTotal.HighestStat + statsTotal.Paragon) * (1.0f + statsTotal.BonusStrengthMultiplier));
             else
-                statsTotal.Agility += (float)Math.Floor(statsTotal.HighestStat * (1.0f + statsTotal.BonusAgilityMultiplier));
+                statsTotal.Agility += (float)Math.Floor((statsTotal.HighestStat + statsTotal.Paragon) * (1.0f + statsTotal.BonusAgilityMultiplier));
+
+            // Final Attack Power
+            statsTotal.AttackPower += statsTotal.Strength * 2.0f + (float)Math.Floor(talents.ArmoredToTheTeeth * statsTotal.Armor / 108.0f);
+            statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1.0f + statsTotal.BonusAttackPowerMultiplier));
 
             return statsTotal;
         }
@@ -608,21 +607,8 @@ threat and limited threat scaled by the threat scale.",
             statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + stats.BonusStaminaMultiplier));
             statsSpecialEffects.Strength = (float)Math.Floor(statsSpecialEffects.Strength * (1.0f + stats.BonusStrengthMultiplier));
             statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + stats.BonusAgilityMultiplier));
-            statsSpecialEffects.Health = (float)Math.Floor(statsSpecialEffects.Health + statsSpecialEffects.Stamina * 10.0f);
-
-            // Defensive Stats
-            statsSpecialEffects.Armor = (float)Math.Floor(statsSpecialEffects.Armor * (1f + stats.BaseArmorMultiplier + statsSpecialEffects.BaseArmorMultiplier));
-            statsSpecialEffects.BonusArmor += statsSpecialEffects.Agility * 2.0f;
-            statsSpecialEffects.BonusArmor = (float)Math.Floor(statsSpecialEffects.BonusArmor * (1.0f + stats.BonusArmorMultiplier + statsSpecialEffects.BonusArmorMultiplier));
-            statsSpecialEffects.Armor += statsSpecialEffects.BonusArmor;
-
-            statsSpecialEffects.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsSpecialEffects.Strength, CharacterClass.Warrior));
-            statsSpecialEffects.BlockValue = (float)Math.Floor(statsSpecialEffects.BlockValue * (1.0f + stats.BonusBlockValueMultiplier + statsSpecialEffects.BonusBlockValueMultiplier));
-
-            // Offensive Stats
-            statsSpecialEffects.AttackPower += statsSpecialEffects.Strength * 2.0f;
-            statsSpecialEffects.AttackPower += (float)Math.Floor(character.WarriorTalents.ArmoredToTheTeeth * statsSpecialEffects.Armor / 108.0f);
-            statsSpecialEffects.AttackPower = (float)Math.Floor(statsSpecialEffects.AttackPower * (1.0f + stats.BonusAttackPowerMultiplier + statsSpecialEffects.BonusAttackPowerMultiplier));
+            statsSpecialEffects.Health += statsSpecialEffects.Stamina * 10.0f;
+            statsSpecialEffects.Health = (float)Math.Floor(statsSpecialEffects.Health * (1.0f + stats.BonusHealthMultiplier));
 
             return statsSpecialEffects;
         }
@@ -976,6 +962,7 @@ threat and limited threat scaled by the threat scale.",
                 Health = stats.Health,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
+                PhysicalDamageTakenMultiplier = stats.PhysicalDamageTakenMultiplier,
                 Miss = stats.Miss,
                 CritChanceReduction = stats.CritChanceReduction,
                 AllResist = stats.AllResist,
@@ -1009,6 +996,7 @@ threat and limited threat scaled by the threat scale.",
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
 
                 HighestStat = stats.HighestStat,
+                Paragon = stats.Paragon,
                 BonusShieldSlamDamage = stats.BonusShieldSlamDamage,
                 BonusShockwaveDamage = stats.BonusShockwaveDamage,
                 DevastateCritIncrease = stats.DevastateCritIncrease,
@@ -1041,18 +1029,17 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusAttackPowerMultiplier + stats.BonusArmorMultiplier +
                     stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
                     stats.BlockRating + stats.BlockValue + stats.Health + stats.BonusHealthMultiplier +
-                    stats.DamageTakenMultiplier + stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
+                    stats.DamageTakenMultiplier + stats.PhysicalDamageTakenMultiplier + stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
                     stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
                     stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
-                    stats.NatureResistanceBuff + stats.FireResistanceBuff +
-                    stats.FrostResistanceBuff + stats.ShadowResistanceBuff +
+                    stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + stats.ShadowResistanceBuff +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.WeaponDamage +
                     stats.BonusCritMultiplier + stats.CritChanceReduction +
                     stats.ThreatIncreaseMultiplier + stats.BonusDamageMultiplier + stats.BonusBlockValueMultiplier +
                     stats.BonusBleedDamageMultiplier +
-                    stats.HighestStat +
+                    stats.HighestStat + stats.Paragon + 
                     stats.BonusShieldSlamDamage + stats.BonusShockwaveDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage
                 ) != 0;
 

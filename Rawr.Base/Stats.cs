@@ -430,6 +430,7 @@ namespace Rawr {
         HealingReceivedMultiplier,
         DamageTakenMultiplier,
         SpellDamageTakenMultiplier,
+        PhysicalDamageTakenMultiplier,
         StunDurReduc,
         SnareRootDurReduc,
         FearDurReduc,
@@ -4510,6 +4511,16 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.SpellDamageTakenMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.SpellDamageTakenMultiplier] = value; }
+        }
+
+        [Percentage]
+        [DisplayName("% Physical Damage Taken")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float PhysicalDamageTakenMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalDamageTakenMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalDamageTakenMultiplier] = value; }
         }
 
         [DisplayName("% Stun Duration Reduction")]
