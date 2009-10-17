@@ -54,7 +54,7 @@ namespace Rawr.Rogue.FinishingMoves
                 totalHits += calcOpts.CpGenerator.OhHitsNeeded(combatFactors, calcOpts);
             }
 
-            return Math.Min(rank, Math.Min(5, totalHits / DeadlyPoison.ChanceToApplyPoison));
+            return Math.Min(rank, Math.Min(5, totalHits / DeadlyPoison.ChanceToApply(true)));
         }
 
         private float CritChance(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)

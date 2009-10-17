@@ -51,7 +51,8 @@ namespace Rawr.Rogue.ClassAbilities
         public class MasterPoisoner
         {
             //public static readonly Talents Crit = new TalentBonusPulledFromList(() => _talents.MasterPoisoner, 0.01f, 0.02f, 0.03f);
-            public static readonly Talents DeadlyPoisonApplication = new TalentBonusPulledFromList(() => _talents.MasterPoisoner, .15f, .30f, .45f);
+            //public static readonly Talents DeadlyPoisonApplication = new TalentBonusPulledFromList(() => _talents.MasterPoisoner, .15f, .30f, .45f);
+            public static readonly Talents NotConsumeDeadlyPoison = new TalentBonusPulledFromList(() => _talents.MasterPoisoner, .33f, .66f, 1.00f);
         }
 
         public static readonly Talents TurnTheTables = new TalentBonusPulledFromList(() => _talents.TurnTheTables, 0.02f, 0.04f, 0.06f);
