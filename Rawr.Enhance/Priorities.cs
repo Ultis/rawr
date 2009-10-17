@@ -32,51 +32,51 @@ namespace Rawr.Enhance
             float ESMana = _talents.ShamanisticFocus == 1 ? 0.55f * 0.18f : 0.18f; // 45% reduction if Shamanistic Focus
             float FSMana = _talents.ShamanisticFocus == 1 ? 0.55f * 0.17f : 0.17f; // 45% reduction if Shamanistic Focus
             float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
-            int priority = _calcOpts.GetAbilityPriority(EnhanceAbility.ShamanisticRage);
+            int priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.ShamanisticRage);
             if (priority > 0)
                 if (_talents.ShamanisticRage == 1)
                     abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, gcd, 0f, priority, true));
-            priority = _calcOpts.GetAbilityPriority(EnhanceAbility.FeralSpirits);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FeralSpirits);
             if (priority > 0)
                 if (_talents.FeralSpirit == 1)
                     abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, gcd, 0.12f, priority, false));
-            priority = _calcOpts.GetAbilityPriority(EnhanceAbility.LightningBolt);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LightningBolt);
             if (priority > 0)           
                 if (_talents.MaelstromWeapon > 0)
                     abilities.Add(new Ability(EnhanceAbility.LightningBolt, _cs.SecondsToFiveStack, gcd, 0.1f * convection, priority, false));
-            priority = _calcOpts.GetAbilityPriority(EnhanceAbility.FlameShock);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FlameShock);
             if (priority > 0)           
                 if (_character.ShamanTalents.GlyphofShocking)
                     abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, 1.0f, FSMana * convection, priority, false));
                 else
                     abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, gcd, FSMana * convection, priority, false));
-            priority = _calcOpts.GetAbilityPriority(EnhanceAbility.StormStrike);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike);
             if (priority > 0)           
                 if (_talents.Stormstrike == 1)
                     abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, gcd, 0.08f, priority, false));
-            priority = _calcOpts.GetAbilityPriority(EnhanceAbility.EarthShock);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.EarthShock);
             if (priority > 0)           
                 if (_character.ShamanTalents.GlyphofShocking)
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, ESMana * convection, priority, false));
                 else
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, ESMana * convection, priority, false));
-            priority = _calcOpts.GetAbilityPriority(EnhanceAbility.StormStrike);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike);
             if (priority > 0)           
                 if (_talents.LavaLash == 1)
                     abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, gcd, 0.04f, priority, false));
-            priority = _calcOpts.GetAbilityPriority(EnhanceAbility.StormStrike);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike);
             if (priority > 0)           
                 if (_talents.StaticShock > 0)
                     abilities.Add(new Ability(EnhanceAbility.LightningShield, _cs.StaticShockAvDuration, gcd, 0f, priority, true));
-            priority = _calcOpts.GetAbilityPriority(EnhanceAbility.MagmaTotem);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.MagmaTotem);
             if (priority > 0 && _calcOpts.Magma)
                 abilities.Add(new Ability(EnhanceAbility.MagmaTotem, 20f, 1.0f, 0.27f, priority, false));
-            priority = _calcOpts.GetAbilityPriority(EnhanceAbility.SearingTotem);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.SearingTotem);
             if (priority > 0 && !_calcOpts.Magma)
                 abilities.Add(new Ability(EnhanceAbility.SearingTotem, 60f, 1.0f, 0.07f, priority, false));
-            priority = _calcOpts.GetAbilityPriority(EnhanceAbility.RefreshTotems);
-            if (priority > 0)           
-                abilities.Add(new Ability(EnhanceAbility.RefreshTotems, 300f, 1.0f, 0.24f, _calcOpts.GetAbilityPriority(EnhanceAbility.ShamanisticRage), true)); // patch 3.2 takes just 1 second GCD to refresh totems.
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.RefreshTotems);
+            if (priority > 0)
+                abilities.Add(new Ability(EnhanceAbility.RefreshTotems, 300f, 1.0f, 0.24f, _calcOpts.GetAbilityPriorityValue(EnhanceAbility.ShamanisticRage), true)); // patch 3.2 takes just 1 second GCD to refresh totems.
             abilities.Sort();
             return abilities;
         }
@@ -246,6 +246,7 @@ namespace Rawr.Enhance
 
     public enum EnhanceAbility
     {
+        None = 0,
         FeralSpirits = 1,
         LightningBolt = 2,
         StormStrike = 3,
@@ -257,5 +258,44 @@ namespace Rawr.Enhance
         SearingTotem = 9,
         RefreshTotems = 10,
         ShamanisticRage = 11,
+    }
+
+    [Serializable]
+    public class Priority
+    {
+        private EnhanceAbility _abilityType;
+        private string _priorityName;
+        private string _description;
+        private bool _inUse;
+        private int _priority;
+
+        public Priority()
+        {
+            _abilityType = EnhanceAbility.None;
+            _priorityName = "None";
+            _description = "Empty Priority";
+            _inUse = false;
+            _priority = 0;
+        }
+
+        public Priority(string priorityName, EnhanceAbility abilityType, string description, bool onByDefault, int priority)
+        {
+            _priorityName = priorityName;
+            _abilityType = abilityType;
+            _description = description;
+            _inUse = onByDefault;
+            _priority = priority;
+        }
+
+        public string PriorityName { get { return _priorityName; } set { _priorityName = value; } }
+        public EnhanceAbility AbilityType { get { return _abilityType; } set { _abilityType = value; } }
+        public string Description { get { return _description; } set { _description = value; } }
+        public int PriorityValue { get { return _priority; } set { _priority = value; } }
+        public bool Checked { get { return _inUse; } set { _inUse = value; } }
+
+        public override string ToString()
+        {
+            return _priorityName;
+        }
     }
 }

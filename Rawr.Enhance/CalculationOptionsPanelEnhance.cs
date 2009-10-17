@@ -72,18 +72,27 @@ namespace Rawr.Enhance
                 _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 _calcOpts.Magma = chbMagmaSearing.Checked;
 
+                SavePriorities();
                 Character.OnCalculationsInvalidated();
             }
         }
 
         private void LoadPriorities()
         {
-            _pd = new PriorityDisplay(_calcOpts.Magma);
+            _pd = new PriorityDisplay(_calcOpts.PriorityList);
             CLBPriorities.Items.Clear();
-            foreach (PriorityDisplay.Priority p in _pd.getPriorities())
+            foreach (Priority p in _pd.Values)
             {
-                CLBPriorities.Items.Add(p.PriorityName, p.Checked);
-                _calcOpts.SetAbilityPriority(p.AbilityType, CLBPriorities.Items.Count);
+                CLBPriorities.Items.Add(p, p.Checked);
+            }
+        }
+
+        private void SavePriorities()
+        {
+            for (int i = 0; i < CLBPriorities.Items.Count; i++)
+            {
+                Priority p = (Priority)CLBPriorities.Items[i];
+                _calcOpts.SetAbilityPriority(p.AbilityType, p);
             }
         }
 
@@ -199,78 +208,62 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
-                // one of the priorities changed. TODO Update the Priority Display object with new status
-                List<PriorityDisplay.Priority> priorities = _pd.getPriorities();
-                PriorityDisplay.Priority selected = priorities[e.Index];
-                selected.SetChecked(e.NewValue);
-                if (selected.Checked)
-                    _calcOpts.SetAbilityPriority(selected.AbilityType, e.Index + 1); // index is zero based priorities are 1 based
-                else
-                    _calcOpts.SetAbilityPriority(selected.AbilityType, 0);
-                if (selected.AbilityType == EnhanceAbility.MagmaTotem)
-                {  // toggle status of fire totems - TODO needs to toggle status of checkbox
-                    _calcOpts.SetAbilityPriority(EnhanceAbility.SearingTotem, 0);
-                }
-                if (selected.AbilityType == EnhanceAbility.SearingTotem)
+                if (e.NewValue == CheckState.Checked)
                 {
-                    _calcOpts.SetAbilityPriority(EnhanceAbility.MagmaTotem, 0);
+                    Priority p = (Priority)CLBPriorities.Items[e.Index];
+                    if (p.AbilityType == EnhanceAbility.MagmaTotem)
+                        SetAbilityChecked(EnhanceAbility.SearingTotem, false);
+                    if (p.AbilityType == EnhanceAbility.SearingTotem)
+                        SetAbilityChecked(EnhanceAbility.MagmaTotem, false);
                 }
+                SavePriorities();
                 Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void SetAbilityChecked(EnhanceAbility abilityType, bool checkState)
+        {
+            for (int i = 0; i < CLBPriorities.Items.Count; i++)
+            {
+                Priority p = (Priority)CLBPriorities.Items[i];
+                if (p.AbilityType == abilityType)
+                {
+                    _loadingCalculationOptions = true;
+                    p.Checked = checkState;
+                    _calcOpts.SetAbilityPriority(p.AbilityType, p);
+                    CLBPriorities.SetItemChecked(i, checkState);
+                    _loadingCalculationOptions = false;
+                    break;
+                }
             }
         }
     }
 
     public class PriorityDisplay
     {
-        private List<Priority> priorities;
+        SerializableDictionary<EnhanceAbility, Priority> _priorityList;
 
-        public PriorityDisplay(bool magma)
+        public PriorityDisplay(SerializableDictionary<EnhanceAbility, Priority> priorityList)
         {
-            priorities = new List<Priority>();
-            priorities.Add(new Priority("Shamanistic Rage", EnhanceAbility.ShamanisticRage, "Use Shamanistic Rage", true));
-            priorities.Add(new Priority("Feral Spirits", EnhanceAbility.FeralSpirits, "Use Feral Sprirts", true));
-            priorities.Add(new Priority("Lightning Bolt on 5 stacks of MW", EnhanceAbility.LightningBolt, "Use Lightning Bolt when you have 5 stacks of Maelstrom Weapon", true));
-            priorities.Add(new Priority("Flame Shock", EnhanceAbility.FlameShock, "Use Flame Shock if no Flame Shock debuff on target", true));
-     //       priorities.Add(new Priority("Earth Shock if SS debuff", EnhanceAbility.EarthShock, "Use Earth Shock if Stormstrike debuff on target", true));
-     //       priorities.Add(new Priority("Lava Lash if Quaking Earth", EnhanceAbility.LavaLash, "Use Lava Lash if Volcanic Fury buff about to run out", false));
-            priorities.Add(new Priority("Stormstrike", EnhanceAbility.StormStrike, "Use Stormstrike", true));
-            priorities.Add(new Priority("Earth Shock", EnhanceAbility.EarthShock, "Use Earth Shock", true));
-            priorities.Add(new Priority("Lava Lash", EnhanceAbility.LavaLash, "Use Stormstrike", true));
-            priorities.Add(new Priority("Magma Totem", EnhanceAbility.MagmaTotem, "Refresh Magma Totem", magma));
-            priorities.Add(new Priority("Searing Totem", EnhanceAbility.SearingTotem, "Refresh Searing Totem", ! magma));
-            priorities.Add(new Priority("Lightning Shield", EnhanceAbility.LightningShield, "Refresh Lightning Shield", true));
-        }
-
-        public List<Priority> getPriorities()
-        {
-            return priorities;
-        }
-
-        public class Priority : TextBox
-        {
-            private EnhanceAbility _abilityType;
-            private string _priorityName;
-            private string _description;
-            private bool _inUse;
-
-            public Priority (string priorityName, EnhanceAbility abilityType, string description, bool onByDefault)
+            if (priorityList.Count == 0)
             {
-                _abilityType = abilityType;
-                _priorityName = priorityName;
-                _description = description;
-                _inUse = onByDefault;
-                this.Text = priorityName;
+                int prioirty = 0;
+                priorityList.Add(EnhanceAbility.ShamanisticRage, new Priority("Shamanistic Rage", EnhanceAbility.ShamanisticRage, "Use Shamanistic Rage", true, ++prioirty));
+                priorityList.Add(EnhanceAbility.FeralSpirits, new Priority("Feral Spirits", EnhanceAbility.FeralSpirits, "Use Feral Sprirts", true, ++prioirty));
+                priorityList.Add(EnhanceAbility.LightningBolt, new Priority("Lightning Bolt on 5 stacks of MW", EnhanceAbility.LightningBolt, "Use Lightning Bolt when you have 5 stacks of Maelstrom Weapon", true, ++prioirty));
+                priorityList.Add(EnhanceAbility.FlameShock, new Priority("Flame Shock", EnhanceAbility.FlameShock, "Use Flame Shock if no Flame Shock debuff on target", true, ++prioirty));
+                //       priorityList.Add(new Priority("Earth Shock if SS debuff", EnhanceAbility.EarthShock, "Use Earth Shock if Stormstrike debuff on target", true));
+                //       priorityList.Add(new Priority("Lava Lash if Quaking Earth", EnhanceAbility.LavaLash, "Use Lava Lash if Volcanic Fury buff about to run out", false));
+                priorityList.Add(EnhanceAbility.StormStrike, new Priority("Stormstrike", EnhanceAbility.StormStrike, "Use Stormstrike", true, ++prioirty));
+                priorityList.Add(EnhanceAbility.EarthShock, new Priority("Earth Shock", EnhanceAbility.EarthShock, "Use Earth Shock", true, ++prioirty));
+                priorityList.Add(EnhanceAbility.LavaLash, new Priority("Lava Lash", EnhanceAbility.LavaLash, "Use Stormstrike", true, ++prioirty));
+                priorityList.Add(EnhanceAbility.MagmaTotem, new Priority("Magma Totem", EnhanceAbility.MagmaTotem, "Refresh Magma Totem", true, ++prioirty));
+                priorityList.Add(EnhanceAbility.SearingTotem, new Priority("Searing Totem", EnhanceAbility.SearingTotem, "Refresh Searing Totem", false, ++prioirty));
+                priorityList.Add(EnhanceAbility.LightningShield, new Priority("Lightning Shield", EnhanceAbility.LightningShield, "Refresh Lightning Shield", true, ++prioirty));
             }
-
-            public string PriorityName { get { return _priorityName; } }
-            public EnhanceAbility  AbilityType { get { return _abilityType; } }
-            public string Description { get { return _description; } }
-            public bool Checked { get { return _inUse; } } 
-
-            public void SetChecked(CheckState isChecked)
-            {
-                _inUse = isChecked == CheckState.Checked;
-            }
+            _priorityList = priorityList;
         }
+
+        public SerializableDictionary<EnhanceAbility, Priority>.ValueCollection Values { get { return _priorityList.Values; } }
     }
 }

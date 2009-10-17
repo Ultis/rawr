@@ -397,6 +397,7 @@ namespace Rawr.Enhance
         }
 
         public float dps { get { return _dps; } }
+        public float avTime { get { return _avTime; } }
 
         public override string ToString()
         {
