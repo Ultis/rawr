@@ -20,6 +20,7 @@ namespace Rawr.Elemental.Spells
             lspCoef = spCoef;
             loCoef = spCoef / 2f;
             manaCost = 0.1f * Constants.BaseMana;
+            lightningSpellpower = 0f;
             shortName = "LB";
         }
 
