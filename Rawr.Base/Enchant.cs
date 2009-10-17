@@ -441,8 +441,8 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3096, "Arcanum of the Outcast", ItemSlot.Head, new Stats() { Strength = 17, Intellect = 16 }));
             defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", ItemSlot.Shoulders, new Stats() { Stamina = 16, BonusArmor = 100 }));
             defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", ItemSlot.Shoulders, new Stats() { AttackPower = 26, CritRating = 14 }));
-            defaultEnchants.Add(new Enchant(2583, "Presence of Might", ItemSlot.Head, new Stats() { Stamina = 10, DefenseRating = 10, BlockValue = 15 }));
-            defaultEnchants.Add(new Enchant(2583, "Presence of Might", ItemSlot.Legs, new Stats() { Stamina = 10, DefenseRating = 10, BlockValue = 15 }));
+            defaultEnchants.Add(new Enchant(2583, "Presence of Might", ItemSlot.Head, new Stats() { Stamina = 10, DefenseRating = 10, BlockValue = 30 }));
+            defaultEnchants.Add(new Enchant(2583, "Presence of Might", ItemSlot.Legs, new Stats() { Stamina = 10, DefenseRating = 10, BlockValue = 30 }));
             defaultEnchants.Add(new Enchant(2997, "Greater Inscription of the Blade", ItemSlot.Shoulders, new Stats() { AttackPower = 20, CritRating = 15 }));
             defaultEnchants.Add(new Enchant(2986, "Greater Inscription of Vengeance", ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
             defaultEnchants.Add(new Enchant(2996, "Inscription of the Blade", ItemSlot.Shoulders, new Stats() { CritRating = 13 }));

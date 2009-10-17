@@ -1545,16 +1545,16 @@ namespace Rawr {
         [Category("Rogue")]
         public float RogueT8TwoPieceBonus
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.RogueRuptureDamageBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RogueRuptureDamageBonus] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusEnergyFromDP]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusEnergyFromDP] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Rogue")]
         public float RogueT8FourPieceBonus
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.RogueComboMoveEnergyReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RogueComboMoveEnergyReduction] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.RuptureCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RuptureCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
