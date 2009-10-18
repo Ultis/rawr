@@ -20,7 +20,6 @@ namespace Rawr.UI
         private event EventHandler LoadFinished;
 
         private static Dictionary<string, Type> Classes;
-        private static List<string> WaitingFor;
 
         static LoadScreen()
         {
@@ -58,8 +57,7 @@ namespace Rawr.UI
                     StringWriter sw = new StringWriter();
                     info.Invoke(null, new object[] { sw });
 
-                    FileUtils f = new FileUtils(kvp.Key);
-                    Stream writer = f.Writer;
+					Stream writer = FileUtils.GetFileStream(kvp.Key, true);
                     StringReader reader = new StringReader(sw.ToString());
 
                     int READ_CHUNK = 1024 * 1024;
@@ -121,14 +119,10 @@ namespace Rawr.UI
 				Calculations.RegisterModel(typeof(Rawr.Tree.CalculationsTree));
 				Calculations.RegisterModel(typeof(Rawr.Warlock.CalculationsWarlock));
 
-                WaitingFor = new List<string>(Classes.Keys);
-                string[] files = WaitingFor.ToArray();
+				string[] files = new List<string>(Classes.Keys).ToArray();
 
-                foreach (string s in files)
-                {
-                    FileUtils f = new FileUtils(s);
-                    f.DownloadIfNotExists(new EventHandler(fileLoaded));
-                }
+                FileUtils f = new FileUtils(files, progressUpdated);
+                f.DownloadIfNotExists(new EventHandler(filesLoaded));
             }
             else
             {
@@ -140,24 +134,25 @@ namespace Rawr.UI
             }
         }
 
-        private void fileLoaded(object sender, EventArgs e)
+		private void progressUpdated(object sender, EventArgs e)
+		{
+			FileUtils f = sender as FileUtils;
+			TextBlockLoadProgress.Text = f.Status;
+			ProgressBarLoadProgress.Value = f.Progress;
+		}
+
+        private void filesLoaded(object sender, EventArgs e)
         {
             FileUtils f = sender as FileUtils;
-            MethodInfo info = Classes[f.Filename].GetMethod("Load");
-            if (info != null)
-            {
-                info.Invoke(null, new object[] { new StreamReader(f.Reader, Encoding.UTF8) });
-            }
-            WaitingFor.Remove(f.Filename);
-            CheckLoadFinished();
-        }
-
-        public void CheckLoadFinished()
-        {
-            if (WaitingFor.Count == 0)
-            {
-                if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
-            }
+			foreach (string file in f.Filenames)
+			{
+				MethodInfo info = Classes[file].GetMethod("Load");
+				if (info != null)
+				{
+					info.Invoke(null, new object[] { new StreamReader(FileUtils.GetFileStream(file, false), Encoding.UTF8) });
+				}
+			}
+            if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
         }
 	}
 }

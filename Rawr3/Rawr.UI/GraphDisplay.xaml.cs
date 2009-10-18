@@ -76,8 +76,8 @@ namespace Rawr.UI
             }
         }
 
-        private BuffSelector allBuffs;
-        public BuffSelector AllBuffs
+        private BuffGroup allBuffs;
+        public BuffGroup AllBuffs
         {
             get { return allBuffs; }
             set
@@ -143,14 +143,14 @@ namespace Rawr.UI
             UpdateGraph();
         }
 
-        private string ConvertBuffSelector(BuffSelector sel) {
+        private string ConvertBuffSelector(BuffGroup sel) {
             switch (sel) {
-                case BuffSelector.Current:          { return "Current";            }
-                case BuffSelector.ElixirsAndFlasks: { return "Elixirs and Flasks"; }
-                case BuffSelector.Food:             { return "Food";               }
-                case BuffSelector.Potions:          { return "Potion";             }
-                case BuffSelector.Scrolls:          { return "Scrolls";            }
-                case BuffSelector.RaidBuffs:        { return "Agility and Strength|Armor|Damage Reduction (Major %)|Damage Reduction (Minor %)|Healing Received (%)|Attack Power|Attack Power (%)|Spell Power|Spell Sensitivity|Spirit|Damage (%)|Haste (%)|Health|Resistance|Physical Critical Strike Chance|Spell Critical Strike Chance|Focus Magic, Spell Critical Strike Chance|Spell Haste|Physical Haste|Stamina|Stat Add|Stat Multiplier|Melee Hit Chance Reduction|Racial Buffs|Armor (Major)|Armor (Minor)|Bleed Damage|Critical Strike Chance Taken|Spell Critical Strike Taken|Physical Vulnerability|Special Mobs|Intellect|Replenishment|Mana Regeneration|Ranged Attack Power|Mana Restore|Spell Damage Taken|Spell Hit Taken|Boss Attack Speed|Class Buffs|Disease Damage Taken"; }
+				case BuffGroup.Current: { return "Current"; }
+				case BuffGroup.ElixirsAndFlasks: { return "Elixirs and Flasks"; }
+				case BuffGroup.Food: { return "Food"; }
+				case BuffGroup.Potions: { return "Potion"; }
+				case BuffGroup.Scrolls: { return "Scrolls"; }
+				case BuffGroup.RaidBuffs: { return "Agility and Strength|Armor|Damage Reduction (Major %)|Damage Reduction (Minor %)|Healing Received (%)|Attack Power|Attack Power (%)|Spell Power|Spell Sensitivity|Spirit|Damage (%)|Haste (%)|Health|Resistance|Physical Critical Strike Chance|Spell Critical Strike Chance|Focus Magic, Spell Critical Strike Chance|Spell Haste|Physical Haste|Stamina|Stat Add|Stat Multiplier|Melee Hit Chance Reduction|Racial Buffs|Armor (Major)|Armor (Minor)|Bleed Damage|Critical Strike Chance Taken|Spell Critical Strike Taken|Physical Vulnerability|Special Mobs|Intellect|Replenishment|Mana Regeneration|Ranged Attack Power|Mana Restore|Spell Damage Taken|Spell Hit Taken|Boss Attack Speed|Class Buffs|Disease Damage Taken"; }
                 default:                            { return "All";                }
             }
         }
@@ -378,7 +378,7 @@ namespace Rawr.UI
 
         private void BuffChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            AllBuffs = (BuffSelector)BuffCombo.SelectedIndex;
+            AllBuffs = (BuffGroup)BuffCombo.SelectedIndex;
         }
 
         private void CustomChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

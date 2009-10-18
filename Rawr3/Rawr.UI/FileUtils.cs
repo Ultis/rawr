@@ -11,130 +11,183 @@ using System.Windows.Shapes;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Text;
+using System.Collections.Generic;
+using System.Windows.Resources;
 
 namespace Rawr.UI
 {
     public class FileUtils
     {
         public EventHandler StreamReady;
-        public string Filename { get; private set; }
-
-#if SILVERLIGHT
-        public IsolatedStorageFileStream Reader { get { return FileStream(false); } }
-        public IsolatedStorageFileStream Writer { get { return FileStream(true); } }
-#else
-        public FileStream Reader { get { return FileStream(); } }
-        public FileStream Writer { get { return FileStream(); } }
-#endif
+		public EventHandler ProgressUpdated;
+        public List<string> Filenames { get; private set; }
+        public List<string> FilesToDownload { get; private set; }
+		public int Progress { get; private set; }
+		public string Status { get; private set; }
 
         public FileUtils(string filename)
         {
-            Filename = filename;
+			Filenames = new List<string>(new string[] { filename });
         }
 
-        public void DownloadIfNotExists(EventHandler callback)
+		public FileUtils(string[] filenames)
+		{
+			Filenames = new List<string>(filenames);
+		}
+
+		public FileUtils(string[] filenames, EventHandler progressUpdated)
+		{
+			ProgressUpdated += progressUpdated;
+			Filenames = new List<string>(filenames);
+		}
+
+		public void DownloadIfNotExists(EventHandler callback)
         {
             StreamReady += callback;
+			FilesToDownload = new List<string>();
+			foreach (string file in Filenames)
+			{
 #if !SILVERLIGHT
-            if (File.Exists(Filename))
-            {
-                if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
-            }
-            else
-            {
-                Uri url = new Uri(@"http://wowrawr.com/ClientBin/" + Filename, UriKind.Absolute);
+            if (!File.Exists(file))
 #else
-            if (IsolatedStorageFile.GetUserStoreForApplication().FileExists(Filename))
-            {
-                if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
-            }
-            else
-            {
-                Uri url = new Uri(Filename, UriKind.Relative);
+				if (!IsolatedStorageFile.GetUserStoreForApplication().FileExists(file))
 #endif
-                WebClient client = new WebClient();
-                client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(client_DownloadStringCompleted);
-                client.DownloadStringAsync(url);
-            }
+					FilesToDownload.Add(file);
+			}
+
+			if (FilesToDownload.Count == 0)
+			{
+				//We have all the files, just fire the ready event
+				if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
+			}
+			else
+			{
+				//We need to download at least one of the files
+#if !SILVERLIGHT
+				Uri url = new Uri(@"http://wowrawr.com/ClientBin/DefaultDataFiles.zip", UriKind.Absolute);
+#else
+				Uri url = new Uri("DefaultDataFiles.zip", UriKind.Relative);
+#endif
+				WebClient client = new WebClient();
+				client.OpenReadCompleted += new OpenReadCompletedEventHandler(client_OpenReadCompleted);
+				client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+				client.OpenReadAsync(url);
+
+				UpdateProgress(0, "Downloading default data files...");
+			}
         }
 
 		public void Delete()
 		{
-#if !SILVERLIGHT
-            if (File.Exists(Filename))
-            {
-                File.Delete(Filename);
-            }
-#else
-			if (IsolatedStorageFile.GetUserStoreForApplication().FileExists(Filename))
+			foreach (string file in Filenames)
 			{
-				IsolatedStorageFile.GetUserStoreForApplication().DeleteFile(Filename);
-			}
+#if !SILVERLIGHT
+				if (File.Exists(file))
+				{
+					File.Delete(file);
+				}
+#else
+				if (IsolatedStorageFile.GetUserStoreForApplication().FileExists(file))
+				{
+					IsolatedStorageFile.GetUserStoreForApplication().DeleteFile(file);
+				}
 #endif
+			}
 		}
 
-        private void client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
-        {
-            if (e.Error == null)
-            {
-                using (StringReader sr = new StringReader(e.Result))
-                {
+		void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+		{
+			UpdateProgress(e.ProgressPercentage, 
+				string.Format("Downloading default data files ({0}% complete)", e.ProgressPercentage));
+		}
+
+		void client_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
+		{
+			if (e.Error == null)
+			{
+				StreamResourceInfo zipStream = new StreamResourceInfo(e.Result as Stream, null);
+				foreach (string file in FilesToDownload)
+				{
+					UpdateProgress(0, "Decompressing " + file + "...");
+					Uri part = new Uri(file, UriKind.Relative);
+					
+					StreamResourceInfo fileStream = Application.GetResourceStream(zipStream, part);
+					StreamReader sr = new StreamReader(fileStream.Stream);
+					string unzippedFile = sr.ReadToEnd();
 #if !SILVERLIGHT
-                    StreamWriter sw = new StreamWriter(Filename);
+					StreamWriter writer = new StreamWriter(Filename);
+					writer.Write(unzippedFile);
+					writer.Close();
 #else
-                    IsolatedStorageFileStream isfs = FileStream(true);
-                    StreamWriter sw = new StreamWriter(isfs);
+					//Write it in a special way when using IsolatedStorage, due to IsolatedStorage
+					//having a huge performance issue when writing small chunks
+					IsolatedStorageFileStream isfs = GetFileStream(file, true);
+					
+					char[] charBuffer = unzippedFile.ToCharArray();
+					int fileSize = charBuffer.Length;
+					byte[] byteBuffer = new byte[fileSize];
+					for (int i = 0; i < fileSize; i++) byteBuffer[i] = (byte)charBuffer[i];
+					isfs.Write(byteBuffer, 0, fileSize);
+					isfs.Close();
 #endif
-                    sw.Write(sr.ReadToEnd());
-                    sw.Close();
+					
+					UpdateProgress(0, "Finished " + file + "...");
+				}
+			}
+			else 
+				(App.Current as App).WriteLoadProgress(e.Error.Message);
+			if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
+		}
 
-                }
-            }
-            if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
-        }
+		private void UpdateProgress(int progress, string status)
+		{
+			if (progress != 0) Progress = progress;
+			if (status != null) Status = status;
+			if (ProgressUpdated != null) ProgressUpdated(this, EventArgs.Empty);
+		}
 
 #if !SILVERLIGHT
-        private FileStream FileStream()
+        public static FileStream GetFileStream(string filename)
         {
             return new FileStream(Filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
         }
 #else
-        private IsolatedStorageFileStream FileStream(bool write)
+		public static IsolatedStorageFileStream GetFileStream(string filename, bool write)
         {
             IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication();
-            if (write) return new IsolatedStorageFileStream(Filename, FileMode.Create, isf);
-            else return new IsolatedStorageFileStream(Filename, FileMode.OpenOrCreate, isf);
+            if (write) return new IsolatedStorageFileStream(filename, FileMode.Create, isf);
+            else return new IsolatedStorageFileStream(filename, FileMode.OpenOrCreate, isf);
         }
 #endif
 
-        public static bool HasQuota(int kilobytes)
-        {
+		public static bool HasQuota(int kilobytes)
+		{
 #if !SILVERLIGHT 
             return true;
 #else
-            using (IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication())
-            {
-                return isf.Quota >= kilobytes * 1024;
-            }
+			using (IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication())
+			{
+				return isf.Quota >= kilobytes * 1024;
+			}
 #endif
-        }
+		}
 
-        public static bool EnsureQuota(int kilobytes)
-        {
+		public static bool EnsureQuota(int kilobytes)
+		{
 #if !SILVERLIGHT
             return true;
 #else
-            using (IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication())
-            {
-                long newSpace = kilobytes * 1024; 
-                try
-                {
-                    return isf.IncreaseQuotaTo(newSpace);
-                }
-                catch { }
-            }
-            return false;
+			using (IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication())
+			{
+				long newSpace = kilobytes * 1024;
+				try
+				{
+					return isf.IncreaseQuotaTo(newSpace);
+				}
+				catch { }
+			}
+			return false;
 #endif
-        }
+		}
     }
 }

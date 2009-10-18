@@ -227,7 +227,7 @@ namespace Rawr
         //Blue = 108
     }
 
-    /*public enum BuffSelector
+    public enum BuffGroup
     {
         All = 0,
         Current,
@@ -236,7 +236,7 @@ namespace Rawr
         Scrolls,
         Potions,
         RaidBuffs
-    }*/
+    }
 
     public enum Profession
     { // values are based upon what the armory returns for those profession id's

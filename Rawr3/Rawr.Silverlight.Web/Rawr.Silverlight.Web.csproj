@@ -56,10 +56,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ClientBin\Armory.aspx" />
-    <Content Include="ClientBin\BuffCache.xml" />
-    <Content Include="ClientBin\EnchantCache.xml" />
-    <Content Include="ClientBin\ItemCache.xml" />
-    <Content Include="ClientBin\Talents.xml" />
+    <Content Include="ClientBin\BuffCache.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ClientBin\EnchantCache.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ClientBin\ItemCache.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ClientBin\Talents.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Default.aspx" />
     <Content Include="index.html" />
     <Content Include="MicrosoftAjax.js" />
@@ -83,10 +91,27 @@
     <Content Include="ClientBin\Armory.php">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ClientBin\ItemFilter.xml" />
-    <Content Include="ClientBin\ItemSource.xml" />
+    <Content Include="ClientBin\GemmingTemplates.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ClientBin\ItemFilter.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ClientBin\ItemSource.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ClientBin\Rawr.Silverlight.xap" />
     <Content Include="crossdomain.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ClientBin\Settings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ClientBin\DefaultDataFiles.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -106,7 +131,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>60764</DevelopmentServerPort>
+          <DevelopmentServerPort>2981</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

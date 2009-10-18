@@ -53,20 +53,29 @@ namespace Rawr.UI
         private bool _loadingBuffsFromCharacter;
         private void LoadBuffsFromCharacter()
         {
-            if (CheckBoxes == null || Character == null || Character.ActiveBuffs == null) return;
-            foreach (KeyValuePair<Buff, CheckBox> kvp in CheckBoxes)
-            {
-                kvp.Value.IsChecked = false;                
-            }
-            List<CheckBox> toCheck = new List<CheckBox>();
-            foreach (Buff b in Character.ActiveBuffs)
-            {
-                if (CheckBoxes.ContainsKey(b))
-                {
-                    toCheck.Add(CheckBoxes[b]);
-                }
-            }
-            foreach (CheckBox cb in toCheck) cb.IsChecked = true;
+			try
+			{
+				_loadingBuffsFromCharacter = true;
+
+				if (CheckBoxes == null || Character == null || Character.ActiveBuffs == null) return;
+				foreach (KeyValuePair<Buff, CheckBox> kvp in CheckBoxes)
+				{
+					kvp.Value.IsChecked = false;                
+				}
+				List<CheckBox> toCheck = new List<CheckBox>();
+				foreach (Buff b in Character.ActiveBuffs)
+				{
+					if (CheckBoxes.ContainsKey(b))
+					{
+						toCheck.Add(CheckBoxes[b]);
+					}
+				}
+				foreach (CheckBox cb in toCheck) cb.IsChecked = true;
+			}
+			finally
+			{
+				_loadingBuffsFromCharacter = false;
+			}
         }
 
         private void UpdateCharacterBuffs()

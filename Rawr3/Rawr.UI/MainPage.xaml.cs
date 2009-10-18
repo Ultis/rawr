@@ -152,7 +152,7 @@ namespace Rawr.UI
             StatusMessaging.Ready = true;
         }
 
-        private string ConfigModel { get { return "Healadin"; } }
+        private string ConfigModel { get { return "Bear"; } }
 
         private void Calculations_ModelChanged(object sender, EventArgs e)
         {
@@ -460,13 +460,14 @@ namespace Rawr.UI
 			if (((ConfirmationWindow)sender).DialogResult == true)
 			{
 				Character = new Character();
-				new FileUtils("BuffCache.xml").Delete();
-				new FileUtils("EnchantCache.xml").Delete();
-				new FileUtils("ItemCache.xml").Delete();
-				new FileUtils("Talents.xml").Delete();
-				new FileUtils("ItemSource.xml").Delete();
-				new FileUtils("ItemFilter.xml").Delete();
-				new FileUtils("Settings.xml").Delete();
+				new FileUtils(new string[] {
+					"BuffCache.xml", 
+					"EnchantCache.xml",
+					"ItemCache.xml",
+					"Talents.xml",
+					"ItemSource.xml",
+					"ItemFilter.xml",
+					"Settings.xml"}).Delete();
 				LoadScreen ls = new LoadScreen();
 				(App.Current.RootVisual as Grid).Children.Add(ls);
 				this.Visibility = Visibility.Collapsed;

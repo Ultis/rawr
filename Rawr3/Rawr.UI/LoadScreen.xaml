@@ -14,7 +14,10 @@
 	</UserControl.Resources>
 
 	<Grid x:Name="LayoutRoot" Background="#BF000000">
-		<Image HorizontalAlignment="Center" Margin="0,0,0,0" Width="Auto" Source="Images/Rawr.Splash.png" Stretch="None" VerticalAlignment="Center"/>
-		<StackPanel x:Name="LabelStack" HorizontalAlignment="Left" Margin="25,0,0,25" VerticalAlignment="Bottom"/>
-	</Grid>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+      <Image Margin="0,0,0,0" Width="Auto" Source="Images/Rawr.Splash.png" Stretch="None"/>
+      <ProgressBar x:Name="ProgressBarLoadProgress" Margin="2" HorizontalAlignment="Stretch" Height="16" Minimum="0" Maximum="100" />
+      <TextBlock x:Name="TextBlockLoadProgress" Margin="2" HorizontalAlignment="Left" />
+    </StackPanel>
+  </Grid>
 </UserControl>

@@ -9,10 +9,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Rawr.UI
 {
-    public class App : Application
+    public class App : Application, INotifyPropertyChanged
     {
 #if !SILVERLIGHT
         public new static App Current
@@ -53,5 +54,35 @@ namespace Rawr.UI
             return FocusManager.GetFocusedElement();
         }
 #endif
-    }
+
+		#region INotifyPropertyChanged Members
+		public event PropertyChangedEventHandler PropertyChanged;
+		public void OnPropertyChanged(string property)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(property));
+		}
+		#endregion
+
+		private string _loadProgress = "";
+		public string LoadProgress
+		{
+			get { return _loadProgress; }
+			set
+			{
+				_loadProgress = value;
+				OnPropertyChanged("LoadProgress");
+			}
+		}
+
+		public void WriteLoadProgress(string message)
+		{
+			LoadProgress += "\r\n" + message;
+		}
+
+		public void ClearLoadProgress()
+		{
+			LoadProgress = string.Empty;
+		}
+	}
 }

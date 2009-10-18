@@ -789,7 +789,6 @@ namespace Rawr
                 Group = "Stat Multiplier",
                 Stats = {
                     BonusAgilityMultiplier = 0.10f,
-                    //BonusStrengthMultiplier = 0.10f, // Comment this line for 3.2.2 per PTR Notes
                     BonusIntellectMultiplier = 0.10f,
                     BonusSpiritMultiplier = 0.10f
                 },
