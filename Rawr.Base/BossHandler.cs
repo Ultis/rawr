@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using Rawr.Bosses;
 
 namespace Rawr {
     #region Subclasses

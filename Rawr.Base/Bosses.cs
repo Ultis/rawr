@@ -6,7 +6,7 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-namespace Rawr {
+namespace Rawr.Bosses {
     #region T7 Content
     // ===== Naxxramas ================================
     // Spider Wing
