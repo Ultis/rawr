@@ -92,7 +92,7 @@ namespace Rawr.DPSWarr
                     Damage = combatFactors.NormalizedMhWeaponDmg;
                 }
 
-                return (float)Math.Max(0f, Damage * DamageBonus);
+                return Math.Max(0f, Damage * DamageBonus);
             }
             public override float DamageOnUse
             {
@@ -144,7 +144,7 @@ namespace Rawr.DPSWarr
 
                     // ==== RESULT ====
                     float Damage = DamageMH + DamageOH;
-                    return (float)Math.Max(0f, Damage * AvgTargets);
+                    return Math.Max(0f, Damage * AvgTargets);
                 }
             }
             protected override float DamageOnUseOverride
@@ -197,7 +197,7 @@ namespace Rawr.DPSWarr
 
                     // ==== RESULT ====
                     float Damage = DamageMH + DamageOH;
-                    return (float)Math.Max(0f, Damage * AvgTargets);
+                    return Math.Max(0f, Damage * AvgTargets);
                 }
             }
         }
@@ -272,7 +272,7 @@ namespace Rawr.DPSWarr
                     return procs3 * (1f - Whiteattacks.RageSlip(FightDuration / procs3, RageCost));
                 }
             }
-            protected override float Damage { get { return !Validated ? 0f : (float)Math.Max(0f, SL.DamageOverride); } }
+            protected override float Damage { get { return !Validated ? 0f : Math.Max(0f, SL.DamageOverride); } }
             #endregion
         }
         #endregion

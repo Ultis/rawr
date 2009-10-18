@@ -80,13 +80,13 @@ namespace Rawr.DPSWarr {
                 float acts = e.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f - avoid, combatFactors._c_mhItemSpeed, FightDuration);
                 acts *= FightDuration;
 
-                return (float)Math.Max(0f, acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost + 15f)));
+                return Math.Max(0f, acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost + 15f)));
             }
             protected override float Damage {
                 get {
                     if (!Validated) { return 0f; }
                     float Damage = Exec.DamageOverride;
-                    return (float)Math.Max(0f, Damage);
+                    return Math.Max(0f, Damage);
                 }
             }
             public override float GetRageUseOverDur(float acts) {
@@ -149,8 +149,8 @@ namespace Rawr.DPSWarr {
                         + (dodge > 0 ? YellowAttacksThatDodgeOverDur : 0)
                         + (parry > 0 ? YellowAttacksThatParryOverDur : 0);
 
-                    //acts += (float)Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.AvoidanceStreak));
-                    acts += (float)Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.RageSlip(FightDuration/dodgesoverDur, RageCost)));
+                    //acts += Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.AvoidanceStreak));
+                    acts += Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.RageSlip(FightDuration/dodgesoverDur, RageCost)));
                 }
 
                 return acts;
@@ -238,7 +238,7 @@ namespace Rawr.DPSWarr {
                 get {
                     if (!Validated) { return 0f; }
                     float Damage = WW.GetDamageOnUseOverride(); // WW.DamageOnUseOverride;
-                    return (float)Math.Max(0f, Damage * 6f); // it WW's 6 times
+                    return Math.Max(0f, Damage * 6f); // it WW's 6 times
                 }
             }
         }
@@ -281,7 +281,7 @@ namespace Rawr.DPSWarr {
                 float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) / FightDuration;
                 float effectActs = ss.GetAverageProcsPerSecond(rawActs, rate, combatFactors._c_mhItemSpeed, FightDuration);
                 effectActs *= FightDuration;
-                return (float)Math.Max(0f, effectActs);
+                return Math.Max(0f, effectActs);
             }
             public override string GenTooltip(float acts, float ttldpsperc) {
                 float misses = GetXActs(AttackTableSelector.Missed , acts), missesPerc = (acts == 0f ? 0f : misses/acts);
@@ -356,12 +356,12 @@ namespace Rawr.DPSWarr {
                 } else if (!Override &&  Validated) {
                 } else if (!Override && !Validated) { return 0f; }
 
-                UsedExtraRage = (float)Math.Max(0f, (float)Math.Min(30f, FreeRage));
+                UsedExtraRage = Math.Max(0f, Math.Min(30f, FreeRage));
                 float executeRage = UsedExtraRage + (Talents.GlyphOfExecution ? 10.00f : 0.00f);
 
                 float Damage = 1456f + StatS.AttackPower * 0.2f + executeRage * 38f;
 
-                return (float)Math.Max(0f, Damage * AvgTargets);
+                return Math.Max(0f, Damage * AvgTargets);
             }
             public override float GetRageUseOverDur(float acts) {
                 if (!Validated) { return 0f; }

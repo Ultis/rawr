@@ -25,7 +25,9 @@ namespace Rawr.DPSWarr {
         public float _HPS_TTL;
         public string GCDUsage = "";
         protected CharacterCalculationsDPSWarr calcs = null;
-
+        
+        public bool _needDisplayCalcs = true;
+        
         public float _Thunder_GCDs = 0f, _TH_DPS = 0f, _TH_HPS = 0f;
         protected float _Blood_GCDs = 0f, _Blood_HPS = 0f;
         protected float _ZRage_GCDs = 0f, _ZRage_HPS = 0f;
@@ -141,7 +143,9 @@ namespace Rawr.DPSWarr {
         }
         public void Initialize() { initAbilities(); /*doIterations();*/ }
 
-        public virtual void MakeRotationandDoDPS(bool setCalcs) { }
+        public virtual void MakeRotationandDoDPS(bool setCalcs, bool needsDisplayCalculations) {
+            _needDisplayCalcs = needsDisplayCalculations;
+        }
 
         protected virtual void initAbilities() {
             // Whites
@@ -453,7 +457,7 @@ namespace Rawr.DPSWarr {
                     zerkerMOD *= (1f + upTime);
                 }
                 float dmgCap = 100f / (RageMod * zerkerMOD); // Can't get any more rage than 100 at any given time
-                damagePerSec = (acts * (float)Math.Min(dmgCap, dmg)) / FightDuration;
+                damagePerSec = (acts * Math.Min(dmgCap, dmg)) / FightDuration;
                 
                 return (damagePerSec * RageMod * zerkerMOD) * FightDuration;
             }
@@ -507,12 +511,12 @@ namespace Rawr.DPSWarr {
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, Add DPS, Pull Rage, Don't Use GCD Multiplier</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float DPS_TTL, ref float HPS_TTL, ref float _Abil_DPS, ref float _Abil_HPS, Skills.Ability abil) {
             if (!abil.Validated) { return; }
-            float acts = (float)Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
+            float acts = Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + "\n" : "");
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            GCDsused += Math.Min(NumGCDs, Abil_GCDs);
+            if (_needDisplayCalcs) GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + "\n" : "");
+            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             _Abil_DPS = abil.GetDPS(Abil_GCDs);
             _Abil_HPS = abil.GetHPS(Abil_GCDs);
             DPS_TTL += _Abil_DPS;
@@ -524,12 +528,12 @@ namespace Rawr.DPSWarr {
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, Add DPS, Pull Rage, Use GCD Multiplier</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float DPS_TTL, ref float HPS_TTL, ref float _Abil_DPS, ref float _Abil_HPS, Skills.Ability abil, float GCDMulti) {
             if (!abil.Validated) { return; }
-            float acts = (float)Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
+            float acts = Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs * GCDMulti);
-            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + GCDMulti.ToString() + " : " + abil.Name + "\n" : "");
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            GCDsused += Math.Min(NumGCDs, Abil_GCDs * GCDMulti);
+            if (_needDisplayCalcs) GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + GCDMulti.ToString() + " : " + abil.Name + "\n" : "");
+            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             _Abil_DPS = abil.GetDPS(Abil_GCDs);
             _Abil_HPS = abil.GetHPS(Abil_GCDs);
             DPS_TTL += _Abil_DPS;
@@ -541,12 +545,12 @@ namespace Rawr.DPSWarr {
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, No DPS, Pull Rage, Don't Use GCD Multiplier</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil) {
             if (!abil.Validated) { return; }
-            float acts = (float)Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
+            float acts = Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + "\n" : "");
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            GCDsused += Math.Min(NumGCDs, Abil_GCDs);
+            if (_needDisplayCalcs) GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + "\n" : "");
+            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             _Abil_HPS = abil.GetHPS(Abil_GCDs);
             HPS_TTL += _Abil_HPS;
             float rageadd = abil.GetRageUseOverDur(Abil_GCDs);
@@ -556,12 +560,12 @@ namespace Rawr.DPSWarr {
         /// <summary>Adds an Ability alteration schtuff. Flags: Pull GCDs, No DPS, Add Rage, Don't Use GCD Multiplier</summary>
         public void AddAnItem(ref float NumGCDs, ref float availGCDs, ref float GCDsused, ref float availRage, float TotalPercTimeLost, ref float _Abil_GCDs, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil, bool flag) {
             if (!abil.Validated) { return; }
-            float acts = (float)Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
+            float acts = Math.Min(availGCDs, abil.Activates * (1f - TotalPercTimeLost));
             float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_GCDs = Abil_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Abil_GCDs);
-            GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + "\n" : "");
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            GCDsused += Math.Min(NumGCDs, Abil_GCDs);
+            if (_needDisplayCalcs) GCDUsage += (Abil_GCDs > 0 ? Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + "\n" : "");
+            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             _Abil_HPS = abil.GetHPS(Abil_GCDs);
             HPS_TTL += _Abil_HPS;
             float rageadd = abil.GetRageUseOverDur(Abil_GCDs);
@@ -574,7 +578,7 @@ namespace Rawr.DPSWarr {
             float acts = abil.Activates * (1f - TotalPercTimeLost);
             float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
             _Abil_Acts = Abil_Acts;
-            GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + " (Doesn't use GCDs)\n" : "");
+            if (_needDisplayCalcs) GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + " (Doesn't use GCDs)\n" : "");
             _Abil_HPS = abil.GetHPS(Abil_Acts);
             HPS_TTL += _Abil_HPS;
             float rageadd = abil.GetRageUseOverDur(Abil_Acts);

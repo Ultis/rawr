@@ -278,18 +278,18 @@ namespace Rawr.DPSWarr
         }
          */
         #endregion
-        public override void MakeRotationandDoDPS(bool setCalcs)
+        public override void MakeRotationandDoDPS(bool setCalcs, bool needsDisplayCalcs)
         {
-            base.MakeRotationandDoDPS(setCalcs);
+            base.MakeRotationandDoDPS(setCalcs, needsDisplayCalcs);
             //new_MakeRotationandDoDPS(setCalcs);
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
             float FightDuration = CalcOpts.Duration;
             float LatentGCD = 1.5f + CalcOpts.Latency;
             float NumGCDs = FightDuration / LatentGCD;
-            GCDUsage += "NumGCDs: " + NumGCDs.ToString() + "\n\n";
+            if (_needDisplayCalcs) GCDUsage += "NumGCDs: " + NumGCDs.ToString() + "\n\n";
             float GCDsused = 0f;
-            float availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            float availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             float availRage = 0f;
             float rageadd = 0f;
             //float timelostwhilestunned = 0f;
@@ -328,11 +328,11 @@ namespace Rawr.DPSWarr
             /*Death Wish        */
             AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _Death_GCDs, ref HPS_TTL, ref _Death_HPS, Death);
 
-            /*float Reck_GCDs = (float)Math.Min(availGCDs, RK.Activates);
+            /*float Reck_GCDs = Math.Min(availGCDs, RK.Activates);
             _Reck_GCDs = Reck_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, Reck_GCDs);
+            GCDsused += Math.Min(NumGCDs, Reck_GCDs);
             GCDUsage += RK.Name + ": " + Reck_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             rageadd = RK.GetRageUsePerSecond(Reck_GCDs);
             availRage -= rageadd;
             RageNeeded += rageadd;*/
@@ -349,13 +349,13 @@ namespace Rawr.DPSWarr
                 // ways to counter, no GCD, just use reaction time
                 if (Talents.HeroicFury > 0f)
                 {
-                    float numUses = (float)Math.Min(numStuns, HF.Activates);
+                    float numUses = Math.Min(numStuns, HF.Activates);
                     numStuns -= numUses;
                     timeLost += numUses * (CalcOpts.React / 1000f + CalcOpts.Latency); // not using GetReact because it's not on the GCD
                 }
                 if (Char.Race == CharacterRace.Human)
                 {
-                    float numUses = (float)Math.Min(numStuns, EM.Activates);
+                    float numUses = Math.Min(numStuns, EM.Activates);
                     numStuns -= numUses;
                     timeLost += numUses * CalcOpts.React / 1000f + CalcOpts.Latency; // not using GetReact because it's not on the GCD
                 }
@@ -373,11 +373,11 @@ namespace Rawr.DPSWarr
             #endregion
 
             // Priority 1 : Whirlwind on every CD
-            float WW_GCDs = (float)Math.Min(availGCDs, WW.Activates) * (1f - timeLostPerc);
+            float WW_GCDs = Math.Min(availGCDs, WW.Activates) * (1f - timeLostPerc);
             _WW_GCDs = WW_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, WW_GCDs);
-            GCDUsage += WW.Name + ": " + WW_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            GCDsused += Math.Min(NumGCDs, WW_GCDs);
+            if (_needDisplayCalcs) GCDUsage += WW.Name + ": " + WW_GCDs.ToString() + "\n";
+            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             _WW_DPS = WW.GetDPS(WW_GCDs);
             _WW_HPS = WW.GetHPS(WW_GCDs);
             DPS_TTL += _WW_DPS;
@@ -387,11 +387,11 @@ namespace Rawr.DPSWarr
             RageNeeded += rageadd;
 
             // Priority 2 : Bloodthirst on every CD
-            float BT_GCDs = (float)Math.Min(availGCDs, BT.Activates) * (1f - timeLostPerc);
+            float BT_GCDs = Math.Min(availGCDs, BT.Activates) * (1f - timeLostPerc);
             _BT_GCDs = BT_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, BT_GCDs);
-            GCDUsage += BT.Name + ": " + BT_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            GCDsused += Math.Min(NumGCDs, BT_GCDs);
+            if (_needDisplayCalcs) GCDUsage += BT.Name + ": " + BT_GCDs.ToString() + "\n";
+            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             _BT_DPS = BT.GetDPS(BT_GCDs);
             _BT_HPS = BT.GetHPS(BT_GCDs);
             DPS_TTL += _BT_DPS;
@@ -402,11 +402,11 @@ namespace Rawr.DPSWarr
 
             doIterations();
             // Priority 3 : Bloodsurge Blood Proc (Do an Instant Slam) if available
-            float BS_GCDs = (float)Math.Min(availGCDs, BS.Activates) * (1f - timeLostPerc);
+            float BS_GCDs = Math.Min(availGCDs, BS.Activates) * (1f - timeLostPerc);
             _BS_GCDs = BS_GCDs;
-            GCDsused += (float)Math.Min(NumGCDs, BS_GCDs);
-            GCDUsage += BS.Name + ": " + BS_GCDs.ToString() + "\n";
-            availGCDs = (float)Math.Max(0f, NumGCDs - GCDsused);
+            GCDsused += Math.Min(NumGCDs, BS_GCDs);
+            if (_needDisplayCalcs) GCDUsage += BS.Name + ": " + BS_GCDs.ToString() + "\n";
+            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             _BS_DPS = BS.GetDPS(BS_GCDs);
             _BS_HPS = BS.GetHPS(BS_GCDs);
             DPS_TTL += _BS_DPS;
@@ -468,7 +468,7 @@ namespace Rawr.DPSWarr
             _DW_DPS = DW.DPS;
             DPS_TTL += _DW_DPS;
 
-            GCDUsage += "\nAvail: " + availGCDs.ToString();
+            if (_needDisplayCalcs) GCDUsage += "\nAvail: " + availGCDs.ToString();
 
             // Return result
             _HPS_TTL = HPS_TTL;

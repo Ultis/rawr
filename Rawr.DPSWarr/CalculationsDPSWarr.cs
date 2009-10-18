@@ -1250,7 +1250,7 @@ These numbers to do not include racial bonuses.",
 
                 calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00"; line++;
 
-                Rot.MakeRotationandDoDPS(true); line++;
+                Rot.MakeRotationandDoDPS(true, needsDisplayCalculations); line++;
 
                 float Health2Surv = stats.Health / 100f; line++;
                 float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * 100f;
@@ -1266,18 +1266,21 @@ These numbers to do not include racial bonuses.",
                 calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; line++;
 
                 //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts);
-                Rotation foo;
-                calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, out foo);
-                //calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts);
+                if (needsDisplayCalculations)
+                {
+                    Rotation foo;
+                    calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, out foo);
+                    //calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts);
 
-                float maxArp = calculatedStats.BuffedStats.ArmorPenetrationRating;
-                foreach (SpecialEffect effect in calculatedStats.BuffedStats.SpecialEffects(s => s.Stats.ArmorPenetrationRating > 0f)) {
-                    maxArp += effect.Stats.ArmorPenetrationRating;
+                    float maxArp = calculatedStats.BuffedStats.ArmorPenetrationRating;
+                    foreach (SpecialEffect effect in calculatedStats.BuffedStats.SpecialEffects(s => s.Stats.ArmorPenetrationRating > 0f))
+                    {
+                        maxArp += effect.Stats.ArmorPenetrationRating;
+                    }
+                    calculatedStats.MaxArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
+                        + calculatedStats.ArmorPenetrationStance
+                        + StatConversion.GetArmorPenetrationFromRating(maxArp);
                 }
-                calculatedStats.MaxArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
-                    + calculatedStats.ArmorPenetrationStance
-                    + StatConversion.GetArmorPenetrationFromRating(maxArp);
-
 
             } catch (Exception ex) {
                 new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations",
@@ -1452,7 +1455,7 @@ These numbers to do not include racial bonuses.",
                 if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts);
                 else Rot = new ArmsRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts);
                 Rot.Initialize();
-                Rot.MakeRotationandDoDPS(false);
+                Rot.MakeRotationandDoDPS(false, false);
 
                 // Add some last minute SpecialEffects
                 if (Rot.ST.Validated) {
@@ -1522,19 +1525,19 @@ These numbers to do not include racial bonuses.",
                 float landedAtksInterval = fightDuration / land;
                 float dmgDoneInterval = fightDuration / (land + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
-                //float hitRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
-                float critRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
+                //float hitRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
+                float critRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
 
                 if (Rot.SW.Validated) {
                     SpecialEffect sweep = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusTargets = 1f, },
-                        (float)Math.Min(Rot.SW.Duration, landedAtksInterval * 5f), Rot.SW.Cd);
+                        Math.Min(Rot.SW.Duration, landedAtksInterval * 5f), Rot.SW.Cd);
                     statsTotal.AddSpecialEffect(sweep);
                 }
                 if (Rot.RK.Validated && calcOpts.FuryStance) {
                     SpecialEffect reck = new SpecialEffect(Trigger.Use,
                         new Stats() { PhysicalCrit = 1f - critRate, },
-                        (float)Math.Min(Rot.RK.Duration, landedAtksInterval * 3f), Rot.RK.Cd);
+                        Math.Min(Rot.RK.Duration, landedAtksInterval * 3f), Rot.RK.Cd);
                     statsTotal.AddSpecialEffect(reck);
                 }
                 if (talents.Flurry > 0 && calcOpts.FuryStance) {
@@ -1633,8 +1636,8 @@ These numbers to do not include racial bonuses.",
                 float land = Rot.LandedAtksOverDur;
                 float crit = Rot.CriticalAtksOverDur;
 
-                float hitRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
-                float critRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
+                float hitRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
+                float critRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
 
                 //
                 foreach (SpecialEffect effect in specialEffects) {
@@ -1706,8 +1709,8 @@ These numbers to do not include racial bonuses.",
             float dmgDoneInterval = fightDuration / (land + (calcOpts.FuryStance ? 1f : 4f / 3f));
             float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
 
-            float hitRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
-            float critRate = attempted > 0 ? (float)Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
+            float hitRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
+            float critRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
 
             Stats effectStats = effect.Stats;
             float upTime = 0f;

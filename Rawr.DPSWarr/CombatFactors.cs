@@ -227,29 +227,29 @@ namespace Rawr.DPSWarr {
         }
         private float WhMissChance {
             get {
-                return (float)Math.Max(0f, WhMissCap - MissPrevBonuses); 
+                return Math.Max(0f, WhMissCap - MissPrevBonuses); 
             }
         }
         private float YwMissCap {get {return StatConversion.YELLOW_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level];}}
-        private float YwMissChance { get { return (float)Math.Max(0f, YwMissCap - MissPrevBonuses); } }
+        private float YwMissChance { get { return Math.Max(0f, YwMissCap - MissPrevBonuses); } }
         #endregion
         #region Dodge
         private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
-        private float MhDodgeChance { get { return (float)Math.Max(0f, DodgeChanceCap - GetDPRfromExp(_c_mhexpertise) - Talents.WeaponMastery * 0.01f); } }
-        private float OhDodgeChance { get { return (float)Math.Max(0f, DodgeChanceCap - GetDPRfromExp(_c_ohexpertise) - Talents.WeaponMastery * 0.01f); } }
+        private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - GetDPRfromExp(_c_mhexpertise) - Talents.WeaponMastery * 0.01f); } }
+        private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - GetDPRfromExp(_c_ohexpertise) - Talents.WeaponMastery * 0.01f); } }
         #endregion
         #region Parry
         private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
         private float MhParryChance {
             get {
                 float ParryChance = ParryChanceCap - GetDPRfromExp(_c_mhexpertise);
-                return (float)Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
+                return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
             }
         }
         private float OhParryChance {
             get {
                 float ParryChance = ParryChanceCap - GetDPRfromExp(_c_ohexpertise);
-                return (float)Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
+                return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
             }
         }
         #endregion
@@ -260,8 +260,8 @@ namespace Rawr.DPSWarr {
         // DPSWarr Dev Team has decided to remove Block from the Attack Table
         // until evidence can show specific bosses that do block
         private float BlockChanceCap { get { return 0f/*StatConversion.WHITE_BLOCK_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]*/; } }
-        private float MhBlockChance { get { return (float)Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap); } }
-        private float OhBlockChance { get { return (float)Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap); } }
+        private float MhBlockChance { get { return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap); } }
+        private float OhBlockChance { get { return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap); } }
         #endregion
         #region Crit
         private float MhWhCritChance {
