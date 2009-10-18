@@ -328,15 +328,14 @@ namespace Rawr {
                 // Abyssal Rune
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = 590f }, 10f, 45f, 0.25f));
             }
-            else if (line.Contains("Each time you cast a helpful spell, you gain 16 mana per 5 sec. for 10 sec.  Stacks up to 8 times."))
-            {
-                // Solace of the Defeated
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { Mp5 = 16f, }, 10f, 0f, 1.00f, 8));
+            else if ((match = Regex.Match(line, @"Each time you cast a helpful spell, you gain (?<mp5>\d+) mana per 5 sec. for (?<duration>\d+) sec.  Stacks up to (?<stacks>\d+) times.")).Success)
+            {   // Solace of the Defeated
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { Mp5 = (float)int.Parse(match.Groups["mp5"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 0f, 1.00f, int.Parse(match.Groups["stacks"].Value)));
             }
-            else if (line.Contains("Each time you cast a helpful spell, you gain 18 mana per 5 sec. for 10 sec.  Stacks up to 8 times."))
-            {
-                // Solace of the Defeated (Heroic)
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { Mp5 = 18f, }, 10f, 0f, 1.00f, 8));
+            else if ((match = Regex.Match(line, @"Each time you cast a helpful spell, you gain (?<mp5>\d+) mana per 5 sec. for (?<duration>\d+) sec. nbsp;Stacks up to (?<stacks>\d+) times.")).Success)
+            {   // Solace of the Defeated       // FIXME: WOWHEAD version.
+
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { Mp5 = (float)int.Parse(match.Groups["mp5"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 0f, 1.00f, int.Parse(match.Groups["stacks"].Value)));
             }
             // Idol of the Raven Goddess (already added)
             else if (line.Contains(" critical strike rating to the Leader of the Pack aura"))
@@ -453,14 +452,14 @@ namespace Rawr {
                 if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
                 if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
                 stats.ArmorPenetrationRating += int.Parse(line);
-			}
-			else if (isArmory && line.StartsWith("Increases armor penetration rating by "))
-			{
-				line = line.Substring("Increases armor penetration rating by ".Length);
-				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-				stats.ArmorPenetrationRating += int.Parse(line);
-			}
+            }
+            else if (isArmory && line.StartsWith("Increases armor penetration rating by "))
+            {
+                line = line.Substring("Increases armor penetration rating by ".Length);
+                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+                stats.ArmorPenetrationRating += int.Parse(line);
+            }
             else if (line.StartsWith("Increases the damage dealt by Shred by "))
             {
                 line = line.Substring("Increases the damage dealt by Shred by ".Length);
@@ -485,44 +484,44 @@ namespace Rawr {
                 line = line.Trim('+').Substring(0, line.IndexOf(" "));
                 stats.WeaponDamage += int.Parse(line);
             }
-			else if (line.StartsWith("Your Mangle ability has a chance to grant ") &&
-				line.EndsWith("agility for 10 sec.")) //10sec = Idol of Terror
-			{
-				line = line.Substring("Your Mangle ability has a chance to grant ".Length);
-				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit, new Stats() { Agility = int.Parse(line) }, 10f, 0f, .65f));
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleBearHit, new Stats() { Agility = int.Parse(line) }, 10f, 0f, .45f));
-			}
-			else if (line.StartsWith("Your Mangle ability has a chance to grant ") &&
-				line.EndsWith("agility for 12 sec.")) //12sec = Idol of Corruptor
-			{
-				line = line.Substring("Your Mangle ability has a chance to grant ".Length);
-				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit, new Stats() { Agility = int.Parse(line) }, 12f, 0f, 1f));
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleBearHit, new Stats() { Agility = int.Parse(line) }, 12f, 0f, .7f));
-			}
-			else if (line.StartsWith("While in Bear Form, your Lacerate and Swipe abilities have a chance to grant "))
-			{
-				//While in Bear Form, your Lacerate and Swipe abilities have a chance to grant 200 dodge rating for 9 sec, and your Cat Form's Mangle and Shred abilities have a chance to grant 200 Agility for 16 sec.
+            else if (line.StartsWith("Your Mangle ability has a chance to grant ") &&
+                line.EndsWith("agility for 10 sec.")) //10sec = Idol of Terror
+            {
+                line = line.Substring("Your Mangle ability has a chance to grant ".Length);
+                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit, new Stats() { Agility = int.Parse(line) }, 10f, 0f, .65f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleBearHit, new Stats() { Agility = int.Parse(line) }, 10f, 0f, .45f));
+            }
+            else if (line.StartsWith("Your Mangle ability has a chance to grant ") &&
+                line.EndsWith("agility for 12 sec.")) //12sec = Idol of Corruptor
+            {
+                line = line.Substring("Your Mangle ability has a chance to grant ".Length);
+                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatHit, new Stats() { Agility = int.Parse(line) }, 12f, 0f, 1f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleBearHit, new Stats() { Agility = int.Parse(line) }, 12f, 0f, .7f));
+            }
+            else if (line.StartsWith("While in Bear Form, your Lacerate and Swipe abilities have a chance to grant "))
+            {
+                //While in Bear Form, your Lacerate and Swipe abilities have a chance to grant 200 dodge rating for 9 sec, and your Cat Form's Mangle and Shred abilities have a chance to grant 200 Agility for 16 sec.
 
-				line = line.Substring("While in Bear Form, your Lacerate and Swipe abilities have a chance to grant ".Length);
-				string bearDodge = line.Substring(0, line.IndexOf(' '));
-				line = line.Substring("200 dodge rating for 9 sec, and your Cat Form's Mangle and Shred abilities have a chance to grant ".Length);
-				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.SwipeBearOrLacerateHit, new Stats() { DodgeRating = int.Parse(bearDodge) }, 9f, 0f, .65f));
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatOrShredHit, new Stats() { Agility = int.Parse(line) }, 16f, 0f, .85f));
-			}
-			else if (line.StartsWith("Each time a melee attack strikes you, you have a chance to gain "))
-			{
-				line = line.Substring("Each time a melee attack strikes you, you have a chance to gain ".Length);
-				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { BonusArmor = int.Parse(line) }, 10f, 45f, 0.25f));
-			}
-			else if (isArmory && line.StartsWith("Increases spell power by"))
+                line = line.Substring("While in Bear Form, your Lacerate and Swipe abilities have a chance to grant ".Length);
+                string bearDodge = line.Substring(0, line.IndexOf(' '));
+                line = line.Substring("200 dodge rating for 9 sec, and your Cat Form's Mangle and Shred abilities have a chance to grant ".Length);
+                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SwipeBearOrLacerateHit, new Stats() { DodgeRating = int.Parse(bearDodge) }, 9f, 0f, .65f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatOrShredHit, new Stats() { Agility = int.Parse(line) }, 16f, 0f, .85f));
+            }
+            else if (line.StartsWith("Each time a melee attack strikes you, you have a chance to gain "))
+            {
+                line = line.Substring("Each time a melee attack strikes you, you have a chance to gain ".Length);
+                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { BonusArmor = int.Parse(line) }, 10f, 45f, 0.25f));
+            }
+            else if (isArmory && line.StartsWith("Increases spell power by"))
             {
                 line = line.Substring("Increases spell power by".Length);
                 line = line.Replace(".", "").Replace(" ", "");
@@ -1069,7 +1068,7 @@ namespace Rawr {
             else if ((match = new Regex(@"Increases your block value by (?<blockValue>\d\d*) for (?<duration>\d\d*) sec each time you use Holy Shield.").Match(line)).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShield, new Stats() { HolyShieldBlockValue = (float)int.Parse(match.Groups["blockValue"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 0f, 1f));
-            } 
+            }
             else if (line == "Your Shield of Righteousness deals an additional 96 damage.")
             {
                 stats.BonusShieldOfRighteousnessDamage = 96;
@@ -1077,7 +1076,7 @@ namespace Rawr {
             else if ((match = new Regex(@"Each time you use your Hammer of The Righteous ability, you have a chance to gain (?<dodgeRating>\d\d*) dodge rating for (?<duration>\d\d*) sec.").Match(line)).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HammeroftheRighteous, new Stats() { DodgeRating = (float)int.Parse(match.Groups["dodgeRating"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 10f, 0.8f));
-            } 
+            }
             #endregion
             #region Added by Rawr.Enhance
             else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
@@ -1123,7 +1122,7 @@ namespace Rawr {
                     float hasterating = (float)int.Parse(m.Groups["hasterating"].Value);
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLightningBolt, new Stats() { HasteRating = hasterating }, 12f, 0f, 0.7f));
                 }
-            }   
+            }
             else if (line.StartsWith("Your Shock spells grant "))
             {
                 Regex r = new Regex("Your Shock spells grant (?<spellpower>\\d*) spell power for 6 sec.");
@@ -1191,7 +1190,7 @@ namespace Rawr {
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) }, 10f, 45f, 0.2f));
             }
-            else if ((match = Regex.Match(line.Replace("nbsp;"," "), @"When you deal damage you have a chance to gain Paragon, increasing your Strength or Agility by (?<amount>\d+) for 15 sec.  Your highest stat is always chosen.")).Success)
+            else if ((match = Regex.Match(line.Replace("nbsp;", " "), @"When you deal damage you have a chance to gain Paragon, increasing your Strength or Agility by (?<amount>\d+) for 15 sec.  Your highest stat is always chosen.")).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { Paragon = int.Parse(match.Groups["amount"].Value) }, 15f, 45f, 0.35f));
             }
