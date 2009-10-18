@@ -60,11 +60,11 @@ namespace Rawr.Enhance
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, ESMana * convection, priority, false));
                 else
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, ESMana * convection, priority, false));
-            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LavaLash);
             if (priority > 0)           
                 if (_talents.LavaLash == 1)
                     abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, gcd, 0.04f, priority, false));
-            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike);
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LightningShield);
             if (priority > 0)           
                 if (_talents.StaticShock > 0)
                     abilities.Add(new Ability(EnhanceAbility.LightningShield, _cs.StaticShockAvDuration, gcd, 0f, priority, true));

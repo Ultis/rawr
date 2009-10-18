@@ -52,12 +52,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnDown = new System.Windows.Forms.Button();
+            this.btnUp = new System.Windows.Forms.Button();
             this.CLBPriorities = new System.Windows.Forms.CheckedListBox();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
+            this.btnReset = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
@@ -387,7 +389,9 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.btnReset);
+            this.tabPage2.Controls.Add(this.btnDown);
+            this.tabPage2.Controls.Add(this.btnUp);
             this.tabPage2.Controls.Add(this.CLBPriorities);
             this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -398,6 +402,28 @@
             this.tabPage2.Text = "Priorities";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // btnDown
+            // 
+            this.btnDown.Enabled = false;
+            this.btnDown.Location = new System.Drawing.Point(88, 215);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(80, 23);
+            this.btnDown.TabIndex = 4;
+            this.btnDown.Text = "Move Down";
+            this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
+            // 
+            // btnUp
+            // 
+            this.btnUp.Enabled = false;
+            this.btnUp.Location = new System.Drawing.Point(5, 215);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(80, 23);
+            this.btnUp.TabIndex = 3;
+            this.btnUp.Text = "Move Up";
+            this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
+            // 
             // CLBPriorities
             // 
             this.CLBPriorities.FormattingEnabled = true;
@@ -405,6 +431,7 @@
             this.CLBPriorities.Name = "CLBPriorities";
             this.CLBPriorities.Size = new System.Drawing.Size(249, 184);
             this.CLBPriorities.TabIndex = 2;
+            this.CLBPriorities.SelectedIndexChanged += new System.EventHandler(this.CLBPriorities_SelectedIndexChanged);
             this.CLBPriorities.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CLBPriorities_ItemCheck);
             // 
             // label6
@@ -449,17 +476,15 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
-            // label7
+            // btnReset
             // 
-            this.label7.CausesValidation = false;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(6, 226);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(247, 227);
-            this.label7.TabIndex = 3;
-            this.label7.Text = "Please note none of the priority options above actually do anything at the presen" +
-                "t time. They are required to be in place as the first step to allowing user conf" +
-                "igurable priority queues.";
+            this.btnReset.Location = new System.Drawing.Point(174, 215);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(80, 23);
+            this.btnReset.TabIndex = 5;
+            this.btnReset.Text = "Use Defaults";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -514,7 +539,9 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckedListBox CLBPriorities;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btnDown;
+        private System.Windows.Forms.Button btnUp;
+        private System.Windows.Forms.Button btnReset;
 
     }
 }

@@ -69,18 +69,27 @@ namespace Rawr.Enhance
             _targetNatureResistance = boss.Resistance(ItemDamageType.Nature);
         }
 
+        public bool PriorityInUse(EnhanceAbility abilityType)
+        {
+            Priority p = new Priority();
+            _priorityList.TryGetValue(abilityType, out p);
+            return p == null ? false : p.Checked;
+        }
+
         public Priority GetAbilityPriority(EnhanceAbility abilityType)
         {
             Priority p = new Priority();
-            _priorityList.TryGetValue(abilityType, out p); 
+            _priorityList.TryGetValue(abilityType, out p);
             return p;
         }
 
         public int GetAbilityPriorityValue(EnhanceAbility abilityType)
         {
             Priority p = new Priority();
-            _priorityList.TryGetValue(abilityType, out p); 
-            return p == null ? -1 : p.PriorityValue;
+            _priorityList.TryGetValue(abilityType, out p);
+            if (p == null)
+                return -1;
+            return p.Checked ? p.PriorityValue : 0;  // return 0 if priority not in use
         }
 
         public void SetAbilityPriority(EnhanceAbility abilityType, Priority priority)

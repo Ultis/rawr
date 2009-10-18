@@ -320,7 +320,7 @@ namespace Rawr.Enhance
             //2: Stormstrike DPS
             float dpsSS = 0f;
             float stormstrikeMultiplier = 0f;
-            if (character.ShamanTalents.Stormstrike == 1 && calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike) > 0)
+            if (character.ShamanTalents.Stormstrike == 1 && calcOpts.PriorityInUse(EnhanceAbility.StormStrike))
             {
                 stormstrikeMultiplier = 1.2f + (character.ShamanTalents.GlyphofStormstrike ? .08f : 0f);
                 float swingDPSMH = (damageMHSwing + bonusSSDamage) * cs.HitsPerSMHSS;
@@ -332,7 +332,7 @@ namespace Rawr.Enhance
 
             //3: Lavalash DPS
             float dpsLL = 0f;
-            if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1 && calcOpts.GetAbilityPriorityValue(EnhanceAbility.LavaLash) > 0)
+            if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1 && calcOpts.PriorityInUse(EnhanceAbility.LavaLash))
             {
                 float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
                 float LLnormal = lavalashDPS * cs.YellowHitModifierOH;
@@ -349,7 +349,7 @@ namespace Rawr.Enhance
 
             //4: Earth Shock DPS
             float dpsES = 0f;
-            if (calcOpts.GetAbilityPriorityValue(EnhanceAbility.EarthShock) > 0)
+            if (calcOpts.PriorityInUse(EnhanceAbility.EarthShock))
             {
                 float damageESBase = 872f;
                 float coefES = .3858f;
@@ -362,7 +362,7 @@ namespace Rawr.Enhance
 
             //4.5: Flame Shock DPS
             float dpsFS = 0f;
-            if (calcOpts.GetAbilityPriorityValue(EnhanceAbility.FlameShock) > 0)
+            if (calcOpts.PriorityInUse(EnhanceAbility.FlameShock))
             {
                 float damageFSBase = 500f;
                 float damageFSDoTBase = 834f;
@@ -383,7 +383,7 @@ namespace Rawr.Enhance
             }
             //5: Lightning Bolt DPS
             float dpsLB = 0f;
-            if (calcOpts.GetAbilityPriorityValue(EnhanceAbility.LightningBolt) > 0)
+            if (calcOpts.PriorityInUse(EnhanceAbility.LightningBolt))
             {
                 float damageLBBase = 765f;
                 float coefLB = .7143f;
@@ -410,7 +410,7 @@ namespace Rawr.Enhance
 
             //7: Lightning Shield DPS
             float dpsLS = 0f;
-            if (calcOpts.GetAbilityPriorityValue(EnhanceAbility.LightningShield) > 0)
+            if (calcOpts.PriorityInUse(EnhanceAbility.LightningShield))
             {
                 float damageLSBase = 380;
                 float damageLSCoef = 0.33f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
@@ -422,13 +422,17 @@ namespace Rawr.Enhance
             }
 
             //8: Searing/Magma Totem DPS
-            float damageSTMTBase = calcOpts.Magma ? 371f : 105f;
-            float damageSTMTCoef = calcOpts.Magma ? .1f : .1667f;
-            float damageSTMT = (damageSTMTBase + damageSTMTCoef * spellPower) * callofFlameBonus;
-            float STMTdps = damageSTMT / 2;
-            float STMTNormal = STMTdps * cs.SpellHitModifier;
-            float STMTCrit = STMTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-            float dpsSTMT = (STMTNormal + STMTCrit) * bonusFireDamage * bossFireResistance;
+            float dpsSTMT = 0f;
+            if ((calcOpts.PriorityInUse(EnhanceAbility.MagmaTotem) && calcOpts.Magma) || (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem) && !calcOpts.Magma))
+            {
+                float damageSTMTBase = calcOpts.Magma ? 371f : 105f;
+                float damageSTMTCoef = calcOpts.Magma ? .1f : .1667f;
+                float damageSTMT = (damageSTMTBase + damageSTMTCoef * spellPower) * callofFlameBonus;
+                float STMTdps = damageSTMT / 2;
+                float STMTNormal = STMTdps * cs.SpellHitModifier;
+                float STMTCrit = STMTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
+                dpsSTMT = (STMTNormal + STMTCrit) * bonusFireDamage * bossFireResistance;
+            }
 
             //9: Flametongue Weapon DPS
             float dpsFT = 0f;
@@ -456,7 +460,7 @@ namespace Rawr.Enhance
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
             // my analysis reveals they get 31% of shaman AP + 2 * their STR and base 206.17 dps.
             float dpsDogs = 0f;
-            if (character.ShamanTalents.FeralSpirit == 1 && calcOpts.GetAbilityPriorityValue(EnhanceAbility.FeralSpirits) > 0)
+            if (character.ShamanTalents.FeralSpirit == 1 && calcOpts.PriorityInUse(EnhanceAbility.FeralSpirits))
             {
                 float hitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + .02f * character.ShamanTalents.DualWieldSpecialization;
                 float FSglyphAP = character.ShamanTalents.GlyphofFeralSpirit ? attackPower * .3f : 0f;

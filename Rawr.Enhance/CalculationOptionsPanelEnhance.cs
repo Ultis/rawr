@@ -13,7 +13,6 @@ namespace Rawr.Enhance
         /// <summary>This Model's local bosslist</summary>
         private BossList bosslist = null;
         CalculationOptionsEnhance _calcOpts;
-        PriorityDisplay _pd;
         
         public CalculationOptionsPanelEnhance()
         {
@@ -79,9 +78,9 @@ namespace Rawr.Enhance
 
         private void LoadPriorities()
         {
-            _pd = new PriorityDisplay(_calcOpts.PriorityList);
+            SetPriorityDefaults(_calcOpts.PriorityList);
             CLBPriorities.Items.Clear();
-            foreach (Priority p in _pd.Values)
+            foreach (Priority p in _calcOpts.PriorityList.Values)
             {
                 CLBPriorities.Items.Add(p, p.Checked);
             }
@@ -208,13 +207,18 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
+                Priority p = (Priority)CLBPriorities.Items[e.Index];
                 if (e.NewValue == CheckState.Checked)
                 {
-                    Priority p = (Priority)CLBPriorities.Items[e.Index];
+                    p.Checked = true;
                     if (p.AbilityType == EnhanceAbility.MagmaTotem)
                         SetAbilityChecked(EnhanceAbility.SearingTotem, false);
                     if (p.AbilityType == EnhanceAbility.SearingTotem)
                         SetAbilityChecked(EnhanceAbility.MagmaTotem, false);
+                }
+                else
+                {
+                    p.Checked = false;
                 }
                 SavePriorities();
                 Character.OnCalculationsInvalidated();
@@ -237,33 +241,81 @@ namespace Rawr.Enhance
                 }
             }
         }
-    }
 
-    public class PriorityDisplay
-    {
-        SerializableDictionary<EnhanceAbility, Priority> _priorityList;
-
-        public PriorityDisplay(SerializableDictionary<EnhanceAbility, Priority> priorityList)
+        private void SetPriorityDefaults(SerializableDictionary<EnhanceAbility, Priority> priorityList)
         {
             if (priorityList.Count == 0)
             {
-                int prioirty = 0;
-                priorityList.Add(EnhanceAbility.ShamanisticRage, new Priority("Shamanistic Rage", EnhanceAbility.ShamanisticRage, "Use Shamanistic Rage", true, ++prioirty));
-                priorityList.Add(EnhanceAbility.FeralSpirits, new Priority("Feral Spirits", EnhanceAbility.FeralSpirits, "Use Feral Sprirts", true, ++prioirty));
-                priorityList.Add(EnhanceAbility.LightningBolt, new Priority("Lightning Bolt on 5 stacks of MW", EnhanceAbility.LightningBolt, "Use Lightning Bolt when you have 5 stacks of Maelstrom Weapon", true, ++prioirty));
-                priorityList.Add(EnhanceAbility.FlameShock, new Priority("Flame Shock", EnhanceAbility.FlameShock, "Use Flame Shock if no Flame Shock debuff on target", true, ++prioirty));
+                int priority = 0;
+                priorityList.Add(EnhanceAbility.ShamanisticRage, new Priority("Shamanistic Rage", EnhanceAbility.ShamanisticRage, "Use Shamanistic Rage", true, ++priority));
+                priorityList.Add(EnhanceAbility.FeralSpirits, new Priority("Feral Spirits", EnhanceAbility.FeralSpirits, "Use Feral Sprirts", true, ++priority));
+                priorityList.Add(EnhanceAbility.LightningBolt, new Priority("Lightning Bolt on 5 stacks of MW", EnhanceAbility.LightningBolt, "Use Lightning Bolt when you have 5 stacks of Maelstrom Weapon", true, ++priority));
+                priorityList.Add(EnhanceAbility.FlameShock, new Priority("Flame Shock", EnhanceAbility.FlameShock, "Use Flame Shock if no Flame Shock debuff on target", true, ++priority));
                 //       priorityList.Add(new Priority("Earth Shock if SS debuff", EnhanceAbility.EarthShock, "Use Earth Shock if Stormstrike debuff on target", true));
                 //       priorityList.Add(new Priority("Lava Lash if Quaking Earth", EnhanceAbility.LavaLash, "Use Lava Lash if Volcanic Fury buff about to run out", false));
-                priorityList.Add(EnhanceAbility.StormStrike, new Priority("Stormstrike", EnhanceAbility.StormStrike, "Use Stormstrike", true, ++prioirty));
-                priorityList.Add(EnhanceAbility.EarthShock, new Priority("Earth Shock", EnhanceAbility.EarthShock, "Use Earth Shock", true, ++prioirty));
-                priorityList.Add(EnhanceAbility.LavaLash, new Priority("Lava Lash", EnhanceAbility.LavaLash, "Use Stormstrike", true, ++prioirty));
-                priorityList.Add(EnhanceAbility.MagmaTotem, new Priority("Magma Totem", EnhanceAbility.MagmaTotem, "Refresh Magma Totem", true, ++prioirty));
-                priorityList.Add(EnhanceAbility.SearingTotem, new Priority("Searing Totem", EnhanceAbility.SearingTotem, "Refresh Searing Totem", false, ++prioirty));
-                priorityList.Add(EnhanceAbility.LightningShield, new Priority("Lightning Shield", EnhanceAbility.LightningShield, "Refresh Lightning Shield", true, ++prioirty));
+                priorityList.Add(EnhanceAbility.StormStrike, new Priority("Stormstrike", EnhanceAbility.StormStrike, "Use Stormstrike", true, ++priority));
+                priorityList.Add(EnhanceAbility.EarthShock, new Priority("Earth Shock", EnhanceAbility.EarthShock, "Use Earth Shock", true, ++priority));
+                priorityList.Add(EnhanceAbility.LavaLash, new Priority("Lava Lash", EnhanceAbility.LavaLash, "Use Stormstrike", true, ++priority));
+                priorityList.Add(EnhanceAbility.MagmaTotem, new Priority("Magma Totem", EnhanceAbility.MagmaTotem, "Refresh Magma Totem", true, ++priority));
+                priorityList.Add(EnhanceAbility.SearingTotem, new Priority("Searing Totem", EnhanceAbility.SearingTotem, "Refresh Searing Totem", false, ++priority));
+                priorityList.Add(EnhanceAbility.LightningShield, new Priority("Lightning Shield", EnhanceAbility.LightningShield, "Refresh Lightning Shield", true, ++priority));
             }
-            _priorityList = priorityList;
         }
 
-        public SerializableDictionary<EnhanceAbility, Priority>.ValueCollection Values { get { return _priorityList.Values; } }
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            if (CLBPriorities.SelectedIndex > 0)
+            {
+                _loadingCalculationOptions = true;
+                Priority current = (Priority)CLBPriorities.Items[CLBPriorities.SelectedIndex];
+                Priority above = (Priority)CLBPriorities.Items[CLBPriorities.SelectedIndex - 1];
+                int currentPriority = current.PriorityValue;
+                current.PriorityValue = above.PriorityValue;
+                above.PriorityValue = currentPriority;
+                CLBPriorities.Items[CLBPriorities.SelectedIndex] = above;
+                CLBPriorities.Items[CLBPriorities.SelectedIndex - 1] = current;
+                CLBPriorities.SetItemChecked(CLBPriorities.SelectedIndex, above.Checked);
+                CLBPriorities.SetItemChecked(CLBPriorities.SelectedIndex - 1, current.Checked);
+                CLBPriorities.SelectedIndex--;
+                _loadingCalculationOptions = false; 
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            _loadingCalculationOptions = true;
+            Priority current = (Priority)CLBPriorities.Items[CLBPriorities.SelectedIndex];
+            Priority below = (Priority)CLBPriorities.Items[CLBPriorities.SelectedIndex + 1];
+            int currentPriority = current.PriorityValue;
+            current.PriorityValue = below.PriorityValue;
+            below.PriorityValue = currentPriority;
+            CLBPriorities.Items[CLBPriorities.SelectedIndex] = below;
+            CLBPriorities.Items[CLBPriorities.SelectedIndex + 1] = current;
+            CLBPriorities.SetItemChecked(CLBPriorities.SelectedIndex, below.Checked);
+            CLBPriorities.SetItemChecked(CLBPriorities.SelectedIndex + 1, current.Checked);
+            CLBPriorities.SelectedIndex++;
+            _loadingCalculationOptions = false;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void CLBPriorities_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // set butons enabled or disabled based on 
+            btnUp.Enabled = CLBPriorities.SelectedIndex > 0;
+            btnDown.Enabled = CLBPriorities.SelectedIndex < CLBPriorities.Items.Count - 1;
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            _loadingCalculationOptions = true;
+            btnUp.Enabled = false;
+            btnDown.Enabled = false;
+            _calcOpts.PriorityList = new SerializableDictionary<EnhanceAbility, Priority>();
+            LoadPriorities();
+            _loadingCalculationOptions = false;
+            Character.OnCalculationsInvalidated();
+        }
+
     }
 }
