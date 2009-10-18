@@ -531,7 +531,7 @@ namespace Rawr
 
   	public partial class WarlockTalents
   	{
-  		private bool[] _glyphData = new bool[15];
+  		private bool[] _glyphData = new bool[16];
   		public override bool[] GlyphData { get { return _glyphData; } }
   
   		[GlyphData(0, "Glyph of Chaos Bolt", true, @"Reduces the cooldown on Chaos Bolt by 2 sec.")]
@@ -555,7 +555,7 @@ namespace Rawr
   		public bool GlyphImp { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
   		[GlyphData(8, "Glyph of Incinerate", true, @"Increases the damage done by Incinerate by 5%.")]
   		public bool GlyphIncinerate { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
-  		[GlyphData(9, "Glyph of Life Tap", true, @"When you use Life Tap, you gain 20% of your Spirit as spell power for 20 sec.")]
+  		[GlyphData(9, "Glyph of Life Tap", true, @"When you use Life Tap, you gain 20% of your Spirit as spell power for 40 sec.")]
   		public bool GlyphLifeTap { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
   		[GlyphData(10, "Glyph of Metamorphosis", true, @"Increases the duration of your Metamorphosis by 6 sec.")]
   		public bool GlyphMetamorphosis { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
@@ -568,6 +568,8 @@ namespace Rawr
   		public bool GlyphShadowburn { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
   		[GlyphData(14, "Glyph of Unstable Affliction", true, @"Decreases the casting time of your Unstable Affliction by 0.2 sec.")]
   		public bool GlyphUA { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+        [GlyphData(15, "Glyph of Quick Decay", true, @"Your haste now reduces the time between periodic damage ticks of your Corruption spell.")]
+        public bool GlyphQuickDecay { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
   	}
 
     public partial class RogueTalents
