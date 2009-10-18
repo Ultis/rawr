@@ -62,8 +62,8 @@ namespace Rawr.Bosses {
                  * starts and then back in after
                 */
                 Moves.Add(new Move() {
-                    Frequency = (80f + 120f / 2f),
-                    Duration = (16 + 4) * 1000,
+                    Frequency = (80f + 120f) / 2f,
+                    Duration = (16f + 4f) * 1000f,
                     Chance = 1f,
                     Breakable = false
                 });
@@ -124,7 +124,7 @@ namespace Rawr.Bosses {
                 // For each Rain of Fire she has to be moved (assuming 3 seconds to move)
                 Moves.Add(new Move() {
                     Frequency = a.AttackSpeed,
-                    Duration = 3 * 1000,
+                    Duration = 3f * 1000f,
                     Chance = 1f,
                     Breakable = false
                 });
@@ -182,7 +182,8 @@ namespace Rawr.Bosses {
                 float chance = 1f + a.MaxNumTargets / (Max_Players - Min_Tanks);
                 Stuns.Add(new Stun() {
                     Frequency = freq * (BerserkTimer / (BerserkTimer - initial)) * chance,
-                    Duration = 5 * 1000,
+                    Duration = 5f * 1000f,
+                    Chance = 1f / (Max_Players - Min_Tanks),
                     Breakable = false
                 });
             }
@@ -206,7 +207,8 @@ namespace Rawr.Bosses {
                 float chance = 1f + a.MaxNumTargets / Max_Players;
                 Stuns.Add(new Stun() {
                     Frequency = freq * (BerserkTimer / (BerserkTimer - initial)),
-                    Duration = 6 * 1000,
+                    Duration = 6f * 1000f,
+                    Chance = 1f,
                     Breakable = false
                 });
             }
@@ -308,7 +310,7 @@ namespace Rawr.Bosses {
             // something to the boss
             Moves.Add(new Move() {
                 Frequency = 90f+45f,
-                Duration = (45f-4f*5f) * 1000,
+                Duration = (45f-4f*5f) * 1000f,
                 Chance = 1f,
                 Breakable = false
             });
@@ -361,8 +363,8 @@ namespace Rawr.Bosses {
             // Initial 10 seconds to pop first Spore then every 3rd spore
             // after that (90 seconds respawn then 10 sec moving to/back)
             Moves.Add(new Move() {
-                Frequency = 90,
-                Duration = 10 * 1000,
+                Frequency = 90f,
+                Duration = 10f * 1000f,
                 Chance = 1f,
                 Breakable = false,
             });
@@ -514,7 +516,7 @@ namespace Rawr.Bosses {
             // Bounce back and forth in the back: Every 30 sec for 10 sec but for only 40% of the fight
             Moves.Add(new Move() {
                 Frequency = 30f,
-                Duration = 10 * 1000,
+                Duration = 10f * 1000f,
                 Chance = 0.40f,
                 Breakable = false
             });
@@ -590,7 +592,7 @@ namespace Rawr.Bosses {
             // Dropping the Dur to 1 sec for usability
             Moves.Add(new Move() {
                 Frequency = 8f,
-                Duration = 1 * 1000,
+                Duration = 1f * 1000f,
                 Chance = 1f,
                 Breakable = false
             });
@@ -680,7 +682,7 @@ namespace Rawr.Bosses {
             // 50% chance that your polarity will change
             Moves.Add(new Move() {
                 Frequency = 30f,
-                Duration = 3 * 1000,
+                Duration = 3f * 1000f,
                 Chance = 0.50f,
                 Breakable = false
             });
@@ -736,7 +738,7 @@ namespace Rawr.Bosses {
             // He stops this at 10% hp
             Moves.Add(new Move() {
                 Frequency = 45f + 30f,
-                Duration = 30 * 1000,
+                Duration = 30f * 1000f,
                 Chance = 0.90f,
                 Breakable = false
             });
@@ -797,7 +799,7 @@ namespace Rawr.Bosses {
             // you over someone else
             Moves.Add(new Move() {
                 Frequency = 30f,
-                Duration = 6 * 1000,
+                Duration = 6f * 1000f,
                 Chance = 1f / Max_Players,
                 Breakable = false
             });
@@ -851,7 +853,7 @@ namespace Rawr.Bosses {
             // Every 60 seconds for 20 seconds dps has to jump into the portal and kill the add
             Moves.Add(new Move() {
                 Frequency = 60f + 20f,
-                Duration = 20 * 1000,
+                Duration = 20f * 1000f,
                 Chance = 1f,
                 Breakable = false
             });
@@ -860,7 +862,7 @@ namespace Rawr.Bosses {
             Moves.Add(new Move() {
                 Frequency = Attacks[1].AttackSpeed,
                 Duration = (5f + 1f) * 1000f,
-                Chance = 1 / Max_Players,
+                Chance = 1f / Max_Players,
                 Breakable = false
             });
             /* TODO:
@@ -913,7 +915,7 @@ namespace Rawr.Bosses {
                 // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
                 Moves.Add(new Move() {
                     Frequency = 30f + 20f,
-                    Duration = 20 * 1000,
+                    Duration = 20f * 1000f,
                     Chance = 1f,
                     Breakable = false
                 });
@@ -925,7 +927,7 @@ namespace Rawr.Bosses {
                 // 1/10 chance he'll pick you
                 Moves.Add(new Move() {
                     Frequency = Attacks[1].AttackSpeed,
-                    Duration = (5f + 1f) * 1000,
+                    Duration = (5f + 1f) * 1000f,
                     Chance = 1f / Max_Players,
                     Breakable = false
                 });
@@ -980,7 +982,7 @@ namespace Rawr.Bosses {
             // 1/10 chance he'll pick you
             Moves.Add(new Move() {
                 Frequency = Attacks[1].AttackSpeed,
-                Duration = (5f + 1f) * 1000,
+                Duration = (5f + 1f) * 1000f,
                 Chance = 1f / Max_Players,
                 Breakable = false
             });
@@ -1063,7 +1065,7 @@ namespace Rawr.Bosses {
             // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
             Moves.Add(new Move() {
                 Frequency = 30f,
-                Duration = 5 * 1000,
+                Duration = 5f * 1000f,
                 Chance = 1f,
                 Breakable = false
             });
@@ -1170,7 +1172,7 @@ namespace Rawr.Bosses {
                 */
                 Moves.Add(new Move() {
                     Frequency = (80f + 120f) / 2f,
-                    Duration = (16 + 4) * 1000,
+                    Duration = (16f + 4f) * 1000f,
                     Chance = 1f,
                     Breakable = false
                 });
@@ -1231,7 +1233,7 @@ namespace Rawr.Bosses {
                 // For each Rain of Fire she has to be moved (assuming 3 seconds to move)
                 Moves.Add(new Move() {
                     Frequency = a.AttackSpeed,
-                    Duration = 3 * 1000,
+                    Duration = 3f * 1000f,
                     Chance = 1f,
                     Breakable = false
                 });
@@ -1289,7 +1291,8 @@ namespace Rawr.Bosses {
                 float chance = a.MaxNumTargets / (Max_Players - Min_Tanks);
                 Stuns.Add(new Stun() {
                     Frequency = freq * (BerserkTimer / (BerserkTimer - initial)) / chance,
-                    Duration = 5 * 1000,
+                    Duration = 5f * 1000f,
+                    Chance = 1f / (Max_Players - Min_Tanks),
                     Breakable = false
                 });
             }
@@ -1313,7 +1316,8 @@ namespace Rawr.Bosses {
                 float chance = a.MaxNumTargets / Max_Players;
                 Stuns.Add(new Stun() {
                     Frequency = freq * (BerserkTimer / (BerserkTimer - initial)) / chance,
-                    Duration = 6 * 1000,
+                    Duration = 6f * 1000f,
+                    Chance = 1f,
                     Breakable = false
                 });
             }
@@ -1464,8 +1468,8 @@ namespace Rawr.Bosses {
             // Initial 10 seconds to pop first Spore then every 3rd spore
             // after that (90 seconds respawn then 10 sec moving to/back)
             Moves.Add(new Move() {
-                Frequency = 90,
-                Duration = 10 * 1000,
+                Frequency = 90f,
+                Duration = 10f * 1000f,
                 Chance = 1f,
                 Breakable = false,
             });
@@ -1611,7 +1615,7 @@ namespace Rawr.Bosses {
             // Bounce back and forth in the back: Every 30 sec for 10 sec but for only 40% of the fight
             Moves.Add(new Move() {
                 Frequency = 30f,
-                Duration = 10 * 1000,
+                Duration = 10f * 1000f,
                 Chance = 0.40f,
                 Breakable = false
             });
@@ -1688,7 +1692,7 @@ namespace Rawr.Bosses {
             // avoid Poison Cloud Farts. This goes on the entire fight
             Moves.Add(new Move() {
                 Frequency = 8f,
-                Duration = 1 * 1000,
+                Duration = 1f * 1000f,
                 Chance = 1f,
                 Breakable = false
             });
@@ -1776,7 +1780,7 @@ namespace Rawr.Bosses {
             // 50% chance that your polarity will change
             Moves.Add(new Move() {
                 Frequency = 30f,
-                Duration = 3 * 1000,
+                Duration = 3f * 1000f,
                 Chance = 0.50f,
                 Breakable = false
             });
@@ -1832,7 +1836,7 @@ namespace Rawr.Bosses {
             // He stops this at 10% hp
             Moves.Add(new Move() {
                 Frequency = 45f + 30f,
-                Duration = 30 * 1000,
+                Duration = 30f * 1000f,
                 Chance = 0.90f,
                 Breakable = false
             });
@@ -1893,7 +1897,7 @@ namespace Rawr.Bosses {
             // you over someone else
             Moves.Add(new Move() {
                 Frequency = 30f,
-                Duration = 6 * 1000,
+                Duration = 6f * 1000f,
                 Chance = 1f / Max_Players,
                 Breakable = false
             });
@@ -1944,7 +1948,7 @@ namespace Rawr.Bosses {
             // Every 60 seconds for 20 seconds dps has to jump into the portal and kill the add
             Moves.Add(new Move() {
                 Frequency = 60f + 20f,
-                Duration = 20 * 1000,
+                Duration = 20f * 1000f,
                 Chance = 1f,
                 Breakable = false
             });
@@ -2003,7 +2007,7 @@ namespace Rawr.Bosses {
                 // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
                 Moves.Add(new Move() {
                     Frequency = 30f + 20f,
-                    Duration = 20 * 1000,
+                    Duration = 20f * 1000f,
                     Chance = 1f,
                     Breakable = false
                 });
@@ -2015,7 +2019,7 @@ namespace Rawr.Bosses {
                 // 1/10 chance he'll pick you
                 Moves.Add(new Move() {
                     Frequency = Attacks[1].AttackSpeed,
-                    Duration = (5f + 1f) * 1000,
+                    Duration = (5f + 1f) * 1000f,
                     Chance = 1f / Max_Players,
                     Breakable = false
                 });
@@ -2070,7 +2074,7 @@ namespace Rawr.Bosses {
             // 1/25 chance he'll pick you
             Moves.Add(new Move() {
                 Frequency = Attacks[1].AttackSpeed,
-                Duration = (5f + 1f) * 1000,
+                Duration = (5f + 1f) * 1000f,
                 Chance = 1f / Max_Players,
                 Breakable = false
             });
@@ -2150,7 +2154,7 @@ namespace Rawr.Bosses {
             // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
             Moves.Add(new Move() {
                 Frequency = 30f,
-                Duration = 5 * 1000,
+                Duration = 5f * 1000f,
                 Chance = 3f / Max_Players,
                 Breakable = false
             });
@@ -2311,7 +2315,7 @@ namespace Rawr.Bosses {
                 Attacks.Add(a);
                 Moves.Add(new Move() {
                     Frequency = a.AttackSpeed,
-                    Duration = 5 * 1000,
+                    Duration = 5f * 1000f,
                     Chance = 1f,
                     Breakable = false,
                 });
@@ -2429,7 +2433,7 @@ namespace Rawr.Bosses {
                 Attacks.Add(a);
                 Moves.Add(new Move() {
                     Frequency = a.AttackSpeed,
-                    Duration = (9 + 5) * 1000,
+                    Duration = (9f + 5f) * 1000f,
                     Chance = 1f / Max_Players,
                     Breakable = false,
                 });
@@ -2448,7 +2452,7 @@ namespace Rawr.Bosses {
                 Attacks.Add(a);
                 Moves.Add(new Move() {
                     Frequency = a.AttackSpeed,
-                    Duration = (9 + 5) * 1000,
+                    Duration = (9f + 5f) * 1000f,
                     Chance = 1f / Max_Players,
                     Breakable = false,
                 });
@@ -2640,8 +2644,12 @@ namespace Rawr.Bosses {
             MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
             // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
             // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            FearingTargsFreq = 45f;
-            FearingTargsDur = 5f * 1000f;
+            Fears.Add(new Fear() {
+                Frequency = 45f,
+                Duration = 5f * 1000f,
+                Chance = 1f,
+                Breakable = true,
+            });
             // Fight Requirements
             /* TODO:
              */
@@ -2788,8 +2796,13 @@ namespace Rawr.Bosses {
             MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
             // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
             // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            FearingTargsFreq = 45f;
-            FearingTargsDur = 5f * 1000f;
+            Fears.Add(new Fear()
+            {
+                Frequency = 45f,
+                Duration = 5f * 1000f,
+                Chance = 1f,
+                Breakable = true,
+            });
             /* TODO:
             * Pre-Phase Adds
                  1. Jormungar Behemoth - Attacks with Acid Breath (Heroic) and Sweep (Heroic)
@@ -2851,8 +2864,12 @@ namespace Rawr.Bosses {
             // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
             // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
             // Going to assume the CD is 45 sec for now
-            RootingTargsFreq = 45f;
-            RootingTargsDur = 10f * 1000f;
+            Roots.Add(new Root() {
+                Frequency = 45f,
+                Duration = 10f * 1000f,
+                Chance = 1.00f,
+                Breakable = true,
+            });
             /* TODO:
             * Biting Cold - Applies exponentially increasing damage-over-time Frost damage effect every 1 second to stationary targets. 1 second of moving or a jump will reduce the stack by 1.
             * Freeze - Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
@@ -3092,8 +3109,13 @@ namespace Rawr.Bosses {
             MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
             // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
             // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            FearingTargsFreq = 45f;
-            FearingTargsDur = 5f * 1000f;
+            Fears.Add(new Fear()
+            {
+                Frequency = 45f,
+                Duration = 5f * 1000f,
+                Chance = 1f,
+                Breakable = true,
+            });
             /* TODO:
              */
         }
@@ -3130,8 +3152,13 @@ namespace Rawr.Bosses {
             // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
             // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
             // Going to assume the CD is 45 sec for now
-            RootingTargsFreq = 45f;
-            RootingTargsDur = 10f * 1000f;
+            Roots.Add(new Root()
+            {
+                Frequency = 45f,
+                Duration = 10f * 1000f,
+                Chance = 1.00f,
+                Breakable = true,
+            });
             /* TODO:
              */
         }
