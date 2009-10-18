@@ -320,7 +320,89 @@ namespace Rawr {
             return retVal;
         }
         // The Special Bosses
+        bool useGoodBoyAvg = true;
+        public void ConvertList_Stun(BossHandler[] passedList, BossHandler retboss) {
+            BossHandler dummy = new BossHandler(); dummy.BerserkTimer = retboss.BerserkTimer;
+            Stun s;
+            List<Stun> stuns = new List<Stun>();
+            //
+            foreach (BossHandler boss in passedList)
+            {
+                s = boss.DynamicCompiler_Stun;
+                if (s.Frequency != -1f) {
+                    stuns.Add(s);
+                } else if(useGoodBoyAvg) {
+                    // Adds a stun that doesn't actually occur
+                    stuns.Add(new Stun() {
+                        Frequency = retboss.BerserkTimer,
+                        Duration = 0f, //retboss.BerserkTimer,
+                        Chance = 1f,
+                        Breakable = true,
+                    });
+                }
+            }
+            dummy.Stuns = stuns;
+            s = dummy.DynamicCompiler_Stun;
+            if (s.Frequency != -1) { retboss.Stuns.Add(s); }
+        }
+        public void ConvertList_Move(BossHandler[] passedList, BossHandler retboss) {
+            BossHandler dummy = new BossHandler(); dummy.BerserkTimer = retboss.BerserkTimer;
+            Move s;
+            List<Move> moves = new List<Move>();
+            //
+            foreach (BossHandler boss in passedList)
+            {
+                s = boss.DynamicCompiler_Move;
+                if (s.Frequency != -1f) { moves.Add(s); }
+            }
+            dummy.Moves = moves;
+            s = dummy.DynamicCompiler_Move;
+            if (s.Frequency != -1) { retboss.Moves.Add(s); }
+        }
+        public void ConvertList_Fear(BossHandler[] passedList, BossHandler retboss) {
+            BossHandler dummy = new BossHandler(); dummy.BerserkTimer = retboss.BerserkTimer;
+            Fear s;
+            List<Fear> fears = new List<Fear>();
+            //
+            foreach (BossHandler boss in passedList)
+            {
+                s = boss.DynamicCompiler_Fear;
+                if (s.Frequency != -1f) { fears.Add(s); }
+            }
+            dummy.Fears = fears;
+            s = dummy.DynamicCompiler_Fear;
+            if (s.Frequency != -1) { retboss.Fears.Add(s); }
+        }
+        public void ConvertList_Root(BossHandler[] passedList, BossHandler retboss) {
+            BossHandler dummy = new BossHandler(); dummy.BerserkTimer = retboss.BerserkTimer;
+            Root s;
+            List<Root> roots = new List<Root>();
+            //
+            foreach (BossHandler boss in passedList)
+            {
+                s = boss.DynamicCompiler_Root;
+                if (s.Frequency != -1f) { roots.Add(s); }
+            }
+            dummy.Roots = roots;
+            s = dummy.DynamicCompiler_Root;
+            if (s.Frequency != -1) { retboss.Roots.Add(s); }
+        }
+        public void ConvertList_Dsrm(BossHandler[] passedList, BossHandler retboss) {
+            BossHandler dummy = new BossHandler(); dummy.BerserkTimer = retboss.BerserkTimer;
+            Disarm s;
+            List<Disarm> disarms = new List<Disarm>();
+            //
+            foreach (BossHandler boss in passedList)
+            {
+                s = boss.DynamicCompiler_Disarm;
+                if (s.Frequency != -1f) { disarms.Add(s); }
+            }
+            dummy.Disarms = disarms;
+            s = dummy.DynamicCompiler_Disarm;
+            if (s.Frequency != -1) { retboss.Disarms.Add(s); }
+        }
         private BossHandler GenTheEZModeBoss(BossHandler[] passedList) {
+            useGoodBoyAvg = true;
             BossHandler retboss = new BossHandler();
             if (passedList.Length < 1) { return retboss; }
             float value = 0f;
@@ -380,6 +462,7 @@ namespace Rawr {
             return retboss;
         }
         private BossHandler GenTheAvgBoss(BossHandler[] passedList) {
+            useGoodBoyAvg = true;
             BossHandler retboss = new BossHandler();
             if (passedList.Length < 1) { return retboss; }
             float value = 0f;
@@ -416,24 +499,30 @@ namespace Rawr {
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.MultiTargsPerc; } value /= passedList.Length; retboss.MultiTargsPerc = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.MaxNumTargets; } value /= passedList.Length; retboss.MaxNumTargets = (float)Math.Ceiling(value);
             // Stun
+            //ConvertList_Stun(passedList, retboss);
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.StunningTargsFreq > 0 && boss.StunningTargsFreq < boss.BerserkTimer) ? boss.StunningTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.StunningTargsFreq = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.StunningTargsDur; } value /= passedList.Length; retboss.StunningTargsDur = value;
             // Move
+            //ConvertList_Move(passedList, retboss);
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.MovingTargsFreq > 0 && boss.MovingTargsFreq < boss.BerserkTimer) ? boss.MovingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.MovingTargsFreq = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.MovingTargsDur; } value /= passedList.Length; retboss.MovingTargsDur = value;
             // Fear
+            //ConvertList_Fear(passedList, retboss);
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.FearingTargsFreq > 0 && boss.FearingTargsFreq < boss.BerserkTimer) ? boss.FearingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.FearingTargsFreq = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.FearingTargsDur; } value /= passedList.Length; retboss.FearingTargsDur = value;
             // Root
+            //ConvertList_Root(passedList, retboss);
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.RootingTargsFreq > 0 && boss.RootingTargsFreq < boss.BerserkTimer) ? boss.RootingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.RootingTargsFreq = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.RootingTargsDur; } value /= passedList.Length; retboss.RootingTargsDur = value;
             // Disarm
+            //ConvertList_Dsrm(passedList, retboss);
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.DisarmingTargsFreq > 0 && boss.DisarmingTargsFreq < boss.BerserkTimer) ? boss.DisarmingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.DisarmingTargsFreq = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.DisarmingTargsDur; } value /= passedList.Length; retboss.DisarmingTargsDur = value;
             //
             return retboss;
         }
         private BossHandler GenTheHardestBoss(BossHandler[] passedList) {
+            useGoodBoyAvg = false;
             BossHandler retboss = new BossHandler();
             if (passedList.Length < 1) { return retboss; }
             float value = 0f;
@@ -579,11 +668,11 @@ namespace Rawr {
         public List<Disarm> Disarms = new List<Disarm>();
         private float INBACKPERC_MELEE, INBACKPERC_RANGED,
                       MULTITARGSPERC, MAXNUMTARGS,
-                      STUNNINGTARGS_FREQ, STUNNINGTARGS_DUR,
-                      MOVINGTARGS_FREQ, MOVINGTARGS_DUR,
-                      DISARMINGTARGS_FREQ, DISARMINGTARGS_DUR,
-                      FEARINGTARGS_FREQ, FEARINGTARGS_DUR,
-                      ROOTINGTARGS_FREQ, ROOTINGTARGS_DUR,
+                      STUNNINGTARGS_FREQ, STUNNINGTARGS_DUR, STUNNINGTARGS_CHANCE,
+                      MOVINGTARGS_FREQ, MOVINGTARGS_DUR, MOVINGTARGS_CHANCE,
+                      DISARMINGTARGS_FREQ, DISARMINGTARGS_DUR, DISARMINGTARGS_CHANCE,
+                      FEARINGTARGS_FREQ, FEARINGTARGS_DUR, FEARINGTARGS_CHANCE,
+                      ROOTINGTARGS_FREQ, ROOTINGTARGS_DUR, ROOTINGTARGS_CHANCE,
                       TIMEBOSSISINVULN;
         // Fight Requirements
         private int MAX_PLAYERS, MIN_HEALERS, MIN_TANKS;
@@ -612,11 +701,38 @@ namespace Rawr {
         public float  MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = value; } }
         public float  MaxNumTargets      { get { return MAXNUMTARGS;        } set { MAXNUMTARGS        = value; } }
         // Stunning Targets
+        public Stun DynamicCompiler_Stun {
+            get {
+                // Make one
+                Stun retVal = new Stun() {
+                    Frequency = 20f,
+                    Duration = 1f * 1000f,
+                    Chance = 1.00f,
+                    Breakable = true,
+                };
+                // Find the averaged _____
+                float time = StunningTargsTime;
+                float dur = StunningTargsDur;
+                float acts = time / (dur / 1000f);
+                float freq = BerserkTimer / acts;
+                float chance = StunningTargsChance;
+                // Mark those into the retVal
+                retVal.Frequency = freq;
+                retVal.Duration = dur;
+                retVal.Chance = chance;
+                // Double-check we aren't sending a bad one
+                if (retVal.Frequency <= 0f || retVal.Chance <= 0f) {
+                    //retVal.Frequency = -1f; // if we are, use this as a flag
+                }
+                // Return results
+                return retVal;
+            }
+        }
         public float  StunningTargsFreq  {
             get {
                 if (Stuns.Count > 0) {
                     // Adds up the total number of stuns and evens them out over the Berserk Timer
-                    float numStunsOverDur = 0;
+                    float numStunsOverDur = 0f;
                     foreach (Stun s in Stuns) {
                         numStunsOverDur += BerserkTimer / s.Frequency;
                     }
@@ -632,15 +748,29 @@ namespace Rawr {
             get {
                 if (Stuns.Count > 0) {
                     // Averages out the Stun Durations
-                    float TotalStunDur = 0;
+                    float TotalStunDur = 0f;
                     foreach (Stun s in Stuns) { TotalStunDur += s.Duration; }
-                    float dur = TotalStunDur / Stuns.Count;
+                    float dur = TotalStunDur / (float)Stuns.Count;
                     return dur;
                 } else {
                     return STUNNINGTARGS_DUR ;
                 }
             }
             set { STUNNINGTARGS_DUR  = value; }
+        }
+        public float  StunningTargsChance {
+            get {
+                if (Stuns.Count > 0) {
+                    // Averages out the Stun Chances
+                    float TotalStunChance = 0f;
+                    foreach (Stun s in Stuns) { TotalStunChance += s.Chance; }
+                    float chance = TotalStunChance / (float)Stuns.Count;
+                    return chance;
+                } else {
+                    return STUNNINGTARGS_CHANCE ;
+                }
+            }
+            set { STUNNINGTARGS_CHANCE = value; }
         }
         public float  StunningTargsTime {
             get {
@@ -653,6 +783,33 @@ namespace Rawr {
             }
         }
         // Moving Targets
+        public Move DynamicCompiler_Move {
+            get {
+                // Make one
+                Move retVal = new Move() {
+                    Frequency = 20f,
+                    Duration = 1f * 1000f,
+                    Chance = 1.00f,
+                    Breakable = true,
+                };
+                // Find the averaged _____
+                float time = MovingTargsTime;
+                float dur = MovingTargsDur;
+                float acts = time / (dur / 1000f);
+                float freq = BerserkTimer / acts;
+                float chance = MovingTargsChance;
+                // Mark those into the retVal
+                retVal.Frequency = freq;
+                retVal.Duration = dur;
+                retVal.Chance = chance;
+                // Double-check we aren't sending a bad one
+                if (retVal.Frequency <= 0f || retVal.Chance <= 0f) {
+                    retVal.Frequency = -1f; // if we are, use this as a flag
+                }
+                // Return results
+                return retVal;
+            }
+        }
         public float  MovingTargsFreq   {
             get {
                 if (Moves.Count > 0) {
@@ -683,6 +840,20 @@ namespace Rawr {
             }
             set { MOVINGTARGS_DUR = value; }
         }
+        public float  MovingTargsChance {
+            get {
+                if (Moves.Count > 0) {
+                    // Averages out the Move Chances
+                    float TotalChance = 0f;
+                    foreach (Move s in Moves) { TotalChance += s.Chance; }
+                    float chance = TotalChance / (float)Moves.Count;
+                    return chance;
+                } else {
+                    return MOVINGTARGS_CHANCE ;
+                }
+            }
+            set { MOVINGTARGS_CHANCE = value; }
+        }
         public float  MovingTargsTime {
             get {
                 float time = 0f;
@@ -693,6 +864,33 @@ namespace Rawr {
             }
         }
         // Disarming Targets
+        public Disarm DynamicCompiler_Disarm {
+            get {
+                // Make one
+                Disarm retVal = new Disarm() {
+                    Frequency = 20f,
+                    Duration = 1f * 1000f,
+                    Chance = 1.00f,
+                    Breakable = true,
+                };
+                // Find the averaged _____
+                float time = DisarmingTargsTime;
+                float dur = DisarmingTargsDur;
+                float acts = time / (dur / 1000f);
+                float freq = BerserkTimer / acts;
+                float chance = DisarmingTargsChance;
+                // Mark those into the retVal
+                retVal.Frequency = freq;
+                retVal.Duration = dur;
+                retVal.Chance = chance;
+                // Double-check we aren't sending a bad one
+                if (retVal.Frequency <= 0f || retVal.Chance <= 0f) {
+                    retVal.Frequency = -1f; // if we are, use this as a flag
+                }
+                // Return results
+                return retVal;
+            }
+        }
         public float  DisarmingTargsFreq   {
             get {
                 if (Disarms.Count > 0) {
@@ -723,6 +921,20 @@ namespace Rawr {
             }
             set { DISARMINGTARGS_DUR = value; }
         }
+        public float  DisarmingTargsChance {
+            get {
+                if (Disarms.Count > 0) {
+                    // Averages out the Disarm Chances
+                    float TotalChance = 0f;
+                    foreach (Disarm s in Disarms) { TotalChance += s.Chance; }
+                    float chance = TotalChance / (float)Disarms.Count;
+                    return chance;
+                } else {
+                    return DISARMINGTARGS_CHANCE ;
+                }
+            }
+            set { DISARMINGTARGS_CHANCE = value; }
+        }
         public float  DisarmingTargsTime {
             get {
                 float time = 0f;
@@ -734,6 +946,33 @@ namespace Rawr {
             }
         }
         // Fearing Targets
+        public Fear DynamicCompiler_Fear {
+            get {
+                // Make one
+                Fear retVal = new Fear() {
+                    Frequency = 20f,
+                    Duration = 1f * 1000f,
+                    Chance = 1.00f,
+                    Breakable = true,
+                };
+                // Find the averaged _____
+                float time = FearingTargsTime;
+                float dur = FearingTargsDur;
+                float acts = time / (dur / 1000f);
+                float freq = BerserkTimer / acts;
+                float chance = FearingTargsChance;
+                // Mark those into the retVal
+                retVal.Frequency = freq;
+                retVal.Duration = dur;
+                retVal.Chance = chance;
+                // Double-check we aren't sending a bad one
+                if (retVal.Frequency <= 0f || retVal.Chance <= 0f) {
+                    retVal.Frequency = -1f; // if we are, use this as a flag
+                }
+                // Return results
+                return retVal;
+            }
+        }
         public float  FearingTargsFreq  {
             get {
                 if (Fears.Count > 0) {
@@ -764,6 +1003,20 @@ namespace Rawr {
             }
             set { FEARINGTARGS_DUR = value; }
         }
+        public float  FearingTargsChance {
+            get {
+                if (Fears.Count > 0) {
+                    // Averages out the Fear Chances
+                    float TotalChance = 0f;
+                    foreach (Fear s in Fears) { TotalChance += s.Chance; }
+                    float chance = TotalChance / (float)Fears.Count;
+                    return chance;
+                } else {
+                    return FEARINGTARGS_CHANCE ;
+                }
+            }
+            set { FEARINGTARGS_CHANCE = value; }
+        }
         public float  FearingTargsTime {
             get {
                 float time = 0f;
@@ -775,6 +1028,33 @@ namespace Rawr {
             }
         }
         // Rooting Targets
+        public Root DynamicCompiler_Root {
+            get {
+                // Make one
+                Root retVal = new Root() {
+                    Frequency = 20f,
+                    Duration = 1f * 1000f,
+                    Chance = 1.00f,
+                    Breakable = true,
+                };
+                // Find the averaged _____
+                float time = RootingTargsTime;
+                float dur = RootingTargsDur;
+                float acts = time / (dur / 1000f);
+                float freq = BerserkTimer / acts;
+                float chance = RootingTargsChance;
+                // Mark those into the retVal
+                retVal.Frequency = freq;
+                retVal.Duration = dur;
+                retVal.Chance = chance;
+                // Double-check we aren't sending a bad one
+                if (retVal.Frequency <= 0f || retVal.Chance <= 0f) {
+                    retVal.Frequency = -1f; // if we are, use this as a flag
+                }
+                // Return results
+                return retVal;
+            }
+        }
         public float  RootingTargsFreq  {
             get {
                 if (Roots.Count > 0) {
@@ -804,6 +1084,20 @@ namespace Rawr {
                 }
             }
             set { ROOTINGTARGS_DUR = value; }
+        }
+        public float  RootingTargsChance {
+            get {
+                if (Roots.Count > 0) {
+                    // Averages out the Stun Chances
+                    float TotalChance = 0f;
+                    foreach (Root s in Roots) { TotalChance += s.Chance; }
+                    float chance = TotalChance / (float)Roots.Count;
+                    return chance;
+                } else {
+                    return ROOTINGTARGS_CHANCE ;
+                }
+            }
+            set { ROOTINGTARGS_CHANCE = value; }
         }
         public float  RootingTargsTime {
             get {
