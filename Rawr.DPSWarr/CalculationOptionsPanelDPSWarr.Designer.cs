@@ -160,7 +160,7 @@
             this.CB_Prof1 = new System.Windows.Forms.ComboBox();
             this.CK_HideProfEnchants = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_SE_UseDur = new System.Windows.Forms.CheckBox();
-            this.CK_HideSpellGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
+            this.CK_HideSplGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_HidePvPGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CK_HideDefGear = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.NUD_SurvScale = new System.Windows.Forms.NumericUpDown();
@@ -1355,7 +1355,7 @@
             this.TB_Misc.Controls.Add(this.CB_Prof1);
             this.TB_Misc.Controls.Add(this.CK_HideProfEnchants);
             this.TB_Misc.Controls.Add(this.CK_SE_UseDur);
-            this.TB_Misc.Controls.Add(this.CK_HideSpellGear);
+            this.TB_Misc.Controls.Add(this.CK_HideSplGear);
             this.TB_Misc.Controls.Add(this.CK_HidePvPGear);
             this.TB_Misc.Controls.Add(this.CK_HideDefGear);
             this.TB_Misc.Controls.Add(this.CB_React);
@@ -1447,18 +1447,18 @@
             this.CK_SE_UseDur.UseVisualStyleBackColor = true;
             this.CK_SE_UseDur.CheckedChanged += new System.EventHandler(this.CK_SE_UseDur_CheckedChanged);
             // 
-            // CK_HideSpellGear
+            // CK_HideSplGear
             // 
-            this.CK_HideSpellGear.AutoSize = true;
-            this.CK_HideSpellGear.Checked = true;
-            this.CK_HideSpellGear.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CK_HideSpellGear.Location = new System.Drawing.Point(6, 152);
-            this.CK_HideSpellGear.Name = "CK_HideSpellGear";
-            this.CK_HideSpellGear.Size = new System.Drawing.Size(107, 17);
-            this.CK_HideSpellGear.TabIndex = 9;
-            this.CK_HideSpellGear.Text = "Hide Spell Gear *";
-            this.CK_HideSpellGear.ToolTipText = "";
-            this.CK_HideSpellGear.CheckedChanged += new System.EventHandler(this.CK_HideBadItems_Spl_CheckedChanged);
+            this.CK_HideSplGear.AutoSize = true;
+            this.CK_HideSplGear.Checked = true;
+            this.CK_HideSplGear.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CK_HideSplGear.Location = new System.Drawing.Point(6, 152);
+            this.CK_HideSplGear.Name = "CK_HideSplGear";
+            this.CK_HideSplGear.Size = new System.Drawing.Size(107, 17);
+            this.CK_HideSplGear.TabIndex = 9;
+            this.CK_HideSplGear.Text = "Hide Spell Gear *";
+            this.CK_HideSplGear.ToolTipText = "";
+            this.CK_HideSplGear.CheckedChanged += new System.EventHandler(this.CK_HideBadItems_Spl_CheckedChanged);
             // 
             // CK_HidePvPGear
             // 
@@ -1656,7 +1656,7 @@
         private System.Windows.Forms.Label LB_Freq2;
         private System.Windows.Forms.Label LB_UnmitDmg;
         private System.Windows.Forms.TabPage TB_Misc;
-        private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideSpellGear;
+        private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideSplGear;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HidePvPGear;
         private System.Windows.Forms.CheckBox CK_SE_UseDur;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideProfEnchants;

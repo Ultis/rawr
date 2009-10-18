@@ -84,7 +84,7 @@ CK_HideDefGear.ToolTipText =
 If the object has Defense Related Stats (Defense, Dodge, Parry, Block) the object will be removed from the lists.
 
 Turn all three of these options off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr.";
-CK_HideSpellGear.ToolTipText =
+CK_HideSplGear.ToolTipText =
 @"This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis.
 
 If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Spell penetration) the object will be removed from the lists
@@ -252,11 +252,10 @@ FAQStuff.Add(
                         line = 7; info = calcOpts.TargetArmor.ToString();
                 CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); line = 8;
                 CB_Duration.Value = (decimal)calcOpts.Duration; line = 9;
-                NUD_MoveFreq.Maximum = CB_Duration.Value; line = 10;
                 RB_StanceArms.Checked = !calcOpts.FuryStance; line = 11;
                 CK_PTRMode.Checked = calcOpts.PTRMode; line = 12;
                 CK_HideDefGear.Checked = calcOpts.HideBadItems_Def; CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def; line = 13;
-                CK_HideSpellGear.Checked = calcOpts.HideBadItems_Spl; CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl; line = 13;
+                CK_HideSplGear.Checked = calcOpts.HideBadItems_Spl; CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl; line = 13;
                 CK_HidePvPGear.Checked = calcOpts.HideBadItems_PvP; CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP; line = 13;
                 NUD_SurvScale.Value = (decimal)calcOpts.SurvScale; line = 14;
                 // Boss Selector
@@ -434,6 +433,8 @@ FAQStuff.Add(
                         calcOpts.RootingTargetsDur = boss.RootingTargsDur;
                         calcOpts.DisarmingTargets = ((calcOpts.DisarmingTargetsFreq = (int)(boss.DisarmingTargsFreq)) <= calcOpts.Duration * 0.99f && calcOpts.DisarmingTargetsFreq != 0f);
                         calcOpts.DisarmingTargetsDur = boss.DisarmingTargsDur; line = 15;
+                        calcOpts.AoETargets = ((calcOpts.AoETargetsFreq = (int)(boss.AoETargsFreq)) <= calcOpts.Duration * 0.99f && calcOpts.AoETargetsFreq != 0f);
+                        calcOpts.AoETargetsDMG = boss.AoETargsDMG; line = 16;
 
                         // Set Controls to those Values
                         CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
@@ -482,6 +483,12 @@ FAQStuff.Add(
                         NUD_DisarmDur.Enabled = calcOpts.DisarmingTargets;
                         NUD_DisarmFreq.Value = (int)Math.Max(NUD_DisarmFreq.Minimum, Math.Min(NUD_DisarmFreq.Maximum, calcOpts.DisarmingTargetsFreq));
                         NUD_DisarmDur.Value  = (int)Math.Max(NUD_DisarmDur.Minimum , Math.Min(NUD_DisarmDur.Maximum , (decimal)calcOpts.DisarmingTargetsDur)); line = 55;
+
+                        CK_AoETargs.Checked = calcOpts.AoETargets;
+                        NUD_AoEFreq.Enabled = calcOpts.AoETargets;
+                        NUD_AoEDMG.Enabled = calcOpts.AoETargets;
+                        NUD_AoEFreq.Value = (int)Math.Max(NUD_AoEFreq.Minimum, Math.Min(NUD_AoEFreq.Maximum, calcOpts.AoETargetsFreq));
+                        NUD_AoEDMG.Value = (int)Math.Max(NUD_AoEDMG.Minimum, Math.Min(NUD_AoEDMG.Maximum, (decimal)calcOpts.AoETargetsDMG)); line = 60;
 
                         Stats stats = calcs.GetCharacterStats(Character, null);
                         TB_BossInfo.Text = boss.GenInfoString(
@@ -556,7 +563,7 @@ FAQStuff.Add(
         private void CK_HideBadItems_Spl_CheckedChanged(object sender, EventArgs e) {
             if (!isLoading) {
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                calcOpts.HideBadItems_Spl = CK_HideSpellGear.Checked;
+                calcOpts.HideBadItems_Spl = CK_HideSplGear.Checked;
                 CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
                 ItemCache.OnItemsChanged();
                 Character.OnCalculationsInvalidated();

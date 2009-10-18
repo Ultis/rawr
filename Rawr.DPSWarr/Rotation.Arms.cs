@@ -534,6 +534,7 @@ namespace Rawr.DPSWarr {
             float useExeifMSHasMoreThan, useSlamifMSHasMoreThan;
             string canUse1, canUse2, canUse3;
             float HPS;
+            #region Abilities
             while (
                     Iterator < 50 &&
                     (
@@ -856,6 +857,8 @@ namespace Rawr.DPSWarr {
                 }
                 Iterator++;
             }
+            #endregion
+            #region OnAttacks
             float savedAvailRage = availRage - RageGenWhite;
             Iterator = 0;
             do {
@@ -886,7 +889,7 @@ namespace Rawr.DPSWarr {
             } while (Iterator < 50 && (
                     (hsok && Math.Abs(newHSActivates - oldHSActivates) > 0.01f) ||
                     (clok && Math.Abs(newCLActivates - oldCLActivates) > 0.01f)));
-                
+            #endregion
             #endregion
             #region <20%
             if (PercTimeUnder20 > 0f) {
@@ -1171,7 +1174,7 @@ namespace Rawr.DPSWarr {
                         + SD.GetRageUseOverDur(_SD_GCDs)
                         + EX.GetRageUseOverDur(_EX_GCDs)
                         + SL.GetRageUseOverDur(_SL_GCDs);
-            RageGenOther += 0f
+            RageGenOther = RageGenOverDur_Other
                         + BZ.GetRageUseOverDur(_ZRage_GCDs)
                         + BR.GetRageUseOverDur(_Blood_GCDs)
                         + SS.GetRageUseOverDur(_SS_Acts);

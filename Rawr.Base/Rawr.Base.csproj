@@ -106,6 +106,7 @@
     <Compile Include="Character.cs" />
     <Compile Include="CharacterProfilerData.cs" />
     <Compile Include="BaseStats.cs" />
+    <Compile Include="BossList.cs" />
     <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
     <Compile Include="CustomControls\ExtendedToolTipCheckBox.cs">

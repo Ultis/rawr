@@ -292,6 +292,7 @@ namespace Rawr.DPSWarr {
                 //float whiteAtkInterval = (MhActivates + OhActivates) / FightDuration;
                 //return MHAtkTable.AnyNotLand / abilInterval / whiteAtkInterval * rageCost / MHSwingRage;
                 //float whiteMod = (MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / FightDuration;
+                if (!combatFactors.useOH && MhActivates <= 0f) { return 0f; }
                 return (MHAtkTable.Miss * rageCost) / (abilInterval * ((MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / FightDuration));
             }
             /*public float AvoidanceStreak {
