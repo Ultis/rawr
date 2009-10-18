@@ -92,7 +92,7 @@ namespace Rawr.DPSWarr
                     Damage = combatFactors.NormalizedMhWeaponDmg;
                 }
 
-                return Math.Max(0f, Damage * DamageBonus);
+                return Damage * DamageBonus;
             }
             public override float DamageOnUse
             {
@@ -144,7 +144,7 @@ namespace Rawr.DPSWarr
 
                     // ==== RESULT ====
                     float Damage = DamageMH + DamageOH;
-                    return Math.Max(0f, Damage * AvgTargets);
+                    return Damage * AvgTargets;
                 }
             }
             protected override float DamageOnUseOverride
@@ -197,7 +197,7 @@ namespace Rawr.DPSWarr
 
                     // ==== RESULT ====
                     float Damage = DamageMH + DamageOH;
-                    return Math.Max(0f, Damage * AvgTargets);
+                    return Damage * AvgTargets;
                 }
             }
         }

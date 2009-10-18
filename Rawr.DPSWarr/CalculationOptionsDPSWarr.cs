@@ -109,7 +109,7 @@ namespace Rawr.DPSWarr {
 		// Latency
 		public float Lag = 179f;
 		public float React = 220f;
-        public float Latency { get { return Math.Max(0f, Lag / 1000f); } }
+        public float Latency { get { return Lag / 1000f; } }
         public float AllowedReact { get { return Math.Max(0f, (React - 250f) / 1000f); } }
         public float FullLatency { get { return AllowedReact + Latency; } }
 		//

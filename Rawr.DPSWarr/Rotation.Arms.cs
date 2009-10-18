@@ -544,29 +544,29 @@ namespace Rawr.DPSWarr {
             while (
                     Iterator < 50 &&
                     (
-                     (float)Math.Abs(_ZRage_GCDs - oldZRGCDs) > 0.1f ||
-                     (float)Math.Abs(_Battle_GCDs - oldBTSGCDs) > 0.1f ||
-                     (float)Math.Abs(_Comm_GCDs - oldCSGCDs) > 0.1f ||
-                     (float)Math.Abs(_Demo_GCDs - oldDemoGCDs) > 0.1f ||
-                     (float)Math.Abs(_Sunder_GCDs - oldSNGCDs) > 0.1f ||
-                     (float)Math.Abs(_Thunder_GCDs - oldTHGCDs) > 0.1f ||
-                     (float)Math.Abs(_Ham_GCDs - oldHMSGCDs) > 0.1f ||
-                     (float)Math.Abs(_Shatt_GCDs - oldSTGCDs) > 0.1f ||
-                     (float)Math.Abs(_ER_GCDs - oldERGCDs) > 0.1f ||
-                     (float)Math.Abs(_SW_GCDs - oldSWGCDs) > 0.1f ||
-                     (float)Math.Abs(_Death_GCDs - oldDeathGCDs) > 0.1f ||
-                     (float)Math.Abs(_BLS_GCDs - oldBLSGCDs) > 0.1f ||
-                     (float)Math.Abs(_MS_GCDs - oldMSGCDs) > 0.1f ||
-                     (float)Math.Abs(_RD_GCDs - oldRDGCDs) > 0.1f ||
-                     (float)Math.Abs(_OP_GCDs - oldOPGCDs) > 0.1f ||
-                     (float)Math.Abs(_TB_GCDs - oldTBGCDs) > 0.1f ||
-                     (float)Math.Abs(_SD_GCDs - oldSDGCDs) > 0.1f ||
-                     (float)Math.Abs(_SL_GCDs - oldSLGCDs) > 0.1f ||
+                     Math.Abs(_ZRage_GCDs - oldZRGCDs) > 0.1f ||
+                     Math.Abs(_Battle_GCDs - oldBTSGCDs) > 0.1f ||
+                     Math.Abs(_Comm_GCDs - oldCSGCDs) > 0.1f ||
+                     Math.Abs(_Demo_GCDs - oldDemoGCDs) > 0.1f ||
+                     Math.Abs(_Sunder_GCDs - oldSNGCDs) > 0.1f ||
+                     Math.Abs(_Thunder_GCDs - oldTHGCDs) > 0.1f ||
+                     Math.Abs(_Ham_GCDs - oldHMSGCDs) > 0.1f ||
+                     Math.Abs(_Shatt_GCDs - oldSTGCDs) > 0.1f ||
+                     Math.Abs(_ER_GCDs - oldERGCDs) > 0.1f ||
+                     Math.Abs(_SW_GCDs - oldSWGCDs) > 0.1f ||
+                     Math.Abs(_Death_GCDs - oldDeathGCDs) > 0.1f ||
+                     Math.Abs(_BLS_GCDs - oldBLSGCDs) > 0.1f ||
+                     Math.Abs(_MS_GCDs - oldMSGCDs) > 0.1f ||
+                     Math.Abs(_RD_GCDs - oldRDGCDs) > 0.1f ||
+                     Math.Abs(_OP_GCDs - oldOPGCDs) > 0.1f ||
+                     Math.Abs(_TB_GCDs - oldTBGCDs) > 0.1f ||
+                     Math.Abs(_SD_GCDs - oldSDGCDs) > 0.1f ||
+                     Math.Abs(_SL_GCDs - oldSLGCDs) > 0.1f ||
                      (PercTimeUnder20 > 0
-                        && (float)Math.Abs(_EX_GCDs - oldEXGCDs) > 0.1f) ||
+                        && Math.Abs(_EX_GCDs - oldEXGCDs) > 0.1f) ||
                      (Talents.SwordSpecialization > 0
                         && CombatFactors._c_mhItemType == ItemType.TwoHandSword
-                        && (float)Math.Abs(_SS_Acts - oldSSActs) > 0.1f)
+                        && Math.Abs(_SS_Acts - oldSSActs) > 0.1f)
                     )
                   )
             {
@@ -917,28 +917,28 @@ namespace Rawr.DPSWarr {
                 while (
                         Iterator < 50 &&
                         (
-                         (float)Math.Abs(_ZRage_GCDs - newoldZRGCDs) > 0.1f ||
-                         (float)Math.Abs(_Battle_GCDs - newoldBTSGCDs) > 0.1f ||
-                         (float)Math.Abs(_Comm_GCDs - newoldCSGCDs) > 0.1f ||
-                         (float)Math.Abs(_Demo_GCDs - newoldDemoGCDs) > 0.1f ||
-                         (float)Math.Abs(_Sunder_GCDs - newoldSNGCDs) > 0.1f ||
-                         (float)Math.Abs(_Thunder_GCDs - newoldTHGCDs) > 0.1f ||
-                         (float)Math.Abs(_Ham_GCDs - newoldHMSGCDs) > 0.1f ||
-                         (float)Math.Abs(_Shatt_GCDs - newoldSTGCDs) > 0.1f ||
-                         (float)Math.Abs(_ER_GCDs - newoldERGCDs) > 0.1f ||
-                         (float)Math.Abs(_SW_GCDs - newoldSWGCDs) > 0.1f ||
-                         (float)Math.Abs(_Death_GCDs - newoldDeathGCDs) > 0.1f ||
-                         (float)Math.Abs(_BLS_GCDs - newoldBLSGCDs) > 0.1f ||
-                         (float)Math.Abs(_MS_GCDs - newoldMSGCDs) > 0.1f ||
-                         (float)Math.Abs(_RD_GCDs - newoldRDGCDs) > 0.1f ||
-                         (float)Math.Abs(_OP_GCDs - newoldOPGCDs) > 0.1f ||
-                         (float)Math.Abs(_TB_GCDs - newoldTBGCDs) > 0.1f ||
-                         (float)Math.Abs(_SD_GCDs - newoldSDGCDs) > 0.1f ||
+                         Math.Abs(_ZRage_GCDs - newoldZRGCDs) > 0.1f ||
+                         Math.Abs(_Battle_GCDs - newoldBTSGCDs) > 0.1f ||
+                         Math.Abs(_Comm_GCDs - newoldCSGCDs) > 0.1f ||
+                         Math.Abs(_Demo_GCDs - newoldDemoGCDs) > 0.1f ||
+                         Math.Abs(_Sunder_GCDs - newoldSNGCDs) > 0.1f ||
+                         Math.Abs(_Thunder_GCDs - newoldTHGCDs) > 0.1f ||
+                         Math.Abs(_Ham_GCDs - newoldHMSGCDs) > 0.1f ||
+                         Math.Abs(_Shatt_GCDs - newoldSTGCDs) > 0.1f ||
+                         Math.Abs(_ER_GCDs - newoldERGCDs) > 0.1f ||
+                         Math.Abs(_SW_GCDs - newoldSWGCDs) > 0.1f ||
+                         Math.Abs(_Death_GCDs - newoldDeathGCDs) > 0.1f ||
+                         Math.Abs(_BLS_GCDs - newoldBLSGCDs) > 0.1f ||
+                         Math.Abs(_MS_GCDs - newoldMSGCDs) > 0.1f ||
+                         Math.Abs(_RD_GCDs - newoldRDGCDs) > 0.1f ||
+                         Math.Abs(_OP_GCDs - newoldOPGCDs) > 0.1f ||
+                         Math.Abs(_TB_GCDs - newoldTBGCDs) > 0.1f ||
+                         Math.Abs(_SD_GCDs - newoldSDGCDs) > 0.1f ||
                          (PercTimeUnder20 > 0
-                            && (float)Math.Abs(_EX_GCDs - newoldEXGCDs) > 0.1f) ||
+                            && Math.Abs(_EX_GCDs - newoldEXGCDs) > 0.1f) ||
                          (Talents.SwordSpecialization > 0
                             && CombatFactors._c_mhItemType == ItemType.TwoHandSword
-                            && (float)Math.Abs(_SS_Acts - newoldSSActs) > 0.1f)
+                            && Math.Abs(_SS_Acts - newoldSSActs) > 0.1f)
                         )
                       )
                 {

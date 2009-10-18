@@ -63,7 +63,7 @@ namespace Rawr.DPSWarr {
                 get {
                     //float DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
                     //float DamageBonus = 1f + 0f;
-                    return Math.Max(0f, combatFactors.AvgMhWeaponDmgUnhasted * AvgTargets);
+                    return combatFactors.AvgMhWeaponDmgUnhasted * AvgTargets;
                 }
             }
             public float MhDamageOnUse {
@@ -89,21 +89,21 @@ namespace Rawr.DPSWarr {
 
                     dmg += dmgGlance + dmgBlock + dmgCrit;
 
-                    return Math.Max(0f, dmg);
+                    return dmg;
                 }
             }
             public float AvgMhDamageOnUse { get { return MhDamageOnUse * MhActivates; } }
             public float MhActivates {
                 get {
                     if (MhEffectiveSpeed != 0)
-                        return Math.Max(0f, FightDuration / MhEffectiveSpeed - HSOverridesOverDur - CLOverridesOverDur);
+                        return FightDuration / MhEffectiveSpeed - HSOverridesOverDur - CLOverridesOverDur;
                     else return 0f;
                 }
             }
             public float MhActivatesNoHS {
                 get {
                     if (MhEffectiveSpeed != 0)
-                        return Math.Max(0f, FightDuration / MhEffectiveSpeed);
+                        return FightDuration / MhEffectiveSpeed;
                     else return 0f;
                 }
             }
@@ -114,7 +114,7 @@ namespace Rawr.DPSWarr {
                 get {
                     //float DamageBase = combatFactors.AvgOhWeaponDmgUnhasted;
                     //float DamageBonus = 1f + 0f;
-                    return Math.Max(0f, combatFactors.AvgOhWeaponDmgUnhasted * AvgTargets);
+                    return combatFactors.AvgOhWeaponDmgUnhasted * AvgTargets;
                 }
             }
             public float OhDamageOnUse {
@@ -140,12 +140,12 @@ namespace Rawr.DPSWarr {
 
                     dmg += dmgGlance + dmgBlock + dmgCrit;
 
-                    return Math.Max(0f, dmg);
+                    return dmg;
                 }
             }
             public float AvgOhDamageOnUse { get { return OhDamageOnUse * OhActivates; } }
             public float OhActivates { get {
-                if (OhEffectiveSpeed > 0f) return Math.Max(0f, FightDuration / OhEffectiveSpeed); 
+                if (OhEffectiveSpeed > 0f) return FightDuration / OhEffectiveSpeed; 
                 else return 0; } }
             public float OhDPS { get { return AvgOhDamageOnUse / FightDuration; } }
             // Rage Calcs
@@ -583,9 +583,9 @@ namespace Rawr.DPSWarr {
                         return (validatedSet == true);
                     }
 
-                    if (Char == null || Char.MainHand == null || CalcOpts == null || Talents == null) {
+                    /*if (Char == null || Char.MainHand == null || CalcOpts == null || Talents == null) {
                         validatedSet = false;
-                    } else if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) {
+                    } else */if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) {
                         validatedSet = false;
                     } else if (ReqTalent && Talent2ChksValue < 1) {
                         validatedSet = false;
@@ -673,7 +673,7 @@ namespace Rawr.DPSWarr {
 
                     dmg += /*dmgGlance +*/ dmgBlock + dmgCrit;
 
-                    return Math.Max(0f, dmg);
+                    return dmg;
                 }
             }
             protected virtual float DamageOnUseOverride
@@ -725,7 +725,7 @@ namespace Rawr.DPSWarr {
             }
             public virtual float ContainCritValue(bool IsMH) {
                 //float BaseCrit = IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit;
-                return Math.Min(1f, Math.Max(0f, (IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit) + BonusCritChance));
+                return Math.Min(1f, (IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit) + BonusCritChance);
             }
             protected virtual float GetXActs(AttackTableSelector i,float acts) {
                 float retVal = 0f;

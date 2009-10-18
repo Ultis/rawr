@@ -55,7 +55,7 @@ namespace Rawr.DPSWarr {
                     Damage *= (mhActivates + ohActivates) * Duration / FightDuration;
 
                     // Ensure we're not doing negative damage
-                    return Math.Max(0f, Damage);
+                    return Damage;
                 }
             }
             public override float GetDPS(float acts) { return TickSize; }

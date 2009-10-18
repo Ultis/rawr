@@ -80,13 +80,13 @@ namespace Rawr.DPSWarr {
                 float acts = e.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f - avoid, combatFactors._c_mhItemSpeed, FightDuration);
                 acts *= FightDuration;
 
-                return Math.Max(0f, acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost + 15f)));
+                return acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost + 15f));
             }
             protected override float Damage {
                 get {
                     if (!Validated) { return 0f; }
                     float Damage = Exec.DamageOverride;
-                    return Math.Max(0f, Damage);
+                    return Damage;
                 }
             }
             public override float GetRageUseOverDur(float acts) {
@@ -238,7 +238,7 @@ namespace Rawr.DPSWarr {
                 get {
                     if (!Validated) { return 0f; }
                     float Damage = WW.GetDamageOnUseOverride(); // WW.DamageOnUseOverride;
-                    return Math.Max(0f, Damage * 6f); // it WW's 6 times
+                    return Damage * 6f; // it WW's 6 times
                 }
             }
         }
@@ -281,7 +281,7 @@ namespace Rawr.DPSWarr {
                 float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) / FightDuration;
                 float effectActs = ss.GetAverageProcsPerSecond(rawActs, rate, combatFactors._c_mhItemSpeed, FightDuration);
                 effectActs *= FightDuration;
-                return Math.Max(0f, effectActs);
+                return effectActs;
             }
             public override string GenTooltip(float acts, float ttldpsperc) {
                 float misses = GetXActs(AttackTableSelector.Missed , acts), missesPerc = (acts == 0f ? 0f : misses/acts);
@@ -361,7 +361,7 @@ namespace Rawr.DPSWarr {
 
                 float Damage = 1456f + StatS.AttackPower * 0.2f + executeRage * 38f;
 
-                return Math.Max(0f, Damage * AvgTargets);
+                return Damage * AvgTargets;
             }
             public override float GetRageUseOverDur(float acts) {
                 if (!Validated) { return 0f; }

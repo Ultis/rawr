@@ -1341,7 +1341,7 @@ These numbers to do not include racial bonuses.",
                     Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
                     PhysicalHit = talents.Precision * 0.01f,
                     PhysicalHaste = talents.BloodFrenzy * 0.05f,
-                    StunDurReduc = (float)Math.Ceiling(20f / 3f * talents.IronWill) / 100f,
+                    StunDurReduc = talents.IronWill / 15f,
                     // Defensive
                     Parry = talents.Deflection * 0.01f,
                     Dodge = talents.Anticipation * 0.01f,
@@ -1500,7 +1500,7 @@ These numbers to do not include racial bonuses.",
                 if (Rot.TH.Validated) {
                     //float value = (0.10f * (1f + (float)Math.Ceiling(talents.ImprovedThunderClap * 10f / 3f) / 100f));
                     SpecialEffect tc = new SpecialEffect(Trigger.Use,
-                        new Stats() { BossAttackSpeedMultiplier = (0.10f * (1f + (float)Math.Ceiling(talents.ImprovedThunderClap * 10f / 3f) / 100f)) * -1f, },
+                        new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + talents.ImprovedThunderClap / 30f)), },
                         Rot.TH.Duration, Rot.TH.Cd + 0.01f, Rot.TH.MHAtkTable.AnyLand);
                     statsTotal.AddSpecialEffect(tc);
                 }
@@ -1526,18 +1526,18 @@ These numbers to do not include racial bonuses.",
                 float dmgDoneInterval = fightDuration / (land + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
                 //float hitRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
-                float critRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
+                float critRate = crit / attempted;
 
                 if (Rot.SW.Validated) {
                     SpecialEffect sweep = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusTargets = 1f, },
-                        Math.Min(Rot.SW.Duration, landedAtksInterval * 5f), Rot.SW.Cd);
+                        landedAtksInterval * 5f, Rot.SW.Cd);
                     statsTotal.AddSpecialEffect(sweep);
                 }
                 if (Rot.RK.Validated && calcOpts.FuryStance) {
                     SpecialEffect reck = new SpecialEffect(Trigger.Use,
                         new Stats() { PhysicalCrit = 1f - critRate, },
-                        Math.Min(Rot.RK.Duration, landedAtksInterval * 3f), Rot.RK.Cd);
+                        landedAtksInterval * 3f, Rot.RK.Cd);
                     statsTotal.AddSpecialEffect(reck);
                 }
                 if (talents.Flurry > 0 && calcOpts.FuryStance) {
@@ -1636,8 +1636,8 @@ These numbers to do not include racial bonuses.",
                 float land = Rot.LandedAtksOverDur;
                 float crit = Rot.CriticalAtksOverDur;
 
-                float hitRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
-                float critRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
+                float hitRate = land / attempted;
+                float critRate = crit / attempted;
 
                 //
                 foreach (SpecialEffect effect in specialEffects) {
@@ -1709,8 +1709,8 @@ These numbers to do not include racial bonuses.",
             float dmgDoneInterval = fightDuration / (land + (calcOpts.FuryStance ? 1f : 4f / 3f));
             float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
 
-            float hitRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
-            float critRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, crit / attempted)) : 0f;
+            float hitRate = land / attempted;
+            float critRate = crit / attempted;
 
             Stats effectStats = effect.Stats;
             float upTime = 0f;
