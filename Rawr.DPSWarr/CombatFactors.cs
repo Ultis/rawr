@@ -124,8 +124,8 @@ namespace Rawr.DPSWarr {
         }
         public float AvgMhWeaponDmgUnhasted              { get { return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * _c_mhItemSpeed                 + StatS.WeaponDamage : 0f); } }
         public float AvgOhWeaponDmgUnhasted              { get { return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * _c_ohItemSpeed * OHDamageReduc + StatS.WeaponDamage : 0f); } }
-        public float AvgMhWeaponDmg(        float speed) {       return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * speed                    + StatS.WeaponDamage : 0f); }
-        public float AvgOhWeaponDmg(        float speed) {       return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * speed    * OHDamageReduc + StatS.WeaponDamage : 0f); }
+        /*public float AvgMhWeaponDmg(        float speed) {       return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * speed                    + StatS.WeaponDamage : 0f); }
+        public float AvgOhWeaponDmg(        float speed) {       return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * speed    * OHDamageReduc + StatS.WeaponDamage : 0f); }*/
         #endregion
         #region Weapon Crit Damage
         private float _BonusWhiteCritDmg = -1f;
@@ -186,7 +186,7 @@ namespace Rawr.DPSWarr {
         public float HitPerc { get { return StatConversion.GetHitFromRating(StatS.HitRating, CharacterClass.Warrior); } }
         #endregion
         #region Expertise Rating
-        private float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Warrior);}
+        /*private float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Warrior);}*/
         private float GetRacialExpertiseFromWeaponType(ItemType weapon) {
             CharacterRace r = Char.Race;
             if (weapon != ItemType.None) {
@@ -235,20 +235,20 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Dodge
         private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
-        private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - GetDPRfromExp(_c_mhexpertise) - Talents.WeaponMastery * 0.01f); } }
-        private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - GetDPRfromExp(_c_ohexpertise) - Talents.WeaponMastery * 0.01f); } }
+        private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior) - Talents.WeaponMastery * 0.01f); } }
+        private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior) - Talents.WeaponMastery * 0.01f); } }
         #endregion
         #region Parry
         private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[CalcOpts.TargetLevel - 80]; } }
         private float MhParryChance {
             get {
-                float ParryChance = ParryChanceCap - GetDPRfromExp(_c_mhexpertise);
+                float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior);
                 return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
             }
         }
         private float OhParryChance {
             get {
-                float ParryChance = ParryChanceCap - GetDPRfromExp(_c_ohexpertise);
+                float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior);
                 return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
             }
         }
@@ -325,11 +325,15 @@ namespace Rawr.DPSWarr {
             }
         }
         #region Attackers Stats against you
-        private float LevelModifier() { return (CalcOpts.TargetLevel - Char.Level) * 0.002f; }
-        private float NPC_CritChance() {
-            return Math.Max(0f, 0.05f + LevelModifier()
-                                    - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, CalcOpts.TargetLevel)
-                            );
+        private float LevelModifier { get { return (CalcOpts.TargetLevel - Char.Level) * 0.002f; } }
+        private float NPC_CritChance
+        {
+            get
+            {
+                return Math.Max(0f, 0.05f + LevelModifier
+                                        - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, CalcOpts.TargetLevel)
+                                );
+            }
         }
         #endregion
     }
@@ -465,7 +469,7 @@ namespace Rawr.DPSWarr {
                 Crit = Math.Min(1f - tableSize, isMH ?  combatFactors._c_mhycrit : combatFactors._c_ohycrit);
                 tableSize += Crit;
             } else if (Abil.CanCrit) {
-                Crit = Math.Min(1f - tableSize, Abil.ContainCritValue(isMH));
+                Crit = Math.Min(1f - tableSize, (isMH ? Abil.ContainCritValue_MH : Abil.ContainCritValue_OH));
                 tableSize += Crit;
             } else {
                 Crit = 0f;

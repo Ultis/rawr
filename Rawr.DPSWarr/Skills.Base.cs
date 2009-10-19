@@ -164,7 +164,7 @@ namespace Rawr.DPSWarr {
                     //float rage = 0.0f;
                     float s = combatFactors._c_mhItemSpeed;
                     //s = combatFactors._c_mhItemSpeed;
-                    float based = combatFactors.AvgMhWeaponDmg(s) * combatFactors.DamageBonus * combatFactors.DamageReduction;
+                    float based = combatFactors.AvgMhWeaponDmgUnhasted * combatFactors.DamageBonus * combatFactors.DamageReduction;
 
                     // regular hit
                     //d = based;
@@ -199,7 +199,7 @@ namespace Rawr.DPSWarr {
 
                     //float rage = 0.0f;
                     float s = combatFactors._c_ohItemSpeed;
-                    based = combatFactors.AvgOhWeaponDmg(s) * combatFactors.DamageBonus * combatFactors.DamageReduction;
+                    based = combatFactors.AvgOhWeaponDmgUnhasted * combatFactors.DamageBonus * combatFactors.DamageReduction;
 
                     // regular hit
                     //d = based;
@@ -728,10 +728,12 @@ namespace Rawr.DPSWarr {
                 //float adou = GetAvgHealingOnUse(acts);
                 return GetAvgHealingOnUse(acts) / FightDuration;
             }
-            public virtual float ContainCritValue(bool IsMH) {
+            public virtual float ContainCritValue_MH { get { return Math.Min(1f, combatFactors._c_mhycrit + BonusCritChance); } }
+            public virtual float ContainCritValue_OH { get { return Math.Min(1f, combatFactors._c_ohycrit + BonusCritChance); } }
+            /*public virtual float ContainCritValue(bool IsMH) {
                 //float BaseCrit = IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit;
                 return Math.Min(1f, (IsMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit) + BonusCritChance);
-            }
+            }*/
             protected virtual float GetXActs(AttackTableSelector i,float acts) {
                 float retVal = 0f;
                 switch (i) {

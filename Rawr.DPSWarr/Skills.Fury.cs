@@ -308,7 +308,7 @@ namespace Rawr.DPSWarr
                 get
                 {
                     //float glyphback = (Talents.GlyphOfHeroicStrike ? 10.0f * ContainCritValue(true) : 0f);
-                    return base.FullRageCost - (Talents.GlyphOfHeroicStrike ? 10.0f * ContainCritValue(true) : 0f);
+                    return base.FullRageCost - (Talents.GlyphOfHeroicStrike ? 10.0f * ContainCritValue_MH : 0f);
                 }
             }
         }
