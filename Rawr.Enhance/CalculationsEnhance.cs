@@ -366,7 +366,7 @@ namespace Rawr.Enhance
             {
                 float damageFSBase = 500f;
                 float damageFSDoTBase = 834f;
-                float coefFS = .2142f;
+                float coefFS = 1.5f / 3.5f / 2f;
                 float coefFSDoT = .6f;
                 float damageFS = (damageFSBase + coefFS * spellPower) * concussionMultiplier;
                 float damageFTDoT = (damageFSDoTBase + coefFSDoT * spellPower) * concussionMultiplier;
