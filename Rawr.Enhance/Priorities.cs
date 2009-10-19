@@ -45,8 +45,8 @@ namespace Rawr.Enhance
                 if (_talents.MaelstromWeapon > 0)
                     abilities.Add(new Ability(EnhanceAbility.LightningBolt, _cs.SecondsToFiveStack, gcd, 0.1f * convection, priority, false));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FlameShock);
-            if (priority > 0)           
-                if (_character.ShamanTalents.GlyphofShocking)
+            if (priority > 0)
+                if (_talents.GlyphofShocking)
                     abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, 1.0f, FSMana * convection, priority, false));
                 else
                     abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, gcd, FSMana * convection, priority, false));
@@ -55,8 +55,8 @@ namespace Rawr.Enhance
                 if (_talents.Stormstrike == 1)
                     abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, gcd, 0.08f, priority, false));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.EarthShock);
-            if (priority > 0)           
-                if (_character.ShamanTalents.GlyphofShocking)
+            if (priority > 0)
+                if (_talents.GlyphofShocking)
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, ESMana * convection, priority, false));
                 else
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, ESMana * convection, priority, false));

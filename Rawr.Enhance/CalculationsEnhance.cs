@@ -319,7 +319,7 @@ namespace Rawr.Enhance
 
             //2: Stormstrike DPS
             float dpsSS = 0f;
-            float stormstrikeMultiplier = 0f;
+            float stormstrikeMultiplier = 1f;
             if (character.ShamanTalents.Stormstrike == 1 && calcOpts.PriorityInUse(EnhanceAbility.StormStrike))
             {
                 stormstrikeMultiplier = 1.2f + (character.ShamanTalents.GlyphofStormstrike ? .08f : 0f);

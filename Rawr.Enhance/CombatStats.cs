@@ -251,9 +251,17 @@ namespace Rawr.Enhance
             float edCritBonus = .03f * _talents.ElementalDevastation;
             hastedMHSpeed = baseHastedMHSpeed;
             hastedOHSpeed = baseHastedOHSpeed;
-            hitsPerSMHSS = (1f - chanceYellowMissMH) / stormstrikeSpeed;
-            hitsPerSOHSS = _character.ShamanTalents.DualWield == 1 ? ((1f - 2 * chanceYellowMissOH) / stormstrikeSpeed) : 0f; //OH only swings if MH connects
-            hitsPerSLL = (1f - chanceYellowMissOH) / lavaLashSpeed;
+            if (_talents.Stormstrike == 1)
+            {
+                hitsPerSMHSS = (1f - chanceYellowMissMH) / stormstrikeSpeed;
+                hitsPerSOHSS = _character.ShamanTalents.DualWield == 1 ? ((1f - 2 * chanceYellowMissOH) / stormstrikeSpeed) : 0f; //OH only swings if MH connects
+            }
+            else
+            {
+                hitsPerSMHSS = 0f;
+                hitsPerSOHSS = 0f;
+            }
+            hitsPerSLL = lavaLashSpeed == 0 ? 0f : (1f - chanceYellowMissOH) / lavaLashSpeed;
             float swingsPerSMHMelee = 0f;
             float swingsPerSOHMelee = 0f;
             float wfProcsPerSecond = 0f;
