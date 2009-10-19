@@ -445,6 +445,8 @@ namespace Rawr.Enhance
             {
                 if (TotalExpertiseMH > 26.5f)
                     caps = "{0} (Over Cap)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged\r\n{4}% Parried";
+                else if (TotalExpertiseMH < 26)
+                    caps = "{0} (Under Cap)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged\r\n{4}% Parried";
                 else
                     caps = "{0}*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged\r\n{4}% Parried";
                 return String.Format(caps,
@@ -462,7 +464,9 @@ namespace Rawr.Enhance
                     caps = "{0}/{1} (MH Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% OH Dodged\r\n{5}% Parried";
                 else if (TotalExpertiseOH > 26.5f)
                     caps = "{0}/{1} (OH Over Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% MH Dodged\r\n{5}% Parried";
-                else
+                else if (TotalExpertiseMH < 26f)
+                    caps = "{0}/{1} (MH Under Cap)*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged";
+                else 
                     caps = "{0}/{1}*MH/OH\r\n{2} Expertise\r\n{3} Expertise Rating\r\n{4}% Dodged";
                return String.Format(caps,
                     TotalExpertiseMH.ToString("F0", CultureInfo.InvariantCulture),

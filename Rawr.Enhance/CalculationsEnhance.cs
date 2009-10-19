@@ -434,7 +434,7 @@ namespace Rawr.Enhance
                 dpsSTMT = (STMTNormal + STMTCrit) * bonusFireDamage * bossFireResistance;
             }
 
-            //9: Flametongue Weapon DPS
+            //9: Flametongue Weapon DPS++
             float dpsFT = 0f;
             if (calcOpts.MainhandImbue == "Flametongue")
             {
@@ -514,8 +514,8 @@ namespace Rawr.Enhance
             calculatedStats.URUptime = cs.URUptime * 100f;
             calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
             calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
-            calculatedStats.TotalExpertiseMH = cs.ExpertiseBonusMH * 400f;
-            calculatedStats.TotalExpertiseOH = cs.ExpertiseBonusOH * 400f;
+            calculatedStats.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
+            calculatedStats.TotalExpertiseOH = (float) Math.Floor(cs.ExpertiseBonusOH * 400f);
 
             calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHit, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCrit, cs.HastedMHSpeed);
             calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHit, cs.AverageDodge, -1, cs.AverageYellowCrit, cs.AbilityCooldown(EnhanceAbility.StormStrike));
