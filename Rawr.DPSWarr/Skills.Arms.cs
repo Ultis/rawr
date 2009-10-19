@@ -80,7 +80,7 @@ namespace Rawr.DPSWarr {
                 float acts = e.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f - avoid, combatFactors._c_mhItemSpeed, FightDuration);
                 acts *= FightDuration;
 
-                return acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost + 15f));
+                return acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost + UsedExtraRage));
             }
             protected override float Damage {
                 get {
@@ -338,14 +338,22 @@ namespace Rawr.DPSWarr {
                 ReqMeleeRange = true;
                 Cd = 1.5f;
                 RageCost = 15f - (Talents.ImprovedExecute * 2.5f) - (Talents.FocusedRage * 1f);
+                FreeRage = 0f;
                 StanceOkFury = StanceOkArms = true;
-                PercTimeUnder20 = 0.15f;
+                PercTimeUnder20 = 0.17f;
                 //
                 InitializeB(co);
             }
             public bool GetReqMeleeWeap() { return this.ReqMeleeWeap; }
             public bool GetReqMeleeRange() { return this.ReqMeleeRange; }
-            public float FreeRage;
+            private float FREERAGE;
+            public float FreeRage {
+                get { return FREERAGE; }
+                set {
+                    FREERAGE = value;
+                    UsedExtraRage = Math.Max(0f, Math.Min(30f, FreeRage));
+                }
+            }
             public float UsedExtraRage;
             public float PercTimeUnder20;
             protected override float ActivatesOverride { get { return base.ActivatesOverride * PercTimeUnder20; } }
@@ -356,7 +364,7 @@ namespace Rawr.DPSWarr {
                 } else if (!Override &&  Validated) {
                 } else if (!Override && !Validated) { return 0f; }
 
-                UsedExtraRage = Math.Max(0f, Math.Min(30f, FreeRage));
+                //UsedExtraRage = Math.Max(0f, Math.Min(30f, FreeRage));
                 float executeRage = UsedExtraRage + (Talents.GlyphOfExecution ? 10.00f : 0.00f);
 
                 float Damage = 1456f + StatS.AttackPower * 0.2f + executeRage * 38f;

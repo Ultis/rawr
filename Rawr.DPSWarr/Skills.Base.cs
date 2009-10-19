@@ -589,7 +589,7 @@ namespace Rawr.DPSWarr {
                         validatedSet = false;
                     } else if (ReqTalent && Talent2ChksValue < 1) {
                         validatedSet = false;
-                    } else if (ReqMeleeWeap && Char.MainHand.MaxDamage <= 0) {
+                    } else if (ReqMeleeWeap && (Char.MainHand == null || Char.MainHand.MaxDamage <= 0)) {
                         validatedSet = false;
                     } else if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0)) {
                         validatedSet = false;
