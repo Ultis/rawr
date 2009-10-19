@@ -516,8 +516,8 @@ namespace Rawr.DPSWarr {
             RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20);
             availRage += RageGenWhite;
             availRage -= SL.GetRageUseOverDur(_SL_GCDs);
-            float repassAvailRage = availRage;
-            float PercFailRage = 1f;
+            float repassAvailRage = availRage, repassAvailRageUnder20 = 0f;
+            float PercFailRage = 1f, PercFailRageUnder20 = 1f;
 
             int Iterator = 0;
             #region >20%
@@ -586,8 +586,6 @@ namespace Rawr.DPSWarr {
                 RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20);
                 availRage += RageGenWhite;
 
-                // Reduc abilities due to lack of Rage for maintaining the rotation
-                
                 // ==== Rage Generation Priorities ========
                 // Berserker Rage
                 float acts, Abil_GCDs;
@@ -704,15 +702,14 @@ namespace Rawr.DPSWarr {
                     availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                     availRage -= RD.GetRageUseOverDur(Abil_GCDs);
                 }
-                // Bladestorm
-                if (repassAvailRage < 0f || PercFailRage != 1f)
-                {
+
+                // Reduc abilities due to lack of Rage for maintaining the rotation
+                if (repassAvailRage < 0f || PercFailRage != 1f) {
                     // total the amount of rage you really need and turn it into a percentage that we failed
                     PercFailRage *= 1f + repassAvailRage / (availRage - repassAvailRage); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
-                }
-                else { PercFailRage = 1f; }
+                } else { PercFailRage = 1f; }
 
-                
+                // Bladestorm
                 if (BLS.Validated) {
                     acts = Math.Min(availGCDs, BLS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
@@ -949,8 +946,8 @@ namespace Rawr.DPSWarr {
                 origAvailRage = preloopAvailRage * PercTimeUnder20;
                 RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - TotalPercTimeLost) * PercTimeUnder20;
                 availRage += RageGenWhite;
-                repassAvailRage = availRage;
-                PercFailRage = 1.0f;
+                repassAvailRageUnder20 = availRage;
+                PercFailRageUnder20 = 1.0f;
                 // Run the loop for <20%
                 while (
                         Iterator < 50 &&
@@ -1110,16 +1107,15 @@ namespace Rawr.DPSWarr {
                         availRage -= RD.GetRageUseOverDur(Abil_GCDs);
                     }
 
-                    if (repassAvailRage < 0f)
-                    {
+                    // Reduc abilities due to lack of Rage for maintaining the rotation
+                    if (repassAvailRageUnder20 < 0f || PercFailRageUnder20 != 1f) {
                         // total the amount of rage you really need and turn it into a percentage that we failed
-                        PercFailRage *= 1f + repassAvailRage / (availRage - repassAvailRage); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
-                    }
-                    else { PercFailRage = 1f; }
+                        PercFailRageUnder20 *= 1f + repassAvailRageUnder20 / (availRage - repassAvailRageUnder20); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
+                    } else { PercFailRageUnder20 = 1f; }
 
                     // Overpower
                     if (OP.Validated) {
-                        acts = Math.Min(availGCDs, OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * PercTimeUnder20 * PercFailRage);
+                        acts = Math.Min(availGCDs, OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * PercTimeUnder20 * PercFailRageUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         _OP_GCDs = oldOPGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1128,7 +1124,7 @@ namespace Rawr.DPSWarr {
                     }
                     // Taste for Blood
                     if (TB.Validated) {
-                        acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * PercFailRage);
+                        acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * PercFailRageUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         _TB_GCDs = oldTBGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1139,7 +1135,7 @@ namespace Rawr.DPSWarr {
                     if (EX.Validated) {
                         EX.PercTimeUnder20 = PercTimeUnder20;
                         acts = Math.Min(availGCDs,
-                            availGCDs * (1f - TotalPercTimeLost) * PercFailRage
+                            availGCDs * (1f - TotalPercTimeLost) * PercFailRageUnder20
                             /*EX.Activates - (_ZRage_GCDs + _Battle_GCDs + _Comm_GCDs + _Demo_GCDs
                                + _Sunder_GCDs + _Thunder_GCDs + _Ham_GCDs + _Shatt_GCDs + _ER_GCDs + _Death_GCDs
                                + _RD_GCDs + _TB_GCDs + _OP_GCDs) * PercTimeUnder20*/
@@ -1163,6 +1159,10 @@ namespace Rawr.DPSWarr {
             // Add each of the abilities' DPS and HPS values and other aesthetics
             if (_needDisplayCalcs)
             {
+                if (PercFailRage != 1.0f || PercFailRageUnder20 != 1.0f) {
+                    GCDUsage += (PercFailRage < 1.0f ? string.Format("WARNING! You are losing {0:0.0%} of your abilities due to Rage Stavation before Exec Spam.\n",PercFailRage) : "");
+                    GCDUsage += (PercFailRageUnder20 < 1.0f ? string.Format("WARNING! You are losing {0:0.0%} of your abilities due to Rage Stavation during Exec Spam.\n", PercFailRageUnder20) : "");
+                }
                 GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + BZ.Name + "\n" : "");
                 GCDUsage += (_Battle_GCDs > 0 ? _Battle_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + BTS.Name + "\n" : "");
                 GCDUsage += (_Comm_GCDs > 0 ? _Comm_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + CS.Name + "\n" : "");
