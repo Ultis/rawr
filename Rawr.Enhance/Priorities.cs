@@ -138,6 +138,7 @@ namespace Rawr.Enhance
         
         private void DebugPrint(List<Ability> abilities, float timeElapsed, string name)
         {
+#if !RAWR3
             if (abilities.Count > 3)
                 System.Diagnostics.Debug.Print(
                     "Time: {0} - FS {1}, {2} - LB {3}, {4} - SS {5}, {6} - ES {7}, {8} - LL {9}, {10} - LS {11}, {12} - MT {13}, {14} - used {15}",
@@ -149,6 +150,7 @@ namespace Rawr.Enhance
                    abilities[4].Uses, abilities[4].CooldownOver,
                    abilities[5].Uses, abilities[5].CooldownOver,
                    abilities[6].Uses, abilities[6].CooldownOver, name);
+#endif
         }
 
         public float AbilityCooldown(EnhanceAbility abilityType)
@@ -260,7 +262,9 @@ namespace Rawr.Enhance
         ShamanisticRage = 11,
     }
 
+#if !SILVERLIGHT
     [Serializable]
+#endif
     public class Priority
     {
         private EnhanceAbility _abilityType;

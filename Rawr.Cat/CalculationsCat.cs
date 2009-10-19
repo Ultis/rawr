@@ -862,6 +862,10 @@ namespace Rawr.Cat
 			character.ActiveBuffs.Add(Buff.GetBuffByName("Agility Food"));
 			character.ActiveBuffs.Add(Buff.GetBuffByName("Bloodlust"));
 
+			if (character.PrimaryProfession == Profession.Alchemy ||
+				character.SecondaryProfession == Profession.Alchemy)
+				character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Endless Rage (Mixology)"));
+
 			character.DruidTalents.GlyphOfSavageRoar = true;
 			character.DruidTalents.GlyphOfShred = true;
 			character.DruidTalents.GlyphOfRip = true;
