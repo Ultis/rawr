@@ -47,7 +47,7 @@ namespace Rawr.Mage
         public double MaximumDuration { get; set; }
         public bool AutomaticConstraints { get; set; }
         public bool AutomaticStackingConstraints { get; set; }
-#if !SILVERLIGHT
+#if !RAWR3
         public System.Drawing.Color Color { get; set; }
 #endif
 
@@ -923,7 +923,7 @@ namespace Rawr.Mage
             return effect.Stats.SpellPower + effect.Stats.HasteRating > 0;
         }
 
-#if !SILVERLIGHT
+#if !RAWR3
         private static readonly System.Drawing.Color[] itemColors = new System.Drawing.Color[] {
                 System.Drawing.Color.Aqua,
                 System.Drawing.Color.FromArgb(255, 0, 0, 255),
@@ -959,7 +959,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.Evocation,
                     Name = "Evocation",
                     StandardEffect = StandardEffect.Evocation,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.Aquamarine,
 #endif
                 });
@@ -975,7 +975,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.PowerInfusion,
                     Name = "Power Infusion",
                     StandardEffect = StandardEffect.PowerInfusion,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.FromArgb(255, 255, 255, 0),
 #endif
                 });
@@ -991,7 +991,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.PotionOfSpeed,
                     Name = "Potion of Speed",
                     StandardEffect = StandardEffect.PotionOfSpeed,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.LemonChiffon,
 #endif
                 });
@@ -1007,7 +1007,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.ArcanePower,
                     Name = "Arcane Power",
                     StandardEffect = StandardEffect.ArcanePower,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.Azure,
 #endif
                 });
@@ -1020,7 +1020,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.Combustion,
                     Name = "Combustion",
                     StandardEffect = StandardEffect.Combustion,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.FromArgb(255, 255, 69, 0),
 #endif
                 });
@@ -1036,7 +1036,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.PotionOfWildMagic,
                     Name = "Potion of Wild Magic",
                     StandardEffect = StandardEffect.PotionOfWildMagic,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.FromArgb(255, 128, 0, 128),
 #endif
                 });
@@ -1052,7 +1052,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.Berserking,
                     Name = "Berserking",
                     StandardEffect = StandardEffect.Berserking,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.Brown,
 #endif
                 });
@@ -1068,7 +1068,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.FlameCap,
                     Name = "Flame Cap",
                     StandardEffect = StandardEffect.FlameCap,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.FromArgb(255, 255, 165, 0),
 #endif
                 });
@@ -1084,7 +1084,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.Heroism,
                     Name = "Heroism",
                     StandardEffect = StandardEffect.Heroism,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.Olive,
 #endif
                 });
@@ -1100,7 +1100,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.IcyVeins,
                     Name = "Icy Veins",
                     StandardEffect = StandardEffect.IcyVeins,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.DarkBlue,
 #endif
                 });
@@ -1116,7 +1116,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.MoltenFury,
                     Name = "Molten Fury",
                     StandardEffect = StandardEffect.MoltenFury,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.Crimson,
 #endif
                 });
@@ -1130,7 +1130,7 @@ namespace Rawr.Mage
                     Mask = (int)StandardEffect.WaterElemental,
                     Name = "Water Elemental",
                     StandardEffect = StandardEffect.WaterElemental,
-#if !SILVERLIGHT
+#if !RAWR3
                     Color = System.Drawing.Color.DarkCyan,
 #endif
                 });
@@ -1172,7 +1172,7 @@ namespace Rawr.Mage
                                     cooldown.Duration = effect.Duration;
                                     cooldown.AutomaticConstraints = true;
                                     cooldown.AutomaticStackingConstraints = true;
-#if !SILVERLIGHT
+#if !RAWR3
                                     cooldown.Color = itemColors[Math.Min(itemColors.Length - 1, colorIndex++)];
 #endif
                                     cooldownList.Add(cooldown);
@@ -1199,7 +1199,7 @@ namespace Rawr.Mage
                                     cooldown.Duration = effect.Duration;
                                     cooldown.AutomaticConstraints = true;
                                     cooldown.AutomaticStackingConstraints = true;
-#if !SILVERLIGHT
+#if !RAWR3
                                     cooldown.Color = itemColors[Math.Min(itemColors.Length - 1, colorIndex++)];
 #endif
                                     cooldownList.Add(cooldown);
@@ -1226,7 +1226,7 @@ namespace Rawr.Mage
                     cooldown.Duration = effect.Duration;
                     cooldown.MaximumDuration = MaximizeEffectDuration(calculationOptions.FightDuration, effect.Duration, 120);
                     cooldown.AutomaticStackingConstraints = true;
-#if !SILVERLIGHT
+#if !RAWR3
                     cooldown.Color = System.Drawing.Color.DarkGreen;
 #endif
                     cooldownList.Add(cooldown);

@@ -110,15 +110,20 @@ namespace Rawr.UI
 				{
 					UpdateProgress(0, "Decompressing " + file + "...");
 					Uri part = new Uri(file, UriKind.Relative);
-					
-					StreamResourceInfo fileStream = Application.GetResourceStream(zipStream, part);
-					StreamReader sr = new StreamReader(fileStream.Stream);
-					string unzippedFile = sr.ReadToEnd();
 #if !SILVERLIGHT
-					StreamWriter writer = new StreamWriter(Filename);
+                    System.IO.Packaging.Package zipFile = System.IO.Packaging.ZipPackage.Open(zipStream.Stream, FileMode.Open);
+                    System.IO.Packaging.PackagePart thePart = zipFile.GetPart(part);
+                    StreamReader sr = new StreamReader(thePart.GetStream());
+                    string unzippedFile = sr.ReadToEnd();
+					StreamWriter writer = new StreamWriter(file);
 					writer.Write(unzippedFile);
 					writer.Close();
 #else
+                    // This reading method only works in Silverlight due to the GetResourceStream not existing with 2 arguments in
+                    // regular .Net-land
+					StreamResourceInfo fileStream = Application.GetResourceStream(zipStream, part);
+					StreamReader sr = new StreamReader(fileStream.Stream);
+					string unzippedFile = sr.ReadToEnd();
 					//Write it in a special way when using IsolatedStorage, due to IsolatedStorage
 					//having a huge performance issue when writing small chunks
 					IsolatedStorageFileStream isfs = GetFileStream(file, true);
@@ -130,8 +135,8 @@ namespace Rawr.UI
 					isfs.Write(byteBuffer, 0, fileSize);
 					isfs.Close();
 #endif
-					
-					UpdateProgress(0, "Finished " + file + "...");
+
+                    UpdateProgress(0, "Finished " + file + "...");
 				}
 			}
 			else 
@@ -147,9 +152,9 @@ namespace Rawr.UI
 		}
 
 #if !SILVERLIGHT
-        public static FileStream GetFileStream(string filename)
+        public static FileStream GetFileStream(string filename, bool write)
         {
-            return new FileStream(Filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            return new FileStream(filename, write ? FileMode.Create : FileMode.OpenOrCreate, FileAccess.ReadWrite);
         }
 #else
 		public static IsolatedStorageFileStream GetFileStream(string filename, bool write)
