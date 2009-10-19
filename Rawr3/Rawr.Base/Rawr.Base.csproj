@@ -92,6 +92,9 @@
     <Compile Include="..\..\Rawr.Base\BossHandler.cs">
       <Link>BossHandler.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\BossList.cs">
+      <Link>BossList.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\Buff.cs">
       <Link>Buff.cs</Link>
     </Compile>
