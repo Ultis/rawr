@@ -328,6 +328,7 @@ FAQStuff.Add(
                 CK_SE_UseDur.Checked = calcOpts.SE_UseDur;
                 // Hiding Enchants based on Profession
                 CK_HideProfEnchants.Checked = calcOpts.HideProfEnchants;
+                CalculationsDPSWarr.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
                 CB_Prof1.Enabled = CK_HideProfEnchants.Checked;
                 CB_Prof2.Enabled = CK_HideProfEnchants.Checked;
                 CB_Prof1.Text = ProfessionToString(Character.PrimaryProfession);
