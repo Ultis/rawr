@@ -517,7 +517,7 @@ namespace Rawr.DPSWarr {
             availRage += RageGenWhite;
             availRage -= SL.GetRageUseOverDur(_SL_GCDs);
             float repassAvailRage = availRage;
-            float PercFailRage = 0f;
+            float PercFailRage = 1f;
 
             int Iterator = 0;
             #region >20%
@@ -572,6 +572,7 @@ namespace Rawr.DPSWarr {
                     )
                   )
             {
+                float j = repassAvailRage;
                 // Reset a couple of items so we can keep iterating
                 availGCDs = origavailGCDs;
                 GCDsused = origGCDsused;
@@ -586,11 +587,7 @@ namespace Rawr.DPSWarr {
                 availRage += RageGenWhite;
 
                 // Reduc abilities due to lack of Rage for maintaining the rotation
-                if (repassAvailRage < 0f) {
-                    // total the amount of rage you really need and turn it into a percentage that we failed
-                    PercFailRage = 1f - (availRage / (availRage + repassAvailRage * -1f));
-                } else { PercFailRage = 0f; }
-
+                
                 // ==== Rage Generation Priorities ========
                 // Berserker Rage
                 float acts, Abil_GCDs;
@@ -611,7 +608,7 @@ namespace Rawr.DPSWarr {
                 // ==== Maintenance Priorities ========
                 // Battle Shout
                 if (BTS.Validated) {
-                    acts = Math.Min(availGCDs, BTS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, BTS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                     _Battle_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -620,7 +617,7 @@ namespace Rawr.DPSWarr {
                 }
                 // Commanding Shout
                 if (CS.Validated) {
-                    acts = Math.Min(availGCDs, CS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, CS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                     _Comm_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -629,7 +626,7 @@ namespace Rawr.DPSWarr {
                 }
                 // Demoralizing Shout
                 if (DS.Validated) {
-                    acts = Math.Min(availGCDs, DS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, DS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                     _Demo_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -638,7 +635,7 @@ namespace Rawr.DPSWarr {
                 }
                 // Sunder Armor
                 if (SN.Validated) {
-                    acts = Math.Min(availGCDs, SN.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, SN.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                     _Sunder_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -647,7 +644,7 @@ namespace Rawr.DPSWarr {
                 }
                 // Thunder Clap
                 if (TH.Validated) {
-                    acts = Math.Min(availGCDs, TH.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, TH.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                     _Thunder_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -656,7 +653,7 @@ namespace Rawr.DPSWarr {
                 }
                 // Hamstring
                 if (HMS.Validated) {
-                    acts = Math.Min(availGCDs, HMS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, HMS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                     _Ham_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -665,7 +662,7 @@ namespace Rawr.DPSWarr {
                 }
                 // Shattering Throw
                 if (ST.Validated) {
-                    acts = Math.Min(availGCDs, ST.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, ST.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _Shatt_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -674,7 +671,7 @@ namespace Rawr.DPSWarr {
                 }
                 // Enraged Regeneration
                 if (ER.Validated) {
-                    acts = Math.Min(availGCDs, ER.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, ER.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _ER_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -683,14 +680,14 @@ namespace Rawr.DPSWarr {
                 }
                 // Sweeping Strikes
                 if (SW.Validated) {
-                    acts = Math.Min(availGCDs, SW.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, SW.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _SW_GCDs = Abil_GCDs;
                     availRage -= SW.GetRageUseOverDur(Abil_GCDs);
                 }
                 // Death Wish
                 if (DW.Validated) {
-                    acts = Math.Min(availGCDs, Death.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, Death.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _Death_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -700,7 +697,7 @@ namespace Rawr.DPSWarr {
                 // ==== Primary Ability Priorities ====
                 // Rend
                 if (RD.Validated) {
-                    acts = Math.Min(availGCDs, RD.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, RD.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _RD_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -708,8 +705,16 @@ namespace Rawr.DPSWarr {
                     availRage -= RD.GetRageUseOverDur(Abil_GCDs);
                 }
                 // Bladestorm
+                if (repassAvailRage < 0f || PercFailRage != 1f)
+                {
+                    // total the amount of rage you really need and turn it into a percentage that we failed
+                    PercFailRage *= 1f + repassAvailRage / (availRage - repassAvailRage); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
+                }
+                else { PercFailRage = 1f; }
+
+                
                 if (BLS.Validated) {
-                    acts = Math.Min(availGCDs, BLS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, BLS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _BLS_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs * 4f);
@@ -719,103 +724,106 @@ namespace Rawr.DPSWarr {
                 // Mortal Strike
                 if (MS.Validated) {
                     // TODO: THIS WAS ADDED TO FIX A BUG, JOTHAY'S UNAVAILABLE FOR COMMENT
-                    acts = Math.Min(availGCDs, MS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, MS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     #region Mortal Strike Delays
                     /* ===== Delays in MS from Slam or Execute =====
                  * This is a test for MS Delays (idea coming from Landsoul's sheet 2.502)
                  * Note: The numbers displayed are from a specific example, formula
                  * results in Rawr may differ
                  */
-                    HPS = LandedAtksOverDur;
+                    if (PercFailRage == 1f)
+                    {
+                        HPS = LandedAtksOverDur;
 
-                    // In-Between MS is: 3.50 seconds
-                    // moved up out of the loop
-                    //use exe if MS more than 0.320164 sec
-                    useExeifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (SD_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * HPS * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
-                    //use slam if MS more than 0.413178 sec
-                    useSlamifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (SL_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * HPS * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
+                        // In-Between MS is: 3.50 seconds
+                        // moved up out of the loop
+                        //use exe if MS more than 0.320164 sec
+                        useExeifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (SD_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * HPS * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
+                        //use slam if MS more than 0.413178 sec
+                        useSlamifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (SL_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * HPS * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
 
-                    //1.5 and 1.0 global is 2.60 seconds
-                    // moved out of the loop
-                    //leaving until next MS 0.90 seconds
-                    LeavingUntilNextMS_1 = timeInBetween - OnePt5Plus1;
-                    //Occurs 84.20% of the time
-                    //can use exe or slam for 3rd gcd before next ms
-                    canUse1 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe" : "nothing"));
-                    //puts MS at extra 0.65 length for 5.70
-                    MSatExtra1 = LatentGCD - LeavingUntilNextMS_1;
-                    lengthFor1 = (MSBaseCd + CalcOpts.AllowedReact + MSatExtra1);
-                    //MS is normally at a length of 5.696
-                    msNormally1 = (canUse1 == "exe or slam" ? lengthFor1 : MSBaseCd + CalcOpts.AllowedReact);
-                    //Extended length is 100.00% of the time
+                        //1.5 and 1.0 global is 2.60 seconds
+                        // moved out of the loop
+                        //leaving until next MS 0.90 seconds
+                        LeavingUntilNextMS_1 = timeInBetween - OnePt5Plus1;
+                        //Occurs 84.20% of the time
+                        //can use exe or slam for 3rd gcd before next ms
+                        canUse1 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_1 ? "exe" : "nothing"));
+                        //puts MS at extra 0.65 length for 5.70
+                        MSatExtra1 = LatentGCD - LeavingUntilNextMS_1;
+                        lengthFor1 = (MSBaseCd + CalcOpts.AllowedReact + MSatExtra1);
+                        //MS is normally at a length of 5.696
+                        msNormally1 = (canUse1 == "exe or slam" ? lengthFor1 : MSBaseCd + CalcOpts.AllowedReact);
+                        //Extended length is 100.00% of the time
 
-                    //Two 1.5 globals are 3.10 seconds
-                    // move up out of the loop
-                    //leaving until next MS 0.40 seconds
-                    LeavingUntilNextMS_2 = timeInBetween - Two1pt5;
-                    //Occurs 15.52% of the time
-                    //can use exe for 3rd gcd before next ms
-                    canUse2 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe" : "nothing"));
-                    //puts MS at extra 1.15	length for 6.20
-                    MSatExtra2 = LatentGCD - LeavingUntilNextMS_2;
-                    lengthFor2 = (MSBaseCd + CalcOpts.AllowedReact + MSatExtra2);
-                    //MS is normally at a length of 5.049
-                    msNormally2 = (canUse2 == "exe or slam" ? lengthFor2 : MSBaseCd + CalcOpts.AllowedReact);
-                    //Extended length is 19.25% of the time
+                        //Two 1.5 globals are 3.10 seconds
+                        // move up out of the loop
+                        //leaving until next MS 0.40 seconds
+                        LeavingUntilNextMS_2 = timeInBetween - Two1pt5;
+                        //Occurs 15.52% of the time
+                        //can use exe for 3rd gcd before next ms
+                        canUse2 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_2 ? "exe" : "nothing"));
+                        //puts MS at extra 1.15	length for 6.20
+                        MSatExtra2 = LatentGCD - LeavingUntilNextMS_2;
+                        lengthFor2 = (MSBaseCd + CalcOpts.AllowedReact + MSatExtra2);
+                        //MS is normally at a length of 5.049
+                        msNormally2 = (canUse2 == "exe or slam" ? lengthFor2 : MSBaseCd + CalcOpts.AllowedReact);
+                        //Extended length is 19.25% of the time
 
-                    //Two 1.0 globals are 2.10 seconds
-                    // moved up out of the loop
-                    //leaving until next MS 1.40 seconds
-                    LeavingUntilNextMS_3 = timeInBetween - Two1pt0;
-                    //Occurs 0.28% of the time
-                    //can use exe or slam for last gcd before next ms
-                    canUse3 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe" : "nothing"));
-                    //puts MS at extra 0.15	length for 5.20
-                    MSatExtra3 = LatentGCD - LeavingUntilNextMS_3;
-                    lengthFor3 = (MSBaseCd + CalcOpts.AllowedReact + MSatExtra3);
-                    //MS is normally at a length of 5.196
-                    msNormally3 = (canUse3 == "exe or slam" ? lengthFor3 : MSBaseCd + CalcOpts.AllowedReact);
-                    //Extended length is 100.00% of the time
+                        //Two 1.0 globals are 2.10 seconds
+                        // moved up out of the loop
+                        //leaving until next MS 1.40 seconds
+                        LeavingUntilNextMS_3 = timeInBetween - Two1pt0;
+                        //Occurs 0.28% of the time
+                        //can use exe or slam for last gcd before next ms
+                        canUse3 = (useSlamifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe or slam" : (useExeifMSHasMoreThan < LeavingUntilNextMS_3 ? "exe" : "nothing"));
+                        //puts MS at extra 0.15	length for 5.20
+                        MSatExtra3 = LatentGCD - LeavingUntilNextMS_3;
+                        lengthFor3 = (MSBaseCd + CalcOpts.AllowedReact + MSatExtra3);
+                        //MS is normally at a length of 5.196
+                        msNormally3 = (canUse3 == "exe or slam" ? lengthFor3 : MSBaseCd + CalcOpts.AllowedReact);
+                        //Extended length is 100.00% of the time
 
-                    float Abilities = ((_BLS_GCDs + _RD_GCDs + _SL_GCDs + acts + oldHSActivates + WhiteAtks.MhActivates + _SD_GCDs) / FightDuration);
+                        float Abilities = ((_BLS_GCDs + _RD_GCDs + _SL_GCDs + acts + oldHSActivates + WhiteAtks.MhActivates + _SD_GCDs) / FightDuration);
 
-                    OnePt5Plus1_Occurs = 0f;
-                    Two1PtZero_Occurs = TasteForBloodMOD
-                                            * OtherMOD
-                                            * (
-                                                (1f - 3f * TasteForBloodMOD)
-                                                * Abilities
-                                                * WhiteAtks.MHAtkTable.Dodge
-                                               )
-                                            * OtherMOD;
-                    OnePt5Plus1_Occurs = (1f - 3f * TasteForBloodMOD)
-                                           * Abilities
-                                           * WhiteAtks.MHAtkTable.Dodge
-                                           * OtherMOD
-                                         + TasteForBloodMOD
-                                           * OtherMOD
-                                         - Two1PtZero_Occurs;
-                    Two1pt5_Occurs = 1f - OnePt5Plus1_Occurs - Two1PtZero_Occurs;
+                        OnePt5Plus1_Occurs = 0f;
+                        Two1PtZero_Occurs = TasteForBloodMOD
+                                                * OtherMOD
+                                                * (
+                                                    (1f - 3f * TasteForBloodMOD)
+                                                    * Abilities
+                                                    * WhiteAtks.MHAtkTable.Dodge
+                                                   )
+                                                * OtherMOD;
+                        OnePt5Plus1_Occurs = (1f - 3f * TasteForBloodMOD)
+                                               * Abilities
+                                               * WhiteAtks.MHAtkTable.Dodge
+                                               * OtherMOD
+                                             + TasteForBloodMOD
+                                               * OtherMOD
+                                             - Two1PtZero_Occurs;
+                        Two1pt5_Occurs = 1f - OnePt5Plus1_Occurs - Two1PtZero_Occurs;
 
-                    // Exec procs in MS
-                    atleast1 = (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 1f : 2f) * avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "niether" ? 2f : 3f) * avoid + Two1PtZero_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 2f * (1f - CombatFactors._c_ymiss)) + (MSBaseCd - (1.5f + CalcOpts.AllowedReact)) / CombatFactors._c_mhItemSpeed));
-                    atleast2 = (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 1f : 2f) * avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.AllowedReact)) / CombatFactors._c_mhItemSpeed))
-                             * (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed) + Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed)));
-                    atleast3 = (1f - (float)Math.Pow(SDMOD, Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.AllowedReact)) / CombatFactors._c_mhItemSpeed))
-                             * (1f - (float)Math.Pow(SDMOD, Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed)))
-                             * (1f - (float)Math.Pow(SDMOD, Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid)));
+                        // Exec procs in MS
+                        atleast1 = (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 1f : 2f) * avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "niether" ? 2f : 3f) * avoid + Two1PtZero_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 2f * (1f - CombatFactors._c_ymiss)) + (MSBaseCd - (1.5f + CalcOpts.AllowedReact)) / CombatFactors._c_mhItemSpeed));
+                        atleast2 = (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 1f : 2f) * avoid + 1f * (1f - CombatFactors._c_ymiss)) + Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.AllowedReact)) / CombatFactors._c_mhItemSpeed))
+                                 * (1f - (float)Math.Pow(SDMOD, OnePt5Plus1_Occurs * ((canUse1 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed) + Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed)));
+                        atleast3 = (1f - (float)Math.Pow(SDMOD, Two1pt5_Occurs * (canUse2 == "nothing" ? 2f : 3f) * avoid + (MSBaseCd - (1.5f + CalcOpts.AllowedReact)) / CombatFactors._c_mhItemSpeed))
+                                 * (1f - (float)Math.Pow(SDMOD, Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid + 1.5f / CombatFactors._c_mhItemSpeed)))
+                                 * (1f - (float)Math.Pow(SDMOD, Two1pt5_Occurs * ((canUse2 == "nothing" ? 0f : 1f) * avoid)));
 
-                    extLength1 = (canUse1 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse1 == "exe or slam" ? 1f : 0f));
-                    extLength2 = (canUse2 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse2 == "exe or slam" ? 1f : 0f));
-                    extLength3 = (canUse3 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse3 == "exe or slam" ? 1f : 0f));
+                        extLength1 = (canUse1 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse1 == "exe or slam" ? 1f : 0f));
+                        extLength2 = (canUse2 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse2 == "exe or slam" ? 1f : 0f));
+                        extLength3 = (canUse3 == "exe" ? 0.5f * (atleast1 + atleast2 + atleast3) : (canUse3 == "exe or slam" ? 1f : 0f));
 
-                    //for avg of 5.628472631 between MS'es, from crowding
-                    averageTimeBetween = OnePt5Plus1_Occurs * (lengthFor1 * extLength1 + msNormally1 * (1f - extLength1))
-                                       + Two1pt5_Occurs * (lengthFor2 * extLength2 + msNormally2 * (1f - extLength2))
-                                       + Two1PtZero_Occurs * (lengthFor3 * extLength3 + msNormally3 * (1f - extLength3));
-                    MS.Cd = averageTimeBetween;
+                        //for avg of 5.628472631 between MS'es, from crowding
+                        averageTimeBetween = OnePt5Plus1_Occurs * (lengthFor1 * extLength1 + msNormally1 * (1f - extLength1))
+                                           + Two1pt5_Occurs * (lengthFor2 * extLength2 + msNormally2 * (1f - extLength2))
+                                           + Two1PtZero_Occurs * (lengthFor3 * extLength3 + msNormally3 * (1f - extLength3));
+                        MS.Cd = averageTimeBetween;
+                    }
                     #endregion
-                    acts = Math.Min(availGCDs, MS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, MS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _MS_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -824,7 +832,7 @@ namespace Rawr.DPSWarr {
                 }
                 // Overpower
                 if (OP.Validated) {
-                    acts = Math.Min(availGCDs, OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _OP_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -834,7 +842,7 @@ namespace Rawr.DPSWarr {
 
                 // Taste for Blood
                 if (TB.Validated) {
-                    acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                    acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _TB_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -851,7 +859,7 @@ namespace Rawr.DPSWarr {
                         //acts = attemptspersec * FightDuration;
                         //acts *= (1f - TotalPercTimeLost) * (1f - PercTimeUnder20);
                     } else {
-                        acts = Math.Min(availGCDs, SD.GetActivates(AttemptedAtksOverDur) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, SD.GetActivates(AttemptedAtksOverDur) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     }
                     #endregion
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
@@ -875,7 +883,7 @@ namespace Rawr.DPSWarr {
                     availRage -= SD.GetRageUseOverDur(_SD_GCDs);
                 }
                 // Slam for remainder of GCDs
-                if (SL.Validated && PercFailRage == 0f)
+                if (SL.Validated && PercFailRage == 1f)
                 {
                     acts = Math.Min(availGCDs, availGCDs/*SL.Activates*/ * (1f - TotalPercTimeLost));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
@@ -890,7 +898,7 @@ namespace Rawr.DPSWarr {
             }
             #endregion
             #region OnAttacks
-            if (availRage > 0f && PercFailRage == 0f) { // We need extra rage beyond the rotation to HS/CL and we don't HS/CL when parts of our rotation were failing for lac of rage
+            if (availRage > 0f && PercFailRage == 1f) { // We need extra rage beyond the rotation to HS/CL and we don't HS/CL when parts of our rotation were failing for lac of rage
                 float savedAvailRage = availRage - RageGenWhite;
                 Iterator = 0;
                 do {
@@ -941,6 +949,8 @@ namespace Rawr.DPSWarr {
                 origAvailRage = preloopAvailRage * PercTimeUnder20;
                 RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - TotalPercTimeLost) * PercTimeUnder20;
                 availRage += RageGenWhite;
+                repassAvailRage = availRage;
+                PercFailRage = 1.0f;
                 // Run the loop for <20%
                 while (
                         Iterator < 50 &&
@@ -984,12 +994,6 @@ namespace Rawr.DPSWarr {
 
                     float acts, Abil_GCDs;
 
-                    // Reduc abilities due to lack of Rage for maintaining the rotation
-                    if (repassAvailRage < 0f) {
-                        // total the amount of rage you really need and turn it into a percentage that we failed
-                        PercFailRage = 1f - (availRage / (availRage + repassAvailRage * -1f));
-                    } else { PercFailRage = 0f; }
-
                     // ==== Rage Generation Priorities ========
                     // Berserker Rage
                     if (BZ.Validated) {
@@ -1009,7 +1013,7 @@ namespace Rawr.DPSWarr {
                     // ==== Maintenance Priorities ========
                     // Battle Shout
                     if (BTS.Validated) {
-                        acts = Math.Min(availGCDs, BTS.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, BTS.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                         _Battle_GCDs = oldZRGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1018,7 +1022,7 @@ namespace Rawr.DPSWarr {
                     }
                     // Commanding Shout
                     if (CS.Validated) {
-                        acts = Math.Min(availGCDs, CS.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, CS.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                         _Comm_GCDs = oldCSGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1027,7 +1031,7 @@ namespace Rawr.DPSWarr {
                     }
                     // Demoralizing Shout
                     if (DS.Validated) {
-                        acts = Math.Min(availGCDs, DS.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, DS.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                         _Demo_GCDs = oldDemoGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1036,7 +1040,7 @@ namespace Rawr.DPSWarr {
                     }
                     // Sunder Armor
                     if (SN.Validated) {
-                        acts = Math.Min(availGCDs, SN.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, SN.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                         _Sunder_GCDs = oldSNGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1045,7 +1049,7 @@ namespace Rawr.DPSWarr {
                     }
                     // Thunder Clap
                     if (TH.Validated) {
-                        acts = Math.Min(availGCDs, TH.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, TH.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                         _Thunder_GCDs = oldTHGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1054,7 +1058,7 @@ namespace Rawr.DPSWarr {
                     }
                     // Hamstring
                     if (HMS.Validated) {
-                        acts = Math.Min(availGCDs, HMS.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, HMS.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                         _Ham_GCDs = oldHMSGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1063,7 +1067,7 @@ namespace Rawr.DPSWarr {
                     }
                     // Shattering Throw
                     if (ST.Validated) {
-                        acts = Math.Min(availGCDs, ST.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, ST.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         _Shatt_GCDs = oldSTGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1072,7 +1076,7 @@ namespace Rawr.DPSWarr {
                     }
                     // Enraged Regeneration
                     if (ER.Validated) {
-                        acts = Math.Min(availGCDs, ER.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, ER.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(acts) : acts;
                         _ER_GCDs = oldERGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1081,14 +1085,14 @@ namespace Rawr.DPSWarr {
                     }
                     // Sweeping Strikes
                     if (SW.Validated) {
-                        acts = Math.Min(availGCDs, SW.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, SW.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         _SW_GCDs = oldSWGCDs + Abil_GCDs;
                         availRage -= SW.GetRageUseOverDur(Abil_GCDs);
                     }
                     // Death Wish
                     if (DW.Validated) {
-                        acts = Math.Min(availGCDs, Death.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, Death.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         _Death_GCDs = oldDeathGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1098,16 +1102,24 @@ namespace Rawr.DPSWarr {
                     // ==== Primary Ability Priorities ====
                     // Rend
                     if (RD.Validated) {
-                        acts = Math.Min(availGCDs, RD.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, RD.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         _RD_GCDs = oldRDGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
                         availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                         availRage -= RD.GetRageUseOverDur(Abil_GCDs);
                     }
+
+                    if (repassAvailRage < 0f)
+                    {
+                        // total the amount of rage you really need and turn it into a percentage that we failed
+                        PercFailRage *= 1f + repassAvailRage / (availRage - repassAvailRage); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
+                    }
+                    else { PercFailRage = 1f; }
+
                     // Overpower
                     if (OP.Validated) {
-                        acts = Math.Min(availGCDs, OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * PercTimeUnder20 * PercFailRage);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         _OP_GCDs = oldOPGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1116,7 +1128,7 @@ namespace Rawr.DPSWarr {
                     }
                     // Taste for Blood
                     if (TB.Validated) {
-                        acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * (1f - PercFailRage));
+                        acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * PercFailRage);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         _TB_GCDs = oldTBGCDs + Abil_GCDs;
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
@@ -1127,7 +1139,7 @@ namespace Rawr.DPSWarr {
                     if (EX.Validated) {
                         EX.PercTimeUnder20 = PercTimeUnder20;
                         acts = Math.Min(availGCDs,
-                            availGCDs * (1f - TotalPercTimeLost) * (1f - PercFailRage)
+                            availGCDs * (1f - TotalPercTimeLost) * PercFailRage
                             /*EX.Activates - (_ZRage_GCDs + _Battle_GCDs + _Comm_GCDs + _Demo_GCDs
                                + _Sunder_GCDs + _Thunder_GCDs + _Ham_GCDs + _Shatt_GCDs + _ER_GCDs + _Death_GCDs
                                + _RD_GCDs + _TB_GCDs + _OP_GCDs) * PercTimeUnder20*/
@@ -1137,7 +1149,7 @@ namespace Rawr.DPSWarr {
                         GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
                         availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                         float possibleFreeRage = availRage / (FightDuration * PercTimeUnder20);
-                        if (PercFailRage > 0) { possibleFreeRage = 0f; } // Don't give extra rage to it if we're failing rotation
+                        if (PercFailRage < 1f) { possibleFreeRage = 0f; } // Don't give extra rage to it if we're failing rotation
                         EX.FreeRage = possibleFreeRage;//50f
                         availRage -= EX.GetRageUseOverDur(_EX_GCDs);
                     }
