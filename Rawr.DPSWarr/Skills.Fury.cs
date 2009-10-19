@@ -307,9 +307,8 @@ namespace Rawr.DPSWarr
             {
                 get
                 {
-                    float swingrage = Whiteattacks.MHSwingRage;
-                    float glyphback = (Talents.GlyphOfHeroicStrike ? 10.0f * ContainCritValue(true) : 0f);
-                    return RageCost + swingrage - glyphback;
+                    //float glyphback = (Talents.GlyphOfHeroicStrike ? 10.0f * ContainCritValue(true) : 0f);
+                    return base.FullRageCost - (Talents.GlyphOfHeroicStrike ? 10.0f * ContainCritValue(true) : 0f);
                 }
             }
         }

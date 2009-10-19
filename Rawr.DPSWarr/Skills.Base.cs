@@ -24,6 +24,8 @@ namespace Rawr.DPSWarr {
                 HSOverridesOverDur = 0f;
                 CLOverridesOverDur = 0f;
                 Slam_Freq = 0f;
+                _uwProcValue_mh = combatFactors._c_mhItemSpeed * Talents.UnbridledWrath / 20.0f;
+                _uwProcValue_oh = combatFactors._c_ohItemSpeed * Talents.UnbridledWrath / 20.0f;
             }
             #region Variables
             private readonly Character Char;
@@ -36,6 +38,10 @@ namespace Rawr.DPSWarr {
             public AttackTable OHAtkTable;
             private float OVDOVERDUR_HS;
             private float OVDOVERDUR_CL;
+            private float _uwProcValue_mh;
+            private float _uwProcValue_oh;
+            public float MHUWProcValue { get { return _uwProcValue_mh; } }
+            public float OHUWProcValue { get { return _uwProcValue_oh; } }
             private float FightDuration;
             private float Targets { get { return TARGETS; } set { TARGETS = value; } }
             private float AvgTargets {
@@ -50,7 +56,6 @@ namespace Rawr.DPSWarr {
                 }
             }
             // Get/Set
-            public void UpdateStats(Stats stats) { StatS = stats; }
             public float HSOverridesOverDur { get { return OVDOVERDUR_HS; } set { OVDOVERDUR_HS = value; } }
             public float CLOverridesOverDur { get { return OVDOVERDUR_CL; } set { OVDOVERDUR_CL = value; } }
             public float Slam_Freq;
@@ -164,22 +169,22 @@ namespace Rawr.DPSWarr {
                     // regular hit
                     //d = based;
                     //f = 3.5f;
-                    return RageFormula(based, 
+                    return RageFormula(based,
                         3.5f * s) * (MHAtkTable.Hit + MHAtkTable.Dodge + MHAtkTable.Parry) +
 
                     // glance
-                    //d = based * combatFactors.ReducWhGlancedDmg;
-                            RageFormula(based * combatFactors.ReducWhGlancedDmg, 
+                        //d = based * combatFactors.ReducWhGlancedDmg;
+                            RageFormula(based * combatFactors.ReducWhGlancedDmg,
                         3.5f * s) * MHAtkTable.Glance +
 
                     // crit
-                    //d = based * (1f + combatFactors.BonusWhiteCritDmg);
-                    //f = 7.0f;
-                    
-                            RageFormula(based * (1f + combatFactors.BonusWhiteCritDmg),
-                        7.0f * s) * MHAtkTable.Crit +
+                        //d = based * (1f + combatFactors.BonusWhiteCritDmg);
+                        //f = 7.0f;
 
-                            s * (3f * Talents.UnbridledWrath) / 60.0f * (1.0f - MHAtkTable.AnyLand);
+                            RageFormula(based * (1f + combatFactors.BonusWhiteCritDmg),
+                        7.0f * s) * MHAtkTable.Crit;/* +
+
+                            MHUWProcValue * MHAtkTable.AnyLand;*/
 
                     //return rage;
                 }
@@ -202,27 +207,27 @@ namespace Rawr.DPSWarr {
                     return RageFormula(based, 1.75f * s) * (OHAtkTable.Hit + OHAtkTable.Dodge + OHAtkTable.Parry) +
 
                     // glance
-                    //d = based * combatFactors.ReducWhGlancedDmg;
-                            RageFormula(based * combatFactors.ReducWhGlancedDmg, 
+                        //d = based * combatFactors.ReducWhGlancedDmg;
+                            RageFormula(based * combatFactors.ReducWhGlancedDmg,
                         1.75f * s) * OHAtkTable.Glance +
 
                     // crit
-                    //d = based * (1f + combatFactors.BonusWhiteCritDmg);
-                    //f = 3.5f;
+                        //d = based * (1f + combatFactors.BonusWhiteCritDmg);
+                        //f = 3.5f;
                             RageFormula(based * (1f + combatFactors.BonusWhiteCritDmg),
-                        3.5f*s) * OHAtkTable.Crit +
+                        3.5f * s) * OHAtkTable.Crit; /*+
 
-                        s * (3f * Talents.UnbridledWrath) / 60.0f * (1.0f - OHAtkTable.AnyLand);
+                        OHUWProcValue * OHAtkTable.AnyLand;*/
                     
                     //return rage;
                 }
             }
-            public float MHRageGenOverDur { get { return MhActivates * MHSwingRage; } }
-            public float MHRageGenOverDurNoHS { get { return MhActivatesNoHS * MHSwingRage; } }
+            public float MHRageGenOverDur { get { return MhActivates * (MHSwingRage + MHUWProcValue); } }
+            public float MHRageGenOverDurNoHS { get { return MhActivatesNoHS * (MHSwingRage + MHUWProcValue); } }
             public float OHRageGenOverDur {
                 get {
                     if (combatFactors.useOH) {
-                        return OhActivates * OHSwingRage;
+                        return OhActivates * (OHSwingRage + OHUWProcValue);
                     }
                     return 0f;
                 }
@@ -293,7 +298,7 @@ namespace Rawr.DPSWarr {
                 //return MHAtkTable.AnyNotLand / abilInterval / whiteAtkInterval * rageCost / MHSwingRage;
                 //float whiteMod = (MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / FightDuration;
                 if (!combatFactors.useOH && MhActivates <= 0f) { return 0f; }
-                return (MHAtkTable.Miss * rageCost) / (abilInterval * ((MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / FightDuration));
+                return (MHAtkTable.Miss * rageCost) / (abilInterval * ((MhActivates * (MHSwingRage + MHUWProcValue) + (combatFactors.useOH ? OhActivates * (OHSwingRage + OHUWProcValue) : 0f)) / FightDuration));
             }
             /*public float AvoidanceStreak {
                 get {
@@ -784,7 +789,7 @@ namespace Rawr.DPSWarr {
             private float OVERRIDESOVERDUR;
             // Get/Set
             public float OverridesOverDur { get { return OVERRIDESOVERDUR; } set { OVERRIDESOVERDUR = value; } }
-            public virtual float FullRageCost { get { return RageCost + Whiteattacks.MHSwingRage; } }
+            public virtual float FullRageCost { get { return RageCost + Whiteattacks.MHSwingRage - Whiteattacks.MHUWProcValue * MHAtkTable.AnyLand; } }
             // Functions
             public override float Activates
             {
