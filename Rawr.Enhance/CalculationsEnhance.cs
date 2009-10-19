@@ -371,13 +371,14 @@ namespace Rawr.Enhance
                 float damageFS = (damageFSBase + coefFS * spellPower) * concussionMultiplier;
                 float damageFTDoT = (damageFSDoTBase + coefFSDoT * spellPower) * concussionMultiplier;
                 float usesCooldown = cs.AbilityCooldown(EnhanceAbility.FlameShock);
-                float flameShockdps = (damageFS + damageFTDoT) / usesCooldown;
-                float flameShockNormal = flameShockdps * cs.ChanceSpellHit;
-                float flameShockCrit = 0f;
+                float flameShockdps = damageFS / usesCooldown;
+                float flameShockDoTdps = damageFTDoT / usesCooldown;
+                float flameShockNormal = (flameShockdps * cs.SpellHitModifier) + (flameShockDoTdps * cs.ChanceSpellHit);
+                float flameShockCrit = flameShockdps * cs.SpellCritModifier * cs.CritMultiplierSpell; // only the initial portion can crit
                 if (character.ShamanTalents.GlyphofFlameShock)
                 {
-                    flameShockNormal = flameShockdps * cs.SpellHitModifier;
-                    flameShockCrit = flameShockdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
+                    flameShockNormal = (flameShockdps + flameShockDoTdps) * cs.SpellHitModifier;
+                    flameShockCrit = (flameShockdps + flameShockDoTdps) * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 }
                 dpsFS = (flameShockNormal + flameShockCrit) * bonusFireDamage * bossFireResistance * shockBonus;
             }
