@@ -290,6 +290,7 @@ These numbers to do not include racial bonuses.",
         private Dictionary<string, Color> _subPointNameColors = null;
         private Dictionary<string, Color> _subPointNameColors_Normal = null;
         private Dictionary<string, Color> _subPointNameColors_DPSDMG = null;
+        private Dictionary<string, Color> _subPointNameColors_DPSDPR = null;
         public override Dictionary<string, Color> SubPointNameColors {
             get {
                 if (_subPointNameColors_Normal == null) {
@@ -919,6 +920,7 @@ These numbers to do not include racial bonuses.",
                     _customChartNames = new string[] {
                         "Ability DPS+Damage",
                         //"Ability Maintenance Changes",
+                        "Rage Cost per Damage",
                     };
                 }
                 return _customChartNames;
@@ -1157,6 +1159,141 @@ These numbers to do not include racial bonuses.",
                     #region Rage Dumps
                     comparisons.Add(getComp(character, "Heroic Strike", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_));
                     comparisons.Add(getComp(character, "Cleave", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_));
+                    #endregion
+                    foreach (ComparisonCalculationsDPSWarr comp in comparisons) {
+                        comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
+                    }
+                    calcOpts.Maintenance = origMaints;
+                    return comparisons.ToArray();
+                }
+                #endregion
+                #region Rage Cost per Damage
+                case "Rage Cost per Damage": {
+                    if (_subPointNameColors_DPSDPR == null) {
+                        _subPointNameColors_DPSDPR = new Dictionary<string, Color>();
+                        _subPointNameColors_DPSDPR.Add("Damage Per Rage Point", Color.FromArgb(255, 255, 0, 0));
+                        _subPointNameColors_DPSDPR.Add("Deep Wounds Bonus", Color.FromArgb(255, 0, 0, 255));
+                    }
+                    _subPointNameColors = _subPointNameColors_DPSDPR;
+                    List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
+                    float DeepWoundsDamage = calculations.Rot.DW.TickSize * 6f;
+                    if (calculations.Rot.GetType() == typeof(FuryRotation)) {
+                        #region Fury
+                        FuryRotation fr = (FuryRotation)calculations.Rot;
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Bloodsurge";
+                            comparison.DPSPoints = (fr.BS.RageCost * fr.BS.AvgTargets) / fr.BS.DamageOnUse;
+                            comparison.SurvPoints = (fr.BS.MHAtkTable.Crit * fr.BS.AvgTargets) * (DeepWoundsDamage / fr.BS.DamageOnUse);
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Bloodthirst";
+                            comparison.DPSPoints = (fr.BT.RageCost * fr.BT.AvgTargets) / fr.BT.DamageOnUse;
+                            comparison.SurvPoints = (fr.BT.MHAtkTable.Crit * fr.BT.AvgTargets) * (DeepWoundsDamage / fr.BT.DamageOnUse);
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Whirlwind";
+                            comparison.DPSPoints = (fr.WW.RageCost * fr.WW.AvgTargets) / fr.WW.DamageOnUse;
+                            comparison.SurvPoints = (fr.WW.MHAtkTable.Crit * fr.WW.AvgTargets) * (DeepWoundsDamage / fr.WW.DamageOnUse);
+                            comparisons.Add(comparison);
+                        }
+                        #endregion
+                    } else if (calculations.Rot.GetType() == typeof(ArmsRotation)) {
+                        #region Arms
+                        ArmsRotation ar = (ArmsRotation)calculations.Rot;
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Bladestorm";
+                            comparison.DPSPoints = (ar.BLS.DamageOnUse * ar.BLS.AvgTargets) / ar.BLS.RageCost;
+                            comparison.SurvPoints = (ar.BLS.MHAtkTable.Crit * ar.BLS.AvgTargets) * (DeepWoundsDamage / ar.BLS.RageCost);
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Mortal Strike";
+                            comparison.DPSPoints = (ar.MS.DamageOnUse * ar.MS.AvgTargets) / ar.MS.RageCost;
+                            comparison.SurvPoints = (ar.MS.MHAtkTable.Crit * ar.MS.AvgTargets) * (DeepWoundsDamage / ar.MS.RageCost);
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Rend";
+                            comparison.DPSPoints = (ar.RD.TickSize * ar.RD.NumTicks) / ar.RD.RageCost;
+                            comparison.SurvPoints = 0f;
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Overpower";
+                            comparison.DPSPoints = (ar.OP.DamageOnUse * ar.OP.AvgTargets) / ar.OP.RageCost;
+                            comparison.SurvPoints = (ar.OP.MHAtkTable.Crit * ar.OP.AvgTargets) * (DeepWoundsDamage / ar.OP.RageCost);
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Taste for Blood";
+                            comparison.DPSPoints = (ar.TB.DamageOnUse * ar.TB.AvgTargets) / ar.TB.RageCost;
+                            comparison.SurvPoints = (ar.TB.MHAtkTable.Crit * ar.TB.AvgTargets) * (DeepWoundsDamage / ar.TB.RageCost);
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Sudden Death";
+                            comparison.DPSPoints = (ar.SD.DamageOnUse * ar.SD.AvgTargets) / (ar.SD.RageCost + ar.SD.Exec.UsedExtraRage);
+                            comparison.SurvPoints = (ar.SD.MHAtkTable.Crit * ar.SD.AvgTargets) * (DeepWoundsDamage / (ar.SD.RageCost + ar.SD.Exec.UsedExtraRage));
+                            comparisons.Add(comparison);
+                        }
+                        {
+                            ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                            comparison.Name = "Slam";
+                            comparison.DPSPoints = (ar.SL.DamageOnUse * ar.SL.AvgTargets) / ar.SL.RageCost;
+                            comparison.SurvPoints = (ar.SL.MHAtkTable.Crit * ar.SL.AvgTargets) * (DeepWoundsDamage / ar.SL.RageCost);
+                            comparisons.Add(comparison);
+                        }
+                        #endregion
+                    }
+                    #region Maintenance
+                    {
+                        ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                        comparison.Name = "Thunder Clap";
+                        comparison.DPSPoints = (calculations.Rot.TH.DamageOnUse * calculations.Rot.TH.AvgTargets) / calculations.Rot.TH.RageCost;
+                        comparison.SurvPoints = (calculations.Rot.TH.MHAtkTable.Crit * calculations.Rot.TH.AvgTargets) * (DeepWoundsDamage / calculations.Rot.TH.RageCost);
+                        comparisons.Add(comparison);
+                    }
+                    {
+                        ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                        comparison.Name = "Shattering Throw";
+                        comparison.DPSPoints = (calculations.Rot.ST.DamageOnUse * calculations.Rot.ST.AvgTargets) / calculations.Rot.ST.RageCost;
+                        comparison.SurvPoints = (calculations.Rot.ST.MHAtkTable.Crit * calculations.Rot.ST.AvgTargets) * (DeepWoundsDamage / calculations.Rot.ST.RageCost);
+                        comparisons.Add(comparison);
+                    }
+                    #endregion
+                    #region Generics
+                    {
+                        ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                        comparison.Name = "Heroic Strike";
+                        comparison.DPSPoints = (calculations.Rot.HS.DamageOnUse * calculations.Rot.HS.AvgTargets) / calculations.Rot.HS.FullRageCost;
+                        comparison.SurvPoints = (calculations.Rot.HS.MHAtkTable.Crit * calculations.Rot.HS.AvgTargets) * (DeepWoundsDamage / calculations.Rot.HS.FullRageCost);
+                        comparisons.Add(comparison);
+                    }
+                    {
+                        ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                        comparison.Name = "Cleave";
+                        comparison.DPSPoints = (calculations.Rot.CL.DamageOnUse * calculations.Rot.CL.AvgTargets) / calculations.Rot.CL.FullRageCost;
+                        comparison.SurvPoints = (calculations.Rot.CL.MHAtkTable.Crit * calculations.Rot.CL.AvgTargets) * (DeepWoundsDamage / calculations.Rot.CL.FullRageCost);
+                        comparisons.Add(comparison);
+                    }
+                    {
+                        ComparisonCalculationsDPSWarr comparison = new ComparisonCalculationsDPSWarr();
+                        comparison.Name = "Execute";
+                        comparison.DPSPoints = (calculations.Rot.EX.DamageOnUse * calculations.Rot.EX.AvgTargets) / (calculations.Rot.EX.RageCost + calculations.Rot.EX.UsedExtraRage);
+                        comparison.SurvPoints = (calculations.Rot.EX.MHAtkTable.Crit * calculations.Rot.EX.AvgTargets) * (DeepWoundsDamage / (calculations.Rot.EX.RageCost + calculations.Rot.EX.UsedExtraRage));
+                        comparisons.Add(comparison);
+                    }
                     #endregion
                     foreach (ComparisonCalculationsDPSWarr comp in comparisons) {
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
