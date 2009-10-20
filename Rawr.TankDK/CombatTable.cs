@@ -149,8 +149,13 @@ namespace Rawr.TankDK
             float MHExpertise = stats.Expertise;
             float OHExpertise = stats.Expertise;
 
-            MH = new Weapon(null, stats, calcOpts, 0f);
-            OH = new Weapon(null, stats, calcOpts, 0f);
+            Item barehand = new Item();
+            barehand.Speed = 2.0f;
+            barehand.MaxDamage = 2;
+            barehand.MinDamage = 1;
+
+            MH = new Weapon(barehand, stats, calcOpts, 0f);
+            OH = new Weapon(barehand, stats, calcOpts, 0f);
 
             if (character.MainHand != null)
             {
@@ -1087,7 +1092,7 @@ namespace Rawr.TankDK
             DPSPoints += fDamWanderingPlague;
             DPSPoints += fDamRuneStrike;
 
-            // Magic Number?!?
+            // TODO: Magic Number?!?
             DPSPoints *= 2.0735f;
 
 #if DEBUG

@@ -20,6 +20,7 @@ namespace Rawr.TankDK {
 
             NUM_Quality
         }
+
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
 				////Relevant Gem IDs for TankDKs
@@ -400,9 +401,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bool bDualWielding = false;
             float f2hWeaponDamageMultiplier = 0f;
             float hitChance = 0;
-            float chanceTargetParry = 0f;
-            float chanceTargetDodge = 0f;
-            float chanceTargetMiss = 0f;
+            float chanceTargetParry = StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff];
+            float chanceTargetDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[iLevelDiff];
+            float chanceTargetMiss = StatConversion.WHITE_MISS_CHANCE_CAP[iLevelDiff];
             if (character.MainHand != null) 
             {
                 // 2-hander weapon specialization.
@@ -440,14 +441,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 {
                     stats.Expertise += 5;
                 }
-                // 6.5 % for a boss mob to dodge.
-                // 14% for a boss mob to parry.
-                chanceTargetParry = Math.Max(0.0f, StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff] - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
-                chanceTargetDodge = Math.Max(0.0f, StatConversion.WHITE_DODGE_CHANCE_CAP[iLevelDiff] - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
-                hitChance = 1.0f - (chanceTargetMiss + chanceTargetDodge + chanceTargetParry);
-                // Can't have more than 100% hit chance.
-                hitChance = Math.Min(1f, hitChance);
             }
+
+            chanceTargetParry = Math.Max(0.0f, StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff] - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
+            chanceTargetDodge = Math.Max(0.0f, StatConversion.WHITE_DODGE_CHANCE_CAP[iLevelDiff] - StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise));
+            hitChance = 1.0f - (chanceTargetMiss + chanceTargetDodge + chanceTargetParry);
+            // Can't have more than 100% hit chance.
+            hitChance = Math.Min(1f, hitChance);
+            
             #endregion
 
             // need to calculate the rotation after we have the DR values for Dodge/Parry/Miss/haste.
