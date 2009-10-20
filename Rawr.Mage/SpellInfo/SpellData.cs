@@ -1278,7 +1278,7 @@ namespace Rawr.Mage
         }
 
         float tormentTheWeak;
-        float arcaneBlastDamageMultiplier;
+        float arcaneBlastDamageMultiplier;        
 
         public ArcaneMissilesTemplate(CharacterCalculationsMage calculations)
             : base("Arcane Missiles", true, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(calculations.CalculationOptions), 5, 6)
@@ -1294,6 +1294,8 @@ namespace Rawr.Mage
             BaseSpellModifier *= (1 + calculations.BaseStats.BonusMageNukeMultiplier);
             BaseInterruptProtection += 0.2f * calculations.MageTalents.ArcaneStability;
             BaseCritRate += 0.05f * calculations.BaseStats.Mage4T9;
+            // Arcane Potency bug
+            BaseCritRate -= 0.8f * 0.15f * 0.02f * calculations.MageTalents.ArcaneConcentration * calculations.MageTalents.ArcanePotency;
         }
     }
 
