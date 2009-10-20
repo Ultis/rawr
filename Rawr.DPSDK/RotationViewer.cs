@@ -49,7 +49,7 @@ namespace Rawr.DPSDK
         {
             rotation.getGCDTime();
             totalGCDs.Text = rotation.getGCDTime() + " seconds";
-            if (rotation.getGCDTime() > rotation.curRotationDuration)
+            if (rotation.getGCDTime() > rotation.CurRotationDuration)
             {
                 totalGCDs.ForeColor = Color.Red;
             }
@@ -69,20 +69,20 @@ namespace Rawr.DPSDK
         {
             txtBS.Text = rotation.BloodStrike.ToString();
             txtDC.Text = rotation.DeathCoil.ToString();
-            txtDuration.Text = rotation.curRotationDuration.ToString();
+            txtDuration.Text = rotation.CurRotationDuration.ToString();
             txtFS.Text = rotation.FrostStrike.ToString();
             txtHB.Text = rotation.HowlingBlast.ToString();
             txtHS.Text = rotation.HeartStrike.ToString();
             txtIT.Text = rotation.IcyTouch.ToString();
-            txtNumDisease.Text = rotation.numDisease.ToString();
+            txtNumDisease.Text = rotation.NumDisease.ToString();
             txtOblit.Text = rotation.Obliterate.ToString();
             txtDS.Text = rotation.DeathStrike.ToString();
             txtPS.Text = rotation.PlagueStrike.ToString();
             txtSS.Text = rotation.ScourgeStrike.ToString();
             txtPest.Text = rotation.Pestilence.ToString();
-            txtUptime.Text = rotation.diseaseUptime.ToString();
+            txtUptime.Text = rotation.DiseaseUptime.ToString();
             txtHoW.Text = rotation.Horn.ToString();
-            cbManagedRP.Checked = rotation.managedRP;
+            cbManagedRP.Checked = rotation.ManagedRP;
             txtGF.Text = rotation.GhoulFrenzy.ToString();
             if (rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)
             {
@@ -255,11 +255,11 @@ namespace Rawr.DPSDK
             {
                 double d = double.Parse(t.Text);
                 float f = (float)d;
-                rotation.curRotationDuration = f;
+                rotation.CurRotationDuration = f;
             }
             catch
             {
-                rotation.curRotationDuration = 0f;
+                rotation.CurRotationDuration = 0f;
                 t.Text = "0";
             }
             updateLabels();
@@ -340,11 +340,11 @@ namespace Rawr.DPSDK
             {
                 double d = double.Parse(t.Text);
                 float f = (float)d;
-                rotation.numDisease = f;
+                rotation.NumDisease = f;
             }
             catch
             {
-                rotation.numDisease = 0f;
+                rotation.NumDisease = 0f;
                 t.Text = "0";
             }
             updateLabels();
@@ -458,11 +458,11 @@ namespace Rawr.DPSDK
             {
                 double d = double.Parse(t.Text);
                 float f = (float)d;
-                rotation.diseaseUptime = f;
+                rotation.DiseaseUptime = f;
             }
             catch
             {
-                rotation.diseaseUptime = 0f;
+                rotation.DiseaseUptime = 0f;
                 t.Text = "0";
             }
             updateLabels();
@@ -516,7 +516,7 @@ namespace Rawr.DPSDK
         {
                 txtFS.ReadOnly = cbManagedRP.Checked;
                 txtDC.ReadOnly = cbManagedRP.Checked;
-                rotation.managedRP = cbManagedRP.Checked;
+                rotation.ManagedRP = cbManagedRP.Checked;
                 updateLabels();
                 txtFS.Text = rotation.FrostStrike.ToString();
                 txtDC.Text = rotation.DeathCoil.ToString();
