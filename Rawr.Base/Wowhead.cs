@@ -281,7 +281,7 @@ namespace Rawr
                 if (vendorIndex >= 0)
                 {
                     source = sourceKeys[vendorIndex];
-                    if (sourcemoreKeys.Length > 0)
+					if (sourcemoreKeys.Length > vendorIndex)
                     {
                         sourcemore = sourcemoreKeys[vendorIndex];
                     }
