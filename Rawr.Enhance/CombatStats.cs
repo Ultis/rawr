@@ -71,6 +71,7 @@ namespace Rawr.Enhance
 
         private float callOfThunder = 0f;
         private float staticShocksPerSecond = 0f;
+        private float maxMana = 0;
 
         public float GlancingRate { get { return glancingRate; } }
         public float FightLength { get { return fightLength; } }
@@ -149,6 +150,8 @@ namespace Rawr.Enhance
         public float DisplayMeleeCrit { get { return chanceCrit; } }
         public float DisplayYellowCrit { get { return AverageYellowCrit + yellowCritDepression; } }
         public float DisplaySpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
+
+        public float MaxMana { get { return maxMana; } }
       
         public float DamageReduction {
             get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor, _stats.ArmorPenetration, 0f, _stats.ArmorPenetrationRating); }
@@ -333,6 +336,7 @@ namespace Rawr.Enhance
             chanceMeleeHit = meleeAttacksPerSec / (swingsPerSMHMelee + swingsPerSOHMelee + 2f * wfProcsPerSecond + .25f + 1f/6f);
             float staticShockChance = (.02f * _character.ShamanTalents.StaticShock + (_stats.Enhance2T9 == 1f ? 0.03f : 0f));
             staticShocksPerSecond = (HitsPerSMH + HitsPerSOH) * staticShockChance;
+            maxMana = _stats.Mana;
         }
         
         private float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Shaman);}

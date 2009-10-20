@@ -35,7 +35,7 @@ namespace Rawr.Enhance
             int priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.ShamanisticRage);
             if (priority > 0)
                 if (_talents.ShamanisticRage == 1)
-                    abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, gcd, 0f, priority, true));
+                    abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, gcd, 0f, priority, false));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FeralSpirits);
             if (priority > 0)
                 if (_talents.FeralSpirit == 1)
@@ -83,40 +83,35 @@ namespace Rawr.Enhance
 
         public void CalculateAbilities()
         {
-            float gcd = 1.5f;
-            float currentTime = 0f;
-            float averageLag = _calcOpts.AverageLag / 1000f;
-            float shockOffCooldown = 0f;
-            float shockCooldown = _cs.BaseShockSpeed;
+            PriorityDataBlock db = new PriorityDataBlock(_calcOpts, _cs);
             PriorityQueue<Ability> queue = new PriorityQueue<Ability>();
             foreach (Ability ability in _abilities)
                 queue.Enqueue(ability);
             while (queue.Count > 0)
             {
                 Ability ability = queue.Dequeue();
-                if (ability.MissedCooldown(currentTime)) // we missed a cooldown so set new cooldown to current time
-                    ability.UpdateCooldown(currentTime);
+                if (ability.MissedCooldown(db.CurrentTime)) // we missed a cooldown so set new cooldown to current time
+                    ability.UpdateCooldown(db.CurrentTime);
                 else
                 {
                     // if we have chosen to wait a fraction of a second for next ability then we need
                     // to ensure that the current time starts when ability is actually off cooldown
-                    if (ability.CooldownOver > currentTime)
-                        currentTime = ability.CooldownOver;
+                    if (ability.CooldownOver > db.CurrentTime)
+                        db.CurrentTime = ability.CooldownOver;
                     if ((ability.AbilityType == EnhanceAbility.EarthShock || ability.AbilityType == EnhanceAbility.FlameShock) &&
-                        currentTime < shockOffCooldown)
+                        db.CurrentTime < db.ShockOffCooldown)
                     {
                         // this is a shock and previous shock is still on cooldown
                         // so we update the attempted shock's cooldown to when the shock is next available
-                        ability.UpdateCooldown(shockOffCooldown);
+                        ability.UpdateCooldown(db.ShockOffCooldown);
                     }
                     else
                     {
                         // all is ok so use the ability
                         if (ability.AbilityType == EnhanceAbility.EarthShock || ability.AbilityType == EnhanceAbility.FlameShock)
-                            shockOffCooldown = currentTime + shockCooldown;
-                        ability.Use(currentTime); // consider adding human delay factor to time elapsed as to when next comes off CD
-                        gcd = ability.GCD;
-                        currentTime += gcd + averageLag;
+                            db.UpdateShockCooldown();
+                        ability.Use(db.CurrentTime); // consider adding human delay factor to time elapsed as to when next comes off CD
+                        db.UpdateCurrentTime(ability.GCD);
                     }
                 }
                 if (ability.CooldownOver < fightLength)
@@ -138,7 +133,7 @@ namespace Rawr.Enhance
         
         private void DebugPrint(List<Ability> abilities, float timeElapsed, string name)
         {
-#if !RAWR3
+            #if !RAWR3
             if (abilities.Count > 3)
                 System.Diagnostics.Debug.Print(
                     "Time: {0} - FS {1}, {2} - LB {3}, {4} - SS {5}, {6} - ES {7}, {8} - LL {9}, {10} - LS {11}, {12} - MT {13}, {14} - used {15}",
@@ -150,7 +145,7 @@ namespace Rawr.Enhance
                    abilities[4].Uses, abilities[4].CooldownOver,
                    abilities[5].Uses, abilities[5].CooldownOver,
                    abilities[6].Uses, abilities[6].CooldownOver, name);
-#endif
+            #endif
         }
 
         public float AbilityCooldown(EnhanceAbility abilityType)
@@ -162,6 +157,41 @@ namespace Rawr.Enhance
             }
             return fightLength;
         }
+        #region Data Block
+        private class PriorityDataBlock
+        {
+            float _gcd = 1.5f;
+            float _currentTime = 0f;
+            float _averageLag = 0f;
+            float _shockOffCooldown = 0f;
+            float _shockCooldown = 0f;
+            float _currentMana = 0f;
+
+            public PriorityDataBlock(CalculationOptionsEnhance calcOpts, CombatStats cs)
+            {
+                _averageLag = calcOpts.AverageLag / 1000f;
+                _shockCooldown = cs.BaseShockSpeed;
+                _currentMana = cs.MaxMana;
+            }
+
+            public void UpdateCurrentTime(float gcd)
+            {
+                _gcd = gcd;
+                _currentTime += _gcd + _averageLag;
+            }
+
+            public void UpdateShockCooldown()
+            {
+                _shockOffCooldown = _currentTime + _shockCooldown;
+            }
+
+            public float GCD { get { return _gcd; } set { _gcd = value; } }
+            public float CurrentTime { get { return _currentTime; } set { _currentTime = value; } }
+            public float CurrentMana { get { return _currentMana; } set { _currentMana = value; } }
+            public float ShockCooldown { get { return _shockCooldown; } }
+            public float ShockOffCooldown { get { return _shockOffCooldown; } }
+        }
+        #endregion
     }
 
     #region Ability class

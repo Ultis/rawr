@@ -26,6 +26,8 @@ namespace Rawr.Enhance
         private float _fightLength = 10.0f;
         private float _targetFireResistance = 0;
         private float _targetNatureResistance = 0;
+        private float _minManaSR = 700;
+        private float _minManaPotion = 300;
         private bool _magma = true;
         private bool _baseStatOption = true;
         private SerializableDictionary<EnhanceAbility, Priority> _priorityList = new SerializableDictionary<EnhanceAbility, Priority>();
@@ -37,6 +39,8 @@ namespace Rawr.Enhance
         public bool InBack { get { return _inBack; } set { _inBack = value; OnPropertyChanged("InBack"); } }
         public int InBackPerc { get { return _inBackPerc; } set { _inBackPerc = value; OnPropertyChanged("InBackPerc"); } }
         public int AverageLag { get { return _averageLag; } set { _averageLag = value; OnPropertyChanged("AverageLag"); } }
+        public float MinManaSR { get { return _minManaSR; } set { _minManaSR = value; OnPropertyChanged("MinManaSR"); } }
+        public float MinManaPotion { get { return _minManaPotion; } set { _minManaPotion = value; OnPropertyChanged("MinManaPotion"); } }
         public string MainhandImbue { get { return _mainhandImbue; } set { _mainhandImbue = value; OnPropertyChanged("MainhandImbue"); } }
         public string OffhandImbue { get { return _offhandImbue; } set { _offhandImbue = value; OnPropertyChanged("OffhandImbue"); } }
         public float FightLength { get { return _fightLength; } set { _fightLength = value; OnPropertyChanged("FightLength"); } }
