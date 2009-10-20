@@ -84,6 +84,7 @@ namespace Rawr.DPSWarr {
                 //
                 InitializeB(co);
             }
+            public float ActivatesOverride { get { return base.ActivatesOverride; } }
         }
         public class EnragedRegeneration : BuffEffect
         {

@@ -261,7 +261,7 @@ namespace Rawr.DPSWarr {
                 _Move_GCDs = Abil_Acts;
                 float reduc = Math.Max(0f, BaseMoveDur);
                 GCDsused += Math.Min(NumGCDs, (reduc * _Move_GCDs) / LatentGCD);
-                if (_needDisplayCalcs) GCDUsage += (_Move_GCDs > 0 ? _Move_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : Spent Moving\n" : "");
+                if (_needDisplayCalcs) { GCDUsage += (_Move_GCDs > 0 ? _Move_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + reduc.ToString("0.00") + "secs : Lost to Movement\n" : ""); }
                 availGCDs = Math.Max(0f, NumGCDs - GCDsused);
 
                 /* = Now let's try and get some of those GCDs back =
@@ -285,7 +285,7 @@ namespace Rawr.DPSWarr {
                         _CH_Acts = Math.Min(_Move_GCDs, chActs);
                         reduc = MaxMovementTimeRegain;
                         GCDsused -= Math.Min(GCDsused, (reduc * _CH_Acts) / LatentGCD);
-                        if (_needDisplayCalcs) GCDUsage += (_CH_Acts > 0 ? _CH_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + reduc.ToString() + "secs : " + CH.Name + " (adds back to GCDs when moves are long)\n" : "");
+                        if (_needDisplayCalcs) { GCDUsage += (_CH_Acts > 0 ? _CH_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + reduc.ToString("0.00") + "secs : - " + CH.Name + "\n" : ""); }
                         availGCDs = Math.Max(0f, NumGCDs - GCDsused);
                         availRage += CH.GetRageUseOverDur(_CH_Acts);
                         // Need to add the special effect from Juggernaut to Mortal Strike, not caring about Slam right now
@@ -342,11 +342,10 @@ namespace Rawr.DPSWarr {
                 timelostwhilestunned = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilestunned) : timelostwhilestunned;
                 percTimeInStun = timelostwhilestunned / FightDuration;
                 //
-                if (_needDisplayCalcs)
-                {
-                    GCDUsage += (_Stunned_Acts > 0 ? _Stunned_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + _Stunned_Per.ToString() + "secs : Stunned\n" : "");
-                    GCDUsage += (_HF_Acts > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + _HF_RecovPer.ToString() + "secs : " + HF.Name + " (adds back to GCDs when Stunned)\n" : "");
-                    GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + _EM_RecovPer.ToString() + "secs : " + EM.Name + " (adds back to GCDs when Stunned)\n" : "");
+                if (_needDisplayCalcs) {
+                    GCDUsage += (_Stunned_Acts > 0 ? _Stunned_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _Stunned_Per.ToString("0.00") + "secs : Lost to Stuns\n" : "");
+                    GCDUsage += (_HF_Acts > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _HF_RecovPer.ToString("0.00") + "secs : - " + HF.Name + "\n" : "");
+                    GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _EM_RecovPer.ToString("0.00") + "secs : - " + EM.Name + "\n" : "");
                 }
             }
             #endregion
@@ -361,10 +360,19 @@ namespace Rawr.DPSWarr {
 
                 #region Recovery Efforts
                 if (_Feared_Acts > 0f) {
-                    float bzacts = CalcOpts.AllowFlooring ? (float)Math.Floor(BZ.Activates) : BZ.Activates;
+                    // Berserker Rage can break it
+                    float bzacts = CalcOpts.AllowFlooring ? (float)Math.Floor(BZ.Activates) : BZ.ActivatesOverride;
                     _ZRage_GCDs = Math.Min(_Feared_Acts, bzacts);
                     _BZ_RecovPer = Math.Max(0f, (_Feared_Per - Math.Max(0f, LatentGCD + CalcOpts.React / 1000f)));
                     _BZ_RecovTTL = Math.Min(_Feared_Eaten, (_BZ_RecovPer * _ZRage_GCDs) / LatentGCD);
+                }
+                if (Char.Race == CharacterRace.Human && (_Feared_Acts - _ZRage_GCDs > 0)) {
+                    // Every Man for Himself can break it
+                    float emacts = CalcOpts.AllowFlooring ? (float)Math.Floor(EM.Activates) : EM.Activates;
+                    if (_EM_Acts != 0f) { emacts -= _EM_Acts; }
+                    _EM_Acts = Math.Min(_Feared_Acts - _ZRage_GCDs, emacts);
+                    _EM_RecovPer = Math.Max(0f, (_Feared_Per - Math.Max(0f, CalcOpts.React / 1000f)));
+                    _EM_RecovTTL = Math.Min(_Feared_Eaten, (_EM_RecovPer * _EM_Acts) / LatentGCD);
                 }
                 #endregion
 
@@ -376,10 +384,10 @@ namespace Rawr.DPSWarr {
                 timelostwhilefeared = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilefeared) : timelostwhilefeared;
                 percTimeInFear = timelostwhilefeared / FightDuration;
                 //
-                if (_needDisplayCalcs)
-                {
-                    GCDUsage += (_Feared_Acts > 0 ? _Feared_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + _Feared_Per.ToString() + "secs : Feared\n" : "");
-                    GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + _BZ_RecovPer.ToString() + "secs : " + BZ.Name + " (adds back to GCDs when Feared)\n" : "");
+                if (_needDisplayCalcs) {
+                    GCDUsage += (_Feared_Acts > 0 ? _Feared_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _Feared_Per.ToString("0.00") + "secs : Lost to Fears\n" : "");
+                    GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _BZ_RecovPer.ToString("0.00") + "secs : - " + BZ.Name + "\n" : "");
+                    GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _EM_RecovPer.ToString("0.00") + "secs : - " + EM.Name + "\n" : "");
                 }
             }
             #endregion
@@ -399,6 +407,14 @@ namespace Rawr.DPSWarr {
                     _BZ_RecovPer = Math.Max(0f, (BaseRootDur - Math.Max(0f, CalcOpts.React / 1000f)));
                     _BZ_RecovTTL = Math.Min(_Rooted_Eaten, (_BZ_RecovPer * _ZRage_GCDs) / LatentGCD);
                 }*/
+                if (Char.Race == CharacterRace.Human && _Rooted_Acts > 0) {
+                    // Every Man for Himself can break it
+                    float emacts = CalcOpts.AllowFlooring ? (float)Math.Floor(EM.Activates) : EM.Activates;
+                    if (_EM_Acts != 0f) { emacts -= _EM_Acts; }
+                    _EM_Acts = Math.Min(_Rooted_Acts, emacts);
+                    _EM_RecovPer = Math.Max(0f, (_Rooted_Per - Math.Max(0f, CalcOpts.React / 1000f)));
+                    _EM_RecovTTL = Math.Min(_Rooted_Eaten, (_EM_RecovPer * _EM_Acts) / LatentGCD);
+                }
                 #endregion
 
                 // We'll use % of time lost to stuns to affect each ability equally
@@ -409,12 +425,16 @@ namespace Rawr.DPSWarr {
                 timelostwhilerooted = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilerooted) : timelostwhilerooted;
                 percTimeInRoot = timelostwhilerooted / FightDuration;
                 //
-                if (_needDisplayCalcs) GCDUsage += (_Rooted_Acts > 0 ? _Rooted_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + _Rooted_Per.ToString() + "secs : Rooted\n" : "");
-                //GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x" + _BZ_RecovPer.ToString() + "secs : " + BZ.Name + " (adds back to GCDs when Rooted)\n" : "");
+                if (_needDisplayCalcs) {
+                    GCDUsage += (_Rooted_Acts > 0 ? _Rooted_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _Rooted_Per.ToString("0.00") + "secs : Lost to Roots\n" : "");
+                    GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _EM_RecovPer.ToString("0.00") + "secs : - " + EM.Name + "\n" : "");
+                }
             }
             #endregion
 
             float TotalPercTimeLost = Math.Min(1f, percTimeInStun + percTimeInMovement + percTimeInFear + percTimeInRoot);
+
+            if (_needDisplayCalcs) { GCDUsage += (TotalPercTimeLost != 0f ? "\n" : ""); }
 
             // ==== Rage Generation Priorities ========
             availRage += RageGenOverDur_Other;
@@ -441,7 +461,7 @@ namespace Rawr.DPSWarr {
             _DW_DPS = DW.DPS;
             DPS_TTL += _DW_DPS;
 
-            if (_needDisplayCalcs) GCDUsage += "\n" + availGCDs.ToString("000") + " : Avail GCDs";
+            if (_needDisplayCalcs) { GCDUsage += "\n" + availGCDs.ToString("000") + " : Avail GCDs"; }
 
             // Return result
             _HPS_TTL = HPS_TTL;
@@ -1157,11 +1177,11 @@ namespace Rawr.DPSWarr {
             #endregion
             int bah = Iterator;
             // Add each of the abilities' DPS and HPS values and other aesthetics
-            if (_needDisplayCalcs)
-            {
+            if (_needDisplayCalcs) {
                 if (PercFailRage != 1.0f || PercFailRageUnder20 != 1.0f) {
-                    GCDUsage += (PercFailRage < 1.0f ? string.Format("WARNING! You are losing {0:0.0%} of your abilities due to Rage Stavation before Exec Spam.\n",PercFailRage) : "");
-                    GCDUsage += (PercFailRageUnder20 < 1.0f ? string.Format("WARNING! You are losing {0:0.0%} of your abilities due to Rage Stavation during Exec Spam.\n", PercFailRageUnder20) : "");
+                    GCDUsage += (PercFailRage < 1.0f ? string.Format("WARNING! You are losing {0:0.0%} of your abilities due to Rage Stavation before Exec Spam.\n", (1f - PercFailRage)) : "");
+                    GCDUsage += (PercFailRageUnder20 < 1.0f ? string.Format("WARNING! You are losing {0:0.0%} of your abilities due to Rage Stavation during Exec Spam.\n", (1f - PercFailRageUnder20)) : "");
+                    GCDUsage += "\n";
                 }
                 GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + BZ.Name + "\n" : "");
                 GCDUsage += (_Battle_GCDs > 0 ? _Battle_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + BTS.Name + "\n" : "");
@@ -1174,7 +1194,8 @@ namespace Rawr.DPSWarr {
                 GCDUsage += (_SW_GCDs > 0 ? _SW_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + SW.Name + " (Doesn't Use GCDs)\n" : "");
                 GCDUsage += (_ER_GCDs > 0 ? _ER_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + ER.Name + "\n" : "");
                 GCDUsage += (_Death_GCDs > 0 ? _Death_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + Death.Name + "\n" : "");
-
+                GCDUsage += (_ZRage_GCDs + _Battle_GCDs + _Comm_GCDs + _Demo_GCDs + _Sunder_GCDs + _Thunder_GCDs
+                             + _Ham_GCDs + _Shatt_GCDs + _SW_GCDs + _ER_GCDs + _Death_GCDs + _ZRage_GCDs > 0f ? "\n" : "");
                 GCDUsage += (_BLS_GCDs > 0 ? _BLS_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + "x4 : " + BLS.Name + "\n" : "");
                 GCDUsage += (_MS_GCDs > 0 ? _MS_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + MS.Name + "\n" : "");
                 GCDUsage += (_RD_GCDs > 0 ? _RD_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + RD.Name + "\n" : "");
