@@ -30,6 +30,10 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.labelSRMana = new System.Windows.Forms.Label();
+            this.trackbarSRMana = new System.Windows.Forms.TrackBar();
+            this.label9 = new System.Windows.Forms.Label();
+            this.chbMana = new System.Windows.Forms.CheckBox();
             this.CB_InBackPerc = new System.Windows.Forms.NumericUpDown();
             this.TB_BossInfo = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -52,6 +56,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnReset = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
             this.btnUp = new System.Windows.Forms.Button();
             this.CLBPriorities = new System.Windows.Forms.CheckedListBox();
@@ -59,9 +64,9 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.btnReset = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
@@ -82,6 +87,10 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.labelSRMana);
+            this.tabPage1.Controls.Add(this.trackbarSRMana);
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.chbMana);
             this.tabPage1.Controls.Add(this.CB_InBackPerc);
             this.tabPage1.Controls.Add(this.TB_BossInfo);
             this.tabPage1.Controls.Add(this.label1);
@@ -111,6 +120,55 @@
             this.tabPage1.Text = "Basics";
             this.tabPage1.ToolTipText = "++";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // labelSRMana
+            // 
+            this.labelSRMana.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelSRMana.Location = new System.Drawing.Point(122, 487);
+            this.labelSRMana.Name = "labelSRMana";
+            this.labelSRMana.Size = new System.Drawing.Size(136, 12);
+            this.labelSRMana.TabIndex = 56;
+            this.labelSRMana.Text = "250";
+            // 
+            // trackbarSRMana
+            // 
+            this.trackbarSRMana.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackbarSRMana.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackbarSRMana.Cursor = System.Windows.Forms.Cursors.Default;
+            this.trackbarSRMana.LargeChange = 250;
+            this.trackbarSRMana.Location = new System.Drawing.Point(122, 454);
+            this.trackbarSRMana.Maximum = 5000;
+            this.trackbarSRMana.Name = "trackbarSRMana";
+            this.trackbarSRMana.Size = new System.Drawing.Size(136, 45);
+            this.trackbarSRMana.SmallChange = 50;
+            this.trackbarSRMana.TabIndex = 55;
+            this.trackbarSRMana.TickFrequency = 250;
+            this.trackbarSRMana.Value = 700;
+            this.trackbarSRMana.ValueChanged += new System.EventHandler(this.trackbarSRMana_ValueChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(7, 463);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(116, 13);
+            this.label9.TabIndex = 54;
+            this.label9.Text = "Use SR if Mana below:";
+            // 
+            // chbMana
+            // 
+            this.chbMana.AutoSize = true;
+            this.chbMana.Checked = true;
+            this.chbMana.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbMana.Location = new System.Drawing.Point(9, 431);
+            this.chbMana.Name = "chbMana";
+            this.chbMana.Size = new System.Drawing.Size(135, 17);
+            this.chbMana.TabIndex = 53;
+            this.chbMana.Text = "Use Mana Calculations";
+            this.chbMana.UseVisualStyleBackColor = true;
+            this.chbMana.CheckedChanged += new System.EventHandler(this.chbMana_CheckedChanged);
             // 
             // CB_InBackPerc
             // 
@@ -234,9 +292,9 @@
             // 
             this.labelAverageLag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelAverageLag.Location = new System.Drawing.Point(71, 298);
+            this.labelAverageLag.Location = new System.Drawing.Point(82, 298);
             this.labelAverageLag.Name = "labelAverageLag";
-            this.labelAverageLag.Size = new System.Drawing.Size(192, 12);
+            this.labelAverageLag.Size = new System.Drawing.Size(181, 12);
             this.labelAverageLag.TabIndex = 39;
             this.labelAverageLag.Text = "250";
             // 
@@ -247,10 +305,10 @@
             this.trackBarAverageLag.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarAverageLag.Cursor = System.Windows.Forms.Cursors.Default;
             this.trackBarAverageLag.LargeChange = 25;
-            this.trackBarAverageLag.Location = new System.Drawing.Point(74, 265);
+            this.trackBarAverageLag.Location = new System.Drawing.Point(82, 265);
             this.trackBarAverageLag.Maximum = 750;
             this.trackBarAverageLag.Name = "trackBarAverageLag";
-            this.trackBarAverageLag.Size = new System.Drawing.Size(184, 45);
+            this.trackBarAverageLag.Size = new System.Drawing.Size(176, 45);
             this.trackBarAverageLag.SmallChange = 5;
             this.trackBarAverageLag.TabIndex = 38;
             this.trackBarAverageLag.TickFrequency = 50;
@@ -402,6 +460,16 @@
             this.tabPage2.Text = "Priorities";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // btnReset
+            // 
+            this.btnReset.Location = new System.Drawing.Point(174, 215);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(80, 23);
+            this.btnReset.TabIndex = 5;
+            this.btnReset.Text = "Use Defaults";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
             // btnDown
             // 
             this.btnDown.Enabled = false;
@@ -476,16 +544,6 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
-            // btnReset
-            // 
-            this.btnReset.Location = new System.Drawing.Point(174, 215);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(80, 23);
-            this.btnReset.TabIndex = 5;
-            this.btnReset.Text = "Use Defaults";
-            this.btnReset.UseVisualStyleBackColor = true;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -497,6 +555,7 @@
             this.tabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
@@ -542,6 +601,10 @@
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.CheckBox chbMana;
+        private System.Windows.Forms.Label labelSRMana;
+        private System.Windows.Forms.TrackBar trackbarSRMana;
+        private System.Windows.Forms.Label label9;
 
     }
 }

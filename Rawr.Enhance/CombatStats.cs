@@ -152,6 +152,7 @@ namespace Rawr.Enhance
         public float DisplaySpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
 
         public float MaxMana { get { return maxMana; } }
+        public float ImpStormStrikeMana { get { return _talents.ImprovedStormstrike * 493.6f; } }
       
         public float DamageReduction {
             get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor, _stats.ArmorPenetration, 0f, _stats.ArmorPenetrationRating); }

@@ -26,10 +26,10 @@ namespace Rawr.Enhance
         private float _fightLength = 10.0f;
         private float _targetFireResistance = 0;
         private float _targetNatureResistance = 0;
-        private float _minManaSR = 700;
-        private float _minManaPotion = 300;
+        private float _minManaSR = 1250;
         private bool _magma = true;
         private bool _baseStatOption = true;
+        private bool _useMana = true;
         private SerializableDictionary<EnhanceAbility, Priority> _priorityList = new SerializableDictionary<EnhanceAbility, Priority>();
 
         #region Getter/Setter
@@ -40,7 +40,6 @@ namespace Rawr.Enhance
         public int InBackPerc { get { return _inBackPerc; } set { _inBackPerc = value; OnPropertyChanged("InBackPerc"); } }
         public int AverageLag { get { return _averageLag; } set { _averageLag = value; OnPropertyChanged("AverageLag"); } }
         public float MinManaSR { get { return _minManaSR; } set { _minManaSR = value; OnPropertyChanged("MinManaSR"); } }
-        public float MinManaPotion { get { return _minManaPotion; } set { _minManaPotion = value; OnPropertyChanged("MinManaPotion"); } }
         public string MainhandImbue { get { return _mainhandImbue; } set { _mainhandImbue = value; OnPropertyChanged("MainhandImbue"); } }
         public string OffhandImbue { get { return _offhandImbue; } set { _offhandImbue = value; OnPropertyChanged("OffhandImbue"); } }
         public float FightLength { get { return _fightLength; } set { _fightLength = value; OnPropertyChanged("FightLength"); } }
@@ -48,6 +47,7 @@ namespace Rawr.Enhance
         public float TargetNatureResistance { get { return _targetNatureResistance; } set { _targetNatureResistance = value; OnPropertyChanged("TargetNatureResistance"); } }
         public bool Magma { get { return _magma; } set { _magma = value; OnPropertyChanged("Magma"); } }
         public bool BaseStatOption { get { return _baseStatOption; } set { _baseStatOption = value; OnPropertyChanged("BaseStatOption"); } }
+        public bool UseMana { get { return _useMana; } set { _useMana = value; OnPropertyChanged("UseMana"); } }
         public SerializableDictionary<EnhanceAbility, Priority> PriorityList { get { return _priorityList; } set { _priorityList = value; OnPropertyChanged("PriorityList"); } }
         
         public string GetXml()

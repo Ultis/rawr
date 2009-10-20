@@ -34,10 +34,15 @@ namespace Rawr.Enhance
             CK_InBack.Checked = _calcOpts.InBack;
             CB_InBackPerc.Value = _calcOpts.InBackPerc;
             trackBarAverageLag.Value = _calcOpts.AverageLag;
-            cmbLength.Value = (decimal) _calcOpts.FightLength;
+            trackbarSRMana.Value = (int)_calcOpts.MinManaSR;
+            trackbarSRMana.Enabled = _calcOpts.UseMana;
+            labelAverageLag.Text = trackBarAverageLag.Value.ToString();
+            labelSRMana.Text = trackbarSRMana.Value.ToString();
+            cmbLength.Value = (decimal)_calcOpts.FightLength;
             comboBoxMainhandImbue.SelectedItem = _calcOpts.MainhandImbue;
             comboBoxOffhandImbue.SelectedItem = _calcOpts.OffhandImbue;
             chbMagmaSearing.Checked = _calcOpts.Magma;
+            chbMana.Checked = _calcOpts.UseMana;
             chbBaseStatOption.Checked = _calcOpts.BaseStatOption;
             LoadPriorities();
 
@@ -62,6 +67,7 @@ namespace Rawr.Enhance
             if (!_loadingCalculationOptions)
             {
                 labelAverageLag.Text = trackBarAverageLag.Value.ToString();
+                labelSRMana.Text = trackbarSRMana.Value.ToString();
 
                 _calcOpts.SetBoss(bosslist.GetBossFromBetterName(comboBoxBoss.Text));
                 _calcOpts.FightLength = (float)cmbLength.Value;
@@ -70,6 +76,7 @@ namespace Rawr.Enhance
 
                 _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 _calcOpts.Magma = chbMagmaSearing.Checked;
+                _calcOpts.UseMana = chbMana.Checked;
 
                 SavePriorities();
                 Character.OnCalculationsInvalidated();
@@ -118,6 +125,16 @@ namespace Rawr.Enhance
             }
         }
 
+        private void chbMana_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                _calcOpts.UseMana = chbMana.Checked;
+                trackbarSRMana.Enabled = _calcOpts.UseMana;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         public void Export()
         {
             if (!_loadingCalculationOptions)
@@ -142,6 +159,16 @@ namespace Rawr.Enhance
             {
                 labelAverageLag.Text = trackBarAverageLag.Value.ToString();
                 _calcOpts.AverageLag = trackBarAverageLag.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trackbarSRMana_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                labelSRMana.Text = trackbarSRMana.Value.ToString();
+                _calcOpts.MinManaSR = trackbarSRMana.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -316,6 +343,5 @@ namespace Rawr.Enhance
             _loadingCalculationOptions = false;
             Character.OnCalculationsInvalidated();
         }
-
     }
 }
