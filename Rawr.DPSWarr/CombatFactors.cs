@@ -4,21 +4,29 @@ namespace Rawr.DPSWarr {
     public class CombatFactors {
         public CombatFactors(Character character, Stats stats, CalculationOptionsDPSWarr calcOpts) {
             Char = character;
-            StatS = stats;
             MH = Char == null || Char.MainHand == null ? new Knuckles() : Char.MainHand.Item;
             OH = Char == null || Char.OffHand  == null || Char.WarriorTalents.TitansGrip == 0 ? null : Char.OffHand.Item;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CalcOpts = (calcOpts == null ? new CalculationOptionsDPSWarr() : calcOpts);
-
+            StatS = stats;
+            
             // Optimizations
+            
+            //Set_c_values();
+        }
+
+        private void Set_c_values()
+        {
             _c_mhItemType = MH.Type;
             _c_mhItemSpeed = MH.Speed;
-            if (OH != null) {
+            if (OH != null)
+            {
                 _c_ohItemType = OH.Type;
                 _c_ohItemSpeed = OH.Speed;
             }
             useMH = _useMH; // public variable gets set once
             useOH = _useOH;
+
             _c_mhRacialExpertise = GetRacialExpertiseFromWeaponType(_c_mhItemType);
             _c_mhexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(StatS.ExpertiseRating) + _c_mhRacialExpertise;
             _c_ymiss = YwMissChance;
@@ -29,7 +37,8 @@ namespace Rawr.DPSWarr {
             _c_mhwcrit = MhWhCritChance;
             _c_mhycrit = MhYwCritChance;
             _c_glance = GlanceChance;
-            if (useOH) {
+            if (useOH)
+            {
                 _c_ohRacialExpertise = GetRacialExpertiseFromWeaponType(_c_ohItemType);
                 _c_ohexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(StatS.ExpertiseRating) + _c_ohRacialExpertise;
                 _c_ohdodge = OhDodgeChance;
@@ -37,7 +46,9 @@ namespace Rawr.DPSWarr {
                 _c_ohblock = OhBlockChance;
                 _c_ohwcrit = OhWhCritChance;
                 _c_ohycrit = OhYwCritChance;
-            } else {
+            }
+            else
+            {
                 _c_ohItemType = ItemType.None;
                 _c_ohItemSpeed = 0f;
                 _c_ohRacialExpertise = 0f;
@@ -58,17 +69,29 @@ namespace Rawr.DPSWarr {
         public Item MH { get; private set; }
         public Item OH { get; private set; }
         // Optimizations
-        public readonly float    _c_ymiss, _c_wmiss;
-        public readonly ItemType _c_mhItemType,        _c_ohItemType;
-        public readonly float    _c_mhItemSpeed,       _c_ohItemSpeed;
-        public readonly float    _c_mhRacialExpertise, _c_ohRacialExpertise;
-        public readonly float    _c_mhexpertise,       _c_ohexpertise;
-        public readonly float    _c_mhdodge,           _c_ohdodge;
-        public readonly float    _c_mhparry,           _c_ohparry;
-        public readonly float    _c_mhblock,           _c_ohblock;
-        public readonly float    _c_mhwcrit,           _c_ohwcrit;
-        public readonly float    _c_mhycrit,           _c_ohycrit;
-        public readonly float    _c_glance;
+        public float _c_ymiss { get; private set; }
+        public float _c_wmiss { get; private set; }
+        
+        public ItemType _c_mhItemType { get; private set; }
+        public ItemType _c_ohItemType { get; private set; }
+
+        public float _c_mhItemSpeed { get; private set; }
+        public float _c_ohItemSpeed { get; private set; }
+        public float _c_mhRacialExpertise { get; private set; }
+        public float _c_ohRacialExpertise { get; private set; }
+        public float _c_mhexpertise { get; private set; }
+        public float _c_ohexpertise { get; private set; }
+        public float _c_mhdodge { get; private set; }
+        public float _c_ohdodge { get; private set; }
+        public float _c_mhparry { get; private set; }
+        public float _c_ohparry { get; private set; }
+        public float _c_mhblock { get; private set; }
+        public float _c_ohblock { get; private set; }
+        public float _c_mhwcrit { get; private set; }
+        public float _c_ohwcrit { get; private set; }
+        public float _c_mhycrit { get; private set; }
+        public float _c_ohycrit { get; private set; }
+        public float _c_glance { get; private set; }
         #endregion
 
         public bool useMH; private bool _useMH { get { return MH != null && _c_mhItemSpeed > 0; } }
@@ -76,6 +99,7 @@ namespace Rawr.DPSWarr {
 
         private void InvalidateCache() {
             _DamageBonus = _DamageReduction = _BonusWhiteCritDmg = _MHSpeed = _OHSpeed = _TotalHaste = -1f;
+            Set_c_values();
         }
 
         #region Weapon Damage Calcs
