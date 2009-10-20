@@ -66,6 +66,7 @@ namespace Rawr {
         PhysicalHit,
         HitRating,
         Hp5,
+        HealthRestore,
         IdolCritRating,
         InnervateCooldownReduction,
         InsectSwarmDmg,
@@ -78,6 +79,7 @@ namespace Rawr {
         WarlockSpellstoneHasteRating,
         WarlockFirestoneSpellCritRating,
         Mana,
+        ManaRestore,
         ManaRestorePerCast,
         ManaRestoreOnCast_5_15,
         ManaRestoreOnCast_10_45,
@@ -277,7 +279,6 @@ namespace Rawr {
         HolyShockCrit,
         Heal1Min,
         Healed,
-        ManaRestore,
         SpellsManaReduction,        // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast, initially used by Spark of Hope
         HealingOmenProc,            // Omen like proc from Soul Preserver and the like
         #endregion
@@ -2109,8 +2110,22 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.ManaorEquivRestore]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManaorEquivRestore] = value; }
         }
+        /// <summary>
+        /// This stat stores Health restorations such as Runic Healing Potion
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana Restore")]
+        [DisplayName("Health Restored")]
+        [Category("Equipment Effects")]
+        public float HealthRestore
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HealthRestore]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HealthRestore] = value; }
+        }
+        /// <summary>
+        /// This stat stores Mana restorations such as Runic Mana Potion
+        /// or Mana Restore procs like Figurine - Talasite Owl's Use Effect
+        /// </summary>
+        [DisplayName("Mana Restored")]
         [Category("Equipment Effects")]
         public float ManaRestore
         {
@@ -2197,7 +2212,9 @@ namespace Rawr {
             get { return _rawAdditiveData[(int) AdditiveStat.Paragon]; }
             set { _rawAdditiveData[(int)AdditiveStat.Paragon] = value; }
         }
-
+        /// <summary>
+        /// This stores Healing values for targets, not self, like Forethought Talisman's Passive Effect
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Healed")]
         [Category("Equipment Effects")]

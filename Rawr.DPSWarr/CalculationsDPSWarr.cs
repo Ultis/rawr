@@ -520,6 +520,7 @@ These numbers to do not include racial bonuses.",
                 // Special
                 BonusRageGen = stats.BonusRageGen,
                 BonusRageOnCrit = stats.BonusRageOnCrit,
+                HealthRestore = stats.HealthRestore,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if ((effect.Trigger == Trigger.Use ||
@@ -625,6 +626,7 @@ These numbers to do not include racial bonuses.",
                 + stats.Stamina
                 + stats.BonusHealthMultiplier
                 + stats.BonusStaminaMultiplier
+                + stats.HealthRestore
                 ) > 0) {
                 retVal = true;
             }
@@ -867,10 +869,34 @@ These numbers to do not include racial bonuses.",
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            if (statsBuffs.Bloodlust > 0f) {
-                SpecialEffect bloodlust = new SpecialEffect(Trigger.Use, new Stats { PhysicalHaste = 0.3f, SpellHaste = 0.3f }, 40f, 60f * 10f);
-                statsBuffs.AddSpecialEffect(bloodlust);
+            List<String> buffNames = new List<string>() {
+                "Potion of Speed",
+                "Potion of Wild Magic",
+                "Heroic Potion",
+                "Insane Strength Potion",
+                "Indestructible Potion",
+                "Mighty Rage Potion",
+                "Swiftness Potion",
+            };
+
+            // The following is a special thing for Pots
+            // Instead of using the 20 min cooldown we pass the Fight Duration
+            // user is setting instead, to lessen the skewing of the Pot's value
+            if (statsBuffs._rawSpecialEffectData != null) {
+                foreach (SpecialEffect buffeffect in statsBuffs._rawSpecialEffectData) {
+                    foreach (String name in buffNames) {
+                        Buff buff_1 = Buff.GetBuffByName(name);
+                        Buff buff_2 = Buff.GetBuffByName(name + " (Double Pot Trick)");
+                        SpecialEffect buff1 = null;
+                        SpecialEffect buff2 = null;
+                        if (buff_1.Stats._rawSpecialEffectData[0] != null) { buff1 = buff_1.Stats._rawSpecialEffectData[0]; }
+                        if (buff_2.Stats._rawSpecialEffectData[0] != null) { buff2 = buff_2.Stats._rawSpecialEffectData[0]; }
+                        if (buff1 != null && buffeffect == buff1) { buff1.Cooldown = calcOpts.Duration; }
+                        if (buff2 != null && buffeffect == buff2) { buff2.Cooldown = calcOpts.Duration; }
+                    }
+                }
             }
+
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffs.Add(b);
             }
@@ -1342,7 +1368,7 @@ These numbers to do not include racial bonuses.",
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
             try {
                 CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr; line++;
-                Rotation Rot;
+                Rotation Rot; line++;
                 Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts, out Rot); line++;
                 WarriorTalents talents = character.WarriorTalents; line++;
                 
@@ -1395,7 +1421,8 @@ These numbers to do not include racial bonuses.",
 
                 Rot.MakeRotationandDoDPS(true, needsDisplayCalculations); line++;
 
-                float Health2Surv = stats.Health / 100f; line++;
+                float Health2Surv  = (stats.Health) / 100f; line++;
+                      Health2Surv += (stats.HealthRestore) / 1000f; line++;
                 float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * 100f;
                 float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
                 float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedMultiplier) * 100f;
@@ -1440,8 +1467,14 @@ These numbers to do not include racial bonuses.",
         private enum StatType { Unbuffed, Buffed, Average, Maximum };
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
-            Rotation Rot;
-            return GetCharacterStats(character, additionalItem, StatType.Average, null, out Rot);
+            try {
+                Rotation Rot;
+                return GetCharacterStats(character, additionalItem, StatType.Average, null, out Rot);
+            } catch (Exception ex) {
+                new ErrorBoxDPSWarr("Error in getting Character Stats",
+                    ex.Message, "GetCharacterStats()", "No Additional Info", ex.StackTrace, 0);
+            }
+            return new Stats() { };
         }
 
         private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, out Rotation Rot) {

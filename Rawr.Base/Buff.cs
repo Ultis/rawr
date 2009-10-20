@@ -1610,6 +1610,15 @@ namespace Rawr
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f - 1f, 20f * 60f));
             defaultBuffs.Add(buff = new Buff()
             {
+                Name = "Swiftness Potion",
+                Group = "Potion",
+                Stats = new Stats(),
+                Improvements = { new Buff { Name = "Swiftness Potion (Double Pot Trick)", Stats = new Stats() } }
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.50f }, 15f, 20f * 60f));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.50f }, 15f - 1f, 20f * 60f));
+            defaultBuffs.Add(buff = new Buff()
+            {
                 Name = "Potion of Wild Magic",
                 Group = "Potion",
                 Stats = new Stats(),
@@ -1653,6 +1662,53 @@ namespace Rawr
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f, 20f * 60f));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f - 1f, 20f * 60f));
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Runic Mana Potion",
+                Group = "Potion",
+                Stats = new Stats() { ManaRestore = (4200f + 4400f) / 2f, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Runic Mana Injector",
+                Group = "Potion",
+                Stats = new Stats() { ManaRestore = (4200f + 4400f) / 2f, },
+                Improvements = {
+                        new Buff {
+                            Name = "Runic Mana Injector (Engineer Bonus)",
+                            Stats = new Stats() { ManaRestore = ((4200f + 4400f) / 2f) * 0.25f,
+                        }
+                    }
+                }
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Runic Healing Potion",
+                Group = "Potion",
+                Stats = new Stats() { HealthRestore = (2700f + 4500f) / 2f, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Runic Healing Injector",
+                Group = "Potion",
+                Stats = new Stats() { HealthRestore = (2700f + 4500f) / 2f, },
+                Improvements = {
+                        new Buff {
+                            Name = "Runic Healing Injector (Engineer Bonus)",
+                            Stats = new Stats() { HealthRestore = ((2700f + 4500f) / 2f) * 0.25f,
+                        }
+                    }
+                }
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Powerful Rejuvenation Potion",
+                Group = "Potion",
+                Stats = new Stats() {
+                    ManaRestore   = (2475f + 4125f) / 2f,
+                    HealthRestore = (2475f + 4125f) / 2f,
+                },
+            });
             #endregion
 
             #region Food
