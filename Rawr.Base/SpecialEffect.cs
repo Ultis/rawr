@@ -41,6 +41,7 @@ namespace Rawr
         ShamanLavaLash,
         ShamanShock,
         ShamanStormStrike,
+        ShamanShamanisticRage,
         BloodStrikeHit,
         HeartStrikeHit,
         ObliterateHit,

@@ -97,6 +97,10 @@ namespace Rawr.Enhance
                         trigger = 1f / _cs.AbilityCooldown(EnhanceAbility.LavaLash);
                         chance = _cs.ChanceYellowHitOH;
                         break;
+                    case Trigger.ShamanShamanisticRage :
+                        trigger = 1f / _cs.AbilityCooldown(EnhanceAbility.ShamanisticRage);
+                        chance = 1f;
+                        break;
                 }
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())  // deal with secondary effects
                 {

@@ -853,7 +853,8 @@ namespace Rawr.Enhance
                     trigger == Trigger.ShamanLightningBolt ||
                     trigger == Trigger.ShamanLavaLash ||
                     trigger == Trigger.ShamanShock ||
-                    trigger == Trigger.ShamanStormStrike);
+                    trigger == Trigger.ShamanStormStrike ||
+                    trigger == Trigger.ShamanShamanisticRage);
         }
 
 		public override bool HasRelevantStats(Stats stats)
