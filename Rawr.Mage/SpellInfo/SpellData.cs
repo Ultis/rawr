@@ -1426,7 +1426,7 @@ namespace Rawr.Mage
             if (calculations.MageTalents.ImprovedBlizzard > 0)
             {
                 float fof = (calculations.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * calculations.MageTalents.FingersOfFrost);
-                fof = Math.Max(fof, 0.05f * calculations.MageTalents.Frostbite);
+                fof = Math.Max(fof, 0.05f * calculations.MageTalents.Frostbite * calculations.CalculationOptions.FrostbiteUtilization);
                 BaseCritRate += (1.0f - (1.0f - fof) * (1.0f - fof)) * (calculations.MageTalents.Shatter == 3 ? 0.5f : 0.17f * calculations.MageTalents.Shatter);
                 //CritRate += (1.0f - (float)Math.Pow(1 - 0.05 * castingState.MageTalents.Frostbite, 5.0 / 2.0)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
             }

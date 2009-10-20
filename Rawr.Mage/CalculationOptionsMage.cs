@@ -65,6 +65,13 @@ namespace Rawr.Mage
             set { _Mode33 = value; OnPropertyChanged("Mode33"); }
         }
 
+        private float _FrostbiteUtilization;
+        public float FrostbiteUtilization
+        {
+            get { return _FrostbiteUtilization; }
+            set { _FrostbiteUtilization = value; OnPropertyChanged("FrostbiteUtilization"); }
+        }
+
         private bool _MaxUseAssumption;
         public bool MaxUseAssumption
         {
@@ -1106,6 +1113,7 @@ namespace Rawr.Mage
             EffectCostMultiplier = 1.0f;
             ChanceToLiveAttenuation = 0.1f;
             MaxUseAssumption = true;
+            FrostbiteUtilization = 1.0f;
         }
 
         public CalculationOptionsMage(Character character)

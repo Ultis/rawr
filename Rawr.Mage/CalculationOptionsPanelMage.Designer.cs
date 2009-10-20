@@ -229,6 +229,8 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label107 = new System.Windows.Forms.Label();
+            this.checkBoxMode33 = new System.Windows.Forms.CheckBox();
             this.label85 = new System.Windows.Forms.Label();
             this.checkBoxMaxUseAssumption = new System.Windows.Forms.CheckBox();
             this.label87 = new System.Windows.Forms.Label();
@@ -278,9 +280,9 @@
             this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.textBoxFrostbiteUtilization = new System.Windows.Forms.TextBox();
+            this.label110 = new System.Windows.Forms.Label();
             this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.label107 = new System.Windows.Forms.Label();
-            this.checkBoxMode33 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -490,6 +492,8 @@
             // tabPage2
             // 
             this.tabPage2.AutoScroll = true;
+            this.tabPage2.Controls.Add(this.textBoxFrostbiteUtilization);
+            this.tabPage2.Controls.Add(this.label110);
             this.tabPage2.Controls.Add(this.textBoxWarlockSpellPower);
             this.tabPage2.Controls.Add(this.label109);
             this.tabPage2.Controls.Add(this.label103);
@@ -544,7 +548,7 @@
             // textBoxWarlockSpellPower
             // 
             this.textBoxWarlockSpellPower.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "WarlockSpellPower", true));
-            this.textBoxWarlockSpellPower.Location = new System.Drawing.Point(141, 440);
+            this.textBoxWarlockSpellPower.Location = new System.Drawing.Point(141, 466);
             this.textBoxWarlockSpellPower.Name = "textBoxWarlockSpellPower";
             this.textBoxWarlockSpellPower.Size = new System.Drawing.Size(75, 20);
             this.textBoxWarlockSpellPower.TabIndex = 200;
@@ -552,7 +556,7 @@
             // label109
             // 
             this.label109.AutoSize = true;
-            this.label109.Location = new System.Drawing.Point(-1, 443);
+            this.label109.Location = new System.Drawing.Point(-1, 469);
             this.label109.Name = "label109";
             this.label109.Size = new System.Drawing.Size(116, 13);
             this.label109.TabIndex = 199;
@@ -602,7 +606,7 @@
             // textBoxFocusMagicRate
             // 
             this.textBoxFocusMagicRate.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FocusMagicTargetCritRate", true));
-            this.textBoxFocusMagicRate.Location = new System.Drawing.Point(141, 414);
+            this.textBoxFocusMagicRate.Location = new System.Drawing.Point(141, 440);
             this.textBoxFocusMagicRate.Name = "textBoxFocusMagicRate";
             this.textBoxFocusMagicRate.Size = new System.Drawing.Size(75, 20);
             this.textBoxFocusMagicRate.TabIndex = 194;
@@ -610,7 +614,7 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(-1, 417);
+            this.label36.Location = new System.Drawing.Point(-1, 443);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(104, 13);
             this.label36.TabIndex = 193;
@@ -2423,6 +2427,26 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // label107
+            // 
+            this.label107.AutoSize = true;
+            this.label107.Location = new System.Drawing.Point(0, 127);
+            this.label107.Name = "label107";
+            this.label107.Size = new System.Drawing.Size(63, 13);
+            this.label107.TabIndex = 212;
+            this.label107.Text = "Patch 3.3: *";
+            this.toolTipMage.SetToolTip(this.label107, "Enable calculations changes for patch 3.3.");
+            // 
+            // checkBoxMode33
+            // 
+            this.checkBoxMode33.AutoSize = true;
+            this.checkBoxMode33.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Mode33", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxMode33.Location = new System.Drawing.Point(185, 127);
+            this.checkBoxMode33.Name = "checkBoxMode33";
+            this.checkBoxMode33.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMode33.TabIndex = 211;
+            this.checkBoxMode33.UseVisualStyleBackColor = true;
+            // 
             // label85
             // 
             this.label85.AutoSize = true;
@@ -2948,30 +2972,29 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // textBoxFrostbiteUtilization
+            // 
+            this.textBoxFrostbiteUtilization.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostbiteUtilization", true));
+            this.textBoxFrostbiteUtilization.Location = new System.Drawing.Point(141, 414);
+            this.textBoxFrostbiteUtilization.Name = "textBoxFrostbiteUtilization";
+            this.textBoxFrostbiteUtilization.Size = new System.Drawing.Size(75, 20);
+            this.textBoxFrostbiteUtilization.TabIndex = 202;
+            // 
+            // label110
+            // 
+            this.label110.AutoSize = true;
+            this.label110.Location = new System.Drawing.Point(-1, 417);
+            this.label110.Name = "label110";
+            this.label110.Size = new System.Drawing.Size(129, 13);
+            this.label110.TabIndex = 201;
+            this.label110.Text = "Frostbite Utilization (0-1): *";
+            this.toolTipMage.SetToolTip(this.label110, "Utilization of 1 corresponds to no diminishing returns, only applies to Blizzard." +
+                    "");
+            // 
             // calculationOptionsMageBindingSource
             // 
             this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
             this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
-            // 
-            // label107
-            // 
-            this.label107.AutoSize = true;
-            this.label107.Location = new System.Drawing.Point(0, 127);
-            this.label107.Name = "label107";
-            this.label107.Size = new System.Drawing.Size(63, 13);
-            this.label107.TabIndex = 212;
-            this.label107.Text = "Patch 3.3: *";
-            this.toolTipMage.SetToolTip(this.label107, "Enable calculations changes for patch 3.3.");
-            // 
-            // checkBoxMode33
-            // 
-            this.checkBoxMode33.AutoSize = true;
-            this.checkBoxMode33.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "Mode33", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxMode33.Location = new System.Drawing.Point(185, 127);
-            this.checkBoxMode33.Name = "checkBoxMode33";
-            this.checkBoxMode33.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxMode33.TabIndex = 211;
-            this.checkBoxMode33.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelMage
             // 
@@ -3257,6 +3280,8 @@
         private System.Windows.Forms.Label label106;
         private System.Windows.Forms.Label label107;
         private System.Windows.Forms.CheckBox checkBoxMode33;
+        private System.Windows.Forms.TextBox textBoxFrostbiteUtilization;
+        private System.Windows.Forms.Label label110;
 
     }
 }
