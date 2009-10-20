@@ -517,6 +517,9 @@ These numbers to do not include racial bonuses.",
                 BonusWarrior_T9_2P_Crit = stats.BonusWarrior_T9_2P_Crit,
                 BonusWarrior_T9_2P_ArP = stats.BonusWarrior_T9_2P_ArP,
                 BonusWarrior_T9_4P_SLHSCritIncrease = stats.BonusWarrior_T9_4P_SLHSCritIncrease,
+                // Special
+                BonusRageGen = stats.BonusRageGen,
+                BonusRageOnCrit = stats.BonusRageOnCrit,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if ((effect.Trigger == Trigger.Use ||
@@ -593,7 +596,10 @@ These numbers to do not include racial bonuses.",
                 stats.BonusWarrior_T8_4P_MSBTCritIncrease +
                 stats.BonusWarrior_T9_2P_Crit +
                 stats.BonusWarrior_T9_2P_ArP +
-                stats.BonusWarrior_T9_4P_SLHSCritIncrease
+                stats.BonusWarrior_T9_4P_SLHSCritIncrease +
+                // Special
+                stats.BonusRageGen +
+                stats.BonusRageOnCrit
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (effect.Trigger == Trigger.Use ||
@@ -1602,12 +1608,14 @@ These numbers to do not include racial bonuses.",
                         Rot.ST.MHAtkTable.AnyLand);
                     statsTotal.AddSpecialEffect(shatt);
                 }
-                if (Rot.BR.Validated) {
+                /*if (Rot.BR.Validated) {
                     SpecialEffect blood = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusRageGen = 1f * (1f + talents.ImprovedBloodrage * 0.25f), },
-                        Rot.BR.Duration, Rot.BR.Cd);
+                        new Stats() { BonusRageGen = Rot.BR.RageCost, },
+                        0f, Rot.BR.Cd);
+                    float uptime = blood.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, 0f);
+                    Stats stat = blood.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, 0f);
                     statsTotal.AddSpecialEffect(blood);
-                }
+                }*/
                 /*if (Rot.Hammy.Validated) {
                     SpecialEffect hammy = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusTargets = 1f * calcOpts.MultipleTargetsPerc / 100f, },

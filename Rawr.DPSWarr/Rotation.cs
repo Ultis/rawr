@@ -463,14 +463,24 @@ namespace Rawr.DPSWarr {
             }
         }
         protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
+        protected virtual float RageGenOverDur_Blood {
+            get {
+                if (!BR.Validated) { return 0f; }
+                float rage = BR.RageCost;
+                float acts = BR.Activates;
+                return rage * acts;
+            }
+        }
         
         private float _RageGenOverDur_Other = -1f;
         protected virtual float RageGenOverDur_Other {
             get {
                 if (_RageGenOverDur_Other == -1f) {
-                    float rage = RageGenOverDur_Anger
-                               + RageGenOverDur_IncDmg
-                               + (100f * StatS.ManaorEquivRestore); // 0.02f becomes 2f
+                    float rage = RageGenOverDur_Anger               // Anger Management Talent
+                               + RageGenOverDur_Blood               // Bloodrage
+                               + RageGenOverDur_IncDmg              // Damage from the bosses
+                               + (100f * StatS.ManaorEquivRestore)  // 0.02f becomes 2f
+                               + StatS.BonusRageGen;                // Bloodrage, Berserker Rage, Might Rage Pot
 
                     // 4pcT7
                     if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {

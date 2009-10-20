@@ -84,7 +84,7 @@ namespace Rawr.DPSWarr {
                 //
                 InitializeB(co);
             }
-            public float ActivatesOverride { get { return base.ActivatesOverride; } }
+            public new float ActivatesOverride { get { return base.ActivatesOverride; } }
         }
         public class EnragedRegeneration : BuffEffect
         {
@@ -136,7 +136,10 @@ namespace Rawr.DPSWarr {
                 AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_;
                 Cd = 60f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
                 Duration = 10f; // In Seconds
-                RageCost = 20f * (1f + Talents.ImprovedBloodrage * 0.25f); // This is actually reversed in the rotation
+                // Rage is actually reversed in the rotation
+                RageCost = (20f // Base
+                            + 10f) // Over Time
+                           * (1f + Talents.ImprovedBloodrage * 0.25f); // Talent Bonus
                 StanceOkArms = StanceOkDef = StanceOkFury = true;
                 Stats Base = BaseStats.GetBaseStats(Char.Level, CharacterClass.Warrior, Char.Race);
                 float baseHealth = Base.Health + StatConversion.GetHealthFromStamina(Base.Stamina, CharacterClass.Warrior);

@@ -1644,31 +1644,15 @@ namespace Rawr
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 2f * 60f, 20f * 60f));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 2f * 60f - 1f, 20f * 60f));
-            //defaultBuffs.Add(buff = new Buff()
-            //{
-            //    Name = "Indestructible Potion (Double Pot Trick)",
-            //    Group = "Potion",
-            //    Stats = new Stats(),
-            //});
-            //buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 4f * 60f, 20f * 60f));
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Haste Potion",
-            //    Group = "Potion",
-            //    Stats = { HasteRating = 50 },
-            //});
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Heroic Potion",
-            //    Group = "Potion",
-            //    Stats = { Health = 700 }
-            //});
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Ironshield Potion",
-            //    Group = "Potion",
-            //    Stats = { BonusArmor = 2500 }
-            //});
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Mighty Rage Potion",
+                Group = "Potion",
+                Stats = new Stats() { BonusRageGen = (45f + 75) / 2f, },
+                Improvements = { new Buff { Name = "Mighty Rage Potion (Double Pot Trick)", Stats = new Stats() { BonusRageGen = (45f + 75) / 2f, } } }
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f, 20f * 60f));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f - 1f, 20f * 60f));
             #endregion
 
             #region Food

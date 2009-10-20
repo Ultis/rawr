@@ -302,7 +302,7 @@ namespace Rawr.DPSWarr
             availRage += RageGenOverDur_Other;
             
             /*Bloodrage         */
-            AddAnItem(ref availRage, percTimeInStun, ref _Blood_GCDs, ref HPS_TTL, ref _Blood_HPS, BR);
+            //AddAnItem(ref availRage, percTimeInStun, ref _Blood_GCDs, ref HPS_TTL, ref _Blood_HPS, BR);
             /*Berserker Rage    */
             AddAnItem(ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, percTimeInStun, ref _ZRage_GCDs, ref HPS_TTL, ref _ZRage_HPS, BZ, false);
 
@@ -467,6 +467,7 @@ namespace Rawr.DPSWarr
             _DW_PerHit = DW.TickSize;
             _DW_DPS = DW.DPS;
             DPS_TTL += _DW_DPS;
+            RageGenOther = RageGenOverDur_Other;
 
             if (_needDisplayCalcs) GCDUsage += "\nAvail: " + availGCDs.ToString();
 

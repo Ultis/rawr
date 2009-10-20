@@ -443,7 +443,7 @@ namespace Rawr.DPSWarr {
             SndW.NumStunsOverDur = _Stunned_Acts + _Rooted_Acts;
             AddAnItem(ref availRage, TotalPercTimeLost, ref _Second_Acts, ref HPS_TTL, ref _Second_HPS, SndW);
             // Bloodrage
-            AddAnItem(ref availRage, TotalPercTimeLost, ref _Blood_GCDs, ref HPS_TTL, ref _Blood_HPS, BR);
+            //AddAnItem(ref availRage, TotalPercTimeLost, ref _Blood_GCDs, ref HPS_TTL, ref _Blood_HPS, BR);
 
             // ==== Standard Priorities ===============
             SettleAll(TotalPercTimeLost, PercTimeUnder20, ref NumGCDs, ref availGCDs, ref GCDsused, ref availRage, ref DPS_TTL, ref HPS_TTL);
