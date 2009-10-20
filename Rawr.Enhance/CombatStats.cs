@@ -71,7 +71,9 @@ namespace Rawr.Enhance
 
         private float callOfThunder = 0f;
         private float staticShocksPerSecond = 0f;
-        private float maxMana = 0;
+        private float baseMana = 0f;
+        private float maxMana = 0f;
+        private float manaRegen = 0f;
 
         public float GlancingRate { get { return glancingRate; } }
         public float FightLength { get { return fightLength; } }
@@ -152,7 +154,8 @@ namespace Rawr.Enhance
         public float DisplaySpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
 
         public float MaxMana { get { return maxMana; } }
-        public float ImpStormStrikeMana { get { return _talents.ImprovedStormstrike * 493.6f; } }
+        public float ManaRegen { get { return manaRegen; } }
+        public float ImpStormStrikeMana { get { return _talents.ImprovedStormstrike * .1f * baseMana; } }
       
         public float DamageReduction {
             get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor, _stats.ArmorPenetration, 0f, _stats.ArmorPenetrationRating); }
@@ -167,11 +170,23 @@ namespace Rawr.Enhance
             _calcOpts = calcOpts;
             _talents = _character.ShamanTalents;
             fightLength = _calcOpts.FightLength * 60f;
+            SetManaRegen();
             UpdateCalcs(true);
             _rotation = new Priorities(this, _calcOpts, _character, _stats, _talents);
             _rotation.CalculateAbilities();
             UpdateCalcs(false); // second pass to revise calcs based on new ability cooldowns
         }
+
+        #region Calculate Regen
+        public void SetManaRegen()
+        {
+            baseMana = BaseStats.GetBaseStats(_character).Mana;
+            float spiRegen = StatConversion.GetSpiritRegenSec(_stats.Spirit, _stats.Intellect);
+            float replenishRegen = _stats.Mana * _stats.ManaRestoreFromMaxManaPerSecond;
+            float judgementRegen = _stats.ManaRestoreFromBaseManaPPM / 60f * baseMana;
+            manaRegen = _stats.Mp5 / 5 + spiRegen + replenishRegen + judgementRegen;
+        }
+        #endregion
 
         public void UpdateCalcs(bool firstPass)
         {

@@ -643,6 +643,8 @@ namespace Rawr.Enhance
             }
 
             // add other raid buffs
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Wisdom"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Wisdom"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
@@ -667,6 +669,8 @@ namespace Rawr.Enhance
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Scorch"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Curse of the Elements"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Misery"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Hunting Party"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Judgement of Wisdom"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Endless Rage"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Potion of Speed"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
@@ -810,7 +814,10 @@ namespace Rawr.Enhance
                     PhysicalCrit = stats.PhysicalCrit,
                     SpellHit = stats.SpellHit,
                     SpellHaste = stats.SpellHaste,
-                    SpellCrit = stats.SpellCrit
+                    SpellCrit = stats.SpellCrit,
+                    Mp5 = stats.Mp5,
+                    ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                    ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM
 				};
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -881,7 +888,8 @@ namespace Rawr.Enhance
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + 
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
                 stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
-                stats.BonusWFAttackPower + stats.Enhance2T9 + stats.Enhance4T9 +
+                stats.BonusWFAttackPower + stats.Enhance2T9 + stats.Enhance4T9 + 
+                stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +
                 stats.BonusLSDamage + stats.BonusLLSSDamage + stats.BonusSSDamage) > 0
 
                 &&
