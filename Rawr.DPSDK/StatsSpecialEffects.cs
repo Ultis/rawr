@@ -63,31 +63,31 @@ namespace Rawr.DPSDK
                         chance = combatTable.spellCrits;
                         break;
                     case Trigger.BloodStrikeHit:
-                        trigger = rotation.curRotationDuration / (rotation.BloodStrike * (combatTable.DW ? 2f : 1f));
+                        trigger = rotation.CurRotationDuration / (rotation.BloodStrike * (combatTable.DW ? 2f : 1f));
                         chance = 1f;
                         break;
                     case Trigger.HeartStrikeHit:
-                        trigger = rotation.curRotationDuration / rotation.HeartStrike;
+                        trigger = rotation.CurRotationDuration / rotation.HeartStrike;
                         chance = 1f;
                         break;
                     case Trigger.BloodStrikeOrHeartStrikeHit :
-                        trigger = rotation.curRotationDuration / ((rotation.BloodStrike + rotation.HeartStrike) * (combatTable.DW ? 2f : 1f));
+                        trigger = rotation.CurRotationDuration / ((rotation.BloodStrike + rotation.HeartStrike) * (combatTable.DW ? 2f : 1f));
                         chance = 1f;
                         break;
                     case Trigger.ObliterateHit:
-                        trigger = rotation.curRotationDuration / (rotation.Obliterate * (combatTable.DW ? 2f : 1f));
+                        trigger = rotation.CurRotationDuration / (rotation.Obliterate * (combatTable.DW ? 2f : 1f));
                         chance = 1f;
                         break;
                     case Trigger.ScourgeStrikeHit:
-                        trigger = rotation.curRotationDuration / rotation.ScourgeStrike;
+                        trigger = rotation.CurRotationDuration / rotation.ScourgeStrike;
                         chance = 1f;
                         break;
                     case Trigger.DeathStrikeHit:
-                        trigger = rotation.curRotationDuration / rotation.DeathStrike;
+                        trigger = rotation.CurRotationDuration / rotation.DeathStrike;
                         chance = 1f;
                         break;
                     case Trigger.PlagueStrikeHit:
-                        trigger = rotation.curRotationDuration / (rotation.PlagueStrike * (combatTable.DW ? 2f : 1f));
+                        trigger = rotation.CurRotationDuration / (rotation.PlagueStrike * (combatTable.DW ? 2f : 1f));
                         chance = 1f;
                         break;
                     case Trigger.DoTTick:

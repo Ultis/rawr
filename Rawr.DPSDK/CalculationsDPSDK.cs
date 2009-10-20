@@ -230,12 +230,12 @@ namespace Rawr.DPSDK
             GetTalents(character);
 
 #if RAWR3
-            if (character != null && character.MainHand != null && character.MainHand.Item == null)
+   /*         if (character != null && character.MainHand != null && character.MainHand.Item == null)
             {
                 character.MainHand.Item = new Item("Test Weapon", ItemQuality.Artifact, ItemType.TwoHandAxe, 12345, "",
                    ItemSlot.TwoHand, "", false, new Stats() { Strength = 100f }, new Stats() { }, ItemSlot.None, ItemSlot.None,
                    ItemSlot.None, 500, 1500, ItemDamageType.Physical, 3.6f, "");
-            }
+            }*/
 #endif
 
             Stats stats = GetCharacterStats(character, additionalItem);
@@ -316,44 +316,36 @@ namespace Rawr.DPSDK
 
             //for estimating rotation pushback
 
-            calcOpts.rotation.avgDiseaseMult = calcOpts.rotation.numDisease * (calcOpts.rotation.diseaseUptime / 100);
+            calcOpts.rotation.AvgDiseaseMult = calcOpts.rotation.NumDisease * (calcOpts.rotation.DiseaseUptime / 100);
             float commandMult = 0f;
 
             {
                 calcOpts.presence = calcOpts.rotation.presence;
-                bool TAT = calcOpts.rotation.TAT;	// Threat of Thassarian makes me sad :(
-                // Because now we need two code blocks
-                // For like every single strike
-                // also disregard that I'm an idiot
-                // for abbreviating "Threat of Thassarian" as TAT
 
                 float OHMult = 0.5f * (1f + (float)talents.NervesOfColdSteel * 0.05f);	//an OH multiplier that is useful sometimes
                 Boolean PTR = false; // enable and disable PTR things here
 
                 Rotation temp = new Rotation();
-                temp.managedRP = calcOpts.rotation.managedRP;
-                temp.avgDiseaseMult = calcOpts.rotation.avgDiseaseMult;
+                temp.ManagedRP = calcOpts.rotation.ManagedRP;
+                temp.AvgDiseaseMult = calcOpts.rotation.AvgDiseaseMult;
                 temp.BloodPlague = calcOpts.rotation.BloodPlague;
                 temp.BloodStrike = calcOpts.rotation.BloodStrike;
-                temp.curRotationDuration = calcOpts.rotation.curRotationDuration;
+                temp.CurRotationDuration = calcOpts.rotation.CurRotationDuration;
                 temp.curRotationType = calcOpts.rotation.curRotationType;
                 temp.DancingRuneWeapon = calcOpts.rotation.DancingRuneWeapon;
                 temp.DeathCoil = calcOpts.rotation.DeathCoil;
                 temp.DeathStrike = calcOpts.rotation.DeathStrike;
-                temp.diseaseUptime = calcOpts.rotation.diseaseUptime;
-                temp.fourT7 = calcOpts.rotation.fourT7;
+                temp.DiseaseUptime = calcOpts.rotation.DiseaseUptime;
                 temp.FrostFever = calcOpts.rotation.FrostFever;
                 temp.FrostStrike = calcOpts.rotation.FrostStrike;
                 temp.GargoyleDuration = calcOpts.rotation.GargoyleDuration;
                 temp.GCDTime = calcOpts.rotation.GCDTime;
                 temp.GhoulFrenzy = calcOpts.rotation.GhoulFrenzy;
-                temp.GlyphofFS = calcOpts.rotation.GlyphofFS;
-                temp.GlyphofIT = calcOpts.rotation.GlyphofIT;
                 temp.HeartStrike = calcOpts.rotation.HeartStrike;
                 temp.Horn = calcOpts.rotation.Horn;
                 temp.HowlingBlast = calcOpts.rotation.HowlingBlast;
                 temp.IcyTouch = calcOpts.rotation.IcyTouch;
-                temp.numDisease = calcOpts.rotation.numDisease;
+                temp.NumDisease = calcOpts.rotation.NumDisease;
                 temp.Obliterate = calcOpts.rotation.Obliterate;
                 temp.Pestilence = calcOpts.rotation.Pestilence;
                 temp.PlagueStrike = calcOpts.rotation.PlagueStrike;
@@ -361,10 +353,9 @@ namespace Rawr.DPSDK
                 temp.PTRCalcs = calcOpts.rotation.PTRCalcs || PTR;
                 temp.RP = calcOpts.rotation.RP;
                 temp.ScourgeStrike = calcOpts.rotation.ScourgeStrike;
-                temp.TAT = calcOpts.rotation.TAT;
                 temp.HowlingBlast += talents.Rime * calcOpts.rotation.Obliterate * 0.05f;
 
-                if (temp.managedRP)
+                if (temp.ManagedRP)
                 {
                     temp.getRP(talents, character);
                 }
@@ -396,7 +387,7 @@ namespace Rawr.DPSDK
                     KMPpM *= 1f - combatTable.totalMHMiss;
                     KMPpM += talents.Deathchill / 2f;
 
-                    float KMPpR = KMPpM / (60f / temp.curRotationDuration);
+                    float KMPpR = KMPpM / (60f / temp.CurRotationDuration);
                     float totalAbilities = temp.FrostStrike + temp.IcyTouch + temp.HowlingBlast;
                     KMProcsPerRotation = KMPpR;
                 }
@@ -461,13 +452,13 @@ namespace Rawr.DPSDK
                     float dpsOHBCB = 0f;
                     if ((combatTable.OH.damage != 0) && (DW || combatTable.MH.damage == 0))
                     {
-                        float OHBCBDmg = combatTable.OH.damage * (.25f + .125f * temp.avgDiseaseMult);
+                        float OHBCBDmg = combatTable.OH.damage * (.25f + .125f * temp.AvgDiseaseMult);
                         dpsOHBCB = OHBCBDmg / combatTable.OH.hastedSpeed;
                         dpsOHBCB *= OHMult;
                     }
                     if (combatTable.MH.damage != 0)
                     {
-                        float MHBCBDmg = combatTable.MH.damage * (.25f + .125f * temp.avgDiseaseMult);
+                        float MHBCBDmg = combatTable.MH.damage * (.25f + .125f * temp.AvgDiseaseMult);
                         dpsMHBCB = MHBCBDmg / combatTable.MH.hastedSpeed;
                     }
                     dpsBCB = dpsMHBCB + dpsOHBCB;
@@ -725,7 +716,7 @@ namespace Rawr.DPSDK
                             float SSCD = combatTable.realDuration / temp.ScourgeStrike;
                             float SSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) * 0.40f) + 317.5f +
                                 stats.BonusScourgeStrikeDamage;
-                            SSDmg *= 1f + 0.10f * temp.avgDiseaseMult * (1f + stats.BonusPerDiseaseScourgeStrikeDamage);
+                            SSDmg *= 1f + 0.10f * temp.AvgDiseaseMult * (1f + stats.BonusPerDiseaseScourgeStrikeDamage);
                             dpsScourgeStrike = SSDmg / SSCD;
                             float SSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes) + stats.BonusCritMultiplier;
                             float SSCrit = 1f + ((combatTable.physCrits + (.03f * (float)talents.ViciousStrikes) + (.03f * (float)talents.Subversion)
@@ -902,7 +893,7 @@ namespace Rawr.DPSDK
                         OblitDmgOH *= (talents.ThreatOfThassarian * (1f / 3f/*0.33333333333f*/));
 
                         dpsObliterate = (OblitDmg + OblitDmgOH) / OblitCD;
-                        dpsObliterate *= 1f + 0.125f * (float)temp.avgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
+                        dpsObliterate *= 1f + 0.125f * (float)temp.AvgDiseaseMult * (1f + stats.BonusPerDiseaseObliterateDamage);
                         float OblitCritDmgMult = 1f + (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
                         float OblitCrit = 1f + ((combatTable.physCrits +
                             (0.03f * (float)talents.Subversion) +
@@ -960,7 +951,7 @@ namespace Rawr.DPSDK
                             BSDmgOH *= (talents.ThreatOfThassarian * (1f / 3f/*0.3333333333333333f*/));
                             BSDmg += BSDmgOH;
                         }
-                        BSDmg *= 1f + 0.12f * (float)temp.avgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage);
+                        BSDmg *= 1f + 0.12f * (float)temp.AvgDiseaseMult * (1f + stats.BonusPerDiseaseBloodStrikeDamage);
                         dpsBloodStrike = BSDmg / BSCD;
                         float BSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
                         BSCritDmgMult += (.15f * (float)talents.GuileOfGorefiend) + stats.BonusCritMultiplier;
@@ -979,7 +970,7 @@ namespace Rawr.DPSDK
                         float HSCD = combatTable.realDuration / temp.HeartStrike;
                         float HSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
                             0.5f) + 368f + stats.BonusHeartStrikeDamage;
-                        HSDmg *= 1f + 0.1f * (float)temp.avgDiseaseMult * (1f + stats.BonusPerDiseaseHeartStrikeDamage);
+                        HSDmg *= 1f + 0.1f * (float)temp.AvgDiseaseMult * (1f + stats.BonusPerDiseaseHeartStrikeDamage);
                         dpsHeartStrike = HSDmg / HSCD;
                         //float HSCrit = 1f + combatTable.physCrits + ( .03f * (float)talents.Subversion );
                         float HSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine) + stats.BonusCritMultiplier;
@@ -1318,7 +1309,7 @@ namespace Rawr.DPSDK
                 #region Scourge Strike Is Annoying
                 if (PTR)
                 {
-                    dpsScourgeStrikeShadow = dpsScourgeStrikePhysical * (0.25f * temp.avgDiseaseMult);
+                    dpsScourgeStrikeShadow = dpsScourgeStrikePhysical * (0.25f * temp.AvgDiseaseMult);
                     dpsScourgeStrike = dpsScourgeStrikePhysical * ScourgeStrikePhsyicalMult + dpsScourgeStrikeShadow * ScourgeStrikeShadowMult;
                 }
                 #endregion

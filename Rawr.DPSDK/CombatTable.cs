@@ -43,13 +43,13 @@ namespace Rawr.DPSDK
             totalSpellAbilities = 0f;
 
 
-#if RAWR3
+/*#if RAWR3
             if (calcOpts.rotation == null)
             {
                 calcOpts.rotation = new Rotation();
                 calcOpts.rotation.setRotation(Rotation.Type.Blood);
             }
-#endif
+#endif*/
 
             totalMeleeAbilities = calcOpts.rotation.PlagueStrike + calcOpts.rotation.ScourgeStrike +
                 calcOpts.rotation.Obliterate + calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike +
@@ -143,13 +143,13 @@ namespace Rawr.DPSDK
                     ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
                     ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.SpellHaste))) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f) / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.SpellHaste))))))); //still need to implement spellhaste here
             
-                if (minDuration > calcOpts.rotation.curRotationDuration)
+                if (minDuration > calcOpts.rotation.CurRotationDuration)
                 {
                     realDuration = minDuration;
                 }
                 else
                 {
-                    realDuration = calcOpts.rotation.curRotationDuration;
+                    realDuration = calcOpts.rotation.CurRotationDuration;
                 }
                 }
             #endregion

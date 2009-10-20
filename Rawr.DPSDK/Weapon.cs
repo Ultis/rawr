@@ -29,27 +29,6 @@ namespace Rawr.DPSDK {
             {
                 hastedSpeed = baseSpeed / (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight)) + stats.PhysicalHaste);
                 hastedSpeed /= 1f + 0.05f * (float)calcOpts.talents.ImprovedIcyTalons;
-
-                if (calcOpts.Bloodlust)
-                {
-                    //float bloodlustUptime = (calcOpts.Bloodlust * 40f);
-
-                    //if (bloodlustUptime > fightDuration) bloodlustUptime = 1f;
-                    //else bloodlustUptime /= fightDuration;
-
-                    float numLust = fightDuration % 300f;  // bloodlust changed in 3.0, can only have one every 5 minutes.
-                    float fullLustDur = (numLust - 1) * 300f + 40f;
-                    if (fightDuration < fullLustDur) // if the last lust doesn't go its full duration
-                    {
-                        float lastLustFraction = (fullLustDur - fightDuration) / 40f;
-                        numLust -= 1f;
-                        numLust += lastLustFraction;
-                    }
-
-                    float bloodlustUptime = (numLust * 40f) / fightDuration;
-
-                    hastedSpeed /= 1f + (0.3f * bloodlustUptime);
-                }
             }
             #endregion
 

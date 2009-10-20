@@ -83,7 +83,7 @@ namespace Rawr.DPSDK
                 float dpsMHBCB = 0f;
                 if (combatTable.MH.damage != 0)
                 {
-                    float MHBCBDmg = combatTable.MH.damage * (.25f + .125f * calcOpts.rotation.avgDiseaseMult);
+                    float MHBCBDmg = combatTable.MH.damage * (.25f + .125f * calcOpts.rotation.AvgDiseaseMult);
                     dpsMHBCB = MHBCBDmg / combatTable.MH.hastedSpeed;
                 }
                 dpsBCB = dpsMHBCB;
@@ -192,7 +192,7 @@ namespace Rawr.DPSDK
                     float HSCD = 1;
                     float HSDmg = ((combatTable.MH.baseDamage + ((stats.AttackPower / 14f) * combatTable.normalizationFactor)) *
                         0.5f) + 368f;
-                    HSDmg *= 1f + 0.1f * (float)calcOpts.rotation.avgDiseaseMult * (1f + stats.BonusPerDiseaseHeartStrikeDamage);
+                    HSDmg *= 1f + 0.1f * (float)calcOpts.rotation.AvgDiseaseMult * (1f + stats.BonusPerDiseaseHeartStrikeDamage);
                     dpsHeartStrike = HSDmg / HSCD;
                     //float HSCrit = 1f + combatTable.physCrits + ( .03f * (float)talents.Subversion );
                     float HSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine) + stats.BonusCritMultiplier;
