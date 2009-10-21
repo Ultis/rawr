@@ -197,6 +197,11 @@ namespace Rawr
                 {
                     if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
                 }
+                prompt = _optimizer.CheckOneHandedWeaponUniqueness();
+                if (prompt != null)
+                {
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+                }
             }
 
 			buttonOptimize.Text = "Optimizing...";
@@ -552,20 +557,20 @@ namespace Rawr
             }
             _character.OptimizationRequirements = requirements;
         }
+ 
+        private void progressBarMain_Click(object sender, EventArgs e)
+        {
 
-		private void progressBarMain_Click(object sender, EventArgs e)
-		{
+        }
 
-		}
+        private void progressBarAlt_Click(object sender, EventArgs e)
+        {
 
-		private void progressBarAlt_Click(object sender, EventArgs e)
-		{
+        }
 
-		}
+        private void FormOptimize_Load(object sender, EventArgs e)
+        {
 
-		private void FormOptimize_Load(object sender, EventArgs e)
-		{
-
-		}
-	}
+        }
+    }
 }

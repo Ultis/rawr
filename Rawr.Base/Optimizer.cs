@@ -1450,6 +1450,28 @@ namespace Rawr.Optimizer
             if (tooManyList != null && list.Count > tooManyLimit) tooManyList.Add(group);
         }
 
+        public string CheckOneHandedWeaponUniqueness()
+        {
+            bool nonUniqueOneHander = false;
+            List<Object> weapons = slotItems[(int)CharacterSlot.MainHand];
+            weapons.AddRange(slotItems[(int)CharacterSlot.OffHand]);
+            foreach (ItemInstance item in weapons)
+            {
+                if (item != null && item.Item != null)
+                {
+                    if((item.Item.Type == ItemType.OneHandAxe || item.Item.Type == ItemType.OneHandMace || item.Item.Type == ItemType.OneHandSword) && !item.Item.Unique)
+                    {
+                        nonUniqueOneHander = true;
+                        break;
+                    }
+                }
+            }
+            return nonUniqueOneHander ? "You have a one-handed weapon marked available that is not unique." + Environment.NewLine +
+                                        "The optimizer will assume you have two of these until you mark it unique." + Environment.NewLine + Environment.NewLine +
+                                        "Do you want to continue and let the optimizer assume you have two available?"
+                                : null;
+        }
+
         public static float GetOptimizationValue(Character character, CalculationsBase model)
         {
             float ignore;
