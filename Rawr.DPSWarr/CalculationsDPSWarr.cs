@@ -756,6 +756,8 @@ These numbers to do not include racial bonuses.",
 
         public Stats GetBuffsStats(Character character, CalculationOptionsDPSWarr calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
             float hasRelevantBuff;
 
             #region Racials to Force Enable
@@ -905,10 +907,26 @@ These numbers to do not include racial bonuses.",
                 }
             }
             #endregion
-
+            foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
+            {
+                Stats newStats = new Stats();
+                newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
+                                                            potionBuff.Stats._rawSpecialEffectData[0].Stats,
+                                                            potionBuff.Stats._rawSpecialEffectData[0].Duration, 
+                                                            calcOpts.Duration,
+                                                            potionBuff.Stats._rawSpecialEffectData[0].Chance,
+                                                            potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
+                
+                Buff newBuff = new Buff() { Stats = newStats };
+                character.ActiveBuffs.Remove(potionBuff);
+                character.ActiveBuffs.Add(newBuff);
+                removedBuffs.Add(potionBuff);
+                addedBuffs.Add(newBuff);
+            }
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             #region Special Pot Handling
+            /*
             List<String> buffNames = new List<string>() {
                 "Potion of Speed",
                 "Potion of Wild Magic",
@@ -936,10 +954,15 @@ These numbers to do not include racial bonuses.",
                     }
                 }
             }
+             */
             #endregion
+            
 
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffs.Add(b);
+            }
+            foreach (Buff b in addedBuffs){
+                character.ActiveBuffs.Remove(b);
             }
 
             return statsBuffs;
