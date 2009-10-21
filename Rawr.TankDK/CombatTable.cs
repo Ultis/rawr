@@ -825,11 +825,17 @@ namespace Rawr.TankDK
                 RSDmg *= (1f + stats.BonusRuneStrikeMultiplier); // Two T8.
                 // what's the threat modifier?
                 RSDmg *= 1.5f;
-                float RSCritDmgMult = 2f * (1f + (.15f * (float)talents.MightOfMograine) + stats.BonusCritMultiplier + (talents.GlyphofRuneStrike ? .01f : 0f));
+                float RSCritDmgMult = 2f * (1f + (.15f * (float)talents.MightOfMograine) + stats.BonusCritMultiplier + (talents.GlyphofRuneStrike ? .1f : 0f));
                 float RSCrit = 1f + ((this.physCrits) * RSCritDmgMult);
                 // How many RS do we get?
-                // No more than the number of white swings or the amount of RP available.
-                m_fRSCount = Math.Min((fDuration / MH.hastedSpeed), (calcOpts.m_Rotation.RP / 20f));
+                // First off, we'll go w/ triggers off of the number of Boss Attacks over the duration.
+                // How many can we Dodge or Parry?
+                m_fRSCount = (fDuration / calcOpts.BossAttackSpeed) * (stats.Dodge + stats.Parry);
+                // Then make sure that we don't trigger more often than the number of white swings
+                // No more than the number of white swings.
+                m_fRSCount = Math.Min(m_fRSCount, (fDuration / MH.hastedSpeed));
+                // Then no more than the amount of RP available.
+                m_fRSCount = Math.Min(m_fRSCount, (calcOpts.m_Rotation.RP / 20f));
                 if (m_fRSCount == 0)
                 {
                     m_fRSCount = calcOpts.m_Rotation.RuneStrike;
