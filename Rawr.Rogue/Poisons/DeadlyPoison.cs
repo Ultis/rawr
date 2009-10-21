@@ -42,7 +42,7 @@ namespace Rawr.Rogue.Poisons
 
             float avgHitTime = cycleTime.Duration / hits;
 
-            float sDPPerSec = (STACK_SIZE - consumeDP / countEnve) * baseDamage / DURATION;
+            float sDPPerSec = (countEnve > 0) ? (STACK_SIZE - consumeDP / countEnve) * baseDamage / DURATION : 0;
             float eDPPerSec = STACK_SIZE * baseDamage / DURATION;
 
             float damageStacking = (sDPPerSec + eDPPerSec) * .5f * consumeDP * avgHitTime;

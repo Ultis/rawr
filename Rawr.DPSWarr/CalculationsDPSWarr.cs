@@ -116,6 +116,8 @@ namespace Rawr.DPSWarr {
     }
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
     public class CalculationsDPSWarr : CalculationsBase {
+        #region Variables and Properties
+
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
                 ///Relevant Gem IDs for DPSWarrs
@@ -163,8 +165,6 @@ namespace Rawr.DPSWarr {
 				};
             }
         }
-
-        #region Variables and Properties
 
         #if RAWR3
             public ICalculationOptionsPanel _calculationOptionsPanel = null;
@@ -420,7 +420,6 @@ These numbers to do not include racial bonuses.",
                     "Glyph of Resonating Power",
                     "Glyph of Sweeping Strikes",
                     "Glyph of Victory Rush",
-                    "Glyph of Vigilance",
                     "Glyph of Whirlwind",
                     /* The following Glyphs have been disabled as they are solely Defensive in nature.
                     "Glyph of Barbaric Insults",
@@ -433,7 +432,8 @@ These numbers to do not include racial bonuses.",
                     "Glyph of Shockwave",
                     "Glyph of Spell Reflection",
                     "Glyph of Sunder Armor",
-                    "Glyph of Taunt",*/
+                    "Glyph of Taunt",
+                    "Glyph of Vigilance",*/
                     // ===== MINOR GLYPHS =====
                     "Glyph of Battle",
                     "Glyph of Bloodrage",
@@ -1407,6 +1407,7 @@ These numbers to do not include racial bonuses.",
 #endif
             int line = 0;
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
+            cacheChar = character;
             try {
                 CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr; line++;
                 Rotation Rot; line++;
