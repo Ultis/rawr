@@ -1453,17 +1453,18 @@ namespace Rawr.Optimizer
         public string CheckOneHandedWeaponUniqueness()
         {
             bool nonUniqueOneHander = false;
-            List<Object> weapons = slotItems[(int)CharacterSlot.MainHand];
-            weapons.AddRange(slotItems[(int)CharacterSlot.OffHand]);
-            foreach (ItemInstance item in weapons)
+            foreach (ItemInstance item in slotItems[(int)CharacterSlot.MainHand])
             {
                 if (item != null && item.Item != null)
                 {
                     if((item.Item.Type == ItemType.OneHandAxe || item.Item.Type == ItemType.OneHandMace
                         || item.Item.Type == ItemType.OneHandSword || item.Item.Type == ItemType.FistWeapon) && item.Item.Slot == ItemSlot.OneHand && !item.Item.Unique)
                     {
-                        nonUniqueOneHander = true;
-                        break;
+                        if (slotItems[(int)CharacterSlot.OffHand].Contains(item))
+                        {
+                            nonUniqueOneHander = true;
+                            break;
+                        }
                     }
                 }
             }
