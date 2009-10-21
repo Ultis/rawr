@@ -1105,7 +1105,7 @@ namespace Rawr
 			stats.AppendFormat("Character:\t\t{0}@{1}-{2}\r\nRace:\t\t{3}",
 				character.Name, character.Region, character.Realm, character.Race);
 
-			foreach (KeyValuePair<string, string> kvp in GetCharacterCalculations(character).GetCharacterDisplayCalculationValues())
+			foreach (KeyValuePair<string, string> kvp in GetCharacterCalculations(character, null, false, false, true).GetCharacterDisplayCalculationValues())
 			{
 				stats.AppendFormat("\r\n{0}:\t\t{1}", kvp.Key, kvp.Value.Split('*')[0]);
 			}
