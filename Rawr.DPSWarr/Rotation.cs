@@ -595,6 +595,16 @@ namespace Rawr.DPSWarr {
             RageGenOther += rageadd;
             availRage += rageadd;
         }
+        /// <summary>Adds an Ability alteration schtuff. Flags: No GCDs, No DPS, No Rage, Don't Use GCD Multiplier</summary>
+        public void AddAnItem(float TotalPercTimeLost, ref float _Abil_Acts, ref float HPS_TTL, ref float _Abil_HPS, Skills.Ability abil) {
+            if (!abil.Validated) { return; }
+            float acts = abil.Activates * (1f - TotalPercTimeLost);
+            float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+            _Abil_Acts = Abil_Acts;
+            if (_needDisplayCalcs) GCDUsage += (Abil_Acts > 0 ? Abil_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + abil.Name + " (Doesn't use GCDs)\n" : "");
+            _Abil_HPS = abil.GetHPS(Abil_Acts);
+            HPS_TTL += _Abil_HPS;
+        }
         #endregion
     }
 }
