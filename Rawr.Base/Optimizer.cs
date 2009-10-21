@@ -1459,7 +1459,8 @@ namespace Rawr.Optimizer
             {
                 if (item != null && item.Item != null)
                 {
-                    if((item.Item.Type == ItemType.OneHandAxe || item.Item.Type == ItemType.OneHandMace || item.Item.Type == ItemType.OneHandSword) && !item.Item.Unique)
+                    if((item.Item.Type == ItemType.OneHandAxe || item.Item.Type == ItemType.OneHandMace
+                        || item.Item.Type == ItemType.OneHandSword || item.Item.Type == ItemType.FistWeapon) && item.Item.Slot == ItemSlot.OneHand && !item.Item.Unique)
                     {
                         nonUniqueOneHander = true;
                         break;
