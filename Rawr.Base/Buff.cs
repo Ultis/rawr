@@ -1287,6 +1287,7 @@ namespace Rawr
             {
                 Name = "Judgements of the Just",
                 Group = "Boss Attack Speed",
+                Source = "Prot Paladin",
                 Stats = { BossAttackSpeedMultiplier = -0.2f }
             });
 
@@ -1294,6 +1295,7 @@ namespace Rawr
             {
                 Name = "Infected Wounds",
                 Group = "Boss Attack Speed",
+                Source = "Cat/Bear Druids",
                 Stats = { BossAttackSpeedMultiplier = -0.2f }
             });
 
@@ -1301,6 +1303,7 @@ namespace Rawr
             {
                 Name = "Frost Fever",
                 Group = "Boss Attack Speed",
+                Source = "Frost DK",
                 Stats = { BossAttackSpeedMultiplier = -0.14f },
                 Improvements = { new Buff { Name = "Improved Icy Touch", Stats = { BossAttackSpeedMultiplier = -(1.0f - (0.8f / 0.86f)) } } }
             });
@@ -1309,6 +1312,7 @@ namespace Rawr
             {
                 Name = "Thunder Clap",
                 Group = "Boss Attack Speed",
+                Source = "Prot/Arms Warrior",
                 Stats = { BossAttackSpeedMultiplier = -0.10f },
                 Improvements = { new Buff { Name = "Improved Thunder Clap", Stats = { BossAttackSpeedMultiplier = -(1.0f - (0.8f/0.9f)) } } }
             });

@@ -756,14 +756,50 @@ These numbers to do not include racial bonuses.",
 
         public Stats GetBuffsStats(Character character, CalculationOptionsDPSWarr calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
+            float hasRelevantBuff;
 
+            #region Racials to Force Enable
             // Draenei should always have this buff activated
             // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
             if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence"))) {
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+            {
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
             }
-            float hasRelevantBuff;
+            #endregion
+
+            #region Professions to Force Enable
+            // Miners should always have this buff activated
+            if (CheckHasProf(Profession.Mining)
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
+            {
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Toughness"));
+            }
+            // Skinners should always have this buff activated
+            if (CheckHasProf(Profession.Skinning)
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
+            {
+                character.ActiveBuffs.Add(Buff.GetBuffByName("Master of Anatomy"));
+            }
+            // Engineers should always have this buff activated IF the Primary is
+            if (CheckHasProf(Profession.Engineering)) {
+                List<String> list = new List<string>() {
+                    "Runic Mana Injector",
+                    "Runic Healing Injector",
+                };
+                foreach (String name in list) {
+                    if ( character.ActiveBuffs.Contains(Buff.GetBuffByName(name)) &&
+                        !character.ActiveBuffs.Contains(Buff.GetBuffByName(name + " (Engineer Bonus)")))
+                    {
+                        character.ActiveBuffs.Add(Buff.GetBuffByName(name + " (Engineer Bonus)"));
+                    }
+                }
+            }
+            // NOTE: Might do this again for Alchemy and Mixology but
+            // there could be conflicts for different specialties
+            #endregion
+
+            #region Maintenance Auto-Fixing
             // Removes the Sunder Armor if you are maintaining it yourself
             // Also removes Acid Spit and Expose Armor
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
@@ -830,7 +866,9 @@ These numbers to do not include racial bonuses.",
                 if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
                 if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
             }
+            #endregion
 
+            #region Passive Ability Auto-Fixing
             // Removes the Trauma Buff and it's equivalent Mangle if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             {
@@ -866,9 +904,11 @@ These numbers to do not include racial bonuses.",
                     if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
                 }
             }
+            #endregion
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
+            #region Special Pot Handling
             List<String> buffNames = new List<string>() {
                 "Potion of Speed",
                 "Potion of Wild Magic",
@@ -896,6 +936,7 @@ These numbers to do not include racial bonuses.",
                     }
                 }
             }
+            #endregion
 
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffs.Add(b);
