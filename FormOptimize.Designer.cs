@@ -56,6 +56,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.checkBoxMutateTalents = new System.Windows.Forms.CheckBox();
             this.groupBoxRequirements.SuspendLayout();
             this.groupBoxOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThoroughness)).BeginInit();
@@ -79,7 +80,7 @@
             // 
             this.progressBarMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBarMain.Location = new System.Drawing.Point(12, 412);
+            this.progressBarMain.Location = new System.Drawing.Point(12, 431);
             this.progressBarMain.Name = "progressBarMain";
             this.progressBarMain.Size = new System.Drawing.Size(677, 23);
             this.progressBarMain.TabIndex = 1;
@@ -89,7 +90,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(614, 441);
+            this.buttonCancel.Location = new System.Drawing.Point(614, 460);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 0;
@@ -101,7 +102,7 @@
             // 
             this.labelMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelMax.AutoSize = true;
-            this.labelMax.Location = new System.Drawing.Point(12, 448);
+            this.labelMax.Location = new System.Drawing.Point(12, 467);
             this.labelMax.Name = "labelMax";
             this.labelMax.Size = new System.Drawing.Size(0, 13);
             this.labelMax.TabIndex = 3;
@@ -110,7 +111,7 @@
             // 
             this.progressBarAlt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBarAlt.Location = new System.Drawing.Point(12, 405);
+            this.progressBarAlt.Location = new System.Drawing.Point(12, 424);
             this.progressBarAlt.Name = "progressBarAlt";
             this.progressBarAlt.Size = new System.Drawing.Size(677, 8);
             this.progressBarAlt.TabIndex = 2;
@@ -151,7 +152,7 @@
             this.groupBoxRequirements.Controls.Add(this.buttonAddRequirement);
             this.groupBoxRequirements.Location = new System.Drawing.Point(12, 67);
             this.groupBoxRequirements.Name = "groupBoxRequirements";
-            this.groupBoxRequirements.Size = new System.Drawing.Size(308, 211);
+            this.groupBoxRequirements.Size = new System.Drawing.Size(308, 230);
             this.groupBoxRequirements.TabIndex = 7;
             this.groupBoxRequirements.TabStop = false;
             this.groupBoxRequirements.Text = "Additional Requirements";
@@ -172,6 +173,7 @@
             this.groupBoxOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOptions.Controls.Add(this.checkBoxMutateTalents);
             this.groupBoxOptions.Controls.Add(this.checkBoxOptimizeTalents);
             this.groupBoxOptions.Controls.Add(this.checkBoxOverrideReenchant);
             this.groupBoxOptions.Controls.Add(this.checkBoxMixology);
@@ -185,7 +187,7 @@
             this.groupBoxOptions.Controls.Add(this.label1);
             this.groupBoxOptions.Location = new System.Drawing.Point(326, 40);
             this.groupBoxOptions.Name = "groupBoxOptions";
-            this.groupBoxOptions.Size = new System.Drawing.Size(363, 238);
+            this.groupBoxOptions.Size = new System.Drawing.Size(363, 257);
             this.groupBoxOptions.TabIndex = 8;
             this.groupBoxOptions.TabStop = false;
             this.groupBoxOptions.Text = "Options";
@@ -193,11 +195,11 @@
             // checkBoxOptimizeTalents
             // 
             this.checkBoxOptimizeTalents.AutoSize = true;
-            this.checkBoxOptimizeTalents.Location = new System.Drawing.Point(231, 215);
+            this.checkBoxOptimizeTalents.Location = new System.Drawing.Point(9, 237);
             this.checkBoxOptimizeTalents.Name = "checkBoxOptimizeTalents";
-            this.checkBoxOptimizeTalents.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxOptimizeTalents.Size = new System.Drawing.Size(89, 17);
             this.checkBoxOptimizeTalents.TabIndex = 10;
-            this.checkBoxOptimizeTalents.Text = "Talents";
+            this.checkBoxOptimizeTalents.Text = "Talent Specs";
             this.checkBoxOptimizeTalents.UseVisualStyleBackColor = true;
             // 
             // checkBoxOverrideReenchant
@@ -233,7 +235,7 @@
             // checkBoxOptimizeElixir
             // 
             this.checkBoxOptimizeElixir.AutoSize = true;
-            this.checkBoxOptimizeElixir.Location = new System.Drawing.Point(65, 215);
+            this.checkBoxOptimizeElixir.Location = new System.Drawing.Point(65, 214);
             this.checkBoxOptimizeElixir.Name = "checkBoxOptimizeElixir";
             this.checkBoxOptimizeElixir.Size = new System.Drawing.Size(87, 17);
             this.checkBoxOptimizeElixir.TabIndex = 8;
@@ -314,7 +316,7 @@
             this.groupBox1.Controls.Add(this.buttonOptimize);
             this.groupBox1.Controls.Add(this.labelInfo);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(12, 284);
+            this.groupBox1.Location = new System.Drawing.Point(12, 303);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(308, 115);
             this.groupBox1.TabIndex = 9;
@@ -336,7 +338,7 @@
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.buttonUpgrades);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(326, 284);
+            this.groupBox2.Location = new System.Drawing.Point(326, 303);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(363, 115);
             this.groupBox2.TabIndex = 10;
@@ -352,13 +354,23 @@
             this.label6.TabIndex = 0;
             this.label6.Text = resources.GetString("label6.Text");
             // 
+            // checkBoxMutateTalents
+            // 
+            this.checkBoxMutateTalents.AutoSize = true;
+            this.checkBoxMutateTalents.Location = new System.Drawing.Point(104, 237);
+            this.checkBoxMutateTalents.Name = "checkBoxMutateTalents";
+            this.checkBoxMutateTalents.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxMutateTalents.TabIndex = 11;
+            this.checkBoxMutateTalents.Text = "Talents";
+            this.checkBoxMutateTalents.UseVisualStyleBackColor = true;
+            // 
             // FormOptimize
             // 
             this.AcceptButton = this.buttonOptimize;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(701, 476);
+            this.ClientSize = new System.Drawing.Size(701, 495);
             this.ControlBox = false;
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -418,5 +430,6 @@
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox checkBoxMutateTalents;
 	}
 }

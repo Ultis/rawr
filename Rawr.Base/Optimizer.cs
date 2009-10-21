@@ -307,6 +307,7 @@ namespace Rawr.Optimizer
         private bool optimizeFood;
         private bool optimizeElixirs;
         private bool optimizeTalents;
+        private bool mutateTalents;
         private bool mixology;
 
         public ItemInstanceOptimizer()
@@ -340,7 +341,7 @@ namespace Rawr.Optimizer
             PopulateAvailableIds(itemGenerator);
         }
 
-        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model, bool optimizeFood, bool optimizeElixirs, bool mixology, List<TalentsBase> talentSpecs)
+        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model, bool optimizeFood, bool optimizeElixirs, bool mixology, List<TalentsBase> talentSpecs, bool mutateTalents)
         {
             _character = character;
             Model = model;
@@ -386,6 +387,7 @@ namespace Rawr.Optimizer
             this.optimizeElixirs = optimizeElixirs;
             this.mixology = mixology;
             this.optimizeTalents = (talentSpecs != null && talentSpecs.Count > 0);
+            this.mutateTalents = mutateTalents;
 
             if (optimizeTalents)
             {
@@ -2644,7 +2646,7 @@ namespace Rawr.Optimizer
         {
             bool successful;
             OptimizerCharacter mutant = null;
-            if (optimizeTalents && rand.NextDouble() < 0.5)
+            if (optimizeTalents && mutateTalents && rand.NextDouble() < 0.5)
             {
                 return BuildMutateTalentsCharacter(parent);
             }

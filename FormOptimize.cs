@@ -131,7 +131,7 @@ namespace Rawr
         private List<TalentsBase> GetOptimizeTalentSpecs()
         {
             List<TalentsBase> talentSpecs = null;
-            if (checkBoxOptimizeTalents.Checked)
+            if (checkBoxOptimizeTalents.Checked || checkBoxMutateTalents.Checked)
             {
                 talentSpecs = new List<TalentsBase>();
                 foreach (SavedTalentSpec spec in FormMain.Instance.TalentPicker.SpecsFor(_character.Class))
@@ -189,7 +189,7 @@ namespace Rawr
             _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
             _optimizer.GreedyOptimizationMethod = Properties.Optimizer.Default.GreedyOptimizationMethod;
 
-            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance, checkBoxOptimizeFood.Checked, checkBoxOptimizeElixir.Checked, checkBoxMixology.Checked, GetOptimizeTalentSpecs());
+            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance, checkBoxOptimizeFood.Checked, checkBoxOptimizeElixir.Checked, checkBoxMixology.Checked, GetOptimizeTalentSpecs(), checkBoxMutateTalents.Checked);
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();
@@ -208,7 +208,7 @@ namespace Rawr
 			buttonCancel.Text = "Cancel";
             buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
                 trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
-				checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled = 
+				checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled = checkBoxMutateTalents.Enabled =
 				comboBoxCalculationToOptimize.Enabled = false;
 
             buttonCancel.DialogResult = DialogResult.None;
@@ -250,7 +250,7 @@ namespace Rawr
                 buttonCancel.Text = "Close";
                 buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
                     trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
-                    checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+                    checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled = checkBoxMutateTalents.Enabled =
                     comboBoxCalculationToOptimize.Enabled = true;
                 foreach (Control ctrl in groupBoxRequirements.Controls)
                     ctrl.Enabled = true;
@@ -267,7 +267,7 @@ namespace Rawr
                     buttonCancel.Text = "Close";
                     buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
                         trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
-                        checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+                        checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled = checkBoxMutateTalents.Enabled =
                         comboBoxCalculationToOptimize.Enabled = true;
                     foreach (Control ctrl in groupBoxRequirements.Controls)
                         ctrl.Enabled = true;
@@ -292,13 +292,13 @@ namespace Rawr
                         _character.IsLoading = true;
                         _character.SetItems(bestCharacter);
                         _character.ActiveBuffs = bestCharacter.ActiveBuffs;
-                        if (checkBoxOptimizeTalents.Checked)
+                        if (checkBoxOptimizeTalents.Checked || checkBoxMutateTalents.Checked)
                         {
                             _character.CurrentTalents = bestCharacter.CurrentTalents;
                         }
                         _character.IsLoading = false;
                         _character.OnCalculationsInvalidated();
-                        if (checkBoxOptimizeTalents.Checked)
+                        if (checkBoxOptimizeTalents.Checked || checkBoxMutateTalents.Checked)
                         {
                             FormMain.Instance.TalentPicker.Talents = _character.CurrentTalents;
                         }
@@ -312,7 +312,7 @@ namespace Rawr
                 buttonCancel.Text = "Close";
                 buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
                     trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
-                    checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+                    checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled = checkBoxMutateTalents.Enabled =
                     comboBoxCalculationToOptimize.Enabled = true;
                 foreach (Control ctrl in groupBoxRequirements.Controls)
                     ctrl.Enabled = true;
@@ -341,7 +341,7 @@ namespace Rawr
 				buttonCancel.Text = "Close";
 				buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
 					trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
-					checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+					checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled = checkBoxMutateTalents.Enabled =
 					comboBoxCalculationToOptimize.Enabled = true;
 				foreach (Control ctrl in groupBoxRequirements.Controls)
 					ctrl.Enabled = true;
@@ -499,7 +499,7 @@ namespace Rawr
             _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
             _optimizer.GreedyOptimizationMethod = Properties.Optimizer.Default.GreedyOptimizationMethod;
 
-            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance, checkBoxOptimizeFood.Checked, checkBoxOptimizeElixir.Checked, checkBoxMixology.Checked, GetOptimizeTalentSpecs());
+            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance, checkBoxOptimizeFood.Checked, checkBoxOptimizeElixir.Checked, checkBoxMixology.Checked, GetOptimizeTalentSpecs(), checkBoxMutateTalents.Checked);
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();
@@ -513,7 +513,7 @@ namespace Rawr
 			buttonCancel.Text = "Cancel";
 			buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
 				trackBarThoroughness.Enabled = checkBoxMixology.Enabled = checkBoxOptimizeElixir.Enabled =
-				checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled =
+				checkBoxOptimizeFood.Enabled = checkBoxOptimizeTalents.Enabled = checkBoxMutateTalents.Enabled =
 				comboBoxCalculationToOptimize.Enabled = false;
             buttonCancel.DialogResult = DialogResult.None;
 

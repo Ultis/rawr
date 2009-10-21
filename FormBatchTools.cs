@@ -1184,7 +1184,7 @@ namespace Rawr
                 {
                     bool _overrideRegem = checkBoxOverrideRegem.Checked;
                     bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-                    optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null);
+                    optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null, false);
                 }
                 optimizer.OptimizeCharacterAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, true);
             }
@@ -1230,7 +1230,7 @@ namespace Rawr
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
             if (CurrentBatchCharacter.Character != null)
             {
-                optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null);
+                optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null, false);
                 optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, SingleItemUpgrade);
             }
         }
@@ -1240,7 +1240,7 @@ namespace Rawr
             int _thoroughness = trackBarThoroughness.Value;
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-            if (initializeCache) optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null);
+            if (initializeCache) optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null, false);
             optimizer.EvaluateUpgradeAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, upgradeListEnumerator.Current.Item);
         }
 
