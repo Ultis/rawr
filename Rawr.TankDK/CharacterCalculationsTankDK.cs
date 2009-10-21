@@ -308,7 +308,7 @@ namespace Rawr.TankDK {
             dict["Physical Crit"] = (BasicStats.PhysicalCrit * 100f).ToString("F2");
             dict["Expertise"] = Expertise.ToString("F0");
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
-            dict["Armor Penetration"] = BasicStats.ArmorPenetration.ToString("F0");
+            dict["Armor Penetration"] = (BasicStats.ArmorPenetration * 100f).ToString("F2") + "%";
             dict["Armor Penetration Rating"] = BasicStats.ArmorPenetrationRating.ToString("F0");
 
             dict["Overall Points"] = OverallPoints.ToString("F1"); 

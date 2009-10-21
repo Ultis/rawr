@@ -464,6 +464,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 stats.AddSpecialEffect(se);
             }
 
+            // This is the point that SHOULD have the right values according to the paper-doll.
+            Stats sPaperDoll = stats.Clone();
+
             CombatTable ct = new CombatTable(character, calcs, stats, opts);
 
             // Now that we have the combat table, we should be able to integrate the Special effects.
@@ -748,7 +751,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 //            if (needsDisplayCalculations)
 //            {
                 // TODO: not sure if I want this here...
-                calcs.BasicStats = stats.Clone() as Stats;
+                calcs.BasicStats = sPaperDoll;
                 // The full character data.
                 calcs.TargetLevel = iTargetLevel;
 
@@ -765,7 +768,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 calcs.TargetMiss = chanceTargetMiss;
                 calcs.TargetParry = chanceTargetParry;
                 calcs.Expertise = stats.Expertise;
-                calcs.BasicStats.ArmorPenetration = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating) * 100f;
+//                calcs.BasicStats.ArmorPenetration = StatConversion.GetArmorPenetrationFromRating(sPaperDoll.ArmorPenetrationRating) * 100f;
 
                 calcs.ArmorDamageReduction = ArmorDamageReduction;
 //            }
@@ -872,6 +875,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Expertise Rating -> Expertise:
             statsTotal.Expertise += StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
+
+            statsTotal.ArmorPenetration += StatConversion.GetArmorPenetrationFromRating(statsTotal.ArmorPenetrationRating);
 
         }
 
@@ -1266,7 +1271,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     // Improved Rune Tap.
                     // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
                     fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
-                    newStats.Healed *= 1f + (0.33f * character.DeathKnightTalents.ImprovedRuneTap);
+                    newStats.Healed = StatConversion.ApplyMultiplier(newStats.Healed, (0.33f * character.DeathKnightTalents.ImprovedRuneTap));
                     FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
                 }
             }
@@ -1382,7 +1387,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // 1 min CD. as of 3.2.2
             if (character.DeathKnightTalents.VampiricBlood > 0) {
                 newStats = new Stats();
-                newStats.Health += (fHealth * 0.15f);
+                // TODO: need to figure out how to factor this back in.
+//                newStats.Health = (fHealth * 0.15f);
                 newStats.HealingReceivedMultiplier += 0.35f;
                 FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 10f, 1f * 60f));
             }
