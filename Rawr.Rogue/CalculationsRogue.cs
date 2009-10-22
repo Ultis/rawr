@@ -15,6 +15,8 @@ using Rawr.Rogue.SpecialAbilities;
 namespace Rawr.Rogue {
     [Calculations.RawrModelInfoAttribute("Rogue", "Ability_Rogue_SliceDice", CharacterClass.Rogue)]
     public class CalculationsRogue : CalculationsBase {
+        #region Variables and Properties
+
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
                 ////Relevant Gem IDs for Rogues
@@ -66,8 +68,6 @@ namespace Rawr.Rogue {
 			    };
             }
         }
-
-        #region Variables and Properties
 
         private CalculationOptionsPanelRogue _calculationOptionsPanel = null;
         #if RAWR3
@@ -517,6 +517,7 @@ namespace Rawr.Rogue {
         public override bool IsBuffRelevant(Buff buff)
         {
             if (buff.Name == "Focus Magic")     return false;
+            if (buff.Name.Contains("Mighty Rage")) return false;
 
             if (buff.Group == "Set Bonuses")
             {

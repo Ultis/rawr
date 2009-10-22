@@ -144,9 +144,9 @@ namespace Rawr {
             List<BossHandler> retList = new List<BossHandler>();
             foreach (BossHandler boss in list) {
                 switch (ftype) {
-                    case FilterType.Content:  { if (boss.Content.Equals( Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
+                    case FilterType.Content:  { if (boss.ContentString.Equals( Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
                     case FilterType.Instance: { if (boss.Instance.Equals(Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
-                    case FilterType.Version:  { if (boss.Version.Equals( Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
+                    case FilterType.Version:  { if (boss.VersionString.Equals( Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
                     case FilterType.Name:     { if (boss.Name.Equals(    Filter,StringComparison.OrdinalIgnoreCase)) { retList.Add(boss); } break; }
                     default: { /*Invalid type, do nothing*/ break; }
                 }
@@ -176,7 +176,7 @@ namespace Rawr {
             names.Add(TheAvgBoss.Name);
             names.Add(TheHardestBoss.Name);
             foreach (BossHandler boss in calledList) {
-                string name = boss.Content + " : " + boss.Instance + " (" + boss.Version + ") " + boss.Name;
+                string name = boss.ContentString + " : " + boss.Instance + " (" + boss.VersionString + ") " + boss.Name;
                 names.Add(name);
             }
             return names;
@@ -204,7 +204,7 @@ namespace Rawr {
             else if (TheHardestBoss_Called.Name == name) { retBoss = TheHardestBoss_Called; }
             else {
                 foreach (BossHandler boss in calledList) {
-                    string checkName = boss.Content + " : " + boss.Instance + " (" + boss.Version + ") " + boss.Name;
+                    string checkName = boss.ContentString + " : " + boss.Instance + " (" + boss.VersionString + ") " + boss.Name;
                     if(checkName == name){
                         retBoss = boss;
                         break;
@@ -217,10 +217,10 @@ namespace Rawr {
             List<string> names = new List<string>() { };
             switch (ftype) {
                 case FilterType.Content: {
-                    if (!names.Contains(TheEZModeBoss_Called.Content)) { names.Add(TheEZModeBoss_Called.Content); }
-                    if (!names.Contains(TheAvgBoss_Called.Content)) { names.Add(TheAvgBoss_Called.Content); }
-                    if (!names.Contains(TheHardestBoss_Called.Content)) { names.Add(TheHardestBoss_Called.Content); }
-                    foreach (BossHandler boss in calledList) { if (!names.Contains(boss.Content)) { names.Add(boss.Content); } }
+                    if (!names.Contains(TheEZModeBoss_Called.ContentString)) { names.Add(TheEZModeBoss_Called.ContentString); }
+                    if (!names.Contains(TheAvgBoss_Called.ContentString)) { names.Add(TheAvgBoss_Called.ContentString); }
+                    if (!names.Contains(TheHardestBoss_Called.ContentString)) { names.Add(TheHardestBoss_Called.ContentString); }
+                    foreach (BossHandler boss in calledList) { if (!names.Contains(boss.ContentString)) { names.Add(boss.ContentString); } }
                     break;
                 }
                 case FilterType.Instance: {
@@ -238,10 +238,10 @@ namespace Rawr {
                     break;
                 }
                 case FilterType.Version: {
-                    if (!names.Contains(TheEZModeBoss_Called.Version)) { names.Add(TheEZModeBoss_Called.Version); }
-                    if (!names.Contains(TheAvgBoss_Called.Version)) { names.Add(TheAvgBoss_Called.Version); }
-                    if (!names.Contains(TheHardestBoss_Called.Version)) { names.Add(TheHardestBoss_Called.Version); }
-                    foreach (BossHandler boss in calledList) { if (!names.Contains(boss.Version)) { names.Add(boss.Version); } }
+                    if (!names.Contains(TheEZModeBoss_Called.VersionString)) { names.Add(TheEZModeBoss_Called.VersionString); }
+                    if (!names.Contains(TheAvgBoss_Called.VersionString)) { names.Add(TheAvgBoss_Called.VersionString); }
+                    if (!names.Contains(TheHardestBoss_Called.VersionString)) { names.Add(TheHardestBoss_Called.VersionString); }
+                    foreach (BossHandler boss in calledList) { if (!names.Contains(boss.VersionString)) { names.Add(boss.VersionString); } }
                     break;
                 }
                 default: { /*Invalid type, do nothing*/ break; }
@@ -630,7 +630,7 @@ namespace Rawr {
             // Fight Requirements
             bool is25 = false;
             foreach (BossHandler boss in passedList) {
-                if (boss.Version.Contains("25")) {
+                if (boss.Version == BossHandler.Versions.V_25 || boss.Version == BossHandler.Versions.V_25H) {
                     is25 = true;
                     break;
                 }

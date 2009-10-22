@@ -15,20 +15,20 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Anub'Rekhan";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2230000f;
             // ==== Fight Requirements ====
             Max_Players = 10;
             Min_Tanks   =  2;
             Min_Healers =  2;
-            // Resistance
-            // Attacks
+            // ==== Resistance ====
+            // ==== Attacks ====
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -85,9 +85,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Grand Widow Faerlina";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2231200f;
             // Fight Requirements
             Max_Players = 10;
@@ -98,7 +98,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -141,9 +141,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Maexxna";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2510000f;
             // Fight Requirements
             Max_Players = 10;
@@ -154,7 +154,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -242,9 +242,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Noth the Plaguebringer";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2500000f;
             BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
             // Fight Requirements
@@ -256,7 +256,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -275,9 +275,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Heigan the Unclean";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 3067900f;
             // Fight Requirements
             Max_Players = 10;
@@ -288,7 +288,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -323,9 +323,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Loatheb";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 6693600f;
             BerserkTimer = 5 * 60; // Inevitable Doom starts to get spammed every 15 seconds
             // Fight Requirements
@@ -337,7 +337,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -380,9 +380,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Instructor Razuvious";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 3349000f;
             // Fight Requirements
             Max_Players = 10;
@@ -393,7 +393,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -427,9 +427,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Gothik the Harvester";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 836700f;
             BerserkTimer = BerserkTimer - (4 * 60 + 34);
             // Fight Requirements
@@ -459,9 +459,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Four Horsemen";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 781000f * 4f;
             // Fight Requirements
             Max_Players = 10;
@@ -472,7 +472,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -531,9 +531,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Patchwerk";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 6 * 60;
             Health = 4322950;
             // Fight Requirements
@@ -545,7 +545,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -570,9 +570,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Grobbulus";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2928000f;
             BerserkTimer = 12 * 60;
             // Resistance
@@ -580,7 +580,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -615,9 +615,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Gluth";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2789000;
             BerserkTimer = 8 * 60;
             // Fight Requirements
@@ -629,7 +629,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 40000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -649,9 +649,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Thaddius";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 3850000f + 838300f; // one player only deals with one of the add's total health + thadd's health
             BerserkTimer = 6 * 60; // Need to verify if starts at beg. of combat or beg. of Thadd
             // Fight Requirements
@@ -663,7 +663,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -697,9 +697,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Sapphiron";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 4250000f;
             BerserkTimer = 15 * 60;
             // Fight Requirements
@@ -711,7 +711,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -753,9 +753,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Kel'Thuzad";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2230000f;
             BerserkTimer = 19 * 60;
             SpeedKillTimer = 6 * 60;
@@ -768,7 +768,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -814,9 +814,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Shadron";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "The Obsidian Sanctum";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 976150f;
             // Fight Requirements
             Max_Players = 10;
@@ -827,7 +827,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -875,9 +875,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Tenebron";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "The Obsidian Sanctum";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 976150f;
             // Fight Requirements
             Max_Players = 10;
@@ -888,7 +888,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -942,9 +942,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Vesperon";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "The Obsidian Sanctum";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 976150f;
             // Fight Requirements
             Max_Players = 10;
@@ -955,7 +955,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -996,9 +996,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Sartharion";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "The Obsidian Sanctum";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2510100f;
             // Fight Requirements
             Max_Players = 10;
@@ -1009,7 +1009,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1041,9 +1041,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Archavon The Stone Watcher";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "The Vault of Archavon";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2300925f;
             BerserkTimer = 5 * 60;
             // Fight Requirements
@@ -1055,7 +1055,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1083,9 +1083,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Malygos";
-            Content = "T7";
+            Content = TierLevels.T7_0;
             Instance = "The Eye of Eternity";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2230000f;
             // Fight Requirements
             Max_Players = 10;
@@ -1096,7 +1096,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1124,9 +1124,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from 10 man version
             // Basics
             Name = "Anub'Rekhan";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 6763325f;
             // ==== Fight Requirements ====
             Max_Players = 25;
@@ -1137,7 +1137,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1194,9 +1194,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Grand Widow Faerlina";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 6763325;
             // Fight Requirements
             Max_Players = 25;
@@ -1207,7 +1207,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1250,9 +1250,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from 10 man version
             // Basics
             Name = "Maexxna";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 7600000f;
             // Fight Requirements
             Max_Players = 25;
@@ -1263,7 +1263,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1351,9 +1351,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Noth the Plaguebringer";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 2500000f;
             BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
             // Fight Requirements
@@ -1365,7 +1365,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1384,9 +1384,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Heigan the Unclean";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 9273425f;
             // Fight Requirements
             Max_Players = 25;
@@ -1397,7 +1397,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1428,9 +1428,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Loatheb";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 20220250f;
             BerserkTimer = 5 * 60; // Inevitable Doom starts to get spammed every 15 seconds
             // Fight Requirements
@@ -1442,7 +1442,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1485,9 +1485,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Instructor Razuvious";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 10110125;
             // Fight Requirements
             Max_Players = 25;
@@ -1498,7 +1498,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 240000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -1531,9 +1531,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Gothik the Harvester";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 2510100f;
             //BerserkTimer = (8 * 60) - (4 * 60 + 34);
             // Fight Requirements
@@ -1563,9 +1563,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Four Horsemen";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 2370650f * 4f;
             // Fight Requirements
             Max_Players = 25;
@@ -1576,7 +1576,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -1630,9 +1630,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from 10 man version
             // Basics
             Name = "Patchwerk";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 13038575;
             // Fight Requirements
             Max_Players = 25;
@@ -1643,7 +1643,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1668,9 +1668,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Grobbulus";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 9552325;
             BerserkTimer = 12 * 60;
             // Fight Requirements
@@ -1682,7 +1682,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -1715,9 +1715,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Gluth";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 8436725;
             BerserkTimer = 8 * 60;
             // Fight Requirements
@@ -1729,7 +1729,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 80000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1749,9 +1749,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Thaddius";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 3834875 + 30400100; // one player only deals with one of the add's total health + thadd's health
             BerserkTimer = 6 * 60; // Starts at beg. of Thadd, not begin of fight
             // Fight Requirements
@@ -1763,7 +1763,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -1795,9 +1795,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Sapphiron";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 4250000f;
             BerserkTimer = 15 * 60;
             // Fight Requirements
@@ -1809,7 +1809,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1851,9 +1851,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Kel'Thuzad";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "Naxxramas";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 2500000;
             BerserkTimer = 19 * 60;
             SpeedKillTimer = 6 * 60;
@@ -1866,7 +1866,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1912,9 +1912,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Shadron";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "The Obsidian Sanctum";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 2231200f;
             // Fight Requirements
             Max_Players = 25;
@@ -1925,7 +1925,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -1970,8 +1970,8 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Tenebron";
-            Content = "T7.5";
-            Version = "25 Man";
+            Content = TierLevels.T7_5;
+            Version = Versions.V_25;
             Instance = "The Obsidian Sanctum";
             Health = 2231200;
             // Fight Requirements
@@ -1983,7 +1983,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2034,9 +2034,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Vesperon";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "The Obsidian Sanctum";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 2231200f;
             // Fight Requirements
             Max_Players = 25;
@@ -2047,7 +2047,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
@@ -2088,9 +2088,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Sartharion";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "The Obsidian Sanctum";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 7669750f;
             // Fight Requirements
             Max_Players = 25;
@@ -2101,7 +2101,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2131,9 +2131,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Archavon The Stone Watcher";
-            Content = "T7.5";
+            Content = TierLevels.T7_5;
             Instance = "The Vault of Archavon";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 9970675f;
             BerserkTimer = 5 * 60;
             // Fight Requirements
@@ -2145,7 +2145,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2171,8 +2171,8 @@ namespace Rawr.Bosses {
         public Malygos_25() {
             // If not listed here use values from defaults
             // Basics
-            Content = "T7.5";
-            Version = "25 Man";
+            Content = TierLevels.T7_5;
+            Version = Versions.V_25;
             Health = 2230000f;
             // Fight Requirements
             Max_Players = 25;
@@ -2183,7 +2183,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2209,9 +2209,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Emalon the Storm Watcher";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "The Vault of Archavon";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 2789000f;
             BerserkTimer = 6 * 60;
             // Fight Requirements
@@ -2223,7 +2223,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 90000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2263,9 +2263,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Ignis the Furnace Master";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 5578000f;
             // Fight Requirements
             Max_Players = 10;
@@ -2276,7 +2276,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2350,9 +2350,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Razorscale";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 15 * 60;
             Health = 3555975f;
             // Fight Requirements
@@ -2364,7 +2364,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2399,9 +2399,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "XT-002 Deconstructor";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 10 * 60;
             Health = 5000008f;
             // Fight Requirements
@@ -2413,7 +2413,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2494,9 +2494,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Assembly of Iron";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 15 * 60;
             Health = 2998175f;
             // Fight Requirements
@@ -2508,7 +2508,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2577,9 +2577,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Kologarn";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 3625700f;
             // Fight Requirements
             Max_Players = 10;
@@ -2590,7 +2590,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2617,9 +2617,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Auriaya";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 10 * 60;
             Health = 3137625f;
             // Fight Requirements
@@ -2631,7 +2631,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2661,9 +2661,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Mimiron";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 15 * 60;
             Health = 1742400f*3f;
             // Fight Requirements
@@ -2675,7 +2675,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2713,9 +2713,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Auriaya";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 10 * 60;
             Health = 1394500f;
             // Fight Requirements
@@ -2727,7 +2727,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2769,9 +2769,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Thorim";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 5 * 60 * 2;
             Health = 1742400f;
             // Fight Requirements
@@ -2783,7 +2783,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2841,9 +2841,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Hodir";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 8 * 60;
             Health = 8115990f;
             // Fight Requirements
@@ -2855,7 +2855,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2890,9 +2890,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "General Vezax";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 10 * 60;
             Health = 6275250f;
             // Fight Requirements
@@ -2904,7 +2904,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2930,9 +2930,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Yogg-Saron";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 15 * 60;
             Health = 10999997f;
             // Fight Requirements
@@ -2944,7 +2944,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -2983,9 +2983,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Algalon the Observer";
-            Content = "T8";
+            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = "10 Man";
+            Version = Versions.V_10;
             BerserkTimer = 6 * 60;
             Health = 8367000f;
             // Fight Requirements
@@ -2997,7 +2997,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)TierLevels.T8_0],
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -3025,9 +3025,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Emalon the Storm Watcher";
-            Content = "T8.5";
+            Content = TierLevels.T8_5;
             Instance = "The Vault of Archavon";
-            Version = "25 Man";
+            Version = Versions.V_25;
             Health = 11156000f;
             BerserkTimer = 6 * 60;
             // Fight Requirements
@@ -3039,7 +3039,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 180000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -3082,9 +3082,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Auriaya";
-            Content = "T8.5";
+            Content = TierLevels.T8_5;
             Instance = "Ulduar";
-            Version = "25 Man";
+            Version = Versions.V_25;
             BerserkTimer = 10 * 60;
             Health = 16734000f;
             // Fight Requirements
@@ -3096,7 +3096,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 180000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -3129,9 +3129,9 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Hodir";
-            Content = "T8.5";
+            Content = TierLevels.T8_5;
             Instance = "Ulduar";
-            Version = "25 Man";
+            Version = Versions.V_25;
             BerserkTimer = 8 * 60;
             Health = 32477904f;
             // Fight Requirements
@@ -3143,7 +3143,7 @@ namespace Rawr.Bosses {
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 180000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -3176,16 +3176,16 @@ namespace Rawr.Bosses {
             // If not listed here use values from defaults
             // Basics
             Name = "Koralon the Flame Watcher";
-            Content = "T9";
+            Content = TierLevels.T9_0;
             Instance = "The Vault of Archavon";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Health = 4183500f;
             // Resistance
             // Attacks
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 60000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });
@@ -3208,15 +3208,15 @@ namespace Rawr.Bosses {
         public KoralonTheFlameWatcher_25() {
             // If not listed here use values from defaults
             // Basics
-            Content = "T9.5";
-            Version = "25 Man";
+            Content = TierLevels.T9_5;
+            Version = Versions.V_25;
             Health = 4183500f;
             // Resistance
             // Attacks
             Attacks.Add(new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
-                DamagePerHit = 120000f,
+                DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
             });

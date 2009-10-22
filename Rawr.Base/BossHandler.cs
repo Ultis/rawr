@@ -72,9 +72,9 @@ namespace Rawr {
         public BossHandler() {
             // Basics
             Name = "Generic";
-            Content = "Generic";
+            Content = TierLevels.T7_0;
             Instance = "None";
-            Version = "10 Man";
+            Version = Versions.V_10;
             Comment = "No comments have been written for this Boss.";
             BerserkTimer = 8 * 60; // The longest noted Enrage timer is 19 minutes, and seriously, if the fight is taking that long, then fail... just fail.
             SpeedKillTimer = 3 * 60; // Lots of Achievements run on this timer, so using it for generic
@@ -110,14 +110,23 @@ namespace Rawr {
         }
 
         #region Variables
-        public enum TierLevels : int {
-            T7_0 = 0,
-            T7_5,
-            T8_0,
-            T8_5,
-            T9_0,
-            T9_5,
-        }
+        #region Melee Attack Value stuff
+        protected readonly static string[] BossTierStrings = new string[] {
+            "Tier 7",
+            "Tier 7.5",
+            "Tier 8",
+            "Tier 8.5",
+            "Tier 9",
+            "Tier 9.5",
+        };
+        protected readonly static string[] BossVersionStrings = new string[] {
+            "10 Man",
+            "25 Man",
+            "10 Man (H)",
+            "25 Man (H)",
+        };
+        public enum Versions   : int { V_10 = 0, V_25, V_10H, V_25H, }
+        public enum TierLevels : int { T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, }
         public readonly float[] StandardMeleePerHit = new float[] {
               5000f*2f, //T7_0,
              10000f*2f, //T7_5,
@@ -126,8 +135,11 @@ namespace Rawr {
              40000f*2f, //T9_0,
              50000f*2f, //T9_5,
         };
+        #endregion
         // Basics
-        private string NAME,CONTENT,INSTANCE,VERSION,COMMENT;
+        private string NAME,INSTANCE,COMMENT;
+        private TierLevels CONTENT;
+        private Versions VERSION;
         private float HEALTH,ARMOR;
         private int BERSERKTIMER,SPEEDKILLTIMER,LEVEL;
         private bool USERPARRYHASTE;
@@ -155,10 +167,14 @@ namespace Rawr {
 
         #region Get/Set
         // ==== Basics ====
+        protected string GetVersionString(Versions v) { return BossVersionStrings[(int)v]; }
+        protected string GetContentString(TierLevels c) { return BossTierStrings[(int)c]; }
         public string Name               { get { return NAME;               } set { NAME               = value; } }
-        public string Content            { get { return CONTENT;            } set { CONTENT            = value; } }
+        public TierLevels Content        { get { return CONTENT;            } set { CONTENT            = value; } }
+        public string ContentString      { get { return GetContentString(CONTENT); } }
         public string Instance           { get { return INSTANCE;           } set { INSTANCE           = value; } }
-        public string Version            { get { return VERSION;            } set { VERSION            = value; } }
+        public Versions Version          { get { return VERSION;            } set { VERSION            = value; } }
+        public string VersionString      { get { return GetVersionString(VERSION); } }
         public string Comment            { get { return COMMENT;            } set { COMMENT            = value; } }
         public int    Level              { get { return LEVEL;              } set { LEVEL              = value; } }
         public float  Health             { get { return HEALTH;             } set { HEALTH             = value; } }
@@ -744,8 +760,8 @@ namespace Rawr {
             string retVal = "";
             //
             retVal += "Name: " + Name + "\r\n";
-            retVal += "Content: " + Content + "\r\n";
-            retVal += "Instance: " + Instance + " (" + Version + ")\r\n";
+            retVal += "Content: " + ContentString + "\r\n";
+            retVal += "Instance: " + Instance + " (" + VersionString + ")\r\n";
             retVal += "Health: " + Health.ToString("#,##0") + "\r\n";
             TimeSpan ts = TimeSpan.FromMinutes(BerserkTimer/60d);
             retVal += "Enrage Timer: " + ts.Minutes.ToString("00") + " Min " + ts.Seconds.ToString("00") + " Sec\r\n";
