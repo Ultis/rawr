@@ -671,7 +671,9 @@ These numbers to do not include racial bonuses.",
         public override bool IsBuffRelevant(Buff buff) {
             string name = buff.Name;
             // Force some buffs to active
-            if (name.Contains("Potion of Wild Magic")) {
+            if (name.Contains("Potion of Wild Magic")
+                || name.Contains("Insane Strength Potion")
+            ) {
                 return true;
             }
             // Force some buffs to go away
@@ -907,25 +909,30 @@ These numbers to do not include racial bonuses.",
                 }
             }
             #endregion
+
+            #region Special Pot Handling
             foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
             {
-                Stats newStats = new Stats();
-                newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
-                                                            potionBuff.Stats._rawSpecialEffectData[0].Stats,
-                                                            potionBuff.Stats._rawSpecialEffectData[0].Duration, 
-                                                            calcOpts.Duration,
-                                                            potionBuff.Stats._rawSpecialEffectData[0].Chance,
-                                                            potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
-                
-                Buff newBuff = new Buff() { Stats = newStats };
-                character.ActiveBuffs.Remove(potionBuff);
-                character.ActiveBuffs.Add(newBuff);
-                removedBuffs.Add(potionBuff);
-                addedBuffs.Add(newBuff);
+                if (potionBuff.Stats._rawSpecialEffectData != null
+                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
+                {
+                    Stats newStats = new Stats();
+                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
+                                                                calcOpts.Duration,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
+
+                    Buff newBuff = new Buff() { Stats = newStats };
+                    character.ActiveBuffs.Remove(potionBuff);
+                    character.ActiveBuffs.Add(newBuff);
+                    removedBuffs.Add(potionBuff);
+                    addedBuffs.Add(newBuff);
+                }
             }
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            #region Special Pot Handling
             /*
             List<String> buffNames = new List<string>() {
                 "Potion of Speed",
@@ -934,6 +941,7 @@ These numbers to do not include racial bonuses.",
                 "Insane Strength Potion",
                 "Indestructible Potion",
                 "Mighty Rage Potion",
+                "Insane Strength Potion",
                 "Swiftness Potion",
             };
 
