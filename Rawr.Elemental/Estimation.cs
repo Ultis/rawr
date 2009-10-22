@@ -115,19 +115,13 @@ namespace Rawr.Elemental
             float ManaRegen = ManaRegInFSR;
             #endregion
 
-            // Mana potion: extraMana
-            #region Mana potion
-            float extraMana = new float[] { 0f, 1800f, 2200, 2400, 4300 }[calcOpts.ManaPot];
-            extraMana *= 1 + stats.BonusManaPotion;
-            #endregion
-
             // TotalDamage, CastFraction, TimeUntilOOM
             #region Calculate total damage in the fight
             float TimeUntilOOM = 0;
             float FightDuration = calcOpts.FightDuration;
             float effectiveMPS = rot.MPS - ManaRegen / 5f;
             if (effectiveMPS <= 0) TimeUntilOOM = FightDuration;
-            else TimeUntilOOM = (calculatedStats.BasicStats.Mana + extraMana) / effectiveMPS;
+            else TimeUntilOOM = (calculatedStats.BasicStats.Mana) / effectiveMPS;
             if (TimeUntilOOM > FightDuration) TimeUntilOOM = FightDuration;
 
             #region SpecialEffects from procs etc.

@@ -49,7 +49,6 @@ namespace Rawr.Elemental
             int m = trkFightLength.Value / 4;
             int s = calcOpts.FightDuration - 60 * m;
             lblFightLength.Text = "Fight duration: " + m + ":" + s;
-            cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
 
@@ -76,14 +75,6 @@ namespace Rawr.Elemental
             int m = trkFightLength.Value / 4;
             int s = calcOpts.FightDuration - 60 * m;
             lblFightLength.Text = "Fight duration: "+m+":"+s;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
-            calcOpts.ManaPot = cmbManaAmt.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
 

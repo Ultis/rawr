@@ -33,8 +33,6 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbThunderstorm = new System.Windows.Forms.CheckBox();
-            this.cmbManaAmt = new System.Windows.Forms.ComboBox();
-            this.label10 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.trkFightLength = new System.Windows.Forms.TrackBar();
             this.lblFightLength = new System.Windows.Forms.Label();
@@ -58,7 +56,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(289, 550);
+            this.tabPage4.Size = new System.Drawing.Size(289, 527);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Module Notes";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -91,11 +89,9 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.cbThunderstorm);
-            this.groupBox3.Controls.Add(this.cmbManaAmt);
-            this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Location = new System.Drawing.Point(6, 186);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(277, 73);
+            this.groupBox3.Size = new System.Drawing.Size(277, 41);
             this.groupBox3.TabIndex = 54;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Estimation details";
@@ -110,32 +106,6 @@
             this.cbThunderstorm.Text = "Use Thunderstorm whenever available";
             this.cbThunderstorm.UseVisualStyleBackColor = true;
             this.cbThunderstorm.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // cmbManaAmt
-            // 
-            this.cmbManaAmt.DisplayMember = "2400";
-            this.cmbManaAmt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbManaAmt.Items.AddRange(new object[] {
-            "(None) 0",
-            "(Major) 1350-2250, Avg 1800",
-            "(Mad) 1650-2750, Avg 2200",
-            "(Super) 1800-3000, Avg 2400",
-            "(Runic) 4200-4400, Avg 4300"});
-            this.cmbManaAmt.Location = new System.Drawing.Point(86, 39);
-            this.cmbManaAmt.Name = "cmbManaAmt";
-            this.cmbManaAmt.Size = new System.Drawing.Size(185, 21);
-            this.cmbManaAmt.TabIndex = 46;
-            this.cmbManaAmt.ValueMember = "2400";
-            this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 42);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(74, 13);
-            this.label10.TabIndex = 47;
-            this.label10.Text = "Mana potions:";
             // 
             // groupBox7
             // 
@@ -245,8 +215,6 @@
         private System.Windows.Forms.TrackBar tbBSRatio;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox cbThunderstorm;
-        private System.Windows.Forms.ComboBox cmbManaAmt;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.TrackBar trkFightLength;
         private System.Windows.Forms.Label lblFightLength;

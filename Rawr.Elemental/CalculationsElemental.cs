@@ -369,6 +369,7 @@ namespace Rawr.Elemental
                 SpellFrostDamageRating = stats.SpellFrostDamageRating,
                 Mp5 = stats.Mp5,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                ManaRestore = stats.ManaRestore,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 #endregion
                 #region Multipliers
@@ -447,6 +448,7 @@ namespace Rawr.Elemental
                 stats.SpellFrostDamageRating +
                 stats.Mp5 +
                 stats.ManaRestoreFromMaxManaPerSecond +
+                stats.ManaRestore +
                 stats.ManaRestoreFromBaseManaPPM;
             #endregion
             #region Multipliers

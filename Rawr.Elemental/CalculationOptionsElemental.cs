@@ -15,7 +15,6 @@ namespace Rawr.Elemental
 		public int BSRatio = 75; // goes from 0 to 100
 
 		public int FightDuration = 300; //5 Minutes
-		public int ManaPot = 0; // none
 		public bool UseThunderstorm = true;
 
 		public int rotationType = 0;
