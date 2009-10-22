@@ -109,7 +109,7 @@ namespace Rawr.UI
 				//Calculations.RegisterModel(typeof(Rawr.Hunter.CalculationsHunter));
 				Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
 				Calculations.RegisterModel(typeof(Rawr.Moonkin.CalculationsMoonkin));
-				//Calculations.RegisterModel(typeof(Rawr.ProtPaladin.CalculationsProtPaladin));
+				Calculations.RegisterModel(typeof(Rawr.ProtPaladin.CalculationsProtPaladin));
 				Calculations.RegisterModel(typeof(Rawr.ProtWarr.CalculationsProtWarr));
 				//Calculations.RegisterModel(typeof(Rawr.RestoSham.CalculationsRestoSham));
 				Calculations.RegisterModel(typeof(Rawr.Retribution.CalculationsRetribution));

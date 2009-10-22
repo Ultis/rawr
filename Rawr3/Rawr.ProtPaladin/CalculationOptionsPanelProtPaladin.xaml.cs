@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Rawr.ProtPaladin
 {
@@ -17,10 +18,8 @@ namespace Rawr.ProtPaladin
 		public CalculationOptionsPanelProtPaladin()
 		{
 			InitializeComponent();
-			DataContext = this;
 		}
 
-		#region ICalculationOptionsPanel Members
 		public UserControl PanelControl { get { return this; } }
 
 		private Character character;
@@ -32,19 +31,28 @@ namespace Rawr.ProtPaladin
 			}
 			set
 			{
-				character = value;
-				LoadCalculationOptions();
-			}
-		}
+                if (character != null && character.CalculationOptions != null && character.CalculationOptions is CalculationOptionsProtPaladin)
+                {
+                    ((CalculationOptionsProtPaladin)character.CalculationOptions).PropertyChanged -= new PropertyChangedEventHandler(CalculationOptionsPanelProtPaladin_PropertyChanged);
+                }
 
-		private bool _loadingCalculationOptions;
-		public void LoadCalculationOptions()
-		{
-			_loadingCalculationOptions = true;
-			if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsProtPaladin();
+                character = value;
+                if (character.CalculationOptions == null)
+                    character.CalculationOptions = new CalculationOptionsProtPaladin();
 
-			_loadingCalculationOptions = false;
-		}
-		#endregion
+                LayoutRoot.DataContext = Character.CalculationOptions;
+
+                CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+
+                DataContext = calcOpts;
+
+                calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelProtPaladin_PropertyChanged);
+            }
+        }
+
+        void CalculationOptionsPanelProtPaladin_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Character.OnCalculationsInvalidated();
+        }
 	}
 }
