@@ -467,15 +467,34 @@ namespace Rawr.Enhance
             g.DrawString((maxScale * 0.375f - 100f).ToString(), tickFont, black75brush, ticks[4], bitmap.Height - 16, formatTick);
             g.DrawString((maxScale * 0.625f - 100f).ToString(), tickFont, black75brush, ticks[5], bitmap.Height - 16, formatTick);
             g.DrawString((maxScale * 0.875f - 100f).ToString(), tickFont, black75brush, ticks[6], bitmap.Height - 16, formatTick);
+            g.DrawString("Stat Change", tickFont, black200brush, graphWidth / 2 + 50, bitmap.Height, formatTick);
             #endregion
 
             #region Graph Y ticks   
             Int32 zeroPoint = (int)(maxDpsChange * (graphHeight - 48) / DpsVariance) + 20;
             g.DrawLine(black200, graphStart, zeroPoint, graphEnd, zeroPoint);
             formatTick.Alignment = StringAlignment.Near;
-            g.DrawString((0f).ToString(), tickFont, black200brush, graphStart - 10, zeroPoint + 10, formatTick);
+            g.DrawString("DPS  0", tickFont, black200brush, graphStart - 50, zeroPoint + 10, formatTick);
             g.DrawString(maxDpsChange.ToString("F1", CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, 30, formatTick);
             g.DrawString(minDpsChange.ToString("F1", CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, bitmap.Height - 12, formatTick);
+            float pointY = (int)(maxDpsChange * .75f * (graphHeight - 48) / DpsVariance) + 20;
+            g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
+            g.DrawString((maxDpsChange * .25f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 12, formatTick);
+            pointY = (int)(maxDpsChange * .5f * (graphHeight - 48) / DpsVariance) + 20;
+            g.DrawLine(black150, graphStart, pointY, graphEnd, pointY);
+            g.DrawString((maxDpsChange * .5f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black150brush, graphStart - 50, pointY + 12, formatTick);
+            pointY = (int)(maxDpsChange * .25f * (graphHeight - 48) / DpsVariance) + 20;
+            g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
+            g.DrawString((maxDpsChange * .75f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 12, formatTick);
+            pointY = (int)((maxDpsChange - minDpsChange * .75f) * (graphHeight - 48) / DpsVariance) + 20;
+            g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
+            g.DrawString((minDpsChange * .75f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 12, formatTick);
+            pointY = (int)((maxDpsChange - minDpsChange * .5f) * (graphHeight - 48) / DpsVariance) + 20;
+            g.DrawLine(black150, graphStart, pointY, graphEnd, pointY);
+            g.DrawString((minDpsChange * .5f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black150brush, graphStart - 50, pointY + 12, formatTick);
+            pointY = (int)((maxDpsChange - minDpsChange * .25f) * (graphHeight - 48) / DpsVariance) + 20;
+            g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
+            g.DrawString((minDpsChange * .25f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 12, formatTick);
             #endregion
 
             #region Line Names
