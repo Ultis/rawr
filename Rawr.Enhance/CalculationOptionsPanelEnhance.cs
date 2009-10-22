@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace Rawr.Enhance
 {
@@ -342,6 +343,155 @@ namespace Rawr.Enhance
             LoadPriorities();
             _loadingCalculationOptions = false;
             Character.OnCalculationsInvalidated();
+        }
+
+        private void btnStatsGraph_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            CalculationsEnhance EnhanceCalc = new CalculationsEnhance();
+            CharacterCalculationsEnhance baseCalc = EnhanceCalc.GetCharacterCalculations(Character) as CharacterCalculationsEnhance;
+            Bitmap bitmap = new Bitmap(800,750);
+            Graphics g = Graphics.FromImage(bitmap);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            float graphHeight = 750f, graphOffset = 400f, graphStep = 3.5f;
+            Color[] colors = new Color[] {
+                Color.FromArgb(255,202,180,96), // Strength
+                Color.FromArgb(255,101,225,240), // Agility
+                Color.FromArgb(255,0,4,3), // Attack Power
+                Color.FromArgb(255,238,238,30), // Crit Rating
+                Color.FromArgb(255,45,112,63), // Hit Rating
+                Color.FromArgb(255,121,72,210), //Expertise Rating
+                Color.FromArgb(255,217,100,54), // Haste Rating
+                Color.FromArgb(255,210,72,195), // Armor Penetration
+                Color.FromArgb(255,206,189,191), // Spell Power
+            };
+            Stats[] statsList = _calcOpts.StatsList;
+            float minDpsChange = 0f, maxDpsChange = 0f;
+            Point[][] points = new Point[statsList.Length][];
+            for (int index = 0; index < statsList.Length; index++)
+            {
+                Stats newStats = new Stats();
+                points[index] = new Point[201];
+                newStats.Accumulate(statsList[index], -101);
+                for (int count = -100; count <= 100; count++)
+                {
+                    newStats.Accumulate(statsList[index]);
+
+                    CharacterCalculationsEnhance currentCalc = EnhanceCalc.GetCharacterCalculations(Character, new Item() { Stats = newStats }) as CharacterCalculationsEnhance;
+                    float dpsChange = currentCalc.DPSPoints - baseCalc.DPSPoints;
+                    points[index][count + 100] = new Point(Convert.ToInt32(graphOffset + count * graphStep), Convert.ToInt32(dpsChange));
+                    if (dpsChange < minDpsChange)
+                        minDpsChange = dpsChange;
+                    if (dpsChange > maxDpsChange)
+                        maxDpsChange = dpsChange;
+                }
+            }
+            float DpsVariance = maxDpsChange - minDpsChange;
+            if (DpsVariance == 0)
+                DpsVariance = 1;
+            for (int index = 0; index < statsList.Length; index++)
+            {
+                for (int count = -100; count <= 100; count++)
+                {
+                    points[index][count + 100].Y = (int)((maxDpsChange - points[index][count + 100].Y) * (graphHeight-48) / DpsVariance) + 20;
+                }
+                Brush statBrush = new SolidBrush(colors[index]);
+                g.DrawLines(new Pen(statBrush, 3), points[index]);
+            }
+
+            #region Graph X Ticks
+            float graphStart = graphOffset - 100 * graphStep;
+            float graphEnd = graphOffset + 100 * graphStep;
+            float graphWidth = graphEnd - graphStart;
+            
+            float maxScale = 200f;
+            float[] ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
+							(float)Math.Round(graphStart + graphWidth * 0.75f),
+							(float)Math.Round(graphStart + graphWidth * 0.25f),
+							(float)Math.Round(graphStart + graphWidth * 0.125f),
+							(float)Math.Round(graphStart + graphWidth * 0.375f),
+							(float)Math.Round(graphStart + graphWidth * 0.625f),
+							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+            Pen black200 = new Pen(Color.FromArgb(200, 0, 0, 0));
+            Pen black150 = new Pen(Color.FromArgb(150, 0, 0, 0));
+            Pen black75 = new Pen(Color.FromArgb(75, 0, 0, 0));
+            Pen black50 = new Pen(Color.FromArgb(50, 0, 0, 0));
+            Pen black25 = new Pen(Color.FromArgb(25, 0, 0, 0));
+            StringFormat formatTick = new StringFormat();
+            formatTick.LineAlignment = StringAlignment.Far;
+            formatTick.Alignment = StringAlignment.Center;
+            Brush black200brush = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
+            Brush black150brush = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
+            Brush black75brush = new SolidBrush(Color.FromArgb(75, 0, 0, 0));
+            Brush black50brush = new SolidBrush(Color.FromArgb(50, 0, 0, 0));
+            Brush black25brush = new SolidBrush(Color.FromArgb(25, 0, 0, 0));
+
+            g.DrawLine(black200, graphStart - 4, 20, graphEnd + 4, 20);
+            g.DrawLine(black200, graphStart, 16, graphStart, bitmap.Height - 16);
+            g.DrawLine(black200, graphEnd, 16, graphEnd, 19);
+            g.DrawLine(black200, ticks[0], 16, ticks[0], 19);
+            g.DrawLine(black150, ticks[1], 16, ticks[1], 19);
+            g.DrawLine(black150, ticks[2], 16, ticks[2], 19);
+            g.DrawLine(black75, ticks[3], 16, ticks[3], 19);
+            g.DrawLine(black75, ticks[4], 16, ticks[4], 19);
+            g.DrawLine(black75, ticks[5], 16, ticks[5], 19);
+            g.DrawLine(black75, ticks[6], 16, ticks[6], 19);
+            g.DrawLine(black75, graphEnd, 21, graphEnd, bitmap.Height - 16);
+            g.DrawLine(black75, ticks[0], 21, ticks[0], bitmap.Height - 16);
+            g.DrawLine(black50, ticks[1], 21, ticks[1], bitmap.Height - 16);
+            g.DrawLine(black50, ticks[2], 21, ticks[2], bitmap.Height - 16);
+            g.DrawLine(black25, ticks[3], 21, ticks[3], bitmap.Height - 16);
+            g.DrawLine(black25, ticks[4], 21, ticks[4], bitmap.Height - 16);
+            g.DrawLine(black25, ticks[5], 21, ticks[5], bitmap.Height - 16);
+            g.DrawLine(black25, ticks[6], 21, ticks[6], bitmap.Height - 16);
+            g.DrawLine(black200, graphStart - 4, bitmap.Height - 20, graphEnd + 4, bitmap.Height - 20);
+
+            Font tickFont = new Font("Calibri", 11);
+            g.DrawString((-100f).ToString(), tickFont, black200brush, graphStart, 16, formatTick);
+            g.DrawString((maxScale - 100f).ToString(), tickFont, black200brush, graphEnd, 16, formatTick);
+            g.DrawString((maxScale * 0.5f - 100f).ToString(), tickFont, black200brush, ticks[0], 16, formatTick);
+            g.DrawString((maxScale * 0.75f - 100f).ToString(), tickFont, black150brush, ticks[1], 16, formatTick);
+            g.DrawString((maxScale * 0.25f - 100f).ToString(), tickFont, black150brush, ticks[2], 16, formatTick);
+            g.DrawString((maxScale * 0.125f - 100f).ToString(), tickFont, black75brush, ticks[3], 16, formatTick);
+            g.DrawString((maxScale * 0.375f - 100f).ToString(), tickFont, black75brush, ticks[4], 16, formatTick);
+            g.DrawString((maxScale * 0.625f - 100f).ToString(), tickFont, black75brush, ticks[5], 16, formatTick);
+            g.DrawString((maxScale * 0.875f - 100f).ToString(), tickFont, black75brush, ticks[6], 16, formatTick);
+
+            g.DrawString((-100f).ToString(), tickFont, black200brush, graphStart, bitmap.Height - 16, formatTick);
+            g.DrawString((maxScale - 100f).ToString(), tickFont, black200brush, graphEnd, bitmap.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.5f - 100f).ToString(), tickFont, black200brush, ticks[0], bitmap.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.75f - 100f).ToString(), tickFont, black150brush, ticks[1], bitmap.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.25f - 100f).ToString(), tickFont, black150brush, ticks[2], bitmap.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.125f - 100f).ToString(), tickFont, black75brush, ticks[3], bitmap.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.375f - 100f).ToString(), tickFont, black75brush, ticks[4], bitmap.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.625f - 100f).ToString(), tickFont, black75brush, ticks[5], bitmap.Height - 16, formatTick);
+            g.DrawString((maxScale * 0.875f - 100f).ToString(), tickFont, black75brush, ticks[6], bitmap.Height - 16, formatTick);
+            #endregion
+
+            #region Graph Y ticks   
+            Int32 zeroPoint = (int)(maxDpsChange * (graphHeight - 48) / DpsVariance) + 20;
+            g.DrawLine(black200, graphStart, zeroPoint, graphEnd, zeroPoint);
+            formatTick.Alignment = StringAlignment.Near;
+            g.DrawString((0f).ToString(), tickFont, black200brush, graphStart - 10, zeroPoint + 10, formatTick);
+            g.DrawString(maxDpsChange.ToString("F1", CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, 30, formatTick);
+            g.DrawString(minDpsChange.ToString("F1", CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, bitmap.Height - 12, formatTick);
+            #endregion
+
+            #region Line Names
+            Font nameFont = new Font("Calibri", 14, FontStyle.Bold);
+            int nameX = (int) (graphWidth * .6f + graphStart);
+            for (int index = 0; index < statsList.Length; index++)
+            {
+                Brush nameBrush = new SolidBrush(colors[index]);
+                int nameY = (int) (bitmap.Height * .6f) + index * 24;
+                g.DrawString(statsList[index].ToString(), nameFont, nameBrush, new PointF(nameX, nameY));
+            }
+            #endregion
+
+            Graph graph = new Graph(bitmap);
+            graph.Show();
+            Cursor.Current = Cursors.Default;
         }
     }
 }
