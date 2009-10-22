@@ -1671,6 +1671,12 @@ namespace Rawr
                 Name = "Runic Mana Potion",
                 Group = "Potion",
                 Stats = new Stats() { ManaRestore = (4200f + 4400f) / 2f, },
+                Improvements = {
+                        new Buff {
+                            Name = "Runic Mana Potion (Alch Stone Bonus)",
+                            Stats = new Stats() { ManaRestore = ((4200f + 4400f) / 2f) * 0.40f, }
+                        }
+                    }
             });
             defaultBuffs.Add(buff = new Buff()
             {
@@ -1680,16 +1686,21 @@ namespace Rawr
                 Improvements = {
                         new Buff {
                             Name = "Runic Mana Injector (Engineer Bonus)",
-                            Stats = new Stats() { ManaRestore = ((4200f + 4400f) / 2f) * 0.25f,
+                            Stats = new Stats() { ManaRestore = ((4200f + 4400f) / 2f) * 0.25f, }
                         }
                     }
-                }
             });
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Runic Healing Potion",
                 Group = "Potion",
                 Stats = new Stats() { HealthRestore = (2700f + 4500f) / 2f, },
+                Improvements = {
+                        new Buff {
+                            Name = "Runic Healing Potion (Alch Stone Bonus)",
+                            Stats = new Stats() { HealthRestore = ((2700f + 4500f) / 2f) * 0.40f, }
+                        }
+                    }
             });
             defaultBuffs.Add(buff = new Buff()
             {
@@ -1699,10 +1710,9 @@ namespace Rawr
                 Improvements = {
                         new Buff {
                             Name = "Runic Healing Injector (Engineer Bonus)",
-                            Stats = new Stats() { HealthRestore = ((2700f + 4500f) / 2f) * 0.25f,
+                            Stats = new Stats() { HealthRestore = ((2700f + 4500f) / 2f) * 0.25f, }
                         }
                     }
-                }
             });
             defaultBuffs.Add(buff = new Buff()
             {
@@ -1712,6 +1722,15 @@ namespace Rawr
                     ManaRestore   = (2475f + 4125f) / 2f,
                     HealthRestore = (2475f + 4125f) / 2f,
                 },
+                Improvements = {
+                        new Buff {
+                            Name = "Powerful Rejuvenation Potion (Alch Stone Bonus)",
+                            Stats = new Stats() {
+                                ManaRestore   = ((2475f + 4125f) / 2f) * 0.40f,
+                                HealthRestore = ((2475f + 4125f) / 2f) * 0.40f,
+                            }
+                        }
+                    }
             });
             #endregion
 
