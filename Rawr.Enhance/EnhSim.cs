@@ -125,6 +125,8 @@ namespace Rawr.Enhance
             sb.AppendLine("glyph_minor2                    -");
             sb.AppendLine("glyph_minor3                    -");
             sb.AppendLine();
+            addPriorities(calcOpts, sb);
+            addManaConfigs(character, calcOpts, sb);
             sb.AppendLine();
             sb.AppendLine("#############");
             sb.AppendLine("## Talents ##");
@@ -177,7 +179,7 @@ namespace Rawr.Enhance
 			}
 			catch { }
             MessageBox.Show("EnhSim config data copied to clipboard\n" + 
-                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.8.3 or higher, to import it\n" +
+                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.8.4.1 or higher, to import it\n" +
                 "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                 "Enhance Module", MessageBoxButton.OK);
         }
@@ -190,7 +192,7 @@ namespace Rawr.Enhance
 			}
 			catch { }
             System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard\n" + 
-                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.8.3 or higher, to import it\n" +
+                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.8.4.1 or higher, to import it\n" +
                 "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
         }
@@ -474,6 +476,57 @@ namespace Rawr.Enhance
                 glyphNumber += 1;
                 sb.AppendLine("glyph_major" + glyphNumber + "                    -");
             }
+        }
+
+        private void addPriorities(CalculationOptionsEnhance calcOpts, System.Text.StringBuilder sb)
+        {
+            sb.AppendLine();
+            sb.AppendLine("rotation_priority_count         " + calcOpts.ActivePriorities());
+            int priorityNumber = 0;
+            List<KeyValuePair<EnhanceAbility, Priority>> sortedPriorites = new List<KeyValuePair<EnhanceAbility, Priority>>(calcOpts.PriorityList);
+            sortedPriorites.Sort(
+                delegate(KeyValuePair<EnhanceAbility, Priority> firstPair, KeyValuePair<EnhanceAbility, Priority> nextPair)
+                {
+                    return firstPair.Value.CompareTo(nextPair.Value);
+                }
+            );
+            foreach (var element in sortedPriorites)
+            {
+                Priority p = element.Value;
+                if (p.Checked & p.PriorityValue > 0)
+                    sb.AppendLine("rotation_priority" + (++priorityNumber) + "              " + p.EnhSimName);
+            }
+            sb.AppendLine();
+        }
+
+        private void addManaConfigs(Character character, CalculationOptionsEnhance calcOpts, System.Text.StringBuilder sb)
+        {
+            List<Buff> buffs = character.ActiveBuffs;
+            sb.AppendLine();
+            sb.AppendLine("cast_sr_only_if_mana_left " + calcOpts.MinManaSR);
+            sb.AppendLine("simulate_mana             " + (calcOpts.UseMana ? "1" : "0"));
+            if (isBuffChecked(buffs, "Hunting Party") || isBuffChecked(buffs, "Judgements of the Wise") || isBuffChecked(buffs, "Vampiric Touch") || 
+                    isBuffChecked(buffs, "Improved Soul Leech") || isBuffChecked(buffs, "Enduring Winter"))
+                sb.AppendLine("replenishment             1");
+            else
+                sb.AppendLine("replenishment             0");
+            if (calcOpts.PriorityInUse(EnhanceAbility.LightningShield))
+                sb.AppendLine("water_shield              0");
+            else
+                sb.AppendLine("water_shield              1");
+            if (isBuffChecked(buffs, "Mana Spring Totem"))
+                sb.AppendLine("mana_spring_totem         1");
+            else
+                sb.AppendLine("mana_spring_totem         0");
+            if (isBuffChecked(buffs, "Blessing of Wisdom"))
+                sb.AppendLine("blessing_of_wisdom        1");
+            else
+                sb.AppendLine("blessing_of_wisdom        0");
+            if (isBuffChecked(buffs, "Judgement of Wisdom"))
+                sb.AppendLine("judgement_of_wisdom       1");
+            else
+                sb.AppendLine("judgement_of_wisdom       0");
+            sb.AppendLine();
         }
 
         private void getSpecialsNames(Character character, Stats stats)

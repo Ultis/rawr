@@ -350,13 +350,14 @@ namespace Rawr.Enhance
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class Priority
+    public class Priority : IComparable<Priority>
     {
         private EnhanceAbility _abilityType;
         private string _priorityName;
         private string _description;
         private bool _inUse;
         private int _priority;
+        private string _enhSimName;
 
         public Priority()
         {
@@ -365,15 +366,17 @@ namespace Rawr.Enhance
             _description = "Empty Priority";
             _inUse = false;
             _priority = 0;
+            _enhSimName = "XX";
         }
 
-        public Priority(string priorityName, EnhanceAbility abilityType, string description, bool onByDefault, int priority)
+        public Priority(string priorityName, EnhanceAbility abilityType, string description, bool onByDefault, int priority, string enhSimName)
         {
             _priorityName = priorityName;
             _abilityType = abilityType;
             _description = description;
             _inUse = onByDefault;
             _priority = priority;
+            _enhSimName = enhSimName;
         }
 
         public string PriorityName { get { return _priorityName; } set { _priorityName = value; } }
@@ -381,10 +384,16 @@ namespace Rawr.Enhance
         public string Description { get { return _description; } set { _description = value; } }
         public int PriorityValue { get { return _priority; } set { _priority = value; } }
         public bool Checked { get { return _inUse; } set { _inUse = value; } }
+        public string EnhSimName { get { return _enhSimName; } }
 
         public override string ToString()
         {
             return _priorityName;
+        }
+
+        public int CompareTo(Priority other)
+        {
+            return this.PriorityValue.CompareTo(other.PriorityValue);
         }
     }
 }

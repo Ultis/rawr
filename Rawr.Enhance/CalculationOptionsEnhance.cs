@@ -105,6 +105,16 @@ namespace Rawr.Enhance
                 _priorityList.Add(abilityType, priority);
         }
 
+        public int ActivePriorities()
+        {
+            int activePriorities = 0;
+            foreach (Priority p in _priorityList.Values)
+            {
+                if (p.Checked && p.PriorityValue > 0) activePriorities++;
+            }
+            return activePriorities;
+        }
+
         #region INotifyPropertyChanged Members
         private void OnPropertyChanged(string property)
         {
