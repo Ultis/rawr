@@ -3312,8 +3312,21 @@
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Name>Disable 214-245</Name>
+          <Name>Disable 214-231</Name>
           <MinItemLevel>214</MinItemLevel>
+          <MaxItemLevel>231</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>false</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <Name>Disable 232-245</Name>
+          <MinItemLevel>232</MinItemLevel>
           <MaxItemLevel>245</MaxItemLevel>
           <MinItemQuality>Temp</MinItemQuality>
           <MaxItemQuality>Heirloom</MaxItemQuality>
