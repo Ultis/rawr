@@ -44,15 +44,6 @@
             this.comboBoxMainhandImbue = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.btnReset = new System.Windows.Forms.Button();
-            this.btnDown = new System.Windows.Forms.Button();
-            this.btnUp = new System.Windows.Forms.Button();
-            this.CLBPriorities = new System.Windows.Forms.CheckedListBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tbModuleNotes = new System.Windows.Forms.TextBox();
-            this.btnEnhSim = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.CB_InBackPerc = new System.Windows.Forms.NumericUpDown();
             this.TB_BossInfo = new System.Windows.Forms.TextBox();
@@ -66,15 +57,35 @@
             this.label4 = new System.Windows.Forms.Label();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnReset = new System.Windows.Forms.Button();
+            this.btnDown = new System.Windows.Forms.Button();
+            this.btnUp = new System.Windows.Forms.Button();
+            this.CLBPriorities = new System.Windows.Forms.CheckedListBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tbModuleNotes = new System.Windows.Forms.TextBox();
+            this.btnEnhSim = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkStatsStrength = new System.Windows.Forms.CheckBox();
+            this.chkStatsAgility = new System.Windows.Forms.CheckBox();
+            this.chkStatsAP = new System.Windows.Forms.CheckBox();
+            this.chkStatsCrit = new System.Windows.Forms.CheckBox();
+            this.chkStatsHit = new System.Windows.Forms.CheckBox();
+            this.chkStatsSP = new System.Windows.Forms.CheckBox();
+            this.chkStatsArP = new System.Windows.Forms.CheckBox();
+            this.chkStatsHaste = new System.Windows.Forms.CheckBox();
+            this.chkStatsExp = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).BeginInit();
-            this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -91,6 +102,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.btnStatsGraph);
             this.tabPage1.Controls.Add(this.labelSRMana);
             this.tabPage1.Controls.Add(this.trackbarSRMana);
@@ -115,7 +127,7 @@
             // 
             // btnStatsGraph
             // 
-            this.btnStatsGraph.Location = new System.Drawing.Point(10, 248);
+            this.btnStatsGraph.Location = new System.Drawing.Point(70, 389);
             this.btnStatsGraph.Name = "btnStatsGraph";
             this.btnStatsGraph.Size = new System.Drawing.Size(113, 30);
             this.btnStatsGraph.TabIndex = 57;
@@ -281,105 +293,6 @@
             this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 30;
             this.label3.Text = "Mainhand Imbue:";
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.btnReset);
-            this.tabPage2.Controls.Add(this.btnDown);
-            this.tabPage2.Controls.Add(this.btnUp);
-            this.tabPage2.Controls.Add(this.CLBPriorities);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(264, 525);
-            this.tabPage2.TabIndex = 3;
-            this.tabPage2.Text = "Priorities";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // btnReset
-            // 
-            this.btnReset.Location = new System.Drawing.Point(174, 215);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(80, 23);
-            this.btnReset.TabIndex = 5;
-            this.btnReset.Text = "Use Defaults";
-            this.btnReset.UseVisualStyleBackColor = true;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
-            // btnDown
-            // 
-            this.btnDown.Enabled = false;
-            this.btnDown.Location = new System.Drawing.Point(88, 215);
-            this.btnDown.Name = "btnDown";
-            this.btnDown.Size = new System.Drawing.Size(80, 23);
-            this.btnDown.TabIndex = 4;
-            this.btnDown.Text = "Move Down";
-            this.btnDown.UseVisualStyleBackColor = true;
-            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
-            // 
-            // btnUp
-            // 
-            this.btnUp.Enabled = false;
-            this.btnUp.Location = new System.Drawing.Point(5, 215);
-            this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(80, 23);
-            this.btnUp.TabIndex = 3;
-            this.btnUp.Text = "Move Up";
-            this.btnUp.UseVisualStyleBackColor = true;
-            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
-            // 
-            // CLBPriorities
-            // 
-            this.CLBPriorities.FormattingEnabled = true;
-            this.CLBPriorities.Location = new System.Drawing.Point(5, 25);
-            this.CLBPriorities.Name = "CLBPriorities";
-            this.CLBPriorities.Size = new System.Drawing.Size(249, 184);
-            this.CLBPriorities.TabIndex = 2;
-            this.CLBPriorities.SelectedIndexChanged += new System.EventHandler(this.CLBPriorities_SelectedIndexChanged);
-            this.CLBPriorities.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CLBPriorities_ItemCheck);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 8);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(73, 13);
-            this.label6.TabIndex = 1;
-            this.label6.Text = "Priority Queue";
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.tbModuleNotes);
-            this.tabPage3.Controls.Add(this.btnEnhSim);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(264, 525);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "EnhSim";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // tbModuleNotes
-            // 
-            this.tbModuleNotes.AcceptsReturn = true;
-            this.tbModuleNotes.AcceptsTab = true;
-            this.tbModuleNotes.Location = new System.Drawing.Point(3, 68);
-            this.tbModuleNotes.Multiline = true;
-            this.tbModuleNotes.Name = "tbModuleNotes";
-            this.tbModuleNotes.ReadOnly = true;
-            this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbModuleNotes.Size = new System.Drawing.Size(258, 454);
-            this.tbModuleNotes.TabIndex = 1;
-            // 
-            // btnEnhSim
-            // 
-            this.btnEnhSim.Location = new System.Drawing.Point(21, 23);
-            this.btnEnhSim.Name = "btnEnhSim";
-            this.btnEnhSim.Size = new System.Drawing.Size(208, 28);
-            this.btnEnhSim.TabIndex = 0;
-            this.btnEnhSim.Text = "Export Stats to EnhSim config file";
-            this.btnEnhSim.UseVisualStyleBackColor = true;
-            this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
             // tabPage4
             // 
@@ -564,6 +477,222 @@
             this.label2.TabIndex = 53;
             this.label2.Text = "Boss: ";
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.btnReset);
+            this.tabPage2.Controls.Add(this.btnDown);
+            this.tabPage2.Controls.Add(this.btnUp);
+            this.tabPage2.Controls.Add(this.CLBPriorities);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(264, 525);
+            this.tabPage2.TabIndex = 3;
+            this.tabPage2.Text = "Priorities";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // btnReset
+            // 
+            this.btnReset.Location = new System.Drawing.Point(174, 215);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(80, 23);
+            this.btnReset.TabIndex = 5;
+            this.btnReset.Text = "Use Defaults";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
+            // btnDown
+            // 
+            this.btnDown.Enabled = false;
+            this.btnDown.Location = new System.Drawing.Point(88, 215);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(80, 23);
+            this.btnDown.TabIndex = 4;
+            this.btnDown.Text = "Move Down";
+            this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
+            // 
+            // btnUp
+            // 
+            this.btnUp.Enabled = false;
+            this.btnUp.Location = new System.Drawing.Point(5, 215);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(80, 23);
+            this.btnUp.TabIndex = 3;
+            this.btnUp.Text = "Move Up";
+            this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
+            // 
+            // CLBPriorities
+            // 
+            this.CLBPriorities.FormattingEnabled = true;
+            this.CLBPriorities.Location = new System.Drawing.Point(5, 25);
+            this.CLBPriorities.Name = "CLBPriorities";
+            this.CLBPriorities.Size = new System.Drawing.Size(249, 184);
+            this.CLBPriorities.TabIndex = 2;
+            this.CLBPriorities.SelectedIndexChanged += new System.EventHandler(this.CLBPriorities_SelectedIndexChanged);
+            this.CLBPriorities.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CLBPriorities_ItemCheck);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 8);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(73, 13);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "Priority Queue";
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.tbModuleNotes);
+            this.tabPage3.Controls.Add(this.btnEnhSim);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(264, 525);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "EnhSim";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tbModuleNotes
+            // 
+            this.tbModuleNotes.AcceptsReturn = true;
+            this.tbModuleNotes.AcceptsTab = true;
+            this.tbModuleNotes.Location = new System.Drawing.Point(3, 68);
+            this.tbModuleNotes.Multiline = true;
+            this.tbModuleNotes.Name = "tbModuleNotes";
+            this.tbModuleNotes.ReadOnly = true;
+            this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbModuleNotes.Size = new System.Drawing.Size(258, 454);
+            this.tbModuleNotes.TabIndex = 1;
+            // 
+            // btnEnhSim
+            // 
+            this.btnEnhSim.Location = new System.Drawing.Point(21, 23);
+            this.btnEnhSim.Name = "btnEnhSim";
+            this.btnEnhSim.Size = new System.Drawing.Size(208, 28);
+            this.btnEnhSim.TabIndex = 0;
+            this.btnEnhSim.Text = "Export Stats to EnhSim config file";
+            this.btnEnhSim.UseVisualStyleBackColor = true;
+            this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.chkStatsSP);
+            this.groupBox1.Controls.Add(this.chkStatsArP);
+            this.groupBox1.Controls.Add(this.chkStatsHaste);
+            this.groupBox1.Controls.Add(this.chkStatsExp);
+            this.groupBox1.Controls.Add(this.chkStatsHit);
+            this.groupBox1.Controls.Add(this.chkStatsCrit);
+            this.groupBox1.Controls.Add(this.chkStatsAP);
+            this.groupBox1.Controls.Add(this.chkStatsAgility);
+            this.groupBox1.Controls.Add(this.chkStatsStrength);
+            this.groupBox1.Location = new System.Drawing.Point(10, 246);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(248, 137);
+            this.groupBox1.TabIndex = 58;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Stats Graph Options";
+            // 
+            // chkStatsStrength
+            // 
+            this.chkStatsStrength.AutoSize = true;
+            this.chkStatsStrength.Location = new System.Drawing.Point(6, 19);
+            this.chkStatsStrength.Name = "chkStatsStrength";
+            this.chkStatsStrength.Size = new System.Drawing.Size(66, 17);
+            this.chkStatsStrength.TabIndex = 0;
+            this.chkStatsStrength.Text = "Strength";
+            this.chkStatsStrength.UseVisualStyleBackColor = true;
+            this.chkStatsStrength.CheckedChanged += new System.EventHandler(this.chkStatsStrength_CheckedChanged);
+            // 
+            // chkStatsAgility
+            // 
+            this.chkStatsAgility.AutoSize = true;
+            this.chkStatsAgility.Location = new System.Drawing.Point(6, 42);
+            this.chkStatsAgility.Name = "chkStatsAgility";
+            this.chkStatsAgility.Size = new System.Drawing.Size(53, 17);
+            this.chkStatsAgility.TabIndex = 1;
+            this.chkStatsAgility.Text = "Agility";
+            this.chkStatsAgility.UseVisualStyleBackColor = true;
+            this.chkStatsAgility.CheckedChanged += new System.EventHandler(this.chkStatsAgility_CheckedChanged);
+            // 
+            // chkStatsAP
+            // 
+            this.chkStatsAP.AutoSize = true;
+            this.chkStatsAP.Location = new System.Drawing.Point(6, 65);
+            this.chkStatsAP.Name = "chkStatsAP";
+            this.chkStatsAP.Size = new System.Drawing.Size(90, 17);
+            this.chkStatsAP.TabIndex = 2;
+            this.chkStatsAP.Text = "Attack Power";
+            this.chkStatsAP.UseVisualStyleBackColor = true;
+            this.chkStatsAP.CheckedChanged += new System.EventHandler(this.chkStatsAP_CheckedChanged);
+            // 
+            // chkStatsCrit
+            // 
+            this.chkStatsCrit.AutoSize = true;
+            this.chkStatsCrit.Location = new System.Drawing.Point(6, 88);
+            this.chkStatsCrit.Name = "chkStatsCrit";
+            this.chkStatsCrit.Size = new System.Drawing.Size(75, 17);
+            this.chkStatsCrit.TabIndex = 3;
+            this.chkStatsCrit.Text = "Crit Rating";
+            this.chkStatsCrit.UseVisualStyleBackColor = true;
+            this.chkStatsCrit.CheckedChanged += new System.EventHandler(this.chkStatsCrit_CheckedChanged);
+            // 
+            // chkStatsHit
+            // 
+            this.chkStatsHit.AutoSize = true;
+            this.chkStatsHit.Location = new System.Drawing.Point(6, 111);
+            this.chkStatsHit.Name = "chkStatsHit";
+            this.chkStatsHit.Size = new System.Drawing.Size(73, 17);
+            this.chkStatsHit.TabIndex = 4;
+            this.chkStatsHit.Text = "Hit Rating";
+            this.chkStatsHit.UseVisualStyleBackColor = true;
+            this.chkStatsHit.CheckedChanged += new System.EventHandler(this.chkStatsHit_CheckedChanged);
+            // 
+            // chkStatsSP
+            // 
+            this.chkStatsSP.AutoSize = true;
+            this.chkStatsSP.Location = new System.Drawing.Point(115, 88);
+            this.chkStatsSP.Name = "chkStatsSP";
+            this.chkStatsSP.Size = new System.Drawing.Size(82, 17);
+            this.chkStatsSP.TabIndex = 8;
+            this.chkStatsSP.Text = "Spell Power";
+            this.chkStatsSP.UseVisualStyleBackColor = true;
+            this.chkStatsSP.CheckedChanged += new System.EventHandler(this.chkStatsSP_CheckedChanged);
+            // 
+            // chkStatsArP
+            // 
+            this.chkStatsArP.AutoSize = true;
+            this.chkStatsArP.Location = new System.Drawing.Point(115, 65);
+            this.chkStatsArP.Name = "chkStatsArP";
+            this.chkStatsArP.Size = new System.Drawing.Size(115, 17);
+            this.chkStatsArP.TabIndex = 7;
+            this.chkStatsArP.Text = "Armour Pen Rating";
+            this.chkStatsArP.UseVisualStyleBackColor = true;
+            this.chkStatsArP.CheckedChanged += new System.EventHandler(this.chkStatsArP_CheckedChanged);
+            // 
+            // chkStatsHaste
+            // 
+            this.chkStatsHaste.AutoSize = true;
+            this.chkStatsHaste.Location = new System.Drawing.Point(115, 42);
+            this.chkStatsHaste.Name = "chkStatsHaste";
+            this.chkStatsHaste.Size = new System.Drawing.Size(88, 17);
+            this.chkStatsHaste.TabIndex = 6;
+            this.chkStatsHaste.Text = "Haste Rating";
+            this.chkStatsHaste.UseVisualStyleBackColor = true;
+            this.chkStatsHaste.CheckedChanged += new System.EventHandler(this.chkStatsHaste_CheckedChanged);
+            // 
+            // chkStatsExp
+            // 
+            this.chkStatsExp.AutoSize = true;
+            this.chkStatsExp.Location = new System.Drawing.Point(115, 19);
+            this.chkStatsExp.Name = "chkStatsExp";
+            this.chkStatsExp.Size = new System.Drawing.Size(103, 17);
+            this.chkStatsExp.TabIndex = 5;
+            this.chkStatsExp.Text = "Expertise Rating";
+            this.chkStatsExp.UseVisualStyleBackColor = true;
+            this.chkStatsExp.CheckedChanged += new System.EventHandler(this.chkStatsExp_CheckedChanged);
+            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -577,14 +706,16 @@
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -629,6 +760,16 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown cmbLength;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox chkStatsStrength;
+        private System.Windows.Forms.CheckBox chkStatsAgility;
+        private System.Windows.Forms.CheckBox chkStatsAP;
+        private System.Windows.Forms.CheckBox chkStatsSP;
+        private System.Windows.Forms.CheckBox chkStatsArP;
+        private System.Windows.Forms.CheckBox chkStatsHaste;
+        private System.Windows.Forms.CheckBox chkStatsExp;
+        private System.Windows.Forms.CheckBox chkStatsHit;
+        private System.Windows.Forms.CheckBox chkStatsCrit;
 
     }
 }

@@ -45,6 +45,15 @@ namespace Rawr.Enhance
             chbMagmaSearing.Checked = _calcOpts.Magma;
             chbMana.Checked = _calcOpts.UseMana;
             chbBaseStatOption.Checked = _calcOpts.BaseStatOption;
+            chkStatsStrength.Checked = _calcOpts.StatsList[0];
+            chkStatsAgility.Checked = _calcOpts.StatsList[1];
+            chkStatsAP.Checked = _calcOpts.StatsList[2];
+            chkStatsCrit.Checked = _calcOpts.StatsList[3];
+            chkStatsHit.Checked = _calcOpts.StatsList[4];
+            chkStatsExp.Checked = _calcOpts.StatsList[5];
+            chkStatsHaste.Checked = _calcOpts.StatsList[6];
+            chkStatsArP.Checked = _calcOpts.StatsList[7];
+            chkStatsSP.Checked =_calcOpts.StatsList[8];
             LoadPriorities();
 
 
@@ -78,7 +87,15 @@ namespace Rawr.Enhance
                 _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 _calcOpts.Magma = chbMagmaSearing.Checked;
                 _calcOpts.UseMana = chbMana.Checked;
-
+                _calcOpts.StatsList[0] = chkStatsStrength.Checked;
+                _calcOpts.StatsList[1] = chkStatsAgility.Checked;
+                _calcOpts.StatsList[2] = chkStatsAP.Checked;
+                _calcOpts.StatsList[3] = chkStatsCrit.Checked;
+                _calcOpts.StatsList[4] = chkStatsHit.Checked;
+                _calcOpts.StatsList[5] = chkStatsExp.Checked;
+                _calcOpts.StatsList[6] = chkStatsHaste.Checked;
+                _calcOpts.StatsList[7] = chkStatsArP.Checked;
+                _calcOpts.StatsList[8] = chkStatsSP.Checked;
                 SavePriorities();
                 Character.OnCalculationsInvalidated();
             }
@@ -345,6 +362,31 @@ namespace Rawr.Enhance
             Character.OnCalculationsInvalidated();
         }
 
+        private Stats[] BuildStatsList()
+        {
+            List<Stats> statsList = new List<Stats>();
+            if (chkStatsStrength.Checked)
+                statsList.Add(new Stats() { Strength = 1 });
+            if (chkStatsAgility.Checked)
+                statsList.Add(new Stats() { Agility = 1 });
+            if (chkStatsAP.Checked)
+                statsList.Add(new Stats() { AttackPower = 2 });
+            if (chkStatsCrit.Checked)
+                statsList.Add(new Stats() { CritRating = 1 });
+            if (chkStatsHit.Checked)
+                statsList.Add(new Stats() { HitRating = 1 });
+            if (chkStatsExp.Checked)
+                statsList.Add(new Stats() { ExpertiseRating = 1 });
+            if (chkStatsHaste.Checked)
+                statsList.Add(new Stats() { HasteRating = 1 });
+            if (chkStatsArP.Checked)
+                statsList.Add(new Stats() { ArmorPenetrationRating = 1 });
+            if (chkStatsSP.Checked)
+                statsList.Add(new Stats() { SpellPower = 1.15f });
+
+            return statsList.ToArray();
+        }
+
         private void btnStatsGraph_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -366,7 +408,8 @@ namespace Rawr.Enhance
                 Color.FromArgb(255,210,72,195), // Armor Penetration
                 Color.FromArgb(255,206,189,191), // Spell Power
             };
-            Stats[] statsList = _calcOpts.StatsList;
+            Stats[] statsList = BuildStatsList();
+            if (statsList.Length == 0) return;
             float minDpsChange = 0f, maxDpsChange = 0f;
             Point[][] points = new Point[statsList.Length][];
             for (int index = 0; index < statsList.Length; index++)
@@ -413,6 +456,7 @@ namespace Rawr.Enhance
 							(float)Math.Round(graphStart + graphWidth * 0.375f),
 							(float)Math.Round(graphStart + graphWidth * 0.625f),
 							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+            Pen ZeroLine = new Pen(Color.FromArgb(100, 0, 0, 0), 3);
             Pen black200 = new Pen(Color.FromArgb(200, 0, 0, 0));
             Pen black150 = new Pen(Color.FromArgb(150, 0, 0, 0));
             Pen black75 = new Pen(Color.FromArgb(75, 0, 0, 0));
@@ -430,7 +474,7 @@ namespace Rawr.Enhance
             g.DrawLine(black200, graphStart - 4, 20, graphEnd + 4, 20);
             g.DrawLine(black200, graphStart, 16, graphStart, bitmap.Height - 16);
             g.DrawLine(black200, graphEnd, 16, graphEnd, 19);
-            g.DrawLine(black200, ticks[0], 16, ticks[0], 19);
+            g.DrawLine(ZeroLine, ticks[0], 16, ticks[0], 19);
             g.DrawLine(black150, ticks[1], 16, ticks[1], 19);
             g.DrawLine(black150, ticks[2], 16, ticks[2], 19);
             g.DrawLine(black75, ticks[3], 16, ticks[3], 19);
@@ -438,7 +482,7 @@ namespace Rawr.Enhance
             g.DrawLine(black75, ticks[5], 16, ticks[5], 19);
             g.DrawLine(black75, ticks[6], 16, ticks[6], 19);
             g.DrawLine(black75, graphEnd, 21, graphEnd, bitmap.Height - 16);
-            g.DrawLine(black75, ticks[0], 21, ticks[0], bitmap.Height - 16);
+            g.DrawLine(ZeroLine, ticks[0], 21, ticks[0], bitmap.Height - 16);
             g.DrawLine(black50, ticks[1], 21, ticks[1], bitmap.Height - 16);
             g.DrawLine(black50, ticks[2], 21, ticks[2], bitmap.Height - 16);
             g.DrawLine(black25, ticks[3], 21, ticks[3], bitmap.Height - 16);
@@ -472,7 +516,7 @@ namespace Rawr.Enhance
 
             #region Graph Y ticks   
             Int32 zeroPoint = (int)(maxDpsChange * (graphHeight - 48) / DpsVariance) + 20;
-            g.DrawLine(black200, graphStart, zeroPoint, graphEnd, zeroPoint);
+            g.DrawLine(ZeroLine, graphStart, zeroPoint, graphEnd, zeroPoint);
             formatTick.Alignment = StringAlignment.Near;
             g.DrawString("DPS  0", tickFont, black200brush, graphStart - 50, zeroPoint + 10, formatTick);
             g.DrawString(maxDpsChange.ToString("F1", CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, 30, formatTick);
@@ -508,9 +552,60 @@ namespace Rawr.Enhance
             }
             #endregion
 
+            #region Explanatory Text
+            g.DrawString("This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" + 
+                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" + 
+                         "The vertical axis shows the amount of dps added or lost", tickFont, black150brush, graphWidth * .1f, graphHeight * .05f);
+            #endregion
+
             Graph graph = new Graph(bitmap);
             graph.Show();
             Cursor.Current = Cursors.Default;
+        }
+
+        private void chkStatsStrength_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.StatsList[0] = chkStatsStrength.Checked;
+        }
+
+        private void chkStatsAgility_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.StatsList[1] = chkStatsAgility.Checked;
+        }
+
+        private void chkStatsAP_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.StatsList[2] = chkStatsAP.Checked;
+        }
+
+        private void chkStatsCrit_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.StatsList[3] = chkStatsCrit.Checked;
+        }
+
+        private void chkStatsHit_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.StatsList[4] = chkStatsHit.Checked;
+        }
+
+        private void chkStatsExp_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.StatsList[5] = chkStatsExp.Checked;
+        }
+
+        private void chkStatsHaste_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.StatsList[6] = chkStatsHaste.Checked;
+        }
+
+        private void chkStatsArP_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.StatsList[7] = chkStatsArP.Checked;
+        }
+
+        private void chkStatsSP_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.StatsList[8] = chkStatsSP.Checked;
         }
     }
 }
