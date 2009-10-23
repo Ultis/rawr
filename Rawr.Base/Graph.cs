@@ -13,11 +13,16 @@ namespace Rawr.Base
     {
         private Bitmap bitGraph;
         private Graphics g;
-        
+        private int graphHeight = 750;
+        private int graphWidth = 800;
+
         public Graph()
         {
-            bitGraph = new Bitmap(800, 750);
-            this.g = Graphics.FromImage(bitGraph);
+            bitGraph = new Bitmap(graphWidth, graphHeight);
+            this.Height = graphHeight;
+            this.Width = graphWidth;
+            g = Graphics.FromImage(bitGraph);
+            g.Clear(Color.White);
             InitializeComponent();
         }
        
@@ -25,6 +30,8 @@ namespace Rawr.Base
         {
             pictureBoxGraph.Image = bitGraph;
             pictureBoxGraph.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBoxGraph.Height = graphHeight;
+            pictureBoxGraph.Width = graphWidth;
         }
 
         public void SetupGraph(Character character, Stats[] statsList, string explanatoryText, string calculation)
@@ -35,7 +42,7 @@ namespace Rawr.Base
             float baseFigure = GetCalculationValue(baseCalc, calculation);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-            float graphHeight = 750f, graphOffset = 400f, graphStep = 3.5f;
+            float graphOffset = 400f, graphStep = 3.5f;
             Color[] colors = new Color[] {
                 Color.FromArgb(255,202,180,96), 
                 Color.FromArgb(255,101,225,240),
@@ -85,16 +92,16 @@ namespace Rawr.Base
             #region Graph X Ticks
             float graphStart = graphOffset - 100 * graphStep;
             float graphEnd = graphOffset + 100 * graphStep;
-            float graphWidth = graphEnd - graphStart;
+            float activeWidth = graphEnd - graphStart;
 
             float maxScale = 200f;
-            float[] ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
-							(float)Math.Round(graphStart + graphWidth * 0.75f),
-							(float)Math.Round(graphStart + graphWidth * 0.25f),
-							(float)Math.Round(graphStart + graphWidth * 0.125f),
-							(float)Math.Round(graphStart + graphWidth * 0.375f),
-							(float)Math.Round(graphStart + graphWidth * 0.625f),
-							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+            float[] ticks = new float[] {(float)Math.Round(graphStart + activeWidth * 0.5f),
+							(float)Math.Round(graphStart + activeWidth * 0.75f),
+							(float)Math.Round(graphStart + activeWidth * 0.25f),
+							(float)Math.Round(graphStart + activeWidth * 0.125f),
+							(float)Math.Round(graphStart + activeWidth * 0.375f),
+							(float)Math.Round(graphStart + activeWidth * 0.625f),
+							(float)Math.Round(graphStart + activeWidth * 0.875f)};
             Pen ZeroLine = new Pen(Color.FromArgb(100, 0, 0, 0), 3);
             Pen black200 = new Pen(Color.FromArgb(200, 0, 0, 0));
             Pen black150 = new Pen(Color.FromArgb(150, 0, 0, 0));
@@ -150,7 +157,7 @@ namespace Rawr.Base
             g.DrawString((maxScale * 0.375f - 100f).ToString(), tickFont, black75brush, ticks[4], graphHeight - 16, formatTick);
             g.DrawString((maxScale * 0.625f - 100f).ToString(), tickFont, black75brush, ticks[5], graphHeight - 16, formatTick);
             g.DrawString((maxScale * 0.875f - 100f).ToString(), tickFont, black75brush, ticks[6], graphHeight - 16, formatTick);
-            g.DrawString("Stat Change", tickFont, black200brush, graphWidth / 2 + 50, graphHeight, formatTick);
+            g.DrawString("Stat Change", tickFont, black200brush, activeWidth / 2 + 50, graphHeight, formatTick);
             #endregion
 
             #region Graph Y ticks
@@ -184,7 +191,7 @@ namespace Rawr.Base
 
             #region Key Legend 
             Font nameFont = new Font("Calibri", 14, FontStyle.Bold);
-            int nameX = (int)(graphWidth * .6f + graphStart);
+            int nameX = (int)(activeWidth * .6f + graphStart);
             for (int index = 0; index < statsList.Length; index++)
             {
                 Brush nameBrush = new SolidBrush(colors[index]);
@@ -194,7 +201,7 @@ namespace Rawr.Base
             #endregion
 
             #region Explanatory Text
-            g.DrawString(explanatoryText, tickFont, black150brush, graphWidth * .1f, graphHeight * .05f);
+            g.DrawString(explanatoryText, tickFont, black150brush, activeWidth * .1f, graphHeight * .05f);
             #endregion
             Cursor.Current = Cursors.Default;
         }
