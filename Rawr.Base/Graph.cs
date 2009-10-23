@@ -27,10 +27,12 @@ namespace Rawr.Base
             pictureBoxGraph.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
-        public void SetupGraph(Character character, Stats[] statsList, string explanatoryText, string yAxisName)
+        public void SetupGraph(Character character, Stats[] statsList, string explanatoryText, string yAxisName, string calculation)
         {
             Cursor.Current = Cursors.WaitCursor;
+            this.Text = "Graph of " + calculation;
             CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(character);
+            float baseFigure = GetCalculationValue(baseCalc, calculation);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
             float graphHeight = 750f, graphOffset = 400f, graphStep = 3.5f;
@@ -58,7 +60,8 @@ namespace Rawr.Base
                     newStats.Accumulate(statsList[index]);
 
                     CharacterCalculationsBase currentCalc = Calculations.GetCharacterCalculations(character, new Item() { Stats = newStats }, false, false, false);
-                    float dpsChange = currentCalc.OverallPoints - baseCalc.OverallPoints;
+                    float currentFigure = GetCalculationValue(currentCalc, calculation);
+                    float dpsChange = currentFigure - baseFigure;
                     points[index][count + 100] = new Point(Convert.ToInt32(graphOffset + count * graphStep), Convert.ToInt32(dpsChange));
                     if (dpsChange < minDpsChange)
                         minDpsChange = dpsChange;
@@ -194,5 +197,30 @@ namespace Rawr.Base
             Cursor.Current = Cursors.Default;
         }
 
+        private float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)
+        {
+            if (calculation == null || calculation == "Overall Rating")
+                return calcs.OverallPoints;
+            else
+            {
+                int index = 0;
+                foreach (string subPoint in Calculations.SubPointNameColors.Keys)
+                {
+                    if (calculation.StartsWith(subPoint))
+                        return calcs.SubPoints[index];
+                    index++;
+                }
+                return 0f;
+            }
+        }
+
+        public static string[] GetCalculationNames()
+        {
+            List<string> names = new List<string>();
+            names.Add("Overall Rating");
+            foreach (string subPoint in Calculations.SubPointNameColors.Keys)
+				names.Add(subPoint + " Rating");
+            return names.ToArray();
+        }
     }
 }

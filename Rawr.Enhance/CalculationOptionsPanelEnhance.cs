@@ -20,6 +20,7 @@ namespace Rawr.Enhance
             InitializeComponent();
             if (bosslist == null) { bosslist = new BossList(); }
             comboBoxBoss.Items.AddRange(bosslist.GetBetterBossNamesAsArray());
+            comboBoxCalculationToGraph.Items.AddRange(Graph.GetCalculationNames());
         }
 
         protected override void LoadCalculationOptions()
@@ -42,6 +43,7 @@ namespace Rawr.Enhance
             cmbLength.Value = (decimal)_calcOpts.FightLength;
             comboBoxMainhandImbue.SelectedItem = _calcOpts.MainhandImbue;
             comboBoxOffhandImbue.SelectedItem = _calcOpts.OffhandImbue;
+            comboBoxCalculationToGraph.SelectedItem = _calcOpts.CalculationToGraph;
             chbMagmaSearing.Checked = _calcOpts.Magma;
             chbMana.Checked = _calcOpts.UseMana;
             chbBaseStatOption.Checked = _calcOpts.BaseStatOption;
@@ -83,7 +85,7 @@ namespace Rawr.Enhance
                 _calcOpts.FightLength = (float)cmbLength.Value;
                 _calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
                 _calcOpts.OffhandImbue = (string)comboBoxOffhandImbue.SelectedItem;
-
+                _calcOpts.CalculationToGraph = (string)comboBoxCalculationToGraph.SelectedItem;
                 _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 _calcOpts.Magma = chbMagmaSearing.Checked;
                 _calcOpts.UseMana = chbMana.Checked;
@@ -394,7 +396,7 @@ namespace Rawr.Enhance
             string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
                          "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
                          "The vertical axis shows the amount of dps added or lost";
-            graph.SetupGraph(Character, statsList, explanatoryText, "DPS");
+            graph.SetupGraph(Character, statsList, explanatoryText, "DPS", _calcOpts.CalculationToGraph);
             graph.Show();
         }
 
@@ -441,6 +443,11 @@ namespace Rawr.Enhance
         private void chkStatsSP_CheckedChanged(object sender, EventArgs e)
         {
             _calcOpts.StatsList[8] = chkStatsSP.Checked;
+        }
+
+        private void comboBoxCalculationToGraph_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _calcOpts.CalculationToGraph = (string)comboBoxCalculationToGraph.SelectedItem;
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Rawr.Enhance
         private int _averageLag = 250;
         private string _mainhandImbue = "Windfury";
         private string _offhandImbue = "Flametongue";
+        private string _calculationToGraph = "DPS Rating";
         private float _fightLength = 10.0f;
         private float _targetFireResistance = 0;
         private float _targetNatureResistance = 0;
@@ -43,6 +44,7 @@ namespace Rawr.Enhance
         public float MinManaSR { get { return _minManaSR; } set { _minManaSR = value; OnPropertyChanged("MinManaSR"); } }
         public string MainhandImbue { get { return _mainhandImbue; } set { _mainhandImbue = value; OnPropertyChanged("MainhandImbue"); } }
         public string OffhandImbue { get { return _offhandImbue; } set { _offhandImbue = value; OnPropertyChanged("OffhandImbue"); } }
+        public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
         public float FightLength { get { return _fightLength; } set { _fightLength = value; OnPropertyChanged("FightLength"); } }
         public float TargetFireResistance { get { return _targetFireResistance; } set { _targetFireResistance = value; OnPropertyChanged("TargetFireResistance"); } }
         public float TargetNatureResistance { get { return _targetNatureResistance; } set { _targetNatureResistance = value; OnPropertyChanged("TargetNatureResistance"); } }
