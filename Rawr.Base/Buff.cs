@@ -1687,7 +1687,7 @@ namespace Rawr
                 Improvements = {
                     new Buff {
                         Name = "Mighty Rage Potion (Double Pot Trick)",
-                        Stats = new Stats() { BonusRageGen = (45f + 75) / 2f, }
+                        Stats = new Stats() { BonusRageGen = (45f + 75) / 2f, },
                         AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, CharacterClass.Druid, },
                     }
                 }
