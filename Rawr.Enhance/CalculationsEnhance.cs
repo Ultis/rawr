@@ -861,6 +861,8 @@ namespace Rawr.Enhance
 		{
             if (relevantStats(stats))
                 return true;
+            if (irrelevantStats(stats)) 
+                return false;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (HasRelevantTrigger(effect.Trigger))
@@ -891,11 +893,12 @@ namespace Rawr.Enhance
                 stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
                 stats.BonusWFAttackPower + stats.Enhance2T9 + stats.Enhance4T9 + 
                 stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +
-                stats.BonusLSDamage + stats.BonusLLSSDamage + stats.BonusSSDamage) > 0
+                stats.BonusLSDamage + stats.BonusLLSSDamage + stats.BonusSSDamage) > 0;
+        }
 
-                &&
-
-                stats.TigersFuryCooldownReduction == 0;
+        private bool irrelevantStats(Stats stats)
+        {
+            return (stats.TigersFuryCooldownReduction + stats.BonusRageGen + stats.ArcaneBlastBonus) > 0;
         }
         #endregion
 
