@@ -202,6 +202,10 @@ namespace Rawr
                 {
                     if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
                 }
+                if (!_optimizer.ItemGenerator.IsCharacterValid(_character, out prompt))
+                {
+                    if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+                }
             }
 
 			buttonOptimize.Text = "Optimizing...";

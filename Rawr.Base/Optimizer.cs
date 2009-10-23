@@ -1291,6 +1291,14 @@ namespace Rawr.Optimizer
         CharacterSlot lockedSlot = CharacterSlot.None;
         AvailableItemGenerator itemGenerator;
 
+        public AvailableItemGenerator ItemGenerator
+        {
+            get
+            {
+                return itemGenerator;
+            }
+        }
+
         private void PopulateLockedItems(Item item)
         {
             lockedItems = itemGenerator.GetPossibleGemmedItemsForItem(item, item.Id.ToString()).ConvertAll(itemInstance => (object)itemInstance);
@@ -1377,7 +1385,7 @@ namespace Rawr.Optimizer
         {
             int gemLimit = 8;
             int itemLimit = 512;
-            //int enchantLimit = 8;
+            int enchantLimit = 8;
 
             List<string> emptyList = new List<string>();
             List<string> tooManyList = new List<string>();
@@ -1403,18 +1411,18 @@ namespace Rawr.Optimizer
             CalculateWarnings(slotItems[(int)CharacterSlot.Projectile], "Projectile Items", null, tooManyList, itemLimit);
             CalculateWarnings(slotItems[(int)CharacterSlot.ProjectileBag], "Projectile Bag Items", null, tooManyList, itemLimit);
 
-            //CalculateWarnings(backEnchants, "Back Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(chestEnchants, "Chest Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(feetEnchants, "Feet Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(fingerEnchants, "Finger Enchants", null, tooManyList, enchantLimit);
-            //CalculateWarnings(handsEnchants, "Hands Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(headEnchants, "Head Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(legsEnchants, "Legs Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(shouldersEnchants, "Shoulder Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(mainHandEnchants, "Main Hand Enchants", emptyList, tooManyList, enchantLimit);
-            //CalculateWarnings(offHandEnchants, "Offhand Enchants", null, tooManyList, enchantLimit);
-            //CalculateWarnings(rangedEnchants, "Ranged Enchants", null, tooManyList, enchantLimit);
-            //CalculateWarnings(wristEnchants, "Wrist Enchants", emptyList, tooManyList, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.Back], "Back Enchants", emptyList, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.Chest], "Chest Enchants", emptyList, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.Feet], "Feet Enchants", emptyList, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.Finger1], "Finger Enchants", null, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.Hands], "Hands Enchants", emptyList, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.Head], "Head Enchants", emptyList, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.Legs], "Legs Enchants", emptyList, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.Shoulders], "Shoulder Enchants", emptyList, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.MainHand], "Main Hand Enchants", emptyList, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.OffHand], "Offhand Enchants", null, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.Ranged], "Ranged Enchants", null, null, enchantLimit);
+            CalculateWarnings(itemGenerator.SlotEnchants[(int)CharacterSlot.Wrist], "Wrist Enchants", emptyList, null, enchantLimit);
 
             if (emptyList.Count + tooManyList.Count > 0)
             {

@@ -101,6 +101,48 @@ namespace Rawr.Optimizer
             }
         }
 
+        public bool IsCharacterValid(Character character, out string warning)
+        {
+            StringBuilder s = new StringBuilder();
+            s.AppendLine("The following currently equipped items are not available");
+            s.AppendLine();
+            bool valid = true;
+            // if item is not available pick the one that is available
+            for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+            {
+                ItemInstance item = character._item[slot];
+                if (item != null && item.Item != null)
+                {
+                    if (item.Item.AvailabilityInformation != null)
+                    {
+                        if (!itemAvailable.ContainsKey(item.GemmedId))
+                        {
+                            // gemming/enchant is not available
+                            s.AppendLine("\t" + item.Item.Name + " gemming/enchant is not available");
+                            valid = false;
+                        }
+                    }
+                    else
+                    {
+                        // item itself is not available
+                        s.AppendLine("\t" + item.Item.Name + " is not available");
+                        valid = false;
+                    }
+                }
+            }
+            if (!valid)
+            {
+                s.AppendLine();
+                s.AppendLine("Do you want to continue with the optimization?");
+                warning = s.ToString();
+            }
+            else
+            {
+                warning = null;
+            }
+            return valid;
+        }
+
         public void AddItemRestrictions(ItemInstance[] items)
         {
             for (int slot = 0; slot < items.Length; slot++)
