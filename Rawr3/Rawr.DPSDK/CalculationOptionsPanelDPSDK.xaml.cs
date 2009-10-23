@@ -38,6 +38,7 @@ namespace Rawr.DPSDK
                 LoadCalculationOptions();
 
                 RotationTab.DataContext = (Character.CalculationOptions as CalculationOptionsDPSDK).rotation;
+                OptionsTab.DataContext = (Character.CalculationOptions as CalculationOptionsDPSDK);
 
                 ((CalculationOptionsDPSDK)character.CalculationOptions).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
 
@@ -60,12 +61,6 @@ namespace Rawr.DPSDK
 
         void CalculationOptionsPanelDPSDK_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != "talents" && e.PropertyName != "Presence")
-            {
-                MessageBox.Show(e.PropertyName + " ; " + e.ToString());
-                character.OnCalculationsInvalidated();
-            }
-           //Character.OnCalculationsInvalidated();
         }
     }
 }

@@ -46,13 +46,6 @@ namespace Rawr.DPSDK
 			set { _BloodwormsUptime = value; OnPropertyChanged("BloodwormsUptime"); }
 		}
 		
-		private Presence _presence = Presence.Blood;
-		public Presence presence
-		{
-			get { return _presence; }
-			set { _presence = value; OnPropertyChanged("Presence"); }
-		}
-		
 		private bool _Ghoul = true;
 		public bool Ghoul
 		{
@@ -67,8 +60,8 @@ namespace Rawr.DPSDK
 			set { _EnforceMetagemRequirements = value; OnPropertyChanged("EnforceMetagemRequirements"); }
 		}
 		
-		private int _FightLength = 6;
-		public int FightLength
+		private float _FightLength = 6;
+		public float FightLength
 		{
 			get {return _FightLength; }
 			set { _FightLength = value; OnPropertyChanged("FightLength"); }

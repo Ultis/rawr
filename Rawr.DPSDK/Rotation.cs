@@ -7,9 +7,27 @@ namespace Rawr.DPSDK
     public class Rotation
     {
         public Type curRotationType = Type.Blood;
-        public CalculationOptionsDPSDK.Presence presence = CalculationOptionsDPSDK.Presence.Blood;
-        private float _curRotationDuration = 0f;  // rotation duration in seconds
+        
 
+        private CalculationOptionsDPSDK.Presence _presence = CalculationOptionsDPSDK.Presence.Blood;
+        public CalculationOptionsDPSDK.Presence presence
+        {
+            get { return _presence; }
+            set { _presence = value; }
+        }
+
+        private int _presenceByIndex = 0;
+        public int PresenceByIndex
+        {
+            get { return _presenceByIndex; }
+            set
+            {
+                _presenceByIndex = value;
+                if (_presenceByIndex == 0) presence = CalculationOptionsDPSDK.Presence.Blood;
+                if (_presenceByIndex == 1) presence = CalculationOptionsDPSDK.Presence.Unholy;
+            }
+        }
+        private float _curRotationDuration = 0f;  // rotation duration in seconds
         public float CurRotationDuration
         {
             get { return _curRotationDuration; }

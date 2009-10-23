@@ -320,7 +320,6 @@ namespace Rawr.DPSDK
             float commandMult = 0f;
 
             {
-                calcOpts.presence = calcOpts.rotation.presence;
 
                 float OHMult = 0.5f * (1f + (float)talents.NervesOfColdSteel * 0.05f);	//an OH multiplier that is useful sometimes
                 Boolean PTR = false; // enable and disable PTR things here
@@ -577,12 +576,12 @@ namespace Rawr.DPSDK
                                     tempStats.AttackPower += (tempStats.Armor / 180f) * (float)talents.BladedArmor;
                                     tempStats.BonusSpellPowerMultiplier = tempStats.BonusShadowDamageMultiplier;
                                     tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
-                                    if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
+                                    if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
                                     {
                                         tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
                                         tempStats.BonusSpellPowerMultiplier *= 1.15f;
                                     }
-                                    else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
+                                    else if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
                                     {
                                         tempStats.PhysicalHaste += 0.15f;
                                         tempStats.SpellHaste += 0.15f;
@@ -655,12 +654,12 @@ namespace Rawr.DPSDK
                                     tempStats.AttackPower += (tempStats.Armor / 180f) * (float)talents.BladedArmor;
                                     tempStats.BonusSpellPowerMultiplier = tempStats.BonusShadowDamageMultiplier;
                                     tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
-                                    if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
+                                    if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
                                     {
                                         tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
                                         tempStats.BonusSpellPowerMultiplier *= 1.15f;
                                     }
-                                    else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
+                                    else if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
                                     {
                                         tempStats.PhysicalHaste += 0.15f;
                                         tempStats.SpellHaste += 0.15f;
@@ -1389,12 +1388,12 @@ namespace Rawr.DPSDK
 
                                 tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
 
-                                if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
+                                if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
                                 {
                                     tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
                                     tempStats.BonusSpellPowerMultiplier *= 1.15f;
                                 }
-                                else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
+                                else if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
                                 {
                                     tempStats.PhysicalHaste += 0.15f;
                                     tempStats.SpellHaste += 0.15f;
@@ -1520,12 +1519,12 @@ namespace Rawr.DPSDK
             statsTotal.BonusSpellPowerMultiplier++;
             statsTotal.BonusPhysicalDamageMultiplier++;
 
-            if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
+            if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
             {
                 statsTotal.BonusPhysicalDamageMultiplier *= 1.15f;
                 statsTotal.BonusSpellPowerMultiplier *= 1.15f;
             }
-            else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
+            else if (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
             {
                 statsTotal.PhysicalHaste += 0.15f;
                 statsTotal.SpellHaste += 0.15f;

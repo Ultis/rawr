@@ -40,7 +40,7 @@ namespace Rawr.DPSDK
            
 
             cbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
-			tbFightLength.Value = calcOpts.FightLength;
+			tbFightLength.Value = (int)calcOpts.FightLength;
 			lblFightLengthNum.Text = tbFightLength.Value.ToString();
 
             nudTargetArmor.Value = calcOpts.BossArmor;
