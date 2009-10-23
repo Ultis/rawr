@@ -1683,7 +1683,14 @@ namespace Rawr
                 Name = "Mighty Rage Potion",
                 Group = "Potion",
                 Stats = new Stats() { BonusRageGen = (45f + 75) / 2f, },
-                Improvements = { new Buff { Name = "Mighty Rage Potion (Double Pot Trick)", Stats = new Stats() { BonusRageGen = (45f + 75) / 2f, } } }
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, CharacterClass.Druid, },
+                Improvements = {
+                    new Buff {
+                        Name = "Mighty Rage Potion (Double Pot Trick)",
+                        Stats = new Stats() { BonusRageGen = (45f + 75) / 2f, }
+                        AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, CharacterClass.Druid, },
+                    }
+                }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f, 20f * 60f));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f - 1f, 20f * 60f));
@@ -1955,6 +1962,203 @@ namespace Rawr
             #endregion
 
             #region Set Bonuses
+            
+            #region Death Knight
+            #region WotLK
+            #region Tier  7 | Scourgeborne
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgeborne Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusDeathStrikeCrit = 0.05f,
+                    BonusObliterateCrit = 0.05f,
+                    BonusScourgeStrikeCrit = 0.05f
+                },
+                SetName = "Scourgeborne Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgeborne Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusRPFromDeathStrike = 5f,
+                    BonusRPFromObliterate = 5f,
+                    BonusRPFromScourgeStrike = 5f
+                },
+                SetName = "Scourgeborne Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgeborne Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusPlagueStrikeCrit = 0.10f },
+                SetName = "Scourgeborne Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgeborne Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusIceboundFortitudeDuration = 3f },
+                SetName = "Scourgeborne Plate",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            #endregion
+            #region Tier  8 | Darkruned
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Darkruned Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusDeathCoilCrit = 0.08f,
+                    BonusFrostStrikeCrit = 0.08f
+                },
+                SetName = "Darkruned Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Darkruned Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusPerDiseaseBloodStrikeDamage = 0.20f,
+                    BonusPerDiseaseHeartStrikeDamage = 0.20f,
+                    BonusPerDiseaseObliterateDamage = 0.20f,
+                    BonusPerDiseaseScourgeStrikeDamage = 0.20f
+                },
+                SetName = "Darkruned Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Darkruned Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusRuneStrikeMultiplier = 0.10f },
+                SetName = "Darkruned Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Darkruned Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusAntiMagicShellDamageReduction = 0.10f },
+                SetName = "Darkruned Plate",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            #endregion
+            #region Tier  9 | Koltira/Kolitra/Thassaurian
+            Stats DK2T9 = new Stats();
+            DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, new Stats() { Strength = 180f }, 15f, 45f, .5f));
+            DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, new Stats() { Strength = 180f }, 15f, 45f, .5f));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Koltira's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = DK2T9,
+                SetName = "Koltira's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Koltira's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    DiseasesCanCrit = 1f
+                },
+                SetName = "Koltira's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thassarian's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = DK2T9,
+                SetName = "Thassarian's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thassarian's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    DiseasesCanCrit = 1f
+                },
+                SetName = "Thassarian's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            #endregion
+            #region Tier 10 |
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "DK DPS 2T10",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusHeartStrikeMultiplier = .07f,
+                    BonusScourgeStrikeMultiplier = .1f,
+                    BonusObliterateMultiplier = .1f
+                },
+                SetName = "DK DPS T10",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "DK DPS 4T10",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusPhysicalDamageMultiplier = .03f,
+                    BonusSpellPowerMultiplier = .03f
+                },
+                SetName = "DK DPS T10",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            #endregion
+            #endregion
+            #endregion
+
+            #region Druid
+            #region TBC
+            #region Tier 4 | Malorne
+            #region Harness
             defaultBuffs.Add(new Buff()
             {
                 Name = "Malorne Harness 2 Piece Bonus",
@@ -1963,7 +2167,7 @@ namespace Rawr
                 Stats = { BloodlustProc = 0.8f },
                 SetName = "Malorne Harness",
                 SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid },
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
             defaultBuffs.Add(new Buff()
             {
@@ -1975,6 +2179,45 @@ namespace Rawr
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid },
             });
+            #endregion
+            #region Raiment
+            defaultBuffs.Add( buff = new Buff()
+            {
+                Name = "Malorne Raiment 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ManaRestoreOnCast_5_15 = 120 },
+                SetName = "Malorne Raiment",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { ManaRestore = 120f }, 0f, 0f, 0.05f));
+            #endregion
+            #region Regalia
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Malorne Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Malorne Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { Mana = 120f }, 0f, 0f, 0.1f, 1));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Malorne Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { InnervateCooldownReduction = 48.0f },
+                SetName = "Malorne Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #endregion
+            #region Tier 5 | Nordrassil
+            #region Harness
             defaultBuffs.Add(new Buff()
             {
                 Name = "Nordrassil Harness 4 Piece Bonus",
@@ -1985,6 +2228,43 @@ namespace Rawr
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid },
             });
+            #endregion
+            #region Raiment
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nordrassil Raiment 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RegrowthExtraTicks = 2 },
+                SetName = "Nordrassil Raiment",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nordrassil Raiment 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { LifebloomFinalHealBonus = 150 },
+                SetName = "Nordrassil Raiment",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #region Regalia
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nordrassil Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { StarfireBonusWithDot = 0.1f },
+                SetName = "Nordrassil Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #endregion
+            #region Tier 6 | Thunderheart
+            #region Harness
             defaultBuffs.Add(new Buff()
             {
                 Name = "Thunderheart Harness 2 Piece Bonus",
@@ -2005,6 +2285,275 @@ namespace Rawr
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid },
             });
+            #endregion
+            #region Raiment
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thunderheart Raiment 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusHealingTouchMultiplier = 0.05f },
+                SetName = "Thunderheart Raiment",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #region Regalia
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thunderheart Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MoonfireExtension = 3.0f },
+                SetName = "Thunderheart Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thunderheart Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { StarfireCritChance = 0.05f },
+                SetName = "Thunderheart Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #endregion
+            #endregion
+            #region WotLK
+            #region Tier  7 | Dreamwalker
+            #region Battlegear
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreamwalker Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusRipDuration = 4f, BonusLacerateDamageMultiplier = 0.05f },
+                SetName = "Dreamwalker Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreamwalker Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { TigersFuryCooldownReduction = 3f, WeaponDamage = 1.778f /*Increased Barkskin Duration*/ },
+                SetName = "Dreamwalker Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+			});
+            #endregion
+            #region Garb
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreamwalker Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusInsectSwarmDamage = 0.1f },
+                SetName = "Dreamwalker Garb",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreamwalker Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusNukeCritChance = 0.05f },
+                SetName = "Dreamwalker Garb",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #region Regalia
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreamwalker Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { LifebloomCostReduction = 0.05f },
+                SetName = "Dreamwalker Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreamwalker Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { NourishBonusPerHoT = 0.05f },
+                SetName = "Dreamwalker Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #endregion
+            #region Tier  8 | Nightsong
+            #region Battlegear
+            defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
+			{
+			    Name = "Nightsong Battlegear 2 Piece Bonus",
+			    Group = "Set Bonuses",
+			    ConflictingBuffs = new List<string>(new string[] { }),
+			    Stats = { ClearcastOnBleedChance = 0.02f },
+				SetName = "Nightsong Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+			});
+			defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
+			{
+				Name = "Nightsong Battlegear 4 Piece Bonus",
+			    Group = "Set Bonuses",
+			    ConflictingBuffs = new List<string>(new string[] { }),
+			    Stats = { BonusSavageRoarDuration = 8f },
+				SetName = "Nightsong Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+			});
+            #endregion
+            #region Garb
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nightsong Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { EclipseBonus = 0.15f },
+                SetName = "Nightsong Garb",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Nightsong Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats(),
+                SetName = "Nightsong Garb",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmTick, new Stats() { StarfireProc = 1f }, 0f, 0f, 0.08f, 1));
+            #endregion
+            #region Regalia
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nightsong Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SwiftmendBonus = 0.1f },
+                SetName = "Nightsong Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nightsong Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RejuvenationInstantTick = 0.5f },
+                SetName = "Nightsong Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #endregion
+            #region Tier  9 | Malfurion's
+            #region Battlegear
+            defaultBuffs.Add(new Buff()
+			{
+				Name = "Malfurion's Battlegear 2 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { BonusRakeDuration = 3f, BonusLacerateDamageMultiplier = 0.05f },
+				SetName = "Malfurion's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Malfurion's Battlegear 4 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { BonusRipCrit = 0.05f, BonusFerociousBiteCrit = 0.05f },
+				SetName = "Malfurion's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+			});
+            #endregion
+            #region Regalia
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Malfurion's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MoonfireDotCrit = 1f },
+				SetName = "Malfurion's Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+				Name = "Malfurion's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusMoonkinNukeDamage = 0.04f },
+				SetName = "Malfurion's Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #region Garb
+            defaultBuffs.Add(new Buff()
+            {
+				Name = "Malfurion's Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { NourishCritBonus = 0.05f },
+				SetName = "Malfurion's Garb",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+				Name = "Malfurion's Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RejuvenationCrit = 1.0f },
+				SetName = "Malfurion's Garb",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #endregion
+            #region Tier 10 | 
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Moonkin T10 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats(),
+                SetName = "Moonkin T10",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { BonusArcaneDamageMultiplier = 0.15f, BonusNatureDamageMultiplier = 0.15f }, 6.0f, 0f, 0.06f, 1));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Moonkin T10 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MoonkinT10CritDot = 0.05f },
+                SetName = "Moonkin T10",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #endregion
+            #region PvP
             defaultBuffs.Add(new Buff()
             {
                 Name = "Gladiator Sanctuary 2 Piece Bonus",
@@ -2012,17 +2561,314 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Resilience = 35 },
                 SetName = "Gladiator's Sanctuary",
-                SetThreshold = 2
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            #endregion
+            #endregion
+
+            #region Hunter
+            #region TBC
+            #region Tier 4 | Demon Stalker
+            // 2-piece bonus is FD-resist
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Demon Stalker Armor 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Demon Stalker Armor",
+                Stats = { MultiShotManaDiscount = .1f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Tier 5 | Rift Stalker
+            // 2-piece bonus is pet healing
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Rift Stalker Armor 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Rift Stalker Armor",
+                Stats = { BonusSteadyShotCrit = .05f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Tier 6 | Gronnstalker's
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gronnstalker's Armor 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Gronnstalker's Armor",
+                Stats = { BonusAspectOfTheViperGain = 0.25f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Gladiator's Regalia 2 Piece Bonus",
+                Name = "Gronnstalker's Armor 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Gronnstalker's Armor",
+                Stats = { BonusSteadyShotDamageMultiplier = .1f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #endregion
+            #region WotLK
+            #region Tier 7 | Cryptstalker
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Cryptstalker Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Cryptstalker Battlegear",
+                Stats = { BonusPetDamageMultiplier = 0.05f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Cryptstalker Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Cryptstalker Battlegear",
+                Stats = { BonusAspectOfTheViperAttackSpeed = 0.2f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Tier 8 | Scourgestalker
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgestalker Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Scourgestalker Battlegear",
+                Stats = { BonusSerpentStingDamage = 0.1f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Scourgestalker Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Scourgestalker Battlegear",
+                Stats = { BonusSteadyShotAttackPowerBuff = 1 },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Tier 9 | Windrunner's
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Windrunner's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Windrunner's Battlegear",
+                Stats = { BonusSerpentStingCanCrit = 1 },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Windrunner's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Windrunner's Battlegear",
+                Stats = { BonusSteadyShotPetAttackPowerBuff = 1 },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #endregion
+            #region PvP
+            #region Gladiator's Pursuit (Season 1)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gladiator's Pursuit 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 35 },
+                SetName = "Gladiator's Pursuit",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gladiator's Pursuit 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MultiShotCooldownReduction = 1 },
+                SetName = "Gladiator's Pursuit",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Merciless Gladiator's Pursuit (Season 2)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Merciless Gladiator's Pursuit 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 35 },
+                SetName = "Merciless Gladiator's Pursuit",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Merciless Gladiator's Pursuit 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MultiShotCooldownReduction = 1 },
+                SetName = "Merciless Gladiator's Pursuit",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Vengeful Gladiator's Pursuit (Season 3)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Vengeful Gladiator's Pursuit 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 35 },
+                SetName = "Vengeful Gladiator's Pursuit",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Vengeful Gladiator's Pursuit 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MultiShotCooldownReduction = 1 },
+                SetName = "Vengeful Gladiator's Pursuit",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Brutal Gladiator's Pursuit (Season 4)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Brutal Gladiator's Pursuit 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 35 },
+                SetName = "Brutal Gladiator's Pursuit",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Brutal Gladiator's Pursuit 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MultiShotCooldownReduction = 1 },
+                SetName = "Brutal Gladiator's Pursuit",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Savage Gladiator's Pursuit (Season 5.1)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Savage Gladiator's Pursuit 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Resilience = 50 },
-                SetName = "Gladiator's Regalia",
-                SetThreshold = 2
+                SetName = "Savage Gladiator's Pursuit",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Savage Gladiator's Pursuit 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { TrapCooldownReduction = 2 },
+                SetName = "Savage Gladiator's Pursuit",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Hateful Gladiator's Pursuit (Season 5.2)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Hateful Gladiator's Pursuit 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 50 },
+                SetName = "Hateful Gladiator's Pursuit",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Hateful Gladiator's Pursuit 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { TrapCooldownReduction = 2 },
+                SetName = "Hateful Gladiator's Pursuit",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Deadly Gladiator's Pursuit (Season 5.3)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Deadly Gladiator's Pursuit 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 50 },
+                SetName = "Deadly Gladiator's Pursuit",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Deadly Gladiator's Pursuit 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { TrapCooldownReduction = 2 },
+                SetName = "Deadly Gladiator's Pursuit",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #region Furious Gladiator's Pursuit (Season 6)
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Furious Gladiator's Pursuit 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 50 },
+                SetName = "Furious Gladiator's Pursuit",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Furious Gladiator's Pursuit 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { TrapCooldownReduction = 2 },
+                SetName = "Furious Gladiator's Pursuit",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
+            });
+            #endregion
+            #endregion
+            #endregion
+
+            #region Mage
+            #region TBC
+            #region Tier 4 | Aldor
             defaultBuffs.Add(new Buff()
             {
                 Name = "Aldor Regalia 2 Piece Bonus",
@@ -2030,8 +2876,11 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { AldorRegaliaInterruptProtection = 1 },
                 SetName = "Aldor Regalia",
-                SetThreshold = 2
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
+            #endregion
+            #region Tier 5 | Tirisfal
             defaultBuffs.Add(new Buff()
             {
                 Name = "Tirisfal Regalia 2 Piece Bonus",
@@ -2039,7 +2888,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { ArcaneBlastBonus = .05f },
                 SetName = "Tirisfal Regalia",
-                SetThreshold = 2
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
             defaultBuffs.Add(buff = new Buff()
             {
@@ -2048,9 +2898,12 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats(),
                 SetName = "Tirisfal Regalia",
-                SetThreshold = 4
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { SpellPower = 70f }, 6.0f, 0.0f));
+            #endregion
+            #region Tier 6 | Tempest
             defaultBuffs.Add(new Buff()
             {
                 Name = "Tempest Regalia 2 Piece Bonus",
@@ -2058,7 +2911,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { EvocationExtension = 2f },
                 SetName = "Tempest Regalia",
-                SetThreshold = 2
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
             defaultBuffs.Add(new Buff()
             {
@@ -2067,10 +2921,997 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusMageNukeMultiplier = 0.05f },
                 SetName = "Tempest Regalia",
-                SetThreshold = 4
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
+            #endregion
+            #endregion
+            #region WotLK
+            #region Tier 7 | Frostfire
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Frostfire Garb 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusManaGem = 0.25f },
+                SetName = "Frostfire Garb",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.ManaGem, new Stats() { SpellPower = 225f }, 15f, 0f));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Frostfire Garb 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { CritBonusDamage = 0.05f },
+                SetName = "Frostfire Garb",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
+            });
+            #endregion
+            #region Tier 8 | Kirin Tor
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Kirin Tor Garb 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { },
+                SetName = "Kirin Tor Garb",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.MageNukeCast, new Stats() { SpellPower = 350f }, 15f, 45f, 0.25f));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Kirin Tor Garb 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Mage4T8 = 1 },
+                SetName = "Kirin Tor Garb",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
+            });
+            #endregion
+            #region Tier 9 | Khadgar's Regalia
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Khadgar's Regalia 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Mage2T9 = 1 },
+                SetName = "Khadgar's Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Khadgar's Regalia 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Mage4T9 = 1 },
+                SetName = "Khadgar's Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
+            });
+            #endregion
+            #endregion
+            #region PvP
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gladiator's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 50 },
+                SetName = "Gladiator's Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
+            });
+            #endregion
+            #endregion
 
-            #region Warlock T7 set bonuses
+            #region Paladin
+            #region TBC
+            #region Tier 4 |
+            #endregion
+            #region Tier 5 |
+            #endregion
+            #region Tier 6 | Lightbringer
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Lightbringer Raiment 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { HolyLightCrit = .05f },
+                SetName = "Lightbringer Raiment",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Lightbringer Raiment 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { FlashOfLightMultiplier = .05f },
+                SetName = "Lightbringer Raiment",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            #endregion
+            #endregion
+            #region WotLK
+            #region Tier  7 | Redemption
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Redemption Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { HolyShockCrit = .1f },
+                SetName = "Redemption Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Redemption Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { HolyLightPercentManaReduction = .05f },
+                SetName = "Redemption Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Redemption Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DivineStormMultiplier = .1f },
+                SetName = "Redemption Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Redemption Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { JudgementCDReduction = 1f },
+                SetName = "Redemption Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Redemption Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusHammerOfTheRighteousMultiplier = .1f },
+                SetName = "Redemption Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Redemption Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DivineProtectionDurationBonus = 3f },
+                SetName = "Redemption Plate",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            #endregion
+            #region Tier  8 | Aegis Plate
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = 
+                {
+                	BonusSealOfVengeanceDamageMultiplier = .1f,
+                	BonusSealOfCorruptionDamageMultiplier = .1f,
+                	BonusSealOfRighteousnessDamageMultiplier = .1f,
+                },
+                SetName = "Aegis Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Aegis Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats(),
+                SetName = "Aegis Plate",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.ShieldofRighteousness, new Stats() { ShieldOfRighteousnessBlockValue = 225f }, 6.0f, 0.0f, 1.0f));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ExorcismMultiplier = .1f, HammerOfWrathMultiplier = .1f },
+                SetName = "Aegis Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { CrusaderStrikeCrit = .1f, DivineStormCrit = .1f },
+                SetName = "Aegis Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { HolyShockHoTOnCrit = .15f },
+                SetName = "Aegis Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SacredShieldICDReduction = 2f },
+                SetName = "Aegis Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            #endregion
+            #region Tier  9 | Turalyon's
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Turalyon's Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusHammerOfTheRighteousMultiplier = .05f,
+                    // HandOfReckoningCooldownReduction = 2f // Hand of Reckoning is currently unmodeled.
+                },
+                SetName = "Turalyon's Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            /* Divine Protection and Forbearance are currently unmodeled.
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Turalyon's Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    DivineProtectionCooldownReduction = 30f,
+                    ForbearanceDurationReduction = 30f,
+                },
+                SetName = "Turalyon's Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });*/
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Turalyon's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RighteousVengeanceCanCrit = 1f },
+				SetName = "Turalyon's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+			});
+			defaultBuffs.Add(new Buff()
+			{
+                Name = "Turalyon's Battlegear 4 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { JudgementCrit = .05f },
+				SetName = "Turalyon's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+			});
+            #endregion
+            #region Tier 10 |
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Paladin Tank T10 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusHammerOfTheRighteousMultiplier = .2f
+                },
+                SetName = "Paladin Tank T10",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Paladin Tank T10 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats(),
+                SetName = "Paladin Tank T10",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivinePlea, new Stats() { Dodge = .12f }, 10.0f, 0.0f, 1.0f));
+            #endregion
+            #endregion
+            #region PvP
+            #endregion
+            #endregion
+
+            #region Priest
+            #region TBC
+            #region Tier 4 |
+            #endregion
+            #region Tier 5 | Avatar Raiment
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Avatar Raiment 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ManaGainOnGreaterHealOverheal = 100f },
+                SetName = "Avatar Raiment",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Avatar Raiment 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RenewDurationIncrease = 3f },
+                SetName = "Avatar Raiment",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #region Tier 6 | Absolution
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Vestments of Absolution 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusPoHManaCostReductionMultiplier = 0.1f },
+                SetName = "Vestments of Absolution",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Vestments of Absolution 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusGHHealingMultiplier = 0.05f },
+                SetName = "Vestments of Absolution",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Absolution Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SWPDurationIncrease = 3f },
+                SetName = "Absolution Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Absolution Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusMindBlastMultiplier = 0.1f },
+                SetName = "Absolution Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #endregion
+            #region WotLK
+            #region Tier 7 | Garb of Faith
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Garb of Faith 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MindBlastCostReduction = 0.1f },
+                SetName = "Garb of Faith",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Garb of Faith 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ShadowWordDeathCritIncrease = 0.1f },
+                SetName = "Garb of Faith",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Regalia of Faith 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PrayerOfMendingExtraJumps = 1 },
+                SetName = "Regalia of Faith",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Regalia of Faith 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GreaterHealCostReduction = 0.05f },
+                SetName = "Regalia of Faith",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #region Tier 8 | Sanctification
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Sanctification Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PrayerOfHealingExtraCrit = 0.1f },
+                SetName = "Sanctification Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Sanctification Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PWSBonusSpellPowerProc = 250 },
+                SetName = "Sanctification Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Sanctification Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DevouringPlagueBonusDamage = 0.15f },
+                SetName = "Sanctification Garb",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Sanctification Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { MindBlastHasteProc = 240 },
+                SetName = "Sanctification Garb",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #region Tier 9 | Velen's
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Velen's Raiment 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestHeal_T9_2pc = 0.2f },
+                SetName = "Velen's Raiment",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Velen's Raiment 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestHeal_T9_4pc = 0.1f },
+                SetName = "Velen's Raiment",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Velen's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestDPS_T9_2pc = 6 },
+                SetName = "Velen's Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Velen's Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { PriestDPS_T9_4pc = 0.05f },
+                SetName = "Velen's Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #endregion
+            #region PvP
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gladiator's Investiture 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 50f },
+                SetName = "Gladiator's Investiture",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gladiator's Investiture 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { WeakenedSoulDurationDecrease = 2f },
+                SetName = "Gladiator's Investiture",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gladiator's Raiment 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 50f },
+                SetName = "Gladiator's Raiment",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gladiator's Raiment 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { WeakenedSoulDurationDecrease = 2f },
+                SetName = "Gladiator's Raiment",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
+            });
+            #endregion
+            #endregion
+
+            #region Rogue
+            #region TBC
+            #region Tier 4 | Netherblade
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Netherblade 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusSnDDuration = 3f },
+                SetName = "Netherblade",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Netherblade 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { CPOnFinisher = .15f },
+                SetName = "Netherblade",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            #endregion
+            #region Tier 5 | Deathmantle
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Deathmantle 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusEvisEnvenomDamage = 40f },
+                SetName = "Deathmantle",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Deathmantle 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusFreeFinisher = 1f },
+                SetName = "Deathmantle",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            #endregion
+            #region Tier 6 | Slayer
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Slayer's Armor 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusSnDHaste = .05f },
+                SetName = "Slayer's Armor",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Slayer's Armor 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusCPGDamage = .06f },
+                SetName = "Slayer's Armor",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            #endregion
+            #endregion
+            #region WotLK
+            #region Tier 7 | Bonescythe
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Bonescythe Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RogueT7TwoPieceBonus = 0.1f },
+                SetName = "Bonescythe Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Bonescythe Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RogueT7FourPieceBonus = .05f },
+                SetName = "Bonescythe Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            #endregion
+            #region Tier 8 | Terrorblade
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Terrorblade Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RogueT8TwoPieceBonus = 1f },
+                SetName = "Terrorblade Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Terrorblade Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RogueT8FourPieceBonus = 1f },
+                SetName = "Terrorblade Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            #endregion
+            #region Tier 9 | VanCleef/Garona
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "VanCleef's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ReduceEnergyCostFromRupture = 40f },
+                SetName = "VanCleef's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "VanCleef's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusCPGCritChance = .05f },
+                SetName = "VanCleef's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Garona's Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ReduceEnergyCostFromRupture = 40f },
+                SetName = "Garona's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Garona's Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusCPGCritChance = .05f },
+                SetName = "Garona's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
+            });
+            #endregion
+            #endregion
+            #region PvP
+            #endregion
+            #endregion
+
+            #region Shaman
+            #region TBC
+            #region Tier 4 | Cyclone
+            /*
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Cyclone Raiment 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Cyclone Raiment",
+                Stats = { ManaSpringMp5Increase = 7.5f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            */
+            #endregion
+            #region Tier 5 | Cataclysm
+            /*
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Cataclysm Raiment 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Cataclysm Raiment",
+                Stats = { LHWManaReduction = .05f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            */
+            #endregion
+            #region Tier 6 | Skyshatter
+            /*
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Skyshatter Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Skyshatter Regalia",
+                Stats = { Mp5 = 15f, CritRating = 35f, SpellPower = 45f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Skyshatter Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Skyshatter Regalia",
+                Stats = { LightningBoltDamageModifier = 5f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Skyshatter Raiment 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Skyshatter Raiment",
+                Stats = { CHManaReduction = .1f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Skyshatter Raiment 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Skyshatter Raiment",
+                Stats = { CHHealIncrease = .05f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+             */
+            #endregion
+            #endregion
+            #region WotLK
+            #region Tier 7 | Earthshatter
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthshatter Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Earthshatter Battlegear",
+                Stats = { BonusLSDamage = 0.1f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthshatter Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Earthshatter Battlegear",
+                Stats = { BonusFlurryHaste = 0.05f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthshatter Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Earthshatter Garb",
+                Stats = { LightningBoltCostReduction = 5f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthshatter Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Earthshatter Garb",
+                Stats = { BonusLavaBurstCritDamage = 10f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthshatter Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Earthshatter Regalia",
+                Stats = { WaterShieldIncrease = .1f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthshatter Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Earthshatter Regalia",
+                Stats = { CHHWHealIncrease = .05f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            #endregion
+            #region Tier 8 | Worldbreaker
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Worldbreaker Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Battlegear",
+                Stats = { BonusLLSSDamage = 0.2f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Worldbreaker Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Battlegear",
+                Stats = { BonusMWFreq = 0.2f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Worldbreaker Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Garb",
+                Stats = { FlameShockDoTCanCrit = 1f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Worldbreaker Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Garb",
+                Stats = { LightningBoltCritDamageModifier = 0.08f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Worldbreaker Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Regalia",
+                Stats = { RTCDDecrease = 1f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Worldbreaker Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Regalia",
+                Stats = { CHCTDecrease = .2f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            #endregion
+            #region Tier 9 | Nobundo's
+            defaultBuffs.Add(buff = new Buff()
+            {
+				Name = "Nobundo's Battlegear 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Enhance2T9 = 1 },
+                SetName = "Nobundo's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+				Name = "Nobundo's Battlegear 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Enhance4T9 = 1 },
+				SetName = "Nobundo's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thrall's/Nobundo's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Nobundo's Regalia",
+                Stats = { BonusFlameShockDuration = 9f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+			defaultBuffs.Add(new Buff()
+			{
+                Name = "Thrall's/Nobundo's Regalia 4 Piece Bonus",
+			    Group = "Set Bonuses",
+			    ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Nobundo's Regalia",
+			    Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+			});
+            #endregion
+            #endregion
+            #region PvP
+            #endregion
+            #endregion
+
+            #region Warlock
+            #region TBC
+            #region Tier 4 |
+            #endregion
+            #region Tier 5 |
+            #endregion
+            #region Tier 6 |
+            #endregion
+            #endregion
+            #region WotLK
+            #region Tier 7 | Plagueheart
             defaultBuffs.Add(new Buff()
             {
                 Name = "Plagueheart Garb 2 Piece Bonus",
@@ -2078,7 +3919,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Warlock2T7 = 0.10f },
                 SetName = "Plagueheart Garb",
-                SetThreshold = 2
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
             defaultBuffs.Add(new Buff()
             {
@@ -2087,10 +3929,11 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Warlock4T7 = 300f },
                 SetName = "Plagueheart Garb",
-                SetThreshold = 4
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
             #endregion
-            #region Warlock T8 set bonuses
+            #region Tier 8 | Deathbringer
             defaultBuffs.Add(new Buff()
             {
                 Name = "Deathbringer Garb 2 Piece Bonus",
@@ -2098,7 +3941,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Warlock2T8 = 0.2f },
                 SetName = "Deathbringer Garb",
-                SetThreshold = 2
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
             defaultBuffs.Add(new Buff()
             {
@@ -2107,10 +3951,11 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Warlock4T8 = 0.05f },
                 SetName = "Deathbringer Garb",
-                SetThreshold = 4
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
             #endregion
-            #region Warlock T9 set bonuses
+            #region Tier 9 | Kel'Thuzad's Regalia
             //alliance [<3] set
             defaultBuffs.Add(new Buff()
             {
@@ -2119,7 +3964,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Warlock2T9 = 0.10f },
                 SetName = "Kel'Thuzad's Regalia",
-                SetThreshold = 2
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
             defaultBuffs.Add(new Buff()
             {
@@ -2128,14 +3974,149 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Warlock4T9 = 0.10f },
                 SetName = "Kel'Thuzad's Regalia",
-                SetThreshold = 4
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
             #endregion
+            #endregion
+            #region PvP
+            #endregion
+            #endregion
 
+            #region Warrior
+            #region WotLK
+            #region Tier  7 | Dreadnaught
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreadnaught Plate (T7) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusShieldSlamDamage = 0.1f },
+                SetName = "Dreadnaught Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreadnaught Battlegear (T7) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T7_2P_SlamDamage = 0.1f },
+                SetName = "Dreadnaught Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreadnaught Battlegear (T7) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T7_4P_RageProc = 5f },
+                SetName = "Dreadnaught Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            #endregion
+            #region Tier  8 | Siegebreaker
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Siegebreaker Plate (T8) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DevastateCritIncrease = 0.1f },
+                SetName = "Siegebreaker Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Siegebreaker Battlegear (T8) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { BonusWarrior_T8_2P_HasteProc = 1, },
+                SetName = "Siegebreaker Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HSorSLHit, new Stats() { HasteRating = 150f, }, 5f, 0f, 0.40f));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Siegebreaker Battlegear (T8) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T8_4P_MSBTCritIncrease = 0.1f },
+                SetName = "Siegebreaker Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            #endregion
+            #region Tier  9 | Wrynn's
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Wrynn's Battlegear (T9) 2 Piece Fury Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T9_2P_Crit = 0.02f },
+                SetName = "Wrynn's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Wrynn's Battlegear (T9) 2 Piece Arms Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T9_2P_ArP = 0.06f },
+                SetName = "Wrynn's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Wrynn's Battlegear (T9) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_T9_4P_SLHSCritIncrease = 0.05f },
+                SetName = "Wrynn's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Wrynn's Plate (T9) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusDevastateDamage = 0.05f },
+                SetName = "Wrynn's Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            #endregion
+            #region Tier 10 | 
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Warrior Tanking (T10) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusShieldSlamDamage = 0.2f, BonusShockwaveDamage = 0.2f },
+                SetName = "Warrior Tank T10",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
+            #endregion
+            #endregion
+            #region PvP
+            #endregion
+            #endregion
+
+            #region Professions
+            #region Tailoring
+            #region TBC
             defaultBuffs.Add(new Buff()
             {
                 Name = "Spellfire 3 Piece Bonus",
                 Group = "Set Bonuses",
+                Source = "Spellfire Tailoring",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { SpellDamageFromIntellectPercentage = 0.07f },
                 SetName = "Wrath of Spellfire",
@@ -2153,135 +4134,17 @@ namespace Rawr
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { SpellPower = 92 }, 10, 0, 0.05f));
             defaultBuffs.Add(new Buff()
             {
-                Name = "Lightbringer Raiment 4 Piece",
+                Name = "Primal Mooncloth 3 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { HolyLightCrit = .05f },
-                SetName = "Lightbringer Raiment",
-                SetThreshold = 4
+                Stats = { SpellCombatManaRegeneration = 0.05f },
+                SetName = "Primal Mooncloth",
+                SetThreshold = 3
             });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Lightbringer Raiment 2 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { FlashOfLightMultiplier = .05f },
-                SetName = "Lightbringer Raiment",
-                SetThreshold = 2
-            });
-            // Resto druid tier 4/5/6 sets
-            defaultBuffs.Add( buff = new Buff()
-            {
-                Name = "Malorne Raiment 2 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { ManaRestoreOnCast_5_15 = 120 },
-                SetName = "Malorne Raiment",
-                SetThreshold = 2
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { ManaRestore = 120f }, 0f, 0f, 0.05f));
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Nordrassil Raiment 2 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RegrowthExtraTicks = 2 },
-                SetName = "Nordrassil Raiment",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Nordrassil Raiment 4 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { LifebloomFinalHealBonus = 150 },
-                SetName = "Nordrassil Raiment",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Thunderheart Raiment 4 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusHealingTouchMultiplier = 0.05f },
-                SetName = "Thunderheart Raiment",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Frostfire Garb 2 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusManaGem = 0.25f },
-                SetName = "Frostfire Garb",
-                SetThreshold = 2
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.ManaGem, new Stats() { SpellPower = 225f }, 15f, 0f));
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Frostfire Garb 4 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { CritBonusDamage = 0.05f },
-                SetName = "Frostfire Garb",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Kirin Tor Garb 2 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { },
-                SetName = "Kirin Tor Garb",
-                SetThreshold = 2
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.MageNukeCast, new Stats() { SpellPower = 350f }, 15f, 45f, 0.25f));
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Kirin Tor Garb 4 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Mage4T8 = 1 },
-                SetName = "Kirin Tor Garb",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Khadgar's Regalia 2 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Mage2T9 = 1 },
-                SetName = "Khadgar's Regalia",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Khadgar's Regalia 4 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Mage4T9 = 1 },
-                SetName = "Khadgar's Regalia",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Duskweaver 2 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SpellPower = 18f },
-                SetName = "Duskweaver",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Duskweaver 4 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Stamina = 25f },
-                SetName = "Duskweaver",
-                SetThreshold = 4
-            });
-
+            #endregion
+            #endregion
+            #region Leatherworking
+            #region TBC
             defaultBuffs.Add(new Buff()
             {
                 Name = "Primalstrike 3 Piece Bonus",
@@ -2309,9 +4172,6 @@ namespace Rawr
                 SetName = "Strength of the Clefthoof",
                 SetThreshold = 3
             });
-
-
-            #region Windhawk (epic leather caster) set
             defaultBuffs.Add(new Buff()
             {
                 Name = "Windhawk Armor",
@@ -2322,1676 +4182,7 @@ namespace Rawr
                 SetThreshold = 3
             });
             #endregion
-            #region Moonkin tier 4/5/6 sets
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Malorne Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Malorne Regalia",
-                SetThreshold = 2
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { Mana = 120f }, 0f, 0f, 0.1f, 1));
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Malorne Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { InnervateCooldownReduction = 48.0f },
-                SetName = "Malorne Regalia",
-                SetThreshold = 4
-            });
             #endregion
-            #region Nordrassil 2-piece skipped because it has nothing to do with dps
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Nordrassil Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { StarfireBonusWithDot = 0.1f },
-                SetName = "Nordrassil Regalia",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Thunderheart Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MoonfireExtension = 3.0f },
-                SetName = "Thunderheart Regalia",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Thunderheart Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { StarfireCritChance = 0.05f },
-                SetName = "Thunderheart Regalia",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Feral Tier 7 set bonuses
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dreamwalker Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusRipDuration = 4f, BonusLacerateDamageMultiplier = 0.05f },
-                SetName = "Dreamwalker Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dreamwalker Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { TigersFuryCooldownReduction = 3f, WeaponDamage = 1.778f /*Increased Barkskin Duration*/ },
-                SetName = "Dreamwalker Battlegear",
-                SetThreshold = 4
-			});
-            #endregion
-            #region Feral Tier 8 set bonuses
-            defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
-			{
-			    Name = "Nightsong Battlegear 2 Piece Bonus",
-			    Group = "Set Bonuses",
-			    ConflictingBuffs = new List<string>(new string[] { }),
-			    Stats = { ClearcastOnBleedChance = 0.02f },
-				SetName = "Nightsong Battlegear",
-			    SetThreshold = 2
-			});
-			defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
-			{
-				Name = "Nightsong Battlegear 4 Piece Bonus",
-			    Group = "Set Bonuses",
-			    ConflictingBuffs = new List<string>(new string[] { }),
-			    Stats = { BonusSavageRoarDuration = 8f },
-				SetName = "Nightsong Battlegear",
-			    SetThreshold = 4
-			});
-            #endregion
-			#region Feral Tier 9 set bonuses
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Malfurion's Battlegear 2 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { BonusRakeDuration = 3f, BonusLacerateDamageMultiplier = 0.05f },
-				SetName = "Malfurion's Battlegear",
-				SetThreshold = 2
-			});
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Malfurion's Battlegear 4 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { BonusRipCrit = 0.05f, BonusFerociousBiteCrit = 0.05f },
-				SetName = "Malfurion's Battlegear",
-				SetThreshold = 4
-			});
-			#endregion
-			#region Moonkin Tier 7 set bonuses
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dreamwalker Garb 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusInsectSwarmDamage = 0.1f },
-                SetName = "Dreamwalker Garb",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dreamwalker Garb 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusNukeCritChance = 0.05f },
-                SetName = "Dreamwalker Garb",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Moonkin Tier 8 set bonuses
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Nightsong Garb 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { EclipseBonus = 0.15f },
-                SetName = "Nightsong Garb",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Nightsong Garb 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats(),
-                SetName = "Nightsong Garb",
-                SetThreshold = 4
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmTick, new Stats() { StarfireProc = 1f }, 0f, 0f, 0.08f, 1));
-            #endregion
-            #region Moonkin Tier 9 set bonuses
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Malfurion's Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MoonfireDotCrit = 1f },
-				SetName = "Malfurion's Regalia",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-				Name = "Malfurion's Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusMoonkinNukeDamage = 0.04f },
-				SetName = "Malfurion's Regalia",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Moonkin Tier 10 set bonuses
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Moonkin T10 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats(),
-                SetName = "Moonkin T10",
-                SetThreshold = 2
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { BonusArcaneDamageMultiplier = 0.15f, BonusNatureDamageMultiplier = 0.15f }, 6.0f, 0f, 0.06f, 1));
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Moonkin T10 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MoonkinT10CritDot = 0.05f },
-                SetName = "Moonkin T10",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Tree Tier 7 set bonuses
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dreamwalker Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { LifebloomCostReduction = 0.05f },
-                SetName = "Dreamwalker Regalia",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dreamwalker Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { NourishBonusPerHoT = 0.05f },
-                SetName = "Dreamwalker Regalia",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Tree Tier 8 set bonuses
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Nightsong Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SwiftmendBonus = 0.1f },
-                SetName = "Nightsong Regalia",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Nightsong Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RejuvenationInstantTick = 0.5f },
-                SetName = "Nightsong Regalia",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Tree Tier 9 set bonuses
-            defaultBuffs.Add(new Buff()
-            {
-				Name = "Malfurion's Garb 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { NourishCritBonus = 0.05f },
-				SetName = "Malfurion's Garb",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-				Name = "Malfurion's Garb 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RejuvenationCrit = 1.0f },
-				SetName = "Malfurion's Garb",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Warrior set bonuses
-            /* Don't believe we need these older bonuses cluttering up the list anymore
-             * However, commenting just in case!
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Destroyer Armor (T5) 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BlockValue = 100f / 2f },
-                SetName = "Destroyer Armor",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                //This can vary depending on how many mobs are being tanked and your
-                //avoidance, for now assume it procs once every 30 seconds.
-                //200 haste for 10 sec every 30 sec = 200 / 3 = 67 haste rating
-                Name = "Destroyer Armor (T5) 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { HasteRating = 67f },
-                SetName = "Destroyer Armor",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Onslaught Armor (T6) 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusCommandingShoutHP = 170f },
-                SetName = "Onslaught Armor",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Onslaught Armor (T6) 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusShieldSlamDamage = 0.1f },
-                SetName = "Onslaught Armor",
-                SetThreshold = 4
-            });
-            */
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dreadnaught Plate (T7) 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusShieldSlamDamage = 0.1f },
-                SetName = "Dreadnaught Plate",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Siegebreaker Plate (T8) 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { DevastateCritIncrease = 0.1f },
-                SetName = "Siegebreaker Plate",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dreadnaught Battlegear (T7) 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T7_2P_SlamDamage = 0.1f },
-                SetName = "Dreadnaught Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dreadnaught Battlegear (T7) 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T7_4P_RageProc = 5f },
-                SetName = "Dreadnaught Battlegear",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Siegebreaker Battlegear (T8) 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { BonusWarrior_T8_2P_HasteProc = 1, },
-                SetName = "Siegebreaker Battlegear",
-                SetThreshold = 2
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.HSorSLHit, new Stats() { HasteRating = 150f, }, 5f, 0f, 0.40f));
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Siegebreaker Battlegear (T8) 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T8_4P_MSBTCritIncrease = 0.1f },
-                SetName = "Siegebreaker Battlegear",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Wrynn's Battlegear (T9) 2 Piece Fury Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T9_2P_Crit = 0.02f },
-                SetName = "Wrynn's Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Wrynn's Battlegear (T9) 2 Piece Arms Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T9_2P_ArP = 0.06f },
-                SetName = "Wrynn's Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Wrynn's Battlegear (T9) 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T9_4P_SLHSCritIncrease = 0.05f },
-                SetName = "Wrynn's Battlegear",
-                SetThreshold = 4
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Wrynn's Plate (T9) 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusDevastateDamage = 0.05f },
-                SetName = "Wrynn's Plate",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Warrior Tanking (T10) 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusShieldSlamDamage = 0.2f, BonusShockwaveDamage = 0.2f },
-                SetName = "Warrior Tank T10",
-                SetThreshold = 2
-            });
-            #endregion
-
-            #region Resto Shammy set bonuses: Removed BC sets as we push to Ulduar
-            /*defaultBuffs.Add(new Buff()
-            {
-                Name = "Cyclone Raiment 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Cyclone Raiment",
-                Stats = { ManaSpringMp5Increase = 7.5f },
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Cataclysm Raiment 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Cataclysm Raiment",
-                Stats = { LHWManaReduction = .05f },
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Skyshatter Raiment 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Skyshatter Raiment",
-                Stats = { CHManaReduction = .1f },
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Skyshatter Raiment 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Skyshatter Raiment",
-                Stats = { CHHealIncrease = .05f },
-                SetThreshold = 4
-            });*/
-            #endregion
-
-            #region Restoration Shaman set bonuses
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Earthshatter Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Earthshatter Regalia",
-                Stats = { WaterShieldIncrease = .1f },
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Earthshatter Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Earthshatter Regalia",
-                Stats = { CHHWHealIncrease = .05f },
-                SetThreshold = 4
-            });
-            // Tier 8
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Worldbreaker Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Worldbreaker Regalia",
-                Stats = { RTCDDecrease = 1f },
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Worldbreaker Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Worldbreaker Regalia",
-                Stats = { CHCTDecrease = .2f },
-                SetThreshold = 4
-            });
-            #endregion
-
-            #region Elemental Shaman set bonuses
-            //Tier 6																																																																																		
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Skyshatter Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Skyshatter Regalia",
-                Stats = { Mp5 = 15f, CritRating = 35f, SpellPower = 45f },
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Skyshatter Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Skyshatter Regalia",
-                Stats = { LightningBoltDamageModifier = 5f },
-                SetThreshold = 4
-            });
-            //Tier 7																																																																																				
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Earthshatter Garb 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Earthshatter Garb",
-                Stats = { LightningBoltCostReduction = 5f },
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Earthshatter Garb 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Earthshatter Garb",
-                Stats = { BonusLavaBurstCritDamage = 10f },
-                SetThreshold = 4
-            });
-
-            //Tier 8
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Worldbreaker Garb 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Worldbreaker Garb",
-                Stats = { FlameShockDoTCanCrit = 1f },
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Worldbreaker Garb 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Worldbreaker Garb",
-                Stats = { LightningBoltCritDamageModifier = 0.08f },
-                SetThreshold = 4
-            });
-
-            // Tier 9
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Thrall's/Nobundo's Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Nobundo's Regalia",
-                Stats = { BonusFlameShockDuration = 9f },
-                SetThreshold = 2
-            });
-
-			defaultBuffs.Add(new Buff()
-			{
-                Name = "Thrall's/Nobundo's Regalia 4 Piece Bonus",
-			    Group = "Set Bonuses",
-			    ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Nobundo's Regalia",
-			    Stats = { BonusLavaBurstDamageMultiplier = 0.2f },
-			    SetThreshold = 4
-			});
-
-            #endregion
-
-            #region Enhancement Shaman Set Bonuses
-            //Enhancement Shaman Tier 7 Set Bonuses
-            
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Earthshatter Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Earthshatter Battlegear",
-                Stats = { BonusLSDamage = 0.1f },
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Earthshatter Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Earthshatter Battlegear",
-                Stats = { BonusFlurryHaste = 0.05f },
-                SetThreshold = 4
-            });
-
-            //Enhancement Shaman Tier 8 Set Bonuses
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Worldbreaker Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Worldbreaker Battlegear",
-                Stats = { BonusLLSSDamage = 0.2f },
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Worldbreaker Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Worldbreaker Battlegear",
-                Stats = { BonusMWFreq = 0.2f },
-                SetThreshold = 4
-            });
-
-            //Enhancement Shaman Tier 9 Set Bonuses
-
-            defaultBuffs.Add(buff = new Buff()
-            {
-				Name = "Nobundo's Battlegear 2 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Enhance2T9 = 1 },
-                SetName = "Nobundo's Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(buff = new Buff()
-            {
-				Name = "Nobundo's Battlegear 4 Piece",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Enhance4T9 = 1 },
-				SetName = "Nobundo's Battlegear",
-                SetThreshold = 4
-            });
-            #endregion
-
-            #region Hunter Set Bonuses
-            #region Demon Stalker Armor (Tier 4)
-            // 2-piece bonus is FD-resist
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Demon Stalker Armor 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Demon Stalker Armor",
-                Stats = { MultiShotManaDiscount = .1f },
-                SetThreshold = 4
-            });
-            #endregion
-            #region Rift Stalker Armor (Tier 5)
-            // 2-piece bonus is pet healing
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Rift Stalker Armor 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Rift Stalker Armor",
-                Stats = { BonusSteadyShotCrit = .05f },
-                SetThreshold = 4
-            });
-            #endregion
-            #region Gronnstalker's Armor (Tier 6)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gronnstalker's Armor 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Gronnstalker's Armor",
-                Stats = { BonusAspectOfTheViperGain = 0.25f },
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gronnstalker's Armor 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Gronnstalker's Armor",
-                Stats = { BonusSteadyShotDamageMultiplier = .1f },
-                SetThreshold = 4
-            });
-            #endregion
-            #region Cryptstalker Battlegear (Tier 7)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Cryptstalker Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Cryptstalker Battlegear",
-                Stats = { BonusPetDamageMultiplier = 0.05f },
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Cryptstalker Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Cryptstalker Battlegear",
-                Stats = { BonusAspectOfTheViperAttackSpeed = 0.2f },
-                SetThreshold = 4
-            });
-            #endregion
-            #region Scourgestalker Battlegear (Tier 8)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Scourgestalker Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Scourgestalker Battlegear",
-                Stats = { BonusSerpentStingDamage = 0.1f },
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Scourgestalker Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Scourgestalker Battlegear",
-                Stats = { BonusSteadyShotAttackPowerBuff = 1 },
-                SetThreshold = 4
-            });
-            #endregion
-            #region Windrunner's Pursuit & Windrunner's Battlegear (Tier 9)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Windrunner's Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Windrunner's Battlegear",
-                Stats = { BonusSerpentStingCanCrit = 1 },
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Windrunner's Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Windrunner's Battlegear",
-                Stats = { BonusSteadyShotPetAttackPowerBuff = 1 },
-                SetThreshold = 4
-            });
-            #endregion
-            #region Gladiator's Pursuit (Season 1)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 35 },
-                SetName = "Gladiator's Pursuit",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MultiShotCooldownReduction = 1 },
-                SetName = "Gladiator's Pursuit",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Merciless Gladiator's Pursuit (Season 2)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Merciless Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 35 },
-                SetName = "Merciless Gladiator's Pursuit",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Merciless Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MultiShotCooldownReduction = 1 },
-                SetName = "Merciless Gladiator's Pursuit",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Vengeful Gladiator's Pursuit (Season 3)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Vengeful Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 35 },
-                SetName = "Vengeful Gladiator's Pursuit",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Vengeful Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MultiShotCooldownReduction = 1 },
-                SetName = "Vengeful Gladiator's Pursuit",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Brutal Gladiator's Pursuit (Season 4)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Brutal Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 35 },
-                SetName = "Brutal Gladiator's Pursuit",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Brutal Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MultiShotCooldownReduction = 1 },
-                SetName = "Brutal Gladiator's Pursuit",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Savage Gladiator's Pursuit (Season 5.1)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Savage Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50 },
-                SetName = "Savage Gladiator's Pursuit",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Savage Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { TrapCooldownReduction = 2 },
-                SetName = "Savage Gladiator's Pursuit",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Hateful Gladiator's Pursuit (Season 5.2)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Hateful Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50 },
-                SetName = "Hateful Gladiator's Pursuit",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Hateful Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { TrapCooldownReduction = 2 },
-                SetName = "Hateful Gladiator's Pursuit",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Deadly Gladiator's Pursuit (Season 5.3)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Deadly Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50 },
-                SetName = "Deadly Gladiator's Pursuit",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Deadly Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { TrapCooldownReduction = 2 },
-                SetName = "Deadly Gladiator's Pursuit",
-                SetThreshold = 4
-            });
-            #endregion
-            #region Furious Gladiator's Pursuit (Season 6)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Furious Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50 },
-                SetName = "Furious Gladiator's Pursuit",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Furious Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { TrapCooldownReduction = 2 },
-                SetName = "Furious Gladiator's Pursuit",
-                SetThreshold = 4
-            });
-            #endregion
-            #endregion
-
-            #region Holy Priest bonuses
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Primal Mooncloth 3 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SpellCombatManaRegeneration = 0.05f },
-                SetName = "Primal Mooncloth",
-                SetThreshold = 3
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Vestments of Absolution 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusPoHManaCostReductionMultiplier = 0.1f },
-                SetName = "Vestments of Absolution",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Vestments of Absolution 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusGHHealingMultiplier = 0.05f },
-                SetName = "Vestments of Absolution",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Absolution Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SWPDurationIncrease = 3f },
-                SetName = "Absolution Regalia",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Absolution Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusMindBlastMultiplier = 0.1f },
-                SetName = "Absolution Regalia",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Garb of Faith 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MindBlastCostReduction = 0.1f },
-                SetName = "Garb of Faith",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Garb of Faith 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { ShadowWordDeathCritIncrease = 0.1f },
-                SetName = "Garb of Faith",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Avatar Raiment 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { ManaGainOnGreaterHealOverheal = 100f },
-                SetName = "Avatar Raiment",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Avatar Raiment 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RenewDurationIncrease = 3f },
-                SetName = "Avatar Raiment",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Regalia of Faith 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { PrayerOfMendingExtraJumps = 1 },
-                SetName = "Regalia of Faith",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Regalia of Faith 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { GreaterHealCostReduction = 0.05f },
-                SetName = "Regalia of Faith",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gladiator's Investiture 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50f },
-                SetName = "Gladiator's Investiture",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gladiator's Investiture 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { WeakenedSoulDurationDecrease = 2f },
-                SetName = "Gladiator's Investiture",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gladiator's Raiment 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50f },
-                SetName = "Gladiator's Raiment",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gladiator's Raiment 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { WeakenedSoulDurationDecrease = 2f },
-                SetName = "Gladiator's Raiment",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Sanctification Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { PrayerOfHealingExtraCrit = 0.1f },
-                SetName = "Sanctification Regalia",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Sanctification Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { PWSBonusSpellPowerProc = 250 },
-                SetName = "Sanctification Regalia",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Sanctification Garb 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { DevouringPlagueBonusDamage = 0.15f },
-                SetName = "Sanctification Garb",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Sanctification Garb 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MindBlastHasteProc = 240 },
-                SetName = "Sanctification Garb",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Velen's Raiment 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { PriestHeal_T9_2pc = 0.2f },
-                SetName = "Velen's Raiment",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Velen's Raiment 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { PriestHeal_T9_4pc = 0.1f },
-                SetName = "Velen's Raiment",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Velen's Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { PriestDPS_T9_2pc = 6 },
-                SetName = "Velen's Regalia",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Velen's Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { PriestDPS_T9_4pc = 0.05f },
-                SetName = "Velen's Regalia",
-                SetThreshold = 4
-            });
-
-            #endregion
-
-            #region Rogue set bonuses
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Netherblade 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusSnDDuration = 3f },
-                SetName = "Netherblade",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Netherblade 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { CPOnFinisher = .15f },
-                SetName = "Netherblade",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Deathmantle 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusEvisEnvenomDamage = 40f },
-                SetName = "Deathmantle",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Deathmantle 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusFreeFinisher = 1f },
-                SetName = "Deathmantle",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Slayer's Armor 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusSnDHaste = .05f },
-                SetName = "Slayer's Armor",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Slayer's Armor 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusCPGDamage = .06f },
-                SetName = "Slayer's Armor",
-                SetThreshold = 4
-            });
-
-            //T7
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Bonescythe Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RogueT7TwoPieceBonus = 0.1f },
-                SetName = "Bonescythe Battlegear",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Bonescythe Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RogueT7FourPieceBonus = .05f },
-                SetName = "Bonescythe Battlegear",
-                SetThreshold = 4
-            });
-
-            //T8
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Terrorblade Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RogueT8TwoPieceBonus = 1f },
-                SetName = "Terrorblade Battlegear",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Terrorblade Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RogueT8FourPieceBonus = 1f },
-                SetName = "Terrorblade Battlegear",
-                SetThreshold = 4
-            });
-
-            //T9 - Alliance (VanCleef's) ; Horde (Garona's)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "VanCleef's Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { ReduceEnergyCostFromRupture = 40f },
-                SetName = "VanCleef's Battlegear",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "VanCleef's Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusCPGCritChance = .05f },
-                SetName = "VanCleef's Battlegear",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Garona's Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { ReduceEnergyCostFromRupture = 40f },
-                SetName = "Garona's Battlegear",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Garona's Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusCPGCritChance = .05f },
-                SetName = "Garona's Battlegear",
-                SetThreshold = 4
-            });
-            #endregion
-
-            #region Paladin Set Bonuses
-            //Holy T7
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Redemption Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { HolyShockCrit = .1f },
-                SetName = "Redemption Regalia",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Redemption Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { HolyLightPercentManaReduction = .05f },
-                SetName = "Redemption Regalia",
-                SetThreshold = 4
-            });
-
-            //Retribution T7
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Redemption Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { DivineStormMultiplier = .1f },
-                SetName = "Redemption Battlegear",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Redemption Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { JudgementCDReduction = 1f },
-                SetName = "Redemption Battlegear",
-                SetThreshold = 4
-            });
-            
-            //Protection T7
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Redemption Plate 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusHammerOfTheRighteousMultiplier = .1f },
-                SetName = "Redemption Plate",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Redemption Plate 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { DivineProtectionDurationBonus = 3f },
-                SetName = "Redemption Plate",
-                SetThreshold = 4
-            });
-
-            //Protection T8
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Aegis Plate 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = 
-                {
-                	BonusSealOfVengeanceDamageMultiplier = .1f,
-                	BonusSealOfCorruptionDamageMultiplier = .1f,
-                	BonusSealOfRighteousnessDamageMultiplier = .1f,
-                },
-                SetName = "Aegis Plate",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Aegis Plate 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats(),
-                SetName = "Aegis Plate",
-                SetThreshold = 4
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.ShieldofRighteousness, new Stats() { ShieldOfRighteousnessBlockValue = 225f }, 6.0f, 0.0f, 1.0f));
-
-            //Protection T9
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Turalyon's Plate 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    BonusHammerOfTheRighteousMultiplier = .05f,
-                    // HandOfReckoningCooldownReduction = 2f // Hand of Reckoning is currently unmodeled.
-                },
-                SetName = "Turalyon's Plate",
-                SetThreshold = 2
-            });
-
-            /* Divine Protection and Forbearance are currently unmodeled.
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Turalyon's Plate 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    DivineProtectionCooldownReduction = 30f,
-                    ForbearanceDurationReduction = 30f,
-                },
-                SetName = "Turalyon's Plate",
-                SetThreshold = 2
-            });
-            */
-
-            //Protection T10
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Paladin Tank T10 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    BonusHammerOfTheRighteousMultiplier = .2f
-                },
-                SetName = "Paladin Tank T10",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Paladin Tank T10 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats(),
-                SetName = "Paladin Tank T10",
-                SetThreshold = 4
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivinePlea, new Stats() { Dodge = .12f }, 10.0f, 0.0f, 1.0f));
-
-            //Retribution T8
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Aegis Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { ExorcismMultiplier = .1f, HammerOfWrathMultiplier = .1f },
-                SetName = "Aegis Battlegear",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Aegis Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { CrusaderStrikeCrit = .1f, DivineStormCrit = .1f },
-                SetName = "Aegis Battlegear",
-                SetThreshold = 4
-            });
-
-            //Retribution T9
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Turalyon's Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { RighteousVengeanceCanCrit = 1f },
-				SetName = "Turalyon's Battlegear",
-                SetThreshold = 2
-			});
-
-			defaultBuffs.Add(new Buff()
-			{
-                Name = "Turalyon's Battlegear 4 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { JudgementCrit = .05f },
-				SetName = "Turalyon's Battlegear",
-				SetThreshold = 4
-			});
-
-            //Holy T8
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Aegis Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { HolyShockHoTOnCrit = .15f },
-                SetName = "Aegis Regalia",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Aegis Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SacredShieldICDReduction = 2f },
-                SetName = "Aegis Regalia",
-                SetThreshold = 4
-            });
-            #endregion
-
-            #region Death Knight Set Bonuses
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Scourgeborne Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { 
-                    BonusDeathStrikeCrit = 0.05f, 
-                    BonusObliterateCrit = 0.05f, 
-                    BonusScourgeStrikeCrit = 0.05f 
-                },
-                SetName = "Scourgeborne Battlegear",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Scourgeborne Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    BonusRPFromDeathStrike = 5f,
-                    BonusRPFromObliterate = 5f,
-                    BonusRPFromScourgeStrike = 5f
-                },
-                SetName = "Scourgeborne Battlegear",
-                SetThreshold = 4
-            });
-
-            // DK DPS T8
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Darkruned Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    BonusDeathCoilCrit = 0.08f,
-                    BonusFrostStrikeCrit = 0.08f
-                },
-                SetName = "Darkruned Battlegear",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Darkruned Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    BonusPerDiseaseBloodStrikeDamage = 0.20f,
-                    BonusPerDiseaseHeartStrikeDamage = 0.20f,
-                    BonusPerDiseaseObliterateDamage = 0.20f,
-                    BonusPerDiseaseScourgeStrikeDamage = 0.20f
-                },
-                SetName = "Darkruned Battlegear",
-                SetThreshold = 4
-            });
-
-            // DK DPS T9
-            Stats DK2T9 = new Stats();
-            DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, new Stats() { Strength = 180f }, 15f, 45f, .5f));
-            DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, new Stats() { Strength = 180f }, 15f, 45f, .5f));
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Koltira's Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = DK2T9,
-                SetName = "Koltira's Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Koltira's Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    DiseasesCanCrit = 1f
-                },
-                SetName = "Koltira's Battlegear",
-                SetThreshold = 4
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Thassarian's Battlegear 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = DK2T9,
-                SetName = "Thassarian's Battlegear",
-                SetThreshold = 2
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Thassarian's Battlegear 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    DiseasesCanCrit = 1f
-                },
-                SetName = "Thassarian's Battlegear",
-                SetThreshold = 4
-            });
-
-            // DK DPS T10
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "DK DPS 2T10",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    BonusHeartStrikeMultiplier = .07f,
-                    BonusScourgeStrikeMultiplier = .1f,
-                    BonusObliterateMultiplier = .1f
-                },
-                SetName = "DK DPS T10",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "DK DPS 4T10",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats =
-                {
-                    BonusPhysicalDamageMultiplier = .03f,
-                    BonusSpellPowerMultiplier = .03f
-                },
-                SetName = "DK DPS T10",
-                SetThreshold = 4
-            });
-
-            // DK Tank T7
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Scourgeborne Plate 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusPlagueStrikeCrit = 0.10f },
-                SetName = "Scourgeborne Plate",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Scourgeborne Plate 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusIceboundFortitudeDuration = 3f },
-                SetName = "Scourgeborne Plate",
-                SetThreshold = 4
-            });
-
-            // DK Tank T8
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Darkruned Plate 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusRuneStrikeMultiplier = 0.10f },
-                SetName = "Darkruned Plate",
-                SetThreshold = 2
-            });
-
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Darkruned Plate 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusAntiMagicShellDamageReduction = 0.10f },
-                SetName = "Darkruned Plate",
-                SetThreshold = 4
-            });
             #endregion
 
             #region Onyxia Drops set bonuses
@@ -4000,7 +4191,7 @@ namespace Rawr
             setEffect.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = 2521 }, 0, 45, 0.2f));
 			setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { FireDamage = 2862 }, 0, 45, 0.2f));
             // Not sure what the stat for this DoT effect would be for damage classes
-//            setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() {  }, 0, 45, 0.2f));
+            //setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() {  }, 0, 45, 0.2f));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Purified Shard of the Gods 2 Piece Bonus (10 man version)",
