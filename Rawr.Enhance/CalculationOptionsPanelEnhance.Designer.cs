@@ -31,6 +31,9 @@
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.btnStatsGraph = new System.Windows.Forms.Button();
+            this.comboBoxCalculationToGraph = new System.Windows.Forms.ComboBox();
             this.chkStatsSP = new System.Windows.Forms.CheckBox();
             this.chkStatsArP = new System.Windows.Forms.CheckBox();
             this.chkStatsHaste = new System.Windows.Forms.CheckBox();
@@ -40,7 +43,6 @@
             this.chkStatsAP = new System.Windows.Forms.CheckBox();
             this.chkStatsAgility = new System.Windows.Forms.CheckBox();
             this.chkStatsStrength = new System.Windows.Forms.CheckBox();
-            this.btnStatsGraph = new System.Windows.Forms.Button();
             this.labelSRMana = new System.Windows.Forms.Label();
             this.trackbarSRMana = new System.Windows.Forms.TrackBar();
             this.label9 = new System.Windows.Forms.Label();
@@ -76,7 +78,6 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.comboBoxCalculationToGraph = new System.Windows.Forms.ComboBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -103,9 +104,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.comboBoxCalculationToGraph);
             this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.btnStatsGraph);
             this.tabPage1.Controls.Add(this.labelSRMana);
             this.tabPage1.Controls.Add(this.trackbarSRMana);
             this.tabPage1.Controls.Add(this.label9);
@@ -129,6 +128,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.btnStatsGraph);
+            this.groupBox1.Controls.Add(this.comboBoxCalculationToGraph);
             this.groupBox1.Controls.Add(this.chkStatsSP);
             this.groupBox1.Controls.Add(this.chkStatsArP);
             this.groupBox1.Controls.Add(this.chkStatsHaste);
@@ -140,10 +142,38 @@
             this.groupBox1.Controls.Add(this.chkStatsStrength);
             this.groupBox1.Location = new System.Drawing.Point(10, 246);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(248, 137);
+            this.groupBox1.Size = new System.Drawing.Size(248, 199);
             this.groupBox1.TabIndex = 58;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Stats Graph Options";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 137);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(82, 13);
+            this.label7.TabIndex = 62;
+            this.label7.Text = "Rating to Graph";
+            // 
+            // btnStatsGraph
+            // 
+            this.btnStatsGraph.Location = new System.Drawing.Point(62, 163);
+            this.btnStatsGraph.Name = "btnStatsGraph";
+            this.btnStatsGraph.Size = new System.Drawing.Size(113, 30);
+            this.btnStatsGraph.TabIndex = 61;
+            this.btnStatsGraph.Text = "Display Stats Graph";
+            this.btnStatsGraph.UseVisualStyleBackColor = true;
+            this.btnStatsGraph.Click += new System.EventHandler(this.btnStatsGraph_Click);
+            // 
+            // comboBoxCalculationToGraph
+            // 
+            this.comboBoxCalculationToGraph.FormattingEnabled = true;
+            this.comboBoxCalculationToGraph.Location = new System.Drawing.Point(89, 134);
+            this.comboBoxCalculationToGraph.Name = "comboBoxCalculationToGraph";
+            this.comboBoxCalculationToGraph.Size = new System.Drawing.Size(148, 21);
+            this.comboBoxCalculationToGraph.TabIndex = 60;
+            this.comboBoxCalculationToGraph.SelectedIndexChanged += new System.EventHandler(this.comboBoxCalculationToGraph_SelectedIndexChanged);
             // 
             // chkStatsSP
             // 
@@ -243,16 +273,6 @@
             this.chkStatsStrength.Text = "Strength";
             this.chkStatsStrength.UseVisualStyleBackColor = true;
             this.chkStatsStrength.CheckedChanged += new System.EventHandler(this.chkStatsStrength_CheckedChanged);
-            // 
-            // btnStatsGraph
-            // 
-            this.btnStatsGraph.Location = new System.Drawing.Point(82, 415);
-            this.btnStatsGraph.Name = "btnStatsGraph";
-            this.btnStatsGraph.Size = new System.Drawing.Size(113, 30);
-            this.btnStatsGraph.TabIndex = 57;
-            this.btnStatsGraph.Text = "Display Stats Graph";
-            this.btnStatsGraph.UseVisualStyleBackColor = true;
-            this.btnStatsGraph.Click += new System.EventHandler(this.btnStatsGraph_Click);
             // 
             // labelSRMana
             // 
@@ -695,15 +715,6 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
-            // comboBoxCalculationToGraph
-            // 
-            this.comboBoxCalculationToGraph.FormattingEnabled = true;
-            this.comboBoxCalculationToGraph.Location = new System.Drawing.Point(11, 388);
-            this.comboBoxCalculationToGraph.Name = "comboBoxCalculationToGraph";
-            this.comboBoxCalculationToGraph.Size = new System.Drawing.Size(247, 21);
-            this.comboBoxCalculationToGraph.TabIndex = 59;
-            this.comboBoxCalculationToGraph.SelectedIndexChanged += new System.EventHandler(this.comboBoxCalculationToGraph_SelectedIndexChanged);
-            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -758,7 +769,6 @@
         private System.Windows.Forms.TrackBar trackbarSRMana;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Button btnStatsGraph;
         private System.Windows.Forms.NumericUpDown CB_InBackPerc;
         private System.Windows.Forms.TextBox TB_BossInfo;
         private System.Windows.Forms.Label label1;
@@ -781,7 +791,9 @@
         private System.Windows.Forms.CheckBox chkStatsExp;
         private System.Windows.Forms.CheckBox chkStatsHit;
         private System.Windows.Forms.CheckBox chkStatsCrit;
+        private System.Windows.Forms.Button btnStatsGraph;
         private System.Windows.Forms.ComboBox comboBoxCalculationToGraph;
+        private System.Windows.Forms.Label label7;
 
     }
 }
