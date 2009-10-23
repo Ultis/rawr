@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Rawr.DPSDK
 {
@@ -26,8 +27,17 @@ namespace Rawr.DPSDK
             get { return character; }
             set
             {
+                if (character != null && character.CalculationOptions != null && character.CalculationOptions is CalculationOptionsDPSDK)
+                {
+                    ((CalculationOptionsDPSDK)character.CalculationOptions).PropertyChanged -= new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
+                }
+
                 character = value;
-                LoadCalculationOptions();
+                if (character.CalculationOptions == null) character.CalculationOptions = new CalculationOptionsDPSDK();
+                LayoutRoot.DataContext = Character.CalculationOptions;
+
+                ((CalculationOptionsDPSDK)character.CalculationOptions).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
+
             }
         }
 
@@ -38,6 +48,11 @@ namespace Rawr.DPSDK
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsDPSDK();
 
             _loadingCalculationOptions = false;
+        }
+
+        void CalculationOptionsPanelDPSDK_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Character.OnCalculationsInvalidated();
         }
     }
 }

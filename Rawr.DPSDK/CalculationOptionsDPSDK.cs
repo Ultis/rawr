@@ -98,8 +98,38 @@ namespace Rawr.DPSDK
 		private Rotation _rotation = null;
 		public Rotation rotation
 		{
-            get { if (_rotation == null) return new Rotation(); else return _rotation; }
-            set { _rotation = value; OnPropertyChanged("rotation"); }
+            get { return _rotation; }
+            set
+            {
+                if (_rotation == null) _rotation = new Rotation();
+                _rotation.ManagedRP = value.ManagedRP;
+                _rotation.AvgDiseaseMult = value.AvgDiseaseMult;
+                _rotation.BloodPlague = value.BloodPlague;
+                _rotation.BloodStrike = value.BloodStrike;
+                _rotation.CurRotationDuration = value.CurRotationDuration;
+                _rotation.curRotationType = value.curRotationType;
+                _rotation.DancingRuneWeapon = value.DancingRuneWeapon;
+                _rotation.DeathCoil = value.DeathCoil;
+                _rotation.DeathStrike = value.DeathStrike;
+                _rotation.DiseaseUptime = value.DiseaseUptime;
+                _rotation.FrostFever = value.FrostFever;
+                _rotation.FrostStrike = value.FrostStrike;
+                _rotation.GargoyleDuration = value.GargoyleDuration;
+                _rotation.GCDTime = value.GCDTime;
+                _rotation.GhoulFrenzy = value.GhoulFrenzy;
+                _rotation.HeartStrike = value.HeartStrike;
+                _rotation.Horn = value.Horn;
+                _rotation.HowlingBlast = value.HowlingBlast;
+                _rotation.IcyTouch = value.IcyTouch;
+                _rotation.NumDisease = value.NumDisease;
+                _rotation.Obliterate = value.Obliterate;
+                _rotation.Pestilence = value.Pestilence;
+                _rotation.PlagueStrike = value.PlagueStrike;
+                _rotation.presence = value.presence;
+                _rotation.PTRCalcs = value.PTRCalcs;
+                _rotation.RP = value.RP;
+                _rotation.ScourgeStrike = value.ScourgeStrike;
+                OnPropertyChanged("rotation"); }
 		}
 		
 		private bool _TalentsSaved = false;
