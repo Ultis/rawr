@@ -1,4 +1,4 @@
-﻿namespace Rawr.Enhance
+﻿namespace Rawr.Base
 {
     partial class Graph
     {

@@ -77,12 +77,6 @@
     <Compile Include="ComparisonCalculationsEnhance.cs" />
     <Compile Include="EnhSim.cs" />
     <Compile Include="Gemming.cs" />
-    <Compile Include="Graph.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Graph.designer.cs">
-      <DependentUpon>Graph.cs</DependentUpon>
-    </Compile>
     <Compile Include="OldCode.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -98,10 +92,6 @@
   <ItemGroup>
     <EmbeddedResource Include="CalculationOptionsPanelEnhance.resx">
       <DependentUpon>CalculationOptionsPanelEnhance.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Graph.resx">
-      <DependentUpon>Graph.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
