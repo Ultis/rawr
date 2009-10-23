@@ -27,7 +27,7 @@ namespace Rawr.Base
             pictureBoxGraph.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
-        public void SetupGraph(Character character, Stats[] statsList, string explanatoryText, string yAxisName, string calculation)
+        public void SetupGraph(Character character, Stats[] statsList, string explanatoryText, string calculation)
         {
             Cursor.Current = Cursors.WaitCursor;
             this.Text = "Graph of " + calculation;
@@ -157,18 +157,20 @@ namespace Rawr.Base
             Int32 zeroPoint = (int)(maxDpsChange * (graphHeight - 48) / DpsVariance) + 20;
             g.DrawLine(ZeroLine, graphStart, zeroPoint, graphEnd, zeroPoint);
             formatTick.Alignment = StringAlignment.Near;
-            g.DrawString(yAxisName + "  0", tickFont, black200brush, graphStart - 50, zeroPoint + 10, formatTick);
+            StringFormat formatName = new StringFormat(StringFormatFlags.DirectionVertical);
+            g.DrawString(calculation, tickFont, black200brush, graphStart - 50, graphHeight / 2, formatName);
+            g.DrawString("0", tickFont, black200brush, graphStart - 20, zeroPoint + 10, formatTick);
             g.DrawString(maxDpsChange.ToString("F1", CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, 30, formatTick);
             g.DrawString(minDpsChange.ToString("F1", CultureInfo.InvariantCulture), tickFont, black200brush, graphStart - 50, graphHeight - 12, formatTick);
             float pointY = (int)(maxDpsChange * .75f * (graphHeight - 48) / DpsVariance) + 20;
             g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
-            g.DrawString((maxDpsChange * .25f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 12, formatTick);
+            g.DrawString((maxDpsChange * .25f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 10, formatTick);
             pointY = (int)(maxDpsChange * .5f * (graphHeight - 48) / DpsVariance) + 20;
             g.DrawLine(black150, graphStart, pointY, graphEnd, pointY);
-            g.DrawString((maxDpsChange * .5f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black150brush, graphStart - 50, pointY + 12, formatTick);
+            g.DrawString((maxDpsChange * .5f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black150brush, graphStart - 50, pointY + 10, formatTick);
             pointY = (int)(maxDpsChange * .25f * (graphHeight - 48) / DpsVariance) + 20;
             g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
-            g.DrawString((maxDpsChange * .75f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 12, formatTick);
+            g.DrawString((maxDpsChange * .75f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 10, formatTick);
             pointY = (int)((maxDpsChange - minDpsChange * .75f) * (graphHeight - 48) / DpsVariance) + 20;
             g.DrawLine(black75, graphStart, pointY, graphEnd, pointY);
             g.DrawString((minDpsChange * .75f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 12, formatTick);
@@ -180,7 +182,7 @@ namespace Rawr.Base
             g.DrawString((minDpsChange * .25f).ToString("F1", CultureInfo.InvariantCulture), tickFont, black75brush, graphStart - 50, pointY + 12, formatTick);
             #endregion
 
-            #region Line Names
+            #region Key Legend 
             Font nameFont = new Font("Calibri", 14, FontStyle.Bold);
             int nameX = (int)(graphWidth * .6f + graphStart);
             for (int index = 0; index < statsList.Length; index++)

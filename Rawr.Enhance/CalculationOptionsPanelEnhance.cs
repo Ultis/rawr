@@ -396,7 +396,7 @@ namespace Rawr.Enhance
             string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
                          "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
                          "The vertical axis shows the amount of dps added or lost";
-            graph.SetupGraph(Character, statsList, explanatoryText, "DPS", _calcOpts.CalculationToGraph);
+            graph.SetupGraph(Character, statsList, explanatoryText, _calcOpts.CalculationToGraph);
             graph.Show();
         }
 
