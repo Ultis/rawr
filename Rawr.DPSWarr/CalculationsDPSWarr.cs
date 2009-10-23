@@ -965,7 +965,6 @@ These numbers to do not include racial bonuses.",
              */
             #endregion
             
-
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffs.Add(b);
             }

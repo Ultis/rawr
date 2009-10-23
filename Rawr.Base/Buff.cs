@@ -20,6 +20,27 @@ namespace Rawr
         public string Name;
         public string Group;
         public Stats Stats = new Stats();
+        public List<CharacterClass> _allowedClasses = null;
+        public List<CharacterClass> AllowedClasses
+        {
+            get
+            {
+                return _allowedClasses ??
+                    (_allowedClasses = new List<CharacterClass>(new CharacterClass[] {
+                        CharacterClass.DeathKnight,
+                        CharacterClass.Druid,
+                        CharacterClass.Hunter,
+                        CharacterClass.Mage,
+                        CharacterClass.Paladin,
+                        CharacterClass.Priest,
+                        CharacterClass.Rogue,
+                        CharacterClass.Shaman,
+                        CharacterClass.Warlock,
+                        CharacterClass.Warrior,
+                    }));
+            }
+            set { _allowedClasses = value; }
+        }
         public string SetName;
         public string Source;
         public int SetThreshold = 0;
@@ -1941,7 +1962,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BloodlustProc = 0.8f },
                 SetName = "Malorne Harness",
-                SetThreshold = 2
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid },
             });
             defaultBuffs.Add(new Buff()
             {
@@ -1950,7 +1972,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusArmor = 1400, CatFormStrength = 30 },
                 SetName = "Malorne Harness",
-                SetThreshold = 4
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid },
             });
             defaultBuffs.Add(new Buff()
             {
@@ -1959,7 +1982,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusShredDamage = 75/*, BonusLacerateDamage = 15/5*/},
                 SetName = "Nordrassil Harness",
-                SetThreshold = 4
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid },
             });
             defaultBuffs.Add(new Buff()
             {
@@ -1968,7 +1992,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { MangleCatCostReduction = 5, BonusMangleBearThreat = 0.15f },
                 SetName = "Thunderheart Harness",
-                SetThreshold = 2
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid },
             });
             defaultBuffs.Add(new Buff()
             {
@@ -1977,7 +2002,8 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusRipDamageMultiplier = .15f, BonusFerociousBiteDamageMultiplier = .15f, BonusSwipeDamageMultiplier = .15f },
                 SetName = "Thunderheart Harness",
-                SetThreshold = 4
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid },
             });
             defaultBuffs.Add(new Buff()
             {
