@@ -16,24 +16,11 @@ namespace Rawr.ProtPaladin
 		public CalculationOptionsPanelProtPaladin()
 		{
 			InitializeComponent();
-			armorBosses.Add(3800, ": Shade of Aran");
-			armorBosses.Add(4700, ": Roar");
-			armorBosses.Add(5500, ": Netherspite");
-			armorBosses.Add(6100, ": Julianne, Curator");
-			armorBosses.Add(6200, ": Karathress, Vashj, Solarian, Kael'thas, Winterchill, Anetheron, Kaz'rogal, Azgalor, Archimonde, Teron, Shahraz");
-			armorBosses.Add(6700, ": Maiden, Illhoof");
-			armorBosses.Add(7300, ": Strawman");
-			armorBosses.Add(7500, ": Attumen");
-			armorBosses.Add(7600, ": Romulo, Nightbane, Malchezaar, Doomwalker");
-			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
-			armorBosses.Add(8200, ": Midnight");
-			armorBosses.Add(8800, ": Void Reaver");
-			armorBosses.Add((int)StatConversion.NPC_ARMOR[80-80], ": Level 80 Warrior Type Creature");//9729
-			armorBosses.Add((int)StatConversion.NPC_ARMOR[81-80], ": Level 81 Warrior Type Creature");//10026 own value
-			armorBosses.Add((int)StatConversion.NPC_ARMOR[82-80], ": Level 82 Warrior Type Creature");//10331 own value
-            armorBosses.Add((int)StatConversion.NPC_ARMOR[83-80], ": Wotlk Bosses in 3.1");
-            armorBosses.Add(13100, ": Tier 7 Bosses in 3.08");
-		}
+            armorBosses.Add((int)StatConversion.NPC_ARMOR[80 - 80], "Level 80 Creatures");
+            armorBosses.Add((int)StatConversion.NPC_ARMOR[81 - 80], "Level 81 Creatures");
+            armorBosses.Add((int)StatConversion.NPC_ARMOR[82 - 80], "Level 82 Creatures");
+            armorBosses.Add((int)StatConversion.NPC_ARMOR[83 - 80], "Bosses and Level 83 Creatures");
+        }
 
 		protected override void LoadCalculationOptions()
 		{
