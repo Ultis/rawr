@@ -857,6 +857,14 @@ namespace Rawr.Enhance
                     trigger == Trigger.ShamanShamanisticRage);
         }
 
+        public override bool IsBuffRelevant(Buff buff)
+        {
+            if (buff.AllowedClasses.Contains(CharacterClass.Shaman))
+                return base.IsBuffRelevant(buff);
+            else
+                return false;
+        }
+
 		public override bool HasRelevantStats(Stats stats)
 		{
             if (relevantStats(stats))
