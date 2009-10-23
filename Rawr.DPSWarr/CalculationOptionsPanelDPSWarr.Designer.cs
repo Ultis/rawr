@@ -168,6 +168,10 @@
             this.NUD_SurvScale = new System.Windows.Forms.NumericUpDown();
             this.LB_SurvScale = new System.Windows.Forms.Label();
             this.CK_PTRMode = new Rawr.CustomControls.ExtendedToolTipCheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.NUD_TargHP = new System.Windows.Forms.NumericUpDown();
+            this.LB_TargHP = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_React)).BeginInit();
@@ -198,6 +202,7 @@
             this.Page_02_Maintenance.SuspendLayout();
             this.TB_Misc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_SurvScale)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_TargHP)).BeginInit();
             this.SuspendLayout();
             // 
             // CB_TargLvl
@@ -552,6 +557,10 @@
             // 
             // Page_03_FightInfo
             // 
+            this.Page_03_FightInfo.Controls.Add(this.NUD_TargHP);
+            this.Page_03_FightInfo.Controls.Add(this.LB_TargHP);
+            this.Page_03_FightInfo.Controls.Add(this.label2);
+            this.Page_03_FightInfo.Controls.Add(this.label1);
             this.Page_03_FightInfo.Controls.Add(this.LB_Freq2);
             this.Page_03_FightInfo.Controls.Add(this.LB_UnmitDmg);
             this.Page_03_FightInfo.Controls.Add(this.NUD_AoEDMG);
@@ -1564,6 +1573,65 @@
                 "d Specialization proc chance is now 2/4/6/8/10%";
             this.CK_PTRMode.CheckedChanged += new System.EventHandler(this.CK_PTRMode_CheckedChanged);
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Location = new System.Drawing.Point(277, 101);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(15, 20);
+            this.label1.TabIndex = 52;
+            this.label1.Text = "%";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Location = new System.Drawing.Point(277, 78);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(15, 20);
+            this.label2.TabIndex = 53;
+            this.label2.Text = "%";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // NUD_TargHP
+            // 
+            this.NUD_TargHP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.NUD_TargHP.Location = new System.Drawing.Point(53, 146);
+            this.NUD_TargHP.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
+            this.NUD_TargHP.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NUD_TargHP.Name = "NUD_TargHP";
+            this.NUD_TargHP.Size = new System.Drawing.Size(104, 20);
+            this.NUD_TargHP.TabIndex = 54;
+            this.NUD_TargHP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.NUD_TargHP.ThousandsSeparator = true;
+            this.NUD_TargHP.Value = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.NUD_TargHP.ValueChanged += new System.EventHandler(this.NUD_TargHP_ValueChanged);
+            // 
+            // LB_TargHP
+            // 
+            this.LB_TargHP.BackColor = System.Drawing.Color.Transparent;
+            this.LB_TargHP.Location = new System.Drawing.Point(3, 145);
+            this.LB_TargHP.Name = "LB_TargHP";
+            this.LB_TargHP.Size = new System.Drawing.Size(50, 21);
+            this.LB_TargHP.TabIndex = 55;
+            this.LB_TargHP.Text = "Targ HP:";
+            this.LB_TargHP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // CalculationOptionsPanelDPSWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1606,6 +1674,7 @@
             this.TB_Misc.ResumeLayout(false);
             this.TB_Misc.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_SurvScale)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUD_TargHP)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1693,5 +1762,9 @@
         private System.Windows.Forms.ComboBox CB_Prof2;
         private System.Windows.Forms.Label LB_Version;
         private System.Windows.Forms.ComboBox CB_PatchNotes;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown NUD_TargHP;
+        public System.Windows.Forms.Label LB_TargHP;
     }
 }

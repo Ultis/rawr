@@ -872,6 +872,7 @@ CB_PatchNotes.Items.Add("All");
                         line = 7; info = calcOpts.TargetArmor.ToString();
                 CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); line = 8;
                 CB_Duration.Value = (decimal)calcOpts.Duration; line = 9;
+                NUD_TargHP.Value = (decimal)calcOpts.TargetHP; line = 10;
                 RB_StanceArms.Checked = !calcOpts.FuryStance; line = 11;
                 CK_PTRMode.Checked = calcOpts.PTRMode; line = 12;
                 CK_HideDefGear.Checked = calcOpts.HideBadItems_Def; CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def; line = 13;
@@ -1040,6 +1041,7 @@ CB_PatchNotes.Items.Add("All");
                         BossHandler boss = bosslist.GetBossFromBetterName(CB_BossList.Text);
                         calcOpts.TargetLevel = boss.Level;
                         calcOpts.TargetArmor = (int)boss.Armor;
+                        calcOpts.TargetHP = boss.Health;
                         calcOpts.Duration = boss.BerserkTimer;
                         calcOpts.InBack = ((calcOpts.InBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
                         calcOpts.MultipleTargets = ((calcOpts.MultipleTargetsPerc = (int)(boss.MultiTargsPerc * 100f)) > 0);
@@ -1060,7 +1062,8 @@ CB_PatchNotes.Items.Add("All");
                         // Set Controls to those Values
                         CB_TargLvl.Text = calcOpts.TargetLevel.ToString();
                         CB_TargArmor.Text = calcOpts.TargetArmor.ToString();
-                        CB_Duration.Value = (int)calcOpts.Duration; line = 20;
+                        CB_Duration.Value = (int)calcOpts.Duration;
+                        NUD_TargHP.Value = (int)calcOpts.TargetHP; line = 20;
 
                         CK_InBack.Checked = calcOpts.InBack;
                         LB_InBehindPerc.Enabled = calcOpts.InBack;
@@ -1132,6 +1135,7 @@ CB_PatchNotes.Items.Add("All");
                         BossHandler boss = new BossHandler();
                         //
                         boss.Name               = "Custom";
+                        boss.Health             = (float)NUD_TargHP.Value;
                         boss.Level              = int.Parse(CB_TargLvl.Text);
                         boss.Armor              = (float)int.Parse(CB_TargArmor.Text == "" ? "10643" : CB_TargArmor.Text);
                         boss.BerserkTimer       = (int)CB_Duration.Value;
@@ -1228,7 +1232,19 @@ CB_PatchNotes.Items.Add("All");
                 }
             }
         }
-        private void RB_StanceFury_CheckedChanged(object sender, EventArgs e) {
+        private void NUD_TargHP_ValueChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CB_BossList.Text = "Custom";
+                if (Character != null && Character.CalculationOptions != null) {
+                    CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                    calcOpts.TargetHP = (float)NUD_TargHP.Value;
+                    CB_BossList_SelectedIndexChanged(null, null);
+                    Character.OnCalculationsInvalidated();
+                }
+            }
+        }
+        private void RB_StanceFury_CheckedChanged(object sender, EventArgs e)
+        {
             if (!isLoading) {
                 CB_BossList.Text = "Custom";
                 CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
