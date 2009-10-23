@@ -108,6 +108,18 @@ namespace Rawr {
             Min_Healers =  3;
             Min_Tanks   =  2;
         }
+        public BossHandler Clone() {
+            BossHandler clone = (BossHandler)this.MemberwiseClone();
+            //
+            //clone.Attacks.Clear(); clone.Attacks.AddRange((Attack[])clone.Attacks.ToArray().Clone());
+            //clone.Stuns.Clear(); clone.Stuns.AddRange((Stun[])clone.Stuns.ToArray().Clone());
+            //clone.Fears.Clear(); clone.Fears.AddRange((Fear[])clone.Fears.ToArray().Clone());
+            //clone.Roots.Clear(); clone.Roots.AddRange((Root[])clone.Roots.ToArray().Clone());
+            //clone.Moves.Clear(); clone.Moves.AddRange((Move[])clone.Moves.ToArray().Clone());
+            //clone.Disarms.Clear(); clone.Disarms.AddRange((Disarm[])clone.Disarms.ToArray().Clone());
+            //
+            return clone;
+        }
 
         #region Variables
         #region Melee Attack Value stuff

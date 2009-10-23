@@ -53,6 +53,12 @@
     <Compile Include="DG_BossAttacks.Designer.cs">
       <DependentUpon>DG_BossAttacks.cs</DependentUpon>
     </Compile>
+    <Compile Include="DG_BossSitChanges.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DG_BossSitChanges.Designer.cs">
+      <DependentUpon>DG_BossSitChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rotation.Arms.cs" />
     <Compile Include="Rotation.Fury.cs" />
     <Compile Include="Skills.Shared.cs" />
@@ -86,6 +92,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DG_BossAttacks.resx">
       <DependentUpon>DG_BossAttacks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DG_BossSitChanges.resx">
+      <DependentUpon>DG_BossSitChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
