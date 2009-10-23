@@ -183,7 +183,7 @@ namespace Rawr.ProtPaladin
             this.labelBossAttack.Name = "labelBossAttack";
             this.labelBossAttack.Size = new System.Drawing.Size(83, 45);
             this.labelBossAttack.TabIndex = 0;
-            this.labelBossAttack.Text = "Base Attack: * (Default: 25000)";
+            this.labelBossAttack.Text = "Base Attack: * (Default: 80000)";
             this.labelBossAttack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelBossAttack.ToolTipText = "Base attacker damage before armor.";
             // 
@@ -732,7 +732,7 @@ namespace Rawr.ProtPaladin
             this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
             this.extendedToolTipLabel2.Size = new System.Drawing.Size(83, 45);
             this.extendedToolTipLabel2.TabIndex = 2;
-            this.extendedToolTipLabel2.Text = "Damage: * (Default: 8000)";
+            this.extendedToolTipLabel2.Text = "Damage: * (Default: 20000)";
             this.extendedToolTipLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.extendedToolTipLabel2.ToolTipText = "Base attacker damage before armor.";
             // 
