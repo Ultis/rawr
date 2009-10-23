@@ -24,7 +24,7 @@ namespace Rawr.ProtPaladin
             set { _TargetArmor = value; OnPropertyChanged("TargetArmor"); }
         }
 
-        private int _BossAttackValue = 50000;
+        private int _BossAttackValue = 80000;
         public int BossAttackValue
         {
             get { return _BossAttackValue; }
@@ -38,7 +38,7 @@ namespace Rawr.ProtPaladin
             set { _BossAttackSpeed = value; OnPropertyChanged("BossAttackSpeed"); }
         }
 
-		private int _BossAttackValueMagic = 8000;
+		private int _BossAttackValueMagic = 20000;
         public int BossAttackValueMagic
         {
             get { return _BossAttackValueMagic; }

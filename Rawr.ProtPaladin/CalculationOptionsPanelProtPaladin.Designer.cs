@@ -661,7 +661,8 @@ namespace Rawr.ProtPaladin
             "Frostfire",
             "Shadow",
             "Arcane",
-            "Spellfire"});
+            "Spellfire",
+            "Naturefire"});
             this.comboBoxMagicDamageType.Location = new System.Drawing.Point(95, 16);
             this.comboBoxMagicDamageType.Name = "comboBoxMagicDamageType";
             this.comboBoxMagicDamageType.Size = new System.Drawing.Size(169, 21);
