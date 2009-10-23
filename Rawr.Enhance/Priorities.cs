@@ -209,6 +209,8 @@ namespace Rawr.Enhance
                         break;
                     case EnhanceAbility.StormStrike :
                         _currentMana += _impStormStrikeMana;
+                        if (_currentMana > _maxMana)
+                            _currentMana = _maxMana;
                         break;
                 }
             }
@@ -216,6 +218,8 @@ namespace Rawr.Enhance
             public void AddManaRegen(float timeElapsed)
             {
                 _currentMana += _manaRegen * timeElapsed;
+                if (_currentMana > _maxMana)
+                    _currentMana = _maxMana;
             }
 
             public void UpdateShockCooldown()
