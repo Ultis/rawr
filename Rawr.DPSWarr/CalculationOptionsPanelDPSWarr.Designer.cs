@@ -111,6 +111,8 @@
             this.CB_FAQ_Questions = new System.Windows.Forms.ComboBox();
             this.RTB_FAQ = new System.Windows.Forms.RichTextBox();
             this.Tab_Version = new System.Windows.Forms.TabPage();
+            this.LB_Version = new System.Windows.Forms.Label();
+            this.CB_PatchNotes = new System.Windows.Forms.ComboBox();
             this.RTB_Version = new System.Windows.Forms.RichTextBox();
             this.Page_03_FightInfo = new System.Windows.Forms.TabPage();
             this.LB_Freq2 = new System.Windows.Forms.Label();
@@ -502,6 +504,8 @@
             // 
             // Tab_Version
             // 
+            this.Tab_Version.Controls.Add(this.LB_Version);
+            this.Tab_Version.Controls.Add(this.CB_PatchNotes);
             this.Tab_Version.Controls.Add(this.RTB_Version);
             this.Tab_Version.Location = new System.Drawing.Point(4, 22);
             this.Tab_Version.Name = "Tab_Version";
@@ -511,15 +515,40 @@
             this.Tab_Version.Text = "Version Notes";
             this.Tab_Version.UseVisualStyleBackColor = true;
             // 
+            // LB_Version
+            // 
+            this.LB_Version.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.LB_Version.Location = new System.Drawing.Point(6, 3);
+            this.LB_Version.Name = "LB_Version";
+            this.LB_Version.Size = new System.Drawing.Size(276, 18);
+            this.LB_Version.TabIndex = 6;
+            this.LB_Version.Text = "Select a Version or choose All to display all";
+            this.LB_Version.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // CB_PatchNotes
+            // 
+            this.CB_PatchNotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CB_PatchNotes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_PatchNotes.FormattingEnabled = true;
+            this.CB_PatchNotes.Location = new System.Drawing.Point(6, 24);
+            this.CB_PatchNotes.Name = "CB_PatchNotes";
+            this.CB_PatchNotes.Size = new System.Drawing.Size(276, 21);
+            this.CB_PatchNotes.TabIndex = 5;
+            this.CB_PatchNotes.SelectedIndexChanged += new System.EventHandler(this.CB_PatchNotes_SelectedIndexChanged);
+            // 
             // RTB_Version
             // 
-            this.RTB_Version.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RTB_Version.Location = new System.Drawing.Point(3, 3);
+            this.RTB_Version.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.RTB_Version.Location = new System.Drawing.Point(3, 51);
             this.RTB_Version.Name = "RTB_Version";
             this.RTB_Version.ReadOnly = true;
-            this.RTB_Version.Size = new System.Drawing.Size(282, 547);
+            this.RTB_Version.Size = new System.Drawing.Size(282, 499);
             this.RTB_Version.TabIndex = 2;
-            this.RTB_Version.Text = resources.GetString("RTB_Version.Text");
+            this.RTB_Version.Text = "";
             // 
             // Page_03_FightInfo
             // 
@@ -1662,5 +1691,7 @@
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_HideProfEnchants;
         private System.Windows.Forms.ComboBox CB_Prof1;
         private System.Windows.Forms.ComboBox CB_Prof2;
+        private System.Windows.Forms.Label LB_Version;
+        private System.Windows.Forms.ComboBox CB_PatchNotes;
     }
 }

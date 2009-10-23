@@ -677,14 +677,7 @@ These numbers to do not include racial bonuses.",
                 return true;
             }
             // Force some buffs to go away
-            else if (name.Contains("Malorne")
-                 || name.Contains("Duskweaver")
-                 || name.Contains("Primalstrike")
-                 || name.Contains("Clefthoof")
-                 || name.Contains("Dreamwalker")
-                 || name.Contains("DK DPS 4T10")
-                 || name.Contains("Skyshatter")
-            ) {
+            else if (!buff.AllowedClasses.Contains(CharacterClass.Warrior)) {
                 return false;
             }
             bool haswantedStats = HasWantedStats(buff.Stats);
