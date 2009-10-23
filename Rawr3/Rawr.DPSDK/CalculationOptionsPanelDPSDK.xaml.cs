@@ -29,12 +29,15 @@ namespace Rawr.DPSDK
             {
                 if (character != null && character.CalculationOptions != null && character.CalculationOptions is CalculationOptionsDPSDK)
                 {
-                    ((CalculationOptionsDPSDK)character.CalculationOptions).PropertyChanged -= new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
+               //     ((CalculationOptionsDPSDK)character.CalculationOptions).PropertyChanged -= new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
                 }
 
                 character = value;
-                if (character.CalculationOptions == null) character.CalculationOptions = new CalculationOptionsDPSDK();
-                LayoutRoot.DataContext = Character.CalculationOptions;
+                //if (character.CalculationOptions == null) character.CalculationOptions = new CalculationOptionsDPSDK();
+                //LayoutRoot.DataContext = Character.CalculationOptions;
+                LoadCalculationOptions();
+
+                RotationTab.DataContext = (Character.CalculationOptions as CalculationOptionsDPSDK).rotation;
 
                 ((CalculationOptionsDPSDK)character.CalculationOptions).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
 
@@ -50,9 +53,19 @@ namespace Rawr.DPSDK
             _loadingCalculationOptions = false;
         }
 
-        void CalculationOptionsPanelDPSDK_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void ButtonClickHandler(object sender, RoutedEventArgs e)
         {
             Character.OnCalculationsInvalidated();
+        }
+
+        void CalculationOptionsPanelDPSDK_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != "talents" && e.PropertyName != "Presence")
+            {
+                MessageBox.Show(e.PropertyName + " ; " + e.ToString());
+                character.OnCalculationsInvalidated();
+            }
+           //Character.OnCalculationsInvalidated();
         }
     }
 }

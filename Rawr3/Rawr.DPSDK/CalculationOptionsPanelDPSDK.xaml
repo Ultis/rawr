@@ -20,7 +20,7 @@
 		<Grid Height="100" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100"/>
 
 		<controls:TabControl Margin="0,0,0,0">
-			<controls:TabItem Header="Rotation">
+			<controls:TabItem Header="Rotation" x:Name="RotationTab">
 				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="auto"/>
@@ -40,6 +40,7 @@
 						<RowDefinition Height="auto"/>
 						<RowDefinition Height="auto"/>
 						<RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
 					</Grid.RowDefinitions>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="auto"/>
@@ -59,22 +60,23 @@
 					<TextBlock Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,0,0,0" Text="Horn of Winter:" Grid.Row="12"/>
 					<TextBlock Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,0,0,0" Text="Ghoul Frenzy:" Grid.Row="13"/>
 					<TextBlock Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,0,0,0" Text="Duration:" Grid.Row="14"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.DeathStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="1"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.Obliterate, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="2"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.ScourgeStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="3"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.BloodStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="4"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.HeartStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="5"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.Pestilence, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="6"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.HowlingBlast, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="7"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.IcyTouch, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="8"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.PlagueStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="9"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.DeathCoil, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="10"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.FrostStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="11"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.Horn, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="12"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.GhoulFrenzy, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="13"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding rotation.CurRotationDuration, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Grid.Row="14"/>
-					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding GhoulUptime, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="15"/>
-					
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding DeathStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="1"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding Obliterate, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="2"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding ScourgeStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="3"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding BloodStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="4"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding HeartStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="5"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding Pestilence, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="6"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding HowlingBlast, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="7"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding IcyTouch, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="8"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding PlagueStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="9"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding DeathCoil, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="10"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding FrostStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="11"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding Horn, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="12"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding GhoulFrenzy, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="13"/>
+					<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding CurRotationDuration, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="14"/>
+				<!--	<TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding GhoulUptime, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="15"/>
+					-->
+                    <Button Margin="0,0,0,0" Grid.Row="15" Name="Button" Content="Apply" Click="ButtonClickHandler" />
 				</Grid>
 			</controls:TabItem>
 			<controls:TabItem Header="TabItem">

@@ -98,7 +98,7 @@ namespace Rawr.DPSDK
 		private Rotation _rotation = null;
 		public Rotation rotation
 		{
-            get { return _rotation; }
+            get { if (_rotation == null) _rotation = new Rotation(); return _rotation; }
             set
             {
                 if (_rotation == null) _rotation = new Rotation();
