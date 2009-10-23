@@ -262,7 +262,7 @@ namespace Rawr.DPSWarr {
                 RageCost = Whiteattacks.MHSwingRage;
                 //
                 InitializeB(co);
-                MHAtkTable = Whiteattacks.MHAtkTable;
+                //MHAtkTable = Whiteattacks.MHAtkTable;
             }
             public override bool Validated {
                 get {
@@ -288,7 +288,7 @@ namespace Rawr.DPSWarr {
                 float dodges = GetXActs(AttackTableSelector.Dodged , acts), dodgesPerc = (acts == 0f ? 0f : dodges/acts);
                 float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys/acts);
                 float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = (acts == 0f ? 0f : blocks/acts);
-                float glance = GetXActs(AttackTableSelector.Glance , acts), glancePerc = (acts == 0f ? 0f : glance/acts);
+                //float glance = GetXActs(AttackTableSelector.Glance , acts), glancePerc = (acts == 0f ? 0f : glance/acts);
                 float crits  = GetXActs(AttackTableSelector.Crit   , acts), critsPerc  = (acts == 0f ? 0f : crits /acts);
                 float hits   = GetXActs(AttackTableSelector.Hit    , acts), hitsPerc   = (acts == 0f ? 0f : hits  /acts);
 
@@ -296,7 +296,7 @@ namespace Rawr.DPSWarr {
                 bool showdodge = CanBeDodged  && dodges > 0f;
                 bool showparry = CanBeParried && parrys > 0f;
                 bool showblock = CanBeBlocked && blocks > 0f;
-                bool showglance= true         && glance > 0f;
+                //bool showglance= true         && glance > 0f;
                 bool showcrits = CanCrit      && crits > 0f;
                 
                 string tooltip = "*" + Name +
@@ -308,7 +308,7 @@ namespace Rawr.DPSWarr {
                 (showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged "  : "") +
                 (showparry ? Environment.NewLine + "- " + parrys.ToString("000.00") + " : " + parrysPerc.ToString("00.00%") + " : Parried " : "") +
                 (showblock ? Environment.NewLine + "- " + blocks.ToString("000.00") + " : " + blocksPerc.ToString("00.00%") + " : Blocked " : "") +
-                (showglance? Environment.NewLine + "- " + glance.ToString("000.00") + " : " + glancePerc.ToString("00.00%") + " : Glanced " : "") +
+                //(showglance? Environment.NewLine + "- " + glance.ToString("000.00") + " : " + glancePerc.ToString("00.00%") + " : Glanced " : "") +
                 (showcrits ? Environment.NewLine + "- " + crits.ToString( "000.00") + " : " + critsPerc.ToString( "00.00%") + " : Crit " : "") +
                              Environment.NewLine + "- " + hits.ToString(  "000.00") + " : " + hitsPerc.ToString(  "00.00%") + " : Hit " +
                     Environment.NewLine +

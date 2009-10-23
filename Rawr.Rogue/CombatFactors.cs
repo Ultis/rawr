@@ -94,7 +94,8 @@ namespace Rawr.Rogue {
 
         public float TotalHaste {
             get {
-                float totalHaste = 1f + _stats.PhysicalHaste; // All haste is calc'd into PhysicalHaste in GetCharacterStats
+                //  float totalHaste = 1f + _stats.PhysicalHaste; // All haste is calc'd into PhysicalHaste in GetCharacterStats
+                float totalHaste = _stats.PhysicalHaste;
                 //totalHaste      *= 1f + Talents.Flurry * 0.05f * FlurryUptime;
                 return totalHaste;
             }
@@ -120,6 +121,7 @@ namespace Rawr.Rogue {
                 return armorReduction;
             }
         }
+        public float GlanceReduction { get { return 0.75f; } }
         public float PoisonDamageReduction { get { return StatConversion.GetAverageResistance(_character.Level,_calcOpts.TargetLevel,0f,0f); } }
         public float AvgMhWeaponDmg { get { return CalcAverageWeaponDamage(MH, _stats); } }
         public float MhAvgDamage { get { return AvgMhWeaponDmg + (_stats.AttackPower / 14.0f) * MH.Speed; } }
@@ -127,7 +129,7 @@ namespace Rawr.Rogue {
         public float AvgOhWeaponDmg { get { return CalcAverageWeaponDamage(OH, _stats); } }
         public float OhAvgDamage { get { return (AvgOhWeaponDmg + (_stats.AttackPower / 14.0f) * OH.Speed) * OffHandDamagePenalty; } }
         public float OhNormalizedDamage { get { return (AvgOhWeaponDmg + (_stats.AttackPower/14.0f)*OhNormalizedAttackSpeed)*OffHandDamagePenalty; } }
-        public float OffHandDamagePenalty { get { return 0.5f + Talents.DualWieldSpecialization.Bonus; } }
+        public float OffHandDamagePenalty { get { return 0.5f * (1f + Talents.DualWieldSpecialization.Bonus); } }
         public float ProbGlancingHit { get { return StatConversion.WHITE_GLANCE_CHANCE_CAP[_calcOpts.TargetLevel - _character.Level]; } }
         //assume parry & glance are always 0 for a yellow attack
         public float ProbYellowHit { get { return 1f - YellowMissChance - MhDodgeChance; } }
@@ -151,6 +153,8 @@ namespace Rawr.Rogue {
         //1 energy per Deadly Poison tick, 1 tick every 3 seconds
         public float Tier8TwoPieceEnergyBonus { get { return _stats.RogueT8TwoPieceBonus == 1 ? 1f / 3f : 0f; } }
         public float Tier8FourPieceRuptureCrit { get { return 1 + (_stats.RogueT8FourPieceBonus == 1 ? ProbMhCrit : 0f); } }
+        public float T09x2ReduceEnergyCostFromRupture { get { return _stats.ReduceEnergyCostFromRupture; } }
+        public float T09x4BonusCPGCritChance { get { return _stats.BonusCPGCritChance; } }
         private static float CalcAverageWeaponDamage(Item weapon, Stats stats) { return stats.WeaponDamage + (weapon.MinDamage + weapon.MaxDamage) / 2.0f; }
         public class Knuckles : Item { public Knuckles() { Speed = 2f; } }
     }

@@ -44,6 +44,13 @@ namespace Rawr.Rogue
             {
                 energyRegen += _combatFactors.Tier8TwoPieceEnergyBonus;
             }
+
+            if (_calcOpts.DpsCycle.Includes("Rupture"))
+            {
+                //  http://www.wowhead.com/?spell=67209#comments, 2% per 2sec.
+                energyRegen += _combatFactors.T09x2ReduceEnergyCostFromRupture * .01f;
+            }
+
             return energyRegen;
         }
     }

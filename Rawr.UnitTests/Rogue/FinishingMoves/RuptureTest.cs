@@ -52,7 +52,7 @@ namespace Rawr.UnitTests.Rogue.FinishingMoves
             calcOpts.DpsCycle = cycle;
 
             var combatFactors = new CombatFactors(character, new Stats());
-            var cycleTime = new CycleTime(calcOpts, combatFactors, new WhiteAttacks(combatFactors)) { EnergyRegen = 10f };
+            var cycleTime = new CycleTime(calcOpts, combatFactors, new WhiteAttacks(character, new Stats(), combatFactors)) { EnergyRegen = 10f };
 
             var actual = Rupture.BonusDurationFromBackstab(calcOpts, combatFactors, cycleTime, ruptureDuration);
             Assert.AreEqual(expectedBonus, actual);            

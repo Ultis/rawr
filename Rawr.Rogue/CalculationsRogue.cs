@@ -183,12 +183,12 @@ namespace Rawr.Rogue {
             //------------------------------------------------------------------------------------
             CharacterCalculationsRogue displayedValues = new CharacterCalculationsRogue(stats);
 
-            WhiteAttacks whiteAttacks = new WhiteAttacks(combatFactors);
+            WhiteAttacks whiteAttacks = new WhiteAttacks(character, stats, combatFactors);
             CycleTime cycleTime = new CycleTime(calcOpts, combatFactors, whiteAttacks);
 
             //Now that we have the basics, reset for any SnD bonus
-            stats.PhysicalHaste += SnD.CalcHasteBonus(calcOpts, cycleTime);
-            whiteAttacks = new WhiteAttacks(combatFactors);
+            stats.PhysicalHaste *= (1f + SnD.CalcHasteBonus(calcOpts, cycleTime));
+            whiteAttacks = new WhiteAttacks(character, stats, combatFactors);
             cycleTime = new CycleTime(calcOpts, combatFactors, whiteAttacks);
             var sndUpTime = SnD.UpTime(calcOpts, cycleTime);
             var cpgDps = calcOpts.CpGenerator.CalcCpgDps(calcOpts, combatFactors, stats, cycleTime);
@@ -292,8 +292,11 @@ namespace Rawr.Rogue {
                 SpellCrit = talents.Malice * 0.01f,
 				Dodge = talents.LightningReflexes * 0.02f,
 				Parry = talents.Deflection * 0.02f,
+                PhysicalHaste = (float)Math.Round((double)(0.033*talents.LightningReflexes),2),
+                /*
 				PhysicalHaste = (1f + talents.BladeFlurry * 0.20f)
                               * (1f + (float)Math.Ceiling((10f/3f*talents.LightningReflexes)/100f)) - 1f,
+                 */
 			};
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
@@ -338,6 +341,7 @@ namespace Rawr.Rogue {
             /*statsTotal.PhysicalHaste *= (1f + StatConversion.GetHasteFromRating(statsTotal.HasteRating,CharacterClass.Rogue))
                                      *  (1f + Talents.BladeFlurry.Haste.Bonus)
                                      *  (1f + Talents.LightningReflexes.Haste.Bonus);*/
+            /*
             statsTotal.HasteRating = (float)Math.Floor(statsTotal.HasteRating);
             float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
             statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
@@ -346,9 +350,8 @@ namespace Rawr.Rogue {
                                        (1f + statsTalents.PhysicalHaste) *
                                        (1f + statsOptionsPanel.PhysicalHaste) *
                                        (1f + statsProcs.PhysicalHaste) *
-                                       (1f + ratingHasteBonus)
-                                       - 1f;
-
+                                       (1f + ratingHasteBonus);
+            */
             statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, CharacterClass.Rogue);
 
             // Defensive Stats
@@ -365,7 +368,7 @@ namespace Rawr.Rogue {
 
             // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
             CombatFactors combatFactors = new CombatFactors(character, statsTotal);
-            WhiteAttacks whiteAttacks = new WhiteAttacks(combatFactors);
+            WhiteAttacks whiteAttacks = new WhiteAttacks(character, statsTotal, combatFactors);
 
             float fightDuration = 600f;//calcOpts.Duration;
 
@@ -458,24 +461,22 @@ namespace Rawr.Rogue {
             statsProcs.AttackPower  = (float)Math.Floor(apBonusSTRProcs + apBonusAGIProcs + apBonusOtherProcs);
 
             // Haste
-            statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
-                                     * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, CharacterClass.Rogue))
-                                     - 1f;
+            statsProcs.PhysicalHaste = StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, CharacterClass.Rogue);
 
             statsTotal += statsProcs;
 
             // Haste
             statsTotal.HasteRating = (float)Math.Floor(statsTotal.HasteRating);
-            ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
+            float ratingHasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
             statsTotal.PhysicalHaste = (1f + statsRace.PhysicalHaste) *
                                        (1f + statsItems.PhysicalHaste) *
                                        (1f + statsBuffs.PhysicalHaste) *
                                        (1f + statsTalents.PhysicalHaste) *
                                        (1f + statsOptionsPanel.PhysicalHaste) *
                                        (1f + statsProcs.PhysicalHaste) *
-                                       (1f + ratingHasteBonus)
-                                       - 1f;
-            
+                                       (1f + Talents.BladeFlurry.Haste.Bonus * 15f / 120f) *
+                                       (1f + ratingHasteBonus);
+
             return statsTotal;
         }
 

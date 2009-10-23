@@ -280,7 +280,9 @@ PNStuff.Add(
 - Bugfix for the new Bloodrage usage (wasn't counting health value for BR Glyph)
 - There was a bug where the new potion code would affect the potion's duration until the character was re-created (ie, when changing models and their stats instead of creating a new character or loading an old one). Modified so we are creating a new buff instead.
 - Fixed a null reference error
-- Added some Default Talent Specs for Warriors (several mutations for Arms and 1 Fury, 1 Prot)"
+- Added some Default Talent Specs for Warriors (several mutations for Arms and 1 Fury, 1 Prot)
+- Changed the Set Bonus filtering to use the new Class restrictions instead of by string comparison
+- Updated Patch Notes on the Options pane to use the FAQ system (drop-down selects version to view DPSWarr notes for that version)"
 );
 PNStuff.Add(
 "v2.2.23 (Oct 15, 2009 03:15)",

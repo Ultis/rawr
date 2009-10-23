@@ -73,7 +73,7 @@ namespace Rawr.Rogue.ClassAbilities
         //Combat Talents
         //---------------------------------------------------------------------
         public static readonly Talents ImprovedSinisterStrike = new TalentBonusPulledFromList(() => _talents.ImprovedSinisterStrike, 3f, 5f);
-        public static readonly Talents DualWieldSpecialization = new TalentBonusPulledFromList(() => _talents.DualWieldSpecialization, 0.5f, 0.1f, 0.15f, 0.2f, 0.25f);
+        public static readonly Talents DualWieldSpecialization = new TalentBonusPulledFromList(() => _talents.DualWieldSpecialization, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f);
         public static readonly Talents ImprovedSliceAndDice = new TalentBonusPulledFromList(() => _talents.ImprovedSliceAndDice, 0.25f, 0.50f);
         public static readonly Talents Deflection = new TalentBonusPulledFromList(() => _talents.Deflection, 0.02f, 0.04f, 0.06f);
         public static readonly Talents Precision = new TalentBonusPulledFromList(() => _talents.Precision, 0.01f, 0.02f, 0.03f, 0.04f, 0.05f);
@@ -82,17 +82,17 @@ namespace Rawr.Rogue.ClassAbilities
         public static readonly Talents CloseQuartersCombat = new TalentBonusPulledFromList(() => _talents.CloseQuartersCombat, 0.01f, 0.02f, 0.03f, 0.04f, 0.05f);
         public static readonly Talents Aggression = new TalentBonusPulledFromList(() => _talents.Aggression, 0.03f, 0.06f, 0.09f, 0.12f, 0.15f);
         
-        //public class LightningReflexes
-        //{
-            //public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.LightningReflexes, 0.04f, 0.07f, 0.10f);
-            //public static readonly Talents Dodge = new TalentBonusPulledFromList(() => _talents.LightningReflexes, 0.02f, 0.04f, 0.06f);
-        //}
+        public class LightningReflexes
+        {
+            public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.LightningReflexes, 0.04f, 0.07f, 0.10f);
+            public static readonly Talents Dodge = new TalentBonusPulledFromList(() => _talents.LightningReflexes, 0.02f, 0.04f, 0.06f);
+        }
 
         public static readonly Talents MaceSpecialization = new TalentBonusPulledFromList(() => _talents.MaceSpecialization, .03f, .06f, .09f, .12f, .15f);
 		
         public class BladeFlurry
         {
-            //public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.BladeFlurry, 0.20f);
+            public static readonly Talents Haste = new TalentBonusPulledFromList(() => _talents.BladeFlurry, 0.20f);
             public static readonly Talents EnergyCost = new TalentBonusCalculatedFromMethod(() => _talents.BladeFlurry, EnergyCostWithGlyph);   
 
             public static float EnergyCostWithGlyph(int points)
