@@ -2157,6 +2157,7 @@ namespace Rawr
 
             #region Druid
             #region TBC
+/*
             #region Tier 4 | Malorne
             #region Harness
             defaultBuffs.Add(new Buff()
@@ -2223,7 +2224,7 @@ namespace Rawr
                 Name = "Nordrassil Harness 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusShredDamage = 75/*, BonusLacerateDamage = 15/5*/},
+                Stats = { BonusShredDamage = 75 }, //, BonusLacerateDamage = 15/5},
                 SetName = "Nordrassil Harness",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid },
@@ -2321,6 +2322,7 @@ namespace Rawr
             });
             #endregion
             #endregion
+ */
             #endregion
             #region WotLK
             #region Tier  7 | Dreamwalker
@@ -2569,6 +2571,7 @@ namespace Rawr
 
             #region Hunter
             #region TBC
+/*
             #region Tier 4 | Demon Stalker
             // 2-piece bonus is FD-resist
             defaultBuffs.Add(new Buff()
@@ -2618,6 +2621,7 @@ namespace Rawr
             });
             #endregion
             #endregion
+*/
             #region WotLK
             #region Tier 7 | Cryptstalker
             defaultBuffs.Add(new Buff()
@@ -2868,6 +2872,7 @@ namespace Rawr
 
             #region Mage
             #region TBC
+/*
             #region Tier 4 | Aldor
             defaultBuffs.Add(new Buff()
             {
@@ -2925,6 +2930,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
             });
             #endregion
+*/
             #endregion
             #region WotLK
             #region Tier 7 | Frostfire
@@ -3012,6 +3018,7 @@ namespace Rawr
 
             #region Paladin
             #region TBC
+/*          
             #region Tier 4 |
             #endregion
             #region Tier 5 |
@@ -3038,6 +3045,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
             #endregion
+ */
             #endregion
             #region WotLK
             #region Tier  7 | Redemption
@@ -3254,6 +3262,7 @@ namespace Rawr
 
             #region Priest
             #region TBC
+/*
             #region Tier 4 |
             #endregion
             #region Tier 5 | Avatar Raiment
@@ -3320,6 +3329,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
             });
             #endregion
+*/
             #endregion
             #region WotLK
             #region Tier 7 | Garb of Faith
@@ -3495,6 +3505,7 @@ namespace Rawr
 
             #region Rogue
             #region TBC
+/*
             #region Tier 4 | Netherblade
             defaultBuffs.Add(new Buff()
             {
@@ -3561,6 +3572,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
             });
             #endregion
+*/
             #endregion
             #region WotLK
             #region Tier 7 | Bonescythe
@@ -3656,8 +3668,8 @@ namespace Rawr
 
             #region Shaman
             #region TBC
-            #region Tier 4 | Cyclone
             /*
+            #region Tier 4 | Cyclone
             defaultBuffs.Add(new Buff()
             {
                 Name = "Cyclone Raiment 2 Piece Bonus",
@@ -3668,10 +3680,8 @@ namespace Rawr
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
-            */
             #endregion
             #region Tier 5 | Cataclysm
-            /*
             defaultBuffs.Add(new Buff()
             {
                 Name = "Cataclysm Raiment 2 Piece Bonus",
@@ -3682,10 +3692,8 @@ namespace Rawr
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
-            */
             #endregion
             #region Tier 6 | Skyshatter
-            /*
             defaultBuffs.Add(new Buff()
             {
                 Name = "Skyshatter Regalia 2 Piece Bonus",
@@ -3726,7 +3734,7 @@ namespace Rawr
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
-             */
+*/
             #endregion
             #endregion
             #region WotLK
@@ -3903,12 +3911,14 @@ namespace Rawr
 
             #region Warlock
             #region TBC
+/*
             #region Tier 4 |
             #endregion
             #region Tier 5 |
             #endregion
             #region Tier 6 |
             #endregion
+*/
             #endregion
             #region WotLK
             #region Tier 7 | Plagueheart
@@ -4112,6 +4122,7 @@ namespace Rawr
             #region Professions
             #region Tailoring
             #region TBC
+/*
             defaultBuffs.Add(new Buff()
             {
                 Name = "Spellfire 3 Piece Bonus",
@@ -4141,10 +4152,12 @@ namespace Rawr
                 SetName = "Primal Mooncloth",
                 SetThreshold = 3
             });
+ */
             #endregion
             #endregion
             #region Leatherworking
             #region TBC
+            /*          
             defaultBuffs.Add(new Buff()
             {
                 Name = "Primalstrike 3 Piece Bonus",
@@ -4181,6 +4194,7 @@ namespace Rawr
                 SetName = "Windhawk Armor",
                 SetThreshold = 3
             });
+ */
             #endregion
             #endregion
             #endregion
