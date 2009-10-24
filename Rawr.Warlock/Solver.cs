@@ -346,12 +346,15 @@ namespace Rawr.Warlock
             float lastUsedTime = 0;
             float modCast = 0;
 
+            int Iterator = 0;
+
             #region Calculate cast rotation
             Event currentEvent = new Event(null, "Done casting");
             CalculationOptions.castseq = "";
             StringBuilder builder = new StringBuilder();
-            while (newtime < maxTime) 
+            while (newtime < maxTime && Iterator < 5000) 
             {
+                Iterator++;
                 time = newtime;
                 if (currentEvent.Spell != null) 
                 {
