@@ -165,7 +165,7 @@ namespace Rawr.ProtPaladin
                     trackBarThreatScale.Value = 100;
                 }
                 trackBarThreatScale.Enabled = labelThreatScale.Enabled = (calcOpts.RankingMode != 4);
-                trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1) || (calcOpts.RankingMode == 5);
+                trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1) || (calcOpts.RankingMode == 5) || (calcOpts.RankingMode == 6);
 
                 Character.OnCalculationsInvalidated();
             }
