@@ -234,7 +234,7 @@ namespace Rawr.DPSWarr {
 
             // ==== Reasons GCDs would be lost ========
             #region Having to Move
-            if (CalcOpts.MovingTargets) {
+            if (CalcOpts.MovingTargets && CalcOpts.Moves.Count > 0) {
                 /* = Movement Speed =
                  * According to a post I found on WoWWiki, Standard (Run) Movement
                  * Speed is 7 yards per 1 sec.
@@ -265,7 +265,6 @@ namespace Rawr.DPSWarr {
                  * Charge
                  */
                 float MovementSpeed = (7f / 1f) * (1f + StatS.MovementSpeed); // 7 yards per sec * 1.08 (if have bonus) = 7.56
-                //float TotalTimeInMovement = 0f;
                 float BaseMoveDur = 0f, movedActs = 0f, reducedDur = 0f,
                       MinMovementTimeRegain = 0f, MaxMovementTimeRegain = 0f,
                       ChanceYouHaveToMove = 1f;
@@ -276,7 +275,6 @@ namespace Rawr.DPSWarr {
                 {
                     BaseMoveDur = (m.Duration / 1000f * (1f - StatS.MovementSpeed));
                     _Move_GCDs += movedActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / m.Frequency) : FightDuration / m.Frequency;
-                    //ChanceYouHaveToMove
 
                     if ((ChargeMaxActs - ChargeActualActs > 0f) && (movedActs > 0f))
                     {
@@ -325,6 +323,62 @@ namespace Rawr.DPSWarr {
                 percTimeInMovement = timelostwhilemoving / FightDuration;
             }
             #endregion
+            #region Being Feared
+            if (CalcOpts.FearingTargets && CalcOpts.Fears.Count > 0) {
+                float BaseFearDur = 0f, fearActs = 0f, reducedDur = 0f,
+                      MaxTimeRegain = 0f,
+                      ChanceYouAreFeared = 1f;
+                float BZMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(BZ.ActivatesOverride) : BZ.ActivatesOverride;
+                float BZActualActs = 0f;
+                float EMMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(EM.Activates) : EM.Activates;
+                float EMActualActs = 0f;
+                _Feared_Acts = 0f;
+                foreach (Fear f in CalcOpts.Fears)
+                {
+                    BaseFearDur = Math.Max(0f, (f.Duration / 1000f * (1f - StatS.FearDurReduc)));
+                    _Feared_Acts += fearActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / f.Frequency) : FightDuration / f.Frequency;
+
+                    if ((BZMaxActs - BZActualActs > 0f) && (fearActs > 0f))
+                    {
+                        MaxTimeRegain = Math.Max(0f, (BaseFearDur - LatentGCD - CalcOpts.React / 1000f));
+                        float BZNewActs = Math.Min(BZMaxActs - BZActualActs, fearActs);
+                        BZActualActs += BZNewActs;
+                        // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
+                        reducedDur = Math.Max(0f, BaseFearDur - MaxTimeRegain);
+                        float percBZdVsUnBZd = BZNewActs / fearActs;
+                        timelostwhilefeared += (reducedDur * fearActs * percBZdVsUnBZd * ChanceYouAreFeared)
+                                             + (BaseFearDur * fearActs * (1f - percBZdVsUnBZd) * ChanceYouAreFeared);
+                    } else if (Char.Race == CharacterRace.Human && (EMMaxActs - EMActualActs > 0f) && (fearActs > 0f)) {
+                        MaxTimeRegain = Math.Max(0f,(BaseFearDur - LatentGCD - CalcOpts.React / 1000f));
+                        float EMNewActs = Math.Min(EMMaxActs - EMActualActs, fearActs);
+                        EMActualActs += EMNewActs;
+                        // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
+                        reducedDur = Math.Max(0f, BaseFearDur - MaxTimeRegain);
+                        float percEMdVsUnEMd = EMNewActs / fearActs;
+                        timelostwhilefeared += (reducedDur  * fearActs *       percEMdVsUnEMd  * ChanceYouAreFeared)
+                                             + (BaseFearDur * fearActs * (1f - percEMdVsUnEMd) * ChanceYouAreFeared);
+                    } else if (fearActs > 0f) {
+                        timelostwhilefeared += BaseFearDur * fearActs * ChanceYouAreFeared;
+                    }
+                }
+                _ZRage_GCDs = BZActualActs;
+                _EM_Acts    = EMActualActs;
+                if (_needDisplayCalcs)
+                {
+                    GCDUsage += (_Feared_Acts > 0 ? _Feared_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " +  BaseFearDur.ToString("0.00")               + "secs : Lost to Fears\n"     : "");
+                    GCDUsage += (_ZRage_GCDs  > 0 ? _ZRage_GCDs.ToString( CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + BZ.Name + "\n" : "");
+                    GCDUsage += (_EM_Acts     > 0 ? _EM_Acts.ToString(    CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + EM.Name + "\n" : "");
+                }
+                GCDsused += Math.Min(NumGCDs, (BaseFearDur * _Feared_Acts) / LatentGCD);
+                GCDsused -= Math.Min(GCDsused, (reducedDur * _ZRage_GCDs) / LatentGCD);
+                GCDsused -= Math.Min(GCDsused, (reducedDur * _EM_Acts) / LatentGCD);
+                availGCDs = Math.Max(0f, NumGCDs - GCDsused);
+                availRage += CH.GetRageUseOverDur(_CH_Acts);
+
+                timelostwhilefeared = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilefeared) : timelostwhilefeared;
+                percTimeInFear = timelostwhilefeared / FightDuration;
+            }
+            #endregion
             #region Being Stunned
             if (CalcOpts.StunningTargets && CalcOpts.StunningTargetsFreq > 0) {
                 float BaseStunDur = Math.Max(0f, (CalcOpts.StunningTargetsDur / 1000f * (1f - StatS.StunDurReduc)));
@@ -361,48 +415,6 @@ namespace Rawr.DPSWarr {
                 if (_needDisplayCalcs) {
                     GCDUsage += (_Stunned_Acts > 0 ? _Stunned_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _Stunned_Per.ToString("0.00") + "secs : Lost to Stuns\n" : "");
                     GCDUsage += (_HF_Acts > 0 ? _HF_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _HF_RecovPer.ToString("0.00") + "secs : - " + HF.Name + "\n" : "");
-                    GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _EM_RecovPer.ToString("0.00") + "secs : - " + EM.Name + "\n" : "");
-                }
-            }
-            #endregion
-            #region Being Feared
-            if (CalcOpts.FearingTargets && CalcOpts.FearingTargetsFreq > 0) {
-                float BaseFearDur = Math.Max(0f, (CalcOpts.FearingTargetsDur / 1000f * (1f - StatS.FearDurReduc)));
-                float fearedActs = Math.Max(0f, FightDuration / CalcOpts.FearingTargetsFreq);
-                float Abil_Acts = CalcOpts.AllowFlooring ? (float)Math.Ceiling(fearedActs) : fearedActs;
-                _Feared_Acts = Abil_Acts;
-                _Feared_Per = Math.Max(0f, BaseFearDur);
-                _Feared_Eaten = Math.Min(NumGCDs, (_Feared_Per * _Feared_Acts) / LatentGCD);
-
-                #region Recovery Efforts
-                if (_Feared_Acts > 0f) {
-                    // Berserker Rage can break it
-                    float bzacts = CalcOpts.AllowFlooring ? (float)Math.Floor(BZ.Activates) : BZ.ActivatesOverride;
-                    _ZRage_GCDs = Math.Min(_Feared_Acts, bzacts);
-                    _BZ_RecovPer = Math.Max(0f, (_Feared_Per - Math.Max(0f, LatentGCD + CalcOpts.React / 1000f)));
-                    _BZ_RecovTTL = Math.Min(_Feared_Eaten, (_BZ_RecovPer * _ZRage_GCDs) / LatentGCD);
-                }
-                if (Char.Race == CharacterRace.Human && (_Feared_Acts - _ZRage_GCDs > 0)) {
-                    // Every Man for Himself can break it
-                    float emacts = CalcOpts.AllowFlooring ? (float)Math.Floor(EM.Activates) : EM.Activates;
-                    if (_EM_Acts != 0f) { emacts -= _EM_Acts; }
-                    _EM_Acts = Math.Min(_Feared_Acts - _ZRage_GCDs, emacts);
-                    _EM_RecovPer = Math.Max(0f, (_Feared_Per - Math.Max(0f, CalcOpts.React / 1000f)));
-                    _EM_RecovTTL = Math.Min(_Feared_Eaten, (_EM_RecovPer * _EM_Acts) / LatentGCD);
-                }
-                #endregion
-
-                // We'll use % of time lost to stuns to affect each ability equally
-                // othwerwise we are only seriously affecting things at
-                // the bottom of priorities, which isn't fair (poor Slam)
-                timelostwhilefeared = _Feared_Acts * _Feared_Per
-                                      - _ZRage_GCDs * _BZ_RecovPer;
-                timelostwhilefeared = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilefeared) : timelostwhilefeared;
-                percTimeInFear = timelostwhilefeared / FightDuration;
-                //
-                if (_needDisplayCalcs) {
-                    GCDUsage += (_Feared_Acts > 0 ? _Feared_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _Feared_Per.ToString("0.00") + "secs : Lost to Fears\n" : "");
-                    GCDUsage += (_ZRage_GCDs > 0 ? _ZRage_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _BZ_RecovPer.ToString("0.00") + "secs : - " + BZ.Name + "\n" : "");
                     GCDUsage += (_EM_Acts > 0 ? _EM_Acts.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + _EM_RecovPer.ToString("0.00") + "secs : - " + EM.Name + "\n" : "");
                 }
             }
