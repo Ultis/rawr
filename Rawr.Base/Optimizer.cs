@@ -1383,7 +1383,7 @@ namespace Rawr.Optimizer
 
         public string GetWarningPromptIfNeeded()
         {
-            int gemLimit = 8;
+            int gemLimit = 12;
             int itemLimit = 512;
             int enchantLimit = 8;
 
