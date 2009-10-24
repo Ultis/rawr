@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,7 +42,14 @@ namespace Rawr.ProtPaladin
             "Shadow",
             "Arcane",
             "Spellfire",
-            "Naturefire",
+            "Naturefire"
+        };
+
+        private static string[] TrinketOnUseHandling = new string[]
+        {
+            "Ignore",
+            "Averaged Uptime",
+            "Active"
         };
 
         private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
@@ -57,6 +63,9 @@ namespace Rawr.ProtPaladin
 
             // Setup MagicDamageType combo box
             cboMagicDamageType.ItemsSource = MagicDamageTypes;
+
+            // Setup TrinketOnUseHandling combo box
+            cboTrinketOnUseHandling.ItemsSource = TrinketOnUseHandling;
 
             // Setup TargetArmor values
             armorBosses.Add((int)StatConversion.NPC_ARMOR[80 - 80], "Level 80 Creatures");
@@ -150,6 +159,49 @@ namespace Rawr.ProtPaladin
         private void btnResetBossAttackSpeedMagic_Click(object sender, RoutedEventArgs e)
         {
             calcOpts.BossAttackSpeedMagic = 2.0f;
+        }
+
+        private void cboRankingMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int selectedIndex = cboRankingMode.Items.IndexOf(e.AddedItems[0]);
+
+            // Because calcOpts.RankingMode is 1-based, we have to shut the user out of the first item which is an index of 0.
+            if (selectedIndex == 0)
+                calcOpts.RankingMode = 1;
+
+            // Only enable threat scale for RankingModes other than 4
+            if (btnResetThreatScale != null && silThreatScale != null)
+                btnResetThreatScale.IsEnabled = silThreatScale.IsEnabled = (selectedIndex != 4);
+
+            // Only enable mitigation scale for RankingModes 1, 5, and 6
+            if (btnResetMitigationScale != null && silMitigationScale != null)
+                btnResetMitigationScale.IsEnabled = silMitigationScale.IsEnabled = (selectedIndex == 1) || (selectedIndex == 5) || (selectedIndex == 6);
+
+            // Set the default ThreatScale
+            if (selectedIndex == 4)
+                calcOpts.ThreatScale = 0f;
+            else if (calcOpts.RankingMode == 4 && selectedIndex != 4)
+                calcOpts.ThreatScale = 10f;
+        }
+
+        private void silThreatScale_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (tbThreatScale != null)
+                tbThreatScale.Text = (e.NewValue / 10f).ToString("N2");
+        }
+
+        private void btnResetThreatScale_Click(object sender, RoutedEventArgs e)
+        {
+            calcOpts.ThreatScale = 10f;
+        }
+
+        private void silMitigationScale_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            if (tbMitigationScale != null)
+                tbMitigationScale.Text = (e.NewValue / 17000f).ToString("N2");
+        }
+
+        private void btnResetMitigationScale_Click(object sender, RoutedEventArgs e) {
+            calcOpts.MitigationScale = 17000f;
         }
 
         #endregion
