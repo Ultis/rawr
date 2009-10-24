@@ -11,9 +11,7 @@ namespace Rawr.DPSWarr
     public partial class DG_BossSitChanges : Form
     {
         #region Constructors
-        public DG_BossSitChanges() {
-            InitializeComponent();
-        }
+        public DG_BossSitChanges() { InitializeComponent(); }
         public DG_BossSitChanges(List<Stun> list)
         {
             InitializeComponent();
@@ -96,50 +94,6 @@ namespace Rawr.DPSWarr
         }
         #endregion
         #region Functions
-        private string GetStunString(Stun item) {
-            string retVal = "";
-            retVal += "F: " + item.Frequency.ToString("0") + "sec";
-            retVal += " D: " + item.Duration.ToString("0") + "ms";
-            retVal += " C: " + item.Chance.ToString("0.0%");
-            retVal += item.Breakable ? " : Breakable" : "";
-            return retVal;
-        }
-        private string GetMoveString(Move item)
-        {
-            string retVal = "";
-            retVal += "F: " + item.Frequency.ToString("0") + "sec";
-            retVal += " D: " + item.Duration.ToString("0") + "ms";
-            retVal += " C: " + item.Chance.ToString("0.0%");
-            retVal += item.Breakable ? " : Breakable" : "";
-            return retVal;
-        }
-        private string GetRootString(Root item)
-        {
-            string retVal = "";
-            retVal += "F: " + item.Frequency.ToString("0") + "sec";
-            retVal += " D: " + item.Duration.ToString("0") + "ms";
-            retVal += " C: " + item.Chance.ToString("0.0%");
-            retVal += item.Breakable ? " : Breakable" : "";
-            return retVal;
-        }
-        private string GetFearString(Fear item)
-        {
-            string retVal = "";
-            retVal += "F: " + item.Frequency.ToString("0") + "sec";
-            retVal += " D: " + item.Duration.ToString("0") + "ms";
-            retVal += " C: " + item.Chance.ToString("0.0%");
-            retVal += item.Breakable ? " : Breakable" : "";
-            return retVal;
-        }
-        private string GetDisarmString(Disarm item)
-        {
-            string retVal = "";
-            retVal += "F: " + item.Frequency.ToString("0") + "sec";
-            retVal += " D: " + item.Duration.ToString("0") + "ms";
-            retVal += " C: " + item.Chance.ToString("0.0%");
-            retVal += item.Breakable ? " : Breakable" : "";
-            return retVal;
-        }
         private void SetListBox()
         {
             LB_TheList.Items.Clear();
@@ -147,7 +101,7 @@ namespace Rawr.DPSWarr
                 case Flags.Move: {
                     foreach (Move s in MoveList)
                     {
-                        string str = GetMoveString(s);
+                        string str = s.ToString();
                         LB_TheList.Items.Add(str);
                     }
                     break;
@@ -156,7 +110,7 @@ namespace Rawr.DPSWarr
                     {
                         foreach (Fear s in FearList)
                         {
-                            string str = GetFearString(s);
+                            string str = s.ToString();
                             LB_TheList.Items.Add(str);
                         }
                         break;
@@ -165,7 +119,7 @@ namespace Rawr.DPSWarr
                     {
                         foreach (Root s in RootList)
                         {
-                            string str = GetRootString(s);
+                            string str = s.ToString();
                             LB_TheList.Items.Add(str);
                         }
                         break;
@@ -174,7 +128,7 @@ namespace Rawr.DPSWarr
                     {
                         foreach (Disarm s in DisarmList)
                         {
-                            string str = GetDisarmString(s);
+                            string str = s.ToString();
                             LB_TheList.Items.Add(str);
                         }
                         break;
@@ -183,7 +137,7 @@ namespace Rawr.DPSWarr
                     {
                     foreach (Stun s in StunList)
                     {
-                        string str = GetStunString(s);
+                        string str = s.ToString();
                         LB_TheList.Items.Add(str);
                     }
                     break;

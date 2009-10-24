@@ -31,41 +31,55 @@ namespace Rawr {
         /// <summary>The Attack Type (for AoE vs single-target Melee/Ranged)</summary>
         public ATTACK_TYPES AttackType;
     }
+    public class Impedence {
+        #region Constructors
+        public Impedence() {
+            Frequency = 120f;
+            Duration  = 5000f;
+            Chance    = 1.00f;
+            Breakable = true;
+        }
+        public Impedence(float f, float d, float c, bool b) {
+            Frequency = f;
+            Duration  = d;
+            Chance    = c;
+            Breakable = b;
+        }
+        public Impedence(Impedence i) {
+            Impedence clone = (Impedence)i.MemberwiseClone();
+            Frequency = clone.Frequency;
+            Duration  = clone.Duration;
+            Chance    = clone.Chance;
+            Breakable = clone.Breakable;
+        }
+        #endregion
+        #region Variables
+        public float Frequency;
+        public float Duration;
+        public float Chance;
+        public bool Breakable;
+        #endregion
+        #region Functions
+        public override string ToString() {
+            string retVal = "";
+            retVal += "F: " + Frequency.ToString("0") + "s";
+            retVal += " D: " + Duration.ToString("0") + "ms";
+            retVal += " C: " + Chance.ToString("0.0%");
+            retVal += Breakable ? " : B" : "";
+            return retVal;
+        }
+        #endregion
+    }
     /// <summary>Stores a Stun that the Boss Performs</summary>
-    public struct Stun {
-        public float Frequency;
-        public float Duration;
-        public float Chance;
-        public bool Breakable;
-    }
+    public class Stun   : Impedence { public Stun()   { } }
     /// <summary>Stores a Fear that the Boss Performs</summary>
-    public struct Fear {
-        public float Frequency;
-        public float Duration;
-        public float Chance;
-        public bool Breakable;
-    }
+    public class Fear   : Impedence { public Fear()   { } }
     /// <summary>Stores a Root that the Boss Performs</summary>
-    public struct Root {
-        public float Frequency;
-        public float Duration;
-        public float Chance;
-        public bool Breakable;
-    }
+    public class Root   : Impedence { public Root()   { } }
     /// <summary>Stores a Move that the Boss Performs</summary>
-    public struct Move {
-        public float Frequency;
-        public float Duration;
-        public float Chance;
-        public bool Breakable;
-    }
+    public class Move   : Impedence { public Move()   { } }
     /// <summary>Stores a Disarm that the Boss Performs</summary>
-    public struct Disarm {
-        public float Frequency;
-        public float Duration;
-        public float Chance;
-        public bool Breakable;
-    }
+    public class Disarm : Impedence { public Disarm() { } }
     #endregion
     public class BossHandler {
         public const int NormCharLevel = 80;

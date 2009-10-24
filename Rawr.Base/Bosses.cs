@@ -65,7 +65,7 @@ namespace Rawr.Bosses {
                     Frequency = (80f + 120f) / 2f,
                     Duration = (16f + 4f) * 1000f,
                     Chance = 1f,
-                    Breakable = false
+                    Breakable = true
                 });
             }
             // Every time he Locust Swarms he summons a Crypt Guard

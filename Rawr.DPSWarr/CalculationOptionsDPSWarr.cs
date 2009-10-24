@@ -28,13 +28,43 @@ namespace Rawr.DPSWarr {
 		// Rotational Changes
 		public bool InBack           = true ; public int InBackPerc           = 100;
 		public bool MultipleTargets  = false; public int MultipleTargetsPerc  =  25; public float MultipleTargetsMax  =    3;
-		public bool MovingTargets    = false; public int MovingTargetsFreq    = 120; public float MovingTargetsDur    = 5000;
+		public bool MovingTargets    = false; //public int MovingTargetsFreq    = 120; public float MovingTargetsDur    = 5000;
 		public bool StunningTargets  = false; public int StunningTargetsFreq  = 120; public float StunningTargetsDur  = 5000;
         public bool FearingTargets   = false; public int FearingTargetsFreq   = 120; public float FearingTargetsDur   = 5000;
         public bool RootingTargets   = false; public int RootingTargetsFreq   = 120; public float RootingTargetsDur   = 5000;
 		public bool DisarmingTargets = false; public int DisarmingTargetsFreq = 120; public float DisarmingTargetsDur = 5000;// nonfunctional
         public bool AoETargets       = false; public int AoETargetsFreq       =  20; public float AoETargetsDMG       = 5000;
-		// Abilities to Maintain
+        private List<Stun> _stuns;
+        public List<Stun> Stuns
+        {
+            get { return _stuns ?? (_stuns = new List<Stun>()); }
+            set { _stuns = value; }
+        }
+        private List<Move> _moves;
+        public List<Move> Moves
+        {
+            get { return _moves ?? (_moves = new List<Move>()); }
+            set { _moves = value; }
+        }
+        private List<Fear> _fears;
+        public List<Fear> Fears
+        {
+            get { return _fears ?? (_fears = new List<Fear>()); }
+            set { _fears = value; }
+        }
+        private List<Root> _roots;
+        public List<Root> Roots
+        {
+            get { return _roots ?? (_roots = new List<Root>()); }
+            set { _roots = value; }
+        }
+        private List<Disarm> _disarms;
+        public List<Disarm> Disarms
+        {
+            get { return _disarms ?? (_disarms = new List<Disarm>()); }
+            set { _disarms = value; }
+        }
+        // Abilities to Maintain
 		public bool[] Maintenance = new bool[] {
             true,  // == Rage Gen ==
                 true,  // Berserker Rage
