@@ -170,6 +170,47 @@
                 </StackPanel>
             </controls:TabItem>
             <controls:TabItem Header="Abilities">
+                <StackPanel>
+                    <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Margin="2 2 2 10" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="Seal Choice" />
+                            <ComboBox Margin="2" x:Name="cboSealChoice" Grid.Row="1" Grid.Column="0" SelectedItem="{Binding Mode=TwoWay, Path=SealChoice}" />
+                        </Grid>
+                    </Border>
+                    <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Margin="2 2 2 10" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="Paladin Abilities" />
+                            <CheckBox Margin="2" Grid.Row="1" Grid.Column="0" Content="Use Holy Shield" IsChecked="{Binding Mode=TwoWay, Path=UseHolyShield}" />
+                        </Grid>
+                    </Border>
+                    <Border Margin="0 2" x:Name="borPTR" Background="Transparent" BorderBrush="Black" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Margin="2 2 2 10" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="PTR Mode" />
+                            <CheckBox Margin="2" Grid.Row="1" Grid.Column="0" Content="Use PTR v3.3" IsChecked="{Binding Mode=TwoWay, Path=PTRMode}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
             </controls:TabItem>
         </controls:TabControl>
     </Grid>

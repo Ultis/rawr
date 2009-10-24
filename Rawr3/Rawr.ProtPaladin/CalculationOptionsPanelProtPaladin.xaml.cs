@@ -52,6 +52,12 @@ namespace Rawr.ProtPaladin
             "Active"
         };
 
+        private static string[] SealChoices = new string[]
+        {
+            "Seal of Vengeance",
+            "Seal of Righteousness"
+        };
+
         private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
 
         public CalculationOptionsPanelProtPaladin()
@@ -67,11 +73,18 @@ namespace Rawr.ProtPaladin
             // Setup TrinketOnUseHandling combo box
             cboTrinketOnUseHandling.ItemsSource = TrinketOnUseHandling;
 
+            // Setup SealChoice combo box
+            cboSealChoice.ItemsSource = SealChoices;
+
             // Setup TargetArmor values
             armorBosses.Add((int)StatConversion.NPC_ARMOR[80 - 80], "Level 80 Creatures");
             armorBosses.Add((int)StatConversion.NPC_ARMOR[81 - 80], "Level 81 Creatures");
             armorBosses.Add((int)StatConversion.NPC_ARMOR[82 - 80], "Level 82 Creatures");
             armorBosses.Add((int)StatConversion.NPC_ARMOR[83 - 80], "Bosses & Level 83 Creatures");
+
+            // PTR Mode - Allow PTR mode or not by leaving one of these lines commented out
+            borPTR.Visibility = Visibility.Collapsed; // PTR mode not available
+            //borPTR.Visibility = Visibility.Visible;   // PTR mode available
         }
 
         #endregion
@@ -106,6 +119,21 @@ namespace Rawr.ProtPaladin
                 DataContext = calcOpts;
 
                 calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelProtPaladin_PropertyChanged);
+
+                if (tbTargetArmor != null)
+                    tbTargetArmor.Text = string.Format("{0}{1}", calcOpts.TargetArmor, (armorBosses.ContainsKey(calcOpts.TargetArmor) ? ": " + armorBosses[calcOpts.TargetArmor] : ""));
+
+                if (tbBossAttackSpeed != null)
+                    tbBossAttackSpeed.Text = string.Format("{0:N2} seconds", calcOpts.BossAttackSpeed);
+
+                if (tbBossAttackSpeedMagic != null)
+                    tbBossAttackSpeedMagic.Text = string.Format("{0:N2} seconds", calcOpts.BossAttackSpeedMagic);
+
+                if (tbThreatScale != null)
+                    tbThreatScale.Text = (calcOpts.ThreatScale / 10f).ToString("N2");
+
+                if (tbMitigationScale != null)
+                    tbMitigationScale.Text = (calcOpts.MitigationScale / 17000f).ToString("N2");
             }
         }
 
@@ -121,7 +149,7 @@ namespace Rawr.ProtPaladin
         private void sliTargetArmor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (tbTargetArmor != null)
-                tbTargetArmor.Text = e.NewValue.ToString() + (armorBosses.ContainsKey((int)e.NewValue) ? ": " + armorBosses[(int)e.NewValue] : "");
+                tbTargetArmor.Text = string.Format("{0}{1}", e.NewValue, (armorBosses.ContainsKey((int)e.NewValue) ? ": " + armorBosses[(int)e.NewValue] : ""));
         }
 
         private void btnResetTargetArmor_Click(object sender, RoutedEventArgs e)
@@ -142,7 +170,7 @@ namespace Rawr.ProtPaladin
 
         private void btnResetBossAttackSpeed_Click(object sender, RoutedEventArgs e)
         {
-            calcOpts.BossAttackSpeed = 1.0f;
+            calcOpts.BossAttackSpeed = 2.0f;
         }
 
         private void btnResetBossAttackValueMagic_Click(object sender, RoutedEventArgs e)
@@ -158,7 +186,7 @@ namespace Rawr.ProtPaladin
 
         private void btnResetBossAttackSpeedMagic_Click(object sender, RoutedEventArgs e)
         {
-            calcOpts.BossAttackSpeedMagic = 2.0f;
+            calcOpts.BossAttackSpeedMagic = 1.0f;
         }
 
         private void cboRankingMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
