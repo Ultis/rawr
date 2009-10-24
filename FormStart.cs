@@ -18,15 +18,14 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.23.0
- - Shift+Right-Click will now allow you to custom gem an item. This mirrors in-game functionality.
- - Added a Lesser Flask of Resistance to default Buffs.
- - Rawr.Cat: Updated default gemming templates. Fixed a bug with white miss rate at extremely high crit rates. Fixed a bug with Berserk uptime calculations.
- - Rawr.Moonkin: Tier 10 Idol should now be properly modeled. Lunar Eclipse now properly caps at 100% crit.
- - Rawr.Enhance: Smoothed out priority calculations. This module should now be faster, and more accurate.
- - Rawr.ShadowPriest: 3.3 PTR Mode checkbox added in the options tab to model the SPriest changes in 3.3.
- - Rawr.DPSWarr: Fixed a bug in uptime calculations with stacking special effects.
- - Rawr.ProtWarr: You may now specify how often you are using heroic strike in the options panel. (Was previously just Limited/Unlimited) Average Vigilance threat and Base Boss attack values updated for Heroic TotC values.";
+			labelVersionHistory.Text = @"v2.2.24.0
+ - A debuff was added to represent the Expose Weakness debuff used in the ToTC Anub encounter.
+ - Rawr.Bear: Fixed a bug with Heroic Presense calculation.
+ - Rawr.Moonkin: DoTs now benefit from Nature's Grace
+ - Rawr.Enhance: User selected priority system implemnted.  Added support for modeling Flame Shock.
+ - Rawr.Rogue: Many updated applied; this should fix a number of issues with trinkets and talents not being modeled correctly.  Haste has been updated, Rawr also now assumes (if you have the talent) that you use Blade Flurry ever 120 seconds.
+ - Rawr.ProtWarr: Support added for boss dehaste abilities (ie: Thunder Clap, Imp. Icy Touch, etc) 
+ - Rawr.Warlock: Added Glyph of Quick Decay. Fix for a crash when using a non-filler spell as the last spell in your rotation (DPS will be terrible, due to not having a filler, but at least won't crash when you're in the middle of swapping spells around in your rotation).";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
