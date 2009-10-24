@@ -10,6 +10,15 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
+/* Things to add:
+ * 
+ * Custom Rotation Priority
+ * Threat Value/Weight
+ * Pot Usage (Needs to pull GCDs)
+ * Healing Recieved
+ * Vigilance Threat pulling
+ */
+
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : ICalculationOptionsPanel {
         private bool isLoading = false;
@@ -17,11 +26,12 @@ namespace Rawr.DPSWarr {
         /// <summary>This Model's local bosslist</summary>
         private BossList bosslist = null;
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
+        private Dictionary<string, string> PNStuff = new Dictionary<string, string>();
         public UserControl PanelControl { get { return this; } }
-        private Character character;
+        private Character _char;
         public Character Character {
-            get { return character; }
-            set { character = value; LoadCalculationOptions(); }
+            get { return _char; }
+            set { _char = value; LoadCalculationOptions(); }
         }
         public CalculationOptionsPanelDPSWarr() {
             int line = 0;
@@ -192,7 +202,8 @@ FAQStuff.Add(
             isLoading = true; line = 1;
             CalculationOptionsDPSWarr calcOpts; line = 2;
             try {
-                if (Character != null && Character.CalculationOptions == null) {
+                if (Character != null && Character.CalculationOptions == null)
+                {
                     // If it's broke, make a new one with the defaults
                     Character.CalculationOptions = new CalculationOptionsDPSWarr(); line = 3;
                     isLoading = true; line = 4;
@@ -259,8 +270,8 @@ FAQStuff.Add(
                 LB_Fear0.IsEnabled = calcOpts.FearingTargets;
                 LB_Fear1.IsEnabled = calcOpts.FearingTargets;
                 LB_Fear2.IsEnabled = calcOpts.FearingTargets;
-                NUD_FearFreq.Value = (int)calcOpts.FearingTargetsFreq;
-                NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur;
+                //NUD_FearFreq.Value = (int)calcOpts.FearingTargetsFreq;
+                //NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur;
 
                 CK_RootingTargs.IsChecked = calcOpts.RootingTargets;
                 NUD_RootFreq.IsEnabled = calcOpts.RootingTargets;
@@ -416,8 +427,8 @@ FAQStuff.Add(
                         LB_Fear0.IsEnabled = calcOpts.FearingTargets;
                         LB_Fear1.IsEnabled = calcOpts.FearingTargets;
                         LB_Fear2.IsEnabled = calcOpts.FearingTargets;
-                        NUD_FearFreq.Value = (int)calcOpts.FearingTargetsFreq;
-                        NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur;
+                        //NUD_FearFreq.Value = (int)calcOpts.FearingTargetsFreq;
+                        //NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur;
                         CK_RootingTargs.IsChecked = calcOpts.RootingTargets;
                         NUD_RootFreq.IsEnabled = calcOpts.RootingTargets;
                         NUD_RootDur.IsEnabled = calcOpts.RootingTargets;
@@ -520,7 +531,8 @@ FAQStuff.Add(
         private void CB_ArmorBosses_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
             if (!isLoading) {
                 //int targetArmor = int.Parse((string)CB_TargArmor.SelectedItem);
-                if (Character != null && Character.CalculationOptions != null) {
+                if (Character != null && Character.CalculationOptions != null)
+                {
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     //
                     //calcOpts.TargetArmor = targetArmor;
@@ -532,7 +544,8 @@ FAQStuff.Add(
         }
         private void CB_TargetLevel_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
             if (!isLoading) {
-                if (Character != null && Character.CalculationOptions != null) {
+                if (Character != null && Character.CalculationOptions != null)
+                {
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     //
                     //calcOpts.TargetLevel = int.Parse(CB_TargLvl.Text);
@@ -751,24 +764,24 @@ FAQStuff.Add(
             }
         }
         private void NUD_FearFreq_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            if (!isLoading) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            /*if (!isLoading) {
+                /*CalculationOptionsDPSWarr calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.FearingTargetsFreq = (int)NUD_FearFreq.Value;
                 //CB_BossList.Text = "Custom";
                 //
-                Character.OnCalculationsInvalidated();
-            }
+                Char.OnCalculationsInvalidated();
+            }*/
         }
         private void NUD_FearDur_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            if (!isLoading) {
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            /*if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 //
                 calcOpts.FearingTargetsDur = (float)NUD_FearDur.Value;
                 //CB_BossList.Text = "Custom";
                 //
-                Character.OnCalculationsInvalidated();
-            }
+                Char.OnCalculationsInvalidated();
+            }*/
         }
         private void NUD_RootFreq_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (!isLoading) {
@@ -803,7 +816,7 @@ FAQStuff.Add(
         private void CTL_Maints_AfterCheck(object sender/*, TreeViewEventArgs e*/) {
             if (!isLoading) {/*
                 CTL_Maints.AfterCheck -= new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
-                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                CalculationOptionsDPSWarr calcOpts = Char.CalculationOptions as CalculationOptionsDPSWarr;
                 // Work special changes for the tree
                 switch (e.Node.Text) {
                     #region Rage Generators
@@ -1400,7 +1413,7 @@ FAQStuff.Add(
                 // Assign the new values to the program
                 setAbilBools();
                 // Run a new dps calc
-                Character.OnCalculationsInvalidated();
+                Char.OnCalculationsInvalidated();
                 CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(CTL_Maints_AfterCheck);
             */}
         }

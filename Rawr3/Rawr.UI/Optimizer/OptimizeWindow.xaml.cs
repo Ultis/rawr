@@ -296,7 +296,7 @@ namespace Rawr.UI
             optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant,
                 OptimizerSettings.Default.TemplateGemsEnabled, Calculations.Instance,
                 FoodCheck.IsChecked.GetValueOrDefault(), ElixirsFlasksCheck.IsChecked.GetValueOrDefault(),
-                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs());
+                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), false);
 
             if (OptimizerSettings.Default.WarningsEnabled)
             {
@@ -384,7 +384,7 @@ namespace Rawr.UI
             optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant,
                 OptimizerSettings.Default.TemplateGemsEnabled, Calculations.Instance,
                 FoodCheck.IsChecked.GetValueOrDefault(), ElixirsFlasksCheck.IsChecked.GetValueOrDefault(),
-                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs());
+                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), false);
             if (OptimizerSettings.Default.WarningsEnabled)
             {
                 string prompt = optimizer.GetWarningPromptIfNeeded();
