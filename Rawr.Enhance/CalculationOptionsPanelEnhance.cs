@@ -368,21 +368,21 @@ namespace Rawr.Enhance
         {
             List<Stats> statsList = new List<Stats>();
             if (chkStatsStrength.Checked)
-                statsList.Add(new Stats() { Strength = 1 });
+                statsList.Add(new Stats() { Strength = 1f });
             if (chkStatsAgility.Checked)
-                statsList.Add(new Stats() { Agility = 1 });
+                statsList.Add(new Stats() { Agility = 1f });
             if (chkStatsAP.Checked)
-                statsList.Add(new Stats() { AttackPower = 2 });
+                statsList.Add(new Stats() { AttackPower = 2f });
             if (chkStatsCrit.Checked)
-                statsList.Add(new Stats() { CritRating = 1 });
+                statsList.Add(new Stats() { CritRating = 1f });
             if (chkStatsHit.Checked)
-                statsList.Add(new Stats() { HitRating = 1 });
+                statsList.Add(new Stats() { HitRating = 1f });
             if (chkStatsExp.Checked)
-                statsList.Add(new Stats() { ExpertiseRating = 1 });
+                statsList.Add(new Stats() { ExpertiseRating = 1f });
             if (chkStatsHaste.Checked)
-                statsList.Add(new Stats() { HasteRating = 1 });
+                statsList.Add(new Stats() { HasteRating = 1f });
             if (chkStatsArP.Checked)
-                statsList.Add(new Stats() { ArmorPenetrationRating = 1 });
+                statsList.Add(new Stats() { ArmorPenetrationRating = 1f });
             if (chkStatsSP.Checked)
                 statsList.Add(new Stats() { SpellPower = 1.15f });
 
@@ -396,7 +396,7 @@ namespace Rawr.Enhance
             string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
                          "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
                          "The vertical axis shows the amount of dps added or lost";
-            graph.SetupGraph(Character, statsList, explanatoryText, _calcOpts.CalculationToGraph);
+            graph.SetupGraph(Character, statsList, 100, explanatoryText, _calcOpts.CalculationToGraph);
             graph.Show();
         }
 

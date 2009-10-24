@@ -34,7 +34,7 @@ namespace Rawr.Base
             pictureBoxGraph.Width = graphWidth;
         }
 
-        public void SetupGraph(Character character, Stats[] statsList, string explanatoryText, string calculation)
+        public void SetupGraph(Character character, Stats[] statsList, int scale, string explanatoryText, string calculation)
         {
             Cursor.Current = Cursors.WaitCursor;
             this.Text = "Graph of " + calculation;
@@ -42,7 +42,7 @@ namespace Rawr.Base
             float baseFigure = GetCalculationValue(baseCalc, calculation);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-            float graphOffset = 400f, graphStep = 3.5f;
+            float graphOffset = 400f, graphStep = 350f / scale;
             Color[] colors = new Color[] {
                 Color.FromArgb(255,202,180,96), 
                 Color.FromArgb(255,101,225,240),
@@ -60,16 +60,16 @@ namespace Rawr.Base
             for (int index = 0; index < statsList.Length; index++)
             {
                 Stats newStats = new Stats();
-                points[index] = new Point[201];
-                newStats.Accumulate(statsList[index], -101);
-                for (int count = -100; count <= 100; count++)
+                points[index] = new Point[2 * scale + 1];
+                newStats.Accumulate(statsList[index], -scale - 1);
+                for (int count = -scale; count <= scale; count++)
                 {
                     newStats.Accumulate(statsList[index]);
 
                     CharacterCalculationsBase currentCalc = Calculations.GetCharacterCalculations(character, new Item() { Stats = newStats }, false, false, false);
                     float currentFigure = GetCalculationValue(currentCalc, calculation);
                     float dpsChange = currentFigure - baseFigure;
-                    points[index][count + 100] = new Point(Convert.ToInt32(graphOffset + count * graphStep), Convert.ToInt32(dpsChange));
+                    points[index][count + scale] = new Point(Convert.ToInt32(graphOffset + count * graphStep), Convert.ToInt32(dpsChange));
                     if (dpsChange < minDpsChange)
                         minDpsChange = dpsChange;
                     if (dpsChange > maxDpsChange)
@@ -81,20 +81,20 @@ namespace Rawr.Base
                 DpsVariance = 1;
             for (int index = 0; index < statsList.Length; index++)
             {
-                for (int count = -100; count <= 100; count++)
+                for (int count = -scale; count <= scale; count++)
                 {
-                    points[index][count + 100].Y = (int)((maxDpsChange - points[index][count + 100].Y) * (graphHeight - 48) / DpsVariance) + 20;
+                    points[index][count + scale].Y = (int)((maxDpsChange - points[index][count + scale].Y) * (graphHeight - 48) / DpsVariance) + 20;
                 }
                 Brush statBrush = new SolidBrush(colors[index]);
                 g.DrawLines(new Pen(statBrush, 3), points[index]);
             }
 
             #region Graph X Ticks
-            float graphStart = graphOffset - 100 * graphStep;
-            float graphEnd = graphOffset + 100 * graphStep;
+            float graphStart = graphOffset - scale * graphStep;
+            float graphEnd = graphOffset + scale * graphStep;
             float activeWidth = graphEnd - graphStart;
 
-            float maxScale = 200f;
+            float maxScale = 2 * scale;
             float[] ticks = new float[] {(float)Math.Round(graphStart + activeWidth * 0.5f),
 							(float)Math.Round(graphStart + activeWidth * 0.75f),
 							(float)Math.Round(graphStart + activeWidth * 0.25f),
@@ -138,25 +138,25 @@ namespace Rawr.Base
             g.DrawLine(black200, graphStart - 4, graphHeight - 20, graphEnd + 4, graphHeight - 20);
 
             Font tickFont = new Font("Calibri", 11);
-            g.DrawString((-100f).ToString(), tickFont, black200brush, graphStart, 16, formatTick);
-            g.DrawString((maxScale - 100f).ToString(), tickFont, black200brush, graphEnd, 16, formatTick);
-            g.DrawString((maxScale * 0.5f - 100f).ToString(), tickFont, black200brush, ticks[0], 16, formatTick);
-            g.DrawString((maxScale * 0.75f - 100f).ToString(), tickFont, black150brush, ticks[1], 16, formatTick);
-            g.DrawString((maxScale * 0.25f - 100f).ToString(), tickFont, black150brush, ticks[2], 16, formatTick);
-            g.DrawString((maxScale * 0.125f - 100f).ToString(), tickFont, black75brush, ticks[3], 16, formatTick);
-            g.DrawString((maxScale * 0.375f - 100f).ToString(), tickFont, black75brush, ticks[4], 16, formatTick);
-            g.DrawString((maxScale * 0.625f - 100f).ToString(), tickFont, black75brush, ticks[5], 16, formatTick);
-            g.DrawString((maxScale * 0.875f - 100f).ToString(), tickFont, black75brush, ticks[6], 16, formatTick);
+            g.DrawString((-scale).ToString(), tickFont, black200brush, graphStart, 16, formatTick);
+            g.DrawString((maxScale - scale).ToString(), tickFont, black200brush, graphEnd, 16, formatTick);
+            g.DrawString((maxScale * 0.5f - scale).ToString(), tickFont, black200brush, ticks[0], 16, formatTick);
+            g.DrawString((maxScale * 0.75f - scale).ToString(), tickFont, black150brush, ticks[1], 16, formatTick);
+            g.DrawString((maxScale * 0.25f - scale).ToString(), tickFont, black150brush, ticks[2], 16, formatTick);
+            g.DrawString((maxScale * 0.125f - scale).ToString(), tickFont, black75brush, ticks[3], 16, formatTick);
+            g.DrawString((maxScale * 0.375f - scale).ToString(), tickFont, black75brush, ticks[4], 16, formatTick);
+            g.DrawString((maxScale * 0.625f - scale).ToString(), tickFont, black75brush, ticks[5], 16, formatTick);
+            g.DrawString((maxScale * 0.875f - scale).ToString(), tickFont, black75brush, ticks[6], 16, formatTick);
 
-            g.DrawString((-100f).ToString(), tickFont, black200brush, graphStart, graphHeight - 16, formatTick);
-            g.DrawString((maxScale - 100f).ToString(), tickFont, black200brush, graphEnd, graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.5f - 100f).ToString(), tickFont, black200brush, ticks[0], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.75f - 100f).ToString(), tickFont, black150brush, ticks[1], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.25f - 100f).ToString(), tickFont, black150brush, ticks[2], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.125f - 100f).ToString(), tickFont, black75brush, ticks[3], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.375f - 100f).ToString(), tickFont, black75brush, ticks[4], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.625f - 100f).ToString(), tickFont, black75brush, ticks[5], graphHeight - 16, formatTick);
-            g.DrawString((maxScale * 0.875f - 100f).ToString(), tickFont, black75brush, ticks[6], graphHeight - 16, formatTick);
+            g.DrawString((-scale).ToString(), tickFont, black200brush, graphStart, graphHeight - 16, formatTick);
+            g.DrawString((maxScale - scale).ToString(), tickFont, black200brush, graphEnd, graphHeight - 16, formatTick);
+            g.DrawString((maxScale * 0.5f - scale).ToString(), tickFont, black200brush, ticks[0], graphHeight - 16, formatTick);
+            g.DrawString((maxScale * 0.75f - scale).ToString(), tickFont, black150brush, ticks[1], graphHeight - 16, formatTick);
+            g.DrawString((maxScale * 0.25f - scale).ToString(), tickFont, black150brush, ticks[2], graphHeight - 16, formatTick);
+            g.DrawString((maxScale * 0.125f - scale).ToString(), tickFont, black75brush, ticks[3], graphHeight - 16, formatTick);
+            g.DrawString((maxScale * 0.375f - scale).ToString(), tickFont, black75brush, ticks[4], graphHeight - 16, formatTick);
+            g.DrawString((maxScale * 0.625f - scale).ToString(), tickFont, black75brush, ticks[5], graphHeight - 16, formatTick);
+            g.DrawString((maxScale * 0.875f - scale).ToString(), tickFont, black75brush, ticks[6], graphHeight - 16, formatTick);
             g.DrawString("Stat Change", tickFont, black200brush, activeWidth / 2 + 50, graphHeight, formatTick);
             #endregion
 
