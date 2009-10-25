@@ -85,6 +85,7 @@ namespace Rawr.Enhance
 
         public void CalculateAbilities()
         {
+            float fightLengthMultiplier = _calcOpts.FightLengthMultiplier;
             PriorityDataBlock db = new PriorityDataBlock(_calcOpts, _cs);
             PriorityQueue<Ability> queue = new PriorityQueue<Ability>();
             foreach (Ability ability in _abilities)
@@ -123,7 +124,7 @@ namespace Rawr.Enhance
                         }
                     }
                 }
-                if (ability.CooldownOver < fightLength) // adds ability back into queue if its available again before end of fight
+                if (ability.CooldownOver < fightLength * fightLengthMultiplier) // adds ability back into queue if its available again before end of fight
                     queue.Enqueue(ability);
               //  DebugPrint(_abilities, db.Timestamp, name, db.CurrentMana);
             }
@@ -132,8 +133,9 @@ namespace Rawr.Enhance
             // use beyond fight duration.
             foreach (Ability ability in _abilities)
             {
-                float overrun = ability.Duration - (ability.CooldownOver - fightLength);
+                float overrun = ability.Duration - (ability.CooldownOver - fightLength * fightLengthMultiplier);
                 ability.AddUses(overrun / ability.Duration);
+                ability.AverageUses(fightLengthMultiplier);
             }
             // DebugPrint(_abilities, timeElapsed - gcd - averageLag, "Final uses");
         }
@@ -294,7 +296,7 @@ namespace Rawr.Enhance
 
         public void AddUses(float uses)
         {
-            _uses += uses;
+            _uses += uses > 0f ? uses : 0f;
         }
 
         public void AverageUses(float iterations)

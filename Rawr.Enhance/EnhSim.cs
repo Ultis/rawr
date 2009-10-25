@@ -493,7 +493,7 @@ namespace Rawr.Enhance
             foreach (var element in sortedPriorites)
             {
                 Priority p = element.Value;
-                if (p.Checked & p.PriorityValue > 0)
+                if (p.Checked & p.PriorityValue > 0 & !p.EnhSimName.Equals(""))
                     sb.AppendLine("rotation_priority" + (++priorityNumber) + "              " + p.EnhSimName);
             }
             sb.AppendLine();
