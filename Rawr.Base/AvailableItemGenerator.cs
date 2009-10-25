@@ -101,11 +101,13 @@ namespace Rawr.Optimizer
             }
         }
 
-        public bool IsCharacterValid(Character character, out string warning)
+        public bool IsCharacterValid(Character character, out string warning, bool explain)
         {
             StringBuilder s = new StringBuilder();
             s.AppendLine("The following currently equipped items are not available");
             s.AppendLine();
+            string line;
+            List<string> warnings = new List<string>();
             bool valid = true;
             // if item is not available pick the one that is available
             for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
@@ -118,14 +120,134 @@ namespace Rawr.Optimizer
                         if (!itemAvailable.ContainsKey(item.GemmedId))
                         {
                             // gemming/enchant is not available
-                            s.AppendLine("\t" + item.Item.Name + " gemming/enchant is not available");
-                            valid = false;
+                            if (explain)
+                            {
+                                // try to determine what they have to do to make it available
+                                switch (character.GetItemAvailability(item))
+                                {
+                                    case ItemAvailability.Available:
+                                        // shouldn't happen
+                                        break;
+                                    case ItemAvailability.AvailableWithEnchantRestrictions:
+                                        // they have marked this specific gemmming available, but it doesn't allow this enchant
+                                        // warn about the enchant
+                                        if (item.EnchantId != 0)
+                                        {
+                                            line = item.Enchant.Name + " is not available on " + item.Item.Name;
+                                            if (!warnings.Contains(line))
+                                            {
+                                                warnings.Add(line);
+                                            }
+                                            s.AppendLine(line);
+                                            valid = false;
+                                        }
+                                        break;
+                                    case ItemAvailability.RegemmingAllowed:
+                                        // all gemmings/enchants are available so the ones that are available must not be sufficient
+                                        for (int gem = 1; gem <= 3; gem++)
+                                        {
+                                            Item g = item.GetGem(gem);
+                                            if (g != null)
+                                            {
+                                                // ignore if we have something strictly better marked
+                                                if ((g.Slot == ItemSlot.Meta && !Array.Exists(MetaGemItems, gg => gg.Stats >= g.Stats)) ||
+                                                    (g.Slot != ItemSlot.Meta && !Array.Exists(GemItems, gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
+                                                {
+                                                    // gem is not available
+                                                    line = g.Name + " is not available";
+                                                    if (!warnings.Contains(line))
+                                                    {
+                                                        warnings.Add(line);
+                                                    }
+                                                    s.AppendLine(line);
+                                                    valid = false;
+                                                }
+                                            }
+                                        }
+                                        Enchant enchant = item.Enchant;
+                                        if (enchant != null && enchant.Id != 0)
+                                        {
+                                            // ignore if we have something strictly better marked
+                                            if (!Array.Exists(SlotEnchants[slot], e => e.Id == enchant.Id || e.Stats >= enchant.Stats))
+                                            {
+                                                // enchant is not available
+                                                line = item.Enchant.Name + " is not available";
+                                                if (!warnings.Contains(line))
+                                                {
+                                                    warnings.Add(line);
+                                                }
+                                                s.AppendLine(line);
+                                                valid = false;
+                                            }
+                                        }
+                                        break;
+                                    case ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
+                                        // all gemmings are available so the ones that are available must not be sufficient
+                                        for (int gem = 1; gem <= 3; gem++)
+                                        {
+                                            Item g = item.GetGem(gem);
+                                            if (g != null)
+                                            {
+                                                // ignore if we have something strictly better marked
+                                                if ((g.Slot == ItemSlot.Meta && !Array.Exists(MetaGemItems, gg => gg.Stats >= g.Stats)) ||
+                                                    (g.Slot != ItemSlot.Meta && !Array.Exists(GemItems, gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
+                                                {
+                                                    // gem is not available
+                                                    line = g.Name + " is not available";
+                                                    if (!warnings.Contains(line))
+                                                    {
+                                                        warnings.Add(line);
+                                                    }
+                                                    s.AppendLine(line);
+                                                    valid = false;
+                                                }
+                                            }
+                                        }
+                                        if (item.EnchantId != 0 && !character.AvailableItems.Contains(item.Id + ".*.*.*." + item.EnchantId))
+                                        {
+                                            // this specific enchant is not valid                                        
+                                            line = item.Enchant.Name + " is not available on " + item.Item.Name;
+                                            if (!warnings.Contains(line))
+                                            {
+                                                warnings.Add(line);
+                                            }
+                                            s.AppendLine(line);
+                                            valid = false;
+                                        }
+                                        break;
+                                    case ItemAvailability.NotAvailable:
+                                        // they could have some other gemming/enchant marked as available, but not in general
+                                        line = item.Item.Name + " gemming/enchant is not available";
+                                        if (!warnings.Contains(line))
+                                        {
+                                            warnings.Add(line);
+                                        }
+                                        s.AppendLine(line);
+                                        valid = false;
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                line = item.Item.Name + " gemming/enchant is not available";
+                                if (!warnings.Contains(line))
+                                {
+                                    warnings.Add(line);
+                                }
+                                s.AppendLine(line);
+                                valid = false;
+                            }
                         }
                     }
                     else
                     {
                         // item itself is not available
-                        s.AppendLine("\t" + item.Item.Name + " is not available");
+                        line = item.Item.Name + " is not available";
+                        if (!warnings.Contains(line))
+                        {
+                            warnings.Add(line);
+                        }
+                        s.AppendLine(line);
                         valid = false;
                     }
                 }
