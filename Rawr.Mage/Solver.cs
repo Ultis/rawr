@@ -420,7 +420,7 @@ namespace Rawr.Mage
                     double value;
                     //System.Diagnostics.Stopwatch clock = new System.Diagnostics.Stopwatch();
                     //clock.Reset();
-                    if (fightDuration <= 600 || double.IsPositiveInfinity(effect1Cooldown) || double.IsPositiveInfinity(effect2Cooldown))
+                    if (double.IsPositiveInfinity(effect1Cooldown) || double.IsPositiveInfinity(effect2Cooldown))
                     {
                         //clock.Start();
                         value = MaximizeStackingDuration(fightDuration, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, 0, 0);
@@ -491,7 +491,7 @@ namespace Rawr.Mage
             double value = 0;
             double min = 0;
 
-            if (effect2ActiveCooldown > effect1Duration)
+            if (effect2ActiveCooldown > 0)
             {
                 // if optimal placement of effect1 is stacked with effect2 activation
                 // and it doesn't overlap two different activations
@@ -528,10 +528,13 @@ namespace Rawr.Mage
             {
                 int minOffset = Math.Max(0, (int)(effect2ActiveCooldown - slack));
                 int maxOffset = (int)Math.Min(effect1Duration, effect2ActiveCooldown);
-                int endAlignedOffset = (int)(effect1Duration - effect2Duration);
-                if (endAlignedOffset > minOffset)
+                if (effect2Cooldown >= effect1Duration)
                 {
-                    minOffset = Math.Min(endAlignedOffset, maxOffset);
+                    int endAlignedOffset = (int)(effect1Duration - effect2Duration);
+                    if (endAlignedOffset > minOffset)
+                    {
+                        minOffset = Math.Min(endAlignedOffset, maxOffset);
+                    }
                 }
                 for (int offset = minOffset; offset <= maxOffset; offset++)
                 {
@@ -541,12 +544,12 @@ namespace Rawr.Mage
                     if (effect1Cooldown - offset < effect2Cooldown)
                     {
                         // effect1 will be off cooldown first
-                        value = leftover + Math.Min(min, fightDuration) + MaximizeStackingDuration(fightDuration - effect2ActiveCooldown - effect1Cooldown + offset, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, Math.Max(0, effect2Duration - effect1Cooldown + offset), Math.Max(0, effect2Cooldown - effect1Cooldown + offset));
+                        value = leftover + Math.Min(min, fightDuration - effect2ActiveCooldown) + MaximizeStackingDuration(fightDuration - effect2ActiveCooldown - effect1Cooldown + offset, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, Math.Max(0, effect2Duration - effect1Cooldown + offset), Math.Max(0, effect2Cooldown - effect1Cooldown + offset));
                     }
                     else
                     {
                         // effect2 will be off cooldown first
-                        value = leftover + Math.Min(min, fightDuration) + MaximizeStackingDuration(fightDuration - effect2ActiveCooldown - effect2Cooldown, effect2Duration, effect2Cooldown, effect1Duration, effect1Cooldown, Math.Max(0, effect1Duration - offset - effect2Cooldown), Math.Max(0, effect1Cooldown - offset - effect2Cooldown));
+                        value = leftover + Math.Min(min, fightDuration - effect2ActiveCooldown) + MaximizeStackingDuration(fightDuration - effect2ActiveCooldown - effect2Cooldown, effect2Duration, effect2Cooldown, effect1Duration, effect1Cooldown, Math.Max(0, effect1Duration - offset - effect2Cooldown), Math.Max(0, effect1Cooldown - offset - effect2Cooldown));
                     }
                     if (value > best)
                     {
@@ -623,7 +626,7 @@ namespace Rawr.Mage
             int value = 0;
             int min = 0;
 
-            if (effect2ActiveCooldown > effect1Duration)
+            if (effect2ActiveCooldown > 0)
             {
                 // if optimal placement of effect1 is stacked with effect2 activation
                 // and it doesn't overlap two different activations
@@ -658,10 +661,13 @@ namespace Rawr.Mage
             // TODO ok it works well enough, but still costs a significant amount, time to improve this
             int minOffset = Math.Max(0, effect2ActiveCooldown - slack);
             int maxOffset = Math.Min(effect1Duration, effect2ActiveCooldown);
-            int endAlignedOffset = effect1Duration - effect2Duration;
-            if (endAlignedOffset > minOffset)
+            if (effect2Cooldown >= effect1Duration)
             {
-                minOffset = Math.Min(endAlignedOffset, maxOffset);
+                int endAlignedOffset = effect1Duration - effect2Duration;
+                if (endAlignedOffset > minOffset)
+                {
+                    minOffset = Math.Min(endAlignedOffset, maxOffset);
+                }
             }
             for (int offset = minOffset; offset <= maxOffset; offset++)
             {
@@ -671,12 +677,12 @@ namespace Rawr.Mage
                 if (effect1Cooldown - offset < effect2Cooldown)
                 {
                     // effect1 will be off cooldown first
-                    value = leftover + Math.Min(min, fightDuration) + MaximizeStackingDuration2(fightDuration - effect2ActiveCooldown - effect1Cooldown + offset, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, Math.Max(0, effect2Duration - effect1Cooldown + offset), Math.Max(0, effect2Cooldown - effect1Cooldown + offset), order);
+                    value = leftover + Math.Min(min, fightDuration - effect2ActiveCooldown) + MaximizeStackingDuration2(fightDuration - effect2ActiveCooldown - effect1Cooldown + offset, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, Math.Max(0, effect2Duration - effect1Cooldown + offset), Math.Max(0, effect2Cooldown - effect1Cooldown + offset), order);
                 }
                 else
                 {
                     // effect2 will be off cooldown first
-                    value = leftover + Math.Min(min, fightDuration) + MaximizeStackingDuration2(fightDuration - effect2ActiveCooldown - effect2Cooldown, effect2Duration, effect2Cooldown, effect1Duration, effect1Cooldown, Math.Max(0, effect1Duration - offset - effect2Cooldown), Math.Max(0, effect1Cooldown - offset - effect2Cooldown), 1 - order);
+                    value = leftover + Math.Min(min, fightDuration - effect2ActiveCooldown) + MaximizeStackingDuration2(fightDuration - effect2ActiveCooldown - effect2Cooldown, effect2Duration, effect2Cooldown, effect1Duration, effect1Cooldown, Math.Max(0, effect1Duration - offset - effect2Cooldown), Math.Max(0, effect1Cooldown - offset - effect2Cooldown), 1 - order);
                 }
                 if (value > best)
                 {

@@ -64,7 +64,8 @@
       <Link>CalculationsBear.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelBear.xaml.cs">
-      <DependentUpon>CalculationOptionsPanelBear.xaml</DependentUpon>
+      <DependentUpon>CalculationOptionsPanelBear.WPF.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -78,9 +79,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CalculationOptionsPanelBear.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="CalculationOptionsPanelBear.WPF.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -91,5 +92,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\PreprocessXaml.targets" />
 </Project>

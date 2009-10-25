@@ -153,7 +153,7 @@
       <Link>StateDescriptionScanner.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelMage.xaml.cs">
-      <DependentUpon>CalculationOptionsPanelMage.xaml</DependentUpon>
+      <DependentUpon>CalculationOptionsPanelMage.WPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -167,7 +167,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CalculationOptionsPanelMage.xaml">
+    <Page Include="CalculationOptionsPanelMage.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -180,5 +180,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\PreprocessXaml.targets" />
 </Project>

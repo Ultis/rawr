@@ -122,5 +122,4 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\PreprocessXaml.targets" />
 </Project>

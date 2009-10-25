@@ -109,7 +109,9 @@ namespace Rawr.UI
 				//Calculations.RegisterModel(typeof(Rawr.Hunter.CalculationsHunter));
 				Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
 				Calculations.RegisterModel(typeof(Rawr.Moonkin.CalculationsMoonkin));
+#if SILVERLIGHT
 				Calculations.RegisterModel(typeof(Rawr.ProtPaladin.CalculationsProtPaladin));
+#endif
 				Calculations.RegisterModel(typeof(Rawr.ProtWarr.CalculationsProtWarr));
 				//Calculations.RegisterModel(typeof(Rawr.RestoSham.CalculationsRestoSham));
 				Calculations.RegisterModel(typeof(Rawr.Retribution.CalculationsRetribution));

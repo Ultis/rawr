@@ -96,7 +96,7 @@
       <Link>Skill.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelRetribution.xaml.cs">
-      <DependentUpon>CalculationOptionsPanelRetribution.xaml</DependentUpon>
+      <DependentUpon>CalculationOptionsPanelRetribution.WPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -110,7 +110,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CalculationOptionsPanelRetribution.xaml">
+    <Page Include="CalculationOptionsPanelRetribution.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -123,5 +123,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\PreprocessXaml.targets" />
 </Project>

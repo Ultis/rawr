@@ -39,10 +39,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK", "Rawr.TankDK\
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3E1EB01-42E9-45AB-BEE8-E253A85FFE33}"
-	ProjectSection(SolutionItems) = preProject
-		PreprocessXaml.targets = PreprocessXaml.targets
-		XamlPreprocessor.dll = XamlPreprocessor.dll
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Elemental", "Rawr.Elemental\Rawr.Elemental.csproj", "{2D00FCEA-E624-4E4F-92AE-C4B4BD1D6E46}"
 EndProject

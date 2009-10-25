@@ -5,15 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6B7551FD-FCAA-4D09-A217-0F35250F78D4}</ProjectGuid>
-    <OutputType>library</OutputType>
+    <ProjectGuid>{0C265AB5-D8BF-49C2-8FCD-DD44544678EF}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rawr.Cat.WPF</RootNamespace>
-    <AssemblyName>Rawr.Cat.WPF</AssemblyName>
+    <RootNamespace>XamlSync</RootNamespace>
+    <AssemblyName>XamlSync</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -24,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;RAWR3</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -32,7 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;RAWR3</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -49,45 +47,10 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Cat\CalculationOptionsCat.cs">
-      <Link>CalculationOptionsCat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CalculationsCat.cs">
-      <Link>CalculationsCat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CatAbilityStats.cs">
-      <Link>CatAbilityStats.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CatRotationCalculator.cs">
-      <Link>CatRotationCalculator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Cat\CharacterCalculationsCat.cs">
-      <Link>CharacterCalculationsCat.cs</Link>
-    </Compile>
-    <Compile Include="CalculationOptionsPanelCat.xaml.cs">
-      <DependentUpon>CalculationOptionsPanelCat.WPF.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
-      <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
-      <Name>Rawr.Base.WPF</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="CalculationOptionsPanelCat.WPF.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,11 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
 	xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-#if SILVERLIGHT    
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-#else
-	xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-#endif    
 	xmlns:local="clr-namespace:Rawr.UI"
 	x:Class="Rawr.UI.OptimizerResults"
 	Title="Optimizer Results"
