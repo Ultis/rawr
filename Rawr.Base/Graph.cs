@@ -53,8 +53,11 @@ namespace Rawr.Base
                 Color.FromArgb(255,217,100,54), 
                 Color.FromArgb(255,210,72,195), 
                 Color.FromArgb(255,206,189,191), 
+                Color.FromArgb(255,255,0,0), 
+                Color.FromArgb(255,0,255,0), 
+                Color.FromArgb(255,0,0,255), 
             };
-            if (statsList.Length == 0 || statsList.Length > 9) return; // more than 9 elements for the array would run out of colours
+            if (statsList.Length == 0 || statsList.Length > 12) return; // more than 12 elements for the array would run out of colours
             float minDpsChange = 0f, maxDpsChange = 0f;
             Point[][] points = new Point[statsList.Length][];
             for (int index = 0; index < statsList.Length; index++)

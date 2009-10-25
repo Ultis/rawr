@@ -31,7 +31,7 @@ namespace Rawr.Enhance
         private bool _magma = true;
         private bool _baseStatOption = true;
         private bool _useMana = true;
-        private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true };
+        private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true };
         private SerializableDictionary<EnhanceAbility, Priority> _priorityList = new SerializableDictionary<EnhanceAbility, Priority>();
 
         #region Getter/Setter

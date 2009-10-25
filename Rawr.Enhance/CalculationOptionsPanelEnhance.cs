@@ -56,6 +56,7 @@ namespace Rawr.Enhance
             chkStatsHaste.Checked = _calcOpts.StatsList[6];
             chkStatsArP.Checked = _calcOpts.StatsList[7];
             chkStatsSP.Checked =_calcOpts.StatsList[8];
+            chkStatsInt.Checked = _calcOpts.StatsList[9];
             LoadPriorities();
 
 
@@ -98,6 +99,7 @@ namespace Rawr.Enhance
                 _calcOpts.StatsList[6] = chkStatsHaste.Checked;
                 _calcOpts.StatsList[7] = chkStatsArP.Checked;
                 _calcOpts.StatsList[8] = chkStatsSP.Checked;
+                _calcOpts.StatsList[9] = chkStatsInt.Checked;
                 SavePriorities();
                 Character.OnCalculationsInvalidated();
             }
@@ -306,6 +308,7 @@ namespace Rawr.Enhance
                 priorityList.Add(EnhanceAbility.MagmaTotem, new Priority("Magma Totem", EnhanceAbility.MagmaTotem, "Refresh Magma Totem", true, ++priority, "MT"));
                 priorityList.Add(EnhanceAbility.SearingTotem, new Priority("Searing Totem", EnhanceAbility.SearingTotem, "Refresh Searing Totem", false, ++priority, "ST"));
                 priorityList.Add(EnhanceAbility.LightningShield, new Priority("Lightning Shield", EnhanceAbility.LightningShield, "Refresh Lightning Shield", true, ++priority, "LS"));
+                priorityList.Add(EnhanceAbility.RefreshTotems, new Priority("Refresh Totems", EnhanceAbility.RefreshTotems, "Refresh Totems", true, ++priority, ""));
             }
         }
 
@@ -385,6 +388,8 @@ namespace Rawr.Enhance
                 statsList.Add(new Stats() { ArmorPenetrationRating = 1f });
             if (chkStatsSP.Checked)
                 statsList.Add(new Stats() { SpellPower = 1.15f });
+            if (chkStatsInt.Checked)
+                statsList.Add(new Stats() { Intellect = 1f });
 
             return statsList.ToArray();
         }
@@ -445,9 +450,15 @@ namespace Rawr.Enhance
             _calcOpts.StatsList[8] = chkStatsSP.Checked;
         }
 
+        private void chkStatsInt_CheckedChanged(object sender, EventArgs e)
+        {
+            _calcOpts.StatsList[9] = chkStatsInt.Checked;
+        }
+        
         private void comboBoxCalculationToGraph_SelectedIndexChanged(object sender, EventArgs e)
         {
             _calcOpts.CalculationToGraph = (string)comboBoxCalculationToGraph.SelectedItem;
         }
+
     }
 }

@@ -78,6 +78,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
+            this.chkStatsInt = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -128,6 +129,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.chkStatsInt);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.btnStatsGraph);
             this.groupBox1.Controls.Add(this.comboBoxCalculationToGraph);
@@ -715,6 +717,17 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
+            // chkStatsInt
+            // 
+            this.chkStatsInt.AutoSize = true;
+            this.chkStatsInt.Location = new System.Drawing.Point(115, 111);
+            this.chkStatsInt.Name = "chkStatsInt";
+            this.chkStatsInt.Size = new System.Drawing.Size(63, 17);
+            this.chkStatsInt.TabIndex = 63;
+            this.chkStatsInt.Text = "Intellect";
+            this.chkStatsInt.UseVisualStyleBackColor = true;
+            this.chkStatsInt.CheckedChanged += new System.EventHandler(this.chkStatsInt_CheckedChanged);
+            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -794,6 +807,7 @@
         private System.Windows.Forms.Button btnStatsGraph;
         private System.Windows.Forms.ComboBox comboBoxCalculationToGraph;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.CheckBox chkStatsInt;
 
     }
 }
