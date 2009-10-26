@@ -19,7 +19,7 @@ namespace Rawr.DPSWarr {
         protected WarriorTalents TALENTS;
         protected Stats STATS;
         protected CombatFactors COMBATFACTORS;
-        protected Skills.WhiteAttacks WHITEATTACKS, WHITEATTACKSUNDER;
+        protected Skills.WhiteAttacks WHITEATTACKS;
         protected CalculationOptionsDPSWarr CALCOPTS;
 
         public float _HPS_TTL;

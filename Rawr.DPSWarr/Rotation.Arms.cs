@@ -564,7 +564,7 @@ namespace Rawr.DPSWarr {
             RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20);
             availRage += RageGenWhite;
             availRage -= SL.GetRageUseOverDur(_SL_GCDs);
-            float repassAvailRage = availRage, repassAvailRageUnder20 = 0f;
+            float repassAvailRage = 0f, repassAvailRageUnder20 = 0f;
             float PercFailRage = 1f, PercFailRageUnder20 = 1f;
 
             int Iterator = 0;
