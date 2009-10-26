@@ -859,6 +859,8 @@ namespace Rawr.Enhance
 
         public override bool IsBuffRelevant(Buff buff)
         {
+            if (buff.Name.StartsWith("Amplify Magic"))
+                return false;
             if (buff.AllowedClasses.Contains(CharacterClass.Shaman))
                 return base.IsBuffRelevant(buff);
             else

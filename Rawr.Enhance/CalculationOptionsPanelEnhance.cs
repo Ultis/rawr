@@ -36,7 +36,7 @@ namespace Rawr.Enhance
             CK_InBack.Checked = _calcOpts.InBack;
             CB_InBackPerc.Value = _calcOpts.InBackPerc;
             trackBarAverageLag.Value = _calcOpts.AverageLag;
-            trackBarAverageLag.Value = (int)_calcOpts.FightLengthMultiplier;
+            trackBarSimLength.Value = (int)_calcOpts.FightLengthMultiplier;
             trackbarSRMana.Value = (int)_calcOpts.MinManaSR;
             trackbarSRMana.Enabled = _calcOpts.UseMana;
             labelAverageLag.Text = trackBarAverageLag.Value.ToString();
