@@ -244,7 +244,10 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes() {
 PNStuff.Add(
-"v2.2.24 (Projected Release: Oct 24, 2009 08:00)",
+"v2.2.25 (Unreleased)",
+@"");
+PNStuff.Add(
+"v2.2.24 (Projected Release: Oct 24, 2009 18:00)",
 @"- Added new naming/colors for the custom chart so you know what each number actually means
 - Fixed a bug with Sword Spec to show values when not using a Swordspec
 - Fixed a bug with Needed Rage in Arms Rotation, making it visually double-dip

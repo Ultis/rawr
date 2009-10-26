@@ -72,6 +72,9 @@
     <Compile Include="..\..\Rawr.DPSWarr\ComparisonCalculationsDPSWarr.cs">
       <Link>ComparisonCalculationsDPSWarr.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\ErrorBoxDPSWarr.cs">
+      <Link>ErrorBoxDPSWarr.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSWarr\Rotation.Arms.cs">
       <Link>Rotation.Arms.cs</Link>
     </Compile>

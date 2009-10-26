@@ -756,7 +756,7 @@ namespace Rawr.DPSWarr {
                     // total the amount of rage you really need and turn it into a percentage that we failed
                     PercFailRage *= 1f + repassAvailRage / (availRage - repassAvailRage); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
                 } else { PercFailRage = 1f; }
-
+                
                 // Bladestorm
                 if (BLS.Validated) {
                     acts = Math.Min(availGCDs, BLS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
@@ -772,10 +772,10 @@ namespace Rawr.DPSWarr {
                     acts = Math.Min(availGCDs, MS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     #region Mortal Strike Delays
                     /* ===== Delays in MS from Slam or Execute =====
-                 * This is a test for MS Delays (idea coming from Landsoul's sheet 2.502)
-                 * Note: The numbers displayed are from a specific example, formula
-                 * results in Rawr may differ
-                 */
+                     * This is a test for MS Delays (idea coming from Landsoul's sheet 2.502)
+                     * Note: The numbers displayed are from a specific example, formula
+                     * results in Rawr may differ
+                     */
                     if (PercFailRage == 1f)
                     {
                         HPS = LandedAtksOverDur;
@@ -884,7 +884,6 @@ namespace Rawr.DPSWarr {
                     availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                     availRage -= OP.GetRageUseOverDur(_OP_GCDs);
                 }
-
                 // Taste for Blood
                 if (TB.Validated) {
                     acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
@@ -943,7 +942,8 @@ namespace Rawr.DPSWarr {
             }
             #endregion
             #region OnAttacks
-            if (availRage > 0f && PercFailRage == 1f) { // We need extra rage beyond the rotation to HS/CL and we don't HS/CL when parts of our rotation were failing for lac of rage
+            if (availRage > 0f && PercFailRage == 1f && (hsok || clok))
+            { // We need extra rage beyond the rotation to HS/CL and we don't HS/CL when parts of our rotation were failing for lack of rage
                 float savedAvailRage = availRage - RageGenWhite;
                 Iterator = 0;
                 do {

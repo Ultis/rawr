@@ -1761,6 +1761,8 @@ namespace Rawr //O O . .
             clone.Class = this.Class;
             clone.AssignAllTalentsFromCharacter(this, true);
 			clone.EnforceGemRequirements = this.EnforceGemRequirements;
+            clone.PrimaryProfession = this.PrimaryProfession;
+            clone.SecondaryProfession = this.SecondaryProfession;
             clone.WaistBlacksmithingSocketEnabled = this.WaistBlacksmithingSocketEnabled;
             clone.WristBlacksmithingSocketEnabled = this.WristBlacksmithingSocketEnabled;
             clone.HandsBlacksmithingSocketEnabled = this.HandsBlacksmithingSocketEnabled;
