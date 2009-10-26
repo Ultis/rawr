@@ -86,7 +86,9 @@ namespace Rawr.Enhance
         public void CalculateAbilities()
         {
             float averageLag = _calcOpts.AverageLag / 1000f;
-            float reactionTime = _calcOpts.ReactionTime / 1000f;
+            float reactionTime = (_calcOpts.ReactionTime / 1000f) - 0.25f; // the 0.25 seconds before spell comes off gcd allows spells added to queue.
+            if (reactionTime < 0f)
+                reactionTime = 0f;
             // first calculate base abilities uses
             float totalTimeUsed = 0f;
             float totalManaUsed = 0f;
