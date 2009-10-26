@@ -92,9 +92,17 @@ namespace Rawr.Enhance
             // first calculate base abilities uses
             float totalTimeUsed = 0f;
             float totalManaUsed = 0f;
+            float uses = 0f;
+            float shockTime = 0f;
             foreach (Ability ability in _abilities)
             {
-                float uses = fightLength / (ability.Duration + averageLag);
+                if (ability.AbilityType == EnhanceAbility.EarthShock || ability.AbilityType == EnhanceAbility.FlameShock)
+                {
+                    uses = (fightLength - shockTime) / (ability.Duration + averageLag);
+                    shockTime = uses * _cs.BaseShockSpeed;
+                }
+                else
+                    uses = fightLength / (ability.Duration + averageLag);
                 ability.AddUses(uses);
                 totalTimeUsed += uses * (ability.GCD + reactionTime);
                 totalManaUsed += uses * (ability.ManaCost - ability.GCD * _cs.ManaRegen);
