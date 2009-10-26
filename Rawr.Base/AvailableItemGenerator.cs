@@ -137,8 +137,8 @@ namespace Rawr.Optimizer
                                             if (!warnings.Contains(line))
                                             {
                                                 warnings.Add(line);
+                                                s.AppendLine(line);
                                             }
-                                            s.AppendLine(line);
                                             valid = false;
                                         }
                                         break;
@@ -158,8 +158,8 @@ namespace Rawr.Optimizer
                                                     if (!warnings.Contains(line))
                                                     {
                                                         warnings.Add(line);
+                                                        s.AppendLine(line);
                                                     }
-                                                    s.AppendLine(line);
                                                     valid = false;
                                                 }
                                             }
@@ -175,8 +175,8 @@ namespace Rawr.Optimizer
                                                 if (!warnings.Contains(line))
                                                 {
                                                     warnings.Add(line);
+                                                    s.AppendLine(line);
                                                 }
-                                                s.AppendLine(line);
                                                 valid = false;
                                             }
                                         }
@@ -197,8 +197,8 @@ namespace Rawr.Optimizer
                                                     if (!warnings.Contains(line))
                                                     {
                                                         warnings.Add(line);
+                                                        s.AppendLine(line);
                                                     }
-                                                    s.AppendLine(line);
                                                     valid = false;
                                                 }
                                             }
@@ -210,8 +210,8 @@ namespace Rawr.Optimizer
                                             if (!warnings.Contains(line))
                                             {
                                                 warnings.Add(line);
+                                                s.AppendLine(line);
                                             }
-                                            s.AppendLine(line);
                                             valid = false;
                                         }
                                         break;
@@ -221,8 +221,8 @@ namespace Rawr.Optimizer
                                         if (!warnings.Contains(line))
                                         {
                                             warnings.Add(line);
+                                            s.AppendLine(line);
                                         }
-                                        s.AppendLine(line);
                                         valid = false;
                                         break;
                                 }
@@ -233,21 +233,28 @@ namespace Rawr.Optimizer
                                 if (!warnings.Contains(line))
                                 {
                                     warnings.Add(line);
+                                    s.AppendLine(line);
                                 }
-                                s.AppendLine(line);
                                 valid = false;
                             }
                         }
                     }
                     else
                     {
+                        if (slot == (int)CharacterSlot.Projectile)
+                        {
+                            if (!character.CurrentCalculations.CanUseAmmo)
+                            {
+                                continue;
+                            }
+                        }
                         // item itself is not available
                         line = item.Item.Name + " is not available";
                         if (!warnings.Contains(line))
                         {
                             warnings.Add(line);
+                            s.AppendLine(line);
                         }
-                        s.AppendLine(line);
                         valid = false;
                     }
                 }
