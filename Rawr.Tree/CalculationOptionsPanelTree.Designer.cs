@@ -38,11 +38,10 @@
             this.tbBSRatio = new System.Windows.Forms.TrackBar();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.cbApplyMore = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblIdleFraction = new System.Windows.Forms.Label();
+            this.tbIdlePercentage = new System.Windows.Forms.TrackBar();
             this.tbSwiftmendPerMin = new System.Windows.Forms.TrackBar();
             this.lblSwiftMend = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.tbPrimaryHealFrac = new System.Windows.Forms.TrackBar();
             this.lblPrimaryHeal = new System.Windows.Forms.Label();
             this.tbWildGrowth = new System.Windows.Forms.TrackBar();
@@ -70,6 +69,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbIdlePercentage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbSwiftmendPerMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPrimaryHealFrac)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).BeginInit();
@@ -181,11 +181,10 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.cbApplyMore);
-            this.groupBox7.Controls.Add(this.label1);
+            this.groupBox7.Controls.Add(this.lblIdleFraction);
+            this.groupBox7.Controls.Add(this.tbIdlePercentage);
             this.groupBox7.Controls.Add(this.tbSwiftmendPerMin);
             this.groupBox7.Controls.Add(this.lblSwiftMend);
-            this.groupBox7.Controls.Add(this.label7);
             this.groupBox7.Controls.Add(this.tbPrimaryHealFrac);
             this.groupBox7.Controls.Add(this.lblPrimaryHeal);
             this.groupBox7.Controls.Add(this.tbWildGrowth);
@@ -201,33 +200,30 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Fight Details";
             // 
-            // cbApplyMore
+            // lblIdleFraction
             // 
-            this.cbApplyMore.AutoSize = true;
-            this.cbApplyMore.Location = new System.Drawing.Point(9, 390);
-            this.cbApplyMore.Name = "cbApplyMore";
-            this.cbApplyMore.Size = new System.Drawing.Size(180, 17);
-            this.cbApplyMore.TabIndex = 56;
-            this.cbApplyMore.Text = "Also apply penalty to burst points";
-            this.cbApplyMore.UseVisualStyleBackColor = true;
-            this.cbApplyMore.Visible = false;
-            this.cbApplyMore.CheckedChanged += new System.EventHandler(this.cbApplyMore_CheckedChanged);
+            this.lblIdleFraction.AutoSize = true;
+            this.lblIdleFraction.Location = new System.Drawing.Point(6, 314);
+            this.lblIdleFraction.Name = "lblIdleFraction";
+            this.lblIdleFraction.Size = new System.Drawing.Size(143, 13);
+            this.lblIdleFraction.TabIndex = 56;
+            this.lblIdleFraction.Text = "Non-casting fraction required";
             // 
-            // label1
+            // tbIdlePercentage
             // 
-            this.label1.AutoEllipsis = true;
-            this.label1.Location = new System.Drawing.Point(6, 344);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(262, 43);
-            this.label1.TabIndex = 55;
-            this.label1.Text = "The Penalty value will punish going out of mana by scaling down the sustained hea" +
-                "ling points. Use this to make mana regeneration suddenly very important.";
-            this.label1.Visible = false;
+            this.tbIdlePercentage.BackColor = System.Drawing.SystemColors.Window;
+            this.tbIdlePercentage.Location = new System.Drawing.Point(6, 330);
+            this.tbIdlePercentage.Maximum = 100;
+            this.tbIdlePercentage.Name = "tbIdlePercentage";
+            this.tbIdlePercentage.Size = new System.Drawing.Size(262, 45);
+            this.tbIdlePercentage.TabIndex = 55;
+            this.tbIdlePercentage.TickFrequency = 5;
+            this.tbIdlePercentage.Scroll += new System.EventHandler(this.tbIdlePercentage_Scroll);
             // 
             // tbSwiftmendPerMin
             // 
             this.tbSwiftmendPerMin.BackColor = System.Drawing.SystemColors.Window;
-            this.tbSwiftmendPerMin.Location = new System.Drawing.Point(6, 296);
+            this.tbSwiftmendPerMin.Location = new System.Drawing.Point(6, 266);
             this.tbSwiftmendPerMin.Maximum = 4;
             this.tbSwiftmendPerMin.Name = "tbSwiftmendPerMin";
             this.tbSwiftmendPerMin.Size = new System.Drawing.Size(262, 45);
@@ -237,22 +233,11 @@
             // lblSwiftMend
             // 
             this.lblSwiftMend.AutoSize = true;
-            this.lblSwiftMend.Location = new System.Drawing.Point(6, 280);
+            this.lblSwiftMend.Location = new System.Drawing.Point(6, 250);
             this.lblSwiftMend.Name = "lblSwiftMend";
-            this.lblSwiftMend.Size = new System.Drawing.Size(205, 13);
+            this.lblSwiftMend.Size = new System.Drawing.Size(136, 13);
             this.lblSwiftMend.TabIndex = 53;
-            this.lblSwiftMend.Text = "Swiftmends cast per minute (Experimental)";
-            // 
-            // label7
-            // 
-            this.label7.AutoEllipsis = true;
-            this.label7.Location = new System.Drawing.Point(6, 251);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(262, 29);
-            this.label7.TabIndex = 42;
-            this.label7.Text = "(Healing provided by wild growth is not yet modelled, but mana usage and gcd time" +
-                " is)";
-            this.label7.Visible = false;
+            this.lblSwiftMend.Text = "Swiftmends cast per minute";
             // 
             // tbPrimaryHealFrac
             // 
@@ -515,6 +500,7 @@
             this.tabPage2.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbIdlePercentage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbSwiftmendPerMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPrimaryHealFrac)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).EndInit();
@@ -542,7 +528,6 @@
         private System.Windows.Forms.ComboBox cbRotation;
         private System.Windows.Forms.TrackBar tbWildGrowth;
         private System.Windows.Forms.Label lblWG;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TextBox tbModuleNotes;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -559,12 +544,12 @@
         private System.Windows.Forms.TrackBar trkTimeInFSR;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox cbInnervate;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar tbSwiftmendPerMin;
         private System.Windows.Forms.Label lblSwiftMend;
-        private System.Windows.Forms.CheckBox cbApplyMore;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lblSurvMulti;
         private System.Windows.Forms.TrackBar tbSurvMulti;
+        private System.Windows.Forms.Label lblIdleFraction;
+        private System.Windows.Forms.TrackBar tbIdlePercentage;
     }
 }

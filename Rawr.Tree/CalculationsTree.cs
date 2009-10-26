@@ -579,7 +579,9 @@ applied and result is scaled down by 100)",
             
             float replenishment;
             //if (1){ //calcOpts.Patch3_2
-                replenishment = stats.Mana * 0.01f * (calcOpts.ReplenishmentUptime / 100f); // Now 1% every 5 sec
+//                replenishment = stats.Mana * 0.01f * (calcOpts.ReplenishmentUptime / 100f); // Now 1% every 5 sec
+                replenishment = stats.Mana * stats.ManaRestoreFromMaxManaPerSecond * 5.0f * (calcOpts.ReplenishmentUptime / 100f); // Use the buff values (they are /sec, multiply by 5 to get to mp5)
+            
             /*}else{ // patch 3.1
                 replenishment = stats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);   // Old: 0.25% every sec
             }*/
@@ -625,12 +627,23 @@ applied and result is scaled down by 100)",
             //}else{primaryHeal.calculateOldNaturesGrace(primaryHeal.CritPercent / 100f);}
 
             float tpsHealing = 1f - (hotsCastTime + wgCastTime + swiftCastTime);
+            float MaxPrimaryFraction = 1.0f;
+
+            if (tpsHealing > (calcOpts.IdleCastTimePercent/100.0f))
+            {
+                // Reduce available time to keep enough idle time
+                MaxPrimaryFraction = (tpsHealing - (calcOpts.IdleCastTimePercent / 100.0f) )/ tpsHealing;
+            }
+            else
+            {   // User wanted more idle time than available after tank HoTs, just set primary heal to 0
+                MaxPrimaryFraction = 0.0f;
+            }
 
             // Determine if Mana or GCD limited
             float effectiveManaBurnTankHots = hotsMPS + wgMPS + swiftMPS - manaRegen / 5f;
             float manaAvailForPrimaryHeal = (extraMana + stats.Mana) - effectiveManaBurnTankHots * calcOpts.FightDuration;
             float primaryHealMpsAvail = manaAvailForPrimaryHeal / calcOpts.FightDuration;
-            float mpsHealing = tpsHealing * primaryHeal.ManaCost / primaryHeal.CastTime;
+            float mpsHealing = tpsHealing * MaxPrimaryFraction * primaryHeal.ManaCost / primaryHeal.CastTime;
 
             float unusedMana = 0f;
             float unusedCastTimeFrac = 0f;
@@ -639,8 +652,6 @@ applied and result is scaled down by 100)",
                 // Not enough mana to keep hots up
                 // Mana limited
                 primaryFrac = 0f;
-
-                unusedCastTimeFrac = tpsHealing;
 
                 // Need to calculate how much tank healing is penalised/reduced in order to not over value this setup
                 float reduceFactor = (effectiveManaBurnTankHots / (effectiveManaBurnTankHots - primaryHealMpsAvail));
@@ -658,14 +669,14 @@ applied and result is scaled down by 100)",
                 healsPerMinute += reduceFactor;
                 rejuvTicksPerMinute *= reduceFactor;
             } else if (primaryHealMpsAvail > mpsHealing) {
-                // GCD limited
+                // GCD/Idle Time limited
                 unusedMana = (primaryHealMpsAvail - mpsHealing) * calcOpts.FightDuration;
-                primaryFrac = 1.0f;
+                primaryFrac = MaxPrimaryFraction;
             } else {
                 // Mana limited
-                primaryFrac = primaryHealMpsAvail / mpsHealing;
-                unusedCastTimeFrac = tpsHealing * (1.0f - primaryFrac);
+                primaryFrac = primaryHealMpsAvail / mpsHealing * MaxPrimaryFraction;
             }
+            unusedCastTimeFrac = tpsHealing * (1.0f - primaryFrac);
             #endregion
 
             #region Primary Heal
@@ -1378,6 +1389,7 @@ applied and result is scaled down by 100)",
                 Mp5 = stats.Mp5,
                 Armor = stats.Armor,
                 Stamina = stats.Stamina,
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 #endregion
                 #region Trinkets
                 BonusManaPotion = stats.BonusManaPotion,
@@ -1431,7 +1443,7 @@ applied and result is scaled down by 100)",
         public bool HasRelevantSpecialEffectStats(Stats stats) {
             return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore
                    + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.SwiftmendBonus + stats.HealingOmenProc
-                   + stats.ShieldFromHealed) > 0;
+                   + stats.ShieldFromHealed + stats.ManaRestoreFromMaxManaPerSecond) > 0;
         }
         public override bool HasRelevantStats(Stats stats) {
             foreach (Rawr.SpecialEffect effect in stats.SpecialEffects()) {
@@ -1458,7 +1470,7 @@ applied and result is scaled down by 100)",
                 stats.RejuvenationInstantTick + stats.NourishSpellpower + stats.SpellsManaReduction + 
                 //stats.ManacostReduceWithin15OnHealingCast +
                 stats.HealingOmenProc + stats.SwiftmendBonus + stats.NourishCritBonus + stats.RejuvenationCrit +
-                stats.Armor + stats.Stamina
+                stats.Armor + stats.Stamina + stats.ManaRestoreFromMaxManaPerSecond
                 > 0)
                 return true;
 

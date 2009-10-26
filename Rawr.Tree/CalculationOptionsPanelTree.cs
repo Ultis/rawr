@@ -71,6 +71,9 @@ namespace Rawr.Tree {
             tbSwiftmendPerMin.Value = calcOpts.SwiftmendPerMinute;
             lblSwiftMend.Text = "Swiftmends per Minute: " + tbSwiftmendPerMin.Value;
 
+            tbIdlePercentage.Value = calcOpts.IdleCastTimePercent;
+            lblIdleFraction.Text = "Idle percentage: " + tbIdlePercentage.Value;
+
             loading = false;
         }
         private float parseFloat(string s) {
@@ -157,11 +160,21 @@ namespace Rawr.Tree {
             lblSwiftMend.Text = "Swiftmends per minute: " + tbSwiftmendPerMin.Value;
             Character.OnCalculationsInvalidated();
         }
-        private void cbApplyMore_CheckedChanged(object sender, EventArgs e) {
+        private void tbIdlePercentage_Scroll(object sender, EventArgs e)
+        {
+            if (loading) { return; }
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.IdleCastTimePercent = tbIdlePercentage.Value;
+            lblIdleFraction.Text = "Idle percentage: " + tbIdlePercentage.Value;
+            Character.OnCalculationsInvalidated();
+        }
+        private void cbApplyMore_CheckedChanged(object sender, EventArgs e)
+        {
             if (loading) { return; }
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             //calcOpts.PenalizeEverything = cbApplyMore.Checked;
             Character.OnCalculationsInvalidated();
         }
+
     }
 }

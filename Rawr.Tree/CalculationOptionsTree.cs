@@ -32,12 +32,13 @@ namespace Rawr.Tree {
         private int wildGrowthPerMinute;
         private int innervates;
         private int swiftmendPerMinute;
+        private int idleCastTimePercent; // goes from 0 to 100
         private bool patch3_2;          // Unused atm
         //public int MainSpellFraction = 60;
         public RotationSettings customRotationSettings;
         //private CharacterCalculationsTree calculatedStats = null;
         public CalculationOptionsTree() {
-            BSRatio = 75; // goes from 0 to 100
+            BSRatio = 50; // goes from 0 to 100
             SurvValuePer100 = 1; // 100 Survival Points = 1 HPS (Survival Points = Health / (1-ArmorDamage Reduction)
             
             FightDuration = 240; // 4 Minutes
@@ -50,6 +51,7 @@ namespace Rawr.Tree {
             Innervates = 1;
 
             SwiftmendPerMinute = 0;
+            idleCastTimePercent = 0;
             patch3_2 = true;
         }
         public string GetXml() {
@@ -69,7 +71,9 @@ namespace Rawr.Tree {
         public int WildGrowthPerMinute { get { return wildGrowthPerMinute; } set { wildGrowthPerMinute = value; OnPropertyChanged("WildGrowthPerMinute" ); } }
         public int Innervates          { get { return innervates;          } set { innervates          = value; OnPropertyChanged("Innervates"          ); } }
         public int SwiftmendPerMinute  { get { return swiftmendPerMinute;  } set { swiftmendPerMinute  = value; OnPropertyChanged("SwiftmendPerMinute"  ); } }
-        public bool Patch3_2           { get { return patch3_2;            } set { patch3_2            = value; OnPropertyChanged("Patch3_2"            ); } }
+        public int IdleCastTimePercent { get { return idleCastTimePercent; } set { idleCastTimePercent = value; OnPropertyChanged("IdleCastTimePercent"); } }
+        public bool Patch3_2 { get { return patch3_2; } set { patch3_2 = value; OnPropertyChanged("Patch3_2"); } }
+
 
         #region INotifyPropertyChanged Members
         private void OnPropertyChanged(string name) { if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name)); }
