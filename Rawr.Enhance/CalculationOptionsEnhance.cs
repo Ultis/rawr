@@ -25,6 +25,7 @@ namespace Rawr.Enhance
         private string _offhandImbue = "Flametongue";
         private string _calculationToGraph = "DPS Rating";
         private float _fightLength = 10.0f;
+        private float _fightLengthMultiplier = 5.0f;
         private float _targetFireResistance = 0;
         private float _targetNatureResistance = 0;
         private float _minManaSR = 1250;
@@ -46,6 +47,7 @@ namespace Rawr.Enhance
         public string OffhandImbue { get { return _offhandImbue; } set { _offhandImbue = value; OnPropertyChanged("OffhandImbue"); } }
         public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
         public float FightLength { get { return _fightLength; } set { _fightLength = value; OnPropertyChanged("FightLength"); } }
+        public float FightLengthMultiplier { get { return _fightLengthMultiplier; } set { _fightLengthMultiplier = value; OnPropertyChanged("FightLengthMultiplier"); } }
         public float TargetFireResistance { get { return _targetFireResistance; } set { _targetFireResistance = value; OnPropertyChanged("TargetFireResistance"); } }
         public float TargetNatureResistance { get { return _targetNatureResistance; } set { _targetNatureResistance = value; OnPropertyChanged("TargetNatureResistance"); } }
         public bool Magma { get { return _magma; } set { _magma = value; OnPropertyChanged("Magma"); } }

@@ -31,6 +31,7 @@
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkStatsInt = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnStatsGraph = new System.Windows.Forms.Button();
             this.comboBoxCalculationToGraph = new System.Windows.Forms.ComboBox();
@@ -78,7 +79,9 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.chkStatsInt = new System.Windows.Forms.CheckBox();
+            this.labelSimLength = new System.Windows.Forms.Label();
+            this.trackBarSimLength = new System.Windows.Forms.TrackBar();
+            this.label11 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -89,6 +92,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarSimLength)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -105,6 +109,9 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.labelSimLength);
+            this.tabPage1.Controls.Add(this.trackBarSimLength);
+            this.tabPage1.Controls.Add(this.label11);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.labelSRMana);
             this.tabPage1.Controls.Add(this.trackbarSRMana);
@@ -142,12 +149,23 @@
             this.groupBox1.Controls.Add(this.chkStatsAP);
             this.groupBox1.Controls.Add(this.chkStatsAgility);
             this.groupBox1.Controls.Add(this.chkStatsStrength);
-            this.groupBox1.Location = new System.Drawing.Point(10, 246);
+            this.groupBox1.Location = new System.Drawing.Point(10, 294);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(248, 199);
             this.groupBox1.TabIndex = 58;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Stats Graph Options";
+            // 
+            // chkStatsInt
+            // 
+            this.chkStatsInt.AutoSize = true;
+            this.chkStatsInt.Location = new System.Drawing.Point(115, 111);
+            this.chkStatsInt.Name = "chkStatsInt";
+            this.chkStatsInt.Size = new System.Drawing.Size(63, 17);
+            this.chkStatsInt.TabIndex = 63;
+            this.chkStatsInt.Text = "Intellect";
+            this.chkStatsInt.UseVisualStyleBackColor = true;
+            this.chkStatsInt.CheckedChanged += new System.EventHandler(this.chkStatsInt_CheckedChanged);
             // 
             // label7
             // 
@@ -280,7 +298,7 @@
             // 
             this.labelSRMana.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSRMana.Location = new System.Drawing.Point(122, 228);
+            this.labelSRMana.Location = new System.Drawing.Point(122, 276);
             this.labelSRMana.Name = "labelSRMana";
             this.labelSRMana.Size = new System.Drawing.Size(136, 12);
             this.labelSRMana.TabIndex = 56;
@@ -293,7 +311,7 @@
             this.trackbarSRMana.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackbarSRMana.Cursor = System.Windows.Forms.Cursors.Default;
             this.trackbarSRMana.LargeChange = 250;
-            this.trackbarSRMana.Location = new System.Drawing.Point(122, 195);
+            this.trackbarSRMana.Location = new System.Drawing.Point(122, 243);
             this.trackbarSRMana.Maximum = 5000;
             this.trackbarSRMana.Name = "trackbarSRMana";
             this.trackbarSRMana.Size = new System.Drawing.Size(136, 45);
@@ -306,7 +324,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 204);
+            this.label9.Location = new System.Drawing.Point(7, 252);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(116, 13);
             this.label9.TabIndex = 54;
@@ -317,7 +335,7 @@
             this.chbMana.AutoSize = true;
             this.chbMana.Checked = true;
             this.chbMana.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbMana.Location = new System.Drawing.Point(9, 172);
+            this.chbMana.Location = new System.Drawing.Point(9, 220);
             this.chbMana.Name = "chbMana";
             this.chbMana.Size = new System.Drawing.Size(135, 17);
             this.chbMana.TabIndex = 53;
@@ -329,7 +347,7 @@
             // 
             this.labelAverageLag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelAverageLag.Location = new System.Drawing.Point(82, 39);
+            this.labelAverageLag.Location = new System.Drawing.Point(82, 87);
             this.labelAverageLag.Name = "labelAverageLag";
             this.labelAverageLag.Size = new System.Drawing.Size(181, 12);
             this.labelAverageLag.TabIndex = 39;
@@ -342,7 +360,7 @@
             this.trackBarAverageLag.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarAverageLag.Cursor = System.Windows.Forms.Cursors.Default;
             this.trackBarAverageLag.LargeChange = 25;
-            this.trackBarAverageLag.Location = new System.Drawing.Point(82, 6);
+            this.trackBarAverageLag.Location = new System.Drawing.Point(82, 54);
             this.trackBarAverageLag.Maximum = 750;
             this.trackBarAverageLag.Name = "trackBarAverageLag";
             this.trackBarAverageLag.Size = new System.Drawing.Size(176, 45);
@@ -355,7 +373,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 15);
+            this.label5.Location = new System.Drawing.Point(7, 63);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(71, 13);
             this.label5.TabIndex = 37;
@@ -366,7 +384,7 @@
             this.chbMagmaSearing.AutoSize = true;
             this.chbMagmaSearing.Checked = true;
             this.chbMagmaSearing.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbMagmaSearing.Location = new System.Drawing.Point(10, 149);
+            this.chbMagmaSearing.Location = new System.Drawing.Point(10, 197);
             this.chbMagmaSearing.Name = "chbMagmaSearing";
             this.chbMagmaSearing.Size = new System.Drawing.Size(237, 17);
             this.chbMagmaSearing.TabIndex = 30;
@@ -379,7 +397,7 @@
             this.chbBaseStatOption.AutoSize = true;
             this.chbBaseStatOption.Checked = true;
             this.chbBaseStatOption.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbBaseStatOption.Location = new System.Drawing.Point(10, 126);
+            this.chbBaseStatOption.Location = new System.Drawing.Point(10, 174);
             this.chbBaseStatOption.Name = "chbBaseStatOption";
             this.chbBaseStatOption.Size = new System.Drawing.Size(211, 17);
             this.chbBaseStatOption.TabIndex = 29;
@@ -397,7 +415,7 @@
             this.comboBoxOffhandImbue.Items.AddRange(new object[] {
             "Windfury",
             "Flametongue"});
-            this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 90);
+            this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 138);
             this.comboBoxOffhandImbue.Name = "comboBoxOffhandImbue";
             this.comboBoxOffhandImbue.Size = new System.Drawing.Size(159, 21);
             this.comboBoxOffhandImbue.TabIndex = 28;
@@ -411,7 +429,7 @@
             this.comboBoxMainhandImbue.Items.AddRange(new object[] {
             "Windfury",
             "Flametongue"});
-            this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 63);
+            this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 111);
             this.comboBoxMainhandImbue.Name = "comboBoxMainhandImbue";
             this.comboBoxMainhandImbue.Size = new System.Drawing.Size(159, 21);
             this.comboBoxMainhandImbue.TabIndex = 27;
@@ -420,7 +438,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(7, 93);
+            this.label8.Location = new System.Drawing.Point(7, 141);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(80, 13);
             this.label8.TabIndex = 31;
@@ -429,7 +447,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 66);
+            this.label3.Location = new System.Drawing.Point(7, 114);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 30;
@@ -717,16 +735,39 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
-            // chkStatsInt
+            // labelSimLength
             // 
-            this.chkStatsInt.AutoSize = true;
-            this.chkStatsInt.Location = new System.Drawing.Point(115, 111);
-            this.chkStatsInt.Name = "chkStatsInt";
-            this.chkStatsInt.Size = new System.Drawing.Size(63, 17);
-            this.chkStatsInt.TabIndex = 63;
-            this.chkStatsInt.Text = "Intellect";
-            this.chkStatsInt.UseVisualStyleBackColor = true;
-            this.chkStatsInt.CheckedChanged += new System.EventHandler(this.chkStatsInt_CheckedChanged);
+            this.labelSimLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelSimLength.Location = new System.Drawing.Point(82, 39);
+            this.labelSimLength.Name = "labelSimLength";
+            this.labelSimLength.Size = new System.Drawing.Size(181, 12);
+            this.labelSimLength.TabIndex = 61;
+            this.labelSimLength.Text = "250";
+            // 
+            // trackBarSimLength
+            // 
+            this.trackBarSimLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarSimLength.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarSimLength.Cursor = System.Windows.Forms.Cursors.Default;
+            this.trackBarSimLength.Location = new System.Drawing.Point(82, 6);
+            this.trackBarSimLength.Maximum = 25;
+            this.trackBarSimLength.Minimum = 1;
+            this.trackBarSimLength.Name = "trackBarSimLength";
+            this.trackBarSimLength.Size = new System.Drawing.Size(176, 45);
+            this.trackBarSimLength.TabIndex = 60;
+            this.trackBarSimLength.Value = 25;
+            this.trackBarSimLength.Scroll += new System.EventHandler(this.trackBarSimLength_Scroll);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(7, 15);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(63, 13);
+            this.label11.TabIndex = 59;
+            this.label11.Text = "Sim Length:";
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -751,6 +792,7 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarSimLength)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -808,6 +850,9 @@
         private System.Windows.Forms.ComboBox comboBoxCalculationToGraph;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox chkStatsInt;
+        private System.Windows.Forms.Label labelSimLength;
+        private System.Windows.Forms.TrackBar trackBarSimLength;
+        private System.Windows.Forms.Label label11;
 
     }
 }

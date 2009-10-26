@@ -36,9 +36,11 @@ namespace Rawr.Enhance
             CK_InBack.Checked = _calcOpts.InBack;
             CB_InBackPerc.Value = _calcOpts.InBackPerc;
             trackBarAverageLag.Value = _calcOpts.AverageLag;
+            trackBarAverageLag.Value = (int)_calcOpts.FightLengthMultiplier;
             trackbarSRMana.Value = (int)_calcOpts.MinManaSR;
             trackbarSRMana.Enabled = _calcOpts.UseMana;
             labelAverageLag.Text = trackBarAverageLag.Value.ToString();
+            labelSimLength.Text = trackBarSimLength.Value.ToString();
             labelSRMana.Text = trackbarSRMana.Value.ToString();
             cmbLength.Value = (decimal)_calcOpts.FightLength;
             comboBoxMainhandImbue.SelectedItem = _calcOpts.MainhandImbue;
@@ -80,6 +82,7 @@ namespace Rawr.Enhance
             if (!_loadingCalculationOptions)
             {
                 labelAverageLag.Text = trackBarAverageLag.Value.ToString();
+                labelSimLength.Text = trackBarSimLength.Value.ToString();
                 labelSRMana.Text = trackbarSRMana.Value.ToString();
 
                 _calcOpts.SetBoss(bosslist.GetBossFromBetterName(comboBoxBoss.Text));
@@ -87,6 +90,8 @@ namespace Rawr.Enhance
                 _calcOpts.MainhandImbue = (string)comboBoxMainhandImbue.SelectedItem;
                 _calcOpts.OffhandImbue = (string)comboBoxOffhandImbue.SelectedItem;
                 _calcOpts.CalculationToGraph = (string)comboBoxCalculationToGraph.SelectedItem;
+                _calcOpts.AverageLag = trackBarAverageLag.Value;
+                _calcOpts.FightLengthMultiplier = trackBarSimLength.Value;
                 _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 _calcOpts.Magma = chbMagmaSearing.Checked;
                 _calcOpts.UseMana = chbMana.Checked;
@@ -185,6 +190,16 @@ namespace Rawr.Enhance
             }
         }
 
+        private void trackBarSimLength_Scroll(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                labelSimLength.Text = trackBarSimLength.Value.ToString();
+                _calcOpts.FightLengthMultiplier = trackBarSimLength.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        
         private void trackbarSRMana_ValueChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
@@ -459,6 +474,5 @@ namespace Rawr.Enhance
         {
             _calcOpts.CalculationToGraph = (string)comboBoxCalculationToGraph.SelectedItem;
         }
-
     }
 }
