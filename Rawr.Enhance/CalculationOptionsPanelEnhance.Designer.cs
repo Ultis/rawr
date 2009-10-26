@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPageBasics = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkStatsInt = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -57,7 +57,7 @@
             this.comboBoxMainhandImbue = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPageBoss = new System.Windows.Forms.TabPage();
             this.CB_InBackPerc = new System.Windows.Forms.NumericUpDown();
             this.TB_BossInfo = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -70,69 +70,73 @@
             this.label4 = new System.Windows.Forms.Label();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPagePriorities = new System.Windows.Forms.TabPage();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
             this.btnUp = new System.Windows.Forms.Button();
             this.CLBPriorities = new System.Windows.Forms.CheckedListBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPageEnhSim = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
             this.labelSimLength = new System.Windows.Forms.Label();
             this.trackBarSimLength = new System.Windows.Forms.TrackBar();
             this.label11 = new System.Windows.Forms.Label();
+            this.labelReactionTime = new System.Windows.Forms.Label();
+            this.trackBarReactionTime = new System.Windows.Forms.TrackBar();
+            this.label12 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.tabPageBasics.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).BeginInit();
-            this.tabPage4.SuspendLayout();
+            this.tabPageBoss.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
-            this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.tabPagePriorities.SuspendLayout();
+            this.tabPageEnhSim.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarSimLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
             // 
-            this.tabControl.Controls.Add(this.tabPage1);
-            this.tabControl.Controls.Add(this.tabPage4);
-            this.tabControl.Controls.Add(this.tabPage2);
-            this.tabControl.Controls.Add(this.tabPage3);
+            this.tabControl.Controls.Add(this.tabPageBasics);
+            this.tabControl.Controls.Add(this.tabPageBoss);
+            this.tabControl.Controls.Add(this.tabPagePriorities);
+            this.tabControl.Controls.Add(this.tabPageEnhSim);
             this.tabControl.Location = new System.Drawing.Point(0, 3);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(272, 551);
             this.tabControl.TabIndex = 9;
             // 
-            // tabPage1
+            // tabPageBasics
             // 
-            this.tabPage1.Controls.Add(this.labelSimLength);
-            this.tabPage1.Controls.Add(this.trackBarSimLength);
-            this.tabPage1.Controls.Add(this.label11);
-            this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.labelSRMana);
-            this.tabPage1.Controls.Add(this.trackbarSRMana);
-            this.tabPage1.Controls.Add(this.label9);
-            this.tabPage1.Controls.Add(this.chbMana);
-            this.tabPage1.Controls.Add(this.labelAverageLag);
-            this.tabPage1.Controls.Add(this.trackBarAverageLag);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.chbMagmaSearing);
-            this.tabPage1.Controls.Add(this.chbBaseStatOption);
-            this.tabPage1.Controls.Add(this.comboBoxOffhandImbue);
-            this.tabPage1.Controls.Add(this.comboBoxMainhandImbue);
-            this.tabPage1.Controls.Add(this.label8);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(264, 525);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Basics";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPageBasics.Controls.Add(this.labelReactionTime);
+            this.tabPageBasics.Controls.Add(this.trackBarReactionTime);
+            this.tabPageBasics.Controls.Add(this.label12);
+            this.tabPageBasics.Controls.Add(this.groupBox1);
+            this.tabPageBasics.Controls.Add(this.labelSRMana);
+            this.tabPageBasics.Controls.Add(this.trackbarSRMana);
+            this.tabPageBasics.Controls.Add(this.label9);
+            this.tabPageBasics.Controls.Add(this.chbMana);
+            this.tabPageBasics.Controls.Add(this.labelAverageLag);
+            this.tabPageBasics.Controls.Add(this.trackBarAverageLag);
+            this.tabPageBasics.Controls.Add(this.label5);
+            this.tabPageBasics.Controls.Add(this.chbMagmaSearing);
+            this.tabPageBasics.Controls.Add(this.chbBaseStatOption);
+            this.tabPageBasics.Controls.Add(this.comboBoxOffhandImbue);
+            this.tabPageBasics.Controls.Add(this.comboBoxMainhandImbue);
+            this.tabPageBasics.Controls.Add(this.label8);
+            this.tabPageBasics.Controls.Add(this.label3);
+            this.tabPageBasics.Location = new System.Drawing.Point(4, 22);
+            this.tabPageBasics.Name = "tabPageBasics";
+            this.tabPageBasics.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageBasics.Size = new System.Drawing.Size(264, 525);
+            this.tabPageBasics.TabIndex = 0;
+            this.tabPageBasics.Text = "Basics";
+            this.tabPageBasics.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -453,27 +457,27 @@
             this.label3.TabIndex = 30;
             this.label3.Text = "Mainhand Imbue:";
             // 
-            // tabPage4
+            // tabPageBoss
             // 
-            this.tabPage4.Controls.Add(this.CB_InBackPerc);
-            this.tabPage4.Controls.Add(this.TB_BossInfo);
-            this.tabPage4.Controls.Add(this.label1);
-            this.tabPage4.Controls.Add(this.CK_InBack);
-            this.tabPage4.Controls.Add(this.LB_TargLvl);
-            this.tabPage4.Controls.Add(this.LB_TargArmor);
-            this.tabPage4.Controls.Add(this.CB_TargLvl);
-            this.tabPage4.Controls.Add(this.CB_TargArmor);
-            this.tabPage4.Controls.Add(this.comboBoxBoss);
-            this.tabPage4.Controls.Add(this.label4);
-            this.tabPage4.Controls.Add(this.cmbLength);
-            this.tabPage4.Controls.Add(this.label2);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(264, 525);
-            this.tabPage4.TabIndex = 4;
-            this.tabPage4.Text = "Boss";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPageBoss.Controls.Add(this.CB_InBackPerc);
+            this.tabPageBoss.Controls.Add(this.TB_BossInfo);
+            this.tabPageBoss.Controls.Add(this.label1);
+            this.tabPageBoss.Controls.Add(this.CK_InBack);
+            this.tabPageBoss.Controls.Add(this.LB_TargLvl);
+            this.tabPageBoss.Controls.Add(this.LB_TargArmor);
+            this.tabPageBoss.Controls.Add(this.CB_TargLvl);
+            this.tabPageBoss.Controls.Add(this.CB_TargArmor);
+            this.tabPageBoss.Controls.Add(this.comboBoxBoss);
+            this.tabPageBoss.Controls.Add(this.label4);
+            this.tabPageBoss.Controls.Add(this.cmbLength);
+            this.tabPageBoss.Controls.Add(this.label2);
+            this.tabPageBoss.Location = new System.Drawing.Point(4, 22);
+            this.tabPageBoss.Name = "tabPageBoss";
+            this.tabPageBoss.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageBoss.Size = new System.Drawing.Size(264, 525);
+            this.tabPageBoss.TabIndex = 4;
+            this.tabPageBoss.Text = "Boss";
+            this.tabPageBoss.UseVisualStyleBackColor = true;
             // 
             // CB_InBackPerc
             // 
@@ -636,20 +640,23 @@
             this.label2.TabIndex = 53;
             this.label2.Text = "Boss: ";
             // 
-            // tabPage2
+            // tabPagePriorities
             // 
-            this.tabPage2.Controls.Add(this.btnReset);
-            this.tabPage2.Controls.Add(this.btnDown);
-            this.tabPage2.Controls.Add(this.btnUp);
-            this.tabPage2.Controls.Add(this.CLBPriorities);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(264, 525);
-            this.tabPage2.TabIndex = 3;
-            this.tabPage2.Text = "Priorities";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPagePriorities.Controls.Add(this.labelSimLength);
+            this.tabPagePriorities.Controls.Add(this.trackBarSimLength);
+            this.tabPagePriorities.Controls.Add(this.label11);
+            this.tabPagePriorities.Controls.Add(this.btnReset);
+            this.tabPagePriorities.Controls.Add(this.btnDown);
+            this.tabPagePriorities.Controls.Add(this.btnUp);
+            this.tabPagePriorities.Controls.Add(this.CLBPriorities);
+            this.tabPagePriorities.Controls.Add(this.label6);
+            this.tabPagePriorities.Location = new System.Drawing.Point(4, 22);
+            this.tabPagePriorities.Name = "tabPagePriorities";
+            this.tabPagePriorities.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPagePriorities.Size = new System.Drawing.Size(264, 525);
+            this.tabPagePriorities.TabIndex = 3;
+            this.tabPagePriorities.Text = "Priorities";
+            this.tabPagePriorities.UseVisualStyleBackColor = true;
             // 
             // btnReset
             // 
@@ -702,16 +709,16 @@
             this.label6.TabIndex = 1;
             this.label6.Text = "Priority Queue";
             // 
-            // tabPage3
+            // tabPageEnhSim
             // 
-            this.tabPage3.Controls.Add(this.tbModuleNotes);
-            this.tabPage3.Controls.Add(this.btnEnhSim);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(264, 525);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "EnhSim";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPageEnhSim.Controls.Add(this.tbModuleNotes);
+            this.tabPageEnhSim.Controls.Add(this.btnEnhSim);
+            this.tabPageEnhSim.Location = new System.Drawing.Point(4, 22);
+            this.tabPageEnhSim.Name = "tabPageEnhSim";
+            this.tabPageEnhSim.Size = new System.Drawing.Size(264, 525);
+            this.tabPageEnhSim.TabIndex = 2;
+            this.tabPageEnhSim.Text = "EnhSim";
+            this.tabPageEnhSim.UseVisualStyleBackColor = true;
             // 
             // tbModuleNotes
             // 
@@ -739,10 +746,10 @@
             // 
             this.labelSimLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSimLength.Location = new System.Drawing.Point(82, 39);
+            this.labelSimLength.Location = new System.Drawing.Point(78, 277);
             this.labelSimLength.Name = "labelSimLength";
             this.labelSimLength.Size = new System.Drawing.Size(181, 12);
-            this.labelSimLength.TabIndex = 61;
+            this.labelSimLength.TabIndex = 64;
             this.labelSimLength.Text = "250";
             // 
             // trackBarSimLength
@@ -751,23 +758,58 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarSimLength.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarSimLength.Cursor = System.Windows.Forms.Cursors.Default;
-            this.trackBarSimLength.Location = new System.Drawing.Point(82, 6);
+            this.trackBarSimLength.Location = new System.Drawing.Point(78, 244);
             this.trackBarSimLength.Maximum = 25;
             this.trackBarSimLength.Minimum = 1;
             this.trackBarSimLength.Name = "trackBarSimLength";
             this.trackBarSimLength.Size = new System.Drawing.Size(176, 45);
-            this.trackBarSimLength.TabIndex = 60;
+            this.trackBarSimLength.TabIndex = 63;
             this.trackBarSimLength.Value = 25;
-            this.trackBarSimLength.Scroll += new System.EventHandler(this.trackBarSimLength_Scroll);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(7, 15);
+            this.label11.Location = new System.Drawing.Point(3, 253);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(63, 13);
-            this.label11.TabIndex = 59;
+            this.label11.TabIndex = 62;
             this.label11.Text = "Sim Length:";
+            // 
+            // labelReactionTime
+            // 
+            this.labelReactionTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelReactionTime.Location = new System.Drawing.Point(83, 39);
+            this.labelReactionTime.Name = "labelReactionTime";
+            this.labelReactionTime.Size = new System.Drawing.Size(181, 12);
+            this.labelReactionTime.TabIndex = 61;
+            this.labelReactionTime.Text = "250";
+            // 
+            // trackBarReactionTime
+            // 
+            this.trackBarReactionTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarReactionTime.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarReactionTime.Cursor = System.Windows.Forms.Cursors.Default;
+            this.trackBarReactionTime.LargeChange = 25;
+            this.trackBarReactionTime.Location = new System.Drawing.Point(83, 6);
+            this.trackBarReactionTime.Maximum = 750;
+            this.trackBarReactionTime.Name = "trackBarReactionTime";
+            this.trackBarReactionTime.Size = new System.Drawing.Size(176, 45);
+            this.trackBarReactionTime.SmallChange = 5;
+            this.trackBarReactionTime.TabIndex = 60;
+            this.trackBarReactionTime.TickFrequency = 50;
+            this.trackBarReactionTime.Value = 250;
+            this.trackBarReactionTime.Scroll += new System.EventHandler(this.trackBarReactionTime_Scroll);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(8, 15);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(79, 13);
+            this.label12.TabIndex = 59;
+            this.label12.Text = "Reaction Time:";
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -778,21 +820,22 @@
             this.Name = "CalculationOptionsPanelEnhance";
             this.Size = new System.Drawing.Size(284, 573);
             this.tabControl.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.tabPageBasics.ResumeLayout(false);
+            this.tabPageBasics.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).EndInit();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
+            this.tabPageBoss.ResumeLayout(false);
+            this.tabPageBoss.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CB_InBackPerc)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.tabPagePriorities.ResumeLayout(false);
+            this.tabPagePriorities.PerformLayout();
+            this.tabPageEnhSim.ResumeLayout(false);
+            this.tabPageEnhSim.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarSimLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -800,12 +843,12 @@
 		#endregion
 
         private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPageBasics;
         private System.Windows.Forms.ComboBox comboBoxOffhandImbue;
         private System.Windows.Forms.ComboBox comboBoxMainhandImbue;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPageEnhSim;
         private System.Windows.Forms.Button btnEnhSim;
         private System.Windows.Forms.TextBox tbModuleNotes;
         private System.Windows.Forms.CheckBox chbBaseStatOption;
@@ -813,7 +856,7 @@
         private System.Windows.Forms.Label labelAverageLag;
         private System.Windows.Forms.TrackBar trackBarAverageLag;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPagePriorities;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckedListBox CLBPriorities;
         private System.Windows.Forms.Button btnDown;
@@ -823,7 +866,7 @@
         private System.Windows.Forms.Label labelSRMana;
         private System.Windows.Forms.TrackBar trackbarSRMana;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPageBoss;
         private System.Windows.Forms.NumericUpDown CB_InBackPerc;
         private System.Windows.Forms.TextBox TB_BossInfo;
         private System.Windows.Forms.Label label1;
@@ -853,6 +896,9 @@
         private System.Windows.Forms.Label labelSimLength;
         private System.Windows.Forms.TrackBar trackBarSimLength;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label labelReactionTime;
+        private System.Windows.Forms.TrackBar trackBarReactionTime;
+        private System.Windows.Forms.Label label12;
 
     }
 }

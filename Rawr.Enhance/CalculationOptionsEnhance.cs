@@ -21,6 +21,7 @@ namespace Rawr.Enhance
 
         // General parameters
         private int _averageLag = 250;
+        private int _reactionTime = 250;
         private string _mainhandImbue = "Windfury";
         private string _offhandImbue = "Flametongue";
         private string _calculationToGraph = "DPS Rating";
@@ -42,6 +43,7 @@ namespace Rawr.Enhance
         public bool InBack { get { return _inBack; } set { _inBack = value; OnPropertyChanged("InBack"); } }
         public int InBackPerc { get { return _inBackPerc; } set { _inBackPerc = value; OnPropertyChanged("InBackPerc"); } }
         public int AverageLag { get { return _averageLag; } set { _averageLag = value; OnPropertyChanged("AverageLag"); } }
+        public int ReactionTime { get { return _reactionTime; } set { _reactionTime = value; OnPropertyChanged("ReactionTime"); } }
         public float MinManaSR { get { return _minManaSR; } set { _minManaSR = value; OnPropertyChanged("MinManaSR"); } }
         public string MainhandImbue { get { return _mainhandImbue; } set { _mainhandImbue = value; OnPropertyChanged("MainhandImbue"); } }
         public string OffhandImbue { get { return _offhandImbue; } set { _offhandImbue = value; OnPropertyChanged("OffhandImbue"); } }

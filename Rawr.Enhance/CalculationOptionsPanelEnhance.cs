@@ -18,6 +18,7 @@ namespace Rawr.Enhance
         public CalculationOptionsPanelEnhance()
         {
             InitializeComponent();
+            tabPagePriorities.Dispose();
             if (bosslist == null) { bosslist = new BossList(); }
             comboBoxBoss.Items.AddRange(bosslist.GetBetterBossNamesAsArray());
             comboBoxCalculationToGraph.Items.AddRange(Graph.GetCalculationNames());
@@ -36,10 +37,12 @@ namespace Rawr.Enhance
             CK_InBack.Checked = _calcOpts.InBack;
             CB_InBackPerc.Value = _calcOpts.InBackPerc;
             trackBarAverageLag.Value = _calcOpts.AverageLag;
+            trackBarReactionTime.Value = _calcOpts.ReactionTime;
             trackBarSimLength.Value = (int)_calcOpts.FightLengthMultiplier;
             trackbarSRMana.Value = (int)_calcOpts.MinManaSR;
             trackbarSRMana.Enabled = _calcOpts.UseMana;
             labelAverageLag.Text = trackBarAverageLag.Value.ToString();
+            labelReactionTime.Text = trackBarReactionTime.Value.ToString();
             labelSimLength.Text = trackBarSimLength.Value.ToString();
             labelSRMana.Text = trackbarSRMana.Value.ToString();
             cmbLength.Value = (decimal)_calcOpts.FightLength;
@@ -82,6 +85,7 @@ namespace Rawr.Enhance
             if (!_loadingCalculationOptions)
             {
                 labelAverageLag.Text = trackBarAverageLag.Value.ToString();
+                labelReactionTime.Text = trackBarReactionTime.Value.ToString();
                 labelSimLength.Text = trackBarSimLength.Value.ToString();
                 labelSRMana.Text = trackbarSRMana.Value.ToString();
 
@@ -91,6 +95,7 @@ namespace Rawr.Enhance
                 _calcOpts.OffhandImbue = (string)comboBoxOffhandImbue.SelectedItem;
                 _calcOpts.CalculationToGraph = (string)comboBoxCalculationToGraph.SelectedItem;
                 _calcOpts.AverageLag = trackBarAverageLag.Value;
+                _calcOpts.ReactionTime = trackBarReactionTime.Value;
                 _calcOpts.FightLengthMultiplier = trackBarSimLength.Value;
                 _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 _calcOpts.Magma = chbMagmaSearing.Checked;
@@ -186,6 +191,16 @@ namespace Rawr.Enhance
             {
                 labelAverageLag.Text = trackBarAverageLag.Value.ToString();
                 _calcOpts.AverageLag = trackBarAverageLag.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trackBarReactionTime_Scroll(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                labelReactionTime.Text = trackBarReactionTime.Value.ToString();
+                _calcOpts.ReactionTime = trackBarReactionTime.Value;
                 Character.OnCalculationsInvalidated();
             }
         }

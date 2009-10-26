@@ -125,7 +125,7 @@ namespace Rawr.Enhance
             sb.AppendLine("glyph_minor2                    -");
             sb.AppendLine("glyph_minor3                    -");
             sb.AppendLine();
-            addPriorities(calcOpts, sb);
+ //           addPriorities(calcOpts, sb);
             addManaConfigs(character, calcOpts, sb);
             sb.AppendLine();
             sb.AppendLine("#############");
