@@ -426,8 +426,8 @@ namespace Rawr.Enhance
         private String dpsOutputFormat(DPSAnalysis dpsStat, float totaldps)
         {
             float percent = dpsStat.dps / totaldps * 100f;
-            return string.Format("{0}\r\n{1}% of total dps",
-                dpsStat, percent.ToString("F2", CultureInfo.InvariantCulture));
+            return string.Format("{0}\r\n{1}% of total dps\r\n{2} PPM",
+                dpsStat, percent.ToString("F2", CultureInfo.InvariantCulture), dpsStat.PPM.ToString("F2", CultureInfo.InvariantCulture));
         }
         
         private String dpsOutputFormat(float dps, float totaldps)

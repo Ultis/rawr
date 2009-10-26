@@ -139,6 +139,7 @@ namespace Rawr.Enhance
         public float HitsPerSLL { get { return hitsPerSLL; } }
         public float WFCooldown { get { return hitsPerSWF == 0 ? 0f : 1 / hitsPerSWF; } }
         public float FTCooldown { get { return hitsPerSOH == 0 ? 0f : 1 / hitsPerSOH; } }
+        public float MeleePPM { get { return (hastedMHSpeed == 0 ? 0f : 60f / hastedMHSpeed) + (hastedOHSpeed == 0 ? 0f : 60f / hastedOHSpeed); } }
 
         public float PecentageBehindBoss { get { return _calcOpts.InBackPerc / 100f; } }
         public float PecentageInfrontBoss { get { return 1f - _calcOpts.InBackPerc / 100f; } }
@@ -403,16 +404,16 @@ namespace Rawr.Enhance
         private float _glancing = -1f;
         private float _hit = -1f;
         private float _crit = -1f;
-        private float _avTime = 0f;
+        private float _ppm = 0f;
 
-        public DPSAnalysis(float dps, float miss, float dodge, float glancing, float crit, float avTime)
+        public DPSAnalysis(float dps, float miss, float dodge, float glancing, float crit, float PPM)
         {
             _dps = dps;
             _miss = miss;
             _dodge = dodge;
             _glancing = glancing;
             _crit = crit;
-            _avTime = avTime;
+            _ppm = PPM;
             _hit = 1f;
             if (miss > 0)
                 _hit -= miss;  // only need to subtract miss from hit as at this point miss includes dodge
@@ -425,7 +426,7 @@ namespace Rawr.Enhance
         }
 
         public float dps { get { return _dps; } }
-        public float avTime { get { return _avTime; } }
+        public float PPM { get { return _ppm; } }
 
         public override string ToString()
         {
