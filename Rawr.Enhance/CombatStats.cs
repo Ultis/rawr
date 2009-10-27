@@ -137,8 +137,8 @@ namespace Rawr.Enhance
         public float HitsPerSMHSS { get { return hitsPerSMHSS; } }
         public float HitsPerSWF { get { return hitsPerSWF; } }
         public float HitsPerSLL { get { return hitsPerSLL; } }
-        public float WFCooldown { get { return hitsPerSWF == 0 ? 0f : 1 / hitsPerSWF; } }
-        public float FTCooldown { get { return hitsPerSOH == 0 ? 0f : 1 / hitsPerSOH; } }
+        public float WFPPM { get { return hitsPerSWF == 0 ? 0f : 60f * hitsPerSWF / 2f; } } // we doubled the hits to get extra attacks for PPM we need number of WFs not number of hits
+        public float FTPPM { get { return hitsPerSOH == 0 ? 0f : 60f * hitsPerSOH; } }
         public float MeleePPM { get { return (hastedMHSpeed == 0 ? 0f : 60f / hastedMHSpeed) + (hastedOHSpeed == 0 ? 0f : 60f / hastedOHSpeed); } }
 
         public float PecentageBehindBoss { get { return _calcOpts.InBackPerc / 100f; } }
