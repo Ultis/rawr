@@ -414,7 +414,7 @@ namespace Rawr.Enhance
             if (calcOpts.PriorityInUse(EnhanceAbility.LightningShield))
             {
                 float damageLSBase = 380;
-                float damageLSCoef = 0.33f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
+                float damageLSCoef = 0.267f; // co-efficient from EnhSim
                 float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellPower);
                 // no crit needed as LS can't crit
                 dpsLS = cs.ChanceSpellHit * cs.StaticShockProcsPerS * damageLS * bonusNatureDamage * bonusLSDamage * bossNatureResistance;
