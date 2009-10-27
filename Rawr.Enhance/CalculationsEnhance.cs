@@ -468,9 +468,15 @@ namespace Rawr.Enhance
                 float soeBuff = IsBuffChecked(character.ActiveBuffs, "Strength of Earth Totem") ? 155f : 0f;
                 float enhTotems = IsBuffChecked(character.ActiveBuffs, "Enhancing Totems (Agility/Strength)") ? 23f : 0f;
                 float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 plus SoE totem if active giving extra 178 str buff
+                float dogsAgi = 113f + soeBuff + enhTotems; 
                 float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * cs.URUptime * (1f + unleashedRage);
                 float dogsMissrate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - hitBonus) + cs.AverageDodge;
-                float dogsCrit = 0.05f * (1 + stats.BonusCritChance);
+                bool critDebuff = IsBuffChecked(character.ActiveBuffs, "Heart of the Crusader") || 
+                                  IsBuffChecked(character.ActiveBuffs, "Master Poisioner") ||
+                                  IsBuffChecked(character.ActiveBuffs, "Totem of Wrath");
+                bool critBuff = IsBuffChecked(character.ActiveBuffs, "Leader of the Pack") ||
+                                IsBuffChecked(character.ActiveBuffs, "Rampage");
+                float dogsCrit = (StatConversion.GetCritFromAgility(dogsAgi, CharacterClass.Shaman) + (critDebuff ? 0.03f : 0f) + (critBuff ? 0.05f : 0f)) * (1 + stats.BonusCritChance);
                 float dogsBaseSpeed = 1.5f;
                 float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste));
                 float dogsBaseDamage = (206.17f + dogsAP / 14f) * dogsBaseSpeed;
@@ -483,7 +489,7 @@ namespace Rawr.Enhance
                 float dogsMultipliers = cs.DamageReduction * bonusPhysicalDamage;
 
                 dpsDogs = 2 * (45f / 180f) * dogsTotalDPS * dogsHitsPerS * dogsMultipliers;
-                calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, 0.065f, cs.GlancingRate, dogsCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FeralSpirits));
+                calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, dogsMissrate, cs.AverageDodge, cs.GlancingRate, dogsCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FeralSpirits));
             }
             else 
             { 

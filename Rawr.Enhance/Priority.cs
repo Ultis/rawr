@@ -41,7 +41,7 @@ namespace Rawr.Enhance
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FeralSpirits);
             if (priority > 0)
                 if (_talents.FeralSpirit == 1)
-                    abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, gcd, 0.12f * baseMana, priority, false, false));
+                    abilities.Add(new Ability(EnhanceAbility.FeralSpirits, 180f, 0f, 0.12f * baseMana, priority, false, false));
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LightningBolt);
             if (priority > 0)
                 if (_talents.MaelstromWeapon > 0)
