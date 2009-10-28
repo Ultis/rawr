@@ -81,26 +81,26 @@ namespace Rawr.Bear
 					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Max Survivbility
 						RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
 
-					new GemmingTemplate() { Model = "Bear", Group = "Rare", Enabled = true, //Max Mitigation
+					new GemmingTemplate() { Model = "Bear", Group = "Rare", //Max Mitigation
 						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = austere },
-					new GemmingTemplate() { Model = "Bear", Group = "Rare", Enabled = true, //Mitigation Heavier 
+					new GemmingTemplate() { Model = "Bear", Group = "Rare", //Mitigation Heavier 
 						RedId = delicate[1], YellowId = stalwart[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = austere },
-					new GemmingTemplate() { Model = "Bear", Group = "Rare", Enabled = true, //Mitigation Heavy
+					new GemmingTemplate() { Model = "Bear", Group = "Rare", //Mitigation Heavy
 						RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = austere },
-					new GemmingTemplate() { Model = "Bear", Group = "Rare", Enabled = true, //Survivbility Heavy
+					new GemmingTemplate() { Model = "Bear", Group = "Rare", //Survivbility Heavy
 						RedId = shifting[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
-					new GemmingTemplate() { Model = "Bear", Group = "Rare", Enabled = true, //Max Survivbility
+					new GemmingTemplate() { Model = "Bear", Group = "Rare", //Max Survivbility
 						RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
 						
-					new GemmingTemplate() { Model = "Bear", Group = "Epic", //Max Mitigation
+					new GemmingTemplate() { Model = "Bear", Group = "Epic", Enabled = true, //Max Mitigation
 						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = austere },
-					new GemmingTemplate() { Model = "Bear", Group = "Epic", //Mitigation Heavier 
+					new GemmingTemplate() { Model = "Bear", Group = "Epic", Enabled = true, //Mitigation Heavier 
 						RedId = delicate[2], YellowId = stalwart[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = austere },
-					new GemmingTemplate() { Model = "Bear", Group = "Epic", //Mitigation Heavy
+					new GemmingTemplate() { Model = "Bear", Group = "Epic", Enabled = true, //Mitigation Heavy
 						RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = austere },
-					new GemmingTemplate() { Model = "Bear", Group = "Epic", //Survivbility Heavy
+					new GemmingTemplate() { Model = "Bear", Group = "Epic", Enabled = true, //Survivbility Heavy
 						RedId = shifting[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
-					new GemmingTemplate() { Model = "Bear", Group = "Epic", //Max Survivbility
+					new GemmingTemplate() { Model = "Bear", Group = "Epic", Enabled = true, //Max Survivbility
 						RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
 						
 					new GemmingTemplate() { Model = "Bear", Group = "Jeweler", //Max Mitigation
