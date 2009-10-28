@@ -30,6 +30,12 @@ namespace Rawr.DPSWarr {
                 InitializeComponent();
                 SetUpFAQ();
                 SetUpPatchNotes();
+#if !DEBUG
+                calcOpts.UseMarkov = false;
+                CK_Markov.Checked  = false;
+                CK_Markov.Visible  = false;
+#endif
+
                 CTL_Maints.ExpandAll(); line = 10;
 #region Tooltips
 #region Boss Selector
@@ -969,6 +975,8 @@ CB_PatchNotes.Items.Add("All");
                 calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
                 RB_StanceFury.Checked = calcOpts.FuryStance;
                 RB_StanceArms.Checked = !RB_StanceFury.Checked; line = 50;
+                //
+                CK_Markov.Checked = calcOpts.UseMarkov;
                 //
                 Character.OnCalculationsInvalidated();
             } catch (Exception ex) {
@@ -2498,6 +2506,15 @@ CB_PatchNotes.Items.Add("All");
                 CustomBoss.Disarms = Box.DisarmList;
                 calcOpts.Disarms = CustomBoss.Disarms;
                 CB_BossList_SelectedIndexChanged(null, null);
+            }
+        }
+        // Markov
+        private void CK_Markov_CheckedChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                bool Checked = CK_Markov.Checked;
+                calcOpts.UseMarkov = Checked;
+                Character.OnCalculationsInvalidated();
             }
         }
     }

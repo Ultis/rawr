@@ -1841,6 +1841,12 @@ namespace Rawr
                 Group = "Food",
                 Stats = { AttackPower = 80, SpellPower = 46, Stamina = 40 }
             });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dodge Food",
+                Group = "Food",
+                Stats = { DodgeRating = 30 }
+            });
             #endregion
             #region Pet Food
             defaultBuffs.Add(new Buff()

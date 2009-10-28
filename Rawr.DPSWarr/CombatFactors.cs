@@ -334,20 +334,16 @@ namespace Rawr.DPSWarr {
         #endregion
         #endregion
         #region Other
-        /*private float FlurryUptime {
-            get {
-                float uptime = 1f - (1f - _c_mhycrit) * (1f - _c_mhycrit) * (1f - _c_mhycrit);
-                return uptime;
-            }
-        }*/
-        #endregion
-        private class Knuckles : Item {
-            public Knuckles() {
+        private class Knuckles : Item
+        {
+            public Knuckles()
+            {
                 Speed = 0f;
                 MaxDamage = 0;
                 MinDamage = 0;
             }
         }
+        #endregion
         #region Attackers Stats against you
         private float LevelModifier { get { return (CalcOpts.TargetLevel - Char.Level) * 0.002f; } }
         private float NPC_CritChance

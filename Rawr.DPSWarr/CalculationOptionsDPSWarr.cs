@@ -17,6 +17,7 @@ namespace Rawr.DPSWarr {
 		public bool FuryStance = true;
 		public bool AllowFlooring = false;
         public bool SE_UseDur = true;
+        public bool UseMarkov = false;
 		public bool PTRMode = false;
         public bool HideBadItems = true;
         public bool HideBadItems_Def = true;

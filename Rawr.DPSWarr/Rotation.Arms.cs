@@ -211,6 +211,12 @@ namespace Rawr.DPSWarr {
             // The goggles! They do nothing!
         }
 
+        #region Markov
+        private void MakeMarkovRotation(bool setCalcs, float PercTimeUnder20) {
+
+        }
+        #endregion
+
         public void MakeRotationandDoDPS(bool setCalcs, float PercTimeUnder20) {
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;

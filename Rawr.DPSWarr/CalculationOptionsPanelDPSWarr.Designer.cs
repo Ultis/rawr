@@ -172,6 +172,7 @@
             this.NUD_SurvScale = new System.Windows.Forms.NumericUpDown();
             this.LB_SurvScale = new System.Windows.Forms.Label();
             this.CK_PTRMode = new Rawr.CustomControls.ExtendedToolTipCheckBox();
+            this.CK_Markov = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_React)).BeginInit();
@@ -1391,6 +1392,7 @@
             // 
             // TB_Misc
             // 
+            this.TB_Misc.Controls.Add(this.CK_Markov);
             this.TB_Misc.Controls.Add(this.CB_Prof2);
             this.TB_Misc.Controls.Add(this.CB_Prof1);
             this.TB_Misc.Controls.Add(this.CK_HideProfEnchants);
@@ -1575,6 +1577,17 @@
                 "d Specialization proc chance is now 2/4/6/8/10%";
             this.CK_PTRMode.CheckedChanged += new System.EventHandler(this.CK_PTRMode_CheckedChanged);
             // 
+            // CK_Markov
+            // 
+            this.CK_Markov.AutoSize = true;
+            this.CK_Markov.Location = new System.Drawing.Point(6, 295);
+            this.CK_Markov.Name = "CK_Markov";
+            this.CK_Markov.Size = new System.Drawing.Size(84, 17);
+            this.CK_Markov.TabIndex = 14;
+            this.CK_Markov.Text = "Use Markov";
+            this.CK_Markov.UseVisualStyleBackColor = true;
+            this.CK_Markov.CheckedChanged += new System.EventHandler(this.CK_Markov_CheckedChanged);
+            // 
             // CalculationOptionsPanelDPSWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1705,5 +1718,6 @@
         private System.Windows.Forms.Button BT_Root;
         private System.Windows.Forms.Button BT_Fear;
         private System.Windows.Forms.Button BT_Move;
+        private System.Windows.Forms.CheckBox CK_Markov;
     }
 }
