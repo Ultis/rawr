@@ -699,7 +699,7 @@ namespace Rawr.TankDK
 
             #region Howling Blast
             {
-                if (talents.HowlingBlast > 0 && calcOpts.m_Rotation.HowlingBlast > 0f)
+                if ((talents.HowlingBlast > 0) && (calcOpts.m_Rotation.HowlingBlast > 0f))
                 {
                     float addedCritFromKM = KMRatio;
                     float HBCount = calcOpts.m_Rotation.HowlingBlast;
@@ -1098,8 +1098,11 @@ namespace Rawr.TankDK
             DPSPoints += fDamWanderingPlague;
             DPSPoints += fDamRuneStrike;
 
-            // TODO: Magic Number?!?
+            // Multiply by Frost Presence modifier:
             DPSPoints *= 2.0735f;
+            // Figure out how much damage may have been done when factoring in missrate.
+            // This currenty is just physicalhit not spell hit.  Need to fix that.
+            DPSPoints *= 1f - chanceMissed;
 
 #if DEBUG
             if ( float.IsNaN(DPSPoints) )

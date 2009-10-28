@@ -85,7 +85,7 @@ namespace Rawr.TankDK {
         public override string ToString() {
             // So that the ToString() function can be used as a base-line comparison if all else fails.
             // TODO: Update this for Burst/ReactionTime.
-            return string.Format("{0}: ({1}O = {2}M {3}S {4}T)", Name, Math.Round(OverallPoints), Math.Round(Mitigation), Math.Round(Survival), Math.Round(Threat));
+            return string.Format("{0}: ({1}O = {2}M {3}S {4}T)", Name, OverallPoints, Mitigation, Survival, Threat);
         }
     }
 }

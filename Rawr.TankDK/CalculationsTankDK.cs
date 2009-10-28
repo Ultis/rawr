@@ -102,16 +102,16 @@ namespace Rawr.TankDK {
 
 				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Defense
 				        RedId = thick[3], YellowId = thick[3], BlueId = thick[3], PrismaticId = thick[3], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Defense 
-				        RedId = thick[3], YellowId = thick[2], BlueId = thick[3], PrismaticId = thick[2], MetaId = austere },
+//				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Defense 
+//				        RedId = thick[3], YellowId = thick[2], BlueId = thick[3], PrismaticId = thick[2], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Dodge
 				        RedId = subtle[3], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[3], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Dodge
-				        RedId = subtle[2], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[2], MetaId = austere },
+//				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Dodge
+//				        RedId = subtle[2], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[2], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Stamina
 				        RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Stamina
-				        RedId = solid[3], YellowId = solid[3], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
+//				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Stamina
+//				        RedId = solid[3], YellowId = solid[3], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
 				};
             }
         }
@@ -328,7 +328,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     "Chance to be Crit",
                     "Avoidance %",
                     "Damage Reduction %",
-                    "+Hit",
+                    "% Chance to Hit",
                     "Target Parry %",
                     "Target Dodge %",
                     "Armor",
@@ -529,19 +529,18 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // So let's populate the miss, dodge and parry values pulling them out of the avoidance number.
             fChanceToGetHit = 1f;
-            stats.Miss = fAvoidance[(int)HitResult.Miss];
+            stats.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Miss]));
             fChanceToGetHit -= stats.Miss;
             // Dodge needs to be factored in here.
-            stats.Dodge = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Dodge]);
+            stats.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Dodge]));
             fChanceToGetHit -= stats.Dodge;
             // Pary factors
-            stats.Parry = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Parry]);
+            stats.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Parry]));
             float fChanceToGetCrit = fAvoidance[(int)HitResult.Crit];
             // The next call expect Defense rating to NOT be factored into the defense stat
             calcs.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, iTargetLevel);
 
             stats.Defense += StatConversion.GetDefenseFromRating(stats.DefenseRating, character.Class);
-
 
             // 5% + Level difference crit chance.
             // Level difference is already factored in above.
@@ -701,7 +700,18 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fPerShotPhysical = StatConversion.ApplyMultiplier(fPerShotPhysical, stats.DamageTakenMultiplier);
 
             // Since IncMagical was MagicalDPS - now distribute the damage over the whole fight.
-            fIncMagicalDamage *= (fFightDuration * 60f);
+            fIncMagicalDamage = ((fIncMagicalDamage * fChanceToGetCrit) * 2f) * (fFightDuration * 60f);
+
+            // There's still a matter of a muting of the importance of getting Crit Immune give the above functions.
+            // We have a problem where the tank could get gibbed if the mitigation fails, and the boss crits.
+            if (fChanceToGetCrit > 0)
+            {
+                // This means that the likelihood of getting gibbed is assured.
+                if ((fTotalBossAttacksPerFight * fChanceToGetCrit) > 1)
+                {
+//                    fIncPhysicalDamage *= 2f;
+                }
+            }
 
             // Let's make sure we don't go into negative damage here.
             fIncMagicalDamage = Math.Max(0f, fIncMagicalDamage);
@@ -887,7 +897,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float[] fAvoidance = new float[(uint)HitResult.NUM_HitResult];
             Character c = new Character();
             c.Class = CharacterClass.DeathKnight;
-            float fChanceToGetHit = 1f;
             for (uint i = 0; i < (uint)HitResult.NUM_HitResult; i++)
             {
                 // GetDRAvoidanceChance returns a dec. percentage.
@@ -896,13 +905,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // So let's populate the miss, dodge and parry values for the UI display as well as pulling them out of the avoidance number.
-            statsTotal.Miss = fAvoidance[(int)HitResult.Miss];
-            fChanceToGetHit -= statsTotal.Miss;
+            statsTotal.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Miss]));
             // Dodge needs to be factored in here.
-            statsTotal.Dodge = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Dodge]);
-            fChanceToGetHit -= statsTotal.Dodge;
+            statsTotal.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Dodge]));
             // Pary factors
-            statsTotal.Parry = Math.Min(fChanceToGetHit, fAvoidance[(int)HitResult.Parry]);
+            statsTotal.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight]/100), Math.Max(0, fAvoidance[(int)HitResult.Parry]));
         }
 
         /// <summary>

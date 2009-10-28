@@ -51,6 +51,7 @@
             this.lblFightLength = new System.Windows.Forms.Label();
             this.comboChartType = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.btnStatsGraph = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).BeginInit();
@@ -390,12 +391,23 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(3, 358);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(63, 13);
+            this.label8.Size = new System.Drawing.Size(89, 13);
             this.label8.TabIndex = 38;
-            this.label8.Text = "Graph Type";
+            this.label8.Text = "Main Graph Type";
+            // 
+            // btnStatsGraph
+            // 
+            this.btnStatsGraph.Location = new System.Drawing.Point(64, 406);
+            this.btnStatsGraph.Name = "btnStatsGraph";
+            this.btnStatsGraph.Size = new System.Drawing.Size(113, 30);
+            this.btnStatsGraph.TabIndex = 62;
+            this.btnStatsGraph.Text = "Display Stats Graph";
+            this.btnStatsGraph.UseVisualStyleBackColor = true;
+            this.btnStatsGraph.Click += new System.EventHandler(this.btnStatsGraph_Click_1);
             // 
             // CalculationOptionsPanelTankDK
             // 
+            this.Controls.Add(this.btnStatsGraph);
             this.Controls.Add(this.comboChartType);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.gbFightInfo);
@@ -456,5 +468,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox comboChartType;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnStatsGraph;
     }
 }
