@@ -44,10 +44,13 @@ namespace Rawr.Enhance
         public List<GemmingTemplate> addTemplates(String group, int rarity, int metagem, bool enabled)
         {
             return new List<GemmingTemplate>() { 
-            	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, //Max Expertise
+            	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, // Stats
+					RedId = tear[rarity], YellowId = tear[rarity], BlueId = tear[rarity], PrismaticId = tear[rarity], MetaId = metagem },
+
+            	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, //Max Expertise - colour match
 					RedId = precise[rarity], YellowId = accurate[rarity], BlueId = guardian[rarity], PrismaticId = precise[rarity], MetaId = metagem },
-            	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, //Max Expertise
-					RedId = precise[rarity], YellowId = accurate[rarity], BlueId = guardian[rarity], PrismaticId = tear[rarity], MetaId = metagem },
+            	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, //Max Expertise - no colour match
+					RedId = precise[rarity], YellowId = precise[rarity], BlueId = precise[rarity], PrismaticId = precise[rarity], MetaId = metagem },
 
             	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Hit - red exp
 					RedId = accurate[rarity], YellowId = rigid[rarity], BlueId = vivid[rarity], PrismaticId = rigid[rarity], MetaId = metagem },
@@ -55,6 +58,8 @@ namespace Rawr.Enhance
 					RedId = glinting[rarity], YellowId = rigid[rarity], BlueId = vivid[rarity], PrismaticId = rigid[rarity], MetaId = metagem },
             	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Hit - red ap
 					RedId = pristine[rarity], YellowId = rigid[rarity], BlueId = vivid[rarity], PrismaticId = rigid[rarity], MetaId = metagem },
+            	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Hit - no colour match
+					RedId = rigid[rarity], YellowId = rigid[rarity], BlueId = rigid[rarity], PrismaticId = rigid[rarity], MetaId = metagem },
 
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Attack Power - yellow hit
 					RedId = bright[rarity], YellowId = pristine[rarity], BlueId = tear[rarity], PrismaticId = bright[rarity], MetaId = metagem },
@@ -62,6 +67,8 @@ namespace Rawr.Enhance
 					RedId = bright[rarity], YellowId = stark[rarity], BlueId = tear[rarity], PrismaticId = bright[rarity], MetaId = metagem },
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Attack Power - yellow crit
 					RedId = bright[rarity], YellowId = wicked[rarity], BlueId = tear[rarity], PrismaticId = bright[rarity], MetaId = metagem },
+                new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Attack Power - no colour match
+					RedId = bright[rarity], YellowId = bright[rarity], BlueId = bright[rarity], PrismaticId = bright[rarity], MetaId = metagem },
 
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Agility - yellow hit
 					RedId = delicate[rarity], YellowId = glinting[rarity], BlueId = shifting[rarity], PrismaticId = delicate[rarity], MetaId = metagem },
@@ -69,19 +76,25 @@ namespace Rawr.Enhance
 					RedId = delicate[rarity], YellowId = deft[rarity], BlueId = shifting[rarity], PrismaticId = delicate[rarity], MetaId = metagem },
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Agility - yellow crit
 					RedId = delicate[rarity], YellowId = deadly[rarity], BlueId = shifting[rarity], PrismaticId = delicate[rarity], MetaId = metagem },
+                new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Agility - no colour match
+					RedId = delicate[rarity], YellowId = delicate[rarity], BlueId = delicate[rarity], PrismaticId = delicate[rarity], MetaId = metagem },
 
             	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Crit - red agi
 					RedId = deadly[rarity], YellowId = smooth[rarity], BlueId = jagged[rarity], PrismaticId = smooth[rarity], MetaId = metagem },
             	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Crit - red ap
 					RedId = wicked[rarity], YellowId = smooth[rarity], BlueId = jagged[rarity], PrismaticId = smooth[rarity], MetaId = metagem },
+            	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Crit - no colour match
+					RedId = smooth[rarity], YellowId = smooth[rarity], BlueId = smooth[rarity], PrismaticId = smooth[rarity], MetaId = metagem },
 
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Haste - red agi
 					RedId = deft[rarity], YellowId = quick[rarity], BlueId = forceful[rarity], PrismaticId = quick[rarity], MetaId = metagem },
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Haste - red ap
 					RedId = stark[rarity], YellowId = quick[rarity], BlueId = forceful[rarity], PrismaticId = quick[rarity], MetaId = metagem },
+                new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Haste - no colour match
+					RedId = quick[rarity], YellowId = quick[rarity], BlueId = quick[rarity], PrismaticId = quick[rarity], MetaId = metagem },
 
-                new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Armour Penetration
-					RedId = fractured[rarity], YellowId = fractured[rarity], BlueId = puissant[rarity], PrismaticId = fractured[rarity], MetaId = metagem },
+                new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Armour Penetration - no colour match
+					RedId = fractured[rarity], YellowId = fractured[rarity], BlueId = fractured[rarity], PrismaticId = fractured[rarity], MetaId = metagem },
             };
         }
     }
