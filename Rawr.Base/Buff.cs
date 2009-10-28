@@ -4206,21 +4206,40 @@ namespace Rawr
             #endregion
 
             #region Onyxia Drops set bonuses
-            Stats setEffect = new Stats() { SpellPower = 222f };
-            // Guess at cooldown and proc chance, to be updated when more info available
-            setEffect.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = 2521 }, 0, 45, 0.2f));
-			setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { FireDamage = 2862 }, 0, 45, 0.2f));
-            // Not sure what the stat for this DoT effect would be for damage classes
-            //setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() {  }, 0, 45, 0.2f));
-            defaultBuffs.Add(new Buff()
             {
-                Name = "Purified Shard of the Gods 2 Piece Bonus (10 man version)",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = setEffect ,
-                SetName = "Purified Shard of the Gods",
-                SetThreshold = 2
-            });
+                Stats setEffect = new Stats() { SpellPower = 222f };
+                // Guess at cooldown and proc chance, to be updated when more info available
+                setEffect.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = 2521 }, 0, 45, 0.2f));
+			    setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { FireDamage = 2862 }, 0, 45, 0.2f));
+                // Not sure what the stat for this DoT effect would be for damage classes
+                //setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() {  }, 0, 45, 0.2f));
+                defaultBuffs.Add(new Buff()
+                {
+                    Name = "Purified Shard of the Gods 2 Piece Bonus (10 man version)",
+                    Group = "Set Bonuses",
+                    ConflictingBuffs = new List<string>(new string[] { }),
+                    Stats = setEffect ,
+                    SetName = "Purified Shard of the Gods",
+                    SetThreshold = 2
+                });
+            }
+            {
+                Stats setEffect = new Stats() { SpellPower = 250f };
+                // Guess at cooldown and proc chance, to be updated when more info available
+                setEffect.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = 2811 }, 0, 45, 0.2f));
+                setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { FireDamage = 3192 }, 0, 45, 0.2f));
+                // Not sure what the stat for this DoT effect would be for damage classes
+                //setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() {  }, 0, 45, 0.2f));
+                defaultBuffs.Add(new Buff()
+                {
+                    Name = "Shiny Shard of the Gods 2 Piece Bonus (25 man version)",
+                    Group = "Set Bonuses",
+                    ConflictingBuffs = new List<string>(new string[] { }),
+                    Stats = setEffect,
+                    SetName = "Shiny Shard of the Gods",
+                    SetThreshold = 2
+                });
+            }
             #endregion
 
             #endregion
