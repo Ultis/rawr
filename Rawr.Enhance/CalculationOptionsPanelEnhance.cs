@@ -18,7 +18,6 @@ namespace Rawr.Enhance
         public CalculationOptionsPanelEnhance()
         {
             InitializeComponent();
-            tabPagePriorities.Dispose();
             if (bosslist == null) { bosslist = new BossList(); }
             comboBoxBoss.Items.AddRange(bosslist.GetBetterBossNamesAsArray());
             comboBoxCalculationToGraph.Items.AddRange(Graph.GetCalculationNames());
@@ -38,12 +37,10 @@ namespace Rawr.Enhance
             CB_InBackPerc.Value = _calcOpts.InBackPerc;
             trackBarAverageLag.Value = _calcOpts.AverageLag;
             trackBarReactionTime.Value = _calcOpts.ReactionTime;
-            trackBarSimLength.Value = (int)_calcOpts.FightLengthMultiplier;
             trackbarSRMana.Value = (int)_calcOpts.MinManaSR;
             trackbarSRMana.Enabled = _calcOpts.UseMana;
             labelAverageLag.Text = trackBarAverageLag.Value.ToString();
             labelReactionTime.Text = trackBarReactionTime.Value.ToString();
-            labelSimLength.Text = trackBarSimLength.Value.ToString();
             labelSRMana.Text = trackbarSRMana.Value.ToString();
             cmbLength.Value = (decimal)_calcOpts.FightLength;
             comboBoxMainhandImbue.SelectedItem = _calcOpts.MainhandImbue;
@@ -86,7 +83,6 @@ namespace Rawr.Enhance
             {
                 labelAverageLag.Text = trackBarAverageLag.Value.ToString();
                 labelReactionTime.Text = trackBarReactionTime.Value.ToString();
-                labelSimLength.Text = trackBarSimLength.Value.ToString();
                 labelSRMana.Text = trackbarSRMana.Value.ToString();
 
                 _calcOpts.SetBoss(bosslist.GetBossFromBetterName(comboBoxBoss.Text));
@@ -96,7 +92,6 @@ namespace Rawr.Enhance
                 _calcOpts.CalculationToGraph = (string)comboBoxCalculationToGraph.SelectedItem;
                 _calcOpts.AverageLag = trackBarAverageLag.Value;
                 _calcOpts.ReactionTime = trackBarReactionTime.Value;
-                _calcOpts.FightLengthMultiplier = trackBarSimLength.Value;
                 _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 _calcOpts.Magma = chbMagmaSearing.Checked;
                 _calcOpts.UseMana = chbMana.Checked;
@@ -205,16 +200,6 @@ namespace Rawr.Enhance
             }
         }
 
-        private void trackBarSimLength_Scroll(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                labelSimLength.Text = trackBarSimLength.Value.ToString();
-                _calcOpts.FightLengthMultiplier = trackBarSimLength.Value;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        
         private void trackbarSRMana_ValueChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
@@ -330,7 +315,7 @@ namespace Rawr.Enhance
                 priorityList.Add(EnhanceAbility.FeralSpirits, new Priority("Feral Spirits", EnhanceAbility.FeralSpirits, "Use Feral Sprirts", true, ++priority, "SW"));
                 priorityList.Add(EnhanceAbility.LightningBolt, new Priority("Lightning Bolt on 5 stacks of MW", EnhanceAbility.LightningBolt, "Use Lightning Bolt when you have 5 stacks of Maelstrom Weapon", true, ++priority, "MW5_LB"));
                 priorityList.Add(EnhanceAbility.FlameShock, new Priority("Flame Shock", EnhanceAbility.FlameShock, "Use Flame Shock if no Flame Shock debuff on target", true, ++priority, "FS"));
-                //       priorityList.Add(new Priority("Earth Shock if SS debuff", EnhanceAbility.EarthShock, "Use Earth Shock if Stormstrike debuff on target", true, ++priority, "ES_SS"));
+                // priorityList.Add(EnhanceAbility.EarthShock, new Priority("Earth Shock if SS debuff", EnhanceAbility.EarthShock, "Use Earth Shock if Stormstrike debuff on target", true, ++priority, "ES_SS"));
                 //       priorityList.Add(new Priority("Lava Lash if Quaking Earth", EnhanceAbility.LavaLash, "Use Lava Lash if Volcanic Fury buff about to run out", false, ++priority, "LL_QE"));
                 priorityList.Add(EnhanceAbility.StormStrike, new Priority("Stormstrike", EnhanceAbility.StormStrike, "Use Stormstrike", true, ++priority, "SS"));
                 priorityList.Add(EnhanceAbility.EarthShock, new Priority("Earth Shock", EnhanceAbility.EarthShock, "Use Earth Shock", true, ++priority, "ES"));

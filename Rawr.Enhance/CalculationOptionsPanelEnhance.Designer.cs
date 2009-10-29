@@ -30,6 +30,9 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageBasics = new System.Windows.Forms.TabPage();
+            this.labelReactionTime = new System.Windows.Forms.Label();
+            this.trackBarReactionTime = new System.Windows.Forms.TrackBar();
+            this.label12 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkStatsInt = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -79,14 +82,10 @@
             this.tabPageEnhSim = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.labelSimLength = new System.Windows.Forms.Label();
-            this.trackBarSimLength = new System.Windows.Forms.TrackBar();
-            this.label11 = new System.Windows.Forms.Label();
-            this.labelReactionTime = new System.Windows.Forms.Label();
-            this.trackBarReactionTime = new System.Windows.Forms.TrackBar();
-            this.label12 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPageBasics.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAverageLag)).BeginInit();
@@ -95,8 +94,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.tabPagePriorities.SuspendLayout();
             this.tabPageEnhSim.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarSimLength)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -137,6 +134,42 @@
             this.tabPageBasics.TabIndex = 0;
             this.tabPageBasics.Text = "Basics";
             this.tabPageBasics.UseVisualStyleBackColor = true;
+            // 
+            // labelReactionTime
+            // 
+            this.labelReactionTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelReactionTime.Location = new System.Drawing.Point(83, 39);
+            this.labelReactionTime.Name = "labelReactionTime";
+            this.labelReactionTime.Size = new System.Drawing.Size(181, 12);
+            this.labelReactionTime.TabIndex = 61;
+            this.labelReactionTime.Text = "250";
+            // 
+            // trackBarReactionTime
+            // 
+            this.trackBarReactionTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarReactionTime.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarReactionTime.Cursor = System.Windows.Forms.Cursors.Default;
+            this.trackBarReactionTime.LargeChange = 25;
+            this.trackBarReactionTime.Location = new System.Drawing.Point(83, 6);
+            this.trackBarReactionTime.Maximum = 750;
+            this.trackBarReactionTime.Name = "trackBarReactionTime";
+            this.trackBarReactionTime.Size = new System.Drawing.Size(176, 45);
+            this.trackBarReactionTime.SmallChange = 5;
+            this.trackBarReactionTime.TabIndex = 60;
+            this.trackBarReactionTime.TickFrequency = 50;
+            this.trackBarReactionTime.Value = 250;
+            this.trackBarReactionTime.Scroll += new System.EventHandler(this.trackBarReactionTime_Scroll);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(8, 15);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(79, 13);
+            this.label12.TabIndex = 59;
+            this.label12.Text = "Reaction Time:";
             // 
             // groupBox1
             // 
@@ -642,9 +675,7 @@
             // 
             // tabPagePriorities
             // 
-            this.tabPagePriorities.Controls.Add(this.labelSimLength);
-            this.tabPagePriorities.Controls.Add(this.trackBarSimLength);
-            this.tabPagePriorities.Controls.Add(this.label11);
+            this.tabPagePriorities.Controls.Add(this.label10);
             this.tabPagePriorities.Controls.Add(this.btnReset);
             this.tabPagePriorities.Controls.Add(this.btnDown);
             this.tabPagePriorities.Controls.Add(this.btnUp);
@@ -742,74 +773,16 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
-            // labelSimLength
+            // label10
             // 
-            this.labelSimLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSimLength.Location = new System.Drawing.Point(78, 277);
-            this.labelSimLength.Name = "labelSimLength";
-            this.labelSimLength.Size = new System.Drawing.Size(181, 12);
-            this.labelSimLength.TabIndex = 64;
-            this.labelSimLength.Text = "250";
-            // 
-            // trackBarSimLength
-            // 
-            this.trackBarSimLength.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarSimLength.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarSimLength.Cursor = System.Windows.Forms.Cursors.Default;
-            this.trackBarSimLength.Location = new System.Drawing.Point(78, 244);
-            this.trackBarSimLength.Maximum = 25;
-            this.trackBarSimLength.Minimum = 1;
-            this.trackBarSimLength.Name = "trackBarSimLength";
-            this.trackBarSimLength.Size = new System.Drawing.Size(176, 45);
-            this.trackBarSimLength.TabIndex = 63;
-            this.trackBarSimLength.Value = 25;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 253);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(63, 13);
-            this.label11.TabIndex = 62;
-            this.label11.Text = "Sim Length:";
-            // 
-            // labelReactionTime
-            // 
-            this.labelReactionTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelReactionTime.Location = new System.Drawing.Point(83, 39);
-            this.labelReactionTime.Name = "labelReactionTime";
-            this.labelReactionTime.Size = new System.Drawing.Size(181, 12);
-            this.labelReactionTime.TabIndex = 61;
-            this.labelReactionTime.Text = "250";
-            // 
-            // trackBarReactionTime
-            // 
-            this.trackBarReactionTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarReactionTime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarReactionTime.Cursor = System.Windows.Forms.Cursors.Default;
-            this.trackBarReactionTime.LargeChange = 25;
-            this.trackBarReactionTime.Location = new System.Drawing.Point(83, 6);
-            this.trackBarReactionTime.Maximum = 750;
-            this.trackBarReactionTime.Name = "trackBarReactionTime";
-            this.trackBarReactionTime.Size = new System.Drawing.Size(176, 45);
-            this.trackBarReactionTime.SmallChange = 5;
-            this.trackBarReactionTime.TabIndex = 60;
-            this.trackBarReactionTime.TickFrequency = 50;
-            this.trackBarReactionTime.Value = 250;
-            this.trackBarReactionTime.Scroll += new System.EventHandler(this.trackBarReactionTime_Scroll);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(8, 15);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(79, 13);
-            this.label12.TabIndex = 59;
-            this.label12.Text = "Reaction Time:";
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(7, 247);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(246, 109);
+            this.label10.TabIndex = 6;
+            this.label10.Text = "Please note new smoothing functions mean for time being that the order of priorit" +
+                "ies have only minimal effect on the dps results. Also note that currently priori" +
+                "tes are not included in EnhSim export.";
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -822,6 +795,7 @@
             this.tabControl.ResumeLayout(false);
             this.tabPageBasics.ResumeLayout(false);
             this.tabPageBasics.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarSRMana)).EndInit();
@@ -834,8 +808,6 @@
             this.tabPagePriorities.PerformLayout();
             this.tabPageEnhSim.ResumeLayout(false);
             this.tabPageEnhSim.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarSimLength)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -893,12 +865,10 @@
         private System.Windows.Forms.ComboBox comboBoxCalculationToGraph;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox chkStatsInt;
-        private System.Windows.Forms.Label labelSimLength;
-        private System.Windows.Forms.TrackBar trackBarSimLength;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label labelReactionTime;
         private System.Windows.Forms.TrackBar trackBarReactionTime;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label10;
 
     }
 }
