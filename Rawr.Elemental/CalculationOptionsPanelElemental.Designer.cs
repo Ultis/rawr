@@ -34,6 +34,12 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbThunderstorm = new System.Windows.Forms.CheckBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.textBoxGCDLatency = new System.Windows.Forms.TextBox();
+            this.lblLatencyGcd = new System.Windows.Forms.Label();
+            this.textBoxCastLatency = new System.Windows.Forms.TextBox();
+            this.lblLatencyCast = new System.Windows.Forms.Label();
+            this.trkTargets = new System.Windows.Forms.TrackBar();
+            this.lbTargets = new System.Windows.Forms.Label();
             this.trkFightLength = new System.Windows.Forms.TrackBar();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -44,6 +50,7 @@
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trkTargets)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
@@ -89,7 +96,7 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.cbThunderstorm);
-            this.groupBox3.Location = new System.Drawing.Point(6, 186);
+            this.groupBox3.Location = new System.Drawing.Point(6, 308);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(277, 41);
             this.groupBox3.TabIndex = 54;
@@ -109,14 +116,75 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.textBoxGCDLatency);
+            this.groupBox7.Controls.Add(this.lblLatencyGcd);
+            this.groupBox7.Controls.Add(this.textBoxCastLatency);
+            this.groupBox7.Controls.Add(this.lblLatencyCast);
+            this.groupBox7.Controls.Add(this.trkTargets);
+            this.groupBox7.Controls.Add(this.lbTargets);
             this.groupBox7.Controls.Add(this.trkFightLength);
             this.groupBox7.Controls.Add(this.lblFightLength);
             this.groupBox7.Location = new System.Drawing.Point(6, 93);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 87);
+            this.groupBox7.Size = new System.Drawing.Size(277, 209);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General Fight Details";
+            // 
+            // textBoxGCDLatency
+            // 
+            this.textBoxGCDLatency.Location = new System.Drawing.Point(116, 176);
+            this.textBoxGCDLatency.Name = "textBoxGCDLatency";
+            this.textBoxGCDLatency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxGCDLatency.TabIndex = 161;
+            this.textBoxGCDLatency.TextChanged += new System.EventHandler(this.textBoxGCDLatency_TextChanged);
+            // 
+            // lblLatencyGcd
+            // 
+            this.lblLatencyGcd.AutoSize = true;
+            this.lblLatencyGcd.Location = new System.Drawing.Point(5, 179);
+            this.lblLatencyGcd.Name = "lblLatencyGcd";
+            this.lblLatencyGcd.Size = new System.Drawing.Size(74, 13);
+            this.lblLatencyGcd.TabIndex = 160;
+            this.lblLatencyGcd.Text = "GCD Latency:";
+            // 
+            // textBoxCastLatency
+            // 
+            this.textBoxCastLatency.Location = new System.Drawing.Point(116, 150);
+            this.textBoxCastLatency.Name = "textBoxCastLatency";
+            this.textBoxCastLatency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxCastLatency.TabIndex = 159;
+            this.textBoxCastLatency.TextChanged += new System.EventHandler(this.textBoxCastLatency_TextChanged);
+            // 
+            // lblLatencyCast
+            // 
+            this.lblLatencyCast.AutoSize = true;
+            this.lblLatencyCast.Location = new System.Drawing.Point(5, 153);
+            this.lblLatencyCast.Name = "lblLatencyCast";
+            this.lblLatencyCast.Size = new System.Drawing.Size(72, 13);
+            this.lblLatencyCast.TabIndex = 158;
+            this.lblLatencyCast.Text = "Cast Latency:";
+            // 
+            // trkTargets
+            // 
+            this.trkTargets.LargeChange = 1;
+            this.trkTargets.Location = new System.Drawing.Point(9, 99);
+            this.trkTargets.Maximum = 5;
+            this.trkTargets.Minimum = 1;
+            this.trkTargets.Name = "trkTargets";
+            this.trkTargets.Size = new System.Drawing.Size(262, 45);
+            this.trkTargets.TabIndex = 41;
+            this.trkTargets.Value = 1;
+            this.trkTargets.Scroll += new System.EventHandler(this.trkTargets_Scroll);
+            // 
+            // lbTargets
+            // 
+            this.lbTargets.AutoSize = true;
+            this.lbTargets.Location = new System.Drawing.Point(6, 83);
+            this.lbTargets.Name = "lbTargets";
+            this.lbTargets.Size = new System.Drawing.Size(94, 13);
+            this.lbTargets.TabIndex = 40;
+            this.lbTargets.Text = "Number of targets:";
             // 
             // trkFightLength
             // 
@@ -195,6 +263,7 @@
             this.groupBox3.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trkTargets)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -218,6 +287,12 @@
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.TrackBar trkFightLength;
         private System.Windows.Forms.Label lblFightLength;
+        private System.Windows.Forms.TrackBar trkTargets;
+        private System.Windows.Forms.Label lbTargets;
+        private System.Windows.Forms.TextBox textBoxGCDLatency;
+        private System.Windows.Forms.Label lblLatencyGcd;
+        private System.Windows.Forms.TextBox textBoxCastLatency;
+        private System.Windows.Forms.Label lblLatencyCast;
 
     }
 }

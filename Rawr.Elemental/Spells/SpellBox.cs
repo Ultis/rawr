@@ -6,9 +6,6 @@ namespace Rawr.Elemental.Spells
     {
         LightningBolt,
         ChainLightning,
-        ChainLightning2,
-        ChainLightning3,
-        ChainLightning4,
         LavaBurst,
         LavaBurstFS,
         FlameShock,
@@ -26,28 +23,25 @@ namespace Rawr.Elemental.Spells
         private Spell[] spells;
         private bool EMapplied = false;
 
-        public SpellBox(Stats stats, ShamanTalents talents)
+        public SpellBox(ISpellArgs args)
         {
-            spells = new Spell[11];
-            spells[(int)SpellIndex.LightningBolt] = new LightningBolt(stats, talents);
-            spells[(int)SpellIndex.ChainLightning] = new ChainLightning(stats, talents, 0);
-            spells[(int)SpellIndex.ChainLightning2] = new ChainLightning(stats, talents, 1);
-            spells[(int)SpellIndex.ChainLightning3] = new ChainLightning(stats, talents, 2);
-            spells[(int)SpellIndex.ChainLightning4] = new ChainLightning(stats, talents, 3);
-            spells[(int)SpellIndex.LavaBurst] = new LavaBurst(stats, talents, 0);
-            spells[(int)SpellIndex.LavaBurstFS] = new LavaBurst(stats, talents, 1);
-            spells[(int)SpellIndex.FlameShock] = new FlameShock(stats, talents);
-            spells[(int)SpellIndex.EarthShock] = new EarthShock(stats, talents);
-            spells[(int)SpellIndex.FrostShock] = new FrostShock(stats, talents);
-            spells[(int)SpellIndex.Thunderstorm] = new Thunderstorm(stats, talents);
+            spells = new Spell[8];
+            spells[(int)SpellIndex.LightningBolt] = new LightningBolt(args);
+            spells[(int)SpellIndex.ChainLightning] = new ChainLightning(args);
+            spells[(int)SpellIndex.LavaBurst] = new LavaBurst(args, 0);
+            spells[(int)SpellIndex.LavaBurstFS] = new LavaBurst(args, 1);
+            spells[(int)SpellIndex.FlameShock] = new FlameShock(args);
+            spells[(int)SpellIndex.EarthShock] = new EarthShock(args);
+            spells[(int)SpellIndex.FrostShock] = new FrostShock(args);
+            spells[(int)SpellIndex.Thunderstorm] = new Thunderstorm(args);
         }
 
-        public void Update(Stats stats, ShamanTalents talents)
+        public void Update(ISpellArgs args)
         {
             foreach (Spell s in spells)
             {
                 if (s != null)
-                    s.Update(stats, talents);
+                    s.Update(args);
             }
             EMapplied = false;
         }
@@ -88,21 +82,6 @@ namespace Rawr.Elemental.Spells
         public ChainLightning CL
         {
             get { return (ChainLightning)spells[(int)SpellIndex.ChainLightning]; }
-        }
-
-        public ChainLightning CL2
-        {
-            get { return (ChainLightning)spells[(int)SpellIndex.ChainLightning2]; }
-        }
-
-        public ChainLightning CL3
-        {
-            get { return (ChainLightning)spells[(int)SpellIndex.ChainLightning3]; }
-        }
-
-        public ChainLightning CL4
-        {
-            get { return (ChainLightning)spells[(int)SpellIndex.ChainLightning4]; }
         }
 
         public LavaBurst LvB

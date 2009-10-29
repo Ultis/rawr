@@ -24,32 +24,32 @@ namespace Rawr.Elemental.Spells
             shortName = "LB";
         }
 
-        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(ISpellArgs args)
         {
-            castTime -= .1f * shamanTalents.LightningMastery;
-            manaCost *= 1f - .02f * shamanTalents.Convection;
-            totalCoef += .01f * shamanTalents.Concussion;
-            crit += .05f * shamanTalents.CallOfThunder;
-            spCoef += .03f * shamanTalents.Shamanism;
-            loCoef += .03f * shamanTalents.Shamanism;
-            crit += .05f * shamanTalents.TidalMastery;
-            manaCost *= 1 - stats.LightningBoltCostReduction / 100f; // T7 2 piece
-            spellPower += stats.SpellNatureDamageRating; // Nature SP
-            lightningSpellpower += stats.LightningSpellPower; // Totem (relic) is not affected by shamanism
-            if (shamanTalents.GlyphofLightningBolt) totalCoef += .04f;
-            totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
-            totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f; // T6 4 piece
-            
-            lightningOverload = shamanTalents.LightningOverload;
+            castTime -= .1f * args.Talents.LightningMastery;
+            manaCost *= 1f - .02f * args.Talents.Convection;
+            totalCoef += .01f * args.Talents.Concussion;
+            crit += .05f * args.Talents.CallOfThunder;
+            spCoef += .03f * args.Talents.Shamanism;
+            loCoef += .03f * args.Talents.Shamanism;
+            crit += .05f * args.Talents.TidalMastery;
+            manaCost *= 1 - args.Stats.LightningBoltCostReduction / 100f; // T7 2 piece
+            spellPower += args.Stats.SpellNatureDamageRating; // Nature SP
+            lightningSpellpower += args.Stats.LightningSpellPower; // Totem (relic) is not affected by shamanism
+            if (args.Talents.GlyphofLightningBolt) totalCoef += .04f;
+            totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
+            totalCoef *= 1 + args.Stats.LightningBoltDamageModifier / 100f; // T6 4 piece
 
-            base.Initialize(stats, shamanTalents);
-            critModifier *= 1 + stats.LightningBoltCritDamageModifier; // T8 4 piece
+            lightningOverload = args.Talents.LightningOverload;
+
+            base.Initialize(args);
+            critModifier *= 1 + args.Stats.LightningBoltCritDamageModifier; // T8 4 piece
         }
 
-        public LightningBolt(Stats stats, ShamanTalents shamanTalents)
+        public LightningBolt(ISpellArgs args)
             : this()
         {
-            Initialize(stats, shamanTalents);
+            Initialize(args);
         }
 
         public static LightningBolt operator +(LightningBolt A, LightningBolt B)

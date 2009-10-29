@@ -86,11 +86,26 @@ namespace Rawr.Elemental
             }
         }
 
+        float lag = float.PositiveInfinity;
+        /// <summary>
+        /// Effective time lost due to latency per spellcast.
+        /// </summary>
+        public float LatencyPerSecond
+        {
+            get
+            {
+                if (lag == float.PositiveInfinity)
+                    calculateProperties();
+                return lag;
+            }
+            set
+            {
+                lag = value;
+            }
+        }
+
         public LightningBolt LB;
         public ChainLightning CL;
-        public ChainLightning CL2;
-        public ChainLightning CL3;
-        public ChainLightning CL4;
         public LavaBurst LvB;
         public LavaBurst LvBFS;
         public FlameShock FS;
@@ -110,9 +125,6 @@ namespace Rawr.Elemental
             Talents = talents;
             LB = spellBox.LB;
             CL = spellBox.CL;
-            CL2 = spellBox.CL2;
-            CL3 = spellBox.CL3;
-            CL4 = spellBox.CL4;
             LvB = spellBox.LvB;
             LvBFS = spellBox.LvBFS;
             FS = spellBox.FS;
@@ -122,6 +134,9 @@ namespace Rawr.Elemental
             CalculateRotation();
         }
 
+        /// <summary>
+        /// Invalidates the cached values.
+        /// </summary>
         private void Invalidate()
         {
             casts = null;
@@ -333,12 +348,13 @@ namespace Rawr.Elemental
         }
 
         /// <summary>
-        /// Calculates Clearcasting, mana usage and dps.
+        /// Calculates Clearcasting, mana usage, dps and lag per second.
         /// </summary>
         private void calculateProperties()
         {
             mps = 0f; //summing up total manacost
             dps = 0f; //summing up total damage
+            lag = 0f;
             cc = new SerializableDictionary<Type, float>(); //clear casting
             spelldps = new SerializableDictionary<Type, float>(); //dps broken up per spell type
             spelltype = new SerializableDictionary<Type, Spell>(); //all used spells by type
@@ -372,6 +388,7 @@ namespace Rawr.Elemental
                     dps += thisdps;
                     spelldps[s.GetType()] += thisdps;
                     cc[s.GetType()] += ccc;
+                    lag += s.Latency;
                     count[s.GetType()]++;
                 }
                 prev2 = prev1;
@@ -384,6 +401,7 @@ namespace Rawr.Elemental
             }
             mps /= GetTime(); //divide by rotation time
             dps /= GetTime();
+            lag /= GetTime();
         }
 
         /// <summary>

@@ -19,6 +19,12 @@ namespace Rawr.Elemental
 
 		public int rotationType = 0;
 
+        //latency in s
+        public float LatencyGcd = .15f;
+        public float LatencyCast = .075f;
+
+        public int NumberOfTargets = 1;
+
 		public string GetXml()
 		{
 			System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsElemental));

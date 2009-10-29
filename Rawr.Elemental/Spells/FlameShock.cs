@@ -23,39 +23,39 @@ public class FlameShock : Shock
             shortName = "FS";
         }
 
-        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(ISpellArgs args)
         {
             //for reference
             //dotTick = (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)
 
-            totalCoef += .01f * shamanTalents.Concussion;
-            totalCoef += .1f * shamanTalents.BoomingEchoes;
-            manaCost *= 1 - .02f * shamanTalents.Convection;
-            dotBaseCoef *= 1 + .2f * shamanTalents.StormEarthAndFire;
-            dotSpCoef *= 1 + .2f * shamanTalents.StormEarthAndFire;
-            dotBaseCoef *= 1 + .01f * shamanTalents.Concussion;
-            dotSpCoef *= 1 + .01f * shamanTalents.Concussion;
-            dotBaseCoef *= 1 + stats.BonusFireDamageMultiplier;
-            dotSpCoef *= 1 + stats.BonusFireDamageMultiplier;
-            manaCost *= 1 - .45f * shamanTalents.ShamanisticFocus;
-            cooldown -= .2f * shamanTalents.Reverberation;
-            cooldown -= 1f * shamanTalents.BoomingEchoes;
-            spellPower += stats.SpellFireDamageRating;
-            totalCoef *= 1 + stats.BonusFireDamageMultiplier;
-            periodicTicks += stats.BonusFlameShockDuration / 3f; // t9 2 piece
+            totalCoef += .01f * args.Talents.Concussion;
+            totalCoef += .1f * args.Talents.BoomingEchoes;
+            manaCost *= 1 - .02f * args.Talents.Convection;
+            dotBaseCoef *= 1 + .2f * args.Talents.StormEarthAndFire;
+            dotSpCoef *= 1 + .2f * args.Talents.StormEarthAndFire;
+            dotBaseCoef *= 1 + .01f * args.Talents.Concussion;
+            dotSpCoef *= 1 + .01f * args.Talents.Concussion;
+            dotBaseCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
+            dotSpCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
+            manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
+            cooldown -= .2f * args.Talents.Reverberation;
+            cooldown -= 1f * args.Talents.BoomingEchoes;
+            spellPower += args.Stats.SpellFireDamageRating;
+            totalCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
+            periodicTicks += args.Stats.BonusFlameShockDuration / 3f; // t9 2 piece
 
-            if (shamanTalents.GlyphofShocking)
+            if (args.Talents.GlyphofShocking)
                 gcd -= .5f;
 
-            dotCanCrit = stats.FlameShockDoTCanCrit; // T8 2 piece
+            dotCanCrit = args.Stats.FlameShockDoTCanCrit; // T8 2 piece
 
-            base.Initialize(stats, shamanTalents);
+            base.Initialize(args);
         }
 
-        public FlameShock(Stats stats, ShamanTalents shamanTalents)
+        public FlameShock(ISpellArgs args)
             : this()
         {
-            Initialize(stats, shamanTalents);
+            Initialize(args);
         }
 
         public static FlameShock operator +(FlameShock A, FlameShock B)

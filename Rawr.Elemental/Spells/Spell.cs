@@ -26,6 +26,9 @@ namespace Rawr.Elemental.Spells
         protected float dotCanCrit = 0f;
         protected float spellPower = 0f;
 
+        protected float latencyGcd = .15f;
+        protected float latencyCast = .075f;
+
         /// <summary>
         /// This Constructor calls SetBaseValues.
         /// </summary>
@@ -59,10 +62,10 @@ namespace Rawr.Elemental.Spells
             spellPower = 0f;
         }
 
-        public void Update(Stats stats, ShamanTalents talents)
+        public void Update(ISpellArgs args)
         {
             SetBaseValues();
-            Initialize(stats, talents);
+            Initialize(args);
         }
 
         protected string shortName = "Spell";
@@ -138,16 +141,34 @@ namespace Rawr.Elemental.Spells
         public float MaxDamage
         { get { return (1f - CritChance) * MaxHit + CritChance * MaxCrit; } }
 
+        /// <summary>
+        /// The effective Cast Time. Taking GCD and latency into account.
+        /// </summary>
         public float CastTime
         {
             get
             {
-                if (castTime > gcd)
-                    return gcd==0?castTime:Math.Max(castTime,1f);
-                else if (gcd > 1 || gcd == 0)
-                    return gcd;
+                if(gcd == 0 && castTime == 0)
+                    return 0;
+                if (castTime >= gcd)
+                    return Math.Max(castTime, gcd) + Latency;
                 else
-                    return 1;
+                    return Math.Max(1, gcd) + Latency;
+            }
+        }
+        /// <summary>
+        /// The effective Latency of this spell effecting the start cast time of the next one.
+        /// </summary>
+        public float Latency
+        {
+            get
+            {
+                if (gcd == 0 && castTime == 0)
+                    return 0;
+                if (castTime >= gcd)
+                    return latencyCast;
+                else
+                    return latencyGcd;
             }
         }
 
@@ -166,7 +187,7 @@ namespace Rawr.Elemental.Spells
         { get { return Math.Min(1f, crit); } }
 
         /// <summary>
-        /// Crit chance for all kind of proc triggers. This exists seperately because of Lightning Overload.
+        /// Crit chance for all kind of proc triggers (e.g. Clearcasting). This exists seperately because of Lightning Overload.
         /// </summary>
         public virtual float CCCritChance
         { get { return CritChance; } }
@@ -242,18 +263,20 @@ namespace Rawr.Elemental.Spells
         public float ManaCost
         { get { return manaCost; } }
 
-        public virtual void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public virtual void Initialize(ISpellArgs args)
         {
-            float Speed = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
+            float Speed = (1f + args.Stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(args.Stats.HasteRating));
             gcd = (float)Math.Round(gcd / Speed, 4);
             castTime = (float)Math.Round(castTime / Speed, 4);
-            critModifier += .2f * shamanTalents.ElementalFury;
-            critModifier *= (float)Math.Round(1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f, 6);
+            latencyGcd = args.LatencyGCD;
+            latencyCast = args.LatencyCast;
+            critModifier += .2f * args.Talents.ElementalFury;
+            critModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritMultiplier) - 1f, 6);
             //critModifier += 1f;
-            spellPower += stats.SpellPower;
-            crit += stats.SpellCrit;
-            missChance -= stats.SpellHit;
-            totalCoef *= 1 + stats.BonusDamageMultiplier; //ret + bm buff
+            spellPower += args.Stats.SpellPower;
+            crit += args.Stats.SpellCrit;
+            missChance -= args.Stats.SpellHit;
+            totalCoef *= 1 + args.Stats.BonusDamageMultiplier; //ret + bm buff
             if (missChance < 0) missChance = 0;
             manaCost = (float)Math.Floor(manaCost);
         }

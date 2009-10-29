@@ -20,26 +20,26 @@ public class FrostShock : Shock
             shortName = "FrS";
         }
 
-        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(ISpellArgs args)
         {
-            totalCoef += .01f * shamanTalents.Concussion;
-            spCoef *= 1f + .1f * shamanTalents.BoomingEchoes;
-            manaCost *= 1 - .02f * shamanTalents.Convection;
-            manaCost *= 1 - .45f * shamanTalents.ShamanisticFocus;
-            cooldown -= .2f * shamanTalents.Reverberation;
-            cooldown -= 1f * shamanTalents.BoomingEchoes;
-            spellPower += stats.SpellFrostDamageRating;
-            totalCoef *= 1 + stats.BonusFrostDamageMultiplier;
-            if (shamanTalents.GlyphofShocking)
+            totalCoef += .01f * args.Talents.Concussion;
+            spCoef *= 1f + .1f * args.Talents.BoomingEchoes;
+            manaCost *= 1 - .02f * args.Talents.Convection;
+            manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
+            cooldown -= .2f * args.Talents.Reverberation;
+            cooldown -= 1f * args.Talents.BoomingEchoes;
+            spellPower += args.Stats.SpellFrostDamageRating;
+            totalCoef *= 1 + args.Stats.BonusFrostDamageMultiplier;
+            if (args.Talents.GlyphofShocking)
                 gcd -= .5f;
 
-            base.Initialize(stats, shamanTalents);
+            base.Initialize(args);
         }
 
-        public FrostShock(Stats stats, ShamanTalents shamanTalents)
+        public FrostShock(ISpellArgs args)
             : this()
         {
-            Initialize(stats, shamanTalents);
+            Initialize(args);
         }
 
         public static FrostShock operator +(FrostShock A, FrostShock B)

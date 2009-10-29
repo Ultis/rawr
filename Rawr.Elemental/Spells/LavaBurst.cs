@@ -23,39 +23,39 @@ namespace Rawr.Elemental.Spells
             shortName = "LvB";
         }
 
-        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(ISpellArgs args)
         {
-            Initialize(stats, shamanTalents, fs);
+            Initialize(args, fs);
         }
 
-        public void Initialize(Stats stats, ShamanTalents shamanTalents, float fs)
+        public void Initialize(ISpellArgs args, float fs)
         {
-            manaCost *= 1f - .02f * shamanTalents.Convection;
-            totalCoef += .01f * shamanTalents.Concussion;
-            totalCoef += .02f * shamanTalents.CallOfFlame;
-            totalCoef += stats.BonusLavaBurstDamageMultiplier; // t9 4 piece
-            castTime -= .1f * shamanTalents.LightningMastery;
-            spCoef += .04f * shamanTalents.Shamanism;
-            critModifier += new float[] { 0f, 0.06f, 0.12f, 0.24f }[shamanTalents.LavaFlows];
-            critModifier += stats.BonusLavaBurstCritDamage / 100f; // t7 4 piece
-            baseMinDamage += stats.LavaBurstBonus; // Totem (relic)
-            baseMaxDamage += stats.LavaBurstBonus; // Totem (relic) 
-            spellPower += stats.SpellFireDamageRating;
-            if (shamanTalents.GlyphofLava)
+            manaCost *= 1f - .02f * args.Talents.Convection;
+            totalCoef += .01f * args.Talents.Concussion;
+            totalCoef += .02f * args.Talents.CallOfFlame;
+            totalCoef += args.Stats.BonusLavaBurstDamageMultiplier; // t9 4 piece
+            castTime -= .1f * args.Talents.LightningMastery;
+            spCoef += .04f * args.Talents.Shamanism;
+            critModifier += new float[] { 0f, 0.06f, 0.12f, 0.24f }[args.Talents.LavaFlows];
+            critModifier += args.Stats.BonusLavaBurstCritDamage / 100f; // t7 4 piece
+            baseMinDamage += args.Stats.LavaBurstBonus; // Totem (relic)
+            baseMaxDamage += args.Stats.LavaBurstBonus; // Totem (relic) 
+            spellPower += args.Stats.SpellFireDamageRating;
+            if (args.Talents.GlyphofLava)
                 spCoef += .1f;
-            totalCoef *= 1 + stats.BonusFireDamageMultiplier;
+            totalCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
 
-            base.Initialize(stats, shamanTalents);
+            base.Initialize(args);
 
             this.fs = fs;
             crit = (1 - fs) * crit + fs;
         }
 
-        public LavaBurst(Stats stats, ShamanTalents shamanTalents, float fs)
+        public LavaBurst(ISpellArgs args, float fs)
             : this()
         {
             this.fs = fs;
-            Initialize(stats, shamanTalents, fs);
+            Initialize(args, fs);
         }
 
         public static LavaBurst operator +(LavaBurst A, LavaBurst B)

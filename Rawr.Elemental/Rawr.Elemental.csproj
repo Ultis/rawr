@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalculationOptionsElemental.cs" />
+    <Compile Include="CombatFactors.cs" />
     <Compile Include="Estimation.cs" />
     <Compile Include="CalculationOptionsPanelElemental.cs">
       <SubType>UserControl</SubType>
@@ -106,6 +107,7 @@
     <Compile Include="Spells\LightningBolt.cs" />
     <Compile Include="Spells\Shock.cs" />
     <Compile Include="Spells\Spell.cs" />
+    <Compile Include="Spells\ISpellArgs.cs" />
     <Compile Include="Spells\SpellBox.cs" />
     <Compile Include="Spells\Thunderstorm.cs" />
     <Compile Include="Spells\Wait.cs" />

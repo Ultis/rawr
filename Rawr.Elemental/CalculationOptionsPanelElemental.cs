@@ -50,6 +50,12 @@ namespace Rawr.Elemental
             int s = calcOpts.FightDuration - 60 * m;
             lblFightLength.Text = "Fight duration: " + m + ":" + s;
 
+            trkTargets.Value = calcOpts.NumberOfTargets;
+            lbTargets.Text = "Number of targets: " + calcOpts.NumberOfTargets;
+
+            textBoxCastLatency.Text = calcOpts.LatencyCast.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            textBoxGCDLatency.Text = calcOpts.LatencyGcd.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
 
             loading = false;
@@ -96,5 +102,43 @@ namespace Rawr.Elemental
             calcOpts.UseThunderstorm = cbThunderstorm.Checked;
             Character.OnCalculationsInvalidated();
         }
+
+        private void textBoxCastLatency_TextChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            float lag;
+            if(!float.TryParse(textBoxCastLatency.Text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out lag))
+            {
+                textBoxCastLatency.Text = calcOpts.LatencyCast.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                return;
+            }
+            calcOpts.LatencyCast = lag;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void textBoxGCDLatency_TextChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            float lag;
+            if (!float.TryParse(textBoxGCDLatency.Text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out lag))
+            {
+                textBoxGCDLatency.Text = calcOpts.LatencyGcd.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                return;
+            }
+            calcOpts.LatencyGcd = lag;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void trkTargets_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            calcOpts.NumberOfTargets = trkTargets.Value;
+            lbTargets.Text = "Number of Targets: " + trkTargets.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
     }
 }

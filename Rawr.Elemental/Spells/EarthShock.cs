@@ -19,23 +19,23 @@ public class EarthShock : Shock
             shortName = "ES";
         }
 
-        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(ISpellArgs args)
         {
-            totalCoef += .01f * shamanTalents.Concussion;
-            manaCost *= 1 - .02f * shamanTalents.Convection;
-            manaCost *= 1 - .45f * shamanTalents.ShamanisticFocus;
-            cooldown -= .2f * shamanTalents.Reverberation;
-            spellPower += stats.SpellNatureDamageRating;
-            totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
-            if (shamanTalents.GlyphofShocking)
+            totalCoef += .01f * args.Talents.Concussion;
+            manaCost *= 1 - .02f * args.Talents.Convection;
+            manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
+            cooldown -= .2f * args.Talents.Reverberation;
+            spellPower += args.Stats.SpellNatureDamageRating;
+            totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
+            if (args.Talents.GlyphofShocking)
                 gcd -= .5f;
 
-            base.Initialize(stats, shamanTalents);
+            base.Initialize(args);
         }
 
-        public EarthShock(Stats stats, ShamanTalents shamanTalents) : this()
+        public EarthShock(ISpellArgs args) : this()
         {
-            Initialize(stats, shamanTalents);
+            Initialize(args);
         }
 
         public static EarthShock operator +(EarthShock A, EarthShock B)

@@ -26,45 +26,40 @@ public class ChainLightning : Spell, ILightningOverload
             lightningSpellpower = 0f;
         }
 
-        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(ISpellArgs args)
         {
-            Initialize(stats, shamanTalents, 0);
-        }
-
-        public void Initialize(Stats stats, ShamanTalents shamanTalents, int additionalTargets)
-        {
+            additionalTargets = args.AdditionalTargets;
             // jumps
             if (additionalTargets < 0)
                 additionalTargets = 0;
             if (additionalTargets > 3)
                 additionalTargets = 3;
             shortName = "CL" + (1 + additionalTargets);
-            if (!shamanTalents.GlyphofChainLightning && additionalTargets > 2)
+            if (!args.Talents.GlyphofChainLightning && additionalTargets > 2)
                 additionalTargets = 2;
-            this.additionalTargets = additionalTargets;
             totalCoef *= new float[] { 1f, 1.7f, 2.19f, 2.533f, 2.7731f }[additionalTargets];
 
-            manaCost *= 1f - .02f * shamanTalents.Convection;
-            totalCoef += .01f * shamanTalents.Concussion;
-            crit += .05f * shamanTalents.CallOfThunder;
-            spCoef += .03f * shamanTalents.Shamanism;
-            loCoef += .03f * shamanTalents.Shamanism;
-            castTime -= .1f * shamanTalents.LightningMastery;
-            cooldown -= new float[] { 0, .75f, 1.5f, 2.5f }[shamanTalents.StormEarthAndFire];
-            crit += .01f * shamanTalents.TidalMastery;
-            spellPower += stats.SpellNatureDamageRating;
-            lightningSpellpower += stats.LightningSpellPower;  
-            totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
+            manaCost *= 1f - .02f * args.Talents.Convection;
+            totalCoef += .01f * args.Talents.Concussion;
+            crit += .05f * args.Talents.CallOfThunder;
+            spCoef += .03f * args.Talents.Shamanism;
+            loCoef += .03f * args.Talents.Shamanism;
+            castTime -= .1f * args.Talents.LightningMastery;
+            cooldown -= new float[] { 0, .75f, 1.5f, 2.5f }[args.Talents.StormEarthAndFire];
+            crit += .01f * args.Talents.TidalMastery;
+            spellPower += args.Stats.SpellNatureDamageRating;
+            lightningSpellpower += args.Stats.LightningSpellPower;
+            totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
 
-            lightningOverload = shamanTalents.LightningOverload;
+            lightningOverload = args.Talents.LightningOverload;
 
-            base.Initialize(stats, shamanTalents);
+            base.Initialize(args);
         }
 
-        public ChainLightning(Stats stats, ShamanTalents shamanTalents, int additionalTargets)
+        public ChainLightning(ISpellArgs args)
             : this()
         {
-            Initialize(stats, shamanTalents, additionalTargets);
+            Initialize(args);
         }
 
         public int AdditionalTargets

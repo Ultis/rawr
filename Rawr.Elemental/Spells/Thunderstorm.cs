@@ -21,23 +21,24 @@ public class Thunderstorm : Spell
             shortName = "TS";
         }
 
-        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(ISpellArgs args)
         {
-            totalCoef += .01f * shamanTalents.Concussion;
-            crit += .05f * shamanTalents.CallOfThunder;
-            crit += .01f * shamanTalents.TidalMastery;
-            spellPower += stats.SpellNatureDamageRating;
-            totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
+            totalCoef += .01f * args.Talents.Concussion;
+            crit += .05f * args.Talents.CallOfThunder;
+            crit += .01f * args.Talents.TidalMastery;
+            spellPower += args.Stats.SpellNatureDamageRating;
+            totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
 
-            if (shamanTalents.GlyphofThunder)
+            if (args.Talents.GlyphofThunder)
                 cooldown -= 10f;
 
-            base.Initialize(stats, shamanTalents);
+            base.Initialize(args);
         }
 
-        public Thunderstorm(Stats stats, ShamanTalents shamanTalents) : this()
+        public Thunderstorm(ISpellArgs args)
+            : this()
         {
-            Initialize(stats, shamanTalents);
+            Initialize(args);
         }
 
         public static float getProcsPerSecond(bool glyphed, int fightDuration)

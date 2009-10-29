@@ -17,18 +17,18 @@ public class ElementalMastery : Spell
             shortName = "EM";
         }
 
-        public override void Initialize(Stats stats, ShamanTalents shamanTalents)
+        public override void Initialize(ISpellArgs args)
         {
-            if (shamanTalents.GlyphofElementalMastery)
+            if (args.Talents.GlyphofElementalMastery)
                 cooldown -= 30f;
 
-            base.Initialize(stats, shamanTalents);
+            base.Initialize(args);
         }
 
-        public ElementalMastery(Stats stats, ShamanTalents shamanTalents)
+        public ElementalMastery(ISpellArgs args)
             : this()
         {
-            Initialize(stats, shamanTalents);
+            Initialize(args);
         }
 
         public static float getAverageUptime(bool glyphed, int fightDuration)

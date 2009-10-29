@@ -22,7 +22,8 @@ namespace Rawr.Elemental
 
             Stats addedStats = baseStats.Clone();
             addedStats.Accumulate(procStats);
-            spellbox = new SpellBox(addedStats, talents);
+            CombatFactors combatFactors = new CombatFactors(talents, addedStats, Math.Max(calcOpts.NumberOfTargets-1, 0), calcOpts.LatencyCast, calcOpts.LatencyGcd);
+            spellbox = new SpellBox(combatFactors);
         }
 
         /// <summary>
@@ -41,7 +42,8 @@ namespace Rawr.Elemental
 
             Stats addedStats = baseStats.Clone();
             addedStats.Accumulate(procStats);
-            spellbox.Update(addedStats, talents);
+            CombatFactors combatFactors = new CombatFactors(talents, addedStats, Math.Max(calcOpts.NumberOfTargets - 1, 0), calcOpts.LatencyCast, calcOpts.LatencyGcd);
+            spellbox.Update(combatFactors);
         }
 
         private Rotation getPriorityRotation(int type)
@@ -156,8 +158,6 @@ namespace Rawr.Elemental
             calculatedStats.ReplenishMP5 = replenishRegen;
             calculatedStats.LightningBolt = rot.LB;
             calculatedStats.ChainLightning = rot.CL;
-            calculatedStats.ChainLightning3 = rot.CL3;
-            calculatedStats.ChainLightning4 = rot.CL4;
             calculatedStats.FlameShock = rot.FS;
             calculatedStats.LavaBurst = rot.LvB;
             calculatedStats.EarthShock = rot.ES;
@@ -170,6 +170,7 @@ namespace Rawr.Elemental
             calculatedStats.LvBPerSecond = rot.getCastsPerSecond(typeof(LavaBurst));
             calculatedStats.LBPerSecond = rot.getCastsPerSecond(typeof(LightningBolt));
             calculatedStats.FSPerSecond = rot.getCastsPerSecond(typeof(FlameShock));
+            calculatedStats.LatencyPerSecond = rot.LatencyPerSecond;
             calculatedStats.RotationDPS = rot.DPS;
             calculatedStats.RotationMPS = rot.MPS;
             calculatedStats.TotalDPS = TotalDamage / FightDuration;

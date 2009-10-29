@@ -22,6 +22,8 @@ namespace Rawr.Elemental.Spells
         {
             castTime = duration;
             baseCastTime = duration;
+            latencyCast = 0;
+            latencyGcd = 0;
         }
 
         public Wait(float duration)
