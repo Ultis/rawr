@@ -113,14 +113,16 @@ namespace Rawr.Enhance
             }
             if (totalTimeUsed > fightLength)
                 foreach (Ability ability in _abilities)
-                {
-                    ability.AverageUses(totalTimeUsed / fightLength); // modify to appropriate multiplier
-                }
+                    ability.AverageUses(totalTimeUsed / fightLength); 
             if (totalManaUsed > _cs.MaxMana && _calcOpts.UseMana)
                 foreach (Ability ability in _abilities)
-                {
-                    ability.AverageUses(totalManaUsed / _cs.MaxMana); // modify to appropriate multiplier
-                }
+                    ability.AverageUses(totalManaUsed / _cs.MaxMana); 
+            // at this stage have the upper bounds of number of uses - ie: no GCD interference
+            float gcd = Math.Max(1.0f, 1.5f * (1f - StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
+            foreach (Ability ability in _abilities)
+            {
+                ability.RemovePossibleClashingUses(0.075f, fightLength);
+            }
         }       
 
         public float AbilityCooldown(EnhanceAbility abilityType)

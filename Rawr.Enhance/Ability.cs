@@ -42,6 +42,7 @@ namespace Rawr.Enhance
         public float Uses { get { return _uses; } }
         public float ManaCost { get { return _manacost; } }
         public bool ManaRegen { get { return _manaRegen; } }
+        public int Priority { get { return _priority; } }
 
         public void Use(float useTime)
         {
@@ -52,6 +53,12 @@ namespace Rawr.Enhance
         public void AddUses(float uses)
         {
             _uses += uses > 0f ? uses : 0f;
+        }
+
+        public void RemovePossibleClashingUses(float clashChance, float fightLength)
+        {
+            float possibleClashes = clashChance * (float)Math.Sqrt(_priority - 1) * fightLength / _duration;
+            _uses -= possibleClashes;
         }
 
         public void AverageUses(float iterations)
