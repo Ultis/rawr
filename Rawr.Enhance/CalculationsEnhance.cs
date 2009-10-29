@@ -514,6 +514,8 @@ namespace Rawr.Enhance
             calculatedStats.SpellCrit = (float)Math.Floor((float)(cs.ChanceSpellCrit * 10000f)) / 100f;
             calculatedStats.GlancingBlows = cs.GlancingRate * 100f;
             calculatedStats.ArmorMitigation = (1f - cs.DamageReduction) * 100f;
+            calculatedStats.AttackPower = attackPower;
+            calculatedStats.SpellPower = spellPower;
             calculatedStats.AvMHSpeed = cs.HastedMHSpeed;
             calculatedStats.AvOHSpeed = cs.HastedOHSpeed;
             calculatedStats.EDBonusCrit = cs.EDBonusCrit * 100f;

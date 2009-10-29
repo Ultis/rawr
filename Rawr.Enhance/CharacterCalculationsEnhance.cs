@@ -63,6 +63,20 @@ namespace Rawr.Enhance
 			set { _targetLevel = value; }
 		}
 
+        private float _attackPower;
+        public float AttackPower
+        {
+            get { return _attackPower; }
+            set { _attackPower = value; }
+        }
+
+        private float _spellPower;
+        public float SpellPower
+        {
+            get { return _spellPower; }
+            set { _spellPower = value; }
+        }
+
         private float _totalExpertiseMH;
         public float TotalExpertiseMH
         {
@@ -400,17 +414,17 @@ namespace Rawr.Enhance
             dictValues.Add("Survivability Points", SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
 
-            dictValues.Add("White Damage", dpsOutputFormat(SwingDamage,DPSPoints));
-            dictValues.Add("Windfury Attack", dpsOutputFormat(WindfuryAttack,DPSPoints));
-            dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack,DPSPoints));
-            dictValues.Add("Lightning Bolt", dpsOutputFormat(LightningBolt,DPSPoints));
-            dictValues.Add("Earth Shock", dpsOutputFormat(EarthShock,DPSPoints));
-            dictValues.Add("Flame Shock", dpsOutputFormat(FlameShock, DPSPoints));
-            dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma, DPSPoints));
-            dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike,DPSPoints));
-            dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf,DPSPoints));
-            dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield,DPSPoints));
-            dictValues.Add("Lava Lash", dpsOutputFormat(LavaLash, DPSPoints));
+            dictValues.Add("White Damage", dpsOutputFormat(SwingDamage,DPSPoints, true));
+            dictValues.Add("Windfury Attack", dpsOutputFormat(WindfuryAttack, DPSPoints, true));
+            dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack,DPSPoints, false));
+            dictValues.Add("Lightning Bolt", dpsOutputFormat(LightningBolt,DPSPoints, false));
+            dictValues.Add("Earth Shock", dpsOutputFormat(EarthShock,DPSPoints, false));
+            dictValues.Add("Flame Shock", dpsOutputFormat(FlameShock, DPSPoints, false));
+            dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma, DPSPoints, false));
+            dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike, DPSPoints, true));
+            dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf,DPSPoints, true));
+            dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield, DPSPoints, false));
+            dictValues.Add("Lava Lash", dpsOutputFormat(LavaLash, DPSPoints, true));
             dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
 
             dictValues.Add("Enhance Version", _version);
@@ -423,11 +437,13 @@ namespace Rawr.Enhance
             return dictValues;
 		}
 
-        private String dpsOutputFormat(DPSAnalysis dpsStat, float totaldps)
+        private String dpsOutputFormat(DPSAnalysis dpsStat, float totaldps, bool AP)
         {
             float percent = dpsStat.dps / totaldps * 100f;
-            return string.Format("{0}\r\n{1}% of total dps\r\n{2} PPM",
-                dpsStat, percent.ToString("F2", CultureInfo.InvariantCulture), dpsStat.PPM.ToString("F2", CultureInfo.InvariantCulture));
+            string power = AP ? "Av.AP : " + _attackPower.ToString("F2", CultureInfo.InvariantCulture) :
+                                "Av.SP : " + _spellPower.ToString("F2", CultureInfo.InvariantCulture);
+            return string.Format("{0}\r\n{1}% of total dps\r\nPPM    : {2}\r\n{3}",
+                dpsStat, percent.ToString("F2", CultureInfo.InvariantCulture), dpsStat.PPM.ToString("F2", CultureInfo.InvariantCulture), power);
         }
         
         private String dpsOutputFormat(float dps, float totaldps)
