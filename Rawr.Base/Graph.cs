@@ -193,12 +193,12 @@ namespace Rawr.Base
             #endregion
 
             #region Key Legend 
-            Font nameFont = new Font("Calibri", 14, FontStyle.Bold);
-            int nameX = (int)(activeWidth * .6f + graphStart);
+            Font nameFont = new Font("Calibri", 12, FontStyle.Bold);
+            int nameX = (int)(activeWidth * .667f + graphStart);
             for (int index = 0; index < statsList.Length; index++)
             {
                 Brush nameBrush = new SolidBrush(colors[index]);
-                int nameY = (int)(graphHeight * .6f) + index * 24;
+                int nameY = (int)(graphHeight * .5f) + (int)(index * nameFont.Height);
                 g.DrawString(statsList[index].ToString(), nameFont, nameBrush, new PointF(nameX, nameY));
             }
             #endregion
