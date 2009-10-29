@@ -92,6 +92,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\ArrayPool.cs" />
+    <Compile Include="Algorithms\LU.cs" />
+    <Compile Include="Algorithms\StateSpace.cs" />
     <Compile Include="Armory.cs" />
     <Compile Include="ArrayUtils.cs" />
     <Compile Include="AvailableItemGenerator.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="ItemFilter.cs" />
     <Compile Include="ItemLocation.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Algorithms\MarkovProcess.cs" />
     <Compile Include="Optimizer.cs" />
     <Compile Include="OptimizerBase.cs" />
     <Compile Include="OptimizerResults.cs" />
