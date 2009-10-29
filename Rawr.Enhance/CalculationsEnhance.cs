@@ -74,6 +74,9 @@ namespace Rawr.Enhance
                     "Complex Stats:Flurry Uptime",
                     "Complex Stats:ED Uptime*Elemental Devastation Uptime percentage",
                     "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
+                    "Complex Stats:Weapon Enchant Uptime",
+                    "Complex Stats:Trinket 1 Uptime",
+                    "Complex Stats:Trinket 2 Uptime",
                     "Attacks:White Damage",
                     "Attacks:Windfury Attack",
                     "Attacks:Flametongue Attack",
@@ -523,6 +526,10 @@ namespace Rawr.Enhance
             calculatedStats.URUptime = cs.URUptime * 100f;
             calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
             calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
+            calculatedStats.WeaponEnchantUptime = se.GetUptime(character.MainHand) * 100f;
+            calculatedStats.Trinket1Uptime = se.GetUptime(character.Trinket1) * 100f;
+            calculatedStats.Trinket2Uptime = se.GetUptime(character.Trinket2) * 100f;
+            
             calculatedStats.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
             calculatedStats.TotalExpertiseOH = (float) Math.Floor(cs.ExpertiseBonusOH * 400f);
             
@@ -530,10 +537,7 @@ namespace Rawr.Enhance
             calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHit, cs.AverageDodge, -1, cs.AverageYellowCrit, 60f / cs.AbilityCooldown(EnhanceAbility.StormStrike));
             calculatedStats.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH, 60f / cs.AbilityCooldown(EnhanceAbility.LavaLash));
             calculatedStats.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.EarthShock));
-            if (character.ShamanTalents.GlyphofFlameShock)
-                calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FlameShock));
-            else
-                calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, 0, 60f / cs.AbilityCooldown(EnhanceAbility.FlameShock));
+            calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FlameShock));
             calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningBolt));
             calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, cs.WFPPM);
             calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, -1, 60f / cs.AbilityCooldown(EnhanceAbility.LightningShield));

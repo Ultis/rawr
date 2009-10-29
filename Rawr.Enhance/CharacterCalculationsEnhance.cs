@@ -322,6 +322,27 @@ namespace Rawr.Enhance
             set { _version = value; }
         }
 
+        private float _weaponEnchantUptime;
+        public float WeaponEnchantUptime
+        {
+            get { return _weaponEnchantUptime; }
+            set { _weaponEnchantUptime = value; }
+        }
+
+        private float _trinket1Uptime;
+        public float Trinket1Uptime
+        {
+            get { return _trinket1Uptime; }
+            set { _trinket1Uptime = value; }
+        }
+
+        private float _trinket2Uptime;
+        public float Trinket2Uptime
+        {
+            get { return _trinket2Uptime; }
+            set { _trinket2Uptime = value; }
+        }
+
         public List<Buff> ActiveBuffs { get; set; }
         #endregion
 
@@ -409,7 +430,9 @@ namespace Rawr.Enhance
                 EDBonusCrit.ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Flurry Uptime", FlurryUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Avg Time to 5 Stack", SecondsTo5Stack.ToString("F2", CultureInfo.InvariantCulture) + " sec");
-
+            dictValues.Add("Weapon Enchant Uptime", WeaponEnchantUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Trinket 1 Uptime", Trinket1Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Trinket 2 Uptime", Trinket2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Survivability Points", SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
