@@ -100,7 +100,7 @@ namespace Rawr.Base.Algorithms
                 {
                     foreach (StateTransition<TAbility> transition in state.Transitions)
                     {
-                        float transitionProbability = transition.TransitionProbability;
+                        double transitionProbability = transition.TransitionProbability;
                         if (transitionProbability > 0)
                         {
                             double p = stateWeight * transitionProbability;

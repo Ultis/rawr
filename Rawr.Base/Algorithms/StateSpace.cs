@@ -20,8 +20,8 @@ namespace Rawr.Base.Algorithms
     {
         public State<TAbility> TargetState { get; set; }
         public TAbility Ability { get; set; }
-        public virtual float TransitionProbability { get; set; }
-        public virtual float TransitionDuration { get; set; }
+        public virtual double TransitionProbability { get; set; }
+        public virtual double TransitionDuration { get; set; }
     }
 
     public abstract class StateSpaceGenerator<TAbility>
