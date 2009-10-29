@@ -9,7 +9,7 @@ namespace Rawr.DPSWarr {
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CalcOpts = (calcOpts == null ? new CalculationOptionsDPSWarr() : calcOpts);
             StatS = stats;
-            
+            InvalidateCache();
             // Optimizations
             
             //Set_c_values();
@@ -62,7 +62,7 @@ namespace Rawr.DPSWarr {
         }
         #region Global Variables
         private Stats _Stats;
-        public Stats StatS { get { return _Stats; } set { _Stats = value; InvalidateCache(); } }
+        public Stats StatS { get { return _Stats; } set { _Stats = value; } }
         private WarriorTalents Talents;
         public CalculationOptionsDPSWarr CalcOpts { get; private set; }
         public Character Char { get; private set; }
@@ -97,7 +97,7 @@ namespace Rawr.DPSWarr {
         public bool useMH; private bool _useMH { get { return MH != null && _c_mhItemSpeed > 0; } }
         public bool useOH; private bool _useOH { get { return Talents.TitansGrip > 0 && OH != null && _c_ohItemSpeed > 0; } }
 
-        private void InvalidateCache() {
+        public void InvalidateCache() {
             _DamageBonus = _DamageReduction = _BonusWhiteCritDmg = _MHSpeed = _OHSpeed = _TotalHaste = -1f;
             Set_c_values();
         }

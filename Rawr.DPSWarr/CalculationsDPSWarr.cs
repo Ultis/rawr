@@ -1713,17 +1713,17 @@ These numbers to do not include racial bonuses.",
                 Stats bersStats = new Stats();
                 if (bersMainHand != null) {
                     // berserker enchant id
-                    bersStats.Accumulate(bersMainHand.Stats, bersMainHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0));
-                    //float f = bersMainHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    float f = bersMainHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    bersStats.Accumulate(bersMainHand.Stats, f);
                 }
                 if (bersOffHand != null) {
-                    bersStats.Accumulate(bersOffHand.Stats, bersOffHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0));
-                    //float f = bersOffHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    float f = bersOffHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    bersStats.Accumulate(bersOffHand.Stats, f);    
                 }
                 //float apBonusOtherProcs = (1f + totalBAPM) * (bersStats.AttackPower);
                 bersStats.AttackPower = (1f + totalBAPM) * (bersStats.AttackPower);
                 combatFactors.StatS.Accumulate(bersStats);
- 
+                combatFactors.InvalidateCache();
                 return combatFactors.StatS;
             /*} catch (Exception ex) {
                 new ErrorBoxDPSWarr("Error in creating Character Stats",
@@ -1807,18 +1807,18 @@ These numbers to do not include racial bonuses.",
                 }
 
                 combatFactors.StatS = UpdateStatsAndAdd(statsProcs, originalStats, Char);
-
+                combatFactors.InvalidateCache();
                 if (iterate) {
-                    float precisionWhole = 0.01f;
-                    float precisionDec = 0.0001f;
-                    Stats temp = statsProcs - iterateOld;
-                    if (temp.Agility > precisionWhole ||
-                        temp.HasteRating > precisionWhole ||
-                        temp.HitRating > precisionWhole ||
-                        temp.CritRating > precisionWhole ||
-                        temp.PhysicalHaste > precisionDec ||
-                        temp.PhysicalCrit > precisionDec ||
-                        temp.PhysicalHit > precisionDec) {
+                    const float precisionWhole = 0.01f;
+                    const float precisionDec = 0.0001f;
+                    if (statsProcs.Agility - iterateOld.Agility > precisionWhole ||
+                        statsProcs.HasteRating - iterateOld.HasteRating > precisionWhole ||
+                        statsProcs.HitRating - iterateOld.HitRating > precisionWhole ||
+                        statsProcs.CritRating - iterateOld.CritRating > precisionWhole ||
+                        statsProcs.PhysicalHaste - iterateOld.PhysicalHaste > precisionDec ||
+                        statsProcs.PhysicalCrit - iterateOld.PhysicalCrit > precisionDec ||
+                        statsProcs.PhysicalHit - iterateOld.PhysicalHit > precisionDec)
+                    {
                         Rot.doIterations();
                         return IterativeSpecialEffectsStats(Char, Rot, combatFactors, calcOpts,
                             specialEffects, true, statsProcs, originalStats);
