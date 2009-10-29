@@ -234,6 +234,7 @@ namespace Rawr
 		{
 			_allItems = null;
 			_relevantItems = null;
+            cachedRelevantItems = null;
 			if (ItemsChanged != null) ItemsChanged(null, null);
 		}
 #if RAWR3
