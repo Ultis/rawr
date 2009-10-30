@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Rawr.Optimizer
 {
@@ -150,8 +151,8 @@ namespace Rawr.Optimizer
                                             if (g != null)
                                             {
                                                 // ignore if we have something strictly better marked
-                                                if ((g.Slot == ItemSlot.Meta && !Array.Exists(MetaGemItems, gg => gg.Stats >= g.Stats)) ||
-                                                    (g.Slot != ItemSlot.Meta && !Array.Exists(GemItems, gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
+                                                if ((g.Slot == ItemSlot.Meta && !MetaGemItems.Any(gg => gg.Stats >= g.Stats)) ||
+                                                    (g.Slot != ItemSlot.Meta && !GemItems.Any(gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
                                                 {
                                                     // gem is not available
                                                     line = g.Name + " is not available";
@@ -168,7 +169,7 @@ namespace Rawr.Optimizer
                                         if (enchant != null && enchant.Id != 0)
                                         {
                                             // ignore if we have something strictly better marked
-                                            if (!Array.Exists(SlotEnchants[slot], e => e.Id == enchant.Id || e.Stats >= enchant.Stats))
+                                            if (!SlotEnchants[slot].Any(e => e.Id == enchant.Id || e.Stats >= enchant.Stats))
                                             {
                                                 // enchant is not available
                                                 line = item.Enchant.Name + " is not available";
@@ -189,8 +190,8 @@ namespace Rawr.Optimizer
                                             if (g != null)
                                             {
                                                 // ignore if we have something strictly better marked
-                                                if ((g.Slot == ItemSlot.Meta && !Array.Exists(MetaGemItems, gg => gg.Stats >= g.Stats)) ||
-                                                    (g.Slot != ItemSlot.Meta && !Array.Exists(GemItems, gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
+                                                if ((g.Slot == ItemSlot.Meta && !MetaGemItems.Any(gg => gg.Stats >= g.Stats)) ||
+                                                    (g.Slot != ItemSlot.Meta && !GemItems.Any(gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
                                                 {
                                                     // gem is not available
                                                     line = g.Name + " is not available";
