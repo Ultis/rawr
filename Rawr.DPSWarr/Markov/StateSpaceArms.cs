@@ -33,13 +33,14 @@ namespace Rawr.DPSWarr.Markov
             public bool HaveBuff_OPTfB;
             public bool HaveBuff_SD;
             public double CDRem_MS;
+            public bool AbilRdy_MS;
             public bool ThereAreMultipleMobs;
         }
 
         protected override State<Skills.Ability> GetInitialState()
         {
-            return GetState(0, 0, 0, 6, false, false, 0, false);
-            //return GetState(0, LatentGCD, Rot.MS.Whiteattacks.MhEffectiveSpeed, 6, false, false, 0, false);
+            return GetState(0, 0, 0, 6, false, false, 0, true, false);
+            //return GetState(0, LatentGCD, Rot.MS.Whiteattacks.MhEffectiveSpeed, 6, false, false, 0, true, false);
         }
 
         protected override List<StateTransition<Skills.Ability>> GetStateTransitions(State<Skills.Ability> state)
@@ -66,6 +67,7 @@ namespace Rawr.DPSWarr.Markov
                             s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             s.HaveBuff_SD,
                             Math.Max(0f, s.CDRem_MS - dur),
+                            s.AbilRdy_MS,
                             s.ThereAreMultipleMobs
                         ),
                         TransitionProbability = 1.0,
@@ -89,6 +91,7 @@ namespace Rawr.DPSWarr.Markov
                             s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             s.HaveBuff_SD,
                             Math.Max(0f, s.CDRem_MS - dur),
+                            s.AbilRdy_MS,
                             s.ThereAreMultipleMobs
                         ),
                         TransitionProbability = 1.0,
@@ -112,6 +115,7 @@ namespace Rawr.DPSWarr.Markov
                             s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             s.HaveBuff_SD,
                             Math.Max(0f, s.CDRem_MS - dur),
+                            s.AbilRdy_MS,
                             s.ThereAreMultipleMobs
                         ),
                         TransitionProbability = 1.0,
@@ -139,6 +143,7 @@ namespace Rawr.DPSWarr.Markov
                             s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             s.HaveBuff_SD,
                             Math.Max(0f, s.CDRem_MS - dur),
+                            true,
                             s.ThereAreMultipleMobs
                         ),
                         TransitionProbability = 1.0,
@@ -163,6 +168,7 @@ namespace Rawr.DPSWarr.Markov
                             s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             true,
                             Rot.MS.Cd,
+                            false,
                             s.ThereAreMultipleMobs
                         ),
                         TransitionProbability = 1.0 * (0.03 * Talents.SuddenDeath) * Rot.MS.MHAtkTable.AnyLand,
@@ -184,6 +190,7 @@ namespace Rawr.DPSWarr.Markov
                                 s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                                 s.HaveBuff_SD,
                                 Rot.MS.Cd,
+                                false,
                                 s.ThereAreMultipleMobs
                             ),
                             TransitionProbability = 1 - list[list.Count - 1].TransitionProbability,
@@ -208,6 +215,7 @@ namespace Rawr.DPSWarr.Markov
                             false,
                             s.HaveBuff_SD,
                             Math.Max(0f, s.CDRem_MS - dur),
+                            s.AbilRdy_MS,
                             s.ThereAreMultipleMobs
                         ),
                         TransitionProbability = 1.0,
@@ -231,6 +239,7 @@ namespace Rawr.DPSWarr.Markov
                             s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             false,
                             Math.Max(0f, s.CDRem_MS - dur),
+                            s.AbilRdy_MS,
                             s.ThereAreMultipleMobs
                         ),
                         TransitionProbability = 1.0,
@@ -254,6 +263,7 @@ namespace Rawr.DPSWarr.Markov
                             s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             s.HaveBuff_SD,
                             Math.Max(0f, s.CDRem_MS - dur),
+                            s.AbilRdy_MS,
                             s.ThereAreMultipleMobs
                         ),
                         TransitionProbability = 1.0,
@@ -275,6 +285,7 @@ namespace Rawr.DPSWarr.Markov
                             s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             s.HaveBuff_SD,
                             Math.Max(0f, s.CDRem_MS - dur),
+                            s.AbilRdy_MS,
                             s.ThereAreMultipleMobs
                         ),
                         TransitionProbability = 1.0,
@@ -285,30 +296,34 @@ namespace Rawr.DPSWarr.Markov
         }
         private Dictionary<string, StateArms> stateDictionary = new Dictionary<string, StateArms>();
         public StateArms GetState(double _rage, double _gcdtime, double _whiteattacktime, double _timetillnextTfBproccingrendtick,
-                                   bool _OverpowerTfBbuff, bool _SuddenDeathbuff, double _MortalStrikecooldownleft, bool _ThereAreMultipleMobs)
+                                  bool _OverpowerTfBbuff, bool _SuddenDeathbuff,
+                                  double _MortalStrikecooldownleft, bool _MortalStrikeReady,
+                                  bool _ThereAreMultipleMobs)
         {
-            string name = string.Format("Rage {0:000.0000},GCD {1:0.0000},White {2:0.0000},TfB {3:0.0000},TfBBuff {4},SDBuff {5},MSCD {6:0.0000},MM {7}",
-                                        _rage,
-                                        _gcdtime,
-                                        _whiteattacktime,
-                                        _timetillnextTfBproccingrendtick,
-                                        _OverpowerTfBbuff ? "+" : "-",
-                                        _SuddenDeathbuff ? "+" : "-",
-                                        _MortalStrikecooldownleft,
-                                        _ThereAreMultipleMobs ? "+" : "-");
+            string name = string.Format(
+                "Rage {0:000.0000},GCD {1:0.0000},White {2:0.0000},TfBBuff {3},SDBuff {4},MSRdy {5},MM {6}",//TfB {3:0.0000},
+                Math.Round(_rage, 4),
+                Math.Round(_gcdtime, 4),
+                Math.Round(_whiteattacktime, 4),
+                //_timetillnextTfBproccingrendtick,
+                _OverpowerTfBbuff ? "+" : "-",
+                _SuddenDeathbuff ? "+" : "-",
+                _MortalStrikeReady ? "+" : "-",
+                _ThereAreMultipleMobs ? "+" : "-");
             StateArms state;
             if (!stateDictionary.TryGetValue(name, out state))
             {
                 state = new StateArms()
                 {
                     Name = name,
-                    Current_Rage = _rage,
-                    TimeTilNext_GCD = _gcdtime,
-                    TimeTilNext_WhiteAttack = _whiteattacktime,
-                    TimeTilNext_RendTickProcgTfB = _timetillnextTfBproccingrendtick,
+                    Current_Rage = Math.Round(_rage, 4),
+                    TimeTilNext_GCD = Math.Round(_gcdtime, 4),
+                    TimeTilNext_WhiteAttack = Math.Round(_whiteattacktime, 4),
+                    TimeTilNext_RendTickProcgTfB = Math.Round(_timetillnextTfBproccingrendtick, 4),
                     HaveBuff_OPTfB = _OverpowerTfBbuff,
                     HaveBuff_SD = _SuddenDeathbuff,
-                    CDRem_MS = _MortalStrikecooldownleft,
+                    CDRem_MS = Math.Round(_MortalStrikecooldownleft, 4),
+                    AbilRdy_MS = _MortalStrikeReady,
                     ThereAreMultipleMobs = _ThereAreMultipleMobs,
                 };
                 stateDictionary[name] = state;
@@ -316,10 +331,14 @@ namespace Rawr.DPSWarr.Markov
             return state;
         }
         public StateArms GetState(float _rage, float _gcdtime, float _whiteattacktime, float _timetillnextTfBproccingrendtick,
-                                   bool _OverpowerTfBbuff, bool _SuddenDeathbuff, float _MortalStrikecooldownleft, bool _ThereAreMultipleMobs)
+                                  bool _OverpowerTfBbuff, bool _SuddenDeathbuff,
+                                  float _MortalStrikecooldownleft, bool _MortalStrikeReady,
+                                  bool _ThereAreMultipleMobs)
         {
             return GetState((double)_rage, (double)_gcdtime, (double)_whiteattacktime, (double)_timetillnextTfBproccingrendtick,
-                                   _OverpowerTfBbuff, _SuddenDeathbuff, (double)_MortalStrikecooldownleft, _ThereAreMultipleMobs);
+                                   _OverpowerTfBbuff, _SuddenDeathbuff,
+                                   (double)_MortalStrikecooldownleft, _MortalStrikeReady,
+                                   _ThereAreMultipleMobs);
         }
     }
 
@@ -327,18 +346,22 @@ namespace Rawr.DPSWarr.Markov
         public void StateSpaceGeneratorArmsTest1(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co)
         {
             ArmsGenerator gen = new ArmsGenerator(c, s, cf, wa, co);
-
             var stateSpace = gen.GenerateStateSpace();
+            try {
+                MarkovProcess<Skills.Ability> mp = new MarkovProcess<Skills.Ability>(stateSpace);
 
-            MarkovProcess<Skills.Ability> mp = new MarkovProcess<Skills.Ability>(stateSpace);
+                double averageDamage = 0.0;
+                foreach (KeyValuePair<Skills.Ability, double> kvp in mp.AbilityWeight) {
+                    averageDamage += kvp.Key.DamageOnUse * kvp.Value;
+                }
 
-            double averageDamage = 0.0;
-            foreach (KeyValuePair<Skills.Ability, double> kvp in mp.AbilityWeight)
-            {
-                averageDamage += kvp.Key.DamageOnUse * kvp.Value;
+                double dps = averageDamage / mp.AverageTransitionDuration;
+            } catch (Exception ex) {
+                new ErrorBoxDPSWarr("Error in creating Arms Markov Calculations",
+                    ex.Message, "StateSpaceGeneratorArmsTest1()",
+                    "StateSpace Count: " + stateSpace.Count.ToString(),
+                    ex.StackTrace, 0);
             }
-
-            double dps = averageDamage / mp.AverageTransitionDuration;
         }
     }
 }

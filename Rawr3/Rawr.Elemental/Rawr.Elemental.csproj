@@ -57,6 +57,9 @@
     <Compile Include="..\..\Rawr.Elemental\CalculationsElemental.cs">
       <Link>CalculationsElemental.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Elemental\CombatFactors.cs">
+      <Link>CombatFactors.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Elemental\Estimation.cs">
       <Link>Estimation.cs</Link>
     </Compile>
@@ -80,6 +83,9 @@
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\ILightningOverload.cs">
       <Link>ILightningOverload.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\ISpellArgs.cs">
+      <Link>ISpellArgs.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\LavaBurst.cs">
       <Link>LavaBurst.cs</Link>
