@@ -2626,8 +2626,9 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
             #endregion
+ */
             #endregion
-*/
+
             #region WotLK
             #region Tier 7 | Cryptstalker
             defaultBuffs.Add(new Buff()
@@ -2719,6 +2720,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
             #endregion
+			/*
             #region Merciless Gladiator's Pursuit (Season 2)
             defaultBuffs.Add(new Buff()
             {
@@ -2873,6 +2875,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
             #endregion
+			*/
             #endregion
             #endregion
 
@@ -3742,7 +3745,6 @@ namespace Rawr
             });
 */
             #endregion
-            #endregion
             #region WotLK
             #region Tier 7 | Earthshatter
             defaultBuffs.Add(new Buff()
@@ -4266,48 +4268,6 @@ namespace Rawr
             #region Temporary Buffs
             defaultBuffs.Add(new Buff()
             {
-                Name = "Bloodlust",
-                Group = "Temporary Buffs",
-                Stats = { Bloodlust = 0.3f },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Drums of Battle",
-                Group = "Temporary Buffs",
-                Stats = { DrumsOfBattle = 80 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Drums of War",
-                Group = "Temporary Buffs",
-                Stats = { DrumsOfWar = 60 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Commendation of Kael'thas",
-                Group = "Temporary Buffs",
-                Stats = { DodgeRating = 152 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Figurine - Empyrean Tortoise",
-                Group = "Temporary Buffs",
-                Stats = { DodgeRating = 165 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Stomp",
-                Group = "Temporary Buffs",
-                Stats = { BonusArmorMultiplier = -0.5f },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
                 Name = "Unbalancing Strike",
                 Group = "Temporary Buffs",
                 Stats = { Defense = -200.0f },
@@ -4320,7 +4280,14 @@ namespace Rawr
                 Stats = { BonusHealthMultiplier = -0.25f },
                 ConflictingBuffs = new List<string>(new string[] { })
             });
-            defaultBuffs.Add(new Buff()
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Chill of the Throne",
+				Group = "Temporary Buffs",
+				Stats = { Dodge = -0.20f },
+				ConflictingBuffs = new List<string>(new string[] { })
+			});
+			defaultBuffs.Add(new Buff()
             {
                 Name = "Expose Weakness",
                 Group = "Temporary Buffs",
@@ -4339,62 +4306,6 @@ namespace Rawr
                 Name = "Nightmare Seed",
                 Group = "Temporary Buffs",
                 Stats = { Health = 2000 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Heroic 1750 Health Trinket",
-                Group = "Temporary Buffs",
-                Stats = { Health = 1750 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Season 3 Resilience Relic",
-                Group = "Temporary Buffs",
-                Stats = { Resilience = 31 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Moonglade Rejuvination",
-                Group = "Temporary Buffs",
-                Stats = { DodgeRating = 35 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Living Root of the Wildheart",
-                Group = "Temporary Buffs",
-                Stats = { BonusArmor = 4070 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Argussian Compass",
-                Group = "Temporary Buffs",
-                Stats = { Health = 1150 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dawnstone Crab",
-                Group = "Temporary Buffs",
-                Stats = { DodgeRating = 125 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Adamantite Figurine",
-                Group = "Temporary Buffs",
-                Stats = { BonusArmor = 1280 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Brooch of the Immortal King",
-                Group = "Temporary Buffs",
-                Stats = { Health = 1250 },
                 ConflictingBuffs = new List<string>(new string[] { })
             });
             #endregion

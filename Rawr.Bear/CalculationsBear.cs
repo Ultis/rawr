@@ -1328,6 +1328,7 @@ the Threat Scale defined on the Options tab.",
 				ShadowResistanceBuff = stats.ShadowResistanceBuff,
 				HighestStat = stats.HighestStat,
 				Paragon = stats.Paragon,
+				Dodge = stats.Dodge,
 
                 Strength = stats.Strength,
                 AttackPower = stats.AttackPower,
@@ -1372,7 +1373,7 @@ the Threat Scale defined on the Options tab.",
 			bool relevant = (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHealthMultiplier +
 				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
-				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
+				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.Dodge +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.PhysicalCrit +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff + stats.CritChanceReduction +

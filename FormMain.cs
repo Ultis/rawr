@@ -832,10 +832,11 @@ namespace Rawr
         private void LoadCharacterIntoForm(Character character, bool unsavedChanges)
         {
 			string characterModel = character.CurrentModel;
-            Character = character;
+			Character = new Character();
+			LoadModel(characterModel);
+			Character = character;
             _unsavedChanges = unsavedChanges;
             SetTitle();
-			LoadModel(characterModel);
 			comboBoxModel.SelectedItem = characterModel;
         }
 
