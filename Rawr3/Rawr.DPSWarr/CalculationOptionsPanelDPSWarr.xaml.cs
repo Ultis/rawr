@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -29,7 +30,8 @@ namespace Rawr.DPSWarr {
         private Dictionary<string, string> PNStuff = new Dictionary<string, string>();
         public UserControl PanelControl { get { return this; } }
         private Character _char;
-        public Character Character {
+        public Character Character
+        {
             get { return _char; }
             set { _char = value; LoadCalculationOptions(); }
         }
@@ -37,14 +39,9 @@ namespace Rawr.DPSWarr {
             int line = 0;
             isLoading = true;
             try {
-                //try {
-                    //string isnull = null;
-                    //string check = isnull + "1";
-                //}catch (Exception ex) {
-                    new ErrorBoxDPSWarr("Test Title", "Test message", "CalculationOptionsPanelDPSWarr()",
-                        "This is a forced one, just making sure the frackin thing works", "test stack trace", 0);
-                //}
-                //InitializeComponent();
+                new ErrorBoxDPSWarr("Test Title", "Test message", "CalculationOptionsPanelDPSWarr()",
+                    "This is a forced one, just making sure the frackin thing works", "test stack trace", 0);
+                InitializeComponent();
                 //SetUpFAQ();
                 //CTL_Maints.ExpandAll(); line = 10;
 
@@ -251,34 +248,34 @@ FAQStuff.Add(
                 CK_MovingTargs.IsChecked = calcOpts.MovingTargets;
                 CB_MoveTargsTime.IsEnabled = calcOpts.MovingTargets;
                 CB_MoveTargsPerc.IsEnabled = calcOpts.MovingTargets;
-                LB_MoveSec.IsEnabled = calcOpts.MovingTargets;
+                //LB_MoveSec.IsEnabled = calcOpts.MovingTargets;
                 //CB_MoveTargsTime.Value = (int)calcOpts.MovingTargetsTime;
                 //CB_MoveTargsPerc.Value = (int)(calcOpts.MovingTargetsTime / calcOpts.Duration * 100); line = 20;
 
                 CK_StunningTargs.IsChecked = calcOpts.StunningTargets;
                 NUD_StunFreq.IsEnabled = calcOpts.StunningTargets;
                 NUD_StunDur.IsEnabled = calcOpts.StunningTargets;
-                LB_Stun0.IsEnabled = calcOpts.StunningTargets;
-                LB_Stun1.IsEnabled = calcOpts.StunningTargets;
-                LB_Stun2.IsEnabled = calcOpts.StunningTargets;
+                //LB_Stun0.IsEnabled = calcOpts.StunningTargets;
+                //LB_Stun1.IsEnabled = calcOpts.StunningTargets;
+                //LB_Stun2.IsEnabled = calcOpts.StunningTargets;
                 NUD_StunFreq.Value = (int)calcOpts.StunningTargetsFreq;
                 NUD_StunDur.Value = (int)calcOpts.StunningTargetsDur;
 
                 CK_FearingTargs.IsChecked = calcOpts.FearingTargets;
                 NUD_FearFreq.IsEnabled = calcOpts.FearingTargets;
                 NUD_FearDur.IsEnabled = calcOpts.FearingTargets;
-                LB_Fear0.IsEnabled = calcOpts.FearingTargets;
-                LB_Fear1.IsEnabled = calcOpts.FearingTargets;
-                LB_Fear2.IsEnabled = calcOpts.FearingTargets;
+                //LB_Fear0.IsEnabled = calcOpts.FearingTargets;
+                //LB_Fear1.IsEnabled = calcOpts.FearingTargets;
+                //LB_Fear2.IsEnabled = calcOpts.FearingTargets;
                 //NUD_FearFreq.Value = (int)calcOpts.FearingTargetsFreq;
                 //NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur;
 
                 CK_RootingTargs.IsChecked = calcOpts.RootingTargets;
                 NUD_RootFreq.IsEnabled = calcOpts.RootingTargets;
                 NUD_RootDur.IsEnabled = calcOpts.RootingTargets;
-                LB_Root0.IsEnabled = calcOpts.RootingTargets;
-                LB_Root1.IsEnabled = calcOpts.RootingTargets;
-                LB_Root2.IsEnabled = calcOpts.RootingTargets;
+                //LB_Root0.IsEnabled = calcOpts.RootingTargets;
+                //LB_Root1.IsEnabled = calcOpts.RootingTargets;
+                //LB_Root2.IsEnabled = calcOpts.RootingTargets;
                 NUD_RootFreq.Value = (int)calcOpts.RootingTargetsFreq;
                 NUD_RootDur.Value = (int)calcOpts.RootingTargetsDur;
 
@@ -409,32 +406,32 @@ FAQStuff.Add(
                         CK_StunningTargs.IsChecked = calcOpts.StunningTargets;
                         NUD_StunFreq.IsEnabled = calcOpts.StunningTargets;
                         NUD_StunDur.IsEnabled = calcOpts.StunningTargets;
-                        LB_Stun0.IsEnabled = calcOpts.StunningTargets;
-                        LB_Stun1.IsEnabled = calcOpts.StunningTargets;
-                        LB_Stun2.IsEnabled = calcOpts.StunningTargets;
+                        //LB_Stun0.IsEnabled = calcOpts.StunningTargets;
+                        //LB_Stun1.IsEnabled = calcOpts.StunningTargets;
+                        //LB_Stun2.IsEnabled = calcOpts.StunningTargets;
                         NUD_StunFreq.Value = (int)calcOpts.StunningTargetsFreq;
                         NUD_StunDur.Value = (int)calcOpts.StunningTargetsDur;
                         CK_MovingTargs.IsChecked = calcOpts.MovingTargets;
                         CB_MoveTargsTime.IsEnabled = calcOpts.MovingTargets;
                         CB_MoveTargsPerc.IsEnabled = calcOpts.MovingTargets;
-                        LB_MoveSec.IsEnabled = calcOpts.MovingTargets;
-                        LB_MovePerc.IsEnabled = calcOpts.MovingTargets;
+                        //LB_MoveSec.IsEnabled = calcOpts.MovingTargets;
+                        //LB_MovePerc.IsEnabled = calcOpts.MovingTargets;
                         //CB_MoveTargsTime.Value = (int)calcOpts.MovingTargetsTime;
                         //CB_MoveTargsPerc.Value = (double)Math.Floor(calcOpts.MovingTargetsTime / (float)CB_Duration.Value * 100f);
                         CK_FearingTargs.IsChecked = calcOpts.FearingTargets;
                         NUD_FearFreq.IsEnabled = calcOpts.FearingTargets;
                         NUD_FearDur.IsEnabled = calcOpts.FearingTargets;
-                        LB_Fear0.IsEnabled = calcOpts.FearingTargets;
-                        LB_Fear1.IsEnabled = calcOpts.FearingTargets;
-                        LB_Fear2.IsEnabled = calcOpts.FearingTargets;
+                        //LB_Fear0.IsEnabled = calcOpts.FearingTargets;
+                        //LB_Fear1.IsEnabled = calcOpts.FearingTargets;
+                        //LB_Fear2.IsEnabled = calcOpts.FearingTargets;
                         //NUD_FearFreq.Value = (int)calcOpts.FearingTargetsFreq;
                         //NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur;
                         CK_RootingTargs.IsChecked = calcOpts.RootingTargets;
                         NUD_RootFreq.IsEnabled = calcOpts.RootingTargets;
                         NUD_RootDur.IsEnabled = calcOpts.RootingTargets;
-                        LB_Root0.IsEnabled = calcOpts.RootingTargets;
-                        LB_Root1.IsEnabled = calcOpts.RootingTargets;
-                        LB_Root2.IsEnabled = calcOpts.RootingTargets;
+                        //LB_Root0.IsEnabled = calcOpts.RootingTargets;
+                        //LB_Root1.IsEnabled = calcOpts.RootingTargets;
+                        //LB_Root2.IsEnabled = calcOpts.RootingTargets;
                         NUD_RootFreq.Value = (int)calcOpts.RootingTargetsFreq;
                         NUD_RootDur.Value = (int)calcOpts.RootingTargetsDur;
 
@@ -610,11 +607,11 @@ FAQStuff.Add(
                 //
                 bool Checked             = (bool)CK_StunningTargs.IsChecked;
                 calcOpts.StunningTargets = Checked;
-                LB_Stun0.IsEnabled         = Checked;
+                //LB_Stun0.IsEnabled         = Checked;
                 NUD_StunFreq.IsEnabled     = Checked;
-                LB_Stun1.IsEnabled         = Checked;
+                //LB_Stun1.IsEnabled         = Checked;
                 NUD_StunDur.IsEnabled      = Checked;
-                LB_Stun2.IsEnabled         = Checked;
+                //LB_Stun2.IsEnabled         = Checked;
                 //CB_BossList.Text = "Custom";
                 //
                 Character.OnCalculationsInvalidated();
@@ -627,8 +624,8 @@ FAQStuff.Add(
                 calcOpts.MovingTargets = (bool)CK_MovingTargs.IsChecked;
                 CB_MoveTargsTime.IsEnabled = calcOpts.MovingTargets;
                 CB_MoveTargsPerc.IsEnabled = calcOpts.MovingTargets;
-                LB_MoveSec.IsEnabled = calcOpts.MovingTargets;
-                LB_MovePerc.IsEnabled = calcOpts.MovingTargets;
+                //LB_MoveSec.IsEnabled = calcOpts.MovingTargets;
+                //LB_MovePerc.IsEnabled = calcOpts.MovingTargets;
                 //CB_BossList.Text = "Custom";
                 //
                 Character.OnCalculationsInvalidated();
@@ -651,11 +648,11 @@ FAQStuff.Add(
                 //
                 bool Checked             = (bool)CK_FearingTargs.IsChecked;
                 calcOpts.FearingTargets  = Checked;
-                LB_Fear0.IsEnabled         = Checked;
+                //LB_Fear0.IsEnabled         = Checked;
                 NUD_FearFreq.IsEnabled     = Checked;
-                LB_Fear1.IsEnabled         = Checked;
+                //LB_Fear1.IsEnabled         = Checked;
                 NUD_FearDur.IsEnabled      = Checked;
-                LB_Fear2.IsEnabled         = Checked;
+                //LB_Fear2.IsEnabled         = Checked;
                 //CB_BossList.Text = "Custom";
                 //
                 Character.OnCalculationsInvalidated();
@@ -667,11 +664,11 @@ FAQStuff.Add(
                 //
                 bool Checked               = (bool)CK_RootingTargs.IsChecked;
                 calcOpts.RootingTargets    = Checked;
-                LB_Root0.IsEnabled         = Checked;
+                //LB_Root0.IsEnabled         = Checked;
                 NUD_RootFreq.IsEnabled     = Checked;
-                LB_Root1.IsEnabled         = Checked;
+                //LB_Root1.IsEnabled         = Checked;
                 NUD_RootDur.IsEnabled      = Checked;
-                LB_Root2.IsEnabled         = Checked;
+                //LB_Root2.IsEnabled         = Checked;
                 //CB_BossList.Text           = "Custom";
                 //
                 Character.OnCalculationsInvalidated();
@@ -1499,6 +1496,10 @@ FAQStuff.Add(
             CTL_Maints.Nodes[4].Nodes[1].Checked            = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             //
             this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);*/
+        }
+        private void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Character.OnCalculationsInvalidated();
         }
     }
 }
