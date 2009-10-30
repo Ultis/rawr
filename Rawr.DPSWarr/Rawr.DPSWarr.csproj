@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="CalculationOptionsDPSWarr.cs" />
     <Compile Include="Markov\StateSpaceArms.cs" />
-    <Compile Include="Markov\MarkovProcessArms.cs" />
     <Compile Include="DG_BossAttacks.cs">
       <SubType>Form</SubType>
     </Compile>
