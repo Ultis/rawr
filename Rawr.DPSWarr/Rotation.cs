@@ -93,7 +93,7 @@ namespace Rawr.DPSWarr {
         protected WarriorTalents Talents { get { return TALENTS; } set { TALENTS = value; } }
         protected Stats StatS { get { return STATS; } set { STATS = value; } }
         protected CombatFactors CombatFactors { get { return COMBATFACTORS; } set { COMBATFACTORS = value; } }
-        protected Skills.WhiteAttacks WhiteAtks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
+        public Skills.WhiteAttacks WhiteAtks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
         protected CalculationOptionsDPSWarr CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
         #endregion
         #region Functions

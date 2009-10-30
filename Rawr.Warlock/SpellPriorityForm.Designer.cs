@@ -37,27 +37,34 @@
             this.bRemove = new System.Windows.Forms.Button();
             this.bClear = new System.Windows.Forms.Button();
             this.bSave = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // cmbSpells
             // 
+            this.cmbSpells.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbSpells.FormattingEnabled = true;
-            this.cmbSpells.Location = new System.Drawing.Point(13, 13);
+            this.cmbSpells.Location = new System.Drawing.Point(12, 12);
             this.cmbSpells.Name = "cmbSpells";
-            this.cmbSpells.Size = new System.Drawing.Size(190, 21);
+            this.cmbSpells.Size = new System.Drawing.Size(192, 21);
             this.cmbSpells.TabIndex = 0;
             // 
             // lsSpellPriority
             // 
+            this.lsSpellPriority.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.lsSpellPriority.FormattingEnabled = true;
-            this.lsSpellPriority.Location = new System.Drawing.Point(13, 50);
+            this.lsSpellPriority.Location = new System.Drawing.Point(12, 37);
             this.lsSpellPriority.Name = "lsSpellPriority";
-            this.lsSpellPriority.Size = new System.Drawing.Size(190, 147);
+            this.lsSpellPriority.Size = new System.Drawing.Size(192, 160);
             this.lsSpellPriority.TabIndex = 1;
             // 
             // bAdd
             // 
-            this.bAdd.Location = new System.Drawing.Point(210, 13);
+            this.bAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bAdd.Location = new System.Drawing.Point(210, 10);
             this.bAdd.Name = "bAdd";
             this.bAdd.Size = new System.Drawing.Size(75, 23);
             this.bAdd.TabIndex = 2;
@@ -67,7 +74,8 @@
             // 
             // bUp
             // 
-            this.bUp.Location = new System.Drawing.Point(210, 50);
+            this.bUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bUp.Location = new System.Drawing.Point(210, 49);
             this.bUp.Name = "bUp";
             this.bUp.Size = new System.Drawing.Size(75, 23);
             this.bUp.TabIndex = 3;
@@ -77,7 +85,8 @@
             // 
             // bDown
             // 
-            this.bDown.Location = new System.Drawing.Point(210, 80);
+            this.bDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bDown.Location = new System.Drawing.Point(210, 78);
             this.bDown.Name = "bDown";
             this.bDown.Size = new System.Drawing.Size(75, 23);
             this.bDown.TabIndex = 4;
@@ -87,7 +96,8 @@
             // 
             // bRemove
             // 
-            this.bRemove.Location = new System.Drawing.Point(210, 110);
+            this.bRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bRemove.Location = new System.Drawing.Point(210, 107);
             this.bRemove.Name = "bRemove";
             this.bRemove.Size = new System.Drawing.Size(75, 23);
             this.bRemove.TabIndex = 5;
@@ -97,7 +107,8 @@
             // 
             // bClear
             // 
-            this.bClear.Location = new System.Drawing.Point(210, 140);
+            this.bClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bClear.Location = new System.Drawing.Point(210, 136);
             this.bClear.Name = "bClear";
             this.bClear.Size = new System.Drawing.Size(75, 23);
             this.bClear.TabIndex = 6;
@@ -107,7 +118,8 @@
             // 
             // bSave
             // 
-            this.bSave.Location = new System.Drawing.Point(210, 170);
+            this.bSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.bSave.Location = new System.Drawing.Point(210, 174);
             this.bSave.Name = "bSave";
             this.bSave.Size = new System.Drawing.Size(75, 23);
             this.bSave.TabIndex = 7;
@@ -115,11 +127,24 @@
             this.bSave.UseVisualStyleBackColor = true;
             this.bSave.Click += new System.EventHandler(this.bSave_Click);
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.Location = new System.Drawing.Point(12, 200);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(273, 28);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "If you don\'t put the Filler spell as your last priority, you may see rotation iss" +
+                "ues.";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // SpellPriorityForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(297, 210);
+            this.ClientSize = new System.Drawing.Size(297, 237);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.bSave);
             this.Controls.Add(this.bClear);
             this.Controls.Add(this.bRemove);
@@ -128,9 +153,11 @@
             this.Controls.Add(this.bAdd);
             this.Controls.Add(this.lsSpellPriority);
             this.Controls.Add(this.cmbSpells);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "SpellPriorityForm";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Spell Priority";
             this.ResumeLayout(false);
@@ -147,5 +174,6 @@
         private System.Windows.Forms.Button bRemove;
         private System.Windows.Forms.Button bClear;
         private System.Windows.Forms.Button bSave;
+        private System.Windows.Forms.Label label1;
     }
 }

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 namespace Rawr.UnitTests
 {
-    
-    
     /// <summary>
     ///This is a test class for StateSpaceGeneratorTest and is intended
     ///to contain all StateSpaceGeneratorTest Unit Tests
@@ -13,24 +11,14 @@ namespace Rawr.UnitTests
     [TestClass()]
     public class StateSpaceGeneratorTest
     {
-
-
         private TestContext testContextInstance;
-
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
         ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
+        public TestContext TestContext {
+            get { return testContextInstance; }
+            set { testContextInstance = value; }
         }
 
         #region Additional test attributes

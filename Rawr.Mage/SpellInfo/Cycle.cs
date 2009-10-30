@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 #if RAWR3
 using System.Linq;
 #endif
+using System.Text;
 
 namespace Rawr.Mage
 {

@@ -1700,7 +1700,7 @@ These numbers to do not include racial bonuses.",
                 {
                     DoSpecialEffects(character, Rot, combatFactors, calcOpts, bersMainHand, bersOffHand, statsTotal);
                 }
-                else // statType == StatType.Maximum
+                else // if (statType == StatType.Maximum)
                 {
                     Stats maxSpecEffects = new Stats();
                     foreach (SpecialEffect effect in statsTotal.SpecialEffects()) maxSpecEffects.Accumulate(effect.Stats);
@@ -1911,27 +1911,26 @@ These numbers to do not include racial bonuses.",
         }
 
         private Stats UpdateStatsAndAdd(Stats statsToAdd, Stats baseStats, Character character)
-            //float totalBSTAM, float totalBSM, float totalBAM, float totalBAPM)
         {
             Stats retVal = baseStats.Clone();
             // Multipliers
             float totalBSTAM = baseStats.BonusStaminaMultiplier;
-            float totalBSM = baseStats.BonusStrengthMultiplier;
-            float totalBAM = baseStats.BonusAgilityMultiplier;
+            float totalBSTRM = baseStats.BonusStrengthMultiplier;
+            float totalBAGIM = baseStats.BonusAgilityMultiplier;
             float totalBAPM = baseStats.BonusAttackPowerMultiplier;
 
             // Base Stats
-            statsToAdd.Stamina = (statsToAdd.Stamina * (1f + totalBSTAM) * (1f + statsToAdd.BonusStaminaMultiplier));
-            statsToAdd.Strength = (statsToAdd.Strength * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
-            statsToAdd.Agility = (statsToAdd.Agility * (1f + totalBAM) * (1f + statsToAdd.BonusAgilityMultiplier));
-            statsToAdd.Health += (statsToAdd.Stamina * 10f);
+            statsToAdd.Stamina  = (statsToAdd.Stamina  * (1f + totalBSTAM) * (1f + statsToAdd.BonusStaminaMultiplier));
+            statsToAdd.Strength = (statsToAdd.Strength * (1f + totalBSTRM) * (1f + statsToAdd.BonusStrengthMultiplier));
+            statsToAdd.Agility  = (statsToAdd.Agility  * (1f + totalBAGIM) * (1f + statsToAdd.BonusAgilityMultiplier));
+            statsToAdd.Health  += (statsToAdd.Stamina  * 10f);
             // Paragon
             if (baseStats.Strength + statsToAdd.Strength > baseStats.Agility + statsToAdd.Agility) {
-                statsToAdd.Strength += (statsToAdd.Paragon * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
-                statsToAdd.Strength += (statsToAdd.HighestStat * (1f + totalBSM) * (1f + statsToAdd.BonusStrengthMultiplier));
+                statsToAdd.Strength += (statsToAdd.Paragon * (1f + totalBSTRM) * (1f + statsToAdd.BonusStrengthMultiplier));
+                statsToAdd.Strength += (statsToAdd.HighestStat * (1f + totalBSTRM) * (1f + statsToAdd.BonusStrengthMultiplier));
             } else {
-                statsToAdd.Agility += (statsToAdd.Paragon * (1f + totalBAM) * (1f + statsToAdd.BonusAgilityMultiplier));
-                statsToAdd.Agility += (statsToAdd.HighestStat * (1f + totalBAM) * (1f + statsToAdd.BonusAgilityMultiplier));
+                statsToAdd.Agility += (statsToAdd.Paragon * (1f + totalBAGIM) * (1f + statsToAdd.BonusAgilityMultiplier));
+                statsToAdd.Agility += (statsToAdd.HighestStat * (1f + totalBAGIM) * (1f + statsToAdd.BonusAgilityMultiplier));
             }
 
             // Armor
