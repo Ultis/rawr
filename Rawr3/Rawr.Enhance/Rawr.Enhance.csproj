@@ -51,6 +51,9 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Enhance\Ability.cs">
+      <Link>Ability.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Enhance\CalculationOptionsEnhance.cs">
       <Link>CalculationOptionsEnhance.cs</Link>
     </Compile>
@@ -72,11 +75,8 @@
     <Compile Include="..\..\Rawr.Enhance\Gemming.cs">
       <Link>Gemming.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Enhance\Priorities.cs">
-      <Link>Priorities.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Enhance\PriorityQueue.cs">
-      <Link>PriorityQueue.cs</Link>
+    <Compile Include="..\..\Rawr.Enhance\Priority.cs">
+      <Link>Priority.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Enhance\StatsSpecialEffects.cs">
       <Link>StatsSpecialEffects.cs</Link>
