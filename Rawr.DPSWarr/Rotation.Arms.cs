@@ -25,6 +25,7 @@ namespace Rawr.DPSWarr {
         public Skills.TasteForBlood TB;
         public Skills.Suddendeath SD;
         public Skills.Swordspec SS;
+        public Skills.FakeWhite FW;
         // GCD Totals
         public float _MS_DPS  = 0f, _MS_HPS  = 0f, _MS_GCDs  = 0f;
         public float _RD_DPS  = 0f, _RD_HPS  = 0f, _RD_GCDs  = 0f;
@@ -33,6 +34,7 @@ namespace Rawr.DPSWarr {
         public float _SD_DPS  = 0f, _SD_HPS  = 0f, _SD_GCDs  = 0f;
         public float _SS_DPS  = 0f, _SS_HPS  = 0f, _SS_Acts  = 0f;
         public float _BLS_DPS = 0f, _BLS_HPS = 0f, _BLS_GCDs = 0f;
+        public float _FW_DPS  = 0f, _FW_HPS  = 0f, _FW_GCDs  = 0f;
         // GCD Losses
         public float _Move_GCDs    = 0f, _Move_Per    = 0f, _Move_Eaten    = 0f;
         public float _Stunned_Acts = 0f, _Stunned_Per = 0f, _Stunned_Eaten = 0f;
@@ -57,6 +59,7 @@ namespace Rawr.DPSWarr {
             calcs.TB = TB;
             calcs.SD = SD;
             calcs.SS = SS;
+            calcs.FW = FW;
         }
         protected override void initAbilities() {
             base.initAbilities();
@@ -68,6 +71,7 @@ namespace Rawr.DPSWarr {
             OP = new Skills.OverPower(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS, SS);
             TB = new Skills.TasteForBlood(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
             SD = new Skills.Suddendeath(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            FW = new Skills.FakeWhite(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
         }
         #endregion
         #region Various Attacks Over Dur

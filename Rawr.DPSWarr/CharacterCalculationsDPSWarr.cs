@@ -113,7 +113,8 @@ namespace Rawr.DPSWarr {
         public Skills.DeepWounds DW { get; set; }
         public Skills.HeroicStrike HS { get; set; }
         public Skills.Execute EX { get; set; }
-        
+        // Markov Work
+        public Skills.FakeWhite FW { get; set; }
         #endregion
         #region Neutral
         public float BaseHealth { get; set; }

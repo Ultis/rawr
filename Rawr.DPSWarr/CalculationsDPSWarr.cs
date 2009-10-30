@@ -1335,6 +1335,9 @@ These numbers to do not include racial bonuses.",
                 CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts); line++;
                 Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors, calcOpts); line++;
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race); line++;
+
+                //Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
+                //b.StateSpaceGeneratorArmsTest1(character,stats,combatFactors, whiteAttacks, calcOpts);
                 
                 calculatedStats.Duration = calcOpts.Duration; line++;
                 calculatedStats.AverageStats = stats; line++;

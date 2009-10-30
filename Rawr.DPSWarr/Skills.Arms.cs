@@ -480,5 +480,24 @@ namespace Rawr.DPSWarr {
                 return result;
             }
         }
+
+        public class FakeWhite : Ability {
+            public FakeWhite(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+                Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; InitializeA(co);
+                //
+                Name = "MH White Swing";
+                ReqMeleeWeap = true;
+                ReqMeleeRange = true;
+                Cd = Whiteattacks.MhEffectiveSpeed;
+                RageCost = Whiteattacks.MHSwingRage;
+                StanceOkArms = StanceOkFury = StanceOkDef = true;
+                DamageBase = Whiteattacks.MhDamageOnUse;
+                //DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusWarrior_T7_2P_SlamDamage);
+                //BonusCritChance = StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
+                //
+                InitializeB(co);
+                MHAtkTable = Whiteattacks.MHAtkTable;
+            }
+        }
     }
 }

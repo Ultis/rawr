@@ -31,7 +31,7 @@ namespace Rawr.DPSWarr {
                 SetUpFAQ();
                 SetUpPatchNotes();
 #if !DEBUG
-                calcOpts.UseMarkov = false;
+                //calcOpts.UseMarkov = false;
                 CK_Markov.Checked  = false;
                 CK_Markov.Visible  = false;
 #endif

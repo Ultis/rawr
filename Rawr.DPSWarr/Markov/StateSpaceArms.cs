@@ -7,6 +7,23 @@ namespace Rawr.DPSWarr.Markov
 {
     public class ArmsGenerator : StateSpaceGenerator<Skills.Ability>
     {
+        public ArmsGenerator(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+            Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; WhiteAtks = wa; CalcOpts = co;
+            //
+            Rot = new ArmsRotation(c, s, cf, wa, co);
+            Rot.Initialize();
+            LatentGCD = 1.5 + co.FullLatency;
+        }
+
+        protected double LatentGCD;
+        public ArmsRotation Rot = null;
+        Character Char;
+        WarriorTalents Talents;
+        Stats StatS;
+        CombatFactors combatFactors;
+        Skills.WhiteAttacks WhiteAtks;
+        CalculationOptionsDPSWarr CalcOpts;
+
         public class StateArms : State<Skills.Ability>
         {
             public double Current_Rage;
@@ -19,12 +36,6 @@ namespace Rawr.DPSWarr.Markov
             public bool ThereAreMultipleMobs;
         }
 
-        Skills.Ability MS = new Skills.Ability();// Skills.MortalStrike(Character,Stats,CombatFactors,Skills.WhiteAttacks,CalculationOptionsDPSWarr);
-        Skills.Ability OP = new Skills.Ability();// Skills.Overpower(Character,Stats,CombatFactors,Skills.WhiteAttacks,CalculationOptionsDPSWarr);
-        Skills.Ability RD = new Skills.Ability();// Skills.Rend(Character,Stats,CombatFactors,Skills.WhiteAttacks,CalculationOptionsDPSWarr);
-        protected double LatentGCD = 1.7;
-        public ArmsRotation Rot = null;
-
         protected override State<Skills.Ability> GetInitialState()
         {
             return GetState(0, 0, 0, 6, false, false, 0, false);
@@ -35,9 +46,81 @@ namespace Rawr.DPSWarr.Markov
         {
             StateArms s = state as StateArms;
             List<StateTransition<Skills.Ability>> list = new List<StateTransition<Skills.Ability>>();
-            if (s.TimeTilNext_GCD == 0)
+            if (s.TimeTilNext_WhiteAttack == 0)
             {
-                if (s.CDRem_MS < LatentGCD)
+                if (s.Current_Rage > 70f && s.ThereAreMultipleMobs && s.Current_Rage > Rot.CL.RageCost)
+                {
+                    // do Cleave on next White swing
+                    double dur = Math.Min(s.TimeTilNext_GCD, s.TimeTilNext_WhiteAttack);
+                    list.Add(new StateTransition<Skills.Ability>()
+                    {
+                        Ability = Rot.CL,
+                        TransitionDuration = dur,
+                        TargetState = GetState(
+                            s.Current_Rage - Rot.CL.RageCost,
+                            Math.Max(0f, s.TimeTilNext_GCD - dur),
+                            Math.Max(0f, Rot.FW.Cd - dur),
+                            s.TimeTilNext_RendTickProcgTfB /*> dur
+                                                            ? s.TimeTilNext_RendTickProcgTfB - dur
+                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur*/,
+                            s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
+                            s.HaveBuff_SD,
+                            Math.Max(0f, s.CDRem_MS - dur),
+                            s.ThereAreMultipleMobs
+                        ),
+                        TransitionProbability = 1.0,
+                    });
+                }
+                else if (s.Current_Rage > 70f && s.Current_Rage > Rot.HS.RageCost)
+                {
+                    // do Heroic Strike on next White swing
+                    double dur = Math.Min(s.TimeTilNext_GCD, s.TimeTilNext_WhiteAttack);
+                    list.Add(new StateTransition<Skills.Ability>()
+                    {
+                        Ability = Rot.HS,
+                        TransitionDuration = dur,
+                        TargetState = GetState(
+                            s.Current_Rage - Rot.HS.RageCost,
+                            Math.Max(0f, s.TimeTilNext_GCD - dur),
+                            Math.Max(0f, Rot.FW.Cd - dur),
+                            s.TimeTilNext_RendTickProcgTfB /*> dur
+                                                            ? s.TimeTilNext_RendTickProcgTfB - dur
+                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur*/,
+                            s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
+                            s.HaveBuff_SD,
+                            Math.Max(0f, s.CDRem_MS - dur),
+                            s.ThereAreMultipleMobs
+                        ),
+                        TransitionProbability = 1.0,
+                    });
+                }
+                else
+                {
+                    // let it white swing
+                    double dur = Math.Min(s.TimeTilNext_GCD, Rot.FW.Cd);
+                    list.Add(new StateTransition<Skills.Ability>()
+                    {
+                        Ability = Rot.FW,
+                        TransitionDuration = dur,
+                        TargetState = GetState(
+                            Math.Min(100, s.Current_Rage + Rot.WhiteAtks.MHSwingRage),
+                            Math.Max(0f, s.TimeTilNext_GCD - dur),
+                            Math.Max(0f, Rot.FW.Cd - dur),
+                            s.TimeTilNext_RendTickProcgTfB /*> dur
+                                                            ? s.TimeTilNext_RendTickProcgTfB - dur
+                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur*/,
+                            s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
+                            s.HaveBuff_SD,
+                            Math.Max(0f, s.CDRem_MS - dur),
+                            s.ThereAreMultipleMobs
+                        ),
+                        TransitionProbability = 1.0,
+                    });
+                }
+            }
+            else if (s.TimeTilNext_GCD == 0)
+            {
+                if (s.CDRem_MS != 0 && s.CDRem_MS < LatentGCD)
                 {
                     // do nothing, don't want to reset GCD and delay MS
                     // later we'll consider delaying for an extra Slam or Execute
@@ -50,9 +133,9 @@ namespace Rawr.DPSWarr.Markov
                             s.Current_Rage,
                             Math.Max(0f, s.TimeTilNext_GCD - dur),
                             Math.Max(0f, s.TimeTilNext_WhiteAttack - dur),
-                            s.TimeTilNext_RendTickProcgTfB > dur
+                            s.TimeTilNext_RendTickProcgTfB /*> dur
                                                             ? s.TimeTilNext_RendTickProcgTfB - dur
-                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur,
+                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur*/,
                             s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             s.HaveBuff_SD,
                             Math.Max(0f, s.CDRem_MS - dur),
@@ -61,85 +144,141 @@ namespace Rawr.DPSWarr.Markov
                         TransitionProbability = 1.0,
                     });
                 }
-                //else if (s.CDRem_MS == 0 && s.Current_Rage > Rot.MS.RageCost)
+                else if (s.CDRem_MS == 0 && s.Current_Rage > Rot.MS.RageCost)
                 {
                     // Time to MS!
-                    //trans.Ability = Rot.MS;
+                    double dur = Math.Min(LatentGCD, s.TimeTilNext_WhiteAttack);
+                    list.Add(new StateTransition<Skills.Ability>()
+                    {
+                        Ability = Rot.MS,
+                        TransitionDuration = dur,
+                        TargetState = GetState(
+                            s.Current_Rage - Rot.MS.RageCost,
+                            Math.Max(0f, s.TimeTilNext_GCD - dur),
+                            Math.Max(0f, s.TimeTilNext_WhiteAttack - dur),
+                            s.TimeTilNext_RendTickProcgTfB /*> dur
+                                                            ? s.TimeTilNext_RendTickProcgTfB - dur
+                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur*/
+                                                                                                         ,
+                            s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
+                            true,
+                            Rot.MS.Cd,
+                            s.ThereAreMultipleMobs
+                        ),
+                        TransitionProbability = 1.0 * (0.03 * Talents.SuddenDeath) * Rot.MS.MHAtkTable.AnyLand,
+                    });
+                    if (list[list.Count - 1].TransitionProbability != 1.0)
+                    {
+                        list.Add(new StateTransition<Skills.Ability>()
+                        {
+                            Ability = Rot.MS,
+                            TransitionDuration = dur,
+                            TargetState = GetState(
+                                s.Current_Rage - Rot.MS.RageCost,
+                                Math.Max(0f, s.TimeTilNext_GCD - dur),
+                                Math.Max(0f, s.TimeTilNext_WhiteAttack - dur),
+                                s.TimeTilNext_RendTickProcgTfB /*> dur
+                                                            ? s.TimeTilNext_RendTickProcgTfB - dur
+                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur*/
+                                                                                                             ,
+                                s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
+                                s.HaveBuff_SD,
+                                Rot.MS.Cd,
+                                s.ThereAreMultipleMobs
+                            ),
+                            TransitionProbability = 1 - list[list.Count - 1].TransitionProbability,
+                        });
+                    }
                 }
-                //else if ((s.TimeTilNext_RendTickProcgTfB == 0 || s.HaveBuff_OPTfB) && s.Current_Rage > Rot.OP.RageCost)
+                else if ((s.TimeTilNext_RendTickProcgTfB == 0 || s.HaveBuff_OPTfB) && s.Current_Rage > Rot.OP.RageCost)
                 {
                     // tfb should proc now, we can use the ability after react time
-                    //trans.Ability = s.TimeTilNext_RendTickProcgTfB == 0 ? (Skills.Ability)Rot.TB : (Skills.Ability)Rot.OP;
+                    double dur = Math.Min(LatentGCD, s.TimeTilNext_WhiteAttack);
+                    list.Add(new StateTransition<Skills.Ability>()
+                    {
+                        Ability = s.TimeTilNext_RendTickProcgTfB == 0 ? (Skills.Ability)Rot.TB : (Skills.Ability)Rot.OP,
+                        TransitionDuration = dur,
+                        TargetState = GetState(
+                            s.Current_Rage - Rot.MS.RageCost,
+                            Math.Max(0f, s.TimeTilNext_GCD - dur),
+                            Math.Max(0f, s.TimeTilNext_WhiteAttack - dur),
+                            s.TimeTilNext_RendTickProcgTfB /*> dur
+                                                            ? s.TimeTilNext_RendTickProcgTfB - dur
+                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur*/,
+                            false,
+                            s.HaveBuff_SD,
+                            Math.Max(0f, s.CDRem_MS - dur),
+                            s.ThereAreMultipleMobs
+                        ),
+                        TransitionProbability = 1.0,
+                    });
                 }
-                //else if (s.HaveBuff_SD && s.Current_Rage > Rot.SD.RageCost)
+                else if (s.HaveBuff_SD && s.Current_Rage > Rot.SD.RageCost)
                 {
                     // Sudden death is active, we can execute
-                    //trans.Ability = Rot.SD;
+                    double dur = Math.Min(LatentGCD, s.TimeTilNext_WhiteAttack);
+                    list.Add(new StateTransition<Skills.Ability>()
+                    {
+                        Ability = Rot.SD,
+                        TransitionDuration = dur,
+                        TargetState = GetState(
+                            s.Current_Rage - (Rot.SD.RageCost + Rot.SD.UsedExtraRage),
+                            Math.Max(0f, s.TimeTilNext_GCD - dur),
+                            Math.Max(0f, s.TimeTilNext_WhiteAttack - dur),
+                            s.TimeTilNext_RendTickProcgTfB /*> dur
+                                                            ? s.TimeTilNext_RendTickProcgTfB - dur
+                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur*/,
+                            s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
+                            false,
+                            Math.Max(0f, s.CDRem_MS - dur),
+                            s.ThereAreMultipleMobs
+                        ),
+                        TransitionProbability = 1.0,
+                    });
                 }
-                //else if (s.Current_Rage > Rot.SL.RageCost)
+                else if (s.Current_Rage > Rot.SL.RageCost)
                 {
                     // do slam if nothing else
-                    //trans.Ability = Rot.SL;
-                }
-            }
-            else if (s.TimeTilNext_WhiteAttack == 0)
-            {
-                if (s.Current_Rage > 70f)
-                {
-                    if (s.ThereAreMultipleMobs && s.Current_Rage > Rot.CL.FullRageCost)
+                    double dur = Math.Min(LatentGCD, s.TimeTilNext_WhiteAttack);
+                    list.Add(new StateTransition<Skills.Ability>()
                     {
-                        // do Cleave on next White swing
-                        /*trans.Ability = Rot.CL;
-                        trans.TransitionDuration = Math.Min(s.TimeTilNext_GCD, s.TimeTilNext_WhiteAttack);
-                        trans.TargetState = GetState(
-                            s.Current_Rage,
-                            Math.Max(0f, s.TimeTilNext_GCD - trans.TransitionDuration),
-                            Rot.WhiteAtks.MhEffectiveSpeed,
-                            s.TimeTilNext_RendTickProcgTfB > trans.TransitionDuration
-                                                            ? s.TimeTilNext_RendTickProcgTfB - trans.TransitionDuration
-                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - trans.TransitionDuration,
-                            s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - trans.TransitionDuration) == 0),
+                        Ability = Rot.SL,
+                        TransitionDuration = dur,
+                        TargetState = GetState(
+                            s.Current_Rage - Rot.SL.RageCost,
+                            Math.Max(0f, s.TimeTilNext_GCD - dur),
+                            Math.Max(0f, s.TimeTilNext_WhiteAttack + Rot.SL.CastTime - dur),// Slam delays the swing timer
+                            s.TimeTilNext_RendTickProcgTfB /*> dur
+                                                            ? s.TimeTilNext_RendTickProcgTfB - dur
+                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur*/,
+                            s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             s.HaveBuff_SD,
-                            Math.Max(0f, s.CDRem_MS - trans.TransitionDuration),
+                            Math.Max(0f, s.CDRem_MS - dur),
                             s.ThereAreMultipleMobs
-                        );*/
-                    }
-                    else if (s.Current_Rage > Rot.HS.FullRageCost)
+                        ),
+                        TransitionProbability = 1.0,
+                    });
+                }else{
+                    // We don't have enough rage to do anything on this GCD
+                    double dur = s.TimeTilNext_WhiteAttack;
+                    list.Add(new StateTransition<Skills.Ability>()
                     {
-                        // do Heroic Strike on next White swing
-                        /*trans.Ability = Rot.HS;
-                        trans.TransitionDuration = Math.Min(s.TimeTilNext_GCD, s.TimeTilNext_WhiteAttack);
-                        trans.TargetState = GetState(
+                        Ability = null,
+                        TransitionDuration = dur,
+                        TargetState = GetState(
                             s.Current_Rage,
-                            Math.Max(0f, s.TimeTilNext_GCD - trans.TransitionDuration),
-                            Rot.WhiteAtks.MhEffectiveSpeed,
-                            s.TimeTilNext_RendTickProcgTfB > trans.TransitionDuration
-                                                            ? s.TimeTilNext_RendTickProcgTfB - trans.TransitionDuration
-                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - trans.TransitionDuration,
-                            s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - trans.TransitionDuration) == 0),
+                            Math.Max(0f, s.TimeTilNext_GCD - dur),
+                            Math.Max(0f, s.TimeTilNext_WhiteAttack - dur),
+                            s.TimeTilNext_RendTickProcgTfB /*> dur
+                                                            ? s.TimeTilNext_RendTickProcgTfB - dur
+                                                            : 6f + s.TimeTilNext_RendTickProcgTfB - dur*/,
+                            s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - dur) == 0),
                             s.HaveBuff_SD,
-                            Math.Max(0f, s.CDRem_MS - trans.TransitionDuration),
+                            Math.Max(0f, s.CDRem_MS - dur),
                             s.ThereAreMultipleMobs
-                        );*/
-                    }
-                }
-                else
-                {
-                    // let it white swing
-                    /*trans.Ability = null; // need to make this be White Attacks -> a MH Swing
-                    trans.TransitionDuration = Math.Min(s.TimeTilNext_GCD, s.TimeTilNext_WhiteAttack);
-                    trans.TargetState = GetState(
-                        s.Current_Rage,
-                        Math.Max(0f, s.TimeTilNext_GCD - trans.TransitionDuration),
-                        Rot.WhiteAtks.MhEffectiveSpeed,
-                        s.TimeTilNext_RendTickProcgTfB > trans.TransitionDuration
-                                                        ? s.TimeTilNext_RendTickProcgTfB - trans.TransitionDuration
-                                                        : 6f + s.TimeTilNext_RendTickProcgTfB - trans.TransitionDuration,
-                        s.HaveBuff_OPTfB || (Math.Max(0f, s.TimeTilNext_RendTickProcgTfB - trans.TransitionDuration) == 0),
-                        s.HaveBuff_SD,
-                        Math.Max(0f, s.CDRem_MS - trans.TransitionDuration),
-                        s.ThereAreMultipleMobs
-                    );*/
+                        ),
+                        TransitionProbability = 1.0,
+                    });
                 }
             }
             return list;
@@ -148,7 +287,7 @@ namespace Rawr.DPSWarr.Markov
         public StateArms GetState(double _rage, double _gcdtime, double _whiteattacktime, double _timetillnextTfBproccingrendtick,
                                    bool _OverpowerTfBbuff, bool _SuddenDeathbuff, double _MortalStrikecooldownleft, bool _ThereAreMultipleMobs)
         {
-            string name = string.Format("Rage{0},GCD{1},White{2},TfB{3},TfBBuff{4},SDBuff{5},MSCD{6},MM{7}",
+            string name = string.Format("Rage {0:000.0000},GCD {1:0.0000},White {2:0.0000},TfB {3:0.0000},TfBBuff {4},SDBuff {5},MSCD {6:0.0000},MM {7}",
                                         _rage,
                                         _gcdtime,
                                         _whiteattacktime,
@@ -185,10 +324,9 @@ namespace Rawr.DPSWarr.Markov
     }
 
     public class StateSpaceGeneratorArmsTest {
-
-        public void StateSpaceGeneratorArmsTest1()
+        public void StateSpaceGeneratorArmsTest1(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co)
         {
-            ArmsGenerator gen = new ArmsGenerator();
+            ArmsGenerator gen = new ArmsGenerator(c, s, cf, wa, co);
 
             var stateSpace = gen.GenerateStateSpace();
 
