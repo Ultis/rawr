@@ -75,6 +75,9 @@
     <Compile Include="..\..\Rawr.DPSWarr\ErrorBoxDPSWarr.cs">
       <Link>ErrorBoxDPSWarr.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.DPSWarr\Markov\StateSpaceArms.cs">
+      <Link>Markov\StateSpaceArms.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.DPSWarr\Rotation.Arms.cs">
       <Link>Rotation.Arms.cs</Link>
     </Compile>

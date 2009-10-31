@@ -3,6 +3,7 @@ using System.Collections.Generic;
 #if RAWR3
 using System.Windows.Media;
 #else
+using Rawr.DPSWarr.Markov;
 using System.Drawing;
 #endif
 using System.IO;
@@ -1336,8 +1337,13 @@ These numbers to do not include racial bonuses.",
                 Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors, calcOpts); line++;
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race); line++;
 
-                //Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
-                //b.StateSpaceGeneratorArmsTest1(character,stats,combatFactors, whiteAttacks, calcOpts);
+                #if !RAWR3      
+                if (calcOpts.UseMarkov)
+                {
+                    Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
+                    b.StateSpaceGeneratorArmsTest1(character,stats,combatFactors, whiteAttacks, calcOpts);
+                }
+                #endif
                 
                 calculatedStats.Duration = calcOpts.Duration; line++;
                 calculatedStats.AverageStats = stats; line++;
@@ -1604,14 +1610,6 @@ These numbers to do not include racial bonuses.",
                         Rot.ST.MHAtkTable.AnyLand);
                     statsTotal.AddSpecialEffect(shatt);
                 }
-                /*if (Rot.BR.Validated) {
-                    SpecialEffect blood = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusRageGen = Rot.BR.RageCost, },
-                        0f, Rot.BR.Cd);
-                    float uptime = blood.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, 0f);
-                    Stats stat = blood.GetAverageStats(0f, 1f, combatFactors._c_mhItemSpeed, 0f);
-                    statsTotal.AddSpecialEffect(blood);
-                }*/
                 /*if (Rot.Hammy.Validated) {
                     SpecialEffect hammy = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusTargets = 1f * calcOpts.MultipleTargetsPerc / 100f, },
@@ -1625,28 +1623,24 @@ These numbers to do not include racial bonuses.",
                     statsTotal.AddSpecialEffect(bs);
                 }
                 if (Rot.CS.Validated) {
-                    //float value = (2255f * (1f + talents.CommandingPresence * 0.05f));
                     SpecialEffect cs = new SpecialEffect(Trigger.Use,
                         new Stats() { Health = 2255f * (1f + talents.CommandingPresence * 0.05f), },
                         Rot.CS.Duration, Rot.CS.Cd + 0.01f);
                     statsTotal.AddSpecialEffect(cs);
                 }
                 if (Rot.DS.Validated) {
-                    //float value = (410f * (1f + talents.ImprovedDemoralizingShout * 0.08f));
                     SpecialEffect ds = new SpecialEffect(Trigger.Use,
                         new Stats() { BossAttackPower = 410f * (1f + talents.ImprovedDemoralizingShout * 0.08f) * -1f, },
                         Rot.DS.Duration, Rot.DS.Cd + 0.01f);
                     statsTotal.AddSpecialEffect(ds);
                 }
                 if (Rot.TH.Validated) {
-                    //float value = (0.10f * (1f + (float)Math.Ceiling(talents.ImprovedThunderClap * 10f / 3f) / 100f));
                     SpecialEffect tc = new SpecialEffect(Trigger.Use,
                         new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + talents.ImprovedThunderClap / 30f)), },
                         Rot.TH.Duration, Rot.TH.Cd + 0.01f, Rot.TH.MHAtkTable.AnyLand);
                     statsTotal.AddSpecialEffect(tc);
                 }
                 if (Rot.SN.Validated) {
-                    //float value = 0.04f;
                     SpecialEffect sn = new SpecialEffect(Trigger.Use,
                         new Stats() { ArmorPenetration = 0.04f, },
                         Rot.SN.Duration, Rot.SN.Cd + 0.01f, Rot.SN.MHAtkTable.AnyLand, 5);
@@ -1661,9 +1655,9 @@ These numbers to do not include racial bonuses.",
                 float land = Rot.LandedAtksOverDur;
                 float crit = Rot.CriticalAtksOverDur;
 
-                //float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
                 float attemptedAtksInterval = fightDuration / attempted;
                 float landedAtksInterval = fightDuration / land;
+                // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
                 float dmgDoneInterval = fightDuration / (land + (calcOpts.FuryStance ? 1f : 4f / 3f));
 
                 //float hitRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
@@ -1720,7 +1714,7 @@ These numbers to do not include racial bonuses.",
                     bersStats.Accumulate(bersMainHand.Stats, f);
                 }
                 if (bersOffHand != null) {
-                    float f = bersOffHand.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    float f = bersOffHand.GetAverageUptime( fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                     bersStats.Accumulate(bersOffHand.Stats, f);    
                 }
                 //float apBonusOtherProcs = (1f + totalBAPM) * (bersStats.AttackPower);
@@ -1844,10 +1838,10 @@ These numbers to do not include racial bonuses.",
             float land = rotation.LandedAtksOverDur;
             float crit = rotation.CriticalAtksOverDur;
 
-            float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
+            float bleedHitInterval = 1f / (calcOpts.FuryStance || !calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
             float attemptedAtkInterval = fightDuration / attempted;
             float landedAtksInterval = fightDuration / land;
-            float dmgDoneInterval = fightDuration / (land + (calcOpts.FuryStance ? 1f : 4f / 3f));
+            float dmgDoneInterval = fightDuration / land + (calcOpts.FuryStance || !calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f : 4f / 3f);
             float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
 
             float hitRate = land / attempted;
@@ -1895,13 +1889,10 @@ These numbers to do not include racial bonuses.",
                     else upTime = effect.GetAverageUptime(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
                 case Trigger.DamageAvoided: // Boss AoE attacks we manage to avoid
-                    // 0.1f need to be replaced with the player's avoidance stats
                     if (effect.MaxStack > 1f) { upTime = effect.GetAverageStackSize(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
                     else upTime = effect.GetAverageUptime(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
                 case Trigger.HSorSLHit: // Set bonus handler
-                    //Rot._SL_GCDs = Rot._SL_GCDs;
-                    //Rot._HS_Acts = Rot._HS_Acts;
                     if (effect.MaxStack > 1f) { upTime = effect.GetAverageStackSize(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
                     upTime = effect.GetAverageUptime(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;

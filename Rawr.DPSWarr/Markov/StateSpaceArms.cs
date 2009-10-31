@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+#if !RAWR3
 using Rawr.Base.Algorithms;
+#endif
+using System.Text;
 
 namespace Rawr.DPSWarr.Markov
 {
+#if !RAWR3
     public class ArmsGenerator : StateSpaceGenerator<Skills.Ability>
     {
         public ArmsGenerator(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co) {
@@ -306,4 +309,5 @@ namespace Rawr.DPSWarr.Markov
             }
         }
     }
+#endif
 }

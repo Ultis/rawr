@@ -34,7 +34,6 @@ namespace Rawr.DPSWarr {
         {
             get { return _char; }
             set {
-                //_char = value; LoadCalculationOptions();
                 if (_char != null && _char.CalculationOptions != null
                     && _char.CalculationOptions is CalculationOptionsDPSWarr)
                     ((CalculationOptionsDPSWarr)_char.CalculationOptions).PropertyChanged
@@ -86,6 +85,7 @@ namespace Rawr.DPSWarr {
                 //CB_BossList.Items.Add("Custom");
                 //foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
                 //line = 25;
+                //calcOpts_PropertyChanged(null, null);
             } catch (Exception ex) {
                 new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane",
                     ex.Message, "CalculationOptionsPanelDPSWarr()", ex.InnerException.Message, ex.StackTrace, 0);
@@ -885,6 +885,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                     Character.CalculationOptions = new CalculationOptionsDPSWarr(); line = 3;
                     isLoading = true; line = 4;
                 }
+                else if (Character == null) { return; }
                 calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; line = 5;
                 //CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
                 line = 7; info = calcOpts.TargetArmor.ToString();
@@ -923,6 +924,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 NUD_RootDur.IsEnabled = calcOpts.RootingTargets;
                 NUD_DisarmFreq.IsEnabled = calcOpts.DisarmingTargets;
                 NUD_DisarmDur.IsEnabled = calcOpts.DisarmingTargets;
+                NUD_AoEFreq.IsEnabled = calcOpts.AoETargets;
+                NUD_AoEDMG.IsEnabled = calcOpts.AoETargets;
 
                 // Abilities to Maintain
                 //CK_Flooring.IsChecked = calcOpts.AllowFlooring;
@@ -931,11 +934,11 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 //CB_Lag.Value = (int)calcOpts.Lag;
                 //CB_React.Value = (int)calcOpts.React; line = 40;
                 //
-                calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
+                //calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
                 //RB_StanceFury.IsChecked = calcOpts.FuryStance;
                 //RB_StanceArms.IsChecked = !RB_StanceFury.IsChecked; line = 50;
                 //
-                Character.OnCalculationsInvalidated();
+                calcOpts_PropertyChanged(null, null);
             } catch (Exception ex) {
                 new ErrorBoxDPSWarr("Error in loading the DPSWarr Options Pane",
                     ex.Message, "LoadCalculationOptions()", info, ex.StackTrace, line);
@@ -1854,6 +1857,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             NUD_RootDur.IsEnabled = calcOpts.RootingTargets;
             NUD_DisarmFreq.IsEnabled = calcOpts.DisarmingTargets;
             NUD_DisarmDur.IsEnabled = calcOpts.DisarmingTargets;
+            NUD_AoEFreq.IsEnabled = calcOpts.AoETargets;
+            NUD_AoEDMG.IsEnabled = calcOpts.AoETargets;
             //
             Character.OnCalculationsInvalidated();
         }

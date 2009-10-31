@@ -8,7 +8,7 @@ xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 xmlns:controlsToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
 x:Class="Rawr.DPSWarr.CalculationOptionsPanelDPSWarr"
-mc:Ignorable="d" Height="605" Width="303">
+mc:Ignorable="d">
 <Grid x:Name="LayoutRoot">
     <controls:TabControl x:Name="Tabs" TabStripPlacement="Top">
         <controls:TabItem x:Name="Page_00_Instructions" Header="Instructions">
@@ -43,123 +43,123 @@ mc:Ignorable="d" Height="605" Width="303">
         </controls:TabItem>
         <controls:TabItem x:Name="Page_03_FightInfo" Background="#FF1F3B53" Header="Boss Selector">
             <Grid x:Name="Page_03_Layout">
-                <dataInput:Label x:Name="LB_Where" Height="21" Margin="8,8,0,0" VerticalAlignment="Top" Content="Where" HorizontalAlignment="Left" Width="40"/>
-                <ComboBox x:Name="CB_BL_FilterType" Height="21" Margin="52,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="81" SelectedIndex="0" d:LayoutOverrides="HorizontalAlignment" SelectionChanged="CB_BL_FilterType_SelectedIndexChanged">
+                <dataInput:Label x:Name="LB_Where" Height="21" Margin="8,8,0,0" VerticalAlignment="Top" Content="Where" HorizontalAlignment="Left" Width="40" TabIndex="0"/>
+                <ComboBox x:Name="CB_BL_FilterType" Height="21" Margin="52,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="81" SelectedIndex="0" d:LayoutOverrides="HorizontalAlignment" SelectionChanged="CB_BL_FilterType_SelectedIndexChanged" TabIndex="1">
                     <ComboBoxItem x:Name="FT_Content" Content="Content" IsSelected="True"/>
                     <ComboBoxItem x:Name="FT_Instance" Content="Instance"/>
                     <ComboBoxItem x:Name="FT_Version" Content="Version"/>
                     <ComboBoxItem x:Name="FT_Name" Content="Name"/>
                 </ComboBox>
-                <dataInput:Label x:Name="LB_Is" Height="21" Margin="137,8,0,0" VerticalAlignment="Top" Content="is" HorizontalAlignment="Left" Width="14" RenderTransformOrigin="0.477,0.45"/>
-                <ComboBox x:Name="CB_BL_Filter" Height="20" Margin="151,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="132" SelectedIndex="0" SelectionChanged="CB_BL_Filter_SelectedIndexChanged">
+                <dataInput:Label x:Name="LB_Is" Height="21" Margin="137,8,0,0" VerticalAlignment="Top" Content="is" HorizontalAlignment="Left" Width="14" RenderTransformOrigin="0.477,0.45" TabIndex="2"/>
+                <ComboBox x:Name="CB_BL_Filter" Margin="151,8,8,0" SelectedIndex="0" SelectionChanged="CB_BL_Filter_SelectedIndexChanged" VerticalAlignment="Top" TabIndex="3">
                     <ComboBoxItem Content="All"/>
                 </ComboBox>
-                <ComboBox x:Name="CB_BossList" Height="21" Margin="8,33,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="275" SelectedIndex="0" SelectionChanged="CB_BossList_SelectedIndexChanged">
+                <ComboBox x:Name="CB_BossList" Height="21" Margin="8,33,8,0" VerticalAlignment="Top" SelectedIndex="0" SelectionChanged="CB_BossList_SelectedIndexChanged" TabIndex="4">
                     <ComboBoxItem Content="Custom"/>
                 </ComboBox>
-                <dataInput:Label x:Name="LB_TargLvl" Height="21" HorizontalAlignment="Left" Margin="8,58,0,0" VerticalAlignment="Top" Width="70" Content="Targ Level:"/>
-                <ComboBox x:Name="CB_TargLvl" Height="21" Margin="82,58,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" SelectionChanged="CB_TargetLevel_SelectedIndexChanged" d:LayoutOverrides="HorizontalAlignment">
+                <dataInput:Label x:Name="LB_TargLvl" Height="21" HorizontalAlignment="Left" Margin="8,58,0,0" VerticalAlignment="Top" Width="70" Content="Level:" TabIndex="5"/>
+                <ComboBox x:Name="CB_TargLvl" Height="21" Margin="82,58,149,0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="53" SelectionChanged="CB_TargetLevel_SelectedIndexChanged" TabIndex="6">
                     <ComboBoxItem x:Name="LVL83" Content="83" IsSelected="True"/>
                     <ComboBoxItem x:Name="LVL82" Content="82"/>
                     <ComboBoxItem x:Name="LVL81" Content="81"/>
                     <ComboBoxItem x:Name="LVL80" Content="80"/>
                 </ComboBox>
-                <dataInput:Label x:Name="LB_TargArmor" Height="21" Margin="139,58,0,0" VerticalAlignment="Top" Content="Targ Armor:" HorizontalAlignment="Left" Width="70"/>
-                <ComboBox x:Name="CB_TargArmor" Height="21" HorizontalAlignment="Left" Margin="213,58,0,0" VerticalAlignment="Top" Width="70" SelectionChanged="CB_ArmorBosses_SelectedIndexChanged">
+                <dataInput:Label x:Name="LB_TargArmor" Height="21" Margin="139,58,97,0" VerticalAlignment="Top" Content="Armor:" HorizontalAlignment="Center" Width="49" TabIndex="7"/>
+                <ComboBox x:Name="CB_TargArmor" Height="21" HorizontalAlignment="Right" Margin="205,58,8,0" VerticalAlignment="Top" Width="70" SelectionChanged="CB_ArmorBosses_SelectedIndexChanged" TabIndex="8">
                     <ComboBoxItem x:Name="Armor10643" Content="10643" IsSelected="True"/>
                     <ComboBoxItem x:Name="Armor10338" Content="10338"/>
                     <ComboBoxItem x:Name="Armor10034" Content="10034"/>
                     <ComboBoxItem x:Name="Armor09729" Content="9729"/>
                 </ComboBox>
-                <dataInput:Label x:Name="LB_Duration" Height="20" HorizontalAlignment="Left" Margin="8,85,0,0" VerticalAlignment="Top" Width="76" Content="Duration (s)"/>
-                <inputToolkit:NumericUpDown x:Name="CB_Duration" Height="20" Margin="88,85,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="48" d:LayoutOverrides="HorizontalAlignment" Value="{Binding Duration, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="1200" Minimum="30"/>
-                <dataInput:Label x:Name="LB_Under20Perc" Height="21" Margin="140,84,0,0" VerticalAlignment="Top" Content="HP &lt;20%: *" HorizontalAlignment="Left" Width="70" ToolTipService.ToolTip="Time where Execute Spamming Rotation occurs, only effective if Execute Spamming is active"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_Under20Perc" Height="20" HorizontalAlignment="Left" Margin="214,85,0,0" VerticalAlignment="Top" Width="50" Maximum="0.25" Minimum="0.15" Value="{Binding Under20Perc, Mode=TwoWay, UpdateSourceTrigger=Default}" DecimalPlaces="2"/>
-                <dataInput:Label x:Name="LBUnder20Perc2" Height="20" Margin="268,85,0,0" VerticalAlignment="Top" Content="%" HorizontalAlignment="Left" Width="15"/>
-                <CheckBox x:Name="CK_InBack" Height="20" Margin="8,109,0,0" Content="You stand behind boss &#42;" HorizontalAlignment="Left" Width="159" VerticalAlignment="Top" RenderTransformOrigin="0.481,0.294" ToolTipService.ToolTip="This affects how often the Boss can Parry your attacks (no bosses in WotLK Block)" IsChecked="{Binding InBack, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <inputToolkit:NumericUpDown x:Name="CB_InBackPerc" Height="20" HorizontalAlignment="Left" Margin="171,109,0,0" VerticalAlignment="Top" Width="93" d:LayoutOverrides="Height" Value="{Binding InBackPerc, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <dataInput:Label x:Name="LB_InBehindPerc" Height="20" Margin="268,109,0,0" VerticalAlignment="Top" Content="%" HorizontalAlignment="Left" Width="15"/>
-                <CheckBox x:Name="CK_MultiTargs" Height="20" Margin="8,133,0,0" VerticalAlignment="Top" Content="Multiple Targets *" ToolTipService.ToolTip="How much of the fight is spend where more than one target is within Melee Range, allowing the use of MultiTarget abilities like Cleave and normal abilities like WhirlWind to do extra damage. Max is the highest number of targets over the fight, use to clip WhirlWind, etc. to 2 targets instead of the full 4" HorizontalAlignment="Left" Width="125" IsChecked="{Binding MultipleTargets, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <dataInput:Label x:Name="LB_Max" Height="20" Margin="137,133,0,0" VerticalAlignment="Top" Content="Max:" HorizontalAlignment="Left" Width="30"/>
-                <inputToolkit:NumericUpDown x:Name="CB_MultiTargsMax" Height="20" HorizontalAlignment="Left" Margin="171,133,0,0" VerticalAlignment="Top" Width="40" Maximum="8" Minimum="1" Value="{Binding MultipleTargetsMax, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <inputToolkit:NumericUpDown x:Name="CB_MultiTargsPerc" Height="20" HorizontalAlignment="Left" Margin="215,133,0,0" VerticalAlignment="Top" Width="49" Value="{Binding MultipleTargetsPerc, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <dataInput:Label x:Name="LB_MultiTargsPerc" Height="20" Margin="268,133,0,0" VerticalAlignment="Top" Content="%" HorizontalAlignment="Left" Width="15"/>
-                <CheckBox x:Name="CK_StunningTargs" Height="20" Margin="8,181,128,0" VerticalAlignment="Top" Content="Boss Stuns You *" ToolTipService.ToolTip="While stunned, you cannot DPS. Iron Will and other Stun Duration reducing effects can lower the duration. Abilities like Heroic Fury and Every Man for Himself (Humans) can negate Stuns after they occur if they are not on cooldown." IsChecked="{Binding StunningTargets, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_StunFreq" Height="20" HorizontalAlignment="Right" Margin="0,181,74,0" VerticalAlignment="Top" Width="50" Maximum="1200" d:LayoutOverrides="HorizontalAlignment" Value="{Binding StunningTargetsFreq, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_StunDur" Height="20" HorizontalAlignment="Left" Margin="221,181,0,0" VerticalAlignment="Top" Width="62" Maximum="100000" Minimum="1500" Value="{Binding StunningTargetsDur, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <CheckBox x:Name="CK_MovingTargs" Height="20" Margin="8,205,128,0" VerticalAlignment="Top" Content="You have to Move *" RenderTransformOrigin="0.496,0.353" ToolTipService.ToolTip="Time spent in movement where you cannot DPS the Boss. Either the boss has moved or you are in a situation where you can't stand where you are. There are no epix in the green! Movespeed buffs can reduce this time." d:LayoutOverrides="VerticalAlignment" IsChecked="{Binding MovingTargets, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_MoveFreq" Height="20" HorizontalAlignment="Left" Margin="167,205,0,0" VerticalAlignment="Top" Width="50" Maximum="1200" d:LayoutOverrides="VerticalAlignment"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_MoveDur" Height="20" HorizontalAlignment="Left" Margin="221,205,0,0" VerticalAlignment="Top" Width="62" d:LayoutOverrides="VerticalAlignment" Maximum="100000" Minimum="1500"/>
-                <CheckBox x:Name="CK_DisarmTargs" Height="20" Margin="8,277,128,0" VerticalAlignment="Top" Content="Boss Disarms You *" ToolTipService.ToolTip="This functionality is disabled as no bosses Disarm in WotLK" IsChecked="{Binding DisarmingTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEnabled="False"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_DisarmDur" Height="20" HorizontalAlignment="Left" Margin="221,277,0,0" VerticalAlignment="Top" Width="62" Maximum="100000" Minimum="1500" Value="{Binding DisarmingTargetsDur, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEnabled="False"/>
-                <CheckBox x:Name="CK_FearingTargs" Margin="8,229,128,0" Content="Boss Fears You *" ToolTipService.ToolTip="While feared you cannot DPS. Fear Duration reducing effects can lower the duration. Abilities like Berserker Rage can negate Fears after they occur if they are not on cooldown." Height="20" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" IsChecked="{Binding FearingTargets, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_FearFreq" HorizontalAlignment="Right" Margin="0,229,74,0" Width="50" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment, VerticalAlignment" Maximum="1200" Height="20"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_FearDur" HorizontalAlignment="Left" Margin="221,229,0,0" Width="62" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" Height="20" Minimum="1500" Maximum="100000"/>
-                <CheckBox x:Name="CK_RootingTargs" HorizontalAlignment="Left" Margin="8,253,0,0" Width="155" Content="Boss Roots You *" ToolTipService.ToolTip="While Rooted you cannot DPS (assume the target moves out of melee range). Snare/Root Duration reducing effects can lower the duration. Some abilities can negate Snares after they occur if they are not on cooldown." Height="20" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" IsChecked="{Binding RootingTargets, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_RootFreq" HorizontalAlignment="Right" Margin="0,253,74,0" Width="50" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment, VerticalAlignment" Maximum="1200" Height="20" Value="{Binding RootingTargetsFreq, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_RootDur" HorizontalAlignment="Left" Margin="221,253,0,0" Width="62" VerticalAlignment="Top" Height="20" d:LayoutOverrides="VerticalAlignment" Minimum="1500" Maximum="100000" Value="{Binding RootingTargetsDur, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <TextBox x:Name="TB_BossInfo" Height="211" HorizontalAlignment="Left" Margin="8,349,0,0" VerticalAlignment="Top" Width="276" Text="Boss Information would normally be displayed here" TextWrapping="Wrap" IsReadOnly="True"/>
-                <dataInput:Label x:Name="LB_TargHP" Height="20" HorizontalAlignment="Left" Margin="8,157,0,0" VerticalAlignment="Top" Width="55" Content="Targ HP:"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_TargHP" Height="20" Margin="67,157,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="97" Maximum="100000000" Value="{Binding TargetHP, Mode=TwoWay, UpdateSourceTrigger=Default}" Minimum="500000" />
-                <CheckBox x:Name="CK_AoETargs" HorizontalAlignment="Left" Margin="8,325,0,0" Width="155" Content="Boss Does AoE Damage *" ToolTipService.ToolTip="" Height="20" VerticalAlignment="Top" IsChecked="{Binding AoETargets, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_AoEFreq" HorizontalAlignment="Right" Margin="0,325,74,0" Width="50" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment" Maximum="1200" Height="20" Value="{Binding AoETargetsFreq, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEnabled="False"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_AoEDMG" HorizontalAlignment="Left" Margin="221,325,0,0" Width="62" VerticalAlignment="Top" Maximum="500000" Height="20" Value="{Binding AoETargetsDMG, Mode=TwoWay, UpdateSourceTrigger=Default}" Minimum="1000" IsEnabled="False"/>
-                <dataInput:Label x:Name="LB_Dur2" Margin="221,0,0,247" Content="Unmit DMG" HorizontalAlignment="Left" Width="62" Height="20" VerticalAlignment="Bottom"/>
-                <dataInput:Label x:Name="LB_Freq2" Margin="168,0,0,247" Content="Freq (s)" HorizontalAlignment="Left" Width="49" Height="20" VerticalAlignment="Bottom"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_DisarmFreq" HorizontalAlignment="Right" Margin="0,277,74,271" Width="50" Maximum="1200" d:LayoutOverrides="HorizontalAlignment" Height="20" Value="{Binding DisarmingTargetsFreq, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEnabled="False"/>
-                <dataInput:Label x:Name="LB_Dur1" Margin="221,157,0,0" Content="Dur (ms)" HorizontalAlignment="Left" Width="62" Height="20" VerticalAlignment="Top"/>
-                <dataInput:Label x:Name="LB_Freq1" Margin="168,157,0,0" Content="Freq (s)" HorizontalAlignment="Left" Width="49" Height="20" VerticalAlignment="Top"/>
+                <dataInput:Label x:Name="LB_Duration" Height="20" HorizontalAlignment="Left" Margin="8,85,0,0" VerticalAlignment="Top" Width="70" Content="Duration (s)" TabIndex="9"/>
+                <inputToolkit:NumericUpDown x:Name="CB_Duration" Height="20" Margin="82,85,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="48" d:LayoutOverrides="HorizontalAlignment" Value="{Binding Duration, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="1200" Minimum="30" TabIndex="10"/>
+                <dataInput:Label x:Name="LB_Under20Perc" Height="21" Margin="133,84,80,0" VerticalAlignment="Top" Content="HP &lt;20%: *" ToolTipService.ToolTip="Time where Execute Spamming Rotation occurs, only effective if Execute Spamming is active" HorizontalAlignment="Left" TabIndex="11"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_Under20Perc" Height="20" Margin="223,85,29,0" VerticalAlignment="Top" Maximum="0.25" Minimum="0.15" Value="{Binding Under20Perc, Mode=TwoWay, UpdateSourceTrigger=Default}" DecimalPlaces="2" TabIndex="12"/>
+                <dataInput:Label x:Name="LBUnder20Perc2" Height="20" Margin="260,85,8,0" VerticalAlignment="Top" Content="%" HorizontalAlignment="Right" Width="15" TabIndex="13"/>
+                <CheckBox x:Name="CK_InBack" Height="20" Margin="8,109,0,0" Content="You stand behind boss &#42;" HorizontalAlignment="Left" Width="159" VerticalAlignment="Top" RenderTransformOrigin="0.481,0.294" ToolTipService.ToolTip="This affects how often the Boss can Parry your attacks (no bosses in WotLK Block)" IsChecked="{Binding InBack, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="14"/>
+                <inputToolkit:NumericUpDown x:Name="CB_InBackPerc" Height="20" HorizontalAlignment="Right" Margin="0,109,29,0" VerticalAlignment="Top" Width="85" d:LayoutOverrides="Height" Value="{Binding InBackPerc, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="15"/>
+                <dataInput:Label x:Name="LB_InBehindPerc" Height="20" Margin="260,109,8,0" VerticalAlignment="Top" Content="%" HorizontalAlignment="Right" Width="15" TabIndex="16"/>
+                <CheckBox x:Name="CK_MultiTargs" Height="20" Margin="8,133,0,0" VerticalAlignment="Top" Content="Multiple Targets *" ToolTipService.ToolTip="How much of the fight is spend where more than one target is within Melee Range, allowing the use of MultiTarget abilities like Cleave and normal abilities like WhirlWind to do extra damage. Max is the highest number of targets over the fight, use to clip WhirlWind, etc. to 2 targets instead of the full 4" HorizontalAlignment="Left" Width="125" IsChecked="{Binding MultipleTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="17"/>
+                <dataInput:Label x:Name="LB_Max" Height="20" Margin="0,133,119,0" VerticalAlignment="Top" Content="Max:" HorizontalAlignment="Right" Width="30" TabIndex="18"/>
+                <inputToolkit:NumericUpDown x:Name="CB_MultiTargsMax" Height="20" HorizontalAlignment="Right" Margin="171,133,79,0" VerticalAlignment="Top" Width="36" Maximum="8" Minimum="1" Value="{Binding MultipleTargetsMax, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="19"/>
+                <inputToolkit:NumericUpDown x:Name="CB_MultiTargsPerc" Height="20" HorizontalAlignment="Right" Margin="0,133,29,0" VerticalAlignment="Top" Width="47" Value="{Binding MultipleTargetsPerc, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="20"/>
+                <dataInput:Label x:Name="LB_MultiTargsPerc" Height="20" Margin="260,133,8,0" VerticalAlignment="Top" Content="%" HorizontalAlignment="Right" Width="15" TabIndex="21"/>
+                <CheckBox x:Name="CK_StunningTargs" Height="20" Margin="8,181,166,0" VerticalAlignment="Top" Content="Boss Stuns You *" ToolTipService.ToolTip="While stunned, you cannot DPS. Iron Will and other Stun Duration reducing effects can lower the duration. Abilities like Heroic Fury and Every Man for Himself (Humans) can negate Stuns after they occur if they are not on cooldown." IsChecked="{Binding StunningTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Left" TabIndex="26"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_StunFreq" Height="20" HorizontalAlignment="Right" Margin="0,181,74,0" VerticalAlignment="Top" Width="50" Maximum="1200" d:LayoutOverrides="HorizontalAlignment" Value="{Binding StunningTargetsFreq, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="27"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_StunDur" Height="20" HorizontalAlignment="Right" Margin="213,181,8,0" VerticalAlignment="Top" Width="62" Maximum="100000" Minimum="1500" Value="{Binding StunningTargetsDur, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="28"/>
+                <CheckBox x:Name="CK_MovingTargs" Height="20" Margin="8,205,166,0" VerticalAlignment="Top" Content="You have to Move *" RenderTransformOrigin="0.496,0.353" ToolTipService.ToolTip="Time spent in movement where you cannot DPS the Boss. Either the boss has moved or you are in a situation where you can't stand where you are. There are no epix in the green! Movespeed buffs can reduce this time." d:LayoutOverrides="VerticalAlignment" IsChecked="{Binding MovingTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Left" TabIndex="29"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_MoveFreq" Height="20" HorizontalAlignment="Right" Margin="0,205,74,0" VerticalAlignment="Top" Width="50" Maximum="1200" d:LayoutOverrides="VerticalAlignment" TabIndex="30"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_MoveDur" Height="20" HorizontalAlignment="Right" Margin="213,205,8,0" VerticalAlignment="Top" Width="62" d:LayoutOverrides="VerticalAlignment" Maximum="100000" Minimum="1500" TabIndex="31"/>
+                <CheckBox x:Name="CK_DisarmTargs" Height="20" Margin="8,277,166,0" VerticalAlignment="Top" Content="Boss Disarms You *" ToolTipService.ToolTip="This functionality is disabled as no bosses Disarm in WotLK" IsChecked="{Binding DisarmingTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEnabled="False" HorizontalAlignment="Left" TabIndex="38"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_DisarmDur" Height="20" Margin="213,277,8,0" VerticalAlignment="Top" Width="62" Maximum="100000" Minimum="1500" Value="{Binding DisarmingTargetsDur, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEnabled="False" HorizontalAlignment="Right" TabIndex="40"/>
+                <CheckBox x:Name="CK_FearingTargs" Margin="8,229,166,0" Content="Boss Fears You *" ToolTipService.ToolTip="While feared you cannot DPS. Fear Duration reducing effects can lower the duration. Abilities like Berserker Rage can negate Fears after they occur if they are not on cooldown." Height="20" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" IsChecked="{Binding FearingTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Left" TabIndex="32"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_FearFreq" HorizontalAlignment="Right" Margin="0,229,74,0" Width="50" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment, VerticalAlignment" Maximum="1200" Height="20" TabIndex="33"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_FearDur" Margin="213,229,8,0" Width="62" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" Height="20" Minimum="1500" Maximum="100000" HorizontalAlignment="Right" TabIndex="34"/>
+                <CheckBox x:Name="CK_RootingTargs" Margin="8,253,166,0" Content="Boss Roots You *" ToolTipService.ToolTip="While Rooted you cannot DPS (assume the target moves out of melee range). Snare/Root Duration reducing effects can lower the duration. Some abilities can negate Snares after they occur if they are not on cooldown." Height="20" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" IsChecked="{Binding RootingTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Left" TabIndex="35"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_RootFreq" HorizontalAlignment="Right" Margin="0,253,74,0" Width="50" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment, VerticalAlignment" Maximum="1200" Height="20" Value="{Binding RootingTargetsFreq, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="36"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_RootDur" Margin="213,253,8,0" Width="62" VerticalAlignment="Top" Height="20" d:LayoutOverrides="VerticalAlignment" Minimum="1500" Maximum="100000" Value="{Binding RootingTargetsDur, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Right" TabIndex="37"/>
+                <TextBox x:Name="TB_BossInfo" Margin="8,349,8,8" TextWrapping="Wrap" IsReadOnly="True" TabIndex="46"/>
+                <dataInput:Label x:Name="LB_TargHP" Height="20" HorizontalAlignment="Left" Margin="8,157,0,0" VerticalAlignment="Top" Width="55" Content="Health:" TabIndex="22"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_TargHP" Height="20" Margin="67,157,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="88" Maximum="100000000" Value="{Binding TargetHP, Mode=TwoWay, UpdateSourceTrigger=Default}" Minimum="500000" TabIndex="23" />
+                <CheckBox x:Name="CK_AoETargs" Margin="8,325,166,0" Content="Boss Does AoE Damage *" ToolTipService.ToolTip="" Height="20" VerticalAlignment="Top" IsChecked="{Binding AoETargets, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="43"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_AoEFreq" HorizontalAlignment="Right" Margin="0,325,74,0" Width="50" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment" Maximum="1200" Height="20" Value="{Binding AoETargetsFreq, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="44"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_AoEDMG" Margin="0,325,8,0" Width="62" VerticalAlignment="Top" Maximum="500000" Height="20" Value="{Binding AoETargetsDMG, Mode=TwoWay, UpdateSourceTrigger=Default}" Minimum="1000" HorizontalAlignment="Right" TabIndex="45"/>
+                <dataInput:Label x:Name="LB_Dur2" Margin="0,301,8,0" Content="Unmit DMG" HorizontalAlignment="Right" Width="62" Height="20" VerticalAlignment="Top" TabIndex="42"/>
+                <dataInput:Label x:Name="LB_Freq2" Margin="0,301,74,0" Content="Freq (s)" HorizontalAlignment="Right" Width="49" Height="20" VerticalAlignment="Top" TabIndex="41"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_DisarmFreq" HorizontalAlignment="Right" Margin="0,277,74,0" Width="50" Maximum="1200" d:LayoutOverrides="HorizontalAlignment" Height="20" Value="{Binding DisarmingTargetsFreq, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEnabled="False" VerticalAlignment="Top" TabIndex="39"/>
+                <dataInput:Label x:Name="LB_Dur1" Margin="213,157,8,0" Content="Dur (ms)" HorizontalAlignment="Right" Width="62" Height="20" VerticalAlignment="Top" TabIndex="25"/>
+                <dataInput:Label x:Name="LB_Freq1" Margin="160,157,74,0" Content="Freq (s)" HorizontalAlignment="Right" Width="49" Height="20" VerticalAlignment="Top" TabIndex="24"/>
             </Grid>
         </controls:TabItem>
         <controls:TabItem x:Name="Page_02_Maintenance" Header="Abilities">
             <Grid x:Name="Page_02_Layout">
                 <controls:TreeView x:Name="CTL_Maints" Margin="3,23,3,3" Grid.ColumnSpan="2">
-                    <controls:TreeViewItem Margin="0" Header="Rage Gen">
-                        <controls:TreeViewItem Margin="0" Header="Berserker Rage"/>
-                        <controls:TreeViewItem Margin="0" Header="Bloodrage"/>
+                    <controls:TreeViewItem Margin="0" Header="Rage Gen" IsExpanded="True">
+                        <controlsToolkit:TreeViewItemCheckBox Content="Berserker Rage"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Bloodrage"/>
                     </controls:TreeViewItem>
                     <controls:TreeViewItem Margin="0" Header="Maintenance" IsExpanded="True">
                         <controls:TreeViewItem Margin="0" Header="Shout Choice" IsExpanded="True">
-                            <controls:TreeViewItem Margin="0" Header="Battle Shout"/>
-                            <controls:TreeViewItem Margin="0" Header="Commanding Shout"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Battle Shout"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Commanding Shout"/>
                         </controls:TreeViewItem>
-                        <controls:TreeViewItem Margin="0" Header="Demoralizing Shout"/>
-                        <controls:TreeViewItem Margin="0" Header="Sunder Armor"/>
-                        <controls:TreeViewItem Margin="0" Header="Thunder Clap"/>
-                        <controls:TreeViewItem Margin="0" Header="Hamstring"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Demoralizing Shout"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Sunder Armor"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Thunder Clap"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Hamstring"/>
                     </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="0" Header="Periodics">
-                        <controls:TreeViewItem Margin="0" Header="Shattering Throw"/>
-                        <controls:TreeViewItem Margin="0" Header="Sweeping Strikes"/>
-                        <controls:TreeViewItem Margin="0" Header="Death Wish"/>
-                        <controls:TreeViewItem Margin="0" Header="Recklessness"/>
-                        <controls:TreeViewItem Margin="0" Header="Enraged Regeneration"/>
+                    <controls:TreeViewItem Margin="0" Header="Periodics" IsExpanded="True">
+                        <controlsToolkit:TreeViewItemCheckBox Content="Shattering Throw"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Sweeping Strikes"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Death Wish"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Recklessness"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Enraged Regeneration"/>
                     </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="0" Header="Damage Dealers">
-                        <controls:TreeViewItem Margin="0" Header="Fury">
-                            <controls:TreeViewItem Margin="0" Header="Whirlwind"/>
-                            <controls:TreeViewItem Margin="0" Header="Bloodthirst"/>
-                            <controls:TreeViewItem Margin="0" Header="Bloodsurge"/>
+                    <controls:TreeViewItem Margin="0" Header="Damage Dealers" IsExpanded="True">
+                        <controls:TreeViewItem Margin="0" Header="Fury" IsExpanded="True">
+                            <controlsToolkit:TreeViewItemCheckBox Content="Whirlwind"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Bloodthirst"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Bloodsurge"/>
                         </controls:TreeViewItem>
-                        <controls:TreeViewItem Margin="0" Header="Arms">
-                            <controls:TreeViewItem Margin="0" Header="Bladestorm"/>
-                            <controls:TreeViewItem Margin="0" Header="Mortal Strike"/>
-                            <controls:TreeViewItem Margin="0" Header="Rend"/>
-                            <controls:TreeViewItem Margin="0" Header="Overpower"/>
-                            <controls:TreeViewItem Margin="0" Header="Taste for Blood"/>
-                            <controls:TreeViewItem Margin="0" Header="Sudden Death"/>
-                            <controls:TreeViewItem Margin="0" Header="Slam"/>
+                        <controls:TreeViewItem Margin="0" Header="Arms" IsExpanded="True">
+                            <controlsToolkit:TreeViewItemCheckBox Content="Bladestorm"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Mortal Strike"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Rend"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Overpower"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Taste for Blood"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Sudden Death"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Slam"/>
                         </controls:TreeViewItem>
-                        <controls:TreeViewItem Margin="0" Header="&lt;20% Execute Spam" />
+                        <controlsToolkit:TreeViewItemCheckBox Content="&lt;20% Execute Spam"/>
                     </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="0" Header="Rage Dumps">
-                        <controls:TreeViewItem Margin="0" Header="Cleave"/>
-                        <controls:TreeViewItem Margin="0" Header="Heroic Strike"/>
+                    <controls:TreeViewItem Margin="0" Header="Rage Dumps" IsExpanded="True">
+                        <controlsToolkit:TreeViewItemCheckBox Content="Cleave"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Heroic Strike"/>
                     </controls:TreeViewItem>
                 </controls:TreeView>
                 <CheckBox x:Name="CK_Flooring" Height="19" Margin="3,0,0,0" VerticalAlignment="Top" Content="Allow Flooring *" ToolTipService.ToolTip="Flooring changes the way Rotations are calculated. Normally, an ability can have 94.7 activates in a rotation, this allows a more smooth calc for things like Haste and Expertise (due to Overpower Procs). Flooring forces any partial activate off the table, 94.7 becomes 94. This is to better simulate reality, however it isn't fully factored in everywhere that it should be. Use Flooring at your own risk." HorizontalAlignment="Left" Width="114" IsChecked="{Binding AllowFlooring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 <RadioButton x:Name="RB_StanceFury" Height="17" Margin="0,3,58,0" VerticalAlignment="Top" RenderTransformOrigin="0.467,0.412" Content="Fury" Canvas.ZIndex="-7" HorizontalAlignment="Right" Width="52" d:LayoutOverrides="GridBox" IsChecked="{Binding FuryStance, Mode=TwoWay, UpdateSourceTrigger=Default}" GroupName="Stance"/>
-                <RadioButton x:Name="RB_StanceArms" Height="17" Margin="0,3,5,0" VerticalAlignment="Top" Content="Arms" Grid.Column="1" HorizontalAlignment="Right" Width="48" GroupName="Stance"/>
+                <RadioButton x:Name="RB_StanceArms" Height="17" Margin="0,3,5,0" VerticalAlignment="Top" Content="Arms" Grid.Column="1" HorizontalAlignment="Right" Width="48" GroupName="Stance" IsChecked="True"/>
             </Grid>
         </controls:TabItem>
         <controls:TabItem x:Name="Page_04_Misc" Header="Misc">
