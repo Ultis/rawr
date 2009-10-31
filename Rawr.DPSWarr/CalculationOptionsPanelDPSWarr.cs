@@ -830,7 +830,7 @@ CB_Version.Items.Add("All");
             PNStuff.Keys.CopyTo(arr, 0);
             CB_Version.Items.AddRange(arr);
             CB_Version.SelectedIndex = 0;
-            CB_PatchNotes_SelectedIndexChanged(null, null);
+            CB_Version_SelectedIndexChanged(null, null);
         }
         private void CB_Version_SelectedIndexChanged(object sender, EventArgs e) {
             string text = "";
