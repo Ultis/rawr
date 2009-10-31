@@ -3,12 +3,12 @@ using System.Collections.Generic;
 #if RAWR3
 using System.Windows.Media;
 #else
-using Rawr.DPSWarr.Markov;
 using System.Drawing;
 #endif
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
+using Rawr.DPSWarr.Markov;
 
 namespace Rawr.DPSWarr {
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
@@ -1337,13 +1337,11 @@ These numbers to do not include racial bonuses.",
                 Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors, calcOpts); line++;
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race); line++;
 
-                #if !RAWR3      
                 if (calcOpts.UseMarkov)
                 {
                     Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
                     b.StateSpaceGeneratorArmsTest1(character,stats,combatFactors, whiteAttacks, calcOpts);
                 }
-                #endif
                 
                 calculatedStats.Duration = calcOpts.Duration; line++;
                 calculatedStats.AverageStats = stats; line++;

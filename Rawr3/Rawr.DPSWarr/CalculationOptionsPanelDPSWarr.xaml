@@ -113,53 +113,54 @@ mc:Ignorable="d">
         </controls:TabItem>
         <controls:TabItem x:Name="Page_02_Maintenance" Header="Abilities">
             <Grid x:Name="Page_02_Layout">
-                <controls:TreeView x:Name="CTL_Maints" Margin="3,23,3,3" Grid.ColumnSpan="2">
-                    <controls:TreeViewItem Margin="0" Header="Rage Gen" IsExpanded="True">
-                        <controlsToolkit:TreeViewItemCheckBox Content="Berserker Rage"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Bloodrage"/>
+                <controls:TreeView x:Name="CTL_Maints" Margin="0,31,0,0" d:LayoutOverrides="GridBox">
+                    <controls:TreeViewItem Margin="-10,-10,-10,0" Header="Rage Gen" IsExpanded="True" Padding="3">
+                        <controlsToolkit:TreeViewItemCheckBox Content="Berserker Rage" Margin="0,-4" IsChecked="{Binding M_BerserkerRage, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Bloodrage" Margin="0,0,0,-4" IsChecked="{Binding M_Bloodrage, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                     </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="0" Header="Maintenance" IsExpanded="True">
-                        <controls:TreeViewItem Margin="0" Header="Shout Choice" IsExpanded="True">
-                            <controlsToolkit:TreeViewItemCheckBox Content="Battle Shout"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Commanding Shout"/>
+                    <controls:TreeViewItem Margin="-10,0" Header="Maintenance" IsExpanded="True">
+                        <controls:TreeViewItem Margin="0,-4" Header="Shout Choice" IsExpanded="True">
+                            <RadioButton Content="Battle Shout" Margin="0,-4" GroupName="Shouts" IsChecked="{Binding M_BattleShout, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                            <RadioButton Content="Commanding Shout" Margin="0,0,0,-4" GroupName="Shouts" IsChecked="{Binding M_CommandingShout, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                            <RadioButton Content="No Shout" Margin="0,0,0,-4" GroupName="Shouts"/>
                         </controls:TreeViewItem>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Demoralizing Shout"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Sunder Armor"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Thunder Clap"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Hamstring"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Demoralizing Shout" Margin="0,0,0,-4" IsChecked="{Binding M_DemoralizingShout, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Sunder Armor" Margin="0,0,0,-4" IsChecked="{Binding M_SunderArmor, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Thunder Clap" Margin="0,0,0,-4" IsChecked="{Binding M_ThunderClap, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Hamstring" Margin="0,0,0,-4" IsChecked="{Binding M_Hamstring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                     </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="0" Header="Periodics" IsExpanded="True">
-                        <controlsToolkit:TreeViewItemCheckBox Content="Shattering Throw"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Sweeping Strikes"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Death Wish"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Recklessness"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Enraged Regeneration"/>
+                    <controls:TreeViewItem Margin="-10,0" Header="Periodics" IsExpanded="True">
+                        <controlsToolkit:TreeViewItemCheckBox Content="Shattering Throw" Margin="0,-4" IsChecked="{Binding M_ShatteringThrow, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Sweeping Strikes" Margin="0,0,0,-4" IsChecked="{Binding M_SweepingStrikes, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Death Wish" Margin="0,0,0,-4" IsChecked="{Binding M_DeathWish, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Recklessness" Margin="0,0,0,-4" IsChecked="{Binding M_Recklessness, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Enraged Regeneration" Margin="0,0,0,-4" IsChecked="{Binding M_EnragedRegeneration, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                     </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="0" Header="Damage Dealers" IsExpanded="True">
-                        <controls:TreeViewItem Margin="0" Header="Fury" IsExpanded="True">
-                            <controlsToolkit:TreeViewItemCheckBox Content="Whirlwind"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Bloodthirst"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Bloodsurge"/>
+                    <controls:TreeViewItem Margin="-10,0" Header="Damage Dealers" IsExpanded="True">
+                        <controls:TreeViewItem Margin="0,-4,0,0" Header="Fury" IsExpanded="True">
+                            <controlsToolkit:TreeViewItemCheckBox Content="Whirlwind" Margin="0,-4" IsChecked="{Binding M_Whirlwind, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Bloodthirst" Margin="0,0,0,-4" IsChecked="{Binding M_Bloodthirst, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Bloodsurge" Margin="0,0,0,-4" IsChecked="{Binding M_Bloodsurge, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                         </controls:TreeViewItem>
-                        <controls:TreeViewItem Margin="0" Header="Arms" IsExpanded="True">
-                            <controlsToolkit:TreeViewItemCheckBox Content="Bladestorm"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Mortal Strike"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Rend"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Overpower"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Taste for Blood"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Sudden Death"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Slam"/>
+                        <controls:TreeViewItem Margin="0,-4,0,0" Header="Arms" IsExpanded="True">
+                            <controlsToolkit:TreeViewItemCheckBox Content="Bladestorm" Margin="0,-4" IsChecked="{Binding M_Bladestorm, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Mortal Strike" Margin="0,0,0,-4" IsChecked="{Binding M_MortalStrike, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Rend" Margin="0,0,0,-4" IsChecked="{Binding M_Rend, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Overpower" Margin="0,0,0,-4" IsChecked="{Binding M_Overpower, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Taste for Blood" Margin="0,0,0,-4" IsChecked="{Binding M_TasteForBlood, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Sudden Death" Margin="0,0,0,-4" IsChecked="{Binding M_SuddenDeath, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                            <controlsToolkit:TreeViewItemCheckBox Content="Slam" Margin="0,0,0,-4" IsChecked="{Binding M_Slam, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                         </controls:TreeViewItem>
-                        <controlsToolkit:TreeViewItemCheckBox Content="&lt;20% Execute Spam"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="&lt;20% Execute Spam" Margin="0,-4" IsChecked="{Binding M_ExecuteSpam, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                     </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="0" Header="Rage Dumps" IsExpanded="True">
-                        <controlsToolkit:TreeViewItemCheckBox Content="Cleave"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Heroic Strike"/>
+                    <controls:TreeViewItem Margin="-10,0,-10,-10" Header="Rage Dumps" IsExpanded="True">
+                        <controlsToolkit:TreeViewItemCheckBox Content="Cleave" Margin="0,-4" IsChecked="{Binding M_Cleave, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                        <controlsToolkit:TreeViewItemCheckBox Content="Heroic Strike" Margin="0" IsChecked="{Binding M_HeroicStrike, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                     </controls:TreeViewItem>
                 </controls:TreeView>
-                <CheckBox x:Name="CK_Flooring" Height="19" Margin="3,0,0,0" VerticalAlignment="Top" Content="Allow Flooring *" ToolTipService.ToolTip="Flooring changes the way Rotations are calculated. Normally, an ability can have 94.7 activates in a rotation, this allows a more smooth calc for things like Haste and Expertise (due to Overpower Procs). Flooring forces any partial activate off the table, 94.7 becomes 94. This is to better simulate reality, however it isn't fully factored in everywhere that it should be. Use Flooring at your own risk." HorizontalAlignment="Left" Width="114" IsChecked="{Binding AllowFlooring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <RadioButton x:Name="RB_StanceFury" Height="17" Margin="0,3,58,0" VerticalAlignment="Top" RenderTransformOrigin="0.467,0.412" Content="Fury" Canvas.ZIndex="-7" HorizontalAlignment="Right" Width="52" d:LayoutOverrides="GridBox" IsChecked="{Binding FuryStance, Mode=TwoWay, UpdateSourceTrigger=Default}" GroupName="Stance"/>
-                <RadioButton x:Name="RB_StanceArms" Height="17" Margin="0,3,5,0" VerticalAlignment="Top" Content="Arms" Grid.Column="1" HorizontalAlignment="Right" Width="48" GroupName="Stance" IsChecked="True"/>
+                <CheckBox x:Name="CK_Flooring" Height="19" Margin="8,8,0,0" VerticalAlignment="Top" Content="Allow Flooring *" ToolTipService.ToolTip="Flooring changes the way Rotations are calculated. Normally, an ability can have 94.7 activates in a rotation, this allows a more smooth calc for things like Haste and Expertise (due to Overpower Procs). Flooring forces any partial activate off the table, 94.7 becomes 94. This is to better simulate reality, however it isn't fully factored in everywhere that it should be. Use Flooring at your own risk." HorizontalAlignment="Left" Width="114" IsChecked="{Binding AllowFlooring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                <RadioButton x:Name="RB_StanceFury" Height="17" Margin="0,8,60,0" VerticalAlignment="Top" RenderTransformOrigin="0.467,0.412" Content="Fury" Canvas.ZIndex="-7" HorizontalAlignment="Right" Width="52" d:LayoutOverrides="GridBox" IsChecked="{Binding FuryStance, Mode=TwoWay, UpdateSourceTrigger=Default}" GroupName="Stance"/>
+                <RadioButton x:Name="RB_StanceArms" Height="17" Margin="0,8,8,0" VerticalAlignment="Top" Content="Arms" HorizontalAlignment="Right" Width="48" GroupName="Stance" IsChecked="True" HorizontalContentAlignment="Left" d:LayoutOverrides="GridBox"/>
             </Grid>
         </controls:TabItem>
         <controls:TabItem x:Name="Page_04_Misc" Header="Misc">
@@ -167,11 +168,11 @@ mc:Ignorable="d">
                 <CheckBox x:Name="CK_HideDefGear" Height="17" Margin="8,123,8,0" VerticalAlignment="Top" Content="Hide Defensive Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." IsChecked="{Binding HideBadItems_Def, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 <CheckBox x:Name="CK_PTRMode" Height="17" Margin="8,102,8,0" VerticalAlignment="Top" Content="PTR Mode *" ToolTipService.ToolTip="Enables Patch 3.3.0 changes specific to DPSWarr." IsChecked="{Binding PTRMode, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                 <dataInput:Label x:Name="LB_Lag" Height="20" HorizontalAlignment="Left" Margin="8,32,0,0" VerticalAlignment="Top" Width="135" Content="Lag (ms):"/>
-                <inputToolkit:NumericUpDown x:Name="CB_Lag" Height="20" Margin="147,32,0,0" VerticalAlignment="Top" Width="136" HorizontalAlignment="Left" Value="{Binding Lag, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="999"/>
+                <inputToolkit:NumericUpDown x:Name="CB_Lag" Height="20" Margin="0,32,8,0" VerticalAlignment="Top" Width="136" HorizontalAlignment="Right" Value="{Binding Lag, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="999"/>
                 <dataInput:Label x:Name="LB_React" Height="21" Margin="8,56,0,0" VerticalAlignment="Top" Content="React (ms): *" ToolTipService.ToolTip="This doesn't affect you unless the number is over 250. Blizzard allows users 1/4 second reaction before penalizing them." HorizontalAlignment="Left" Width="135" d:LayoutOverrides="HorizontalAlignment"/>
-                <inputToolkit:NumericUpDown x:Name="CB_React" Height="21" HorizontalAlignment="Left" Margin="147,56,0,0" VerticalAlignment="Top" Width="136" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500"/>
+                <inputToolkit:NumericUpDown x:Name="CB_React" Height="21" HorizontalAlignment="Right" Margin="0,56,8,0" VerticalAlignment="Top" Width="136" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500"/>
                 <dataInput:Label x:Name="LB_SurvScale" Height="20" Margin="8,8,0,0" VerticalAlignment="Top" Content="Survivability Scale:" Width="135" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_SurvScale" Height="20" Margin="147,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="136" DecimalPlaces="1" Increment="0.1" Value="{Binding SurvScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_SurvScale" Height="20" Margin="0,8,8,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="136" DecimalPlaces="1" Increment="0.1" Value="{Binding SurvScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10"/>
                 <CheckBox x:Name="CK_HidePvPGear" Height="17" Margin="8,165,8,0" VerticalAlignment="Top" Content="Hide PvP Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." IsChecked="{Binding HideBadItems_PvP, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 <CheckBox x:Name="CK_HideSplGear" Height="17" Content="Hide Spell Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." VerticalAlignment="Top" Margin="8,144,8,0" IsChecked="{Binding HideBadItems_Spl, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 <CheckBox x:Name="CK_HideProfEnchants" Height="17" Content="Hide Enchants Based on Professions *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." VerticalAlignment="Top" Margin="8,186,8,0" IsChecked="{Binding HideProfEnchants, Mode=TwoWay, UpdateSourceTrigger=Default}"/>

@@ -342,6 +342,43 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Abilities to Maintain
         private bool[] _Maintenance;
+        public enum Maintenances
+        {
+            _RageGen__ = 0,
+            BerserkerRage_,
+            Bloodrage_,
+            _Maintenance__,
+            ShoutChoice_,
+            BattleShout_,
+            CommandingShout_,
+            DemoralizingShout_,
+            SunderArmor_,
+            ThunderClap_,
+            Hamstring_,
+            _Periodics__,
+            ShatteringThrow_,
+            SweepingStrikes_,
+            DeathWish_,
+            Recklessness_,
+            EnragedRegeneration_,
+            _DamageDealers__,
+            Fury_,
+            Whirlwind_,
+            Bloodthirst_,
+            Bloodsurge_,
+            Arms_,
+            Bladestorm_,
+            MortalStrike_,
+            Rend_,
+            Overpower_,
+            TasteForBlood_,
+            SuddenDeath_,
+            Slam_,
+            ExecuteSpam_,
+            _RageDumps__,
+            Cleave_,
+            HeroicStrike_
+        };
         public bool[] Maintenance
         {
             get {
@@ -385,42 +422,136 @@ namespace Rawr.DPSWarr {
             }
             set { _Maintenance = value; OnPropertyChanged("Maintenance"); }
         }
-		public enum Maintenances {
-			_RageGen__ = 0,
-                BerserkerRage_,
-                Bloodrage_,
-			_Maintenance__,
-                ShoutChoice_,
-                    BattleShout_,
-                    CommandingShout_,
-                DemoralizingShout_,
-                SunderArmor_,
-                ThunderClap_,
-                Hamstring_,
-			_Periodics__,
-                ShatteringThrow_,
-                SweepingStrikes_,
-                DeathWish_,
-                Recklessness_,
-                EnragedRegeneration_,
-            _DamageDealers__,
-                Fury_,
-                    Whirlwind_,
-                    Bloodthirst_,
-                    Bloodsurge_,
-                Arms_,
-                    Bladestorm_,
-                    MortalStrike_,
-                    Rend_,
-                    Overpower_,
-                    TasteForBlood_,
-                    SuddenDeath_,
-                    Slam_,
-                ExecuteSpam_,
-			_RageDumps__,
-                Cleave_,
-                HeroicStrike_
-		};
+        public bool M_BerserkerRage
+        {
+            get { return Maintenance[(int)Maintenances.BerserkerRage_]; }
+            set { Maintenance[(int)Maintenances.BerserkerRage_] = value; OnPropertyChanged("M_BerserkerRage"); }
+        }
+        public bool M_Bloodrage
+        {
+            get { return Maintenance[(int)Maintenances.Bloodrage_]; }
+            set { Maintenance[(int)Maintenances.Bloodrage_] = value; OnPropertyChanged("M_Bloodrage"); }
+        }
+        public bool M_BattleShout
+        {
+            get { return Maintenance[(int)Maintenances.BattleShout_]; }
+            set { Maintenance[(int)Maintenances.BattleShout_] = value; OnPropertyChanged("M_BattleShout"); }
+        }
+        public bool M_CommandingShout
+        {
+            get { return Maintenance[(int)Maintenances.CommandingShout_]; }
+            set { Maintenance[(int)Maintenances.CommandingShout_] = value; OnPropertyChanged("M_CommandingShout"); }
+        }
+        public bool M_DemoralizingShout
+        {
+            get { return Maintenance[(int)Maintenances.DemoralizingShout_]; }
+            set { Maintenance[(int)Maintenances.DemoralizingShout_] = value; OnPropertyChanged("M_DemoralizingShout"); }
+        }
+        public bool M_SunderArmor
+        {
+            get { return Maintenance[(int)Maintenances.SunderArmor_]; }
+            set { Maintenance[(int)Maintenances.SunderArmor_] = value; OnPropertyChanged("M_SunderArmor"); }
+        }
+        public bool M_ThunderClap
+        {
+            get { return Maintenance[(int)Maintenances.ThunderClap_]; }
+            set { Maintenance[(int)Maintenances.ThunderClap_] = value; OnPropertyChanged("M_ThunderClap"); }
+        }
+        public bool M_Hamstring
+        {
+            get { return Maintenance[(int)Maintenances.Hamstring_]; }
+            set { Maintenance[(int)Maintenances.Hamstring_] = value; OnPropertyChanged("M_Hamstring"); }
+        }
+        public bool M_ShatteringThrow
+        {
+            get { return Maintenance[(int)Maintenances.ShatteringThrow_]; }
+            set { Maintenance[(int)Maintenances.ShatteringThrow_] = value; OnPropertyChanged("M_ShatteringThrow"); }
+        }
+        public bool M_SweepingStrikes
+        {
+            get { return Maintenance[(int)Maintenances.SweepingStrikes_]; }
+            set { Maintenance[(int)Maintenances.SweepingStrikes_] = value; OnPropertyChanged("M_SweepingStrikes"); }
+        }
+        public bool M_DeathWish
+        {
+            get { return Maintenance[(int)Maintenances.DeathWish_]; }
+            set { Maintenance[(int)Maintenances.DeathWish_] = value; OnPropertyChanged("M_DeathWish"); }
+        }
+        public bool M_Recklessness
+        {
+            get { return Maintenance[(int)Maintenances.Recklessness_]; }
+            set { Maintenance[(int)Maintenances.Recklessness_] = value; OnPropertyChanged("M_Recklessness"); }
+        }
+        public bool M_EnragedRegeneration
+        {
+            get { return Maintenance[(int)Maintenances.EnragedRegeneration_]; }
+            set { Maintenance[(int)Maintenances.EnragedRegeneration_] = value; OnPropertyChanged("M_EnragedRegeneration"); }
+        }
+        public bool M_Whirlwind
+        {
+            get { return Maintenance[(int)Maintenances.Whirlwind_]; }
+            set { Maintenance[(int)Maintenances.Whirlwind_] = value; OnPropertyChanged("M_Whirlwind"); }
+        }
+        public bool M_Bloodthirst
+        {
+            get { return Maintenance[(int)Maintenances.Bloodthirst_]; }
+            set { Maintenance[(int)Maintenances.Bloodthirst_] = value; OnPropertyChanged("M_Bloodthirst"); }
+        }
+        public bool M_Bloodsurge
+        {
+            get { return Maintenance[(int)Maintenances.Bloodsurge_]; }
+            set { Maintenance[(int)Maintenances.Bloodsurge_] = value; OnPropertyChanged("M_Bloodsurge"); }
+        }
+        public bool M_Bladestorm
+        {
+            get { return Maintenance[(int)Maintenances.Bladestorm_]; }
+            set { Maintenance[(int)Maintenances.Bladestorm_] = value; OnPropertyChanged("M_Bladestorm"); }
+        }
+        public bool M_MortalStrike
+        {
+            get { return Maintenance[(int)Maintenances.MortalStrike_]; }
+            set { Maintenance[(int)Maintenances.MortalStrike_] = value; OnPropertyChanged("M_MortalStrike"); }
+        }
+        public bool M_Rend
+        {
+            get { return Maintenance[(int)Maintenances.Rend_]; }
+            set { Maintenance[(int)Maintenances.Rend_] = value; OnPropertyChanged("M_Rend"); }
+        }
+        public bool M_Overpower
+        {
+            get { return Maintenance[(int)Maintenances.Overpower_]; }
+            set { Maintenance[(int)Maintenances.Overpower_] = value; OnPropertyChanged("M_Overpower"); }
+        }
+        public bool M_TasteForBlood
+        {
+            get { return Maintenance[(int)Maintenances.TasteForBlood_]; }
+            set { Maintenance[(int)Maintenances.TasteForBlood_] = value; OnPropertyChanged("M_TasteForBlood"); }
+        }
+        public bool M_SuddenDeath
+        {
+            get { return Maintenance[(int)Maintenances.SuddenDeath_]; }
+            set { Maintenance[(int)Maintenances.SuddenDeath_] = value; OnPropertyChanged("M_SuddenDeath"); }
+        }
+        public bool M_Slam
+        {
+            get { return Maintenance[(int)Maintenances.Slam_]; }
+            set { Maintenance[(int)Maintenances.Slam_] = value; OnPropertyChanged("M_Slam"); }
+        }
+        public bool M_ExecuteSpam
+        {
+            get { return Maintenance[(int)Maintenances.ExecuteSpam_]; }
+            set { Maintenance[(int)Maintenances.ExecuteSpam_] = value; OnPropertyChanged("M_ExecuteSpam"); }
+        }
+        public bool M_Cleave
+        {
+            get { return Maintenance[(int)Maintenances.Cleave_]; }
+            set { Maintenance[(int)Maintenances.Cleave_] = value; OnPropertyChanged("M_Cleave"); }
+        }
+        public bool M_HeroicStrike
+        {
+            get { return Maintenance[(int)Maintenances.HeroicStrike_]; }
+            set { Maintenance[(int)Maintenances.HeroicStrike_] = value; OnPropertyChanged("M_HeroicStrike"); }
+        }
         #endregion
         #region Latency
         private float _Lag;
