@@ -112,7 +112,7 @@
             this.RTB_FAQ = new System.Windows.Forms.RichTextBox();
             this.Tab_Version = new System.Windows.Forms.TabPage();
             this.LB_Version = new System.Windows.Forms.Label();
-            this.CB_PatchNotes = new System.Windows.Forms.ComboBox();
+            this.CB_Version = new System.Windows.Forms.ComboBox();
             this.RTB_Version = new System.Windows.Forms.RichTextBox();
             this.Page_03_FightInfo = new System.Windows.Forms.TabPage();
             this.BT_Disarm = new System.Windows.Forms.Button();
@@ -162,6 +162,7 @@
             this.CK_Flooring = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.CTL_Maints = new System.Windows.Forms.TreeView();
             this.TB_Misc = new System.Windows.Forms.TabPage();
+            this.CK_Markov = new System.Windows.Forms.CheckBox();
             this.CB_Prof2 = new System.Windows.Forms.ComboBox();
             this.CB_Prof1 = new System.Windows.Forms.ComboBox();
             this.CK_HideProfEnchants = new Rawr.CustomControls.ExtendedToolTipCheckBox();
@@ -172,7 +173,6 @@
             this.NUD_SurvScale = new System.Windows.Forms.NumericUpDown();
             this.LB_SurvScale = new System.Windows.Forms.Label();
             this.CK_PTRMode = new Rawr.CustomControls.ExtendedToolTipCheckBox();
-            this.CK_Markov = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_React)).BeginInit();
@@ -507,7 +507,7 @@
             // Tab_Version
             // 
             this.Tab_Version.Controls.Add(this.LB_Version);
-            this.Tab_Version.Controls.Add(this.CB_PatchNotes);
+            this.Tab_Version.Controls.Add(this.CB_Version);
             this.Tab_Version.Controls.Add(this.RTB_Version);
             this.Tab_Version.Location = new System.Drawing.Point(4, 22);
             this.Tab_Version.Name = "Tab_Version";
@@ -528,17 +528,17 @@
             this.LB_Version.Text = "Select a Version or choose All to display all";
             this.LB_Version.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // CB_PatchNotes
+            // CB_Version
             // 
-            this.CB_PatchNotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.CB_Version.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.CB_PatchNotes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_PatchNotes.FormattingEnabled = true;
-            this.CB_PatchNotes.Location = new System.Drawing.Point(6, 24);
-            this.CB_PatchNotes.Name = "CB_PatchNotes";
-            this.CB_PatchNotes.Size = new System.Drawing.Size(276, 21);
-            this.CB_PatchNotes.TabIndex = 5;
-            this.CB_PatchNotes.SelectedIndexChanged += new System.EventHandler(this.CB_PatchNotes_SelectedIndexChanged);
+            this.CB_Version.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_Version.FormattingEnabled = true;
+            this.CB_Version.Location = new System.Drawing.Point(6, 24);
+            this.CB_Version.Name = "CB_Version";
+            this.CB_Version.Size = new System.Drawing.Size(276, 21);
+            this.CB_Version.TabIndex = 5;
+            this.CB_Version.SelectedIndexChanged += new System.EventHandler(this.CB_Version_SelectedIndexChanged);
             // 
             // RTB_Version
             // 
@@ -1415,6 +1415,17 @@
             this.TB_Misc.Text = "Misc";
             this.TB_Misc.UseVisualStyleBackColor = true;
             // 
+            // CK_Markov
+            // 
+            this.CK_Markov.AutoSize = true;
+            this.CK_Markov.Location = new System.Drawing.Point(6, 295);
+            this.CK_Markov.Name = "CK_Markov";
+            this.CK_Markov.Size = new System.Drawing.Size(84, 17);
+            this.CK_Markov.TabIndex = 14;
+            this.CK_Markov.Text = "Use Markov";
+            this.CK_Markov.UseVisualStyleBackColor = true;
+            this.CK_Markov.CheckedChanged += new System.EventHandler(this.CK_Markov_CheckedChanged);
+            // 
             // CB_Prof2
             // 
             this.CB_Prof2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1577,17 +1588,6 @@
                 "d Specialization proc chance is now 2/4/6/8/10%";
             this.CK_PTRMode.CheckedChanged += new System.EventHandler(this.CK_PTRMode_CheckedChanged);
             // 
-            // CK_Markov
-            // 
-            this.CK_Markov.AutoSize = true;
-            this.CK_Markov.Location = new System.Drawing.Point(6, 295);
-            this.CK_Markov.Name = "CK_Markov";
-            this.CK_Markov.Size = new System.Drawing.Size(84, 17);
-            this.CK_Markov.TabIndex = 14;
-            this.CK_Markov.Text = "Use Markov";
-            this.CK_Markov.UseVisualStyleBackColor = true;
-            this.CK_Markov.CheckedChanged += new System.EventHandler(this.CK_Markov_CheckedChanged);
-            // 
             // CalculationOptionsPanelDPSWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1708,7 +1708,7 @@
         private System.Windows.Forms.ComboBox CB_Prof1;
         private System.Windows.Forms.ComboBox CB_Prof2;
         private System.Windows.Forms.Label LB_Version;
-        private System.Windows.Forms.ComboBox CB_PatchNotes;
+        private System.Windows.Forms.ComboBox CB_Version;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown NUD_TargHP;

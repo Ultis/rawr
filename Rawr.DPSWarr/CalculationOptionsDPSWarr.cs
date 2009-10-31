@@ -24,7 +24,7 @@ namespace Rawr.DPSWarr {
             SE_UseDur = true;
             UseMarkov = false;
 		    PTRMode = false;
-            HideBadItems = true;
+            //HideBadItems = true;
             HideBadItems_Def = true;
             HideBadItems_Spl = true;
             HideBadItems_PvP = true;
@@ -155,12 +155,6 @@ namespace Rawr.DPSWarr {
         {
             get { return _PTRMode; }
             set { _PTRMode = value; OnPropertyChanged("PTRMode"); }
-        }
-        private bool _HideBadItems;
-        public bool HideBadItems
-        {
-            get { return _HideBadItems; }
-            set { _HideBadItems = value; OnPropertyChanged("HideBadItems"); }
         }
         private bool _HideBadItems_Def;
         public bool HideBadItems_Def
@@ -428,8 +422,8 @@ namespace Rawr.DPSWarr {
                 HeroicStrike_
 		};
         #endregion
-        // Latency
-		private float _Lag;
+        #region Latency
+        private float _Lag;
         public float Lag
         {
             get { return _Lag; }
@@ -444,7 +438,7 @@ namespace Rawr.DPSWarr {
         public float Latency { get { return Lag / 1000f; } }
         public float AllowedReact { get { return Math.Max(0f, (React - 250f) / 1000f); } }
         public float FullLatency { get { return AllowedReact + Latency; } }
-		//
+        #endregion
 		public WarriorTalents talents = null;
         #endregion
         #region Functions

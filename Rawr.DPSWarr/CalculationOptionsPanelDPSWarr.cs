@@ -825,16 +825,16 @@ PNStuff.Add(
 - Enforced activation of buffs Trauma, Rampage and Blood Frenzy if you have the talents
 - Formulaic fixes and some Talent/Glyph improvements"
 );
-CB_PatchNotes.Items.Add("All");
+CB_Version.Items.Add("All");
             string[] arr = new string[PNStuff.Keys.Count];
             PNStuff.Keys.CopyTo(arr, 0);
-            CB_PatchNotes.Items.AddRange(arr);
-            CB_PatchNotes.SelectedIndex = 0;
+            CB_Version.Items.AddRange(arr);
+            CB_Version.SelectedIndex = 0;
             CB_PatchNotes_SelectedIndexChanged(null, null);
         }
-        private void CB_PatchNotes_SelectedIndexChanged(object sender, EventArgs e) {
+        private void CB_Version_SelectedIndexChanged(object sender, EventArgs e) {
             string text = "";
-            if (CB_PatchNotes.Text == "All") {
+            if (CB_Version.Text == "All") {
                 int Iter = 1;
                 text += "== CONTENTS ==" + "\r\n";
                 foreach (string s in PNStuff.Keys) {
@@ -853,7 +853,7 @@ CB_PatchNotes.Items.Add("All");
                 } Iter = 1;
                 RTB_Version.Text = text;
             }else{
-                string s = CB_PatchNotes.Text;
+                string s = CB_Version.Text;
                 string a = "invalid";
                 bool ver = PNStuff.TryGetValue(s, out a);
                 text += s + "\r\n";

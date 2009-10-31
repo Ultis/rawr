@@ -109,7 +109,7 @@ namespace Rawr.DPSWarr
         public void Show()
         {
 #if RAWR3
-            //new ErrorWindow() { Message = Title + "\r\n\r\n" + buildFullMessage() }.Show();
+            System.Windows.MessageBox.Show(Message = Title + "\r\n\r\n" + buildFullMessage());
 #else
             System.Windows.Forms.MessageBox.Show(buildFullMessage(), Title);
 #endif
