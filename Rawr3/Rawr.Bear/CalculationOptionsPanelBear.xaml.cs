@@ -17,7 +17,7 @@ namespace Rawr.Bear
 		public CalculationOptionsPanelBear()
 		{
 			InitializeComponent();
-			DataContext = this;
+            this.LayoutRoot.SelectAll();
 		}
 
 		#region ICalculationOptionsPanel Members
@@ -42,7 +42,8 @@ namespace Rawr.Bear
 		{
 			_loadingCalculationOptions = true;
 			if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsBear();
-
+            this.DataContext = Character.CalculationOptions as CalculationOptionsBear;
+            this.LayoutRoot.SelectAll();
 			_loadingCalculationOptions = false;
 		}
 		#endregion

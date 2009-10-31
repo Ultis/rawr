@@ -35,11 +35,9 @@ namespace Rawr.Bear
 			numericUpDownTargetDamage.Value = calcOpts.TargetDamage;
 			numericUpDownTargetAttackSpeed.Value = (decimal)calcOpts.TargetAttackSpeed;
 
-			radioButtonNoAuto.Checked = !calcOpts.CustomUseMaul.HasValue;
-			radioButtonMelee.Checked = calcOpts.CustomUseMaul.HasValue && !calcOpts.CustomUseMaul.Value;
-			radioButtonMaul.Checked = calcOpts.CustomUseMaul.HasValue && calcOpts.CustomUseMaul.Value;
-			checkBoxMangle.Checked = calcOpts.CustomUseMangle;
-			checkBoxSwipe.Checked = calcOpts.CustomUseSwipe;
+			checkBoxMaul.Checked = calcOpts.CustomUseMaul;
+            checkBoxMangle.Checked = calcOpts.CustomUseMangle;
+            checkBoxSwipe.Checked = calcOpts.CustomUseSwipe;
 			checkBoxFaerieFire.Checked = calcOpts.CustomUseFaerieFire;
 			checkBoxLacerate.Checked = calcOpts.CustomUseLacerate;
 			checkBoxTargetParryHastes.Checked = calcOpts.TargetParryHastes;
@@ -103,11 +101,9 @@ namespace Rawr.Bear
 				calcOpts.TargetDamage = (int)numericUpDownTargetDamage.Value;
 				calcOpts.TargetAttackSpeed = (float)numericUpDownTargetAttackSpeed.Value;
 
-				if (radioButtonNoAuto.Checked) calcOpts.CustomUseMaul = null;
-				else if (radioButtonMelee.Checked) calcOpts.CustomUseMaul = false;
-				else if (radioButtonMaul.Checked)  calcOpts.CustomUseMaul = true;
-				calcOpts.CustomUseMangle = checkBoxMangle.Checked;
-				calcOpts.CustomUseSwipe = checkBoxSwipe.Checked;
+                calcOpts.CustomUseMaul = checkBoxMaul.Checked;
+                calcOpts.CustomUseMangle = checkBoxMangle.Checked;
+                calcOpts.CustomUseSwipe = checkBoxSwipe.Checked;
 				calcOpts.CustomUseFaerieFire = checkBoxFaerieFire.Checked;
 				calcOpts.CustomUseLacerate = checkBoxLacerate.Checked;
 				calcOpts.TargetParryHastes = checkBoxTargetParryHastes.Checked;

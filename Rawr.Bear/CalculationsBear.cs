@@ -375,6 +375,7 @@ the Threat Scale defined on the Options tab.",
 		/// <returns>The deserialized CalculationOptionsBear object</returns>
 		public override ICalculationOptionBase DeserializeDataObject(string xml)
 		{
+            xml = xml.Replace("<CustomUseMaul xsi:nil=\"true\" />", "<CustomUseMaul>false</CustomUseMaul>");
 			System.Xml.Serialization.XmlSerializer serializer =
 				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsBear));
 			System.IO.StringReader reader = new System.IO.StringReader(xml);
@@ -675,16 +676,15 @@ the Threat Scale defined on the Options tab.",
 			rotationCalculationDPS = rotationCalculationTPS = new BearRotationCalculator.BearRotationCalculation();
 
 			//Loop through the potential rotations...
-			for (int useMaul = 0; useMaul < 3; useMaul++)
+			for (int useMaul = 0; useMaul < 2; useMaul++)
 				for (int useMangle = 0; useMangle < 2; useMangle++)
 					for (int useSwipe = 0; useSwipe < 2; useSwipe++)
 						for (int useFaerieFire = 0; useFaerieFire < 2; useFaerieFire++)
 							for (int useLacerate = 0; useLacerate < 2; useLacerate++)
 							{
 								//...and feed them to the BearRotationCalculator
-								bool?[] useMaulValues = new bool?[] {null, false, true};
 								BearRotationCalculator.BearRotationCalculation rotationCalculation = 
-									rotationCalculator.GetRotationCalculations(useMaulValues[useMaul],
+									rotationCalculator.GetRotationCalculations(useMaul == 1,
 									useMangle == 1, useSwipe == 1, useFaerieFire == 1, useLacerate == 1);
 								//Keep track of the best rotation for both DPS and TPS
 								if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
