@@ -37,9 +37,9 @@ namespace Rawr.Base.Algorithms
 
             //U[i * rows + j]
 
-            foreach (CycleState state in StateList)
+            foreach (State<TAbility> state in StateSpace)
             {
-                foreach (CycleStateTransition transition in state.Transitions)
+                foreach (StateTransition<TAbility> transition in state.Transitions)
                 {
                     arraySet.LU_U[transition.TargetState.Index * size + state.Index] += transition.TransitionProbability;
                 }
