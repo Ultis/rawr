@@ -138,6 +138,126 @@ Turn all three of these options off for normal behavior based solely on Item Typ
             }
             isLoading = false;
         }
+        protected override void LoadCalculationOptions() {
+            int line = 0; string info = "";
+            isLoading = true; line = 1;
+            CalculationOptionsDPSWarr calcOpts; line = 2;
+            try {
+                if (Character != null && Character.CalculationOptions == null) {
+                    // If it's broke, make a new one with the defaults
+                    Character.CalculationOptions = new CalculationOptionsDPSWarr(); line = 3;
+                    isLoading = true; line = 4;
+                }
+                calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; line = 5;
+                CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
+                CB_TargLvl.Text = info;// string.Format("{0}", calcOpts.TargetLevel);
+                        line = 7; info = calcOpts.TargetArmor.ToString();
+                CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); line = 8;
+                CB_Duration.Value = (decimal)calcOpts.Duration; line = 9;
+                NUD_TargHP.Value = (decimal)calcOpts.TargetHP; line = 10;
+                RB_StanceArms.Checked = !calcOpts.FuryStance; line = 11;
+                CK_PTRMode.Checked = calcOpts.PTRMode; line = 12;
+                CK_HideDefGear.Checked = calcOpts.HideBadItems_Def; CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def; line = 13;
+                CK_HideSplGear.Checked = calcOpts.HideBadItems_Spl; CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl; line = 13;
+                CK_HidePvPGear.Checked = calcOpts.HideBadItems_PvP; CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP; line = 13;
+                NUD_SurvScale.Value = (decimal)calcOpts.SurvScale; line = 14;
+
+                // Save the new names
+                CB_BL_FilterType.Text = calcOpts.FilterType;
+                firstload = true;
+                isLoading = false; CB_BL_FilterType_SelectedIndexChanged(null, null); isLoading = true;
+                CB_BL_Filter.Text = calcOpts.Filter;
+                isLoading = false; CB_BL_Filter_SelectedIndexChanged(null, null); isLoading = true;
+                CB_BossList.Text = calcOpts.BossName;
+                isLoading = false; CB_BossList_SelectedIndexChanged(null, null); isLoading = true;
+                firstload = false; line = 15;
+
+                // Rotational Changes
+                CK_InBack.Checked = calcOpts.InBack;
+                LB_InBehindPerc.Enabled = calcOpts.InBack;
+                CB_InBackPerc.Enabled = calcOpts.InBack;
+                CB_InBackPerc.Value = calcOpts.InBackPerc;
+
+                CK_MultiTargs.Checked = calcOpts.MultipleTargets;
+                LB_Max.Enabled = calcOpts.MultipleTargets;
+                //LB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
+                CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
+                CB_MultiTargsMax.Enabled = calcOpts.MultipleTargets;
+                CB_MultiTargsPerc.Value = calcOpts.MultipleTargetsPerc;
+                CB_MultiTargsMax.Value = (int)calcOpts.MultipleTargetsMax;
+
+                CK_StunningTargs.Checked = calcOpts.StunningTargets;
+                NUD_StunFreq.Enabled = calcOpts.StunningTargets;
+                NUD_StunDur.Enabled = calcOpts.StunningTargets;
+                NUD_StunFreq.Value = (int)calcOpts.StunningTargetsFreq;
+                NUD_StunDur.Value = (int)calcOpts.StunningTargetsDur;
+
+                CK_MovingTargs.Checked = calcOpts.MovingTargets;
+                CustomBoss.Moves = calcOpts.Moves;
+                BT_Move.Enabled = calcOpts.MovingTargets;
+                BT_Move.Text = calcOpts.Moves.Count > 0 ? CustomBoss.DynamicCompiler_Move.ToString() : "None";
+                //NUD_MoveFreq.Enabled = calcOpts.MovingTargets;
+                //NUD_MoveDur.Enabled = calcOpts.MovingTargets;
+                //NUD_MoveFreq.Value = (int)calcOpts.MovingTargetsFreq;
+                //NUD_MoveDur.Value = (int)calcOpts.MovingTargetsDur;
+
+                CK_FearingTargs.Checked = calcOpts.FearingTargets;
+                CustomBoss.Fears = calcOpts.Fears;
+                BT_Fear.Enabled = calcOpts.FearingTargets;
+                BT_Fear.Text = calcOpts.Fears.Count > 0 ? CustomBoss.DynamicCompiler_Fear.ToString() : "None";
+                //NUD_FearFreq.Enabled = calcOpts.FearingTargets;
+                //NUD_FearDur.Enabled = calcOpts.FearingTargets;
+                //NUD_FearFreq.Value = (int)calcOpts.FearingTargetsFreq;
+                //NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur;
+
+                CK_RootingTargs.Checked = calcOpts.RootingTargets;
+                NUD_RootFreq.Enabled = calcOpts.RootingTargets;
+                NUD_RootDur.Enabled = calcOpts.RootingTargets;
+                NUD_RootFreq.Value = (int)calcOpts.RootingTargetsFreq;
+                NUD_RootDur.Value = (int)calcOpts.RootingTargetsDur;
+
+                CK_DisarmTargs.Checked = calcOpts.DisarmingTargets;
+                NUD_DisarmFreq.Enabled = calcOpts.DisarmingTargets;
+                NUD_DisarmDur.Enabled = calcOpts.DisarmingTargets;
+                NUD_DisarmFreq.Value = (int)calcOpts.DisarmingTargetsFreq;
+                NUD_DisarmDur.Value = (int)calcOpts.DisarmingTargetsDur;
+
+                CK_AoETargs.Checked = calcOpts.AoETargets;
+                NUD_AoEFreq.Enabled = calcOpts.AoETargets;
+                NUD_AoEDMG.Enabled = calcOpts.AoETargets;
+                NUD_AoEFreq.Value = (int)calcOpts.AoETargetsFreq;
+                NUD_AoEDMG.Value = (int)calcOpts.AoETargetsDMG;
+
+                // Abilities to Maintain
+                CK_Flooring.Checked = calcOpts.AllowFlooring;
+                LoadAbilBools(calcOpts); line = 30;
+                // Latency
+                CB_Lag.Value = (int)calcOpts.Lag;
+                CB_React.Value = (int)calcOpts.React; line = 40;
+                // Special Effects Special Option
+                CK_SE_UseDur.Checked = calcOpts.SE_UseDur;
+                // Hiding Enchants based on Profession
+                CK_HideProfEnchants.Checked = calcOpts.HideProfEnchants;
+                CalculationsDPSWarr.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
+                CB_Prof1.Enabled = CK_HideProfEnchants.Checked;
+                CB_Prof2.Enabled = CK_HideProfEnchants.Checked;
+                CB_Prof1.Text = ProfessionToString(Character.PrimaryProfession);
+                CB_Prof2.Text = ProfessionToString(Character.SecondaryProfession);
+                //
+                calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
+                RB_StanceFury.Checked = calcOpts.FuryStance;
+                RB_StanceArms.Checked = !RB_StanceFury.Checked; line = 50;
+                //
+                CK_Markov.Checked = calcOpts.UseMarkov;
+                //
+                Character.OnCalculationsInvalidated();
+            } catch (Exception ex) {
+                new ErrorBoxDPSWarr("Error in loading the DPSWarr Options Pane",
+                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace, line);
+            }
+            ItemCache.OnItemsChanged();
+            isLoading = false;
+        }
         private void SetUpFAQ() {
 FAQStuff.Add(
 "Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x DPS.",
@@ -865,126 +985,6 @@ CB_Version.Items.Add("All");
                 RTB_Version.Select(0, RTB_Version.Text.IndexOf('\n'));
                 RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
             }
-        }
-        protected override void LoadCalculationOptions() {
-            int line = 0; string info = "";
-            isLoading = true; line = 1;
-            CalculationOptionsDPSWarr calcOpts; line = 2;
-            try {
-                if (Character != null && Character.CalculationOptions == null) {
-                    // If it's broke, make a new one with the defaults
-                    Character.CalculationOptions = new CalculationOptionsDPSWarr(); line = 3;
-                    isLoading = true; line = 4;
-                }
-                calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; line = 5;
-                CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
-                CB_TargLvl.Text = info;// string.Format("{0}", calcOpts.TargetLevel);
-                        line = 7; info = calcOpts.TargetArmor.ToString();
-                CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); line = 8;
-                CB_Duration.Value = (decimal)calcOpts.Duration; line = 9;
-                NUD_TargHP.Value = (decimal)calcOpts.TargetHP; line = 10;
-                RB_StanceArms.Checked = !calcOpts.FuryStance; line = 11;
-                CK_PTRMode.Checked = calcOpts.PTRMode; line = 12;
-                CK_HideDefGear.Checked = calcOpts.HideBadItems_Def; CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def; line = 13;
-                CK_HideSplGear.Checked = calcOpts.HideBadItems_Spl; CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl; line = 13;
-                CK_HidePvPGear.Checked = calcOpts.HideBadItems_PvP; CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP; line = 13;
-                NUD_SurvScale.Value = (decimal)calcOpts.SurvScale; line = 14;
-
-                // Save the new names
-                CB_BL_FilterType.Text = calcOpts.FilterType;
-                firstload = true;
-                isLoading = false; CB_BL_FilterType_SelectedIndexChanged(null, null); isLoading = true;
-                CB_BL_Filter.Text = calcOpts.Filter;
-                isLoading = false; CB_BL_Filter_SelectedIndexChanged(null, null); isLoading = true;
-                CB_BossList.Text = calcOpts.BossName;
-                isLoading = false; CB_BossList_SelectedIndexChanged(null, null); isLoading = true;
-                firstload = false; line = 15;
-
-                // Rotational Changes
-                CK_InBack.Checked = calcOpts.InBack;
-                LB_InBehindPerc.Enabled = calcOpts.InBack;
-                CB_InBackPerc.Enabled = calcOpts.InBack;
-                CB_InBackPerc.Value = calcOpts.InBackPerc;
-
-                CK_MultiTargs.Checked = calcOpts.MultipleTargets;
-                LB_Max.Enabled = calcOpts.MultipleTargets;
-                //LB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
-                CB_MultiTargsPerc.Enabled = calcOpts.MultipleTargets;
-                CB_MultiTargsMax.Enabled = calcOpts.MultipleTargets;
-                CB_MultiTargsPerc.Value = calcOpts.MultipleTargetsPerc;
-                CB_MultiTargsMax.Value = (int)calcOpts.MultipleTargetsMax;
-
-                CK_StunningTargs.Checked = calcOpts.StunningTargets;
-                NUD_StunFreq.Enabled = calcOpts.StunningTargets;
-                NUD_StunDur.Enabled = calcOpts.StunningTargets;
-                NUD_StunFreq.Value = (int)calcOpts.StunningTargetsFreq;
-                NUD_StunDur.Value = (int)calcOpts.StunningTargetsDur;
-
-                CK_MovingTargs.Checked = calcOpts.MovingTargets;
-                CustomBoss.Moves = calcOpts.Moves;
-                BT_Move.Enabled = calcOpts.MovingTargets;
-                BT_Move.Text = calcOpts.Moves.Count > 0 ? CustomBoss.DynamicCompiler_Move.ToString() : "None";
-                //NUD_MoveFreq.Enabled = calcOpts.MovingTargets;
-                //NUD_MoveDur.Enabled = calcOpts.MovingTargets;
-                //NUD_MoveFreq.Value = (int)calcOpts.MovingTargetsFreq;
-                //NUD_MoveDur.Value = (int)calcOpts.MovingTargetsDur;
-
-                CK_FearingTargs.Checked = calcOpts.FearingTargets;
-                CustomBoss.Fears = calcOpts.Fears;
-                BT_Fear.Enabled = calcOpts.FearingTargets;
-                BT_Fear.Text = calcOpts.Fears.Count > 0 ? CustomBoss.DynamicCompiler_Fear.ToString() : "None";
-                //NUD_FearFreq.Enabled = calcOpts.FearingTargets;
-                //NUD_FearDur.Enabled = calcOpts.FearingTargets;
-                //NUD_FearFreq.Value = (int)calcOpts.FearingTargetsFreq;
-                //NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur;
-
-                CK_RootingTargs.Checked = calcOpts.RootingTargets;
-                NUD_RootFreq.Enabled = calcOpts.RootingTargets;
-                NUD_RootDur.Enabled = calcOpts.RootingTargets;
-                NUD_RootFreq.Value = (int)calcOpts.RootingTargetsFreq;
-                NUD_RootDur.Value = (int)calcOpts.RootingTargetsDur;
-
-                CK_DisarmTargs.Checked = calcOpts.DisarmingTargets;
-                NUD_DisarmFreq.Enabled = calcOpts.DisarmingTargets;
-                NUD_DisarmDur.Enabled = calcOpts.DisarmingTargets;
-                NUD_DisarmFreq.Value = (int)calcOpts.DisarmingTargetsFreq;
-                NUD_DisarmDur.Value = (int)calcOpts.DisarmingTargetsDur;
-
-                CK_AoETargs.Checked = calcOpts.AoETargets;
-                NUD_AoEFreq.Enabled = calcOpts.AoETargets;
-                NUD_AoEDMG.Enabled = calcOpts.AoETargets;
-                NUD_AoEFreq.Value = (int)calcOpts.AoETargetsFreq;
-                NUD_AoEDMG.Value = (int)calcOpts.AoETargetsDMG;
-
-                // Abilities to Maintain
-                CK_Flooring.Checked = calcOpts.AllowFlooring;
-                LoadAbilBools(calcOpts); line = 30;
-                // Latency
-                CB_Lag.Value = (int)calcOpts.Lag;
-                CB_React.Value = (int)calcOpts.React; line = 40;
-                // Special Effects Special Option
-                CK_SE_UseDur.Checked = calcOpts.SE_UseDur;
-                // Hiding Enchants based on Profession
-                CK_HideProfEnchants.Checked = calcOpts.HideProfEnchants;
-                CalculationsDPSWarr.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
-                CB_Prof1.Enabled = CK_HideProfEnchants.Checked;
-                CB_Prof2.Enabled = CK_HideProfEnchants.Checked;
-                CB_Prof1.Text = ProfessionToString(Character.PrimaryProfession);
-                CB_Prof2.Text = ProfessionToString(Character.SecondaryProfession);
-                //
-                calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
-                RB_StanceFury.Checked = calcOpts.FuryStance;
-                RB_StanceArms.Checked = !RB_StanceFury.Checked; line = 50;
-                //
-                CK_Markov.Checked = calcOpts.UseMarkov;
-                //
-                Character.OnCalculationsInvalidated();
-            } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in loading the DPSWarr Options Pane",
-                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace, line);
-            }
-            ItemCache.OnItemsChanged();
-            isLoading = false;
         }
         // Boss Handler
         private void CB_BL_FilterType_SelectedIndexChanged(object sender, EventArgs e) {

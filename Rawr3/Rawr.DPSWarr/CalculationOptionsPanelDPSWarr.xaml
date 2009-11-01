@@ -113,54 +113,36 @@ mc:Ignorable="d">
         </controls:TabItem>
         <controls:TabItem x:Name="Page_02_Maintenance" Header="Abilities">
             <Grid x:Name="Page_02_Layout">
-                <controls:TreeView x:Name="CTL_Maints" Margin="0,31,0,0" d:LayoutOverrides="GridBox">
-                    <controls:TreeViewItem Margin="-10,-10,-10,0" Header="Rage Gen" IsExpanded="True" Padding="3">
-                        <controlsToolkit:TreeViewItemCheckBox Content="Berserker Rage" Margin="0,-4" IsChecked="{Binding M_BerserkerRage, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Bloodrage" Margin="0,0,0,-4" IsChecked="{Binding M_Bloodrage, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="-10,0" Header="Maintenance" IsExpanded="True">
-                        <controls:TreeViewItem Margin="0,-4" Header="Shout Choice" IsExpanded="True">
-                            <RadioButton Content="Battle Shout" Margin="0,-4" GroupName="Shouts" IsChecked="{Binding M_BattleShout, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                            <RadioButton Content="Commanding Shout" Margin="0,0,0,-4" GroupName="Shouts" IsChecked="{Binding M_CommandingShout, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                            <RadioButton Content="No Shout" Margin="0,0,0,-4" GroupName="Shouts"/>
-                        </controls:TreeViewItem>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Demoralizing Shout" Margin="0,0,0,-4" IsChecked="{Binding M_DemoralizingShout, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Sunder Armor" Margin="0,0,0,-4" IsChecked="{Binding M_SunderArmor, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Thunder Clap" Margin="0,0,0,-4" IsChecked="{Binding M_ThunderClap, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Hamstring" Margin="0,0,0,-4" IsChecked="{Binding M_Hamstring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="-10,0" Header="Periodics" IsExpanded="True">
-                        <controlsToolkit:TreeViewItemCheckBox Content="Shattering Throw" Margin="0,-4" IsChecked="{Binding M_ShatteringThrow, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Sweeping Strikes" Margin="0,0,0,-4" IsChecked="{Binding M_SweepingStrikes, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Death Wish" Margin="0,0,0,-4" IsChecked="{Binding M_DeathWish, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Recklessness" Margin="0,0,0,-4" IsChecked="{Binding M_Recklessness, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Enraged Regeneration" Margin="0,0,0,-4" IsChecked="{Binding M_EnragedRegeneration, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="-10,0" Header="Damage Dealers" IsExpanded="True">
-                        <controls:TreeViewItem Margin="0,-4,0,0" Header="Fury" IsExpanded="True">
-                            <controlsToolkit:TreeViewItemCheckBox Content="Whirlwind" Margin="0,-4" IsChecked="{Binding M_Whirlwind, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Bloodthirst" Margin="0,0,0,-4" IsChecked="{Binding M_Bloodthirst, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Bloodsurge" Margin="0,0,0,-4" IsChecked="{Binding M_Bloodsurge, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        </controls:TreeViewItem>
-                        <controls:TreeViewItem Margin="0,-4,0,0" Header="Arms" IsExpanded="True">
-                            <controlsToolkit:TreeViewItemCheckBox Content="Bladestorm" Margin="0,-4" IsChecked="{Binding M_Bladestorm, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Mortal Strike" Margin="0,0,0,-4" IsChecked="{Binding M_MortalStrike, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Rend" Margin="0,0,0,-4" IsChecked="{Binding M_Rend, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Overpower" Margin="0,0,0,-4" IsChecked="{Binding M_Overpower, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Taste for Blood" Margin="0,0,0,-4" IsChecked="{Binding M_TasteForBlood, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Sudden Death" Margin="0,0,0,-4" IsChecked="{Binding M_SuddenDeath, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                            <controlsToolkit:TreeViewItemCheckBox Content="Slam" Margin="0,0,0,-4" IsChecked="{Binding M_Slam, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        </controls:TreeViewItem>
-                        <controlsToolkit:TreeViewItemCheckBox Content="&lt;20% Execute Spam" Margin="0,-4" IsChecked="{Binding M_ExecuteSpam, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    </controls:TreeViewItem>
-                    <controls:TreeViewItem Margin="-10,0,-10,-10" Header="Rage Dumps" IsExpanded="True">
-                        <controlsToolkit:TreeViewItemCheckBox Content="Cleave" Margin="0,-4" IsChecked="{Binding M_Cleave, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                        <controlsToolkit:TreeViewItemCheckBox Content="Heroic Strike" Margin="0" IsChecked="{Binding M_HeroicStrike, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    </controls:TreeViewItem>
-                </controls:TreeView>
                 <CheckBox x:Name="CK_Flooring" Height="19" Margin="8,8,0,0" VerticalAlignment="Top" Content="Allow Flooring *" ToolTipService.ToolTip="Flooring changes the way Rotations are calculated. Normally, an ability can have 94.7 activates in a rotation, this allows a more smooth calc for things like Haste and Expertise (due to Overpower Procs). Flooring forces any partial activate off the table, 94.7 becomes 94. This is to better simulate reality, however it isn't fully factored in everywhere that it should be. Use Flooring at your own risk." HorizontalAlignment="Left" Width="114" IsChecked="{Binding AllowFlooring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <RadioButton x:Name="RB_StanceFury" Height="17" Margin="0,8,60,0" VerticalAlignment="Top" RenderTransformOrigin="0.467,0.412" Content="Fury" Canvas.ZIndex="-7" HorizontalAlignment="Right" Width="52" d:LayoutOverrides="GridBox" IsChecked="{Binding FuryStance, Mode=TwoWay, UpdateSourceTrigger=Default}" GroupName="Stance"/>
-                <RadioButton x:Name="RB_StanceArms" Height="17" Margin="0,8,8,0" VerticalAlignment="Top" Content="Arms" HorizontalAlignment="Right" Width="48" GroupName="Stance" IsChecked="True" HorizontalContentAlignment="Left" d:LayoutOverrides="GridBox"/>
+                <RadioButton x:Name="RB_StanceFury" Margin="8,166,150,0" VerticalAlignment="Top" RenderTransformOrigin="0.467,0.412" Content="Fury" Canvas.ZIndex="-7" d:LayoutOverrides="GridBox" IsChecked="{Binding FuryStance, Mode=TwoWay, UpdateSourceTrigger=Default}" GroupName="Stance" FontWeight="Bold"/>
+                <RadioButton x:Name="RB_StanceArms" Margin="136,166,8,0" VerticalAlignment="Top" Content="Arms" GroupName="Stance" IsChecked="True" HorizontalContentAlignment="Left" d:LayoutOverrides="GridBox" FontWeight="Bold"/>
+                <controlsToolkit:TreeViewItemCheckBox Content="Berserker Rage" Margin="8,40,0,0" IsChecked="{Binding M_BerserkerRage, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <controlsToolkit:TreeViewItemCheckBox Content="Bloodrage" IsChecked="{Binding M_Bloodrage, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="8,61,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment"/>
+                <RadioButton Content="Battle" Margin="168,40,61,0" GroupName="Shouts" IsChecked="{Binding M_BattleShout, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Top" RenderTransformOrigin="2.491,0.471" d:LayoutOverrides="Width"/>
+                <RadioButton Content="Commanding" GroupName="Shouts" IsChecked="{Binding M_CommandingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="168,61,4,0" VerticalAlignment="Top"/>
+                <RadioButton Content="None" GroupName="Shouts" Margin="168,82,65,0" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment, Width"/>
+                <controlsToolkit:TreeViewItemCheckBox Content="Demoralizing Shout" IsChecked="{Binding M_DemoralizingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="8,82,136,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <controlsToolkit:TreeViewItemCheckBox Content="Sunder Armor" IsChecked="{Binding M_SunderArmor, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="8,103,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="128"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_A_TH" Content="Thunder Clap" IsChecked="{Binding M_ThunderClap, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Top" Margin="136,229,26,0" d:LayoutOverrides="HorizontalAlignment"/>
+                <controlsToolkit:TreeViewItemCheckBox Content="Hamstring" IsChecked="{Binding M_Hamstring, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="8,124,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_A_ST" Content="Shattering Throw" Margin="136,187,26,0" IsChecked="{Binding M_ShatteringThrow, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment, Width"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_A_SW" Content="Sweeping Strikes" IsChecked="{Binding M_SweepingStrikes, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="136,208,26,0" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_F_DW" Content="Death Wish" IsChecked="{Binding M_DeathWish, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Left" Margin="8,187,0,0" d:LayoutOverrides="VerticalAlignment" VerticalAlignment="Top"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_F_RK" Content="Recklessness" IsChecked="{Binding M_Recklessness, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Left" Margin="8,208,0,0" VerticalAlignment="Top"/>
+                <controlsToolkit:TreeViewItemCheckBox Content="Enraged Regeneration" Margin="8,145,0,0" IsChecked="{Binding M_EnragedRegeneration, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <controlsToolkit:TreeViewItemCheckBox Content="Cleave" Margin="168,124,57,0" IsChecked="{Binding M_Cleave, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Top" d:LayoutOverrides="Width"/>
+                <controlsToolkit:TreeViewItemCheckBox Content="Heroic Strike" Margin="168,145,22,0" IsChecked="{Binding M_HeroicStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Top" d:LayoutOverrides="Width"/>
+                <controlsToolkit:TreeViewItemCheckBox Content="&lt;20% Execute Spam" Margin="136,103,8,0" IsChecked="{Binding M_ExecuteSpam, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Top" d:LayoutOverrides="Width"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_F_WW" Content="Whirlwind" Margin="8,259,0,0" IsChecked="{Binding M_Whirlwind, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_F_BT" Content="Bloodthirst" IsChecked="{Binding M_Bloodthirst, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Left" Margin="8,280,0,0" VerticalAlignment="Top"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_F_BS" Content="Bloodsurge" IsChecked="{Binding M_Bloodsurge, Mode=TwoWay, UpdateSourceTrigger=Default}" HorizontalAlignment="Left" Margin="8,301,0,0" VerticalAlignment="Top"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_A_BLS" Content="Bladestorm" Margin="136,259,26,0" IsChecked="{Binding M_Bladestorm, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_A_MS" Content="Mortal Strike" IsChecked="{Binding M_MortalStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="136,280,26,0" d:LayoutOverrides="HorizontalAlignment" VerticalAlignment="Top"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_A_RD" Content="Rend" IsChecked="{Binding M_Rend, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="136,301,26,0" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_A_OP" Content="Overpower" IsChecked="{Binding M_Overpower, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="136,322,26,0" d:LayoutOverrides="HorizontalAlignment" VerticalAlignment="Top"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_A_TB" Content="Taste for Blood" IsChecked="{Binding M_TasteForBlood, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="136,343,26,0" d:LayoutOverrides="HorizontalAlignment" VerticalAlignment="Top"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_A_SD" Content="Sudden Death" IsChecked="{Binding M_SuddenDeath, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="136,364,26,0" d:LayoutOverrides="HorizontalAlignment" VerticalAlignment="Top"/>
+                <controlsToolkit:TreeViewItemCheckBox x:Name="CK_M_A_SL" Content="Slam" IsChecked="{Binding M_Slam, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="136,385,26,0" d:LayoutOverrides="HorizontalAlignment" VerticalAlignment="Top"/>
             </Grid>
         </controls:TabItem>
         <controls:TabItem x:Name="Page_04_Misc" Header="Misc">
@@ -168,16 +150,44 @@ mc:Ignorable="d">
                 <CheckBox x:Name="CK_HideDefGear" Height="17" Margin="8,123,8,0" VerticalAlignment="Top" Content="Hide Defensive Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." IsChecked="{Binding HideBadItems_Def, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 <CheckBox x:Name="CK_PTRMode" Height="17" Margin="8,102,8,0" VerticalAlignment="Top" Content="PTR Mode *" ToolTipService.ToolTip="Enables Patch 3.3.0 changes specific to DPSWarr." IsChecked="{Binding PTRMode, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                 <dataInput:Label x:Name="LB_Lag" Height="20" HorizontalAlignment="Left" Margin="8,32,0,0" VerticalAlignment="Top" Width="135" Content="Lag (ms):"/>
-                <inputToolkit:NumericUpDown x:Name="CB_Lag" Height="20" Margin="0,32,8,0" VerticalAlignment="Top" Width="136" HorizontalAlignment="Right" Value="{Binding Lag, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="999"/>
+                <inputToolkit:NumericUpDown x:Name="CB_Lag" Height="20" Margin="0,32,8,0" VerticalAlignment="Top" Width="110" HorizontalAlignment="Right" Value="{Binding Lag, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="999" d:LayoutOverrides="HorizontalAlignment"/>
                 <dataInput:Label x:Name="LB_React" Height="21" Margin="8,56,0,0" VerticalAlignment="Top" Content="React (ms): *" ToolTipService.ToolTip="This doesn't affect you unless the number is over 250. Blizzard allows users 1/4 second reaction before penalizing them." HorizontalAlignment="Left" Width="135" d:LayoutOverrides="HorizontalAlignment"/>
-                <inputToolkit:NumericUpDown x:Name="CB_React" Height="21" HorizontalAlignment="Right" Margin="0,56,8,0" VerticalAlignment="Top" Width="136" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500"/>
+                <inputToolkit:NumericUpDown x:Name="CB_React" Height="21" HorizontalAlignment="Right" Margin="0,56,8,0" VerticalAlignment="Top" Width="110" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500" d:LayoutOverrides="HorizontalAlignment"/>
                 <dataInput:Label x:Name="LB_SurvScale" Height="20" Margin="8,8,0,0" VerticalAlignment="Top" Content="Survivability Scale:" Width="135" HorizontalAlignment="Left" d:LayoutOverrides="HorizontalAlignment"/>
-                <inputToolkit:NumericUpDown x:Name="NUD_SurvScale" Height="20" Margin="0,8,8,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="136" DecimalPlaces="1" Increment="0.1" Value="{Binding SurvScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10"/>
+                <inputToolkit:NumericUpDown x:Name="NUD_SurvScale" Height="20" Margin="0,8,8,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="110" DecimalPlaces="1" Increment="0.1" Value="{Binding SurvScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" d:LayoutOverrides="HorizontalAlignment"/>
                 <CheckBox x:Name="CK_HidePvPGear" Height="17" Margin="8,165,8,0" VerticalAlignment="Top" Content="Hide PvP Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." IsChecked="{Binding HideBadItems_PvP, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 <CheckBox x:Name="CK_HideSplGear" Height="17" Content="Hide Spell Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." VerticalAlignment="Top" Margin="8,144,8,0" IsChecked="{Binding HideBadItems_Spl, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 <CheckBox x:Name="CK_HideProfEnchants" Height="17" Content="Hide Enchants Based on Professions *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." VerticalAlignment="Top" Margin="8,186,8,0" IsChecked="{Binding HideProfEnchants, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                <CheckBox x:Name="CK_Markov" Content="Use Markov *" ToolTipService.ToolTip="This has no real relevance at this time." Margin="8,270,8,281" IsChecked="{Binding UseMarkov, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                <CheckBox x:Name="CK_Markov" Content="Use Markov *" ToolTipService.ToolTip="This has no real relevance at this time." Margin="8,255,8,0" IsChecked="{Binding UseMarkov, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment"/>
                 <CheckBox x:Name="CK_SE_UseDur" Height="17" Content="Use Duration for Special Effects" ToolTipService.ToolTip="" VerticalAlignment="Top" Margin="8,81,8,0" IsChecked="{Binding SE_UseDur, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                <ComboBox x:Name="CB_Prof1" Margin="29,207,29,0" VerticalAlignment="Top" SelectionChanged="CB_Prof1_SelectedIndexChanged">
+                	<ComboBoxItem x:Name="Prof1_None" Content="None"/>
+                	<ComboBoxItem x:Name="Prof1_AL" Content="Alchemy"/>
+                	<ComboBoxItem x:Name="Prof1_BS" Content="Blacksmithing"/>
+                	<ComboBoxItem x:Name="Prof1_EC" Content="Enchanting"/>
+                	<ComboBoxItem x:Name="Prof1_EN" Content="Engineering"/>
+                	<ComboBoxItem x:Name="Prof1_HB" Content="Herbalism"/>
+                	<ComboBoxItem x:Name="Prof1_IN" Content="Inscription"/>
+                	<ComboBoxItem x:Name="Prof1_JC" Content="Jewelcrafting"/>
+                	<ComboBoxItem x:Name="Prof1_LW" Content="Leatherworking"/>
+                	<ComboBoxItem x:Name="Prof1_MN" Content="Mining"/>
+                	<ComboBoxItem x:Name="Prof1_SK" Content="Skinning"/>
+                	<ComboBoxItem x:Name="Prof1_TL" Content="Tailoring"/>
+				</ComboBox>
+                <ComboBox x:Name="CB_Prof2" Margin="29,231,29,0" VerticalAlignment="Top" SelectionChanged="CB_Prof2_SelectedIndexChanged">
+                	<ComboBoxItem x:Name="Prof2_None" Content="None"/>
+                	<ComboBoxItem x:Name="Prof2_AL" Content="Alchemy"/>
+                	<ComboBoxItem x:Name="Prof2_BS" Content="Blacksmithing"/>
+                	<ComboBoxItem x:Name="Prof2_EC" Content="Enchanting"/>
+                	<ComboBoxItem x:Name="Prof2_EN" Content="Engineering"/>
+                	<ComboBoxItem x:Name="Prof2_HB" Content="Herbalism"/>
+                	<ComboBoxItem x:Name="Prof2_IN" Content="Inscription"/>
+                	<ComboBoxItem x:Name="Prof2_JC" Content="Jewelcrafting"/>
+                	<ComboBoxItem x:Name="Prof2_LW" Content="Leatherworking"/>
+                	<ComboBoxItem x:Name="Prof2_MN" Content="Mining"/>
+                	<ComboBoxItem x:Name="Prof2_SK" Content="Skinning"/>
+                	<ComboBoxItem x:Name="Prof2_TL" Content="Tailoring"/>
+                </ComboBox>
             </Grid>
         </controls:TabItem>
     </controls:TabControl>

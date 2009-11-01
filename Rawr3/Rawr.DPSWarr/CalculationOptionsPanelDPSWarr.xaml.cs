@@ -59,7 +59,6 @@ namespace Rawr.DPSWarr {
                 SetUpFAQ();
                 SetUpPatchNotes();
                 SetUpOther();
-                //CTL_Maints.ExpandAll(); line = 10;
 
                 // Create our local Boss List
                 //if (bosslist == null) { bosslist = new BossList(); }
@@ -85,10 +84,74 @@ namespace Rawr.DPSWarr {
                 //CB_BossList.Items.Add("Custom");
                 //foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
                 //line = 25;
-                //calcOpts_PropertyChanged(null, null);
             } catch (Exception ex) {
                 new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane",
                     ex.Message, "CalculationOptionsPanelDPSWarr()", ex.InnerException.Message, ex.StackTrace, 0);
+            }
+            isLoading = false;
+        }
+        public void LoadCalculationOptions()
+        {
+            int line = 0; string info = "";
+            isLoading = true; line = 1;
+            try {
+                CalculationOptionsDPSWarr calcOpts; line = 2;
+                if (Character != null && Character.CalculationOptions == null)
+                {
+                    // If it's broke, make a new one with the defaults
+                    Character.CalculationOptions = new CalculationOptionsDPSWarr(); line = 3;
+                    isLoading = true; line = 4;
+                }
+                else if (Character == null) { return; }
+                calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; line = 5;
+                //CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
+                CB_TargLvl.SelectedItem = calcOpts.TargetLevel.ToString();
+                CB_TargLvl.SelectedItem = calcOpts.TargetLevel.ToString();
+                CB_TargArmor.SelectedItem = calcOpts.TargetArmor.ToString(); line = 8;
+                CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def;
+                CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
+                CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
+                CalculationsDPSWarr.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
+                ItemCache.OnItemsChanged(); line = 13;
+
+                // Boss Selector
+                // Save the new names
+                //CB_BL_FilterType.Text = calcOpts.FilterType;
+                firstload = true;
+                isLoading = false; CB_BL_FilterType_SelectedIndexChanged(null, null); isLoading = true;
+                //CB_BL_Filter.Text = calcOpts.Filter;
+                isLoading = false; CB_BL_Filter_SelectedIndexChanged(null, null); isLoading = true;
+                //CB_BossList.Text = calcOpts.BossName;
+                isLoading = false; CB_BossList_SelectedIndexChanged(null, null); isLoading = true;
+                firstload = false; line = 15;
+
+                // Rotational Changes
+                LB_InBehindPerc.IsEnabled = calcOpts.InBack;
+                CB_InBackPerc.IsEnabled = calcOpts.InBack;
+                LB_Max.IsEnabled = calcOpts.MultipleTargets;
+                LB_MultiTargsPerc.IsEnabled = calcOpts.MultipleTargets;
+                CB_MultiTargsPerc.IsEnabled = calcOpts.MultipleTargets;
+                CB_MultiTargsMax.IsEnabled = calcOpts.MultipleTargets;
+                NUD_MoveFreq.IsEnabled = calcOpts.MovingTargets;
+                NUD_MoveDur.IsEnabled = calcOpts.MovingTargets;
+                NUD_StunFreq.IsEnabled = calcOpts.StunningTargets;
+                NUD_StunDur.IsEnabled = calcOpts.StunningTargets;
+                NUD_FearFreq.IsEnabled = calcOpts.FearingTargets;
+                NUD_FearDur.IsEnabled = calcOpts.FearingTargets;
+                NUD_RootFreq.IsEnabled = calcOpts.RootingTargets;
+                NUD_RootDur.IsEnabled = calcOpts.RootingTargets;
+                NUD_DisarmFreq.IsEnabled = calcOpts.DisarmingTargets;
+                NUD_DisarmDur.IsEnabled = calcOpts.DisarmingTargets;
+                NUD_AoEFreq.IsEnabled = calcOpts.AoETargets;
+                NUD_AoEDMG.IsEnabled = calcOpts.AoETargets;
+
+                // Abilities to Maintain
+                LoadAbilBools(calcOpts); line = 30;
+                //
+                calcOpts_PropertyChanged(null, null);
+            } catch (Exception ex) {
+                new ErrorBoxDPSWarr("Error in loading the DPSWarr Options Pane",
+                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace, line);
             }
             isLoading = false;
         }
@@ -873,78 +936,6 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
             }*/
         }
-        public void LoadCalculationOptions()
-        {
-            int line = 0; string info = "";
-            isLoading = true; line = 1;
-            try {
-                CalculationOptionsDPSWarr calcOpts; line = 2;
-                if (Character != null && Character.CalculationOptions == null)
-                {
-                    // If it's broke, make a new one with the defaults
-                    Character.CalculationOptions = new CalculationOptionsDPSWarr(); line = 3;
-                    isLoading = true; line = 4;
-                }
-                else if (Character == null) { return; }
-                calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr; line = 5;
-                //CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
-                line = 7; info = calcOpts.TargetArmor.ToString();
-                //CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); line = 8;
-                CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def;
-                CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
-                CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
-                CalculationsDPSWarr.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
-                ItemCache.OnItemsChanged(); line = 13;
-
-                // Boss Selector
-                // Save the new names
-                //CB_BL_FilterType.Text = calcOpts.FilterType;
-                firstload = true;
-                isLoading = false; CB_BL_FilterType_SelectedIndexChanged(null, null); isLoading = true;
-                //CB_BL_Filter.Text = calcOpts.Filter;
-                isLoading = false; CB_BL_Filter_SelectedIndexChanged(null, null); isLoading = true;
-                //CB_BossList.Text = calcOpts.BossName;
-                isLoading = false; CB_BossList_SelectedIndexChanged(null, null); isLoading = true;
-                firstload = false; line = 15;
-
-                // Rotational Changes
-                LB_InBehindPerc.IsEnabled = calcOpts.InBack;
-                CB_InBackPerc.IsEnabled = calcOpts.InBack;
-                LB_Max.IsEnabled = calcOpts.MultipleTargets;
-                LB_MultiTargsPerc.IsEnabled = calcOpts.MultipleTargets;
-                CB_MultiTargsPerc.IsEnabled = calcOpts.MultipleTargets;
-                CB_MultiTargsMax.IsEnabled = calcOpts.MultipleTargets;
-                NUD_MoveFreq.IsEnabled = calcOpts.MovingTargets;
-                NUD_MoveDur.IsEnabled = calcOpts.MovingTargets;
-                NUD_StunFreq.IsEnabled = calcOpts.StunningTargets;
-                NUD_StunDur.IsEnabled = calcOpts.StunningTargets;
-                NUD_FearFreq.IsEnabled = calcOpts.FearingTargets;
-                NUD_FearDur.IsEnabled = calcOpts.FearingTargets;
-                NUD_RootFreq.IsEnabled = calcOpts.RootingTargets;
-                NUD_RootDur.IsEnabled = calcOpts.RootingTargets;
-                NUD_DisarmFreq.IsEnabled = calcOpts.DisarmingTargets;
-                NUD_DisarmDur.IsEnabled = calcOpts.DisarmingTargets;
-                NUD_AoEFreq.IsEnabled = calcOpts.AoETargets;
-                NUD_AoEDMG.IsEnabled = calcOpts.AoETargets;
-
-                // Abilities to Maintain
-                //CK_Flooring.IsChecked = calcOpts.AllowFlooring;
-                LoadAbilBools(calcOpts); line = 30;
-                // Latency
-                //CB_Lag.Value = (int)calcOpts.Lag;
-                //CB_React.Value = (int)calcOpts.React; line = 40;
-                //
-                //calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
-                //RB_StanceFury.IsChecked = calcOpts.FuryStance;
-                //RB_StanceArms.IsChecked = !RB_StanceFury.IsChecked; line = 50;
-                //
-                calcOpts_PropertyChanged(null, null);
-            } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in loading the DPSWarr Options Pane",
-                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace, line);
-            }
-            isLoading = false;
-        }
         // Boss Handler
         private void CB_BL_FilterType_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
             try {
@@ -1123,12 +1114,13 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         // Basics
         private void CB_ArmorBosses_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
             if (!isLoading) {
-                //int targetArmor = int.Parse((string)CB_TargArmor.SelectedItem);
                 if (Character != null && Character.CalculationOptions != null)
                 {
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     //
-                    //calcOpts.TargetArmor = targetArmor;
+                    ComboBoxItem newItem = (ComboBoxItem)(CB_TargArmor.SelectedItem);
+                    string text = (string)newItem.Content;
+                    calcOpts.TargetArmor = float.Parse(text);
                     //CB_BossList.Text = "Custom";
                     //
                     Character.OnCalculationsInvalidated();
@@ -1141,7 +1133,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 {
                     CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
                     //
-                    //calcOpts.TargetLevel = int.Parse(CB_TargLvl.Text);
+                    ComboBoxItem newItem = (ComboBoxItem)(CB_TargLvl.SelectedItem);
+                    string text = (string)newItem.Content;
+                    calcOpts.TargetLevel = int.Parse(text);
                     //CB_BossList.Text = "Custom";
                     //
                     Character.OnCalculationsInvalidated();
@@ -1197,10 +1191,60 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             CalculationOptionsPanelDPSWarr.CheckSize(calcOpts);
             calcOpts_PropertyChanged(null, null);
         }
+        // Hiding Enchants based on Profession
+        private void CB_Prof1_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
+            if (!isLoading) {
+                ComboBoxItem newItem = (ComboBoxItem)(CB_Prof1.SelectedItem);
+                string text = (string)newItem.Content;
+                Character.PrimaryProfession = StringToProfession(text);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void CB_Prof2_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
+            if (!isLoading) {
+                ComboBoxItem newItem = (ComboBoxItem)(CB_Prof2.SelectedItem);
+                string text = (string)newItem.Content;
+                Character.SecondaryProfession = StringToProfession(text);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        public Profession StringToProfession(string s) {
+            Profession                        p = Profession.None;
+            if      (s == "Alchemy"       ) { p = Profession.Alchemy;
+            }else if(s == "Blacksmithing" ) { p = Profession.Blacksmithing;
+            }else if(s == "Enchanting"    ) { p = Profession.Enchanting;
+            }else if(s == "Engineering"   ) { p = Profession.Engineering;
+            }else if(s == "Herbalism"     ) { p = Profession.Herbalism;
+            }else if(s == "Inscription"   ) { p = Profession.Inscription;
+            }else if(s == "Jewelcrafting" ) { p = Profession.Jewelcrafting;
+            }else if(s == "Leatherworking") { p = Profession.Leatherworking;
+            }else if(s == "Mining"        ) { p = Profession.Mining;
+            }else if(s == "Skinning"      ) { p = Profession.Skinning;
+            }else if(s == "Tailoring"     ) { p = Profession.Tailoring; }
+            return p;
+        }
+        public string ProfessionToString(Profession p) {
+            string                                     s = "None";
+            if      (p == Profession.Alchemy       ) { s = "Alchemy";
+            }else if(p == Profession.Blacksmithing ) { s = "Blacksmithing";
+            }else if(p == Profession.Enchanting    ) { s = "Enchanting";
+            }else if(p == Profession.Engineering   ) { s = "Engineering";
+            }else if(p == Profession.Herbalism     ) { s = "Herbalism";
+            }else if(p == Profession.Inscription   ) { s = "Inscription";
+            }else if(p == Profession.Jewelcrafting ) { s = "Jewelcrafting";
+            }else if(p == Profession.Leatherworking) { s = "Leatherworking";
+            }else if(p == Profession.Mining        ) { s = "Mining";
+            }else if(p == Profession.Skinning      ) { s = "Skinning";
+            }else if(p == Profession.Tailoring     ) { s = "Tailoring"; }
+            return s;
+        }
         //
         private void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            // Target Armor/Level
+            if (!isLoading && CB_TargLvl.SelectedIndex   == -1) { CB_TargLvl.SelectedIndex   = 0; }
+            if (!isLoading && CB_TargArmor.SelectedIndex == -1) { CB_TargArmor.SelectedIndex = 0; }
             // Fix the enables
             LB_InBehindPerc.IsEnabled = calcOpts.InBack;
             CB_InBackPerc.IsEnabled = calcOpts.InBack;
@@ -1220,6 +1264,35 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             NUD_DisarmDur.IsEnabled = calcOpts.DisarmingTargets;
             NUD_AoEFreq.IsEnabled = calcOpts.AoETargets;
             NUD_AoEDMG.IsEnabled = calcOpts.AoETargets;
+            // Change abilities if stance changes
+            if (e.PropertyName == "FuryStance") {
+                bool Checked = calcOpts.FuryStance;
+                // Fury
+                CK_M_F_WW.IsChecked = Checked;
+                CK_M_F_BS.IsChecked = Checked;
+                CK_M_F_BT.IsChecked = Checked;
+                // Fury Special
+                CK_M_F_DW.IsChecked = calcOpts.M_DeathWish && Checked;
+                CK_M_F_RK.IsChecked = calcOpts.M_Recklessness && Checked;
+                // Arms
+                CK_M_A_BLS.IsChecked = !Checked;
+                CK_M_A_MS.IsChecked = !Checked;
+                CK_M_A_RD.IsChecked = !Checked;
+                CK_M_A_OP.IsChecked = !Checked;
+                CK_M_A_TB.IsChecked = !Checked;
+                CK_M_A_SD.IsChecked = !Checked;
+                CK_M_A_SL.IsChecked = !Checked;
+                // Arms Special
+                CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && !Checked;
+                CK_M_A_ST.IsChecked = calcOpts.M_ShatteringThrow && !Checked;
+                CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && !Checked;
+            }
+            // Hide Enchants based on Professions
+            CalculationsDPSWarr.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
+            CB_Prof1.IsEnabled = calcOpts.HideProfEnchants;
+            CB_Prof2.IsEnabled = calcOpts.HideProfEnchants;
+            if (!isLoading && CB_Prof1.SelectedIndex == -1) { CB_Prof1.SelectedIndex = 0; }
+            if (!isLoading && CB_Prof2.SelectedIndex == -1) { CB_Prof2.SelectedIndex = 0; }
             //
             Character.OnCalculationsInvalidated();
         }
