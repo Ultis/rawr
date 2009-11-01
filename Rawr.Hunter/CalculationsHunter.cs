@@ -62,18 +62,18 @@ namespace Rawr.Hunter
 					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon", //Hit
 						RedId = glinting[0], YellowId = rigid[0], BlueId = vivid[0], PrismaticId = rigid[0], MetaId = relentless },
 						
-					new GemmingTemplate() { Model = "Hunter", Group = "Rare", Enabled = true, //Max Agi
+					new GemmingTemplate() { Model = "Hunter", Group = "Rare", //Max Agi
 						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Rare", Enabled = true, //Agi/Hit
+					new GemmingTemplate() { Model = "Hunter", Group = "Rare", //Agi/Hit
 						RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Rare", Enabled = true, //Hit
+					new GemmingTemplate() { Model = "Hunter", Group = "Rare", //Hit
 						RedId = glinting[1], YellowId = rigid[1], BlueId = vivid[1], PrismaticId = rigid[1], MetaId = relentless },
 						
-					new GemmingTemplate() { Model = "Hunter", Group = "Epic", //Max Agi
+					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, //Max Agi
 						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Epic", //Agi/Hit
+					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, //Agi/Hit
 						RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Epic", //Hit
+					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, //Hit
 						RedId = glinting[2], YellowId = rigid[2], BlueId = vivid[2], PrismaticId = rigid[2], MetaId = relentless },
 						
 					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler", //Max Agi
