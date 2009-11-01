@@ -167,13 +167,22 @@ namespace Rawr.Hunter
             critSpecialShotsPerSecond = 0;
             critsRatioSum = 0;
 
+            // 31-10-2009 Drizz: Updated to follow 92b
+            // I still don't understand the method of how critSpecialShotsPerSecond is calculated.
+
             for (int i = 0; i < priorities.Length; i++)
             {
                 if (priorities[i] == null) continue;
                 ShotData s = priorities[i];
 
-                if (s.final_freq > 0) specialShotsPerSecond += 1 / s.final_freq;
-                critSpecialShotsPerSecond += s.crits_per_sec;
+                specialShotsPerSecond += 1 / s.final_freq;
+                
+                if (s.final_freq > 0)
+                    if (s.type == Shots.SerpentSting)
+                        critSpecialShotsPerSecond += 1 / (s.final_freq/ s.rotation_cooldown * 3);
+                    else
+                        critSpecialShotsPerSecond += 1 / s.final_freq;
+               
                 critsRatioSum += s.crits_ratio;
             }
         }
@@ -265,7 +274,7 @@ namespace Rawr.Hunter
 
         public void calculateRotationDPS()
         {
-            bool debug_shot_rotation = false;
+            bool debug_shot_rotation = true;
 
             DPS = 0;
 
@@ -674,21 +683,21 @@ namespace Rawr.Hunter
                     steadyBefore    ? "Not being used in rotation:\n  Steady shot has a higher\n  priority" :
                     "(Not in rotation)";
             }
-            /*
-            if (false) // yet another rotation debug block
+         
+            if (true) // yet another rotation debug block
             {
                 ret += "\n-\n";
-                //ret += "start_freq = " + start_freq.ToString("F2") + "\n";
-                //ret += "inbet_freq = " + inbet_freq.ToString("F2") + "\n";
-                //ret += "lal_freq = " + lal_freq.ToString("F2") + "\n";
-                //ret += "final_freq = " + final_freq.ToString("F2") + "\n";
+                ret += "start_freq = " + start_freq.ToString("F2") + "\n";
+                ret += "inbet_freq = " + inbet_freq.ToString("F2") + "\n";
+                ret += "lal_freq = " + lal_freq.ToString("F2") + "\n";
+                ret += "final_freq = " + final_freq.ToString("F2") + "\n";
                 ret += "crits_per_sec = " + crits_per_sec.ToString("P2") + "\n";
                 ret += "crits_ratio = " + crits_ratio.ToString("P2") + "\n";
                 ret += "crits_composite = " + crits_composite.ToString("P2") + "\n";
-                //ret += "ratio = " + ratio.ToString("P2") + "\n";
-                //ret += "time_used = " + time_used.ToString("F2") + "\n";
+                ret += "ratio = " + ratio.ToString("P2") + "\n";
+                ret += "time_used = " + time_used.ToString("F2") + "\n";
             }
-            */
+         
             return ret;
         }
     }

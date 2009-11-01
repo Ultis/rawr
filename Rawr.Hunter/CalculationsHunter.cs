@@ -166,6 +166,8 @@ namespace Rawr.Hunter
                 "Hunter DPS:Proc DPS",
                 "Hunter DPS:Kill Shot low HP gain",
                 "Hunter DPS:Aspect Loss",
+                // 29-10-2009 Drizz: Adding to display the piercing shot effect in stats
+                "Hunter DPS:Piercing Shots DPS",
 
 				"Combined DPS:Hunter DPS",
 				"Combined DPS:Pet DPS",
@@ -948,15 +950,17 @@ namespace Rawr.Hunter
             #endregion
 
             // hits
-            #region August 2998 Hit-related Debuffs
+            #region August 2009 Hit-related Debuffs
 
             double targetDebuffsHit = 0; // Buffs!F77
 
             double targetDebuffsCrit = statsBuffs.PhysicalCrit; // Buffs!L77
 
             calculatedStats.targetDebuffsCrit = targetDebuffsCrit;
-
+            
             #endregion
+
+
             #region August 2009 Hit Chance
 
             // hit base
@@ -1094,6 +1098,17 @@ namespace Rawr.Hunter
                 double deathsChoiceUptime = deathsChoiceTimeBetween > 0 ? 15 / deathsChoiceTimeBetween : 0; // T141
                 agilityFromProcs += 450 * deathsChoiceUptime;
             }
+
+            // *************************************************************************
+            // 29-10-2009 Drizz: Adding the Heroic Version of Death's Choice and Verdict.
+            if (IsWearingTrinket(character, 47131) || IsWearingTrinket(character, 47464))
+            {
+                double deathsChoiceTimePer = totalShotsPerSecond > 0 ? 1 / totalShotsPerSecond / hitChance : 0; // T138
+                double deathsChoiceTimeBetween = deathsChoiceTimePer > 0 ? 1 / 0.35 * deathsChoiceTimePer + 45 : 0; // T139
+                double deathsChoiceUptime = deathsChoiceTimeBetween > 0 ? 15 / deathsChoiceTimeBetween : 0; // T141
+                agilityFromProcs += 510 * deathsChoiceUptime;
+            }
+            // *************************************************************************
 
             // Agility
             double agilityMultiplier = statsBaseGear.BonusAgilityMultiplier + statsBuffs.BonusAgilityMultiplier;
@@ -1243,6 +1258,9 @@ namespace Rawr.Hunter
             double explosiveShotCrit = critHitPercent + glyphOfExplosiveShotCritModifier + survivalInstinctsCritModifier;
             calculatedStats.explosiveShot.critChance = explosiveShotCrit;
 
+            // 29-10-2009 Drizz: Adding the critchance to SerpentSting
+            calculatedStats.serpentSting.critChance = critHitPercent;
+
             calculatedStats.chimeraShot.critChance = critHitPercent;
 
             double arcaneShotCrit = critHitPercent + survivalInstinctsCritModifier;
@@ -1318,6 +1336,9 @@ namespace Rawr.Hunter
             calculatedStats.targetDebuffsNature = 1 + targetDebuffsNature;
             calculatedStats.targetDebuffsPetDamage = 1 + targetDebuffsPetDamage;
 
+            //29-10-2009 Drizz: For PiercingShots
+            double targetDebuffBleed = statsBuffs.BonusBleedDamageMultiplier;
+            
             #endregion
 
             // mana consumption
@@ -1423,6 +1444,9 @@ namespace Rawr.Hunter
             double mp5FromBuffs = statsBaseGear.Mp5 + statsBuffs.Mp5;
             calculatedStats.manaRegenGearBuffs = mp5FromBuffs / 5;
 
+            //29-10-2009 Drizz: TODO Probably missing T7 Viper bonus
+
+
             // Viper Regen if viper is up 100%
             calculatedStats.manaRegenConstantViper = 0;
             if (options.selectedAspect == Aspect.Viper)
@@ -1450,6 +1474,7 @@ namespace Rawr.Hunter
             {
                 if (calculatedStats.chimeraShot.freq > 0)
                 {
+                    //29-10-2009 Drizz: Comment, 3092 is fetched from the Viper Sting Table on the SpellValues sheet (v92b). The 0.6 comes from ChimeraShotEffect.
                     calculatedStats.manaRegenChimeraViperProc = 0.6 * 3092 / calculatedStats.chimeraShot.freq;
                 }
             }
@@ -1503,6 +1528,8 @@ namespace Rawr.Hunter
             #region August 2009 Aspect Usage
 
             double manaRegenTier7ViperBonus = character.ActiveBuffsContains("Cryptstalker Battlegear 4 Piece Bonus") ? 1.2 : 1;
+            double tier82SetAdjust = character.ActiveBuffsContains("Scourgestalker Battlegear 2 Piece Bonus") ? 1.1 : 1;
+
 
             double glpyhOfAspectOfTheViperBonus = character.HunterTalents.GlyphOfAspectOfTheViper ? 1.1 : 1;
 
@@ -1683,6 +1710,13 @@ namespace Rawr.Hunter
 
                     
             calculatedStats.apFromProc = 0;
+
+            // 29-10-2009 Drizz : Adding Banner of Victory
+            if (IsWearingTrinket(character, 47214))
+            {
+                calculatedStats.apFromProc += 1008 * CalcTrinketUptime(10, 45, 0.35, totalShotsPerSecond * hitChance);
+            }
+            
 
             // Mirror of Truth
             if (IsWearingTrinket(character, 40684))
@@ -1881,7 +1915,7 @@ namespace Rawr.Hunter
             double improvedStingsDamageAdjust = 1 + 0.1 * character.HunterTalents.ImprovedStings;
 
             //Steady Shot Glyph
-            double glyphOfSteadyShotDamageAdjust = character.HunterTalents.GlyphOfSteadyShot ? 1.1 : 1;
+            double glyphOfSteadyShotDamageAdjust = Math.Max(character.HunterTalents.GlyphOfSteadyShot ? 1.1 : 1,character.HunterTalents.MarkedForDeath>0 ? 1.1:1);
 
             //Improved Arcane Shot 
             double improvedArcaneShotDamageAdjust = 1 + 0.05 * character.HunterTalents.ImprovedArcaneShot;
@@ -1918,7 +1952,7 @@ namespace Rawr.Hunter
             double mortalShotsCritDamage = 0.06 * character.HunterTalents.MortalShots;
 
             //CritDamageMetaGems
-            double metaGemCritDamage = 1 + (statsBaseGear.BonusCritMultiplier * 2);
+            double metaGemCritDamage = 1.0 + (statsBaseGear.BonusCritMultiplier * 2.0);
 
             //Marked For Death
             double markedForDeathCritDamage = 0.02 * character.HunterTalents.MarkedForDeath;
@@ -1984,8 +2018,8 @@ namespace Rawr.Hunter
                                                 1,
                                                 wildQuiverDamageAdjust
                                               );
-
-                calculatedStats.WildQuiverDPS = wildQuiverDamageReal / wildQuiverProcFrequency;
+                //29-10-2009 Drizz: Added the ViperUpTIme penalty
+                calculatedStats.WildQuiverDPS = (wildQuiverDamageReal / wildQuiverProcFrequency)*(1-viperDamagePenalty);
             }
 
             #endregion
@@ -2006,10 +2040,14 @@ namespace Rawr.Hunter
             double steadyShotDamageAdjust = talentDamageAdjust
                                             * targetPhysicalDebuffsDamageAdjust
                                             * sniperTrainingDamageAdjust
-                                            * glyphOfSteadyShotDamageAdjust
-                                            * armorReductionDamageAdjust;
-
-            double steadyShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
+                                            * glyphOfSteadyShotDamageAdjust;
+    
+            // ****************************************************************************
+            // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
+            // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
+            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
+            // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
+            double steadyShotCritAdjust = metaGemCritDamage+ 0.5*mortalShotsCritDamage*(1 + metaGemCritDamage) + markedForDeathCritDamage;
 
             double steadyShotDamageReal = CalcEffectiveDamage(
                                             steadyShotDamageNormal,
@@ -2019,7 +2057,16 @@ namespace Rawr.Hunter
                                             steadyShotDamageAdjust
                                           );
 
-            calculatedStats.steadyShot.damage = steadyShotDamageReal;
+            steadyShotDamageReal *= armorReductionDamageAdjust;
+            // ****************************************************************************
+
+            //29-10-2009 Drizz: Added for PiercingShots
+            double steadyShotAvgNonCritDamage = steadyShotDamageNormal * steadyShotDamageAdjust*armorReductionDamageAdjust;
+            double steadyShotAvgCritDamage = steadyShotAvgNonCritDamage * (1 + steadyShotCritAdjust);
+            double steadyShotPiercingShots = (character.HunterTalents.PiercingShots * 0.1)*steadyShotCritChance*steadyShotAvgCritDamage;
+
+            //Drizz: Add the piercingShots effect
+            calculatedStats.steadyShot.damage = steadyShotDamageReal + steadyShotPiercingShots;
 
             #endregion
             #region August 2009 Serpent Sting
@@ -2029,10 +2076,19 @@ namespace Rawr.Hunter
 
             // T9 2-piece bonus
             double serpentStingT9CritAdjust = 1;
-            if (character.ActiveBuffsContains("Windrunner's Pursuit 2 Piece Bonus"))
+            double serpentStingInterimBonus;
+            double serpentStingCriticalHitDamage;
+            // 29-10-2009 Drizz: The name in the buff have not switched from Battlegear (i.e. the name is of the Horde buff)
+            // if (character.ActiveBuffsContains("Windrunner's Pursuit 2 Piece Bonus"))
+            if (character.ActiveBuffsContains("Windrunner's Battlegear 2 Piece Bonus"))
             {
-                serpentStingT9CritAdjust = 1.0 + (0.5 * metaGemCritDamage) * critHitPercent;
+                // Drizz : aligned with v92b
+                serpentStingInterimBonus = 0.5 + 0.5 * mortalShotsCritDamage + 0.5;
+                serpentStingCriticalHitDamage = serpentStingInterimBonus*(1+(1+0.5)*(metaGemCritDamage-1)/2+(1+0.5)*(metaGemCritDamage-1)/2);
+                serpentStingT9CritAdjust = 1+ critHitPercent*serpentStingCriticalHitDamage;
             }
+
+            double serpentStingCritAdjustment = serpentStingT9CritAdjust;
 
             // damage_adjust = (sting_talent_adjusts ~ noxious stings) * improved_stings * improved_tracking
             //                  + partial_resists * tier-8_2-piece_bonus * target_nature_debuffs * 100%_noxious_stings
@@ -2045,7 +2101,7 @@ namespace Rawr.Hunter
                                                 * improvedStingsDamageAdjust
                                                 * improvedTrackingDamageAdjust
                                                 * partialResistDamageAdjust
-                                                * serpentStingT9CritAdjust
+                                                * serpentStingCritAdjustment
                                                 * (1 + targetDebuffsNature);
 
             // T8 2-piece bonus
@@ -2060,17 +2116,21 @@ namespace Rawr.Hunter
 
             #endregion
             #region August 2009 Aimed Shot
+            // ****************************************************************************
+            // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
+            // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
 
             // base_damage = normalized_shot + 408 (but ammo is not normalized!)
             double aimedShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + statsBaseGear.WeaponDamage + damageFromRAPNormalized) + 408;
 
-            // crit_damage = 1 + mortal_shots + gem_crit + marked_for_death
-            double aimedShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
+            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
+            // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
+            double aimedShotCritAdjust = metaGemCritDamage + 0.5 * mortalShotsCritDamage * (1 + metaGemCritDamage) + markedForDeathCritDamage;
 
             // damage_adjust = talent_adjust * barrage_adjust * target_debuff_adjust * sniper_training_adjust * improved_ss_adjust
             double aimedShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
-                                            * sniperTrainingDamageAdjust * ISSAimedShotDamageAdjust
-                                            * armorReductionDamageAdjust;
+                                            * sniperTrainingDamageAdjust * ISSAimedShotDamageAdjust;
+
 
             double aimedShotDamageReal = CalcEffectiveDamage(
                                             aimedShotDamageNormal,
@@ -2080,7 +2140,15 @@ namespace Rawr.Hunter
                                             aimedShotDamageAdjust
                                           );
 
-            calculatedStats.aimedShot.damage = aimedShotDamageReal;
+            aimedShotDamageReal *= armorReductionDamageAdjust;
+
+            //Drizz: added for piercing shots
+            double aimedShotAvgNonCritDamage = aimedShotDamageNormal * aimedShotDamageAdjust*armorReductionDamageAdjust;
+            double aimedShotAvgCritDamage = aimedShotAvgNonCritDamage * (1 + aimedShotCritAdjust);
+            double aimedShotPiercingShots = (character.HunterTalents.PiercingShots * 0.1) * aimedShotCrit * aimedShotAvgCritDamage;
+
+            //Drizz: Trying out...
+            calculatedStats.aimedShot.damage = aimedShotDamageReal+ aimedShotPiercingShots;
 
             #endregion
             #region August 2009 Explosive Shot
@@ -2111,10 +2179,18 @@ namespace Rawr.Hunter
             #region August 2009 Chimera Shot
 
             // base_damage = normalized_autoshot * 125%
-            double chimeraShotDamageNormal = autoShotDamageNormalized * 1.25;
+            // double chimeraShotDamageNormal = autoShotDamageNormalized * 1.25;
+            // Drizz: Making Changes
+            double chimeraShotDamageNormal = (rangedAmmoDamage + (RAP / 14 * 2.8) + rangedWeaponDamage)*1.25;
+            
+            // Drizz: In the spreadsheet there is also added a row for + Weapon Damage Gear... not included here.
 
-            // crit for 'specials'
-            double chimeraShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
+            // Drizz: 
+            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
+            // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
+            //double chimeraShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
+
+            double chimeraShotCritAdjust = metaGemCritDamage + 0.5 * mortalShotsCritDamage * (1 + metaGemCritDamage) + markedForDeathCritDamage;
 
             // damage_adjust = talent_adjust * nature_debuffs * ISS_cs_bonus * partial_resist
             double chimeraShotDamageAdjust = talentDamageAdjust * ISSChimeraShotDamageAdjust
@@ -2128,30 +2204,53 @@ namespace Rawr.Hunter
                                                 chimeraShotDamageAdjust
                                            );
 
+            //Drizz: added for piercing shots
+            double chimeraShotAvgNonCritDamage = chimeraShotDamageNormal * talentDamageAdjust * ISSChimeraShotDamageAdjust * (1+ targetDebuffsNature);
+            double chimeraShotAvgCritDamage = chimeraShotAvgNonCritDamage * (1 + chimeraShotCritAdjust);
+            double chimeraShotPiercingShots = (character.HunterTalents.PiercingShots * 0.1) * critHitPercent * chimeraShotAvgCritDamage;
+
+            calculatedStats.chimeraShot.damage = chimeraShotDamageReal + chimeraShotPiercingShots;
+
             // calculate damage from serpent sting
-            double chimeraShotSerpentDamage = serpentStingDamageReal * 0.4;
-            double chimeraShotSerpentCritAdjust = (1 + mortalShotsCritDamage) * metaGemCritDamage;
-            double chimeraShotSerpentDamageAdjust = talentDamageAdjust * (1 + targetDebuffsNature);
+            // Drizz: Adding
+            double chimeraShotSerpentMultiplier = improvedStingsDamageAdjust
+                                                  * improvedTrackingDamageAdjust
+                                                  * noxiousStingsDamageAdjust
+                                                  * partialResistDamageAdjust
+                                                  * (1 + targetDebuffsNature)
+                                                  *  tier82SetAdjust
+                                                  * (focusedFireDamageAdjust
+                                                  *  beastWithinDamageAdjust
+                                                  * sancRetributionAuraDamageAdjust
+                                                  * blackArrowAuraDamageAdjust
+                                                  * ferociousInspirationArcaneDamageAdjust);
 
-            double chimeraShotSerpentDamageReal = CalcEffectiveDamage(
-                                                    chimeraShotSerpentDamage,
-                                                    hitChance,
-                                                    critHitPercent,
-                                                    chimeraShotSerpentCritAdjust,
-                                                    chimeraShotSerpentDamageAdjust
-                                                 );
+            double chimeraShotSerpentStingDamage = Math.Round(serpentStingDamageBase*chimeraShotSerpentMultiplier/5,1)*serpentStingTicks ;
 
-            double chimeraShotDamageTotal = chimeraShotDamageReal + chimeraShotSerpentDamageReal;
+            double chimeraShotEffect;
+            if (calculatedStats.serpentSting.used)
+                chimeraShotEffect = chimeraShotSerpentStingDamage * 0.4;
+            else
+                chimeraShotEffect = 0;
 
-            calculatedStats.chimeraShot.damage = chimeraShotDamageTotal;
+            // Drizz: Updates
+            double chimeraShotSerpentCritAdjust = metaGemCritDamage + (0.5 * metaGemCritDamage + 0.5) * mortalShotsCritDamage;
+            double chimeraShotSerpentDamageAdjust = hitChance*(1+critHitPercent*chimeraShotSerpentCritAdjust);
 
+            double chimeraShotSerpentTotalAdjust = chimeraShotSerpentDamageAdjust* talentDamageAdjust* (1 + targetDebuffsNature);
+
+            calculatedStats.chimeraShot.damage += chimeraShotEffect* chimeraShotSerpentTotalAdjust;
             #endregion
             #region August 2009 Arcane Shot
 
             // base_damage = 492 + weapon_damage_gear + (RAP * 15%)
             double arcaneShotDamageNormal = 492 + statsBaseGear.WeaponDamage + (RAP * 0.15);
 
-            double arcaneShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
+            // Drizz:
+            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
+            // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
+            double arcaneShotCritAdjust = metaGemCritDamage + 0.5 * mortalShotsCritDamage * (1 + metaGemCritDamage) + markedForDeathCritDamage;
+
             double arcaneShotDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * improvedArcaneShotDamageAdjust
                                             * ferociousInspirationArcaneDamageAdjust * ISSArcaneShotDamageAdjust; // missing arcane_debuffs!
 
@@ -2164,7 +2263,6 @@ namespace Rawr.Hunter
                                           );
 
             calculatedStats.arcaneShot.damage = arcaneShotDamageReal;
-            //calculatedStats.arcaneShot.Dump("Arcane Shot");
 
             #endregion
             #region August 2009 Multi Shot
@@ -2204,10 +2302,17 @@ namespace Rawr.Hunter
 
             #endregion
             #region August 2009 Kill Shot
-
+            // ****************************************************************************
+            // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
+            // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
+            
             double killShotDamageNormal = (autoShotDamage * 2) + statsBaseGear.WeaponDamage + 650 + (RAP * 0.4);
-            double killShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
-            double killShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * armorReductionDamageAdjust;
+
+            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
+            // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
+            double killShotCritAdjust = metaGemCritDamage + 0.5 * mortalShotsCritDamage * (1 + metaGemCritDamage) + markedForDeathCritDamage;
+
+            double killShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust;
 
             double killShotDamageReal = CalcEffectiveDamage(
                                             killShotDamageNormal,
@@ -2216,6 +2321,8 @@ namespace Rawr.Hunter
                                             killShotCritAdjust,
                                             killShotDamageAdjust
                                         );
+
+            killShotDamageReal *= armorReductionDamageAdjust;
 
             calculatedStats.killShot.damage = killShotDamageReal;
 
@@ -2250,11 +2357,56 @@ namespace Rawr.Hunter
 
             #endregion
             #region August 2009 Rapid Fire
-
+            
             calculatedStats.rapidFire.damage = 0;
 
             #endregion
+            #region October 2009 Piercing Shots
+            //Drizz: Added for PiercingShots
+            
+            calculatedStats.PiercingShotsDPS = 0;
+            calculatedStats.PiercingShotsDPSSteadyShot = 0;
+            calculatedStats.PiercingShotsDPSAimedShot = 0;
+            calculatedStats.PiercingShotsDPSChimeraShot = 0;
 
+            if (character.HunterTalents.PiercingShots > 0)
+            {
+                double piercingShotsDamageDone = character.HunterTalents.PiercingShots * 0.1;
+                double piercingShotsMangleOnTarget = targetDebuffBleed;
+                double piercingShotsTotalModifier = piercingShotsDamageDone * piercingShotsMangleOnTarget;
+                double piercingShotsSteadyShotFrequency = calculatedStats.steadyShot.freq;
+                double piercingShotsSteadyShotDamageAdded = steadyShotPiercingShots;
+
+                double piercingShotsAimedShotFrequency = calculatedStats.aimedShot.freq;
+                double piercingShotsAimedShotDamageAdded = aimedShotPiercingShots;
+                double piercingShotsChimeraShotFrequency = calculatedStats.chimeraShot.freq;
+                double piercingShotsChimeraShotDamageAdded = chimeraShotPiercingShots;
+
+                if (piercingShotsSteadyShotFrequency > 0)
+                {
+                    //calculatedStats.PiercingShotsDPSSteadyShot = piercingShotsSteadyShotDamageAdded / piercingShotsSteadyShotFrequency;
+                    calculatedStats.PiercingShotsDPS += piercingShotsSteadyShotDamageAdded / piercingShotsSteadyShotFrequency;
+                }
+                if (piercingShotsAimedShotFrequency > 0)
+                {
+                    //calculatedStats.PiercingShotsDPSAimedShot = piercingShotsAimedShotDamageAdded / piercingShotsAimedShotFrequency;
+                    calculatedStats.PiercingShotsDPS += piercingShotsAimedShotDamageAdded / piercingShotsAimedShotFrequency;
+                }
+                if (piercingShotsChimeraShotFrequency > 0)
+                {
+                    //calculatedStats.PiercingShotsDPSChimeraShot = piercingShotsChimeraShotDamageAdded / piercingShotsChimeraShotFrequency;
+                    calculatedStats.PiercingShotsDPS += piercingShotsChimeraShotDamageAdded / piercingShotsChimeraShotFrequency;
+                }
+
+            // **************************************************************************
+            // 29-10-2009 Drizz: The below is used to make easier comparisons to the spreadsheet.
+                calculatedStats.PiercingShotsDPSSteadyShot = piercingShotsSteadyShotDamageAdded;
+                calculatedStats.PiercingShotsDPSAimedShot = piercingShotsAimedShotDamageAdded;
+                calculatedStats.PiercingShotsDPSChimeraShot = piercingShotsChimeraShotDamageAdded;
+            //***************************************************************************
+            }
+
+            #endregion
 
             #region August 2009 On-Proc DPS
 

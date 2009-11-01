@@ -167,6 +167,8 @@
             this.label82 = new System.Windows.Forms.Label();
             this.cmbManaPotion = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownCDCutOff = new System.Windows.Forms.NumericUpDown();
+            this.label89 = new System.Windows.Forms.Label();
             this.numericBossHP = new System.Windows.Forms.NumericUpDown();
             this.label81 = new System.Windows.Forms.Label();
             this.numericTime35 = new System.Windows.Forms.NumericUpDown();
@@ -229,6 +231,7 @@
             this.tabPage1.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCDCutOff)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBossHP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTime35)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTime20)).BeginInit();
@@ -1571,7 +1574,7 @@
             this.groupBox4.Controls.Add(this.cmbAspect);
             this.groupBox4.Controls.Add(this.label82);
             this.groupBox4.Controls.Add(this.cmbManaPotion);
-            this.groupBox4.Location = new System.Drawing.Point(9, 255);
+            this.groupBox4.Location = new System.Drawing.Point(9, 283);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(277, 267);
             this.groupBox4.TabIndex = 19;
@@ -1719,6 +1722,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.numericUpDownCDCutOff);
+            this.groupBox3.Controls.Add(this.label89);
             this.groupBox3.Controls.Add(this.numericBossHP);
             this.groupBox3.Controls.Add(this.label81);
             this.groupBox3.Controls.Add(this.numericTime35);
@@ -1736,10 +1741,37 @@
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Location = new System.Drawing.Point(9, 11);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(277, 238);
+            this.groupBox3.Size = new System.Drawing.Size(277, 272);
             this.groupBox3.TabIndex = 18;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Fight Settings";
+            // 
+            // numericUpDownCDCutOff
+            // 
+            this.numericUpDownCDCutOff.Location = new System.Drawing.Point(164, 129);
+            this.numericUpDownCDCutOff.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.numericUpDownCDCutOff.Name = "numericUpDownCDCutOff";
+            this.numericUpDownCDCutOff.Size = new System.Drawing.Size(96, 20);
+            this.numericUpDownCDCutOff.TabIndex = 34;
+            this.numericUpDownCDCutOff.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            this.numericUpDownCDCutOff.ValueChanged += new System.EventHandler(this.numericUpDownCDCutOff_ValueChanged);
+            // 
+            // label89
+            // 
+            this.label89.AutoSize = true;
+            this.label89.Location = new System.Drawing.Point(17, 131);
+            this.label89.Name = "label89";
+            this.label89.Size = new System.Drawing.Size(67, 13);
+            this.label89.TabIndex = 33;
+            this.label89.Text = "CDCutoff (s):";
             // 
             // numericBossHP
             // 
@@ -1748,7 +1780,7 @@
             0,
             0,
             0});
-            this.numericBossHP.Location = new System.Drawing.Point(163, 209);
+            this.numericBossHP.Location = new System.Drawing.Point(163, 232);
             this.numericBossHP.Minimum = new decimal(new int[] {
             1,
             0,
@@ -1767,7 +1799,7 @@
             // label81
             // 
             this.label81.AutoSize = true;
-            this.label81.Location = new System.Drawing.Point(15, 211);
+            this.label81.Location = new System.Drawing.Point(15, 234);
             this.label81.Name = "label81";
             this.label81.Size = new System.Drawing.Size(96, 13);
             this.label81.TabIndex = 31;
@@ -1780,7 +1812,7 @@
             0,
             0,
             0});
-            this.numericTime35.Location = new System.Drawing.Point(163, 183);
+            this.numericTime35.Location = new System.Drawing.Point(163, 206);
             this.numericTime35.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -1799,7 +1831,7 @@
             // label80
             // 
             this.label80.AutoSize = true;
-            this.label80.Location = new System.Drawing.Point(15, 185);
+            this.label80.Location = new System.Drawing.Point(15, 208);
             this.label80.Name = "label80";
             this.label80.Size = new System.Drawing.Size(108, 13);
             this.label80.TabIndex = 29;
@@ -1812,7 +1844,7 @@
             0,
             0,
             0});
-            this.numericTime20.Location = new System.Drawing.Point(163, 157);
+            this.numericTime20.Location = new System.Drawing.Point(163, 180);
             this.numericTime20.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -1831,7 +1863,7 @@
             // label79
             // 
             this.label79.AutoSize = true;
-            this.label79.Location = new System.Drawing.Point(15, 159);
+            this.label79.Location = new System.Drawing.Point(15, 182);
             this.label79.Name = "label79";
             this.label79.Size = new System.Drawing.Size(102, 13);
             this.label79.TabIndex = 27;
@@ -1844,7 +1876,7 @@
             0,
             0,
             0});
-            this.duration.Location = new System.Drawing.Point(163, 131);
+            this.duration.Location = new System.Drawing.Point(163, 154);
             this.duration.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -1863,7 +1895,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(15, 133);
+            this.label25.Location = new System.Drawing.Point(15, 156);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(110, 13);
             this.label25.TabIndex = 25;
@@ -1933,11 +1965,11 @@
             this.trackBarTargetArmor.Maximum = 20000;
             this.trackBarTargetArmor.Minimum = 6000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
-            this.trackBarTargetArmor.Size = new System.Drawing.Size(131, 42);
+            this.trackBarTargetArmor.Size = new System.Drawing.Size(131, 45);
             this.trackBarTargetArmor.SmallChange = 100;
             this.trackBarTargetArmor.TabIndex = 20;
             this.trackBarTargetArmor.TickFrequency = 2000;
-            this.trackBarTargetArmor.Value = 13100;
+            this.trackBarTargetArmor.Value = 10643;
             this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.trackBarTargetArmor_Scroll);
             // 
             // lblTargetArmorValue
@@ -2408,6 +2440,7 @@
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCDCutOff)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBossHP)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTime35)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTime20)).EndInit();
@@ -2620,5 +2653,7 @@
         private System.Windows.Forms.Label label87;
         private System.Windows.Forms.CheckBox chkUseRotation;
         private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.NumericUpDown numericUpDownCDCutOff;
+        private System.Windows.Forms.Label label89;
     }
 }

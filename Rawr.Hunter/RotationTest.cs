@@ -253,7 +253,10 @@ namespace Rawr.Hunter
                         // If we're not interleaving other shots with L&L procs reset ES cooldown and advance timer by 0.5 seconds (to miss the last tick)
                         else if (!InterleaveLAL && LALShots < 3 && LALShots > 0 && s.type == Shots.ExplosiveShot)
                         {
-                            currentTime += 0.5;
+                            // ******************************************************************************
+                            // 29-10-2009 - Drizz: Commenting out this line to align with Spreadsheet (v92b)
+                            // currentTime += 0.5;
+                            // ******************************************************************************
                             s.time_until_off_cd = 0;
                             haveShot = true;
                             thisShot = s.type;
@@ -279,6 +282,13 @@ namespace Rawr.Hunter
                             {
                                 // do nothing if we don't want to prioritise Aimed/Arcane or Multi-Shot
                             }
+                        // ************************************************************************
+                        //29-10-2009 Drizz : Added one else if check to align with Spreadsheet v92b
+                            else if (s.type==Shots.Readiness && RFCD < (currentTime+CDCutoff+waitTime))
+                            {
+                                // Do nothing if we Rapid Fire isn't soon enough of CD
+                            }
+                        // ************************************************************************
                             else if (s.check_gcd)
                             {
                                 bool result = true;
@@ -477,6 +487,8 @@ namespace Rawr.Hunter
 
                     // Note down shot current time and shot used
                     if (options.debugShotRotation)
+                    // Drizz: Enable for getting printout of Rotation.
+                    // if(true)
                     {
                         // currentTime
                         // thisShot

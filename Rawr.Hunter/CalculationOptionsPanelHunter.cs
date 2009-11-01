@@ -112,6 +112,9 @@ namespace Rawr.Hunter
             numericTime35.Value = options.timeSpent35To20;
             numericBossHP.Value = (decimal)Math.Round(100 * options.bossHPPercentage);
 
+            // Drizz: Added option for CDCutoff
+            numericUpDownCDCutOff.Value = options.cooldownCutoff;
+
             numericTime20.Maximum = duration.Value;
             numericTime35.Maximum = duration.Value;
 
@@ -476,6 +479,15 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
+        private void numericUpDownCDCutOff_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.cooldownCutoff = (int)numericUpDownCDCutOff.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         
         private void duration_ValueChanged(object sender, EventArgs e)
         {

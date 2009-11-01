@@ -300,7 +300,8 @@ namespace Rawr.Hunter
 
         public void CalculateDPS()
         {
-            dps = frequency > 0 ? damage / frequency : 0;
+            
+            dps =  frequency > 0 ? damage / frequency : 0;
             kc_dps = can_crit ? dps : 0;
         }
     }

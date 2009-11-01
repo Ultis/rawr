@@ -54,7 +54,11 @@ namespace Rawr.Hunter
 
         // rotation test
         public bool useRotationTest = true;
-        public int cooldownCutoff = 15; // not editable (not sure what this does)
+        // ************************************************************************************
+        // 29-10-2009: Drizz: Updated this to 30s from 15(being the default in spreadsheet v92b
+        // This value is also able to be updated in the spreadsheet... i.e. should be added to the optionspage.
+        public int cooldownCutoff = 30; // not editable (not sure what this does)
+        // ************************************************************************************
         public bool randomizeProcs = false; // not editable
         public double waitForCooldown = 0.8; // not editable
         public bool interleaveLAL = false; // not editable

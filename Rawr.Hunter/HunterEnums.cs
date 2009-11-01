@@ -195,20 +195,26 @@ namespace Rawr.Hunter
 
     public static class HunterRatings //TODO: Why is this here? Use Rawr.Base's Rawr.StatConversion class for this.
     {
+        // Drizz: Verified with spreadsheet (92b)
         public static double HIT_RATING_PER_PERCENT = 32.78998947;
-
         public static double AGILITY_PER_CRIT = 83.33; // was previously 83.33333333 - rounded down for spreadsheet
-        public static double CRIT_RATING_PER_PERCENT = 45.905985258; // from spreadsheet. we were using 45.90598679                                                       
+        
+        // Drizz: Updated with new values (92b)
+        public static double CRIT_RATING_PER_PERCENT = 45.90598526; // OLD Comment: from spreadsheet. we were using 45.90598679                                                       
+        public static double ARP_RATING_PER_PERCENT = 13.9957; // OLD Comment: from spreadsheet (was 15.39529991)
         public static double HASTE_RATING_PER_PERCENT = 32.78998947; // matches spreadsheet
-        public static double ARP_RATING_PER_PERCENT = 12.3162; // from spreadsheet (was 15.39529991)
-        public static double INTELLECT_PER_SPELL_CRIT = 166.667; // from spreadsheet 
-
         public static double BASE_CRIT_PERCENT = -.0153; // Check
-
+        
+        // Drizz: Yet to verify (Against 92b)        
+        public static double INTELLECT_PER_SPELL_CRIT = 166.667; // from spreadsheet 
+        
         public static double BASE_MISS_PERCENT = 0.05;
         public static double CHAR_LEVEL = 80.0;
         
         public static double HUNTERS_MARK = 500.0;
+
+        // Drizz: Added
+        public static double PET_CRITDAMAGE = 2; // Percent
     }  
 
 }

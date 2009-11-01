@@ -59,14 +59,15 @@ namespace Rawr.Hunter
 
             #region Focus Regen
 
-            double focusRegenBase = 5;
-            double focusRegenBestialDiscipline = focusRegenBase * 0.5 * character.HunterTalents.BestialDiscipline;            
+            // 31-10-2009 Drizz: Region updated to align with spreadsheet v92b
+            double focusRegenBasePer4 = 20;
+            double focusRegenBestialDiscipline = focusRegenBasePer4 * 0.5 * character.HunterTalents.BestialDiscipline;            
 
-            double critHitsPerSecond = calculatedStats.shotsPerSecondCritting * calculatedStats.priorityRotation.critsCompositeSum;
+            double critHitsPer4 = calculatedStats.shotsPerSecondCritting * calculatedStats.priorityRotation.critsCompositeSum*4;
             double goForTheThroatPerCrit = 25 * character.HunterTalents.GoForTheThroat;
-            double focusRegenGoForTheThroat = critHitsPerSecond * goForTheThroatPerCrit;
+            double focusRegenGoForTheThroat = critHitsPer4 * goForTheThroatPerCrit;
 
-            double focusRegenPerSecond = focusRegenBase + focusRegenBestialDiscipline + focusRegenGoForTheThroat;
+            double focusRegenPerSecond = (focusRegenBasePer4 + focusRegenBestialDiscipline + focusRegenGoForTheThroat)/4;
 
             // owl's focus
             double owlsFocusEffect = (options.petOwlsFocus > 0) ? owlsFocusEffect = 1 / (1 / (options.petOwlsFocus * 0.15) + 1) : 0;
@@ -384,6 +385,13 @@ namespace Rawr.Hunter
             }
 
             #endregion
+
+
+            #region Target Armor Effect
+            //31-10-2009 Drizz: added Armor effect
+            double petEffectiveArmor = options.TargetArmor * (1 - calculatedStats.petArmorDebuffs);
+            calculatedStats.petTargetArmorReduction = petEffectiveArmor/(petEffectiveArmor - 22167.5 + (467.5*80));
+            #endregion
         }
 
         public void calculateDPS()
@@ -406,7 +414,9 @@ namespace Rawr.Hunter
 
             // Tier 9 4-pice bonus is complex
             calculatedStats.petAPFromTier9 = 0;
-            if (character.ActiveBuffsContains("Windrunner's Pursuit 4 Piece Bonus"))
+
+            // 31-10-2009 Drizz: Name in buffs seems to be Battlegear instead of Pursuit (i.e. not Alliance just Horde)
+            if (character.ActiveBuffsContains("Windrunner's Battlegear 4 Piece Bonus"))
             {
                 double tier9BonusTimePetShot = 0.9;
                 double tier9BonusTimeBetween = tier9BonusTimePetShot > 0 ? 1 / 0.15 * tier9BonusTimePetShot + 45 : 0;
@@ -750,6 +760,7 @@ namespace Rawr.Hunter
                 {
                     double focusDumpDamageAverage = ((118 + 168) / 2) + damageBonusMeleeFromAP;
                     S.damage = focusDumpDamageAverage * damageAdjustSpecials * damageAdjustMitigation;
+
                 }
 
                 if (S.skillData.type == PetSkillType.SpecialMelee)
@@ -881,7 +892,9 @@ namespace Rawr.Hunter
                 double killCommandDPSOverCooldown = killCommandCooldown > 0 ? killCommandBonusDamage / killCommandCooldown : 0;
 
                 double killCommandFocusedFireCritBonus = character.HunterTalents.FocusedFire * 0.1;
-                double killCommandAdjustedBonus = killCommandFocusedFireCritBonus * damageAdjustDodge * damageAdjustMitigation;
+                // 31-10-2009 Drizz: Remade the AdjustedBonus Calculation from the one below
+                // double killCommandAdjustedBonus = killCommandFocusedFireCritBonus *  damageAdjustDodge * damageAdjustMitigation;
+                double killCommandAdjustedBonus = killCommandFocusedFireCritBonus * (HunterRatings.PET_CRITDAMAGE - 1 ) * (1 - calculatedStats.petTargetArmorReduction);
 
                 killCommandDPS = killCommandDPSOverCooldown * (1 + killCommandAdjustedBonus);
             }

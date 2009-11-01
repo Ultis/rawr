@@ -15,6 +15,11 @@ namespace Rawr.Hunter
         private double _autoshotDPS;
         private double _wildQuiverDPS;
         private double _customDPS;
+        //Drizz: Added
+        private double _piercingShotsDPS;
+        private double _piercingShotsDPSSteadyShot;
+        private double _piercingShotsDPSAimedShot;
+        private double _piercingShotsDPSChimeraShot;
 
         public PetCalculations pet { get; set; }
 
@@ -24,6 +29,7 @@ namespace Rawr.Hunter
         public double petWhiteDPS { get; set; }
         public double petSpecialDPS { get; set; }
         public double petArmorDebuffs { get; set; }
+        public double petTargetArmorReduction { get; set; }
         public double petTargetDodge { get; set; }
         public double ferociousInspirationDamageAdjust { get; set; }
         #endregion
@@ -152,7 +158,9 @@ namespace Rawr.Hunter
         public ShotData aimedShot = new ShotData(Shots.AimedShot, true, true);
         public ShotData arcaneShot = new ShotData(Shots.ArcaneShot, true, true);
         public ShotData multiShot = new ShotData(Shots.MultiShot, true, true);
-        public ShotData serpentSting = new ShotData(Shots.SerpentSting, false, true);
+        // Drizz: Serpentsstings now Crits
+        //public ShotData serpentSting = new ShotData(Shots.SerpentSting, false, true);
+        public ShotData serpentSting = new ShotData(Shots.SerpentSting, true, true);
         public ShotData scorpidSting = new ShotData(Shots.ScorpidSting, false, true);
         public ShotData viperSting = new ShotData(Shots.ViperSting, false, true);
         public ShotData silencingShot = new ShotData(Shots.SilencingShot, true, false);
@@ -237,6 +245,32 @@ namespace Rawr.Hunter
             get { return _wildQuiverDPS; }
             set { _wildQuiverDPS = value; }
         }
+
+        //Drizz: Added 27-10-2009
+        public double PiercingShotsDPS
+        {
+            get { return _piercingShotsDPS; }
+            set { _piercingShotsDPS = value; }
+        }
+
+        public double PiercingShotsDPSSteadyShot
+        {
+            get { return _piercingShotsDPSSteadyShot; }
+            set { _piercingShotsDPSSteadyShot = value; }
+        }
+        
+        public double PiercingShotsDPSAimedShot
+        {
+            get { return _piercingShotsDPSAimedShot; }
+            set { _piercingShotsDPSAimedShot = value; }
+        }
+
+        public double PiercingShotsDPSChimeraShot
+        {
+            get { return _piercingShotsDPSChimeraShot; }
+            set { _piercingShotsDPSChimeraShot = value; }
+        }
+
 
         public double CustomDPS
         {
@@ -338,9 +372,11 @@ namespace Rawr.Hunter
                             apFromCallOfTheWild.ToString("P2") + " from Call of the Wild\n" +
                             apFromTrueshotAura.ToString("P2") + " from Trueshot Aura\n" +
                             apFromBuffs.ToString("P2") + " from buffs\n" +
-                            apFromHuntersMark.ToString("F0") + " from Hunter's Mark\n" +
                             apFromExposeWeakness.ToString("F0") + " from Expose Weakness\n" +
-                            apFromDebuffs.ToString("F0") + " from target debuffs");
+                            apFromDebuffs.ToString("F0") + " from target debuffs\n" +
+                            "----------------------\n" +
+                            apFromHuntersMark.ToString("F0") + " from Hunter's Mark\n");
+
             dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
 			
             // Pet Stats						
@@ -439,6 +475,11 @@ namespace Rawr.Hunter
                             "Hawk Uptime: " + aspectUptimeHawk.ToString("P2") + "\n" + 
                             "Viper Uptime: " + aspectUptimeViper.ToString("P2") + "\n" + 
                             "Beast Uptime: " + aspectUptimeBeast.ToString("P2"));
+            dictValues.Add("Piercing Shots DPS", PiercingShotsDPS.ToString("F2") + "*" +
+                            "Steady Shot: " + PiercingShotsDPSSteadyShot.ToString("F2") + "\n" +
+                            "Aimed Shot: " + PiercingShotsDPSAimedShot.ToString("F2") + "\n" +
+                            "Chimera Shot: " + PiercingShotsDPSChimeraShot.ToString("F2") + "\n");
+
 
             // Combined DPS
             dictValues.Add("Hunter DPS", HunterDpsPoints.ToString("F2"));
