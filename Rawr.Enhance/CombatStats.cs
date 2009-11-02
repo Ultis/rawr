@@ -301,21 +301,21 @@ namespace Rawr.Enhance
                 swingsPerSOHMelee = hastedOHSpeed == 0f ? 0f : 1f / hastedOHSpeed;
 
                 float hitsThatProcWFPerS = (1f - chanceWhiteMissMH) * swingsPerSMHMelee + hitsPerSMHSS;
-/*
+
                 // new Stationary Distribution WF model - with Markov Chains - idea inspired by Kavan
                 float avTimeforWFHit = hastedMHSpeed < 1.5f ? 
-                        (1 / (1 + chanceToProcWFPerHit)) * hastedMHSpeed + 3 * (chanceToProcWFPerHit / (1 + chanceToProcWFPerHit)) * hastedMHSpeed :
-                        (1 / (1 + chanceToProcWFPerHit)) * hastedMHSpeed + 2 * (chanceToProcWFPerHit / (1 + chanceToProcWFPerHit)) * hastedMHSpeed;
-                wfProcsPerSecond = avTimeforWFHit == 0 ? 0f : hitsThatProcWFPerS / avTimeforWFHit / 3;
+                        (1 / (1 + chanceToProcWFPerHit)) * hastedMHSpeed + 2 * (chanceToProcWFPerHit / (1 + chanceToProcWFPerHit)) * hastedMHSpeed :
+                        (1 / (1 + chanceToProcWFPerHit)) * hastedMHSpeed +     (chanceToProcWFPerHit / (1 + chanceToProcWFPerHit)) * hastedMHSpeed;
+                wfProcsPerSecond = avTimeforWFHit == 0 ? 0f : hitsThatProcWFPerS / (avTimeforWFHit * (hastedMHSpeed < 1.5f ? 4 : 3));
                 hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
-*/
+/*
                 // new WF model - slighly curved Windfury Society
                 float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * fightLength;
                 float ineligibleSeconds = maxExpectedWFPerFight * (3f - hastedMHSpeed);
                 float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (fightLength - ineligibleSeconds);
                 wfProcsPerSecond = expectedWFPerFight / fightLength;
                 hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
-
+*/
                 //Due to attack table, a white swing has the same chance to crit as a yellow hit
                 couldCritSwingsPerSecond = swingsPerSMHMelee + swingsPerSOHMelee + hitsPerSMHSS + hitsPerSOHSS + hitsPerSLL + hitsPerSWF;
                 float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;

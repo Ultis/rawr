@@ -64,7 +64,7 @@ namespace Rawr.Enhance
                 }
                 else
                 {
-                    effect.AccumulateAverageStats(statsAverage, trigger, chance, unhastedAttackSpeed, _cs.FightLength);
+                    effect.AccumulateAverageStats(statsAverage, trigger, chance, unhastedAttackSpeed);
                 }
             }
             return statsAverage;
@@ -144,7 +144,7 @@ namespace Rawr.Enhance
                 foreach (SpecialEffect effect in item.GetTotalStats().SpecialEffects())
                 {
                     SetTriggerChanceAndSpeed(effect);
-                    uptime = effect.GetAverageUptime(trigger, chance, unhastedAttackSpeed, _cs.FightLength);
+                    uptime = effect.GetAverageUptime(trigger, chance, unhastedAttackSpeed);
                 }
             return uptime;
         }
