@@ -3815,7 +3815,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Battlegear",
-                Stats = { BonusLLSSDamage = 0.2f },
+                Stats = { Enhance2T8 = 1f },
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
@@ -3825,7 +3825,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Battlegear",
-                Stats = { BonusMWFreq = 0.2f },
+                Stats = { Enhance4T8 = 1f },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });

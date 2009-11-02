@@ -281,7 +281,7 @@ namespace Rawr.Enhance
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             float bonusLSDamage = 1f + stats.BonusLSDamage; // 2 piece T7 set bonus
-            float bonusLLSSDamage = 1f + stats.BonusLLSSDamage;
+            float Enhance2T8 = 1f + stats.Enhance2T8 * 0.2f;
             float bonusSSDamage = stats.BonusSSDamage;
             int baseResistance = Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
             float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
@@ -330,7 +330,7 @@ namespace Rawr.Enhance
                 float swingDPSOH = (damageOHSwing + bonusSSDamage) * cs.HitsPerSOHSS;
                 float SSnormal = (swingDPSMH * cs.YellowHitModifierMH) + (swingDPSOH * cs.YellowHitModifierOH);
                 float SScrit = ((swingDPSMH * cs.YellowCritModifierMH) + (swingDPSOH * cs.YellowCritModifierOH)) * cs.CritMultiplierMelee;
-                dpsSS = (SSnormal + SScrit) * cs.DamageReduction * weaponMastery * bonusNatureDamage * bonusLLSSDamage * bossNatureResistance;
+                dpsSS = (SSnormal + SScrit) * cs.DamageReduction * weaponMastery * bonusNatureDamage * Enhance2T8 * bossNatureResistance;
             }
 
             //3: Lavalash DPS
@@ -340,7 +340,7 @@ namespace Rawr.Enhance
                 float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
                 float LLnormal = lavalashDPS * cs.YellowHitModifierOH;
                 float LLcrit = lavalashDPS * cs.YellowCritModifierOH * cs.CritMultiplierMelee;
-                dpsLL = (LLnormal + LLcrit) * bonusFireDamage * bonusLLSSDamage * bossFireResistance; //and no armor reduction yeya!
+                dpsLL = (LLnormal + LLcrit) * bonusFireDamage * Enhance2T8 * bossFireResistance; //and no armor reduction yeya!
                 if (calcOpts.OffhandImbue == "Flametongue")
                 {  // 25% bonus dmg if FT imbue in OH
                     if (character.ShamanTalents.GlyphofLavaLash)
@@ -817,8 +817,8 @@ namespace Rawr.Enhance
                     Paragon = stats.Paragon,
                     BonusLSDamage = stats.BonusLSDamage,
                     BonusFlurryHaste = stats.BonusFlurryHaste,
-                    BonusMWFreq = stats.BonusMWFreq,
-                    BonusLLSSDamage = stats.BonusLLSSDamage,
+                    Enhance4T8 = stats.Enhance4T8,
+                    Enhance2T8 = stats.Enhance2T8,
                     Enhance2T9 = stats.Enhance2T9,
                     Enhance4T9 = stats.Enhance4T9,
                     PhysicalHit = stats.PhysicalHit,
@@ -912,10 +912,10 @@ namespace Rawr.Enhance
                 stats.ExposeWeakness + stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + 
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
-                stats.LightningSpellPower + stats.BonusMWFreq + stats.BonusFlurryHaste +
+                stats.LightningSpellPower + stats.Enhance4T8 + stats.BonusFlurryHaste +
                 stats.BonusWFAttackPower + stats.Enhance2T9 + stats.Enhance4T9 + 
                 stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +
-                stats.BonusLSDamage + stats.BonusLLSSDamage + stats.BonusSSDamage) > 0;
+                stats.BonusLSDamage + stats.Enhance2T8 + stats.BonusSSDamage) > 0;
         }
 
         private bool irrelevantStats(Stats stats)

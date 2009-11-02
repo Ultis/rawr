@@ -224,8 +224,8 @@ namespace Rawr {
         BonusWFAttackPower,
         BonusFlurryHaste,
         BonusLSDamage,
-        BonusLLSSDamage,
-        BonusMWFreq,
+        Enhance2T8,
+        Enhance4T8,
         Enhance2T9,
         Enhance4T9,
         #endregion
@@ -3126,19 +3126,19 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance")]
-        public float BonusLLSSDamage
+        [Category("Enhance T8 2 Piece Bonus")]
+        public float Enhance2T8
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusLLSSDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusLLSSDamage] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T8]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Enhance2T8] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance")]
-        public float BonusMWFreq
+        [Category("Enhance T8 4 Piece Bonus")]
+        public float Enhance4T8
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusMWFreq]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusMWFreq] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T8]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Enhance4T8] = value; }
         }
 
         [DisplayName("Enhance T9 2 Piece Bonus")]

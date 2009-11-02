@@ -266,7 +266,7 @@ namespace Rawr.Enhance
             float stormstrikeSpeed = firstPass ? (_talents.Stormstrike == 1 ? 8f : 0f) : AbilityCooldown(EnhanceAbility.StormStrike);
             float shockSpeed = firstPass ? BaseShockSpeed : AbilityCooldown(EnhanceAbility.EarthShock);
             float lavaLashSpeed = firstPass ? (_talents.LavaLash == 1 ? 6f : 0f) : AbilityCooldown(EnhanceAbility.LavaLash);
-            float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.BonusMWFreq);
+            float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.Enhance4T8 * 0.2f);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
             float edCritBonus = .03f * _talents.ElementalDevastation;
             hastedMHSpeed = baseHastedMHSpeed;
