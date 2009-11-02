@@ -1,13 +1,19 @@
-﻿<UserControl x:Class="Rawr.Enhance.CalculationOptionsPanelEnhance"
+﻿<UserControl 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d" 
+    xmlns:local="clr-namespace:Rawr.Enhance"
     xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
-    xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit" 
+    xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:controlsToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
-    Width="400" Height="600">
+	xmlns:System="clr-namespace:System;assembly=mscorlib" 
+    x:Class="Rawr.Enhance.CalculationOptionsPanelEnhance"
+	d:DesignWidth="297" d:DesignHeight="469" 
+    >
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -17,6 +23,11 @@
             <controls:TabItem x:Name="Basics" Header="Basics">
             </controls:TabItem>
             <controls:TabItem x:Name="Priorities" Header="Priorities">
+            </controls:TabItem>
+            <controls:TabItem x:Name="EnhSim" Header="EnhSim">
+                <Grid x:Name="Tab_Welcome_Layout">
+                    <TextBox x:Name="EnhSim_Instructions" Margin="3,0,3,3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="4"/>
+                </Grid>
             </controls:TabItem>
         </controls:TabControl>
     </Grid>
