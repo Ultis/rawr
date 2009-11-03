@@ -766,7 +766,7 @@ namespace Rawr.Optimizer
             float ret = 0;
             foreach (OptimizationRequirement requirement in requirements)
             {
-                float calcValue = GetCalculationValue(calcs, requirement.Calculation);
+                float calcValue = GetCalculationValue(character, calcs, requirement.Calculation);
                 if (requirement.LessThan)
                 {
                     if (!(calcValue <= requirement.Value))
@@ -780,17 +780,31 @@ namespace Rawr.Optimizer
             }
 
             if (ret < 0) return ret + gemValue;
-            else return GetCalculationValue(calcs, calculation) + gemValue;
+            else return GetCalculationValue(character, calcs, calculation) + gemValue;
         }
 
-        private static float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)
+        private static float GetCalculationValue(Character character, CharacterCalculationsBase calcs, string calculation)
         {
             if (calculation == null || calculation == "[Overall]")
+            {
                 return calcs.OverallPoints;
+            }
             else if (calculation.StartsWith("[SubPoint "))
+            {
                 return calcs.SubPoints[int.Parse(calculation.Substring(10).TrimEnd(']'))];
+            }
+            else if (calculation.StartsWith("[Talent "))
+            {
+                return character.CurrentTalents.Data[int.Parse(calculation.Substring(8).TrimEnd(']'))];
+            }
+            else if (calculation.StartsWith("[Glyph "))
+            {
+                return character.CurrentTalents.GlyphData[int.Parse(calculation.Substring(7).TrimEnd(']'))] ? 1 : 0;
+            }
             else
+            {
                 return calcs.GetOptimizableCalculationValue(calculation);
+            }
         }
 
         protected override BatchValuation GetValuation(BatchIndividual individual)

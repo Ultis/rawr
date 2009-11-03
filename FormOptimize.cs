@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Rawr.Optimizer;
+using System.Reflection;
 
 namespace Rawr
 {
@@ -14,6 +15,8 @@ namespace Rawr
 		private Character _character;
         private ItemInstanceOptimizer _optimizer;
         private Item _itemToEvaluate;
+
+        private string[] talentList;
 
         public void EvaluateUpgrades(Item itemToEvaluate)
         {
@@ -26,8 +29,24 @@ namespace Rawr
             }
         }
 
+        private void InitializeTalentList(Character character)
+        {
+            talentList = new string[character.CurrentTalents.Data.Length];
+            foreach (PropertyInfo pi in character.CurrentTalents.GetType().GetProperties())
+            {
+                TalentDataAttribute[] talentDatas = pi.GetCustomAttributes(typeof(TalentDataAttribute), true) as TalentDataAttribute[];
+                if (talentDatas.Length > 0)
+                {
+                    TalentDataAttribute talentData = talentDatas[0];
+                    talentList[talentData.Index] = talentData.Name;
+                }
+            }
+        }
+
 		public FormOptimize(Character character)
 		{
+            InitializeTalentList(character);
+
 			InitializeComponent();
 			_character = character;
             _optimizer = new ItemInstanceOptimizer();
@@ -99,6 +118,10 @@ namespace Rawr
                                             reqComboBox.SelectedIndex = index + 1;
                                         }
                                     }
+                                    else if (calculationString.StartsWith("[Talent "))
+                                    {
+                                        reqComboBox.SelectedItem = "Talent";
+                                    }
                                     else
                                     {
                                         if (Array.IndexOf(Calculations.OptimizableCalculationLabels, calculationString) >= 0)
@@ -107,7 +130,19 @@ namespace Rawr
                                         }
                                     }
                                     break;
-
+                                case "comboBoxRequirementTalent":
+                                    calculationString = character.OptimizationRequirements[reqIndex].Calculation;
+                                    if (calculationString.StartsWith("[Talent "))
+                                    {
+                                        calculationString = calculationString.Substring(8).TrimEnd(']');
+                                        int index = int.Parse(calculationString);
+                                        if (index < talentList.Length)
+                                        {
+                                            ComboBox reqComboBoxTalent = (ComboBox)reqCtrl;
+                                            reqComboBoxTalent.SelectedIndex = index;
+                                        }
+                                    }
+                                    break;
                                 case "comboBoxRequirementGreaterLessThan":
                                     (reqCtrl as ComboBox).SelectedIndex = character.OptimizationRequirements[reqIndex].LessThan ? 1 : 0;
                                     break;
@@ -156,31 +191,18 @@ namespace Rawr
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
             int _thoroughness = trackBarThoroughness.Value;
-			string _calculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize);
+			string _calculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize, null);
             List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
 			foreach (Control ctrl in groupBoxRequirements.Controls)
 			{
 				ctrl.Enabled = false;
-				if (ctrl is Panel) 
+                Panel panel = ctrl as Panel;
+				if (panel != null) 
 				{
                     OptimizationRequirement requirement = new OptimizationRequirement();
-					foreach (Control reqCtrl in ctrl.Controls)
-					{
-						switch (reqCtrl.Name)
-						{
-							case "comboBoxRequirementCalculation":
-								requirement.Calculation = GetCalculationStringFromComboBox(reqCtrl as ComboBox);
-								break;
-
-							case "comboBoxRequirementGreaterLessThan":
-								requirement.LessThan = (reqCtrl as ComboBox).SelectedIndex == 1;
-								break;
-
-							case "numericUpDownRequirementValue":
-								requirement.Value = (float)((reqCtrl as NumericUpDown).Value);
-								break;
-						}
-					}
+                    requirement.Calculation = GetCalculationStringFromComboBox(panel.Controls["comboBoxRequirementCalculation"] as ComboBox, panel.Controls["comboBoxRequirementTalent"] as ComboBox);
+                    requirement.LessThan = (panel.Controls["comboBoxRequirementGreaterLessThan"] as ComboBox).SelectedIndex == 1;
+                    requirement.Value = (float)((panel.Controls["numericUpDownRequirementValue"] as NumericUpDown).Value);
 					requirements.Add(requirement);
 				}
 			}
@@ -220,12 +242,14 @@ namespace Rawr
             _optimizer.OptimizeCharacterAsync(_character, _calculationToOptimize, _requirements, _thoroughness, false);
 		}
 
-		private string GetCalculationStringFromComboBox(ComboBox comboBox)
+		private string GetCalculationStringFromComboBox(ComboBox comboBox, ComboBox comboBoxTalent)
 		{
 			if (comboBox.SelectedIndex == 0)
 				return "[Overall]";
 			else if (comboBox.SelectedIndex <= (int)comboBox.Tag)
 				return string.Format("[SubPoint {0}]", comboBox.SelectedIndex - 1);
+            else if (comboBox.Text == "Talent")
+                return string.Format("[Talent {0}]", comboBoxTalent.SelectedIndex);
 			else
 				return comboBox.Text;
 		}
@@ -366,7 +390,8 @@ namespace Rawr
 
 			Panel panelRequirement = new System.Windows.Forms.Panel();
 			ComboBox comboBoxRequirementCalculation = new System.Windows.Forms.ComboBox();
-			ComboBox comboBoxRequirementGreaterLessThan = new System.Windows.Forms.ComboBox();
+            ComboBox comboBoxRequirementTalent = new System.Windows.Forms.ComboBox();
+            ComboBox comboBoxRequirementGreaterLessThan = new System.Windows.Forms.ComboBox();
 			NumericUpDown numericUpDownRequirementValue = new System.Windows.Forms.NumericUpDown();
 			Button buttonRemoveRequirement = new System.Windows.Forms.Button();
 			panelRequirement.SuspendLayout();
@@ -377,7 +402,8 @@ namespace Rawr
 			panelRequirement.Controls.Add(numericUpDownRequirementValue);
 			panelRequirement.Controls.Add(buttonRemoveRequirement);
 			panelRequirement.Controls.Add(comboBoxRequirementGreaterLessThan);
-			panelRequirement.Controls.Add(comboBoxRequirementCalculation);
+            panelRequirement.Controls.Add(comboBoxRequirementTalent);
+            panelRequirement.Controls.Add(comboBoxRequirementCalculation);
 			panelRequirement.Dock = System.Windows.Forms.DockStyle.Top;
 			panelRequirement.Location = new System.Drawing.Point(3, 16);
 			panelRequirement.Name = "panelRequirement";
@@ -386,15 +412,28 @@ namespace Rawr
 			// 
 			// comboBoxRequirementCalculation
 			// 
-			comboBoxRequirementCalculation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+            comboBoxRequirementCalculation.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
 			comboBoxRequirementCalculation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			comboBoxRequirementCalculation.FormattingEnabled = true;
 			comboBoxRequirementCalculation.Location = new System.Drawing.Point(64, 4);
 			comboBoxRequirementCalculation.Name = "comboBoxRequirementCalculation";
-			comboBoxRequirementCalculation.Size = new System.Drawing.Size(125, 21);
+			comboBoxRequirementCalculation.Size = new System.Drawing.Size(133, 21);
 			comboBoxRequirementCalculation.TabIndex = 3;
-			// 
+            comboBoxRequirementCalculation.DropDownWidth = 133;
+            comboBoxRequirementCalculation.SelectedIndexChanged += new EventHandler(comboBoxRequirementCalculation_SelectedIndexChanged);
+            // 
+            // comboBoxRequirementTalent
+            // 
+            comboBoxRequirementTalent.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
+            comboBoxRequirementTalent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBoxRequirementTalent.FormattingEnabled = true;
+            comboBoxRequirementTalent.Location = new System.Drawing.Point(119, 4);
+            comboBoxRequirementTalent.Name = "comboBoxRequirementTalent";
+            comboBoxRequirementTalent.Size = new System.Drawing.Size(78, 21);
+            comboBoxRequirementTalent.Visible = false;
+            comboBoxRequirementTalent.TabIndex = 3;
+            comboBoxRequirementTalent.DropDownWidth = 133;
+            // 
 			// comboBoxRequirementGreaterLessThan
 			// 
 			comboBoxRequirementGreaterLessThan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -442,18 +481,46 @@ namespace Rawr
 			comboBoxRequirementCalculation.Tag = Calculations.SubPointNameColors.Count;
 			foreach (string subPoint in Calculations.SubPointNameColors.Keys)
 				comboBoxRequirementCalculation.Items.Add(subPoint + " Rating");
-			comboBoxRequirementCalculation.Items.AddRange(Calculations.OptimizableCalculationLabels);
+            comboBoxRequirementCalculation.Items.AddRange(Calculations.OptimizableCalculationLabels);
+            comboBoxRequirementCalculation.Items.Add("Talent");
+
+            comboBoxRequirementTalent.Items.AddRange(talentList);
 			
-			comboBoxRequirementCalculation.SelectedIndex = comboBoxRequirementGreaterLessThan.SelectedIndex = 0;
+			comboBoxRequirementCalculation.SelectedIndex = comboBoxRequirementTalent.SelectedIndex = comboBoxRequirementGreaterLessThan.SelectedIndex = 0;
 			groupBoxRequirements.Controls.Add(panelRequirement);
             ((System.ComponentModel.ISupportInitialize)(numericUpDownRequirementValue)).EndInit();
             panelRequirement.ResumeLayout();
             panelRequirement.BringToFront();
 		}
 
+        void comboBoxRequirementCalculation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox comboBoxRequirementCalculation = (ComboBox)sender;
+            Panel panel = (Panel)comboBoxRequirementCalculation.Parent;
+            ComboBox comboBoxRequirementTalent = (ComboBox)panel.Controls["comboBoxRequirementTalent"];
+            if ((string)comboBoxRequirementCalculation.SelectedItem == "Talent")
+            {
+                comboBoxRequirementCalculation.Size = new System.Drawing.Size(55, 21);
+                comboBoxRequirementTalent.Visible = true;
+            }
+            else
+            {
+                comboBoxRequirementCalculation.Size = new System.Drawing.Size(133, 21);
+                comboBoxRequirementTalent.Visible = false;
+            }
+        }
+
 		void buttonRemoveRequirement_Click(object sender, EventArgs e)
 		{
-			((Button)sender).Parent.Parent.Controls.Remove(((Button)sender).Parent);
+            // need to remove event handlers on child controls, otherwise it'll cause lingering references
+            Button buttonRemoveRequirement = (Button)sender;
+            Panel panel = (Panel)buttonRemoveRequirement.Parent;
+            ComboBox comboBoxRequirementTalent = (ComboBox)panel.Controls["comboBoxRequirementCalculation"];
+
+            comboBoxRequirementTalent.SelectedIndexChanged -= new EventHandler(comboBoxRequirementCalculation_SelectedIndexChanged);
+            buttonRemoveRequirement.Click -= new EventHandler(buttonRemoveRequirement_Click);
+
+            panel.Parent.Controls.Remove(panel);
 			buttonAddRequirement.Top -= 29;
 		}
 		
@@ -462,31 +529,18 @@ namespace Rawr
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
             int _thoroughness = (int)Math.Ceiling((float)trackBarThoroughness.Value / 10f);
-            string _calculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize);
+            string _calculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize, null);
             List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
             foreach (Control ctrl in groupBoxRequirements.Controls)
             {
 				ctrl.Enabled = false;
-                if (ctrl is Panel)
+                Panel panel = ctrl as Panel;
+                if (panel != null)
                 {
                     OptimizationRequirement requirement = new OptimizationRequirement();
-                    foreach (Control reqCtrl in ctrl.Controls)
-                    {
-                        switch (reqCtrl.Name)
-                        {
-                            case "comboBoxRequirementCalculation":
-                                requirement.Calculation = GetCalculationStringFromComboBox(reqCtrl as ComboBox);
-                                break;
-
-                            case "comboBoxRequirementGreaterLessThan":
-                                requirement.LessThan = (reqCtrl as ComboBox).SelectedIndex == 1;
-                                break;
-
-                            case "numericUpDownRequirementValue":
-                                requirement.Value = (float)((reqCtrl as NumericUpDown).Value);
-                                break;
-                        }
-                    }
+                    requirement.Calculation = GetCalculationStringFromComboBox(panel.Controls["comboBoxRequirementCalculation"] as ComboBox, panel.Controls["comboBoxRequirementTalent"] as ComboBox);
+                    requirement.LessThan = (panel.Controls["comboBoxRequirementGreaterLessThan"] as ComboBox).SelectedIndex == 1;
+                    requirement.Value = (float)((panel.Controls["numericUpDownRequirementValue"] as NumericUpDown).Value);
                     requirements.Add(requirement);
                 }
             }
@@ -529,33 +583,20 @@ namespace Rawr
             Properties.Optimizer.Default.OverrideRegem = checkBoxOverrideRegem.Checked;
             Properties.Optimizer.Default.OverrideReenchant = checkBoxOverrideReenchant.Checked;
             Properties.Optimizer.Default.Thoroughness = trackBarThoroughness.Value;
-            Properties.Optimizer.Default.CalculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize);
+            Properties.Optimizer.Default.CalculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize, null);
             Properties.Optimizer.Default.Save();
 
-            _character.CalculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize);
+            _character.CalculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize, null);
             List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
             foreach (Control ctrl in groupBoxRequirements.Controls)
             {
-                if (ctrl is Panel)
+                Panel panel = ctrl as Panel;
+                if (panel != null)
                 {
                     OptimizationRequirement requirement = new OptimizationRequirement();
-                    foreach (Control reqCtrl in ctrl.Controls)
-                    {
-                        switch (reqCtrl.Name)
-                        {
-                            case "comboBoxRequirementCalculation":
-                                requirement.Calculation = GetCalculationStringFromComboBox(reqCtrl as ComboBox);
-                                break;
-
-                            case "comboBoxRequirementGreaterLessThan":
-                                requirement.LessThan = (reqCtrl as ComboBox).SelectedIndex == 1;
-                                break;
-
-                            case "numericUpDownRequirementValue":
-                                requirement.Value = (float)((reqCtrl as NumericUpDown).Value);
-                                break;
-                        }
-                    }
+                    requirement.Calculation = GetCalculationStringFromComboBox(panel.Controls["comboBoxRequirementCalculation"] as ComboBox, panel.Controls["comboBoxRequirementTalent"] as ComboBox);
+                    requirement.LessThan = (panel.Controls["comboBoxRequirementGreaterLessThan"] as ComboBox).SelectedIndex == 1;
+                    requirement.Value = (float)((panel.Controls["numericUpDownRequirementValue"] as NumericUpDown).Value);
                     requirements.Add(requirement);
                 }
             }
