@@ -12,12 +12,26 @@ namespace Rawr.Enhance
         float trigger = 0f;
         float chance = 1f;
         float unhastedAttackSpeed = 3f;
+        SpecialEffect mainHandEnchant = null;
+        SpecialEffect offHandEnchant = null;
+        bool mhProcessed = false;
+        bool ohProcessed = false;
 
         public StatsSpecialEffects(Character character, Stats stats, CalculationOptionsEnhance calcOpts)
         {
             _character = character;
             _stats = stats;
             _cs = new CombatStats(_character, _stats, calcOpts);
+            if (character.MainHandEnchant != null)
+            { 
+                Stats.SpecialEffectEnumerator mhEffects = character.MainHandEnchant.Stats.SpecialEffects();
+                if (mhEffects.MoveNext()) { mainHandEnchant = mhEffects.Current; }
+            }
+            if (_character.ShamanTalents.DualWield == 1 && character.OffHandEnchant != null)
+            {
+                Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
+                if (ohEffects.MoveNext()) { offHandEnchant = ohEffects.Current; }
+            }
         }
 
         public Stats getSpecialEffects()
@@ -35,7 +49,20 @@ namespace Rawr.Enhance
         public Stats getSpecialEffects(SpecialEffect effect)
         {
             Stats statsAverage = new Stats();
-            if (effect.Trigger == Trigger.Use)
+            if (effect == mainHandEnchant || effect == offHandEnchant)
+            {
+                if (mainHandEnchant != null && !mhProcessed)
+                {
+                    statsAverage.Accumulate(mainHandEnchant.Stats, GetMHUptime());
+                    mhProcessed = true; 
+                }
+                else if (offHandEnchant != null && !ohProcessed)
+                {
+                    statsAverage.Accumulate(offHandEnchant.Stats, GetOHUptime());
+                    ohProcessed = true; 
+                }
+            }
+            else if (effect.Trigger == Trigger.Use)
             {
                 effect.AccumulateAverageStats(statsAverage);
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())
@@ -147,6 +174,16 @@ namespace Rawr.Enhance
                     uptime = effect.GetAverageUptime(trigger, chance, unhastedAttackSpeed);
                 }
             return uptime;
+        }
+
+        public float GetMHUptime()
+        {
+            return mainHandEnchant == null ? 0f : mainHandEnchant.GetAverageUptime(_cs.HastedMHSpeed, _cs.ChanceMeleeHit, _cs.UnhastedMHSpeed, _cs.FightLength);
+        }
+
+        public float GetOHUptime()
+        {
+            return offHandEnchant == null ? 0f : offHandEnchant.GetAverageUptime(_cs.HastedOHSpeed, _cs.ChanceMeleeHit, _cs.UnhastedOHSpeed, _cs.FightLength);
         }
 
         // Handling for Paragon trinket procs

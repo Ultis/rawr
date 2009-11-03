@@ -74,7 +74,8 @@ namespace Rawr.Enhance
                     "Complex Stats:Flurry Uptime",
                     "Complex Stats:ED Uptime*Elemental Devastation Uptime percentage",
                     "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
-                    "Complex Stats:Weapon Enchant Uptime",
+                    "Complex Stats:MH Enchant Uptime",
+                    "Complex Stats:OH Enchant Uptime",
                     "Complex Stats:Trinket 1 Uptime",
                     "Complex Stats:Trinket 2 Uptime",
                     "Attacks:White Damage",
@@ -526,7 +527,8 @@ namespace Rawr.Enhance
             calculatedStats.URUptime = cs.URUptime * 100f;
             calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
             calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
-            calculatedStats.WeaponEnchantUptime = se.GetUptime(character.MainHand) * 100f;
+            calculatedStats.MHEnchantUptime = se.GetMHUptime() * 100f;
+            calculatedStats.OHEnchantUptime = se.GetOHUptime() * 100f;
             calculatedStats.Trinket1Uptime = se.GetUptime(character.Trinket1) * 100f;
             calculatedStats.Trinket2Uptime = se.GetUptime(character.Trinket2) * 100f;
             
