@@ -269,17 +269,15 @@ namespace Rawr.Enhance
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.Enhance4T8 * 0.2f);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
             float edCritBonus = .03f * _talents.ElementalDevastation;
-            hastedMHSpeed = baseHastedMHSpeed;
-            hastedOHSpeed = baseHastedOHSpeed;
+            hitsPerSMHSS = 0f;
+            hitsPerSOHSS = 0f;
+            hitsPerSOH = 0f;
+            hitsPerSMH = 0f;
+            hitsPerSWF = 0f;
             if (_talents.Stormstrike == 1)
             {
                 hitsPerSMHSS = (1f - chanceYellowMissMH) / stormstrikeSpeed;
                 hitsPerSOHSS = _character.ShamanTalents.DualWield == 1 ? ((1f - 2 * chanceYellowMissOH) / stormstrikeSpeed) : 0f; //OH only swings if MH connects
-            }
-            else
-            {
-                hitsPerSMHSS = 0f;
-                hitsPerSOHSS = 0f;
             }
             hitsPerSLL = lavaLashSpeed == 0 ? 0f : (1f - chanceYellowMissOH) / lavaLashSpeed;
             float swingsPerSMHMelee = 0f;
@@ -287,54 +285,52 @@ namespace Rawr.Enhance
             float wfProcsPerSecond = 0f;
             float mwProcsPerSecond = 0f;
             secondsToFiveStack = 10f;
-            float averageMeleeCritChance = (chanceYellowCritMH + chanceYellowCritOH)/2;
+            float averageMeleeCritChance = (chanceYellowCritMH + chanceYellowCritOH) / 2f;
             float couldCritSwingsPerSecond = 0f;
-            hitsPerSOH = 0f;
-            hitsPerSMH = 0f;
-            hitsPerSWF = 0f;
-            for (int i = 0; i < 5; i++)
+            float whiteHitsPerSMH = 0f;
+            float whiteHitsPerSOH = 0f;
+            float yellowHitsPerSMH = 0f;
+            float yellowHitsPerSOH = 0f;
+            for (int i = 0; i < 10; i++)
             {
                 float bonusHaste = (1f + (flurryUptime * flurryHasteBonus));
                 hastedMHSpeed = baseHastedMHSpeed / bonusHaste;
                 hastedOHSpeed = baseHastedOHSpeed / bonusHaste;
                 swingsPerSMHMelee = 1f / hastedMHSpeed;
                 swingsPerSOHMelee = hastedOHSpeed == 0f ? 0f : 1f / hastedOHSpeed;
-
-                float hitsThatProcWFPerS = (1f - chanceWhiteMissMH) * swingsPerSMHMelee + hitsPerSMHSS;
-
+                whiteHitsPerSMH = (1f - chanceWhiteMissMH - chanceDodgeMH) * swingsPerSMHMelee;
+                whiteHitsPerSOH = (1f - chanceWhiteMissOH - chanceDodgeOH) * swingsPerSOHMelee;
+                
                 // new Stationary Distribution WF model - with Markov Chains - idea inspired by Kavan
                 float avTimeforWFHit = hastedMHSpeed < 1.5f ? 
                         (1 / (1 + chanceToProcWFPerHit)) * hastedMHSpeed + 2 * (chanceToProcWFPerHit / (1 + chanceToProcWFPerHit)) * hastedMHSpeed :
                         (1 / (1 + chanceToProcWFPerHit)) * hastedMHSpeed +     (chanceToProcWFPerHit / (1 + chanceToProcWFPerHit)) * hastedMHSpeed;
+                float hitsThatProcWFPerS = whiteHitsPerSMH + hitsPerSMHSS;
                 wfProcsPerSecond = avTimeforWFHit == 0 ? 0f : hitsThatProcWFPerS / (avTimeforWFHit * (hastedMHSpeed < 1.5f ? 4 : 3));
                 hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
-/*
-                // new WF model - slighly curved Windfury Society
-                float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * fightLength;
-                float ineligibleSeconds = maxExpectedWFPerFight * (3f - hastedMHSpeed);
-                float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (fightLength - ineligibleSeconds);
-                wfProcsPerSecond = expectedWFPerFight / fightLength;
-                hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
-*/
+                yellowHitsPerSMH = hitsPerSWF + hitsPerSMHSS;
+                yellowHitsPerSOH = hitsPerSOHSS + hitsPerSLL;
+                    
                 //Due to attack table, a white swing has the same chance to crit as a yellow hit
-                couldCritSwingsPerSecond = swingsPerSMHMelee + swingsPerSOHMelee + hitsPerSMHSS + hitsPerSOHSS + hitsPerSLL + hitsPerSWF;
+                couldCritSwingsPerSecond = whiteHitsPerSMH + whiteHitsPerSOH + yellowHitsPerSMH + yellowHitsPerSOH;
                 float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;
                 flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);
 
-                hitsPerSMH = swingsPerSMHMelee * (1f - chanceWhiteMissMH - chanceDodgeMH) + hitsPerSWF + hitsPerSMHSS;
+                hitsPerSMH = whiteHitsPerSMH + yellowHitsPerSMH;
                 mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH;
                 if (_character.ShamanTalents.DualWield == 1 && unhastedOHSpeed != 0f)
                 {
-                    hitsPerSOH = swingsPerSOHMelee * (1f - chanceWhiteMissOH - chanceDodgeOH) + hitsPerSOHSS + hitsPerSLL;
+                    hitsPerSOH = whiteHitsPerSOH + yellowHitsPerSOH;
                     mwProcsPerSecond += (mwPPM / (60f / unhastedOHSpeed)) * hitsPerSOH;
                 }
-                secondsToFiveStack = 5 / mwProcsPerSecond;
+                secondsToFiveStack = 5f / mwProcsPerSecond;
 
-                spellAttacksPerSec = 1 / secondsToFiveStack + 1 / shockSpeed;
+                spellAttacksPerSec = 1f / secondsToFiveStack + 1f / shockSpeed;
+//                if (_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1)
+//                    spellAttacksPerSec += 0.25f; // add flametongue attacks to spell hits per second normalised to 4.0 speed weapon = 0.25 hits per second
                 float couldCritSpellsPerS = spellAttacksPerSec * (1f - chanceSpellMiss);
                 edUptime = 1f - (float)Math.Pow(1 - chanceSpellCrit, 10 * couldCritSpellsPerS);
-                float averageYellowCrit = (chanceYellowCritMH + chanceYellowCritOH) / 2;
-                averageMeleeCritChance = averageYellowCrit + edUptime * edCritBonus;
+                averageMeleeCritChance = (chanceYellowCritMH + chanceYellowCritOH) / 2f + edUptime * edCritBonus;
             }
             urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
             float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS;
@@ -348,7 +344,7 @@ namespace Rawr.Enhance
             chanceYellowCritMH += edBonusCrit; 
             chanceYellowCritOH += edBonusCrit;
             meleeAttacksPerSec = hitsPerSMH + hitsPerSOH;
-            meleeCritsPerSec = (hitsPerSMH * chanceWhiteCritMH) + (hitsPerSOH * chanceWhiteCritOH);
+            meleeCritsPerSec = (whiteHitsPerSMH * chanceWhiteCritMH) + (whiteHitsPerSOH * chanceWhiteCritOH) + (yellowHitsPerSMH * chanceYellowCritMH) + (yellowHitsPerSOH * chanceYellowCritOH);
             spellAttacksPerSec = 1f / secondsToFiveStack + 1f / shockSpeed;
             if (_calcOpts.MainhandImbue == "Flametongue")  // flametongue weapon imbue is spell damage so we have extra spell attacks per second with it imbued.
                 spellAttacksPerSec += hitsPerSMH;
