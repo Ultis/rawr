@@ -2076,6 +2076,7 @@ namespace Rawr
             });
             #endregion
             #region Tier  9 | Koltira/Kolitra/Thassaurian
+            #region DPSDK
             Stats DK2T9 = new Stats();
             DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.BloodStrikeHit, new Stats() { Strength = 180f }, 15f, 45f, .5f));
             DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, new Stats() { Strength = 180f }, 15f, 45f, .5f));
@@ -2126,6 +2127,60 @@ namespace Rawr
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
             });
+            #endregion
+            #region TankDK
+            defaultBuffs.Add(new Buff()
+            {
+                // Decreases the cooldown on your Dark Command ability by 2 sec and increases the damage done by your Blood Strike and Heart Strike abilities by 5%.
+                Name = "Koltira's Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { 
+                    BonusBloodStrikeDamage = .05f,
+                    BonusHeartStrikeDamage = .05f,
+                },
+                SetName = "Koltira's Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                // Decreases the cooldown on your Unbreakable Armor, Vampiric Blood, and Bone Shield abilities by 10 sec.
+                Name = "Koltira's Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { },
+                SetName = "Koltira's Plate",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thassarian's Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats =
+                {
+                    BonusBloodStrikeDamage = .05f,
+                    BonusHeartStrikeDamage = .05f,
+                },
+                SetName = "Thassarian's Plate",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thassarian's Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { },
+                SetName = "Thassarian's Plate",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
+            });
+            #endregion
+
             #endregion
             #region Tier 10 |
             defaultBuffs.Add(new Buff()

@@ -21,6 +21,8 @@ namespace Rawr.TankDK {
             NUM_Quality
         }
 
+        public bool m_bT9_4PC = false;
+
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
 				////Relevant Gem IDs for TankDKs
@@ -288,8 +290,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
 						ItemType.None,
-                        ItemType.Leather,
-                        ItemType.Mail,
+                        // Pulling out Leather & Mail.
+                        // While it may be fine for a DPS class to under gear for an instance, the armor value of 
+                        // Plate really makes a difference for Tanks.
+                        // ItemType.Leather,
+                        // ItemType.Mail,
                         ItemType.Plate,
                         ItemType.Sigil,
                         ItemType.Polearm,
@@ -558,10 +563,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 uint BSStacks = 3;  // The number of bones by default.
                 if (character.DeathKnightTalents.GlyphofBoneShield == true) { BSStacks += 2; }
 
+                float fBSCD = 60f;
+                if (m_bT9_4PC) fBSCD -= 10f;
+
                 bsUptime = Math.Min(1f,                         // Can't be up for longer than 100% of the time. 
                             (BSStacks * 2f)                   // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death. 
                             / (1 - fChanceToGetHit)   // Loose a bone every time we get hit.
-                            / 60.0f);                          // 60 sec cooldown.
+                            / fBSCD);                          // 60 sec cooldown.
                 // 20% damage reduction while active.
                 bsDR = 0.2f * bsUptime;
             }
@@ -819,7 +827,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // There are too many places where this just kinda stuck in.  It should be attached to the toon.
                 statsTotal.Defense = 400f;
             AccumulateItemStats(statsTotal, character, additionalItem);
-            AccumulateBuffsStats(statsTotal, character.ActiveBuffs);
+            AccumulateBuffsStats(statsTotal, character.ActiveBuffs); // includes set bonuses.
+            // Except the 4 piece T9 - improves CD of VB, UA, and BS by 10 sec.  That has to get handled elsewhere.
+            if (character.ActiveBuffsContains("Thassarian's Plate 4 Piece Bonus") ||
+                character.ActiveBuffsContains("Koltira's Plate 4 Piece Bonus"))
+            {
+                // Set the character as having the T9_4pc bonus
+                m_bT9_4PC = true;
+            }
             AccumulateFrostPresence(statsTotal);
             
             // Stack only the info we care about.
@@ -1397,7 +1412,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // TODO: need to figure out how to factor this back in.
 //                newStats.Health = (fHealth * 0.15f);
                 newStats.HealingReceivedMultiplier += 0.35f;
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 10f, 1f * 60f));
+
+                float fVBCD = 60f;
+                if (m_bT9_4PC) fVBCD -= 10f;
+
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 10f, fVBCD));
             }
 
             // Will of the Necropolis
@@ -1600,7 +1619,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     newStats.BaseArmorMultiplier += .2f;
                     newStats.BonusArmorMultiplier += .2f;
                 }
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20f, 1f * 60f));
+                float fUACD = 60f;
+                if (m_bT9_4PC) fUACD -= 10f;
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20f, fUACD));
             }
 
             // Acclimation
