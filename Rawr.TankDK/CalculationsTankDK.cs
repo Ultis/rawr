@@ -1586,7 +1586,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // Unbreakable Armor
-            // Reinforces your armor with a thick coat of ice, reducing damage from all attacks by [5 * AR * 0.01] and increasing your Strength by 25% for 20 sec.  The amount of damage reduced increases as your armor increases.
+            // Reinforces your armor with a thick coat of ice, Increasing Armor by 25% and increasing your Strength by 10% for 20 sec.
             if (character.DeathKnightTalents.UnbreakableArmor > 0) {
                 newStats = new Stats();
                 newStats.BonusStrengthMultiplier += 0.10f;
@@ -1594,8 +1594,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 newStats.BonusArmorMultiplier += .25f;
                 if (character.DeathKnightTalents.GlyphofUnbreakableArmor)
                 {
-                    newStats.BaseArmorMultiplier *= .2f;
-                    newStats.BonusArmorMultiplier *= .2f;
+                    // As per wowhead:
+                    // Effect: Apply Aura: Add % Modifier (3)
+                    // Value: 20
+                    newStats.BaseArmorMultiplier += .2f;
+                    newStats.BonusArmorMultiplier += .2f;
                 }
                 FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20f, 1f * 60f));
             }
