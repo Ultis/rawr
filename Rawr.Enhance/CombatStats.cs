@@ -266,6 +266,8 @@ namespace Rawr.Enhance
             float stormstrikeSpeed = firstPass ? (_talents.Stormstrike == 1 ? 8f : 0f) : AbilityCooldown(EnhanceAbility.StormStrike);
             float shockSpeed = firstPass ? BaseShockSpeed : AbilityCooldown(EnhanceAbility.EarthShock);
             float lavaLashSpeed = firstPass ? (_talents.LavaLash == 1 ? 6f : 0f) : AbilityCooldown(EnhanceAbility.LavaLash);
+            float magmaSearingSpeed = firstPass ? (_calcOpts.Magma ? 20f : 60f) :
+                    (_calcOpts.Magma ? AbilityCooldown(EnhanceAbility.MagmaTotem) : AbilityCooldown(EnhanceAbility.SearingTotem));
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.Enhance4T8 * 0.2f);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
             float edCritBonus = .03f * _talents.ElementalDevastation;
@@ -325,9 +327,7 @@ namespace Rawr.Enhance
                 }
                 secondsToFiveStack = 5f / mwProcsPerSecond;
 
-                spellAttacksPerSec = 1f / secondsToFiveStack + 1f / shockSpeed;
-//                if (_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1)
-//                    spellAttacksPerSec += 0.25f; // add flametongue attacks to spell hits per second normalised to 4.0 speed weapon = 0.25 hits per second
+                spellAttacksPerSec = 1f / secondsToFiveStack + 1f / shockSpeed + 1f / magmaSearingSpeed;
                 float couldCritSpellsPerS = spellAttacksPerSec * (1f - chanceSpellMiss);
                 edUptime = 1f - (float)Math.Pow(1 - chanceSpellCrit, 10 * couldCritSpellsPerS);
                 averageMeleeCritChance = (chanceYellowCritMH + chanceYellowCritOH) / 2f + edUptime * edCritBonus;

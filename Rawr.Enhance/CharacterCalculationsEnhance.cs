@@ -204,10 +204,11 @@ namespace Rawr.Enhance
         }
 
         private float _secondsTo5Stack;
+        private float _MWPPM;
         public float SecondsTo5Stack
         {
             get { return _secondsTo5Stack; }
-            set { _secondsTo5Stack = value; }
+            set { _secondsTo5Stack = value; _MWPPM = value == 0 ? 0 : 5f * 60f / value; }
         }
 
         private float _avMHSpeed;
@@ -436,7 +437,9 @@ namespace Rawr.Enhance
                 EDUptime.ToString("F2", CultureInfo.InvariantCulture),
                 EDBonusCrit.ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Flurry Uptime", FlurryUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("Avg Time to 5 Stack", SecondsTo5Stack.ToString("F2", CultureInfo.InvariantCulture) + " sec");
+            dictValues.Add("Avg Time to 5 Stack", String.Format("{0} sec*{1} PPM", 
+                SecondsTo5Stack.ToString("F2", CultureInfo.InvariantCulture),
+                _MWPPM.ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("MH Enchant Uptime", MHEnchantUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("OH Enchant Uptime", OHEnchantUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Trinket 1 Uptime", Trinket1Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");

@@ -245,7 +245,6 @@ namespace Rawr.Enhance
                 case 2: unleashedRage = .07f; break;
                 case 3: unleashedRage = .10f; break;
             }
-
             float FTspellpower = (float)Math.Floor((float)(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f)));
             if (calcOpts.MainhandImbue == "Flametongue")
                 stats.SpellPower += FTspellpower;
@@ -266,6 +265,7 @@ namespace Rawr.Enhance
             ////////////////////////////
 
             CombatStats cs = new CombatStats(character, stats, calcOpts); // calculate the combat stats using modified stats
+
             // only apply unleashed rage talent if not already applied Unleashed Rage buff.
             float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f :
                                                     (stats.AttackPower * unleashedRage * cs.URUptime);
