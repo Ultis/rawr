@@ -214,7 +214,7 @@ namespace Rawr.Optimizer
             best = (float)bestValue;
             bestValuation = GetValuation(bestIndividual);
 
-            return bestIndividual;
+            return PostProcess(bestIndividual);
         }
 
         protected int noImprove;
@@ -468,8 +468,13 @@ namespace Rawr.Optimizer
             bestIndividual = null;
             this.bestValuation = default(TValuation);
 
-            return ret;
+            return PostProcess(ret);
 		}
+
+        protected virtual TIndividual PostProcess(TIndividual bestIndividual)
+        {
+            return bestIndividual;
+        }
 
         protected virtual void LookForDirectItemUpgrades()
         {

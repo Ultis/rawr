@@ -1331,6 +1331,17 @@ namespace Rawr
 			return summary;
 		}
 
+        public bool MatchesSocketBonus
+        {
+            get
+            {
+                Item item = Item;
+                return Item.GemMatchesSlot(Gem1, item.SocketColor1) &&
+                       Item.GemMatchesSlot(Gem2, item.SocketColor2) &&
+                       Item.GemMatchesSlot(Gem3, item.SocketColor3);
+            }
+        }
+
 		// caching policy: cache total stats only for items that don't have global requirements
 		// value should not change if it relies on data other than from this item
 		// assume there is no stat editing happening in code other than in item editor
