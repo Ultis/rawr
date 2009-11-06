@@ -147,8 +147,9 @@ namespace Rawr.Hunter
             LALType = Shots.None;
 
             //IAotH variables
-            LastAutoShotCheck = -50;
-            IAotHDuration = -1;
+            // 021109 Drizz: Updating init variables to align with v92b spreadsheet
+            LastAutoShotCheck = 0; // -50;
+            IAotHDuration = 0;// -1;
             IAotHProcs = 0;
 
             SerpentUsed = false;
@@ -160,7 +161,9 @@ namespace Rawr.Hunter
             RFCD = 0;
             currentTime = 0;
             LALProcs = 0;
+
             double IAotHUptime = 0;
+
 
             #endregion
             #region The Main Loop
@@ -299,7 +302,8 @@ namespace Rawr.Hunter
                                     RotationShotInfo thatShot = shotTable[j];
                                     if (thatShot != null)
                                     {
-                                        if (thatShot.time_until_off_cd > currentTime && thatShot.time_until_off_cd <= currentTime + WaitForESCS && checkGCD(thisShot))
+                                        // 021109 Drizz: Removed the last && on this line (align with Worksheet 92b.
+                                        if (thatShot.time_until_off_cd > currentTime && thatShot.time_until_off_cd <= currentTime + WaitForESCS) // && checkGCD(thisShot))
                                         {
                                             if (compareDamage(thisShot, thatShot.type, waitTime) != thisShot)
                                             {
@@ -410,22 +414,30 @@ namespace Rawr.Hunter
                     // Check if we had an auto shot since the last check
                     if (currentTime - LastAutoShotCheck > currentAutoShotSpeed)
                     {
+                    // *******************************************************
+                    // 021109 Drizz: Added if around LastAutoShotCheck, Updated from v92b (spreadsheet)
+                        if (currentTime == 0)
                         LastAutoShotCheck = currentTime;
+                        else
+                            LastAutoShotCheck += currentAutoShotSpeed;
+                    // *******************************************************
+                    
+                    // 021109 Drizz: Updating to use "LastAutoShotCheck" instead of currentTime (Align with v92b)
                         if (RandomProcs)
                         {
                             // 10% proc chance                    
                             if (randomProc(IAotHChance))
                             {
-                                if (IAotHDuration - currentTime < 0)
+                                if (IAotHDuration - LastAutoShotCheck < 0)
                                 {
                                         // No IAotH proc active
                                         IAotHUptime = IAotHUptime + 12;
                                 }
                                 else
                                 {
-                                    IAotHUptime = IAotHUptime - (IAotHDuration - currentTime) + 12;
+                                    IAotHUptime = IAotHUptime - (IAotHDuration - LastAutoShotCheck) + 12;
                                 }
-                                IAotHDuration = currentTime + 12;
+                                IAotHDuration = LastAutoShotCheck + 12;
                                 IAotHProcs = IAotHProcs + 1;
                             }
                         }
@@ -435,16 +447,16 @@ namespace Rawr.Hunter
                             if (IAotHfix * IAotHChance > 100)
                             {
                                 IAotHfix = 0; // reset counter
-                                if (IAotHDuration - currentTime < 0)
+                                if (IAotHDuration - LastAutoShotCheck < 0)
                                 {
                                     // No IAotH proc active
                                     IAotHUptime = IAotHUptime + 12;
                                 }
                                 else
                                 {
-                                    IAotHUptime = IAotHUptime - (IAotHDuration - currentTime) + 12;
+                                    IAotHUptime = IAotHUptime - (IAotHDuration - LastAutoShotCheck) + 12;
                                 }
-                                IAotHDuration = currentTime + 12;
+                                IAotHDuration = LastAutoShotCheck + 12;
                                 IAotHProcs = IAotHProcs + 1;
                             }
                         }
@@ -486,9 +498,9 @@ namespace Rawr.Hunter
 
 
                     // Note down shot current time and shot used
-                    if (options.debugShotRotation)
+                    //if (options.debugShotRotation)
                     // Drizz: Enable for getting printout of Rotation.
-                    // if(true)
+                    if(true)
                     {
                         // currentTime
                         // thisShot
@@ -519,7 +531,8 @@ namespace Rawr.Hunter
                             onCDUntil = thisShotInfo.time_until_off_cd;
                         }
 
-                        Debug.WriteLine(currentTime + ": " + thisShot + " (" +timeUsed+"/"+castEnd+"/"+onCDUntil + ")");
+                        Debug.WriteLine(" "+ currentTime + ": " + thisShot + " (" +timeUsed+"/"+castEnd+"/"+onCDUntil + ")");
+                        Debug.Flush();
                     }
 
 
@@ -775,7 +788,9 @@ namespace Rawr.Hunter
         private bool randomProc(double chance)
         {
             if (chance < 0) return false;
-            return rand.Next(0,99) < chance;
+            // 021109 Drizz: If I understand the rand.Next function correctly it is always below the 2nd parameter so (0,100) is what we want.
+            //return rand.Next(0,99) < chance;
+            return rand.Next(0, 100) < chance;
         }
 
         private bool containsShot(Shots shot)

@@ -63,7 +63,7 @@ namespace Rawr.Hunter
         public double waitForCooldown = 0.8; // not editable
         public bool interleaveLAL = false; // not editable
         public bool prioritiseArcAimedOverSteady = true; // not editable
-        public bool debugShotRotation = false; // not editable
+        public bool debugShotRotation = true; // not editable
 
         // NOTE: setting this to true does 'bad' uptime calculations,
         // to help match the spread sheet. if a fight last 10 seconds

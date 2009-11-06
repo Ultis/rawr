@@ -224,6 +224,7 @@
             this.comboBoxPet2 = new System.Windows.Forms.ComboBox();
             this.comboBoxPet1 = new System.Windows.Forms.ComboBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.chkRandomProcs = new System.Windows.Forms.CheckBox();
             this.tabPage2.SuspendLayout();
             this.grpTalentsTenacity.SuspendLayout();
             this.grpTalentsFerocity.SuspendLayout();
@@ -1562,6 +1563,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.chkRandomProcs);
             this.groupBox4.Controls.Add(this.chkUseRotation);
             this.groupBox4.Controls.Add(this.label86);
             this.groupBox4.Controls.Add(this.cmbHeroismUsage);
@@ -1576,7 +1578,7 @@
             this.groupBox4.Controls.Add(this.cmbManaPotion);
             this.groupBox4.Location = new System.Drawing.Point(9, 283);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(277, 267);
+            this.groupBox4.Size = new System.Drawing.Size(277, 285);
             this.groupBox4.TabIndex = 19;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Hunter Settings";
@@ -2419,6 +2421,17 @@
             this.tabPage4.Text = "Pet Buffs";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // chkRandomProcs
+            // 
+            this.chkRandomProcs.AutoSize = true;
+            this.chkRandomProcs.Location = new System.Drawing.Point(18, 259);
+            this.chkRandomProcs.Name = "chkRandomProcs";
+            this.chkRandomProcs.Size = new System.Drawing.Size(186, 17);
+            this.chkRandomProcs.TabIndex = 12;
+            this.chkRandomProcs.Text = "Randomize Procs on rotation Test";
+            this.chkRandomProcs.UseVisualStyleBackColor = true;
+            this.chkRandomProcs.CheckedChanged += new System.EventHandler(this.chkRandomProcs_CheckedChanged);
+            // 
             // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2655,5 +2668,6 @@
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.NumericUpDown numericUpDownCDCutOff;
         private System.Windows.Forms.Label label89;
+        private System.Windows.Forms.CheckBox chkRandomProcs;
     }
 }

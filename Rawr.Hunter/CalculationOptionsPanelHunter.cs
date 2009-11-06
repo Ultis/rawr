@@ -140,6 +140,7 @@ namespace Rawr.Hunter
             chkUseBeastDuringBW.Checked = options.useBeastDuringBeastialWrath;
             chkEmulateBugs.Checked = options.emulateSpreadsheetBugs;
             chkSpreadsheetUptimes.Checked = options.calculateUptimesLikeSpreadsheet;
+            chkRandomProcs.Checked = options.randomizeProcs;
             chkUseRotation.Checked = options.useRotationTest;
 
             PopulateAbilities();
@@ -1054,6 +1055,15 @@ namespace Rawr.Hunter
             options.useRotationTest = chkUseRotation.Checked;
             Character.OnCalculationsInvalidated();
         }
+
+
+
+        private void chkRandomProcs_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loadingOptions) return;
+            options.randomizeProcs = chkRandomProcs.Checked;
+            Character.OnCalculationsInvalidated();
+    }
 
     }
 }

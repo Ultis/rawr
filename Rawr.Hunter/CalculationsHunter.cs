@@ -812,6 +812,7 @@ namespace Rawr.Hunter
 
             // Using the rotation test will get us better frequencies
             RotationTest rotationTest = new RotationTest(character, calculatedStats, options);
+           
 
             if (options.useRotationTest)
             {
@@ -944,8 +945,10 @@ namespace Rawr.Hunter
                 calculatedStats.priorityRotation.calculateFrequencies();
                 calculatedStats.priorityRotation.calculateFrequencySums();
             }
-
+           
             double autoShotSpeed = rangedWeaponSpeed / (totalStaticHaste * totalDynamicHaste);
+
+
 
             #endregion
 
@@ -1533,6 +1536,12 @@ namespace Rawr.Hunter
 
             double glpyhOfAspectOfTheViperBonus = character.HunterTalents.GlyphOfAspectOfTheViper ? 1.1 : 1;
 
+            // 021109 - Drizz: Comment
+            // From spreadsheet
+            // =FinalMana*RangedWeaponSpeed/100*ShotsPerSecondWithoutHawk*IF(T7ViperBonus,1.2,1)*...
+            // ...IF(COUNTIF(GlyphsUsed,"Glyph of Aspect of the Viper"),1+...
+            // ...VLOOKUP("Glyph of Aspect of the Viper",GlyphMatrix,3,FALSE),1)+FinalMana*0.04/3
+
             calculatedStats.manaRegenViper = calculatedStats.BasicStats.Mana * Math.Round(rangedWeaponSpeed, 1) / 100 * shotsPerSecondWithoutHawk
                                         * manaRegenTier7ViperBonus * glpyhOfAspectOfTheViperBonus
                                         + calculatedStats.BasicStats.Mana * 0.04 / 3;
@@ -1636,6 +1645,8 @@ namespace Rawr.Hunter
             // Darkmoon Card: Crusade
             if (IsWearingTrinket(character, 31856)) calculatedStats.apFromGear += 120;
 
+
+            // Bloodfury
             calculatedStats.apFromBloodFury = 0;
             if (character.Race == CharacterRace.Orc && calculatedStats.bloodFury.freq > 0)
             {
@@ -2007,7 +2018,7 @@ namespace Rawr.Hunter
             if (character.HunterTalents.WildQuiver > 0)
             {
                 double wildQuiverProcChance = character.HunterTalents.WildQuiver * 0.04;
-                double wildQuiverProcFrequency = (autoShotSpeed / wildQuiverProcChance);
+                double wildQuiverProcFrequency = (1/autoShotsPerSecond / wildQuiverProcChance);
                 double wildQuiverDamageNormal = 0.8 * (rangedWeaponDamage + statsBaseGear.WeaponDamage + damageFromRAP);
                 double wildQuiverDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * (1 + targetDebuffsNature);
 
@@ -2063,7 +2074,8 @@ namespace Rawr.Hunter
             //29-10-2009 Drizz: Added for PiercingShots
             double steadyShotAvgNonCritDamage = steadyShotDamageNormal * steadyShotDamageAdjust*armorReductionDamageAdjust;
             double steadyShotAvgCritDamage = steadyShotAvgNonCritDamage * (1 + steadyShotCritAdjust);
-            double steadyShotPiercingShots = (character.HunterTalents.PiercingShots * 0.1)*steadyShotCritChance*steadyShotAvgCritDamage;
+            //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
+            double steadyShotPiercingShots = (1+ statsBuffs.BonusBleedDamageMultiplier)*(character.HunterTalents.PiercingShots * 0.1)*steadyShotCritChance*steadyShotAvgCritDamage;
 
             //Drizz: Add the piercingShots effect
             calculatedStats.steadyShot.damage = steadyShotDamageReal + steadyShotPiercingShots;
@@ -2145,7 +2157,8 @@ namespace Rawr.Hunter
             //Drizz: added for piercing shots
             double aimedShotAvgNonCritDamage = aimedShotDamageNormal * aimedShotDamageAdjust*armorReductionDamageAdjust;
             double aimedShotAvgCritDamage = aimedShotAvgNonCritDamage * (1 + aimedShotCritAdjust);
-            double aimedShotPiercingShots = (character.HunterTalents.PiercingShots * 0.1) * aimedShotCrit * aimedShotAvgCritDamage;
+            //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
+            double aimedShotPiercingShots = (1 + statsBuffs.BonusBleedDamageMultiplier) * (character.HunterTalents.PiercingShots * 0.1) * aimedShotCrit * aimedShotAvgCritDamage;
 
             //Drizz: Trying out...
             calculatedStats.aimedShot.damage = aimedShotDamageReal+ aimedShotPiercingShots;
@@ -2207,7 +2220,8 @@ namespace Rawr.Hunter
             //Drizz: added for piercing shots
             double chimeraShotAvgNonCritDamage = chimeraShotDamageNormal * talentDamageAdjust * ISSChimeraShotDamageAdjust * (1+ targetDebuffsNature);
             double chimeraShotAvgCritDamage = chimeraShotAvgNonCritDamage * (1 + chimeraShotCritAdjust);
-            double chimeraShotPiercingShots = (character.HunterTalents.PiercingShots * 0.1) * critHitPercent * chimeraShotAvgCritDamage;
+            // 021109 - Drizz: Had to add the Bleed Damage Multiplier
+            double chimeraShotPiercingShots = (1 + statsBuffs.BonusBleedDamageMultiplier) * (character.HunterTalents.PiercingShots * 0.1) * critHitPercent * chimeraShotAvgCritDamage;
 
             calculatedStats.chimeraShot.damage = chimeraShotDamageReal + chimeraShotPiercingShots;
 
