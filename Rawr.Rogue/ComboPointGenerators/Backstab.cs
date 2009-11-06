@@ -21,7 +21,9 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         public override float Crit( CombatFactors combatFactors, CalculationOptionsRogue calcOpts )
         {
-            return (combatFactors.ProbMhCrit + Talents.PuncturingWounds.Backstab.Bonus + CritBonusFromTurnTheTables(calcOpts)) * combatFactors.ProbYellowHit;
+            float baseCrit = combatFactors.ProbMhCrit + Talents.PuncturingWounds.Backstab.Bonus + CritBonusFromTurnTheTables(calcOpts) + combatFactors.T09x4BonusCPGCritChance;
+
+            return Math.Min(combatFactors.ProbYellowHit, baseCrit);
         }
 
         public override float CalcCpgDps(CalculationOptionsRogue calcOpts, CombatFactors combatFactors, Stats stats, CycleTime cycleTime)
@@ -48,11 +50,6 @@ namespace Rawr.Rogue.ComboPointGenerators
             {
                 return 0f;
             }
-        }
-
-        private static float CriticalDamageMultiplier(CombatFactors combatFactors)
-        {
-            return (combatFactors.BaseCritMultiplier + Talents.Lethality.Bonus);
         }
     }
 }

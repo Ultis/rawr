@@ -32,5 +32,9 @@ namespace Rawr.Rogue.ComboPointGenerators {
         protected float CritBonusFromTurnTheTables(CalculationOptionsRogue calcOpts) {
             return calcOpts.TurnTheTablesUptime * Talents.TurnTheTables.Bonus;
         }
+        protected float CriticalDamageMultiplier(CombatFactors combatFactors)
+        {
+            return combatFactors.BaseCritMultiplier * (1f + Talents.Lethality.Bonus);
+        }
     }
 }

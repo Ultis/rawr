@@ -26,7 +26,9 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         public override float Crit( CombatFactors combatFactors, CalculationOptionsRogue calcOpts )
         {
-            return combatFactors.ProbMhCrit + Talents.PuncturingWounds.Mutilate.Bonus + CritBonusFromTurnTheTables(calcOpts);
+            float baseCrit = combatFactors.ProbMhCrit + Talents.PuncturingWounds.Mutilate.Bonus + CritBonusFromTurnTheTables(calcOpts) + combatFactors.T09x4BonusCPGCritChance;
+
+            return Math.Min(combatFactors.ProbYellowHit, baseCrit);
 		}
 
         protected override float ComboPointsGeneratedPerAttack(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
@@ -69,15 +71,10 @@ namespace Rawr.Rogue.ComboPointGenerators
                 || calcOpts.TempMainHandEnchant.Name == new WoundPoison().Name
                 || calcOpts.TempOffHandEnchant.Name == new WoundPoison().Name)
             {
-                return 1.5f;
+                return 1.2f;
             }
 
             return 1f;
-        }
-
-        private static float CriticalDamageMultiplier(CombatFactors combatFactors)
-        {
-            return combatFactors.BaseCritMultiplier + Talents.Lethality.Bonus;
         }
 
         public override float OhHitsNeeded(CombatFactors combatFactors, CalculationOptionsRogue calcOpts)
