@@ -7,6 +7,26 @@ namespace Rawr.Moonkin
 	[Rawr.Calculations.RawrModelInfo("Moonkin", "Spell_Nature_ForceOfNature", CharacterClass.Druid)]
 	public class CalculationsMoonkin : CalculationsBase
     {
+        private string[] _optimizableCalculationLabels = null;
+        /// <summary>
+        /// Labels of the stats available to the Optimizer 
+        /// </summary>
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+                    "Hit Rating",
+					"Haste Rating",
+                    "Crit Rating"
+					};
+                return _optimizableCalculationLabels;
+            }
+        }
+        /// <summary>
+        /// List of gemming templates available to Rawr.
+        /// </summary>
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -211,6 +231,7 @@ namespace Rawr.Moonkin
 				};
             }
         }
+
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
             if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) return false;

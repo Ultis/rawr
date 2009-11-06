@@ -64,5 +64,16 @@ namespace Rawr.Moonkin
 
             return retVal;
         }
+
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Hit Rating": return baseStats.HitRating;
+                case "Haste Rating": return baseStats.HasteRating;
+                case "Crit Rating": return baseStats.CritRating;
+            }
+            return 0;
+        }
     }
 }
