@@ -49,9 +49,21 @@ namespace Rawr.Warlock
             //get buffs before calculations for double dipping of benifts
             Stats buffs = (new CalculationsWarlock()).GetBuffStats(character);
             //remove player only buffs
-            if (character.ActiveBuffsContains("Fish Feast")) buffs -= Buff.GetBuffByName("Fish Feast").Stats;
-            if (character.ActiveBuffsContains("Flask of the Frost Wyrm")) buffs -= Buff.GetBuffByName("Flask of the Frost Wyrm").Stats;
             if (character.ActiveBuffsContains("Focus Magic")) buffs -= Buff.GetBuffByName("Focus Magic").Stats;
+            //remove elixir and flask/food buff
+            foreach (Buff buff in character.ActiveBuffs)
+            {
+                if (buff.Group == "Elixirs and Flasks")
+                {
+                    buffs -= buff.Stats;
+                    //TODO: Remove improvement from applying to pet as well
+                    //foreach (Buff ImpBuff in buff.Improvements) buffs -= ImpBuff.Stats; ;
+                }
+                if (buff.Group == "Food") buffs -= buff.Stats;
+            }
+
+
+
 
             petStats += buffs;
             #endregion
