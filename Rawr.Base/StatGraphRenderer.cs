@@ -62,7 +62,7 @@ namespace Rawr
 			byte[] types = new byte[points.Length];
 			types[0] = (byte)PathPointType.Start;
 			types[types.Length - 1] = (byte)PathPointType.Line;
-			float integralY = 0f, x = 0;
+			float x = 0; // integralY = 0f, 
 			for (int i = 1; i <= graphData.Length; i++)
 			{
 				x = MinimumX + (float)(i - 1) / (float)GranularityX;

@@ -3967,6 +3967,28 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
 			});
             #endregion
+            #region Tier 10 | Frost Witch's
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Frost Witch's Battlegear 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Enhance2T10 = 1 },
+                SetName = "Nobundo's Battlegear",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Frost Witch's Battlegear 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Enhance4T10 = 1 },
+				SetName = "Nobundo's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            #endregion
             #endregion
             #region PvP
             #endregion

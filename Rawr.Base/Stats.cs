@@ -228,6 +228,8 @@ namespace Rawr {
         Enhance4T8,
         Enhance2T9,
         Enhance4T9,
+        Enhance2T10,
+        Enhance4T10,
         #endregion
         #region Added by Rawr.Elemental
         BonusCritChance,
@@ -3157,6 +3159,24 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T9]; }
             set { _rawAdditiveData[(int)AdditiveStat.Enhance4T9] = value; }
+        }
+
+        [DisplayName("Enhance T10 2 Piece Bonus")]
+        [Category("Enhance")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float Enhance2T10
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T10]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Enhance2T10] = value; }
+        }
+
+        [DisplayName("Enhance T10 4 Piece Bonus")]
+        [Category("Enhance")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float Enhance4T10
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T10]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Enhance4T10] = value; }
         }
 
         #endregion
