@@ -746,12 +746,21 @@ namespace Rawr.Mage
             Sequence sequence = GenerateRawSequence(false);
             if (!sequence.SortGroups(displaySolver))
             {
-                sequence = GenerateRawSequence(true);
-                sequence.SortGroups(displaySolver);
+                //sequence = GenerateRawSequence(true);
+                //sequence.SortGroups(displaySolver);
+            }
+            foreach (SequenceItem item in sequence.sequence)
+            {
+                item.MinTime = SegmentList[item.Segment].TimeStart;
+                item.MaxTime = SegmentList[item.Segment].TimeEnd - item.Duration;
             }
 
+
             // mana gem/pot/evo positioning
-            sequence.RepositionManaConsumption();
+            if (CalculationOptions.CooldownRestrictionList == null && !CalculationOptions.EncounterEnabled)
+            {
+                sequence.RepositionManaConsumption();
+            }
 
             sequence.RemoveIndex(ColumnTimeExtension);
             sequence.Compact(true);

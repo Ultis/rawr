@@ -1703,32 +1703,36 @@ namespace Rawr.Mage
                     manaRegen = wand.ManaPerSecond;
                     for (int segment = 0; segment < wandSegments; segment++)
                     {
-                        column = lp.AddColumnUnsafe();
-                        lp.SetColumnUpperBound(column, (wandSegments > 1) ? segmentList[segment].Duration : calculationOptions.FightDuration);
-                        if (segment == 0) calculationResult.ColumnWand = column;
-                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Cycle = wand, Segment = segment, State = calculationResult.BaseState });
-                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
-                        lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
-                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                        lp.SetElementUnsafe(rowThreat, column, tps = wand.ThreatPerSecond);
-                        lp.SetElementUnsafe(rowTargetDamage, column, -wand.DamagePerSecond);
-                        lp.SetCostUnsafe(column, minimizeTime ? -1 : wand.DamagePerSecond);
-                        if (needsDisplayCalculations) tpsList.Add(tps);
-                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                        if (restrictManaUse)
+                        float mult = segmentCooldowns ? calculationOptions.GetDamageMultiplier(segmentList[segment]) : 1.0f;
+                        if (mult > 0)
                         {
-                            for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                            column = lp.AddColumnUnsafe();
+                            lp.SetColumnUpperBound(column, (wandSegments > 1) ? segmentList[segment].Duration : calculationOptions.FightDuration);
+                            if (segment == 0) calculationResult.ColumnWand = column;
+                            if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Cycle = wand, Segment = segment, State = calculationResult.BaseState });
+                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
+                            lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
+                            lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                            lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                            lp.SetElementUnsafe(rowThreat, column, tps = wand.ThreatPerSecond);
+                            lp.SetElementUnsafe(rowTargetDamage, column, -wand.DamagePerSecond);
+                            lp.SetCostUnsafe(column, minimizeTime ? -1 : wand.DamagePerSecond * mult);
+                            if (needsDisplayCalculations) tpsList.Add(tps);
+                            if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                            if (restrictManaUse)
                             {
-                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
-                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                                for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                                }
                             }
-                        }
-                        if (restrictThreat)
-                        {
-                            for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                            if (restrictThreat)
                             {
-                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                }
                             }
                         }
                     }
@@ -2468,18 +2472,22 @@ namespace Rawr.Mage
                             {
                                 if (calculationOptions.CooldownRestrictionsValid(segmentList[calculationOptions.IncrementalSetSegments[index]], stateList[buffset]))
                                 {
-                                    column = lp.AddColumnUnsafe();
-                                    Cycle c = stateList[buffset].GetCycle(calculationOptions.IncrementalSetSpells[index]);
-                                    int seg = calculationOptions.IncrementalSetSegments[index];
-                                    if (seg != lastSegment)
+                                    float mult = segmentCooldowns ? calculationOptions.GetDamageMultiplier(segmentList[calculationOptions.IncrementalSetSegments[index]]) : 1.0f;
+                                    if (mult > 0)
                                     {
-                                        for (; lastSegment < seg; )
+                                        column = lp.AddColumnUnsafe();
+                                        Cycle c = stateList[buffset].GetCycle(calculationOptions.IncrementalSetSpells[index]);
+                                        int seg = calculationOptions.IncrementalSetSegments[index];
+                                        if (seg != lastSegment)
                                         {
-                                            segmentColumn[++lastSegment] = column;
+                                            for (; lastSegment < seg; )
+                                            {
+                                                segmentColumn[++lastSegment] = column;
+                                            }
                                         }
+                                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell });
+                                        SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, c, mult);
                                     }
-                                    if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell });
-                                    SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, c);
                                 }
                             }
                         }
@@ -2501,31 +2509,35 @@ namespace Rawr.Mage
                         {
                             if (calculationOptions.CooldownRestrictionsValid(segmentList[seg], stateList[buffset]))
                             {
-                                placed.Clear();
-                                for (int spell = 0; spell < spellList.Count; spell++)
+                                float mult = segmentCooldowns ? calculationOptions.GetDamageMultiplier(segmentList[seg]) : 1.0f;
+                                if (mult > 0)
                                 {
-                                    if (segmentCooldowns && moltenFuryAvailable && stateList[buffset].MoltenFury && seg < firstMoltenFurySegment) continue;
-                                    if (segmentCooldowns && moltenFuryAvailable && !stateList[buffset].MoltenFury && seg >= firstMoltenFurySegment) continue;
-                                    if (!segmentNonCooldowns && stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
-                                    if (segmentCooldowns && calculationOptions.HeroismControl == 3 && stateList[buffset].Heroism && seg < firstMoltenFurySegment) continue;
-                                    Cycle c = stateList[buffset].GetCycle(spellList[spell]);
-                                    bool skip = false;
-                                    foreach (Cycle s2 in placed)
+                                    placed.Clear();
+                                    for (int spell = 0; spell < spellList.Count; spell++)
                                     {
-                                        // TODO verify it this is ok, it assumes that spells placed under same casting state are independent except for aoe spells
-                                        // assuming there are no constraints that depend on properties of particular spell cycle instead of properties of casting state
-                                        if (!c.AreaEffect && s2.DamagePerSecond >= c.DamagePerSecond - 0.00001 && s2.ManaPerSecond <= c.ManaPerSecond + 0.00001)
+                                        if (segmentCooldowns && moltenFuryAvailable && stateList[buffset].MoltenFury && seg < firstMoltenFurySegment) continue;
+                                        if (segmentCooldowns && moltenFuryAvailable && !stateList[buffset].MoltenFury && seg >= firstMoltenFurySegment) continue;
+                                        if (!segmentNonCooldowns && stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
+                                        if (segmentCooldowns && calculationOptions.HeroismControl == 3 && stateList[buffset].Heroism && seg < firstMoltenFurySegment) continue;
+                                        Cycle c = stateList[buffset].GetCycle(spellList[spell]);
+                                        bool skip = false;
+                                        foreach (Cycle s2 in placed)
                                         {
-                                            skip = true;
-                                            break;
+                                            // TODO verify it this is ok, it assumes that spells placed under same casting state are independent except for aoe spells
+                                            // assuming there are no constraints that depend on properties of particular spell cycle instead of properties of casting state
+                                            if (!c.AreaEffect && s2.DamagePerSecond >= c.DamagePerSecond - 0.00001 && s2.ManaPerSecond <= c.ManaPerSecond + 0.00001)
+                                            {
+                                                skip = true;
+                                                break;
+                                            }
                                         }
-                                    }
-                                    if (!skip && (c.AffectedByFlameCap || !stateList[buffset].FlameCap))
-                                    {
-                                        placed.Add(c);
-                                        column = lp.AddColumnUnsafe();
-                                        if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell });
-                                        SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, c);
+                                        if (!skip && (c.AffectedByFlameCap || !stateList[buffset].FlameCap))
+                                        {
+                                            placed.Add(c);
+                                            column = lp.AddColumnUnsafe();
+                                            if (needsSolutionVariables) solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell });
+                                            SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, c, mult);
+                                        }
                                     }
                                 }
                             }
@@ -2650,6 +2662,51 @@ namespace Rawr.Mage
                     {
                         ticks.Add(restriction.TimeStart);
                         ticks.Add(restriction.TimeEnd);
+                    }
+                }
+                if (calculationOptions.EncounterEnabled && calculationOptions.Encounter != null)
+                {
+                    foreach (DamageMultiplier multiplier in calculationOptions.Encounter.GlobalMultipliers)
+                    {
+                        if (multiplier.RelativeTime)
+                        {
+                            ticks.Add(multiplier.StartTime * calculationOptions.FightDuration);
+                            ticks.Add(multiplier.EndTime * calculationOptions.FightDuration);
+                        }
+                        else
+                        {
+                            ticks.Add(multiplier.StartTime);
+                            ticks.Add(multiplier.EndTime);
+                        }
+                    }
+                    foreach (TargetGroup group in calculationOptions.Encounter.TargetGroups)
+                    {
+                        float startTime, endTime;
+                        if (group.RelativeTime)
+                        {
+                            startTime = group.EntranceTime * calculationOptions.FightDuration;
+                            endTime = group.ExitTime * calculationOptions.FightDuration;
+                        }
+                        else
+                        {
+                            startTime = group.EntranceTime;
+                            endTime = group.ExitTime;
+                        }
+                        ticks.Add(startTime);
+                        ticks.Add(endTime);
+                        foreach (DamageMultiplier multiplier in group.Multipliers)
+                        {
+                            if (multiplier.RelativeTime)
+                            {
+                                ticks.Add(startTime + multiplier.StartTime * (endTime - startTime));
+                                ticks.Add(startTime + multiplier.EndTime * (endTime - startTime));
+                            }
+                            else
+                            {
+                                ticks.Add(startTime + multiplier.StartTime);
+                                ticks.Add(startTime + multiplier.EndTime);
+                            }
+                        }
                     }
                 }
                 ticks.Sort();
@@ -3285,7 +3342,7 @@ namespace Rawr.Mage
             return rowCount;
         }
 
-        private void SetSpellColumn(bool minimizeTime, List<double> tpsList, int segment, CastingState state, int column, Cycle cycle)
+        private void SetSpellColumn(bool minimizeTime, List<double> tpsList, int segment, CastingState state, int column, Cycle cycle, float multiplier)
         {
             double bound = calculationOptions.FightDuration;
             double manaRegen = cycle.ManaPerSecond;
@@ -3390,8 +3447,8 @@ namespace Rawr.Mage
             lp.SetElementUnsafe(rowThreat, column, cycle.ThreatPerSecond);
             if (needsDisplayCalculations) tpsList.Add(cycle.ThreatPerSecond);
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
-            lp.SetElementUnsafe(rowTargetDamage, column, -cycle.DamagePerSecond);
-            lp.SetCostUnsafe(column, minimizeTime ? -1 : cycle.DamagePerSecond);
+            lp.SetElementUnsafe(rowTargetDamage, column, -cycle.DamagePerSecond * multiplier);
+            lp.SetCostUnsafe(column, minimizeTime ? -1 : cycle.DamagePerSecond * multiplier);
 
             foreach (StackingConstraint constraint in rowStackingConstraint)
             {

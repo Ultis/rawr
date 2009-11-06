@@ -421,7 +421,6 @@ namespace Rawr.Mage
             set { _ReconstructSequence = value; OnPropertyChanged("ReconstructSequence"); }
         }
 
-
         private bool _ComparisonSegmentCooldowns;
         public bool ComparisonSegmentCooldowns
         {
@@ -506,6 +505,15 @@ namespace Rawr.Mage
             set { _EnableHastedEvocation = value; OnPropertyChanged("EnableHastedEvocation"); }
         }
 
+        private bool _EncounterEnabled;
+        public bool EncounterEnabled
+        {
+            get { return _EncounterEnabled; }
+            set { _EncounterEnabled = value; OnPropertyChanged("EncounterEnabled"); }
+        }
+
+        public Encounter Encounter { get; set; }
+
         [XmlIgnore]
         public List<CooldownRestriction> CooldownRestrictionList;
         public bool CooldownRestrictionsValid(Segment segment, CastingState state)
@@ -519,6 +527,76 @@ namespace Rawr.Mage
                 }
             }
             return true;
+        }
+
+        public float GetDamageMultiplier(Segment segment)
+        {
+            float mult = 1.0f;
+            if (Encounter != null && EncounterEnabled)
+            {
+                // very naive for now, assume that exactly one target can apply
+                foreach (DamageMultiplier multiplier in Encounter.GlobalMultipliers)
+                {
+                    float startTime, endTime;
+                    if (multiplier.RelativeTime)
+                    {
+                        startTime = multiplier.StartTime * FightDuration;
+                        endTime = multiplier.EndTime * FightDuration;
+                    }
+                    else
+                    {
+                        startTime = multiplier.StartTime;
+                        endTime = multiplier.EndTime;
+                    }
+                    if (segment.TimeStart >= startTime && segment.TimeEnd <= endTime)
+                    {
+                        mult *= multiplier.Multiplier;
+                    }
+                }
+                bool foundTarget = false;
+                foreach (TargetGroup group in Encounter.TargetGroups)
+                {
+                    float startTime, endTime;
+                    if (group.RelativeTime)
+                    {
+                        startTime = group.EntranceTime * FightDuration;
+                        endTime = group.ExitTime * FightDuration;
+                    }
+                    else
+                    {
+                        startTime = group.EntranceTime;
+                        endTime = group.ExitTime;
+                    }
+                    if (segment.TimeStart >= startTime && segment.TimeEnd <= endTime)
+                    {
+                        foundTarget = true;
+                        foreach (DamageMultiplier multiplier in group.Multipliers)
+                        {
+                            float t1, t2;
+                            if (multiplier.RelativeTime)
+                            {
+                                t1 = startTime + multiplier.StartTime * (endTime - startTime);
+                                t2 = startTime + multiplier.EndTime * (endTime - startTime);
+                            }
+                            else
+                            {
+                                t1 = startTime + multiplier.StartTime;
+                                t2 = startTime + multiplier.EndTime;
+                            }
+                            if (segment.TimeStart >= t1 && segment.TimeEnd <= t2)
+                            {
+                                mult *= multiplier.Multiplier;
+                            }
+                        }
+                        break;
+                    }
+                }
+                if (!foundTarget)
+                {
+                    mult = 0.0f;
+                }
+            }
+            return mult;
         }
 
         private MIPMethod _MIPMethod;
@@ -1114,6 +1192,7 @@ namespace Rawr.Mage
             ChanceToLiveAttenuation = 0.1f;
             MaxUseAssumption = true;
             FrostbiteUtilization = 1.0f;
+            Encounter = new Encounter();
         }
 
         public CalculationOptionsMage(Character character)

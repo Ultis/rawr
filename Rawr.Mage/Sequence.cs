@@ -1485,9 +1485,9 @@ namespace Rawr.Mage.SequenceReconstruction
             SortGroups_Compute(groupedItems, solver);
             if (compactItems == null)
             {
-                return false;
+                //return false;
             }
-            if (compactItems != null)
+            else /*if (compactItems != null)*/
             {
                 for (int i = 0; i < compactItems.Count; i++)
                 {
@@ -1532,9 +1532,11 @@ namespace Rawr.Mage.SequenceReconstruction
 
             sequence.Sort((x, y) =>
             {
+                int compare = x.Segment.CompareTo(y.Segment);
+                if (compare != 0) return compare;
                 bool xgrouped = x.Group.Count > 0;
                 bool ygrouped = y.Group.Count > 0;
-                int compare = xgrouped.CompareTo(ygrouped);
+                compare = xgrouped.CompareTo(ygrouped);
                 if (compare != 0) return compare;
                 compare = x.MinTime.CompareTo(y.MinTime);
                 if (compare != 0) return compare;
