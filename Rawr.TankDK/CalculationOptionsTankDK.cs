@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.ComponentModel;
 
 namespace Rawr.TankDK
 {
@@ -9,6 +10,7 @@ namespace Rawr.TankDK
 #endif
 	public class CalculationOptionsTankDK : ICalculationOptionBase
 	{
+        // No one will ever tank in anything other than Frost.
 		public enum Presence { Blood, Frost, Unholy }
 
 		public int TargetLevel = 83;
@@ -37,5 +39,14 @@ namespace Rawr.TankDK
 			return xml.ToString();
 		}
 
+        #region INotifyPropertyChanged Members
+        private void OnPropertyChanged(string property)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
 	}
 }

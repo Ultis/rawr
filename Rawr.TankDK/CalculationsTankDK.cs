@@ -1329,14 +1329,15 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // Mark of blood
+            // Cast on the enemy
             // buff that lasts 20 secs or 20 hits
-            // heals the target for 4% of max health for each hit.
+            // heals the target for 4% of max health for each damage dealing hit from that enemy to the target of that enemy.
             if (character.DeathKnightTalents.MarkOfBlood > 0) {
                 // TODO: Need to know how many hits are incoming.
                 // for now assuming 10 hits.  This should be adjusted by the Threat section for Boss hit rate.
-                newStats = new Stats();
-                newStats.Healed = (fHealth * 0.04f * 10f);
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, newStats, 20f, 3f * 60f));
+//                newStats = new Stats();
+//                newStats.Healed = (fHealth * 0.04f * 10f);
+//                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, newStats, 20f, 3f * 60f));
             }
 
             // Bloody Vengence

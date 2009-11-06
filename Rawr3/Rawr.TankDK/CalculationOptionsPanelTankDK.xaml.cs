@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Rawr.TankDK
 {
@@ -28,6 +29,12 @@ namespace Rawr.TankDK
             {
                 character = value;
                 LoadCalculationOptions();
+
+//                RotationTab.DataContext = (Character.CalculationOptions as CalculationOptionsTankDK).rotation;
+                OptionsTab.DataContext = (Character.CalculationOptions as CalculationOptionsTankDK);
+
+                ((CalculationOptionsTankDK)character.CalculationOptions).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelTankDK_PropertyChanged);
+
             }
         }
 
@@ -38,6 +45,15 @@ namespace Rawr.TankDK
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsTankDK();
 
             _loadingCalculationOptions = false;
+        }
+
+        void ButtonClickHandler(object sender, RoutedEventArgs e)
+        {
+            Character.OnCalculationsInvalidated();
+        }
+
+        void CalculationOptionsPanelTankDK_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
         }
     }
 }
