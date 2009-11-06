@@ -272,6 +272,19 @@ namespace Rawr.Enhance
             stats.AttackPower += URattackPower; // no need to multiply by bonus attack power as the whole point is its zero if we need to add Unleashed rage
             stats.SpellPower += mentalQuickness * URattackPower * (1f + stats.BonusSpellPowerMultiplier);
 
+            // Tier 10 Bonuses
+            if (stats.Enhance2T10 == 1)
+            {
+                SpecialEffect t10 = new SpecialEffect(Trigger.Use, new Stats { BonusDamageMultiplier = .12f }, 15f, 0f);
+                t10.AccumulateAverageStats(stats, cs.AbilityCooldown(EnhanceAbility.ShamanisticRage));
+            }
+            if (stats.Enhance4T10 == 1)
+            {
+                SpecialEffect t10 = new SpecialEffect(Trigger.Use, new Stats { AttackPower = .2f * stats.AttackPower }, 10f, 0);
+//                float uptime = t10.GetAverageUptime(cs.SecondsToFiveStack, .15f);
+                t10.AccumulateAverageStats(stats, cs.SecondsToFiveStack, 0.15f);
+            }
+
             // assign basic variables for calcs
             float attackPower = stats.AttackPower;
             float spellPower = stats.SpellPower;
@@ -823,6 +836,8 @@ namespace Rawr.Enhance
                     Enhance2T8 = stats.Enhance2T8,
                     Enhance2T9 = stats.Enhance2T9,
                     Enhance4T9 = stats.Enhance4T9,
+                    Enhance2T10 = stats.Enhance2T10,
+                    Enhance4T10 = stats.Enhance4T10,
                     PhysicalHit = stats.PhysicalHit,
                     PhysicalHaste = stats.PhysicalHaste,
                     PhysicalCrit = stats.PhysicalCrit,
@@ -914,8 +929,8 @@ namespace Rawr.Enhance
                 stats.ExposeWeakness + stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + 
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
-                stats.LightningSpellPower + stats.Enhance4T8 + stats.BonusFlurryHaste +
-                stats.BonusWFAttackPower + stats.Enhance2T9 + stats.Enhance4T9 + 
+                stats.LightningSpellPower + stats.Enhance4T8 + stats.BonusFlurryHaste + stats.BonusWFAttackPower + 
+                stats.Enhance2T9 + stats.Enhance4T9 + +stats.Enhance2T10 + stats.Enhance4T10 + 
                 stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +
                 stats.BonusLSDamage + stats.Enhance2T8 + stats.BonusSSDamage) > 0;
         }

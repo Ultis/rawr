@@ -3974,7 +3974,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Enhance2T10 = 1 },
-                SetName = "Nobundo's Battlegear",
+                SetName = "Frost Witch's Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
@@ -3984,7 +3984,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Enhance4T10 = 1 },
-				SetName = "Nobundo's Battlegear",
+                SetName = "Frost Witch's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
