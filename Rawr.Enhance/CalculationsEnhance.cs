@@ -78,6 +78,8 @@ namespace Rawr.Enhance
                     "Complex Stats:OH Enchant Uptime",
                     "Complex Stats:Trinket 1 Uptime",
                     "Complex Stats:Trinket 2 Uptime",
+                    "Complex Stats:Tier 10 2 pc Uptime",
+                    "Complex Stats:Tier 10 4 pc Uptime",
                     "Attacks:White Damage",
                     "Attacks:Windfury Attack",
                     "Attacks:Flametongue Attack",
@@ -276,12 +278,13 @@ namespace Rawr.Enhance
             if (stats.Enhance2T10 == 1)
             {
                 SpecialEffect t10 = new SpecialEffect(Trigger.Use, new Stats { BonusDamageMultiplier = .12f }, 15f, 0f);
+                calculatedStats.T10_2Uptime = t10.GetAverageUptime(cs.AbilityCooldown(EnhanceAbility.ShamanisticRage), 1f) * 100f;
                 t10.AccumulateAverageStats(stats, cs.AbilityCooldown(EnhanceAbility.ShamanisticRage));
             }
             if (stats.Enhance4T10 == 1)
             {
                 SpecialEffect t10 = new SpecialEffect(Trigger.Use, new Stats { AttackPower = .2f * stats.AttackPower }, 10f, 0);
-//                float uptime = t10.GetAverageUptime(cs.SecondsToFiveStack, .15f);
+                calculatedStats.T10_4Uptime = t10.GetAverageUptime(cs.SecondsToFiveStack, .15f) * 100f;
                 t10.AccumulateAverageStats(stats, cs.SecondsToFiveStack, 0.15f);
             }
 
