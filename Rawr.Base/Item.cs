@@ -16,7 +16,13 @@ namespace Rawr
 		[XmlElement("ItemLevel")]
 		public int _itemLevel;
 
-		[XmlElement("IconPath")]
+        [XmlElement("DisplayId")]
+        public int _displayId;
+
+        [XmlElement("DisplaySlot")]
+        public int _displaySlot;
+
+        [XmlElement("IconPath")]
 		public string _iconPath;
 
 		[XmlElement("Stats")]
@@ -162,7 +168,25 @@ namespace Rawr
 				_itemLevel = value;
 			}
 		}
-		[XmlIgnore]
+        [XmlIgnore]
+        public int DisplayId
+        {
+            get { return _displayId; }
+            set
+            {
+                _displayId = value;
+            }
+        }
+        [XmlIgnore]
+        public int DisplaySlot
+        {
+            get { return _displaySlot; }
+            set
+            {
+                _displaySlot = value;
+            }
+        }
+        [XmlIgnore]
 		public string IconPath
 		{
 			get { return (_iconPath == null ? null : _iconPath.ToLower(System.Globalization.CultureInfo.InvariantCulture)); }
@@ -1342,7 +1366,23 @@ namespace Rawr
             }
         }
 
-		// caching policy: cache total stats only for items that don't have global requirements
+        public int DisplayId
+        {
+            get
+            {
+                return Item == null ? 0 : Item.DisplayId;
+            }
+        }
+
+        public int DisplaySlot
+        {
+            get
+            {
+                return Item == null ? 0 : Item.DisplaySlot;
+            }
+        }
+
+        // caching policy: cache total stats only for items that don't have global requirements
 		// value should not change if it relies on data other than from this item
 		// assume there is no stat editing happening in code other than in item editor
 		// invalidate on id changes, invalidate when item is opened for editing

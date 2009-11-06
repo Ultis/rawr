@@ -2344,5 +2344,45 @@ namespace Rawr
                 dialog.Dispose();
             }
         }
+
+        private void view3DWowheadModelViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowWowhead3DModelURL(Character, true);
+        }
+
+        private void maleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowWowhead3DModelURL(Character, true);
+        }
+
+        private void femaleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowWowhead3DModelURL(Character, false);
+        }
+
+        private void ShowWowhead3DModelURL(Character character, bool maleModel)
+        {
+            bool missingDisplayID = false;
+            StringBuilder URL = new StringBuilder("http://static.wowhead.com/modelviewer/ModelView.swf?model=");
+            URL.Append(character.Race.ToString().ToLower());
+            URL.Append(maleModel ? "male" : "female");
+            URL.Append("&modelType=16&ha=0&hc=0&fa=0&sk=0&fh=0&fc=0&contentPath=http://static.wowhead.com/modelviewer/&blur=1&equipList=");
+            foreach (ItemInstance item in character.GetItems())
+            {
+                if (item != null && (item.Slot != ItemSlot.Neck && item.Slot != ItemSlot.Shirt && item.Slot != ItemSlot.Tabard &&
+                    item.Slot != ItemSlot.Trinket && item.Slot != ItemSlot.Finger && item.Slot != ItemSlot.Projectile && item.Slot != ItemSlot.ProjectileBag ||
+                    (item.Slot == ItemSlot.Ranged && (item.Type == ItemType.Bow || item.Type == ItemType.Crossbow || item.Type == ItemType.Thrown || item.Type == ItemType.Wand))))
+                {
+                   if (item.DisplayId == 0 || item.DisplaySlot == 0)
+                        missingDisplayID = true;
+                    URL.Append(item.DisplaySlot + ",");
+                    URL.Append(item.DisplayId + ",");
+                }
+            }
+            if (missingDisplayID)
+                MessageBox.Show("One or more of your equipped items has a missing Display Information.\r\nPlease update your item cache from Wowhead to try to fix this problem.");
+            else
+                Help.ShowHelp(null, URL.ToString().TrimEnd(','));
+        }
     }
 }

@@ -359,6 +359,8 @@ namespace Rawr //O O . .
 
         public bool ActiveBuffsContains(string buff)
         {
+            if (_activeBuffs == null)
+                return false;
             return _activeBuffs.FindIndex(x => x.Name == buff) >= 0;
         }
 

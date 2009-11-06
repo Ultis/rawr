@@ -100,7 +100,6 @@
     <Content Include="ClientBin\ItemSource.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ClientBin\Rawr.Silverlight.xap" />
     <Content Include="crossdomain.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +111,7 @@
     <Content Include="ClientBin\DefaultDataFiles.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ClientBin\Rawr.Silverlight.xap" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

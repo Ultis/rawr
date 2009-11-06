@@ -472,7 +472,7 @@ namespace Rawr.Enhance
                 float damageFTBase = 274f * cs.UnhastedOHSpeed / 4.0f;
                 float damageFTCoef = 0.03811f * cs.UnhastedOHSpeed;
                 float damageFT = damageFTBase + damageFTCoef * spellPower;
-                float FTdps = damageFT * cs.HitsPerSOH;
+                float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;

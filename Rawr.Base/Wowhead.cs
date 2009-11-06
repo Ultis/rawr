@@ -663,7 +663,6 @@ namespace Rawr
 			{
 				case "id": //ID's are parsed out of the main data, not the json
 				case "name": //Item names are parsed out of the main data, not the json
-				case "slotbak": //A couple slots actually have two possible slots... ie vests and robes both fit in chest. slotbak distinguishes vests from robes. We don't care for Rawr, so ignored.
 				case "subclass": //subclass is combined with class
 				case "subsubclass": //Only used for Battle vs Guardian Elixirs
 				case "buyprice": //Rawr doesn't care about buy...
@@ -673,7 +672,6 @@ namespace Rawr
 				case "maxcount": //Rawr doesn't deal with stack sizes
 				case "dura": //durability isn't handled
 				case "nsockets": //Rawr figures this out itself, Smart program.
-				case "displayid": //An ID# for each icon, but we'll just get the icon name from the xml
 				case "races": //Not worried about race restrictions
 				case "source": //Handled below by individual keyvals
 				case "sourcemore": //Handled below by individual keyvals
@@ -681,6 +679,12 @@ namespace Rawr
 				case "avgmoney": //For containers, average amount of money inside
 				case "glyph": //1=Major, 2=Minor
 					break;
+                case "displayid": //A 3d display ID# for each icon
+                    item.DisplayId = int.Parse(value);
+                    break;
+                case "slotbak": //A couple slots actually have two possible slots... ie vests and robes both fit in chest. slotbak distinguishes vests from robes. We don't care for Rawr, so ignored.
+                    item.DisplaySlot = int.Parse(value); // it is also used for the 3d display slot id
+                    break;
                 case "level": //Rawr now handles item levels
                     item.ItemLevel = int.Parse(value);
                     break;
