@@ -269,7 +269,7 @@ namespace Rawr.Enhance
             float magmaSearingSpeed = firstPass ? (_calcOpts.Magma ? 20f : 60f) :
                     (_calcOpts.Magma ? AbilityCooldown(EnhanceAbility.MagmaTotem) : AbilityCooldown(EnhanceAbility.SearingTotem));
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.Enhance4T8 * 0.2f);
-            float flurryHasteBonus = .05f * _talents.Flurry + _stats.BonusFlurryHaste;
+            float flurryHasteBonus = .05f * _talents.Flurry + _stats.Enhance4T7;
             float edCritBonus = .03f * _talents.ElementalDevastation;
             hitsPerSMHSS = 0f;
             hitsPerSOHSS = 0f;

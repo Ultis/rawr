@@ -3808,7 +3808,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Battlegear",
-                Stats = { BonusLSDamage = 0.1f },
+                Stats = { Enhance2T7 = 0.1f },
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
@@ -3818,7 +3818,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Battlegear",
-                Stats = { BonusFlurryHaste = 0.05f },
+                Stats = { Enhance4T7 = 0.05f },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });

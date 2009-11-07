@@ -218,8 +218,8 @@ namespace Rawr {
         #region Added by Rawr.Enhance
         BonusSSDamage,
         BonusWFAttackPower,
-        BonusFlurryHaste,
-        BonusLSDamage,
+        Enhance2T7,
+        Enhance4T7,
         Enhance2T8,
         Enhance4T8,
         Enhance2T9,
@@ -3075,19 +3075,19 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance")]
-        public float BonusFlurryHaste
+        [Category("Enhance T7 4 Piece Bonus")]
+        public float Enhance4T7
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusFlurryHaste]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusFlurryHaste] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T7]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Enhance4T7] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance")]
-        public float BonusLSDamage
+        [Category("Enhance T7 2 Piece Bonus")]
+        public float Enhance2T7
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusLSDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusLSDamage] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T7]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Enhance2T7] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

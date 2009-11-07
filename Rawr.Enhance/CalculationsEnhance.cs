@@ -297,7 +297,7 @@ namespace Rawr.Enhance
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier);
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
-            float bonusLSDamage = 1f + stats.BonusLSDamage; // 2 piece T7 set bonus
+            float bonusLSDamage = 1f + stats.Enhance2T7; // 2 piece T7 set bonus
             float Enhance2T8 = 1f + stats.Enhance2T8 * 0.2f;
             float bonusSSDamage = stats.BonusSSDamage;
             int baseResistance = Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
@@ -822,12 +822,12 @@ namespace Rawr.Enhance
                     LightningSpellPower = stats.LightningSpellPower,
                     BonusSSDamage = stats.BonusSSDamage,
                     BonusWFAttackPower = stats.BonusWFAttackPower,
+                    Enhance2T7 = stats.Enhance2T7,
+                    Enhance4T7 = stats.Enhance4T7,
                     HighestStat = stats.HighestStat,
                     Paragon = stats.Paragon,
-                    BonusLSDamage = stats.BonusLSDamage,
-                    BonusFlurryHaste = stats.BonusFlurryHaste,
-                    Enhance4T8 = stats.Enhance4T8,
                     Enhance2T8 = stats.Enhance2T8,
+                    Enhance4T8 = stats.Enhance4T8,
                     Enhance2T9 = stats.Enhance2T9,
                     Enhance4T9 = stats.Enhance4T9,
                     Enhance2T10 = stats.Enhance2T10,
@@ -923,10 +923,10 @@ namespace Rawr.Enhance
                 stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + 
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
-                stats.LightningSpellPower + stats.Enhance4T8 + stats.BonusFlurryHaste + stats.BonusWFAttackPower + 
+                stats.LightningSpellPower + stats.Enhance4T8 + stats.Enhance4T7 + stats.BonusWFAttackPower + 
                 stats.Enhance2T9 + stats.Enhance4T9 + +stats.Enhance2T10 + stats.Enhance4T10 + 
                 stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +
-                stats.BonusLSDamage + stats.Enhance2T8 + stats.BonusSSDamage) > 0;
+                stats.Enhance2T7 + stats.Enhance2T8 + stats.BonusSSDamage) > 0;
         }
 
         private bool irrelevantStats(Stats stats)
