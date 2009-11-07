@@ -70,7 +70,7 @@ namespace Rawr.HunterSE
             float focusRegenPerSecond = (focusRegenBasePer4 + focusRegenBestialDiscipline + focusRegenGoForTheThroat)/4f;
 
             // owl's focus
-            float owlsFocusEffect = (options.petOwlsFocus > 0) ? owlsFocusEffect = 1f / (1f / (options.petOwlsFocus * 0.15f) + 1f) : 0f;
+            float owlsFocusEffect = (options.PetTalents.OwlsFocus > 0) ? owlsFocusEffect = 1f / (1f / (options.PetTalents.OwlsFocus * 0.15f) + 1f) : 0f;
 
             #endregion
             #region Special Abilities Priority Rotation
@@ -146,7 +146,7 @@ namespace Rawr.HunterSE
 
             calculatedStats.petCritFromBase = 0.032f;
             calculatedStats.petCritFromAgility = critAgilityTotal / (100f * 62.5f);
-            calculatedStats.petCritFromSpidersBite = options.petSpidersBite * 0.03f;
+            calculatedStats.petCritFromSpidersBite = options.PetTalents.SpidersBite * 0.03f;
             calculatedStats.petCritFromFerocity = character.HunterTalents.Ferocity * 0.02f;
             calculatedStats.petCritFromGear = isWearingBeastTamersShoulders ? 0.02f : 0;
             calculatedStats.petCritFromBuffs = statsBuffs.PhysicalCrit + StatConversion.GetCritFromRating(statsBuffs.CritRating);
@@ -198,7 +198,7 @@ namespace Rawr.HunterSE
 
             float attackSpeedFromSerpentsSwiftness = 1f + (character.HunterTalents.SerpentsSwiftness * 0.04f);
             float attackSpeedFromHeroism = 1f + calculatedStats.hasteFromHeroism;
-            float attackSpeedFromCobraReflexes = 1f + (options.petCobraReflexes * 0.15f);
+            float attackSpeedFromCobraReflexes = 1f + (options.PetTalents.CobraReflexes * 0.15f);
             float attackSpeedFromMultiplicitiveHasteBuffs = 1 + statsBuffs.PhysicalHaste;
             float attackSpeedAdjust = attackSpeedFromSerpentsSwiftness
                                      * attackSpeedFromHeroism
@@ -377,7 +377,7 @@ namespace Rawr.HunterSE
 
             // Call of the Wild
             calculatedStats.apFromCallOfTheWild = 0;
-            if (options.petCallOfTheWild > 0)
+            if (options.PetTalents.CallOfTheWild > 0)
             {
                 SpecialEffect callofthewild = new SpecialEffect(Trigger.Use, new Stats() { BonusAttackPowerMultiplier = 0.10f, },
                     20f, 5f * 60f);
@@ -408,7 +408,7 @@ namespace Rawr.HunterSE
             petStats.Strength += statsBuffs.Strength;
             petStats.Strength *= 1.0f + statsBuffs.BonusStrengthMultiplier;
 
-            float apFromHunterScaling = 0.22f * (1 + options.petWildHunt * 0.15f);
+            float apFromHunterScaling = 0.22f * (1 + options.PetTalents.WildHunt * 0.15f);
             calculatedStats.petAPFromStrength = (petStats.Strength - 10f) * 2f;
             calculatedStats.petAPFromHunterVsWild = (float)Math.Floor(calculatedStats.BasicStats.Stamina * (0.1f * character.HunterTalents.HunterVsWild));
             calculatedStats.petAPFromBuffs = statsBuffs.AttackPower;
@@ -459,7 +459,7 @@ namespace Rawr.HunterSE
             SpecialEffect rabid = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusAttackPowerMultiplier = 0.05f },
                 20, rabidCooldown, 0.50f, 5);
-            float rabidUptime = options.petRabid * rabid.GetAverageUptime(0f, 1f, 2f, options.duration);
+            float rabidUptime = options.PetTalents.Rabid * rabid.GetAverageUptime(0f, 1f, 2f, options.duration);
 
             if (rabidUptime > 0)
             {
@@ -607,26 +607,26 @@ namespace Rawr.HunterSE
 
             float damageAdjustUnleashedFury = 1f + (character.HunterTalents.UnleashedFury * 0.03f);
             float damageAdjustMood = options.petHappiness == PetHappiness.Happy ? 1.25f : options.petHappiness == PetHappiness.Content ? 1f : 0.75f;
-            float damageAdjustSpikedCollar = 1f + (options.petSpikedCollar * 0.03f);
+            float damageAdjustSpikedCollar = 1f + (options.PetTalents.SpikedCollar * 0.03f);
             float damageAdjustRaceModifier = character.Race == CharacterRace.Orc ? 1.05f : 1f;
             float damageAdjustGearModifier = isWearingBeastTamersShoulders ? 1.03f : 1f;
             float damageAdjustFerociousInspiration = calculatedStats.ferociousInspirationDamageAdjust;
             float damageAdjustKindredSpirits = 1f + (character.HunterTalents.KindredSpirits * 0.04f);
             float damageAdjustSancRetributionAura = 1f + statsBuffs.BonusDamageMultiplier;
             float damageAdjustTier7Bonus = 1f + statsHunterBuffs.BonusPetDamageMultiplier;
-            float damageAdjustSharkAttack = 1f + (options.petSharkAttack * 0.03f);
+            float damageAdjustSharkAttack = 1f + (options.PetTalents.SharkAttack * 0.03f);
             float damageAdjustTargetDebuffs = calculatedStats.targetDebuffsPetDamage;
             float damageAdjustPetFamily = 1.05f;
             float damageAdjustMarkedForDeath = 1f + (character.HunterTalents.MarkedForDeath * 0.02f);
-            float damageAdjustCobraReflexes = 1f - (options.petCobraReflexes * 0.075f); // this is a negative effect!
+            float damageAdjustCobraReflexes = 1f - (options.PetTalents.CobraReflexes * 0.075f); // this is a negative effect!
 
             // Feeding Frenzy
             float damageAdjustFeedingFrenzy = 1;
-            if (options.petFeedingFrenzy > 0)
+            if (options.PetTalents.FeedingFrenzy > 0)
             {
                 float feedingFrenzyTimeSpent = options.timeSpentSub20 + options.timeSpent35To20;
                 float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / options.duration : 0;
-                damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * options.petFeedingFrenzy * 0.08f;
+                damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * options.PetTalents.FeedingFrenzy * 0.08f;
             }
 
             // Glancing Blows

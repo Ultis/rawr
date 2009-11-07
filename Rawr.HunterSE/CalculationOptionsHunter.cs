@@ -82,59 +82,126 @@ namespace Rawr.HunterSE
         public int PriorityIndex10 = 0;
 		
 		// pet talents
-        public int petCobraReflexes = 0;
-        public int petDiveDash = 0;
-        public int petChargeSwoop = 0;
-        public int petGreatStamina = 0;
-        public int petNaturalArmor = 0;
-        public int petBoarsSpeed = 0;
-        public int petMobility = 0;
-        public int petSpikedCollar = 0;
-        public int petImprovedCower = 0;
-        public int petBloodthirsty = 0;
-        public int petBloodOfTheRhino = 0;
-        public int petPetBarding = 0;
-        public int petAvoidance = 0;
-        public int petLionhearted = 0;
-        public int petCarrionFeeder = 0;
-        public int petGuardDog = 0;
-        public int petThunderstomp = 0;
-        public int petGreatResistance = 0;
-        public int petOwlsFocus = 0;
-        public int petCornered = 0;
-        public int petFeedingFrenzy = 0;
-        public int petHeartOfThePhoenix = 0;
-        public int petSpidersBite = 0;
-        public int petWolverineBite = 0;
-        public int petRoarOfRecovery = 0;
-        public int petBullheaded = 0;
-        public int petGraceOfTheMantis = 0;
-        public int petRabid = 0;
-        public int petLickYourWounds = 0;
-        public int petCallOfTheWild = 0;
-        public int petLastStand = 0;
-        public int petTaunt = 0;
-        public int petIntervene = 0;
-        public int petWildHunt = 0;
-        public int petRoarOfSacrifice = 0;
-        public int petSharkAttack = 0;
-        public int petSilverback = 0;
-                
+        public class PetTalentTree
+        {
+            public PetTalentTree() {
+                CobraReflexes = 0;
+                DiveDash = 0;
+                ChargeSwoop = 0;
+                GreatStamina = 0;
+                NaturalArmor = 0;
+                BoarsSpeed = 0;
+                Mobility = 0;
+                SpikedCollar = 0;
+                ImprovedCower = 0;
+                Bloodthirsty = 0;
+                BloodOfTheRhino = 0;
+                PetBarding = 0;
+                Avoidance = 0;
+                Lionhearted = 0;
+                CarrionFeeder = 0;
+                GuardDog = 0;
+                Thunderstomp = 0;
+                GreatResistance = 0;
+                OwlsFocus = 0;
+                Cornered = 0;
+                FeedingFrenzy = 0;
+                HeartOfThePhoenix = 0;
+                SpidersBite = 0;
+                WolverineBite = 0;
+                RoarOfRecovery = 0;
+                Bullheaded = 0;
+                GraceOfTheMantis = 0;
+                Rabid = 0;
+                LickYourWounds = 0;
+                CallOfTheWild = 0;
+                LastStand = 0;
+                Taunt = 0;
+                Intervene = 0;
+                WildHunt = 0;
+                RoarOfSacrifice = 0;
+                SharkAttack = 0;
+                Silverback = 0;
+            }
+            public int CobraReflexes, DiveDash,
+                       ChargeSwoop, GreatStamina,
+                       NaturalArmor, BoarsSpeed,
+                       Mobility, SpikedCollar,
+                       ImprovedCower, Bloodthirsty,
+                       BloodOfTheRhino, PetBarding,
+                       Avoidance, Lionhearted,
+                       CarrionFeeder, GuardDog,
+                       Thunderstomp, GreatResistance,
+                       OwlsFocus, Cornered,
+                       FeedingFrenzy, HeartOfThePhoenix,
+                       SpidersBite, WolverineBite,
+                       RoarOfRecovery, Bullheaded,
+                       GraceOfTheMantis, Rabid,
+                       LickYourWounds, CallOfTheWild,
+                       LastStand, Taunt,
+                       Intervene, WildHunt,
+                       RoarOfSacrifice, SharkAttack,
+                       Silverback;
+            public void Reset(){
+                CobraReflexes = 0;
+                DiveDash = 0;
+                ChargeSwoop = 0;
+                GreatStamina = 0;
+                NaturalArmor = 0;
+                BoarsSpeed = 0;
+                Mobility = 0;
+                SpikedCollar = 0;
+                ImprovedCower = 0;
+                Bloodthirsty = 0;
+                BloodOfTheRhino = 0;
+                PetBarding = 0;
+                Avoidance = 0;
+                Lionhearted = 0;
+                CarrionFeeder = 0;
+                GuardDog = 0;
+                Thunderstomp = 0;
+                GreatResistance = 0;
+                OwlsFocus = 0;
+                Cornered = 0;
+                FeedingFrenzy = 0;
+                HeartOfThePhoenix = 0;
+                SpidersBite = 0;
+                WolverineBite = 0;
+                RoarOfRecovery = 0;
+                Bullheaded = 0;
+                GraceOfTheMantis = 0;
+                Rabid = 0;
+                LickYourWounds = 0;
+                CallOfTheWild = 0;
+                LastStand = 0;
+                Taunt = 0;
+                Intervene = 0;
+                WildHunt = 0;
+                RoarOfSacrifice = 0;
+                SharkAttack = 0;
+                Silverback = 0;
+            }
+        }
+        private PetTalentTree _PetTalents;
+        public PetTalentTree PetTalents {
+            get { return _PetTalents ?? (_PetTalents = new PetTalentTree()); }
+            set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
+        }
         public PetFamily PetFamily
 		{
 			get { return _petFamily; }
-			set { _petFamily = value; }
+            set { _petFamily = value; OnPropertyChanged("PetFamily"); }
 		}
         
         public int TargetLevel
 		{
 			get { return _TargetLevel; }
-			set { _TargetLevel = value; }
+            set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
 		}
 		public int TargetArmor
 		{
 			get { return _TargetArmor; }
-			set { _TargetArmor = value; }
+            set { _TargetArmor = value; OnPropertyChanged("TargetArmor"); }
 		}
 
         private bool _HideBadItems_Spl;
@@ -157,18 +224,16 @@ namespace Rawr.HunterSE
         }
 
         #region ICalculationOptionBase Members
-
 		public string GetXml()
 		{
             _petActiveBuffsXml = new List<string>(_petActiveBuffs.ConvertAll(buff => buff.Name));
 
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHunterSE));
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsHunterSE));
 			StringBuilder xml = new StringBuilder();
 			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
 			serializer.Serialize(writer, this);
 			return xml.ToString();
 		}
-
 		#endregion
         #region INotifyPropertyChanged Members
         private void OnPropertyChanged(string property)
