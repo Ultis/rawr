@@ -660,7 +660,6 @@ namespace Rawr.Enhance
             if (character.ShamanTalents.EnhancingTotems == 3)
             {
                 character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Agility/Strength)")); // add both the Agi Str one 
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Spell Power)")); // and the spellpower one
             }
 
             // add other raid buffs
@@ -676,7 +675,7 @@ namespace Rawr.Enhance
             character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Elemental Oath"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spell Power)"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Divine Spirit"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
