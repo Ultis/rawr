@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Xml;
 
 using Rawr.Forms;
+using Rawr.UserControls;
 using System.IO;
 using System.Threading;
 using System.Drawing.Imaging;
@@ -1587,8 +1588,11 @@ namespace Rawr
 				}
 			}
 #if DEBUG
-			if (sbChanges.Length > 0)
-				MessageBox.Show(sbChanges.ToString());
+            if (sbChanges.Length > 0)
+            {
+                ScrollableMessageBox msgBox = new ScrollableMessageBox();
+                msgBox.Show(sbChanges.ToString());
+            }
 #endif
 			StatusMessaging.UpdateStatusFinished("Update All Items");
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
@@ -1629,7 +1633,10 @@ namespace Rawr
 			}
 #if DEBUG
 			if (sbChanges.Length > 0)
-				MessageBox.Show(sbChanges.ToString());
+            {
+                ScrollableMessageBox msgBox = new ScrollableMessageBox();
+                msgBox.Show(sbChanges.ToString());
+            }
 #endif
 			StatusMessaging.UpdateStatusFinished("Update All Items");
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
