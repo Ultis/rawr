@@ -1073,10 +1073,10 @@ namespace Rawr.DPSDK
                         dpsSwing *= (1f - missedSpecial) - 0.24f;   // the Ghoul only has one weapon || Glancings added further down
                         dpsClaw *= 1f - missedSpecial;
 
-                        dpsSwing *= 1f + .054f + stats.LotPCritRating / 4591f; // needs other crit modifiers, but doesn't inherit crit from master
+                        dpsSwing *= 1f + .054f;// + stats.LotPCritRating / 4591f; // needs other crit modifiers, but doesn't inherit crit from master
                         dpsSwing += dpsGhoulGlancing;
 
-                        dpsClaw *= 1f + .054f + stats.LotPCritRating / 4591f; // needs other crit modifiers, but doesn't inherit crit from master
+                        dpsClaw *= 1f + .054f;// + stats.LotPCritRating / 4591f; // needs other crit modifiers, but doesn't inherit crit from master
 
                         dpsGhoul = dpsSwing + dpsClaw;
 
@@ -1796,7 +1796,6 @@ namespace Rawr.DPSDK
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
 
-                LotPCritRating = stats.LotPCritRating,
                 CritMeleeRating = stats.CritMeleeRating,
                 Bloodlust = stats.Bloodlust,
 

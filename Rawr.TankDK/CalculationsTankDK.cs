@@ -892,9 +892,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             statsTotal.SpellCrit = StatConversion.ApplyMultiplier(statsTotal.SpellCrit
                                         + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusSpellCritMultiplier);
 
-            statsTotal.PhysicalCrit += statsTotal.LotPCritRating;
-            statsTotal.SpellCrit += statsTotal.LotPCritRating;
-
             statsTotal.PhysicalHit += StatConversion.GetHitFromRating(statsTotal.HitRating, CharacterClass.DeathKnight);
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
 
@@ -997,7 +994,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 
-                LotPCritRating = stats.LotPCritRating,
                 CritMeleeRating = stats.CritMeleeRating,
                 Bloodlust = stats.Bloodlust,
 
@@ -1167,7 +1163,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.ThreatReductionMultiplier != 0);
 
             bResults |= (stats.CritMeleeRating != 0);
-            bResults |= (stats.LotPCritRating != 0);
             bResults |= (stats.Bloodlust != 0);
 
             // Bringing in the damage stuff from DPSDK for better threat data

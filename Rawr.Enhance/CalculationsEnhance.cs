@@ -825,7 +825,6 @@ namespace Rawr.Enhance
                     BonusManaMultiplier = stats.BonusManaMultiplier,
                     Health = stats.Health,
                     Mana = stats.Mana,
-					ExposeWeakness = stats.ExposeWeakness,
 					SpellPower = stats.SpellPower,
                     CritMeleeRating = stats.CritMeleeRating,
                     LightningSpellPower = stats.LightningSpellPower,
@@ -929,7 +928,7 @@ namespace Rawr.Enhance
                 stats.BonusStrengthMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusIntellectMultiplier + 
                 stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
-                stats.ExposeWeakness + stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
+                stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + 
                 stats.SpellCrit + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
                 stats.LightningSpellPower + stats.Enhance4T8 + stats.BonusFlurryHaste + stats.BonusWFAttackPower + 

@@ -2,7 +2,7 @@
 
 namespace Rawr.DPSWarr
 {
-    internal class ComparisonCalculationsDPSWarr : ComparisonCalculationBase
+    internal class ComparisonCalculationDPSWarr : ComparisonCalculationBase
     {
         private string _name = string.Empty;
         private float[] _subPoints = new[] { 0f, 0f };

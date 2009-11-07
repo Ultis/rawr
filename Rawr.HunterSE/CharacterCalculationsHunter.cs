@@ -22,9 +22,6 @@ namespace Rawr.HunterSE
         private double _piercingShotsDPSAimedShot;
         private double _piercingShotsDPSChimeraShot;
 
-
-
-
         public float BaseHealth { get; set; }
 
         public PetCalculations pet { get; set; }
@@ -316,8 +313,6 @@ namespace Rawr.HunterSE
 		}
 		public List<string> ActiveBuffs { get; set; }
 
-
-
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
             //string format = "";
@@ -517,10 +512,13 @@ namespace Rawr.HunterSE
 			switch (calculation)
 			{
 				case "Health": return BasicStats.Health;
-                case "Crit Rating": return BasicStats.CritRating;
-				case "Hit Rating": return BasicStats.HitRating;
-                case "Haste Rating": return BasicStats.HasteRating;
-				case "Mana": return BasicStats.Mana;
+                case "Mana": return BasicStats.Mana;
+                case "Agility": return BasicStats.Agility;
+                case "Crit %": return BasicStats.PhysicalCrit * 100f;
+                case "Haste %": return BasicStats.PhysicalHaste * 100f;
+                case "Attack Power": return BasicStats.AttackPower;
+                case "Armor Penetration %": return BasicStats.ArmorPenetration * 100f;
+                case "% Chance to Miss (Yellow)": return StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - BasicStats.PhysicalHit * 100f;
 			}
 			return 0;
 		}

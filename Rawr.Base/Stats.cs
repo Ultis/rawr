@@ -53,11 +53,8 @@ namespace Rawr {
         DefenseRating,
         Dodge,
         DodgeRating,
-        DrumsOfBattle,
-        DrumsOfWar,
         Expertise,
         ExpertiseRating,
-        ExposeWeakness,
         FireResistance,
         FrostResistance,
         HasteRating,
@@ -73,7 +70,6 @@ namespace Rawr {
         Intellect,
         InterruptProtection,
         LightweaveEmbroideryProc,
-        LotPCritRating,
         WarlockFelArmor,
         WarlockDemonArmor,
         WarlockSpellstoneHasteRating,
@@ -2046,30 +2042,6 @@ namespace Rawr {
         #region Deprecated
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Deprecated")]
-        public float ExposeWeakness
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ExposeWeakness]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ExposeWeakness] = value; }
-        }
-
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        public float DrumsOfWar
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DrumsOfWar]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DrumsOfWar] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        public float DrumsOfBattle
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DrumsOfBattle]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DrumsOfBattle] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
         public float ShatteredSunMightProc
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ShatteredSunMightProc]; }
@@ -2503,15 +2475,6 @@ namespace Rawr {
         }
         #endregion
         #region Added by Rawr.Feral
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        [DisplayName("LotP Crit")]
-        public float LotPCritRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LotPCritRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LotPCritRating] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Feral")]
         [DisplayName("Strength in Cat Form")]

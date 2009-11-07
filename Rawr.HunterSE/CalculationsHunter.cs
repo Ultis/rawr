@@ -11,81 +11,46 @@ using System.IO;
 using System.Diagnostics;
 
 namespace Rawr.HunterSE {
-	/// <summary>
-    /// All calculations in this module are based on Shandara's DPS Spreadsheet
-    /// and will be updated from that sheet until it is no longer actively 
-    /// maintained.
-    /// 
-    /// Version: 0.91a
-    /// Released: July 28, 2009
-    /// Link: http://elitistjerks.com/f74/t30710-wotlk_dps_spreadsheet/
-    /// 
-    /// Current maintainer: iamcal
-    /// Previous maintainers: lawjpbo, nosnevel
-	/// </summary>
     [Rawr.Calculations.RawrModelInfo("HunterSE", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
 	public class CalculationsHunterSE : CalculationsBase {
+        #region Variables and Properties
+
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
 				////Relevant Gem IDs for Hunters
 				//Red
 				int[] delicate = { 41434, 39997, 40112, 42143 };
-
 				//Purple
 				int[] shifting = { 41460, 40023, 40130 };
-
 				//Green
                 int[] vivid = { 41481, 40088, 40166 };
-
 				//Yellow
                 int[] rigid = { 41447, 40014, 40125, 42156 };
-
 				//Orange
                 int[] glinting = { 41491, 40044, 40148 };
-
 				//Meta
 				int relentless = 41398;
 
 				return new List<GemmingTemplate>()
 				{
-					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon", //Max Agi
-						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon", //Agi/Hit
-						RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon", //Hit
-						RedId = glinting[0], YellowId = rigid[0], BlueId = vivid[0], PrismaticId = rigid[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon",             RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless }, //Max Agi
+					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon",             RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless }, //Agi/Hit
+					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon",             RedId = glinting[0], YellowId = rigid[0]   , BlueId = vivid[0]   , PrismaticId = rigid[0]   , MetaId = relentless }, //Hit
 						
-					new GemmingTemplate() { Model = "Hunter", Group = "Rare", //Max Agi
-						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Rare", //Agi/Hit
-						RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Rare", //Hit
-						RedId = glinting[1], YellowId = rigid[1], BlueId = vivid[1], PrismaticId = rigid[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Rare",                 RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless }, //Max Agi
+					new GemmingTemplate() { Model = "Hunter", Group = "Rare",                 RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless }, //Agi/Hit
+					new GemmingTemplate() { Model = "Hunter", Group = "Rare",                 RedId = glinting[1], YellowId = rigid[1]   , BlueId = vivid[1]   , PrismaticId = rigid[1]   , MetaId = relentless }, //Hit
 						
-					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, //Max Agi
-						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, //Agi/Hit
-						RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, //Hit
-						RedId = glinting[2], YellowId = rigid[2], BlueId = vivid[2], PrismaticId = rigid[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless }, //Max Agi
+					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless }, //Agi/Hit
+					new GemmingTemplate() { Model = "Hunter", Group = "Epic", Enabled = true, RedId = glinting[2], YellowId = rigid[2]   , BlueId = vivid[2]   , PrismaticId = rigid[2]   , MetaId = relentless }, //Hit
 						
-					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler", //Max Agi
-						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler", //Agi/Hit
-						RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler", //Hit
-						RedId = rigid[3], YellowId = rigid[2], BlueId = rigid[3], PrismaticId = rigid[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler",              RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless }, //Max Agi
+					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler",              RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless }, //Agi/Hit
+					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler",              RedId = rigid[3]   , YellowId = rigid[2]   , BlueId = rigid[3]   , PrismaticId = rigid[2]   , MetaId = relentless }, //Hit
 				};
             }
         }
-
-        #region Variables and Properties
-        #region Talent Constants
-		private const string BEAST_MASTER = "Beast Mastery";
-		private const string SURVIVAL = "Survival";
-		private const string MARKSMAN = "Marksmanship";
-		#endregion
-
 
         #if RAWR3
             private ICalculationOptionsPanel calculationOptionsPanel = null;
@@ -112,7 +77,7 @@ namespace Rawr.HunterSE {
                         "Basic Stats:Ranged Attack Power",
 				        "Basic Stats:Intellect",
 				        @"Basic Stats:Hit*8.00% chance to miss base for Yellow Attacks
-Focused Aim 0 - 8%-0%=8%=262 Rating soft cap
+Focused Aim 0 - 8%-0%=8%=264 Rating soft cap
 Focused Aim 1 - 8%-1%=7%=230 Rating soft cap
 Focused Aim 2 - 8%-2%=6%=197 Rating soft cap
 Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
@@ -182,9 +147,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 if (_optimizableCalculationLabels == null) {
                     _optimizableCalculationLabels = new string[] {
 					    "Health",
+                        "Attack Power",
+                        "Agility",
                         "Mana",
-					    "Crit Rating",
-					    "Hit Rating"
+					    "Crit %",
+                        "Haste %",
+                        "Armor Penetration %",
+                        "% Chance to Miss (Yellow)",
 					};
                 }
 				return _optimizableCalculationLabels;
@@ -214,13 +183,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
         }
 
-        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHunterSE(); }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHunterSE(); }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHunterSE(); }
 
 		public override ICalculationOptionBase DeserializeDataObject(string xml) {
-			XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsHunterSE));
-			StringReader reader = new StringReader(xml);
-			CalculationOptionsHunterSE calcOpts = serializer.Deserialize(reader) as CalculationOptionsHunterSE;
+			XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsHunterSE));
+			StringReader sr = new StringReader(xml);
+			CalculationOptionsHunterSE calcOpts = s.Deserialize(sr) as CalculationOptionsHunterSE;
 
             // convert buffs here!
             calcOpts.petActiveBuffs = new List<Buff>(calcOpts._petActiveBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
@@ -278,6 +247,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				Intellect = stats.Intellect,
 				Mana = stats.Mana,
 				Mp5 = stats.Mp5,
+                Armor = stats.Armor,
                 // Ratings
 				AttackPower = stats.AttackPower,
 				RangedAttackPower = stats.RangedAttackPower,
@@ -293,14 +263,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
 				ArmorPenetration = stats.ArmorPenetration,
-				DrumsOfBattle = stats.DrumsOfBattle,
-				DrumsOfWar = stats.DrumsOfWar,
-				ExposeWeakness = stats.ExposeWeakness,
 				Miss = stats.Miss,
 				ScopeDamage = stats.ScopeDamage,
 
                 // Special
-				LotPCritRating = stats.LotPCritRating,
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
  				MultiShotManaDiscount = stats.MultiShotManaDiscount,
@@ -311,6 +277,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 ShadowDamage = stats.ShadowDamage,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 MovementSpeed = stats.MovementSpeed,
+                StunDurReduc = stats.StunDurReduc,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
+                ManaorEquivRestore = stats.ManaorEquivRestore,
+
                 // Multipliers
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -321,8 +293,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				BonusManaPotion = stats.BonusManaPotion,
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
 				BonusDamageMultiplier = stats.BonusDamageMultiplier,
-				BonusArmorMultiplier = stats.BonusArmorMultiplier,
-				BonusCritMultiplier = stats.BonusCritMultiplier,
+                BaseArmorMultiplier = stats.BaseArmorMultiplier,
+                BonusArmorMultiplier = stats.BonusArmorMultiplier,
+                BonusCritMultiplier = stats.BonusCritMultiplier,
 				BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
 				BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
 				BonusPetCritChance = stats.BonusPetCritChance,
@@ -383,11 +356,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.PhysicalCrit +
                 stats.CritRating +
                 stats.RangedCritRating +
-                stats.DrumsOfBattle +
                 stats.DamageTakenMultiplier +
                 stats.MovementSpeed +
-                stats.DrumsOfWar +
-                stats.ExposeWeakness +
                 stats.HasteRating +
                 stats.RangedHasteRating +
                 stats.RangedHaste +
@@ -399,8 +369,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.Intellect +
                 stats.Mp5 +
                 stats.ScopeDamage +
-                stats.ShatteredSunAcumenProc +
-                stats.ShatteredSunMightProc +
                 stats.BonusSteadyShotCrit +
                 stats.BonusSteadyShotDamageMultiplier +
                 stats.ManaRestoreFromMaxManaPerSecond +

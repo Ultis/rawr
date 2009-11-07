@@ -768,7 +768,6 @@ namespace Rawr.Cat
 					Health = stats.Health,
 					MangleCatCostReduction = stats.MangleCatCostReduction,
 					TigersFuryCooldownReduction = stats.TigersFuryCooldownReduction,
-					ExposeWeakness = stats.ExposeWeakness,
 					Bloodlust = stats.Bloodlust,
 					ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 					PhysicalHaste = stats.PhysicalHaste,
@@ -822,7 +821,7 @@ namespace Rawr.Cat
 				stats.BonusMangleCatDamage + stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
-				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
+				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.Bloodlust +
 				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.TerrorProc + stats.BonusRipCrit +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BonusRakeDuration +
 				stats.ThreatReductionMultiplier + stats.AllResist + stats.ArcaneDamage + stats.ShadowDamage +

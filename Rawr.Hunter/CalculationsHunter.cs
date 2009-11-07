@@ -444,14 +444,10 @@ namespace Rawr.Hunter
 				BonusPetCritChance = stats.BonusPetCritChance,
 				BonusDamageMultiplier = stats.BonusDamageMultiplier,
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-				LotPCritRating = stats.LotPCritRating,
 				PhysicalCrit = stats.PhysicalCrit,
 				CritRating = stats.CritRating,
 				RangedCritRating = stats.RangedCritRating,
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
-				DrumsOfBattle = stats.DrumsOfBattle,
-				DrumsOfWar = stats.DrumsOfWar,
-				ExposeWeakness = stats.ExposeWeakness,
 				HasteRating = stats.HasteRating,
 				RangedHasteRating = stats.RangedHasteRating,
 				PhysicalHit = stats.PhysicalHit,
@@ -462,8 +458,6 @@ namespace Rawr.Hunter
 				Miss = stats.Miss,
 				Mp5 = stats.Mp5,
 				ScopeDamage = stats.ScopeDamage,
-				ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
-				ShatteredSunMightProc = stats.ShatteredSunMightProc,
 				BonusSteadyShotCrit = stats.BonusSteadyShotCrit,
 				BonusSteadyShotDamageMultiplier = stats.BonusSteadyShotDamageMultiplier,
 				BonusRangedAttackPowerMultiplier = stats.BonusRangedAttackPowerMultiplier,
@@ -512,10 +506,7 @@ namespace Rawr.Hunter
             stats.PhysicalCrit +
             stats.CritRating +
             stats.RangedCritRating +
-            stats.DrumsOfBattle +
             stats.DamageTakenMultiplier +
-            stats.DrumsOfWar +
-            stats.ExposeWeakness +
             stats.HasteRating +
             stats.RangedHasteRating +
             stats.RangedHaste +
@@ -525,8 +516,6 @@ namespace Rawr.Hunter
             stats.Intellect +
             stats.Mp5 +
             stats.ScopeDamage +
-            stats.ShatteredSunAcumenProc +
-            stats.ShatteredSunMightProc +
             stats.BonusSteadyShotCrit +
             stats.BonusSteadyShotDamageMultiplier +
             stats.ManaRestoreFromMaxManaPerSecond +
@@ -573,6 +562,7 @@ namespace Rawr.Hunter
 
         public override bool IsBuffRelevant(Buff buff)
         {
+            if (!buff.AllowedClasses.Contains(CharacterClass.Hunter)) { return false; }
             if (buff.Name == "Concentration Aura") return false; // Gets selected due to a bug saying it increases BonusAspectOfTheViperAttackSpeed
             if (buff.Group == "Potion") return false;
 
@@ -2606,9 +2596,7 @@ namespace Rawr.Hunter
             statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
 			
 			statsTotal.HitRating = (float)Math.Floor((double)statsRace.HitRating + (double)statsGearEnchantsBuffs.HitRating + (double)statsGearEnchantsBuffs.RangedHitRating);
-			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
-			statsTotal.ShatteredSunMightProc = statsRace.ShatteredSunMightProc + statsGearEnchantsBuffs.ShatteredSunMightProc;
 			statsTotal.Mp5 = statsRace.Mp5 + statsGearEnchantsBuffs.Mp5;
 			statsTotal.BonusPetCritChance = statsGearEnchantsBuffs.BonusPetCritChance;
 			statsTotal.ScopeDamage = statsGearEnchantsBuffs.ScopeDamage;

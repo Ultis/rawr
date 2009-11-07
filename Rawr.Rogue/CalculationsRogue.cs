@@ -517,13 +517,12 @@ namespace Rawr.Rogue {
 
         public override bool IsBuffRelevant(Buff buff)
         {
-            if (buff.Name == "Focus Magic")     return false;
-            if (buff.Name.Contains("Mighty Rage")) return false;
+            if (!buff.AllowedClasses.Contains(CharacterClass.Rogue)) { return false; }
+            if (buff.Name == "Focus Magic") { return false; }
 
-            if (buff.Group == "Set Bonuses")
-            {
-                if (buff.SetName == "Strength of the Clefthoof")    return false;
-                if (buff.SetName == "Skyshatter Regalia")           return false;
+            if (buff.Group == "Set Bonuses") {
+                if (buff.SetName == "Strength of the Clefthoof") { return false; }
+                if (buff.SetName == "Skyshatter Regalia") { return false; }
             }
 
             return base.IsBuffRelevant(buff);
@@ -531,64 +530,63 @@ namespace Rawr.Rogue {
 
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats {
-                           Agility = stats.Agility,
-                           Strength = stats.Strength,
-                           AttackPower = stats.AttackPower,
-                           CritRating = stats.CritRating,
-                           HitRating = stats.HitRating,
-                           Stamina = stats.Stamina,
-                           HasteRating = stats.HasteRating,
-                           ExpertiseRating = stats.ExpertiseRating,
-                           ArmorPenetration = stats.ArmorPenetration,
-                           ArmorPenetrationRating = stats.ArmorPenetrationRating,
-                           BloodlustProc = stats.BloodlustProc,
-                           WeaponDamage = stats.WeaponDamage,
-                           BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
-                           BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                           BonusCritMultiplier = stats.BonusCritMultiplier,
-                           BonusDamageMultiplier = stats.BonusDamageMultiplier,
-                           BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-                           BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
-                           Health = stats.Health,
-                           ExposeWeakness = stats.ExposeWeakness,
-                           Bloodlust = stats.Bloodlust,
-                           ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
-                           PhysicalHaste = stats.PhysicalHaste,
-                           PhysicalHit = stats.PhysicalHit,
-                           PhysicalCrit = stats.PhysicalCrit,
-                           HighestStat = stats.HighestStat,
-                           
-                           /*AllResist = stats.AllResist,
-                           ArcaneResistance = stats.ArcaneResistance,
-                           NatureResistance = stats.NatureResistance,
-                           FireResistance = stats.FireResistance,
-                           FrostResistance = stats.FrostResistance,
-                           ShadowResistance = stats.ShadowResistance,
-                           ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
-                           NatureResistanceBuff = stats.NatureResistanceBuff,
-                           FireResistanceBuff = stats.FireResistanceBuff,
-                           FrostResistanceBuff = stats.FrostResistanceBuff,
-                           ShadowResistanceBuff = stats.ShadowResistanceBuff,*/
-                           
-                           BonusSnDDuration = stats.BonusSnDDuration,
-                           CPOnFinisher = stats.CPOnFinisher,
-                           BonusEvisEnvenomDamage = stats.BonusEvisEnvenomDamage,
-                           BonusFreeFinisher = stats.BonusFreeFinisher,
-                           BonusCPGDamage = stats.BonusCPGDamage,
-                           BonusSnDHaste = stats.BonusSnDHaste,
-                           BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
-                           RogueT7TwoPieceBonus = stats.RogueT7TwoPieceBonus,
-                           RogueT7FourPieceBonus = stats.RogueT7FourPieceBonus,
-                           RogueT8TwoPieceBonus = stats.RogueT8TwoPieceBonus,
-                           RogueT8FourPieceBonus = stats.RogueT8FourPieceBonus,
-                           ReduceEnergyCostFromRupture = stats.ReduceEnergyCostFromRupture,
-                           BonusCPGCritChance = stats.BonusCPGCritChance,
+               Agility = stats.Agility,
+               Strength = stats.Strength,
+               AttackPower = stats.AttackPower,
+               CritRating = stats.CritRating,
+               HitRating = stats.HitRating,
+               Stamina = stats.Stamina,
+               HasteRating = stats.HasteRating,
+               ExpertiseRating = stats.ExpertiseRating,
+               ArmorPenetration = stats.ArmorPenetration,
+               ArmorPenetrationRating = stats.ArmorPenetrationRating,
+               BloodlustProc = stats.BloodlustProc,
+               WeaponDamage = stats.WeaponDamage,
+               BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+               BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
+               BonusCritMultiplier = stats.BonusCritMultiplier,
+               BonusDamageMultiplier = stats.BonusDamageMultiplier,
+               BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+               BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
+               Health = stats.Health,
+               Bloodlust = stats.Bloodlust,
+               ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+               PhysicalHaste = stats.PhysicalHaste,
+               PhysicalHit = stats.PhysicalHit,
+               PhysicalCrit = stats.PhysicalCrit,
+               HighestStat = stats.HighestStat,
+               
+               /*AllResist = stats.AllResist,
+               ArcaneResistance = stats.ArcaneResistance,
+               NatureResistance = stats.NatureResistance,
+               FireResistance = stats.FireResistance,
+               FrostResistance = stats.FrostResistance,
+               ShadowResistance = stats.ShadowResistance,
+               ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+               NatureResistanceBuff = stats.NatureResistanceBuff,
+               FireResistanceBuff = stats.FireResistanceBuff,
+               FrostResistanceBuff = stats.FrostResistanceBuff,
+               ShadowResistanceBuff = stats.ShadowResistanceBuff,*/
+               
+               BonusSnDDuration = stats.BonusSnDDuration,
+               CPOnFinisher = stats.CPOnFinisher,
+               BonusEvisEnvenomDamage = stats.BonusEvisEnvenomDamage,
+               BonusFreeFinisher = stats.BonusFreeFinisher,
+               BonusCPGDamage = stats.BonusCPGDamage,
+               BonusSnDHaste = stats.BonusSnDHaste,
+               BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
+               RogueT7TwoPieceBonus = stats.RogueT7TwoPieceBonus,
+               RogueT7FourPieceBonus = stats.RogueT7FourPieceBonus,
+               RogueT8TwoPieceBonus = stats.RogueT8TwoPieceBonus,
+               RogueT8FourPieceBonus = stats.RogueT8FourPieceBonus,
+               ReduceEnergyCostFromRupture = stats.ReduceEnergyCostFromRupture,
+               BonusCPGCritChance = stats.BonusCPGCritChance,
 
-                           BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-                           SpellHit = stats.SpellHit,
-                           SpellCrit = stats.SpellCrit,
-                           BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier
-                       };
+               BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+               SpellHit = stats.SpellHit,
+               SpellCrit = stats.SpellCrit,
+               BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier
+           };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -626,7 +624,6 @@ namespace Rawr.Rogue {
                     stats.BonusStaminaMultiplier +
                     stats.BonusStrengthMultiplier +
                     //stats.Health +
-                    stats.ExposeWeakness +
                     stats.Bloodlust +
                     stats.ThreatReductionMultiplier +
                     stats.PhysicalHaste +

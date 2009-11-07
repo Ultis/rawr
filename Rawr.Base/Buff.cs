@@ -20,7 +20,7 @@ namespace Rawr
         public string Name;
         public string Group;
         public Stats Stats = new Stats();
-        public List<CharacterClass> _allowedClasses = null;
+        private List<CharacterClass> _allowedClasses = null;
         public List<CharacterClass> AllowedClasses
         {
             get
