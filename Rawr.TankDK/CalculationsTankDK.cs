@@ -76,30 +76,30 @@ namespace Rawr.TankDK {
 				    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Stamina
 				        RedId = regal[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
 						
-				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, //Max Defense
+				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Max Defense
 				        RedId = thick[1], YellowId = thick[1], BlueId = thick[1], PrismaticId = thick[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, //Defense 
+				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Defense 
 				        RedId = stalwart[1], YellowId = thick[1], BlueId = enduring[1], PrismaticId = thick[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, //Max Dodge
+				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Max Dodge
 				        RedId = subtle[1], YellowId = subtle[1], BlueId = subtle[1], PrismaticId = subtle[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, //Dodge
+				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Dodge
 				        RedId = subtle[1], YellowId = stalwart[1], BlueId = regal[1], PrismaticId = subtle[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, //Max Stamina
+				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Max Stamina
 				        RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, //Stamina
+				    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Stamina
 				        RedId = regal[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
 
-				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", //Max Defense
+				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Max Defense
 				        RedId = thick[2], YellowId = thick[2], BlueId = thick[2], PrismaticId = thick[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", //Defense 
+				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Defense 
 				        RedId = stalwart[2], YellowId = thick[2], BlueId = enduring[2], PrismaticId = thick[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", //Max Dodge
+				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Max Dodge
 				        RedId = subtle[2], YellowId = subtle[2], BlueId = subtle[2], PrismaticId = subtle[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", //Dodge
+				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Dodge
 				        RedId = subtle[2], YellowId = stalwart[2], BlueId = regal[2], PrismaticId = subtle[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", //Max Stamina
+				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Max Stamina
 				        RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "TankDK", Group = "Epic", //Stamina
+				    new GemmingTemplate() { Model = "TankDK", Group = "Epic",Enabled = true,  //Stamina
 				        RedId = regal[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
 
 				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Defense
