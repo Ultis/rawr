@@ -313,13 +313,11 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Hunter
         RangedAttackPower,
+        BonusHunter_T8_4P_SteadyShotAPProc,
+        BonusHunter_T9_2P_SerpCanCrit,
+        BonusHunter_T9_4P_SteadyShotPetAPProc,
+        BonusHunter_PvP_4pc,
         BonusPetCritChance,
-        BonusSteadyShotCrit,
-        BonusSteadyShotAttackPowerBuff,
-        BonusSerpentStingCanCrit,
-        BonusSteadyShotPetAttackPowerBuff,
-        MultiShotManaDiscount,
-        TrapCooldownReduction,
         PetStamina,
         PetStrength,
         PetSpirit,
@@ -335,6 +333,7 @@ namespace Rawr {
         BonusWarrior_T9_2P_Crit,
         BonusWarrior_T9_2P_ArP,
         BonusWarrior_T9_4P_SLHSCritIncrease,
+        BonusWarrior_PvP_4P_InterceptCDReduc,
         #endregion
         #region Set Bonuses: Rogue
         BonusSnDDuration,
@@ -385,6 +384,8 @@ namespace Rawr {
         ArcaneDamage,
         FireDamage,
         ShadowDamage,
+        FrostDamage,
+        HolyDamage,
         NatureDamage,
 
         NUM_AdditiveStat // This should always be the last entry.
@@ -459,11 +460,9 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Hunter
         BonusRangedAttackPowerMultiplier,
-        BonusSteadyShotDamageMultiplier,
         BonusPetDamageMultiplier,
-        BonusAspectOfTheViperGain,
-        BonusAspectOfTheViperAttackSpeed,
-        BonusSerpentStingDamage,
+        BonusHunter_T7_4P_ViperSpeed,
+        BonusHunter_T8_2P_SerpDmg,
         #endregion
         #region Added by Rawr.Warlock
         WarlockSpellstoneDotDamageMultiplier,
@@ -1433,38 +1432,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.InterruptProtection] = value; }
         }
 
-        #region Hunter Bonuses
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Hunter")]
-        [DisplayName("Ranged Crit Rating")]
-        [CommonStat]
-        public float RangedCritRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RangedCritRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RangedCritRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Hunter")]
-        [DisplayName("Ranged Hit Rating")]
-        [CommonStat]
-        public float RangedHitRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RangedHitRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RangedHitRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Hunter")]
-        [DisplayName("Ranged Haste Rating")]
-        [CommonStat]
-        public float RangedHasteRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RangedHasteRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RangedHasteRating] = value; }
-        }
-        #endregion
-
         #region Mage Bonuses
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Mage")]
@@ -2227,6 +2194,24 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.FireDamage] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Frost Damage")]
+        [Category("Equipment Effects")]
+        public float FrostDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FrostDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FrostDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Holy Damage")]
+        [Category("Equipment Effects")]
+        public float HolyDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyDamage] = value; }
+        }
+
         // Thunder Capacitor
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Nature Damage")]
@@ -2779,16 +2764,114 @@ namespace Rawr {
         }
         #endregion
         #region Added by Rawr.Hunter
+        #region Common Stats
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Hunter")]
+        [DisplayName("Ranged Crit Rating")]
+        [CommonStat]
+        public float RangedCritRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RangedCritRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RangedCritRating] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Hunter")]
+        [DisplayName("Ranged Hit Rating")]
+        [CommonStat]
+        public float RangedHitRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RangedHitRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RangedHitRating] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Hunter")]
+        [DisplayName("Ranged Haste Rating")]
+        [CommonStat]
+        public float RangedHasteRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RangedHasteRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RangedHasteRating] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Hunter")]
+        [DisplayName("Ranged Attack Power")]
+        [CommonStat]
         public float RangedAttackPower
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RangedAttackPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.RangedAttackPower] = value; }
         }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage] /*its not really multiplicative, but it is stored as .02 instead of 2 because crit is % based 0-1, so this attribute makes it display correctly */
+        [Percentage]
+        [Category("Hunter")]
+        [CommonStat]
+        public float BonusRangedAttackPowerMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier] = value; }
+        }
+        #endregion
+        #region Set Bonuses
+        /// <summary>Your ranged attack speed is increased by 20% while Aspect of the Viper is active</summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Ranged Attack Speed Increase while Aspect of the Viper is active")]
+        [Category("Hunter")]
+        public float BonusHunter_T7_4P_ViperSpeed
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHunter_T7_4P_ViperSpeed]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHunter_T7_4P_ViperSpeed] = value; }
+        }
+        /// <summary>Increases the damage done by your Serpent Sting ability by 10%.</summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Damage increase for Serpent Sting")]
+        [Category("Hunter")]
+        public float BonusHunter_T8_2P_SerpDmg
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHunter_T8_2P_SerpDmg]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHunter_T8_2P_SerpDmg] = value; }
+        }
+        /// <summary>Your Steady Shot has a chance to grant you 600 Attack Power for 15 sec.</summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Steady shot has a chance to increase attack power")]
+        [Category("Hunter")]
+        public float BonusHunter_T8_4P_SteadyShotAPProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHunter_T8_4P_SteadyShotAPProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHunter_T8_4P_SteadyShotAPProc] = value; }
+        }
+        /// <summary>All Trap cooldowns reduced by 2 seconds</summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("second cooldown reduction for Traps")]
+        [Category("Hunter")]
+        public float BonusHunter_PvP_4pc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHunter_PvP_4pc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHunter_PvP_4pc] = value; }
+        }
+        /// <summary>Your Serpent Stings can now Critical Strike</summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Your Serpent Stings can now crit")]
+        [Category("Hunter")]
+        public float BonusHunter_T9_2P_SerpCanCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHunter_T9_2P_SerpCanCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHunter_T9_2P_SerpCanCrit] = value; }
+        }
+        /// <summary>Steady shot has a chance to increase pet's attack power by 600</summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Steady shot has a chance to increase pet's attack power")]
+        [Category("Hunter")]
+        public float BonusHunter_T9_4P_SteadyShotPetAPProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHunter_T9_4P_SteadyShotPetAPProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHunter_T9_4P_SteadyShotPetAPProc] = value; }
+        }
+        #endregion
+        #region Pet Bonuses
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
         [DisplayName("% Extra Pet Crit Chance")]
         [Category("Hunter")]
         public float BonusPetCritChance
@@ -2796,90 +2879,40 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance] = value; }
         }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage] /*Same as above*/
-        [DisplayName("% Extra Steady Shot Crit")]
-        [Category("Hunter")]
-        public float BonusSteadyShotCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Steady shot has a chance to increase attack power")]
-        [Category("Hunter")]
-        public float BonusSteadyShotAttackPowerBuff
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusSteadyShotAttackPowerBuff]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusSteadyShotAttackPowerBuff] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Serpent Sting can crit")]
-        [Category("Hunter")]
-        public float BonusSerpentStingCanCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusSerpentStingCanCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusSerpentStingCanCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Steady shot has a chance to increase pet's attack power")]
-        [Category("Hunter")]
-        public float BonusSteadyShotPetAttackPowerBuff
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusSteadyShotPetAttackPowerBuff]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusSteadyShotPetAttackPowerBuff] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Multishot mana discount")]
-        [Category("Hunter")]
-        public float MultiShotManaDiscount
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MultiShotManaDiscount]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MultiShotManaDiscount] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("second cooldown reduction for Traps")]
-        [Category("Hunter")]
-        public float TrapCooldownReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.TrapCooldownReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TrapCooldownReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Stamina")]
+        [DisplayName("Pet Stamina")]
         [Category("Hunter")]
         public float PetStamina
         {
             get { return _rawAdditiveData[(int)AdditiveStat.PetStamina]; }
             set { _rawAdditiveData[(int)AdditiveStat.PetStamina] = value; }
         }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Strength")]
+        [DisplayName("Pet Strength")]
         [Category("Hunter")]
         public float PetStrength
         {
             get { return _rawAdditiveData[(int)AdditiveStat.PetStrength]; }
             set { _rawAdditiveData[(int)AdditiveStat.PetStrength] = value; }
         }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spirit")]
+        [DisplayName("Pet Spirit")]
         [Category("Hunter")]
         public float PetSpirit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.PetSpirit]; }
             set { _rawAdditiveData[(int)AdditiveStat.PetSpirit] = value; }
         }
-
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Bonus Pet Damage")]
+        [Category("Hunter")]
+        public float BonusPetDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier] = value; }
+        }
+        #endregion
         #endregion
         #region Added by Rawr.Tree
         // Tree 2-piece T5
@@ -3831,67 +3864,6 @@ namespace Rawr {
         }
         #endregion
 
-        #region Added by Rawr.Hunter
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Hunter")]
-        public float BonusRangedAttackPowerMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Hunter")]
-        [DisplayName("% Bonus Steady Shot Damage")]
-        public float BonusSteadyShotDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSteadyShotDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSteadyShotDamageMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Hunter")]
-        [DisplayName("% Bonus Pet Damage")]
-        public float BonusPetDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Hunter")]
-        [DisplayName("% Aspect of the Viper Bonus Mana Regen")]
-        public float BonusAspectOfTheViperGain
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusAspectOfTheViperGain]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusAspectOfTheViperGain] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Ranged Attack Speed Increase while Aspect of the Viper is active")]
-        [Category("Hunter")]
-        public float BonusAspectOfTheViperAttackSpeed
-        {
-			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusAspectOfTheViperAttackSpeed]; }
-			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusAspectOfTheViperAttackSpeed] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Damage increase for Serpent Sting")]
-        [Category("Hunter")]
-        public float BonusSerpentStingDamage
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSerpentStingDamage]; }
-			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSerpentStingDamage] = value; }
-        }
-
-        #endregion
         #region Added by Rawr.DPSWarr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Rage on Crit")]
@@ -3942,6 +3914,7 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShockwaveDamage] = value; }
         }
 
+        /// <summary>Increases the Damage of your Slam by 10%</summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -3952,6 +3925,7 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T7_2P_SlamDamage] = value; }
         }
 
+        /// <summary>Your Bleed periodic effects have a chance to make your next ability cost 5 less rage.</summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Warrior")]
         [DisplayName("Rage Cost Reduction Proc")]
@@ -3961,6 +3935,7 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T7_4P_RageProc] = value; }
         }
 
+        /// <summary>Heroic Strike and Slam critical strikes have a chance to grant you 150 haste rating for 5 sec.</summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Warrior")]
         [DisplayName("bonus haste rating chance on Heroic Strike and Slam crits")]
@@ -3970,6 +3945,7 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_2P_HasteProc] = value; }
         }
 
+        /// <summary>Increases the critical strike chance of Mortal Strike and Bloodthirst by 10%</summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -3980,6 +3956,7 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_4P_MSBTCritIncrease] = value; }
         }
 
+        /// <summary>Berserker Stance grants an additional 2% crit chance.</summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -3990,6 +3967,7 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_Crit] = value; }
         }
 
+        /// <summary>Battle Stance grants an additional 6% armor penetration.</summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -4000,6 +3978,7 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_ArP] = value; }
         }
 
+        /// <summary>Increases the critical strike chance of your Slam and Heroic Strike abilities by 5%.</summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
@@ -4008,6 +3987,16 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_4P_SLHSCritIncrease]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_4P_SLHSCritIncrease] = value; }
+        }
+
+        /// <summary>Your Intercept abilities cooldown is reduced by 5 sec.</summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Warrior")]
+        [DisplayName("second Intercept Cooldown Reduction")]
+        public float BonusWarrior_PvP_4P_InterceptCDReduc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_PvP_4P_InterceptCDReduc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_PvP_4P_InterceptCDReduc] = value; }
         }
 
         #endregion

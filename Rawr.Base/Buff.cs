@@ -2649,7 +2649,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Cryptstalker Battlegear",
-                Stats = { BonusAspectOfTheViperAttackSpeed = 0.2f },
+                Stats = { BonusHunter_T7_4P_ViperSpeed = 0.2f },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
@@ -2661,7 +2661,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Scourgestalker Battlegear",
-                Stats = { BonusSerpentStingDamage = 0.1f },
+                Stats = { BonusHunter_T8_2P_SerpDmg = 0.1f },
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
@@ -2671,7 +2671,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Scourgestalker Battlegear",
-                Stats = { BonusSteadyShotAttackPowerBuff = 1 },
+                Stats = { BonusHunter_T8_4P_SteadyShotAPProc = 1 },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
@@ -2683,7 +2683,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Windrunner's Battlegear",
-                Stats = { BonusSerpentStingCanCrit = 1 },
+                Stats = { BonusHunter_T9_2P_SerpCanCrit = 1 },
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
@@ -2693,7 +2693,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Windrunner's Battlegear",
-                Stats = { BonusSteadyShotPetAttackPowerBuff = 1 },
+                Stats = { BonusHunter_T9_4P_SteadyShotPetAPProc = 1 },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
@@ -2716,7 +2716,7 @@ namespace Rawr
                 Name = "Gladiator's Pursuit 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { TrapCooldownReduction = 2 },
+                Stats = { BonusHunter_PvP_4pc = 2 },
                 SetName = "Gladiator's Pursuit",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
@@ -3992,6 +3992,16 @@ namespace Rawr
             #endregion
             #endregion
             #region PvP
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Gladiator's Battlegear (PvP) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusWarrior_PvP_4P_InterceptCDReduc = 5 },
+                SetName = "Gladiator's Battlegear",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+            });
             #endregion
             #endregion
 

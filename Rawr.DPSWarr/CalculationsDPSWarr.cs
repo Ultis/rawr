@@ -495,6 +495,7 @@ These numbers to do not include racial bonuses.",
                 stats.BonusWarrior_T9_2P_Crit +
                 stats.BonusWarrior_T9_2P_ArP +
                 stats.BonusWarrior_T9_4P_SLHSCritIncrease +
+                stats.BonusWarrior_PvP_4P_InterceptCDReduc +
                 // Special
                 stats.BonusRageGen +
                 stats.BonusRageOnCrit
@@ -595,7 +596,6 @@ These numbers to do not include racial bonuses.",
         }
 
         public override bool IsEnchantRelevant(Enchant enchant) {
-            //bool test = base.IsEnchantRelevant(enchant);
             string name = enchant.Name;
             if (name.Contains("Rune of the Fallen Crusader")) {
                 return false; // Bad DK Enchant, Bad!

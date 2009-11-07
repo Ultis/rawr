@@ -130,7 +130,6 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 line = 25;
                 CB_Duration.Minimum = 0;
                 CB_Duration.Maximum = 60 * 20; // 20 minutes
-                //NUD_MoveFreq.Maximum = 60 * 20; // 20 minutes
                 line = 50;
             } catch (Exception ex) {
                 new ErrorBoxDPSWarr("Error in creating the DPSWarr Options Pane",

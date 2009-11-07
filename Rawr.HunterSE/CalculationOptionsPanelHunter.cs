@@ -12,23 +12,25 @@ namespace Rawr.HunterSE
     public partial class CalculationOptionsPanelHunterSE : CalculationOptionsPanelBase
     {
         #region Instance Variables
-
-        private bool loadingOptions = false;
-		private CalculationOptionsHunterSE options = null;
+        private bool isLoading = false;
+		private CalculationOptionsHunterSE CalcOpts = null;
         private PetBuffSelectorSE petBuffSelector = null;
         #endregion
 
         #region Constructors
-
         public CalculationOptionsPanelHunterSE()
         {
+            isLoading = true;
             InitializeComponent();
+
+            CB_Duration.Minimum = 0;
+            CB_Duration.Maximum = 60 * 20; // 20 minutes
 
             // The PetBuffSelector doesn't work in the designer. bah
             petBuffSelector = new PetBuffSelectorSE();
             petBuffSelector.character = Character;
 
-            tabPage4.Controls.Add(petBuffSelector);
+            Page_04_PetBuffs.Controls.Add(petBuffSelector);
             petBuffSelector.AutoScroll = true;
             petBuffSelector.Dock = System.Windows.Forms.DockStyle.Fill;
             petBuffSelector.Location = new System.Drawing.Point(0, 0);
@@ -37,19 +39,18 @@ namespace Rawr.HunterSE
             petBuffSelector.Size = new System.Drawing.Size(303, 558);
             petBuffSelector.TabIndex = 0;
 
-
-            InitializeShotList(cmbPriority1);
-            InitializeShotList(cmbPriority2);
-            InitializeShotList(cmbPriority3);
-            InitializeShotList(cmbPriority4);
-            InitializeShotList(cmbPriority5);
-            InitializeShotList(cmbPriority6);
-            InitializeShotList(cmbPriority7);
-            InitializeShotList(cmbPriority8);
-            InitializeShotList(cmbPriority9);
-            InitializeShotList(cmbPriority10);
+            InitializeShotList(CB_ShotPriority_01);
+            InitializeShotList(CB_ShotPriority_02);
+            InitializeShotList(CB_ShotPriority_03);
+            InitializeShotList(CB_ShotPriority_04);
+            InitializeShotList(CB_ShotPriority_05);
+            InitializeShotList(CB_ShotPriority_06);
+            InitializeShotList(CB_ShotPriority_07);
+            InitializeShotList(CB_ShotPriority_08);
+            InitializeShotList(CB_ShotPriority_09);
+            InitializeShotList(CB_ShotPriority_10);
+            isLoading = false;
         }
-
         private void InitializeShotList(ComboBox cb)
         {
             cb.Items.Add("None");
@@ -72,165 +73,171 @@ namespace Rawr.HunterSE
             cb.Items.Add("Orc - Blood Fury");
             cb.Items.Add("Troll - Berserk");
         }
-
-        #endregion
-
-        #region Overrides
-
         protected override void LoadCalculationOptions()
         {
-            loadingOptions = true;
-			options = Character.CalculationOptions as CalculationOptionsHunterSE;
-			if (options == null)
-			{
-				options = new CalculationOptionsHunterSE();
-				Character.CalculationOptions = options;
-			}
-			for (int i = 0; i < cmbTargetLevel.Items.Count; i++)
-			{
-				if (cmbTargetLevel.Items[i] as string == options.TargetLevel.ToString())
-				{
-					cmbTargetLevel.SelectedItem = cmbTargetLevel.Items[i];
-					break;
-				}
-			}
+            isLoading = true;
+            if (Character != null && Character.CalculationOptions == null)
+            {
+                // If it's broke, make a new one with the defaults
+                Character.CalculationOptions = new CalculationOptionsHunterSE();
+                isLoading = true;
+            }
+            CalcOpts = Character.CalculationOptions as CalculationOptionsHunterSE;
+            for (int i = 0; i < CB_TargetLevel.Items.Count; i++)
+            {
+                if (CB_TargetLevel.Items[i] as string == CalcOpts.TargetLevel.ToString())
+                {
+                    CB_TargetLevel.SelectedItem = CB_TargetLevel.Items[i];
+                    break;
+                }
+            }
+
+            // Hiding Gear based on Bad Stats
+            CK_HideSplGear.Checked = CalcOpts.HideBadItems_Spl; CalculationsHunterSE.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
+            CK_HidePvPGear.Checked = CalcOpts.HideBadItems_PvP; CalculationsHunterSE.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
+            // Hiding Enchants based on Profession
+            CK_HideProfEnchants.Checked = CalcOpts.HideProfEnchants;
+            CalculationsHunterSE.HidingBadStuff_Prof = CalcOpts.HideProfEnchants;
+            CB_Prof1.Enabled = CK_HideProfEnchants.Checked;
+            CB_Prof2.Enabled = CK_HideProfEnchants.Checked;
+            CB_Prof1.Text = ProfessionToString(Character.PrimaryProfession);
+            CB_Prof2.Text = ProfessionToString(Character.SecondaryProfession);
 
             petBuffSelector.character = Character;
             petBuffSelector.LoadBuffsFromOptions();
 
-            numericUpDownLatency.Value = (decimal)(options.Latency * 1000.0);
+            NUD_Latency.Value = (decimal)(CalcOpts.Latency * 1000.0);
 
-            trackBarTargetArmor.Value = options.TargetArmor;
-            lblTargetArmorValue.Text = options.TargetArmor.ToString();
+            Bar_TargArmor.Value = CalcOpts.TargetArmor;
+            LB_TargArmorValue.Text = CalcOpts.TargetArmor.ToString();
 
-            comboPetFamily.Items.Clear();
-            foreach (PetFamily f in Enum.GetValues(typeof(PetFamily))) comboPetFamily.Items.Add(f);
-            comboPetFamily.SelectedItem = options.PetFamily;
+            CB_PetFamily.Items.Clear();
+            foreach (PetFamily f in Enum.GetValues(typeof(PetFamily))) CB_PetFamily.Items.Add(f);
+            CB_PetFamily.SelectedItem = CalcOpts.PetFamily;
 
-            duration.Value = options.duration;
-            numericTime20.Value = options.timeSpentSub20;
-            numericTime35.Value = options.timeSpent35To20;
-            numericBossHP.Value = (decimal)Math.Round(100 * options.bossHPPercentage);
+            CB_Duration.Value = CalcOpts.duration;
+            NUD_Time20.Value = CalcOpts.timeSpentSub20;
+            NUD_35.Value = CalcOpts.timeSpent35To20;
+            NUD_BossHP.Value = (decimal)Math.Round(100 * CalcOpts.bossHPPercentage);
 
             // Drizz: Added option for CDCutoff
-            numericUpDownCDCutOff.Value = options.cooldownCutoff;
+            NUD_CDCutOff.Value = CalcOpts.cooldownCutoff;
 
-            numericTime20.Maximum = duration.Value;
-            numericTime35.Maximum = duration.Value;
+            NUD_Time20.Maximum = CB_Duration.Value;
+            NUD_35.Maximum = CB_Duration.Value;
 
-            if (options.useManaPotion == ManaPotionType.None) cmbManaPotion.SelectedIndex = 0;
-            if (options.useManaPotion == ManaPotionType.RunicManaPotion) cmbManaPotion.SelectedIndex = 1;
-            if (options.useManaPotion == ManaPotionType.SuperManaPotion) cmbManaPotion.SelectedIndex = 2;
+            if (CalcOpts.useManaPotion == ManaPotionType.None) CB_ManaPotion.SelectedIndex = 0;
+            if (CalcOpts.useManaPotion == ManaPotionType.RunicManaPotion) CB_ManaPotion.SelectedIndex = 1;
+            if (CalcOpts.useManaPotion == ManaPotionType.SuperManaPotion) CB_ManaPotion.SelectedIndex = 2;
 
-            if (options.selectedAspect == Aspect.None) cmbAspect.SelectedIndex = 0;
-            if (options.selectedAspect == Aspect.Beast) cmbAspect.SelectedIndex = 1;
-            if (options.selectedAspect == Aspect.Hawk) cmbAspect.SelectedIndex = 2;
-            if (options.selectedAspect == Aspect.Viper) cmbAspect.SelectedIndex = 3;
-            if (options.selectedAspect == Aspect.Monkey) cmbAspect.SelectedIndex = 4;
-            if (options.selectedAspect == Aspect.Dragonhawk) cmbAspect.SelectedIndex = 5;
+            if (CalcOpts.selectedAspect == Aspect.None) CB_Aspect.SelectedIndex = 0;
+            if (CalcOpts.selectedAspect == Aspect.Beast) CB_Aspect.SelectedIndex = 1;
+            if (CalcOpts.selectedAspect == Aspect.Hawk) CB_Aspect.SelectedIndex = 2;
+            if (CalcOpts.selectedAspect == Aspect.Viper) CB_Aspect.SelectedIndex = 3;
+            if (CalcOpts.selectedAspect == Aspect.Monkey) CB_Aspect.SelectedIndex = 4;
+            if (CalcOpts.selectedAspect == Aspect.Dragonhawk) CB_Aspect.SelectedIndex = 5;
 
-            if (options.aspectUsage == AspectUsage.AlwaysOn) cmbAspectUsage.SelectedIndex = 0;
-            if (options.aspectUsage == AspectUsage.ViperToOOM) cmbAspectUsage.SelectedIndex = 1;
-            if (options.aspectUsage == AspectUsage.ViperRegen) cmbAspectUsage.SelectedIndex = 2;
+            if (CalcOpts.aspectUsage == AspectUsage.AlwaysOn) CB_AspectUsage.SelectedIndex = 0;
+            if (CalcOpts.aspectUsage == AspectUsage.ViperToOOM) CB_AspectUsage.SelectedIndex = 1;
+            if (CalcOpts.aspectUsage == AspectUsage.ViperRegen) CB_AspectUsage.SelectedIndex = 2;
 
-            chkUseBeastDuringBW.Checked = options.useBeastDuringBeastialWrath;
-            chkEmulateBugs.Checked = options.emulateSpreadsheetBugs;
-            chkSpreadsheetUptimes.Checked = options.calculateUptimesLikeSpreadsheet;
-            chkRandomProcs.Checked = options.randomizeProcs;
-            chkUseRotation.Checked = options.useRotationTest;
+            CK_UseBeastDuringBW.Checked = CalcOpts.useBeastDuringBeastialWrath;
+            CK_EmulateBugs.Checked = CalcOpts.emulateSpreadsheetBugs;
+            CK_SpreadsheetUptimes.Checked = CalcOpts.calculateUptimesLikeSpreadsheet;
+            CK_RandomProcs.Checked = CalcOpts.randomizeProcs;
+            CK_UseRotation.Checked = CalcOpts.useRotationTest;
 
             PopulateAbilities();
 
-            comboBoxPet1.SelectedItem = options.PetPriority1;
-            comboBoxPet2.SelectedItem = options.PetPriority2;
-            comboBoxPet3.SelectedItem = options.PetPriority3;
-            comboBoxPet4.SelectedItem = options.PetPriority4;
-            comboBoxPet5.SelectedItem = options.PetPriority5;
-            comboBoxPet6.SelectedItem = options.PetPriority6;
-            comboBoxPet7.SelectedItem = options.PetPriority7;
+            CB_PetPrio_01.SelectedItem = CalcOpts.PetPriority1;
+            CB_PetPrio_02.SelectedItem = CalcOpts.PetPriority2;
+            CB_PetPrio_03.SelectedItem = CalcOpts.PetPriority3;
+            CB_PetPrio_04.SelectedItem = CalcOpts.PetPriority4;
+            CB_PetPrio_05.SelectedItem = CalcOpts.PetPriority5;
+            CB_PetPrio_06.SelectedItem = CalcOpts.PetPriority6;
+            CB_PetPrio_07.SelectedItem = CalcOpts.PetPriority7;
 
 
             // Cunning
-            initTalentValues(cmbCunningCorbaReflexes, 2);
-            initTalentValues(cmbCunningDiveDash, 1);
-            initTalentValues(cmbCunningGreatStamina, 3);
-            initTalentValues(cmbCunningNaturalArmor, 2);
-            initTalentValues(cmbCunningBoarsSpeed, 1);
-            initTalentValues(cmbCunningMobility, 2);
-            initTalentValues(cmbCunningSpikedCollar, 3);
-            initTalentValues(cmbCunningAvoidance, 3);
-            initTalentValues(cmbCunningLionhearted, 2);
-            initTalentValues(cmbCunningCarrionFeeder, 1);
-            initTalentValues(cmbCunningGreatResistance, 3);
-            initTalentValues(cmbCunningOwlsFocus, 2);
-            initTalentValues(cmbCunningCornered, 2);
-            initTalentValues(cmbCunningFeedingFrenzy, 2);
-            initTalentValues(cmbCunningWolverineBite, 1);
-            initTalentValues(cmbCunningRoarOfRecovery, 1);
-            initTalentValues(cmbCunningBullheaded, 1);
-            initTalentValues(cmbCunningGraceOfTheMantis, 2);
-            initTalentValues(cmbCunningWildHunt, 2);
-            initTalentValues(cmbCunningRoarOfSacrifice, 1);
+            initTalentValues(CB_CunningCorbaReflexes, 2);
+            initTalentValues(CB_CunningDiveDash, 1);
+            initTalentValues(CB_CunningGreatStamina, 3);
+            initTalentValues(CB_CunningNaturalArmor, 2);
+            initTalentValues(CB_CunningBoarsSpeed, 1);
+            initTalentValues(CB_CunningMobility, 2);
+            initTalentValues(CB_CunningSpikedCollar, 3);
+            initTalentValues(CB_CunningAvoidance, 3);
+            initTalentValues(CB_CunningLionhearted, 2);
+            initTalentValues(CB_CunningCarrionFeeder, 1);
+            initTalentValues(CB_CunningGreatResistance, 3);
+            initTalentValues(CB_CunningOwlsFocus, 2);
+            initTalentValues(CB_CunningCornered, 2);
+            initTalentValues(CB_CunningFeedingFrenzy, 2);
+            initTalentValues(CB_CunningWolverineBite, 1);
+            initTalentValues(CB_CunningRoarOfRecovery, 1);
+            initTalentValues(CB_CunningBullheaded, 1);
+            initTalentValues(CB_CunningGraceOfTheMantis, 2);
+            initTalentValues(CB_CunningWildHunt, 2);
+            initTalentValues(CB_CunningRoarOfSacrifice, 1);
             // Ferocity
-            initTalentValues(cmbFerocityAvoidance, 3);
-            initTalentValues(cmbFerocityBloodthirsty, 2);
-            initTalentValues(cmbFerocityBoarsSpeed, 1);
-            initTalentValues(cmbFerocityCallOfTheWild, 1);
-            initTalentValues(cmbFerocityChargeSwoop, 1);
-            initTalentValues(cmbFerocityCobraReflexes, 2);
-            initTalentValues(cmbFerocityDiveDash, 1);
-            initTalentValues(cmbFerocityGreatResistance, 3);
-            initTalentValues(cmbFerocityGreatStamina, 3);
-            initTalentValues(cmbFerocityHeartOfThePhoenix, 1);
-            initTalentValues(cmbFerocityImprovedCower, 2);
-            initTalentValues(cmbFerocityLickYourWounds, 1);
-            initTalentValues(cmbFerocityLionhearted, 2);
-            initTalentValues(cmbFerocityNaturalArmor, 2);
-            initTalentValues(cmbFerocityRabid, 1);
-            initTalentValues(cmbFerocitySharkAttack, 2);
-            initTalentValues(cmbFerocitySpidersBite, 3);
-            initTalentValues(cmbFerocitySpikedCollar, 3);
-            initTalentValues(cmbFerocityWildHunt, 2);
+            initTalentValues(CB_FerocityAvoidance, 3);
+            initTalentValues(CB_FerocityBloodthirsty, 2);
+            initTalentValues(CB_FerocityBoarsSpeed, 1);
+            initTalentValues(CB_FerocityCallOfTheWild, 1);
+            initTalentValues(CB_FerocityChargeSwoop, 1);
+            initTalentValues(CB_FerocityCobraReflexes, 2);
+            initTalentValues(CB_FerocityDiveDash, 1);
+            initTalentValues(CB_FerocityGreatResistance, 3);
+            initTalentValues(CB_FerocityGreatStamina, 3);
+            initTalentValues(CB_FerocityHeartOfThePhoenix, 1);
+            initTalentValues(CB_FerocityImprovedCower, 2);
+            initTalentValues(CB_FerocityLickYourWounds, 1);
+            initTalentValues(CB_FerocityLionhearted, 2);
+            initTalentValues(CB_FerocityNaturalArmor, 2);
+            initTalentValues(CB_FerocityRabid, 1);
+            initTalentValues(CB_FerocitySharkAttack, 2);
+            initTalentValues(CB_FerocitySpidersBite, 3);
+            initTalentValues(CB_FerocitySpikedCollar, 3);
+            initTalentValues(CB_FerocityWildHunt, 2);
             // Tenacity
-            initTalentValues(cmbTenacityAvoidance, 3);
-            initTalentValues(cmbTenacityBloodOfTheRhino, 2);
-            initTalentValues(cmbTenacityBoarsSpeed, 1);
-            initTalentValues(cmbTenacityCharge, 1);
-            initTalentValues(cmbTenacityCobraReflexes, 2);
-            initTalentValues(cmbTenacityGraceOfTheMantis, 2);
-            initTalentValues(cmbTenacityGreatResistance, 3);
-            initTalentValues(cmbTenacityGreatStamina, 3);
-            initTalentValues(cmbTenacityGuardDog, 2);
-            initTalentValues(cmbTenacityIntervene, 1);
-            initTalentValues(cmbTenacityLastStand, 1);
-            initTalentValues(cmbTenacityLiohearted, 2);
-            initTalentValues(cmbTenacityNaturalArmor, 2);
-            initTalentValues(cmbTenacityPetBarding, 2);
-            initTalentValues(cmbTenacityRoarOfSacrifice, 1);
-            initTalentValues(cmbTenacitySilverback, 2);
-            initTalentValues(cmbTenacitySpikedCollar, 3);
-            initTalentValues(cmbTenacityTaunt, 1);
-            initTalentValues(cmbTenacityThunderstomp, 1);
-            initTalentValues(cmbTenacityWildHunt, 2);
+            initTalentValues(CB_TenacityAvoidance, 3);
+            initTalentValues(CB_TenacityBloodOfTheRhino, 2);
+            initTalentValues(CB_TenacityBoarsSpeed, 1);
+            initTalentValues(CB_TenacityCharge, 1);
+            initTalentValues(CB_TenacityCobraReflexes, 2);
+            initTalentValues(CB_TenacityGraceOfTheMantis, 2);
+            initTalentValues(CB_TenacityGreatResistance, 3);
+            initTalentValues(CB_TenacityGreatStamina, 3);
+            initTalentValues(CB_TenacityGuardDog, 2);
+            initTalentValues(CB_TenacityIntervene, 1);
+            initTalentValues(CB_TenacityLastStand, 1);
+            initTalentValues(CB_TenacityLiohearted, 2);
+            initTalentValues(CB_TenacityNaturalArmor, 2);
+            initTalentValues(CB_TenacityPetBarding, 2);
+            initTalentValues(CB_TenacityRoarOfSacrifice, 1);
+            initTalentValues(CB_TenacitySilverback, 2);
+            initTalentValues(CB_TenacitySpikedCollar, 3);
+            initTalentValues(CB_TenacityTaunt, 1);
+            initTalentValues(CB_TenacityThunderstomp, 1);
+            initTalentValues(CB_TenacityWildHunt, 2);
 
             populatePetTalentCombos();
 
             // set up shot priorities
-            cmbPriority1.SelectedIndex = options.PriorityIndex1;
-            cmbPriority2.SelectedIndex = options.PriorityIndex2;
-            cmbPriority3.SelectedIndex = options.PriorityIndex3;
-            cmbPriority4.SelectedIndex = options.PriorityIndex4;
-            cmbPriority5.SelectedIndex = options.PriorityIndex5;
-            cmbPriority6.SelectedIndex = options.PriorityIndex6;
-            cmbPriority7.SelectedIndex = options.PriorityIndex7;
-            cmbPriority8.SelectedIndex = options.PriorityIndex8;
-            cmbPriority9.SelectedIndex = options.PriorityIndex9;
-            cmbPriority10.SelectedIndex = options.PriorityIndex10;
-            cmbPriorityDefaults.SelectedIndex = 0;
+            CB_ShotPriority_01.SelectedIndex = CalcOpts.PriorityIndex1;
+            CB_ShotPriority_02.SelectedIndex = CalcOpts.PriorityIndex2;
+            CB_ShotPriority_03.SelectedIndex = CalcOpts.PriorityIndex3;
+            CB_ShotPriority_04.SelectedIndex = CalcOpts.PriorityIndex4;
+            CB_ShotPriority_05.SelectedIndex = CalcOpts.PriorityIndex5;
+            CB_ShotPriority_06.SelectedIndex = CalcOpts.PriorityIndex6;
+            CB_ShotPriority_07.SelectedIndex = CalcOpts.PriorityIndex7;
+            CB_ShotPriority_08.SelectedIndex = CalcOpts.PriorityIndex8;
+            CB_ShotPriority_09.SelectedIndex = CalcOpts.PriorityIndex9;
+            CB_ShotPriority_10.SelectedIndex = CalcOpts.PriorityIndex10;
+            CB_PriorityDefaults.SelectedIndex = 0;
 
-            loadingOptions = false;
+            isLoading = false;
         }
-
         #endregion
 
         #region Event Handlers
@@ -239,9 +246,9 @@ namespace Rawr.HunterSE
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!loadingOptions)
+            if (!isLoading)
             {
-                options.TargetLevel = int.Parse(cmbTargetLevel.SelectedItem.ToString());
+                CalcOpts.TargetLevel = int.Parse(CB_TargetLevel.SelectedItem.ToString());
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -259,7 +266,7 @@ namespace Rawr.HunterSE
             // only Cat and SpiritBeast currently have a #5!
             //
 
-            switch (options.PetFamily)
+            switch (CalcOpts.PetFamily)
             {
                 case PetFamily.Bat:
                     familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.SonicBlast };
@@ -359,15 +366,15 @@ namespace Rawr.HunterSE
                     break;
             }
 
-            comboBoxPet1.Items.Clear();
-            comboBoxPet1.Items.Add(PetAttacks.None);
+            CB_PetPrio_01.Items.Clear();
+            CB_PetPrio_01.Items.Add(PetAttacks.None);
 
             int family_mod = 0;
 
-            if (options.PetFamily != PetFamily.None)
+            if (CalcOpts.PetFamily != PetFamily.None)
             {
-                comboBoxPet1.Items.Add(PetAttacks.Growl);
-                comboBoxPet1.Items.Add(PetAttacks.Cower);
+                CB_PetPrio_01.Items.Add(PetAttacks.Growl);
+                CB_PetPrio_01.Items.Add(PetAttacks.Cower);
 
                 foreach (PetAttacks A in familyList)
                 {
@@ -377,7 +384,7 @@ namespace Rawr.HunterSE
                     }
                     else
                     {
-                        comboBoxPet1.Items.Add(A);
+                        CB_PetPrio_01.Items.Add(A);
                     }
                 }
 
@@ -386,69 +393,69 @@ namespace Rawr.HunterSE
                 if (family == PetFamilyTree.Cunning)
                 {
                     //comboBoxPet1.Items.Add(PetAttacks.RoarOfRecovery);
-                    comboBoxPet1.Items.Add(PetAttacks.RoarOfSacrifice);
-                    comboBoxPet1.Items.Add(PetAttacks.WolverineBite);
+                    CB_PetPrio_01.Items.Add(PetAttacks.RoarOfSacrifice);
+                    CB_PetPrio_01.Items.Add(PetAttacks.WolverineBite);
                     //comboBoxPet1.Items.Add(PetAttacks.Bullheaded);
                 }
 
                 if (family == PetFamilyTree.Ferocity)
                 {
-                    comboBoxPet1.Items.Add(PetAttacks.LickYourWounds);
+                    CB_PetPrio_01.Items.Add(PetAttacks.LickYourWounds);
                     //comboBoxPet1.Items.Add(PetAttacks.CallOfTheWild);
                     //comboBoxPet1.Items.Add(PetAttacks.Rabid);
                 }
 
                 if (family == PetFamilyTree.Tenacity)
                 {
-                    comboBoxPet1.Items.Add(PetAttacks.Thunderstomp);
-                    comboBoxPet1.Items.Add(PetAttacks.LastStand);
-                    comboBoxPet1.Items.Add(PetAttacks.Taunt);
-                    comboBoxPet1.Items.Add(PetAttacks.RoarOfSacrifice);
+                    CB_PetPrio_01.Items.Add(PetAttacks.Thunderstomp);
+                    CB_PetPrio_01.Items.Add(PetAttacks.LastStand);
+                    CB_PetPrio_01.Items.Add(PetAttacks.Taunt);
+                    CB_PetPrio_01.Items.Add(PetAttacks.RoarOfSacrifice);
                 }
             }
 
-            object[] attacks_picklist = new object[comboBoxPet1.Items.Count];
-            comboBoxPet1.Items.CopyTo(attacks_picklist, 0);
+            object[] attacks_picklist = new object[CB_PetPrio_01.Items.Count];
+            CB_PetPrio_01.Items.CopyTo(attacks_picklist, 0);
 
-            comboBoxPet2.Items.Clear();
-            comboBoxPet3.Items.Clear();
-            comboBoxPet4.Items.Clear();
-            comboBoxPet5.Items.Clear();
-            comboBoxPet6.Items.Clear();
-            comboBoxPet7.Items.Clear();
+            CB_PetPrio_02.Items.Clear();
+            CB_PetPrio_03.Items.Clear();
+            CB_PetPrio_04.Items.Clear();
+            CB_PetPrio_05.Items.Clear();
+            CB_PetPrio_06.Items.Clear();
+            CB_PetPrio_07.Items.Clear();
 
-            comboBoxPet2.Items.AddRange(attacks_picklist);
-            comboBoxPet3.Items.AddRange(attacks_picklist);
-            comboBoxPet4.Items.AddRange(attacks_picklist);
-            comboBoxPet5.Items.AddRange(attacks_picklist);
-            comboBoxPet6.Items.AddRange(attacks_picklist);
-            comboBoxPet7.Items.AddRange(attacks_picklist);
+            CB_PetPrio_02.Items.AddRange(attacks_picklist);
+            CB_PetPrio_03.Items.AddRange(attacks_picklist);
+            CB_PetPrio_04.Items.AddRange(attacks_picklist);
+            CB_PetPrio_05.Items.AddRange(attacks_picklist);
+            CB_PetPrio_06.Items.AddRange(attacks_picklist);
+            CB_PetPrio_07.Items.AddRange(attacks_picklist);
 
-            if (options.PetFamily != PetFamily.None)
+            if (CalcOpts.PetFamily != PetFamily.None)
             {
-                comboBoxPet1.SelectedIndex = 6 - family_mod; // family skill 1
-                comboBoxPet2.SelectedIndex = 3; // focus dump
+                CB_PetPrio_01.SelectedIndex = 6 - family_mod; // family skill 1
+                CB_PetPrio_02.SelectedIndex = 3; // focus dump
             }
             else
             {
-                comboBoxPet1.SelectedIndex = 0; // none
-                comboBoxPet2.SelectedIndex = 0; // none
+                CB_PetPrio_01.SelectedIndex = 0; // none
+                CB_PetPrio_02.SelectedIndex = 0; // none
             }
 
-            comboBoxPet3.SelectedIndex = 0; // none
-            comboBoxPet4.SelectedIndex = 0; // none
-            comboBoxPet5.SelectedIndex = 0; // none
-            comboBoxPet6.SelectedIndex = 0; // none
-            comboBoxPet7.SelectedIndex = 0; // none
+            CB_PetPrio_03.SelectedIndex = 0; // none
+            CB_PetPrio_04.SelectedIndex = 0; // none
+            CB_PetPrio_05.SelectedIndex = 0; // none
+            CB_PetPrio_06.SelectedIndex = 0; // none
+            CB_PetPrio_07.SelectedIndex = 0; // none
         }
 
         private void comboPetFamily_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) updateTalentDisplay();
+            if (isLoading) updateTalentDisplay();
 
-            if (!loadingOptions && comboPetFamily.SelectedItem != null)
+            if (!isLoading && CB_PetFamily.SelectedItem != null)
             {
-                options.PetFamily = (PetFamily)comboPetFamily.SelectedItem;
+                CalcOpts.PetFamily = (PetFamily)CB_PetFamily.SelectedItem;
                 PopulateAbilities();
                 updateTalentDisplay();
                 resetTalents();
@@ -460,47 +467,45 @@ namespace Rawr.HunterSE
 
         private void trackBarTargetArmor_Scroll(object sender, EventArgs e)
         {
-            if (!loadingOptions)
+            if (!isLoading)
             {
-                options.TargetArmor = trackBarTargetArmor.Value;
+                CalcOpts.TargetArmor = Bar_TargArmor.Value;
                 Character.OnCalculationsInvalidated();
-                lblTargetArmorValue.Text = trackBarTargetArmor.Value.ToString();
+                LB_TargArmorValue.Text = Bar_TargArmor.Value.ToString();
             }
         }
 
         private void numericUpDownLatency_ValueChanged(object sender, EventArgs e)
         {
-            if (!loadingOptions)
+            if (!isLoading)
             {
-                options.Latency = (float)numericUpDownLatency.Value/1000.0f;
+                CalcOpts.Latency = (float)NUD_Latency.Value/1000.0f;
                 Character.OnCalculationsInvalidated();
             }
         }
         private void numericUpDownCDCutOff_ValueChanged(object sender, EventArgs e)
         {
-            if (!loadingOptions)
+            if (!isLoading)
             {
-                options.cooldownCutoff = (int)numericUpDownCDCutOff.Value;
+                CalcOpts.cooldownCutoff = (int)NUD_CDCutOff.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
 
-        
         private void duration_ValueChanged(object sender, EventArgs e)
         {
-            if (!loadingOptions)
+            if (!isLoading)
             {
-            	options.duration = (int)duration.Value;
-                numericTime20.Maximum = duration.Value; // don't allow these two to be 
-                numericTime35.Maximum = duration.Value; // longer than than the fight!
+            	CalcOpts.duration = (int)CB_Duration.Value;
+                NUD_Time20.Maximum = CB_Duration.Value; // don't allow these two to be 
+                NUD_35.Maximum = CB_Duration.Value; // longer than than the fight!
                 Character.OnCalculationsInvalidated();
             }
         }
         
-        
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            if (!loadingOptions)
+            if (!isLoading)
             {
             	//options.CobraReflexes = (int)numCobraReflexes.Value;
                 Character.OnCalculationsInvalidated();
@@ -509,34 +514,34 @@ namespace Rawr.HunterSE
 
         private void comboBoxPets_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            options.PetPriority1 = comboBoxPet1.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet1.SelectedItem;
-            options.PetPriority2 = comboBoxPet2.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet2.SelectedItem;
-            options.PetPriority3 = comboBoxPet3.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet3.SelectedItem;
-            options.PetPriority4 = comboBoxPet4.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet4.SelectedItem;
-            options.PetPriority5 = comboBoxPet5.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet5.SelectedItem;
-            options.PetPriority6 = comboBoxPet6.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet6.SelectedItem;
-            options.PetPriority7 = comboBoxPet7.SelectedItem == null ? PetAttacks.None : (PetAttacks)comboBoxPet7.SelectedItem;
+            if (isLoading) return;
+            CalcOpts.PetPriority1 = CB_PetPrio_01.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_01.SelectedItem;
+            CalcOpts.PetPriority2 = CB_PetPrio_02.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_02.SelectedItem;
+            CalcOpts.PetPriority3 = CB_PetPrio_03.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_03.SelectedItem;
+            CalcOpts.PetPriority4 = CB_PetPrio_04.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_04.SelectedItem;
+            CalcOpts.PetPriority5 = CB_PetPrio_05.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_05.SelectedItem;
+            CalcOpts.PetPriority6 = CB_PetPrio_06.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_06.SelectedItem;
+            CalcOpts.PetPriority7 = CB_PetPrio_07.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_07.SelectedItem;
             Character.OnCalculationsInvalidated();
         }
 
         private void PrioritySelectedIndexChanged(object sender, EventArgs e)
         {
             // this is called whenever any of the priority dropdowns are modified
-            if (loadingOptions) return;
+            if (isLoading) return;
 
-            options.PriorityIndex1 = cmbPriority1.SelectedIndex;
-            options.PriorityIndex2 = cmbPriority2.SelectedIndex;
-            options.PriorityIndex3 = cmbPriority3.SelectedIndex;
-            options.PriorityIndex4 = cmbPriority4.SelectedIndex;
-            options.PriorityIndex5 = cmbPriority5.SelectedIndex;
-            options.PriorityIndex6 = cmbPriority6.SelectedIndex;
-            options.PriorityIndex7 = cmbPriority7.SelectedIndex;
-            options.PriorityIndex8 = cmbPriority8.SelectedIndex;
-            options.PriorityIndex9 = cmbPriority9.SelectedIndex;
-            options.PriorityIndex10 = cmbPriority10.SelectedIndex;
+            CalcOpts.PriorityIndex1 = CB_ShotPriority_01.SelectedIndex;
+            CalcOpts.PriorityIndex2 = CB_ShotPriority_02.SelectedIndex;
+            CalcOpts.PriorityIndex3 = CB_ShotPriority_03.SelectedIndex;
+            CalcOpts.PriorityIndex4 = CB_ShotPriority_04.SelectedIndex;
+            CalcOpts.PriorityIndex5 = CB_ShotPriority_05.SelectedIndex;
+            CalcOpts.PriorityIndex6 = CB_ShotPriority_06.SelectedIndex;
+            CalcOpts.PriorityIndex7 = CB_ShotPriority_07.SelectedIndex;
+            CalcOpts.PriorityIndex8 = CB_ShotPriority_08.SelectedIndex;
+            CalcOpts.PriorityIndex9 = CB_ShotPriority_09.SelectedIndex;
+            CalcOpts.PriorityIndex10 = CB_ShotPriority_10.SelectedIndex;
 
-            cmbPriorityDefaults.SelectedIndex = 0;
+            CB_PriorityDefaults.SelectedIndex = 0;
 
             Character.OnCalculationsInvalidated();
         }
@@ -544,65 +549,65 @@ namespace Rawr.HunterSE
         private void cmbPriorityDefaults_SelectedIndexChanged(object sender, EventArgs e)
         {
             // only do anything if we weren't set to 0
-            if (cmbPriorityDefaults.SelectedIndex == 0) return;
-            if (loadingOptions) return;
+            if (CB_PriorityDefaults.SelectedIndex == 0) return;
+            if (isLoading) return;
 
-            loadingOptions = true;
+            isLoading = true;
 
-            if (cmbPriorityDefaults.SelectedIndex == 1) // beast master
+            if (CB_PriorityDefaults.SelectedIndex == 1) // beast master
             {
-                cmbPriority1.SelectedIndex = 14; // Rapid Fire
-                cmbPriority2.SelectedIndex = 16; // Bestial Wrath
-                cmbPriority3.SelectedIndex = 9; // Kill Shot
-                cmbPriority4.SelectedIndex = 1; // Aimed Shot
-                cmbPriority5.SelectedIndex = 2; // Arcane Shot
-                cmbPriority6.SelectedIndex = 4; // Serpent Sting
-                cmbPriority7.SelectedIndex = 8; // Steady Shot
-                cmbPriority8.SelectedIndex = 0;
-                cmbPriority9.SelectedIndex = 0;
-                cmbPriority10.SelectedIndex = 0;
+                CB_ShotPriority_01.SelectedIndex = 14; // Rapid Fire
+                CB_ShotPriority_02.SelectedIndex = 16; // Bestial Wrath
+                CB_ShotPriority_03.SelectedIndex = 9; // Kill Shot
+                CB_ShotPriority_04.SelectedIndex = 1; // Aimed Shot
+                CB_ShotPriority_05.SelectedIndex = 2; // Arcane Shot
+                CB_ShotPriority_06.SelectedIndex = 4; // Serpent Sting
+                CB_ShotPriority_07.SelectedIndex = 8; // Steady Shot
+                CB_ShotPriority_08.SelectedIndex = 0;
+                CB_ShotPriority_09.SelectedIndex = 0;
+                CB_ShotPriority_10.SelectedIndex = 0;
             }
 
-            if (cmbPriorityDefaults.SelectedIndex == 2) // marksman
+            if (CB_PriorityDefaults.SelectedIndex == 2) // marksman
             {
-                cmbPriority1.SelectedIndex = 14; // Rapid Fire
-                cmbPriority2.SelectedIndex = 15; // Readiness
-                cmbPriority3.SelectedIndex = 4; // Serpent Sting
-                cmbPriority4.SelectedIndex = 13; // Chimera Shot
-                cmbPriority5.SelectedIndex = 9; // Kill Shot
-                cmbPriority6.SelectedIndex = 1; // Aimed Shot
-                cmbPriority7.SelectedIndex = 7; // Silencing Shot
-                cmbPriority8.SelectedIndex = 8; // Steady Shot
-                cmbPriority9.SelectedIndex = 0;
-                cmbPriority10.SelectedIndex = 0;
+                CB_ShotPriority_01.SelectedIndex = 14; // Rapid Fire
+                CB_ShotPriority_02.SelectedIndex = 15; // Readiness
+                CB_ShotPriority_03.SelectedIndex = 4; // Serpent Sting
+                CB_ShotPriority_04.SelectedIndex = 13; // Chimera Shot
+                CB_ShotPriority_05.SelectedIndex = 9; // Kill Shot
+                CB_ShotPriority_06.SelectedIndex = 1; // Aimed Shot
+                CB_ShotPriority_07.SelectedIndex = 7; // Silencing Shot
+                CB_ShotPriority_08.SelectedIndex = 8; // Steady Shot
+                CB_ShotPriority_09.SelectedIndex = 0;
+                CB_ShotPriority_10.SelectedIndex = 0;
             }
 
-            if (cmbPriorityDefaults.SelectedIndex == 3) // survival
+            if (CB_PriorityDefaults.SelectedIndex == 3) // survival
             {
-                cmbPriority1.SelectedIndex = 14; // Rapid Fire
-                cmbPriority2.SelectedIndex = 9; // Kill Shot
-                cmbPriority3.SelectedIndex = 10; // Explosive Shot
-                cmbPriority4.SelectedIndex = 11; // Black Arrow
-                cmbPriority5.SelectedIndex = 4; // Serpent Sting
-                cmbPriority6.SelectedIndex = 1; // Aimed Shot
-                cmbPriority7.SelectedIndex = 8; // Steady Shot
-                cmbPriority8.SelectedIndex = 0;
-                cmbPriority9.SelectedIndex = 0;
-                cmbPriority10.SelectedIndex = 0;
+                CB_ShotPriority_01.SelectedIndex = 14; // Rapid Fire
+                CB_ShotPriority_02.SelectedIndex = 9; // Kill Shot
+                CB_ShotPriority_03.SelectedIndex = 10; // Explosive Shot
+                CB_ShotPriority_04.SelectedIndex = 11; // Black Arrow
+                CB_ShotPriority_05.SelectedIndex = 4; // Serpent Sting
+                CB_ShotPriority_06.SelectedIndex = 1; // Aimed Shot
+                CB_ShotPriority_07.SelectedIndex = 8; // Steady Shot
+                CB_ShotPriority_08.SelectedIndex = 0;
+                CB_ShotPriority_09.SelectedIndex = 0;
+                CB_ShotPriority_10.SelectedIndex = 0;
             }
 
-            loadingOptions = false;
+            isLoading = false;
 
-            options.PriorityIndex1 = cmbPriority1.SelectedIndex;
-            options.PriorityIndex2 = cmbPriority2.SelectedIndex;
-            options.PriorityIndex3 = cmbPriority3.SelectedIndex;
-            options.PriorityIndex4 = cmbPriority4.SelectedIndex;
-            options.PriorityIndex5 = cmbPriority5.SelectedIndex;
-            options.PriorityIndex6 = cmbPriority6.SelectedIndex;
-            options.PriorityIndex7 = cmbPriority7.SelectedIndex;
-            options.PriorityIndex8 = cmbPriority8.SelectedIndex;
-            options.PriorityIndex9 = cmbPriority9.SelectedIndex;
-            options.PriorityIndex10 = cmbPriority10.SelectedIndex;
+            CalcOpts.PriorityIndex1 = CB_ShotPriority_01.SelectedIndex;
+            CalcOpts.PriorityIndex2 = CB_ShotPriority_02.SelectedIndex;
+            CalcOpts.PriorityIndex3 = CB_ShotPriority_03.SelectedIndex;
+            CalcOpts.PriorityIndex4 = CB_ShotPriority_04.SelectedIndex;
+            CalcOpts.PriorityIndex5 = CB_ShotPriority_05.SelectedIndex;
+            CalcOpts.PriorityIndex6 = CB_ShotPriority_06.SelectedIndex;
+            CalcOpts.PriorityIndex7 = CB_ShotPriority_07.SelectedIndex;
+            CalcOpts.PriorityIndex8 = CB_ShotPriority_08.SelectedIndex;
+            CalcOpts.PriorityIndex9 = CB_ShotPriority_09.SelectedIndex;
+            CalcOpts.PriorityIndex10 = CB_ShotPriority_10.SelectedIndex;
 
             Character.OnCalculationsInvalidated();
         }
@@ -619,7 +624,7 @@ namespace Rawr.HunterSE
 
         private PetFamilyTree getPetFamilyTree()
         {
-            switch ((PetFamily)comboPetFamily.SelectedItem)
+            switch ((PetFamily)CB_PetFamily.SelectedItem)
             {
                 case PetFamily.Bat:
                 case PetFamily.Chimera:
@@ -667,57 +672,57 @@ namespace Rawr.HunterSE
         private void updateTalentDisplay()
         {
             PetFamilyTree tree = getPetFamilyTree();
-            grpTalentsCunning.Visible = tree == PetFamilyTree.Cunning;
-            grpTalentsFerocity.Visible = tree == PetFamilyTree.Ferocity;
-            grpTalentsTenacity.Visible = tree == PetFamilyTree.Tenacity;
+            GB_PetTalents_Cunning.Visible = tree == PetFamilyTree.Cunning;
+            GB_PetTalents_Ferocity.Visible = tree == PetFamilyTree.Ferocity;
+            GB_PetTalents_Tenacity.Visible = tree == PetFamilyTree.Tenacity;
         }
 
         private void resetTalents()
         {
-            options.petCobraReflexes = 0;
-            options.petDiveDash = 0;
-            options.petChargeSwoop = 0;
-            options.petGreatStamina = 0;
-            options.petNaturalArmor = 0;
-            options.petBoarsSpeed = 0;
-            options.petMobility = 0;
-            options.petSpikedCollar = 0;
-            options.petImprovedCower = 0;
-            options.petBloodthirsty = 0;
-            options.petBloodOfTheRhino = 0;
-            options.petPetBarding = 0;
-            options.petAvoidance = 0;
-            options.petLionhearted = 0;
-            options.petCarrionFeeder = 0;
-            options.petGuardDog = 0;
-            options.petThunderstomp = 0;
-            options.petGreatResistance = 0;
-            options.petOwlsFocus = 0;
-            options.petCornered = 0;
-            options.petFeedingFrenzy = 0;
-            options.petHeartOfThePhoenix = 0;
-            options.petSpidersBite = 0;
-            options.petWolverineBite = 0;
-            options.petRoarOfRecovery = 0;
-            options.petBullheaded = 0;
-            options.petGraceOfTheMantis = 0;
-            options.petRabid = 0;
-            options.petLickYourWounds = 0;
-            options.petCallOfTheWild = 0;
-            options.petLastStand = 0;
-            options.petTaunt = 0;
-            options.petIntervene = 0;
-            options.petWildHunt = 0;
-            options.petRoarOfSacrifice = 0;
-            options.petSharkAttack = 0;
-            options.petSilverback = 0;
+            CalcOpts.petCobraReflexes = 0;
+            CalcOpts.petDiveDash = 0;
+            CalcOpts.petChargeSwoop = 0;
+            CalcOpts.petGreatStamina = 0;
+            CalcOpts.petNaturalArmor = 0;
+            CalcOpts.petBoarsSpeed = 0;
+            CalcOpts.petMobility = 0;
+            CalcOpts.petSpikedCollar = 0;
+            CalcOpts.petImprovedCower = 0;
+            CalcOpts.petBloodthirsty = 0;
+            CalcOpts.petBloodOfTheRhino = 0;
+            CalcOpts.petPetBarding = 0;
+            CalcOpts.petAvoidance = 0;
+            CalcOpts.petLionhearted = 0;
+            CalcOpts.petCarrionFeeder = 0;
+            CalcOpts.petGuardDog = 0;
+            CalcOpts.petThunderstomp = 0;
+            CalcOpts.petGreatResistance = 0;
+            CalcOpts.petOwlsFocus = 0;
+            CalcOpts.petCornered = 0;
+            CalcOpts.petFeedingFrenzy = 0;
+            CalcOpts.petHeartOfThePhoenix = 0;
+            CalcOpts.petSpidersBite = 0;
+            CalcOpts.petWolverineBite = 0;
+            CalcOpts.petRoarOfRecovery = 0;
+            CalcOpts.petBullheaded = 0;
+            CalcOpts.petGraceOfTheMantis = 0;
+            CalcOpts.petRabid = 0;
+            CalcOpts.petLickYourWounds = 0;
+            CalcOpts.petCallOfTheWild = 0;
+            CalcOpts.petLastStand = 0;
+            CalcOpts.petTaunt = 0;
+            CalcOpts.petIntervene = 0;
+            CalcOpts.petWildHunt = 0;
+            CalcOpts.petRoarOfSacrifice = 0;
+            CalcOpts.petSharkAttack = 0;
+            CalcOpts.petSilverback = 0;
 
             populatePetTalentCombos();
         }
 
         private void talentComboChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
+            if (isLoading) return;
             // one of the (many) talent combo boxes has been updated
             // so we need to update the options
 
@@ -725,166 +730,166 @@ namespace Rawr.HunterSE
 
             if (tree == PetFamilyTree.Cunning)
             {
-                options.petCobraReflexes = cmbCunningCorbaReflexes.SelectedIndex;
-                options.petDiveDash = cmbCunningDiveDash.SelectedIndex;
-                options.petChargeSwoop = 0;
-                options.petGreatStamina = cmbCunningGreatStamina.SelectedIndex;
-                options.petNaturalArmor = cmbCunningNaturalArmor.SelectedIndex;
-                options.petBoarsSpeed = cmbCunningBoarsSpeed.SelectedIndex;
-                options.petMobility = cmbCunningMobility.SelectedIndex;
-                options.petSpikedCollar = cmbCunningSpikedCollar.SelectedIndex;
-                options.petImprovedCower = 0;
-                options.petBloodthirsty = 0;
-                options.petBloodOfTheRhino = 0;
-                options.petPetBarding = 0;
-                options.petAvoidance = cmbCunningAvoidance.SelectedIndex;
-                options.petLionhearted = cmbCunningLionhearted.SelectedIndex;
-                options.petCarrionFeeder = cmbCunningCarrionFeeder.SelectedIndex;
-                options.petGuardDog = 0;
-                options.petThunderstomp = 0;
-                options.petGreatResistance = cmbCunningGreatResistance.SelectedIndex;
-                options.petOwlsFocus = cmbCunningOwlsFocus.SelectedIndex;
-                options.petCornered = cmbCunningCornered.SelectedIndex;
-                options.petFeedingFrenzy = cmbCunningFeedingFrenzy.SelectedIndex;
-                options.petHeartOfThePhoenix = 0;
-                options.petSpidersBite = 0;
-                options.petWolverineBite = cmbCunningWolverineBite.SelectedIndex;
-                options.petRoarOfRecovery = cmbCunningRoarOfRecovery.SelectedIndex;
-                options.petBullheaded = cmbCunningBullheaded.SelectedIndex;
-                options.petGraceOfTheMantis = cmbCunningGraceOfTheMantis.SelectedIndex;
-                options.petRabid = 0;
-                options.petLickYourWounds = 0;
-                options.petCallOfTheWild = 0;
-                options.petLastStand = 0;
-                options.petTaunt = 0;
-                options.petIntervene = 0;
-                options.petWildHunt = cmbCunningWildHunt.SelectedIndex;
-                options.petRoarOfSacrifice = cmbCunningRoarOfSacrifice.SelectedIndex;
-                options.petSharkAttack = 0;
-                options.petSilverback = 0;
+                CalcOpts.petCobraReflexes = CB_CunningCorbaReflexes.SelectedIndex;
+                CalcOpts.petDiveDash = CB_CunningDiveDash.SelectedIndex;
+                CalcOpts.petChargeSwoop = 0;
+                CalcOpts.petGreatStamina = CB_CunningGreatStamina.SelectedIndex;
+                CalcOpts.petNaturalArmor = CB_CunningNaturalArmor.SelectedIndex;
+                CalcOpts.petBoarsSpeed = CB_CunningBoarsSpeed.SelectedIndex;
+                CalcOpts.petMobility = CB_CunningMobility.SelectedIndex;
+                CalcOpts.petSpikedCollar = CB_CunningSpikedCollar.SelectedIndex;
+                CalcOpts.petImprovedCower = 0;
+                CalcOpts.petBloodthirsty = 0;
+                CalcOpts.petBloodOfTheRhino = 0;
+                CalcOpts.petPetBarding = 0;
+                CalcOpts.petAvoidance = CB_CunningAvoidance.SelectedIndex;
+                CalcOpts.petLionhearted = CB_CunningLionhearted.SelectedIndex;
+                CalcOpts.petCarrionFeeder = CB_CunningCarrionFeeder.SelectedIndex;
+                CalcOpts.petGuardDog = 0;
+                CalcOpts.petThunderstomp = 0;
+                CalcOpts.petGreatResistance = CB_CunningGreatResistance.SelectedIndex;
+                CalcOpts.petOwlsFocus = CB_CunningOwlsFocus.SelectedIndex;
+                CalcOpts.petCornered = CB_CunningCornered.SelectedIndex;
+                CalcOpts.petFeedingFrenzy = CB_CunningFeedingFrenzy.SelectedIndex;
+                CalcOpts.petHeartOfThePhoenix = 0;
+                CalcOpts.petSpidersBite = 0;
+                CalcOpts.petWolverineBite = CB_CunningWolverineBite.SelectedIndex;
+                CalcOpts.petRoarOfRecovery = CB_CunningRoarOfRecovery.SelectedIndex;
+                CalcOpts.petBullheaded = CB_CunningBullheaded.SelectedIndex;
+                CalcOpts.petGraceOfTheMantis = CB_CunningGraceOfTheMantis.SelectedIndex;
+                CalcOpts.petRabid = 0;
+                CalcOpts.petLickYourWounds = 0;
+                CalcOpts.petCallOfTheWild = 0;
+                CalcOpts.petLastStand = 0;
+                CalcOpts.petTaunt = 0;
+                CalcOpts.petIntervene = 0;
+                CalcOpts.petWildHunt = CB_CunningWildHunt.SelectedIndex;
+                CalcOpts.petRoarOfSacrifice = CB_CunningRoarOfSacrifice.SelectedIndex;
+                CalcOpts.petSharkAttack = 0;
+                CalcOpts.petSilverback = 0;
             }
 
             if (tree == PetFamilyTree.Ferocity)
             {
-                options.petCobraReflexes = cmbFerocityCobraReflexes.SelectedIndex;
-                options.petDiveDash = cmbFerocityDiveDash.SelectedIndex;
-                options.petChargeSwoop = cmbFerocityChargeSwoop.SelectedIndex;
-                options.petGreatStamina = cmbFerocityGreatStamina.SelectedIndex;
-                options.petNaturalArmor = cmbFerocityNaturalArmor.SelectedIndex;
-                options.petBoarsSpeed = cmbFerocityBoarsSpeed.SelectedIndex;
-                options.petMobility = 0;
-                options.petSpikedCollar = cmbFerocitySpikedCollar.SelectedIndex;
-                options.petImprovedCower = cmbFerocityImprovedCower.SelectedIndex;
-                options.petBloodthirsty = cmbFerocityBloodthirsty.SelectedIndex;
-                options.petBloodOfTheRhino = 0;
-                options.petPetBarding = 0;
-                options.petAvoidance = cmbFerocityAvoidance.SelectedIndex;
-                options.petLionhearted = cmbFerocityLionhearted.SelectedIndex;
-                options.petCarrionFeeder = 0;
-                options.petGuardDog = 0;
-                options.petThunderstomp = 0;
-                options.petGreatResistance = cmbFerocityGreatResistance.SelectedIndex;
-                options.petOwlsFocus = 0;
-                options.petCornered = 0;
-                options.petFeedingFrenzy = 0;
-                options.petHeartOfThePhoenix = cmbFerocityHeartOfThePhoenix.SelectedIndex;
-                options.petSpidersBite = cmbFerocitySpidersBite.SelectedIndex;
-                options.petWolverineBite = 0;
-                options.petRoarOfRecovery = 0;
-                options.petBullheaded = 0;
-                options.petGraceOfTheMantis = 0;
-                options.petRabid = cmbFerocityRabid.SelectedIndex;
-                options.petLickYourWounds = cmbFerocityLickYourWounds.SelectedIndex;
-                options.petCallOfTheWild = cmbFerocityCallOfTheWild.SelectedIndex;
-                options.petLastStand = 0;
-                options.petTaunt = 0;
-                options.petIntervene = 0;
-                options.petWildHunt = cmbFerocityWildHunt.SelectedIndex;
-                options.petRoarOfSacrifice = 0;
-                options.petSharkAttack = cmbFerocitySharkAttack.SelectedIndex;
-                options.petSilverback = 0;
+                CalcOpts.petCobraReflexes = CB_FerocityCobraReflexes.SelectedIndex;
+                CalcOpts.petDiveDash = CB_FerocityDiveDash.SelectedIndex;
+                CalcOpts.petChargeSwoop = CB_FerocityChargeSwoop.SelectedIndex;
+                CalcOpts.petGreatStamina = CB_FerocityGreatStamina.SelectedIndex;
+                CalcOpts.petNaturalArmor = CB_FerocityNaturalArmor.SelectedIndex;
+                CalcOpts.petBoarsSpeed = CB_FerocityBoarsSpeed.SelectedIndex;
+                CalcOpts.petMobility = 0;
+                CalcOpts.petSpikedCollar = CB_FerocitySpikedCollar.SelectedIndex;
+                CalcOpts.petImprovedCower = CB_FerocityImprovedCower.SelectedIndex;
+                CalcOpts.petBloodthirsty = CB_FerocityBloodthirsty.SelectedIndex;
+                CalcOpts.petBloodOfTheRhino = 0;
+                CalcOpts.petPetBarding = 0;
+                CalcOpts.petAvoidance = CB_FerocityAvoidance.SelectedIndex;
+                CalcOpts.petLionhearted = CB_FerocityLionhearted.SelectedIndex;
+                CalcOpts.petCarrionFeeder = 0;
+                CalcOpts.petGuardDog = 0;
+                CalcOpts.petThunderstomp = 0;
+                CalcOpts.petGreatResistance = CB_FerocityGreatResistance.SelectedIndex;
+                CalcOpts.petOwlsFocus = 0;
+                CalcOpts.petCornered = 0;
+                CalcOpts.petFeedingFrenzy = 0;
+                CalcOpts.petHeartOfThePhoenix = CB_FerocityHeartOfThePhoenix.SelectedIndex;
+                CalcOpts.petSpidersBite = CB_FerocitySpidersBite.SelectedIndex;
+                CalcOpts.petWolverineBite = 0;
+                CalcOpts.petRoarOfRecovery = 0;
+                CalcOpts.petBullheaded = 0;
+                CalcOpts.petGraceOfTheMantis = 0;
+                CalcOpts.petRabid = CB_FerocityRabid.SelectedIndex;
+                CalcOpts.petLickYourWounds = CB_FerocityLickYourWounds.SelectedIndex;
+                CalcOpts.petCallOfTheWild = CB_FerocityCallOfTheWild.SelectedIndex;
+                CalcOpts.petLastStand = 0;
+                CalcOpts.petTaunt = 0;
+                CalcOpts.petIntervene = 0;
+                CalcOpts.petWildHunt = CB_FerocityWildHunt.SelectedIndex;
+                CalcOpts.petRoarOfSacrifice = 0;
+                CalcOpts.petSharkAttack = CB_FerocitySharkAttack.SelectedIndex;
+                CalcOpts.petSilverback = 0;
             }
 
             if (tree == PetFamilyTree.Tenacity)
             {
-                options.petCobraReflexes = cmbTenacityCobraReflexes.SelectedIndex;
-                options.petDiveDash = 0;
-                options.petChargeSwoop = cmbTenacityCharge.SelectedIndex;
-                options.petGreatStamina = cmbTenacityGreatStamina.SelectedIndex;
-                options.petNaturalArmor = cmbTenacityNaturalArmor.SelectedIndex;
-                options.petBoarsSpeed = cmbTenacityBoarsSpeed.SelectedIndex;
-                options.petMobility = 0;
-                options.petSpikedCollar = cmbTenacitySpikedCollar.SelectedIndex;
-                options.petImprovedCower = 0;
-                options.petBloodthirsty = 0;
-                options.petBloodOfTheRhino = cmbTenacityBloodOfTheRhino.SelectedIndex;
-                options.petPetBarding = cmbTenacityPetBarding.SelectedIndex;
-                options.petAvoidance = cmbTenacityAvoidance.SelectedIndex;
-                options.petLionhearted = cmbTenacityLiohearted.SelectedIndex;
-                options.petCarrionFeeder = 0;
-                options.petGuardDog = cmbTenacityGuardDog.SelectedIndex;
-                options.petThunderstomp = cmbTenacityThunderstomp.SelectedIndex;
-                options.petGreatResistance = cmbTenacityGreatResistance.SelectedIndex;
-                options.petOwlsFocus = 0;
-                options.petCornered = 0;
-                options.petFeedingFrenzy = 0;
-                options.petHeartOfThePhoenix = 0;
-                options.petSpidersBite = 0;
-                options.petWolverineBite = 0;
-                options.petRoarOfRecovery = 0;
-                options.petBullheaded = 0;
-                options.petGraceOfTheMantis = cmbTenacityGraceOfTheMantis.SelectedIndex;
-                options.petRabid = 0;
-                options.petLickYourWounds = 0;
-                options.petCallOfTheWild = 0;
-                options.petLastStand = cmbTenacityLastStand.SelectedIndex;
-                options.petTaunt = cmbTenacityTaunt.SelectedIndex;
-                options.petIntervene = cmbTenacityIntervene.SelectedIndex;
-                options.petWildHunt = cmbTenacityWildHunt.SelectedIndex;
-                options.petRoarOfSacrifice = cmbTenacityRoarOfSacrifice.SelectedIndex;
-                options.petSharkAttack = 0;
-                options.petSilverback = cmbTenacitySilverback.SelectedIndex;
+                CalcOpts.petCobraReflexes = CB_TenacityCobraReflexes.SelectedIndex;
+                CalcOpts.petDiveDash = 0;
+                CalcOpts.petChargeSwoop = CB_TenacityCharge.SelectedIndex;
+                CalcOpts.petGreatStamina = CB_TenacityGreatStamina.SelectedIndex;
+                CalcOpts.petNaturalArmor = CB_TenacityNaturalArmor.SelectedIndex;
+                CalcOpts.petBoarsSpeed = CB_TenacityBoarsSpeed.SelectedIndex;
+                CalcOpts.petMobility = 0;
+                CalcOpts.petSpikedCollar = CB_TenacitySpikedCollar.SelectedIndex;
+                CalcOpts.petImprovedCower = 0;
+                CalcOpts.petBloodthirsty = 0;
+                CalcOpts.petBloodOfTheRhino = CB_TenacityBloodOfTheRhino.SelectedIndex;
+                CalcOpts.petPetBarding = CB_TenacityPetBarding.SelectedIndex;
+                CalcOpts.petAvoidance = CB_TenacityAvoidance.SelectedIndex;
+                CalcOpts.petLionhearted = CB_TenacityLiohearted.SelectedIndex;
+                CalcOpts.petCarrionFeeder = 0;
+                CalcOpts.petGuardDog = CB_TenacityGuardDog.SelectedIndex;
+                CalcOpts.petThunderstomp = CB_TenacityThunderstomp.SelectedIndex;
+                CalcOpts.petGreatResistance = CB_TenacityGreatResistance.SelectedIndex;
+                CalcOpts.petOwlsFocus = 0;
+                CalcOpts.petCornered = 0;
+                CalcOpts.petFeedingFrenzy = 0;
+                CalcOpts.petHeartOfThePhoenix = 0;
+                CalcOpts.petSpidersBite = 0;
+                CalcOpts.petWolverineBite = 0;
+                CalcOpts.petRoarOfRecovery = 0;
+                CalcOpts.petBullheaded = 0;
+                CalcOpts.petGraceOfTheMantis = CB_TenacityGraceOfTheMantis.SelectedIndex;
+                CalcOpts.petRabid = 0;
+                CalcOpts.petLickYourWounds = 0;
+                CalcOpts.petCallOfTheWild = 0;
+                CalcOpts.petLastStand = CB_TenacityLastStand.SelectedIndex;
+                CalcOpts.petTaunt = CB_TenacityTaunt.SelectedIndex;
+                CalcOpts.petIntervene = CB_TenacityIntervene.SelectedIndex;
+                CalcOpts.petWildHunt = CB_TenacityWildHunt.SelectedIndex;
+                CalcOpts.petRoarOfSacrifice = CB_TenacityRoarOfSacrifice.SelectedIndex;
+                CalcOpts.petSharkAttack = 0;
+                CalcOpts.petSilverback = CB_TenacitySilverback.SelectedIndex;
             }
 
             if (tree == PetFamilyTree.None)
             {
-                options.petCobraReflexes = 0;
-                options.petDiveDash = 0;
-                options.petChargeSwoop = 0;
-                options.petGreatStamina = 0;
-                options.petNaturalArmor = 0;
-                options.petBoarsSpeed = 0;
-                options.petMobility = 0;
-                options.petSpikedCollar = 0;
-                options.petImprovedCower = 0;
-                options.petBloodthirsty = 0;
-                options.petBloodOfTheRhino = 0;
-                options.petPetBarding = 0;
-                options.petAvoidance = 0;
-                options.petLionhearted = 0;
-                options.petCarrionFeeder = 0;
-                options.petGuardDog = 0;
-                options.petThunderstomp = 0;
-                options.petGreatResistance = 0;
-                options.petOwlsFocus = 0;
-                options.petCornered = 0;
-                options.petFeedingFrenzy = 0;
-                options.petHeartOfThePhoenix = 0;
-                options.petSpidersBite = 0;
-                options.petWolverineBite = 0;
-                options.petRoarOfRecovery = 0;
-                options.petBullheaded = 0;
-                options.petGraceOfTheMantis = 0;
-                options.petRabid = 0;
-                options.petLickYourWounds = 0;
-                options.petCallOfTheWild = 0;
-                options.petLastStand = 0;
-                options.petTaunt = 0;
-                options.petIntervene = 0;
-                options.petWildHunt = 0;
-                options.petRoarOfSacrifice = 0;
-                options.petSharkAttack = 0;
-                options.petSilverback = 0;
+                CalcOpts.petCobraReflexes = 0;
+                CalcOpts.petDiveDash = 0;
+                CalcOpts.petChargeSwoop = 0;
+                CalcOpts.petGreatStamina = 0;
+                CalcOpts.petNaturalArmor = 0;
+                CalcOpts.petBoarsSpeed = 0;
+                CalcOpts.petMobility = 0;
+                CalcOpts.petSpikedCollar = 0;
+                CalcOpts.petImprovedCower = 0;
+                CalcOpts.petBloodthirsty = 0;
+                CalcOpts.petBloodOfTheRhino = 0;
+                CalcOpts.petPetBarding = 0;
+                CalcOpts.petAvoidance = 0;
+                CalcOpts.petLionhearted = 0;
+                CalcOpts.petCarrionFeeder = 0;
+                CalcOpts.petGuardDog = 0;
+                CalcOpts.petThunderstomp = 0;
+                CalcOpts.petGreatResistance = 0;
+                CalcOpts.petOwlsFocus = 0;
+                CalcOpts.petCornered = 0;
+                CalcOpts.petFeedingFrenzy = 0;
+                CalcOpts.petHeartOfThePhoenix = 0;
+                CalcOpts.petSpidersBite = 0;
+                CalcOpts.petWolverineBite = 0;
+                CalcOpts.petRoarOfRecovery = 0;
+                CalcOpts.petBullheaded = 0;
+                CalcOpts.petGraceOfTheMantis = 0;
+                CalcOpts.petRabid = 0;
+                CalcOpts.petLickYourWounds = 0;
+                CalcOpts.petCallOfTheWild = 0;
+                CalcOpts.petLastStand = 0;
+                CalcOpts.petTaunt = 0;
+                CalcOpts.petIntervene = 0;
+                CalcOpts.petWildHunt = 0;
+                CalcOpts.petRoarOfSacrifice = 0;
+                CalcOpts.petSharkAttack = 0;
+                CalcOpts.petSilverback = 0;
             }
 
             Character.OnCalculationsInvalidated();
@@ -896,161 +901,236 @@ namespace Rawr.HunterSE
             
             PetFamilyTree tree = getPetFamilyTree();
             
-            cmbCunningAvoidance.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petAvoidance : 0;
-            cmbCunningBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petBoarsSpeed : 0;
-            cmbCunningBullheaded.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petBullheaded : 0;
-            cmbCunningCarrionFeeder.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petCarrionFeeder : 0;
-            cmbCunningCorbaReflexes.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petCobraReflexes : 0;
-            cmbCunningCornered.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petCornered : 0;
-            cmbCunningDiveDash.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petDiveDash : 0;
-            cmbCunningFeedingFrenzy.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petFeedingFrenzy : 0;
-            cmbCunningGraceOfTheMantis.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petGraceOfTheMantis : 0;
-            cmbCunningGreatResistance.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petGreatResistance : 0;
-            cmbCunningGreatStamina.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petGreatStamina : 0;
-            cmbCunningLionhearted.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petLionhearted : 0;
-            cmbCunningMobility.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petMobility : 0;
-            cmbCunningNaturalArmor.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petNaturalArmor : 0;
-            cmbCunningOwlsFocus.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petOwlsFocus : 0;
-            cmbCunningRoarOfRecovery.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petRoarOfRecovery : 0;
-            cmbCunningRoarOfSacrifice.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petRoarOfSacrifice : 0;
-            cmbCunningSpikedCollar.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petSpikedCollar : 0;
-            cmbCunningWildHunt.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petWildHunt : 0;
-            cmbCunningWolverineBite.SelectedIndex = (tree == PetFamilyTree.Cunning) ? options.petWolverineBite : 0;
+            CB_CunningAvoidance.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petAvoidance : 0;
+            CB_CunningBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petBoarsSpeed : 0;
+            CB_CunningBullheaded.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petBullheaded : 0;
+            CB_CunningCarrionFeeder.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petCarrionFeeder : 0;
+            CB_CunningCorbaReflexes.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petCobraReflexes : 0;
+            CB_CunningCornered.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petCornered : 0;
+            CB_CunningDiveDash.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petDiveDash : 0;
+            CB_CunningFeedingFrenzy.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petFeedingFrenzy : 0;
+            CB_CunningGraceOfTheMantis.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petGraceOfTheMantis : 0;
+            CB_CunningGreatResistance.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petGreatResistance : 0;
+            CB_CunningGreatStamina.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petGreatStamina : 0;
+            CB_CunningLionhearted.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petLionhearted : 0;
+            CB_CunningMobility.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petMobility : 0;
+            CB_CunningNaturalArmor.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petNaturalArmor : 0;
+            CB_CunningOwlsFocus.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petOwlsFocus : 0;
+            CB_CunningRoarOfRecovery.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petRoarOfRecovery : 0;
+            CB_CunningRoarOfSacrifice.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petRoarOfSacrifice : 0;
+            CB_CunningSpikedCollar.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petSpikedCollar : 0;
+            CB_CunningWildHunt.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petWildHunt : 0;
+            CB_CunningWolverineBite.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.petWolverineBite : 0;
 
-            cmbFerocityAvoidance.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petAvoidance : 0;
-            cmbFerocityBloodthirsty.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petBloodthirsty : 0;
-            cmbFerocityBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petBoarsSpeed : 0;
-            cmbFerocityCallOfTheWild.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petCallOfTheWild : 0;
-            cmbFerocityChargeSwoop.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petChargeSwoop : 0;
-            cmbFerocityCobraReflexes.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petCobraReflexes : 0;
-            cmbFerocityDiveDash.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petDiveDash : 0;
-            cmbFerocityGreatResistance.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petGreatResistance : 0;
-            cmbFerocityGreatStamina.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petGreatStamina : 0;
-            cmbFerocityHeartOfThePhoenix.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petHeartOfThePhoenix : 0;
-            cmbFerocityImprovedCower.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petImprovedCower : 0;
-            cmbFerocityLickYourWounds.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petLickYourWounds : 0;
-            cmbFerocityLionhearted.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petLionhearted : 0;
-            cmbFerocityNaturalArmor.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petNaturalArmor : 0;
-            cmbFerocityRabid.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petRabid : 0;
-            cmbFerocitySharkAttack.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petSharkAttack : 0;
-            cmbFerocitySpidersBite.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petSpidersBite : 0;
-            cmbFerocitySpikedCollar.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petSpikedCollar : 0;
-            cmbFerocityWildHunt.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? options.petWildHunt : 0;
+            CB_FerocityAvoidance.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petAvoidance : 0;
+            CB_FerocityBloodthirsty.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petBloodthirsty : 0;
+            CB_FerocityBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petBoarsSpeed : 0;
+            CB_FerocityCallOfTheWild.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petCallOfTheWild : 0;
+            CB_FerocityChargeSwoop.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petChargeSwoop : 0;
+            CB_FerocityCobraReflexes.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petCobraReflexes : 0;
+            CB_FerocityDiveDash.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petDiveDash : 0;
+            CB_FerocityGreatResistance.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petGreatResistance : 0;
+            CB_FerocityGreatStamina.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petGreatStamina : 0;
+            CB_FerocityHeartOfThePhoenix.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petHeartOfThePhoenix : 0;
+            CB_FerocityImprovedCower.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petImprovedCower : 0;
+            CB_FerocityLickYourWounds.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petLickYourWounds : 0;
+            CB_FerocityLionhearted.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petLionhearted : 0;
+            CB_FerocityNaturalArmor.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petNaturalArmor : 0;
+            CB_FerocityRabid.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petRabid : 0;
+            CB_FerocitySharkAttack.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petSharkAttack : 0;
+            CB_FerocitySpidersBite.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petSpidersBite : 0;
+            CB_FerocitySpikedCollar.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petSpikedCollar : 0;
+            CB_FerocityWildHunt.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.petWildHunt : 0;
 
-            cmbTenacityAvoidance.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petAvoidance : 0;
-            cmbTenacityBloodOfTheRhino.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petBloodOfTheRhino : 0;
-            cmbTenacityBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petBoarsSpeed : 0;
-            cmbTenacityCharge.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petChargeSwoop : 0;
-            cmbTenacityCobraReflexes.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petCobraReflexes : 0;
-            cmbTenacityGraceOfTheMantis.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petGraceOfTheMantis : 0;
-            cmbTenacityGreatResistance.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petGreatResistance : 0;
-            cmbTenacityGreatStamina.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petGreatStamina : 0;
-            cmbTenacityGuardDog.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petGuardDog : 0;
-            cmbTenacityIntervene.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petIntervene : 0;
-            cmbTenacityLastStand.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petLastStand : 0;
-            cmbTenacityLiohearted.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petLionhearted : 0;
-            cmbTenacityNaturalArmor.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petNaturalArmor : 0;
-            cmbTenacityPetBarding.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petPetBarding : 0;
-            cmbTenacityRoarOfSacrifice.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petRoarOfSacrifice : 0;
-            cmbTenacitySilverback.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petSilverback : 0;
-            cmbTenacitySpikedCollar.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petSpikedCollar : 0;
-            cmbTenacityTaunt.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petTaunt : 0;
-            cmbTenacityThunderstomp.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petThunderstomp : 0;
-            cmbTenacityWildHunt.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? options.petWildHunt : 0;
+            CB_TenacityAvoidance.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petAvoidance : 0;
+            CB_TenacityBloodOfTheRhino.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petBloodOfTheRhino : 0;
+            CB_TenacityBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petBoarsSpeed : 0;
+            CB_TenacityCharge.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petChargeSwoop : 0;
+            CB_TenacityCobraReflexes.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petCobraReflexes : 0;
+            CB_TenacityGraceOfTheMantis.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petGraceOfTheMantis : 0;
+            CB_TenacityGreatResistance.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petGreatResistance : 0;
+            CB_TenacityGreatStamina.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petGreatStamina : 0;
+            CB_TenacityGuardDog.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petGuardDog : 0;
+            CB_TenacityIntervene.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petIntervene : 0;
+            CB_TenacityLastStand.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petLastStand : 0;
+            CB_TenacityLiohearted.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petLionhearted : 0;
+            CB_TenacityNaturalArmor.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petNaturalArmor : 0;
+            CB_TenacityPetBarding.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petPetBarding : 0;
+            CB_TenacityRoarOfSacrifice.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petRoarOfSacrifice : 0;
+            CB_TenacitySilverback.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petSilverback : 0;
+            CB_TenacitySpikedCollar.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petSpikedCollar : 0;
+            CB_TenacityTaunt.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petTaunt : 0;
+            CB_TenacityThunderstomp.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petThunderstomp : 0;
+            CB_TenacityWildHunt.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.petWildHunt : 0;
         }
 
         private void numericTime20_ValueChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            options.timeSpentSub20 = (int)numericTime20.Value;
+            if (isLoading) return;
+            CalcOpts.timeSpentSub20 = (int)NUD_Time20.Value;
             Character.OnCalculationsInvalidated();
         }
 
         private void numericTime35_ValueChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            options.timeSpent35To20 = (int)numericTime35.Value;
+            if (isLoading) return;
+            CalcOpts.timeSpent35To20 = (int)NUD_35.Value;
             Character.OnCalculationsInvalidated();
         }
 
         private void numericBossHP_ValueChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            options.bossHPPercentage = (float)(numericBossHP.Value / 100);
+            if (isLoading) return;
+            CalcOpts.bossHPPercentage = (float)(NUD_BossHP.Value / 100);
             Character.OnCalculationsInvalidated();
         }
 
         private void cmbManaPotion_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            if (cmbManaPotion.SelectedIndex == 0) options.useManaPotion = ManaPotionType.None;
-            if (cmbManaPotion.SelectedIndex == 1) options.useManaPotion = ManaPotionType.RunicManaPotion;
-            if (cmbManaPotion.SelectedIndex == 2) options.useManaPotion = ManaPotionType.SuperManaPotion;
+            if (isLoading) return;
+            if (CB_ManaPotion.SelectedIndex == 0) CalcOpts.useManaPotion = ManaPotionType.None;
+            if (CB_ManaPotion.SelectedIndex == 1) CalcOpts.useManaPotion = ManaPotionType.RunicManaPotion;
+            if (CB_ManaPotion.SelectedIndex == 2) CalcOpts.useManaPotion = ManaPotionType.SuperManaPotion;
             Character.OnCalculationsInvalidated();
         }
 
         private void cmbAspect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            if (cmbAspect.SelectedIndex == 0) options.selectedAspect = Aspect.None;
-            if (cmbAspect.SelectedIndex == 1) options.selectedAspect = Aspect.Beast;
-            if (cmbAspect.SelectedIndex == 2) options.selectedAspect = Aspect.Hawk;
-            if (cmbAspect.SelectedIndex == 3) options.selectedAspect = Aspect.Viper;
-            if (cmbAspect.SelectedIndex == 4) options.selectedAspect = Aspect.Monkey;
-            if (cmbAspect.SelectedIndex == 5) options.selectedAspect = Aspect.Dragonhawk;
+            if (isLoading) return;
+            if (CB_Aspect.SelectedIndex == 0) CalcOpts.selectedAspect = Aspect.None;
+            if (CB_Aspect.SelectedIndex == 1) CalcOpts.selectedAspect = Aspect.Beast;
+            if (CB_Aspect.SelectedIndex == 2) CalcOpts.selectedAspect = Aspect.Hawk;
+            if (CB_Aspect.SelectedIndex == 3) CalcOpts.selectedAspect = Aspect.Viper;
+            if (CB_Aspect.SelectedIndex == 4) CalcOpts.selectedAspect = Aspect.Monkey;
+            if (CB_Aspect.SelectedIndex == 5) CalcOpts.selectedAspect = Aspect.Dragonhawk;
             Character.OnCalculationsInvalidated();
         }
 
         private void cmbAspectUsage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            if (cmbAspectUsage.SelectedIndex == 0) options.aspectUsage = AspectUsage.AlwaysOn;
-            if (cmbAspectUsage.SelectedIndex == 1) options.aspectUsage = AspectUsage.ViperToOOM;
-            if (cmbAspectUsage.SelectedIndex == 2) options.aspectUsage = AspectUsage.ViperRegen;
+            if (isLoading) return;
+            if (CB_AspectUsage.SelectedIndex == 0) CalcOpts.aspectUsage = AspectUsage.AlwaysOn;
+            if (CB_AspectUsage.SelectedIndex == 1) CalcOpts.aspectUsage = AspectUsage.ViperToOOM;
+            if (CB_AspectUsage.SelectedIndex == 2) CalcOpts.aspectUsage = AspectUsage.ViperRegen;
             Character.OnCalculationsInvalidated();
         }
 
         private void chkUseBeastDuringBW_CheckedChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            options.useBeastDuringBeastialWrath = chkUseBeastDuringBW.Checked;
+            if (isLoading) return;
+            CalcOpts.useBeastDuringBeastialWrath = CK_UseBeastDuringBW.Checked;
             Character.OnCalculationsInvalidated();
         }
 
         private void chkEmulateBugs_CheckedChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            options.emulateSpreadsheetBugs = chkEmulateBugs.Checked;
+            if (isLoading) return;
+            CalcOpts.emulateSpreadsheetBugs = CK_EmulateBugs.Checked;
             Character.OnCalculationsInvalidated();
         }
 
         private void chkSpreadsheetUptimes_CheckedChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            options.calculateUptimesLikeSpreadsheet = chkSpreadsheetUptimes.Checked;
+            if (isLoading) return;
+            CalcOpts.calculateUptimesLikeSpreadsheet = CK_SpreadsheetUptimes.Checked;
             Character.OnCalculationsInvalidated();
         }
 
         private void CalculationOptionsPanelHunter_Resize(object sender, EventArgs e)
         {
-            tabControl1.Height = tabControl1.Parent.Height - 5;
+            Tabs.Height = Tabs.Parent.Height - 5;
         }
 
         private void chkUseRotation_CheckedChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            options.useRotationTest = chkUseRotation.Checked;
+            if (isLoading) return;
+            CalcOpts.useRotationTest = CK_UseRotation.Checked;
             Character.OnCalculationsInvalidated();
         }
-
-
 
         private void chkRandomProcs_CheckedChanged(object sender, EventArgs e)
         {
-            if (loadingOptions) return;
-            options.randomizeProcs = chkRandomProcs.Checked;
+            if (isLoading) return;
+            CalcOpts.randomizeProcs = CK_RandomProcs.Checked;
             Character.OnCalculationsInvalidated();
         }
 
+        // Hiding Based on Bad Stats
+        private void CK_HideBadItems_Spl_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!isLoading)
+            {
+                CalculationOptionsHunterSE calcOpts = Character.CalculationOptions as CalculationOptionsHunterSE;
+                calcOpts.HideBadItems_Spl = CK_HideSplGear.Checked;
+                CalculationsHunterSE.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
+                ItemCache.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void CK_HideBadItems_PvP_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!isLoading)
+            {
+                CalculationOptionsHunterSE calcOpts = Character.CalculationOptions as CalculationOptionsHunterSE;
+                calcOpts.HideBadItems_PvP = CK_HidePvPGear.Checked;
+                CalculationsHunterSE.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
+                ItemCache.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        // Hiding Enchants based on Profession
+        private void CK_HideProfEnchants_CheckedChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                CalculationOptionsHunterSE calcOpts = Character.CalculationOptions as CalculationOptionsHunterSE;
+                bool Checked = CK_HideProfEnchants.Checked;
+                calcOpts.HideProfEnchants = Checked;
+                CalculationsHunterSE.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
+                CB_Prof1.Enabled = Checked;
+                CB_Prof2.Enabled = Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void CB_Prof1_SelectedIndexChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                Character.PrimaryProfession = StringToProfession(CB_Prof1.Text);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void CB_Prof2_SelectedIndexChanged(object sender, EventArgs e) {
+            if (!isLoading) {
+                Character.SecondaryProfession = StringToProfession(CB_Prof2.Text);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        public Profession StringToProfession(string s) {
+            Profession                        p = Profession.None;
+            if      (s == "Alchemy"       ) { p = Profession.Alchemy;
+            }else if(s == "Blacksmithing" ) { p = Profession.Blacksmithing;
+            }else if(s == "Enchanting"    ) { p = Profession.Enchanting;
+            }else if(s == "Engineering"   ) { p = Profession.Engineering;
+            }else if(s == "Herbalism"     ) { p = Profession.Herbalism;
+            }else if(s == "Inscription"   ) { p = Profession.Inscription;
+            }else if(s == "Jewelcrafting" ) { p = Profession.Jewelcrafting;
+            }else if(s == "Leatherworking") { p = Profession.Leatherworking;
+            }else if(s == "Mining"        ) { p = Profession.Mining;
+            }else if(s == "Skinning"      ) { p = Profession.Skinning;
+            }else if(s == "Tailoring"     ) { p = Profession.Tailoring; }
+            return p;
+        }
+        public string ProfessionToString(Profession p) {
+            string                                     s = "None";
+            if      (p == Profession.Alchemy       ) { s = "Alchemy";
+            }else if(p == Profession.Blacksmithing ) { s = "Blacksmithing";
+            }else if(p == Profession.Enchanting    ) { s = "Enchanting";
+            }else if(p == Profession.Engineering   ) { s = "Engineering";
+            }else if(p == Profession.Herbalism     ) { s = "Herbalism";
+            }else if(p == Profession.Inscription   ) { s = "Inscription";
+            }else if(p == Profession.Jewelcrafting ) { s = "Jewelcrafting";
+            }else if(p == Profession.Leatherworking) { s = "Leatherworking";
+            }else if(p == Profession.Mining        ) { s = "Mining";
+            }else if(p == Profession.Skinning      ) { s = "Skinning";
+            }else if(p == Profession.Tailoring     ) { s = "Tailoring"; }
+            return s;
+        }
     }
 }

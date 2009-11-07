@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -136,6 +137,25 @@ namespace Rawr.HunterSE
 			set { _TargetArmor = value; }
 		}
 
+        private bool _HideBadItems_Spl;
+        public bool HideBadItems_Spl
+        {
+            get { return _HideBadItems_Spl; }
+            set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); }
+        }
+        private bool _HideBadItems_PvP;
+        public bool HideBadItems_PvP
+        {
+            get { return _HideBadItems_PvP; }
+            set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
+        }
+        private bool _HideProfEnchants;
+        public bool HideProfEnchants
+        {
+            get { return _HideProfEnchants; }
+            set { _HideProfEnchants = value; OnPropertyChanged("HideProfEnchants"); }
+        }
+
         #region ICalculationOptionBase Members
 
 		public string GetXml()
@@ -150,5 +170,13 @@ namespace Rawr.HunterSE
 		}
 
 		#endregion
-	}
+        #region INotifyPropertyChanged Members
+        private void OnPropertyChanged(string property)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
+    }
 }

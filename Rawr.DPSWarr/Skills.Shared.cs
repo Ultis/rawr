@@ -705,7 +705,7 @@ namespace Rawr.DPSWarr {
                 //
                 MinRange = 8f;
                 MaxRange = 25f; // In Yards 
-                Cd = 30f * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
+                Cd = 30f - (Talents.ImprovedIntercept * 5f) - StatS.BonusWarrior_PvP_4P_InterceptCDReduc; // In Seconds
                 Duration = 3f;
                 RageCost = 10f - Talents.Precision * 1f;
                 StanceOkFury = true; StanceOkArms = StanceOkDef = (Talents.Warbringer == 1);

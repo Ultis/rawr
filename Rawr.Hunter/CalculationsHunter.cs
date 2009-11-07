@@ -458,17 +458,13 @@ namespace Rawr.Hunter
 				Miss = stats.Miss,
 				Mp5 = stats.Mp5,
 				ScopeDamage = stats.ScopeDamage,
-				BonusSteadyShotCrit = stats.BonusSteadyShotCrit,
-				BonusSteadyShotDamageMultiplier = stats.BonusSteadyShotDamageMultiplier,
 				BonusRangedAttackPowerMultiplier = stats.BonusRangedAttackPowerMultiplier,
-				BonusAspectOfTheViperGain = stats.BonusAspectOfTheViperGain,
-				BonusAspectOfTheViperAttackSpeed = stats.BonusAspectOfTheViperAttackSpeed,
-				BonusSerpentStingDamage = stats.BonusSerpentStingDamage,
-				BonusSteadyShotAttackPowerBuff = stats.BonusSteadyShotAttackPowerBuff,
-				BonusSerpentStingCanCrit = stats.BonusSerpentStingCanCrit,
-				BonusSteadyShotPetAttackPowerBuff = stats.BonusSteadyShotPetAttackPowerBuff,
-				MultiShotManaDiscount = stats.MultiShotManaDiscount,
-				TrapCooldownReduction = stats.TrapCooldownReduction,
+				BonusHunter_T7_4P_ViperSpeed = stats.BonusHunter_T7_4P_ViperSpeed,
+				BonusHunter_T8_2P_SerpDmg = stats.BonusHunter_T8_2P_SerpDmg,
+				BonusHunter_T8_4P_SteadyShotAPProc = stats.BonusHunter_T8_4P_SteadyShotAPProc,
+				BonusHunter_T9_2P_SerpCanCrit = stats.BonusHunter_T9_2P_SerpCanCrit,
+				BonusHunter_T9_4P_SteadyShotPetAPProc = stats.BonusHunter_T9_4P_SteadyShotPetAPProc,
+				BonusHunter_PvP_4pc = stats.BonusHunter_PvP_4pc,
                 FireDamage = stats.FireDamage,
                 Stamina = stats.Stamina,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
@@ -515,18 +511,14 @@ namespace Rawr.Hunter
             stats.Intellect +
             stats.Mp5 +
             stats.ScopeDamage +
-            stats.BonusSteadyShotCrit +
-            stats.BonusSteadyShotDamageMultiplier +
             stats.ManaRestoreFromMaxManaPerSecond +
             stats.BonusRangedAttackPowerMultiplier +
-            stats.BonusAspectOfTheViperGain +
-            stats.BonusAspectOfTheViperAttackSpeed +
-            stats.BonusSerpentStingDamage +
-            stats.BonusSteadyShotAttackPowerBuff +
-            stats.BonusSerpentStingCanCrit +
-            stats.BonusSteadyShotPetAttackPowerBuff +
-            stats.MultiShotManaDiscount +
-            stats.TrapCooldownReduction +
+            stats.BonusHunter_T7_4P_ViperSpeed +
+            stats.BonusHunter_T8_2P_SerpDmg +
+            stats.BonusHunter_T8_4P_SteadyShotAPProc +
+            stats.BonusHunter_T9_2P_SerpCanCrit +
+            stats.BonusHunter_T9_4P_SteadyShotPetAPProc +
+            stats.BonusHunter_PvP_4pc +
             stats.FireDamage + 
             stats.Stamina +
             stats.ManaRestoreFromBaseManaPPM +
@@ -2030,8 +2022,6 @@ namespace Rawr.Hunter
                         + rangedAmmoDamageNormalized
                         + (RAP * 0.1)
                         + (rangedWeaponDamage / rangedWeaponSpeed * 2.8);
-
-
             // adjust = talent_adjust * gronnstalker_bonus * glyph_of_steadyshot
             //          * sniper_training * physcial_debuffs
             // to-maybe-do: Gronnstalker set bonus
@@ -2044,7 +2034,7 @@ namespace Rawr.Hunter
             // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
             // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
             // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
-            // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
+            // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
             double steadyShotCritAdjust = metaGemCritDamage+ 0.5*mortalShotsCritDamage*(1 + metaGemCritDamage) + markedForDeathCritDamage;
 
             double steadyShotDamageReal = CalcEffectiveDamage(
@@ -2104,7 +2094,7 @@ namespace Rawr.Hunter
                                                 * (1 + targetDebuffsNature);
 
             // T8 2-piece bonus
-            serpentStingDamageAdjust += statsBuffs.BonusSerpentStingDamage;
+            serpentStingDamageAdjust += statsBuffs.BonusHunter_T8_2P_SerpDmg;
 
             double serpentStingTicks = calculatedStats.serpentSting.duration / 3;
             double serpentStingDamagePerTick = Math.Round(serpentStingDamageBase * serpentStingDamageAdjust / 5, 1);
@@ -2123,7 +2113,7 @@ namespace Rawr.Hunter
             double aimedShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + statsBaseGear.WeaponDamage + damageFromRAPNormalized) + 408;
 
             // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
-            // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
+            // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
             double aimedShotCritAdjust = metaGemCritDamage + 0.5 * mortalShotsCritDamage * (1 + metaGemCritDamage) + markedForDeathCritDamage;
 
             // damage_adjust = talent_adjust * barrage_adjust * target_debuff_adjust * sniper_training_adjust * improved_ss_adjust
@@ -2189,7 +2179,6 @@ namespace Rawr.Hunter
             // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
             // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
             //double chimeraShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
-
             double chimeraShotCritAdjust = metaGemCritDamage + 0.5 * mortalShotsCritDamage * (1 + metaGemCritDamage) + markedForDeathCritDamage;
 
             // damage_adjust = talent_adjust * nature_debuffs * ISS_cs_bonus * partial_resist
@@ -2208,7 +2197,10 @@ namespace Rawr.Hunter
             double chimeraShotAvgNonCritDamage = chimeraShotDamageNormal * talentDamageAdjust * ISSChimeraShotDamageAdjust * (1+ targetDebuffsNature);
             double chimeraShotAvgCritDamage = chimeraShotAvgNonCritDamage * (1 + chimeraShotCritAdjust);
             // 021109 - Drizz: Had to add the Bleed Damage Multiplier
-            double chimeraShotPiercingShots = (1 + statsBuffs.BonusBleedDamageMultiplier) * (character.HunterTalents.PiercingShots * 0.1) * critHitPercent * chimeraShotAvgCritDamage;
+            double chimeraShotPiercingShots = (1 + statsBuffs.BonusBleedDamageMultiplier)
+                                            * (character.HunterTalents.PiercingShots * 0.1)
+                                            * critHitPercent
+                                            * chimeraShotAvgCritDamage;
 
             calculatedStats.chimeraShot.damage = chimeraShotDamageReal + chimeraShotPiercingShots;
 
@@ -2543,7 +2535,6 @@ namespace Rawr.Hunter
 			statsTotal.BonusSpellPowerMultiplier = ((1 + statsRace.BonusSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellPowerMultiplier)) - 1;
 			statsTotal.BonusArcaneDamageMultiplier = ((1 + statsRace.BonusArcaneDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusArcaneDamageMultiplier)) - 1;
 			statsTotal.BonusPetDamageMultiplier = ((1 + statsGearEnchantsBuffs.BonusPetDamageMultiplier) * (1 + statsRace.BonusPetDamageMultiplier)) - 1;
-			statsTotal.BonusSteadyShotDamageMultiplier = ((1 + statsGearEnchantsBuffs.BonusSteadyShotDamageMultiplier) * (1 + statsRace.BonusSteadyShotDamageMultiplier) * (1 + statsTalents.BonusSteadyShotDamageMultiplier)) - 1;
 			statsTotal.BonusSpiritMultiplier = ((1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier) * (statsTalents.BonusSpiritMultiplier)) - 1;
 			
             // Stamina
@@ -2597,7 +2588,6 @@ namespace Rawr.Hunter
 			statsTotal.Mp5 = statsRace.Mp5 + statsGearEnchantsBuffs.Mp5;
 			statsTotal.BonusPetCritChance = statsGearEnchantsBuffs.BonusPetCritChance;
 			statsTotal.ScopeDamage = statsGearEnchantsBuffs.ScopeDamage;
-			statsTotal.BonusSteadyShotCrit = statsGearEnchantsBuffs.BonusSteadyShotCrit;
 
             statsTotal.BonusDamageMultiplier = 1.0f + statsGearEnchantsBuffs.BonusDamageMultiplier;
             statsTotal.BonusAttackPowerMultiplier = 1.0f + statsGearEnchantsBuffs.BonusAttackPowerMultiplier;

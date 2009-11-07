@@ -237,6 +237,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
+        private bool HidingBadStuff { get { return HidingBadStuff_Spl || HidingBadStuff_PvP; } }
+        private static bool _HidingBadStuff_Spl = true;
+        internal static bool HidingBadStuff_Spl { get { return _HidingBadStuff_Spl; } set { _HidingBadStuff_Spl = value; } }
+        private static bool _HidingBadStuff_PvP = true;
+        internal static bool HidingBadStuff_PvP { get { return _HidingBadStuff_PvP; } set { _HidingBadStuff_PvP = value; } }
+        private static bool _HidingBadStuff_Prof = false;
+        internal static bool HidingBadStuff_Prof { get { return _HidingBadStuff_Prof; } set { _HidingBadStuff_Prof = value; } }
+
         public override Stats GetRelevantStats(Stats stats)
         {
 			Stats relevantStats = new Stats() {
@@ -269,8 +277,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 // Special
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
- 				MultiShotManaDiscount = stats.MultiShotManaDiscount,
-				TrapCooldownReduction = stats.TrapCooldownReduction,
+ 				BonusHunter_PvP_4pc = stats.BonusHunter_PvP_4pc,
                 FireDamage = stats.FireDamage,
                 ArcaneDamage = stats.ArcaneDamage,
                 ShadowDamage = stats.ShadowDamage,
@@ -281,6 +288,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 FearDurReduc = stats.FearDurReduc,
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
                 ManaorEquivRestore = stats.ManaorEquivRestore,
+                HealthRestore = stats.HealthRestore,
 
                 // Multipliers
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
@@ -298,14 +306,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
 				BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
 				BonusPetCritChance = stats.BonusPetCritChance,
-				BonusSteadyShotCrit = stats.BonusSteadyShotCrit,
-				BonusSteadyShotDamageMultiplier = stats.BonusSteadyShotDamageMultiplier,
-				BonusAspectOfTheViperGain = stats.BonusAspectOfTheViperGain,
-				BonusAspectOfTheViperAttackSpeed = stats.BonusAspectOfTheViperAttackSpeed,
-				BonusSerpentStingDamage = stats.BonusSerpentStingDamage,
-				BonusSteadyShotAttackPowerBuff = stats.BonusSteadyShotAttackPowerBuff,
-				BonusSerpentStingCanCrit = stats.BonusSerpentStingCanCrit,
-				BonusSteadyShotPetAttackPowerBuff = stats.BonusSteadyShotPetAttackPowerBuff,
+				BonusHunter_T7_4P_ViperSpeed = stats.BonusHunter_T7_4P_ViperSpeed,
+				BonusHunter_T8_2P_SerpDmg = stats.BonusHunter_T8_2P_SerpDmg,
+				BonusHunter_T8_4P_SteadyShotAPProc = stats.BonusHunter_T8_4P_SteadyShotAPProc,
+				BonusHunter_T9_2P_SerpCanCrit = stats.BonusHunter_T9_2P_SerpCanCrit,
+				BonusHunter_T9_4P_SteadyShotPetAPProc = stats.BonusHunter_T9_4P_SteadyShotPetAPProc,
 
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
@@ -331,72 +336,75 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
             return relevantStats;
         }
+        public override bool HasRelevantStats(Stats stats) {
+            bool relevant = HasWantedStats(stats) && !HasIgnoreStats(stats);
+            return relevant;
+        }
 
-        public override bool HasRelevantStats(Stats stats)
+        private bool HasWantedStats(Stats stats)
         {
-            // this list must match the one above!
             bool isRelevant = (
+                // Base Stats
                 stats.Agility +
-                stats.ArmorPenetration +
+                stats.AttackPower + stats.RangedAttackPower +
+                stats.Intellect +
+                // Ratings
+                stats.Mp5 +
                 stats.ArmorPenetrationRating +
-                stats.AttackPower +
-                stats.RangedAttackPower +
-                stats.BonusAgilityMultiplier +
-                stats.BonusArmorMultiplier +
-                stats.BonusAttackPowerMultiplier +
-                stats.BonusCritMultiplier +
-                stats.BonusIntellectMultiplier +
-                stats.BonusManaPotion +
-                stats.BonusPetDamageMultiplier +
-                stats.BonusDamageMultiplier +
-                stats.BonusStaminaMultiplier +
-                stats.BonusSpiritMultiplier +
-                stats.BonusPetCritChance +
+                stats.CritRating  + stats.RangedCritRating +
+                stats.HasteRating + stats.RangedHasteRating +
+                stats.HitRating   + stats.RangedHitRating +
+                // Bonuses
+                stats.ArmorPenetration +
                 stats.PhysicalCrit +
-                stats.CritRating +
-                stats.RangedCritRating +
-                stats.DamageTakenMultiplier +
-                stats.MovementSpeed +
-                stats.HasteRating +
-                stats.RangedHasteRating +
                 stats.RangedHaste +
                 stats.PhysicalHit +
+                stats.MovementSpeed + stats.StunDurReduc + stats.SnareRootDurReduc + stats.FearDurReduc +
+                stats.ManaRestore + // Mana Pots
+                stats.ManaRestoreFromMaxManaPerSecond + // Reblenishment Buffs
+                stats.ManaRestoreFromBaseManaPPM + // Judgement of Wisdom Buff
+                // Target Debuffs
+                // Procs
+                stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
                 stats.Paragon +
-                stats.HitRating +
-                stats.RangedHitRating +
-                stats.Intellect +
-                stats.Mp5 +
-                stats.ScopeDamage +
-                stats.BonusSteadyShotCrit +
-                stats.BonusSteadyShotDamageMultiplier +
-                stats.ManaRestoreFromMaxManaPerSecond +
+                stats.ManaorEquivRestore +
+                // Multipliers
+                stats.BonusAgilityMultiplier +
+                stats.BonusAttackPowerMultiplier +
                 stats.BonusRangedAttackPowerMultiplier +
-                stats.BonusAspectOfTheViperGain +
-                stats.BonusAspectOfTheViperAttackSpeed +
-                stats.BonusSerpentStingDamage +
-                stats.BonusSteadyShotAttackPowerBuff +
-                stats.BonusSerpentStingCanCrit +
-                stats.BonusSteadyShotPetAttackPowerBuff +
-                stats.MultiShotManaDiscount +
-                stats.TrapCooldownReduction +
-                stats.FireDamage + 
-                stats.ArcaneDamage + 
-                stats.ShadowDamage + 
-                stats.Stamina +
-                stats.Health +
-                stats.ManaRestoreFromBaseManaPPM +
-                stats.BonusFireDamageMultiplier +
-                stats.BonusFrostDamageMultiplier +
-                stats.BonusArcaneDamageMultiplier +
-                stats.BonusShadowDamageMultiplier +
-                stats.BonusHolyDamageMultiplier +
-                stats.BonusNatureDamageMultiplier +
+                stats.BonusCritMultiplier +
+                stats.BonusIntellectMultiplier +
+                stats.BonusPetDamageMultiplier +
+                stats.BonusDamageMultiplier +
+                stats.BonusSpiritMultiplier +
+                stats.DamageTakenMultiplier +
+                stats.BaseArmorMultiplier +
+                stats.BonusArmorMultiplier +
                 stats.BonusBleedDamageMultiplier +
-                stats.BonusPhysicalDamageMultiplier)
-             != 0;
+                stats.BonusPhysicalDamageMultiplier +
+                // Set Bonuses
+                stats.BonusHunter_T7_4P_ViperSpeed +
+                stats.BonusHunter_T8_2P_SerpDmg +
+                stats.BonusHunter_T8_4P_SteadyShotAPProc +
+                stats.BonusHunter_T9_2P_SerpCanCrit +
+                stats.BonusHunter_T9_4P_SteadyShotPetAPProc +
+                stats.BonusHunter_PvP_4pc +
+                // Special
+                stats.ScopeDamage +
+                stats.BonusManaPotion +
+                stats.BonusPetCritChance +
+                // Special Damage Type Effectors
+                stats.FireDamage + stats.BonusFireDamageMultiplier +
+                stats.ArcaneDamage + stats.BonusArcaneDamageMultiplier +
+                stats.ShadowDamage + stats.BonusShadowDamageMultiplier +
+                stats.FrostDamage + stats.BonusFrostDamageMultiplier +
+                stats.HolyDamage + stats.BonusHolyDamageMultiplier +
+                stats.NatureDamage + stats.BonusNatureDamageMultiplier
+            ) != 0;
 
-            foreach (SpecialEffect e in stats.SpecialEffects()) {
+            foreach (SpecialEffect e in stats.SpecialEffects())
+            {
                 if (e.Trigger == Trigger.DamageDone
                     || e.Trigger == Trigger.DoTTick
                     || e.Trigger == Trigger.PhysicalCrit
@@ -411,40 +419,157 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return isRelevant;
         }
 
+        private bool HasSurvivabilityStats(Stats stats)
+        {
+            bool retVal = false;
+            if ((stats.Health
+                + stats.Stamina
+                + stats.BonusHealthMultiplier
+                + stats.BonusStaminaMultiplier
+                + stats.HealthRestore
+                ) > 0)
+            {
+                retVal = true;
+            }
+            return retVal;
+        }
+
+        private bool HasIgnoreStats(Stats stats)
+        {
+            if (!HidingBadStuff) { return false; }
+            return (
+                // Remove Spellcasting only Stuff
+                (HidingBadStuff_Spl ? stats.SpellPower + stats.SpellPenetration
+                                    : 0f)
+                // Remove PvP Items
+                + (HidingBadStuff_PvP ? stats.Resilience
+                                      : 0f)
+                ) > 0;
+        }
+
+        private static Character cacheChar = null;
+
+        public bool CheckHasProf(Profession p)
+        {
+            if (cacheChar == null) { return false; }
+            if (cacheChar.PrimaryProfession == p) { return true; }
+            if (cacheChar.SecondaryProfession == p) { return true; }
+
+            return false;
+        }
+
         public override bool IsEnchantRelevant(Enchant enchant) {
-            if (enchant.Id == 3847) return false; // Rune of the Stoneskin Gargoyle - only DKs can use this
-            return base.IsEnchantRelevant(enchant);
+            string name = enchant.Name;
+            if (name.Contains("Rune of the Fallen Crusader"))
+            {
+                return false; // Bad DK Enchant, Bad!
+            }
+            else if (HidingBadStuff_Prof)
+            {
+                if (!CheckHasProf(Profession.Enchanting))
+                {
+                    if (enchant.Slot == ItemSlot.Finger &&
+                        (name.Contains("Assault") ||
+                         name.Contains("Stats") ||
+                         name.Contains("Striking") ||
+                         name.Contains("Stamina"))
+                        )
+                    {
+                        return false;
+                    }
+                }
+                if (!CheckHasProf(Profession.Engineering))
+                {
+                    if (name.Contains("Mind Amplification Dish") ||
+                        name.Contains("Flexweave Underlay") ||
+                        name.Contains("Hyperspeed Accelerators") ||
+                        name.Contains("Reticulated Armor Webbing") ||
+                        name.Contains("Nitro Boosts"))
+                    {
+                        return false;
+                    }
+                }
+                if (!CheckHasProf(Profession.Inscription))
+                {
+                    if (name.Contains("Master's") ||
+                        name.Contains("Inscription of Triumph"))
+                    {
+                        return false;
+                    }
+                }
+                if (!CheckHasProf(Profession.Leatherworking))
+                {
+                    if (name.Contains("Fur Lining - Attack Power") ||
+                        name.Contains("Fur Lining - Stamina"))
+                    {
+                        return false;
+                    }
+                }
+                if (!CheckHasProf(Profession.Tailoring))
+                {
+                    if (name.Contains("Swordguard Embroidery"))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return HasWantedStats(enchant.Stats) || (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats));
+            //return base.IsEnchantRelevant(enchant);
         }
 
         public override bool IsBuffRelevant(Buff buff) {
-            if (!buff.AllowedClasses.Contains(CharacterClass.Hunter)) { return false; }
-            if (buff.Name == "Concentration Aura") return false; // Gets selected due to a bug saying it increases BonusAspectOfTheViperAttackSpeed
-            //if (buff.Group == "Potion") return false;
-
-            // these four foods give stam, which is the only useful part of their buff.
-            // removed because you shouldn't use these foods - other foods are always better.
-            if (buff.Name == "Spirit Food") return false;
-            if (buff.Name == "Strength Food") return false;
-            if (buff.Name == "Expertise Food") return false;
-            if (buff.Name == "Spell Power Food") return false;
-
-            return base.IsBuffRelevant(buff);               
+            string name = buff.Name;
+            // Force some buffs to active
+            if (name.Contains("Potion of Wild Magic")
+                || name.Contains("Insane Strength Potion")
+            ) {
+                return true;
+            }
+            // Force some buffs to go away
+            else if (!buff.AllowedClasses.Contains(CharacterClass.Hunter)
+                     // Gets selected due to a bug saying it increases BonusAspectOfTheViperAttackSpeed
+                     || name.Contains("Concentration Aura")
+                     // these four foods give stam, which is the only useful part of their buff.
+                     // removed because you shouldn't use these foods - other foods are always better.
+                     || name.Contains("Spirit Food")
+                     || name.Contains("Strength Food")
+                     || name.Contains("Expertise Food")
+                     || name.Contains("Spell Power Food")
+            ) {
+                return false;
+            }
+            bool haswantedStats = HasWantedStats(buff.Stats);
+            bool hassurvStats = HasSurvivabilityStats(buff.Stats);
+            bool hasbadstats = HasIgnoreStats(buff.Stats);
+            bool retVal = haswantedStats || (hassurvStats && !hasbadstats);
+            return retVal;
+            //return base.IsBuffRelevant(buff);               
         }
        
 		public override bool CanUseAmmo { get { return true; } }
 
 		public override bool IsItemRelevant(Item item) {
-			bool returnValue;
-			if (item.Slot == ItemSlot.Ranged && item.Type == ItemType.Idol) {
-				returnValue = false;
-			} else if (item.Slot == ItemSlot.Projectile || 
-				(item.Slot == ItemSlot.Ranged && (item.Type == ItemType.Gun || item.Type == ItemType.Bow || item.Type == ItemType.Crossbow)))
-			{
-				returnValue = true;
-			} else {
-				returnValue = base.IsItemRelevant(item);
-			}
-			return returnValue;
+            if ( // Manual override for +X to all Stats gems
+                   item.Name == "Nightmare Tear"
+                || item.Name == "Enchanted Tear"
+                || item.Name == "Enchanted Pearl"
+                || item.Name == "Chromatic Sphere"
+                ) {
+                return true;
+                //}else if (item.Type == ItemType.Polearm && 
+            } else if (item.Slot == ItemSlot.Ranged && item.Type == ItemType.Idol) {
+                return false;
+            } else if (item.Slot == ItemSlot.Projectile ||
+                (item.Slot == ItemSlot.Ranged && (item.Type == ItemType.Gun || item.Type == ItemType.Bow || item.Type == ItemType.Crossbow)))
+            {
+                return true;
+            } else {
+                Stats stats = item.Stats;
+                bool wantedStats = HasWantedStats(stats);
+                bool survstats = HasSurvivabilityStats(stats);
+                bool ignoreStats = HasIgnoreStats(stats);
+                return (wantedStats || survstats) && !ignoreStats && base.IsItemRelevant(item);
+            }
 		}
 
         private static List<Buff> _relevantPetBuffs = new List<Buff>();
@@ -796,6 +921,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 		#region CalculationsBase Overrides
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+            cacheChar = character;
             CharacterCalculationsHunterSE calculatedStats = new CharacterCalculationsHunterSE();
             if (character == null) { return calculatedStats; }
             calculatedStats.character = character;
@@ -1164,6 +1290,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.targetDebuffsNature = 1 + targetDebuffsNature;
             calculatedStats.targetDebuffsPetDamage = 1 + targetDebuffsPetDamage;
 
+            //29-10-2009 Drizz: For PiercingShots
+            double targetDebuffBleed = statsBuffs.BonusBleedDamageMultiplier;
             #endregion
 
             // mana consumption
@@ -1755,8 +1883,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         + rangedAmmoDamageNormalized
                         + (RAP * 0.1f)
                         + (rangedWeaponDamage / rangedWeaponSpeed * 2.8f);
-
-
             // adjust = talent_adjust * gronnstalker_bonus * glyph_of_steadyshot
             //          * sniper_training * physcial_debuffs
             // to-maybe-do: Gronnstalker set bonus
@@ -1766,7 +1892,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                             * glyphOfSteadyShotDamageAdjust
                                             * ArmorDamageReduction;
 
-            float steadyShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
+            // ****************************************************************************
+            // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
+            // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
+            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
+            // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
+            float steadyShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
 
             float steadyShotDamageReal = CalcEffectiveDamage(
                                             steadyShotDamageNormal,
@@ -1777,6 +1908,18 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                           );
 
             calculatedStats.steadyShot.damage = steadyShotDamageReal;
+            // ****************************************************************************
+
+            //29-10-2009 Drizz: Added for PiercingShots
+            float steadyShotAvgNonCritDamage = steadyShotDamageNormal * steadyShotDamageAdjust * ArmorDamageReduction;
+            float steadyShotAvgCritDamage = steadyShotAvgNonCritDamage * (1f + steadyShotCritAdjust);
+            //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
+            float steadyShotPiercingShots = (1f + statsBuffs.BonusBleedDamageMultiplier)
+                                          * (character.HunterTalents.PiercingShots * 0.1f)
+                                          * steadyShotCritChance * steadyShotAvgCritDamage;
+
+            //Drizz: Add the piercingShots effect
+            calculatedStats.steadyShot.damage = steadyShotDamageReal + steadyShotPiercingShots;
 
             #endregion
             #region August 2009 Serpent Sting
@@ -1806,7 +1949,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                 * (1 + targetDebuffsNature);
 
             // T8 2-piece bonus
-            serpentStingDamageAdjust += statsBuffs.BonusSerpentStingDamage;
+            serpentStingDamageAdjust += statsBuffs.BonusHunter_T8_2P_SerpDmg;
 
             float serpentStingTicks = calculatedStats.serpentSting.duration / 3;
             float serpentStingDamagePerTick = (float)Math.Round(serpentStingDamageBase * serpentStingDamageAdjust / 5f, 1);
@@ -1817,12 +1960,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
             #region August 2009 Aimed Shot
+            // ****************************************************************************
+            // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
 
             // base_damage = normalized_shot + 408 (but ammo is not normalized!)
-            float aimedShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + statsItems.WeaponDamage + damageFromRAPNormalized) + 408;
+            float aimedShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + statsItems.WeaponDamage + damageFromRAPNormalized) + 408f;
 
-            // crit_damage = 1 + mortal_shots + gem_crit + marked_for_death
-            float aimedShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
+            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
+            // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
+            float aimedShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
 
             // damage_adjust = talent_adjust * barrage_adjust * target_debuff_adjust * sniper_training_adjust * improved_ss_adjust
             float aimedShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
@@ -1838,6 +1984,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                           );
 
             calculatedStats.aimedShot.damage = aimedShotDamageReal;
+
+            //Drizz: added for piercing shots
+            float aimedShotAvgNonCritDamage = aimedShotDamageNormal * aimedShotDamageAdjust * ArmorDamageReduction;
+            float aimedShotAvgCritDamage = aimedShotAvgNonCritDamage * (1 + aimedShotCritAdjust);
+            //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
+            float aimedShotPiercingShots = (1f + statsBuffs.BonusBleedDamageMultiplier)
+                                         * (character.HunterTalents.PiercingShots * 0.1f)
+                                         * aimedShotCrit * aimedShotAvgCritDamage;
+
+            //Drizz: Trying out...
+            calculatedStats.aimedShot.damage = aimedShotDamageReal + aimedShotPiercingShots;
 
             #endregion
             #region August 2009 Explosive Shot
@@ -1868,10 +2025,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region August 2009 Chimera Shot
 
             // base_damage = normalized_autoshot * 125%
-            float chimeraShotDamageNormal = autoShotDamageNormalized * 1.25f;
+            //float chimeraShotDamageNormal = autoShotDamageNormalized * 1.25f;
+            // Drizz: Making Changes
+            float chimeraShotDamageNormal = (rangedAmmoDamage + (RAP / 14f * 2.8f) + rangedWeaponDamage) * 1.25f;
 
-            // crit for 'specials'
-            float chimeraShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
+            // Drizz: In the spreadsheet there is also added a row for + Weapon Damage Gear... not included here.
+
+            // Drizz: 
+            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
+            // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
+            float chimeraShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
 
             // damage_adjust = talent_adjust * nature_debuffs * ISS_cs_bonus * partial_resist
             float chimeraShotDamageAdjust = talentDamageAdjust * ISSChimeraShotDamageAdjust
@@ -1885,22 +2048,46 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                 chimeraShotDamageAdjust
                                            );
 
+            //Drizz: added for piercing shots
+            float chimeraShotAvgNonCritDamage = chimeraShotDamageNormal * talentDamageAdjust * ISSChimeraShotDamageAdjust * (1f + targetDebuffsNature);
+            float chimeraShotAvgCritDamage = chimeraShotAvgNonCritDamage * (1f + chimeraShotCritAdjust);
+            // 021109 - Drizz: Had to add the Bleed Damage Multiplier
+            float chimeraShotPiercingShots = (1f + statsBuffs.BonusBleedDamageMultiplier)
+                                           * (character.HunterTalents.PiercingShots * 0.1f)
+                                           * calculatedStats.critRateOverall
+                                           * chimeraShotAvgCritDamage;
+
+            calculatedStats.chimeraShot.damage = chimeraShotDamageReal + chimeraShotPiercingShots;
+
             // calculate damage from serpent sting
-            float chimeraShotSerpentDamage = serpentStingDamageReal * 0.4f;
-            float chimeraShotSerpentCritAdjust = (1 + mortalShotsCritDamage) * metaGemCritDamage;
-            float chimeraShotSerpentDamageAdjust = talentDamageAdjust * (1 + targetDebuffsNature);
+            // Drizz: Adding
+            float chimeraShotSerpentMultiplier = improvedStingsDamageAdjust
+                                                  * improvedTrackingDamageAdjust
+                                                  * noxiousStingsDamageAdjust
+                                                  * partialResistDamageAdjust
+                                                  * (1 + targetDebuffsNature)
+                                                  * stats.BonusHunter_T8_2P_SerpDmg
+                                                  * (focusedFireDamageAdjust
+                                                  * beastWithinDamageAdjust
+                                                  * sancRetributionAuraDamageAdjust
+                                                  * blackArrowAuraDamageAdjust
+                                                  * ferociousInspirationArcaneDamageAdjust);
 
-            float chimeraShotSerpentDamageReal = CalcEffectiveDamage(
-                                                    chimeraShotSerpentDamage,
-                                                    ChanceToMiss,
-                                                    stats.PhysicalCrit,
-                                                    chimeraShotSerpentCritAdjust,
-                                                    chimeraShotSerpentDamageAdjust
-                                                 );
+            float chimeraShotSerpentStingDamage = (float)Math.Round(serpentStingDamageBase * chimeraShotSerpentMultiplier / 5f, 1) * serpentStingTicks;
 
-            float chimeraShotDamageTotal = chimeraShotDamageReal + chimeraShotSerpentDamageReal;
+            float chimeraShotEffect;
+            if (calculatedStats.serpentSting.used)
+                chimeraShotEffect = chimeraShotSerpentStingDamage * 0.4f;
+            else
+                chimeraShotEffect = 0;
 
-            calculatedStats.chimeraShot.damage = chimeraShotDamageTotal;
+            // Drizz: Updates
+            float chimeraShotSerpentCritAdjust = metaGemCritDamage + (0.5f * metaGemCritDamage + 0.5f) * mortalShotsCritDamage;
+            float chimeraShotSerpentDamageAdjust = calculatedStats.hitOverall * (1f + calculatedStats.critRateOverall * chimeraShotSerpentCritAdjust);
+
+            float chimeraShotSerpentTotalAdjust = chimeraShotSerpentDamageAdjust * talentDamageAdjust * (1 + targetDebuffsNature);
+
+            calculatedStats.chimeraShot.damage += chimeraShotEffect * chimeraShotSerpentTotalAdjust;
 
             #endregion
             #region August 2009 Arcane Shot
@@ -2011,7 +2198,51 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.rapidFire.damage = 0;
 
             #endregion
+            #region October 2009 Piercing Shots
+            //Drizz: Added for PiercingShots
 
+            calculatedStats.PiercingShotsDPS = 0;
+            calculatedStats.PiercingShotsDPSSteadyShot = 0;
+            calculatedStats.PiercingShotsDPSAimedShot = 0;
+            calculatedStats.PiercingShotsDPSChimeraShot = 0;
+
+            if (character.HunterTalents.PiercingShots > 0)
+            {
+                double piercingShotsDamageDone = character.HunterTalents.PiercingShots * 0.1;
+                double piercingShotsMangleOnTarget = targetDebuffBleed;
+                double piercingShotsTotalModifier = piercingShotsDamageDone * piercingShotsMangleOnTarget;
+                double piercingShotsSteadyShotFrequency = calculatedStats.steadyShot.freq;
+                double piercingShotsSteadyShotDamageAdded = steadyShotPiercingShots;
+
+                double piercingShotsAimedShotFrequency = calculatedStats.aimedShot.freq;
+                double piercingShotsAimedShotDamageAdded = aimedShotPiercingShots;
+                double piercingShotsChimeraShotFrequency = calculatedStats.chimeraShot.freq;
+                double piercingShotsChimeraShotDamageAdded = chimeraShotPiercingShots;
+
+                if (piercingShotsSteadyShotFrequency > 0)
+                {
+                    //calculatedStats.PiercingShotsDPSSteadyShot = piercingShotsSteadyShotDamageAdded / piercingShotsSteadyShotFrequency;
+                    calculatedStats.PiercingShotsDPS += piercingShotsSteadyShotDamageAdded / piercingShotsSteadyShotFrequency;
+                }
+                if (piercingShotsAimedShotFrequency > 0)
+                {
+                    //calculatedStats.PiercingShotsDPSAimedShot = piercingShotsAimedShotDamageAdded / piercingShotsAimedShotFrequency;
+                    calculatedStats.PiercingShotsDPS += piercingShotsAimedShotDamageAdded / piercingShotsAimedShotFrequency;
+                }
+                if (piercingShotsChimeraShotFrequency > 0)
+                {
+                    //calculatedStats.PiercingShotsDPSChimeraShot = piercingShotsChimeraShotDamageAdded / piercingShotsChimeraShotFrequency;
+                    calculatedStats.PiercingShotsDPS += piercingShotsChimeraShotDamageAdded / piercingShotsChimeraShotFrequency;
+                }
+
+                // **************************************************************************
+                // 29-10-2009 Drizz: The below is used to make easier comparisons to the spreadsheet.
+                calculatedStats.PiercingShotsDPSSteadyShot = piercingShotsSteadyShotDamageAdded;
+                calculatedStats.PiercingShotsDPSAimedShot = piercingShotsAimedShotDamageAdded;
+                calculatedStats.PiercingShotsDPSChimeraShot = piercingShotsChimeraShotDamageAdded;
+                //***************************************************************************
+            }
+            #endregion
 
             #region August 2009 On-Proc DPS
 
@@ -2123,6 +2354,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            cacheChar = character;
             CalculationOptionsHunterSE calcOpts = character.CalculationOptions as CalculationOptionsHunterSE;
             if (calcOpts == null) { calcOpts = new CalculationOptionsHunterSE(); character.CalculationOptions = calcOpts; }
             HunterTalents talents = character.HunterTalents;
