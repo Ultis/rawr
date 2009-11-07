@@ -33,6 +33,7 @@ namespace Rawr.Enhance
         private bool _magma = true;
         private bool _baseStatOption = true;
         private bool _useMana = true;
+        private bool _hideProfessions = true;
         private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true };
         private SerializableDictionary<EnhanceAbility, Priority> _priorityList = SetPriorityDefaults();
 
@@ -55,6 +56,7 @@ namespace Rawr.Enhance
         public bool Magma { get { return _magma; } set { _magma = value; OnPropertyChanged("Magma"); } }
         public bool BaseStatOption { get { return _baseStatOption; } set { _baseStatOption = value; OnPropertyChanged("BaseStatOption"); } }
         public bool UseMana { get { return _useMana; } set { _useMana = value; OnPropertyChanged("UseMana"); } }
+        public bool HideProfessions { get { return _hideProfessions; } set { _hideProfessions = value; OnPropertyChanged("HideProfessions"); } }
         public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } } 
         public SerializableDictionary<EnhanceAbility, Priority> PriorityList { get { return _priorityList; } set { _priorityList = value; OnPropertyChanged("PriorityList"); } }
         

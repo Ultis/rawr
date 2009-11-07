@@ -48,6 +48,7 @@ namespace Rawr.Enhance
             comboBoxCalculationToGraph.SelectedItem = _calcOpts.CalculationToGraph;
             chbMagmaSearing.Checked = _calcOpts.Magma;
             chbMana.Checked = _calcOpts.UseMana;
+            checkBoxHideProfessions.Checked = _calcOpts.HideProfessions;
             chbBaseStatOption.Checked = _calcOpts.BaseStatOption;
             chkStatsStrength.Checked = _calcOpts.StatsList[0];
             chkStatsAgility.Checked = _calcOpts.StatsList[1];
@@ -95,6 +96,7 @@ namespace Rawr.Enhance
                 _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 _calcOpts.Magma = chbMagmaSearing.Checked;
                 _calcOpts.UseMana = chbMana.Checked;
+                _calcOpts.HideProfessions = checkBoxHideProfessions.Checked;
                 _calcOpts.StatsList[0] = chkStatsStrength.Checked;
                 _calcOpts.StatsList[1] = chkStatsAgility.Checked;
                 _calcOpts.StatsList[2] = chkStatsAP.Checked;
@@ -157,6 +159,15 @@ namespace Rawr.Enhance
             {
                 _calcOpts.UseMana = chbMana.Checked;
                 trackbarSRMana.Enabled = _calcOpts.UseMana;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxHideProfessions_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                _calcOpts.HideProfessions = checkBoxHideProfessions.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }

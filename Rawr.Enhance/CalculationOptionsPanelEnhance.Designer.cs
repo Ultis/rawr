@@ -74,6 +74,7 @@
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.tabPagePriorities = new System.Windows.Forms.TabPage();
+            this.label10 = new System.Windows.Forms.Label();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
             this.btnUp = new System.Windows.Forms.Button();
@@ -82,7 +83,7 @@
             this.tabPageEnhSim = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
+            this.checkBoxHideProfessions = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPageBasics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).BeginInit();
@@ -110,6 +111,7 @@
             // 
             // tabPageBasics
             // 
+            this.tabPageBasics.Controls.Add(this.checkBoxHideProfessions);
             this.tabPageBasics.Controls.Add(this.labelReactionTime);
             this.tabPageBasics.Controls.Add(this.trackBarReactionTime);
             this.tabPageBasics.Controls.Add(this.label12);
@@ -186,7 +188,7 @@
             this.groupBox1.Controls.Add(this.chkStatsAP);
             this.groupBox1.Controls.Add(this.chkStatsAgility);
             this.groupBox1.Controls.Add(this.chkStatsStrength);
-            this.groupBox1.Location = new System.Drawing.Point(10, 294);
+            this.groupBox1.Location = new System.Drawing.Point(11, 317);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(248, 199);
             this.groupBox1.TabIndex = 58;
@@ -335,7 +337,7 @@
             // 
             this.labelSRMana.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSRMana.Location = new System.Drawing.Point(122, 276);
+            this.labelSRMana.Location = new System.Drawing.Point(123, 299);
             this.labelSRMana.Name = "labelSRMana";
             this.labelSRMana.Size = new System.Drawing.Size(136, 12);
             this.labelSRMana.TabIndex = 56;
@@ -348,7 +350,7 @@
             this.trackbarSRMana.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackbarSRMana.Cursor = System.Windows.Forms.Cursors.Default;
             this.trackbarSRMana.LargeChange = 250;
-            this.trackbarSRMana.Location = new System.Drawing.Point(122, 243);
+            this.trackbarSRMana.Location = new System.Drawing.Point(123, 266);
             this.trackbarSRMana.Maximum = 5000;
             this.trackbarSRMana.Name = "trackbarSRMana";
             this.trackbarSRMana.Size = new System.Drawing.Size(136, 45);
@@ -361,7 +363,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 252);
+            this.label9.Location = new System.Drawing.Point(8, 275);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(116, 13);
             this.label9.TabIndex = 54;
@@ -372,7 +374,7 @@
             this.chbMana.AutoSize = true;
             this.chbMana.Checked = true;
             this.chbMana.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbMana.Location = new System.Drawing.Point(9, 220);
+            this.chbMana.Location = new System.Drawing.Point(10, 243);
             this.chbMana.Name = "chbMana";
             this.chbMana.Size = new System.Drawing.Size(135, 17);
             this.chbMana.TabIndex = 53;
@@ -689,6 +691,17 @@
             this.tabPagePriorities.Text = "Priorities";
             this.tabPagePriorities.UseVisualStyleBackColor = true;
             // 
+            // label10
+            // 
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(7, 247);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(246, 109);
+            this.label10.TabIndex = 6;
+            this.label10.Text = "Please note new smoothing functions mean for time being that the order of priorit" +
+                "ies have only minimal effect on the dps results. Also note that currently priori" +
+                "tes are not included in EnhSim export.";
+            // 
             // btnReset
             // 
             this.btnReset.Location = new System.Drawing.Point(174, 215);
@@ -773,16 +786,18 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
-            // label10
+            // checkBoxHideProfessions
             // 
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(7, 247);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(246, 109);
-            this.label10.TabIndex = 6;
-            this.label10.Text = "Please note new smoothing functions mean for time being that the order of priorit" +
-                "ies have only minimal effect on the dps results. Also note that currently priori" +
-                "tes are not included in EnhSim export.";
+            this.checkBoxHideProfessions.AutoSize = true;
+            this.checkBoxHideProfessions.Checked = true;
+            this.checkBoxHideProfessions.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxHideProfessions.Location = new System.Drawing.Point(10, 220);
+            this.checkBoxHideProfessions.Name = "checkBoxHideProfessions";
+            this.checkBoxHideProfessions.Size = new System.Drawing.Size(242, 17);
+            this.checkBoxHideProfessions.TabIndex = 62;
+            this.checkBoxHideProfessions.Text = "Hide Profession Buffs Character doesn\'t know";
+            this.checkBoxHideProfessions.UseVisualStyleBackColor = true;
+            this.checkBoxHideProfessions.CheckedChanged += new System.EventHandler(this.checkBoxHideProfessions_CheckedChanged);
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -869,6 +884,7 @@
         private System.Windows.Forms.TrackBar trackBarReactionTime;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox checkBoxHideProfessions;
 
     }
 }

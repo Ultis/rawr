@@ -204,9 +204,11 @@ namespace Rawr.Enhance
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             #region Applied Stats
+            cacheChar = character;
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
             Stats stats = GetCharacterStats(character, additionalItem);
+            _hideProfessions = calcOpts.HideProfessions;
             calculatedStats.BasicStats = stats;
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
             Item noBuffs = RemoveAddedBuffs(calculatedStats.BuffStats);
@@ -781,6 +783,62 @@ namespace Rawr.Enhance
                 return false;
 			return base.IsItemRelevant(item);
 		}
+
+        private static Character cacheChar = null;
+
+        public bool CheckHasProf(Profession p)
+        {
+            if (cacheChar == null) { return false; }
+            if (cacheChar.PrimaryProfession == p) { return true; }
+            if (cacheChar.SecondaryProfession == p) { return true; }
+
+            return false;
+        }
+
+        private static bool _hideProfessions = false;
+
+        public override bool IsEnchantRelevant(Enchant enchant)
+        {
+            string name = enchant.Name;
+            if (name.Contains("Rune of the Fallen Crusader"))
+                return false; // Bad DK Enchant, Bad!
+            else if (_hideProfessions)
+            {
+                if (!CheckHasProf(Profession.Enchanting))
+                {
+                    if (enchant.Slot == ItemSlot.Finger)
+                        return false;
+                }
+                if (!CheckHasProf(Profession.Engineering))
+                {
+                    if (name.Contains("Mind Amplification Dish") ||
+                        name.Contains("Flexweave Underlay") ||
+                        name.Contains("Hyperspeed Accelerators") ||
+                        name.Contains("Reticulated Armor Webbing") ||
+                        name.Contains("Nitro Boosts")  ||
+                        name.Contains("Springy Arachnoweave"))
+                    {
+                        return false;
+                    }
+                }
+                if (!CheckHasProf(Profession.Inscription))
+                {
+                    if (name.Contains("Master's") || name.Contains("Inscription of Triumph"))
+                        return false;
+                }
+                if (!CheckHasProf(Profession.Leatherworking))
+                {
+                    if (name.Contains("Fur Lining") || name.Contains("Jormungar") || name.Contains("Magister's Armor Kit") || name.Contains("Nerubian Leg Reinforcements"))
+                        return false;
+                }
+                if (!CheckHasProf(Profession.Tailoring))
+                {
+                    if (name.Contains("Embroidery"))
+                        return false;
+                }
+            }
+            return HasRelevantStats(enchant.Stats);
+        }
 
 		public override Stats GetRelevantStats(Stats stats)
 		{
