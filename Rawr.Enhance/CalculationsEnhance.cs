@@ -291,8 +291,8 @@ namespace Rawr.Enhance
             // assign basic variables for calcs
             float attackPower = stats.AttackPower;
             float spellPower = stats.SpellPower;
-            float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
-            float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
+            float wdpsMH = character.MainHand == null ? 46.3f : (stats.WeaponDamage + (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed;
+            float wdpsOH = character.OffHand == null ? 46.3f : (stats.WeaponDamage + (character.OffHand.MinDamage + character.OffHand.MaxDamage) / 2f) / character.OffHand.Speed;
             float AP_SP_Ratio = (spellPower - 274f - 211f) / attackPower;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier);
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
@@ -308,7 +308,7 @@ namespace Rawr.Enhance
 
             #region Individual DPS
             //1: Melee DPS
-            float APDPS = attackPower / 14f;
+            float APDPS = (attackPower / 14f);
             float adjustedMHDPS = (wdpsMH + APDPS);
             float adjustedOHDPS = 0f;
             float dpsOHMeleeTotal = 0f;
