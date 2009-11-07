@@ -617,7 +617,7 @@ namespace Rawr.HunterSE {
 
         public string formatTooltip()
         {
-            string ret = damage.ToString("F2")+"*";
+            string ret = damage.ToString("00000") + " : " + dps.ToString("0000.00") + "*";
 
             ret += "Damage: " + damage.ToString("F2") + "\n";
             ret += "Mana: " + mana.ToString("F2") + "\n";

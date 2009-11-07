@@ -1042,8 +1042,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float rangedWeaponSpeed = 0;
             float rangedAmmoDPS = 0;
 
-            rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
-            rangedWeaponSpeed = (float)Math.Round(character.Ranged.Item.Speed * 10f) / 10f;
+            if (character.Ranged != null) {
+                rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
+                rangedWeaponSpeed = (float)Math.Round(character.Ranged.Item.Speed * 10f) / 10f;
+            }
             if (character.Projectile != null) {
                 rangedAmmoDPS = (float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f;
             }
@@ -1061,7 +1063,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // total hastes
             calculatedStats.hasteStaticTotal = stats.PhysicalHaste;
             // Needed by the rotation test
-            calculatedStats.autoShotStaticSpeed = rangedWeaponSpeed / (1f + stats.PhysicalHaste);
+            calculatedStats.autoShotStaticSpeed = rangedWeaponSpeed / calculatedStats.hasteStaticTotal;
             #endregion
             #region Rotation Test
             // Quick shots effect is needed for rotation test
@@ -1091,7 +1093,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Now we have the haste, we can calculate steady shot cast time,
             // then rebuild other various stats.
             // (future enhancement: we only really need to rebuild steady shot)
-            calculatedStats.steadyShot.cooldown = 2f * (1f / stats.PhysicalHaste);
+            calculatedStats.steadyShot.cooldown = 2f / calculatedStats.hasteStaticTotal;
             if (calcOpts.useRotationTest) {
                 calculatedStats.priorityRotation.initializeTimings();
                 calculatedStats.priorityRotation.recalculateRatios();
@@ -1101,7 +1103,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.priorityRotation.calculateFrequencies();
                 calculatedStats.priorityRotation.calculateFrequencySums();
             }
-            float autoShotSpeed = rangedWeaponSpeed / (1f + stats.PhysicalHaste);
+            float autoShotSpeed = rangedWeaponSpeed / calculatedStats.hasteStaticTotal;
             #endregion
 
             // Hits
@@ -1230,6 +1232,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // crit = base_crit + glyph_of_es + survival_instincts
             float explosiveShotCrit = stats.PhysicalCrit + glyphOfExplosiveShotCritModifier + survivalInstinctsCritModifier;
             calculatedStats.explosiveShot.critChance = explosiveShotCrit;
+
+            // 29-10-2009 Drizz: Adding the critchance to SerpentSting
+            calculatedStats.serpentSting.critChance = stats.PhysicalCrit;
 
             calculatedStats.chimeraShot.critChance = stats.PhysicalCrit;
 
@@ -1397,6 +1402,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float mp5FromBuffs = statsItems.Mp5 + statsBuffs.Mp5;
             calculatedStats.manaRegenGearBuffs = mp5FromBuffs / 5;
 
+            //29-10-2009 Drizz: TODO Probably missing T7 Viper bonus
+
             // Viper Regen if viper is up 100%
             calculatedStats.manaRegenConstantViper = 0;
             if (calcOpts.selectedAspect == Aspect.Viper)
@@ -1424,6 +1431,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             {
                 if (calculatedStats.chimeraShot.freq > 0)
                 {
+                    //29-10-2009 Drizz: Comment, 3092 is fetched from the Viper Sting Table on the SpellValues sheet (v92b). The 0.6 comes from ChimeraShotEffect.
                     calculatedStats.manaRegenChimeraViperProc = 0.6f * 3092 / calculatedStats.chimeraShot.freq;
                 }
             }
@@ -1476,9 +1484,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #endregion
             #region August 2009 Aspect Usage
 
-            float manaRegenTier7ViperBonus = character.ActiveBuffsContains("Cryptstalker Battlegear 4 Piece Bonus") ? 1.2f : 1f;
+            float manaRegenTier7ViperBonus = stats.BonusHunter_T7_4P_ViperSpeed > 0 ? 1.2f : 1f;
 
             float glpyhOfAspectOfTheViperBonus = talents.GlyphOfAspectOfTheViper ? 1.1f : 1f;
+
+            // 021109 - Drizz: Comment
+            // From spreadsheet
+            // =FinalMana*RangedWeaponSpeed/100*ShotsPerSecondWithoutHawk*IF(T7ViperBonus,1.2,1)*...
+            // ...IF(COUNTIF(GlyphsUsed,"Glyph of Aspect of the Viper"),1+...
+            // ...VLOOKUP("Glyph of Aspect of the Viper",GlyphMatrix,3,FALSE),1)+FinalMana*0.04/3
 
             calculatedStats.manaRegenViper = calculatedStats.BasicStats.Mana * (float)Math.Round(rangedWeaponSpeed, 1) / 100f * shotsPerSecondWithoutHawk
                                         * manaRegenTier7ViperBonus * glpyhOfAspectOfTheViperBonus
@@ -1870,7 +1884,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                 wildQuiverDamageAdjust
                                               );
 
-                calculatedStats.WildQuiverDPS = wildQuiverDamageReal / wildQuiverProcFrequency;
+                //29-10-2009 Drizz: Added the ViperUpTIme penalty
+                calculatedStats.WildQuiverDPS = (wildQuiverDamageReal / wildQuiverProcFrequency) * (1f - viperDamagePenalty);
             }
 
             #endregion
@@ -1929,10 +1944,19 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // T9 2-piece bonus
             float serpentStingT9CritAdjust = 1;
-            if (character.ActiveBuffsContains("Windrunner's Pursuit 2 Piece Bonus"))
+            float serpentStingInterimBonus;
+            float serpentStingCriticalHitDamage;
+            // 29-10-2009 Drizz: The name in the buff have not switched from Battlegear (i.e. the name is of the Horde buff)
+            // if (character.ActiveBuffsContains("Windrunner's Pursuit 2 Piece Bonus"))
+            if (character.ActiveBuffsContains("Windrunner's Battlegear 2 Piece Bonus"))
             {
-                serpentStingT9CritAdjust = 1.0f + (0.5f * metaGemCritDamage) * stats.PhysicalCrit;
+                // Drizz : aligned with v92b
+                serpentStingInterimBonus = 0.5f + 0.5f * mortalShotsCritDamage + 0.5f;
+                serpentStingCriticalHitDamage = serpentStingInterimBonus * (1f + (1f + 0.5f) * (metaGemCritDamage - 1f) / 2f + (1f + 0.5f) * (metaGemCritDamage - 1) / 2);
+                serpentStingT9CritAdjust = 1f + calculatedStats.critRateOverall * serpentStingCriticalHitDamage;
             }
+
+            double serpentStingCritAdjustment = serpentStingT9CritAdjust;
 
             // damage_adjust = (sting_talent_adjusts ~ noxious stings) * improved_stings * improved_tracking
             //                  + partial_resists * tier-8_2-piece_bonus * target_nature_debuffs * 100%_noxious_stings
@@ -1946,12 +1970,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                 * improvedTrackingDamageAdjust
                                                 * partialResistDamageAdjust
                                                 * serpentStingT9CritAdjust
-                                                * (1 + targetDebuffsNature);
+                                                * (1f + targetDebuffsNature);
 
             // T8 2-piece bonus
             serpentStingDamageAdjust += statsBuffs.BonusHunter_T8_2P_SerpDmg;
 
-            float serpentStingTicks = calculatedStats.serpentSting.duration / 3;
+            float serpentStingTicks = calculatedStats.serpentSting.duration / 3f;
             float serpentStingDamagePerTick = (float)Math.Round(serpentStingDamageBase * serpentStingDamageAdjust / 5f, 1);
             float serpentStingDamageReal = serpentStingDamagePerTick * serpentStingTicks;
 
@@ -1962,6 +1986,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region August 2009 Aimed Shot
             // ****************************************************************************
             // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
+            // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
 
             // base_damage = normalized_shot + 408 (but ammo is not normalized!)
             float aimedShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + statsItems.WeaponDamage + damageFromRAPNormalized) + 408f;
@@ -1972,8 +1997,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // damage_adjust = talent_adjust * barrage_adjust * target_debuff_adjust * sniper_training_adjust * improved_ss_adjust
             float aimedShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
-                                            * sniperTrainingDamageAdjust * ISSAimedShotDamageAdjust
-                                            * ArmorDamageReduction;
+                                            * sniperTrainingDamageAdjust * ISSAimedShotDamageAdjust;
 
             float aimedShotDamageReal = CalcEffectiveDamage(
                                             aimedShotDamageNormal,
@@ -1985,9 +2009,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             calculatedStats.aimedShot.damage = aimedShotDamageReal;
 
+            aimedShotDamageReal *= ArmorDamageReduction;
+
             //Drizz: added for piercing shots
             float aimedShotAvgNonCritDamage = aimedShotDamageNormal * aimedShotDamageAdjust * ArmorDamageReduction;
-            float aimedShotAvgCritDamage = aimedShotAvgNonCritDamage * (1 + aimedShotCritAdjust);
+            float aimedShotAvgCritDamage = aimedShotAvgNonCritDamage * (1f + aimedShotCritAdjust);
             //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
             float aimedShotPiercingShots = (1f + statsBuffs.BonusBleedDamageMultiplier)
                                          * (character.HunterTalents.PiercingShots * 0.1f)
@@ -2038,7 +2064,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // damage_adjust = talent_adjust * nature_debuffs * ISS_cs_bonus * partial_resist
             float chimeraShotDamageAdjust = talentDamageAdjust * ISSChimeraShotDamageAdjust
-                                           * partialResistDamageAdjust * (1 + targetDebuffsNature);
+                                           * partialResistDamageAdjust * (1f + targetDebuffsNature);
 
             float chimeraShotDamageReal = CalcEffectiveDamage(
                                                 chimeraShotDamageNormal,
@@ -2065,7 +2091,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                   * improvedTrackingDamageAdjust
                                                   * noxiousStingsDamageAdjust
                                                   * partialResistDamageAdjust
-                                                  * (1 + targetDebuffsNature)
+                                                  * (1f + targetDebuffsNature)
                                                   * stats.BonusHunter_T8_2P_SerpDmg
                                                   * (focusedFireDamageAdjust
                                                   * beastWithinDamageAdjust
@@ -2085,7 +2111,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float chimeraShotSerpentCritAdjust = metaGemCritDamage + (0.5f * metaGemCritDamage + 0.5f) * mortalShotsCritDamage;
             float chimeraShotSerpentDamageAdjust = calculatedStats.hitOverall * (1f + calculatedStats.critRateOverall * chimeraShotSerpentCritAdjust);
 
-            float chimeraShotSerpentTotalAdjust = chimeraShotSerpentDamageAdjust * talentDamageAdjust * (1 + targetDebuffsNature);
+            float chimeraShotSerpentTotalAdjust = chimeraShotSerpentDamageAdjust * talentDamageAdjust * (1f + targetDebuffsNature);
 
             calculatedStats.chimeraShot.damage += chimeraShotEffect * chimeraShotSerpentTotalAdjust;
 
@@ -2095,7 +2121,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // base_damage = 492 + weapon_damage_gear + (RAP * 15%)
             float arcaneShotDamageNormal = 492f + statsItems.WeaponDamage + (RAP * 0.15f);
 
-            float arcaneShotCritAdjust = (1f + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
+            // Drizz:
+            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
+            // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
+            float arcaneShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
+
             float arcaneShotDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * improvedArcaneShotDamageAdjust
                                             * ferociousInspirationArcaneDamageAdjust * ISSArcaneShotDamageAdjust; // missing arcane_debuffs!
 
@@ -2108,7 +2138,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                           );
 
             calculatedStats.arcaneShot.damage = arcaneShotDamageReal;
-            //calculatedStats.arcaneShot.Dump("Arcane Shot");
 
             #endregion
             #region August 2009 Multi Shot
@@ -2148,9 +2177,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
             #region August 2009 Kill Shot
+            // ****************************************************************************
+            // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
+            // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
 
             float killShotDamageNormal = (autoShotDamage * 2f) + statsItems.WeaponDamage + 650f + (RAP * 0.4f);
-            float killShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
+
+            // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
+            // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
+            float killShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
+            
             float killShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * ArmorDamageReduction;
 
             float killShotDamageReal = CalcEffectiveDamage(

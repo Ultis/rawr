@@ -603,10 +603,7 @@ namespace Rawr.Hunter
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
-            if (character == null)
-            {
-                return calculatedStats;
-            }
+            if (character == null) { return calculatedStats; }
 
             CalculationOptionsHunter options = character.CalculationOptions as CalculationOptionsHunter;
 
@@ -619,8 +616,9 @@ namespace Rawr.Hunter
 
             calculatedStats.pet = new PetCalculations(character, calculatedStats, options, statsBuffs, GetBuffsStats(options.petActiveBuffs), statsBaseGear);
             
-            if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow && character.Ranged.Item.Type != ItemType.Gun
-                                            && character.Ranged.Item.Type != ItemType.Crossbow))
+            if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow
+                                             && character.Ranged.Item.Type != ItemType.Gun
+                                             && character.Ranged.Item.Type != ItemType.Crossbow))
             {
                 //skip all the calculations if there is no ranged weapon
                 return calculatedStats;
@@ -689,12 +687,9 @@ namespace Rawr.Hunter
             calculatedStats.immolationTrap.cooldown = 30 - character.HunterTalents.Resourcefulness * 2;
             calculatedStats.immolationTrap.duration = character.HunterTalents.GlyphOfImmolationTrap ? 9 : 15;
 
-            if (calculatedStats.priorityRotation.containsShot(Shots.Readiness))
-            {
+            if (calculatedStats.priorityRotation.containsShot(Shots.Readiness)) {
                 calculatedStats.rapidFire.cooldown = 157.5 - (30 * character.HunterTalents.RapidKilling);
-            }
-            else
-            {
+            } else {
                 calculatedStats.rapidFire.cooldown = 300 - (60 * character.HunterTalents.RapidKilling);
             }
             calculatedStats.rapidFire.duration = 15;
@@ -718,8 +713,7 @@ namespace Rawr.Hunter
 
             // We can calculate the rough frequencies now
             calculatedStats.priorityRotation.initializeTimings();
-            if (!options.useRotationTest)
-            {
+            if (!options.useRotationTest) {
                 calculatedStats.priorityRotation.calculateFrequencies();
                 calculatedStats.priorityRotation.calculateLALProcs(character);
                 calculatedStats.priorityRotation.calculateFrequencies();
@@ -735,52 +729,38 @@ namespace Rawr.Hunter
             double rangedWeaponSpeed = 0;
             double rangedAmmoDPS = 0;
 
-            if (character.Ranged != null)
-            {
+            if (character.Ranged != null) {
                 rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
                 rangedWeaponSpeed = Math.Round(character.Ranged.Item.Speed * 10) / 10;
             }
-            if (character.Projectile != null)
-            {
+            if (character.Projectile != null) {
                 rangedAmmoDPS = (float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f;
             }
 
             #endregion
             #region August 2009 Static Haste Calcs
-
             //default quiver speed
             calculatedStats.hasteFromBase = 0.15;
-
             // haste from haste rating
             calculatedStats.hasteFromRating = calculatedStats.BasicStats.HasteRating / (HunterRatings.HASTE_RATING_PER_PERCENT * 100);
-
             // serpent swiftness
             calculatedStats.hasteFromTalentsStatic = 0.04 * character.HunterTalents.SerpentsSwiftness;
-
             // haste buffs
             calculatedStats.hasteFromRangedBuffs = calculatedStats.BasicStats.RangedHaste;
-
             // total hastes
             double totalStaticHaste = (1 + calculatedStats.hasteFromBase)             // quiver
                                     * (1 + calculatedStats.hasteFromRating)           // gear haste rating
                                     * (1 + calculatedStats.hasteFromTalentsStatic)    // serpent's swiftness
                                     * (1 + calculatedStats.hasteFromRangedBuffs);     // buffs like swift ret / moonkin
-
             calculatedStats.hasteStaticTotal = totalStaticHaste;
-
-
             // Needed by the rotation test
             calculatedStats.autoShotStaticSpeed = rangedWeaponSpeed / totalStaticHaste;
-
             #endregion
             #region Rotation Test
-
             // Quick shots effect is needed for rotation test
             calculatedStats.quickShotsEffect = 0;
-            if (options.selectedAspect == Aspect.Hawk || options.selectedAspect == Aspect.Dragonhawk)
-            {
-                if (character.HunterTalents.ImprovedAspectOfTheHawk > 0)
-                {
+            if (options.selectedAspect == Aspect.Hawk || options.selectedAspect == Aspect.Dragonhawk) {
+                if (character.HunterTalents.ImprovedAspectOfTheHawk > 0) {
                     double quickShotsEffect = 0.03 * character.HunterTalents.ImprovedAspectOfTheHawk;
                     if (character.HunterTalents.GlyphOfTheHawk) quickShotsEffect += 0.06;
 
@@ -788,13 +768,10 @@ namespace Rawr.Hunter
                 }
             }
 
-
             // Using the rotation test will get us better frequencies
             RotationTest rotationTest = new RotationTest(character, calculatedStats, options);
            
-
-            if (options.useRotationTest)
-            {
+            if (options.useRotationTest) {
                 // The following properties of CalculatedStats must be ready by this call:
                 //  * priorityRotation (shot order, durations, cooldowns)
                 //  * quickShotsEffect
@@ -803,7 +780,6 @@ namespace Rawr.Hunter
 
                 rotationTest.RunTest();
             }
-
             #endregion
             #region August 2009 Dynamic Haste Calcs
 
@@ -977,13 +953,10 @@ namespace Rawr.Hunter
 
             #endregion
             #region August 2009 Quick Shots
-
             double QSBaseFreqnecyIncrease = 0;
 
-            if (options.selectedAspect == Aspect.Hawk || options.selectedAspect == Aspect.Dragonhawk)
-            {
-                if (character.HunterTalents.ImprovedAspectOfTheHawk > 0)
-                {
+            if (options.selectedAspect == Aspect.Hawk || options.selectedAspect == Aspect.Dragonhawk) {
+                if (character.HunterTalents.ImprovedAspectOfTheHawk > 0) {
                     double quickShotsProcChance = 0.1;
 
                     double quickShotsSpeed = autoShotSpeed / (1 + calculatedStats.quickShotsEffect);
@@ -995,14 +968,12 @@ namespace Rawr.Hunter
                     double quickShotsProcSubsequent = 1 - Math.Pow(1 - quickShotsProcChance, quickShotsInReProc);
 
                     double quickShotsAvgShotsBeforeInit = 0;
-                    if (quickShotsProcChance > 0 && quickShotsProcInitial > 0)
-                    {
+                    if (quickShotsProcChance > 0 && quickShotsProcInitial > 0) {
                         quickShotsAvgShotsBeforeInit = ((1 - Math.Pow(0.9, quickShotsInInitialProc + 1)) / 0.01 - (quickShotsInInitialProc + 1) * Math.Pow(0.9, quickShotsInInitialProc) / 0.1 ) / quickShotsProcInitial * 0.1;
                     }
                         
                     double quickShotsAvgShotsBeforeNext = 0;
-                    if (quickShotsProcChance > 0 && quickShotsProcSubsequent > 0)
-                    {
+                    if (quickShotsProcChance > 0 && quickShotsProcSubsequent > 0) {
                         quickShotsAvgShotsBeforeNext = ((1 - Math.Pow(0.9, quickShotsInReProc + 1)) / 0.01 - (quickShotsInReProc + 1) * Math.Pow(0.9, quickShotsInReProc) / 0.1) / quickShotsProcSubsequent * 0.1;
                     }
 
@@ -1015,12 +986,9 @@ namespace Rawr.Hunter
 
                     double quickShotsUptime;
 
-                    if (options.useRotationTest)
-                    {
+                    if (options.useRotationTest) {
                         quickShotsUptime = rotationTest.IAotHUptime;
-                    }
-                    else
-                    {
+                    } else {
                         quickShotsUptime = quickShotsProcChance > 0 ? quickShotsAverageChainQuick / (quickShotsAverageChainQuick + quickShotsAverageChainSlow) : 0;
                     }
 
@@ -1030,7 +998,6 @@ namespace Rawr.Hunter
 
             #endregion
             #region August 2009 Shots Per Second
-
             double baseAutoShotsPerSecond = autoShotSpeed > 0 ? 1 / autoShotSpeed : 0;
             double autoShotsPerSecond = baseAutoShotsPerSecond + QSBaseFreqnecyIncrease;
             double specialShotsPerSecond = calculatedStats.priorityRotation.specialShotsPerSecond;
@@ -1043,7 +1010,6 @@ namespace Rawr.Hunter
 
             calculatedStats.BaseAttackSpeed = (float)autoShotSpeed;
             calculatedStats.shotsPerSecondCritting = crittingShotsPerSecond;
-
             #endregion
 
             // base stats
@@ -1428,7 +1394,6 @@ namespace Rawr.Hunter
 
             //29-10-2009 Drizz: TODO Probably missing T7 Viper bonus
 
-
             // Viper Regen if viper is up 100%
             calculatedStats.manaRegenConstantViper = 0;
             if (options.selectedAspect == Aspect.Viper)
@@ -1511,7 +1476,6 @@ namespace Rawr.Hunter
 
             double manaRegenTier7ViperBonus = character.ActiveBuffsContains("Cryptstalker Battlegear 4 Piece Bonus") ? 1.2 : 1;
             double tier82SetAdjust = character.ActiveBuffsContains("Scourgestalker Battlegear 2 Piece Bonus") ? 1.1 : 1;
-
 
             double glpyhOfAspectOfTheViperBonus = character.HunterTalents.GlyphOfAspectOfTheViper ? 1.1 : 1;
 
@@ -2132,10 +2096,12 @@ namespace Rawr.Hunter
             aimedShotDamageReal *= armorReductionDamageAdjust;
 
             //Drizz: added for piercing shots
-            double aimedShotAvgNonCritDamage = aimedShotDamageNormal * aimedShotDamageAdjust*armorReductionDamageAdjust;
+            double aimedShotAvgNonCritDamage = aimedShotDamageNormal * aimedShotDamageAdjust * armorReductionDamageAdjust;
             double aimedShotAvgCritDamage = aimedShotAvgNonCritDamage * (1 + aimedShotCritAdjust);
             //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
-            double aimedShotPiercingShots = (1 + statsBuffs.BonusBleedDamageMultiplier) * (character.HunterTalents.PiercingShots * 0.1) * aimedShotCrit * aimedShotAvgCritDamage;
+            double aimedShotPiercingShots = (1 + statsBuffs.BonusBleedDamageMultiplier)
+                                          * (character.HunterTalents.PiercingShots * 0.1)
+                                          * aimedShotCrit * aimedShotAvgCritDamage;
 
             //Drizz: Trying out...
             calculatedStats.aimedShot.damage = aimedShotDamageReal+ aimedShotPiercingShots;
@@ -2178,7 +2144,6 @@ namespace Rawr.Hunter
             // Drizz: 
             // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
             // This is the reasone for the 0.5 multiplier and that markedForDeath is kept outside
-            //double chimeraShotCritAdjust = (1 + mortalShotsCritDamage + markedForDeathCritDamage) * metaGemCritDamage;
             double chimeraShotCritAdjust = metaGemCritDamage + 0.5 * mortalShotsCritDamage * (1 + metaGemCritDamage) + markedForDeathCritDamage;
 
             // damage_adjust = talent_adjust * nature_debuffs * ISS_cs_bonus * partial_resist
@@ -2194,7 +2159,7 @@ namespace Rawr.Hunter
                                            );
 
             //Drizz: added for piercing shots
-            double chimeraShotAvgNonCritDamage = chimeraShotDamageNormal * talentDamageAdjust * ISSChimeraShotDamageAdjust * (1+ targetDebuffsNature);
+            double chimeraShotAvgNonCritDamage = chimeraShotDamageNormal * talentDamageAdjust * ISSChimeraShotDamageAdjust * (1 + targetDebuffsNature);
             double chimeraShotAvgCritDamage = chimeraShotAvgNonCritDamage * (1 + chimeraShotCritAdjust);
             // 021109 - Drizz: Had to add the Bleed Damage Multiplier
             double chimeraShotPiercingShots = (1 + statsBuffs.BonusBleedDamageMultiplier)
@@ -2218,7 +2183,7 @@ namespace Rawr.Hunter
                                                   * blackArrowAuraDamageAdjust
                                                   * ferociousInspirationArcaneDamageAdjust);
 
-            double chimeraShotSerpentStingDamage = Math.Round(serpentStingDamageBase*chimeraShotSerpentMultiplier/5,1)*serpentStingTicks ;
+            double chimeraShotSerpentStingDamage = Math.Round(serpentStingDamageBase * chimeraShotSerpentMultiplier / 5, 1) * serpentStingTicks;
 
             double chimeraShotEffect;
             if (calculatedStats.serpentSting.used)
