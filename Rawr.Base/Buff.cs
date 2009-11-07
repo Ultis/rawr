@@ -2631,59 +2631,6 @@ namespace Rawr
             #endregion
 
             #region Hunter
-            #region TBC
-/*
-            #region Tier 4 | Demon Stalker
-            // 2-piece bonus is FD-resist
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Demon Stalker Armor 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Demon Stalker Armor",
-                Stats = { MultiShotManaDiscount = .1f },
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            #endregion
-            #region Tier 5 | Rift Stalker
-            // 2-piece bonus is pet healing
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Rift Stalker Armor 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Rift Stalker Armor",
-                Stats = { BonusSteadyShotCrit = .05f },
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            #endregion
-            #region Tier 6 | Gronnstalker's
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gronnstalker's Armor 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Gronnstalker's Armor",
-                Stats = { BonusAspectOfTheViperGain = 0.25f },
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Gronnstalker's Armor 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Gronnstalker's Armor",
-                Stats = { BonusSteadyShotDamageMultiplier = .1f },
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            #endregion
- */
-            #endregion
-
             #region WotLK
             #region Tier 7 | Cryptstalker
             defaultBuffs.Add(new Buff()
@@ -2753,13 +2700,13 @@ namespace Rawr
             #endregion
             #endregion
             #region PvP
-            #region Gladiator's Pursuit (Season 1)
+            #region Gladiator's Pursuit (Seasons 5-7)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Gladiator's Pursuit 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 35 },
+                Stats = { Resilience = 50 },
                 SetName = "Gladiator's Pursuit",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
@@ -2769,168 +2716,12 @@ namespace Rawr
                 Name = "Gladiator's Pursuit 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MultiShotCooldownReduction = 1 },
+                Stats = { TrapCooldownReduction = 2 },
                 SetName = "Gladiator's Pursuit",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
             #endregion
-			/*
-            #region Merciless Gladiator's Pursuit (Season 2)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Merciless Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 35 },
-                SetName = "Merciless Gladiator's Pursuit",
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Merciless Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MultiShotCooldownReduction = 1 },
-                SetName = "Merciless Gladiator's Pursuit",
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            #endregion
-            #region Vengeful Gladiator's Pursuit (Season 3)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Vengeful Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 35 },
-                SetName = "Vengeful Gladiator's Pursuit",
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Vengeful Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MultiShotCooldownReduction = 1 },
-                SetName = "Vengeful Gladiator's Pursuit",
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            #endregion
-            #region Brutal Gladiator's Pursuit (Season 4)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Brutal Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 35 },
-                SetName = "Brutal Gladiator's Pursuit",
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Brutal Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { MultiShotCooldownReduction = 1 },
-                SetName = "Brutal Gladiator's Pursuit",
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            #endregion
-            #region Savage Gladiator's Pursuit (Season 5.1)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Savage Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50 },
-                SetName = "Savage Gladiator's Pursuit",
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Savage Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { TrapCooldownReduction = 2 },
-                SetName = "Savage Gladiator's Pursuit",
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            #endregion
-            #region Hateful Gladiator's Pursuit (Season 5.2)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Hateful Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50 },
-                SetName = "Hateful Gladiator's Pursuit",
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Hateful Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { TrapCooldownReduction = 2 },
-                SetName = "Hateful Gladiator's Pursuit",
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            #endregion
-            #region Deadly Gladiator's Pursuit (Season 5.3)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Deadly Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50 },
-                SetName = "Deadly Gladiator's Pursuit",
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Deadly Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { TrapCooldownReduction = 2 },
-                SetName = "Deadly Gladiator's Pursuit",
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            #endregion
-            #region Furious Gladiator's Pursuit (Season 6)
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Furious Gladiator's Pursuit 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Resilience = 50 },
-                SetName = "Furious Gladiator's Pursuit",
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Furious Gladiator's Pursuit 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { TrapCooldownReduction = 2 },
-                SetName = "Furious Gladiator's Pursuit",
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
-            });
-            #endregion
-			*/
             #endregion
             #endregion
 

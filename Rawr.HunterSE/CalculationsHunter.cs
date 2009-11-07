@@ -270,7 +270,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
  				MultiShotManaDiscount = stats.MultiShotManaDiscount,
-				MultiShotCooldownReduction = stats.MultiShotCooldownReduction,
 				TrapCooldownReduction = stats.TrapCooldownReduction,
                 FireDamage = stats.FireDamage,
                 ArcaneDamage = stats.ArcaneDamage,
@@ -380,7 +379,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.BonusSerpentStingCanCrit +
                 stats.BonusSteadyShotPetAttackPowerBuff +
                 stats.MultiShotManaDiscount +
-                stats.MultiShotCooldownReduction +
                 stats.TrapCooldownReduction +
                 stats.FireDamage + 
                 stats.ArcaneDamage + 
@@ -419,6 +417,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         }
 
         public override bool IsBuffRelevant(Buff buff) {
+            if (!buff.AllowedClasses.Contains(CharacterClass.Hunter)) { return false; }
             if (buff.Name == "Concentration Aura") return false; // Gets selected due to a bug saying it increases BonusAspectOfTheViperAttackSpeed
             //if (buff.Group == "Potion") return false;
 
@@ -858,7 +857,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.arcaneShot.cooldown = 6;
 
             calculatedStats.multiShot.cooldown = talents.GlyphOfMultiShot ? 9 : 10;
-            calculatedStats.multiShot.cooldown -= calculatedStats.BasicStats.MultiShotCooldownReduction; // PVP S1 Set Bonus
 
             calculatedStats.blackArrow.cooldown = 30 - (talents.Resourcefulness * 2);
             calculatedStats.blackArrow.duration = 15;
@@ -1049,7 +1047,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Crits
             #region August 2009 Crit Chance
             calculatedStats.critBase = -0.0153f;
-            calculatedStats.critFromAgi = StatConversion.GetCritFromRating(stats.Agility, character.Class);
+            calculatedStats.critFromAgi = StatConversion.GetCritFromAgility(stats.Agility, character.Class);
             calculatedStats.critFromRating = StatConversion.GetCritFromRating(calculatedStats.BasicStats.CritRating, character.Class);
             calculatedStats.critFromRacial = 0;
             if (character.Ranged != null &&
@@ -1066,7 +1064,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Crit Depression
             float critdepression = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifI];
-            calculatedStats.critFromDepression = 0 - critdepression;
+            calculatedStats.critFromDepression = 0f - critdepression;
 
             calculatedStats.critRateOverall = stats.PhysicalCrit;
 
@@ -1590,10 +1588,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float blackArrowUptime = 0;
             if (calculatedStats.priorityRotation.containsShot(Shots.BlackArrow))
             {
-                blackArrowUptime = CalcUptime(calculatedStats.blackArrow.duration, calculatedStats.blackArrow.freq, calcOpts);
+                SpecialEffect blackarrow = new SpecialEffect(Trigger.Use,new Stats(),
+                                            calculatedStats.blackArrow.duration, calculatedStats.blackArrow.freq);
+                blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, (float)calcOpts.duration);
             }
-            float blackArrowAuraDamageAdjust = 1 + (0.06f * blackArrowUptime);
-            float blackArrowSelfDamageAdjust = 1 + (RAP / 225000);
+            float blackArrowAuraDamageAdjust = 1f + (0.06f * blackArrowUptime);
+            float blackArrowSelfDamageAdjust = 1f + (RAP / 225000f);
 
             //Noxious Stings
             float noxiousStingsSerpentUptime = 0;
@@ -2271,8 +2271,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float healthTaurenAdjust = character.Race == CharacterRace.Tauren ? 1.05 : 1;
             statsTotal.Health = (float)(healthSubTotal * healthTaurenAdjust);*/
 
-            statsTotal.MultiShotCooldownReduction = statsGearEnchantsBuffs.MultiShotCooldownReduction;
-
             float attemptedAtksInterval = 1;
             float hitRate = (1f - statsTotal.PhysicalHit);
             float critRate = statsTotal.PhysicalCrit;
@@ -2376,36 +2374,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return statsProcs;
         }
 
-		#endregion //overrides 
+		#endregion //overrides
 
         #region Private Functions
 
-        public static float CalcUptime(float duration, float cooldown, CalculationOptionsHunterSE options) {
-            if (options.calculateUptimesLikeSpreadsheet) {
-                return cooldown > 0 ? duration / cooldown : 0;
-            }
-
-            float length = options.duration;
-            float durationleft = length;
-            float numBuff = 0;
-            if (duration >= cooldown) { return 1; }
-
-            while (durationleft > 0) {
-                if (durationleft > duration) {
-                    numBuff += 1;
-                } else {
-                    numBuff += (durationleft / duration);
-                }
-                durationleft -= cooldown;
-            }
-            return ((numBuff * duration) / length);
-        }
-
         public static float CalcEffectiveDamage(float damageNormal, float missChance, float critChance, float critAdjust, float damageAdjust) {
-            float damageCrit = damageNormal * (1f + critAdjust);
+            float damageCrit  =  damageNormal * (1f + critAdjust);
             float damageTotal = (damageNormal * (1f - critChance)
-                               + (damageCrit * critChance));
-            float damageReal = damageTotal * damageAdjust * (1f - missChance);
+                                 + (damageCrit * critChance));
+            float damageReal  = damageTotal * damageAdjust * (1f - missChance);
 
             return damageReal;
         }
@@ -2415,13 +2392,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float timePerTrigger = triggersPerSecond > 0 ? 1 / triggersPerSecond : 0;
             float time_between_procs = timePerTrigger > 0 ? 1 / chance * timePerTrigger + cooldown : 0;
             return time_between_procs > 0 ? duration / time_between_procs : 0;
-        }
-
-        private static bool IsWearingRing(Character character, int ring_id)
-        {
-            if (character.Finger1 != null && character.Finger1.Id == ring_id) return true;
-            if (character.Finger2 != null && character.Finger2.Id == ring_id) return true;
-            return false;
         }
 
         private ShotData getShotByIndex(int index, CharacterCalculationsHunterSE calculatedStats)

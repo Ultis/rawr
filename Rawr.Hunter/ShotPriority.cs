@@ -274,7 +274,7 @@ namespace Rawr.Hunter
 
         public void calculateRotationDPS()
         {
-            bool debug_shot_rotation = true;
+            bool debug_shot_rotation = false;
 
             DPS = 0;
 
@@ -684,7 +684,7 @@ namespace Rawr.Hunter
                     "(Not in rotation)";
             }
          
-            if (true) // yet another rotation debug block
+            if (false) // yet another rotation debug block
             {
                 ret += "\n-\n";
                 ret += "start_freq = " + start_freq.ToString("F2") + "\n";

@@ -498,9 +498,9 @@ namespace Rawr.Hunter
 
 
                     // Note down shot current time and shot used
-                    //if (options.debugShotRotation)
+                    if (options.debugShotRotation)
                     // Drizz: Enable for getting printout of Rotation.
-                    if(true)
+                    //if(true)
                     {
                         // currentTime
                         // thisShot

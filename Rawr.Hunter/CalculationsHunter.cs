@@ -468,7 +468,6 @@ namespace Rawr.Hunter
 				BonusSerpentStingCanCrit = stats.BonusSerpentStingCanCrit,
 				BonusSteadyShotPetAttackPowerBuff = stats.BonusSteadyShotPetAttackPowerBuff,
 				MultiShotManaDiscount = stats.MultiShotManaDiscount,
-				MultiShotCooldownReduction = stats.MultiShotCooldownReduction,
 				TrapCooldownReduction = stats.TrapCooldownReduction,
                 FireDamage = stats.FireDamage,
                 Stamina = stats.Stamina,
@@ -527,7 +526,6 @@ namespace Rawr.Hunter
             stats.BonusSerpentStingCanCrit +
             stats.BonusSteadyShotPetAttackPowerBuff +
             stats.MultiShotManaDiscount +
-            stats.MultiShotCooldownReduction +
             stats.TrapCooldownReduction +
             stats.FireDamage + 
             stats.Stamina +
@@ -682,7 +680,6 @@ namespace Rawr.Hunter
             calculatedStats.arcaneShot.cooldown = 6;
 
             calculatedStats.multiShot.cooldown = character.HunterTalents.GlyphOfMultiShot ? 9 : 10;
-            calculatedStats.multiShot.cooldown -= calculatedStats.BasicStats.MultiShotCooldownReduction; // PVP S1 Set Bonus
 
             calculatedStats.blackArrow.cooldown = 30 - (character.HunterTalents.Resourcefulness * 2);
             calculatedStats.blackArrow.duration = 15;
@@ -2636,7 +2633,6 @@ namespace Rawr.Hunter
 
 			statsTotal.AttackPower = statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower;
 			statsTotal.BonusRangedAttackPowerMultiplier = statsGearEnchantsBuffs.BonusRangedAttackPowerMultiplier;
-            statsTotal.MultiShotCooldownReduction = statsGearEnchantsBuffs.MultiShotCooldownReduction;
 
 			return statsTotal;
 		}

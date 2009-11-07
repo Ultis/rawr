@@ -379,8 +379,9 @@ namespace Rawr.HunterSE
             calculatedStats.apFromCallOfTheWild = 0;
             if (options.petCallOfTheWild > 0)
             {
-                float callOfTheWildUseFreq = priorityRotation.getSkillFrequency(PetAttacks.CallOfTheWild);
-                float callOfTheWildUptime = CalculationsHunterSE.CalcUptime(20, callOfTheWildUseFreq, options);
+                SpecialEffect callofthewild = new SpecialEffect(Trigger.Use, new Stats() { BonusAttackPowerMultiplier = 0.10f, },
+                    20f, 5f * 60f);
+                float callOfTheWildUptime = callofthewild.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, options.duration);
                 calculatedStats.apFromCallOfTheWild = 0.1f * callOfTheWildUptime;
             }
 
@@ -421,7 +422,11 @@ namespace Rawr.HunterSE
             {
                 float tier9BonusTimePetShot = 0.9f;
                 float tier9BonusTimeBetween = tier9BonusTimePetShot > 0 ? 1f / 0.15f * tier9BonusTimePetShot + 45f : 0;
-                calculatedStats.petAPFromTier9 = 600 * CalculationsHunterSE.CalcUptime(15, tier9BonusTimeBetween, options);
+                SpecialEffect tier94pc = new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 600f, }, 15f, 0f, 0.35f);
+                float tier94pcUptime = tier94pc.GetAverageUptime(1.5f,
+                    1f - Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[options.TargetLevel - character.Level] - calculatedStats.BasicStats.PhysicalHit),
+                    calculatedStats.autoShotStaticSpeed, options.duration);
+                calculatedStats.petAPFromTier9 = 600f * tier94pcUptime;
             }
 
             // Furious Howl was calculated earlier
@@ -451,7 +456,10 @@ namespace Rawr.HunterSE
 
             float longevityCooldownAdjust = 1f - character.HunterTalents.Longevity * 0.1f;
             float rabidCooldown = 45f * longevityCooldownAdjust;
-            float rabidUptime = options.petRabid * CalculationsHunterSE.CalcUptime(20, rabidCooldown, options);
+            SpecialEffect rabid = new SpecialEffect(Trigger.Use,
+                new Stats() { BonusAttackPowerMultiplier = 0.05f },
+                20, rabidCooldown, 0.50f, 5);
+            float rabidUptime = options.petRabid * rabid.GetAverageUptime(0f, 1f, 2f, options.duration);
 
             if (rabidUptime > 0)
             {
@@ -545,21 +553,21 @@ namespace Rawr.HunterSE
                                                                + stacks[4].total + stacks[5].total + stacks[6].total : 0;
             }
 
-            float apScalingFactor = 1
-                                 * (1 + calculatedStats.petAPFromCallOfTheWild)
-                                 * (1 + calculatedStats.petAPFromRabidProc)
-                                 * (1 + calculatedStats.petAPFromSerenityDust)
-                                 * (1 + calculatedStats.petAPFromTrueShotAura)
-                                 * (1 + calculatedStats.petAPFromOutsideBuffs)
-                                 * (1 + calculatedStats.petAPFromAnimalHandler)
-                                 * (1 + calculatedStats.petAPFromAspectOfTheBeast);
+            float apScalingFactor = 1f
+                                 * (1f + calculatedStats.petAPFromCallOfTheWild)
+                                 * (1f + calculatedStats.petAPFromRabidProc)
+                                 * (1f + calculatedStats.petAPFromSerenityDust)
+                                 * (1f + calculatedStats.petAPFromTrueShotAura)
+                                 * (1f + calculatedStats.petAPFromOutsideBuffs)
+                                 * (1f + calculatedStats.petAPFromAnimalHandler)
+                                 * (1f + calculatedStats.petAPFromAspectOfTheBeast);
 
             float apTotalUnadjusted = calculatedStats.petAPFromStrength
-                                     + calculatedStats.petAPFromHunterVsWild
-                                     + calculatedStats.petAPFromTier9
-                                     + calculatedStats.petAPFromBuffs
-                                     + calculatedStats.petAPFromFuriousHowl
-                                     + calculatedStats.petAPFromHunterRAP;
+                                    + calculatedStats.petAPFromHunterVsWild
+                                    + calculatedStats.petAPFromTier9
+                                    + calculatedStats.petAPFromBuffs
+                                    + calculatedStats.petAPFromFuriousHowl
+                                    + calculatedStats.petAPFromHunterRAP;
 
             float apTotal = (float)Math.Round(apTotalUnadjusted * apScalingFactor, 1);
 

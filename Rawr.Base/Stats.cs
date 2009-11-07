@@ -319,7 +319,6 @@ namespace Rawr {
         BonusSerpentStingCanCrit,
         BonusSteadyShotPetAttackPowerBuff,
         MultiShotManaDiscount,
-        MultiShotCooldownReduction,
         TrapCooldownReduction,
         PetStamina,
         PetStrength,
@@ -2846,15 +2845,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("second cooldown reduction for Multi-Shot")]
-        [Category("Hunter")]
-        public float MultiShotCooldownReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MultiShotCooldownReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MultiShotCooldownReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("second cooldown reduction for Traps")]
         [Category("Hunter")]
         public float TrapCooldownReduction
@@ -3075,7 +3065,8 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance T7 4 Piece Bonus")]
+        [DisplayName("Enhance T7 4 Piece Bonus")]
+        [Category("Enhance")]
         public float Enhance4T7
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T7]; }
@@ -3083,7 +3074,8 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance T7 2 Piece Bonus")]
+        [DisplayName("Enhance T7 2 Piece Bonus")]
+        [Category("Enhance")]
         public float Enhance2T7
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T7]; }
@@ -3091,7 +3083,8 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance T8 2 Piece Bonus")]
+        [DisplayName("Enhance T8 2 Piece Bonus")]
+        [Category("Enhance")]
         public float Enhance2T8
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T8]; }
@@ -3099,43 +3092,44 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Enhance T8 4 Piece Bonus")]
+        [DisplayName("Enhance T8 4 Piece Bonus")]
+        [Category("Enhance")]
         public float Enhance4T8
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T8]; }
             set { _rawAdditiveData[(int)AdditiveStat.Enhance4T8] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Enhance T9 2 Piece Bonus")]
         [Category("Enhance")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float Enhance2T9
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T9]; }
             set { _rawAdditiveData[(int)AdditiveStat.Enhance2T9] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Enhance T9 4 Piece Bonus")]
         [Category("Enhance")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float Enhance4T9
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T9]; }
             set { _rawAdditiveData[(int)AdditiveStat.Enhance4T9] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Enhance T10 2 Piece Bonus")]
         [Category("Enhance")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float Enhance2T10
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T10]; }
             set { _rawAdditiveData[(int)AdditiveStat.Enhance2T10] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Enhance T10 4 Piece Bonus")]
         [Category("Enhance")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float Enhance4T10
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T10]; }
