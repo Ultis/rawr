@@ -16,13 +16,15 @@ namespace Rawr.Enhance
         private String _trinket1name = String.Empty;
         private String _trinket2name = String.Empty;
         private String _totemname = String.Empty;
+        private Character _character;
 
         public EnhSim(Character character, CalculationOptionsEnhance calcOpts)
         {
+            _character = character;
             CalculationsEnhance ce = new CalculationsEnhance();
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.EnhSimStats;
-            if(isMasterOfAnatomy(character))
+            if(_character.ActiveBuffsContains("Master of Anatomy"))
                 stats.CritRating += 32;
             CombatStats cs = new CombatStats(character, stats, calcOpts);
             
@@ -178,8 +180,8 @@ namespace Rawr.Enhance
                 Clipboard.SetText(_configText);
 			}
 			catch { }
-            MessageBox.Show("EnhSim config data copied to clipboard\n" + 
-                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.8.4.1 or higher, to import it\n" +
+            MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
+                "Use the 'Copy from Clipboard' option in EnhSimGUI v1.8.5.2 or higher, to import it\n" +
                 "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                 "Enhance Module", MessageBoxButton.OK);
         }
@@ -191,7 +193,7 @@ namespace Rawr.Enhance
                 System.Windows.Forms.Clipboard.SetText(_configText);
 			}
 			catch { }
-            System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard\n" + 
+            System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
                 "Use the 'Copy from Clipboard' option in EnhSimGUI v1.8.5.2 or higher, to import it\n" +
                 "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
@@ -205,122 +207,122 @@ namespace Rawr.Enhance
             sb.AppendLine();
             List<Buff> buffs = character.ActiveBuffs;
 
-            if (isBuffChecked(buffs, "Acid Spit") || isBuffChecked(buffs, "Expose Armor") || isBuffChecked(buffs, "Sunder Armor"))
+            if (_character.ActiveBuffsContains("Acid Spit") || _character.ActiveBuffsContains("Expose Armor") || _character.ActiveBuffsContains("Sunder Armor"))
                 sb.AppendLine("armor_debuff_major              20.0/20.0");
             else
                 sb.AppendLine("armor_debuff_major              0.0/20.0");
-            if (isBuffChecked(buffs, "Curse of Recklessness") || isBuffChecked(buffs, "Faerie Fire") || isBuffChecked(buffs, "Sting"))
+            if (_character.ActiveBuffsContains("Curse of Recklessness") || _character.ActiveBuffsContains("Faerie Fire") || _character.ActiveBuffsContains("Sting"))
                 sb.AppendLine("armor_debuff_minor              5.0/5.0");
             else
                 sb.AppendLine("armor_debuff_minor              0.0/5.0");
-            if (isBuffChecked(buffs, "Blood Frenzy") || isBuffChecked(buffs, "Savage Combat"))
+            if (_character.ActiveBuffsContains("Blood Frenzy") || _character.ActiveBuffsContains("Savage Combat"))
                 sb.AppendLine("physical_vulnerability_debuff   4.0/4.0");
             else
                 sb.AppendLine("physical_vulnerability_debuff   0.0/4.0");
-            if (isBuffChecked(buffs, "Windfury Totem"))
-                if (isBuffChecked(buffs, "Improved Windfury Totem"))
+            if (_character.ActiveBuffsContains("Windfury Totem"))
+                if (_character.ActiveBuffsContains("Improved Windfury Totem"))
                     sb.AppendLine("melee_haste_buff                20.0/20.0");
                 else
                     sb.AppendLine("melee_haste_buff                16.0/20.0");
-            else if (isBuffChecked(buffs, "Improved Icy Talons"))
+            else if (_character.ActiveBuffsContains("Improved Icy Talons"))
                 sb.AppendLine("melee_haste_buff                20.0/20.0");
             else
                 sb.AppendLine("melee_haste_buff                0.0/20.0");
-            if (isBuffChecked(buffs, "Leader of the Pack") || isBuffChecked(buffs, "Rampage"))
+            if (_character.ActiveBuffsContains("Leader of the Pack") || _character.ActiveBuffsContains("Rampage"))
                 sb.AppendLine("melee_crit_chance_buff          5.0/5.0");
             else
                 sb.AppendLine("melee_crit_chance_buff          0.0/5.0");
-            if (isBuffChecked(buffs, "Battle Shout"))
+            if (_character.ActiveBuffsContains("Battle Shout"))
             {
-                if (isBuffChecked(buffs, "Commanding Presence (Attack Power)"))
+                if (_character.ActiveBuffsContains("Commanding Presence (Attack Power)"))
                     sb.AppendLine("attack_power_buff_flat          685/688");
                 else
                     sb.AppendLine("attack_power_buff_flat          548/688");
             }
-            else if (isBuffChecked(buffs, "Blessing of Might"))
+            else if (_character.ActiveBuffsContains("Blessing of Might"))
             {
-                if (isBuffChecked(buffs, "Improved Blessing of Might"))
+                if (_character.ActiveBuffsContains("Improved Blessing of Might"))
                     sb.AppendLine("attack_power_buff_flat          687/688");
                 else
                     sb.AppendLine("attack_power_buff_flat          550/688");
             }
             else
                 sb.AppendLine("attack_power_buff_flat          0/688");
-            if (isBuffChecked(buffs, "Trueshot Aura") || isBuffChecked(buffs, "Unleashed Rage") || isBuffChecked(buffs, "Abomination's Might"))
+            if (_character.ActiveBuffsContains("Trueshot Aura") || _character.ActiveBuffsContains("Unleashed Rage") || _character.ActiveBuffsContains("Abomination's Might"))
                 sb.AppendLine("attack_power_buff_multiplier    99.7/99.7");
             else
                 sb.AppendLine("attack_power_buff_multiplier    0.0/99.7");
-            if (isBuffChecked(buffs, "Wrath of Air Totem"))
+            if (_character.ActiveBuffsContains("Wrath of Air Totem"))
                 sb.AppendLine("spell_haste_buff                5.0/5.0");
             else
                 sb.AppendLine("spell_haste_buff                0.0/5.0");
-            if (isBuffChecked(buffs, "Elemental Oath") || isBuffChecked(buffs, "Moonkin Form"))
+            if (_character.ActiveBuffsContains("Elemental Oath") || _character.ActiveBuffsContains("Moonkin Form"))
                 sb.AppendLine("spell_crit_chance_buff          5.0/5.0");
             else
                 sb.AppendLine("spell_crit_chance_buff          0.0/5.0");
-            if (isBuffChecked(buffs, "Improved Scorch") || isBuffChecked(buffs, "Winter's Chill") || isBuffChecked(buffs, "Improved Shadow Bolt"))
+            if (_character.ActiveBuffsContains("Improved Scorch") || _character.ActiveBuffsContains("Winter's Chill") || _character.ActiveBuffsContains("Improved Shadow Bolt"))
                 sb.AppendLine("spell_crit_chance_debuff        5.0/5.0");
             else
                 sb.AppendLine("spell_crit_chance_debuff        0.0/5.0");
-            if (isBuffChecked(buffs, "Ebon Plaguebringer") || isBuffChecked(buffs, "Earth and Moon") || isBuffChecked(buffs, "Curse of the Elements"))
+            if (_character.ActiveBuffsContains("Ebon Plaguebringer") || _character.ActiveBuffsContains("Earth and Moon") || _character.ActiveBuffsContains("Curse of the Elements"))
                 sb.AppendLine("spell_damage_debuff             13.0/13.0");
             else
                 sb.AppendLine("spell_damage_debuff             0.0/13.0");
-            if (isBuffChecked(buffs, "Flametongue Totem"))
+            if (_character.ActiveBuffsContains("Flametongue Totem"))
             {
-                if (isBuffChecked(buffs, "Enhancing Totems (Spell Power)"))
+                if (_character.ActiveBuffsContains("Enhancing Totems (Spell Power)"))
                     sb.AppendLine("spellpower_buff                 165/280");
                 else
                     sb.AppendLine("spellpower_buff                 144/280");
             }
-            else if (isBuffChecked(buffs, "Totem of Wrath (Spell Power)"))
+            else if (_character.ActiveBuffsContains("Totem of Wrath (Spell Power)"))
                 sb.AppendLine("spellpower_buff                 280/280");
             else
                 sb.AppendLine("spellpower_buff                 0/280");
-            if (isBuffChecked(buffs, "Improved Faerie Fire") || isBuffChecked(buffs, "Misery"))
+            if (_character.ActiveBuffsContains("Improved Faerie Fire") || _character.ActiveBuffsContains("Misery"))
                 sb.AppendLine("spell_hit_chance_debuff         3.0/3.0");
             else
                 sb.AppendLine("spell_hit_chance_debuff         0.0/3.0");
-            if (isBuffChecked(buffs, "Improved Moonkin Form") || isBuffChecked(buffs, "Swift Retribution"))
+            if (_character.ActiveBuffsContains("Improved Moonkin Form") || _character.ActiveBuffsContains("Swift Retribution"))
                 sb.AppendLine("haste_buff                      3.0/3.0");
             else
                 sb.AppendLine("haste_buff                      0.0/3.0");
-            if (isBuffChecked(buffs, "Ferocious Inspiration") || isBuffChecked(buffs, "Sanctified Retribution"))
+            if (_character.ActiveBuffsContains("Ferocious Inspiration") || _character.ActiveBuffsContains("Sanctified Retribution"))
                 sb.AppendLine("percentage_damage_increase      3.0/3.0");
             else
                 sb.AppendLine("percentage_damage_increase      0.0/3.0");
-            if (isBuffChecked(buffs, "Heart of the Crusader") || isBuffChecked(buffs, "Totem of Wrath") || isBuffChecked(buffs, "Master Poisoner"))
+            if (_character.ActiveBuffsContains("Heart of the Crusader") || _character.ActiveBuffsContains("Totem of Wrath") || _character.ActiveBuffsContains("Master Poisoner"))
                 sb.AppendLine("crit_chance_debuff              3.0/3.0");
             else
                 sb.AppendLine("crit_chance_debuff              0.0/3.0");
-            if (isBuffChecked(buffs, "Blessing of Kings"))
+            if (_character.ActiveBuffsContains("Blessing of Kings"))
                 sb.AppendLine("stat_multiplier                 10.0/10.0");
             else
                 sb.AppendLine("stat_multiplier                 0.0/10.0");
-            if (isBuffChecked(buffs, "Mark of the Wild"))
-                if (isBuffChecked(buffs, "Improved Mark of the Wild"))
+            if (_character.ActiveBuffsContains("Mark of the Wild"))
+                if (_character.ActiveBuffsContains("Improved Mark of the Wild"))
                     sb.AppendLine("stat_add_buff                   51/52");
                 else
                     sb.AppendLine("stat_add_buff                   37/52");
             else
                 sb.AppendLine("stat_add_buff                   0/52");
-            if (isBuffChecked(buffs, "Strength of Earth Totem") || isBuffChecked(buffs, "Horn of Winter"))
-                if (isBuffChecked(buffs, "Enhancing Totems (Agility/Strength)"))
+            if (_character.ActiveBuffsContains("Strength of Earth Totem") || _character.ActiveBuffsContains("Horn of Winter"))
+                if (_character.ActiveBuffsContains("Enhancing Totems (Agility/Strength)"))
                     sb.AppendLine("agi_and_strength_buff           178/178");
                 else
                     sb.AppendLine("agi_and_strength_buff           155/178");
             else
                 sb.AppendLine("agi_and_strength_buff           0/178");
-            if (isBuffChecked(buffs, "Fel Intelligence (Intellect)"))
-                if (isBuffChecked(buffs, "Improved Felhunter"))
+            if (_character.ActiveBuffsContains("Fel Intelligence (Intellect)"))
+                if (_character.ActiveBuffsContains("Improved Felhunter"))
                     sb.AppendLine("intellect_buff                  52/60");
                 else
                     sb.AppendLine("intellect_buff                  48/60");
-            else if (isBuffChecked(buffs, "Arcane Intellect"))
+            else if (_character.ActiveBuffsContains("Arcane Intellect"))
                 sb.AppendLine("intellect_buff                  60/60");
             else
                 sb.AppendLine("intellect_buff                  0/60");
-            if (isBuffChecked(buffs, "Heroism/Bloodlust"))
+            if (_character.ActiveBuffsContains("Heroism/Bloodlust"))
                 sb.AppendLine("bloodlust_casters               1");
             else
                 sb.AppendLine("bloodlust_casters               0");
@@ -330,95 +332,80 @@ namespace Rawr.Enhance
             sb.AppendLine("food                            " + addFood(buffs));
         }
 
-        private bool isMasterOfAnatomy(Character character)
-        {
-            return isBuffChecked(character.ActiveBuffs, "Master of Anatomy");
-        }
-
-        private bool isBuffChecked(List<Buff> buffs, string buffName)
-        {
-            foreach (Buff buff in buffs)
-            {
-                if (buff.Name.Equals(buffName))
-                    return true;
-            }
-            return false;
-        }
-
         private string addFlask(List<Buff> buffs)
         {
-            if (isBuffChecked(buffs, "Flask of Endless Rage"))
+            if (_character.ActiveBuffsContains("Flask of Endless Rage"))
                 return "flask_of_endless_rage";
-            if (isBuffChecked(buffs, "Flask of the Frost Wyrm"))
+            if (_character.ActiveBuffsContains("Flask of the Frost Wyrm"))
                 return "flask_of_the_frost_wyrm";
-            if (isBuffChecked(buffs, "Elixir of Demonslaying"))
+            if (_character.ActiveBuffsContains("Elixir of Demonslaying"))
                 return "elixir_of_demonslaying";
-            if (isBuffChecked(buffs, "Elixir of Major Agility"))
+            if (_character.ActiveBuffsContains("Elixir of Major Agility"))
                 return "elixir_of_major_agility";
-            if (isBuffChecked(buffs, "Elixir of Mighty Agility"))
+            if (_character.ActiveBuffsContains("Elixir of Mighty Agility"))
                 return "elixir_of_mighty_agility";
-            if (isBuffChecked(buffs, "Elixir of Mighty Strength"))
+            if (_character.ActiveBuffsContains("Elixir of Mighty Strength"))
                 return "elixir_of_mighty_strength";
-            if (isBuffChecked(buffs, "Elixir of Accuracy"))
+            if (_character.ActiveBuffsContains("Elixir of Accuracy"))
                 return "elixir_of_accuracy";
-            if (isBuffChecked(buffs, "Elixir of Armor Piercing"))
+            if (_character.ActiveBuffsContains("Elixir of Armor Piercing"))
                 return "elixir_of_armor_piercing";
-            if (isBuffChecked(buffs, "Elixir of Deadly Strikes"))
+            if (_character.ActiveBuffsContains("Elixir of Deadly Strikes"))
                 return "elixir_of_deadly_strikes";
-            if (isBuffChecked(buffs, "Elixir of Expertise"))
+            if (_character.ActiveBuffsContains("Elixir of Expertise"))
                 return "elixir_of_expertise";
-            if (isBuffChecked(buffs, "Elixir of Lightning Speed"))
+            if (_character.ActiveBuffsContains("Elixir of Lightning Speed"))
                 return "elixir_of_lightning_speed";
-            if (isBuffChecked(buffs, "Guru's Elixir"))
+            if (_character.ActiveBuffsContains("Guru's Elixir"))
                 return "gurus_elixir";
-            if (isBuffChecked(buffs, "Spellpower Elixir"))
+            if (_character.ActiveBuffsContains("Spellpower Elixir"))
                 return "spellpower_elixir";
-            if (isBuffChecked(buffs, "Wrath Elixir"))
+            if (_character.ActiveBuffsContains("Wrath Elixir"))
                 return "wrath_elixir";
             return "-";
         }
 
         private string addGuardianElixir(List<Buff> buffs)
         {
-            if (isBuffChecked(buffs, "Elixir of Draenic Wisdom"))
+            if (_character.ActiveBuffsContains("Elixir of Draenic Wisdom"))
                 return "elixir_of_draenic_wisdom";
-            if (isBuffChecked(buffs, "Elixir of Mighty Thoughts"))
+            if (_character.ActiveBuffsContains("Elixir of Mighty Thoughts"))
                 return "elixir_of_mighty_thoughts";
             return "-";
         }
 
         private string addPotion(List<Buff> buffs)
         {
-            if (isBuffChecked(buffs, "Potion of Speed"))
+            if (_character.ActiveBuffsContains("Potion of Speed"))
                 return "potion_of_speed";
-            if (isBuffChecked(buffs, "Potion of Wild Magic"))
+            if (_character.ActiveBuffsContains("Potion of Wild Magic"))
                 return "potion_of_wild_magic";
-            if (isBuffChecked(buffs, "Heroic Potion"))
+            if (_character.ActiveBuffsContains("Heroic Potion"))
                 return "heroic_potion";
-            if (isBuffChecked(buffs, "Insane Strength Potion"))
+            if (_character.ActiveBuffsContains("Insane Strength Potion"))
                 return "insane_strength_potion";
             return "-";
         }
 
         private string addFood(List<Buff> buffs)
         {
-            if (isBuffChecked(buffs, "Agility Food"))
+            if (_character.ActiveBuffsContains("Agility Food"))
                 return "blackened_dragonfin";
-            if (isBuffChecked(buffs, "Armor Pen Food"))
+            if (_character.ActiveBuffsContains("Armor Pen Food"))
                 return "hearty_rhino";
-            if (isBuffChecked(buffs, "Expertise Food"))
+            if (_character.ActiveBuffsContains("Expertise Food"))
                 return "rhinolicious_wormsteak";
-            if (isBuffChecked(buffs, "Hit Food"))
+            if (_character.ActiveBuffsContains("Hit Food"))
                 return "snapper_extreme";
-            if (isBuffChecked(buffs, "Spell Power Food"))
+            if (_character.ActiveBuffsContains("Spell Power Food"))
                 return "firecracker_salmon";
-            if (isBuffChecked(buffs, "Haste Food"))
+            if (_character.ActiveBuffsContains("Haste Food"))
                 return "imperial_manta_steak";
-            if (isBuffChecked(buffs, "Attack Power Food"))
+            if (_character.ActiveBuffsContains("Attack Power Food"))
                 return "poached_northern_sculpin";
-            if (isBuffChecked(buffs, "Crit Food"))
+            if (_character.ActiveBuffsContains("Crit Food"))
                 return "spiced_wyrm_burger";
-            if (isBuffChecked(buffs, "Fish Feast"))
+            if (_character.ActiveBuffsContains("Fish Feast"))
                 return "fish_feast";
             return "-";
         }
@@ -505,8 +492,8 @@ namespace Rawr.Enhance
             sb.AppendLine();
             sb.AppendLine("cast_sr_only_if_mana_left " + calcOpts.MinManaSR);
             sb.AppendLine("simulate_mana             " + (calcOpts.UseMana ? "1" : "0"));
-            if (isBuffChecked(buffs, "Hunting Party") || isBuffChecked(buffs, "Judgements of the Wise") || isBuffChecked(buffs, "Vampiric Touch") || 
-                    isBuffChecked(buffs, "Improved Soul Leech") || isBuffChecked(buffs, "Enduring Winter"))
+            if (_character.ActiveBuffsContains("Hunting Party") || _character.ActiveBuffsContains("Judgements of the Wise") || _character.ActiveBuffsContains("Vampiric Touch") || 
+                    _character.ActiveBuffsContains("Improved Soul Leech") || _character.ActiveBuffsContains("Enduring Winter"))
                 sb.AppendLine("replenishment             1");
             else
                 sb.AppendLine("replenishment             0");
@@ -514,15 +501,15 @@ namespace Rawr.Enhance
                 sb.AppendLine("water_shield              0");
             else
                 sb.AppendLine("water_shield              1");
-            if (isBuffChecked(buffs, "Mana Spring Totem"))
+            if (_character.ActiveBuffsContains("Mana Spring Totem"))
                 sb.AppendLine("mana_spring_totem         1");
             else
                 sb.AppendLine("mana_spring_totem         0");
-            if (isBuffChecked(buffs, "Blessing of Wisdom"))
+            if (_character.ActiveBuffsContains("Blessing of Wisdom"))
                 sb.AppendLine("blessing_of_wisdom        1");
             else
                 sb.AppendLine("blessing_of_wisdom        0");
-            if (isBuffChecked(buffs, "Judgement of Wisdom"))
+            if (_character.ActiveBuffsContains("Judgement of Wisdom"))
                 sb.AppendLine("judgement_of_wisdom       1");
             else
                 sb.AppendLine("judgement_of_wisdom       0");

@@ -485,17 +485,17 @@ namespace Rawr.Enhance
             {
                 float hitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + .02f * character.ShamanTalents.DualWieldSpecialization;
                 float FSglyphAP = character.ShamanTalents.GlyphofFeralSpirit ? attackPower * .3f : 0f;
-                float soeBuff = IsBuffChecked(character.ActiveBuffs, "Strength of Earth Totem") ? 155f : 0f;
-                float enhTotems = IsBuffChecked(character.ActiveBuffs, "Enhancing Totems (Agility/Strength)") ? 23f : 0f;
+                float soeBuff = character.ActiveBuffsContains("Strength of Earth Totem") ? 155f : 0f;
+                float enhTotems = character.ActiveBuffsContains("Enhancing Totems (Agility/Strength)") ? 23f : 0f;
                 float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 plus SoE totem if active giving extra 178 str buff
                 float dogsAgi = 113f + soeBuff + enhTotems; 
                 float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * cs.URUptime * (1f + unleashedRage);
                 float dogsMissrate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - hitBonus) + cs.AverageDodge;
-                bool critDebuff = IsBuffChecked(character.ActiveBuffs, "Heart of the Crusader") || 
-                                  IsBuffChecked(character.ActiveBuffs, "Master Poisioner") ||
-                                  IsBuffChecked(character.ActiveBuffs, "Totem of Wrath");
-                bool critBuff = IsBuffChecked(character.ActiveBuffs, "Leader of the Pack") ||
-                                IsBuffChecked(character.ActiveBuffs, "Rampage");
+                bool critDebuff = character.ActiveBuffsContains("Heart of the Crusader") || 
+                                  character.ActiveBuffsContains("Master Poisioner") ||
+                                  character.ActiveBuffsContains("Totem of Wrath");
+                bool critBuff = character.ActiveBuffsContains("Leader of the Pack") ||
+                                character.ActiveBuffsContains("Rampage");
                 float dogsCrit = (StatConversion.GetCritFromAgility(dogsAgi, CharacterClass.Shaman) + (critDebuff ? 0.03f : 0f) + (critBuff ? 0.05f : 0f)) * (1 + stats.BonusCritChance);
                 float dogsBaseSpeed = 1.5f;
                 float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste));
@@ -648,19 +648,10 @@ namespace Rawr.Enhance
         #endregion
 
         #region Buff Functions
-        private bool IsBuffChecked(List<Buff> buffs, string buffName)
-        {
-            foreach (Buff buff in buffs)
-                if (buff.Name.Equals(buffName))
-                    return true;
-            return false;
-        }
-
         public override void SetDefaults(Character character)
         {
             // add shaman buffs
             character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Flametongue Totem"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Heroism/Bloodlust"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
 
@@ -685,6 +676,7 @@ namespace Rawr.Enhance
             character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Elemental Oath"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
+            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Divine Spirit"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
             character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
