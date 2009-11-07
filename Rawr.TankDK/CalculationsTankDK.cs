@@ -944,6 +944,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             Stats s = new Stats() {
                 Strength = stats.Strength,
                 Agility = stats.Agility,
+                BaseAgility = stats.BaseAgility,
                 Stamina = stats.Stamina,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,

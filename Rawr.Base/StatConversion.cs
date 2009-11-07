@@ -704,11 +704,15 @@ namespace Rawr
                     modifiedAvoid += ((GetDodgeFromAgility((stats.Agility - stats.BaseAgility), character.Class) +
                                     GetDodgeFromRating(stats.DodgeRating)) * 100f);
                     modifiedAvoid = DRMath(CAP_DODGE_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
+                    finalAvoid = (baseAvoid + modifiedAvoid);
+                    finalAvoid = Math.Min(finalAvoid, CAP_DODGE[iClass]);
                     break;
                 case HitResult.Parry:
                     baseAvoid += stats.Parry * 100f;
                     modifiedAvoid += (GetParryFromRating(stats.ParryRating) * 100f);
                     modifiedAvoid = DRMath(CAP_PARRY_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
+                    finalAvoid = (baseAvoid + modifiedAvoid);
+                    finalAvoid = Math.Min(finalAvoid, CAP_PARRY[iClass]);
                     break;
                 case HitResult.Miss:
                     // Base Miss rate according is 5%
@@ -717,20 +721,24 @@ namespace Rawr
                     modifiedAvoid = DRMath( (1f/CAP_MISSED[iClass]), DR_COEFFIENT[iClass], modifiedAvoid );
                     // Factoring in the Miss Cap. 
                     modifiedAvoid = Math.Min(CAP_MISSED[iClass], modifiedAvoid);
+                    finalAvoid = (baseAvoid + modifiedAvoid);
+                    finalAvoid = Math.Min(finalAvoid, CAP_MISSED[iClass]);
                     break;
                 case HitResult.Block:
                     // Base Block is 5%
                     baseAvoid += stats.Block * 100f;
                     modifiedAvoid += (GetBlockFromRating(stats.BlockRating) * 100f);
+                    finalAvoid = (baseAvoid + modifiedAvoid);
                     break;
                 case HitResult.Crit:
                     modifiedAvoid += (GetCritReductionFromResilience(stats.Resilience) * 100f);
+                    finalAvoid = (baseAvoid + modifiedAvoid);
                     break;
             }
 
             // Many of the base values are whole numbers, so need to get it back to decimal. 
             // May want to look at making this more consistant in the future.
-            finalAvoid = (baseAvoid + modifiedAvoid) / 100.0f;
+            finalAvoid = finalAvoid / 100.0f;
             return finalAvoid;
         }
         /// <summary>
