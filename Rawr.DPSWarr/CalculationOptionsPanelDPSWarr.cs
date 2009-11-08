@@ -369,10 +369,34 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes() {
 PNStuff.Add(
-"v2.2.25 (Unreleased)",
+"v2.2.26 (Unreleased)",
 @"");
 PNStuff.Add(
-"v2.2.24 (Projected Release: Oct 24, 2009 18:00)",
+"v2.2.25 (Projected Release: Nov 08, 2009 18:00)",
+@"- Fix for issue 14526 (Bladestorm eating all your GCDs in low rage settings). Also removed a reference to a variable in Rotation.cs that was never used
+- Refactored ErrorBoxDPSWarr to a new file
+- Added a check for the iterator for Heroic Strikes/Cleaves to use the already set verification of (HS/CL)OK before attempting to loop, should imp perf a little for users not HS'g
+- Added a Dev Only Accessible checkbox to enable Markov Rotation for Arms (working a new method that's more intelligent and better adapted for Interference modeling, it doesn't actually do anything as we haven't fully constructed the necessary files)
+- Fix for Mongoose, fix for off-hand weapon enchants using MH speed in their uptime, some performance improvements
+- Committing work on Markov method for arms rotation, note that it has absolutely no bearing on anything right now
+- Updates for markov model
+- Well Kavan and I got to working on it and it is generating states.... like 140,000 of them /facepalm. Turned it off for now so it doesn't affect anything
+- Converted CalcOpts' variables to properties with an OnPropertyChanged event (to be used later in Rawr3)
+- Rawr3: Some cleanup on the Options pane... but it isn't showing up in Rawr3 when run for some reason
+- Rawr3: LOTS of work on the Options Pane and now it's not crashing (well, almost not) and it's functioning (selecting options actually does stuff)
+- Rawr3: Updated the Options pane to reflect work from Rawr2 (still not done but definitely closer)
+- More Markov work with Kavan
+- Rawr3: Significant improvements to the Options pane, objects should line up correctly, enable/disable and tie to the correct parameters. There's still work to be done but we're getting close to a fully functional Rawr3 model.
+- Added a verifier for bleed hit intervals (in Special Effects handling) to check if Rend is being maintained instead of assuming it is.
+- Cleaned out some old commented code
+- Added logfile creation for recording errors in DPSWarr that go through ErrorBoxDPSWarr class. This is primarily for Rawr3 debugging.
+- Ability Maintenance Tree now ties to abilities, but for some reason when you open that tab, it resets all of them to off (thus making user re-activate them on each character load). Once reactivated, it seems to work fine.
+- Fixed the Ability Maintenance so it won't reset them all to not active (had to do away with the tree unfortunately)
+- Got some of the ComboBoxes working
+- Fixed the cooldown on Intercept and added PvP 4 pc set bonus to it
+- Added comments to the Hunter and Warrior Set Bonus Stats");
+PNStuff.Add(
+"v2.2.24 (Oct 24, 2009 17:45)",
 @"- Added new naming/colors for the custom chart so you know what each number actually means
 - Fixed a bug with Sword Spec to show values when not using a Swordspec
 - Fixed a bug with Needed Rage in Arms Rotation, making it visually double-dip
@@ -411,7 +435,15 @@ PNStuff.Add(
 - Fixed a null reference error
 - Added some Default Talent Specs for Warriors (several mutations for Arms and 1 Fury, 1 Prot)
 - Changed the Set Bonus filtering to use the new Class restrictions instead of by string comparison
-- Updated Patch Notes on the Options pane to use the FAQ system (drop-down selects version to view DPSWarr notes for that version)"
+- Updated Patch Notes on the Options pane to use the FAQ system (drop-down selects version to view DPSWarr notes for that version)
+- Added a Target HP field to the Boss Tab, now Custom Bosses can have health besides 1 million.
+- Added boxes to control individual stuns etc, it will average them out for now, will added handling per stun later
+- Replaced the boxes for Movement Frequency and Duration with a Button that opens the dialog, all moves are now controlled by that system
+- Changed the handling for Moves in Arms rotation to check each move individually, allows better handle for bosses with multiple moves of differing lengths, etc.
+- Replaced the boxes for Fear Frequency and Duration with a Button that opens the dialog, all fears are now controlled by that system
+- Changed the handling for Fears in Arms rotation to check each fear individually, allows better handle for bosses with multiple fears of differing lengths, etc.
+Known Issue: The moves and fears are not recalling from saved files. The file stores the lists correctly but for some reason they don't populate on load.
+- Rawr3: Provided some updated to prevent compile errors but until I can actually dev in Silverlight properly DPSWarr still doesn't work in Rawr3."
 );
 PNStuff.Add(
 "v2.2.23 (Oct 15, 2009 03:15)",
