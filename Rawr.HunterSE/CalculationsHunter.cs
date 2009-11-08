@@ -1300,76 +1300,76 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // mana consumption
             #region August 2009 Mana Adjustments
 
-            float efficiencyManaAdjust = 1 - (talents.Efficiency * 0.03f);
+            float efficiencyManaAdjust = 1f - (talents.Efficiency * 0.03f);
 
-            float thrillOfTheHuntManaAdjust = 1 - (calculatedStats.priorityRotation.critsCompositeSum * 0.4f * (talents.ThrillOfTheHunt / 3));
+            float thrillOfTheHuntManaAdjust = 1f - (calculatedStats.priorityRotation.critsCompositeSum * 0.4f * (talents.ThrillOfTheHunt / 3f));
 
-            float masterMarksmanManaAdjust = 1 - (talents.MasterMarksman * 0.05f);
+            float masterMarksmanManaAdjust = 1f - (talents.MasterMarksman * 0.05f);
 
-            float glyphOfArcaneShotManaAdjust = 1;
+            float glyphOfArcaneShotManaAdjust = 1f;
             if (calculatedStats.priorityRotation.containsShot(Shots.SerpentSting)
                 || calculatedStats.priorityRotation.containsShot(Shots.ScorpidSting))
             {
-                glyphOfArcaneShotManaAdjust = talents.GlyphOfArcaneShot ? 0.8f : 1;
+                glyphOfArcaneShotManaAdjust = talents.GlyphOfArcaneShot ? 0.8f : 1f;
             }
 
-            float resourcefullnessManaAdjust = 1 - talents.Resourcefulness * 0.2f;
+            float resourcefullnessManaAdjust = 1f - talents.Resourcefulness * 0.2f;
 
             // Improved Steady Shot
 
-            float ISSAimedShotManaAdjust = 1;
-            float ISSArcaneShotManaAdjust = 1;
-            float ISSChimeraShotManaAdjust = 1;
+            float ISSAimedShotManaAdjust = 1f;
+            float ISSArcaneShotManaAdjust = 1f;
+            float ISSChimeraShotManaAdjust = 1f;
 
-            float ISSChimeraShotDamageAdjust = 1;
-            float ISSArcaneShotDamageAdjust = 1;
-            float ISSAimedShotDamageAdjust = 1;
+            float ISSChimeraShotDamageAdjust = 1f;
+            float ISSArcaneShotDamageAdjust = 1f;
+            float ISSAimedShotDamageAdjust = 1f;
 
             float ISSProcChance = 0.05f * talents.ImprovedSteadyShot;
-            if (ISSProcChance > 0)
+            if (ISSProcChance > 0f)
             {                
                 if (calcOpts.useRotationTest)
                 {
-                    ISSChimeraShotDamageAdjust = 1 + rotationTest.ISSChimeraUptime * 0.15f;
-                    ISSArcaneShotDamageAdjust = 1 + rotationTest.ISSArcaneUptime * 0.15f;
-                    ISSAimedShotDamageAdjust = 1 + rotationTest.ISSAimedUptime * 0.15f;
+                    ISSChimeraShotDamageAdjust = 1f + rotationTest.ISSChimeraUptime * 0.15f;
+                    ISSArcaneShotDamageAdjust  = 1f + rotationTest.ISSArcaneUptime * 0.15f;
+                    ISSAimedShotDamageAdjust   = 1f + rotationTest.ISSAimedUptime * 0.15f;
 
-                    ISSChimeraShotManaAdjust = 1 - rotationTest.ISSChimeraUptime * 0.2f;
-                    ISSArcaneShotManaAdjust = 1 - rotationTest.ISSArcaneUptime * 0.2f;
-                    ISSAimedShotManaAdjust = 1 - rotationTest.ISSAimedUptime * 0.2f;
+                    ISSChimeraShotManaAdjust   = 1f - rotationTest.ISSChimeraUptime * 0.2f;
+                    ISSArcaneShotManaAdjust    = 1f - rotationTest.ISSArcaneUptime * 0.2f;
+                    ISSAimedShotManaAdjust     = 1f - rotationTest.ISSAimedUptime * 0.2f;
                 }
                 else
                 {
-                    float ISSRealProcChance = 0; // N120
-                    if (calculatedStats.steadyShot.freq > 0)
+                    float ISSRealProcChance = 0f; // N120
+                    if (calculatedStats.steadyShot.freq > 0f)
                     {
                         float ISSSteadyFreq = calculatedStats.steadyShot.freq;
                         float ISSOtherFreq = calculatedStats.arcaneShot.freq
                                             + calculatedStats.chimeraShot.freq
                                             + calculatedStats.aimedShot.freq;
 
-                        ISSRealProcChance = 1 - (float)Math.Pow(1 - ISSProcChance, ISSOtherFreq / ISSSteadyFreq);
+                        ISSRealProcChance = 1f - (float)Math.Pow(1f - ISSProcChance, ISSOtherFreq / ISSSteadyFreq);
                     }
-                    float ISSProcFreqChimera = ISSRealProcChance > 0 ? calculatedStats.chimeraShot.freq / ISSRealProcChance : 0; // N121
-                    float ISSProcFreqArcane = ISSRealProcChance > 0 ? calculatedStats.arcaneShot.freq / ISSRealProcChance : 0; // N122
-                    float ISSProcFreqAimed = ISSRealProcChance > 0 ? calculatedStats.aimedShot.freq / ISSRealProcChance : 0; // N123
+                    float ISSProcFreqChimera = ISSRealProcChance > 0f ? calculatedStats.chimeraShot.freq / ISSRealProcChance : 0f; // N121
+                    float ISSProcFreqArcane = ISSRealProcChance > 0f ? calculatedStats.arcaneShot.freq / ISSRealProcChance : 0f; // N122
+                    float ISSProcFreqAimed = ISSRealProcChance > 0f ? calculatedStats.aimedShot.freq / ISSRealProcChance : 0f; // N123
 
-                    float ISSProcFreqSumInverse = (ISSProcFreqChimera > 0 ? 1 / ISSProcFreqChimera : 0)
-                                                 + (ISSProcFreqArcane > 0 ? 1 / ISSProcFreqArcane : 0)
-                                                 + (ISSProcFreqAimed > 0 ? 1 / ISSProcFreqAimed : 0);
-                    float ISSProcFreqCombined = ISSProcFreqSumInverse > 0 ? 1 / ISSProcFreqSumInverse : 0; // N124
+                    float ISSProcFreqSumInverse = (ISSProcFreqChimera > 0f ? 1f / ISSProcFreqChimera : 0f)
+                                                 + (ISSProcFreqArcane > 0f ? 1f / ISSProcFreqArcane : 0f)
+                                                 + (ISSProcFreqAimed  > 0f ? 1f / ISSProcFreqAimed : 0f);
+                    float ISSProcFreqCombined = ISSProcFreqSumInverse > 0f ? 1f / ISSProcFreqSumInverse : 0f; // N124
 
-                    ISSChimeraShotDamageAdjust = ISSProcFreqChimera > 0 ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.15f : 1f;
-                    ISSArcaneShotDamageAdjust  = ISSProcFreqArcane  > 0 ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.15f : 1f;
-                    ISSAimedShotDamageAdjust   = ISSProcFreqAimed   > 0 ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.15f : 1f;
+                    ISSChimeraShotDamageAdjust = ISSProcFreqChimera > 0f ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.15f : 1f;
+                    ISSArcaneShotDamageAdjust  = ISSProcFreqArcane  > 0f ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.15f : 1f;
+                    ISSAimedShotDamageAdjust   = ISSProcFreqAimed   > 0f ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.15f : 1f;
 
-                    ISSChimeraShotManaAdjust   = ISSProcFreqChimera > 0 ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.2f : 1f;
-                    ISSArcaneShotManaAdjust    = ISSProcFreqArcane  > 0 ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.2f : 1f;
-                    ISSAimedShotManaAdjust     = ISSProcFreqAimed   > 0 ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.2f : 1f;
+                    ISSChimeraShotManaAdjust   = ISSProcFreqChimera > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.2f : 1f;
+                    ISSArcaneShotManaAdjust    = ISSProcFreqArcane  > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.2f : 1f;
+                    ISSAimedShotManaAdjust     = ISSProcFreqAimed   > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.2f : 1f;
                 }
             }
 
-            float resourcefulnessManaAdjust = 1 - (talents.Resourcefulness * 0.2f);
+            float resourcefulnessManaAdjust = 1f - (talents.Resourcefulness * 0.2f);
 
             #endregion
             #region August 2009 Shot Mana Usage
