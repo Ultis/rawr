@@ -68,6 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="BossHandler\BossPicker.xaml.cs">
+      <DependentUpon>BossPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="BuffsControl.xaml.cs">
       <DependentUpon>BuffsControl.xaml</DependentUpon>
     </Compile>
@@ -198,6 +201,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="BossHandler\BossPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
     <Page Include="BuffsControl.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>

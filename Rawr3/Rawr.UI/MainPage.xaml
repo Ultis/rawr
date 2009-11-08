@@ -194,6 +194,11 @@
     			<controls:TabItem x:Name="OptionsTab" Header="Options">
     				<ScrollViewer x:Name="OptionsView" Margin="0,0,0,0" BorderThickness="0,0,0,0" Padding="0,0,0,0" VerticalScrollBarVisibility="Auto"/>
     			</controls:TabItem>
+    			<controls:TabItem x:Name="BossTab" Header="Boss Handler">
+                    <Grid>
+                        <local:BossPicker x:Name="BossPicker" VerticalAlignment="Stretch" Height="Auto"/>
+                    </Grid>
+                </controls:TabItem>
     		</controls:TabControl>
     	</toolkit:DockPanel>
     	<Button x:Name="OfflineInstallButton" HorizontalAlignment="Right" Content="Install Offline" Margin="0,4,8,4" Grid.Column="0" Click="InstallOffline" Grid.ColumnSpan="4"/>

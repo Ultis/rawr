@@ -553,6 +553,7 @@
             this.CB_Duration.Name = "CB_Duration";
             this.CB_Duration.Size = new System.Drawing.Size(157, 20);
             this.CB_Duration.TabIndex = 71;
+            this.CB_Duration.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.CB_Duration.ThousandsSeparator = true;
             this.CB_Duration.Value = new decimal(new int[] {
             300,
@@ -619,7 +620,7 @@
             this.LB_Under35Perc.Name = "LB_Under35Perc";
             this.LB_Under35Perc.Size = new System.Drawing.Size(157, 26);
             this.LB_Under35Perc.TabIndex = 72;
-            this.LB_Under35Perc.Text = "% of Time Spent HP <35%: *";
+            this.LB_Under35Perc.Text = "% of Time Spent HP 20-35%: *";
             this.LB_Under35Perc.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LB_Under35Perc.ToolTipText = "";
             // 

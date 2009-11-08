@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if RAWR3
+#if RAWR3 || SILVERLIGHT
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -52,7 +52,7 @@ namespace Rawr.Hunter {
             }
         }
 
-        #if RAWR3
+        #if RAWR3 || SILVERLIGHT
             private ICalculationOptionsPanel calculationOptionsPanel = null;
             public override ICalculationOptionsPanel CalculationOptionsPanel
         #else

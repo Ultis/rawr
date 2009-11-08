@@ -529,7 +529,7 @@ namespace Rawr.Hunter
                         }
 
                         Debug.WriteLine(" "+ currentTime + ": " + thisShot + " (" +timeUsed+"/"+castEnd+"/"+onCDUntil + ")");
-                        #if !RAWR3
+                        #if !RAWR3 && !SILVERLIGHT
                         Debug.Flush();
                         #endif
                     }
