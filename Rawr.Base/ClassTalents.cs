@@ -1289,10 +1289,12 @@ namespace Rawr
 @"Increases your chance to get a critical strike with all spells and attacks by 5%.",}, "spell_holy_retributionaura")]
         public int Conviction { get { return _data[58]; } set { _data[58] = value; } }
         /// <summary>
-        /// All melee attacks deal 1 to 3 additional Holy damage.  When used with attacks or abilities that strike a single target, this additional Holy damage will strike up to 2 additional targets.  Lasts 30 min.<br/><br/>Unleashing this Seal's energy will judge an enemy, instantly causing 3 to 4 Holy damage.
+        /// All melee attacks deal 1 to 3 additional Holy damage.  When used with attacks or abilities that strike a single target, this additional Holy damage will strike up to 2 additional targets.  Lasts 30 min. Unleashing this Seal's energy will judge an enemy, instantly causing 3 to 4 Holy damage.
         /// </summary>
         [TalentData(59, "Seal of Command", 1, 2, 3, 3, -1, new string[] {
-@"All melee attacks deal 1 to 3 additional Holy damage.  When used with attacks or abilities that strike a single target, this additional Holy damage will strike up to 2 additional targets.  Lasts 30 min.<br/><br/>Unleashing this Seal's energy will judge an enemy, instantly causing 3 to 4 Holy damage.",}, "ability_warrior_innerrage")]
+@"All melee attacks deal 1 to 3 additional Holy damage.  When used with attacks or abilities that strike a single target, this additional Holy damage will strike up to 2 additional targets.  Lasts 30 min.
+
+Unleashing this Seal's energy will judge an enemy, instantly causing 3 to 4 Holy damage.",}, "ability_warrior_innerrage")]
         public int SealOfCommand { get { return _data[59]; } set { _data[59] = value; } }
         /// <summary>
         /// Reduces the duration of all Disarm effects by [25 * Pts]% and increases movement and mounted movement speed by [15 / 2 * Pts]%.  This does not stack with other movement speed increasing effects.
@@ -1514,10 +1516,16 @@ namespace Rawr
 @"Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by 8%, and increases your speed while mounted by 10%. The mounted movement speed increase does not stack with other effects.",}, "ability_mount_jungletiger")]
         public int Pathfinding { get { return _data[6]; } set { _data[6] = value; } }
         /// <summary>
-        /// Aspect of the Viper - Reduces the damage penalty by 10%.<br/><br/>Aspect of the Monkey - Reduces the damage done to you while active by 5%.<br/><br/>Aspect of the Hawk - Increases the attack power bonus by 30%.<br/><br/>Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Hawk.
+        /// Aspect of the Viper - Reduces the damage penalty by 10%. Aspect of the Monkey - Reduces the damage done to you while active by 5%. Aspect of the Hawk - Increases the attack power bonus by 30%. Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Hawk.
         /// </summary>
         [TalentData(7, "Aspect Mastery", 1, 0, 2, 3, -1, new string[] {
-@"Aspect of the Viper - Reduces the damage penalty by 10%.<br/><br/>Aspect of the Monkey - Reduces the damage done to you while active by 5%.<br/><br/>Aspect of the Hawk - Increases the attack power bonus by 30%.<br/><br/>Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Hawk.",}, "ability_hunter_aspectmastery")]
+@"Aspect of the Viper - Reduces the damage penalty by 10%.
+
+Aspect of the Monkey - Reduces the damage done to you while active by 5%.
+
+Aspect of the Hawk - Increases the attack power bonus by 30%.
+
+Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Hawk.",}, "ability_hunter_aspectmastery")]
         public int AspectMastery { get { return _data[7]; } set { _data[7] = value; } }
         /// <summary>
         /// Increases the damage done by your pets by [3 * Pts]%.
@@ -1865,10 +1873,16 @@ namespace Rawr
 @"Increases your damage done by your shots and the damage done by your pet's special abilities by 5% on marked targets, and increases the critical strike damage bonus of your Aimed Shot, Arcane Shot, Steady Shot, Kill Shot and Chimera Shot by 10%.",}, "ability_hunter_assassinate")]
         public int MarkedForDeath { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
-        /// You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect:<br/><br/>Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting.<br/><br/>Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.<br/><br/>Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.
+        /// You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect: Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting. Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting. Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.
         /// </summary>
         [TalentData(52, "Chimera Shot", 1, 1, 2, 11, -1, new string[] {
-@"You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect:<br/><br/>Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting.<br/><br/>Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.<br/><br/>Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.",}, "ability_hunter_chimerashot2")]
+@"You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect:
+
+Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting.
+
+Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.
+
+Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.",}, "ability_hunter_chimerashot2")]
         public int ChimeraShot { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
         /// While tracking Beasts, Demons, Dragonkin, Elementals, Giants, Humanoids and Undead, all damage done to those types by the Hunter is increased by [1 * Pts]%.
@@ -1912,18 +1926,24 @@ namespace Rawr
 @"When your Frost Trap or Snake Trap are triggered you entrap all afflicted targets, preventing them from moving for 4 sec.",}, "spell_nature_stranglevines")]
         public int Entrapment { get { return _data[57]; } set { _data[57] = value; } }
         /// <summary>
-        /// Frost Trap and Freezing Trap - Increases the duration by [10 * Pts]%.<br/><br/>Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by [10 * Pts]%.<br/><br/>Snake Trap - Increases the number of snakes summoned by [2 * Pts]
+        /// Frost Trap and Freezing Trap - Increases the duration by [10 * Pts]%. Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by [10 * Pts]%. Snake Trap - Increases the number of snakes summoned by [2 * Pts]
         /// </summary>
         [TalentData(58, "Trap Mastery", 3, 2, 3, 2, -1, new string[] {
 @"Frost Trap and Freezing Trap - Increases the duration by 10%.
 
-Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 10%.<br/><br/>Snake Trap - Increases the number of snakes summoned by 2.",
+Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 10%.
+
+Snake Trap - Increases the number of snakes summoned by 2.",
 @"Frost Trap and Freezing Trap - Increases the duration by 20%.
 
-Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 20%.<br/><br/>Snake Trap - Increases the number of snakes summoned by 4.",
+Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 20%.
+
+Snake Trap - Increases the number of snakes summoned by 4.",
 @"Frost Trap and Freezing Trap - Increases the duration by 30%.
 
-Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 30%.<br/><br/>Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare")]
+Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 30%.
+
+Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare")]
         public int TrapMastery { get { return _data[58]; } set { _data[58] = value; } }
         /// <summary>
         /// Reduces all damage taken by [2 * Pts]% and increases the critical strike chance of your Arcane Shot, Steady Shot, and Explosive Shot by [2 * Pts]%.
@@ -5825,14 +5845,64 @@ Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage 
 @"Increases the combat ratings gained from your conjured Firestone and Spellstone by 300%.",}, "inv_ammo_firetar")]
         public int MasterConjuror { get { return _data[42]; } set { _data[42] = value; } }
         /// <summary>
-        /// Grants both the Warlock and the summoned demon an effect as long as that demon is active.<br/><br/>Imp - Increases your Fire damage by [1 * Pts]%, and increases the critical effect chance of your Fire spells by [1 * Pts]%.<br/><br/>Voidwalker - Reduces Physical damage taken by [2 * Pts]%.<br/><br/>Succubus - Increases your Shadow damage by [1 * Pts]%, and increases the critical effect chance of your Shadow spells by [1 * Pts]%.<br/><br/>Felhunter - Reduces all spell damage taken by [2 * Pts]%.<br/><br/>Felguard - Increases all damage done by [1 * Pts]%, and reduces all damage taken by [1 * Pts]%.
+        /// Grants both the Warlock and the summoned demon an effect as long as that demon is active. Imp - Increases your Fire damage by [1 * Pts]%, and increases the critical effect chance of your Fire spells by [1 * Pts]%. Voidwalker - Reduces Physical damage taken by [2 * Pts]%. Succubus - Increases your Shadow damage by [1 * Pts]%, and increases the critical effect chance of your Shadow spells by [1 * Pts]%. Felhunter - Reduces all spell damage taken by [2 * Pts]%. Felguard - Increases all damage done by [1 * Pts]%, and reduces all damage taken by [1 * Pts]%.
         /// </summary>
         [TalentData(43, "Master Demonologist", 5, 1, 2, 6, 39, new string[] {
-@"Grants both the Warlock and the summoned demon an effect as long as that demon is active.<br/><br/>Imp - Increases your Fire damage by 1%, and increases the critical effect chance of your Fire spells by 1%.<br/><br/>Voidwalker - Reduces Physical damage taken by 2%.<br/><br/>Succubus - Increases your Shadow damage by 1%, and increases the critical effect chance of your Shadow spells by 1%.<br/><br/>Felhunter - Reduces all spell damage taken by 2%.<br/><br/>Felguard - Increases all damage done by 1%, and reduces all damage taken by 1%.",
-@"Grants both the Warlock and the summoned demon an effect as long as that demon is active.<br/><br/>Imp - Increases your Fire damage by 2%, and increases the critical effect chance of your Fire spells by 2%.<br/><br/>Voidwalker - Reduces Physical damage taken by 4%.<br/><br/>Succubus - Increases your Shadow damage by 2%, and increases the critical effect chance of your Shadow spells by 2%.<br/><br/>Felhunter - Reduces all spell damage taken by 4%.<br/><br/>Felguard - Increases all damage done by 2%, and reduces all damage taken by 2%.",
-@"Grants both the Warlock and the summoned demon an effect as long as that demon is active.<br/><br/>Imp - Increases your Fire damage by 3%, and increases the critical effect chance of your Fire spells by 3%.<br/><br/>Voidwalker - Reduces Physical damage taken by 6%.<br/><br/>Succubus - Increases your Shadow damage by 3%, and increases the critical effect chance of your Shadow spells by 3%.<br/><br/>Felhunter - Reduces all spell damage taken by 6%.<br/><br/>Felguard - Increases all damage done by 3%, and reduces all damage taken by 3%.",
-@"Grants both the Warlock and the summoned demon an effect as long as that demon is active.<br/><br/>Imp - Increases your Fire damage by 4%, and increases the critical effect chance of your Fire spells by 4%.<br/><br/>Voidwalker - Reduces Physical damage taken by 8%.<br/><br/>Succubus - Increases your Shadow damage by 4%, and increases the critical effect chance of your Shadow spells by 4%.<br/><br/>Felhunter - Reduces all spell damage taken by 8%.<br/><br/>Felguard - Increases all damage done by 4%, and reduces all damage taken by 4%.",
-@"Grants both the Warlock and the summoned demon an effect as long as that demon is active.<br/><br/>Imp - Increases your Fire damage by 5%, and increases the critical effect chance of your Fire spells by 5%.<br/><br/>Voidwalker - Reduces Physical damage taken by 10%.<br/><br/>Succubus - Increases your Shadow damage by 5%, and increases the critical effect chance of your Shadow spells by 5%.<br/><br/>Felhunter - Reduces all spell damage taken by 10%.<br/><br/>Felguard - Increases all damage done by 5%, and reduces all damage taken by 5%.",}, "spell_shadow_shadowpact")]
+@"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
+
+Imp - Increases your Fire damage by 1%, and increases the critical effect chance of your Fire spells by 1%.
+
+Voidwalker - Reduces Physical damage taken by 2%.
+
+Succubus - Increases your Shadow damage by 1%, and increases the critical effect chance of your Shadow spells by 1%.
+
+Felhunter - Reduces all spell damage taken by 2%.
+
+Felguard - Increases all damage done by 1%, and reduces all damage taken by 1%.",
+@"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
+
+Imp - Increases your Fire damage by 2%, and increases the critical effect chance of your Fire spells by 2%.
+
+Voidwalker - Reduces Physical damage taken by 4%.
+
+Succubus - Increases your Shadow damage by 2%, and increases the critical effect chance of your Shadow spells by 2%.
+
+Felhunter - Reduces all spell damage taken by 4%.
+
+Felguard - Increases all damage done by 2%, and reduces all damage taken by 2%.",
+@"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
+
+Imp - Increases your Fire damage by 3%, and increases the critical effect chance of your Fire spells by 3%.
+
+Voidwalker - Reduces Physical damage taken by 6%.
+
+Succubus - Increases your Shadow damage by 3%, and increases the critical effect chance of your Shadow spells by 3%.
+
+Felhunter - Reduces all spell damage taken by 6%.
+
+Felguard - Increases all damage done by 3%, and reduces all damage taken by 3%.",
+@"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
+
+Imp - Increases your Fire damage by 4%, and increases the critical effect chance of your Fire spells by 4%.
+
+Voidwalker - Reduces Physical damage taken by 8%.
+
+Succubus - Increases your Shadow damage by 4%, and increases the critical effect chance of your Shadow spells by 4%.
+
+Felhunter - Reduces all spell damage taken by 8%.
+
+Felguard - Increases all damage done by 4%, and reduces all damage taken by 4%.",
+@"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
+
+Imp - Increases your Fire damage by 5%, and increases the critical effect chance of your Fire spells by 5%.
+
+Voidwalker - Reduces Physical damage taken by 10%.
+
+Succubus - Increases your Shadow damage by 5%, and increases the critical effect chance of your Shadow spells by 5%.
+
+Felhunter - Reduces all spell damage taken by 10%.
+
+Felguard - Increases all damage done by 5%, and reduces all damage taken by 5%.",}, "spell_shadow_shadowpact")]
         public int MasterDemonologist { get { return _data[43]; } set { _data[43] = value; } }
         /// <summary>
         /// Your Shadow spells and damage over time effects have a [5 * Pts]% chance to increase the damage of your Fire spells by 10% for 12 sec.
@@ -5851,10 +5921,20 @@ Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage 
 @"Reduces the chance you'll be critically hit by melee and spells by 3% and reduces all damage your summoned demon takes by 15%.",}, "spell_shadow_demonicfortitude")]
         public int DemonicResilience { get { return _data[45]; } set { _data[45] = value; } }
         /// <summary>
-        /// Grants the Warlock's summoned demon Empowerment.<br/><br/>Imp - Increases the Imp's spell critical strike chance by 20% for 30 sec.<br/><br/>Voidwalker - Increases the Voidwalker's health by 20%, and its threat generated from spells and attacks by 20% for 20 sec.<br/><br/>Succubus - Instantly vanishes, causing the Succubus to go into an improved Invisibility state. The vanish effect removes all stuns, snares and movement impairing effects from the Succubus.<br/><br/>Felhunter - Dispels all magical effects from the Felhunter.<br/><br/>Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, snare and movement impairing effects and makes your Felguard immune to them for 15 sec.
+        /// Grants the Warlock's summoned demon Empowerment. Imp - Increases the Imp's spell critical strike chance by 20% for 30 sec. Voidwalker - Increases the Voidwalker's health by 20%, and its threat generated from spells and attacks by 20% for 20 sec. Succubus - Instantly vanishes, causing the Succubus to go into an improved Invisibility state. The vanish effect removes all stuns, snares and movement impairing effects from the Succubus. Felhunter - Dispels all magical effects from the Felhunter. Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, snare and movement impairing effects and makes your Felguard immune to them for 15 sec.
         /// </summary>
         [TalentData(46, "Demonic Empowerment", 1, 1, 2, 7, 43, new string[] {
-@"Grants the Warlock's summoned demon Empowerment.<br/><br/>Imp - Increases the Imp's spell critical strike chance by 20% for 30 sec.<br/><br/>Voidwalker - Increases the Voidwalker's health by 20%, and its threat generated from spells and attacks by 20% for 20 sec.<br/><br/>Succubus - Instantly vanishes, causing the Succubus to go into an improved Invisibility state. The vanish effect removes all stuns, snares and movement impairing effects from the Succubus.<br/><br/>Felhunter - Dispels all magical effects from the Felhunter.<br/><br/>Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, snare and movement impairing effects and makes your Felguard immune to them for 15 sec.",}, "ability_warlock_demonicempowerment")]
+@"Grants the Warlock's summoned demon Empowerment.
+
+Imp - Increases the Imp's spell critical strike chance by 20% for 30 sec.
+
+Voidwalker - Increases the Voidwalker's health by 20%, and its threat generated from spells and attacks by 20% for 20 sec.
+
+Succubus - Instantly vanishes, causing the Succubus to go into an improved Invisibility state. The vanish effect removes all stuns, snares and movement impairing effects from the Succubus.
+
+Felhunter - Dispels all magical effects from the Felhunter.
+
+Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, snare and movement impairing effects and makes your Felguard immune to them for 15 sec.",}, "ability_warlock_demonicempowerment")]
         public int DemonicEmpowerment { get { return _data[46]; } set { _data[46] = value; } }
         /// <summary>
         /// Increases your spell damage by an amount equal to [4 * Pts]% of the total of your active demon's Stamina plus Intellect.
@@ -6290,10 +6370,12 @@ Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage 
 @"Increases your chance to hit with all spells by 4% and reduces your damage taken from all spells by 6%.",}, "ability_druid_balanceofpower")]
         public int BalanceOfPower { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
-        /// Shapeshift into Moonkin Form.  While in this form the armor contribution from items is increased by 370%, damage taken while stunned is reduced by 15%, and all party and raid members within 45 yards have their spell critical chance increased by 5%.  Single target spell critical strikes in this form have a chance to instantly regenerate 2% of your total mana.  The Moonkin can only cast Balance and Remove Curse spells while shapeshifted.<br/><br/>The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.
+        /// Shapeshift into Moonkin Form.  While in this form the armor contribution from items is increased by 370%, damage taken while stunned is reduced by 15%, and all party and raid members within 45 yards have their spell critical chance increased by 5%.  Single target spell critical strikes in this form have a chance to instantly regenerate 2% of your total mana.  The Moonkin can only cast Balance and Remove Curse spells while shapeshifted. The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.
         /// </summary>
         [TalentData(17, "Moonkin Form", 1, 0, 2, 7, -1, new string[] {
-@"Shapeshift into Moonkin Form.  While in this form the armor contribution from items is increased by 370%, damage taken while stunned is reduced by 15%, and all party and raid members within 45 yards have their spell critical chance increased by 5%.  Single target spell critical strikes in this form have a chance to instantly regenerate 2% of your total mana.  The Moonkin can only cast Balance and Remove Curse spells while shapeshifted.<br/><br/>The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.",}, "spell_nature_forceofnature")]
+@"Shapeshift into Moonkin Form.  While in this form the armor contribution from items is increased by 370%, damage taken while stunned is reduced by 15%, and all party and raid members within 45 yards have their spell critical chance increased by 5%.  Single target spell critical strikes in this form have a chance to instantly regenerate 2% of your total mana.  The Moonkin can only cast Balance and Remove Curse spells while shapeshifted.
+
+The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.",}, "spell_nature_forceofnature")]
         public int MoonkinForm { get { return _data[17]; } set { _data[17] = value; } }
         /// <summary>
         /// Your Moonkin Aura also causes affected targets to gain [1 * Pts]% haste and you to gain [10 * Pts]% of your spirit as additional spell damage.
@@ -6471,10 +6553,14 @@ Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage 
 @"Increases the stun duration of your Bash and Pounce abilities by 1 sec and decreases the cooldown of Bash by 30 sec.",}, "ability_druid_bash")]
         public int BrutalImpact { get { return _data[40]; } set { _data[40] = value; } }
         /// <summary>
-        /// Teaches Feral Charge (Bear) and Feral Charge (Cat).<br/><br/>Feral Charge (Bear) - Causes you to charge an enemy, immobilizing and interrupting any spell being cast for 4 sec. This ability can be used in Bear Form and Dire Bear Form. 15 second cooldown.<br/><br/>Feral Charge (Cat) - Causes you to leap behind an enemy, dazing them for 3 sec. 30 second cooldown.
+        /// Teaches Feral Charge (Bear) and Feral Charge (Cat). Feral Charge (Bear) - Causes you to charge an enemy, immobilizing and interrupting any spell being cast for 4 sec. This ability can be used in Bear Form and Dire Bear Form. 15 second cooldown. Feral Charge (Cat) - Causes you to leap behind an enemy, dazing them for 3 sec. 30 second cooldown.
         /// </summary>
         [TalentData(41, "Feral Charge", 1, 1, 3, 5, -1, new string[] {
-@"Teaches Feral Charge (Bear) and Feral Charge (Cat).<br/><br/>Feral Charge (Bear) - Causes you to charge an enemy, immobilizing and interrupting any spell being cast for 4 sec. This ability can be used in Bear Form and Dire Bear Form. 15 second cooldown.<br/><br/>Feral Charge (Cat) - Causes you to leap behind an enemy, dazing them for 3 sec. 30 second cooldown.",}, "ability_hunter_pet_bear")]
+@"Teaches Feral Charge (Bear) and Feral Charge (Cat).
+
+Feral Charge (Bear) - Causes you to charge an enemy, immobilizing and interrupting any spell being cast for 4 sec. This ability can be used in Bear Form and Dire Bear Form. 15 second cooldown.
+
+Feral Charge (Cat) - Causes you to leap behind an enemy, dazing them for 3 sec. 30 second cooldown.",}, "ability_hunter_pet_bear")]
         public int FeralCharge { get { return _data[41]; } set { _data[41] = value; } }
         /// <summary>
         /// Increases your healing spells by up to [35 * Pts]% of your Agility, and increases healing done to you by [10 * Pts]% while in Cat form.
@@ -6593,10 +6679,12 @@ Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage 
 @"Grants the periodic damage from your Lacerate and Rip abilities the ability to critically hit.",}, "ability_druid_rake")]
         public int PrimalGore { get { return _data[56]; } set { _data[56] = value; } }
         /// <summary>
-        /// When activated, this ability causes your Mangle (Bear) ability to hit up to 3 targets and have no cooldown, and reduces the energy cost of all your Cat Form abilities by 50%.  Lasts 15 sec.  You cannot use Tiger's Fury while Berserk is active. <br/><br/>Clears the effect of Fear and makes you immune to Fear for the duration.
+        /// When activated, this ability causes your Mangle (Bear) ability to hit up to 3 targets and have no cooldown, and reduces the energy cost of all your Cat Form abilities by 50%.  Lasts 15 sec.  You cannot use Tiger's Fury while Berserk is active.  Clears the effect of Fear and makes you immune to Fear for the duration.
         /// </summary>
         [TalentData(57, "Berserk", 1, 1, 2, 11, -1, new string[] {
-@"When activated, this ability causes your Mangle (Bear) ability to hit up to 3 targets and have no cooldown, and reduces the energy cost of all your Cat Form abilities by 50%.  Lasts 15 sec.  You cannot use Tiger's Fury while Berserk is active. <br/><br/>Clears the effect of Fear and makes you immune to Fear for the duration.",}, "ability_druid_berserk")]
+@"When activated, this ability causes your Mangle (Bear) ability to hit up to 3 targets and have no cooldown, and reduces the energy cost of all your Cat Form abilities by 50%.  Lasts 15 sec.  You cannot use Tiger's Fury while Berserk is active.
+
+Clears the effect of Fear and makes you immune to Fear for the duration.",}, "ability_druid_berserk")]
         public int Berserk { get { return _data[57]; } set { _data[57] = value; } }
         /// <summary>
         /// Increases the effects of your Mark of the Wild and Gift of the Wild spells by [20 * Pts]%, and increases all of your total attributes by [1 * Pts]%.
@@ -6664,11 +6752,26 @@ Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage 
 @"Each of the Druid's damage, healing spells and auto attacks has a chance of causing the caster to enter a Clearcasting state.  The Clearcasting state reduces the Mana, Rage or Energy cost of your next damage, healing spell or offensive ability by 100%.",}, "spell_nature_crystalball")]
         public int OmenOfClarity { get { return _data[65]; } set { _data[65] = value; } }
         /// <summary>
-        /// Grants an effect which lasts while the Druid is within the respective shapeshift form.<br/><br/>Bear Form - Increases physical damage by [2 * Pts]%.<br/><br/>Cat Form - Increases critical strike chance by [2 * Pts]%.<br/><br/>Moonkin Form - Increases spell damage by [2 * Pts]%.<br/><br/>Tree of Life Form - Increases healing by [2 * Pts]%.
+        /// Grants an effect which lasts while the Druid is within the respective shapeshift form. Bear Form - Increases physical damage by [2 * Pts]%. Cat Form - Increases critical strike chance by [2 * Pts]%. Moonkin Form - Increases spell damage by [2 * Pts]%. Tree of Life Form - Increases healing by [2 * Pts]%.
         /// </summary>
         [TalentData(66, "Master Shapeshifter", 2, 2, 3, 3, 63, new string[] {
-@"Grants an effect which lasts while the Druid is within the respective shapeshift form.<br/><br/>Bear Form - Increases physical damage by 2%.<br/><br/>Cat Form - Increases critical strike chance by 2%.<br/><br/>Moonkin Form - Increases spell damage by 2%.<br/><br/>Tree of Life Form - Increases healing by 2%.",
-@"Grants an effect which lasts while the Druid is within the respective shapeshift form.<br/><br/>Bear Form - Increases physical damage by 4%.<br/><br/>Cat Form - Increases critical strike chance by 4%.<br/><br/>Moonkin Form - Increases spell damage by 4%.<br/><br/>Tree of Life Form - Increases healing by 4%.",}, "ability_druid_mastershapeshifter")]
+@"Grants an effect which lasts while the Druid is within the respective shapeshift form.
+
+Bear Form - Increases physical damage by 2%.
+
+Cat Form - Increases critical strike chance by 2%.
+
+Moonkin Form - Increases spell damage by 2%.
+
+Tree of Life Form - Increases healing by 2%.",
+@"Grants an effect which lasts while the Druid is within the respective shapeshift form.
+
+Bear Form - Increases physical damage by 4%.
+
+Cat Form - Increases critical strike chance by 4%.
+Moonkin Form - Increases spell damage by 4%.
+
+Tree of Life Form - Increases healing by 4%.",}, "ability_druid_mastershapeshifter")]
         public int MasterShapeshifter { get { return _data[66]; } set { _data[66] = value; } }
         /// <summary>
         /// Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by [2 * Pts]%.
@@ -6777,10 +6880,12 @@ Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage 
 @"Your Rejuvenation and Wild Growth spells have a 15% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",}, "ability_druid_replenish")]
         public int Revitalize { get { return _data[79]; } set { _data[79] = value; } }
         /// <summary>
-        /// Reduces the mana cost of your healing over time spells by 20% and grants the ability to shapeshift into the Tree of Life. While in this form you increase healing received by 6% for all party and raid members within 45 yards, and you can only cast Restoration spells in addition to Innervate, Barkskin, Nature's Grasp and Thorns spells.<br/><br/>The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.
+        /// Reduces the mana cost of your healing over time spells by 20% and grants the ability to shapeshift into the Tree of Life. While in this form you increase healing received by 6% for all party and raid members within 45 yards, and you can only cast Restoration spells in addition to Innervate, Barkskin, Nature's Grasp and Thorns spells. The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.
         /// </summary>
         [TalentData(80, "Tree of Life", 1, 2, 2, 9, 77, new string[] {
-@"Reduces the mana cost of your healing over time spells by 20% and grants the ability to shapeshift into the Tree of Life. While in this form you increase healing received by 6% for all party and raid members within 45 yards, and you can only cast Restoration spells in addition to Innervate, Barkskin, Nature's Grasp and Thorns spells.<br/><br/>The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.",}, "ability_druid_treeoflife")]
+@"Reduces the mana cost of your healing over time spells by 20% and grants the ability to shapeshift into the Tree of Life. While in this form you increase healing received by 6% for all party and raid members within 45 yards, and you can only cast Restoration spells in addition to Innervate, Barkskin, Nature's Grasp and Thorns spells.
+
+The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.",}, "ability_druid_treeoflife")]
         public int TreeOfLife { get { return _data[80]; } set { _data[80] = value; } }
         /// <summary>
         /// Increases your armor contribution from items while in Tree of Life Form by [200 / 3 * Pts]%, and increases your healing spell power by [5 * Pts]% of your spirit while in Tree of Life Form.
