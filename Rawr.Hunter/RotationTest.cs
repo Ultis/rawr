@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace Rawr.HunterSE
+namespace Rawr.Hunter
 {
     class RotationTest
     {
         // passed in by the caller
         private Character character;
-        private CharacterCalculationsHunterSE calculatedStats;
-        private CalculationOptionsHunterSE options;
+        private CharacterCalculationsHunter calculatedStats;
+        private CalculationOptionsHunter options;
 
         // used for calculation
         private Dictionary<Shots, RotationShotInfo> shotData;
@@ -30,7 +30,7 @@ namespace Rawr.HunterSE
         public float IAotHTime = 0;
         public float IAotHUptime = 0;
  
-        public RotationTest(Character character, CharacterCalculationsHunterSE calculatedStats, CalculationOptionsHunterSE options)
+        public RotationTest(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options)
         {
             this.character = character;
             this.options = options;

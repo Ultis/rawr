@@ -8,11 +8,11 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using Rawr.CustomControls;
 
-namespace Rawr.HunterSE
+namespace Rawr.Hunter
 {
-    public partial class PetBuffSelectorSE : UserControl
+    public partial class PetBuffSelector : UserControl
     {
-        public PetBuffSelectorSE()
+        public PetBuffSelector()
         {
             InitializeComponent();
             if (!this.DesignMode)
@@ -24,7 +24,7 @@ namespace Rawr.HunterSE
             }
         }
 
-        private CalculationOptionsHunterSE options;
+        private CalculationOptionsHunter options;
         private bool _loadingBuffs = false;
         private Character _character = null;
 
@@ -42,7 +42,7 @@ namespace Rawr.HunterSE
                 if (_character != null)
                 {
                     _character.CalculationsInvalidated += new EventHandler(Character_ItemsChanged);
-                    options = character.CalculationOptions as CalculationOptionsHunterSE;
+                    options = character.CalculationOptions as CalculationOptionsHunter;
                     LoadBuffsFromOptions();
                 }
 
@@ -59,7 +59,7 @@ namespace Rawr.HunterSE
             this.CheckBoxes.Clear();
             this.SuspendLayout();
 
-            List<Buff> buffs = CalculationsHunterSE.RelevantPetBuffs;
+            List<Buff> buffs = CalculationsHunter.RelevantPetBuffs;
 
             foreach (Buff buff in buffs)
             {
@@ -188,7 +188,7 @@ namespace Rawr.HunterSE
 
         private Buff GetParentBuff(Buff childBuff)
         {
-            foreach (Buff parentBuff in CalculationsHunterSE.RelevantPetBuffs)
+            foreach (Buff parentBuff in CalculationsHunter.RelevantPetBuffs)
                 if (parentBuff.Improvements.Contains(childBuff))
                     return parentBuff;
             return null;

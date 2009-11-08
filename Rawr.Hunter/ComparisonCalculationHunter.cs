@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.HunterSE
+namespace Rawr.Hunter
 {
-    public class ComparisonCalculationHunterSE : ComparisonCalculationBase
+    public class ComparisonCalculationHunter : ComparisonCalculationBase
     {
         private string _name = string.Empty;
         public override string Name

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace Rawr.HunterSE
+namespace Rawr.Hunter
 {
-    public class CharacterCalculationsHunterSE : CharacterCalculationsBase
+    public class CharacterCalculationsHunter : CharacterCalculationsBase
     {
 		private float _overallPoints = 0f;
 		private float[] _subPoints = new float[] { 0f,0f };
@@ -15,7 +15,7 @@ namespace Rawr.HunterSE
         private float _wildQuiverDPS;
         private float _customDPS;
         public Character character = null;
-        private CalculationOptionsHunterSE calcOpts = null;
+        private CalculationOptionsHunter calcOpts = null;
         //Drizz: Added
         private double _piercingShotsDPS;
         private double _piercingShotsDPSSteadyShot;
@@ -316,7 +316,7 @@ namespace Rawr.HunterSE
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
             //string format = "";
-            calcOpts = character.CalculationOptions as CalculationOptionsHunterSE;
+            calcOpts = character.CalculationOptions as CalculationOptionsHunter;
 
             // Basic Stats
             dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +

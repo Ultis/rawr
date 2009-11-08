@@ -1,6 +1,6 @@
-﻿namespace Rawr.HunterSE
+﻿namespace Rawr.Hunter
 {
-    partial class CalculationOptionsPanelHunterSE
+    partial class CalculationOptionsPanelHunter
     {
         /// <summary> 
         /// Required designer variable.
@@ -2791,12 +2791,12 @@
             this.flowLayoutPanel2.Size = new System.Drawing.Size(286, 641);
             this.flowLayoutPanel2.TabIndex = 2;
             // 
-            // CalculationOptionsPanelHunterSE
+            // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.Tabs);
-            this.Name = "CalculationOptionsPanelHunterSE";
+            this.Name = "CalculationOptionsPanelHunter";
             this.Size = new System.Drawing.Size(300, 700);
             this.Resize += new System.EventHandler(this.CalculationOptionsPanelHunter_Resize);
             this.Page_03_PetTalents.ResumeLayout(false);

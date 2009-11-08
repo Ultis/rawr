@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace Rawr.HunterSE
+namespace Rawr.Hunter
 {
     public class PetSkill
     {
@@ -35,7 +35,7 @@ namespace Rawr.HunterSE
     public class PetSkillPriorityRotation
     {
         public List<PetSkillInstance> skills = new List<PetSkillInstance>();
-        private CalculationOptionsHunterSE options;
+        private CalculationOptionsHunter options;
         private Character character;
 
         private static Dictionary<PetAttacks, PetSkill> skillLibrary = new Dictionary<PetAttacks, PetSkill>() 
@@ -105,7 +105,7 @@ namespace Rawr.HunterSE
             {PetAttacks.CallOfTheWild, new PetSkill(false, 300, 0, PetSkillType.NonDamaging)},
         };
 
-        public PetSkillPriorityRotation(Character character, CalculationOptionsHunterSE options)
+        public PetSkillPriorityRotation(Character character, CalculationOptionsHunter options)
         {
             this.character = character;
             this.options = options;

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace Rawr.HunterSE {
+namespace Rawr.Hunter {
     public class ShotPriority {
         public ShotData[] priorities = new ShotData[10];
 
-        public CalculationOptionsHunterSE options;
+        public CalculationOptionsHunter options;
 
         public bool chimeraRefreshesSerpent = false;
         public bool chimeraRefreshesViper = false;
@@ -25,7 +25,7 @@ namespace Rawr.HunterSE {
         public float DPS = 0f;
         public float MPS = 0f;
 
-        public ShotPriority(CalculationOptionsHunterSE options) { this.options = options; }
+        public ShotPriority(CalculationOptionsHunter options) { this.options = options; }
 
         public void validateShots(HunterTalents hunterTalents) { 
             // check each shot in the priority is allowed to be there.

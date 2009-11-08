@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace Rawr.HunterSE
+namespace Rawr.Hunter
 {   
     public class PetCalculations
     {
     
         Character character;
-        CharacterCalculationsHunterSE calculatedStats;
-        CalculationOptionsHunterSE options;
+        CharacterCalculationsHunter calculatedStats;
+        CalculationOptionsHunter options;
         Stats statsBuffs;
         Stats statsHunterBuffs;
         Stats statsGear;
@@ -27,7 +27,7 @@ namespace Rawr.HunterSE
         private float critSpecialsAdjust;
         private bool isWearingBeastTamersShoulders;
 
-        public PetCalculations(Character character, CharacterCalculationsHunterSE calculatedStats, CalculationOptionsHunterSE options, Stats statsHunterBuffs, Stats statsBuffs, Stats statsGear)
+        public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, Stats statsHunterBuffs, Stats statsBuffs, Stats statsGear)
         {
             this.character = character;
             this.calculatedStats = calculatedStats;

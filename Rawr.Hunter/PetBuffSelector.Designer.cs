@@ -1,6 +1,6 @@
-﻿namespace Rawr.HunterSE
+﻿namespace Rawr.Hunter
 {
-    partial class PetBuffSelectorSE
+    partial class PetBuffSelector
     {
         /// <summary> 
         /// Required designer variable.

@@ -8,8 +8,8 @@
     <ProjectGuid>{0E323270-4A3A-49F9-872D-E35BB77EBCE3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rawr.HunterSE</RootNamespace>
-    <AssemblyName>Rawr.HunterSE</AssemblyName>
+    <RootNamespace>Rawr.Hunter</RootNamespace>
+    <AssemblyName>Rawr.Hunter</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>

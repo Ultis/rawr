@@ -7,18 +7,18 @@ using System.Text;
 using System.Windows.Forms;
 using System.Collections;
 
-namespace Rawr.HunterSE
+namespace Rawr.Hunter
 {
-    public partial class CalculationOptionsPanelHunterSE : CalculationOptionsPanelBase
+    public partial class CalculationOptionsPanelHunter : CalculationOptionsPanelBase
     {
         #region Instance Variables
         private bool isLoading = false;
-		private CalculationOptionsHunterSE CalcOpts = null;
-        private PetBuffSelectorSE petBuffSelector = null;
+		private CalculationOptionsHunter CalcOpts = null;
+        private PetBuffSelector petBuffSelector = null;
         #endregion
 
         #region Constructors
-        public CalculationOptionsPanelHunterSE()
+        public CalculationOptionsPanelHunter()
         {
             isLoading = true;
             InitializeComponent();
@@ -27,7 +27,7 @@ namespace Rawr.HunterSE
             CB_Duration.Maximum = 60 * 20; // 20 minutes
 
             // The PetBuffSelector doesn't work in the designer. bah
-            petBuffSelector = new PetBuffSelectorSE();
+            petBuffSelector = new PetBuffSelector();
             petBuffSelector.character = Character;
 
             Page_04_PetBuffs.Controls.Add(petBuffSelector);
@@ -79,10 +79,10 @@ namespace Rawr.HunterSE
             if (Character != null && Character.CalculationOptions == null)
             {
                 // If it's broke, make a new one with the defaults
-                Character.CalculationOptions = new CalculationOptionsHunterSE();
+                Character.CalculationOptions = new CalculationOptionsHunter();
                 isLoading = true;
             }
-            CalcOpts = Character.CalculationOptions as CalculationOptionsHunterSE;
+            CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
             for (int i = 0; i < CB_TargetLevel.Items.Count; i++)
             {
                 if (CB_TargetLevel.Items[i] as string == CalcOpts.TargetLevel.ToString())
@@ -93,11 +93,11 @@ namespace Rawr.HunterSE
             }
 
             // Hiding Gear based on Bad Stats
-            CK_HideSplGear.Checked = CalcOpts.HideBadItems_Spl; CalculationsHunterSE.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
-            CK_HidePvPGear.Checked = CalcOpts.HideBadItems_PvP; CalculationsHunterSE.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
+            CK_HideSplGear.Checked = CalcOpts.HideBadItems_Spl; CalculationsHunter.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
+            CK_HidePvPGear.Checked = CalcOpts.HideBadItems_PvP; CalculationsHunter.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
             // Hiding Enchants based on Profession
             CK_HideProfEnchants.Checked = CalcOpts.HideProfEnchants;
-            CalculationsHunterSE.HidingBadStuff_Prof = CalcOpts.HideProfEnchants;
+            CalculationsHunter.HidingBadStuff_Prof = CalcOpts.HideProfEnchants;
             CB_Prof1.Enabled = CK_HideProfEnchants.Checked;
             CB_Prof2.Enabled = CK_HideProfEnchants.Checked;
             CB_Prof1.Text = ProfessionToString(Character.PrimaryProfession);
@@ -1060,9 +1060,9 @@ namespace Rawr.HunterSE
         {
             if (!isLoading)
             {
-                CalculationOptionsHunterSE calcOpts = Character.CalculationOptions as CalculationOptionsHunterSE;
+                CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
                 calcOpts.HideBadItems_Spl = CK_HideSplGear.Checked;
-                CalculationsHunterSE.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
+                CalculationsHunter.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
                 ItemCache.OnItemsChanged();
                 Character.OnCalculationsInvalidated();
             }
@@ -1071,9 +1071,9 @@ namespace Rawr.HunterSE
         {
             if (!isLoading)
             {
-                CalculationOptionsHunterSE calcOpts = Character.CalculationOptions as CalculationOptionsHunterSE;
+                CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
                 calcOpts.HideBadItems_PvP = CK_HidePvPGear.Checked;
-                CalculationsHunterSE.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
+                CalculationsHunter.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
                 ItemCache.OnItemsChanged();
                 Character.OnCalculationsInvalidated();
             }
@@ -1081,10 +1081,10 @@ namespace Rawr.HunterSE
         // Hiding Enchants based on Profession
         private void CK_HideProfEnchants_CheckedChanged(object sender, EventArgs e) {
             if (!isLoading) {
-                CalculationOptionsHunterSE calcOpts = Character.CalculationOptions as CalculationOptionsHunterSE;
+                CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
                 bool Checked = CK_HideProfEnchants.Checked;
                 calcOpts.HideProfEnchants = Checked;
-                CalculationsHunterSE.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
+                CalculationsHunter.HidingBadStuff_Prof = calcOpts.HideProfEnchants;
                 CB_Prof1.Enabled = Checked;
                 CB_Prof2.Enabled = Checked;
                 Character.OnCalculationsInvalidated();

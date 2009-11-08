@@ -10,9 +10,9 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
 
-namespace Rawr.HunterSE {
-    [Rawr.Calculations.RawrModelInfo("HunterSE", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
-	public class CalculationsHunterSE : CalculationsBase {
+namespace Rawr.Hunter {
+    [Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
+	public class CalculationsHunter : CalculationsBase {
         #region Variables and Properties
 
         public override List<GemmingTemplate> DefaultGemmingTemplates {
@@ -61,7 +61,7 @@ namespace Rawr.HunterSE {
         #endif
             {
                 get {
-				    return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunterSE());
+				    return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunter());
                 }
             }
 
@@ -183,13 +183,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
         }
 
-        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHunterSE(); }
-        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHunterSE(); }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHunter(); }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHunter(); }
 
 		public override ICalculationOptionBase DeserializeDataObject(string xml) {
-			XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsHunterSE));
+			XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsHunter));
 			StringReader sr = new StringReader(xml);
-			CalculationOptionsHunterSE calcOpts = s.Deserialize(sr) as CalculationOptionsHunterSE;
+			CalculationOptionsHunter calcOpts = s.Deserialize(sr) as CalculationOptionsHunter;
 
             // convert buffs here!
             calcOpts.petActiveBuffs = new List<Buff>(calcOpts._petActiveBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
@@ -576,7 +576,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         public static List<Buff> RelevantPetBuffs {
             get {
                 if (_relevantPetBuffs.Count == 0) {
-                    _relevantPetBuffs = Buff.AllBuffs.FindAll(buff => CalculationsHunterSE.IsPetBuffRelevant(buff));
+                    _relevantPetBuffs = Buff.AllBuffs.FindAll(buff => CalculationsHunter.IsPetBuffRelevant(buff));
                 }
                 return _relevantPetBuffs;
             }
@@ -630,7 +630,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         }
 
         public Stats GetBuffsStats(Character character) {
-            CalculationOptionsHunterSE calcOpts = character.CalculationOptions as CalculationOptionsHunterSE;
+            CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
             List<Buff> removedBuffs = new List<Buff>();
 
             // Draenei should always have this buff activated
@@ -693,7 +693,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         }
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            CharacterCalculationsHunterSE calculations = GetCharacterCalculations(character) as CharacterCalculationsHunterSE;
+            CharacterCalculationsHunter calculations = GetCharacterCalculations(character) as CharacterCalculationsHunter;
 
             switch (chartName)
             {
@@ -827,9 +827,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return new ComparisonCalculationBase[0];
 
         }
-        private ComparisonCalculationHunterSE comparisonFromShotSpammedDPS(ShotData shot)
+        private ComparisonCalculationHunter comparisonFromShotSpammedDPS(ShotData shot)
         {
-            ComparisonCalculationHunterSE comp =  new ComparisonCalculationHunterSE();
+            ComparisonCalculationHunter comp =  new ComparisonCalculationHunter();
 
             float shotWait = shot.duration > shot.cooldown ? shot.duration : shot.cooldown;
             float dps = shotWait > 0 ? (float)(shot.damage / shotWait) : 0;
@@ -840,9 +840,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return comp;
         }
 
-        private ComparisonCalculationHunterSE comparisonFromShotSpammedMPS(ShotData shot)
+        private ComparisonCalculationHunter comparisonFromShotSpammedMPS(ShotData shot)
         {
-            ComparisonCalculationHunterSE comp = new ComparisonCalculationHunterSE();
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
 
             float shotWait = shot.duration > shot.cooldown ? shot.duration : shot.cooldown;
             float mps = shotWait > 0 ? (float)(shot.mana / shotWait) : 0;
@@ -853,27 +853,27 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return comp;
         }
 
-        private ComparisonCalculationHunterSE comparisonFromShotRotationDPS(ShotData shot)
+        private ComparisonCalculationHunter comparisonFromShotRotationDPS(ShotData shot)
         {
-            ComparisonCalculationHunterSE comp = new ComparisonCalculationHunterSE();
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
             comp.Name = Enum.GetName(typeof(Shots), shot.type);
             comp.SubPoints = new float[] { (float)shot.dps };
             comp.OverallPoints = (float)shot.dps;
             return comp;
         }
 
-        private ComparisonCalculationHunterSE comparisonFromShotRotationMPS(ShotData shot)
+        private ComparisonCalculationHunter comparisonFromShotRotationMPS(ShotData shot)
         {
-            ComparisonCalculationHunterSE comp = new ComparisonCalculationHunterSE();
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
             comp.Name = Enum.GetName(typeof(Shots), shot.type);
             comp.SubPoints = new float[] { (float)shot.mps };
             comp.OverallPoints = (float)shot.mps;
             return comp;
         }
 
-        private ComparisonCalculationHunterSE comparisonFromShotDPM(ShotData shot)
+        private ComparisonCalculationHunter comparisonFromShotDPM(ShotData shot)
         {
-            ComparisonCalculationHunterSE comp = new ComparisonCalculationHunterSE();
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
 
             float dpm = shot.mana > 0 ? (float)(shot.damage / shot.mana) : 0;
 
@@ -883,11 +883,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return comp;
         }
 
-        private ComparisonCalculationHunterSE comparisonFromStat(Character character, CharacterCalculationsHunterSE calcBase, Stats stats, string label)
+        private ComparisonCalculationHunter comparisonFromStat(Character character, CharacterCalculationsHunter calcBase, Stats stats, string label)
         {
-            ComparisonCalculationHunterSE comp = new ComparisonCalculationHunterSE();
+            ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
 
-            CharacterCalculationsHunterSE calcStat = GetCharacterCalculations(character, new Item() { Stats = stats }) as CharacterCalculationsHunterSE;
+            CharacterCalculationsHunter calcStat = GetCharacterCalculations(character, new Item() { Stats = stats }) as CharacterCalculationsHunter;
 
             comp.Name = label;
             comp.HunterDpsPoints = calcStat.HunterDpsPoints - calcBase.HunterDpsPoints;
@@ -897,9 +897,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return comp;
         }
 
-        private ComparisonCalculationHunterSE comparisonFromDouble(string label, float value)
+        private ComparisonCalculationHunter comparisonFromDouble(string label, float value)
         {
-            return new ComparisonCalculationHunterSE()
+            return new ComparisonCalculationHunter()
             {
                 Name = label,
                 SubPoints = new float[] { (float)value },
@@ -907,9 +907,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             };
         }
 
-        private ComparisonCalculationHunterSE comparisonFromDoubles(string label, float value1, float value2)
+        private ComparisonCalculationHunter comparisonFromDoubles(string label, float value1, float value2)
         {
-            return new ComparisonCalculationHunterSE()
+            return new ComparisonCalculationHunter()
             {
                 Name = label,
                 SubPoints = new float[] { (float)value1, (float)value2 },
@@ -922,10 +922,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             cacheChar = character;
-            CharacterCalculationsHunterSE calculatedStats = new CharacterCalculationsHunterSE();
+            CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
             if (character == null) { return calculatedStats; }
             calculatedStats.character = character;
-            CalculationOptionsHunterSE calcOpts = character.CalculationOptions as CalculationOptionsHunterSE;
+            CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
             Stats stats = GetCharacterStats(character, additionalItem);
             HunterTalents talents = character.HunterTalents;
 
@@ -2383,8 +2383,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             cacheChar = character;
-            CalculationOptionsHunterSE calcOpts = character.CalculationOptions as CalculationOptionsHunterSE;
-            if (calcOpts == null) { calcOpts = new CalculationOptionsHunterSE(); character.CalculationOptions = calcOpts; }
+            CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
+            if (calcOpts == null) { calcOpts = new CalculationOptionsHunter(); character.CalculationOptions = calcOpts; }
             HunterTalents talents = character.HunterTalents;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
@@ -2401,7 +2401,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 PhysicalHaste = 0.15f, // This is from what Bags used to give that got rolled into the class
             };
             {
-                CharacterCalculationsHunterSE calculatedStats = new CharacterCalculationsHunterSE();
+                CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
                 calculatedStats.priorityRotation = new ShotPriority(calcOpts);
                 calculatedStats.priorityRotation.priorities[0] = getShotByIndex(calcOpts.PriorityIndex1, calculatedStats);
                 calculatedStats.priorityRotation.priorities[1] = getShotByIndex(calcOpts.PriorityIndex2, calculatedStats);
@@ -2579,7 +2579,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float attemptedAtkInterval, float hitRate, float critRate, float bleedHitInterval, float dmgDoneInterval,
             Stats statsTotal, Stats statsToProcess)
         {
-            CalculationOptionsHunterSE calcOpts = Char.CalculationOptions as CalculationOptionsHunterSE;
+            CalculationOptionsHunter calcOpts = Char.CalculationOptions as CalculationOptionsHunter;
             ItemInstance RangeWeap = Char.MainHand;
             float speed = (RangeWeap != null ? RangeWeap.Speed : 2.4f);
             HunterTalents talents = Char.HunterTalents;
@@ -2655,7 +2655,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return time_between_procs > 0 ? duration / time_between_procs : 0;
         }
 
-        private ShotData getShotByIndex(int index, CharacterCalculationsHunterSE calculatedStats)
+        private ShotData getShotByIndex(int index, CharacterCalculationsHunter calculatedStats)
         {
             if (index == 1) return calculatedStats.aimedShot;
             if (index == 2) return calculatedStats.arcaneShot;
@@ -2678,7 +2678,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return null;
         }
 
-        public float GetArmorDamageReduction(CalculationOptionsHunterSE CalcOpts, Character Char, Stats StatS) {
+        public float GetArmorDamageReduction(CalculationOptionsHunter CalcOpts, Character Char, Stats StatS) {
                 float armorReduction;
                 float arpenBuffs = 0.0f;
                 if (CalcOpts == null) {

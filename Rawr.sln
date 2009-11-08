@@ -69,6 +69,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Rawr.vsmdi = Rawr.vsmdi
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Hunter", "Rawr.Hunter\Rawr.Hunter.csproj", "{0E323270-4A3A-49F9-872D-E35BB77EBCE3}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 24
@@ -409,6 +411,18 @@ Global
 		{E3BD9BA4-C2BE-4F01-A447-14C56733CA91}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{E3BD9BA4-C2BE-4F01-A447-14C56733CA91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3BD9BA4-C2BE-4F01-A447-14C56733CA91}.Release|x86.ActiveCfg = Release|Any CPU
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Debug - x86|Any CPU.ActiveCfg = Debug - x86|Any CPU
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Debug - x86|Any CPU.Build.0 = Debug - x86|Any CPU
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Debug - x86|x86.ActiveCfg = Debug - x86|x86
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Debug - x86|x86.Build.0 = Debug - x86|x86
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Debug|x86.ActiveCfg = Debug|x86
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Debug|x86.Build.0 = Debug|x86
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Release|x86.ActiveCfg = Release|x86
+		{0E323270-4A3A-49F9-872D-E35BB77EBCE3}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

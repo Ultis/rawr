@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Rawr.HunterSE
+namespace Rawr.Hunter
 {
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsHunterSE : ICalculationOptionBase
+	public class CalculationOptionsHunter : ICalculationOptionBase
 	{
 		private int _TargetLevel = 83;
 		private int _TargetArmor = 10643; //Wrath boss armor
@@ -228,7 +228,7 @@ namespace Rawr.HunterSE
 		{
             _petActiveBuffsXml = new List<string>(_petActiveBuffs.ConvertAll(buff => buff.Name));
 
-            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsHunterSE));
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsHunter));
 			StringBuilder xml = new StringBuilder();
 			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
 			serializer.Serialize(writer, this);

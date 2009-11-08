@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.HunterSE
+namespace Rawr.Hunter
 {
 	public enum Aspect
 	{
