@@ -1003,7 +1003,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (calculatedStats.priorityRotation.containsShot(Shots.Readiness)) {
                 calculatedStats.rapidFire.cooldown = 157.5f - (30f * talents.RapidKilling);
             } else {
-                calculatedStats.rapidFire.cooldown = (5 - talents.RapidKilling) * 60;
+                calculatedStats.rapidFire.cooldown = (5 - talents.RapidKilling) * 60f;
             }
             calculatedStats.rapidFire.duration = 15;
 
@@ -2416,7 +2416,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.priorityRotation.validateShots(talents);
                 if (calculatedStats.priorityRotation.containsShot(Shots.RapidFire)) {
                     statsOptionsPanel.AddSpecialEffect(new SpecialEffect(Trigger.Use,
-                        new Stats() { PhysicalHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.4f), }, 15, 5 * 60));
+                        new Stats() { PhysicalHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.4f), },
+                        15, (5 - talents.RapidKilling) * 60));
                 }
             }
             Stats statsTalents = new Stats()
