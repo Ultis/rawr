@@ -1947,8 +1947,10 @@ namespace Rawr.Hunter
                                            autoShotDamageAdjust
                                          );
 
-            double hunterAutoDPS = autoShotsPerSecond * autoShotDamageReal
-                                    * (1 - viperDamagePenalty) * tier7ViperDamageAdjust;
+            double hunterAutoDPS = autoShotsPerSecond
+                                 * autoShotDamageReal
+                                 * (1 - viperDamagePenalty)
+                                 * tier7ViperDamageAdjust;
 
             calculatedStats.aspectBeastLostDPS = (0 - QSBaseFreqnecyIncrease) * (1 - aspectUptimeHawk) * hunterAutoDPS;
 
@@ -2197,7 +2199,7 @@ namespace Rawr.Hunter
 
             double chimeraShotSerpentTotalAdjust = chimeraShotSerpentDamageAdjust* talentDamageAdjust* (1 + targetDebuffsNature);
 
-            calculatedStats.chimeraShot.damage += chimeraShotEffect* chimeraShotSerpentTotalAdjust;
+            calculatedStats.chimeraShot.damage += chimeraShotEffect * chimeraShotSerpentTotalAdjust;
             #endregion
             #region August 2009 Arcane Shot
 

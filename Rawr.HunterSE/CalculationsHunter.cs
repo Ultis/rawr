@@ -1103,7 +1103,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.priorityRotation.calculateFrequencies();
                 calculatedStats.priorityRotation.calculateFrequencySums();
             }
-            float autoShotSpeed = rangedWeaponSpeed / calculatedStats.hasteStaticTotal;
+            float autoShotSpeed = rangedWeaponSpeed / (1f + calculatedStats.hasteStaticTotal);
             #endregion
 
             // Hits
@@ -1856,8 +1856,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                            autoShotCritAdjust,
                                                            autoShotDamageAdjust);
 
-            float hunterAutoDPS = autoShotsPerSecond * autoShotDamageReal
-                                * (1f - viperDamagePenalty) * tier7ViperDamageAdjust;
+            float hunterAutoDPS = autoShotsPerSecond
+                                * autoShotDamageReal
+                                * (1f - viperDamagePenalty)
+                                * tier7ViperDamageAdjust;
 
             calculatedStats.aspectBeastLostDPS = (0f - QSBaseFrequencyIncrease) * (1f - aspectUptimeHawk) * hunterAutoDPS;
 
