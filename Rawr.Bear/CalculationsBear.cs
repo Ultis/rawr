@@ -1419,7 +1419,7 @@ the Threat Scale defined on the Options tab.",
 			character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath"));
 			character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood"));
 			character.ActiveBuffs.Add(Buff.GetBuffByName("Agility Food"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Bloodlust"));
+			character.ActiveBuffs.Add(Buff.GetBuffByName("Heroism/Bloodlust"));
 
 			character.DruidTalents.GlyphOfMaul = true;
 			character.DruidTalents.GlyphOfGrowl = true;
