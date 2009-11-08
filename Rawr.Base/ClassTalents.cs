@@ -1915,9 +1915,15 @@ namespace Rawr
         /// Frost Trap and Freezing Trap - Increases the duration by [10 * Pts]%.<br/><br/>Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by [10 * Pts]%.<br/><br/>Snake Trap - Increases the number of snakes summoned by [2 * Pts]
         /// </summary>
         [TalentData(58, "Trap Mastery", 3, 2, 3, 2, -1, new string[] {
-@"Frost Trap and Freezing Trap - Increases the duration by 10%.<br/><br/>Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 10%.<br/><br/>Snake Trap - Increases the number of snakes summoned by 2.",
-@"Frost Trap and Freezing Trap - Increases the duration by 20%.<br/><br/>Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 20%.<br/><br/>Snake Trap - Increases the number of snakes summoned by 4.",
-@"Frost Trap and Freezing Trap - Increases the duration by 30%.<br/><br/>Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 30%.<br/><br/>Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare")]
+@"Frost Trap and Freezing Trap - Increases the duration by 10%.
+
+Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 10%.<br/><br/>Snake Trap - Increases the number of snakes summoned by 2.",
+@"Frost Trap and Freezing Trap - Increases the duration by 20%.
+
+Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 20%.<br/><br/>Snake Trap - Increases the number of snakes summoned by 4.",
+@"Frost Trap and Freezing Trap - Increases the duration by 30%.
+
+Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 30%.<br/><br/>Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare")]
         public int TrapMastery { get { return _data[58]; } set { _data[58] = value; } }
         /// <summary>
         /// Reduces all damage taken by [2 * Pts]% and increases the critical strike chance of your Arcane Shot, Steady Shot, and Explosive Shot by [2 * Pts]%.
