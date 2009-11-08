@@ -1063,7 +1063,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // total hastes
             calculatedStats.hasteStaticTotal = stats.PhysicalHaste;
             // Needed by the rotation test
-            calculatedStats.autoShotStaticSpeed = rangedWeaponSpeed / calculatedStats.hasteStaticTotal;
+            calculatedStats.autoShotStaticSpeed = rangedWeaponSpeed / (1f + calculatedStats.hasteStaticTotal);
             #endregion
             #region Rotation Test
             // Quick shots effect is needed for rotation test
@@ -1093,7 +1093,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Now we have the haste, we can calculate steady shot cast time,
             // then rebuild other various stats.
             // (future enhancement: we only really need to rebuild steady shot)
-            calculatedStats.steadyShot.cooldown = 2f / calculatedStats.hasteStaticTotal;
+            calculatedStats.steadyShot.cooldown = 2f / (1f + calculatedStats.hasteStaticTotal);
             if (calcOpts.useRotationTest) {
                 calculatedStats.priorityRotation.initializeTimings();
                 calculatedStats.priorityRotation.recalculateRatios();
@@ -2327,12 +2327,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
             #region August 2009 Shot Rotation
-
-
             calculatedStats.priorityRotation.viperDamagePenalty = viperDamagePenalty;
             calculatedStats.priorityRotation.calculateRotationDPS();
             calculatedStats.CustomDPS = calculatedStats.priorityRotation.DPS;
-
             #endregion
             #region August 2009 Kill Shot Sub-20% Usage
 
@@ -2341,24 +2338,24 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float steadyShotCurrentFreq = calculatedStats.steadyShot.freq;
 
             float steadyShotNewFreq = steadyShotCurrentFreq;
-            if (killShotCurrentFreq == 0 && steadyShotCurrentFreq > 0 && killShotPossibleFreq > 0)
+            if (killShotCurrentFreq == 0f && steadyShotCurrentFreq > 0f && killShotPossibleFreq > 0f)
             {
-                steadyShotNewFreq = 1 / (1 / steadyShotCurrentFreq - 1 / killShotPossibleFreq);
+                steadyShotNewFreq = 1f / (1f / steadyShotCurrentFreq - 1f / killShotPossibleFreq);
             }
 
             float oldKillShotDPS = calculatedStats.killShot.dps;
-            float newKillShotDPS = killShotPossibleFreq > 0 ? calculatedStats.killShot.damage / killShotPossibleFreq : 0;
-            newKillShotDPS *= (1 - viperDamagePenalty);
+            float newKillShotDPS = killShotPossibleFreq > 0 ? calculatedStats.killShot.damage / killShotPossibleFreq : 0f;
+            newKillShotDPS *= (1f - viperDamagePenalty);
 
             float oldSteadyShotDPS = calculatedStats.steadyShot.dps;
-            float newSteadyShotDPS = steadyShotNewFreq > 0 ? calculatedStats.steadyShot.damage / steadyShotNewFreq : 0;
-            newSteadyShotDPS *= (1 - viperDamagePenalty);
+            float newSteadyShotDPS = steadyShotNewFreq > 0 ? calculatedStats.steadyShot.damage / steadyShotNewFreq : 0f;
+            newSteadyShotDPS *= (1f - viperDamagePenalty);
 
-            float killShotDPSGain = newKillShotDPS > 0 ? (newKillShotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0;
+            float killShotDPSGain = newKillShotDPS > 0f ? (newKillShotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0f;
 
             float timeSpentSubTwenty = 0;
             if (calcOpts.duration > 0 && calcOpts.timeSpentSub20 > 0) timeSpentSubTwenty = (float)calcOpts.timeSpentSub20 / (float)calcOpts.duration;
-            if (calcOpts.bossHPPercentage < 0.2) timeSpentSubTwenty = 1;
+            if (calcOpts.bossHPPercentage < 0.2f) timeSpentSubTwenty = 1f;
 
             float killShotSubGain = timeSpentSubTwenty * killShotDPSGain;
 

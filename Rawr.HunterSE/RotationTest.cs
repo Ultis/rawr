@@ -115,13 +115,13 @@ namespace Rawr.HunterSE
             // we need to adjust rapid fire cooldown, since we accounted for readiness initially
             if (shotData.ContainsKey(Shots.RapidFire))
             {
-                shotData[Shots.RapidFire].cooldown = 300 - (60 * character.HunterTalents.RapidKilling);
+                shotData[Shots.RapidFire].cooldown = 300f - (60f * character.HunterTalents.RapidKilling);
             }
 
             // set Steady Shot cast time so it's only static haste
             if (shotData.ContainsKey(Shots.SteadyShot))
             {
-                shotData[Shots.SteadyShot].castTime = 2 / calculatedStats.hasteStaticTotal;
+                shotData[Shots.SteadyShot].castTime = 2f / (1f + calculatedStats.hasteStaticTotal);
             }
 
             // Set Auto Shot Speed to statically hasted value
