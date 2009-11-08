@@ -122,8 +122,8 @@
             this.BT_Stun = new System.Windows.Forms.Button();
             this.NUD_TargHP = new System.Windows.Forms.NumericUpDown();
             this.LB_TargHP = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.LB_Under20Perc2 = new System.Windows.Forms.Label();
+            this.LB_InBack = new System.Windows.Forms.Label();
             this.LB_Freq2 = new System.Windows.Forms.Label();
             this.LB_UnmitDmg = new System.Windows.Forms.Label();
             this.NUD_AoEDMG = new System.Windows.Forms.NumericUpDown();
@@ -131,7 +131,7 @@
             this.CK_AoETargs = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.NUD_DisarmDur = new System.Windows.Forms.NumericUpDown();
             this.NUD_DisarmFreq = new System.Windows.Forms.NumericUpDown();
-            this.LBUnder20Perc2 = new System.Windows.Forms.Label();
+            this.LB_MultiTargsPerc = new System.Windows.Forms.Label();
             this.NUD_Under20Perc = new System.Windows.Forms.NumericUpDown();
             this.NUD_RootDur = new System.Windows.Forms.NumericUpDown();
             this.NUD_RootFreq = new System.Windows.Forms.NumericUpDown();
@@ -386,7 +386,7 @@
             this.Tabs.Location = new System.Drawing.Point(0, 0);
             this.Tabs.Name = "Tabs";
             this.Tabs.SelectedIndex = 0;
-            this.Tabs.Size = new System.Drawing.Size(304, 605);
+            this.Tabs.Size = new System.Drawing.Size(304, 630);
             this.Tabs.TabIndex = 0;
             // 
             // Page_00_Instructions
@@ -394,7 +394,7 @@
             this.Page_00_Instructions.Controls.Add(this.Tab_Instr);
             this.Page_00_Instructions.Location = new System.Drawing.Point(4, 22);
             this.Page_00_Instructions.Name = "Page_00_Instructions";
-            this.Page_00_Instructions.Size = new System.Drawing.Size(296, 579);
+            this.Page_00_Instructions.Size = new System.Drawing.Size(296, 604);
             this.Page_00_Instructions.TabIndex = 3;
             this.Page_00_Instructions.Text = "Instructions";
             this.Page_00_Instructions.UseVisualStyleBackColor = true;
@@ -409,7 +409,7 @@
             this.Tab_Instr.Location = new System.Drawing.Point(0, 0);
             this.Tab_Instr.Name = "Tab_Instr";
             this.Tab_Instr.SelectedIndex = 0;
-            this.Tab_Instr.Size = new System.Drawing.Size(296, 579);
+            this.Tab_Instr.Size = new System.Drawing.Size(296, 604);
             this.Tab_Instr.TabIndex = 0;
             // 
             // Tab_Welcome
@@ -418,7 +418,7 @@
             this.Tab_Welcome.Location = new System.Drawing.Point(4, 22);
             this.Tab_Welcome.Name = "Tab_Welcome";
             this.Tab_Welcome.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Welcome.Size = new System.Drawing.Size(288, 553);
+            this.Tab_Welcome.Size = new System.Drawing.Size(288, 578);
             this.Tab_Welcome.TabIndex = 0;
             this.Tab_Welcome.Text = "Basics";
             this.Tab_Welcome.UseVisualStyleBackColor = true;
@@ -429,7 +429,7 @@
             this.RTB_Welcome.Location = new System.Drawing.Point(3, 3);
             this.RTB_Welcome.Name = "RTB_Welcome";
             this.RTB_Welcome.ReadOnly = true;
-            this.RTB_Welcome.Size = new System.Drawing.Size(282, 547);
+            this.RTB_Welcome.Size = new System.Drawing.Size(282, 572);
             this.RTB_Welcome.TabIndex = 0;
             this.RTB_Welcome.Text = resources.GetString("RTB_Welcome.Text");
             // 
@@ -561,8 +561,8 @@
             this.Page_03_FightInfo.Controls.Add(this.BT_Stun);
             this.Page_03_FightInfo.Controls.Add(this.NUD_TargHP);
             this.Page_03_FightInfo.Controls.Add(this.LB_TargHP);
-            this.Page_03_FightInfo.Controls.Add(this.label2);
-            this.Page_03_FightInfo.Controls.Add(this.label1);
+            this.Page_03_FightInfo.Controls.Add(this.LB_Under20Perc2);
+            this.Page_03_FightInfo.Controls.Add(this.LB_InBack);
             this.Page_03_FightInfo.Controls.Add(this.LB_Freq2);
             this.Page_03_FightInfo.Controls.Add(this.LB_UnmitDmg);
             this.Page_03_FightInfo.Controls.Add(this.NUD_AoEDMG);
@@ -570,7 +570,7 @@
             this.Page_03_FightInfo.Controls.Add(this.CK_AoETargs);
             this.Page_03_FightInfo.Controls.Add(this.NUD_DisarmDur);
             this.Page_03_FightInfo.Controls.Add(this.NUD_DisarmFreq);
-            this.Page_03_FightInfo.Controls.Add(this.LBUnder20Perc2);
+            this.Page_03_FightInfo.Controls.Add(this.LB_MultiTargsPerc);
             this.Page_03_FightInfo.Controls.Add(this.NUD_Under20Perc);
             this.Page_03_FightInfo.Controls.Add(this.NUD_RootDur);
             this.Page_03_FightInfo.Controls.Add(this.NUD_RootFreq);
@@ -606,7 +606,7 @@
             this.Page_03_FightInfo.Location = new System.Drawing.Point(4, 22);
             this.Page_03_FightInfo.Name = "Page_03_FightInfo";
             this.Page_03_FightInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_03_FightInfo.Size = new System.Drawing.Size(296, 579);
+            this.Page_03_FightInfo.Size = new System.Drawing.Size(296, 604);
             this.Page_03_FightInfo.TabIndex = 2;
             this.Page_03_FightInfo.Text = "Boss Selector";
             this.Page_03_FightInfo.UseVisualStyleBackColor = true;
@@ -704,27 +704,27 @@
             this.LB_TargHP.Text = "Targ HP:";
             this.LB_TargHP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label2
+            // LB_Under20Perc2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Location = new System.Drawing.Point(277, 78);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(15, 20);
-            this.label2.TabIndex = 53;
-            this.label2.Text = "%";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_Under20Perc2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LB_Under20Perc2.BackColor = System.Drawing.Color.Transparent;
+            this.LB_Under20Perc2.Location = new System.Drawing.Point(277, 78);
+            this.LB_Under20Perc2.Name = "LB_Under20Perc2";
+            this.LB_Under20Perc2.Size = new System.Drawing.Size(15, 20);
+            this.LB_Under20Perc2.TabIndex = 53;
+            this.LB_Under20Perc2.Text = "%";
+            this.LB_Under20Perc2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label1
+            // LB_InBack
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Location = new System.Drawing.Point(277, 101);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(15, 20);
-            this.label1.TabIndex = 52;
-            this.label1.Text = "%";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_InBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LB_InBack.BackColor = System.Drawing.Color.Transparent;
+            this.LB_InBack.Location = new System.Drawing.Point(277, 101);
+            this.LB_InBack.Name = "LB_InBack";
+            this.LB_InBack.Size = new System.Drawing.Size(15, 20);
+            this.LB_InBack.TabIndex = 52;
+            this.LB_InBack.Text = "%";
+            this.LB_InBack.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LB_Freq2
             // 
@@ -855,16 +855,16 @@
             0});
             this.NUD_DisarmFreq.ValueChanged += new System.EventHandler(this.NUD_DisarmFreq_ValueChanged);
             // 
-            // LBUnder20Perc2
+            // LB_MultiTargsPerc
             // 
-            this.LBUnder20Perc2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LBUnder20Perc2.BackColor = System.Drawing.Color.Transparent;
-            this.LBUnder20Perc2.Location = new System.Drawing.Point(277, 124);
-            this.LBUnder20Perc2.Name = "LBUnder20Perc2";
-            this.LBUnder20Perc2.Size = new System.Drawing.Size(15, 20);
-            this.LBUnder20Perc2.TabIndex = 20;
-            this.LBUnder20Perc2.Text = "%";
-            this.LBUnder20Perc2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LB_MultiTargsPerc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LB_MultiTargsPerc.BackColor = System.Drawing.Color.Transparent;
+            this.LB_MultiTargsPerc.Location = new System.Drawing.Point(277, 124);
+            this.LB_MultiTargsPerc.Name = "LB_MultiTargsPerc";
+            this.LB_MultiTargsPerc.Size = new System.Drawing.Size(15, 20);
+            this.LB_MultiTargsPerc.TabIndex = 20;
+            this.LB_MultiTargsPerc.Text = "%";
+            this.LB_MultiTargsPerc.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // NUD_Under20Perc
             // 
@@ -1028,7 +1028,7 @@
             this.TB_BossInfo.Name = "TB_BossInfo";
             this.TB_BossInfo.ReadOnly = true;
             this.TB_BossInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TB_BossInfo.Size = new System.Drawing.Size(290, 230);
+            this.TB_BossInfo.Size = new System.Drawing.Size(290, 255);
             this.TB_BossInfo.TabIndex = 51;
             this.TB_BossInfo.Text = "Boss Information would normally be displayed here";
             // 
@@ -1283,7 +1283,7 @@
             this.Page_02_Maintenance.Location = new System.Drawing.Point(4, 22);
             this.Page_02_Maintenance.Name = "Page_02_Maintenance";
             this.Page_02_Maintenance.Padding = new System.Windows.Forms.Padding(3);
-            this.Page_02_Maintenance.Size = new System.Drawing.Size(296, 579);
+            this.Page_02_Maintenance.Size = new System.Drawing.Size(296, 604);
             this.Page_02_Maintenance.TabIndex = 1;
             this.Page_02_Maintenance.Text = "Ability Maintenance";
             this.Page_02_Maintenance.UseVisualStyleBackColor = true;
@@ -1386,7 +1386,7 @@
             treeNode17,
             treeNode31,
             treeNode34});
-            this.CTL_Maints.Size = new System.Drawing.Size(291, 547);
+            this.CTL_Maints.Size = new System.Drawing.Size(291, 572);
             this.CTL_Maints.TabIndex = 1;
             this.CTL_Maints.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.CTL_Maints_AfterCheck);
             // 
@@ -1410,7 +1410,7 @@
             this.TB_Misc.Location = new System.Drawing.Point(4, 22);
             this.TB_Misc.Name = "TB_Misc";
             this.TB_Misc.Padding = new System.Windows.Forms.Padding(3);
-            this.TB_Misc.Size = new System.Drawing.Size(296, 579);
+            this.TB_Misc.Size = new System.Drawing.Size(296, 604);
             this.TB_Misc.TabIndex = 4;
             this.TB_Misc.Text = "Misc";
             this.TB_Misc.UseVisualStyleBackColor = true;
@@ -1596,7 +1596,7 @@
             this.AutoSize = true;
             this.Controls.Add(this.Tabs);
             this.Name = "CalculationOptionsPanelDPSWarr";
-            this.Size = new System.Drawing.Size(304, 605);
+            this.Size = new System.Drawing.Size(304, 630);
             ((System.ComponentModel.ISupportInitialize)(this.CB_Duration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_Lag)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CB_React)).EndInit();
@@ -1691,7 +1691,7 @@
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_RootingTargs;
         private Rawr.CustomControls.ExtendedToolTipCheckBox CK_FearingTargs;
         public Rawr.CustomControls.ExtendedToolTipLabel LB_Under20Perc;
-        private System.Windows.Forms.Label LBUnder20Perc2;
+        private System.Windows.Forms.Label LB_MultiTargsPerc;
         private System.Windows.Forms.NumericUpDown NUD_Under20Perc;
         private System.Windows.Forms.NumericUpDown NUD_DisarmDur;
         private System.Windows.Forms.NumericUpDown NUD_DisarmFreq;
@@ -1709,8 +1709,8 @@
         private System.Windows.Forms.ComboBox CB_Prof2;
         private System.Windows.Forms.Label LB_Version;
         private System.Windows.Forms.ComboBox CB_Version;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label LB_InBack;
+        private System.Windows.Forms.Label LB_Under20Perc2;
         private System.Windows.Forms.NumericUpDown NUD_TargHP;
         public System.Windows.Forms.Label LB_TargHP;
         private System.Windows.Forms.Button BT_Stun;
