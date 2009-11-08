@@ -1534,9 +1534,10 @@ namespace Rawr.Optimizer
         protected override OptimizerCharacter GenerateIndividual(object[] items)
         {
             items = (object[])items.Clone();
-            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, items, characterSlots,
+            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, _character.BossOptions, items, characterSlots,
                 _character.ActiveBuffs, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
+            character.BossOptions = _character.BossOptions;
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character, false);
             character.EnforceGemRequirements = _character.EnforceGemRequirements;
@@ -2571,9 +2572,10 @@ namespace Rawr.Optimizer
 
             // create character
 
-            Character character = new Character(parent.Character.Name, parent.Character.Realm, parent.Character.Region, parent.Character.Race, items, characterSlots,
+            Character character = new Character(parent.Character.Name, parent.Character.Realm, parent.Character.Region, parent.Character.Race, parent.Character.BossOptions, items, characterSlots,
                 parent.Character.ActiveBuffs, parent.Character.CurrentModel);
             character.CalculationOptions = parent.Character.CalculationOptions;
+            character.BossOptions = parent.Character.BossOptions;
             character.Class = parent.Character.Class;
             character.AssignAllTalentsFromCharacter(parent.Character, false);
             character.EnforceGemRequirements = parent.Character.EnforceGemRequirements;
@@ -2659,9 +2661,10 @@ namespace Rawr.Optimizer
 
             if (successful)
             {
-                Character character = new Character(parent.Character.Name, parent.Character.Realm, parent.Character.Region, parent.Character.Race, items, characterSlots,
+                Character character = new Character(parent.Character.Name, parent.Character.Realm, parent.Character.Region, parent.Character.Race, parent.Character.BossOptions, items, characterSlots,
                     parent.Character.ActiveBuffs, parent.Character.CurrentModel);
                 character.CalculationOptions = parent.Character.CalculationOptions;
+                character.BossOptions = parent.Character.BossOptions;
                 character.Class = parent.Character.Class;
                 character.AssignAllTalentsFromCharacter(parent.Character, false);
                 character.EnforceGemRequirements = parent.Character.EnforceGemRequirements;
@@ -2715,9 +2718,10 @@ namespace Rawr.Optimizer
         {
             object[] items = new object[slotCount];
             Array.Copy(parent.Items, items, slotCount);
-            Character character = new Character(parent.Character.Name, parent.Character.Realm, parent.Character.Region, parent.Character.Race, items, characterSlots,
+            Character character = new Character(parent.Character.Name, parent.Character.Realm, parent.Character.Region, parent.Character.Race, parent.Character.BossOptions, items, characterSlots,
                 parent.Character.ActiveBuffs, parent.Character.CurrentModel);
             character.CalculationOptions = parent.Character.CalculationOptions;
+            character.BossOptions = parent.Character.BossOptions;
             character.Class = parent.Character.Class;
             character.AssignAllTalentsFromCharacter(parent.Character, false);
             character.EnforceGemRequirements = parent.Character.EnforceGemRequirements;
@@ -3690,9 +3694,10 @@ namespace Rawr.Optimizer
                     itemInstances[i] = new ItemInstance(item, gems[0], gems[1], gems[2], items[i * 5 + 4] as Enchant);
                 }
             }
-            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, itemInstances,
+            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, _character.BossOptions, itemInstances,
                 _character.ActiveBuffs, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
+            character.BossOptions = _character.BossOptions;
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character, false);
             character.EnforceGemRequirements = _character.EnforceGemRequirements;
@@ -3849,9 +3854,10 @@ namespace Rawr.Optimizer
                 if ((object)item != null && ((object)bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && (object)bestCharacter[(CharacterSlot)pairSlot] != null && bestCharacter[(CharacterSlot)pairSlot].Id == item.Id && item.Item.Unique))
                 {
                     itemList[(int)slot] = item;
-                    charSwap = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, itemList,
+                    charSwap = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, _character.BossOptions, itemList,
                         _character.ActiveBuffs, _character.CurrentModel);
                     charSwap.CalculationOptions = _character.CalculationOptions;
+                    charSwap.BossOptions = _character.BossOptions;
                     charSwap.Class = _character.Class;
                     charSwap.AssignAllTalentsFromCharacter(_character, false);
                     charSwap.EnforceGemRequirements = _character.EnforceGemRequirements;

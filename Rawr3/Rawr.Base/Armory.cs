@@ -933,13 +933,16 @@ namespace Rawr
                         itemNode.Attribute("permanentenchant").Value);
                 }
 
+                BossList bosslist = new BossList();
+                BossHandler boss = bosslist.TheEZModeBoss_Called;
+
 				StatusMessaging.UpdateStatus("Get Character From Armory", "B");
 
                 EnsureItemsLoaded(items.Values);
 
 				StatusMessaging.UpdateStatus("Get Character From Armory", "C");
 
-                Result = new Character(name, realm, Region, race,
+                Result = new Character(name, realm, Region, race, boss,
                     items.ContainsKey(CharacterSlot.Head) ? items[CharacterSlot.Head] : null,
                     items.ContainsKey(CharacterSlot.Neck) ? items[CharacterSlot.Neck] : null,
                     items.ContainsKey(CharacterSlot.Shoulders) ? items[CharacterSlot.Shoulders] : null,

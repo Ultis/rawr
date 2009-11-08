@@ -12,8 +12,6 @@ namespace Rawr.UI
 {
 	public partial class TalentPicker : UserControl
 	{
-
-        //private TalentsBase talents;
         private Character character;
         public Character Character
         {

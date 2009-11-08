@@ -54,7 +54,7 @@
         		</Grid>
         		<Grid x:Name="PN_Duration" Height="26" Margin="0,2,0,0">
         			<TextBlock x:Name="LB_Duration" HorizontalAlignment="Left" Margin="3,6,0,6" Text="Duration:" TextWrapping="Wrap"/>
-        			<inputToolkit:NumericUpDown x:Name="NUD_Duration" Margin="165,3,35,3" Height="20" Maximum="1200" Minimum="30" Value="300"/>
+        			<inputToolkit:NumericUpDown x:Name="NUD_Duration" Margin="165,3,35,3" Height="20" Maximum="1200" Minimum="30" Value="{Binding BerserkTimer, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEditable="True"/>
         			<TextBlock x:Name="LB_Duration2" Margin="0,6,3,6" Text="sec" HorizontalAlignment="Right" Width="30"/>
         		</Grid>
         		<Grid x:Name="PN_HP" Height="26">
@@ -81,7 +81,7 @@
         			<inputToolkit:NumericUpDown x:Name="CB_MultiTargsMax" Maximum="8" Minimum="1" TabIndex="19" HorizontalAlignment="Left" Margin="165,3,0,3" Height="20" Width="44"/>
         			<inputToolkit:NumericUpDown x:Name="CB_MultiTargsPerc" TabIndex="20" Margin="213,3,35,3" Height="20"/>
         			<dataInput:Label x:Name="LB_MultiTargsPerc" Content="%" TabIndex="21" Margin="0,6,3,6" HorizontalAlignment="Right" Width="30"/>
-        			<TextBlock HorizontalAlignment="Left" Margin="135,6,0,6" Text="Max:" TextAlignment="Right"/>
+        			<TextBlock x:Name="LB_Max" HorizontalAlignment="Left" Margin="135,6,0,6" Text="Max:" TextAlignment="Right"/>
         		</Grid>
         		<Grid x:Name="PN_Stuns" Height="26">
         			<CheckBox x:Name="CK_StunningTargs" Height="18" Content="Boss Stuns You *" ToolTipService.ToolTip="While stunned, you cannot DPS. Iron Will and other Stun Duration reducing effects can lower the duration. Abilities like Heroic Fury and Every Man for Himself (Humans) can negate Stuns after they occur if they are not on cooldown." IsChecked="{Binding StunningTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="26" Margin="3,4,0,4" d:LayoutOverrides="Width" HorizontalAlignment="Left"/>
@@ -104,8 +104,8 @@
         			<Button x:Name="BT_Disarms" FontSize="7" Height="20" Margin="165,3,3,3" Content="F: 120sec D: 5000ms C: 100% : B" IsEnabled="False"/>
         		</Grid>
         		<Grid x:Name="PN_Attacks" Height="26">
-        			<CheckBox x:Name="CK_AoETargs" Content="Boss Does Damage *" ToolTipService.ToolTip="" Height="18" IsChecked="{Binding AoETargets, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="43" Margin="3,4,0,4" HorizontalAlignment="Left"/>
-        			<Button x:Name="BT_Roots_Copy" FontSize="7" Height="20" Margin="165,3,3,3" Content="F: 2.5sec D: 80000 C: 100% : PH"/>
+        			<CheckBox x:Name="CK_Attacks" Content="Boss Does Damage *" ToolTipService.ToolTip="" Height="18" IsChecked="{Binding AoETargets, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="43" Margin="3,4,0,4" HorizontalAlignment="Left"/>
+        			<Button x:Name="BT_Attacks" FontSize="7" Height="20" Margin="165,3,3,3" Content="F: 2.5sec D: 80000 C: 100% : PH"/>
         		</Grid>
         		<TextBox x:Name="TB_BossInfo" TextWrapping="Wrap" IsReadOnly="True" TabIndex="46" d:LayoutOverrides="VerticalAlignment" Margin="3,2,3,3" Text="Boss Information would normally be displayed here"/>
         	</StackPanel>

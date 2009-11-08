@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -81,6 +82,9 @@ namespace Rawr {
     /// <summary>Stores a Disarm that the Boss Performs</summary>
     public class Disarm : Impedence { public Disarm() { } }
     #endregion
+#if !RAWR3 && !SILVERLIGHT
+    [Serializable]
+#endif
     public class BossHandler {
         public const int NormCharLevel = 80;
         public BossHandler() {
@@ -167,7 +171,7 @@ namespace Rawr {
         private TierLevels CONTENT;
         private Versions VERSION;
         private float HEALTH,ARMOR;
-        private int BERSERKTIMER,SPEEDKILLTIMER,LEVEL;
+        private int SPEEDKILLTIMER,LEVEL;
         private bool USERPARRYHASTE;
         // Resistance
         private float RESISTANCE_PHYSICAL,RESISTANCE_NATURE,RESISTANCE_ARCANE,RESISTANCE_FROST,RESISTANCE_FIRE,RESISTANCE_SHADOW,RESISTANCE_HOLY;
@@ -205,7 +209,12 @@ namespace Rawr {
         public int    Level              { get { return LEVEL;              } set { LEVEL              = value; } }
         public float  Health             { get { return HEALTH;             } set { HEALTH             = value; } }
         public float  Armor              { get { return ARMOR;              } set { ARMOR              = value; } }
-        public int    BerserkTimer       { get { return BERSERKTIMER;       } set { BERSERKTIMER       = value; } }
+        private int BERSERKTIMER;
+        public int BerserkTimer
+        {
+            get { return BERSERKTIMER; }
+            set { BERSERKTIMER = value; OnPropertyChanged("BerserkTimer"); }
+        }
         public int    SpeedKillTimer     { get { return SPEEDKILLTIMER;     } set { SPEEDKILLTIMER     = value; } }
         public bool   UseParryHaste      { get { return USERPARRYHASTE;     } set { USERPARRYHASTE     = value; } }
         // ==== Situational Changes ====
@@ -831,6 +840,15 @@ namespace Rawr {
         /// </summary>
         /// <returns>The generated string</returns>
         public string GenInfoString() { return GenInfoString(0,0,0,0,0,0,0); }
+        #endregion
+
+        #region INotifyPropertyChanged Members
+        private void OnPropertyChanged(string property)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
     }
 }

@@ -1239,7 +1239,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             return s;
         }
         //
-        private void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
             // Target Armor/Level
