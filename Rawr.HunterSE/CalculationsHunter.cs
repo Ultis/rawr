@@ -1156,7 +1156,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
             #region August 2009 Shots Per Second
-
             float baseAutoShotsPerSecond = autoShotSpeed > 0 ? 1f / autoShotSpeed : 0;
             float autoShotsPerSecond = baseAutoShotsPerSecond + QSBaseFrequencyIncrease;
             float specialShotsPerSecond = calculatedStats.priorityRotation.specialShotsPerSecond;
@@ -1169,7 +1168,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             calculatedStats.BaseAttackSpeed = (float)autoShotSpeed;
             calculatedStats.shotsPerSecondCritting = crittingShotsPerSecond;
-
             #endregion
 
             // Crits
@@ -2092,12 +2090,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                   * noxiousStingsDamageAdjust
                                                   * partialResistDamageAdjust
                                                   * (1f + targetDebuffsNature)
-                                                  * stats.BonusHunter_T8_2P_SerpDmg
-                                                  * (focusedFireDamageAdjust
+                                                  * (1f + stats.BonusHunter_T8_2P_SerpDmg)
+                                                  * focusedFireDamageAdjust
                                                   * beastWithinDamageAdjust
                                                   * sancRetributionAuraDamageAdjust
                                                   * blackArrowAuraDamageAdjust
-                                                  * ferociousInspirationArcaneDamageAdjust);
+                                                  * ferociousInspirationArcaneDamageAdjust;
 
             float chimeraShotSerpentStingDamage = (float)Math.Round(serpentStingDamageBase * chimeraShotSerpentMultiplier / 5f, 1) * serpentStingTicks;
 
@@ -2109,7 +2107,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Drizz: Updates
             float chimeraShotSerpentCritAdjust = metaGemCritDamage + (0.5f * metaGemCritDamage + 0.5f) * mortalShotsCritDamage;
-            float chimeraShotSerpentDamageAdjust = calculatedStats.hitOverall * (1f + calculatedStats.critRateOverall * chimeraShotSerpentCritAdjust);
+            float chimeraShotSerpentDamageAdjust = (1f - ChanceToMiss) * (1f + calculatedStats.critRateOverall * chimeraShotSerpentCritAdjust);
 
             float chimeraShotSerpentTotalAdjust = chimeraShotSerpentDamageAdjust * talentDamageAdjust * (1f + targetDebuffsNature);
 

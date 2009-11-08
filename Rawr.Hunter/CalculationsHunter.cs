@@ -2137,7 +2137,7 @@ namespace Rawr.Hunter
             // base_damage = normalized_autoshot * 125%
             // double chimeraShotDamageNormal = autoShotDamageNormalized * 1.25;
             // Drizz: Making Changes
-            double chimeraShotDamageNormal = (rangedAmmoDamage + (RAP / 14 * 2.8) + rangedWeaponDamage)*1.25;
+            double chimeraShotDamageNormal = (rangedAmmoDamage + (RAP / 14 * 2.8) + rangedWeaponDamage) * 1.25;
             
             // Drizz: In the spreadsheet there is also added a row for + Weapon Damage Gear... not included here.
 
@@ -2176,12 +2176,12 @@ namespace Rawr.Hunter
                                                   * noxiousStingsDamageAdjust
                                                   * partialResistDamageAdjust
                                                   * (1 + targetDebuffsNature)
-                                                  *  tier82SetAdjust
-                                                  * (focusedFireDamageAdjust
-                                                  *  beastWithinDamageAdjust
+                                                  * tier82SetAdjust
+                                                  * focusedFireDamageAdjust
+                                                  * beastWithinDamageAdjust
                                                   * sancRetributionAuraDamageAdjust
                                                   * blackArrowAuraDamageAdjust
-                                                  * ferociousInspirationArcaneDamageAdjust);
+                                                  * ferociousInspirationArcaneDamageAdjust;
 
             double chimeraShotSerpentStingDamage = Math.Round(serpentStingDamageBase * chimeraShotSerpentMultiplier / 5, 1) * serpentStingTicks;
 
