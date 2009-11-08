@@ -788,11 +788,9 @@ namespace Rawr.Enhance
 
         public bool CheckHasProf(Profession p)
         {
-            if (cacheChar == null) { return false; }
-            if (cacheChar.PrimaryProfession == p) { return true; }
-            if (cacheChar.SecondaryProfession == p) { return true; }
-
-            return false;
+            if (cacheChar == null) 
+                return false;
+            return cacheChar.PrimaryProfession == p || cacheChar.SecondaryProfession == p;
         }
 
         private static bool _hideProfessions = false;
