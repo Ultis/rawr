@@ -1770,12 +1770,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             //Improve Stings
             float improvedStingsDamageAdjust = 1 + 0.1f * talents.ImprovedStings;
 
-            //Steady Shot Glyph
-            float glyphOfSteadyShotDamageAdjust = talents.GlyphOfSteadyShot ? 1.1f : 1;
-
-            //Improved Arcane Shot 
-            float improvedArcaneShotDamageAdjust = 1 + 0.05f * talents.ImprovedArcaneShot;
-
             //TrapMastery
             float trapMasteryDamageAdjust = 1 + 0.1f * talents.TrapMastery;
 
@@ -1904,8 +1898,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float steadyShotDamageAdjust = talentDamageAdjust
                                             * targetPhysicalDebuffsDamageAdjust
                                             * sniperTrainingDamageAdjust
-                                            * glyphOfSteadyShotDamageAdjust
-                                            * ArmorDamageReduction;
+                                            * (talents.GlyphOfSteadyShot ? 1.1f : 1f);
 
             // ****************************************************************************
             // Drizz: 31-10-2009 Aligned the calculations with spreadsheet v92b
@@ -1921,6 +1914,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                             steadyShotCritAdjust,
                                             steadyShotDamageAdjust
                                           );
+
+            steadyShotDamageReal *= ArmorDamageReduction;
 
             calculatedStats.steadyShot.damage = steadyShotDamageReal;
             // ****************************************************************************
@@ -2126,7 +2121,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
             float arcaneShotCritAdjust = metaGemCritDamage + 0.5f * mortalShotsCritDamage * (1f + metaGemCritDamage) + markedForDeathCritDamage;
 
-            float arcaneShotDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * improvedArcaneShotDamageAdjust
+            float arcaneShotDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * (1f + 0.05f * talents.ImprovedArcaneShot)
                                             * ferociousInspirationArcaneDamageAdjust * ISSArcaneShotDamageAdjust; // missing arcane_debuffs!
 
             float arcaneShotDamageReal = CalcEffectiveDamage(
