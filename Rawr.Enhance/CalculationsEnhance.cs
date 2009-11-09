@@ -435,7 +435,7 @@ namespace Rawr.Enhance
             float dpsLS = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.LightningShield))
             {
-                float damageLSBase = 380;
+                float damageLSBase = 380f;
                 float damageLSCoef = 0.267f; // co-efficient from EnhSim
                 float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellPower);
                 // no crit needed as LS can't crit
@@ -451,7 +451,7 @@ namespace Rawr.Enhance
                 float damageSTMTBase = calcOpts.Magma ? 371f : 105f;
                 float damageSTMTCoef = calcOpts.Magma ? .1f : .1667f;
                 float damageSTMT = (damageSTMTBase + damageSTMTCoef * spellPower) * callofFlameBonus;
-                float STMTdps = damageSTMT / 2;
+                float STMTdps = damageSTMT / 2f * cs.FireTotemUptime;
                 float STMTNormal = STMTdps * cs.SpellHitModifier;
                 float STMTCrit = STMTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsSTMT = (STMTNormal + STMTCrit) * bonusFireDamage * bossFireResistance;

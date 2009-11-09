@@ -61,6 +61,7 @@ namespace Rawr.Enhance
         private float edBonusCrit = 0f;
         private float ftBonusCrit = 0f;
         private float urUptime = 0f;
+        private float fireTotemUptime = 0f;
 
         private float meleeAttacksPerSec = 0f;
         private float meleeCritsPerSec = 0f;
@@ -148,6 +149,7 @@ namespace Rawr.Enhance
         public float EDUptime { get { return edUptime; } }
         public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
+        public float FireTotemUptime { get { return fireTotemUptime; } }
         public float AbilityCooldown(EnhanceAbility abilityType) { return _rotation.AbilityCooldown(abilityType); }
 
         public float DisplayMeleeCrit { get { return chanceCrit; } }
@@ -268,6 +270,7 @@ namespace Rawr.Enhance
             float lavaLashSpeed = firstPass ? (_talents.LavaLash == 1 ? 6f : 0f) : AbilityCooldown(EnhanceAbility.LavaLash);
             float magmaSearingSpeed = firstPass ? (_calcOpts.Magma ? 20f : 60f) :
                     (_calcOpts.Magma ? AbilityCooldown(EnhanceAbility.MagmaTotem) : AbilityCooldown(EnhanceAbility.SearingTotem));
+            fireTotemUptime = _calcOpts.Magma ? 20f / magmaSearingSpeed : 60f / magmaSearingSpeed;
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.Enhance4T8 * 0.2f);
             float flurryHasteBonus = .05f * _talents.Flurry + _stats.Enhance4T7;
             float edCritBonus = .03f * _talents.ElementalDevastation;

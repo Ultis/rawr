@@ -59,6 +59,7 @@ namespace Rawr.Enhance
         {
             float possibleClashes = clashChance * (float)Math.Sqrt(_priority - 1) * fightLength / _duration;
             _uses -= possibleClashes;
+            if (_uses < 0) _uses = 0;
         }
 
         public void AverageUses(float iterations)
