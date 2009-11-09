@@ -35,14 +35,14 @@ namespace Rawr.DPSDK
 
                 return new List<GemmingTemplate>()
 				{
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", Enabled = true, //Max Strength
+					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Strength
 						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", Enabled = true, //Strength
+					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Strength
 						RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
 						
-					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", //Max Strength
+					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Max Strength
 						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", //Strength
+					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Strength
 						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
 
 					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength

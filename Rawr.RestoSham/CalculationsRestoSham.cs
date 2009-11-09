@@ -63,30 +63,30 @@ namespace Rawr.RestoSham
 					new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", //SP Crit
 						RedId = Runed[0], YellowId = Potent[0], BlueId = Sundered[0], PrismaticId = Smooth[0], MetaId = Revitalizing },
 
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "RestoSham", Group = "Rare",
 						RedId = Runed[1], YellowId = Runed[1], BlueId = Runed[1], PrismaticId = Runed[1], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "RestoSham", Group = "Rare",
 						RedId = Runed[1], YellowId = Luminous[1], BlueId = Glowing[1], PrismaticId = Runed[1], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "RestoSham", Group = "Rare",
 						RedId = Royal[1], YellowId = Dazzling[1], BlueId = Dazzling[1], PrismaticId = Lustrous[1], MetaId = Insightful },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "RestoSham", Group = "Rare",
 						RedId = Runed[1], YellowId = Dazzling[1], BlueId = Royal[1], PrismaticId = Runed[1], MetaId = Insightful },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "RestoSham", Group = "Rare",
 						RedId = Runed[1], YellowId = Reckless[1], BlueId = Energized[1], PrismaticId = Quick[1], MetaId = Revitalizing },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "RestoSham", Group = "Rare",
 						RedId = Runed[1], YellowId = Potent[1], BlueId = Sundered[1], PrismaticId = Smooth[1], MetaId = Revitalizing },
 
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //Max Spellpower
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //Max Spellpower
 						RedId = Runed[2], YellowId = Runed[2], BlueId = Runed[2], PrismaticId = Runed[2], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //SP Int
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP Int
 						RedId = Runed[2], YellowId = Luminous[2], BlueId = Glowing[2], PrismaticId = Runed[2], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //Heavy MP5
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //Heavy MP5
 						RedId = Royal[2], YellowId = Dazzling[2], BlueId = Dazzling[2], PrismaticId = Lustrous[2], MetaId = Insightful },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //SP MP5
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP MP5
 						RedId = Runed[2], YellowId = Dazzling[2], BlueId = Royal[2], PrismaticId = Runed[2], MetaId = Insightful },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //SP Haste
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP Haste
 						RedId = Runed[2], YellowId = Reckless[2], BlueId = Energized[2], PrismaticId = Quick[2], MetaId = Revitalizing },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //SP Crit
+					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", Enabled = true, //SP Crit
 						RedId = Runed[2], YellowId = Potent[2], BlueId = Sundered[2], PrismaticId = Smooth[2], MetaId = Revitalizing },
 
 					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //JC - SP
