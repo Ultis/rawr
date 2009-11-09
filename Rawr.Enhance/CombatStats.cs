@@ -302,13 +302,12 @@ namespace Rawr.Enhance
                 swingsPerSOHMelee = hastedOHSpeed == 0f ? 0f : 1f / hastedOHSpeed;
                 whiteHitsPerSMH = (1f - chanceWhiteMissMH - chanceDodgeMH) * swingsPerSMHMelee;
                 whiteHitsPerSOH = (1f - chanceWhiteMissOH - chanceDodgeOH) * swingsPerSOHMelee;
-                
-                // new Stationary Distribution WF model - with Markov Chains - idea inspired by Kavan
-                float avTimeforWFHit = hastedMHSpeed < 1.5f ? 
-                        (1 / (1 + chanceToProcWFPerHit)) * hastedMHSpeed + 2 * (chanceToProcWFPerHit / (1 + chanceToProcWFPerHit)) * hastedMHSpeed :
-                        (1 / (1 + chanceToProcWFPerHit)) * hastedMHSpeed +     (chanceToProcWFPerHit / (1 + chanceToProcWFPerHit)) * hastedMHSpeed;
+
                 float hitsThatProcWFPerS = whiteHitsPerSMH + hitsPerSMHSS;
-                wfProcsPerSecond = avTimeforWFHit == 0 ? 0f : hitsThatProcWFPerS / (avTimeforWFHit * (hastedMHSpeed < 1.5f ? 4 : 3));
+                float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * fightLength;
+                float ineligibleSeconds = maxExpectedWFPerFight * (3f - hastedMHSpeed);
+                float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (fightLength - ineligibleSeconds);
+                wfProcsPerSecond = expectedWFPerFight / fightLength;
                 hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
                 yellowHitsPerSMH = hitsPerSWF + hitsPerSMHSS;
                 yellowHitsPerSOH = hitsPerSOHSS + hitsPerSLL;

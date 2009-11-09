@@ -139,6 +139,13 @@ wfProcsPerSecond = 1f / (3f + windfuryTimeToFirstHit + ((avgHitsToProcWF - 1) * 
                 wfProcsPerSecond = expectedWFPerFight / fightLength;
                 hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
 */
+/*
+                // new Stationary Distribution WF model - with Markov Chains - idea inspired by Kavan
+                float avTimeforWFHit = hastedMHSpeed < 1.5f ? 
+                        (1 / (1 + chanceToProcWFPerHit)) * hastedMHSpeed + 2 * (chanceToProcWFPerHit / (1 + chanceToProcWFPerHit)) * hastedMHSpeed :
+                        (1 / (1 + chanceToProcWFPerHit)) * hastedMHSpeed +     (chanceToProcWFPerHit / (1 + chanceToProcWFPerHit)) * hastedMHSpeed;
+                wfProcsPerSecond = avTimeforWFHit == 0 ? 0f : hitsThatProcWFPerS / (avTimeforWFHit * (hastedMHSpeed < 1.5f ? 4 : 3));
+                hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
 
 /*
 CombatStats.cs
