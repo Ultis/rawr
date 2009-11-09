@@ -18,14 +18,14 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.2.24.0
- - A debuff was added to represent the Expose Weakness debuff used in the ToTC Anub encounter.
- - Rawr.Bear: Fixed a bug with Heroic Presense calculation.
- - Rawr.Moonkin: DoTs now benefit from Nature's Grace
- - Rawr.Enhance: User selected priority system implemnted.  Added support for modeling Flame Shock.
- - Rawr.Rogue: Many updated applied; this should fix a number of issues with trinkets and talents not being modeled correctly.  Haste has been updated, Rawr also now assumes (if you have the talent) that you use Blade Flurry ever 120 seconds.
- - Rawr.ProtWarr: Support added for boss dehaste abilities (ie: Thunder Clap, Imp. Icy Touch, etc) 
- - Rawr.Warlock: Added Glyph of Quick Decay. Fix for a crash when using a non-filler spell as the last spell in your rotation (DPS will be terrible, due to not having a filler, but at least won't crash when you're in the middle of swapping spells around in your rotation).";
+			labelVersionHistory.Text = @"v2.2.25.0
+ - Rawr.Enhance: Many Updates to GCD interaction with ability usage to improve accuracy of the module.
+ - Rawr.DPSWarr: Using Bladestorm will no longer eat all your GCDs in low rage settings. Offhand weapon enchants will no longer use your Mainhand weapon's speed for their uptime calculations.  
+ - Rawr.Tree: Added a replenishment buff checkbox in the buffs tab (previously, this was assumed on all the time). Added a slider to allow users to define how much time they cast vs not cast.
+ - Rawr.TankDK: Fixed multiple issues with the value of hit, implemented caps and floors for avoidance stats. T9 set bonus should now be properly modeled.
+ - Rawr.Elemental: Added support for multiple targets and player latency.
+ - Rawr.Hunter: Chimera Shot's damage should now be calculated correctly, as should Wild Quiver. Fixed handleing of the 2pT9 bonus and various trinkets. Pets should regen focus at the correct rate now and their Kill Command should hit for the correct damage. Auto Shot should now be properly affected by haste. Steady Shot should now scale correctly. Cosmetic Work on the Options Panel made. Overall, there have been a large amount of changes to Rawr.Hunter, so please be sure to report any bugs you encounter on our site.
+ - Rawr.Rogue: T9 Set bonus should now be modeled correctly. Mutilate and Envenom should now do the proper amount of damage.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;

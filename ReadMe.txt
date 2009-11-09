@@ -1,15 +1,15 @@
-Rawr v2.2.24.0
+Rawr v2.2.25.0
 ------------
-Welcome to Rawr 2.2.24.0.
+Welcome to Rawr 2.2.25.0.
    
 Recent Changes:
- - A debuff was added to represent the "Expose Weakness" debuff used in the ToTC Anub encounter.
- - Rawr.Bear: Fixed a bug with Heroic Presense calculation.
- - Rawr.Moonkin: DoTs now benefit from Nature's Grace
- - Rawr.Enhance: User selected priority system implemnted.  Added support for modeling Flame Shock.
- - Rawr.Rogue: Many updated applied; this should fix a number of issues with trinkets and talents not being modeled correctly.  Haste has been updated, Rawr also now assumes (if you have the talent) that you use Blade Flurry ever 120 seconds.
- - Rawr.ProtWarr: Support added for boss dehaste abilities (ie: Thunder Clap, Imp. Icy Touch, etc) 
- - Rawr.Warlock: Added Glyph of Quick Decay. Fix for a crash when using a non-filler spell as the last spell in your rotation (DPS will be terrible, due to not having a filler, but at least won't crash when you're in the middle of swapping spells around in your rotation).
+ - Rawr.Enhance: Many Updates to GCD interaction with ability usage to improve accuracy of the module.
+ - Rawr.DPSWarr: Using Bladestorm will no longer eat all your GCDs in low rage settings. Offhand weapon enchants will no longer use your Mainhand weapon's speed for their uptime calculations.  
+ - Rawr.Tree: Added a replenishment buff checkbox in the buffs tab (previously, this was assumed "on" all the time). Added a slider to allow users to define how much time they cast vs not cast.
+ - Rawr.TankDK: Fixed multiple issues with the value of hit, implemented caps and floors for avoidance stats. T9 set bonus should now be properly modeled.
+ - Rawr.Elemental: Added support for multiple targets and player latency.
+ - Rawr.Hunter: Chimera Shot's damage should now be calculated correctly, as should Wild Quiver. Fixed handleing of the 2pT9 bonus and various trinkets. Pets should regen focus at the correct rate now and their Kill Command should hit for the correct damage. Auto Shot should now be properly affected by haste. Steady Shot should now scale correctly. Cosmetic Work on the Options Panel made. Overall, there have been a large amount of changes to Rawr.Hunter, so please be sure to report any bugs you encounter on our site.
+ - Rawr.Rogue: T9 Set bonus should now be modeled correctly. Mutilate and Envenom should now do the proper amount of damage.
 
 
  
@@ -29,10 +29,10 @@ Now that you have your current character fairly well defined, use the item compa
 FAQ
 ---
  Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
- A: Install .NET Framework 2.0 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 2.0, and try Rawr again. Download link for .NET Framework 2.0 from Microsoft: http://go.microsoft.com/fwlink/?linkid=32168 
+ A: Install .NET Framework 3.5sp1 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 3.5sp1, and try Rawr again. Download link for .NET Framework 3.5sp1 from Microsoft: http://www.microsoft.com/downloads/details.aspx?FamilyID=AB99342F-5D1A-413D-8319-81DA479AB0D7&displaylang=en
 
  Q: I get a "Cannot access disposed object." error. How can I fix that?
- A: There's a bug in the .NET Framework 2.0 which causes this on some machines. The only known fix right now is to uninstall it, and then reinstall the latest .NET Framework from Microsoft.
+ A: This is a bug in an old version of the .NET Framework. Download the most recent version (3.5sp1) from the above link.
 
  Q: There's an item missing! Can you please add [Some Item]?
  A: No, Rawr is designed so that we wouldn't need to update it with new items every time a new item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
@@ -93,7 +93,7 @@ Rawr's source code is freely available at its website, http://www.codeplex.com/R
 
 Rawr on Mac OS X / Linux
 ------------------------
-NOTE: Rawr v3 is currently in development, and will run natively on OSX Intel. Until then...
+NOTE: Rawr v3 is currently in development, and will run natively on OSX Intel. Contact me (cnervig@hotmail.com) if you're interested in beta testing it. Until then, I can't offer any support for running it as describe here, (though it does work for many people):
 
 You can run Rawr using Mono. Mono is a set of libraries that mimic the .NET Framework, which Rawr is built on, allowing it to run on OSX (and Linux). However, unfortunately, it's extremely buggy. If you want to give it a try, please do, it very well may work just fine for you. For most users, running Rawr via some form of emulation (Boot Camp, VMWare Fusion, Parallels, etc) will give you the best results, though. 
 
@@ -119,6 +119,15 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.24.0
+ - A debuff was added to represent the "Expose Weakness" debuff used in the ToTC Anub encounter.
+ - Rawr.Bear: Fixed a bug with Heroic Presense calculation.
+ - Rawr.Moonkin: DoTs now benefit from Nature's Grace
+ - Rawr.Enhance: User selected priority system implemnted.  Added support for modeling Flame Shock.
+ - Rawr.Rogue: Many updated applied; this should fix a number of issues with trinkets and talents not being modeled correctly.  Haste has been updated, Rawr also now assumes (if you have the talent) that you use Blade Flurry ever 120 seconds.
+ - Rawr.ProtWarr: Support added for boss dehaste abilities (ie: Thunder Clap, Imp. Icy Touch, etc) 
+ - Rawr.Warlock: Added Glyph of Quick Decay. Fix for a crash when using a non-filler spell as the last spell in your rotation (DPS will be terrible, due to not having a filler, but at least won't crash when you're in the middle of swapping spells around in your rotation).
+
 v2.2.23.0
  - Shift+Right-Click will now allow you to custom gem an item. This mirrors in-game functionality.
  - Added a Lesser Flask of Resistance to default Buffs.
