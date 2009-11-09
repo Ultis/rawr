@@ -1689,7 +1689,10 @@ namespace Rawr.Optimizer
 
         protected override OptimizerCharacter PostProcess(OptimizerCharacter bestIndividual)
         {
-            itemGenerator.NormalizeCharacter(bestIndividual.Character); // this makes it nonnormal, but i don't think it should create any problems
+            if (bestIndividual != null)
+            {
+                itemGenerator.NormalizeCharacter(bestIndividual.Character); // this makes it nonnormal, but i don't think it should create any problems
+            }
             return bestIndividual;
         }
 
