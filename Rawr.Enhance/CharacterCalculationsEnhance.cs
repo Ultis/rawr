@@ -351,6 +351,13 @@ namespace Rawr.Enhance
             set { _trinket2Uptime = value; }
         }
 
+        private float _fireTotemUptime;
+        public float FireTotemUptime
+        {
+            get { return _fireTotemUptime; }
+            set { _fireTotemUptime = value; }
+        }
+
         private float _t10_2Uptime;
         public float T10_2Uptime
         {
@@ -458,6 +465,7 @@ namespace Rawr.Enhance
             dictValues.Add("OH Enchant Uptime", OHEnchantUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Trinket 1 Uptime", Trinket1Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Trinket 2 Uptime", Trinket2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Fire Totem Uptime", FireTotemUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Tier 10 2 pc Uptime", T10_2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Tier 10 4 pc Uptime", T10_4Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             

@@ -78,6 +78,7 @@ namespace Rawr.Enhance
                     "Complex Stats:OH Enchant Uptime",
                     "Complex Stats:Trinket 1 Uptime",
                     "Complex Stats:Trinket 2 Uptime",
+                    "Complex Stats:Fire Totem Uptime",
                     "Complex Stats:Tier 10 2 pc Uptime",
                     "Complex Stats:Tier 10 4 pc Uptime",
                     "Attacks:White Damage",
@@ -549,6 +550,7 @@ namespace Rawr.Enhance
             calculatedStats.OHEnchantUptime = se.GetOHUptime() * 100f;
             calculatedStats.Trinket1Uptime = se.GetUptime(character.Trinket1) * 100f;
             calculatedStats.Trinket2Uptime = se.GetUptime(character.Trinket2) * 100f;
+            calculatedStats.FireTotemUptime = cs.FireTotemUptime * 100f;
             
             calculatedStats.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
             calculatedStats.TotalExpertiseOH = (float) Math.Floor(cs.ExpertiseBonusOH * 400f);
