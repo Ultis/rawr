@@ -1402,24 +1402,24 @@ the Threat Scale defined on the Options tab.",
 
 		public override void SetDefaults(Character character)
 		{
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Horn of Winter"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Devotion Aura"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Inspiration"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Battle Shout"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Moonkin Form"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Icy Talons"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Agility Food"));
-			character.ActiveBuffs.Add(Buff.GetBuffByName("Heroism/Bloodlust"));
+			character.ActiveBuffsAdd(("Horn of Winter"));
+			character.ActiveBuffsAdd(("Devotion Aura"));
+			character.ActiveBuffsAdd(("Inspiration"));
+			character.ActiveBuffsAdd(("Battle Shout"));
+			character.ActiveBuffsAdd(("Unleashed Rage"));
+			character.ActiveBuffsAdd(("Improved Moonkin Form"));
+			character.ActiveBuffsAdd(("Commanding Shout"));
+			character.ActiveBuffsAdd(("Leader of the Pack"));
+			character.ActiveBuffsAdd(("Improved Icy Talons"));
+			character.ActiveBuffsAdd(("Power Word: Fortitude"));
+			character.ActiveBuffsAdd(("Mark of the Wild"));
+			character.ActiveBuffsAdd(("Blessing of Kings"));
+			character.ActiveBuffsAdd(("Sunder Armor"));
+			character.ActiveBuffsAdd(("Faerie Fire"));
+			character.ActiveBuffsAdd(("Totem of Wrath"));
+			character.ActiveBuffsAdd(("Flask of Stoneblood"));
+			character.ActiveBuffsAdd(("Agility Food"));
+			character.ActiveBuffsAdd(("Heroism/Bloodlust"));
 
 			character.DruidTalents.GlyphOfMaul = true;
 			character.DruidTalents.GlyphOfGrowl = true;

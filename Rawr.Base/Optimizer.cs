@@ -1547,7 +1547,7 @@ namespace Rawr.Optimizer
                 Buff food = (Buff)items[characterSlots];
                 if (food != null && !character.ActiveBuffs.Contains(food))
                 {
-                    character.ActiveBuffs.Add(food);
+                    character.ActiveBuffsAdd(food);
                     CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, food);
                 }
             }
@@ -1562,8 +1562,8 @@ namespace Rawr.Optimizer
                     {
                         if (!character.ActiveBuffs.Contains(battle))
                         {
-                            character.ActiveBuffs.Add(battle);
-                            if (mixology) character.ActiveBuffs.Add(battle.Improvements[0]);
+                            character.ActiveBuffsAdd(battle);
+                            if (mixology) character.ActiveBuffsAdd(battle.Improvements[0]);
                             CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, battle);
                         }
                         else if (mixology)
@@ -1573,7 +1573,7 @@ namespace Rawr.Optimizer
                             {
                                 if (!character.ActiveBuffs.Contains(improvement))
                                 {
-                                    character.ActiveBuffs.Add(improvement);
+                                    character.ActiveBuffsAdd(improvement);
                                 }
                             }
                         }
@@ -1585,8 +1585,8 @@ namespace Rawr.Optimizer
                     {
                         if (!character.ActiveBuffs.Contains(battle))
                         {
-                            character.ActiveBuffs.Add(battle);
-                            if (mixology) character.ActiveBuffs.Add(battle.Improvements[0]);
+                            character.ActiveBuffsAdd(battle);
+                            if (mixology) character.ActiveBuffsAdd(battle.Improvements[0]);
                             CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, battle);
                         }
                         else if (mixology)
@@ -1596,7 +1596,7 @@ namespace Rawr.Optimizer
                             {
                                 if (!character.ActiveBuffs.Contains(improvement))
                                 {
-                                    character.ActiveBuffs.Add(improvement);
+                                    character.ActiveBuffsAdd(improvement);
                                 }
                             }
                         }
@@ -1605,8 +1605,8 @@ namespace Rawr.Optimizer
                     {
                         if (!character.ActiveBuffs.Contains(guardian))
                         {
-                            character.ActiveBuffs.Add(guardian);
-                            if (mixology) character.ActiveBuffs.Add(guardian.Improvements[0]);
+                            character.ActiveBuffsAdd(guardian);
+                            if (mixology) character.ActiveBuffsAdd(guardian.Improvements[0]);
                             CalculationsBase.RemoveConflictingBuffs(character.ActiveBuffs, guardian);
                         }
                         else if (mixology)
@@ -1616,7 +1616,7 @@ namespace Rawr.Optimizer
                             {
                                 if (!character.ActiveBuffs.Contains(improvement))
                                 {
-                                    character.ActiveBuffs.Add(improvement);
+                                    character.ActiveBuffsAdd(improvement);
                                 }
                             }
                         }

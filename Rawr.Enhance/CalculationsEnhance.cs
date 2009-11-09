@@ -653,50 +653,50 @@ namespace Rawr.Enhance
         public override void SetDefaults(Character character)
         {
             // add shaman buffs
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Heroism/Bloodlust"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
+            character.ActiveBuffsAdd(("Strength of Earth Totem"));
+            character.ActiveBuffsAdd(("Heroism/Bloodlust"));
+            character.ActiveBuffsAdd(("Windfury Totem"));
 
             if (character.ShamanTalents.ImprovedWindfuryTotem == 2)
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Windfury Totem"));
+                character.ActiveBuffsAdd(("Improved Windfury Totem"));
             if (character.ShamanTalents.EnhancingTotems == 3)
             {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Agility/Strength)")); // add both the Agi Str one 
+                character.ActiveBuffsAdd(("Enhancing Totems (Agility/Strength)")); // add both the Agi Str one 
             }
 
             // add other raid buffs
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Wisdom"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Wisdom"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Sanctuary"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Elemental Oath"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spell Power)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Divine Spirit"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings (Str/Sta Bonus)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blood Frenzy"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Scorch"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Curse of the Elements"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Misery"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Hunting Party"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Judgement of Wisdom"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Endless Rage"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Potion of Speed"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
+            character.ActiveBuffsAdd(("Blessing of Wisdom"));
+            character.ActiveBuffsAdd(("Improved Blessing of Wisdom"));
+            character.ActiveBuffsAdd(("Blessing of Might"));
+            character.ActiveBuffsAdd(("Improved Blessing of Might"));
+            character.ActiveBuffsAdd(("Sanctified Retribution"));
+            character.ActiveBuffsAdd(("Blessing of Sanctuary"));
+            character.ActiveBuffsAdd(("Swift Retribution"));
+            character.ActiveBuffsAdd(("Arcane Intellect"));
+            character.ActiveBuffsAdd(("Commanding Shout"));
+            character.ActiveBuffsAdd(("Leader of the Pack"));
+            character.ActiveBuffsAdd(("Elemental Oath"));
+            character.ActiveBuffsAdd(("Wrath of Air Totem"));
+            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
+            character.ActiveBuffsAdd(("Divine Spirit"));
+            character.ActiveBuffsAdd(("Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Mark of the Wild"));
+            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Blessing of Kings"));
+            character.ActiveBuffsAdd(("Blessing of Kings (Str/Sta Bonus)"));
+            character.ActiveBuffsAdd(("Sunder Armor"));
+            character.ActiveBuffsAdd(("Faerie Fire"));
+            character.ActiveBuffsAdd(("Heart of the Crusader"));
+            character.ActiveBuffsAdd(("Blood Frenzy"));
+            character.ActiveBuffsAdd(("Improved Scorch"));
+            character.ActiveBuffsAdd(("Curse of the Elements"));
+            character.ActiveBuffsAdd(("Misery"));
+            character.ActiveBuffsAdd(("Hunting Party"));
+            character.ActiveBuffsAdd(("Judgement of Wisdom"));
+            character.ActiveBuffsAdd(("Flask of Endless Rage"));
+            character.ActiveBuffsAdd(("Potion of Speed"));
+            character.ActiveBuffsAdd(("Fish Feast"));
 
             character.EnforceGemRequirements = true; // set default to be true for Enhancement Shaman
         }

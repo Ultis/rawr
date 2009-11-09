@@ -107,23 +107,23 @@ namespace Rawr.RestoSham
         //
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Moonkin Form"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Tree of Life Aura"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Vampiric Touch"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Mana Spring Totem"));
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Restorative Totems"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Moonkin Form"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spell Power)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of the Frost Wyrm"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Spell Power Food"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Earthliving Weapon"));
+            character.ActiveBuffsAdd(("Improved Moonkin Form"));
+            character.ActiveBuffsAdd(("Tree of Life Aura"));
+            character.ActiveBuffsAdd(("Arcane Intellect"));
+            character.ActiveBuffsAdd(("Vampiric Touch"));
+            character.ActiveBuffsAdd(("Mana Spring Totem"));
+                character.ActiveBuffsAdd(("Restorative Totems"));
+            character.ActiveBuffsAdd(("Moonkin Form"));
+            character.ActiveBuffsAdd(("Wrath of Air Totem"));
+            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
+            character.ActiveBuffsAdd(("Power Word: Fortitude"));
+                character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Mark of the Wild"));
+                character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Blessing of Kings"));
+            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
+            character.ActiveBuffsAdd(("Spell Power Food"));
+            character.ActiveBuffsAdd(("Earthliving Weapon"));
         }
         private string[] _characterDisplayCalcLabels = null;
 

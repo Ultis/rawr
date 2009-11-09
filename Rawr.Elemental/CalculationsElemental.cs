@@ -171,27 +171,27 @@ namespace Rawr.Elemental
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Heroism/Bloodlust"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Hunting Party"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Wisdom"));
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Wisdom"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Moonkin Form"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spell Power)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Divine Spirit"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Judgement of Wisdom"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Shadow Bolt"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Curse of the Elements"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Faerie Fire"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of the Frost Wyrm"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
+            character.ActiveBuffsAdd(("Sanctified Retribution"));
+            character.ActiveBuffsAdd(("Heroism/Bloodlust"));
+            character.ActiveBuffsAdd(("Swift Retribution"));
+            character.ActiveBuffsAdd(("Arcane Intellect"));
+            character.ActiveBuffsAdd(("Hunting Party"));
+            character.ActiveBuffsAdd(("Blessing of Wisdom"));
+                character.ActiveBuffsAdd(("Improved Blessing of Wisdom"));
+            character.ActiveBuffsAdd(("Moonkin Form"));
+            character.ActiveBuffsAdd(("Wrath of Air Totem"));
+            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
+            character.ActiveBuffsAdd(("Divine Spirit"));
+            character.ActiveBuffsAdd(("Mark of the Wild"));
+            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Blessing of Kings"));
+            character.ActiveBuffsAdd(("Totem of Wrath"));
+            character.ActiveBuffsAdd(("Judgement of Wisdom"));
+            character.ActiveBuffsAdd(("Improved Shadow Bolt"));
+            character.ActiveBuffsAdd(("Curse of the Elements"));
+            character.ActiveBuffsAdd(("Improved Faerie Fire"));
+            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
+            character.ActiveBuffsAdd(("Fish Feast"));
         }
 
 		private Dictionary<string, Color> _subPointNameColors = null;

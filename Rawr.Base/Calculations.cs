@@ -816,7 +816,7 @@ namespace Rawr
             {
                 if (!charAutoActivated.ActiveBuffs.Contains(autoBuff))
                 {
-                    charAutoActivated.ActiveBuffs.Add(autoBuff);
+                    charAutoActivated.ActiveBuffsAdd(autoBuff);
                     RemoveConflictingBuffs(charAutoActivated.ActiveBuffs, autoBuff);
                 }
             }
@@ -856,7 +856,7 @@ namespace Rawr
 					if (charUnequipped.ActiveBuffs.Contains(buff))
 						charUnequipped.ActiveBuffs.Remove(buff);
 					if (!charEquipped.ActiveBuffs.Contains(buff))
-						charEquipped.ActiveBuffs.Add(buff);
+						charEquipped.ActiveBuffsAdd(buff);
 					//if (string.IsNullOrEmpty(buff.RequiredBuff))
 					//{
 					//    charUnequipped.ActiveBuffs.RemoveAll(x => x.Name == "Improved " + buff.Name);
@@ -865,7 +865,7 @@ namespace Rawr
 					//    charUnequipped.ActiveBuffs.RemoveAll(x => x.Name == buff.RequiredBuff);
 
 					//if (!charEquipped.ActiveBuffs.Contains(buff))
-					//    charEquipped.ActiveBuffs.Add(buff);
+					//    charEquipped.ActiveBuffsAdd(buff);
 					//if (string.IsNullOrEmpty(buff.RequiredBuff))
 					//{
 					//    charEquipped.ActiveBuffs.RemoveAll(x => x.Name == "Improved " + buff.Name);
@@ -874,7 +874,7 @@ namespace Rawr
 					//{
 					//    Buff requiredBuff = Buff.GetBuffByName(buff.RequiredBuff);
 					//    if (!charEquipped.ActiveBuffs.Contains(requiredBuff))
-					//        charEquipped.ActiveBuffs.Add(requiredBuff);
+					//        charEquipped.ActiveBuffsAdd(requiredBuff);
 					//}
 
                     RemoveConflictingBuffs(charEquipped.ActiveBuffs, buff);

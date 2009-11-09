@@ -638,7 +638,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (character.Race == CharacterRace.Draenei
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
             {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+                character.ActiveBuffsAdd(("Heroic Presence"));
             }
 
             /* NOTE: THIS CODE IS FROM DPSWARR, HUNTER MAY MAKE USE OF IT EVENTUALLY TO HANDLE CONFLICTS LIKE TRUESHOT AURA
@@ -659,7 +659,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             foreach (Buff b in removedBuffs) {
-                character.ActiveBuffs.Add(b);
+                character.ActiveBuffsAdd(b);
             }
 
             return statsBuffs;
@@ -668,7 +668,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (character.Race == CharacterRace.Draenei
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
             {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+                character.ActiveBuffsAdd(("Heroic Presence"));
             }
         }
 

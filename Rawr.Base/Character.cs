@@ -364,6 +364,19 @@ namespace Rawr //O O . .
 			set { _activeBuffs = value; }
         }
 
+		public void ActiveBuffsAdd(Buff buff)
+		{
+			if (buff != null)
+				ActiveBuffs.Add(buff);
+		}
+
+		public void ActiveBuffsAdd(string buffName)
+		{
+			Buff buff = Buff.GetBuffByName(buffName);
+			if (buff != null)
+				ActiveBuffs.Add(buff);
+		}
+
         public bool ActiveBuffsContains(string buff)
         {
             if (_activeBuffs == null)

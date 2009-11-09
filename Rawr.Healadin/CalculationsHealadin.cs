@@ -53,22 +53,22 @@ namespace Rawr.Healadin
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Judgements of the Wise"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Wisdom"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Wisdom"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Elemental Oath"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Wrath of Air Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Totem of Wrath (Spell Power)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of the Frost Wyrm"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Tree of Life Aura"));
+            character.ActiveBuffsAdd(("Swift Retribution"));
+            character.ActiveBuffsAdd(("Arcane Intellect"));
+            character.ActiveBuffsAdd(("Judgements of the Wise"));
+            character.ActiveBuffsAdd(("Blessing of Wisdom"));
+            character.ActiveBuffsAdd(("Improved Blessing of Wisdom"));
+            character.ActiveBuffsAdd(("Elemental Oath"));
+            character.ActiveBuffsAdd(("Wrath of Air Totem"));
+            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
+            character.ActiveBuffsAdd(("Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Mark of the Wild"));
+            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Blessing of Kings"));
+            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
+            character.ActiveBuffsAdd(("Fish Feast"));
+            character.ActiveBuffsAdd(("Tree of Life Aura"));
         }
 
         private static List<string> _relevantGlyphs;

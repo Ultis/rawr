@@ -657,7 +657,7 @@ These numbers to do not include racial bonuses.",
             if (character.Race == CharacterRace.Draenei
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
             {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+                character.ActiveBuffsAdd(("Heroic Presence"));
             }
             #endregion
 
@@ -666,13 +666,13 @@ These numbers to do not include racial bonuses.",
             if (CheckHasProf(Profession.Mining)
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
             {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Toughness"));
+                character.ActiveBuffsAdd(("Toughness"));
             }
             // Skinners should always have this buff activated
             if (CheckHasProf(Profession.Skinning)
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
             {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Master of Anatomy"));
+                character.ActiveBuffsAdd(("Master of Anatomy"));
             }
             // Engineers should always have this buff activated IF the Primary is
             if (CheckHasProf(Profession.Engineering)) {
@@ -684,7 +684,7 @@ These numbers to do not include racial bonuses.",
                     if ( character.ActiveBuffs.Contains(Buff.GetBuffByName(name)) &&
                         !character.ActiveBuffs.Contains(Buff.GetBuffByName(name + " (Engineer Bonus)")))
                     {
-                        character.ActiveBuffs.Add(Buff.GetBuffByName(name + " (Engineer Bonus)"));
+                        character.ActiveBuffsAdd((name + " (Engineer Bonus)"));
                     }
                 }
             }
@@ -815,7 +815,7 @@ These numbers to do not include racial bonuses.",
 
                     Buff newBuff = new Buff() { Stats = newStats };
                     character.ActiveBuffs.Remove(potionBuff);
-                    character.ActiveBuffs.Add(newBuff);
+                    character.ActiveBuffsAdd(newBuff);
                     removedBuffs.Add(potionBuff);
                     addedBuffs.Add(newBuff);
                 }
@@ -855,7 +855,7 @@ These numbers to do not include racial bonuses.",
             #endregion
             
             foreach (Buff b in removedBuffs) {
-                character.ActiveBuffs.Add(b);
+                character.ActiveBuffsAdd(b);
             }
             foreach (Buff b in addedBuffs){
                 character.ActiveBuffs.Remove(b);
@@ -886,7 +886,7 @@ These numbers to do not include racial bonuses.",
                     character.ActiveBuffs.Remove(Buff.GetBuffByName("Expose Armor"));
                 }
             }
-            if (doit) { character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor")); }*/
+            if (doit) { character.ActiveBuffsAdd(("Sunder Armor")); }*/
         }
 
         public override bool IncludeOffHandInCalculations(Character character) {

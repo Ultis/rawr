@@ -1353,7 +1353,7 @@ focus on Survival Points.",
             if (character.Race == CharacterRace.Draenei
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
             {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+                character.ActiveBuffsAdd(("Heroic Presence"));
             }
 
             /* NOTE: THIS CODE IS FROM DPSWARR, PROTPALADIN MAY MAKE USE OF IT EVENTUALLY TO HANDLE CONFLICTS LIKE CONCENTRATION AURA
@@ -1374,7 +1374,7 @@ focus on Survival Points.",
             Stats statsBuffs = base.GetBuffsStats(character.ActiveBuffs);
 
             foreach (Buff b in removedBuffs) {
-                character.ActiveBuffs.Add(b);
+                character.ActiveBuffsAdd(b);
             }
 
             return statsBuffs;
@@ -1383,7 +1383,7 @@ focus on Survival Points.",
             if (character.Race == CharacterRace.Draenei
                 && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
             {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+                character.ActiveBuffsAdd(("Heroic Presence"));
             }
         }
         #endregion

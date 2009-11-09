@@ -718,7 +718,7 @@ namespace Rawr.Moonkin
                     CharacterCalculationsMoonkin calcsManaJoW = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
                     if (character.ActiveBuffsContains("Judgement of Wisdom"))
                     {
-                        c2.ActiveBuffs.Add(jow);
+                        c2.ActiveBuffsAdd(jow);
                     }
                     foreach (KeyValuePair<string, RotationData> pairs in calcsManaJoW.Rotations)
                     {
@@ -785,7 +785,7 @@ namespace Rawr.Moonkin
                     CharacterCalculationsMoonkin calcsManaManaSpring = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
                     if (character.ActiveBuffsContains("Mana Spring Totem"))
                     {
-                        c2.ActiveBuffs.Add(manaSpring);
+                        c2.ActiveBuffsAdd(manaSpring);
                     }
                     foreach (KeyValuePair<string, RotationData> pairs in calcsManaManaSpring.Rotations)
                     {

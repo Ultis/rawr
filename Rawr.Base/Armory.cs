@@ -343,14 +343,14 @@ namespace Rawr
         private static void ApplyRacialandProfessionBuffs(XmlDocument doc, Character character)
         {
             if (character.Race == CharacterRace.Draenei)
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+                character.ActiveBuffsAdd(("Heroic Presence"));
 
             foreach (XmlNode profession in doc.SelectNodes("page/characterInfo/characterTab/professions/skill"))
             {   // apply profession buffs if max skill
                 if (profession.Attributes["name"].Value == "Mining" && profession.Attributes["value"].Value == "450")
-                    character.ActiveBuffs.Add(Buff.GetBuffByName("Toughness"));
+                    character.ActiveBuffsAdd(("Toughness"));
                 if (profession.Attributes["name"].Value == "Skinning" && profession.Attributes["value"].Value == "450")
-                    character.ActiveBuffs.Add(Buff.GetBuffByName("Master of Anatomy"));
+                    character.ActiveBuffsAdd(("Master of Anatomy"));
                 if (profession.Attributes["name"].Value == "Blacksmithing" && int.Parse(profession.Attributes["value"].Value) >= 400)
                 {
                     character.WristBlacksmithingSocketEnabled = true;

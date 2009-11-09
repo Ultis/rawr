@@ -292,39 +292,39 @@ threat and limited threat scaled by the threat scale.",
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Enhancing Totems (Agility/Strength)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Devotion Aura"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Devotion Aura (Armor)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Inspiration"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Renewed Hope"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Presence (Health)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Windfury Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings (Str/Sta Bonus)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Trauma"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Insect Swarm"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Thunder Clap"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Thunder Clap"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood"));
+            character.ActiveBuffsAdd(("Strength of Earth Totem"));
+            character.ActiveBuffsAdd(("Enhancing Totems (Agility/Strength)"));
+            character.ActiveBuffsAdd(("Devotion Aura"));
+            character.ActiveBuffsAdd(("Improved Devotion Aura (Armor)"));
+            character.ActiveBuffsAdd(("Inspiration"));
+            character.ActiveBuffsAdd(("Blessing of Might"));
+            character.ActiveBuffsAdd(("Improved Blessing of Might"));
+            character.ActiveBuffsAdd(("Unleashed Rage"));
+            character.ActiveBuffsAdd(("Sanctified Retribution"));
+            character.ActiveBuffsAdd(("Renewed Hope"));
+            character.ActiveBuffsAdd(("Swift Retribution"));
+            character.ActiveBuffsAdd(("Commanding Shout"));
+            character.ActiveBuffsAdd(("Commanding Presence (Health)"));
+            character.ActiveBuffsAdd(("Leader of the Pack"));
+            character.ActiveBuffsAdd(("Windfury Totem"));
+            character.ActiveBuffsAdd(("Improved Windfury Totem"));
+            character.ActiveBuffsAdd(("Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Mark of the Wild"));
+            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Blessing of Kings"));
+            character.ActiveBuffsAdd(("Blessing of Kings (Str/Sta Bonus)"));
+            character.ActiveBuffsAdd(("Sunder Armor"));
+            character.ActiveBuffsAdd(("Faerie Fire"));
+            character.ActiveBuffsAdd(("Trauma"));
+            character.ActiveBuffsAdd(("Heart of the Crusader"));
+            character.ActiveBuffsAdd(("Insect Swarm"));
+            character.ActiveBuffsAdd(("Thunder Clap"));
+            character.ActiveBuffsAdd(("Improved Thunder Clap"));
+            character.ActiveBuffsAdd(("Flask of Stoneblood"));
             if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Stoneblood (Mixology)"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
+                character.ActiveBuffsAdd(("Flask of Stoneblood (Mixology)"));
+            character.ActiveBuffsAdd(("Fish Feast"));
         }
 
         public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }

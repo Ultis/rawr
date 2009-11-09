@@ -116,31 +116,31 @@ namespace Rawr.Retribution
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Strength of Earth Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Blessing of Might"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Unleashed Rage"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Sanctified Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Swift Retribution"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Arcane Intellect"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Commanding Shout"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Leader of the Pack"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Windfury Totem"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Elemental Oath"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Power Word: Fortitude"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Mark of the Wild"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Sunder Armor"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Faerie Fire"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Heart of the Crusader"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blood Frenzy"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Improved Scorch"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Curse of the Elements"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Misery"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Blessing of Kings"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Flask of Endless Rage"));
-            character.ActiveBuffs.Add(Buff.GetBuffByName("Fish Feast"));
+            character.ActiveBuffsAdd(("Strength of Earth Totem"));
+            character.ActiveBuffsAdd(("Blessing of Might"));
+            character.ActiveBuffsAdd(("Improved Blessing of Might"));
+            character.ActiveBuffsAdd(("Unleashed Rage"));
+            character.ActiveBuffsAdd(("Sanctified Retribution"));
+            character.ActiveBuffsAdd(("Swift Retribution"));
+            character.ActiveBuffsAdd(("Arcane Intellect"));
+            character.ActiveBuffsAdd(("Commanding Shout"));
+            character.ActiveBuffsAdd(("Leader of the Pack"));
+            character.ActiveBuffsAdd(("Windfury Totem"));
+            character.ActiveBuffsAdd(("Elemental Oath"));
+            character.ActiveBuffsAdd(("Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
+            character.ActiveBuffsAdd(("Mark of the Wild"));
+            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Sunder Armor"));
+            character.ActiveBuffsAdd(("Faerie Fire"));
+            character.ActiveBuffsAdd(("Heart of the Crusader"));
+            character.ActiveBuffsAdd(("Blood Frenzy"));
+            character.ActiveBuffsAdd(("Improved Scorch"));
+            character.ActiveBuffsAdd(("Curse of the Elements"));
+            character.ActiveBuffsAdd(("Misery"));
+            character.ActiveBuffsAdd(("Blessing of Kings"));
+            character.ActiveBuffsAdd(("Flask of Endless Rage"));
+            character.ActiveBuffsAdd(("Fish Feast"));
         }
 
         private static List<string> _relevantGlyphs;

@@ -1450,7 +1450,7 @@ namespace Rawr
             // TODO this is prone for exceptions and the way it is called is completely inappropriate
             // should rework this completely
             if (Character.Race == CharacterRace.Draenei)
-                Character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
+                Character.ActiveBuffsAdd(("Heroic Presence"));
             else if (Character.Faction == CharacterFaction.Horde)
                 Character.ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
             OnRaceChanged();
