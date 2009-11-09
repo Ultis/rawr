@@ -942,7 +942,7 @@ namespace Rawr
 
 				StatusMessaging.UpdateStatus("Get Character From Armory", "C");
 
-                Result = new Character(name, realm, Region, race, boss,
+                Result = new Character(name, realm, Region, race, //boss,
                     items.ContainsKey(CharacterSlot.Head) ? items[CharacterSlot.Head] : null,
                     items.ContainsKey(CharacterSlot.Neck) ? items[CharacterSlot.Neck] : null,
                     items.ContainsKey(CharacterSlot.Shoulders) ? items[CharacterSlot.Shoulders] : null,

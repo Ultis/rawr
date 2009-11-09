@@ -23,9 +23,9 @@ namespace Rawr.UI
             {
                 if (_char != null) {
                     _char.ClassChanged -= new EventHandler(character_ClassChanged);
-                    if (_char.BossOptions != null) {
+                    /*if (_char.BossOptions != null) {
                         _char.BossOptions.PropertyChanged -= new PropertyChangedEventHandler(bossOpts_PropertyChanged);
-                    }
+                    }*/
                 }
                 _char = value;
                 if (_char != null)
@@ -33,10 +33,10 @@ namespace Rawr.UI
                     _char.ClassChanged += new EventHandler(character_ClassChanged);
                     character_ClassChanged(this, EventArgs.Empty);
 
-                    BossHandler bossOpts = _char.BossOptions;
-                    DataContext = bossOpts;
-                    bossOpts.PropertyChanged += new PropertyChangedEventHandler(bossOpts_PropertyChanged);
-                    bossOpts_PropertyChanged(this, null);
+                    //BossHandler bossOpts = _char.BossOptions;
+                    //DataContext = bossOpts;
+                    //bossOpts.PropertyChanged += new PropertyChangedEventHandler(bossOpts_PropertyChanged);
+                    //bossOpts_PropertyChanged(this, null);
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace Rawr.UI
         private bool isLoading = false;
         public void bossOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            BossHandler bossOpts = Character.BossOptions;
+            /*BossHandler bossOpts = Character.BossOptions;
             // Target Armor/Level
             if (!isLoading && CB_Level.SelectedIndex == -1) { CB_Level.SelectedIndex = 0; }
             if (!isLoading && CB_Armor.SelectedIndex == -1) { CB_Armor.SelectedIndex = 0; }
@@ -66,7 +66,7 @@ namespace Rawr.UI
             BT_Fears.IsEnabled = (bool)CK_FearingTargs.IsChecked;
             BT_Roots.IsEnabled = (bool)CK_RootingTargs.IsChecked;
             BT_Disarms.IsEnabled = (bool)CK_DisarmTargs.IsChecked;
-            BT_Attacks.IsEnabled = (bool)CK_Attacks.IsChecked;
+            BT_Attacks.IsEnabled = (bool)CK_Attacks.IsChecked;*/
             //
             Character.OnCalculationsInvalidated();
         }

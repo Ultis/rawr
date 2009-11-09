@@ -164,12 +164,12 @@ namespace Rawr //O O . .
 
         public List<OptimizationRequirement> OptimizationRequirements { get; set; }
 
-        [XmlElement("Boss")]
+        /*[XmlElement("Boss")]
         public BossHandler SerializableBoss { get { return BossOptions ?? (BossOptions = new BossHandler()); }
-            set { BossOptions = value.Clone() /*new BossHandler(value)*/; } }
+            set { BossOptions = value.Clone() /*new BossHandler(value)*//*; } }
 
         [XmlIgnore]
-        public BossHandler BossOptions = null;
+        public BossHandler BossOptions = null;*/
 
         [XmlElement("WarriorTalents")]
 		public string SerializableWarriorTalents { get { return WarriorTalents.ToString(); } 
@@ -1600,7 +1600,7 @@ namespace Rawr //O O . .
 
         public Character() { }
 
-		public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
+		public Character(string name, string realm, CharacterRegion region, CharacterRace race,// BossHandler boss,
 			string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
 				string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, 
 			string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, 
@@ -1641,10 +1641,10 @@ namespace Rawr //O O . .
             IsLoading = false;
             RecalculateSetBonuses();
 
-            BossOptions = boss;
+            //BossOptions = boss;
         }
 
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race,// BossHandler boss,
             ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
                 ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2,
             ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
@@ -1685,11 +1685,11 @@ namespace Rawr //O O . .
             SetFaction();
             IsLoading = false;
             RecalculateSetBonuses();
-            BossOptions = boss;
+            //BossOptions = boss;
         }
 
         // the following are special contructors used by optimizer, they assume the cached items/enchant are always used, and the underlying gemmedid/enchantid are never used
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race,// BossHandler boss,
 			ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
                 ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2, 
 			ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
@@ -1727,10 +1727,11 @@ namespace Rawr //O O . .
             CurrentModel = model;
             RecalculateSetBonuses();
 
-            BossOptions = boss;
+            //BossOptions = boss;
         }
 
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss, object[] items, int count, List<Buff> activeBuffs, string model)
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, //BossHandler boss,
+            object[] items, int count, List<Buff> activeBuffs, string model)
         {
             IsLoading = true;
             _name = name;
@@ -1745,10 +1746,11 @@ namespace Rawr //O O . .
             CurrentModel = model;
             RecalculateSetBonuses();
 
-            BossOptions = boss;
+            //BossOptions = boss;
         }
 
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss, ItemInstance[] items, List<Buff> activeBuffs, string model)
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, //BossHandler boss,
+            ItemInstance[] items, List<Buff> activeBuffs, string model)
         {
             IsLoading = true;
             _name = name;
@@ -1763,7 +1765,7 @@ namespace Rawr //O O . .
             CurrentModel = model;
             RecalculateSetBonuses();
 
-            BossOptions = boss;
+            //BossOptions = boss;
         }
 
 		public Character Clone()
@@ -1774,7 +1776,8 @@ namespace Rawr //O O . .
                 ItemInstance itemInstance = _item[i];
                 if (itemInstance != null) clonedItemInstances[i] = itemInstance.Clone();
             }
-            Character clone = new Character(this.Name, this.Realm, this.Region, this.Race, this.BossOptions, clonedItemInstances, ActiveBuffs, CurrentModel);
+            Character clone = new Character(this.Name, this.Realm, this.Region, this.Race, //this.BossOptions,
+                clonedItemInstances, ActiveBuffs, CurrentModel);
 			clone.CalculationOptions = this.CalculationOptions;
             clone.Class = this.Class;
             clone.AssignAllTalentsFromCharacter(this, true);
@@ -1788,7 +1791,7 @@ namespace Rawr //O O . .
             clone.OptimizationRequirements = this.OptimizationRequirements;
 #endif
             clone.CalculationToOptimize = this.CalculationToOptimize;
-            clone.BossOptions = this.BossOptions;
+           // clone.BossOptions = this.BossOptions;
 			return clone;
 		}
     
