@@ -2065,6 +2065,7 @@ namespace Rawr {
         /// This stat stores Mana restorations such as Runic Mana Potion
         /// or Mana Restore procs like Figurine - Talasite Owl's Use Effect
         /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Mana Restored")]
         [Category("Equipment Effects")]
         public float ManaRestore
