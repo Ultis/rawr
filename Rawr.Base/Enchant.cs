@@ -584,7 +584,11 @@ namespace Rawr
             Stats berserking = new Stats();
             berserking.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 400f, BonusArmorMultiplier = -.05f }, 15f, 0f, -1.2f));
             defaultEnchants.Add(new Enchant(3789, "Berserking", ItemSlot.OneHand, berserking));
-            
+
+            Stats blackMagic = new Stats();
+            blackMagic.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { HasteRating = 250f }, 10f, 45f, 0.35f));
+            defaultEnchants.Add(new Enchant(3790, "Black Magic", ItemSlot.OneHand, blackMagic));
+
             Stats executioner = new Stats();
             executioner.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetrationRating = 120f }, 15f, 0f, -1.25f));
             defaultEnchants.Add(new Enchant(3225, "Executioner", ItemSlot.OneHand, executioner));
