@@ -225,6 +225,38 @@
     <Tree3>2</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
+    <Name>Protection: Seals of the Pure</Name>
+    <Class>Paladin</Class>
+    <Spec>050000000000000000000000005500513520310232133331232150200000000000000000000000.0000000100000000000000011100001100</Spec>
+    <Tree1>5</Tree1>
+    <Tree2>59</Tree2>
+    <Tree3>7</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Protection: Crusade</Name>
+    <Class>Paladin</Class>
+    <Spec>000000000000000000000000000500513520310231133331232150230050000300000000000000.0000000100000000000000011100001100</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>53</Tree2>
+    <Tree3>18</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Protection: Deep Protection</Name>
+    <Class>Paladin</Class>
+    <Spec>000000000000000000000000005532513522315232133331232100000000000000000000000000.0000000100000000000000011100001100</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>71</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Protection: Improved Concentration Aura</Name>
+    <Class>Paladin</Class>
+    <Spec>503121503000000000000000005032013522310230131331232000000000000000000000000000.0000000100000000000000011100001100</Spec>
+    <Tree1>20</Tree1>
+    <Tree2>51</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
     <Name>Retribution</Name>
     <Class>Paladin</Class>
     <Spec>000000000000000000000000005500010420000000000000000005232050203331302133231331.0000000000000000001010001000001101</Spec>
