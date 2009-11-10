@@ -2388,11 +2388,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             HunterTalents talents = character.HunterTalents;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
-            statsRace += new Stats() {
-                PhysicalCrit = ((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
-                                (character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow)) ?
-                                0.10f : 0.00f,
-            };
+			statsRace.PhysicalCrit += (character.Ranged != null && 
+				((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
+				(character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow))) ?
+				0.01f : 0.00f;
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsOptionsPanel = new Stats()
