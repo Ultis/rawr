@@ -291,12 +291,14 @@ namespace Rawr.Enhance
             float mwProcsPerSecond = 0f;
             secondsToFiveStack = 10f;
             float averageMeleeCritChance = (chanceYellowCritMH + chanceYellowCritOH) / 2f;
+            float averageMeleeHitChance = ((1f - chanceWhiteMissMH - chanceDodgeMH) + (1f - chanceWhiteMissOH - chanceDodgeOH)) / 2f;
+            float averageMeleeMissChance = (chanceWhiteMissMH + chanceDodgeMH + chanceWhiteMissOH + chanceDodgeOH) / 2f;
             float couldCritSwingsPerSecond = 0f;
             float whiteHitsPerSMH = 0f;
             float whiteHitsPerSOH = 0f;
             float yellowHitsPerSMH = 0f;
             float yellowHitsPerSOH = 0f;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
             {
                 float bonusHaste = (1f + (flurryUptime * flurryHasteBonus));
                 hastedMHSpeed = baseHastedMHSpeed / bonusHaste;
@@ -318,7 +320,8 @@ namespace Rawr.Enhance
                 //Due to attack table, a white swing has the same chance to crit as a yellow hit
                 couldCritSwingsPerSecond = whiteHitsPerSMH + whiteHitsPerSOH + yellowHitsPerSMH + yellowHitsPerSOH;
                 float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;
-                flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);
+//                flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);  // old formulae
+                flurryUptime = CalculateFlurryUptime(averageMeleeCritChance, averageMeleeHitChance, averageMeleeMissChance);
 
                 hitsPerSMH = whiteHitsPerSMH + yellowHitsPerSMH;
                 mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH;
@@ -359,6 +362,14 @@ namespace Rawr.Enhance
             float staticShockChance = (.02f * _character.ShamanTalents.StaticShock + (_stats.Enhance2T9 == 1f ? 0.03f : 0f));
             staticShocksPerSecond = (HitsPerSMH + HitsPerSOH) * staticShockChance;
             maxMana = _stats.Mana;
+        }
+
+        private float CalculateFlurryUptime(float c, float h, float m) // c = crit rate, h = hit rate, m = miss rate, assuming hits as noncrits only
+        {
+            h = h - c; // remove crits from hit figure
+            float result = 1 - (float)Math.Pow(1 - c, 3) + 3 * c * m * h * h + 6 * c * m * m * h * h + 3 * c * m * m * h +
+                c * m * m * m * (-6 * h * h * m * m - m * m - 3 * h * m * m + 15 * h * h * m + 2 * m + 7 * h * m - 10 * h * h - 1 - 4 * h) / (float)Math.Pow(m - 1, 3);
+            return result;
         }
         
         private float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Shaman);}
