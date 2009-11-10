@@ -1,11 +1,11 @@
-Rawr v2.2.26.0
+Rawr v2.2.27.0
 ------------
-Welcome to Rawr 2.2.26.0.
+Welcome to Rawr 2.2.27.0.
    
 Recent Changes:
- - Fix for a crash on loading a few characters from Armory
-
-
+ - Rawr.Hunter: Fix for a crash with Dwarves/Trolls.
+ - Rawr.Enhance: Fix for major bug with Windfury calculations from yesterday's builds. Fix for fire totem damage.
+ - Rawr.Rogue: Fix for a crash with Deadly Poisons.
 
  
 TEASER: Work continues on Rawr v3, the next major version of Rawr, which will have both web-based, and desktop versions, and run natively on both Windows, and OSX Intel. If you'd like to beta test it (especially OSX users), please e-mail me at cnervig@hotmail.com.
@@ -18,7 +18,7 @@ Once you've got it running, you should see a basic character-screen-like layout 
 
 Now that you have your current character fairly well defined, use the item comparison are on the right side of the main window. You can choose a slot and a sort method at the top. The ratings calculated in this graph will update as you make changes to your gear/enchants/buffs, to always be as accurate as possible.
 
-~Astrylian on Suramar, cnervig@hotmail.com
+~Astrylian on US-Suramar, cnervig@hotmail.com
 
 
 FAQ
@@ -114,6 +114,9 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.2.26.0
+ - Fix for a crash on loading a few characters from Armory
+
 v2.2.25.0
  - Rawr.Enhance: Many Updates to GCD interaction with ability usage to improve accuracy of the module.
  - Rawr.DPSWarr: Using Bladestorm will no longer eat all your GCDs in low rage settings. Offhand weapon enchants will no longer use your Mainhand weapon's speed for their uptime calculations.  
