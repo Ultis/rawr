@@ -239,8 +239,8 @@ namespace Rawr.ShadowPriest {
             if (character.PriestTalents.Shadowform > 0) {
                 CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.03f;
                 CritCoef = (1.5f * (1f + stats.BonusSpellCritMultiplier) - 1f) * 2f + 1f;
-                if (Ptr)
-                    DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
+                //if (Ptr)  // Apparently made SPriests too good.
+                //    DebuffDuration = BaseDebuffDuration / (1f + stats.SpellHaste);
             }
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
