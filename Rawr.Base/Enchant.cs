@@ -586,7 +586,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3789, "Berserking", ItemSlot.OneHand, berserking));
 
             Stats blackMagic = new Stats();
-            blackMagic.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { HasteRating = 250f }, 10f, 45f, 0.35f));
+            blackMagic.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { HasteRating = 250f }, 10f, 35f, 0.35f));
             defaultEnchants.Add(new Enchant(3790, "Black Magic", ItemSlot.OneHand, blackMagic));
 
             Stats executioner = new Stats();

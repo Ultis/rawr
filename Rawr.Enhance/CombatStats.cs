@@ -251,16 +251,12 @@ namespace Rawr.Enhance
             float hasteBonus = StatConversion.GetHasteFromRating(_stats.HasteRating, _character.Class);
             unhastedMHSpeed = _character.MainHand == null ? 3.0f : _character.MainHand.Item.Speed;
             unhastedOHSpeed = _character.OffHand == null ? 3.0f : _character.OffHand.Item.Speed;
-           
             float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + _stats.PhysicalHaste);
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + _stats.PhysicalHaste);
-
-            // Only MH WF for now
             float chanceToProcWFPerHit = .2f + (_character.ShamanTalents.GlyphofWindfuryWeapon ? .02f : 0f);
-
+           
             //The Swing Loop
             //This is where we figure out feedback systems -- WF, MW, ED, Flurry, etc.
-            //It's also where we'll figure out GCD interference when we model that.
             //--------------
             flurryUptime = 1f;
             edUptime = 0f;
@@ -308,6 +304,7 @@ namespace Rawr.Enhance
                 whiteHitsPerSMH = (1f - chanceWhiteMissMH - chanceDodgeMH) * swingsPerSMHMelee;
                 whiteHitsPerSOH = (1f - chanceWhiteMissOH - chanceDodgeOH) * swingsPerSOHMelee;
 
+                // Windfury model
                 float hitsThatProcWFPerS = whiteHitsPerSMH + hitsPerSMHSS;
                 float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * fightLength;
                 float ineligibleSeconds = maxExpectedWFPerFight * (3.25f - hastedMHSpeed);
@@ -318,11 +315,13 @@ namespace Rawr.Enhance
                 yellowHitsPerSOH = hitsPerSOHSS + hitsPerSLL;
                     
                 //Due to attack table, a white swing has the same chance to crit as a yellow hit
-                couldCritSwingsPerSecond = whiteHitsPerSMH + whiteHitsPerSOH + yellowHitsPerSMH + yellowHitsPerSOH;
-                float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;
+// Old Flurry calc changed 10 Nov 2009
+//                couldCritSwingsPerSecond = whiteHitsPerSMH + whiteHitsPerSOH + yellowHitsPerSMH + yellowHitsPerSOH;
+//                float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;
 //                flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);  // old formulae
                 flurryUptime = CalculateFlurryUptime(averageMeleeCritChance, averageMeleeHitChance, averageMeleeMissChance);
 
+                // Maelstrom Weapon time to 5 stacks calc
                 hitsPerSMH = whiteHitsPerSMH + yellowHitsPerSMH;
                 mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH;
                 if (_character.ShamanTalents.DualWield == 1 && unhastedOHSpeed != 0f)
@@ -332,11 +331,13 @@ namespace Rawr.Enhance
                 }
                 secondsToFiveStack = 5f / mwProcsPerSecond;
 
+                // Elemental Devastation Uptime calc
                 spellAttacksPerSec = 1f / secondsToFiveStack + 1f / shockSpeed + 1f / magmaSearingSpeed;
                 float couldCritSpellsPerS = spellAttacksPerSec * (1f - chanceSpellMiss);
                 edUptime = 1f - (float)Math.Pow(1 - chanceSpellCrit, 10 * couldCritSpellsPerS);
                 averageMeleeCritChance = (chanceYellowCritMH + chanceYellowCritOH) / 2f + edUptime * edCritBonus;
             }
+            couldCritSwingsPerSecond = whiteHitsPerSMH + whiteHitsPerSOH + yellowHitsPerSMH + yellowHitsPerSOH; 
             urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
             float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS;
             if (_character.ShamanTalents.DualWield == 1 && unhastedMHSpeed != 0)

@@ -272,11 +272,15 @@ namespace Rawr.Enhance
             CombatStats cs = new CombatStats(character, stats, calcOpts); // calculate the combat stats using modified stats
 
             // only apply unleashed rage talent if not already applied Unleashed Rage buff.
-            float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f :
-                                                    (stats.AttackPower * unleashedRage * cs.URUptime);
-            stats.AttackPower += URattackPower; // no need to multiply by bonus attack power as the whole point is its zero if we need to add Unleashed rage
-            stats.SpellPower += mentalQuickness * URattackPower * (1f + stats.BonusSpellPowerMultiplier);
-
+            if (!character.ActiveBuffsContains("Unleashed Rage") && 
+                !character.ActiveBuffsContains("Trueshot Aura") && 
+                !character.ActiveBuffsContains("Abomination's Might"))
+            {
+                float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f :
+                                                        (stats.AttackPower * unleashedRage * cs.URUptime);
+                stats.AttackPower += URattackPower; // no need to multiply by bonus attack power as the whole point is its zero if we need to add Unleashed rage
+                stats.SpellPower += mentalQuickness * URattackPower * (1f + stats.BonusSpellPowerMultiplier);
+            }
             // Tier 10 Bonuses
             if (stats.Enhance2T10 == 1)
             {
