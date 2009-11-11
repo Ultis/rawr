@@ -35,6 +35,14 @@ namespace Rawr.Hunter
             this.character = character;
             this.options = options;
             this.calculatedStats = calculatedStats;
+            // 091109 Drizz: Added
+            this.calculatedStats.sequence = "Time  :Shot          :CastTime:Done   :CD Until" + Environment.NewLine;
+        }
+
+        // 091109 Drizz: Added to be able to pull infor from "outside"
+        public RotationShotInfo[] getRotationTable()
+        {
+            return shotTable;
         }
 
         public void RunTest()
@@ -164,6 +172,7 @@ namespace Rawr.Hunter
 
             #endregion
             #region The Main Loop
+ 
 
             do
             {
@@ -495,12 +504,9 @@ namespace Rawr.Hunter
 
 
                     // Note down shot current time and shot used
-                    if (options.debugShotRotation)
-                    // Drizz: Enable for getting printout of Rotation.
-                    //if(true)
+                    // 091109 Drizz: If we now can get the debug info wihtin Rawr, no need to go by debug option.
+                    if (calculatedStats.collectSequence) 
                     {
-                        // currentTime
-                        // thisShot
                         float timeUsed = 0;
                         float castEnd = currentTime;
                         float onCDUntil = currentTime + thisShotInfo.cooldown;
@@ -527,8 +533,9 @@ namespace Rawr.Hunter
                             }
                             onCDUntil = thisShotInfo.time_until_off_cd;
                         }
-
-                        Debug.WriteLine(" "+ currentTime + ": " + thisShot + " (" +timeUsed+"/"+castEnd+"/"+onCDUntil + ")");
+                        // 091109 Drizz: Removing the Debug.Writeline
+                        //Debug.WriteLine(" "+ currentTime + ": " + thisShot + " (" +timeUsed+"/"+castEnd+"/"+onCDUntil + ")");
+                        calculatedStats.sequence += String.Format("{0,6:0.00}:{1,-13}" + " : {2,7:0.000}:{3,7:0.000}:{4,7:0.000}", currentTime, thisShot, timeUsed, castEnd, onCDUntil) + Environment.NewLine;
                         #if !RAWR3 && !SILVERLIGHT
                         Debug.Flush();
                         #endif

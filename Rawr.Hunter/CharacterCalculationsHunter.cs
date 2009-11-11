@@ -181,7 +181,11 @@ namespace Rawr.Hunter
 
         public ShotPriority priorityRotation = null;
 
-
+        //***************************************
+        // 091109 Drizz: Added
+        public bool collectSequence = false;
+        public string sequence = "";
+        //***************************************
         #region Mana Regen
         public float manaRegenGearBuffs {get; set;}
         public float manaRegenConstantViper { get; set; }

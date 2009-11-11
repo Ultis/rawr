@@ -1132,5 +1132,23 @@ namespace Rawr.Hunter
             }else if(p == Profession.Tailoring     ) { s = "Tailoring"; }
             return s;
         }
+
+        //*********************************
+        // 091109 Drizz: Added 
+        private void BT_Calculate_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TB_Rotation_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TB_Shots_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        //****************************************
     }
 }
