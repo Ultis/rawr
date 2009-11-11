@@ -15,7 +15,7 @@ namespace Rawr.Hunter
         private float _wildQuiverDPS;
         private float _customDPS;
         public Character character = null;
-        private CalculationOptionsHunter calcOpts = null;
+        public CalculationOptionsHunter calcOpts = null;
         //Drizz: Added
         private double _piercingShotsDPS;
         private double _piercingShotsDPSSteadyShot;

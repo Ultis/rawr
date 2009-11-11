@@ -926,6 +926,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (character == null) { return calculatedStats; }
             calculatedStats.character = character;
             CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
+            calculatedStats.calcOpts = calcOpts;
             Stats stats = GetCharacterStats(character, additionalItem);
             HunterTalents talents = character.HunterTalents;
 
@@ -1868,13 +1869,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 float wildQuiverProcChance = talents.WildQuiver * 0.04f;
                 float wildQuiverProcFrequency = (autoShotSpeed / wildQuiverProcChance);
                 float wildQuiverDamageNormal = 0.8f * (rangedWeaponDamage + statsItems.WeaponDamage + damageFromRAP);
-                float wildQuiverDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * (1 + targetDebuffsNature);
+                float wildQuiverDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * (1f + targetDebuffsNature);
 
                 float wildQuiverDamageReal = CalcEffectiveDamage(
                                                 wildQuiverDamageNormal,
                                                 ChanceToMiss,
                                                 stats.PhysicalCrit,
-                                                1,
+                                                1f,
                                                 wildQuiverDamageAdjust
                                               );
 
@@ -2024,11 +2025,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float explosiveShotDamageNormal = 425f + (RAP * 0.14f);
 
             // crit_damage = 1 + mortal_shots + gem-crit
-            float explosiveShotCritAdjust = (1 + mortalShotsCritDamage) * metaGemCritDamage;
+            float explosiveShotCritAdjust = (1f + mortalShotsCritDamage) * metaGemCritDamage;
 
             // damage_adjust = talent_adjust * tnt * fire_debuffs * sinper_training * partial_resist
             float explosiveShotDamageAdjust = talentDamageAdjust * TNTDamageAdjust * sniperTrainingDamageAdjust
-                                             * partialResistDamageAdjust * (1 + targetDebuffsFire);
+                                             * partialResistDamageAdjust * (1f + targetDebuffsFire);
 
             float explosiveShotDamageReal = CalcEffectiveDamage(
                                                 explosiveShotDamageNormal,
@@ -2038,7 +2039,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                 explosiveShotDamageAdjust
                                               );
 
-            float explosiveShotDamagePerShot = explosiveShotDamageReal * 3;
+            float explosiveShotDamagePerShot = explosiveShotDamageReal * 3f;
 
             calculatedStats.explosiveShot.damage = explosiveShotDamagePerShot;
 
@@ -2138,7 +2139,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region August 2009 Multi Shot
 
             float multiShotDamageNormal = rangedWeaponDamage + statsItems.WeaponDamage + rangedAmmoDamage
-                                        + calculatedStats.BasicStats.ScopeDamage + 408 + (RAP * 0.2f);
+                                        + calculatedStats.BasicStats.ScopeDamage + 408f + (RAP * 0.2f);
             float multiShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
                                             * ArmorDamageReduction; // missing: pvp gloves bonus
 
@@ -2146,7 +2147,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                             multiShotDamageNormal,
                                             ChanceToMiss,
                                             multiShotCrit,
-                                            1,
+                                            1f,
                                             multiShotDamageAdjust
                                          );
 
@@ -2199,7 +2200,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float silencingShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + damageFromRAPNormalized) * 0.5f;
             float silencingShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * ArmorDamageReduction;
-            float silencingShotCritAdjust = 1 * metaGemCritDamage;
+            float silencingShotCritAdjust = 1f * metaGemCritDamage;
 
             float silencingShotDamageReal = CalcEffectiveDamage(
                                                 silencingShotDamageNormal,
@@ -2519,7 +2520,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // The first 20 Int = 20 Mana, while each subsequent Int = 15 Mana
             // (20-(20/15)) = 18.66666
             // spreadsheet uses 18.7, so we will too :)
-            statsTotal.Mana = (float)(statsRace.Mana + 15f * (statsTotal.Intellect - 18.7) + statsGearEnchantsBuffs.Mana);
+            statsTotal.Mana = (float)(statsRace.Mana + 15f * (statsTotal.Intellect - 18.7f) + statsGearEnchantsBuffs.Mana);
 
             /*// The first 20 Stam = 20 Health, while each subsequent Stam = 10 Health, so Health = (Stam-18)*10
             // (20-(20/10)) = 18
@@ -2531,11 +2532,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float healthTaurenAdjust = character.Race == CharacterRace.Tauren ? 1.05 : 1;
             statsTotal.Health = (float)(healthSubTotal * healthTaurenAdjust);*/
 
-            float attemptedAtksInterval = 1;
-            float hitRate = (1f - statsTotal.PhysicalHit);
+            float attemptedAtksInterval = 1f;
+            float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - statsTotal.PhysicalHit);
+            float hitRate = (1f - ChanceToMiss);
             float critRate = statsTotal.PhysicalCrit;
-            float bleedHitInterval = 1;
-            float dmgDoneInterval = 1;
+            float bleedHitInterval = 1f;
+            float dmgDoneInterval = 1f;
 
             statsProcs += GetSpecialEffectsStats(character, attemptedAtksInterval, hitRate, critRate,
                                     bleedHitInterval, dmgDoneInterval, statsTotal, null);
@@ -2639,12 +2641,37 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         #region Private Functions
 
         public static float CalcEffectiveDamage(float damageNormal, float missChance, float critChance, float critAdjust, float damageAdjust) {
+            /* OLD CODE
+             * 
             float damageCrit  =  damageNormal * (1f + critAdjust);
             float damageTotal = (damageNormal * (1f - critChance)
                                  + (damageCrit * critChance));
             float damageReal  = damageTotal * damageAdjust * (1f - missChance);
 
-            return damageReal;
+            return damageReal;*/
+
+            float dmg = damageNormal; // MhDamage;                  // Base Damage
+            //dmg *= combatFactors.DamageBonus;      // Global Damage Bonuses
+            //dmg *= combatFactors.DamageReduction;  // Global Damage Penalties
+            dmg *= damageAdjust;
+
+            // Work the Attack Table
+            float dmgDrop = (1f
+                - missChance // MHAtkTable.Miss   // no damage when being missed
+                - critChance // MHAtkTable.Crit   // crits   handled below
+                );
+
+            float dmgCrit = dmg
+                          * critChance // MHAtkTable.Crit
+                          * (1f
+                             + critAdjust//combatFactors.BonusWhiteCritDmg
+                             );//Bonus Damage when critting
+
+            dmg *= dmgDrop;
+
+            dmg += dmgCrit;
+
+            return dmg;
         }
 
         public static float CalcTrinketUptime(float duration, float cooldown, float chance, float triggersPerSecond)

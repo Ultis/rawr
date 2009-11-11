@@ -370,9 +370,10 @@ FAQStuff.Add(
         private void SetUpPatchNotes() {
 PNStuff.Add(
 "v2.2.26 (Unreleased)",
-@"");
+@"
+");
 PNStuff.Add(
-"v2.2.25 (Projected Release: Nov 08, 2009 18:00)",
+"v2.2.25 (Nov 08, 2009 19:54)",
 @"- Fix for issue 14526 (Bladestorm eating all your GCDs in low rage settings). Also removed a reference to a variable in Rotation.cs that was never used
 - Refactored ErrorBoxDPSWarr to a new file
 - Added a check for the iterator for Heroic Strikes/Cleaves to use the already set verification of (HS/CL)OK before attempting to loop, should imp perf a little for users not HS'g
