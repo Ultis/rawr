@@ -2665,16 +2665,19 @@ namespace Rawr
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Scourgestalker Battlegear 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Scourgestalker Battlegear",
-                Stats = { BonusHunter_T8_4P_SteadyShotAPProc = 1 },
+                Stats = new Stats(), //{ BonusHunter_T8_4P_SteadyShotAPProc = 1 },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Hunter, },
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.SteadyShotHit,
+                new Stats() { AttackPower = 600f, },
+                15f, 45f, 0.10f));
             #endregion
             #region Tier 9 | Windrunner's
             defaultBuffs.Add(new Buff()

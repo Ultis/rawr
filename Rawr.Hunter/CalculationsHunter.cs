@@ -309,7 +309,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				BonusPetCritChance = stats.BonusPetCritChance,
 				BonusHunter_T7_4P_ViperSpeed = stats.BonusHunter_T7_4P_ViperSpeed,
 				BonusHunter_T8_2P_SerpDmg = stats.BonusHunter_T8_2P_SerpDmg,
-				BonusHunter_T8_4P_SteadyShotAPProc = stats.BonusHunter_T8_4P_SteadyShotAPProc,
 				BonusHunter_T9_2P_SerpCanCrit = stats.BonusHunter_T9_2P_SerpCanCrit,
 				BonusHunter_T9_4P_SteadyShotPetAPProc = stats.BonusHunter_T9_4P_SteadyShotPetAPProc,
 
@@ -388,7 +387,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 // Set Bonuses
                 stats.BonusHunter_T7_4P_ViperSpeed +
                 stats.BonusHunter_T8_2P_SerpDmg +
-                stats.BonusHunter_T8_4P_SteadyShotAPProc +
                 stats.BonusHunter_T9_2P_SerpCanCrit +
                 stats.BonusHunter_T9_4P_SteadyShotPetAPProc +
                 stats.BonusHunter_PvP_4pc +
@@ -1290,8 +1288,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // target debuffs
             #region Target Debuffs
-            float targetDebuffsAP = 0; // Buffs!E77
-
             // The pet debuffs deal with stacking correctly themselves
             float targetDebuffsArmor = 1f - (1f - calculatedStats.petArmorDebuffs)
                                           * (1f - statsBuffs.ArmorPenetration); // Buffs!G77
@@ -1613,63 +1609,21 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // damage
             #region August 2009 Ranged Attack Power
-
-            calculatedStats.apFromBase = 0.0f + character.Level * 2f;
-            calculatedStats.apFromAGI = 0.0f + stats.Agility - 10f;
-            calculatedStats.apFromSTR = 0.0f + stats.Strength - 10f;
-            calculatedStats.apFromGear = 0.0f + calculatedStats.BasicStats.AttackPower;
-
-            // Furious Howl was calculated earlier by the pet model
-            //calculatedStats.apFromFuriousHowl = 0;
-
-            // Expose Weakness
-            float exposeWeaknessShotsPerSecond = crittingShotsPerSecond;
-            float exposeWeaknessCritChance = calculatedStats.priorityRotation.critsCompositeSum;
-            float exposeWeaknessAgility = stats.Agility * 0.25f;
-            float exposeWeaknessPercent = (talents.ExposeWeakness / 3f);
-            float exposeWeaknessUptime = 1f - (float)Math.Pow(1f - (exposeWeaknessPercent * exposeWeaknessCritChance), 7 * exposeWeaknessShotsPerSecond);
-
-            calculatedStats.apFromExposeWeakness = exposeWeaknessUptime * exposeWeaknessAgility;
-
-            // CallOfTheWild - this is calculated in the pet model
-            //calculatedStats.apFromCallOfTheWild = 0;
-
-            calculatedStats.apFromBuffs = 0;
-
-            calculatedStats.apFromDebuffs = targetDebuffsAP;
-
-            calculatedStats.apFromProc = 0;
-
-            // Tier-8 4-set bonus
-            if (character.ActiveBuffsContains("Scourgestalker Battlegear 4 Piece Bonus")) {
-                calculatedStats.apFromProc += 600f * CalcTrinketUptime(15f, 45f, 0.1f, calculatedStats.steadyShot.freq > 0 ? 1f / calculatedStats.steadyShot.freq : 0);
-            }
-
-            // TODO: add multiplicitive buffs
-            float apScalingFactor = 1f
-                //* (1f + calculatedStats.apFromCallOfTheWild)
-                //* (1f + calculatedStats.apFromTrueshotAura)
-                * (1f + calculatedStats.apFromBuffs);
+            calculatedStats.apFromBase = character.Level * 2f - 20f;
+            calculatedStats.apFromAGI  = stats.Agility;
+            calculatedStats.apFromSTR  = stats.Strength;
+            calculatedStats.apFromGear = calculatedStats.BasicStats.AttackPower
+                                       - calculatedStats.apFromBase
+                                       - calculatedStats.apFromAGI
+                                       - calculatedStats.apFromSTR;
 
             // use for pet calculations
-            calculatedStats.apSelfBuffed = 0f
-                + calculatedStats.apFromBase
-                + calculatedStats.apFromAGI
-                + calculatedStats.apFromGear // includes buffs
-                + calculatedStats.apFromFuriousHowl
-                + calculatedStats.apFromProc;
+            calculatedStats.apSelfBuffed = stats.AttackPower;
 
             // used for hunter calculations
-            calculatedStats.apTotal = calculatedStats.apSelfBuffed
-                                    + calculatedStats.apFromExposeWeakness
-                                    + calculatedStats.apFromDebuffs;
-
-            // apply scaling
-            calculatedStats.apTotal      *= apScalingFactor;
-            calculatedStats.apSelfBuffed *= apScalingFactor;
+            calculatedStats.apTotal = calculatedStats.apSelfBuffed;
 
             float RAP = calculatedStats.apTotal;
-
             #endregion
             #region August 2009 Armor Penetration
             float ArmorDamageReduction = GetArmorDamageReduction(calcOpts, character, stats);
@@ -1678,23 +1632,23 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region August 2009 Damage Adjustments
 
             //Partial Resists
-            float averageResist = (calcOpts.TargetLevel - 80) * 0.02f;
-            float resist10 = 5 * averageResist;
+            float averageResist = (calcOpts.TargetLevel - character.Level) * 0.02f;
+            float resist10 = 5.0f * averageResist;
             float resist20 = 2.5f * averageResist;
-            float partialResistDamageAdjust = 1 - (resist10 * 0.1f + resist20 * 0.2f);
+            float partialResistDamageAdjust = 1f - (resist10 * 0.1f + resist20 * 0.2f);
 
             //Beast Within
-            float beastWithinDamageAdjust = 1;
+            float beastWithinDamageAdjust = 1f;
             if (calculatedStats.beastialWrath.freq > 0)
             {
-                beastWithinDamageAdjust = 1 + (0.1f * beastialWrathUptime);
+                beastWithinDamageAdjust = 1f + (0.1f * beastialWrathUptime);
             }            
 
             //Focused Fire
-            float focusedFireDamageAdjust = 1 + 0.01f * talents.FocusedFire;
+            float focusedFireDamageAdjust = 1f + 0.01f * talents.FocusedFire;
 
             //Sanc. Retribution Aura
-            float sancRetributionAuraDamageAdjust = 1 + statsBuffs.BonusDamageMultiplier;
+            float sancRetributionAuraDamageAdjust = 1f + statsBuffs.BonusDamageMultiplier;
 
             //Black Arrow Damage Multiplier
             float blackArrowUptime = 0;
@@ -2387,8 +2341,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.priorityRotation.validateShots(talents);
                 if (calculatedStats.priorityRotation.containsShot(Shots.RapidFire)) {
                     statsOptionsPanel.AddSpecialEffect(new SpecialEffect(Trigger.Use,
-                        new Stats() { PhysicalHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.4f), },
-                        15, (5 - talents.RapidKilling) * 60));
+                        new Stats() { PhysicalHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.40f), },
+                        15f, (5 - talents.RapidKilling) * 60f));
                 }
             }
             Stats statsTalents = new Stats()
@@ -2433,6 +2387,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     20f, 5f * 60f);
                 statsTalents.AddSpecialEffect(callofthewild);
             }
+            if (calcOpts.PetFamily == PetFamily.Wolf) {
+                SpecialEffect FuriousHowl = new SpecialEffect(Trigger.Use,
+                    new Stats() { AttackPower = 320f, },
+                    20f, 40f);
+                statsTalents.AddSpecialEffect(FuriousHowl);
+            }
 
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
@@ -2462,6 +2422,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float agiBase    = (float)Math.Floor((1f + totalBAGIM) * statsRace.Agility);
             float agiBonus   = (float)Math.Floor((1f + totalBAGIM) * statsGearEnchantsBuffs.Agility);
             statsTotal.Agility = agiBase + agiBonus;
+
+            if (talents.ExposeWeakness > 0) {
+                SpecialEffect ExposeWeakness = new SpecialEffect(Trigger.PhysicalCrit,
+                    new Stats() { AttackPower = statsTotal.Agility * 0.25f },
+                    7f, 0f, (1f / 3f * talents.ExposeWeakness));
+                statsTalents.AddSpecialEffect(ExposeWeakness);
+            }
 
             // Intellect
             float totalBINTM = statsTotal.BonusIntellectMultiplier;
@@ -2631,6 +2598,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     case Trigger.DamageDone: // physical and dots
                         if (dmgDoneInterval > 0f) { statsProcs += effect.GetAverageStats(dmgDoneInterval, 1f, speed, fightDuration); }
                         break;
+                    case Trigger.SteadyShotHit:
+                        if (attemptedAtkInterval > 0f)
+                        {
+                            Stats add = effect.GetAverageStats(attemptedAtkInterval * 0.1f, hitRate, speed, fightDuration); // this needs to be fixed to read steady shot frequencies
+                            statsProcs += add;
+                        }
+                        break;
                 }
                 effect.Stats.ArmorPenetrationRating = oldArp;
             }
@@ -2674,13 +2648,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             dmg += dmgCrit;
 
             return dmg;
-        }
-
-        public static float CalcTrinketUptime(float duration, float cooldown, float chance, float triggersPerSecond)
-        {
-            float timePerTrigger = triggersPerSecond > 0 ? 1 / triggersPerSecond : 0;
-            float time_between_procs = timePerTrigger > 0 ? 1 / chance * timePerTrigger + cooldown : 0;
-            return time_between_procs > 0 ? duration / time_between_procs : 0;
         }
 
         private ShotData getShotByIndex(int index, CharacterCalculationsHunter calculatedStats)

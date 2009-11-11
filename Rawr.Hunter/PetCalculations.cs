@@ -327,18 +327,7 @@ namespace Rawr.Hunter
 
             #endregion
             #region Hunter Effects
-
-            // Furious Howl
-            // We need to calculate this now since it applies to the Hunter's AP too
-            calculatedStats.apFromFuriousHowl = 0;
-            float furiousHowlFrequency = priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl);
-            if (furiousHowlFrequency > 0)
-            {
-                float furiousHowlUptime = 20 / furiousHowlFrequency;
-                calculatedStats.apFromFuriousHowl = 320 * furiousHowlUptime;
-            }
-
-            //Ferocious Inspiraion
+            // Ferocious Inspiraion
             // (Same as above)
             calculatedStats.ferociousInspirationDamageAdjust = 1;
             if (character.HunterTalents.FerociousInspiration > 0)
@@ -353,7 +342,7 @@ namespace Rawr.Hunter
                 }
             }
 
-            //Roar of Recovery
+            // Roar of Recovery
             calculatedStats.manaRegenRoarOfRecovery = 0;
             float roarOfRecoveryFreq = priorityRotation.getSkillFrequency(PetAttacks.RoarOfRecovery);
             if (roarOfRecoveryFreq > 0)
@@ -417,9 +406,6 @@ namespace Rawr.Hunter
                     calculatedStats.autoShotStaticSpeed, options.Duration);
                 calculatedStats.petAPFromTier9 = 600f * tier94pcUptime;
             }
-
-            // Furious Howl was calculated earlier
-            calculatedStats.petAPFromFuriousHowl = calculatedStats.apFromFuriousHowl;
 
             // Serenity Dust
             calculatedStats.petAPFromSerenityDust = 0;
@@ -546,7 +532,6 @@ namespace Rawr.Hunter
                                     + calculatedStats.petAPFromHunterVsWild
                                     + calculatedStats.petAPFromTier9
                                     + calculatedStats.petAPFromBuffs
-                                    + calculatedStats.petAPFromFuriousHowl
                                     + calculatedStats.petAPFromHunterRAP;
 
             float apTotal = (float)Math.Round(apTotalUnadjusted * apScalingFactor, 1);

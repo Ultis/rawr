@@ -67,7 +67,6 @@ namespace Rawr.Hunter
         public float petAPFromHunterVsWild { get; set; }
         public float petAPFromTier9 { get; set; }
         public float petAPFromBuffs { get; set; }
-        public float petAPFromFuriousHowl { get; set; }
         public float petAPFromHunterRAP { get; set; }
         public float petAPFromRabidProc { get; set; }
         public float petAPFromSerenityDust { get; set; }
@@ -104,11 +103,6 @@ namespace Rawr.Hunter
 		public float apFromAGI { get; set; }
         public float apFromSTR { get; set; }
 		public float apFromGear { get; set; }
-		public float apFromFuriousHowl { get; set; }
-        public float apFromDebuffs { get; set; }
-        public float apFromProc { get; set; }
-        public float apFromBuffs { get; set; }
-        public float apFromExposeWeakness { get; set; }
         #endregion
         
         #region Hit Stats
@@ -322,8 +316,10 @@ namespace Rawr.Hunter
             dictValues.Add("Ranged Attack Power",string.Format("{0:0000}*Includes:" +
                             Environment.NewLine + "{1:0000} : Base" +
                             Environment.NewLine + "{2:0000} : Agility" +
-                            Environment.NewLine + "{2:0000} : Strength",
-                            apTotal, apFromBase, apFromAGI, apFromSTR));
+                            Environment.NewLine + "{3:0000} : Strength" +
+                            Environment.NewLine + "{4:0000} : Gear" + 
+                            Environment.NewLine + "Procs were averaged out and added",
+                            apTotal, apFromBase, apFromAGI, apFromSTR, apFromGear));
             dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0"));
             // old
             float HitPercent = StatConversion.GetHitFromRating(BasicStats.HitRating);
@@ -383,7 +379,6 @@ namespace Rawr.Hunter
                             petAPFromHunterVsWild.ToString("F2") + " from Hunter vs Wild\n" +
                             petAPFromTier9.ToString("F2") + " from Tier 9 4-piece bonus\n" +
                             petAPFromBuffs.ToString("F2") + " from buffs\n" +
-                            petAPFromFuriousHowl.ToString("F2") + " from Furious Howl\n" +
                             petAPFromHunterRAP.ToString("F2") + " from Hunter RAP\n" +
                             petAPFromRabidProc.ToString("P2") + " from Rabid\n" +
                             petAPFromSerenityDust.ToString("P2") + " from Serenity Dust\n" +

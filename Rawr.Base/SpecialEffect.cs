@@ -58,6 +58,7 @@ namespace Rawr
 		SwipeBearOrLacerateHit,
 		MangleCatOrShredHit,
         HSorSLHit, // Warriors
+        SteadyShotHit, // Hunters
         NUM_Trigger // Should always be the last entry.
     }
 

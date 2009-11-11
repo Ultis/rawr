@@ -313,7 +313,6 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Hunter
         RangedAttackPower,
-        BonusHunter_T8_4P_SteadyShotAPProc,
         BonusHunter_T9_2P_SerpCanCrit,
         BonusHunter_T9_4P_SteadyShotPetAPProc,
         BonusHunter_PvP_4pc,
@@ -2832,15 +2831,6 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHunter_T8_2P_SerpDmg]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHunter_T8_2P_SerpDmg] = value; }
-        }
-        /// <summary>Your Steady Shot has a chance to grant you 600 Attack Power for 15 sec.</summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Steady shot has a chance to increase attack power")]
-        [Category("Hunter")]
-        public float BonusHunter_T8_4P_SteadyShotAPProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusHunter_T8_4P_SteadyShotAPProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusHunter_T8_4P_SteadyShotAPProc] = value; }
         }
         /// <summary>All Trap cooldowns reduced by 2 seconds</summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
