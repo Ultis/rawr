@@ -374,17 +374,6 @@ namespace Rawr.Hunter
                 float invigorationManaPerMinute = invigorationProcFreq > 0 ? 60 / invigorationProcFreq * invigorationEffect * calculatedStats.BasicStats.Mana : 0; // C37
                 calculatedStats.manaRegenInvigoration = invigorationManaPerMinute / 60;
             }
-
-            // Call of the Wild
-            calculatedStats.apFromCallOfTheWild = 0;
-            if (options.PetTalents.CallOfTheWild > 0)
-            {
-                SpecialEffect callofthewild = new SpecialEffect(Trigger.Use, new Stats() { BonusAttackPowerMultiplier = 0.10f, },
-                    20f, 5f * 60f);
-                float callOfTheWildUptime = callofthewild.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, options.Duration);
-                calculatedStats.apFromCallOfTheWild = 0.1f * callOfTheWildUptime;
-            }
-
             #endregion
 
             #region Target Armor Effect
@@ -432,9 +421,6 @@ namespace Rawr.Hunter
             // Furious Howl was calculated earlier
             calculatedStats.petAPFromFuriousHowl = calculatedStats.apFromFuriousHowl;
 
-            // Call of the Wild
-            calculatedStats.petAPFromCallOfTheWild = calculatedStats.apFromCallOfTheWild;
-
             // Serenity Dust
             calculatedStats.petAPFromSerenityDust = 0;
             if (priorityRotation.getSkillFrequency(PetAttacks.SerenityDust) > 0)
@@ -442,15 +428,10 @@ namespace Rawr.Hunter
                 calculatedStats.petAPFromSerenityDust = 0.025f; // 0.1 * (15 / 60);
             }
 
-            calculatedStats.petAPFromTrueShotAura = calculatedStats.apFromTrueshotAura;
             calculatedStats.petAPFromAnimalHandler = character.HunterTalents.AnimalHandler * 0.05f;
             calculatedStats.petAPFromAspectOfTheBeast = calculatedStats.aspectBonusAPBeast;
 
-            calculatedStats.petAPFromOutsideBuffs = 0;
-            if (calculatedStats.petAPFromTrueShotAura == 0)
-            {
-                calculatedStats.petAPFromOutsideBuffs = 0.0f + statsBuffs.BonusAttackPowerMultiplier;
-            }
+            calculatedStats.petAPFromOutsideBuffs = statsBuffs.BonusAttackPowerMultiplier;
 
             calculatedStats.petAPFromRabidProc = 0;
 
@@ -554,10 +535,9 @@ namespace Rawr.Hunter
             }
 
             float apScalingFactor = 1f
-                                 * (1f + calculatedStats.petAPFromCallOfTheWild)
+                                 //* (1f + calculatedStats.petAPFromCallOfTheWild)
                                  * (1f + calculatedStats.petAPFromRabidProc)
                                  * (1f + calculatedStats.petAPFromSerenityDust)
-                                 * (1f + calculatedStats.petAPFromTrueShotAura)
                                  * (1f + calculatedStats.petAPFromOutsideBuffs)
                                  * (1f + calculatedStats.petAPFromAnimalHandler)
                                  * (1f + calculatedStats.petAPFromAspectOfTheBeast);

@@ -69,10 +69,8 @@ namespace Rawr.Hunter
         public float petAPFromBuffs { get; set; }
         public float petAPFromFuriousHowl { get; set; }
         public float petAPFromHunterRAP { get; set; }
-        public float petAPFromCallOfTheWild { get; set; }
         public float petAPFromRabidProc { get; set; }
         public float petAPFromSerenityDust { get; set; }
-        public float petAPFromTrueShotAura { get; set; }
         public float petAPFromOutsideBuffs { get; set; }
         public float petAPFromAnimalHandler { get; set; }
         public float petAPFromAspectOfTheBeast { get; set; }
@@ -103,20 +101,13 @@ namespace Rawr.Hunter
         public float apTotal { get; set; }
         public float apSelfBuffed { get; set; }
 		public float apFromBase { get; set; }
-		public float apFromAgil { get; set; }
-		public float apFromCarefulAim { get; set; }
-		public float apFromHunterVsWild { get; set; }
+		public float apFromAGI { get; set; }
+        public float apFromSTR { get; set; }
 		public float apFromGear { get; set; }
-		public float apFromBloodFury { get; set; }
-		public float apFromAspectOfTheHawk { get; set; }
-		public float apFromAspectMastery { get; set; }
 		public float apFromFuriousHowl { get; set; }
         public float apFromDebuffs { get; set; }
         public float apFromProc { get; set; }
-		public float apFromCallOfTheWild { get; set; }
-		public float apFromTrueshotAura { get; set; }
         public float apFromBuffs { get; set; }
-		public float apFromHuntersMark {get; set;}
         public float apFromExposeWeakness { get; set; }
         #endregion
         
@@ -155,7 +146,6 @@ namespace Rawr.Hunter
         // stuff for rotation test
         //public float autoShotSpeed { get; set; }
         public float autoShotStaticSpeed { get; set; }
-        public float quickShotsEffect { get; set; }
 
         // new shots data
         public ShotData aimedShot = new ShotData(Shots.AimedShot, true, true);
@@ -332,23 +322,8 @@ namespace Rawr.Hunter
             dictValues.Add("Ranged Attack Power",string.Format("{0:0000}*Includes:" +
                             Environment.NewLine + "{1:0000} : Base" +
                             Environment.NewLine + "{2:0000} : Agility" +
-                            Environment.NewLine + "{3:0000} : Careful Aim" +
-                            Environment.NewLine + "{4:0000} : Hunter vs Wild" +
-                            Environment.NewLine + "{5:0000} : Gear" +
-                            Environment.NewLine + "{6:0000} : Orc Racial" +
-                            Environment.NewLine + "{7:0000} : Aspect of the Hawk" +
-                            Environment.NewLine + "{8:0000} : Aspect Mastery" +
-                            Environment.NewLine + "{9:0000} : Furious Howl" +
-                            Environment.NewLine + "{10:0000} : Proc Effects" +
-                            Environment.NewLine + "{11:0000} : Call of the Wild" +
-                            Environment.NewLine + "{12:0000} : Hunter's Mark" +
-                            Environment.NewLine + "{13:0000} : Trueshot Aura" +
-                            Environment.NewLine + "{14:0%} : Buffs" +
-                            Environment.NewLine + "{15:0000} : Target Debuffs" +
-                            Environment.NewLine + "{16:0000} : Expose Weakness",
-                            apTotal, apFromBase, apFromAgil, apFromCarefulAim, apFromHunterVsWild, apFromGear,
-                            apFromBloodFury, apFromAspectOfTheHawk, apFromAspectMastery, apFromFuriousHowl, apFromProc,
-                            apFromCallOfTheWild, apFromHuntersMark, apFromTrueshotAura, apFromBuffs, apFromDebuffs, apFromExposeWeakness));
+                            Environment.NewLine + "{2:0000} : Strength",
+                            apTotal, apFromBase, apFromAGI, apFromSTR));
             dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0"));
             // old
             float HitPercent = StatConversion.GetHitFromRating(BasicStats.HitRating);
@@ -410,10 +385,8 @@ namespace Rawr.Hunter
                             petAPFromBuffs.ToString("F2") + " from buffs\n" +
                             petAPFromFuriousHowl.ToString("F2") + " from Furious Howl\n" +
                             petAPFromHunterRAP.ToString("F2") + " from Hunter RAP\n" +
-                            petAPFromCallOfTheWild.ToString("P2") + " from Call of the Wild\n" +
                             petAPFromRabidProc.ToString("P2") + " from Rabid\n" +
                             petAPFromSerenityDust.ToString("P2") + " from Serenity Dust\n" +
-                            petAPFromTrueShotAura.ToString("P2") + " from True Shot Aura\n" +
                             petAPFromOutsideBuffs.ToString("P2") + " from outside buffs\n" +
                             petAPFromAnimalHandler.ToString("P2") + " from Animal Handler\n" +
                             petAPFromAspectOfTheBeast.ToString("P2") + " from Aspect of the Beast");

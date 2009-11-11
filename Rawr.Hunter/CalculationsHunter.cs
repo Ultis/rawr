@@ -684,8 +684,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
             // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
             // value to relevant talents
-            /*{
-                hasRelevantBuff = character.WarriorTalents.Trauma;
+            {
+                hasRelevantBuff = character.HunterTalents.TrueshotAura;
                 Buff a = Buff.GetBuffByName("Trueshot Aura");
                 Buff b = Buff.GetBuffByName("Unleashed Rage");
                 Buff c = Buff.GetBuffByName("Abomination's Might");
@@ -695,7 +695,31 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
                     if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
                 }
-            }*/
+            }
+            // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            {
+                hasRelevantBuff =  character.HunterTalents.ImprovedHuntersMark
+                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
+                Buff a = Buff.GetBuffByName("Hunter's Mark");
+                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
+                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
+                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
+                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
+                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*/ }
+                // If we have an enhanced Hunter's Mark, kill the Buff
+                if (hasRelevantBuff > 0) {
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*/ }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*/ }
+                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*/ }
+                }
+            }
+            /* [More Buffs to Come to this method]
+             * Ferocious Inspiration | Sanctified Retribution
+             * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
+             * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
+             */
             #endregion
 
             #region Special Pot Handling
@@ -719,8 +743,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     addedBuffs.Add(newBuff);
                 }
             }
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             #endregion
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffsAdd(b);
@@ -1129,16 +1154,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.autoShotStaticSpeed = rangedWeaponSpeed / (1f + calculatedStats.hasteStaticTotal);
             #endregion
             #region Rotation Test
-            // Quick shots effect is needed for rotation test
-            calculatedStats.quickShotsEffect = 0;
-            if ((calcOpts.selectedAspect == Aspect.Hawk || calcOpts.selectedAspect == Aspect.Dragonhawk)
-                && talents.ImprovedAspectOfTheHawk > 0)
-            {
-                float quickShotsEffect = 0.03f * talents.ImprovedAspectOfTheHawk;
-                if (talents.GlyphOfTheHawk) { quickShotsEffect += 0.06f; }
-                calculatedStats.quickShotsEffect = quickShotsEffect;
-            }
-
             // Using the rotation test will get us better frequencies
             RotationTest rotationTest = new RotationTest(character, calculatedStats, calcOpts);
 
@@ -1173,54 +1188,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region Hit vs Miss Chance
             float ChanceToMiss = (float)Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - stats.PhysicalHit);
             #endregion
-            #region August 2009 Quick Shots
-            float QSBaseFrequencyIncrease = 0;
-
-            if (calcOpts.selectedAspect == Aspect.Hawk || calcOpts.selectedAspect == Aspect.Dragonhawk) {
-                if (talents.ImprovedAspectOfTheHawk > 0) {
-                    float quickShotsProcChance = 0.1f;
-
-                    float quickShotsSpeed = autoShotSpeed / (1 + calculatedStats.quickShotsEffect);
-
-                    float quickShotsInInitialProc = (autoShotSpeed > 0 ? (12f - autoShotSpeed) / quickShotsSpeed + 1f : 1f) * (1f - ChanceToMiss);
-                    float quickShotsInReProc = (quickShotsSpeed > 0 ? 12f / quickShotsSpeed : 1f) * (1f - ChanceToMiss);
-
-                    float quickShotsProcInitial = 1f - (float)Math.Pow(1f - quickShotsProcChance, quickShotsInInitialProc);
-                    float quickShotsProcSubsequent = 1f - (float)Math.Pow(1f - quickShotsProcChance, quickShotsInReProc);
-
-                    float quickShotsAvgShotsBeforeInit = 0;
-                    if (quickShotsProcChance > 0 && quickShotsProcInitial > 0) {
-                        quickShotsAvgShotsBeforeInit = ((1f - (float)Math.Pow(0.9f, quickShotsInInitialProc + 1f)) / 0.01f - (quickShotsInInitialProc + 1f) * (float)Math.Pow(0.9f, quickShotsInInitialProc) / 0.1f) / quickShotsProcInitial * 0.1f;
-                    }
-                        
-                    float quickShotsAvgShotsBeforeNext = 0;
-                    if (quickShotsProcChance > 0 && quickShotsProcSubsequent > 0) {
-                        quickShotsAvgShotsBeforeNext = ((1f - (float)Math.Pow(0.9f, quickShotsInReProc + 1f)) / 0.01f - (quickShotsInReProc + 1f) * (float)Math.Pow(0.9f, quickShotsInReProc) / 0.1f) / quickShotsProcSubsequent * 0.1f;
-                    }
-
-                    float quickShotsAverageChainQuick = quickShotsInInitialProc * (1f - quickShotsProcInitial)
-                                                       + quickShotsProcInitial * (1f - quickShotsProcSubsequent)
-                                                       * (quickShotsAvgShotsBeforeNext * quickShotsProcSubsequent / ((float)Math.Pow(1f - quickShotsProcSubsequent, 2))
-                                                       + (quickShotsAvgShotsBeforeInit + quickShotsInReProc) / (1f - quickShotsProcSubsequent));
-
-                    float quickShotsAverageChainSlow = quickShotsProcChance > 0 ? 1f / quickShotsProcChance : 0f;
-
-                    float quickShotsUptime;
-
-                    if (calcOpts.useRotationTest) {
-                        quickShotsUptime = rotationTest.IAotHUptime;
-                    } else {
-                        quickShotsUptime = quickShotsProcChance > 0 ? quickShotsAverageChainQuick / (quickShotsAverageChainQuick + quickShotsAverageChainSlow) : 0;
-                    }
-
-                    QSBaseFrequencyIncrease = autoShotSpeed > 0 ? (1f / quickShotsSpeed - 1f / autoShotSpeed) * quickShotsUptime : 0;
-                }
-            }
-
-            #endregion
             #region August 2009 Shots Per Second
             float baseAutoShotsPerSecond = autoShotSpeed > 0 ? 1f / autoShotSpeed : 0;
-            float autoShotsPerSecond = baseAutoShotsPerSecond + QSBaseFrequencyIncrease;
+            float autoShotsPerSecond = baseAutoShotsPerSecond;
             float specialShotsPerSecond = calculatedStats.priorityRotation.specialShotsPerSecond;
             float totalShotsPerSecond = autoShotsPerSecond + specialShotsPerSecond;
 
@@ -1272,12 +1242,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float sniperTrainingCritModifier = talents.SniperTraining * 0.05f;
 
             //Trueshot Aura Glyph
-            float trueshotAuraGlyphCritModifier = 0;
-            if (talents.GlyphOfTrueshotAura == true) {
-                if (talents.TrueshotAura > 0) {
-                    trueshotAuraGlyphCritModifier = 0.1f;
-                }
-            }
+            float trueshotAuraGlyphCritModifier = (talents.GlyphOfTrueshotAura && talents.TrueshotAura > 0 ? 0.10f : 0f);
             #endregion
             #region August 2009 Shot Crit Chances
 
@@ -1573,7 +1538,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float beastWithinManaBenefit = beastialWrathUptime * 0.2f;
 
-            calculatedStats.manaUsageKillCommand = calculatedStats.petKillCommandMPS * (1 - beastWithinManaBenefit);
+            calculatedStats.manaUsageKillCommand = calculatedStats.petKillCommandMPS * (1f - beastWithinManaBenefit);
             calculatedStats.manaUsageRotation = calculatedStats.priorityRotation.MPS;
 
             calculatedStats.manaUsageTotal = calculatedStats.manaUsageRotation
@@ -1582,18 +1547,18 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.manaChangeDuringViper = calculatedStats.manaRegenViper + calculatedStats.manaRegenPotion + calculatedStats.manaRegenTotal - calculatedStats.manaUsageTotal;
             calculatedStats.manaChangeDuringNormal = calculatedStats.manaRegenTotal + calculatedStats.manaRegenPotion - calculatedStats.manaUsageTotal;
 
-            calculatedStats.manaTimeToFull = calculatedStats.manaChangeDuringViper > 0 ? calculatedStats.BasicStats.Mana / calculatedStats.manaChangeDuringViper : -1;
-            calculatedStats.manaTimeToOOM = calculatedStats.manaChangeDuringNormal < 0 ? calculatedStats.BasicStats.Mana / (0-calculatedStats.manaChangeDuringNormal) : -1;
+            calculatedStats.manaTimeToFull = calculatedStats.manaChangeDuringViper > 0f ? calculatedStats.BasicStats.Mana / calculatedStats.manaChangeDuringViper : -1;
+            calculatedStats.manaTimeToOOM = calculatedStats.manaChangeDuringNormal < 0f ? calculatedStats.BasicStats.Mana / (0-calculatedStats.manaChangeDuringNormal) : -1;
 
-            float viperTimeNeededToLastFight = 0;
-            if (calculatedStats.manaTimeToOOM >= 0 && calculatedStats.manaTimeToOOM < calcOpts.Duration && calculatedStats.manaRegenViper > 0)
+            float viperTimeNeededToLastFight = 0f;
+            if (calculatedStats.manaTimeToOOM >= 0f && calculatedStats.manaTimeToOOM < calcOpts.Duration && calculatedStats.manaRegenViper > 0f)
             {
-                viperTimeNeededToLastFight = (((0 - calculatedStats.manaChangeDuringNormal) * calcOpts.Duration) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
+                viperTimeNeededToLastFight = (((0f - calculatedStats.manaChangeDuringNormal) * calcOpts.Duration) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
             }
 
-            float aspectUptimeHawk = 0;
+            float aspectUptimeHawk = 0f;
 
-            float aspectUptimeViper = 0;
+            float aspectUptimeViper = 0f;
             if (calculatedStats.manaTimeToOOM >= 0 && calcOpts.aspectUsage != AspectUsage.AlwaysOn)
             {
                 if (calcOpts.aspectUsage == AspectUsage.ViperRegen)
@@ -1602,7 +1567,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 }
                 else
                 {
-                    if (viperTimeNeededToLastFight > 0)
+                    if (viperTimeNeededToLastFight > 0f)
                     {
                         aspectUptimeViper = viperTimeNeededToLastFight / calcOpts.Duration;
                     }
@@ -1614,23 +1579,23 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             switch (calcOpts.selectedAspect)
             {
                 case Aspect.Viper:
-                    aspectUptimeViper = calcOpts.useBeastDuringBeastialWrath ? 1 - aspectUptimeBeast : 1;
+                    aspectUptimeViper = calcOpts.useBeastDuringBeastialWrath ? 1f - aspectUptimeBeast : 1f;
                     break;
 
                 case Aspect.Beast:
-                    aspectUptimeBeast = (calcOpts.aspectUsage == AspectUsage.AlwaysOn) ? 1 : 1 - aspectUptimeViper;
+                    aspectUptimeBeast = (calcOpts.aspectUsage == AspectUsage.AlwaysOn) ? 1f : 1f - aspectUptimeViper;
                     break;
 
                 case Aspect.Hawk:
                 case Aspect.Dragonhawk:
-                    aspectUptimeHawk = 1 - aspectUptimeViper - aspectUptimeBeast;
+                    aspectUptimeHawk = 1f - aspectUptimeViper - aspectUptimeBeast;
                     break;
             }
 
 
             // we now know aspect uptimes - calculate bonuses and penalties
 
-            float viperDamageEffect = talents.AspectMastery == 1 ? 0.4f : 0.5f;
+            float viperDamageEffect = talents.AspectMastery > 0 ? 0.4f : 0.5f;
             float viperDamagePenalty = aspectUptimeViper * viperDamageEffect;
 
             float beastStaticAPBonus = talents.GlyphOfTheBeast ? 0.12f : 0.1f;
@@ -1650,32 +1615,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region August 2009 Ranged Attack Power
 
             calculatedStats.apFromBase = 0.0f + character.Level * 2f;
-            calculatedStats.apFromAgil = 0.0f + stats.Agility - 10f;
-            calculatedStats.apFromCarefulAim = (float)Math.Floor((talents.CarefulAim / 3f) * (calculatedStats.BasicStats.Intellect));
-            calculatedStats.apFromHunterVsWild = (float)Math.Floor((talents.HunterVsWild * 0.1f) * (calculatedStats.BasicStats.Stamina));
+            calculatedStats.apFromAGI = 0.0f + stats.Agility - 10f;
+            calculatedStats.apFromSTR = 0.0f + stats.Strength - 10f;
             calculatedStats.apFromGear = 0.0f + calculatedStats.BasicStats.AttackPower;
-
-            // Darkmoon Card: Crusade
-            //if (IsWearingTrinket(character, 31856)) calculatedStats.apFromGear += 120;
-
-            /* Orc Racial is now handled in SpecialEffects, the effect is added in BaseStats
-            calculatedStats.apFromBloodFury = 0;
-            if (character.Race == CharacterRace.Orc && calculatedStats.bloodFury.freq > 0) {
-                calculatedStats.apFromBloodFury = (4f * character.Level) + 2f;
-                calculatedStats.apFromBloodFury *= CalcUptime(calculatedStats.bloodFury.duration, calculatedStats.bloodFury.freq, calcOpts);
-            }*/
-
-            // Aspect of the Hawk
-            calculatedStats.apFromAspectOfTheHawk = 0;
-            if (calcOpts.selectedAspect == Aspect.Hawk || calcOpts.selectedAspect == Aspect.Dragonhawk) {
-                calculatedStats.apFromAspectOfTheHawk = 300f * aspectUptimeHawk;
-            }
-
-            // Aspect Mastery
-            calculatedStats.apFromAspectMastery = 0;
-            if (talents.AspectMastery > 0) {
-                calculatedStats.apFromAspectMastery = calculatedStats.apFromAspectOfTheHawk * 0.3f * aspectUptimeHawk;
-            }
 
             // Furious Howl was calculated earlier by the pet model
             //calculatedStats.apFromFuriousHowl = 0;
@@ -1692,36 +1634,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // CallOfTheWild - this is calculated in the pet model
             //calculatedStats.apFromCallOfTheWild = 0;
 
-            calculatedStats.apFromTrueshotAura = (0.1f * talents.TrueshotAura);
             calculatedStats.apFromBuffs = 0;
-            if (talents.TrueshotAura == 0) {
-                calculatedStats.apFromBuffs = stats.BonusAttackPowerMultiplier;
-            }
-
-            calculatedStats.apFromHuntersMark = 500;
-            calculatedStats.apFromHuntersMark += 500f * 0.1f * talents.ImprovedHuntersMark;
-            if (talents.GlyphOfHuntersMark == true)
-            {
-                calculatedStats.apFromHuntersMark += 0.2f * 500f;
-            }
-
 
             calculatedStats.apFromDebuffs = targetDebuffsAP;
-
-            // debuffs may contain hunters mark too - only count the debuff if it's worth more
-            // than our mark is
-            float apFromHuntersMarkDebuff = 0;
-            if (character.ActiveBuffsContains("Hunter's Mark")) apFromHuntersMarkDebuff += 500;
-            if (character.ActiveBuffsContains("Glyphed Hunter's Mark")) apFromHuntersMarkDebuff += 100;
-            if (character.ActiveBuffsContains("Improved Hunter's Mark")) apFromHuntersMarkDebuff += 150;
-            if (character.ActiveBuffsContains("Improved and Glyphed Hunter's Mark")) apFromHuntersMarkDebuff += 250;
-            calculatedStats.apFromGear -= apFromHuntersMarkDebuff;
-
-            if (apFromHuntersMarkDebuff > calculatedStats.apFromHuntersMark) {
-                // the hunters mark buff (not ours) is better than ours.
-                // add the difference as a target debuff
-                calculatedStats.apFromDebuffs += apFromHuntersMarkDebuff - calculatedStats.apFromHuntersMark;
-            }
 
             calculatedStats.apFromProc = 0;
 
@@ -1732,28 +1647,22 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // TODO: add multiplicitive buffs
             float apScalingFactor = 1f
-                * (1f + calculatedStats.apFromCallOfTheWild)
-                * (1f + calculatedStats.apFromTrueshotAura)
+                //* (1f + calculatedStats.apFromCallOfTheWild)
+                //* (1f + calculatedStats.apFromTrueshotAura)
                 * (1f + calculatedStats.apFromBuffs);
 
             // use for pet calculations
             calculatedStats.apSelfBuffed = 0f
                 + calculatedStats.apFromBase
-                + calculatedStats.apFromAgil
-                + calculatedStats.apFromCarefulAim
-                + calculatedStats.apFromHunterVsWild
+                + calculatedStats.apFromAGI
                 + calculatedStats.apFromGear // includes buffs
-                + calculatedStats.apFromBloodFury
-                + calculatedStats.apFromAspectOfTheHawk
-                + calculatedStats.apFromAspectMastery
                 + calculatedStats.apFromFuriousHowl
                 + calculatedStats.apFromProc;
 
             // used for hunter calculations
             calculatedStats.apTotal = calculatedStats.apSelfBuffed
                                     + calculatedStats.apFromExposeWeakness
-                                    + calculatedStats.apFromDebuffs
-                                    + calculatedStats.apFromHuntersMark;
+                                    + calculatedStats.apFromDebuffs;
 
             // apply scaling
             calculatedStats.apTotal      *= apScalingFactor;
@@ -1918,7 +1827,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                 * (1f - viperDamagePenalty)
                                 * tier7ViperDamageAdjust;
 
-            calculatedStats.aspectBeastLostDPS = (0f - QSBaseFrequencyIncrease) * (1f - aspectUptimeHawk) * hunterAutoDPS;
+            calculatedStats.aspectBeastLostDPS = /*(0f - QSBaseFrequencyIncrease) * */ (1f - aspectUptimeHawk) * hunterAutoDPS;
 
             calculatedStats.AutoshotDPS = hunterAutoDPS;
 
@@ -2497,12 +2406,34 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 BonusStaminaMultiplier = 0.02f * talents.Survivalist,
                 BaseArmorMultiplier = (talents.ThickHide / 3f) * 0.10f,
                 PhysicalHaste = 0.04f * talents.SerpentsSwiftness,
+                BonusAttackPowerMultiplier = 0.10f * talents.TrueshotAura,
             };
-            if(talents.MasterTactician > 0){
+            if (talents.MasterTactician > 0) {
                 SpecialEffect mt = new SpecialEffect(Trigger.PhysicalHit,
                     new Stats() { PhysicalCrit = talents.MasterTactician * 0.02f, }, 8f, 0f, 0.10f);
                 statsTalents.AddSpecialEffect(mt);
             }
+            if ((calcOpts.selectedAspect == Aspect.Hawk || calcOpts.selectedAspect == Aspect.Dragonhawk)
+                && talents.ImprovedAspectOfTheHawk > 0)
+            {
+                float quickShotsEffect = 0.03f * talents.ImprovedAspectOfTheHawk;
+                if (talents.GlyphOfTheHawk) { quickShotsEffect += 0.06f; }
+                SpecialEffect QuickShots = new SpecialEffect(Trigger.PhysicalHit,
+                    new Stats() { RangedHaste = quickShotsEffect, },
+                    12f, 0f, 0.10f);
+                statsTalents.AddSpecialEffect(QuickShots);
+            }
+            if (calcOpts.selectedAspect == Aspect.Hawk || (calcOpts.selectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
+                statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
+            }
+            if (calcOpts.PetTalents.CallOfTheWild > 0)
+            {
+                SpecialEffect callofthewild = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusAttackPowerMultiplier = 0.10f, },
+                    20f, 5f * 60f);
+                statsTalents.AddSpecialEffect(callofthewild);
+            }
+
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
             Stats statsProcs = new Stats();
@@ -2550,8 +2481,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float apBase       = (1f + totalBAPM) * (statsRace.AttackPower + statsRace.RangedAttackPower);
             float apFromAGI    = (1f + totalBAPM) * (statsTotal.Agility);
             float apFromSTR    = (1f + totalBAPM) * (statsTotal.Strength);
+            float apFromHvW    = (1f + totalBAPM) * (statsTotal.Stamina * (0.10f) * talents.HunterVsWild);
+            float apFromCAim   = (1f + totalBAPM) * (statsTotal.Intellect * (1f/3f) * talents.CarefulAim);
+            float apFromHM     = (1f + totalBAPM) * (500f * (1f + talents.ImprovedHuntersMark * 0.10f) * (talents.GlyphOfHuntersMark ? 1.20f : 1f));
             float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower);
-            statsTotal.AttackPower = (float)Math.Floor(apBase + apFromAGI + apFromSTR + apBonusOther);
+            statsTotal.AttackPower = (float)Math.Floor(apBase + apFromAGI + apFromSTR + apFromHvW + apFromCAim + apFromHM + apBonusOther);
 
             // Spell Power
             float totalBSPM    = statsTotal.BonusSpellPowerMultiplier;
@@ -2635,6 +2569,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Haste
             statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
+                                     * (1f + statsProcs.RangedHaste)
                                      * (1f + StatConversion.GetPhysicalHasteFromRating(statsProcs.HasteRating, character.Class))
                                      - 1f;
 

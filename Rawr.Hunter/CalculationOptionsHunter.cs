@@ -123,25 +123,44 @@ namespace Rawr.Hunter
                 SharkAttack = 0;
                 Silverback = 0;
             }
-            public int CobraReflexes, DiveDash,
-                       ChargeSwoop, GreatStamina,
-                       NaturalArmor, BoarsSpeed,
-                       Mobility, SpikedCollar,
-                       ImprovedCower, Bloodthirsty,
-                       BloodOfTheRhino, PetBarding,
-                       Avoidance, Lionhearted,
-                       CarrionFeeder, GuardDog,
-                       Thunderstomp, GreatResistance,
-                       OwlsFocus, Cornered,
-                       FeedingFrenzy, HeartOfThePhoenix,
-                       SpidersBite, WolverineBite,
-                       RoarOfRecovery, Bullheaded,
-                       GraceOfTheMantis, Rabid,
-                       LickYourWounds, CallOfTheWild,
-                       LastStand, Taunt,
-                       Intervene, WildHunt,
-                       RoarOfSacrifice, SharkAttack,
-                       Silverback;
+            public int CobraReflexes;
+            public int DiveDash;
+            public int ChargeSwoop;
+            public int GreatStamina;
+            public int NaturalArmor;
+            public int BoarsSpeed;
+            public int Mobility;
+            public int SpikedCollar;
+            public int ImprovedCower;
+            public int Bloodthirsty;
+            public int BloodOfTheRhino;
+            public int PetBarding;
+            public int Avoidance;
+            public int Lionhearted;
+            public int CarrionFeeder;
+            public int GuardDog;
+            public int Thunderstomp;
+            public int GreatResistance;
+            public int OwlsFocus;
+            public int Cornered;
+            public int FeedingFrenzy;
+            public int HeartOfThePhoenix;
+            public int SpidersBite;
+            public int WolverineBite;
+            public int RoarOfRecovery;
+            public int Bullheaded;
+            public int GraceOfTheMantis;
+            public int Rabid;
+            public int LickYourWounds;
+            /// <summary>Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown.</summary>
+            public int CallOfTheWild;
+            public int LastStand;
+            public int Taunt;
+            public int Intervene;
+            public int WildHunt;
+            public int RoarOfSacrifice;
+            public int SharkAttack;
+            public int Silverback;
             public void Reset(){
                 CobraReflexes = 0;
                 DiveDash = 0;

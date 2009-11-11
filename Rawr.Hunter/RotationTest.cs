@@ -60,7 +60,7 @@ namespace Rawr.Hunter
             int IAotHfix = 0;
             int LALfix = 0;
             float AutoShotSpeed = 2; // Speed at which we shoot auto-shots
-            float IAotHEffect = 1 + calculatedStats.quickShotsEffect; // haste increase during IAoTH
+            //float IAotHEffect = 1 + calculatedStats.quickShotsEffect; // haste increase during IAoTH
             float IAotHChance = character.HunterTalents.ImprovedAspectOfTheHawk > 0 ? 10 : -1;
             float WaitForESCS = options.waitForCooldown;
             bool InterleaveLAL = options.interleaveLAL;
@@ -412,10 +412,10 @@ namespace Rawr.Hunter
                     }
 
                     //  Adjust AutoShotSpeed if IAotH is active
-                    if (IAotHDuration - currentTime > 0)
+                    /*if (IAotHDuration - currentTime > 0)
                     {
-                        currentAutoShotSpeed *= (1 / IAotHEffect);
-                    }
+                        currentAutoShotSpeed *= (1f / IAotHEffect);
+                    }*/
 
                     // Check if we had an auto shot since the last check
                     if (currentTime - LastAutoShotCheck > currentAutoShotSpeed)
@@ -480,7 +480,7 @@ namespace Rawr.Hunter
                     // Determine Steady Shot haste
                     float SShaste = 1f;
                     if (RFTime > currentTime) SShaste *= 1.4f;
-                    if (IAotHDuration > currentTime) SShaste *= IAotHEffect;
+                    //if (IAotHDuration > currentTime) SShaste *= IAotHEffect;
 
 
                     // Increment cooldown on the shot just fired
