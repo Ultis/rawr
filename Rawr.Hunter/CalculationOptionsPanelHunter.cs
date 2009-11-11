@@ -115,7 +115,7 @@ namespace Rawr.Hunter
             foreach (PetFamily f in Enum.GetValues(typeof(PetFamily))) CB_PetFamily.Items.Add(f);
             CB_PetFamily.SelectedItem = CalcOpts.PetFamily;
 
-            CB_Duration.Value = CalcOpts.duration;
+            CB_Duration.Value = CalcOpts.Duration;
             NUD_Time20.Value = CalcOpts.timeSpentSub20;
             NUD_35.Value = CalcOpts.timeSpent35To20;
             NUD_BossHP.Value = (decimal)Math.Round(100 * CalcOpts.bossHPPercentage);
@@ -496,7 +496,7 @@ namespace Rawr.Hunter
         {
             if (!isLoading)
             {
-            	CalcOpts.duration = (int)CB_Duration.Value;
+            	CalcOpts.Duration = (int)CB_Duration.Value;
                 NUD_Time20.Maximum = CB_Duration.Value; // don't allow these two to be 
                 NUD_35.Maximum = CB_Duration.Value; // longer than than the fight!
                 Character.OnCalculationsInvalidated();

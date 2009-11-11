@@ -47,7 +47,7 @@ namespace Rawr.Hunter
 
         public void RunTest()
         {
-            float FightLength = options.duration;
+            float FightLength = options.Duration;
             float Latency = options.Latency;
             float CDCutoff = options.cooldownCutoff;
             float Longevity = character.HunterTalents.Longevity;

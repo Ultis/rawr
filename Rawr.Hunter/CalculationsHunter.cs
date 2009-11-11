@@ -252,6 +252,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 Stamina = stats.Stamina,
                 Health = stats.Health,
                 Agility = stats.Agility,
+                Strength = stats.Strength,
 				Intellect = stats.Intellect,
 				Mana = stats.Mana,
 				Mp5 = stats.Mp5,
@@ -346,6 +347,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             bool isRelevant = (
                 // Base Stats
                 stats.Agility +
+                stats.Strength +
                 stats.AttackPower + stats.RangedAttackPower +
                 stats.Intellect +
                 // Ratings
@@ -629,10 +631,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return false;
         }
 
-        public Stats GetBuffsStats(Character character) {
-            CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
+        public Stats GetBuffsStats(Character character, CalculationOptionsHunter calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
 
+            float hasRelevantBuff;
+
+            #region Racials to Force Enable
             // Draenei should always have this buff activated
             // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
             if (character.Race == CharacterRace.Draenei
@@ -640,36 +645,93 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             {
                 character.ActiveBuffsAdd(("Heroic Presence"));
             }
+            #endregion
 
-            /* NOTE: THIS CODE IS FROM DPSWARR, HUNTER MAY MAKE USE OF IT EVENTUALLY TO HANDLE CONFLICTS LIKE TRUESHOT AURA
-            // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
-            // Also removes their equivalent of Blessing of Might (+Improved)
-            // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
-                Buff a = Buff.GetBuffByName("Commanding Presence (Attack Power)");
-                Buff b = Buff.GetBuffByName("Battle Shout");
-                Buff c = Buff.GetBuffByName("Improved Blessing of Might");
-                Buff d = Buff.GetBuffByName("Blessing of Might");
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
+            #region Professions to Force Enable
+            // Miners should always have this buff activated
+            if (CheckHasProf(Profession.Mining)
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
+            {
+                character.ActiveBuffsAdd(("Toughness"));
+            }
+            // Skinners should always have this buff activated
+            if (CheckHasProf(Profession.Skinning)
+                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
+            {
+                character.ActiveBuffsAdd(("Master of Anatomy"));
+            }
+            // Engineers should always have this buff activated IF the Primary is
+            if (CheckHasProf(Profession.Engineering))
+            {
+                List<String> list = new List<string>() {
+                    "Runic Mana Injector",
+                    "Runic Healing Injector",
+                };
+                foreach (String name in list)
+                {
+                    if (character.ActiveBuffs.Contains(Buff.GetBuffByName(name)) &&
+                        !character.ActiveBuffs.Contains(Buff.GetBuffByName(name + " (Engineer Bonus)")))
+                    {
+                        character.ActiveBuffsAdd((name + " (Engineer Bonus)"));
+                    }
+                }
+            }
+            // NOTE: Might do this again for Alchemy and Mixology but
+            // there could be conflicts for different specialties
+            #endregion
+
+            #region Passive Ability Auto-Fixing
+            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+            // value to relevant talents
+            /*{
+                hasRelevantBuff = character.WarriorTalents.Trauma;
+                Buff a = Buff.GetBuffByName("Trueshot Aura");
+                Buff b = Buff.GetBuffByName("Unleashed Rage");
+                Buff c = Buff.GetBuffByName("Abomination's Might");
+                if (hasRelevantBuff > 0)
+                {
+                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                }
             }*/
+            #endregion
 
+            #region Special Pot Handling
+            foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
+            {
+                if (potionBuff.Stats._rawSpecialEffectData != null
+                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
+                {
+                    Stats newStats = new Stats();
+                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
+                                                                calcOpts.Duration,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
+                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
+
+                    Buff newBuff = new Buff() { Stats = newStats };
+                    character.ActiveBuffs.Remove(potionBuff);
+                    character.ActiveBuffsAdd(newBuff);
+                    removedBuffs.Add(potionBuff);
+                    addedBuffs.Add(newBuff);
+                }
+            }
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            #endregion
 
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs) {
+                character.ActiveBuffs.Remove(b);
             }
 
             return statsBuffs;
         }
         public override void SetDefaults(Character character) {
-            if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-            {
-                character.ActiveBuffsAdd(("Heroic Presence"));
-            }
         }
 
         #endregion
@@ -931,7 +993,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             HunterTalents talents = character.HunterTalents;
 
             Stats statsItems = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character);
+            Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
 
             calculatedStats.BasicStats = stats;
@@ -1266,20 +1328,20 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float targetDebuffsAP = 0; // Buffs!E77
 
             // The pet debuffs deal with stacking correctly themselves
-            float targetDebuffsArmor = 1 - (1 - calculatedStats.petArmorDebuffs)
-                                          * (1 - statsBuffs.ArmorPenetration); // Buffs!G77
+            float targetDebuffsArmor = 1f - (1f - calculatedStats.petArmorDebuffs)
+                                          * (1f - statsBuffs.ArmorPenetration); // Buffs!G77
 
             float targetDebuffsMP5JudgmentOfWisdom = 0;
             if (statsBuffs.ManaRestoreFromBaseManaPPM > 0)
             {
                 // Note: we ignore the value stored in Buff.cs and calculate it as the spreadsheet
                 // does, using shots per second and a derived 50% proc chance.                
-                float jowAvgShotTime = autoShotsPerSecond + specialShotsPerSecond > 0 ? 1 / (autoShotsPerSecond + specialShotsPerSecond) : 0;
+                float jowAvgShotTime = autoShotsPerSecond + specialShotsPerSecond > 0f ? 1f / (autoShotsPerSecond + specialShotsPerSecond) : 0f;
                 float jowProcChance = 0.5f;
-                float jowTimeToProc = jowProcChance > 0 ? 0.25f + jowAvgShotTime / jowProcChance : 0;
+                float jowTimeToProc = jowProcChance > 0 ? 0.25f + jowAvgShotTime / jowProcChance : 0f;
                 float jowManaGained = statsRace.Mana * 0.02f;
-                float jowMPSGained = jowTimeToProc > 0 ? jowManaGained / jowTimeToProc : 0;
-                targetDebuffsMP5JudgmentOfWisdom = jowTimeToProc > 0 ? jowManaGained / jowTimeToProc * 5 : 0;
+                float jowMPSGained = jowTimeToProc > 0f ? jowManaGained / jowTimeToProc : 0f;
+                targetDebuffsMP5JudgmentOfWisdom = jowTimeToProc > 0f ? jowManaGained / jowTimeToProc * 5f : 0f;
             }
             float targetDebuffsMP5 = targetDebuffsMP5JudgmentOfWisdom; // Buffs!H77
 
@@ -1290,12 +1352,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float targetDebuffsPetDamage = statsBuffs.BonusPhysicalDamageMultiplier;
 
-            calculatedStats.targetDebuffsArmor = 1 - targetDebuffsArmor;
-            calculatedStats.targetDebuffsNature = 1 + targetDebuffsNature;
-            calculatedStats.targetDebuffsPetDamage = 1 + targetDebuffsPetDamage;
+            calculatedStats.targetDebuffsArmor = 1f - targetDebuffsArmor;
+            calculatedStats.targetDebuffsNature = 1f + targetDebuffsNature;
+            calculatedStats.targetDebuffsPetDamage = 1f + targetDebuffsPetDamage;
 
             //29-10-2009 Drizz: For PiercingShots
-            double targetDebuffBleed = statsBuffs.BonusBleedDamageMultiplier;
+            float targetDebuffBleed = statsBuffs.BonusBleedDamageMultiplier;
             #endregion
 
             // mana consumption
@@ -1505,7 +1567,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             //if (IsWearingTrinket(character, 35751)) manaHasAlchemistStone = true; // Assassin's Alchemist Stone
             //if (IsWearingTrinket(character, 44324)) manaHasAlchemistStone = true; // Mighty Alchemist's Stone
 
-            calculatedStats.manaRegenPotion = manaFromPotion / calcOpts.duration * (manaHasAlchemistStone ? 1.4f : 1.0f);
+            calculatedStats.manaRegenPotion = manaFromPotion / calcOpts.Duration * (manaHasAlchemistStone ? 1.4f : 1.0f);
 
             float beastialWrathUptime = calculatedStats.beastialWrath.freq > 0 ? calculatedStats.beastialWrath.duration / calculatedStats.beastialWrath.freq : 0;
 
@@ -1524,9 +1586,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.manaTimeToOOM = calculatedStats.manaChangeDuringNormal < 0 ? calculatedStats.BasicStats.Mana / (0-calculatedStats.manaChangeDuringNormal) : -1;
 
             float viperTimeNeededToLastFight = 0;
-            if (calculatedStats.manaTimeToOOM >= 0 && calculatedStats.manaTimeToOOM < calcOpts.duration && calculatedStats.manaRegenViper > 0)
+            if (calculatedStats.manaTimeToOOM >= 0 && calculatedStats.manaTimeToOOM < calcOpts.Duration && calculatedStats.manaRegenViper > 0)
             {
-                viperTimeNeededToLastFight = (((0 - calculatedStats.manaChangeDuringNormal) * calcOpts.duration) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
+                viperTimeNeededToLastFight = (((0 - calculatedStats.manaChangeDuringNormal) * calcOpts.Duration) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
             }
 
             float aspectUptimeHawk = 0;
@@ -1542,7 +1604,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 {
                     if (viperTimeNeededToLastFight > 0)
                     {
-                        aspectUptimeViper = viperTimeNeededToLastFight / calcOpts.duration;
+                        aspectUptimeViper = viperTimeNeededToLastFight / calcOpts.Duration;
                     }
                 }
             }
@@ -1731,7 +1793,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             {
                 SpecialEffect blackarrow = new SpecialEffect(Trigger.Use,new Stats(),
                                             calculatedStats.blackArrow.duration, calculatedStats.blackArrow.freq);
-                blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, (float)calcOpts.duration);
+                blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, (float)calcOpts.Duration);
             }
             float blackArrowAuraDamageAdjust = 1f + (0.06f * blackArrowUptime);
             float blackArrowSelfDamageAdjust = 1f + (RAP / 225000f);
@@ -1925,7 +1987,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float steadyShotAvgNonCritDamage = steadyShotDamageNormal * steadyShotDamageAdjust * ArmorDamageReduction;
             float steadyShotAvgCritDamage = steadyShotAvgNonCritDamage * (1f + steadyShotCritAdjust);
             //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
-            float steadyShotPiercingShots = (1f + statsBuffs.BonusBleedDamageMultiplier)
+            float steadyShotPiercingShots = (1f + targetDebuffBleed)
                                           * (character.HunterTalents.PiercingShots * 0.1f)
                                           * steadyShotCritChance * steadyShotAvgCritDamage;
 
@@ -2011,7 +2073,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float aimedShotAvgNonCritDamage = aimedShotDamageNormal * aimedShotDamageAdjust * ArmorDamageReduction;
             float aimedShotAvgCritDamage = aimedShotAvgNonCritDamage * (1f + aimedShotCritAdjust);
             //021109 Drizz: Have to add the Mangle/Trauma buff effect. 
-            float aimedShotPiercingShots = (1f + statsBuffs.BonusBleedDamageMultiplier)
+            float aimedShotPiercingShots = (1f + targetDebuffBleed)
                                          * (character.HunterTalents.PiercingShots * 0.1f)
                                          * aimedShotCrit * aimedShotAvgCritDamage;
 
@@ -2074,7 +2136,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float chimeraShotAvgNonCritDamage = chimeraShotDamageNormal * talentDamageAdjust * ISSChimeraShotDamageAdjust * (1f + targetDebuffsNature);
             float chimeraShotAvgCritDamage = chimeraShotAvgNonCritDamage * (1f + chimeraShotCritAdjust);
             // 021109 - Drizz: Had to add the Bleed Damage Multiplier
-            float chimeraShotPiercingShots = (1f + statsBuffs.BonusBleedDamageMultiplier)
+            float chimeraShotPiercingShots = (1f + targetDebuffBleed)
                                            * (character.HunterTalents.PiercingShots * 0.1f)
                                            * calculatedStats.critRateOverall
                                            * chimeraShotAvgCritDamage;
@@ -2355,7 +2417,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float killShotDPSGain = newKillShotDPS > 0f ? (newKillShotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0f;
 
             float timeSpentSubTwenty = 0;
-            if (calcOpts.duration > 0 && calcOpts.timeSpentSub20 > 0) timeSpentSubTwenty = (float)calcOpts.timeSpentSub20 / (float)calcOpts.duration;
+            if (calcOpts.Duration > 0 && calcOpts.timeSpentSub20 > 0) timeSpentSubTwenty = (float)calcOpts.timeSpentSub20 / (float)calcOpts.Duration;
             if (calcOpts.bossHPPercentage < 0.2f) timeSpentSubTwenty = 1f;
 
             float killShotSubGain = timeSpentSubTwenty * killShotDPSGain;
@@ -2460,14 +2522,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Strength
             float totalBSTRM = statsTotal.BonusStrengthMultiplier;
-            float strBase = (float)Math.Floor((1f + totalBSTRM) * statsRace.Strength);
-            float strBonus = (float)Math.Floor((1f + totalBSTRM) * statsGearEnchantsBuffs.Strength);
+            float strBase    = (float)Math.Floor((1f + totalBSTRM) * statsRace.Strength);
+            float strBonus   = (float)Math.Floor((1f + totalBSTRM) * statsGearEnchantsBuffs.Strength);
             statsTotal.Strength = strBase + strBonus;
 
             // Agility
             float totalBAGIM = statsTotal.BonusAgilityMultiplier;
-            float agiBase = (float)Math.Floor((1f + totalBAGIM) * statsRace.Agility);
-            float agiBonus = (float)Math.Floor((1f + totalBAGIM) * statsGearEnchantsBuffs.Agility);
+            float agiBase    = (float)Math.Floor((1f + totalBAGIM) * statsRace.Agility);
+            float agiBonus   = (float)Math.Floor((1f + totalBAGIM) * statsGearEnchantsBuffs.Agility);
             statsTotal.Agility = agiBase + agiBonus;
 
             // Intellect
@@ -2486,8 +2548,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             statsTotal.BonusAttackPowerMultiplier *= (1f + statsTotal.BonusRangedAttackPowerMultiplier);
             float totalBAPM    = statsTotal.BonusAttackPowerMultiplier;
             float apBase       = (1f + totalBAPM) * (statsRace.AttackPower + statsRace.RangedAttackPower);
+            float apFromAGI    = (1f + totalBAPM) * (statsTotal.Agility);
+            float apFromSTR    = (1f + totalBAPM) * (statsTotal.Strength);
             float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower);
-            statsTotal.AttackPower = (float)Math.Floor(apBase + apBonusOther);
+            statsTotal.AttackPower = (float)Math.Floor(apBase + apFromAGI + apFromSTR + apBonusOther);
 
             // Spell Power
             float totalBSPM    = statsTotal.BonusSpellPowerMultiplier;
@@ -2559,12 +2623,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Attack Power
             statsProcs.BonusAttackPowerMultiplier *= (1f + statsProcs.BonusRangedAttackPowerMultiplier);
-            float totalBAPMProcs = (1f + statsTotal.BonusAttackPowerMultiplier) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
-            float apBonusOtherProcs = (1f + totalBAPM) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
-            statsProcs.AttackPower = (float)Math.Floor(apBonusOtherProcs);
+            float totalBAPMProcs    = (1f + totalBAPM) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
+            float apFromAGIProcs    = (1f + totalBAPMProcs) * (statsProcs.Agility);
+            float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
+            float apBonusOtherProcs = (1f + totalBAPMProcs) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
+            statsProcs.AttackPower = (float)Math.Floor(apFromAGIProcs + apFromSTRProcs + apBonusOtherProcs);
 
             // Crit
             statsProcs.PhysicalCrit += StatConversion.GetCritFromAgility(statsProcs.Agility, character.Class);
+            statsProcs.PhysicalCrit += StatConversion.GetCritFromRating(statsProcs.CritRating + statsProcs.RangedCritRating, character.Class);
 
             // Haste
             statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste)
@@ -2585,7 +2652,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float speed = (RangeWeap != null ? RangeWeap.Speed : 2.4f);
             HunterTalents talents = Char.HunterTalents;
             Stats statsProcs = new Stats();
-            float fightDuration = calcOpts.duration;
+            float fightDuration = calcOpts.Duration;
             //
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
                 float oldArp = effect.Stats.ArmorPenetrationRating;

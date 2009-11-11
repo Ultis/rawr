@@ -35,7 +35,7 @@ namespace Rawr.Hunter
         }
 
 		public float Latency = 0.15f;
-        public int duration = 360;
+        public int Duration = 360;
         public int timeSpentSub20 = 72;
         public int timeSpent35To20 = 54;
         public float bossHPPercentage = 1;

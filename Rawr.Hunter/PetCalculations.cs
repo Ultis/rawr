@@ -358,9 +358,9 @@ namespace Rawr.Hunter
             float roarOfRecoveryFreq = priorityRotation.getSkillFrequency(PetAttacks.RoarOfRecovery);
             if (roarOfRecoveryFreq > 0)
             {
-                float roarOfRecoveryUseCount = (float)Math.Ceiling(options.duration / roarOfRecoveryFreq);
+                float roarOfRecoveryUseCount = (float)Math.Ceiling(options.Duration / roarOfRecoveryFreq);
                 float roarOfRecoveryManaRestored = calculatedStats.BasicStats.Mana * 0.3f * roarOfRecoveryUseCount; // E129
-                calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseCount > 0 ? roarOfRecoveryManaRestored / options.duration : 0;
+                calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseCount > 0 ? roarOfRecoveryManaRestored / options.Duration : 0;
             }
 
             //Invigoration
@@ -381,7 +381,7 @@ namespace Rawr.Hunter
             {
                 SpecialEffect callofthewild = new SpecialEffect(Trigger.Use, new Stats() { BonusAttackPowerMultiplier = 0.10f, },
                     20f, 5f * 60f);
-                float callOfTheWildUptime = callofthewild.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, options.duration);
+                float callOfTheWildUptime = callofthewild.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, options.Duration);
                 calculatedStats.apFromCallOfTheWild = 0.1f * callOfTheWildUptime;
             }
 
@@ -425,7 +425,7 @@ namespace Rawr.Hunter
                 SpecialEffect tier94pc = new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 600f, }, 15f, 0f, 0.35f);
                 float tier94pcUptime = tier94pc.GetAverageUptime(1.5f,
                     1f - Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[options.TargetLevel - character.Level] - calculatedStats.BasicStats.PhysicalHit),
-                    calculatedStats.autoShotStaticSpeed, options.duration);
+                    calculatedStats.autoShotStaticSpeed, options.Duration);
                 calculatedStats.petAPFromTier9 = 600f * tier94pcUptime;
             }
 
@@ -459,7 +459,7 @@ namespace Rawr.Hunter
             SpecialEffect rabid = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusAttackPowerMultiplier = 0.05f },
                 20, rabidCooldown, 0.50f, 5);
-            float rabidUptime = options.PetTalents.Rabid * rabid.GetAverageUptime(0f, 1f, 2f, options.duration);
+            float rabidUptime = options.PetTalents.Rabid * rabid.GetAverageUptime(0f, 1f, 2f, options.Duration);
 
             if (rabidUptime > 0)
             {
@@ -625,7 +625,7 @@ namespace Rawr.Hunter
             if (options.PetTalents.FeedingFrenzy > 0)
             {
                 float feedingFrenzyTimeSpent = options.timeSpentSub20 + options.timeSpent35To20;
-                float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / options.duration : 0;
+                float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / options.Duration : 0;
                 damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * options.PetTalents.FeedingFrenzy * 0.08f;
             }
 

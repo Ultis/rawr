@@ -821,37 +821,6 @@ These numbers to do not include racial bonuses.",
                 }
             }
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-            /*
-            List<String> buffNames = new List<string>() {
-                "Potion of Speed",
-                "Potion of Wild Magic",
-                "Heroic Potion",
-                "Insane Strength Potion",
-                "Indestructible Potion",
-                "Mighty Rage Potion",
-                "Insane Strength Potion",
-                "Swiftness Potion",
-            };
-
-            // The following is a special thing for Pots
-            // Instead of using the 20 min cooldown we pass the Fight Duration
-            // user is setting instead, to lessen the skewing of the Pot's value
-            if (statsBuffs._rawSpecialEffectData != null) {
-                foreach (SpecialEffect buffeffect in statsBuffs._rawSpecialEffectData) {
-                    foreach (String name in buffNames) {
-                        Buff buff_1 = Buff.GetBuffByName(name);
-                        Buff buff_2 = Buff.GetBuffByName(name + " (Double Pot Trick)");
-                        SpecialEffect buff1 = null;
-                        SpecialEffect buff2 = null;
-                        if (buff_1.Stats._rawSpecialEffectData[0] != null) { buff1 = buff_1.Stats._rawSpecialEffectData[0]; }
-                        if (buff_2.Stats._rawSpecialEffectData[0] != null) { buff2 = buff_2.Stats._rawSpecialEffectData[0]; }
-                        if (buff1 != null && buffeffect == buff1) { buff1.Cooldown = calcOpts.Duration; }
-                        if (buff2 != null && buffeffect == buff2) { buff2.Cooldown = calcOpts.Duration; }
-                    }
-                }
-            }
-             */
             #endregion
             
             foreach (Buff b in removedBuffs) {
