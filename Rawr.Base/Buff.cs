@@ -2592,28 +2592,30 @@ namespace Rawr
             });
             #endregion
             #endregion
-            #region Tier 10 | 
+            #region Tier 10 | Lasherweave
+            #region Garb
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Moonkin T10 2 Piece Bonus",
+                Name = "Lasherweave Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats(),
-                SetName = "Moonkin T10",
+                SetName = "Lasherweave Garb",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { BonusArcaneDamageMultiplier = 0.15f, BonusNatureDamageMultiplier = 0.15f }, 6.0f, 0f, 0.06f, 1));
             defaultBuffs.Add(new Buff()
             {
-                Name = "Moonkin T10 4 Piece Bonus",
+                Name = "Lasherweave Garb 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { MoonkinT10CritDot = 0.05f },
-                SetName = "Moonkin T10",
+                SetName = "Lasherweave Garb",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
+            #endregion
             #endregion
             #endregion
             #region PvP
