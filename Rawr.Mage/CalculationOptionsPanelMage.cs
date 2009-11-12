@@ -25,7 +25,47 @@ namespace Rawr.Mage
             }
             numericUpDownMaxThreads.Value = Properties.Settings.Default.MaxThreads;
             checkBoxDebugCooldownSegmentation.Checked = Properties.Settings.Default.DebugSegmentation;
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                SetUpCheckStateFormatting(this);
+            }
 		}
+
+        private void SetUpCheckStateFormatting(Control parent)
+        {
+            if (parent == null) return;
+            if (parent is CheckBox)
+            {
+                foreach (Binding binding in parent.DataBindings)
+                {
+                    if (binding.PropertyName == "CheckState")
+                    {
+                        binding.Format += new ConvertEventHandler(BooleanToCheckState);
+                        binding.Parse += new ConvertEventHandler(CheckStateToBoolean);
+                    }
+                }
+            }
+            foreach (Control child in parent.Controls)
+            {
+                SetUpCheckStateFormatting(child);
+            }
+        }
+
+        void BooleanToCheckState(object sender, ConvertEventArgs e)
+        {
+            if (e.Value is bool)
+            {
+                e.Value = (bool)e.Value ? CheckState.Checked : CheckState.Unchecked;
+            }
+        }
+
+        void CheckStateToBoolean(object sender, ConvertEventArgs e)
+        {
+            if (e.Value is CheckState)
+            {
+                e.Value = ((CheckState)e.Value == CheckState.Checked);
+            }
+        }
 
         private bool loading = false;
 
