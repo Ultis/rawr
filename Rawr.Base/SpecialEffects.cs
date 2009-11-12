@@ -1078,7 +1078,7 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HammeroftheRighteous, new Stats() { DodgeRating = (float)int.Parse(match.Groups["dodgeRating"].Value) }, (float)int.Parse(match.Groups["duration"].Value), 10f, 0.8f));
             }
             #endregion
-            #region Added by Rawr.Enhance
+            #region Shaman Totem Relic Slot
             else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanShock, new Stats() { AttackPower = 110 }, 10f, 45f));
@@ -1113,6 +1113,16 @@ namespace Rawr {
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 18f, 9f, 0.8f));
                 }
             }
+            else if (line.StartsWith("Your Stormstrike ability grant"))
+            {
+                Regex r = new Regex("Your Stormstrike ability grant (?<attackpower>\\d*) attack power rating for 15 sec. Stacks up to 3 times.");
+                Match m = r.Match(line);
+                if (m.Success) // Totem of the Avalanche
+                {
+                    float attackPower = (float)int.Parse(m.Groups["attackpower"].Value);
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanStormStrike, new Stats() { AttackPower = attackPower }, 15f, 0f, 1f, 3));
+                }
+            }
             else if (line.StartsWith("Each time you cast Lightning Bolt,"))
             {
                 Regex r = new Regex("Each time you cast Lightning Bolt, you have a chance to gain (?<hasterating>\\d*) haste rating for 12 sec.");
@@ -1121,6 +1131,16 @@ namespace Rawr {
                 {
                     float hasterating = (float)int.Parse(m.Groups["hasterating"].Value);
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLightningBolt, new Stats() { HasteRating = hasterating }, 12f, 0f, 0.7f));
+                }
+            }
+            else if (line.StartsWith("The periodic damage from your Flame Shock spell grants"))
+            {
+                Regex r = new Regex("The periodic damage from your Flame Shock spell grants (?<hasterating>\\d*) haste rating for 30 sec. Stacks up to 5 times.");
+                Match m = r.Match(line);
+                if (m.Success) // 	Bizuri's Totem of Shattered Ice
+                {
+                    float hasterating = (float)int.Parse(m.Groups["hasterating"].Value);
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanFSDoTTick, new Stats() { HasteRating = hasterating }, 30f, 0f, 1f, 5));
                 }
             }
             else if (line.StartsWith("Your Shock spells grant "))
@@ -1142,8 +1162,7 @@ namespace Rawr {
                     stats.BonusSSDamage += (float)int.Parse(m.Groups["damage"].Value);
                 }
             }
-            #endregion
-            #region Added by Rawr.RestoSham
+            #region Rawr.RestoSham
             else if (line.StartsWith("Increases the base amount healed by your chain heal by "))
             {
                 line = line.Replace(".", "");
@@ -1180,6 +1199,7 @@ namespace Rawr {
                 line = line.Substring("Your Water Shield ability grants an additional ".Length);
                 stats.TotemThunderhead = 1f; // Totem of the Thunderhead, Possible Future totems
             }
+            #endregion
             #endregion
             else if ((match = Regex.Match(line, @"Reduces the base mana cost of your spells by (?<amount>\d+).")).Success)
             {

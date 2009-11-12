@@ -40,6 +40,7 @@ namespace Rawr
         ShamanLightningBolt,
         ShamanLavaLash,
         ShamanShock,
+        ShamanFSDoTTick,
         ShamanStormStrike,
         ShamanShamanisticRage,
         BloodStrikeHit,
