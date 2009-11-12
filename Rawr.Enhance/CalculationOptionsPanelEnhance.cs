@@ -58,12 +58,10 @@ namespace Rawr.Enhance
             chkStatsExp.Checked = _calcOpts.StatsList[5];
             chkStatsHaste.Checked = _calcOpts.StatsList[6];
             chkStatsArP.Checked = _calcOpts.StatsList[7];
-            chkStatsSP.Checked =_calcOpts.StatsList[8];
-            chkStatsInt.Checked = _calcOpts.StatsList[9];
+            chkStatsSP.Checked = _calcOpts.StatsList[8];
+            try { chkStatsInt.Checked = _calcOpts.StatsList[9]; } catch(Exception) { chkStatsInt.Checked = true; }
             LoadPriorities();
 
-
-      //      labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
             labelAverageLag.Text = trackBarAverageLag.Value.ToString();
 
             tbModuleNotes.Text = "The EnhSim export option exists for users that wish to have very detailed analysis of their stats. " +
