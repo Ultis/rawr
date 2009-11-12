@@ -836,6 +836,8 @@ namespace Rawr.TankDK
                 m_fRSCount = Math.Min(m_fRSCount, (fDuration / MH.hastedSpeed));
                 // Then no more than the amount of RP available.
                 m_fRSCount = Math.Min(m_fRSCount, (calcOpts.m_Rotation.RP / 20f));
+                // No fewer than 0;
+                m_fRSCount = Math.Max(m_fRSCount, 0);
                 if (m_fRSCount == 0)
                 {
                     m_fRSCount = calcOpts.m_Rotation.RuneStrike;
