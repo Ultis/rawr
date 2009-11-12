@@ -479,7 +479,7 @@ namespace Rawr.Hunter
         {
             if (!isLoading)
             {
-                CalcOpts.Latency = (float)NUD_Latency.Value/1000.0f;
+                CalcOpts.Lag = (float)NUD_Latency.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -1137,7 +1137,20 @@ namespace Rawr.Hunter
         // 091109 Drizz: Added 
         private void BT_Calculate_Click(object sender, EventArgs e)
         {
-
+            RotationShotInfo[] myShotsTable;
+            CalculationsHunter calcs = Character.CurrentCalculations as CalculationsHunter;
+            CharacterCalculationsHunter charCalcs = calcs.GetCharacterCalculations(Character) as CharacterCalculationsHunter;
+            charCalcs.collectSequence = true;
+            RotationTest rTest = new RotationTest(Character, charCalcs, CalcOpts);
+            rTest.RunTest();
+            myShotsTable = rTest.getRotationTable();
+            TB_Rotation.Text = charCalcs.sequence;
+            TB_Shots.Text = "";
+            for (int i = 0; i < myShotsTable.Length; i++)
+            {
+                if (myShotsTable[i] != null)
+                    TB_Shots.Text += String.Format("{0,-13} : {1,4}", myShotsTable[i].type, myShotsTable[i].countUsed) + Environment.NewLine;
+            }
         }
 
         private void TB_Rotation_TextChanged(object sender, EventArgs e)

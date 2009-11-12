@@ -34,7 +34,171 @@ namespace Rawr.Hunter
             set { _petActiveBuffs = value; }
         }
 
-		public float Latency = 0.15f;
+        #region Rotational Changes
+        private bool _InBack;
+        public bool InBack
+        {
+            get { return _InBack; }
+            set { _InBack = value; OnPropertyChanged("InBack"); }
+        }
+        private int _InBackPerc;
+        public int InBackPerc
+        {
+            get { return _InBackPerc; }
+            set { _InBackPerc = value; OnPropertyChanged("InBackPerc"); }
+        }
+        private bool _MultipleTargets;
+        public bool MultipleTargets
+        {
+            get { return _MultipleTargets; }
+            set { _MultipleTargets = value; OnPropertyChanged("MultipleTargets"); }
+        }
+        private int _MultipleTargetsPerc;
+        public int MultipleTargetsPerc
+        {
+            get { return _MultipleTargetsPerc; }
+            set { _MultipleTargetsPerc = value; OnPropertyChanged("MultipleTargetsPerc"); }
+        }
+        private float _MultipleTargetsMax;
+        public float MultipleTargetsMax
+        {
+            get { return _MultipleTargetsMax; }
+            set { _MultipleTargetsMax = value; OnPropertyChanged("MultipleTargetsMax"); }
+        }
+        private bool _MovingTargets;
+        public bool MovingTargets
+        {
+            get { return _MovingTargets; }
+            set { _MovingTargets = value; OnPropertyChanged("MovingTargets"); }
+        }
+        private bool _StunningTargets;
+        public bool StunningTargets
+        {
+            get { return _StunningTargets; }
+            set { _StunningTargets = value; OnPropertyChanged("StunningTargets"); }
+        }
+        private int _StunningTargetsFreq;
+        public int StunningTargetsFreq
+        {
+            get { return _StunningTargetsFreq; }
+            set { _StunningTargetsFreq = value; OnPropertyChanged("StunningTargetsFreq"); }
+        }
+        private float _StunningTargetsDur;
+        public float StunningTargetsDur
+        {
+            get { return _StunningTargetsDur; }
+            set { _StunningTargetsDur = value; OnPropertyChanged("StunningTargetsDur"); }
+        }
+        private bool _FearingTargets;
+        public bool FearingTargets
+        {
+            get { return _FearingTargets; }
+            set { _FearingTargets = value; OnPropertyChanged("FearingTargets"); }
+        }
+        private bool _RootingTargets;
+        public bool RootingTargets
+        {
+            get { return _RootingTargets; }
+            set { _RootingTargets = value; OnPropertyChanged("RootingTargets"); }
+        }
+        private int _RootingTargetsFreq;
+        public int RootingTargetsFreq
+        {
+            get { return _RootingTargetsFreq; }
+            set { _RootingTargetsFreq = value; OnPropertyChanged("RootingTargetsFreq"); }
+        }
+        private float _RootingTargetsDur;
+        public float RootingTargetsDur
+        {
+            get { return _RootingTargetsDur; }
+            set { _RootingTargetsDur = value; OnPropertyChanged("RootingTargetsDur"); }
+        }
+        private bool _DisarmingTargets;
+        public bool DisarmingTargets
+        {
+            get { return _DisarmingTargets; }
+            set { _DisarmingTargets = value; OnPropertyChanged("DisarmingTargets"); }
+        }
+        private int _DisarmingTargetsFreq;
+        public int DisarmingTargetsFreq
+        {
+            get { return _DisarmingTargetsFreq; }
+            set { _DisarmingTargetsFreq = value; OnPropertyChanged("DisarmingTargetsFreq"); }
+        }
+        private float _DisarmingTargetsDur;
+        public float DisarmingTargetsDur
+        {
+            get { return _DisarmingTargetsDur; }
+            set { _DisarmingTargetsDur = value; OnPropertyChanged("DisarmingTargetsDur"); }
+        }
+        private bool _AoETargets;
+        public bool AoETargets
+        {
+            get { return _AoETargets; }
+            set { _AoETargets = value; OnPropertyChanged("AoETargets"); }
+        }
+        private int _AoETargetsFreq;
+        public int AoETargetsFreq
+        {
+            get { return _AoETargetsFreq; }
+            set { _AoETargetsFreq = value; OnPropertyChanged("AoETargetsFreq"); }
+        }
+        private float _AoETargetsDMG;
+        public float AoETargetsDMG
+        {
+            get { return _AoETargetsDMG; }
+            set { _AoETargetsDMG = value; OnPropertyChanged("AoETargetsDMG"); }
+        }
+        // ==============================================================
+        private List<Stun> _stuns;
+        public List<Stun> Stuns
+        {
+            get { return _stuns ?? (_stuns = new List<Stun>()); }
+            set { _stuns = value; OnPropertyChanged("Stuns"); }
+        }
+        private List<Move> _moves;
+        public List<Move> Moves
+        {
+            get { return _moves ?? (_moves = new List<Move>()); }
+            set { _moves = value; OnPropertyChanged("Moves"); }
+        }
+        private List<Fear> _fears;
+        public List<Fear> Fears
+        {
+            get { return _fears ?? (_fears = new List<Fear>()); }
+            set { _fears = value; OnPropertyChanged("Fears"); }
+        }
+        private List<Root> _roots;
+        public List<Root> Roots
+        {
+            get { return _roots ?? (_roots = new List<Root>()); }
+            set { _roots = value; OnPropertyChanged("Roots"); }
+        }
+        private List<Disarm> _disarms;
+        public List<Disarm> Disarms
+        {
+            get { return _disarms ?? (_disarms = new List<Disarm>()); }
+            set { _disarms = value; OnPropertyChanged("Disarms"); }
+        }
+        #endregion
+        #region Latency
+        private float _Lag;
+        public float Lag
+        {
+            get { return _Lag; }
+            set { _Lag = value; OnPropertyChanged("Lag"); }
+        }
+        private float _React;
+        public float React
+        {
+            get { return _React; }
+            set { _React = value; OnPropertyChanged("React"); }
+        }
+        public float Latency { get { return Lag / 1000f; } }
+        public float AllowedReact { get { return Math.Max(0f, (React - 250f) / 1000f); } }
+        public float FullLatency { get { return AllowedReact + Latency; } }
+        #endregion
+
         public int Duration = 360;
         public int timeSpentSub20 = 72;
         public int timeSpent35To20 = 54;

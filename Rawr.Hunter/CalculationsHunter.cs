@@ -1702,7 +1702,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // T.N.T.
             float TNTDamageAdjust = 1 + 0.02f * talents.TNT;
 
-
             // These intermediates group the two common sets of adjustments
             float talentDamageAdjust = focusedFireDamageAdjust
                                             * beastWithinDamageAdjust
@@ -2676,6 +2675,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         public float GetArmorDamageReduction(CalculationOptionsHunter CalcOpts, Character Char, Stats StatS) {
                 float armorReduction;
                 float arpenBuffs = 0.0f;
+
                 if (CalcOpts == null) {
                     armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[CalcOpts.TargetLevel - Char.Level], StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
                 } else {

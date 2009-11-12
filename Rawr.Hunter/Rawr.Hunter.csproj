@@ -109,6 +109,7 @@
     </Compile>
     <Compile Include="CalculationsHunter.cs" />
     <Compile Include="CharacterCalculationsHunter.cs" />
+    <Compile Include="CombatFactors.cs" />
     <Compile Include="ComparisonCalculationHunter.cs" />
     <Compile Include="HunterEnums.cs" />
     <Compile Include="PetBuffSelector.cs">
@@ -147,6 +148,7 @@
     </Compile>
     <Compile Include="RotationTest.cs" />
     <Compile Include="ShotPriority.cs" />
+    <Compile Include="Skills.Base.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
