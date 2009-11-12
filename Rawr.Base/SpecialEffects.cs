@@ -1113,10 +1113,11 @@ namespace Rawr {
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanLavaLash, new Stats() { AttackPower = attackPower }, 18f, 9f, 0.8f));
                 }
             }
-            else if (line.StartsWith("Your Stormstrike ability grant"))
+            else if (line.StartsWith("Your Stormstrike ability grants"))
             {
-                Regex r = new Regex("Your Stormstrike ability grant (?<attackpower>\\d*) attack power rating for 15 sec. Stacks up to 3 times.");
-                Match m = r.Match(line);
+                string test = line.Substring(0, line.Length - 27); // stack text has &nbsp; in it which screws up test
+                Regex r = new Regex("Your Stormstrike ability grants (?<attackpower>\\d*) attack power for 15 sec.");
+                Match m = r.Match(test);
                 if (m.Success) // Totem of the Avalanche
                 {
                     float attackPower = (float)int.Parse(m.Groups["attackpower"].Value);
@@ -1135,12 +1136,13 @@ namespace Rawr {
             }
             else if (line.StartsWith("The periodic damage from your Flame Shock spell grants"))
             {
-                Regex r = new Regex("The periodic damage from your Flame Shock spell grants (?<hasterating>\\d*) haste rating for 30 sec. Stacks up to 5 times.");
-                Match m = r.Match(line);
+                string test = line.Substring(0, line.Length - 27); // stack text has &nbsp; in it which screws up test
+                Regex r = new Regex("The periodic damage from your Flame Shock spell grants (?<hasterating>\\d*) haste rating for 30 sec.");
+                Match m = r.Match(test);
                 if (m.Success) // 	Bizuri's Totem of Shattered Ice
                 {
                     float hasterating = (float)int.Parse(m.Groups["hasterating"].Value);
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanFSDoTTick, new Stats() { HasteRating = hasterating }, 30f, 0f, 1f, 5));
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanFlameShockDoTTick, new Stats() { HasteRating = hasterating }, 30f, 0f, 1f, 5));
                 }
             }
             else if (line.StartsWith("Your Shock spells grant "))
