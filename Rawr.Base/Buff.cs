@@ -2593,25 +2593,25 @@ namespace Rawr
             #endregion
             #endregion
             #region Tier 10 | Lasherweave
-            #region Garb
+            #region Regalia
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Lasherweave Garb 2 Piece Bonus",
+                Name = "Lasherweave Regalia 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats(),
-                SetName = "Lasherweave Garb",
+                SetName = "Lasherweave Regalia",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { BonusArcaneDamageMultiplier = 0.15f, BonusNatureDamageMultiplier = 0.15f }, 6.0f, 0f, 0.06f, 1));
             defaultBuffs.Add(new Buff()
             {
-                Name = "Lasherweave Garb 4 Piece Bonus",
+                Name = "Lasherweave Regalia 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { MoonkinT10CritDot = 0.05f },
-                SetName = "Lasherweave Garb",
+                SetName = "Lasherweave Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
