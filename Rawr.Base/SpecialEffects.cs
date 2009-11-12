@@ -929,6 +929,10 @@ namespace Rawr {
                 // Embrace of the Spider
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 505 }, 10, 45, 0.1f));
             }
+            else if ((match = Regex.Match(line, @"Reduces the base mana cost of your spells by (?<amount>\d+).")).Success)
+            {
+                stats.SpellsManaReduction = int.Parse(match.Groups["amount"].Value);
+            }
             else if (line.StartsWith("Your direct healing and heal over time spells have a chance to increase your haste rating by 505 for 10 secs."))
             {
                 // The Egg of Mortal Essence
@@ -1115,9 +1119,8 @@ namespace Rawr {
             }
             else if (line.StartsWith("Your Stormstrike ability grants"))
             {
-                string test = line.Substring(0, line.Length - 27); // stack text has &nbsp; in it which screws up test
-                Regex r = new Regex("Your Stormstrike ability grants (?<attackpower>\\d*) attack power for 15 sec.");
-                Match m = r.Match(test);
+                Regex r = new Regex("Your Stormstrike ability grants (?<attackpower>\\d*) attack power for 15 sec.  Stacks up to 3 times.");
+                Match m = r.Match(line.Replace("nbsp;", " "));
                 if (m.Success) // Totem of the Avalanche
                 {
                     float attackPower = (float)int.Parse(m.Groups["attackpower"].Value);
@@ -1136,9 +1139,8 @@ namespace Rawr {
             }
             else if (line.StartsWith("The periodic damage from your Flame Shock spell grants"))
             {
-                string test = line.Substring(0, line.Length - 27); // stack text has &nbsp; in it which screws up test
-                Regex r = new Regex("The periodic damage from your Flame Shock spell grants (?<hasterating>\\d*) haste rating for 30 sec.");
-                Match m = r.Match(test);
+                Regex r = new Regex("The periodic damage from your Flame Shock spell grants (?<hasterating>\\d*) haste rating for 30 sec.  Stacks up to 5 times.");
+                Match m = r.Match(line.Replace("nbsp;", " "));
                 if (m.Success) // 	Bizuri's Totem of Shattered Ice
                 {
                     float hasterating = (float)int.Parse(m.Groups["hasterating"].Value);
@@ -1203,10 +1205,6 @@ namespace Rawr {
             }
             #endregion
             #endregion
-            else if ((match = Regex.Match(line, @"Reduces the base mana cost of your spells by (?<amount>\d+).")).Success)
-            {
-                stats.SpellsManaReduction = int.Parse(match.Groups["amount"].Value);
-            }
             #region 3.2 Trinkets
             else if ((match = Regex.Match(line, @"Each time you hit with a melee or ranged attack, you have a chance to gain (?<amount>\d+) attack power for 10 sec.")).Success)
             {
@@ -1219,6 +1217,13 @@ namespace Rawr {
             else if ((match = Regex.Match(line, @"Each time you cast a helpful spell, you have a chance to gain (?<amount>\d+) mana.")).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = int.Parse(match.Groups["amount"].Value) }, 0f, 45f, 0.25f));
+            }
+            #endregion
+            #region Icecrown Weapon Procs
+            else if (line == "Your weapon swings have a chance to grant you Necrotic Touch for 10 sec, causing all your melee attacks to deal an additional 9% damage as shadow damage.")
+            {
+                // Black Bruise
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = .09f }, 10f, 0f, 0.01f));
             }
             #endregion
             else
