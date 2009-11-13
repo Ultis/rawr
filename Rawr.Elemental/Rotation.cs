@@ -300,6 +300,26 @@ namespace Rawr.Elemental
             return getSpells(spellType).Count / GetTime();
         }
 
+        public float getTicksPerSecond(Type spellType)
+        {
+            float ticks = 0;
+            for (int i = 0; i < spells.Count; i++)
+            {
+                Spell s = spells[i];
+                if (spellType.IsInstanceOfType(s))
+                {
+                    if (s.Duration <= 0)
+                        return 0;
+                    float durationActive = getNextCastTime(i) - (GetTime(i) + s.CastTimeWithoutGCD);
+                    if (durationActive >= s.Duration)
+                        ticks += s.PeriodicTicks;
+                    else
+                        ticks += (float)Math.Floor(durationActive / s.PeriodicTickTime);
+                }
+            }
+            return ticks / GetTime();
+        }
+
         public List<Spell> getSpells(Type spellType)
         {
             return spells.FindAll(delegate(Spell spell) { return spellType.IsInstanceOfType(spell); });

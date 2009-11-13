@@ -224,6 +224,10 @@ namespace Rawr.Elemental
                 {
                     trigger = 1f / rot.getCastsPerSecond(typeof(Shock));
                 }
+                else if (effect.Trigger == Trigger.ShamanFlameShockDoTTick)
+                {
+                    trigger = 1f / rot.getTicksPerSecond(typeof(FlameShock));
+                }
                 else if (effect.Trigger == Trigger.Use)
                 {
                     trigger = 1f;
