@@ -900,7 +900,8 @@ namespace Rawr.DPSWarr {
                     acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _TB_GCDs = Abil_GCDs;
-                    GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
+                    float OPGCDReduc = (OP.Cd < LatentGCD ? (OP.Cd + CalcOpts.Lag) / LatentGCD : 1f);
+                    GCDsused += Math.Min(origNumGCDs, Abil_GCDs * OPGCDReduc);
                     availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                     availRage -= TB.GetRageUseOverDur(Abil_GCDs);
                 }
