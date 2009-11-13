@@ -2352,11 +2352,6 @@ namespace Rawr
             }
         }
 
-        private void view3DWowheadModelViewerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowWowhead3DModelURL(Character, true);
-        }
-
         private void maleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowWowhead3DModelURL(Character, true);
@@ -2367,6 +2362,18 @@ namespace Rawr
             ShowWowhead3DModelURL(Character, false);
         }
 
+        private void maleJavaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form3DModel model = new Form3DModel();
+            model.ShowWowhead3DModelJava(Character, true);
+        }
+
+        private void femaleJavaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form3DModel model = new Form3DModel();
+            model.ShowWowhead3DModelJava(Character, false);
+        }
+        
         private void ShowWowhead3DModelURL(Character character, bool maleModel)
         {
             bool missingDisplayID = false;
@@ -2391,5 +2398,6 @@ namespace Rawr
             else
                 Help.ShowHelp(null, URL.ToString().TrimEnd(','));
         }
+
     }
 }
