@@ -260,7 +260,7 @@ namespace Rawr.DPSWarr {
             format = "{0:0000} : {1:0000} : {2:" + floorstring + "}";
             if (Rot.GetType() == typeof(ArmsRotation)) {
                 ArmsRotation ar = (ArmsRotation)Rot;
-                dictValues.Add("Bladestorm",        string.Format(format,ar._BLS_DPS,BLS.DamageOnUse/6f,ar._BLS_GCDs)+BLS.GenTooltip(ar._BLS_GCDs,ar._BLS_DPS/TotalDPS));
+                dictValues.Add("Bladestorm",        string.Format(format,ar._BLS_DPS,BLS.DamageOnUse/7f,ar._BLS_GCDs)+BLS.GenTooltip(ar._BLS_GCDs,ar._BLS_DPS/TotalDPS));
                 dictValues.Add("Mortal Strike",     string.Format(format,ar._MS_DPS ,MS.DamageOnUse    ,ar._MS_GCDs )+MS.GenTooltip( ar._MS_GCDs, ar._MS_DPS /TotalDPS));
                 dictValues.Add("Rend",              string.Format(format,ar._RD_DPS ,RD.TickSize       ,ar._RD_GCDs )+RD.GenTooltip( ar._RD_GCDs, ar._RD_DPS /TotalDPS));
                 dictValues.Add("Overpower",         string.Format(format,ar._OP_DPS ,OP.DamageOnUse    ,ar._OP_GCDs )+OP.GenTooltip( ar._OP_GCDs, ar._OP_DPS /TotalDPS));

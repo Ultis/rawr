@@ -238,7 +238,7 @@ namespace Rawr.DPSWarr {
                 get {
                     if (!Validated) { return 0f; }
                     float Damage = WW.GetDamageOnUseOverride(); // WW.DamageOnUseOverride;
-                    return Damage * 6f; // it WW's 6 times
+                    return Damage * 7f; // it WW's 7 times
                 }
             }
         }

@@ -960,7 +960,7 @@ These numbers to do not include racial bonuses.",
                             ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                             comparison.Name = "Bladestorm";
                             comparison.DPSPoints = ar._BLS_DPS;
-                            comparison.SurvPoints = ar.BLS.DamageOnUse / 6f;
+                            comparison.SurvPoints = ar.BLS.DamageOnUse / 7f;
                             comparisons.Add(comparison);
                         }
                         {

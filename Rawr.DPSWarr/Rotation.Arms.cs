@@ -79,7 +79,7 @@ namespace Rawr.DPSWarr {
             get {
                 bool useOH = CombatFactors.useOH;
                 return base.CriticalYellowsOverDurMH
-                    + (_BLS_GCDs * BLS.MHAtkTable.Crit * BLS.AvgTargets * 6) / (useOH ? 2 : 1)
+                    + (_BLS_GCDs * BLS.MHAtkTable.Crit * BLS.AvgTargets * 7) / (useOH ? 2 : 1)
                     + _MS_GCDs * MS.MHAtkTable.Crit * MS.AvgTargets
                     + _OP_GCDs * OP.MHAtkTable.Crit * OP.AvgTargets
                     + _TB_GCDs * TB.MHAtkTable.Crit * TB.AvgTargets
@@ -90,7 +90,7 @@ namespace Rawr.DPSWarr {
             get {
                 bool useOH = CombatFactors.useOH;
                 return base.LandedYellowsOverDurMH
-                    + (_BLS_GCDs * BLS.MHAtkTable.AnyLand * BLS.AvgTargets * 6) / (useOH ? 2 : 1)
+                    + (_BLS_GCDs * BLS.MHAtkTable.AnyLand * BLS.AvgTargets * 7) / (useOH ? 2 : 1)
                     + _MS_GCDs * MS.MHAtkTable.AnyLand * MS.AvgTargets
                     + _OP_GCDs * OP.MHAtkTable.AnyLand * OP.AvgTargets
                     + _TB_GCDs * TB.MHAtkTable.AnyLand * TB.AvgTargets
@@ -101,7 +101,7 @@ namespace Rawr.DPSWarr {
             get {
                 bool useOH = CombatFactors.useOH;
                 return base.ParriedYellowsOverDur
-                    + (useOH ? (_BLS_GCDs * BLS.MHAtkTable.Parry * BLS.AvgTargets + _BLS_GCDs * BLS.OHAtkTable.Parry * BLS.AvgTargets) / 2 : _BLS_GCDs * BLS.MHAtkTable.Parry * BLS.AvgTargets) * 6
+                    + (useOH ? (_BLS_GCDs * BLS.MHAtkTable.Parry * BLS.AvgTargets + _BLS_GCDs * BLS.OHAtkTable.Parry * BLS.AvgTargets) / 2 : _BLS_GCDs * BLS.MHAtkTable.Parry * BLS.AvgTargets) * 7
                     + _MS_GCDs * MS.MHAtkTable.Parry * MS.AvgTargets
                     + _OP_GCDs * OP.MHAtkTable.Parry * OP.AvgTargets
                     + _TB_GCDs * TB.MHAtkTable.Parry * TB.AvgTargets
@@ -110,14 +110,14 @@ namespace Rawr.DPSWarr {
         }
         protected override float CriticalYellowsOverDurOH {
             get {
-                return base.CriticalYellowsOverDurOH + (_BLS_GCDs * BLS.OHAtkTable.Crit * BLS.AvgTargets * 6) / 2;
+                return base.CriticalYellowsOverDurOH + (_BLS_GCDs * BLS.OHAtkTable.Crit * BLS.AvgTargets * 7) / 2;
             }
         }
         public override float DodgedYellowsOverDur {
             get {
                 bool useOH = CombatFactors.useOH;
                 return base.DodgedYellowsOverDur
-                    + (useOH ? (_BLS_GCDs * BLS.MHAtkTable.Dodge * BLS.AvgTargets + _BLS_GCDs * BLS.OHAtkTable.Dodge * BLS.AvgTargets) / 2 : _BLS_GCDs * BLS.MHAtkTable.Dodge * BLS.AvgTargets) * 6
+                    + (useOH ? (_BLS_GCDs * BLS.MHAtkTable.Dodge * BLS.AvgTargets + _BLS_GCDs * BLS.OHAtkTable.Dodge * BLS.AvgTargets) / 2 : _BLS_GCDs * BLS.MHAtkTable.Dodge * BLS.AvgTargets) * 7
                     + _MS_GCDs * MS.MHAtkTable.Dodge * MS.AvgTargets
                     + _OP_GCDs * OP.MHAtkTable.Dodge * OP.AvgTargets
                     + _TB_GCDs * TB.MHAtkTable.Dodge * TB.AvgTargets
@@ -128,14 +128,14 @@ namespace Rawr.DPSWarr {
             get {
                 if (!CombatFactors.useOH) return 0f;
                 return base.LandedYellowsOverDurOH
-                    + (_BLS_GCDs * BLS.OHAtkTable.AnyLand * BLS.AvgTargets * 6f);
+                    + (_BLS_GCDs * BLS.OHAtkTable.AnyLand * BLS.AvgTargets * 7f);
             }
         }
         protected override float AttemptedYellowsOverDurMH {
             get {
                 bool useOH = CombatFactors.useOH;
                 return base.LandedYellowsOverDurMH
-                    + (_BLS_GCDs * BLS.AvgTargets * 6f)
+                    + (_BLS_GCDs * BLS.AvgTargets * 7f)
                     + _MS_GCDs * MS.AvgTargets
                     + _OP_GCDs * OP.AvgTargets
                     + _TB_GCDs * TB.AvgTargets
@@ -147,7 +147,7 @@ namespace Rawr.DPSWarr {
             get {
                 if (!CombatFactors.useOH) return 0f;
                 return base.AttemptedYellowsOverDurOH
-                    + (_BLS_GCDs * BLS.AvgTargets * 6f);
+                    + (_BLS_GCDs * BLS.AvgTargets * 7f);
             }
         }
         public override float LandedAtksOverDurMH {
