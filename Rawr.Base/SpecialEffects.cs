@@ -1223,7 +1223,14 @@ namespace Rawr {
             else if (line == "Your weapon swings have a chance to grant you Necrotic Touch for 10 sec, causing all your melee attacks to deal an additional 9% damage as shadow damage.")
             {
                 // Black Bruise
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = .09f }, 10f, 0f, 0.01f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusPhysicalDamageMultiplier = .09f }, 10f, 0f, 0.01f));
+            }
+            #endregion
+            #region 3.3 Trinkets
+            else if (line == "Each time you deal melee or ranged damage to an opponent, you gain 17 attack power for the next 10 sec, stacking up to 20 times.")
+            {
+                // Herkuml War Token
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = 17f }, 10f, 0f, 1f, 20));
             }
             #endregion
             else

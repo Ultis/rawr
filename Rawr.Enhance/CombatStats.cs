@@ -296,7 +296,8 @@ namespace Rawr.Enhance
             float yellowHitsPerSOH = 0f;
             for (int i = 0; i < 5; i++)
             {
-                float bonusHaste = (1f + (flurryUptime * flurryHasteBonus));
+                // float bonusHaste = (1f + (flurryUptime * flurryHasteBonus));
+                float bonusHaste = 1 / (1 - flurryUptime + flurryUptime / (1 + flurryHasteBonus)); // use time based not proc based flurryUptime
                 hastedMHSpeed = baseHastedMHSpeed / bonusHaste;
                 hastedOHSpeed = baseHastedOHSpeed / bonusHaste;
                 swingsPerSMHMelee = 1f / hastedMHSpeed;
