@@ -380,8 +380,11 @@ namespace Rawr
 
             Bitmap bmPhoto = new Bitmap(destWidth, destHeight,
                                         PixelFormat.Format24bppRgb);
-            bmPhoto.SetResolution(img.HorizontalResolution,
-                                  img.VerticalResolution);
+            if(Type.GetType("Mono.Runtime") == null){
+            	// Only run this on .NET platforms. It breaks Mono 2.4+
+                bmPhoto.SetResolution(img.HorizontalResolution,
+                                      img.VerticalResolution);
+            }
 
             Graphics grPhoto = Graphics.FromImage(bmPhoto);
             grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
