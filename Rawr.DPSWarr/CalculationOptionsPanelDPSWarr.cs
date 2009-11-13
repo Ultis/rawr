@@ -186,8 +186,10 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 CB_MultiTargsMax.Value = (int)calcOpts.MultipleTargetsMax;
 
                 CK_StunningTargs.Checked = calcOpts.StunningTargets;
+                CustomBoss.Stuns = calcOpts.Stuns;
                 NUD_StunFreq.Enabled = calcOpts.StunningTargets;
                 NUD_StunDur.Enabled = calcOpts.StunningTargets;
+                BT_Stun.Enabled = calcOpts.StunningTargets;
                 NUD_StunFreq.Value = (int)calcOpts.StunningTargetsFreq;
                 NUD_StunDur.Value = (int)calcOpts.StunningTargetsDur;
 
@@ -210,14 +212,18 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 //NUD_FearDur.Value = (int)calcOpts.FearingTargetsDur;
 
                 CK_RootingTargs.Checked = calcOpts.RootingTargets;
+                CustomBoss.Roots = calcOpts.Roots;
                 NUD_RootFreq.Enabled = calcOpts.RootingTargets;
                 NUD_RootDur.Enabled = calcOpts.RootingTargets;
+                BT_Root.Enabled = calcOpts.RootingTargets;
                 NUD_RootFreq.Value = (int)calcOpts.RootingTargetsFreq;
                 NUD_RootDur.Value = (int)calcOpts.RootingTargetsDur;
 
                 CK_DisarmTargs.Checked = calcOpts.DisarmingTargets;
+                CustomBoss.Disarms = calcOpts.Disarms;
                 NUD_DisarmFreq.Enabled = calcOpts.DisarmingTargets;
                 NUD_DisarmDur.Enabled = calcOpts.DisarmingTargets;
+                BT_Disarm.Enabled = calcOpts.DisarmingTargets;
                 NUD_DisarmFreq.Value = (int)calcOpts.DisarmingTargetsFreq;
                 NUD_DisarmDur.Value = (int)calcOpts.DisarmingTargetsDur;
 

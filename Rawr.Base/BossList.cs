@@ -449,18 +449,31 @@ namespace Rawr {
             // Stun
             value = 0;      foreach (BossHandler boss in passedList) { if (boss.StunningTargsFreq  <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.StunningTargsFreq  ); } } retboss.StunningTargsFreq  = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
             value = 10*1000;foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsDur  ); } retboss.StunningTargsDur   = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
+            if (retboss.StunningTargsFreq == 0 || retboss.StunningTargsDur == 0) {
+            } else {
+                //retboss.Stuns.Add(new Stun() { Frequency = retboss.StunningTargsFreq, Duration = retboss.StunningTargsDur, Chance = 1f, Breakable = true, });
+            }
             // Move
-            value = 0;      foreach (BossHandler boss in passedList) { if (boss.MovingTargsFreq    <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.MovingTargsFreq    ); } } retboss.MovingTargsFreq    = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
-            value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MovingTargsDur    ); } retboss.MovingTargsDur     = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-            retboss.Moves.Add( new Move() { Frequency = retboss.MovingTargsFreq, Duration = retboss.MovingTargsDur, Chance = 1f, Breakable = true, } );
+            value = 0;      foreach (BossHandler boss in passedList) { if (boss.MovingTargsFreq    <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.MovingTargsFreq); } } retboss.MovingTargsFreq = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
+            value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MovingTargsDur); } retboss.MovingTargsDur = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
+            if (retboss.MovingTargsFreq == 0 || retboss.MovingTargsDur == 0) {
+            } else {
+                retboss.Moves.Add(new Move() { Frequency = retboss.MovingTargsFreq, Duration = retboss.MovingTargsDur, Chance = 1f, Breakable = true, });
+            }
             // Fear
             value = 0;      foreach (BossHandler boss in passedList) { if (boss.FearingTargsFreq   <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.FearingTargsFreq   ); } } retboss.FearingTargsFreq   = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
             value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.FearingTargsDur   ); } retboss.FearingTargsDur    = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-            retboss.Fears.Add(new Fear() { Frequency = retboss.FearingTargsFreq, Duration = retboss.FearingTargsDur, Chance = 1f, Breakable = true, });
+            if (retboss.FearingTargsFreq == 0 || retboss.FearingTargsDur == 0) {
+            } else {
+                retboss.Fears.Add(new Fear() { Frequency = retboss.FearingTargsFreq, Duration = retboss.FearingTargsDur, Chance = 1f, Breakable = true, });
+            }
             // Root
             value = 0;      foreach (BossHandler boss in passedList) { if (boss.RootingTargsFreq   <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.RootingTargsFreq   ); } } retboss.RootingTargsFreq   = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
             value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.RootingTargsDur   ); } retboss.RootingTargsDur    = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-            //retboss.Roots.Add(new Root() { Frequency = retboss.RootingTargsFreq, Duration = retboss.RootingTargsDur, Chance = 1f, Breakable = true, });
+            if (retboss.RootingTargsFreq == 0 || retboss.RootingTargsDur == 0) {
+            } else {
+                //retboss.Roots.Add(new Root() { Frequency = retboss.RootingTargsFreq, Duration = retboss.RootingTargsDur, Chance = 1f, Breakable = true, });
+            }
             // Disarm
             value = 0;      foreach (BossHandler boss in passedList) { if (boss.DisarmingTargsFreq <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.DisarmingTargsFreq ); } } retboss.DisarmingTargsFreq = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
             value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.DisarmingTargsDur ); } retboss.DisarmingTargsDur  = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
@@ -592,24 +605,42 @@ namespace Rawr {
             //ConvertList_Stun(passedList, retboss);
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.StunningTargsFreq > 0 && boss.StunningTargsFreq < boss.BerserkTimer) ? boss.StunningTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.StunningTargsFreq = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.StunningTargsDur; } value /= passedList.Length; retboss.StunningTargsDur = value;
+            if (retboss.StunningTargsFreq == 0 || retboss.StunningTargsDur == 0) {
+            } else {
+                //retboss.Stuns.Add(new Stun() { Frequency = retboss.StunningTargsFreq, Duration = retboss.StunningTargsDur, Chance = 1f, Breakable = true, });
+            }
             // Move
             //ConvertList_Move(passedList, retboss);
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.MovingTargsFreq > 0 && boss.MovingTargsFreq < boss.BerserkTimer) ? boss.MovingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.MovingTargsFreq = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.MovingTargsDur; } value /= passedList.Length; retboss.MovingTargsDur = value;
-            retboss.Moves.Add( new Move() { Frequency = retboss.MovingTargsFreq, Duration = retboss.MovingTargsDur, Chance = 1f, Breakable = true, } );
+            if (retboss.MovingTargsFreq == 0 || retboss.MovingTargsDur == 0) {
+            } else {
+                retboss.Moves.Add( new Move() { Frequency = retboss.MovingTargsFreq, Duration = retboss.MovingTargsDur, Chance = 1f, Breakable = true, } );
+            }
             // Fear
             //ConvertList_Fear(passedList, retboss);
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.FearingTargsFreq > 0 && boss.FearingTargsFreq < boss.BerserkTimer) ? boss.FearingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.FearingTargsFreq = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.FearingTargsDur; } value /= passedList.Length; retboss.FearingTargsDur = value;
-            retboss.Fears.Add(new Fear() { Frequency = retboss.FearingTargsFreq, Duration = retboss.FearingTargsDur, Chance = 1f, Breakable = true, });
+            if (retboss.FearingTargsFreq == 0 || retboss.FearingTargsDur == 0) {
+            } else {
+                retboss.Fears.Add(new Fear() { Frequency = retboss.FearingTargsFreq, Duration = retboss.FearingTargsDur, Chance = 1f, Breakable = true, });
+            }
             // Root
             //ConvertList_Root(passedList, retboss);
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.RootingTargsFreq > 0 && boss.RootingTargsFreq < boss.BerserkTimer) ? boss.RootingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.RootingTargsFreq = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.RootingTargsDur; } value /= passedList.Length; retboss.RootingTargsDur = value;
+            if (retboss.RootingTargsFreq == 0 || retboss.RootingTargsDur == 0) {
+            } else {
+                //retboss.Roots.Add(new Root() { Frequency = retboss.RootingTargsFreq, Duration = retboss.RootingTargsDur, Chance = 1f, Breakable = true, });
+            }
             // Disarm
             //ConvertList_Dsrm(passedList, retboss);
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.DisarmingTargsFreq > 0 && boss.DisarmingTargsFreq < boss.BerserkTimer) ? boss.DisarmingTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.DisarmingTargsFreq = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.DisarmingTargsDur; } value /= passedList.Length; retboss.DisarmingTargsDur = value;
+            if (retboss.DisarmingTargsFreq == 0 || retboss.DisarmingTargsDur == 0) {
+            } else {
+                //retboss.Disarms.Add(new Disarm() { Frequency = retboss.DisarmingTargsFreq, Duration = retboss.DisarmingTargsDur, Chance = 1f, Breakable = true, });
+            }
             //
             return retboss;
         }
@@ -737,20 +768,38 @@ namespace Rawr {
             // Stun
             value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsFreq  > 0 ? boss.StunningTargsFreq  : value); } retboss.StunningTargsFreq  = Math.Max(20,value);
             value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.StunningTargsDur   ); } retboss.StunningTargsDur  = Math.Min(10*1000,value);
+            if (retboss.StunningTargsFreq == 0 || retboss.StunningTargsDur == 0) {
+            } else {
+                //retboss.Stuns.Add(new Stun() { Frequency = retboss.StunningTargsFreq, Duration = retboss.StunningTargsDur, Chance = 1f, Breakable = true, });
+            }
             // Move
             value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MovingTargsFreq    > 0 ? boss.MovingTargsFreq    : value); } retboss.MovingTargsFreq    = Math.Max(20,value);
             value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MovingTargsDur     ); } retboss.MovingTargsDur    = Math.Min(10*1000,value);
-            retboss.Moves.Add( new Move() { Frequency = retboss.MovingTargsFreq, Duration = retboss.MovingTargsDur, Chance = 1f, Breakable = true, } );
+            if (retboss.MovingTargsFreq == 0 || retboss.MovingTargsDur == 0) {
+            } else {
+                retboss.Moves.Add( new Move() { Frequency = retboss.MovingTargsFreq, Duration = retboss.MovingTargsDur, Chance = 1f, Breakable = true, } );
+            }
             // Fear
             value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.FearingTargsFreq   > 0 ? boss.FearingTargsFreq   : value); } retboss.FearingTargsFreq   = Math.Max(20,value);
             value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.FearingTargsDur    ); } retboss.FearingTargsDur   = Math.Min(10*1000,value);
-            retboss.Fears.Add(new Fear() { Frequency = retboss.FearingTargsFreq, Duration = retboss.FearingTargsDur, Chance = 1f, Breakable = true, });
+            if (retboss.FearingTargsFreq == 0 || retboss.FearingTargsDur == 0) {
+            } else {
+                retboss.Fears.Add(new Fear() { Frequency = retboss.FearingTargsFreq, Duration = retboss.FearingTargsDur, Chance = 1f, Breakable = true, });
+            }
             // Root
             value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.RootingTargsFreq   > 0 ? boss.RootingTargsFreq   : value); } retboss.RootingTargsFreq   = Math.Max(20,value);
             value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.RootingTargsDur    ); } retboss.RootingTargsDur   = Math.Min(10*1000,value);
+            if (retboss.RootingTargsFreq == 0 || retboss.RootingTargsDur == 0) {
+            } else {
+                //retboss.Roots.Add(new Root() { Frequency = retboss.RootingTargsFreq, Duration = retboss.RootingTargsDur, Chance = 1f, Breakable = true, });
+            }
             // Disarm
             value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.DisarmingTargsFreq < 0 ? boss.DisarmingTargsFreq : value); } retboss.DisarmingTargsFreq = Math.Max(20,value);
             value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.DisarmingTargsDur  ); } retboss.DisarmingTargsDur = Math.Min(10*1000,value);
+            if (retboss.DisarmingTargsFreq == 0 || retboss.DisarmingTargsDur == 0) {
+            } else {
+                //retboss.Disarms.Add(new Disarm() { Frequency = retboss.DisarmingTargsFreq, Duration = retboss.DisarmingTargsDur, Chance = 1f, Breakable = true, });
+            }
             //
             return retboss;
         }
