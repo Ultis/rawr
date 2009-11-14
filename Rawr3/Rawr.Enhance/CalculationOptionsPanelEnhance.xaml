@@ -21,6 +21,12 @@
         </Grid.ColumnDefinitions>
         <controls:TabControl x:Name="Tabs">
             <controls:TabItem x:Name="Basics" Header="Basics">
+                <Grid x:Name="Basics_Layout">
+                    <CheckBox x:Name="chbBaseStatOption" Height="17" Margin="8,123,8,0" VerticalAlignment="Top" Content="Use AEP values in Relative Stats Chart *" ToolTipService.ToolTip="Adjusts all stats relative to Attack Power." IsChecked="{Binding BaseStatOption, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    <CheckBox x:Name="chbMagmaSearing" Height="17" Margin="8,144,8,0" VerticalAlignment="Top" Content="Use Magma Totem instead of Searing Totem *" ToolTipService.ToolTip="Use Magma Totem instead of Searing Totem." IsChecked="{Binding Magma, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    <CheckBox x:Name="chbHideProfessions" Height="17" Margin="8,165,8,0" VerticalAlignment="Top" Content="Hide Profession Buffs Character doesn't know *" ToolTipService.ToolTip="Don't display an Enchant if you don't have that profession." IsChecked="{Binding HideProfessions, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    <CheckBox x:Name="chbMana" Height="17" Margin="8,186,8,0" VerticalAlignment="Top" Content="Use Mana Calculations *" ToolTipService.ToolTip="When evaluating priorities take mana used into consideration" IsChecked="{Binding UseMana, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                </Grid>
             </controls:TabItem>
             <controls:TabItem x:Name="Priorities" Header="Priorities">
             </controls:TabItem>

@@ -30,6 +30,7 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageBasics = new System.Windows.Forms.TabPage();
+            this.chbHideProfessions = new System.Windows.Forms.CheckBox();
             this.labelReactionTime = new System.Windows.Forms.Label();
             this.trackBarReactionTime = new System.Windows.Forms.TrackBar();
             this.label12 = new System.Windows.Forms.Label();
@@ -83,7 +84,6 @@
             this.tabPageEnhSim = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.checkBoxHideProfessions = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPageBasics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarReactionTime)).BeginInit();
@@ -111,7 +111,7 @@
             // 
             // tabPageBasics
             // 
-            this.tabPageBasics.Controls.Add(this.checkBoxHideProfessions);
+            this.tabPageBasics.Controls.Add(this.chbHideProfessions);
             this.tabPageBasics.Controls.Add(this.labelReactionTime);
             this.tabPageBasics.Controls.Add(this.trackBarReactionTime);
             this.tabPageBasics.Controls.Add(this.label12);
@@ -136,6 +136,19 @@
             this.tabPageBasics.TabIndex = 0;
             this.tabPageBasics.Text = "Basics";
             this.tabPageBasics.UseVisualStyleBackColor = true;
+            // 
+            // chbHideProfessions
+            // 
+            this.chbHideProfessions.AutoSize = true;
+            this.chbHideProfessions.Checked = true;
+            this.chbHideProfessions.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbHideProfessions.Location = new System.Drawing.Point(10, 220);
+            this.chbHideProfessions.Name = "chbHideProfessions";
+            this.chbHideProfessions.Size = new System.Drawing.Size(242, 17);
+            this.chbHideProfessions.TabIndex = 62;
+            this.chbHideProfessions.Text = "Hide Profession Buffs Character doesn\'t know";
+            this.chbHideProfessions.UseVisualStyleBackColor = true;
+            this.chbHideProfessions.CheckedChanged += new System.EventHandler(this.chbHideProfessions_CheckedChanged);
             // 
             // labelReactionTime
             // 
@@ -786,19 +799,6 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
-            // checkBoxHideProfessions
-            // 
-            this.checkBoxHideProfessions.AutoSize = true;
-            this.checkBoxHideProfessions.Checked = true;
-            this.checkBoxHideProfessions.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxHideProfessions.Location = new System.Drawing.Point(10, 220);
-            this.checkBoxHideProfessions.Name = "checkBoxHideProfessions";
-            this.checkBoxHideProfessions.Size = new System.Drawing.Size(242, 17);
-            this.checkBoxHideProfessions.TabIndex = 62;
-            this.checkBoxHideProfessions.Text = "Hide Profession Buffs Character doesn\'t know";
-            this.checkBoxHideProfessions.UseVisualStyleBackColor = true;
-            this.checkBoxHideProfessions.CheckedChanged += new System.EventHandler(this.checkBoxHideProfessions_CheckedChanged);
-            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -884,7 +884,7 @@
         private System.Windows.Forms.TrackBar trackBarReactionTime;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.CheckBox checkBoxHideProfessions;
+        private System.Windows.Forms.CheckBox chbHideProfessions;
 
     }
 }
