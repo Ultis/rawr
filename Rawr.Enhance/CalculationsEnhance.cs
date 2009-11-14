@@ -106,7 +106,11 @@ namespace Rawr.Enhance
 			{
 				if (_optimizableCalculationLabels == null)
 					_optimizableCalculationLabels = new string[] {
-					"Health"
+					"Hit Rating",
+                    "Dodged Attacks",
+                    "Parried Attacks",
+                    "Avoided Attacks",
+                    "Health"
 					};
 				return _optimizableCalculationLabels;
 			}

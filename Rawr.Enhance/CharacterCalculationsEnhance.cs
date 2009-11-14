@@ -559,11 +559,10 @@ namespace Rawr.Enhance
 			{
 				case "Health": return BasicStats.Health;
                 case "DPS Points": return DPSPoints;
-				case "Nature Resist": return BasicStats.NatureResistance;
-				case "Fire Resist": return BasicStats.FireResistance;
-				case "Frost Resist": return BasicStats.FrostResistance;
-				case "Shadow Resist": return BasicStats.ShadowResistance;
-				case "Arcane Resist": return BasicStats.ArcaneResistance;
+				case "Hit Rating": return BasicStats.HitRating;
+                case "Dodged Attacks": return DodgedAttacks;
+                case "Parried Attacks": return ParriedAttacks;
+                case "Avoided Attacks": return AvoidedAttacks;
 			}
 			return 0f;
 		}
