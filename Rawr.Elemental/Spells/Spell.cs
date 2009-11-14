@@ -279,6 +279,8 @@ namespace Rawr.Elemental.Spells
             totalCoef *= 1 + args.Stats.BonusDamageMultiplier; //ret + bm buff
             if (missChance < 0) missChance = 0;
             manaCost = (float)Math.Floor(manaCost);
+            //base resistance by level
+            totalCoef *= 1f - .75f * ((83.0f - 80.0f) * 5.0f / (80.0f * 5f) );
         }
 
         public void ApplyEM(float modifier)
