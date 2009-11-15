@@ -15,7 +15,9 @@ namespace Rawr.Enhance
     // code supplied by http://www.jeff.wilcox.name/2008/05/clipboard-access/
     // clipboard flash from http://code.google.com/p/syntaxhighlighter/
      public static class Clipboard  
-     {  
+     {
+         private static bool success = false;
+         public static bool Success { get { return success; } }
          const string HostNoClipboard = "The clipboard isn't available in the current host.";  
          const string ClipboardFailure = "The text couldn't be copied into the clipboard.";  
          const string BeforeFlashCopy = "The text will now attempt to be copied...";  
@@ -32,7 +34,7 @@ namespace Rawr.Enhance
              // document.window.clipboardData.setData(format, data);  
              var clipboardData = (ScriptObject)HtmlPage.Window.GetProperty("clipboardData");  
              if (clipboardData != null) {  
-                 bool success = (bool)clipboardData.Invoke("setData", "text", text);  
+                 success = (bool)clipboardData.Invoke("setData", "text", text);  
                  if (!success) {  
                      HtmlPage.Window.Alert(ClipboardFailure);  
                  }  

@@ -31,14 +31,15 @@
                     <dataInput:Label x:Name="LB_React" Height="21" Margin="8,39,0,0" VerticalAlignment="Top" Content="React (ms): *" ToolTipService.ToolTip="This doesn't affect you unless the number is over 250. Blizzard allows users 1/4 second reaction before penalizing them." HorizontalAlignment="Left" Width="135" d:LayoutOverrides="HorizontalAlignment"/>
                     <inputToolkit:NumericUpDown x:Name="CB_React" Height="21" HorizontalAlignment="Right" Margin="0,37,8,0" VerticalAlignment="Top" Width="110" Value="{Binding ReactionTime, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500" d:LayoutOverrides="HorizontalAlignment"/>
                     <dataInput:Label x:Name="LB_SRMana" Height="21" Margin="8,68,0,0" VerticalAlignment="Top" Content="Use SR if Mana below: *" ToolTipService.ToolTip="The amount of mana above below which Shamanistic Rage will be used" HorizontalAlignment="Left" Width="135" d:LayoutOverrides="HorizontalAlignment"/>
-                    <inputToolkit:NumericUpDown x:Name="CB_SRMana" Height="21" HorizontalAlignment="Right" Margin="0,66,8,0" VerticalAlignment="Top" Width="110" Value="{Binding SRMana, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500" d:LayoutOverrides="HorizontalAlignment"/>
+                    <inputToolkit:NumericUpDown x:Name="CB_SRMana" Height="21" HorizontalAlignment="Right" Margin="0,66,8,0" VerticalAlignment="Top" Width="110" Value="{Binding MinManaSR, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500" d:LayoutOverrides="HorizontalAlignment"/>
                 </Grid>
             </controls:TabItem>
             <controls:TabItem x:Name="Priorities" Header="Priorities">
             </controls:TabItem>
             <controls:TabItem x:Name="EnhSim" Header="EnhSim">
                 <Grid x:Name="Tab_Welcome_Layout">
-                    <TextBox x:Name="EnhSim_Instructions" Margin="3,0,3,3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="4"/>
+                    <Button x:Name="btnExport" Margin="3,8,3,500" Height="30" Content="Export Stats to EnhSim config file" />
+                    <TextBox x:Name="EnhSim_Instructions" Margin="3,50,3,3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="4"/>
                 </Grid>
             </controls:TabItem>
         </controls:TabControl>

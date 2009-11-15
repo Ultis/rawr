@@ -18,6 +18,7 @@ namespace Rawr.Enhance
         public CalculationOptionsPanelEnhance()
         {
             InitializeComponent();
+            btnExport.Click += new RoutedEventHandler(btnExport_Click);
             SetEnhSimTextBoxText();
             DataContext = this;
         }
@@ -25,13 +26,11 @@ namespace Rawr.Enhance
         #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
 
+        private CalculationOptionsEnhance _calcOpts;
         private Character character;
         public Character Character
         {
-            get
-            {
-                return character;
-            }
+            get { return character; }
             set
             {
                 character = value;
@@ -49,9 +48,9 @@ namespace Rawr.Enhance
             if (character.CalculationOptions == null)
                 character.CalculationOptions = new CalculationOptionsEnhance();
 
-            CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            DataContext = calcOpts;
-            calcOpts.PropertyChanged += new PropertyChangedEventHandler(calcOpts_PropertyChanged);
+            _calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
+            DataContext = _calcOpts;
+            _calcOpts.PropertyChanged += new PropertyChangedEventHandler(calcOpts_PropertyChanged);
 
             _loadingCalculationOptions = false;
         }
@@ -62,6 +61,15 @@ namespace Rawr.Enhance
             CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
             // set all the options from calcOpts
             Character.OnCalculationsInvalidated();
+        }
+
+        private void btnExport_Click(Object sender,RoutedEventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                Enhance.EnhSim simExport = new Enhance.EnhSim(Character, _calcOpts);
+                simExport.copyToClipboard();
+            }
         }
 
         private void SetEnhSimTextBoxText()
