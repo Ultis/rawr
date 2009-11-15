@@ -34,8 +34,10 @@
                     <inputToolkit:NumericUpDown x:Name="CB_SRMana" Height="21" HorizontalAlignment="Right" Margin="0,66,8,0" VerticalAlignment="Top" Width="110" Value="{Binding MinManaSR, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500" d:LayoutOverrides="HorizontalAlignment"/>
                 </Grid>
             </controls:TabItem>
+ <!--
             <controls:TabItem x:Name="Priorities" Header="Priorities">
             </controls:TabItem>
+ -->
             <controls:TabItem x:Name="EnhSim" Header="EnhSim">
                 <Grid x:Name="Tab_Welcome_Layout">
                     <Button x:Name="btnExport" Margin="3,8,3,500" Height="30" Content="Export Stats to EnhSim config file" />
