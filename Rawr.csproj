@@ -140,12 +140,6 @@
     <Compile Include="DG_BossHandler.Designer.cs">
       <DependentUpon>DG_BossHandler.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form3DModel.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form3DModel.Designer.cs">
-      <DependentUpon>Form3DModel.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormEnterWowheadFilter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -363,9 +357,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DG_BossHandler.resx">
       <DependentUpon>DG_BossHandler.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form3DModel.resx">
-      <DependentUpon>Form3DModel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEnterWowheadFilter.resx">
       <DependentUpon>FormEnterWowheadFilter.cs</DependentUpon>

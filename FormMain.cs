@@ -2364,14 +2364,12 @@ namespace Rawr
 
         private void maleJavaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form3DModel model = new Form3DModel();
-            model.ShowWowhead3DModelJava(Character, true);
+            ShowWowhead3DModelJava(Character, true);
         }
 
         private void femaleJavaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form3DModel model = new Form3DModel();
-            model.ShowWowhead3DModelJava(Character, false);
+            ShowWowhead3DModelJava(Character, false);
         }
         
         private void ShowWowhead3DModelURL(Character character, bool maleModel)
@@ -2399,5 +2397,68 @@ namespace Rawr
                 Help.ShowHelp(null, URL.ToString().TrimEnd(','));
         }
 
+        public void ShowWowhead3DModelJava(Character character, bool maleModel)
+        {
+            bool missingDisplayID = false;
+            StringBuilder URL = new StringBuilder("<html><head><title>Wowhead 3D Character Model in Java</title></head><body>");
+            URL.Append("<applet id=\"3dviewer-java\" code=\"org.jdesktop.applet.util.JNLPAppletLauncher\" ");
+            URL.Append("width=\"600\" height=\"400\" ");
+            URL.Append("archive=\"http://static.wowhead.com/modelviewer/applet-launcher.jar,");
+            URL.Append("http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jar,");
+            URL.Append("http://download.java.net/media/gluegen/webstart/gluegen-rt.jar,");
+            URL.Append("http://download.java.net/media/java3d/webstart/release/vecmath/latest/vecmath.jar,");
+            URL.Append("http://static.wowhead.com/modelviewer/ModelView510.jar\">");
+            URL.Append("<param name=\"jnlp_href\" value=\"http://static.wowhead.com/modelviewer/ModelView.jnlp\">");
+            URL.Append("<param name=\"codebase_lookup\" value=\"false\">");
+            URL.Append("<param name=\"cache_option\" value=\"no\">");
+            URL.Append("<param name=\"subapplet.classname\" value=\"modelview.ModelViewerApplet\">");
+            URL.Append("<param name=\"subapplet.displayname\" value=\"Model Viewer Applet\">");
+            URL.Append("<param name=\"progressbar\" value=\"true\">");
+            URL.Append("<param name=\"jnlpNumExtensions\" value=\"1\">");
+            URL.Append("<param name=\"jnlpExtension1\" value=\"http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp\">");
+            URL.Append("<param name=\"contentPath\" value=\"http://static.wowhead.com/modelviewer/\">");
+            URL.Append("<param name=\"model\" value=\"");
+            URL.Append(character.Race.ToString().ToLower());
+            URL.Append(maleModel ? "male" : "female");
+            URL.Append("\">");
+            URL.Append("<param name=\"modelType\" value=\"16\">");
+            URL.Append("<param name=\"equipList\" value=\"");
+            foreach (ItemInstance item in character.GetItems())
+            {
+                if (item != null && (item.Slot != ItemSlot.Neck && item.Slot != ItemSlot.Shirt && item.Slot != ItemSlot.Tabard &&
+                    item.Slot != ItemSlot.Trinket && item.Slot != ItemSlot.Finger && item.Slot != ItemSlot.Projectile && item.Slot != ItemSlot.ProjectileBag ||
+                    (item.Slot == ItemSlot.Ranged && (item.Type == ItemType.Bow || item.Type == ItemType.Crossbow || item.Type == ItemType.Thrown || item.Type == ItemType.Wand))))
+                {
+                    if (item.DisplayId == 0 || item.DisplaySlot == 0)
+                        missingDisplayID = true;
+                    URL.Append(item.DisplaySlot + ",");
+                    URL.Append(item.DisplayId + ",");
+                }
+            }
+            URL.Remove(URL.Length - 1, 1); // removes trailing ,
+            URL.Append("\">");
+            URL.Append("<param name=\"bgColor\" value=\"#181818\">");
+            URL.Append("</applet></body></html>");
+
+            if (missingDisplayID)
+                MessageBox.Show("One or more of your equipped items has a missing Display Information.\r\nPlease update your item cache from Wowhead to try to fix this problem.");
+            else
+            {
+                string path = Application.ExecutablePath;
+                string fileName = path.Substring(0, path.LastIndexOf('\\')) + "\\data\\java3dModel.html";
+                try
+                {
+                    System.IO.FileInfo file = new System.IO.FileInfo(fileName);
+                    System.IO.StreamWriter sw = file.CreateText();
+                    sw.WriteLine(URL.ToString());
+                    sw.Close();
+                    Help.ShowHelp(null, "file:///" + fileName);
+                }
+                catch
+                {
+                    MessageBox.Show("Failed to generate 3d Java html file.");
+                }
+            }
+        }
     }
 }
