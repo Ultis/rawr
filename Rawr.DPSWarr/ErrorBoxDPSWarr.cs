@@ -35,7 +35,6 @@ namespace Rawr.DPSWarr
             StackTrace = stacktrace;
             Info = info;
             Line = line;
-            Show();
         }
         /// <summary>
         /// Generates a pop-up message box with error info.
@@ -116,6 +115,7 @@ namespace Rawr.DPSWarr
             Console.WriteLine(Title + "\n" + buildFullMessage());
             System.IO.StreamWriter file = System.IO.File.CreateText("DEBUGME.log");
             file.Write("\n=====" + System.DateTime.Now.ToShortDateString() + "\n" + Title + "\n" + buildFullMessage() + "\n");
+            file.Close();
         }
     }
 }

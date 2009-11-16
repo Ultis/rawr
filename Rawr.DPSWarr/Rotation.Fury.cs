@@ -26,10 +26,11 @@ namespace Rawr.DPSWarr
         private const float ROTATION_LENGTH = 8.0f;
         private const float FREE_GCDS = 1.0f;
         
-        float _bloodsurgeRPS;
+        //float _bloodsurgeRPS;
         public float _BS_DPS = 0f, _BS_HPS = 0f, _BS_GCDs = 0f;
         public float _BT_DPS = 0f, _BT_HPS = 0f, _BT_GCDs = 0f;
 
+        private float percHS, percCL;
         private float timeLostPerc = 0f;
         #endregion
 
@@ -38,13 +39,25 @@ namespace Rawr.DPSWarr
             base.Initialize(calcs);
             calcs.BT = BT;
             calcs.BS = BS;
+            
+            bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            bool clok = CalcOpts.MultipleTargets
+                     && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+
+            percHS = (hsok ? 1f : 0f);
+            if (clok)
+            {
+                percHS -= CalcOpts.MultipleTargetsPerc / 100f;
+            }
+            percCL = (clok ? 1f - percHS : 0f);
+            BS.maintainActs = MaintainCDs;
         }
 
         protected override void initAbilities()
         {
             base.initAbilities();
-            BT = new Skills.BloodThirst(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            BS = new Skills.BloodSurge(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS, SL, WW, BT);
+            BT = new Skills.BloodThirst(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            BS = new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SL, WW, BT);
         }
 
         protected void new_doIterations()
@@ -80,63 +93,41 @@ namespace Rawr.DPSWarr
         }
         public override void doIterations() {
             int line = 0;
-            try {
+            try
+            {
                 base.doIterations();
                 // Fury Iteration
-                bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
-                bool clok = CalcOpts.MultipleTargets
-                         && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
-                float hsPercOvd, clPercOvd; // what percentage of overrides are cleave and hs
-                hsPercOvd = (hsok ? 1f : 0f);
-                if (CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_])
-                    hsPercOvd -= CalcOpts.MultipleTargetsPerc / 100f;
-                clPercOvd = (clok ? 1f - hsPercOvd : 0f);
-
-                _bloodsurgeRPS = BS.RageUseOverDur;
-                float hsRageUsed = FreeRageOverDur * hsPercOvd;
-                float clRageUsed = FreeRageOverDur * clPercOvd;
-
-                WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = hsRageUsed / HS.FullRageCost;
-                WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = clRageUsed / CL.FullRageCost;
-
-                float /*oldHSActivates = 0f,*/ newHSActivates = HS.Activates;
-                float /*oldCLActivates = 0f,*/ newCLActivates = CL.Activates;
-                BS.maintainActs = MaintainCDs;
-                /*int loopIterator;
-                for (loopIterator = 0;
-                     CalcOpts.FuryStance
-                        && loopIterator < 50
-                        && (Math.Abs(oldHSActivates / newHSActivates - 1f)  > 0.01f
-                            || Math.Abs(oldCLActivates / newCLActivates - 1f) > 0.01f);
-                      loopIterator++)
+                float ovdRage, hsRageUsed, clRageUsed;
+                float oldBS, oldHS, oldCL;
+                do
                 {
-                    oldHSActivates = HS.Activates;
-                    oldCLActivates = CL.Activates;*/
-                    //
-                    BS.hsActivates = newHSActivates; // bloodsurge only cares about HSes, not Cleaves
-                    _bloodsurgeRPS = (BS.RageUseOverDur);
-                    hsRageUsed = FreeRageOverDur * hsPercOvd;
-                    clRageUsed = FreeRageOverDur * clPercOvd;
-                    WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = hsRageUsed / HS.FullRageCost;
-                    WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = clRageUsed / CL.FullRageCost;
-                    //
-                    /*newHSActivates = HS.Activates;
-                    newCLActivates = CL.Activates;
-                }*/
+                    oldBS = BS.Activates;
+                    oldHS = HS.OverridesOverDur;
+                    oldCL = CL.OverridesOverDur;
 
-                BS.hsActivates = newHSActivates;
-                //BS.hsActivates += newCLActivates;
-                if (CalcOpts.FuryStance)
-                {
-                    _HS_DPS = HS.GetDPS(newHSActivates);
-                    _CL_DPS = CL.GetDPS(newCLActivates);
-                    _HS_PerHit = HS.DamageOnUse * hsPercOvd;
-                    _CL_PerHit = CL.DamageOnUse * clPercOvd;
-                }
-            } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in performing Fury Iterations",
+                    ovdRage = FreeRageOverDur;
+                    hsRageUsed = ovdRage * percHS;
+                    clRageUsed = ovdRage * percCL;
+                    WhiteAtks.HSOverridesOverDur = HS.OverridesOverDur = Math.Min(hsRageUsed / HS.FullRageCost, WhiteAtks.MhActivatesNoHS);
+                    WhiteAtks.CLOverridesOverDur = CL.OverridesOverDur = Math.Min(clRageUsed / CL.FullRageCost, WhiteAtks.MhActivatesNoHS - WhiteAtks.HSOverridesOverDur);
+                    BS.hsActivates = HS.OverridesOverDur;
+
+                } while (Math.Abs(1f - oldBS / BS.Activates) > 0.1f ||
+                         Math.Abs(1f - oldHS / HS.OverridesOverDur) > 0.1f ||
+                         Math.Abs(1f - oldCL / CL.OverridesOverDur) > 0.1f);
+
+
+                _HS_DPS = HS.GetDPS(HS.OverridesOverDur);
+                _CL_DPS = CL.GetDPS(CL.OverridesOverDur);
+                _HS_PerHit = HS.DamageOnUse * percHS;
+                _CL_PerHit = CL.DamageOnUse * percCL;
+            }
+            catch (Exception ex)
+            {
+                ErrorBoxDPSWarr eb = new ErrorBoxDPSWarr("Error in performing Fury Iterations",
                     ex.Message, "doIterations()", "No Additional Info", ex.StackTrace, line);
+                eb.Show();
             }
         }
 
@@ -188,7 +179,7 @@ namespace Rawr.DPSWarr
         {
             get
             {
-                return (base.RageNeededOverDur + BT.GetRageUseOverDur(_BT_GCDs) + _bloodsurgeRPS) * 
+                return (base.RageNeededOverDur + BT.GetRageUseOverDur(_BT_GCDs) + BS.RageUseOverDur) * 
                     (1f - timeLostPerc);
             }
         }
@@ -451,7 +442,7 @@ namespace Rawr.DPSWarr
                 DPS_TTL += _HS_DPS;
                 DPS_TTL += _CL_DPS;
             } else {
-                RageGenWhite = WHITEATTACKS.whiteRageGenOverDur * (1f - timeLostPerc);
+                RageGenWhite = WhiteAtks.whiteRageGenOverDur * (1f - timeLostPerc);
                 //availRage += RageGenWhite;
                 WhiteAtks.HSOverridesOverDur = 0f;
                 WhiteAtks.CLOverridesOverDur = 0f;
@@ -477,7 +468,7 @@ namespace Rawr.DPSWarr
             if (setCalcs)
             {
                 this.calcs.TotalDPS = DPS_TTL;
-                this.calcs.WhiteDPS = this._WhiteDPS;
+                this.calcs.WhiteDPS = (WhiteAtks.MhDPS + WhiteAtks.OhDPS) * (1f - timeLostPerc);
 
                 this.calcs.WhiteRage  = this.RageGenWhite;
                 this.calcs.OtherRage  = this.RageGenOther;
@@ -499,7 +490,7 @@ namespace Rawr.DPSWarr
                 float other = RageGenOverDur_Other;
                 float needy = RageNeededOverDur;
                 return white + other - needy;*/
-                return WHITEATTACKS.whiteRageGenOverDurNoHS * (1f - timeLostPerc) +
+                return WhiteAtks.whiteRageGenOverDurNoHS * (1f - timeLostPerc) +
                        RageGenOverDur_Other -
                        RageNeededOverDur;
             }

@@ -15,13 +15,7 @@ namespace Rawr.DPSWarr {
         }
 
         #region Variables
-        protected Character CHARACTER;
-        protected WarriorTalents TALENTS;
-        protected Stats STATS;
-        protected CombatFactors COMBATFACTORS;
-        protected Skills.WhiteAttacks WHITEATTACKS;
-        protected CalculationOptionsDPSWarr CALCOPTS;
-
+       
         public float _HPS_TTL;
         public string GCDUsage = "";
         protected CharacterCalculationsDPSWarr calcs = null;
@@ -89,12 +83,12 @@ namespace Rawr.DPSWarr {
 
         #endregion
         #region Get/Set
-        protected Character Char { get { return CHARACTER; } set { CHARACTER = value; } }
-        protected WarriorTalents Talents { get { return TALENTS; } set { TALENTS = value; } }
-        protected Stats StatS { get { return STATS; } set { STATS = value; } }
-        protected CombatFactors CombatFactors { get { return COMBATFACTORS; } set { COMBATFACTORS = value; } }
-        public Skills.WhiteAttacks WhiteAtks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
-        protected CalculationOptionsDPSWarr CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
+        protected Character Char { get; set; }
+        protected WarriorTalents Talents { get; set; }
+        protected Stats StatS { get; set; }
+        protected CombatFactors CombatFactors { get; set; }
+        public Skills.WhiteAttacks WhiteAtks { get; protected set; }
+        protected CalculationOptionsDPSWarr CalcOpts { get; set; }
         #endregion
         #region Functions
         public virtual void Initialize(CharacterCalculationsDPSWarr calcs) {
@@ -149,39 +143,39 @@ namespace Rawr.DPSWarr {
 
         protected virtual void initAbilities() {
             // Whites
-            //WhiteAtks = new Skills.WhiteAttacks(CHARACTER, STATS, COMBATFACTORS);
+            //WhiteAtks = new Skills.WhiteAtks(Char, StatS, CombatFactors);
             // Anti-Debuff
-            HF  = new Skills.HeroicFury(        CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            EM = new Skills.EveryManForHimself(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            CH = new Skills.Charge(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            IN = new Skills.Intercept(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            IV = new Skills.Intervene(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            HF  = new Skills.HeroicFury(        Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            EM = new Skills.EveryManForHimself(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            CH = new Skills.Charge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            IN = new Skills.Intercept(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            IV = new Skills.Intervene(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             // Rage Generators
-            SndW = new Skills.SecondWind(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            BZ = new Skills.BerserkerRage(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            BR = new Skills.Bloodrage(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            SndW = new Skills.SecondWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            BZ = new Skills.BerserkerRage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            BR = new Skills.Bloodrage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             // Maintenance
-            BTS = new Skills.BattleShout(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            CS = new Skills.CommandingShout(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            DS = new Skills.DemoralizingShout(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            SN = new Skills.SunderArmor(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            TH = new Skills.ThunderClap(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            HMS = new Skills.Hamstring(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            ER = new Skills.EnragedRegeneration(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            BTS = new Skills.BattleShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            CS = new Skills.CommandingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            DS = new Skills.DemoralizingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            SN = new Skills.SunderArmor(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            TH = new Skills.ThunderClap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            HMS = new Skills.Hamstring(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            ER = new Skills.EnragedRegeneration(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             // Periodics
-            ST = new Skills.ShatteringThrow(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            SW = new Skills.SweepingStrikes(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            Death = new Skills.DeathWish(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            RK = new Skills.Recklessness(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            ST = new Skills.ShatteringThrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            SW = new Skills.SweepingStrikes(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            Death = new Skills.DeathWish(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            RK = new Skills.Recklessness(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
 
             // Slam used by Bloodsurge, WW used by Bladestorm, so they're shared
-            SL = new Skills.Slam(               CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS); // actually arms but BS needs it
-            WW = new Skills.WhirlWind(          CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            SL = new Skills.Slam(               Char, StatS, CombatFactors, WhiteAtks, CalcOpts); // actually arms but BS needs it
+            WW = new Skills.WhirlWind(          Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             
-            DW = new Skills.DeepWounds(         CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            CL = new Skills.Cleave(             CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            HS = new Skills.HeroicStrike(       CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            EX = new Skills.Execute(            CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            DW = new Skills.DeepWounds(         Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            CL = new Skills.Cleave(             Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            HS = new Skills.HeroicStrike(       Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            EX = new Skills.Execute(            Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
         }
         public virtual void doIterations() { }
 

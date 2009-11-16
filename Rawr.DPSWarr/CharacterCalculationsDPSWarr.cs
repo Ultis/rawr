@@ -11,7 +11,6 @@ namespace Rawr.DPSWarr {
         public Stats BuffedStats { get; set; }
         public CombatFactors combatFactors { get; set; }
         public Rotation Rot { get; set; }
-        public List<Buff> ActiveBuffs { get; set; }
         #endregion
 
         #region Points

@@ -63,15 +63,15 @@ namespace Rawr.DPSWarr {
         }
         protected override void initAbilities() {
             base.initAbilities();
-            WW = new Skills.WhirlWind(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            BLS = new Skills.Bladestorm(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS, WW);
-            MS = new Skills.MortalStrike(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            RD = new Skills.Rend(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            SS = new Skills.Swordspec(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            OP = new Skills.OverPower(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS, SS);
-            TB = new Skills.TasteForBlood(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            SD = new Skills.Suddendeath(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
-            FW = new Skills.FakeWhite(CHARACTER, STATS, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+            WW = new Skills.WhirlWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            BLS = new Skills.Bladestorm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, WW);
+            MS = new Skills.MortalStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            RD = new Skills.Rend(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            SS = new Skills.Swordspec(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            OP = new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SS);
+            TB = new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            SD = new Skills.Suddendeath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, EX);
+            FW = new Skills.FakeWhite(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
         }
         #endregion
         #region Various Attacks Over Dur
@@ -325,9 +325,9 @@ namespace Rawr.DPSWarr {
                         (new SpecialEffect(Trigger.Use, null, 10, CH.Cd)
                          ).GetAverageUptime(FightDuration / _CH_Acts, 1f, CombatFactors._c_mhItemSpeed, FightDuration)
                 };
-                stats.Accumulate(STATS);
+                stats.Accumulate(StatS);
                 // I'm not sure if this is gonna work, but hell, who knows
-                MS = new Skills.MortalStrike(CHARACTER, stats, COMBATFACTORS, WHITEATTACKS, CALCOPTS);
+                MS = new Skills.MortalStrike(Char, stats, CombatFactors, WhiteAtks, CalcOpts);
 
                 timelostwhilemoving = (CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilemoving) : timelostwhilemoving);
                 percTimeInMovement = timelostwhilemoving / FightDuration;

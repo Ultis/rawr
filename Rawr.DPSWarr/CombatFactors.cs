@@ -61,8 +61,7 @@ namespace Rawr.DPSWarr {
             }
         }
         #region Global Variables
-        private Stats _Stats;
-        public Stats StatS { get { return _Stats; } set { _Stats = value; } }
+        public Stats StatS { get; set; }
         private WarriorTalents Talents;
         public CalculationOptionsDPSWarr CalcOpts { get; private set; }
         public Character Char { get; private set; }
@@ -99,6 +98,7 @@ namespace Rawr.DPSWarr {
 
         public void InvalidateCache() {
             _DamageBonus = _DamageReduction = _BonusWhiteCritDmg = _MHSpeed = _OHSpeed = _TotalHaste = -1f;
+            _AttackTableBasicMH = _AttackTableBasicOH = null;
             Set_c_values();
         }
 
@@ -206,6 +206,29 @@ namespace Rawr.DPSWarr {
         #endregion
         #endregion
         #region Attack Table
+        private AttackTable _AttackTableBasicMH, _AttackTableBasicOH;
+        public AttackTable AttackTableBasicMH
+        {
+            get
+            {
+                if (_AttackTableBasicMH == null)
+                {
+                    _AttackTableBasicMH = new AttackTable(Char, StatS, this, CalcOpts, Skills.Ability.NULL, true, false, false);
+                }
+                return _AttackTableBasicMH;
+            }
+        }
+        public AttackTable AttackTableBasicOH
+        {
+            get
+            {
+                if (_AttackTableBasicOH == null)
+                {
+                    _AttackTableBasicOH = new AttackTable(Char, StatS, this, CalcOpts, Skills.Ability.NULL, false, false, false);
+                }
+                return _AttackTableBasicMH;
+            }
+        }
         #region Hit Rating
         public float HitPerc { get { return StatConversion.GetHitFromRating(StatS.HitRating, CharacterClass.Warrior); } }
         #endregion
@@ -359,6 +382,7 @@ namespace Rawr.DPSWarr {
     }
 
     public abstract class CombatTable {
+        public static CombatTable NULL = new NullCombatTable();
         protected Character Char;
         protected CalculationOptionsDPSWarr calcOpts;
         protected CombatFactors combatFactors;
@@ -451,7 +475,13 @@ namespace Rawr.DPSWarr {
 
         public DefendTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co) { Initialize(character, stats, cf, co, null, true, useSpellHit, false); }
     }*/
-
+    public class NullCombatTable : CombatTable
+    {
+        public NullCombatTable()
+        {
+            Block = Crit = Hit = Dodge = Glance = Miss = Parry = 0;
+        }
+    }
     public class AttackTable : CombatTable {
         protected override void Calculate() {
             float tableSize = 0f;
@@ -486,10 +516,10 @@ namespace Rawr.DPSWarr {
             } else { Glance = 0f; }
             // Critical Hit
             if (isWhite) {
-                Crit = Math.Min(1f - tableSize, isMH ?  combatFactors._c_mhycrit : combatFactors._c_ohycrit);
+                Crit = Math.Min(1f - tableSize, isMH ?  combatFactors._c_mhwcrit : combatFactors._c_ohwcrit);
                 tableSize += Crit;
             } else if (Abil.CanCrit) {
-                Crit = Math.Min(1f - tableSize, (isMH ? Abil.ContainCritValue_MH : Abil.ContainCritValue_OH));
+                Crit = Math.Min(1f - tableSize, Abil.BonusCritChance + (isMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit));
                 tableSize += Crit;
             } else {
                 Crit = 0f;
@@ -498,6 +528,8 @@ namespace Rawr.DPSWarr {
             Hit = Math.Max(0f, 1f - tableSize);
             base.Calculate();
         }
+
+        public AttackTable() { }
 
         public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, bool ismh, bool useSpellHit, bool alwaysHit) {
         
