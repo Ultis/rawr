@@ -1181,7 +1181,8 @@ namespace Rawr.DPSWarr {
                         acts = Math.Min(availGCDs, OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * PercTimeUnder20 * PercFailRageUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         _OP_GCDs = oldOPGCDs + Abil_GCDs;
-                        GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
+                        float OPGCDReduc = (OP.Cd < LatentGCD ? (OP.Cd + CalcOpts.Latency) / LatentGCD : 1f);
+                        GCDsused += Math.Min(origNumGCDs, Abil_GCDs * OPGCDReduc);
                         availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                         availRage -= OP.GetRageUseOverDur(_OP_GCDs);
                     }
@@ -1190,7 +1191,8 @@ namespace Rawr.DPSWarr {
                         acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * PercTimeUnder20 * PercFailRageUnder20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         _TB_GCDs = oldTBGCDs + Abil_GCDs;
-                        GCDsused += Math.Min(origNumGCDs, Abil_GCDs);
+                        float OPGCDReduc = (OP.Cd < LatentGCD ? (OP.Cd + CalcOpts.Latency) / LatentGCD : 1f);
+                        GCDsused += Math.Min(origNumGCDs, Abil_GCDs * OPGCDReduc);
                         availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                         availRage -= TB.GetRageUseOverDur(Abil_GCDs);
                     }
