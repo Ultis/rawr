@@ -85,8 +85,10 @@ namespace Rawr.Enhance
         public float ExpertiseBonusMH { get { return expertiseBonusMH; } }
         public float ExpertiseBonusOH { get { return expertiseBonusOH; } }
 
-        public float NormalHitModifier { get { return 1f - AverageWhiteCrit - glancingRate; } }
-        public float CritHitModifier { get { return AverageWhiteCrit * (2f * (1f + _stats.BonusCritMultiplier)); } }
+        public float NormalHitModifierMH { get { return ChanceWhiteHitMH - chanceWhiteCritMH - glancingRate; } }
+        public float CritHitModifierMH { get { return chanceWhiteCritMH * (2f * (1f + _stats.BonusCritMultiplier)); } }
+        public float NormalHitModifierOH { get { return ChanceWhiteHitOH - chanceWhiteCritOH - glancingRate; } }
+        public float CritHitModifierOH { get { return chanceWhiteCritOH * (2f * (1f + _stats.BonusCritMultiplier)); } }
         public float GlancingHitModifier { get { return glancingRate * 0.7f; } }
         public float YellowHitModifierMH { get { return ChanceYellowHitMH * (1 - chanceYellowCritMH); } }
         public float YellowHitModifierOH { get { return ChanceYellowHitOH * (1 - chanceYellowCritOH); } }

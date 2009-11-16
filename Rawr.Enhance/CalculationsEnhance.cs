@@ -324,22 +324,21 @@ namespace Rawr.Enhance
             float adjustedOHDPS = 0f;
             float dpsOHMeleeTotal = 0f;
 
-            float dpsMHMeleeNormal = adjustedMHDPS * cs.NormalHitModifier;
-            float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitModifier;
+            float dpsMHMeleeNormal = adjustedMHDPS * cs.NormalHitModifierMH;
+            float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitModifierMH;
             float dpsMHMeleeGlances = adjustedMHDPS * cs.GlancingHitModifier;
 
             float meleeMultipliers = weaponMastery * cs.DamageReduction * bonusPhysicalDamage;
-            float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * cs.ChanceWhiteHitMH * meleeMultipliers;
+            float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * meleeMultipliers;
 
             if (character.ShamanTalents.DualWield == 1 && cs.HastedOHSpeed != 0)
             {
                 adjustedOHDPS = (wdpsOH + APDPS) * .5f;
-                float dpsOHMeleeNormal = adjustedOHDPS * cs.NormalHitModifier;
-                float dpsOHMeleeCrits = adjustedOHDPS * cs.CritHitModifier;
+                float dpsOHMeleeNormal = adjustedOHDPS * cs.NormalHitModifierOH;
+                float dpsOHMeleeCrits = adjustedOHDPS * cs.CritHitModifierOH;
                 float dpsOHMeleeGlances = adjustedOHDPS * cs.GlancingHitModifier;
-                dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * cs.UnhastedOHSpeed / cs.HastedOHSpeed) * cs.ChanceWhiteHitOH * meleeMultipliers;
+                dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * cs.UnhastedOHSpeed / cs.HastedOHSpeed) * meleeMultipliers;
             }
-
             float dpsMelee = dpsMHMeleeTotal + dpsOHMeleeTotal;
 
             // Generic MH & OH damage values used for SS, LL & WF
