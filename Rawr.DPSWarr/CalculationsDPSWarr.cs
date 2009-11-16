@@ -346,14 +346,10 @@ These numbers to do not include racial bonuses.",
         }
 
         private bool HidingBadStuff { get { return HidingBadStuff_Def || HidingBadStuff_Spl || HidingBadStuff_PvP; } }
-        private static bool _HidingBadStuff_Def = true;
-        internal static bool HidingBadStuff_Def { get { return _HidingBadStuff_Def; } set { _HidingBadStuff_Def = value; } }
-        private static bool _HidingBadStuff_Spl = true;
-        internal static bool HidingBadStuff_Spl { get { return _HidingBadStuff_Spl; } set { _HidingBadStuff_Spl = value; } }
-        private static bool _HidingBadStuff_PvP = true;
-        internal static bool HidingBadStuff_PvP { get { return _HidingBadStuff_PvP; } set { _HidingBadStuff_PvP = value; } }
-        private static bool _HidingBadStuff_Prof = false;
-        internal static bool HidingBadStuff_Prof { get { return _HidingBadStuff_Prof; } set { _HidingBadStuff_Prof = value; } }
+        internal static bool HidingBadStuff_Def { get; set; }
+        internal static bool HidingBadStuff_Spl { get; set; }
+        internal static bool HidingBadStuff_PvP { get; set; }
+        internal static bool HidingBadStuff_Prof { get; set; }
 
         public override Stats GetRelevantStats(Stats stats) {
             Stats relevantStats = new Stats() {
@@ -649,13 +645,11 @@ These numbers to do not include racial bonuses.",
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
-            float hasRelevantBuff;
-
             #region Racials to Force Enable
             // Draenei should always have this buff activated
             // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
             if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+                && !character.ActiveBuffsContains("Heroic Presence"))
             {
                 character.ActiveBuffsAdd(("Heroic Presence"));
             }
@@ -664,13 +658,13 @@ These numbers to do not include racial bonuses.",
             #region Professions to Force Enable
             // Miners should always have this buff activated
             if (CheckHasProf(Profession.Mining)
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
+                && !character.ActiveBuffsContains("Toughness"))
             {
                 character.ActiveBuffsAdd(("Toughness"));
             }
             // Skinners should always have this buff activated
             if (CheckHasProf(Profession.Skinning)
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
+                && !character.ActiveBuffsContains("Master of Anatomy"))
             {
                 character.ActiveBuffsAdd(("Master of Anatomy"));
             }
@@ -691,111 +685,95 @@ These numbers to do not include racial bonuses.",
             // NOTE: Might do this again for Alchemy and Mixology but
             // there could be conflicts for different specialties
             #endregion
-
+            List<Buff> buffGroup = new List<Buff>();
             #region Maintenance Auto-Fixing
             // Removes the Sunder Armor if you are maintaining it yourself
             // Also removes Acid Spit and Expose Armor
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_]) {
-                Buff a = Buff.GetBuffByName("Sunder Armor");
-                Buff b = Buff.GetBuffByName("Acid Spit");
-                Buff c = Buff.GetBuffByName("Expose Armor");
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
+                buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
+                buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
             // Removes the Thunder Clap & Improved Buffs if you are maintaining it yourself
             // Also removes Judgements of the Just, Infected Wounds, Frost Fever, Improved Icy Touch
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_]) {
-                Buff a = Buff.GetBuffByName("Thunder Clap");
-                Buff b = Buff.GetBuffByName("Improved Thunder Clap");
-                Buff c = Buff.GetBuffByName("Judgements of the Just");
-                Buff d = Buff.GetBuffByName("Infected Wounds");
-                Buff e = Buff.GetBuffByName("Frost Fever");
-                Buff f = Buff.GetBuffByName("Improved Icy Touch");
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
-                if (character.ActiveBuffs.Contains(e)) { character.ActiveBuffs.Remove(e); removedBuffs.Add(e); }
-                if (character.ActiveBuffs.Contains(f)) { character.ActiveBuffs.Remove(f); removedBuffs.Add(f); }
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Thunder Clap"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Thunder Clap"));
+                buffGroup.Add(Buff.GetBuffByName("Judgements of the Just"));
+                buffGroup.Add(Buff.GetBuffByName("Infected Wounds"));
+                buffGroup.Add(Buff.GetBuffByName("Frost Fever"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Icy Touch"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
             // Removes the Demoralizing Shout & Improved Buffs if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_]) {
-                Buff a = Buff.GetBuffByName("Demoralizing Shout");
-                Buff b = Buff.GetBuffByName("Improved Demoralizing Shout");
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Demoralizing Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Demoralizing Shout"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
             // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blessing of Might (+Improved)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
-                Buff a = Buff.GetBuffByName("Commanding Presence (Attack Power)");
-                Buff b = Buff.GetBuffByName("Battle Shout");
-                Buff c = Buff.GetBuffByName("Improved Blessing of Might");
-                Buff d = Buff.GetBuffByName("Blessing of Might");
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Commanding Presence (Attack Power)"));
+                buffGroup.Add(Buff.GetBuffByName("Battle Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Blessing of Might"));
+                buffGroup.Add(Buff.GetBuffByName("Blessing of Might"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
             // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blood Pact (+Improved Imp)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_]) {
-                Buff a = Buff.GetBuffByName("Commanding Presence (Health)");
-                Buff b = Buff.GetBuffByName("Commanding Shout");
-                Buff c = Buff.GetBuffByName("Improved Imp");
-                Buff d = Buff.GetBuffByName("Blood Pact");
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); removedBuffs.Add(d); }
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Commanding Presence (Health)"));
+                buffGroup.Add(Buff.GetBuffByName("Commanding Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Imp"));
+                buffGroup.Add(Buff.GetBuffByName("Blood Pact"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
             }
             #endregion
 
             #region Passive Ability Auto-Fixing
             // Removes the Trauma Buff and it's equivalent Mangle if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (character.WarriorTalents.Trauma > 0)
             {
-                hasRelevantBuff = character.WarriorTalents.Trauma;
-                Buff a = Buff.GetBuffByName("Trauma");
-                Buff b = Buff.GetBuffByName("Mangle");
-                if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                }
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Trauma"));
+                buffGroup.Add(Buff.GetBuffByName("Mangle"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
             // Removes the Blood Frenzy Buff and it's equivalent of Savage Combat if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (character.WarriorTalents.BloodFrenzy > 0)
             {
-                hasRelevantBuff = character.WarriorTalents.BloodFrenzy;
-                Buff a = Buff.GetBuffByName("Blood Frenzy");
-                Buff b = Buff.GetBuffByName("Savage Combat");
-                if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                }
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Blood Frenzy"));
+                buffGroup.Add(Buff.GetBuffByName("Savage Combat"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
             // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.FuryStance) {
-                hasRelevantBuff = character.WarriorTalents.Rampage;
-                Buff a = Buff.GetBuffByName("Rampage");
-                Buff b = Buff.GetBuffByName("Leader of the Pack");
-                if (hasRelevantBuff == 1) {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                }
+            if (character.WarriorTalents.Rampage > 0) {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Rampage"));
+                buffGroup.Add(Buff.GetBuffByName("Leader of the Pack"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
             }
             #endregion
 
@@ -820,9 +798,10 @@ These numbers to do not include racial bonuses.",
                     addedBuffs.Add(newBuff);
                 }
             }
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             #endregion
-            
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+           
             foreach (Buff b in removedBuffs) {
                 character.ActiveBuffsAdd(b);
             }
@@ -831,6 +810,14 @@ These numbers to do not include racial bonuses.",
             }
 
             return statsBuffs;
+        }
+
+        private void MaintBuffHelper(List<Buff> buffGroup, Character character, List<Buff> removedBuffs)
+        {
+            foreach (Buff b in buffGroup)
+            {
+                if (character.ActiveBuffs.Remove(b)) removedBuffs.Add(b);
+            }
         }
         public override void SetDefaults(Character character) {
             //CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -1293,31 +1280,35 @@ These numbers to do not include racial bonuses.",
             }
             System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 #endif
-            int line = 0;
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
             cacheChar = character;
             try {
-                CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr; line++;
-                Rotation Rot; line++;
-                Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts, out Rot); line++;
-                WarriorTalents talents = character.WarriorTalents; line++;
-                
-                CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts); line++;
-                Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors, calcOpts); line++;
-                Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race); line++;
+                CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
+
+                Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts);
+                WarriorTalents talents = character.WarriorTalents;
+                CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts);
+                Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, stats, combatFactors, calcOpts);
 
                 if (calcOpts.UseMarkov)
                 {
                     Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
-                    b.StateSpaceGeneratorArmsTest1(character,stats,combatFactors, whiteAttacks, calcOpts);
+                    b.StateSpaceGeneratorArmsTest1(character, stats, combatFactors, whiteAttacks, calcOpts);
                 }
+
+                Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+
+                Rotation Rot;
+                if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
+                else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
+
                 
-                calculatedStats.Duration = calcOpts.Duration; line++;
-                calculatedStats.AverageStats = stats; line++;
-                calculatedStats.combatFactors = combatFactors; line++;
-                calculatedStats.Rot = Rot; line++;
-                calculatedStats.TargetLevel = calcOpts.TargetLevel; line++;
-                calculatedStats.BaseHealth = statsRace.Health; line++;
+                calculatedStats.Duration = calcOpts.Duration; 
+                calculatedStats.AverageStats = stats; 
+                calculatedStats.combatFactors = combatFactors; 
+                calculatedStats.Rot = Rot; 
+                calculatedStats.TargetLevel = calcOpts.TargetLevel; 
+                calculatedStats.BaseHealth = statsRace.Health; 
                 {// == Attack Table ==
                     // Miss
                     calculatedStats.Miss = stats.Miss;
@@ -1332,7 +1323,7 @@ These numbers to do not include racial bonuses.",
                     calculatedStats.CritPercent = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit;
                     calculatedStats.MhCrit = combatFactors._c_mhycrit;
                     calculatedStats.OhCrit = combatFactors._c_ohycrit;
-                } line++;
+                } 
                 // Offensive
                 calculatedStats.TeethBonus = (int)(stats.Armor * talents.ArmoredToTheTeeth / 108f);
                 calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && combatFactors._c_mhItemType == ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
@@ -1344,38 +1335,35 @@ These numbers to do not include racial bonuses.",
                     + calculatedStats.ArmorPenetrationRating2Perc;
                 calculatedStats.HasteRating = stats.HasteRating;
                 calculatedStats.HastePercent = stats.PhysicalHaste; //talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
-                line++;
+                
                 // DPS
                 Rot.Initialize(calculatedStats);
                 
-                line++;
                 // Neutral
                 // Defensive
-                calculatedStats.Armor = (int)stats.Armor; line++;
+                calculatedStats.Armor = (int)stats.Armor; 
 
-                calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00"; line++;
+                calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00"; 
 
-                Rot.MakeRotationandDoDPS(true, needsDisplayCalculations); line++;
+                Rot.MakeRotationandDoDPS(true, needsDisplayCalculations); 
 
-                float Health2Surv  = (stats.Health) / 100f; line++;
-                      Health2Surv += (stats.HealthRestore) / 1000f; line++;
+                float Health2Surv  = (stats.Health) / 100f; 
+                      Health2Surv += (stats.HealthRestore) / 1000f; 
                 float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * 100f;
                 float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
                 float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedMultiplier) * 100f;
-                calculatedStats.TotalHPS = Rot._HPS_TTL; line++;
+                calculatedStats.TotalHPS = Rot._HPS_TTL; 
                 calculatedStats.Survivability = calcOpts.SurvScale * (calculatedStats.TotalHPS
                                                                       + Health2Surv
                                                                       + DmgTakenMods2Surv
                                                                       + BossAttackPower2Surv
                                                                       + BossAttackSpeedMods2Surv);
-                line++;
-                calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; line++;
+                calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability; 
 
                 //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts);
                 if (needsDisplayCalculations)
                 {
-                    Rotation foo;
-                    calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, out foo);
+                    calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts);
                     //calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts);
 
                     float maxArp = calculatedStats.BuffedStats.ArmorPenetrationRating;
@@ -1389,13 +1377,17 @@ These numbers to do not include racial bonuses.",
                 }
 
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations",
-                    ex.Message, "GetCharacterCalculations()", "No Additional Info", ex.StackTrace, line);
+                ErrorBoxDPSWarr eb = new ErrorBoxDPSWarr("Error in creating Stat Pane Calculations",
+                    ex.Message, "GetCharacterCalculations()", "No Additional Info", ex.StackTrace, -1);
+                eb.Show();
             }
 #if (!RAWR3 && DEBUG)
-            sw.Stop();
-            long elapsedTime = sw.Elapsed.Ticks;
-            calculatedStats.calculationTime = elapsedTime;
+            if (needsDisplayCalculations)
+            {
+                sw.Stop();
+                long elapsedTime = sw.Elapsed.Ticks;
+                calculatedStats.calculationTime = elapsedTime;
+            }
 #endif
             return calculatedStats;
         }
@@ -1404,23 +1396,23 @@ These numbers to do not include racial bonuses.",
 
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
             try {
-                Rotation Rot;
-                return GetCharacterStats(character, additionalItem, StatType.Average, null, out Rot);
+                return GetCharacterStats(character, additionalItem, StatType.Average, null);
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in getting Character Stats",
+                ErrorBoxDPSWarr eb = new ErrorBoxDPSWarr("Error in getting Character Stats",
                     ex.Message, "GetCharacterStats()", "No Additional Info", ex.StackTrace, 0);
+                eb.Show();
             }
             return new Stats() { };
         }
 
-        private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, out Rotation Rot) {
+        private Stats GetCharacterStats_Buffed(Character character, Item additionalItem, CalculationOptionsDPSWarr calcOpts, bool isBuffed) {
                 cacheChar = character;
                 if (calcOpts == null) 
                     calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
                 WarriorTalents talents = character.WarriorTalents;
 
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Warrior, character.Race);
-                Stats statsBuffs = (statType == StatType.Unbuffed ? new Stats() : GetBuffsStats(character, calcOpts));
+                Stats statsBuffs = (isBuffed ? GetBuffsStats(character, calcOpts) : new Stats());
                 Stats statsItems = GetItemStats(character, additionalItem);
                 Stats statsOptionsPanel = new Stats() {
                     BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
@@ -1464,7 +1456,7 @@ These numbers to do not include racial bonuses.",
                     BaseArmorMultiplier = talents.Toughness * 0.02f,
                 };
                 // Add Talents that give SpecialEffects
-                if (talents.Rampage > 0 && calcOpts.FuryStance && statType != StatType.Unbuffed) {
+                if (talents.Rampage > 0 && calcOpts.FuryStance && isBuffed) {
                     /*SpecialEffect rampage = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalCrit = 0.05f, }, 10, 0);
                     statsTalents.AddSpecialEffect(rampage);*/
                     statsTalents.PhysicalCrit += 0.05f;
@@ -1495,7 +1487,7 @@ These numbers to do not include racial bonuses.",
                 statsTotal.Accumulate(statsBuffs);
                 statsTotal.Accumulate(statsTalents);
                 statsTotal.Accumulate(statsOptionsPanel);
-                Stats statsProcs = new Stats();
+                //Stats statsProcs = new Stats();
 
                 // Stamina
                 float totalBSTAM = statsTotal.BonusStaminaMultiplier;
@@ -1556,99 +1548,36 @@ These numbers to do not include racial bonuses.",
                                            (1f + ratingHasteBonus)
                                            - 1f;
 
-                if (statType == StatType.Unbuffed || statType == StatType.Buffed) {
-                    Rot = new Rotation();
-                    return statsTotal;
-                }
+                
+                return statsTotal;
+            }
 
+        private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts)
+        {
+            cacheChar = character;
+            Stats statsTotal = GetCharacterStats_Buffed(character, additionalItem, calcOpts, statType != StatType.Unbuffed);
+            if (statType == (StatType.Buffed | StatType.Unbuffed))
+            {
+                return statsTotal;
+            }
                 // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
+            WarriorTalents talents = character.WarriorTalents;
+            Rotation Rot;
                 CombatFactors combatFactors = new CombatFactors(character, statsTotal, calcOpts);
                 Skills.WhiteAttacks whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors, calcOpts);
                 if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts);
                 else Rot = new ArmsRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts);
                 Rot.Initialize();
                 Rot.MakeRotationandDoDPS(false, false);
-
-                // Add some last minute SpecialEffects
-                if (Rot.ST.Validated) {
-                    SpecialEffect shatt = new SpecialEffect(Trigger.Use,
-                        new Stats() { ArmorPenetration = 0.20f, },
-                        Rot.ST.Duration, Rot.ST.Cd,
-                        Rot.ST.MHAtkTable.AnyLand);
-                    statsTotal.AddSpecialEffect(shatt);
-                }
-                /*if (Rot.Hammy.Validated) {
-                    SpecialEffect hammy = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusTargets = 1f * calcOpts.MultipleTargetsPerc / 100f, },
-                        Rot.SW.Duration, Rot.SW.Cd);
-                    statsTotal.AddSpecialEffect(hammy);
-                }*/
-                if (Rot.BTS.Validated) {
-                    SpecialEffect bs = new SpecialEffect(Trigger.Use,
-                        new Stats() { AttackPower = (548f * (1f + talents.CommandingPresence * 0.05f)), },
-                        Rot.BTS.Duration, Rot.BTS.Cd + 0.01f);
-                    statsTotal.AddSpecialEffect(bs);
-                }
-                if (Rot.CS.Validated) {
-                    SpecialEffect cs = new SpecialEffect(Trigger.Use,
-                        new Stats() { Health = 2255f * (1f + talents.CommandingPresence * 0.05f), },
-                        Rot.CS.Duration, Rot.CS.Cd + 0.01f);
-                    statsTotal.AddSpecialEffect(cs);
-                }
-                if (Rot.DS.Validated) {
-                    SpecialEffect ds = new SpecialEffect(Trigger.Use,
-                        new Stats() { BossAttackPower = 410f * (1f + talents.ImprovedDemoralizingShout * 0.08f) * -1f, },
-                        Rot.DS.Duration, Rot.DS.Cd + 0.01f);
-                    statsTotal.AddSpecialEffect(ds);
-                }
-                if (Rot.TH.Validated) {
-                    SpecialEffect tc = new SpecialEffect(Trigger.Use,
-                        new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + talents.ImprovedThunderClap / 30f)), },
-                        Rot.TH.Duration, Rot.TH.Cd + 0.01f, Rot.TH.MHAtkTable.AnyLand);
-                    statsTotal.AddSpecialEffect(tc);
-                }
-                if (Rot.SN.Validated) {
-                    SpecialEffect sn = new SpecialEffect(Trigger.Use,
-                        new Stats() { ArmorPenetration = 0.04f, },
-                        Rot.SN.Duration, Rot.SN.Cd + 0.01f, Rot.SN.MHAtkTable.AnyLand, 5);
-                    statsTotal.AddSpecialEffect(sn);
-                }
-
-                float fightDuration = calcOpts.Duration;
-
-                bool useOH = combatFactors.useOH;
+                Rot.AddValidatedSpecialEffects(statsTotal, talents);
+                
+            float fightDuration = calcOpts.Duration;
 
                 float attempted = Rot.AttemptedAtksOverDur;
                 float land = Rot.LandedAtksOverDur;
                 float crit = Rot.CriticalAtksOverDur;
 
-                float attemptedAtksInterval = fightDuration / attempted;
-                float landedAtksInterval = fightDuration / land;
-                // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
-                float dmgDoneInterval = fightDuration / (land + (calcOpts.FuryStance ? 1f : 4f / 3f));
-
-                //float hitRate = attempted > 0 ? Math.Min(1f, Math.Max(0f, land / attempted)) : 0f;
-                float critRate = crit / attempted;
-
-                if (Rot.SW.Validated) {
-                    SpecialEffect sweep = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusTargets = 1f, },
-                        landedAtksInterval * 5f, Rot.SW.Cd);
-                    statsTotal.AddSpecialEffect(sweep);
-                }
-                if (Rot.RK.Validated && calcOpts.FuryStance) {
-                    SpecialEffect reck = new SpecialEffect(Trigger.Use,
-                        new Stats() { PhysicalCrit = 1f - critRate, },
-                        landedAtksInterval * 3f, Rot.RK.Cd);
-                    statsTotal.AddSpecialEffect(reck);
-                }
-                if (talents.Flurry > 0 && calcOpts.FuryStance) {
-                    //float value = talents.Flurry * 0.05f;
-                    SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit,
-                        new Stats() { PhysicalHaste = talents.Flurry * 0.05f, }, landedAtksInterval * 3f, 0f);
-                    statsTotal.AddSpecialEffect(flurry);
-                }
-
+            
                 SpecialEffect bersMainHand = null;
                 SpecialEffect bersOffHand = null;
 
@@ -1685,7 +1614,9 @@ These numbers to do not include racial bonuses.",
                     bersStats.Accumulate(bersOffHand.Stats, f);    
                 }
                 //float apBonusOtherProcs = (1f + totalBAPM) * (bersStats.AttackPower);
-                bersStats.AttackPower = (1f + totalBAPM) * (bersStats.AttackPower);
+                bersStats.AttackPower = (1f + statsTotal.BonusAttackPower) * (bersStats.AttackPower);
+                bersStats.Agility = (1f + statsTotal.BonusAgilityMultiplier) * (bersStats.Agility);
+                bersStats.Armor = (1f + statsTotal.BonusArmorMultiplier) * (bersStats.Armor);
                 combatFactors.StatS.Accumulate(bersStats);
                 combatFactors.InvalidateCache();
                 return combatFactors.StatS;
@@ -1738,10 +1669,6 @@ These numbers to do not include racial bonuses.",
                 float land = Rot.LandedAtksOverDur;
                 float crit = Rot.CriticalAtksOverDur;
 
-                float hitRate = land / attempted;
-                float critRate = crit / attempted;
-
-                //
                 foreach (SpecialEffect effect in specialEffects) {
                     if (effect.Stats.ArmorPenetrationRating > 0) {
                         float arpenBuffs =
@@ -1791,7 +1718,8 @@ These numbers to do not include racial bonuses.",
 
                 return statsProcs;
             } catch (Exception ex) {
-                new ErrorBoxDPSWarr("Error in creating SpecialEffects Stats", ex.Message, "GetSpecialEffectsStats()");
+                ErrorBoxDPSWarr box = new ErrorBoxDPSWarr("Error in creating SpecialEffects Stats", ex.Message, "GetSpecialEffectsStats()");
+                box.Show();
                 return new Stats();
             }
         }
@@ -1804,11 +1732,12 @@ These numbers to do not include racial bonuses.",
             float attempted = rotation.AttemptedAtksOverDur;
             float land = rotation.LandedAtksOverDur;
             float crit = rotation.CriticalAtksOverDur;
+            float bleed = calcOpts.Duration * (calcOpts.FuryStance || !calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f : 4f / 3f);
 
-            float bleedHitInterval = 1f / (calcOpts.FuryStance || !calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
+            float bleedHitInterval = fightDuration / bleed;
             float attemptedAtkInterval = fightDuration / attempted;
             float landedAtksInterval = fightDuration / land;
-            float dmgDoneInterval = fightDuration / land + (calcOpts.FuryStance || !calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f : 4f / 3f);
+            float dmgDoneInterval = fightDuration / (land + bleed);
             float dmgTakenInterval = fightDuration / calcOpts.AoETargetsFreq;
 
             float hitRate = land / attempted;
@@ -1829,39 +1758,31 @@ These numbers to do not include racial bonuses.",
                         ApplySpecialEffect(effect.Stats._rawSpecialEffectData[0], character, rotation, combatFactors, calcOpts, avoidedAttacks, ref _stats2);
                         effectStats = _stats2;
                     } else {
-                        if (effect.MaxStack > 1f) { upTime = effect.GetAverageStackSize(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
-                        else upTime = effect.GetAverageUptime(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                        upTime = effect.GetAverageStackSize(0f, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); 
                     }
                     break;
                 case Trigger.MeleeHit:
                 case Trigger.PhysicalHit:
-                    if (effect.MaxStack > 1f) { upTime = effect.GetAverageStackSize(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
-                    else upTime = effect.GetAverageUptime(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    upTime = effect.GetAverageStackSize(attemptedAtkInterval, hitRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
                 case Trigger.MeleeCrit:
                 case Trigger.PhysicalCrit:
-                    if (effect.MaxStack > 1f) { upTime = effect.GetAverageStackSize(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration2Pass); } 
-                    else upTime = effect.GetAverageUptime(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    upTime = effect.GetAverageStackSize(attemptedAtkInterval, critRate, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
                 case Trigger.DoTTick:
-                    if (effect.MaxStack > 1f) { upTime = effect.GetAverageStackSize(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
-                    else upTime = effect.GetAverageUptime(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); // 1/sec DeepWounds, 1/3sec Rend
+                    upTime = effect.GetAverageStackSize(bleedHitInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
                 case Trigger.DamageDone: // physical and dots
-                    if (effect.MaxStack > 1f) { upTime = effect.GetAverageStackSize(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); } 
-                    else upTime = effect.GetAverageUptime(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    upTime = effect.GetAverageStackSize(dmgDoneInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
                 case Trigger.DamageTaken: // physical and dots
-                    if (effect.MaxStack > 1f) { upTime = effect.GetAverageStackSize(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
-                    else upTime = effect.GetAverageUptime(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    upTime = effect.GetAverageStackSize(dmgTakenInterval, 1f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
                 case Trigger.DamageAvoided: // Boss AoE attacks we manage to avoid
-                    if (effect.MaxStack > 1f) { upTime = effect.GetAverageStackSize(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
-                    else upTime = effect.GetAverageUptime(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    upTime = effect.GetAverageStackSize(dmgTakenInterval, avoidedAttacks, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
                 case Trigger.HSorSLHit: // Set bonus handler
-                    if (effect.MaxStack > 1f) { upTime = effect.GetAverageStackSize(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass); }
-                    upTime = effect.GetAverageUptime(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    upTime = effect.GetAverageStackSize(fightDuration / rotation.CritHsSlamOverDur, 0.4f, combatFactors._c_mhItemSpeed, fightDuration2Pass);
                     break;
             }
             if (upTime > 0f && upTime <= effect.MaxStack) {
@@ -1871,7 +1792,7 @@ These numbers to do not include racial bonuses.",
             return 0f;
         }
 
-        private Stats UpdateStatsAndAdd(Stats statsToAdd, Stats baseStats, Character character)
+        private static Stats UpdateStatsAndAdd(Stats statsToAdd, Stats baseStats, Character character)
         {
             Stats retVal = baseStats.Clone();
             // Multipliers

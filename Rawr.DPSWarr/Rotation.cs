@@ -606,5 +606,79 @@ namespace Rawr.DPSWarr {
             HPS_TTL += _Abil_HPS;
         }
         #endregion
+
+        internal unsafe void AddValidatedSpecialEffects(Stats statsTotal, WarriorTalents talents)
+        {
+            if (ST.Validated)
+            {
+                SpecialEffect shatt = new SpecialEffect(Trigger.Use,
+                    new Stats() { ArmorPenetration = 0.20f, },
+                    ST.Duration, ST.Cd,
+                    ST.MHAtkTable.AnyLand);
+                statsTotal.AddSpecialEffect(shatt);
+            }
+            if (BTS.Validated)
+            {
+                SpecialEffect bs = new SpecialEffect(Trigger.Use,
+                    new Stats() { AttackPower = (548f * (1f + talents.CommandingPresence * 0.05f)), },
+                    BTS.Duration, BTS.Cd);
+                statsTotal.AddSpecialEffect(bs);
+            }
+            if (CS.Validated)
+            {
+                //float value = (2255f * (1f + talents.CommandingPresence * 0.05f));
+                SpecialEffect cs = new SpecialEffect(Trigger.Use,
+                    new Stats() { Health = 2255f * (1f + talents.CommandingPresence * 0.05f), },
+                    CS.Duration, CS.Cd);
+                statsTotal.AddSpecialEffect(cs);
+            }
+            if (DS.Validated)
+            {
+                //float value = (410f * (1f + talents.ImprovedDemoralizingShout * 0.08f));
+                SpecialEffect ds = new SpecialEffect(Trigger.Use,
+                    new Stats() { BossAttackPower = 410f * (1f + talents.ImprovedDemoralizingShout * 0.08f) * -1f, },
+                    DS.Duration, DS.Cd);
+                statsTotal.AddSpecialEffect(ds);
+            }
+            if (TH.Validated)
+            {
+                //float value = (0.10f * (1f + (float)Math.Ceiling(talents.ImprovedThunderClap * 10f / 3f) / 100f));
+                SpecialEffect tc = new SpecialEffect(Trigger.Use,
+                    new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + talents.ImprovedThunderClap / 30f)), },
+                    TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand);
+                statsTotal.AddSpecialEffect(tc);
+            }
+            if (SN.Validated)
+            {
+                //float value = 0.04f;
+                SpecialEffect sn = new SpecialEffect(Trigger.Use,
+                    new Stats() { ArmorPenetration = 0.04f, },
+                    SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5);
+                statsTotal.AddSpecialEffect(sn);
+            }
+            float landedAtksInterval = LandedAtksOverDur / CalcOpts.Duration;
+            float critRate = CriticalAtksOverDur / AttemptedAtksOverDur;
+            if (SW.Validated)
+            {
+                SpecialEffect sweep = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusTargets = 1f, },
+                    landedAtksInterval * 5f, SW.Cd);
+                statsTotal.AddSpecialEffect(sweep);
+            }
+            if (RK.Validated && CalcOpts.FuryStance)
+            {
+                SpecialEffect reck = new SpecialEffect(Trigger.Use,
+                    new Stats() { PhysicalCrit = 1f - critRate, },
+                    landedAtksInterval * 3f, RK.Cd);
+                statsTotal.AddSpecialEffect(reck);
+            }
+            if (talents.Flurry > 0 && CalcOpts.FuryStance)
+            {
+                //float value = talents.Flurry * 0.05f;
+                SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit,
+                    new Stats() { PhysicalHaste = talents.Flurry * 0.05f, }, landedAtksInterval * 3f, 0f);
+                statsTotal.AddSpecialEffect(flurry);
+            }
+        }
     }
 }
