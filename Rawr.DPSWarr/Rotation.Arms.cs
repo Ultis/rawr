@@ -875,7 +875,10 @@ namespace Rawr.DPSWarr {
                         averageTimeBetween = OnePt5Plus1_Occurs * (lengthFor1 * extLength1 + msNormally1 * (1f - extLength1))
                                            + Two1pt5_Occurs * (lengthFor2 * extLength2 + msNormally2 * (1f - extLength2))
                                            + Two1PtZero_Occurs * (lengthFor3 * extLength3 + msNormally3 * (1f - extLength3));
-                        MS.Cd = averageTimeBetween;
+                        float RendSpace = _RD_GCDs / origNumGCDs;
+                        float BLS_Space = (1 - RendSpace) * (_BLS_GCDs * 4) / origNumGCDs;
+                        MS.Cd = LatentGCD / (LatentGCD * (1 - BLS_Space) / averageTimeBetween);
+                        
                     }
                     #endregion
                     acts = Math.Min(availGCDs, MS.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
@@ -890,7 +893,7 @@ namespace Rawr.DPSWarr {
                     acts = Math.Min(availGCDs, OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _OP_GCDs = Abil_GCDs;
-                    float OPGCDReduc = (OP.Cd < LatentGCD ? (OP.Cd + CalcOpts.Lag) / LatentGCD : 1f);
+                    float OPGCDReduc = (OP.Cd < LatentGCD ? (OP.Cd + CalcOpts.Latency) / LatentGCD : 1f);
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs * OPGCDReduc);
                     availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                     availRage -= OP.GetRageUseOverDur(_OP_GCDs);
@@ -900,7 +903,7 @@ namespace Rawr.DPSWarr {
                     acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _TB_GCDs = Abil_GCDs;
-                    float OPGCDReduc = (OP.Cd < LatentGCD ? (OP.Cd + CalcOpts.Lag) / LatentGCD : 1f);
+                    float OPGCDReduc = (OP.Cd < LatentGCD ? (OP.Cd + CalcOpts.Latency) / LatentGCD : 1f);
                     GCDsused += Math.Min(origNumGCDs, Abil_GCDs * OPGCDReduc);
                     availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                     availRage -= TB.GetRageUseOverDur(Abil_GCDs);
