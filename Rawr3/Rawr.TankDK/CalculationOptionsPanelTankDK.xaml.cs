@@ -18,20 +18,21 @@ namespace Rawr.TankDK
         public CalculationOptionsPanelTankDK()
         {
             InitializeComponent();
+            this.LayoutRoot.SelectAll();
         }
         public UserControl PanelControl { get { return this; } }
 
         private Character character;
         public Character Character
         {
-            get { return character; }
+            get 
+            { 
+                return character; 
+            }
             set
             {
                 character = value;
                 LoadCalculationOptions();
-
-//                RotationTab.DataContext = (Character.CalculationOptions as CalculationOptionsTankDK).rotation;
-                OptionsTab.DataContext = (Character.CalculationOptions as CalculationOptionsTankDK);
 
                 ((CalculationOptionsTankDK)character.CalculationOptions).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelTankDK_PropertyChanged);
 
@@ -42,8 +43,11 @@ namespace Rawr.TankDK
         public void LoadCalculationOptions()
         {
             _loadingCalculationOptions = true;
-            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsTankDK();
-
+            if (Character.CalculationOptions == null)
+            {
+                Character.CalculationOptions = new CalculationOptionsTankDK();
+            }
+            DataContext = Character.CalculationOptions as CharacterCalculationsTankDK;
             _loadingCalculationOptions = false;
         }
 
