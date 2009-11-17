@@ -29,21 +29,22 @@ namespace Rawr {
         BlockValue,
         Bloodlust,
         BloodlustProc,
+        BonusBlockValueMultiplier,
         BonusCommandingShoutHP,
         BonusLacerateDamageMultiplier,
         BonusMangleBearDamage,
         BonusMangleCatDamage,
         BonusMaxRunicPower,
-		BonusRakeDuration,
-		BonusRipDamagePerCPPerTick,
+        BonusRakeDuration,
+        BonusRipDamagePerCPPerTick,
         BonusRipDuration,
-		BonusSavageRoarDuration,
+        BonusSavageRoarDuration,
         BonusShredDamage,
         BonusStreadyShotCrit,
         BossAttackPower,
         ExtraSpiritWhileCasting,
         CatFormStrength,
-		ClearcastOnBleedChance,
+        ClearcastOnBleedChance,
         PhysicalCrit,
         CritRating,
         CritMeleeRating,
@@ -3767,8 +3768,8 @@ namespace Rawr {
         [DisplayName("% Block Value")]
         public float BonusBlockValueMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusBlockValueMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBlockValueMultiplier] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusBlockValueMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.BonusBlockValueMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
