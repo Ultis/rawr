@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 #if RAWR3
 using System.Windows.Media;
 #endif
+using System.Text;
 
 namespace Rawr.Cat
 {
@@ -299,6 +299,7 @@ namespace Rawr.Cat
 			float chanceCritBite = Math.Min(1f - chanceAvoided, chanceCrit + stats.BonusFerociousBiteCrit);
 			float chanceHitBite = 1f - chanceCritBite - chanceAvoided;
 			float chanceCritRip = chanceCritBleed > 0 ? chanceCritBleed + stats.BonusRipCrit : 0;
+            float chanceCritRake = stats.BonusRakeCrit > 0 ? chanceCritBleed : 0;
 
 			float cpPerCPG = (chanceHit + chanceCrit * (1f + stats.BonusCPOnCrit)) / chanceNonAvoided;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
@@ -333,7 +334,7 @@ namespace Rawr.Cat
 										chanceHitNonGlance * meleeDamageRaw;
 			float mangleDamageAverage = (1f - chanceCrit) * mangleDamageRaw + chanceCrit * mangleDamageRaw * critMultiplier;
 			float shredDamageAverage = (1f - chanceCrit) * shredDamageRaw + chanceCrit * shredDamageRaw * critMultiplier;
-			float rakeDamageAverage = ((1f - chanceCrit) * rakeDamageRaw + chanceCrit * rakeDamageRaw * critMultiplier) + rakeDamageDot;
+            float rakeDamageAverage = ((1f - chanceCrit) * rakeDamageRaw + chanceCrit * rakeDamageRaw * critMultiplier) + (chanceCritRake * rakeDamageDot * critMultiplierBleed);
 			float ripDamageAverage = ((1f - chanceCritRip) * ripDamageRaw + chanceCritRip * ripDamageRaw * critMultiplierBleed);
 			float biteBaseDamageAverage = (1f - chanceCritBite) * biteBaseDamageRaw + chanceCritBite * biteBaseDamageRaw * critMultiplier;
 			float biteCPDamageAverage = (1f - chanceCritBite) * biteCPDamageRaw + chanceCritBite * biteCPDamageRaw * critMultiplier;
@@ -343,7 +344,7 @@ namespace Rawr.Cat
 			float mangleEnergyRaw = 45f - stats.MangleCatCostReduction;
 			float shredEnergyRaw = 60f - stats.ShredCostReduction;
 			float rakeEnergyRaw = 40f - stats.RakeCostReduction;
-			float ripEnergyRaw = 30f;
+			float ripEnergyRaw = 30f - stats.RipCostReduction;
 			float biteEnergyRaw = 35f; //Assuming no wasted energy
 			float roarEnergyRaw = 25f;
 
@@ -783,6 +784,8 @@ namespace Rawr.Cat
 					Paragon = stats.Paragon,
 					BonusRakeDuration = stats.BonusRakeDuration,
 					BonusRipCrit = stats.BonusRipCrit,
+                    BonusRakeCrit = stats.BonusRakeCrit,
+                    RipCostReduction = stats.RipCostReduction,
 
 					AllResist = stats.AllResist,
 					ArcaneResistance = stats.ArcaneResistance,

@@ -258,8 +258,7 @@ namespace Rawr.Hunter
             private HunterTalents TALENTS;
             private Stats STATS;
             private CombatFactors COMBATFACTORS;
-            private AttackTable MHATTACKTABLE;
-            private AttackTable OHATTACKTABLE;
+            private AttackTable RWATTACKTABLE;
             private WhiteAttacks WHITEATTACKS;
             private CalculationOptionsHunter CALCOPTS;
             private bool USESPELLHIT = false;
@@ -357,7 +356,7 @@ namespace Rawr.Hunter
             protected HunterTalents Talents { get { return TALENTS; } set { TALENTS = value; } }
             protected Stats StatS { get { return STATS; } set { STATS = value; } }
             protected CombatFactors combatFactors { get { return COMBATFACTORS; } set { COMBATFACTORS = value; } }
-            public AttackTable RWAtkTable { get { return MHATTACKTABLE; } set { MHATTACKTABLE = value; } }
+            public AttackTable RWAtkTable { get { return RWATTACKTABLE; } set { RWATTACKTABLE = value; } }
             public WhiteAttacks Whiteattacks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
             protected CalculationOptionsHunter CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
             public virtual float RageUseOverDur { get { return (!Validated ? 0f : Activates * RageCost); } }
