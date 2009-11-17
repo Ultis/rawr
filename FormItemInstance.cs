@@ -194,10 +194,13 @@ namespace Rawr
 
         private void SetFormItemSelection(ItemInstance item)
         {
-            Character emptyGemCharacter = FormMain.Instance.FormItemSelection.Character.Clone();
-            emptyGemCharacter[CharacterSlot] = item;
-            _formItemSelection.Character = emptyGemCharacter;
-            _formItemSelection.CurrentCalculations = Calculations.GetCharacterCalculations(emptyGemCharacter);
+            if (FormMain.Instance.FormItemSelection.Character != null)
+            {
+                Character emptyGemCharacter = FormMain.Instance.FormItemSelection.Character.Clone();
+                emptyGemCharacter[CharacterSlot] = item;
+                _formItemSelection.Character = emptyGemCharacter;
+                _formItemSelection.CurrentCalculations = Calculations.GetCharacterCalculations(emptyGemCharacter);
+            }
         }
     }
 }
