@@ -86,6 +86,7 @@ namespace Rawr {
         MangleCostReduction,
         Paragon,
         RakeCostReduction,
+        RipCostReduction,
         ShredCostReduction,
         Miss,
         MoonfireDmg,
@@ -160,6 +161,7 @@ namespace Rawr {
 		MangleCooldownReduction,
 		BonusFerociousBiteCrit,
 		BonusRipCrit,
+        BonusRakeCrit,
         BonusObliterateDamage,
         BonusScourgeStrikeDamage,
         BonusHeartStrikeMultiplier,
@@ -1865,6 +1867,14 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.RakeCostReduction] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Feral")]
+        public float RipCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RipCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RipCostReduction] = value; }
+        }
+        
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Feral")]
         public float ShredCostReduction
@@ -4090,6 +4100,15 @@ namespace Rawr {
 			set { _rawAdditiveData[(int)AdditiveStat.BonusRipCrit] = value; }
 		}
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Bonus Rake Bleed Can Crit")]
+        [Category("Feral")]
+        public float BonusRakeCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusRakeCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusRakeCrit] = value; }
+        }
+        
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Ferocious Bite Crit Chance")]
         [Category("Feral")]
