@@ -1352,7 +1352,31 @@ namespace Rawr //O O . .
             }
         }
 
-		private int GetItemGemIdCount(ItemInstance item, int id)
+        public bool UniqueGemEquipped(Item testGem)
+        {
+            for (int slot = 0; slot < OptimizableSlotCount; slot++)
+            {
+                if (slot != (int)CharacterSlot.OffHand || CurrentCalculations.IncludeOffHandInCalculations(this))
+                {
+                    ItemInstance item = _item[slot];
+                    if (item == null) continue;
+                    for (int gemIndex = 1; gemIndex <= 3; gemIndex++)
+                    {
+                        Item gem = item.GetGem(gemIndex);
+                        if (gem != null && !gem.IsJewelersGem)
+                        {
+                            if (gem.IsStormjewel && gem == testGem) 
+                                return true;
+                            if (gem.Unique && gem == testGem) 
+                                return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        
+        private int GetItemGemIdCount(ItemInstance item, int id)
 		{
 			int count = 0;
 			if ((object)item != null)

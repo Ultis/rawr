@@ -259,7 +259,23 @@ namespace Rawr
                             if (!seenEquippedItem && _button != null && item.Equals(_button.SelectedItem)) seenEquippedItem = true;
                             if (item.FitsInSlot(slot, Character))
                             {
-                                itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
+                                if(slot == CharacterSlot.Gems) 
+                                {
+                                    if (item.IsJewelersGem)
+                                    {
+                                        if (Character.JewelersGemCount < 3)
+                                            itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
+                                    }
+                                    else if (item.IsLimitedGem)
+                                    {
+                                        if(!Character.UniqueGemEquipped(item))
+                                            itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
+                                    }
+                                    else
+                                        itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
+                                }
+                                else
+                                    itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
                             }
                         }
                         if (!seenEquippedItem && _button != null && _button.SelectedItem != null)
