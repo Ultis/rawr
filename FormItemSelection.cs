@@ -268,7 +268,7 @@ namespace Rawr
                                     }
                                     else if (item.IsLimitedGem)
                                     {
-                                        if(!Character.UniqueGemEquipped(item))
+                                        if(!Character.IsUniqueGemEquipped(item))
                                             itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
                                     }
                                     else

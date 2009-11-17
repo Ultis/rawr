@@ -1352,7 +1352,7 @@ namespace Rawr //O O . .
             }
         }
 
-        public bool UniqueGemEquipped(Item testGem)
+        public bool IsUniqueGemEquipped(Item testGem)
         {
             for (int slot = 0; slot < OptimizableSlotCount; slot++)
             {
