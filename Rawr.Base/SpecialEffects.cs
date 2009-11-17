@@ -220,6 +220,10 @@ namespace Rawr {
 			{
 				//stats.BonusLacerateDamage = float.Parse(line.Substring("Increases initial and per application periodic damage done by Lacerate by ".Length));
 			}
+            else if ((match = new Regex(@"Chance on melee and ranged critical strike to increase your armor penetration rating by (?<amount>\d\d*) for 10 sec(s?).").Match(line)).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { ArmorPenetrationRating = (float)int.Parse(match.Groups["amount"].Value) }, 10f, 30, 0.10f));
+            }
             else if (line.StartsWith("Your harmful spells have a chance to increase your haste rating by 522 for 10 sec."))
             {
                 // Elemental Focus Stone
