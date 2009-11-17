@@ -73,6 +73,7 @@ namespace Rawr
             this.gem3Button.Size = new System.Drawing.Size(70, 70);
             this.gem3Button.TabIndex = 5;
             this.gem3Button.UseVisualStyleBackColor = true;
+            this.gem3Button.Click += new System.EventHandler(this.gem3Button_Click);
             this.gem3Button.Leave += new System.EventHandler(this.gem3Button_Leave);
             // 
             // gem2Button
@@ -91,6 +92,7 @@ namespace Rawr
             this.gem2Button.Size = new System.Drawing.Size(70, 70);
             this.gem2Button.TabIndex = 4;
             this.gem2Button.UseVisualStyleBackColor = true;
+            this.gem2Button.Click += new System.EventHandler(this.gem2Button_Click);
             this.gem2Button.Leave += new System.EventHandler(this.gem2Button_Leave);
             // 
             // gem1Button
@@ -109,6 +111,7 @@ namespace Rawr
             this.gem1Button.Size = new System.Drawing.Size(70, 70);
             this.gem1Button.TabIndex = 3;
             this.gem1Button.UseVisualStyleBackColor = true;
+            this.gem1Button.Click += new System.EventHandler(this.gem1Button_Click);
             this.gem1Button.Leave += new System.EventHandler(this.gem1Button_Leave);
             // 
             // label5

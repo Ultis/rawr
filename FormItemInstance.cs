@@ -170,5 +170,34 @@ namespace Rawr
                     break;
             }
         }
+
+        private void gem1Button_Click(object sender, EventArgs e)
+        {
+            ItemInstance item = ItemInstance.Clone();
+            item.Gem1 = null;
+            SetFormItemSelection(item);
+        }
+
+        private void gem2Button_Click(object sender, EventArgs e)
+        {
+            ItemInstance item = ItemInstance.Clone();
+            item.Gem2 = null;
+            SetFormItemSelection(item);
+        }
+
+        private void gem3Button_Click(object sender, EventArgs e)
+        {
+            ItemInstance item = ItemInstance.Clone();
+            item.Gem3 = null;
+            SetFormItemSelection(item);
+        }
+
+        private void SetFormItemSelection(ItemInstance item)
+        {
+            Character emptyGemCharacter = FormMain.Instance.FormItemSelection.Character.Clone();
+            emptyGemCharacter[CharacterSlot] = item;
+            _formItemSelection.Character = emptyGemCharacter;
+            _formItemSelection.CurrentCalculations = Calculations.GetCharacterCalculations(emptyGemCharacter);
+        }
     }
 }
