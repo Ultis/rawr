@@ -557,6 +557,7 @@
             0,
             0,
             0});
+            this.CB_InBackPerc.ValueChanged += new System.EventHandler(this.CB_InBackPerc_ValueChanged);
             // 
             // TB_BossInfo
             // 
@@ -595,6 +596,7 @@
             this.CK_InBack.ToolTipText = "This affects how often the Boss can Parry your attacks (no bosses in WotLK Block)" +
                 "";
             this.CK_InBack.UseVisualStyleBackColor = false;
+            this.CK_InBack.CheckedChanged += new System.EventHandler(this.CK_InBack_CheckedChanged);
             // 
             // LB_TargLvl
             // 
@@ -657,6 +659,7 @@
             this.comboBoxBoss.Name = "comboBoxBoss";
             this.comboBoxBoss.Size = new System.Drawing.Size(209, 21);
             this.comboBoxBoss.TabIndex = 56;
+            this.comboBoxBoss.SelectedIndexChanged += new System.EventHandler(this.comboBoxBoss_SelectedIndexChanged);
             // 
             // label4
             // 
