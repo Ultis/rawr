@@ -488,8 +488,8 @@ namespace Rawr.DPSWarr {
 
             // Deep Wounds Activates
             float mhActivates =
-                /*OnAttack*/_HS_Acts * HS.MHAtkTable.Crit +
-                /*OnAttack*/_CL_Acts * CL.MHAtkTable.Crit +
+                /*OnAttack*/HS.Activates * HS.MHAtkTable.Crit +
+                /*OnAttack*/CL.Activates * CL.MHAtkTable.Crit +
                 /*Yellow  */CriticalYellowsOverDurMH +
                 /*White   */(WhiteAtks.MhActivates * (1f - TotalPercTimeLost)) * WhiteAtks.MHAtkTable.Crit;
 
@@ -890,7 +890,7 @@ namespace Rawr.DPSWarr {
                 }
                 // Overpower
                 if (OP.Validated) {
-                    acts = Math.Min(availGCDs, OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
+                    acts = Math.Min(availGCDs, (1 - 3*_TB_GCDs/origNumGCDs) *  OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     _OP_GCDs = Abil_GCDs;
                     float OPGCDReduc = (OP.Cd < LatentGCD ? (OP.Cd + CalcOpts.Latency) / LatentGCD : 1f);
