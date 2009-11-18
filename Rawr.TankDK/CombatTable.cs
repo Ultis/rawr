@@ -810,7 +810,8 @@ namespace Rawr.TankDK
                     fDamHeartStrike = HSDmg * HSCount;
                     float HSCritDmgMult = 2f * (1f + (.15f * (float)talents.MightOfMograine) + stats.BonusCritMultiplier);
                     float HSCrit = 1f + ((this.physCrits + (.03f * (float)talents.Subversion)) * HSCritDmgMult);
-                    fDamHeartStrike *= HSCrit * Math.Min(2, calcOpts.uNumberTargets);
+                    fDamHeartStrike *= HSCrit;
+                    fDamHeartStrike += fDamHeartStrike * (0.5f * (Math.Min(2, calcOpts.uNumberTargets) - 1) );
                     // Patch 3.2: From 15% to 5% per point.
                     fDamHeartStrike *= 1f + (.05f * (float)talents.BloodyStrikes);
                 }

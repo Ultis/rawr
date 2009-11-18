@@ -619,6 +619,14 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fThreatPS = fThreatTotal / fRotDuration;
 
             calcs.Threat = fThreatPS;
+            // Improved Blood Presence
+            if (character.DeathKnightTalents.ImprovedBloodPresence > 0)
+            {
+                float fDamageDone = fThreatPS / 2.035f; // reducing the TPS by the multiplier for Frost presence for basic DPS number - not the most accurate, but it gets us closer.
+                // FullCharacterStats.HealingReceivedMultiplier += 0.5f * character.DeathKnightTalents.ImprovedBloodPresence;
+                stats.Healed += (fDamageDone * 0.02f * character.DeathKnightTalents.ImprovedBloodPresence);
+            }
+
 
             // Threat buffs.
             calcs.Threat *= 1f + (stats.ThreatIncreaseMultiplier - stats.ThreatReductionMultiplier);
@@ -675,6 +683,19 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // Update the total number of attacks if we have rotation data to factor in expertise parry-hasting.
                 fTotalBossAttacksPerFight = fBossShotCountPerRot * fNumRotations;
                 fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
+            }
+
+            // Mark of blood
+            // Cast on the enemy
+            // buff that lasts 20 secs or 20 hits
+            // heals the target for 4% of max health for each damage dealing hit from that enemy to the target of that enemy.
+            // 3 Min CD.
+            if (character.DeathKnightTalents.MarkOfBlood > 0)
+            {
+                // Now that we have the Avg. Boss Attack speed, let's figure how many attacks in 20 secs.
+                float AttacksFor20 = Math.Min(20f, 20f / fBossAverageAttackSpeed);
+                float MOBhealing = stats.Health * .04f * (AttacksFor20 * fChanceToGetHit); // how many attacks get through avoidance.
+                stats.Healed += MOBhealing * Math.Max(1f, fFightDuration / 3); // Fire it off every time we can and at least once per fight.
             }
 
             #region Anti-Magic Shell
@@ -749,6 +770,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Mitigation is the difference between what damage would have been before and what it is once you factor in mitigation effects.
             calcs.Mitigation = fReactionSwingCount * fBossAverageAttackSpeed * (fIncPhysicalDamage - fPerShotPhysical);
+            calcs.Mitigation += StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
             #endregion
 
             #region Key Data Validation
@@ -1253,7 +1275,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Subversion
             // Increase crit 3% per point of BS, HS, Oblit
             // 3.2.2: also SS
-            if (character.DeathKnightTalents.Subversion > 0) { }
+            if (character.DeathKnightTalents.Subversion > 0) 
+            { 
+                // implmented in CombatTable.cs
+            }
 
             // Blade Barrier
             // Reduce damage by 1% per point for 10 sec.
@@ -1269,6 +1294,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Scent of Blood
             // 15% after Dodge, Parry or damage received causing 1 melee hit per point to generate 5 runic power.
+            // TODO: setup RP gains.
 
             // 2H weapon spec.
             // 2% per point increased damage
@@ -1302,16 +1328,20 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Death Rune Mastery
             // Create death runes out of Frost & Unholy for each oblit.
+            // TODO: Implement Death Runes in CombatTable/Ability/Rotation
 
             // Spell Deflection
             // Parry chance of taking 15% less damage per point from direct damage spell
+            // Implmented after Parry calc above.
 
             // Vendetta
             // Heals you for up to 2% per point on killing blow
+            // TODO: Not important for MT but may be useful in OTing?
 
             // Bloody Strikes
             // increases damage of BS and HS by 15% per point
             // increases damage of BB by 10% per point
+            // Implemented in Combattable.cs
 
             // Veteran of the 3rd War
             // Patch 3.2 from 2% to 1% per point.
@@ -1328,12 +1358,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Cast on the enemy
             // buff that lasts 20 secs or 20 hits
             // heals the target for 4% of max health for each damage dealing hit from that enemy to the target of that enemy.
-            if (character.DeathKnightTalents.MarkOfBlood > 0) {
-                // TODO: Need to know how many hits are incoming.
-                // for now assuming 10 hits.  This should be adjusted by the Threat section for Boss hit rate.
-//                newStats = new Stats();
-//                newStats.Healed = (fHealth * 0.04f * 10f);
-//                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, newStats, 20f, 3f * 60f));
+            if (character.DeathKnightTalents.MarkOfBlood > 0) 
+            {
+                // Implemented in Mitigation section above.
             }
 
             // Bloody Vengence
@@ -1375,7 +1402,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Killy frenzy for 30 sec.
             // Increase physical damage by 20%
             // take damage 1% of max every sec.
-            if (character.DeathKnightTalents.Hysteria > 0) {
+            if (character.DeathKnightTalents.Hysteria > 0) 
+            {
                 float fDur = 30f;
                 newStats = new Stats();
                 newStats.BonusPhysicalDamageMultiplier += 0.2f;
@@ -1386,19 +1414,22 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Improved Blood Presence
             // while in frost or unholy, you retain the 2% per point healing from blood presence
             // Healing done to you is increased by 5% per point
-            if (character.DeathKnightTalents.ImprovedBloodPresence > 0) {
-                fDamageDone = 100f; // This needs to be factored in from threat - so may have to pull it out of here.
-                FullCharacterStats.HealingReceivedMultiplier += 0.5f * character.DeathKnightTalents.ImprovedBloodPresence;
-                FullCharacterStats.Healed += (fDamageDone * 0.02f * character.DeathKnightTalents.ImprovedBloodPresence);
+            if (character.DeathKnightTalents.ImprovedBloodPresence > 0) 
+            {
+                // Implmented above.
             }
 
             // Improved Death Strike
             // increase damage of DS by 15% per point 
             // increase crit chance of DS by 3% per point
+            // Implemented in CombatTable.cs
 
             // Sudden Doom
             // BS & HS have a 5% per point chance to launch a DC at target
-            if (character.DeathKnightTalents.SuddenDoom > 0) { }
+            if (character.DeathKnightTalents.SuddenDoom > 0) 
+            { 
+                // Implmented in CombatTable.cs
+            }
 
             // Vampiric Blood
             // temp 15% of max health and
@@ -1431,9 +1462,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Heart Strike
             // 3.2.2: Secondary targets of HS take 1/2 as much damage
+            // Implemented in CombatTable.cs
 
             // Might of Mograine
             // increase crit damage of BB, BS, DS, and HS by 15% per point
+            // Implemented in CombatTable.cs
 
             // Blood Gorged
             // when above 75% health, you deal 2% more damage per point
@@ -1445,6 +1478,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // Dancing Rune Weapon
+            // not impl
             #endregion
 
             #region Frost Talents
