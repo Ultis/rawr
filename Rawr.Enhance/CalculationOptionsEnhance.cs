@@ -31,6 +31,7 @@ namespace Rawr.Enhance
         private float _targetNatureResistance = 0;
         private float _minManaSR = 1250;
         private bool _magma = true;
+        private bool _fireElemental = true;
         private bool _baseStatOption = true;
         private bool _useMana = true;
         private bool _hideProfessions = true;
@@ -54,6 +55,7 @@ namespace Rawr.Enhance
         public float TargetFireResistance { get { return _targetFireResistance; } set { _targetFireResistance = value; OnPropertyChanged("TargetFireResistance"); } }
         public float TargetNatureResistance { get { return _targetNatureResistance; } set { _targetNatureResistance = value; OnPropertyChanged("TargetNatureResistance"); } }
         public bool Magma { get { return _magma; } set { _magma = value; OnPropertyChanged("Magma"); } }
+        public bool FireElemental { get { return _fireElemental; } set { _fireElemental = value; OnPropertyChanged("FireElemental"); } }
         public bool BaseStatOption { get { return _baseStatOption; } set { _baseStatOption = value; OnPropertyChanged("BaseStatOption"); } }
         public bool UseMana { get { return _useMana; } set { _useMana = value; OnPropertyChanged("UseMana"); } }
         public bool HideProfessions { get { return _hideProfessions; } set { _hideProfessions = value; OnPropertyChanged("HideProfessions"); } }
@@ -140,6 +142,8 @@ namespace Rawr.Enhance
                 priorityList.Add(EnhanceAbility.StormStrike, new Priority("Stormstrike", EnhanceAbility.StormStrike, "Use Stormstrike", true, ++priority, "SS"));
                 priorityList.Add(EnhanceAbility.EarthShock, new Priority("Earth Shock", EnhanceAbility.EarthShock, "Use Earth Shock", true, ++priority, "ES"));
                 priorityList.Add(EnhanceAbility.LavaLash, new Priority("Lava Lash", EnhanceAbility.LavaLash, "Use Lava Lash", true, ++priority, "LL"));
+                priorityList.Add(EnhanceAbility.FireNova, new Priority("Fire Nova", EnhanceAbility.FireNova, "Use Fire Nova", false, ++priority, "FN"));
+                priorityList.Add(EnhanceAbility.FireElemental, new Priority("Fire Elemental", EnhanceAbility.FireElemental, "Drop Fire Elemental Totem", false, ++priority, "FE"));
                 priorityList.Add(EnhanceAbility.MagmaTotem, new Priority("Magma Totem", EnhanceAbility.MagmaTotem, "Refresh Magma Totem", true, ++priority, "MT"));
                 priorityList.Add(EnhanceAbility.SearingTotem, new Priority("Searing Totem", EnhanceAbility.SearingTotem, "Refresh Searing Totem", false, ++priority, "ST"));
                 priorityList.Add(EnhanceAbility.LightningShield, new Priority("Lightning Shield", EnhanceAbility.LightningShield, "Refresh Lightning Shield", true, ++priority, "LS"));

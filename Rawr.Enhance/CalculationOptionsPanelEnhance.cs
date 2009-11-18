@@ -47,6 +47,7 @@ namespace Rawr.Enhance
             comboBoxOffhandImbue.SelectedItem = _calcOpts.OffhandImbue;
             comboBoxCalculationToGraph.SelectedItem = _calcOpts.CalculationToGraph;
             chbMagmaSearing.Checked = _calcOpts.Magma;
+            chbFireElemental.Checked = _calcOpts.FireElemental;
             chbMana.Checked = _calcOpts.UseMana;
             chbHideProfessions.Checked = _calcOpts.HideProfessions;
             chbBaseStatOption.Checked = _calcOpts.BaseStatOption;
@@ -93,6 +94,7 @@ namespace Rawr.Enhance
                 _calcOpts.ReactionTime = trackBarReactionTime.Value;
                 _calcOpts.BaseStatOption = chbBaseStatOption.Checked;
                 _calcOpts.Magma = chbMagmaSearing.Checked;
+                _calcOpts.FireElemental = chbFireElemental.Checked;
                 _calcOpts.UseMana = chbMana.Checked;
                 _calcOpts.HideProfessions = chbHideProfessions.Checked;
                 _calcOpts.StatsList[0] = chkStatsStrength.Checked;
@@ -147,6 +149,15 @@ namespace Rawr.Enhance
             if (!_loadingCalculationOptions)
             {
                 _calcOpts.Magma = chbMagmaSearing.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        
+        private void chbFireElemental_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                _calcOpts.FireElemental = chbFireElemental.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }

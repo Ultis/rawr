@@ -113,5 +113,7 @@ namespace Rawr.Enhance
         SearingTotem = 9,
         RefreshTotems = 10,
         ShamanisticRage = 11,
+        FireNova = 12,
+        FireElemental = 13,
     }
 }
