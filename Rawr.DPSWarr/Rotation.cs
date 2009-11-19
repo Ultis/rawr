@@ -601,7 +601,7 @@ namespace Rawr.DPSWarr {
         }
         #endregion
 
-        internal unsafe void AddValidatedSpecialEffects(Stats statsTotal, WarriorTalents talents)
+        public void AddValidatedSpecialEffects(Stats statsTotal, WarriorTalents talents)
         {
             if (ST.Validated)
             {
