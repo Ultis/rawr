@@ -148,6 +148,15 @@ namespace Rawr.Hunter {
         #endregion
         #endregion
         #region Attack Table
+        private AttackTable _AttackTableBasicRW;
+        public AttackTable AttackTableBasicRW {
+            get {
+                if (_AttackTableBasicRW == null) {
+                    _AttackTableBasicRW = new AttackTable(Char, StatS, this, CalcOpts, Skills.Ability.NULL, false, false);
+                }
+                return _AttackTableBasicRW;
+            }
+        }
         #region Hit Rating
         public float HitPerc { get { return StatConversion.GetHitFromRating(StatS.HitRating, CharacterClass.Hunter); } }
         #endregion
@@ -255,6 +264,7 @@ namespace Rawr.Hunter {
     }
 
     public abstract class CombatTable {
+        public static CombatTable NULL = new NullCombatTable();
         protected Character Char;
         protected CalculationOptionsHunter calcOpts;
         protected CombatFactors combatFactors;
@@ -346,8 +356,15 @@ namespace Rawr.Hunter {
 
         public DefendTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsHunter co) { Initialize(character, stats, cf, co, null, true, useSpellHit, false); }
     }*/
-
-    public class AttackTable : CombatTable {
+    public class NullCombatTable : CombatTable
+    {
+        public NullCombatTable()
+        {
+            Block = Crit = Hit = Dodge = Glance = Miss = Parry = 0;
+        }
+    }
+    public class AttackTable : CombatTable
+    {
         protected override void Calculate() {
             float tableSize = 0f;
 

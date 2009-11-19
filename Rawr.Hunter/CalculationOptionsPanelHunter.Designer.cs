@@ -237,10 +237,9 @@
             this.Page_04_PetBuffs = new System.Windows.Forms.TabPage();
             this.Page_05_Details = new System.Windows.Forms.TabPage();
             this.BT_Calculate = new System.Windows.Forms.Button();
-            this.TB_Rotation = new System.Windows.Forms.TextBox();
             this.GB_Rotation_Shots = new System.Windows.Forms.GroupBox();
             this.TB_Shots = new System.Windows.Forms.TextBox();
-            this.FLP_05_Details = new System.Windows.Forms.FlowLayoutPanel();
+            this.TB_Rotation = new System.Windows.Forms.TextBox();
             this.Page_03_PetTalents.SuspendLayout();
             this.FLP_PetFamilies.SuspendLayout();
             this.GB_PetTalents_Tenacity.SuspendLayout();
@@ -268,7 +267,6 @@
             this.GB_PetRotation.SuspendLayout();
             this.Page_05_Details.SuspendLayout();
             this.GB_Rotation_Shots.SuspendLayout();
-            this.FLP_05_Details.SuspendLayout();
             this.SuspendLayout();
             // 
             // Page_03_PetTalents
@@ -2803,7 +2801,9 @@
             // 
             // Page_05_Details
             // 
-            this.Page_05_Details.Controls.Add(this.FLP_05_Details);
+            this.Page_05_Details.Controls.Add(this.TB_Rotation);
+            this.Page_05_Details.Controls.Add(this.GB_Rotation_Shots);
+            this.Page_05_Details.Controls.Add(this.BT_Calculate);
             this.Page_05_Details.Location = new System.Drawing.Point(4, 22);
             this.Page_05_Details.Name = "Page_05_Details";
             this.Page_05_Details.Padding = new System.Windows.Forms.Padding(3);
@@ -2814,7 +2814,7 @@
             // 
             // BT_Calculate
             // 
-            this.BT_Calculate.Location = new System.Drawing.Point(3, 3);
+            this.BT_Calculate.Location = new System.Drawing.Point(6, 6);
             this.BT_Calculate.Name = "BT_Calculate";
             this.BT_Calculate.Size = new System.Drawing.Size(75, 23);
             this.BT_Calculate.TabIndex = 0;
@@ -2822,23 +2822,12 @@
             this.BT_Calculate.UseVisualStyleBackColor = true;
             this.BT_Calculate.Click += new System.EventHandler(this.BT_Calculate_Click);
             // 
-            // TB_Rotation
-            // 
-            this.TB_Rotation.Font = new System.Drawing.Font("Courier New", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TB_Rotation.Location = new System.Drawing.Point(3, 181);
-            this.TB_Rotation.Multiline = true;
-            this.TB_Rotation.Name = "TB_Rotation";
-            this.TB_Rotation.ReadOnly = true;
-            this.TB_Rotation.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.TB_Rotation.Size = new System.Drawing.Size(280, 445);
-            this.TB_Rotation.TabIndex = 1;
-            this.TB_Rotation.WordWrap = false;
-            this.TB_Rotation.TextChanged += new System.EventHandler(this.TB_Rotation_TextChanged);
-            // 
             // GB_Rotation_Shots
             // 
+            this.GB_Rotation_Shots.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.GB_Rotation_Shots.Controls.Add(this.TB_Shots);
-            this.GB_Rotation_Shots.Location = new System.Drawing.Point(3, 32);
+            this.GB_Rotation_Shots.Location = new System.Drawing.Point(6, 35);
             this.GB_Rotation_Shots.Name = "GB_Rotation_Shots";
             this.GB_Rotation_Shots.Size = new System.Drawing.Size(280, 143);
             this.GB_Rotation_Shots.TabIndex = 2;
@@ -2859,17 +2848,21 @@
             this.TB_Shots.WordWrap = false;
             this.TB_Shots.TextChanged += new System.EventHandler(this.TB_Shots_TextChanged);
             // 
-            // FLP_05_Details
+            // TB_Rotation
             // 
-            this.FLP_05_Details.AutoScroll = true;
-            this.FLP_05_Details.Controls.Add(this.BT_Calculate);
-            this.FLP_05_Details.Controls.Add(this.GB_Rotation_Shots);
-            this.FLP_05_Details.Controls.Add(this.TB_Rotation);
-            this.FLP_05_Details.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FLP_05_Details.Location = new System.Drawing.Point(3, 3);
-            this.FLP_05_Details.Name = "FLP_05_Details";
-            this.FLP_05_Details.Size = new System.Drawing.Size(286, 641);
-            this.FLP_05_Details.TabIndex = 3;
+            this.TB_Rotation.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.TB_Rotation.Font = new System.Drawing.Font("Courier New", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TB_Rotation.Location = new System.Drawing.Point(6, 184);
+            this.TB_Rotation.Multiline = true;
+            this.TB_Rotation.Name = "TB_Rotation";
+            this.TB_Rotation.ReadOnly = true;
+            this.TB_Rotation.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TB_Rotation.Size = new System.Drawing.Size(280, 457);
+            this.TB_Rotation.TabIndex = 1;
+            this.TB_Rotation.WordWrap = false;
+            this.TB_Rotation.TextChanged += new System.EventHandler(this.TB_Rotation_TextChanged);
             // 
             // CalculationOptionsPanelHunter
             // 
@@ -2913,10 +2906,9 @@
             this.GB_PetRotation.ResumeLayout(false);
             this.GB_PetRotation.PerformLayout();
             this.Page_05_Details.ResumeLayout(false);
+            this.Page_05_Details.PerformLayout();
             this.GB_Rotation_Shots.ResumeLayout(false);
             this.GB_Rotation_Shots.PerformLayout();
-            this.FLP_05_Details.ResumeLayout(false);
-            this.FLP_05_Details.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3135,6 +3127,5 @@
         private System.Windows.Forms.TextBox TB_Rotation;
         private System.Windows.Forms.Button BT_Calculate;
         private System.Windows.Forms.TextBox TB_Shots;
-        private System.Windows.Forms.FlowLayoutPanel FLP_05_Details;
     }
 }

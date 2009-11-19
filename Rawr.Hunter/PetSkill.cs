@@ -158,10 +158,10 @@ namespace Rawr.Hunter
                 S.CalculateTimings(PrevSkill);
                 PrevSkill = S;
 
-                crittableInverseSum += S.crittable_freq > 0 ? 1 / S.crittable_freq : 0;
+                crittableInverseSum += S.crittable_freq > 0 ? 1f / S.crittable_freq : 0;
             }
 
-            petSpecialFrequency = crittableInverseSum > 0 ? 1 / crittableInverseSum : 0;
+            petSpecialFrequency = crittableInverseSum > 0 ? 1f / crittableInverseSum : 0;
         }
 
         private void CalculateSkillData()
@@ -177,8 +177,8 @@ namespace Rawr.Hunter
                 S.focus = S.skillData.focus;
                 S.can_crit = S.skillData.can_crit;
 
-                if (S.skillType == PetAttacks.Dive) S.cooldown -= options.PetTalents.DiveDash * 8;
-                if (S.skillType == PetAttacks.Dash) S.cooldown -= options.PetTalents.DiveDash * 8;
+                if (S.skillType == PetAttacks.Dive) S.cooldown -= options.PetTalents.DiveDash * 8f;
+                if (S.skillType == PetAttacks.Dash) S.cooldown -= options.PetTalents.DiveDash * 8f;
 
                 if (S.skillData.type != PetSkillType.FocusDump) S.cooldown *= longevityCooldownAdjust;
             }

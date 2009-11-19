@@ -9,6 +9,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
+using Rawr.Hunter.Skills;
 
 namespace Rawr.Hunter {
     [Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
@@ -1014,10 +1015,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.calcOpts = calcOpts;
             Stats stats = GetCharacterStats(character, additionalItem);
             HunterTalents talents = character.HunterTalents;
+            CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts);
+            WhiteAttacks whiteAttacks = new WhiteAttacks(character, stats, combatFactors, calcOpts);
 
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
+
+            //ExplosiveShot es = new ExplosiveShot(character, stats, combatFactors, whiteAttacks, calcOpts);
+            //ChimeraShot cs = new ChimeraShot(character, stats, combatFactors, whiteAttacks, calcOpts);
 
             calculatedStats.BasicStats = stats;
             calculatedStats.BaseHealth = statsRace.Health;

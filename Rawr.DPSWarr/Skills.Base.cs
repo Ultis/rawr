@@ -254,60 +254,21 @@ namespace Rawr.DPSWarr.Skills
             return (4f + Talents.EndlessRage) / 4f * ((fs > c_const3 * d) ? (c_const2 * d) : (c_const * d + fs) / 2.0f);
         }
         // Attacks Over Fight Duration
-        public float LandedAtksOverDur
-        {
-            get
-            {
-                return LandedAtksOverDurMH + LandedAtksOverDurOH;
-            }
-        }
-        public float LandedAtksOverDurMH
-        {
-            get
-            {
-                return MhActivates * MHAtkTable.AnyLand;
-            }
-        }
-        public float LandedAtksOverDurOH
-        {
-            get
-            {
-                return (combatFactors.useOH ? OhActivates * OHAtkTable.AnyLand : 0f);
-            }
-        }
-        private float CriticalAtksOverDur
-        {
-            get
-            {
-                return CriticalAtksOverDurMH + CriticalAtksOverDurOH;
-            }
-        }
-        public float CriticalAtksOverDurMH
-        {
-            get
-            {
-                return MhActivates * MHAtkTable.Crit;
-            }
-        }
-        public float CriticalAtksOverDurOH
-        {
-            get
-            {
-                return (combatFactors.useOH ? OhActivates * OHAtkTable.Crit : 0f);
-            }
-        }
+        public float LandedAtksOverDur { get { return LandedAtksOverDurMH + LandedAtksOverDurOH; } }
+        public float LandedAtksOverDurMH { get { return MhActivates * MHAtkTable.AnyLand; } }
+        public float LandedAtksOverDurOH { get { return (combatFactors.useOH ? OhActivates * OHAtkTable.AnyLand : 0f); } }
+        private float CriticalAtksOverDur { get { return CriticalAtksOverDurMH + CriticalAtksOverDurOH; } }
+        public float CriticalAtksOverDurMH { get { return MhActivates * MHAtkTable.Crit; } }
+        public float CriticalAtksOverDurOH { get { return (combatFactors.useOH ? OhActivates * OHAtkTable.Crit : 0f); } }
         // Other
-        public float RageSlip(float abilInterval, float rageCost)
-        {
+        public float RageSlip(float abilInterval, float rageCost) {
             if (!combatFactors.useOH && MhActivates <= 0f) { return 0f; }
             return (MHAtkTable.Miss * rageCost) / (abilInterval * ((MhActivates * (MHSwingRage + MHUWProcValue) + (combatFactors.useOH ? OhActivates * (OHSwingRage + OHUWProcValue) : 0f)) / FightDuration));
         }
-        public virtual float GetXActs(AttackTableSelector i, float acts, bool isMH)
-        {
+        public virtual float GetXActs(AttackTableSelector i, float acts, bool isMH) {
             AttackTable table = (isMH ? MHAtkTable : OHAtkTable);
             float retVal = 0f;
-            switch (i)
-            {
+            switch (i) {
                 case AttackTableSelector.Missed: { retVal = acts * table.Miss; break; }
                 case AttackTableSelector.Dodged: { retVal = acts * table.Dodge; break; }
                 case AttackTableSelector.Parried: { retVal = acts * table.Parry; break; }

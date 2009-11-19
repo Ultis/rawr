@@ -149,6 +149,7 @@
     <Compile Include="RotationTest.cs" />
     <Compile Include="ShotPriority.cs" />
     <Compile Include="Skills.Base.cs" />
+    <Compile Include="Skills.Shots.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

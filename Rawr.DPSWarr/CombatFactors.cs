@@ -143,9 +143,7 @@ namespace Rawr.DPSWarr {
         public float OHDamageReduc { get { return 0.5f * (1f + Talents.DualWieldSpecialization * 0.05f); } }
         public float NormalizedMhWeaponDmg { get { return useMH ? CalcNormalizedWeaponDamage(MH)                 : 0f; } }
         public float NormalizedOhWeaponDmg { get { return useOH ? CalcNormalizedWeaponDamage(OH) * OHDamageReduc : 0f; } }
-        private float CalcNormalizedWeaponDamage(Item weapon) {
-            return weapon.Speed * weapon.DPS + StatS.AttackPower / 14f * 3.3f + StatS.WeaponDamage;
-        }
+        private float CalcNormalizedWeaponDamage(Item weapon) { return weapon.Speed * weapon.DPS + StatS.AttackPower / 14f * 3.3f + StatS.WeaponDamage; }
         public float AvgMhWeaponDmgUnhasted              { get { return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * _c_mhItemSpeed                 + StatS.WeaponDamage : 0f); } }
         public float AvgOhWeaponDmgUnhasted              { get { return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * _c_ohItemSpeed * OHDamageReduc + StatS.WeaponDamage : 0f); } }
         /*public float AvgMhWeaponDmg(        float speed) {       return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * speed                    + StatS.WeaponDamage : 0f); }
@@ -518,7 +516,6 @@ namespace Rawr.DPSWarr {
         public AttackTable() { }
 
         public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, bool ismh, bool useSpellHit, bool alwaysHit) {
-        
             Initialize(character, stats, cf, co, null, ismh, useSpellHit, alwaysHit);
         }
 
