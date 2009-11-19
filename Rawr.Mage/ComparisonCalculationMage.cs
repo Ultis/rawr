@@ -20,17 +20,27 @@ namespace Rawr.Mage
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f };
+        private float[] _subPoints = new float[] { 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
             set { _subPoints = value; }
         }
 
-        public float DpsPoints
+        public float DpsRating
         {
-            get { return _subPoints[0]; }
-            set { _subPoints[0] = value; }
+            get
+            {
+                return _subPoints[0];
+            }
+        }
+
+        public float SurvivabilityRating
+        {
+            get
+            {
+                return _subPoints[1];
+            }
         }
 
         private Item _item = null;
@@ -56,7 +66,7 @@ namespace Rawr.Mage
 
         public override string ToString()
         {
-            return string.Format("{0:F}: ({1:F} Dps)", Name, Math.Round(DpsPoints));
+            return string.Format("{0:F}: ({1:F} Dps, {2:F} Survivability)", Name, Math.Round(DpsRating), Math.Round(SurvivabilityRating));
         }
     }
 }
