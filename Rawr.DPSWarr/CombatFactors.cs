@@ -323,8 +323,7 @@ namespace Rawr.DPSWarr {
             get {
                 if (!useMH) { return 0f; }
                 return ((StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating)) +
-                       ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f))
-                        * (1f - _c_ymiss - _c_mhdodge);
+                       ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
             }
         }
         private float OhWhCritChance {
@@ -338,22 +337,9 @@ namespace Rawr.DPSWarr {
             get {
                 if (!useOH) { return 0f; }
                 return ((StatS.PhysicalCrit + StatConversion.GetCritFromRating(StatS.CritRating)) +
-                ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f))
-                * (1f - _c_ymiss - _c_ohdodge);
+                ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
             }
         }
-        #endregion
-        #region Chance of Hitting
-        // White
-        private float ProbMhWhiteHit   { get { return         1f - _c_wmiss - _c_mhdodge - _c_mhparry - _c_mhwcrit; } }
-        private float ProbOhWhiteHit   { get { return useOH ? 1f - _c_wmiss - _c_ohdodge - _c_ohparry - _c_ohwcrit : 0; } }
-        private float ProbMhWhiteLand  { get { return         1f - _c_wmiss - _c_mhdodge - _c_mhparry; } }
-        private float ProbOhWhiteLand  { get { return useOH ? 1f - _c_wmiss - _c_ohdodge - _c_ohparry : 0; } }
-        // Yellow (Doesn't Glance and has different MissChance Cap)
-        private float ProbMhYellowHit  { get { return         1f - _c_ymiss - _c_mhdodge - _c_mhparry - _c_mhblock - _c_mhycrit; } }
-        private float ProbOhYellowHit  { get { return useOH ? 1f - _c_ymiss - _c_ohdodge - _c_ohparry - _c_ohblock - _c_ohycrit : 0; } }
-        private float ProbMhYellowLand { get { return         1f - _c_ymiss - _c_mhdodge - _c_mhparry - _c_mhblock; } }
-        private float ProbOhYellowLand { get { return useOH ? 1f - _c_ymiss - _c_ohdodge - _c_ohparry - _c_ohblock : 0; } }
         #endregion
         #endregion
         #region Other
@@ -519,7 +505,7 @@ namespace Rawr.DPSWarr {
                 Crit = Math.Min(1f - tableSize, isMH ?  combatFactors._c_mhwcrit : combatFactors._c_ohwcrit);
                 tableSize += Crit;
             } else if (Abil.CanCrit) {
-                Crit = Math.Min(1f - tableSize, Abil.BonusCritChance + (isMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit));
+                Crit = Math.Min(1f - tableSize, Abil.BonusCritChance + (isMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit)) * (1f - Dodge - Miss);
                 tableSize += Crit;
             } else {
                 Crit = 0f;

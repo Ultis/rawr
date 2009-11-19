@@ -488,11 +488,8 @@ namespace Rawr.DPSWarr {
 
             // Deep Wounds Activates
             float mhActivates =
-                /*OnAttack*/HS.Activates * HS.MHAtkTable.Crit +
-                /*OnAttack*/CL.Activates * CL.MHAtkTable.Crit +
                 /*Yellow  */CriticalYellowsOverDurMH +
                 /*White   */(WhiteAtks.MhActivates * (1f - TotalPercTimeLost)) * WhiteAtks.MHAtkTable.Crit;
-
             // Push DW Activates to the Ability
             DW.SetAllAbilityActivates(mhActivates, 0f);
             _DW_PerHit = DW.TickSize;
