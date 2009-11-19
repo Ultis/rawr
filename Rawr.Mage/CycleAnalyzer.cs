@@ -166,5 +166,16 @@ namespace Rawr.Mage
 
             buttonCalculate_Click(null, EventArgs.Empty);
         }
+
+        private void CycleAnalyzer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (backgroundWorker.IsBusy)
+            {
+                backgroundWorker.CancelAsync();
+                backgroundWorker.DoWork -= new DoWorkEventHandler(backgroundWorker_DoWork);
+                backgroundWorker.RunWorkerCompleted -= new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
+                backgroundWorker.ProgressChanged -= new ProgressChangedEventHandler(backgroundWorker_ProgressChanged);
+            }
+        }
     }
 }

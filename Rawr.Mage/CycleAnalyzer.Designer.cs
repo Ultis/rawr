@@ -176,6 +176,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "CycleAnalyzer";
             this.Text = "Cycle Analyzer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CycleAnalyzer_FormClosing);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
