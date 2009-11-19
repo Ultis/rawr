@@ -2323,7 +2323,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 				((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
 				(character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow))) ?
 				0.01f : 0.00f;
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsOptionsPanel = new Stats()
             {
@@ -2403,9 +2403,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents + statsOptionsPanel;
             Stats statsProcs = new Stats();
 
-            statsTotal.Agility += statsTotal.AverageAgility;
-            int targetDefence = 5 * calcOpts.TargetLevel;
-
             // Stamina
             float totalBSTAM = statsTotal.BonusStaminaMultiplier;
             float staBase = (float)Math.Floor((1f + totalBSTAM) * statsRace.Stamina);
@@ -2426,7 +2423,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float totalBAGIM = statsTotal.BonusAgilityMultiplier;
             float agiBase    = (float)Math.Floor((1f + totalBAGIM) * statsRace.Agility);
             float agiBonus   = (float)Math.Floor((1f + totalBAGIM) * statsGearEnchantsBuffs.Agility);
-            statsTotal.Agility = agiBase + agiBonus;
+            float agiFromAvg = (float)Math.Floor((1f + totalBAGIM) * statsTotal.AverageAgility); // ??
+            statsTotal.Agility = agiBase + agiBonus + agiFromAvg;
 
             if (talents.ExposeWeakness > 0) {
                 SpecialEffect ExposeWeakness = new SpecialEffect(Trigger.PhysicalCrit,
@@ -2437,8 +2435,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Intellect
             float totalBINTM = statsTotal.BonusIntellectMultiplier;
-            float intBase = (float)Math.Floor((1f + totalBINTM) * statsRace.Intellect);
-            float intBonus = (float)Math.Floor((1f + totalBINTM) * statsGearEnchantsBuffs.Intellect);
+            float intBase    = (float)Math.Floor((1f + totalBINTM) * statsRace.Intellect);
+            float intBonus   = (float)Math.Floor((1f + totalBINTM) * statsGearEnchantsBuffs.Intellect);
             statsTotal.Intellect = intBase + intBonus;
 
             // Armor
