@@ -3844,6 +3844,28 @@ namespace Rawr
             #endregion
             #endregion
             #region Tier 9 | Nobundo's
+            #region Garb
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thrall's/Nobundo's Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Nobundo's Regalia",
+                Stats = { RestoSham2T9 = 1f },
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thrall's/Nobundo's Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Nobundo's Regalia",
+                Stats = { RestoSham4T9 = 1f },
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
+            });
+            #endregion
             #region Regalia
             defaultBuffs.Add(new Buff()
             {

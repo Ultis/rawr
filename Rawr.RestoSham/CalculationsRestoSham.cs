@@ -387,14 +387,14 @@ namespace Rawr.RestoSham
             float PlusHW = ((Healing + stats.TotemHWSpellpower) * (.04f * character.ShamanTalents.TidalWaves)) 
                 * ((3 - (character.ShamanTalents.ImprovedHealingWave * .1f)) / 3.5f);
             float TankCH = (options.TankHeal ? 1 : (1.75f + (character.ShamanTalents.GlyphofChainHeal ? .125f : 0)));
-            float RTHeal = ((1670f + (Healing * .5f)) * (1f + ((character.ShamanTalents.Purification) * .02f)));
+            float RTHeal = (((1670f + (Healing * .5f)) * (1f + ((character.ShamanTalents.Purification) * .02f)))) * ( 1 + ( .2f * stats.RestoSham2T9));
             float LHWHeal = (1720 + (Healing + PlusLHW + ((1.88f * stats.TotemLHWSpellpower) * (1.5f / 3.5f)))) 
                 * (options.TankHeal ? (character.ShamanTalents.GlyphofLesserHealingWave ? 1.2f : 1) : 1);
             float HWHeal = ((3250 + (Healing + PlusHW + (((1.88f * stats.TotemHWSpellpower)) * ((3  - (character.ShamanTalents.ImprovedHealingWave * .1f)) 
                 / 3.5f)))) * (1f + (character.ShamanTalents.Purification * .02f))  * (character.ShamanTalents.GlyphofHealingWave ? 1.2f : 1)) * (1 + (.25f 
                 * character.ShamanTalents.HealingWay / 3));
             float CHHeal = (((((((1130 + stats.TotemCHBaseHeal) + (Healing * (2.5f / 3.5f))) * (1f + (character.ShamanTalents.ImprovedChainHeal * .02f)) 
-                * (1f + ((character.ShamanTalents.Purification) * .02f))) * Critical) * TankCH) + (ExtraELW * ELWHPS * (2.5f * ((1 + (stats.HasteRating 
+                * (1f + ((character.ShamanTalents.Purification) * .02f))) * (Critical + (.05f * stats.RestoSham4T9))) * TankCH) + (ExtraELW * ELWHPS * (2.5f * ((1 + (stats.HasteRating 
                 / 3270) + stats.SpellHaste))) / 2f)) * (1f + stats.CHHWHealIncrease));
             #endregion
             #region Base Speeds ( Hasted / RTCast / LHWCast / HWCast / CHCast )
@@ -721,7 +721,7 @@ namespace Rawr.RestoSham
         }
 
         #endregion
-        #region Relevant Stats: Code Flag = Penguin (Impliment Real special effect, not module special effects)
+        #region Relevant Stats
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats s = new Stats()
@@ -749,7 +749,9 @@ namespace Rawr.RestoSham
                 ManaRestore = stats.ManaRestore,
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
-                BonusIntellectMultiplier = stats.BonusIntellectMultiplier
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                RestoSham2T9 = stats.RestoSham2T9,
+                RestoSham4T9 = stats.RestoSham4T9
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -777,7 +779,7 @@ namespace Rawr.RestoSham
                 stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste +
                 stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast + stats.CHCTDecrease +
                 stats.RTCDDecrease + stats.Earthliving + stats.TotemCHBaseHeal + stats.TotemHWBaseCost + stats.TotemCHBaseCost + 
-                stats.TotemHWSpellpower + stats.TotemLHWSpellpower + stats.TotemThunderhead) > 0;
+                stats.TotemHWSpellpower + stats.TotemLHWSpellpower + stats.TotemThunderhead + stats.RestoSham2T9 + stats.RestoSham4T9) > 0;
         }
 
         #endregion

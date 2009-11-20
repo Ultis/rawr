@@ -266,6 +266,8 @@ namespace Rawr {
         TotemHWSpellpower,
         TotemLHWSpellpower,
         TotemThunderhead,
+        RestoSham2T9,
+        RestoSham4T9,
         #endregion
         #region Added by Rawr.Healadin
         FlashOfLightSpellPower,
@@ -4427,6 +4429,24 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CHHealIncrease]; }
             set { _rawAdditiveData[(int)AdditiveStat.CHHealIncrease] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [Category("RestoSham")]
+        [DisplayName("Increases the healing done by your Riptide spell by 20%.")]
+        public float RestoSham2T9
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RestoSham2T9]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RestoSham2T9] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [Category("RestoSham")]
+        [DisplayName("Increases the critical strike chance of your Chain Heal spell by 5%.")]
+        public float RestoSham4T9
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RestoSham4T9]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RestoSham4T9] = value; }
         }
         #endregion
         #region Added by Rawr.ProtPaladin
