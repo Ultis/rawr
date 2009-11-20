@@ -587,11 +587,10 @@ namespace Rawr.Enhance
         #region Get Character Stats
         public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-            Stats statsBase = BaseStats.GetBaseStats(character); // GetRaceStats(character);
+            Stats statsBase = BaseStats.GetBaseStats(character); 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-			// Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs; // +statsEnchants;
+            Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
 			int AK = character.ShamanTalents.AncestralKnowledge;
             float agiBase = (float)Math.Floor((float)(statsBase.Agility));
@@ -683,6 +682,7 @@ namespace Rawr.Enhance
             character.ActiveBuffsAdd("Swift Retribution");
             character.ActiveBuffsAdd("Arcane Intellect");
             character.ActiveBuffsAdd("Commanding Shout");
+            character.ActiveBuffsAdd("Commanding Presence (Health)");
             character.ActiveBuffsAdd("Leader of the Pack");
             character.ActiveBuffsAdd("Elemental Oath");
             character.ActiveBuffsAdd("Wrath of Air Totem");
@@ -981,7 +981,7 @@ namespace Rawr.Enhance
         private bool relevantStats(Stats stats)
         {
             return (stats.Agility + stats.Intellect + stats.Stamina + stats.Strength + stats.Spirit +
-                stats.AttackPower + stats.SpellPower + stats.Mana + stats.WeaponDamage +
+                stats.AttackPower + stats.SpellPower + stats.Mana + stats.WeaponDamage + stats.Health +
                 stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.CritMeleeRating + 
                 stats.Expertise + stats.ExpertiseRating + stats.HasteRating + stats.CritRating + stats.HitRating + 
                 stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier + 
