@@ -707,6 +707,9 @@ namespace Rawr.Enhance
             character.ActiveBuffsAdd("Potion of Speed");
             character.ActiveBuffsAdd("Fish Feast");
 
+            if (CheckHasProf(Profession.Alchemy))
+                character.ActiveBuffsAdd(("Flask of Endless Rage (Mixology)"));
+
             character.EnforceGemRequirements = true; // set default to be true for Enhancement Shaman
         }
 
