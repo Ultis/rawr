@@ -885,6 +885,17 @@ namespace Rawr.DPSWarr {
                     availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                     availRage -= MS.GetRageUseOverDur(Abil_GCDs);
                 }
+                // Taste for Blood
+                if (TB.Validated)
+                {
+                    acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
+                    Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                    _TB_GCDs = Abil_GCDs;
+                    float OPGCDReduc = (OP.Cd < LatentGCD ? (OP.Cd + CalcOpts.Latency) / LatentGCD : 1f);
+                    GCDsused += Math.Min(origNumGCDs, Abil_GCDs * OPGCDReduc);
+                    availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
+                    availRage -= TB.GetRageUseOverDur(Abil_GCDs);
+                }
                 // Overpower
                 if (OP.Validated) {
                     acts = Math.Min(availGCDs, (1 - 3*_TB_GCDs/origNumGCDs) *  OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, _SS_Acts) * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
@@ -895,16 +906,7 @@ namespace Rawr.DPSWarr {
                     availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                     availRage -= OP.GetRageUseOverDur(_OP_GCDs);
                 }
-                // Taste for Blood
-                if (TB.Validated) {
-                    acts = Math.Min(availGCDs, TB.Activates * (1f - TotalPercTimeLost) * (1f - PercTimeUnder20) * PercFailRage);
-                    Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
-                    _TB_GCDs = Abil_GCDs;
-                    float OPGCDReduc = (OP.Cd < LatentGCD ? (OP.Cd + CalcOpts.Latency) / LatentGCD : 1f);
-                    GCDsused += Math.Min(origNumGCDs, Abil_GCDs * OPGCDReduc);
-                    availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
-                    availRage -= TB.GetRageUseOverDur(Abil_GCDs);
-                }
+               
                 // Sudden Death
                 // the atleast (1 to 3) comes from MS Delays, this does already factor talent rate in
                 if (SD.Validated) {
@@ -943,6 +945,7 @@ namespace Rawr.DPSWarr {
                 {
                     acts = Math.Min(availGCDs, availGCDs/*SL.Activates*/ * (1f - TotalPercTimeLost));
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                    if (SL.GetRageUseOverDur(Abil_GCDs) > availRage) Abil_GCDs = availRage / SL.RageCost;
                     _SL_GCDs = Abil_GCDs;
                     GCDsused += Math.Min(origNumGCDs, _SL_GCDs);
                     availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
