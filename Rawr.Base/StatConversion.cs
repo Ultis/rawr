@@ -691,6 +691,8 @@ namespace Rawr
         public static float GetDRAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, uint TargetLevel)
         {
             float defSkill = stats.Defense;
+            // Let's make sure we don't run off the bottom w/ a negative defense rating.
+            stats.DefenseRating = Math.Max(stats.DefenseRating, 0f);
             float defSkillMod = (GetDefenseFromRating(stats.DefenseRating, character.Class) * DEFENSE_RATING_AVOIDANCE_MULTIPLIER);
             float baseAvoid = (defSkill - (TargetLevel * 5)) * DEFENSE_RATING_AVOIDANCE_MULTIPLIER;
             float modifiedAvoid = defSkillMod;
@@ -701,6 +703,8 @@ namespace Rawr
             {
                 case HitResult.Dodge:
                     baseAvoid += ((stats.Dodge + GetDodgeFromAgility(stats.BaseAgility, character.Class)) * 100f);
+                    // Assuring we don't run off the bottom w/ negative dodge rating.
+                    stats.DodgeRating = Math.Max(stats.DodgeRating, 0f);
                     modifiedAvoid += ((GetDodgeFromAgility((stats.Agility - stats.BaseAgility), character.Class) +
                                     GetDodgeFromRating(stats.DodgeRating)) * 100f);
                     modifiedAvoid = DRMath(CAP_DODGE_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
@@ -709,6 +713,8 @@ namespace Rawr
                     break;
                 case HitResult.Parry:
                     baseAvoid += stats.Parry * 100f;
+                    // Assuring we don't run off the bottom w/ negative parry rating.
+                    stats.ParryRating = Math.Max(stats.ParryRating, 0f);
                     modifiedAvoid += (GetParryFromRating(stats.ParryRating) * 100f);
                     modifiedAvoid = DRMath(CAP_PARRY_INV[iClass], DR_COEFFIENT[iClass], modifiedAvoid);
                     finalAvoid = (baseAvoid + modifiedAvoid);
@@ -727,6 +733,9 @@ namespace Rawr
                 case HitResult.Block:
                     // Base Block is 5%
                     baseAvoid += stats.Block * 100f;
+                    // Assuring we don't run off the bottom w/ negative block rating.
+                    stats.BlockRating = Math.Max(stats.BlockRating, 0f);
+
                     modifiedAvoid += (GetBlockFromRating(stats.BlockRating) * 100f);
                     finalAvoid = (baseAvoid + modifiedAvoid);
                     break;
