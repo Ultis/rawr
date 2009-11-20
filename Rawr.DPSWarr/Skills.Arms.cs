@@ -419,7 +419,6 @@ namespace Rawr.DPSWarr.Skills
 
     public class Rend : DoT
     {
-        // Constructors
         /// <summary>
         /// Wounds the target causing them to bleed for 380 damage plus an additional
         /// (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your

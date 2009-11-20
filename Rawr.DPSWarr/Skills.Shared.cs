@@ -235,7 +235,6 @@ namespace Rawr.DPSWarr.Skills
     }
     public class DeathWish : BuffEffect
     {
-        // Constructors
         /// <summary>
         /// When activated you become enraged, increasing your physical damage by 20% but increasing
         /// all damage taken by 5%. Lasts 30 sec.

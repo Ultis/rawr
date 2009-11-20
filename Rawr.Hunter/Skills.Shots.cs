@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Rawr.Hunter.Skills
 {
+    #region Shots
     public class ExplosiveShot : Ability
     {
         /// <summary>
@@ -29,7 +30,7 @@ namespace Rawr.Hunter.Skills
             ManaCostisPerc = true;
             ManaCost = 0.10f; // 10% of base mana, but higher shots are 7% so we need to verify
             StanceOkFury = StanceOkArms = StanceOkDef = true;
-            DamageBase = StatS.RangedAttackPower * 0.14f + ((386f + 464f) / 2f);
+            DamageBase = (StatS.RangedAttackPower * 0.14f + ((386f + 464f) / 2f)) * 3f;
             BonusCritChance = Talents.GlyphOfExplosiveShot ? 0.04f : 0f;
             //
             Initialize();
@@ -42,7 +43,7 @@ namespace Rawr.Hunter.Skills
         /// <para>You deal 125% weapon damage, refreshing the current Sting on your
         /// target and triggering an effect:</para>
         /// <para>Serpent Sting - Instantly deals 40% of the Damage done by your Serpent Sting.</para>
-        /// <para>Viper Sting - Instatly restores mana to you equal to 60% of the total amount drained by your Viper Sting.</para>
+        /// <para>Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.</para>
         /// <para>Scorpid Sting - Attempts to Disarm the target for 10 sec. This affect cannot occur more than once per 1 minute.</para>
         /// </summary>
         /// <TalentsAffecting>Chimera Shot (Requires Talent)</TalentsAffecting>
@@ -212,18 +213,288 @@ namespace Rawr.Hunter.Skills
             Initialize();
         }
     }
+    public class SilencingShot : Ability
+    {
+        /// <summary>
+        /// <b>Silencing Shot</b>, 6% Base Mana, 5-35yd, Instant, 20 sec Cd
+        /// <para>A shot that deals 50% weapon damage and Silences the target for 3 sec.</para>
+        /// </summary>
+        /// <TalentsAffecting></TalentsAffecting>
+        /// <GlyphsAffecting></GlyphsAffecting>
+        public SilencingShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "Silencing Shot";
+            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
+            ReqTalent = true;
+            Talent2ChksValue = Talents.ExplosiveShot;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+            //Targets += StatS.BonusTargets;
+            Cd = 20f; // In Seconds
+            ManaCostisPerc = true;
+            ManaCost = 0.06f; // 6% of base mana
+            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            DamageBase = cf.AvgRwWeaponDmgUnhasted * 0.50f;
+            //
+            Initialize();
+        }
+    }
+    #endregion
 
-    public class BlackArrow : Ability { }
-    public class SilencingShot : Ability { }
-    public class ScorpidSting : Ability { }
-    public class ViperSting : Ability { }
-    public class RapidFire : Ability { }
+    #region DoTs
+    public class BlackArrowDoT : DoT
+    {
+        /// <summary>
+        /// <b>Black Arrow</b>, 6% Base Mana, 5-35yd, Instant, 30 sec Cd
+        /// <para>Fires a Black Arrow at the target, increasing all damage done by you
+        /// to the target by 6%, and dealing [RAP * 0.1 + 2765] Shadow Damage over 15
+        /// sec. Black Arrow shares a cooldown with Trap spells.</para>
+        /// </summary>
+        /// <TalentsAffecting>Black Arrow (Requires Talent)</TalentsAffecting>
+        /// <GlyphsAffecting></GlyphsAffecting>
+        public BlackArrowDoT(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "Black Arrow";
+            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
+            ReqTalent = true;
+            Talent2ChksValue = Talents.BlackArrow;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+            //Targets += StatS.BonusTargets;
+            Cd = 30f; // In Seconds
+            Duration = 15f;
+            TimeBtwnTicks = 1f; // In Seconds
+            ManaCostisPerc = true;
+            ManaCost = 0.06f; // 6% of base mana
+            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            DamageBase = StatS.RangedAttackPower * 0.10f + 2765f;
+            //
+            Initialize();
+        }
+        public override float TickSize {
+            get {
+                if (!Validated) { return 0f; }
+
+                float damage = Damage;
+                /*float DmgBonusBase = (StatS.AttackPower * combatFactors._c_rwItemSpeed) / 14f
+                                   + (combatFactors.RW.MaxDamage + combatFactors.RW.MinDamage) / 2f;
+                float DmgBonusU75 = 0.75f * 1.00f;
+                float DmgBonusO75 = 0.25f * 1.35f;
+                float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)
+                             * (1f + StatS.BonusDamageMultiplier)
+                             * DamageBonus;
+                float GlyphMOD = Talents.GlyphOfRending ? 7f / 5f : 1f;
+
+                float damageUnder75 = (DamageBase + DmgBonusBase) * DmgBonusU75;
+                float damageOver75 = (DamageBase + DmgBonusBase) * DmgBonusO75;
+
+                float TheDamage = (damageUnder75 + damageOver75) * DmgMod;
+
+                float TickSize = (TheDamage * GlyphMOD) / NumTicks;*/
+
+                return Damage * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusShadowDamageMultiplier) / NumTicks;
+            }
+        }
+        public override float GetDPS(float acts)
+        {
+            float dmgonuse = TickSize;
+            float numticks = NumTicks * (acts /*- addMisses - addDodges - addParrys*/);
+            float result = GetDmgOverTickingTime(acts) / FightDuration;
+            return result;
+        }
+    }
+    public class BlackArrowBuff : BuffEffect
+    {
+        /// <summary>
+        /// <b>Black Arrow</b>, 6% Base Mana, 5-35yd, Instant, 30 sec Cd
+        /// <para>Fires a Black Arrow at the target, increasing all damage done by you
+        /// to the target by 6%, and dealing [RAP * 0.1 + 2765] Shadow Damage over 15
+        /// sec. Black Arrow shares a cooldown with Trap spells.</para>
+        /// </summary>
+        /// <TalentsAffecting>Black Arrow (Requires Talent)</TalentsAffecting>
+        /// <GlyphsAffecting></GlyphsAffecting>
+        public BlackArrowBuff(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "Black Arrow";
+            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
+            ReqTalent = true;
+            Talent2ChksValue = Talents.BlackArrow;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+            //Targets += StatS.BonusTargets;
+            Cd = 30f; // In Seconds
+            ManaCostisPerc = true;
+            ManaCost = 0.06f; // 6% of base mana
+            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            Effect = new SpecialEffect(Trigger.Use,
+                new Stats() { BonusDamageMultiplier = 0.06f, },
+                Duration, Cd);
+            //
+            Initialize();
+        }
+    }
+    #endregion
+
+    #region Stings
+    public class SerpentSting : DoT {
+        /// <summary>
+        /// <b>Serpent Sting</b>, 9% Base Mana, 5-35yd, Instant, No Cd
+        /// <para>Stings the target, causing [RAP * 0.2 + 1210] Nature
+        /// damage over 15 sec. Only one Sting per Hunter can be active
+        /// on any one target.</para>
+        /// </summary>
+        /// <TalentsAffecting></TalentsAffecting>
+        /// <GlyphsAffecting>Glyph of Serpent Sting [+6 sec Dur]</GlyphsAffecting>
+        public SerpentSting(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "Serpent Sting";
+            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+            //Targets += StatS.BonusTargets;
+            TimeBtwnTicks = 3f; // In Seconds
+            Duration = 15f + (Talents.GlyphOfSerpentSting ? 6f : 0f);
+            ManaCostisPerc = true;
+            ManaCost = 0.09f; // 9% of base mana
+            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            DamageBase = StatS.RangedAttackPower * 0.2f + 1210f;
+            //
+            Initialize();
+        }
+        public override float TickSize
+        {
+            get
+            {
+                if (!Validated) { return 0f; }
+
+                float damage = Damage;
+                /*float DmgBonusBase = (StatS.AttackPower * combatFactors._c_rwItemSpeed) / 14f
+                                   + (combatFactors.RW.MaxDamage + combatFactors.RW.MinDamage) / 2f;
+                float DmgBonusU75 = 0.75f * 1.00f;
+                float DmgBonusO75 = 0.25f * 1.35f;
+                float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)
+                             * (1f + StatS.BonusDamageMultiplier)
+                             * DamageBonus;
+                float GlyphMOD = Talents.GlyphOfRending ? 7f / 5f : 1f;
+
+                float damageUnder75 = (DamageBase + DmgBonusBase) * DmgBonusU75;
+                float damageOver75 = (DamageBase + DmgBonusBase) * DmgBonusO75;
+
+                float TheDamage = (damageUnder75 + damageOver75) * DmgMod;
+
+                float TickSize = (TheDamage * GlyphMOD) / NumTicks;*/
+
+                return Damage * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusShadowDamageMultiplier) / NumTicks;
+            }
+        }
+        public override float GetDPS(float acts)
+        {
+            float dmgonuse = TickSize;
+            float numticks = NumTicks * (acts /*- addMisses - addDodges - addParrys*/);
+            float result = GetDmgOverTickingTime(acts) / FightDuration;
+            return result;
+        }
+    }
+    public class ChimeraShot_Serpent : Ability { }
+    public class ScorpidSting : Ability {
+        /// <summary>
+        /// <b>Scorpid Sting</b>, 11% Base Mana, 5-35yd, Instant, No Cd
+        /// <para>Stings the target, reducing chance to hit with melee and
+        /// ranged attacks by 3% for 20 sec. Only one Sting per Hunter can
+        /// be active on any one target.</para>
+        /// </summary>
+        /// <TalentsAffecting></TalentsAffecting>
+        /// <GlyphsAffecting></GlyphsAffecting>
+        public ScorpidSting(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "Scorpid Sting";
+            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+            //Targets += StatS.BonusTargets;
+            ManaCostisPerc = true;
+            ManaCost = 0.11f; // 11% of base mana
+            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            //
+            Initialize();
+        }
+    }
+    public class ViperSting : Ability {
+        /// <summary>
+        /// <b>Viper Sting</b>, 8% Base Mana, 5-35yd, Instant, 15 sec Cd
+        /// <para>Stings the target, draining 4% mana over 8 sec (up to a
+        /// maximum of 8% of the caster's maximum mana), and energizing
+        /// the Hunter equal to 300% of the amount drained. Only one
+        /// Sting per Hunter can be active on any one target.</para>
+        /// </summary>
+        /// <TalentsAffecting></TalentsAffecting>
+        /// <GlyphsAffecting></GlyphsAffecting>
+        public ViperSting(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "Viper Sting";
+            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+            //Targets += StatS.BonusTargets;
+            Cd = 15f; // In Seconds
+            ManaCostisPerc = true;
+            ManaCost = 0.08f; // 8% of base mana
+            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            //
+            Initialize();
+        }
+    }
+    #endregion
+
     public class ImmolationTrap : Ability { }
     public class Readiness : Ability { }
     public class BeastialWrath : Ability { }
-    public class BloodFury : Ability { }
-    public class Berserk : Ability { }
 
-    public class ChimeraShot_Serpent : Ability { }
-    public class SerpentSting : Ability { }
+    #region Buff Effects
+    public class RapidFire : BuffEffect
+    {
+        /// <summary>
+        /// <b>Rapid Fire</b>, 3% Base Mana, , , Instant, 5 min Cd
+        /// <para>Increases ranged attack speed by 40% for 15 sec.</para>
+        /// </summary>
+        /// <TalentsAffecting></TalentsAffecting>
+        /// <GlyphsAffecting>Glyph of Rapid Fire [+8% Haste Bonus]</GlyphsAffecting>
+        public RapidFire(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "Rapid Fire";
+            //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_;
+            Cd = (5f - Talents.RapidKilling) * 60f; // In Seconds
+            Duration = 15f;
+            ManaCostisPerc = true;
+            ManaCost = 0.03f;
+            StanceOkDef = StanceOkArms = StanceOkFury = true;
+            UseHitTable = false;
+            //
+            Effect = new SpecialEffect(Trigger.Use,
+                    new Stats() { RangedHaste = 0.40f + (Talents.GlyphOfRapidFire ? 0.08f : 0f), },
+                    Duration, Cd);
+            if (Talents.RapidRecuperation > 0) {
+                Effect2 = new SpecialEffect(Trigger.Use,
+                        new Stats() { ManaRestore = StatS.Mana * (0.02f * Talents.RapidRecuperation) * Duration / 3f, },
+                        Duration, Cd);
+            } else { Effect2 = null; }
+            //
+            Initialize();
+        }
+    }
+    #endregion
 }
