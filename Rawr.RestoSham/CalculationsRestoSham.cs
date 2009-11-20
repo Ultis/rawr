@@ -341,7 +341,7 @@ namespace Rawr.RestoSham
                 stats.SpellHaste = .3f / (60 * options.FightLength);
             calcStats.TotalManaPool = (((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
                 ((character.ShamanTalents.GlyphofManaTideTotem ? 0.4f : 0)))))) * (options.ManaTideEveryCD ? 1 : 0)) + 
-                stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
+                stats.Mana + onUse + (stats.ManaRestore * 60 * options.FightLength) + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
                 (options.BurstPercentage * .01f)) + ((stats.Mp5 / 5) * 60 * options.FightLength) - HeroismMana;
             calcStats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect)
                 + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit +
@@ -567,7 +567,7 @@ namespace Rawr.RestoSham
             float ESUsage = (float)Math.Round(((options.FightLength * 60) / ESTimer), 0);
             float Time = (options.FightLength * 60) - (1.5f * ESUsage) - 4;
             float Converter = Time / (options.FightLength * 60);
-            calcStats.MAPS = ((calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / (60f * options.FightLength) * Converter) - ESMPS;
+            calcStats.MAPS = ((calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength) + stats.ManaRestore ) / (60f * options.FightLength) * Converter) - ESMPS;
             float MAPSConvert = (float)Math.Min((calcStats.MAPS / (calcStats.MUPS * Converter)), 1);
             calcStats.BurstHPS = (calcStats.BurstHPS * Converter) + ESHPS;
             calcStats.SustainedHPS = ((SustHPS * Converter) * MAPSConvert) + ESHPS;
@@ -746,6 +746,7 @@ namespace Rawr.RestoSham
                 TotemHWSpellpower = stats.TotemHWSpellpower,
                 TotemLHWSpellpower = stats.TotemLHWSpellpower,
                 TotemThunderhead = stats.TotemThunderhead,
+                ManaRestore = stats.ManaRestore,
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier
