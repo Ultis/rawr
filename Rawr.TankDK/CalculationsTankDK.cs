@@ -104,16 +104,10 @@ namespace Rawr.TankDK {
 
 				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Defense
 				        RedId = thick[3], YellowId = thick[3], BlueId = thick[3], PrismaticId = thick[3], MetaId = austere },
-//				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Defense 
-//				        RedId = thick[3], YellowId = thick[2], BlueId = thick[3], PrismaticId = thick[2], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Dodge
 				        RedId = subtle[3], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[3], MetaId = austere },
-//				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Dodge
-//				        RedId = subtle[2], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[2], MetaId = austere },
 				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Stamina
 				        RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = austere },
-//				    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Stamina
-//				        RedId = solid[3], YellowId = solid[3], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
 				};
             }
         }
@@ -274,16 +268,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// be trimmed down further if some aren't typically used. ItemType.None should almost
         /// always be included, because that type includes items with no proficiancy requirement, such
         /// as rings, necklaces, cloaks, held in off hand items, etc.
-        /// 
-        /// EXAMPLE:
-        /// relevantItemTypes = new List<ItemType>(new ItemType[]
-        /// {
-        ///     ItemType.None,
-        ///     ItemType.Leather,
-        ///     ItemType.Idol,
-        ///     ItemType.Staff,
-        ///     ItemType.TwoHandMace
-        /// });
+
         /// </summary>
         public override List<ItemType> RelevantItemTypes {
             get {
@@ -293,8 +278,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                         // Pulling out Leather & Mail.
                         // While it may be fine for a DPS class to under gear for an instance, the armor value of 
                         // Plate really makes a difference for Tanks.
-                        // ItemType.Leather,
-                        // ItemType.Mail,
                         ItemType.Plate,
                         ItemType.Sigil,
                         ItemType.Polearm,
@@ -478,6 +461,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // However, the special effects will modify the incoming stats for all aspects, so we have 
             // ensure that as we iterate, we don't count whole sets of stats twice.
 
+            #region Special Effects
             // For now we just factor them in once.
             StatsSpecialEffects sse = new StatsSpecialEffects(character, stats, ct);
             Stats statSE = new Stats();
@@ -489,7 +473,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             statSE.Strength = StatConversion.ApplyMultiplier(statSE.Strength, stats.BonusStrengthMultiplier);
             statSE.Agility = StatConversion.ApplyMultiplier(statSE.Agility, stats.BonusAgilityMultiplier);
             statSE.Stamina = StatConversion.ApplyMultiplier(statSE.Stamina, stats.BonusStaminaMultiplier);
-            statSE.Stamina = (float)Math.Floor(statSE.Stamina);
+//            statSE.Stamina = (float)Math.Floor(statSE.Stamina);
             statSE.Armor = StatConversion.ApplyMultiplier(statSE.Armor, stats.BaseArmorMultiplier);
             statSE.AttackPower = StatConversion.ApplyMultiplier(statSE.AttackPower, stats.BonusAttackPowerMultiplier);
             statSE.BonusArmor = StatConversion.ApplyMultiplier(statSE.BonusArmor, stats.BonusArmorMultiplier);
@@ -510,7 +494,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             stats.Strength = StatConversion.ApplyMultiplier(stats.Strength, statSE.BonusStrengthMultiplier);
             stats.Agility = StatConversion.ApplyMultiplier(stats.Agility, statSE.BonusAgilityMultiplier);
             stats.Stamina = StatConversion.ApplyMultiplier(stats.Stamina, statSE.BonusStaminaMultiplier);
-            stats.Stamina = (float)Math.Floor(stats.Stamina);
+//            stats.Stamina = (float)Math.Floor(stats.Stamina);
             stats.Armor = StatConversion.ApplyMultiplier(stats.Armor, statSE.BaseArmorMultiplier);
             stats.AttackPower = StatConversion.ApplyMultiplier(stats.AttackPower, statSE.BonusAttackPowerMultiplier);
             stats.BonusArmor = StatConversion.ApplyMultiplier(stats.BonusArmor, statSE.BonusArmorMultiplier);
@@ -522,6 +506,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             stats.Miss = fBaseMiss;
 
             stats.Accumulate(statSE);
+
+            #endregion // Special effects 
 
             // refresh avoidance w/ the new stats.
             float[] fAvoidance = new float[(uint)HitResult.NUM_HitResult];
@@ -695,7 +681,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // Now that we have the Avg. Boss Attack speed, let's figure how many attacks in 20 secs.
                 float AttacksFor20 = Math.Min(20f, 20f / fBossAverageAttackSpeed);
                 float MOBhealing = stats.Health * .04f * (AttacksFor20 * fChanceToGetHit); // how many attacks get through avoidance.
-                stats.Healed += MOBhealing * Math.Max(1f, fFightDuration / 3); // Fire it off every time we can and at least once per fight.
+                stats.Healed += MOBhealing; // Fire it off every time we can and at least once per fight.
             }
 
             #region Anti-Magic Shell
@@ -1255,8 +1241,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         }
 
         /// <summary>Build the talent special effects.</summary>
-        private void AccumulateTalents(Stats FullCharacterStats, Character character) {
-//            Stats sReturn = new Stats();
+        private void AccumulateTalents(Stats FullCharacterStats, Character character) 
+        {
             Stats newStats = new Stats();
             float fDamageDone = 0f;
             // ok... I don't like that we have to do some evaluation at this point.
@@ -1298,6 +1284,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // 2H weapon spec.
             // 2% per point increased damage
+            // Implmented in weapon section above.
 
             // Rune Tap
             // Convert 1 BR to 10% health.
@@ -1306,19 +1293,17 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 newStats = new Stats();
                 float fCD = 60f;
                 newStats.Healed = (fHealth * .1f);
-                if (character.DeathKnightTalents.ImprovedRuneTap == 0) 
-                {
-                    FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
-                }
-                else
+                if (character.DeathKnightTalents.ImprovedRuneTap > 0) 
                 {
                     // Improved Rune Tap.
                     // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
                     fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
-                    newStats.Healed = StatConversion.ApplyMultiplier(newStats.Healed, (0.33f * character.DeathKnightTalents.ImprovedRuneTap));
+                    newStats.Healed += (newStats.Healed * (0.33f * character.DeathKnightTalents.ImprovedRuneTap));
                     FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
                 }
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
             }
+
             // Dark Conviction 
             // Increase Crit w/ weapons, spells, and abilities by 1% per point.
             if (character.DeathKnightTalents.DarkConviction > 0) {
@@ -1358,10 +1343,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Cast on the enemy
             // buff that lasts 20 secs or 20 hits
             // heals the target for 4% of max health for each damage dealing hit from that enemy to the target of that enemy.
-            if (character.DeathKnightTalents.MarkOfBlood > 0) 
-            {
-                // Implemented in Mitigation section above.
-            }
+            // Implemented in Mitigation section above.
 
             // Bloody Vengence
             // 1% per point bonus to physical damage for 30 secs after a crit w/ up to 3 stacks.
@@ -1394,8 +1376,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 newStats = new Stats();
                 // TODO: figure out how much damage the worms do.
                 fDamageDone = 100f;
-                newStats.Healed = (fDamageDone * 1.5f);
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, 20, 0, .03f * character.DeathKnightTalents.Bloodworms));
+                float fBWAttackSpeed = 2f;
+                float fBWDuration = 20f;
+                newStats.Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f);
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, fBWDuration, 0, .03f * character.DeathKnightTalents.Bloodworms));
             }
 
             // Hysteria
@@ -1414,10 +1398,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Improved Blood Presence
             // while in frost or unholy, you retain the 2% per point healing from blood presence
             // Healing done to you is increased by 5% per point
-            if (character.DeathKnightTalents.ImprovedBloodPresence > 0) 
-            {
-                // Implmented above.
-            }
+            // Implemented above.
 
             // Improved Death Strike
             // increase damage of DS by 15% per point 
@@ -1438,13 +1419,17 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (character.DeathKnightTalents.VampiricBlood > 0) {
                 newStats = new Stats();
                 // TODO: need to figure out how to factor this back in.
-//                newStats.Health = (fHealth * 0.15f);
+                newStats.Health = (fHealth * 0.15f);
                 newStats.HealingReceivedMultiplier += 0.35f;
 
                 float fVBCD = 60f;
                 if (m_bT9_4PC) fVBCD -= 10f;
-
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 10f, fVBCD));
+                float fVBDur = 10f;
+                if (character.DeathKnightTalents.GlyphofVampiricBlood == true)
+                {
+                    fVBDur += 5f;
+                }
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fVBDur, fVBCD));
             }
 
             // Will of the Necropolis

@@ -182,8 +182,9 @@ namespace Rawr.TankDK
             {
                 OH = new Weapon(character.OffHand.Item, stats, calcOpts, OHExpertise);
 
+                // Talent: Nerves of Cold Steel 
                 float OHMult = .05f * (float)talents.NervesOfColdSteel;
-                OH.damage *= .5f + OHMult;
+                OH.damage *= (.5f + OHMult);
 
                 //need this for weapon swing procs
                 //combinedSwingTime = 1f / MH.hastedSpeed + 1f / OH.hastedSpeed;
