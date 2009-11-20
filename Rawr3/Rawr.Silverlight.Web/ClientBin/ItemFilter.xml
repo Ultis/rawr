@@ -337,7 +337,7 @@
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Ahn'kahet</Name>
           <Pattern>Ahn'kahet</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -347,11 +347,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Azjol-Nerub</Name>
           <Pattern>Azjol-Nerub</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -361,11 +361,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>The Culling of Stratholme</Name>
           <Pattern>Stratholme</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -375,11 +375,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Drak'Tharon Keep</Name>
           <Pattern>Drak'Tharon</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -389,11 +389,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Gundrak</Name>
           <Pattern>Gundrak</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -403,11 +403,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Halls of Lightning</Name>
           <Pattern>Halls of Lightning</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -417,11 +417,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Halls of Stone</Name>
           <Pattern>Halls of Stone</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -431,11 +431,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Nexus</Name>
           <Pattern>Nexus</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -445,11 +445,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>The Oculus</Name>
           <Pattern>Oculus</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -459,11 +459,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Trial of the Champion</Name>
           <Pattern>Trial of the Champion</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -473,11 +473,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Utgarde Keep</Name>
           <Pattern>Utgarde Keep</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -487,11 +487,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Utgarde Pinnacle</Name>
           <Pattern>Utgarde Pinnacle</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -501,11 +501,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Violet Hold</Name>
           <Pattern>Violet Hold</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -515,10 +515,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Dungeons</Name>
       <Pattern>(?&lt;! Heroic.*)(Ahn'kahet|Azjol-Nerub|Stratholme|Drak'Tharon|Gundrak|Halls of Lightning|Halls of Stone|Nexus|Oculus|Trial of the Champion|Utgarde Keep|Utgarde Pinnacle|Violet Hold)</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -528,13 +528,13 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Ahn'kahet</Name>
           <Pattern>Ahn'kahet</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -544,11 +544,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Azjol-Nerub</Name>
           <Pattern>Azjol-Nerub</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -558,11 +558,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>The Culling of Stratholme</Name>
           <Pattern>Stratholme</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -572,11 +572,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Drak'Tharon Keep</Name>
           <Pattern>Drak'Tharon</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -586,11 +586,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Gundrak</Name>
           <Pattern>Gundrak</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -600,11 +600,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Halls of Lightning</Name>
           <Pattern>Halls of Lightning</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -614,11 +614,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Halls of Stone</Name>
           <Pattern>Halls of Stone</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -628,11 +628,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Nexus</Name>
           <Pattern>Nexus</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -642,11 +642,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>The Oculus</Name>
           <Pattern>Oculus</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -656,11 +656,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Trial of the Champion</Name>
           <Pattern>Trial of the Champion</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -670,11 +670,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Utgarde Keep</Name>
           <Pattern>Utgarde Keep</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -684,11 +684,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Utgarde Pinnacle</Name>
           <Pattern>Utgarde Pinnacle</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -698,11 +698,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Violet Hold</Name>
           <Pattern>Violet Hold</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -712,10 +712,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Dungeons (Heroic)</Name>
       <Pattern>Heroic.*(Ahn'kahet|Azjol-Nerub|Stratholme|Drak'Tharon|Gundrak|Halls of Lightning|Halls of Stone|Nexus|Oculus|Trial of the Champion|Utgarde Keep|Utgarde Pinnacle|Violet Hold)|Sjonnir The Ironshaper in $|Zuramat the Obliterator in $|Drakkari Elemental in $</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -725,7 +725,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
@@ -735,7 +735,7 @@
               <RegexList>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Patchwerk</Name>
                   <Pattern>Patchwerk</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -745,11 +745,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Grobbulus</Name>
                   <Pattern>Grobbulus</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -759,11 +759,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Gluth</Name>
                   <Pattern>Gluth</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -773,11 +773,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Thaddius</Name>
                   <Pattern>Thaddius</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -787,10 +787,10 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Construct Quarter</Name>
               <Pattern>Patchwerk|Grobbulus|Gluth|Thaddius</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -800,13 +800,13 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Noth the Plaguebringer</Name>
                   <Pattern>Noth the Plaguebringer</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -816,11 +816,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Heigan the Unclean</Name>
                   <Pattern>Heigan the Unclean</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -830,11 +830,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Loatheb</Name>
                   <Pattern>Loatheb</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -844,10 +844,10 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Plague Quarter</Name>
               <Pattern>Noth the Plaguebringer|Heigan the Unclean|Loatheb</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -857,13 +857,13 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Anub'Rekhan</Name>
                   <Pattern>Anub'Rekhan</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -873,11 +873,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Grand Widow Faerlina</Name>
                   <Pattern>Grand Widow Faerlina</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -887,11 +887,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Maexxna</Name>
                   <Pattern>Maexxna</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -901,10 +901,10 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Spider Quarter</Name>
               <Pattern>Anub'Rekhan|Grand Widow Faerlina|Maexxna</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -914,13 +914,13 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Instructor Razuvious</Name>
                   <Pattern>Instructor Razuvious</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -930,11 +930,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Gothik the Harvester</Name>
                   <Pattern>Gothik the Harvester</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -944,11 +944,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>The Four Horsemen</Name>
                   <Pattern>The Four Horsemen|Four Horsemen Chest</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -958,10 +958,10 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Military Quarter</Name>
               <Pattern>Instructor Razuvious|Gothik the Harvester|The Four Horsemen|Four Horsemen Chest</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -971,13 +971,13 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Sapphiron</Name>
                   <Pattern>Sapphiron</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -987,11 +987,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Kel'Thuzad</Name>
                   <Pattern>Kel'Thuzad</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1001,10 +1001,10 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Frostwyrm Lair</Name>
               <Pattern>Sapphiron|Kel'Thuzad</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1014,10 +1014,10 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Naxxramas</Name>
           <Pattern>Naxxramas</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1027,11 +1027,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Eye of Eternity</Name>
           <Pattern>Eye of Eternity</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1041,11 +1041,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Obsidian Sanctum</Name>
           <Pattern>Obsidian Sanctum</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1055,13 +1055,13 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Archavon the Stone Watcher</Name>
               <Pattern>Archavon the Stone Watcher</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1071,11 +1071,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Emalon the Storm Watcher</Name>
               <Pattern>Emalon the Storm Watcher</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1085,11 +1085,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Koralon the Flame Watcher</Name>
               <Pattern>Koralon the Flame Watcher</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1099,10 +1099,10 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Vault of Archavon</Name>
           <Pattern>Archavon</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1112,10 +1112,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 7 Raids (10)</Name>
       <Pattern>(?&lt;! Heroic.*)(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon)$|(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon) \(10</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -1125,7 +1125,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
@@ -1135,7 +1135,7 @@
               <RegexList>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Patchwerk</Name>
                   <Pattern>Patchwerk</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1145,11 +1145,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Grobbulus</Name>
                   <Pattern>Grobbulus</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1159,11 +1159,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Gluth</Name>
                   <Pattern>Gluth</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1173,11 +1173,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Thaddius</Name>
                   <Pattern>Thaddius</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1187,10 +1187,10 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Construct Quarter</Name>
               <Pattern>Patchwerk|Grobbulus|Gluth|Thaddius</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1200,13 +1200,13 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Noth the Plaguebringer</Name>
                   <Pattern>Noth the Plaguebringer</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1216,11 +1216,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Heigan the Unclean</Name>
                   <Pattern>Heigan the Unclean</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1230,11 +1230,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Loatheb</Name>
                   <Pattern>Loatheb</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1244,10 +1244,10 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Plague Quarter</Name>
               <Pattern>Noth the Plaguebringer|Heigan the Unclean|Loatheb</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1257,13 +1257,13 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Anub'Rekhan</Name>
                   <Pattern>Anub'Rekhan</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1273,11 +1273,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Grand Widow Faerlina</Name>
                   <Pattern>Grand Widow Faerlina</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1287,11 +1287,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Maexxna</Name>
                   <Pattern>Maexxna</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1301,10 +1301,10 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Spider Quarter</Name>
               <Pattern>Anub'Rekhan|Grand Widow Faerlina|Maexxna</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1314,13 +1314,13 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Instructor Razuvious</Name>
                   <Pattern>Instructor Razuvious</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1330,11 +1330,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Gothik the Harvester</Name>
                   <Pattern>Gothik the Harvester</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1344,11 +1344,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>The Four Horsemen</Name>
                   <Pattern>The Four Horsemen|Four Horsemen Chest</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1358,10 +1358,10 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Military Quarter</Name>
               <Pattern>Instructor Razuvious|Gothik the Harvester|The Four Horsemen|Four Horsemen Chest</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1371,13 +1371,13 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Sapphiron</Name>
                   <Pattern>Sapphiron</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1387,11 +1387,11 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList />
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>Kel'Thuzad</Name>
                   <Pattern>Kel'Thuzad</Pattern>
                   <MinItemLevel>0</MinItemLevel>
@@ -1401,10 +1401,10 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>true</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Frostwyrm Lair</Name>
               <Pattern>Sapphiron|Kel'Thuzad</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1414,10 +1414,10 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Naxxramas</Name>
           <Pattern>Naxxramas</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1427,11 +1427,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Eye of Eternity</Name>
           <Pattern>Eye of Eternity</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1441,11 +1441,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Obsidian Sanctum</Name>
           <Pattern>Obsidian Sanctum</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1455,13 +1455,13 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Archavon the Stone Watcher</Name>
               <Pattern>Archavon the Stone Watcher</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1471,11 +1471,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Emalon the Storm Watcher</Name>
               <Pattern>Emalon the Storm Watcher</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1485,11 +1485,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Koralon the Flame Watcher</Name>
               <Pattern>Koralon the Flame Watcher</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1499,10 +1499,10 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Vault of Archavon</Name>
           <Pattern>Archavon</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1512,10 +1512,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 7 Raids (25)</Name>
       <Pattern>Heroic.*(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon)$|(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon) \(25|Sartharion in $|Alexstrasza's Gift in $</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -1525,7 +1525,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
@@ -1533,7 +1533,7 @@
           <RegexList>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Flame Leviathan</Name>
               <Pattern>Flame Leviathan</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1543,11 +1543,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Ignis the Furnace Master</Name>
               <Pattern>Ignis the Furnace Master</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1557,11 +1557,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Razorscale</Name>
               <Pattern>Razorscale</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1571,11 +1571,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>XT-002 Deconstructor</Name>
               <Pattern>XT-002 Deconstructor</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1585,11 +1585,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Assembly of Iron</Name>
               <Pattern>Stormcaller Brundir|Runemaster Molgeim|Steelbreaker</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1599,11 +1599,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Kologarn</Name>
               <Pattern>Cache of Living Stone</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1613,11 +1613,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Auriaya</Name>
               <Pattern>Auriaya</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1627,11 +1627,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Mimiron</Name>
               <Pattern>Cache of Innovation</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1641,11 +1641,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Hodir</Name>
               <Pattern>Cache of Winter</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1655,11 +1655,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Thorim</Name>
               <Pattern>Cache of Storms</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1669,11 +1669,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Freya</Name>
               <Pattern>Freya's Gift</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1683,11 +1683,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>General Vezax</Name>
               <Pattern>General Vezax</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1697,11 +1697,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Yogg-Saron</Name>
               <Pattern>Yogg-Saron</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1711,11 +1711,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Algalon the Observer</Name>
               <Pattern>Algalon the Observer</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1725,10 +1725,10 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Ulduar</Name>
           <Pattern>Ulduar</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1738,11 +1738,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>?? (Refresh from Wowhead)</Name>
           <Pattern>(?&lt;!Heroic.*)Ulduar$</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1752,10 +1752,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 8 Raids (10)</Name>
       <Pattern>in Ulduar \(10|(?&lt;!Heroic.*)Ulduar$</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -1765,7 +1765,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
@@ -1773,7 +1773,7 @@
           <RegexList>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Flame Leviathan</Name>
               <Pattern>Flame Leviathan</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1783,11 +1783,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Ignis the Furnace Master</Name>
               <Pattern>Ignis the Furnace Master</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1797,11 +1797,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Razorscale</Name>
               <Pattern>Razorscale</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1811,11 +1811,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>XT-002 Deconstructor</Name>
               <Pattern>XT-002 Deconstructor</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1825,11 +1825,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Assembly of Iron</Name>
               <Pattern>Stormcaller Brundir|Runemaster Molgeim|Steelbreaker</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1839,11 +1839,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Kologarn</Name>
               <Pattern>Cache of Living Stone</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1853,11 +1853,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Auriaya</Name>
               <Pattern>Auriaya</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1867,11 +1867,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Mimiron</Name>
               <Pattern>Cache of Innovation</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1881,11 +1881,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Hodir</Name>
               <Pattern>Cache of Winter</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1895,11 +1895,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Thorim</Name>
               <Pattern>Cache of Storms</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1909,11 +1909,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Freya</Name>
               <Pattern>Freya's Gift</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1923,11 +1923,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>General Vezax</Name>
               <Pattern>General Vezax</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1937,11 +1937,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Yogg-Saron</Name>
               <Pattern>Yogg-Saron</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1951,11 +1951,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Algalon the Observer</Name>
               <Pattern>Algalon the Observer</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -1965,10 +1965,10 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Ulduar</Name>
           <Pattern>Heroic Ulduar$|Ulduar \(25</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -1978,10 +1978,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 8 Raids (25)</Name>
       <Pattern>Ulduar \(25|(Heroic.*)Ulduar$</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -1991,7 +1991,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
@@ -1999,7 +1999,7 @@
           <RegexList>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Northrend Beasts</Name>
               <Pattern>Icehowl</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2009,11 +2009,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Lord Jaraxxus</Name>
               <Pattern>Lord Jaraxxus</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2023,11 +2023,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Faction Champions</Name>
               <Pattern>Champions' Cache</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2037,11 +2037,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Twin Val'kyr</Name>
               <Pattern>Fjola Lightbane|Eydis Darkbane</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2051,11 +2051,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Anub'arak</Name>
               <Pattern>Anub'arak</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2065,10 +2065,10 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Trial of the Crusader</Name>
           <Pattern>(?&lt;! Heroic )Trial of the Crusader \(10</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2078,13 +2078,13 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Northrend Beasts</Name>
               <Pattern>Icehowl</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2094,11 +2094,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Lord Jaraxxus</Name>
               <Pattern>Lord Jaraxxus</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2108,11 +2108,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Faction Champions</Name>
               <Pattern>Champions' Cache</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2122,11 +2122,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Twin Val'kyr</Name>
               <Pattern>Fjola Lightbane|Eydis Darkbane</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2136,11 +2136,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Anub'arak</Name>
               <Pattern>Anub'arak</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2150,11 +2150,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Tribute Chest</Name>
               <Pattern>Tribute Chest</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2164,10 +2164,10 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Trial of the Grand Crusader</Name>
           <Pattern>Heroic Trial of the Crusader \(10|Tribute Chest</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2177,10 +2177,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 9 Raids (10)</Name>
       <Pattern>Trial of the Crusader \(10|(?&lt;!Heroic.*)Trial of the Crusader$</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -2190,7 +2190,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
@@ -2198,7 +2198,7 @@
           <RegexList>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Northrend Beasts</Name>
               <Pattern>Icehowl</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2208,11 +2208,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Lord Jaraxxus</Name>
               <Pattern>Lord Jaraxxus</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2222,11 +2222,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Faction Champions</Name>
               <Pattern>Champions' Cache</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2236,11 +2236,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Twin Val'kyr</Name>
               <Pattern>Fjola Lightbane|Eydis Darkbane</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2250,11 +2250,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Anub'arak</Name>
               <Pattern>Anub'arak</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2264,10 +2264,10 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Trial of the Crusader</Name>
           <Pattern>(?&lt;! Heroic )Trial of the Crusader \(25</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2277,13 +2277,13 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Northrend Beasts</Name>
               <Pattern>Icehowl</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2293,11 +2293,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Lord Jaraxxus</Name>
               <Pattern>Lord Jaraxxus</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2307,11 +2307,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Faction Champions</Name>
               <Pattern>Champions' Cache(?! in $)</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2321,11 +2321,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Twin Val'kyr</Name>
               <Pattern>Fjola Lightbane|Eydis Darkbane</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2335,11 +2335,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Anub'arak</Name>
               <Pattern>Anub'arak</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2349,11 +2349,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Tribute Chest</Name>
               <Pattern>Tribute Chest</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2363,11 +2363,11 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
-              <OtherRegexEnabled>false</OtherRegexEnabled>
+              <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>? (Refresh from Armory)</Name>
               <Pattern>Champions' Cache in $</Pattern>
               <MinItemLevel>0</MinItemLevel>
@@ -2377,10 +2377,10 @@
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
               <AppliesToGems>true</AppliesToGems>
-              <Enabled>false</Enabled>
+              <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Trial of the Grand Crusader</Name>
           <Pattern>Heroic Trial of the Crusader \(25|Champions' Cache in $|Tribute Chest</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2390,10 +2390,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Tier 9 Raids (25)</Name>
       <Pattern>Trial of the Crusader \(25|Champions' Cache in $|(Heroic.*)Trial of the Crusader$</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -2403,13 +2403,13 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Onyxia's Lair</Name>
           <Pattern>(?&lt;!Heroic )Onyxia's Lair</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2419,11 +2419,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Onyxia's Lair (Heroic)</Name>
           <Pattern>Heroic Onyxia's Lair</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2433,10 +2433,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Onyxia's Lair</Name>
       <Pattern>Onyxia's Lair|Onyxia in $|Onyxia</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -2446,13 +2446,13 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Heroism</Name>
           <Pattern>Emblem of Heroism|Arcanist Ivrenne</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2462,11 +2462,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Valor</Name>
           <Pattern>Emblem of Valor|Magister Brasael|Arcanist Adurin</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2476,11 +2476,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Conquest</Name>
           <Pattern>Emblem of Conquest</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2490,11 +2490,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Triumph</Name>
           <Pattern>(?&lt;! 1 \[)Emblem of Triumph</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2504,11 +2504,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Badge of Justice</Name>
           <Pattern>Badge of Justice</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2518,11 +2518,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Kirin Tor Rings</Name>
           <Pattern>(Band|Loop|Ring|Signet) of the Kirin Tor|Harold Winston</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2532,11 +2532,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Champion's Seal</Name>
           <Pattern>Champion's Seal</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2546,11 +2546,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Armor Tokens</Name>
           <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Emblem of Triumph</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2560,11 +2560,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Stone Keeper's Shard</Name>
           <Pattern>Stone Keeper's Shard</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2574,11 +2574,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Venture Coin</Name>
           <Pattern>Purkom|'Grizzly' D\. Adams</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2588,10 +2588,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Special Currency (Badges, Rings, etc.)</Name>
       <Pattern>Purchasable with|Harold Winston|Valerie Langrom|Magister Brasael|Dubin Clay|Lady Palanseer|Arcanist Ivrenne|Paldesse|Purkom|'Grizzly' D\. Adams|Brightlink</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -2601,13 +2601,13 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Alchemy</Name>
           <Pattern>Alchemy</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2617,11 +2617,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>false</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Blacksmithing</Name>
           <Pattern>Blacksmithing</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2631,11 +2631,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>false</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Engineer</Name>
           <Pattern>Engineering</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2645,11 +2645,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>false</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Inscription</Name>
           <Pattern>Inscription</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2659,11 +2659,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>false</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Jewelcrafting (non-gem)</Name>
           <Pattern>Jewelcrafting</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2673,11 +2673,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>false</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Leatherworking</Name>
           <Pattern>Leatherworking</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2687,11 +2687,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>false</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Tailoring</Name>
           <Pattern>Tailoring</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2701,11 +2701,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>false</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>? (Refresh from Wowhead)</Name>
           <Pattern>Created via</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2715,10 +2715,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>false</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Crafted</Name>
       <Pattern>Created|Crafted</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -2728,13 +2728,13 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>false</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Alliance Vanguard</Name>
           <Pattern>Logistics Officer Brighton|Alliance Vanguard</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2744,11 +2744,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Argent Crusade</Name>
           <Pattern>Veteran Crusader Aliocha Segard|Argent Crusade</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2758,11 +2758,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Frenzyheart Tribe</Name>
           <Pattern>Tanak</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2772,11 +2772,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Horde Expedition</Name>
           <Pattern>Horde Expedition</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2786,11 +2786,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Kalu'ak</Name>
           <Pattern>Kalu'ak</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2800,11 +2800,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Kirin Tor</Name>
           <Pattern>Archmage Alvareaux</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2814,11 +2814,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Knights of the Ebon Blade</Name>
           <Pattern>Duchess Mynx|Knights of the Ebon</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2828,11 +2828,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>The Oracles</Name>
           <Pattern>Geen</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2842,11 +2842,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>The Sons of Hodir</Name>
           <Pattern>Lillehoff|Sons of Hodir</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2856,11 +2856,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Wyrmrest Accord</Name>
           <Pattern>Cielstrasza</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2870,10 +2870,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Factions &amp; Vendors</Name>
       <Pattern>Friendly|Honored|Revered|Exalted|Duchess Mynx|Archmage Alvareaux|Cielstrasza|Tanak|Geen|Veteran Crusader Aliocha Segard|Lillehoff|Horde Expedition|Kalu'ak|Logistics Officer Brighton|Alliance Vanguard</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -2883,13 +2883,13 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Mark of Honor</Name>
           <Pattern>Mark of Honor</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2899,11 +2899,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Honor Points</Name>
           <Pattern>Honor Points|Doris Volanthius|Lieutenant Tristia</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2913,11 +2913,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Arena Points</Name>
           <Pattern>Arena Points|Blazzek the Biter|Argex Irongut|Nargle Lashcord|Grex Brainboiler|Trapjaw Rix|for 0  Points| 0 PVP</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2927,11 +2927,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Venture Coin</Name>
           <Pattern>Venture Coin</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2941,11 +2941,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>? (Refresh from Armory)</Name>
           <Pattern>(?&gt;! 0 )PvP Points</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -2955,10 +2955,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>PVP</Name>
       <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Doris Volanthius|Evee Copperspring</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -2968,11 +2968,11 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Quest Rewards</Name>
       <Pattern>Reward from</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -2982,11 +2982,11 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>World Drop</Name>
       <Pattern>World Drop</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -2996,11 +2996,11 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Burning Crusade</Name>
       <Pattern>Sunwell|Yrma|Theremis|Tydormu|Black Temple|Hyjal|Veynna Dawnstar|Tempest Keep|Serpentshrine Cavern|Zul'Aman|G'eras|Anwehu|Badge of Justice|Asuur|Karazhan|Gruul's Lair|Magtheridon's Lair|Old Hillsbrad Foothills|Blood Furnace|Slave Pens|Arcatraz|Underbog|Shattered Halls|Hellfire Ramparts|Magisters' Terrace|Auchenai Crypts|Shadow Labyrinth|Sethekk Halls|Steamvault|Mana-Tombs|Botanica|Mechanar|Black Morass|Spirit Shard|Forgotten Vanquisher</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -3010,11 +3010,11 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Classic</Name>
       <Pattern>Zul'Gurub|Ahn'Qiraj</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -3024,13 +3024,13 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Refresh from Armory</Name>
           <Pattern>Unknown|Champions' Cache in $|Onyxia in $|Alexstrasza's Gift in $|Sjonnir The Ironshaper in $|Zuramat the Obliterator in $|Drakkari Elemental in $</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -3040,11 +3040,11 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Refresh from Wowhead</Name>
           <Pattern>Drops from  in $|(?&lt;!Reward from.*) in Ulduar$</Pattern>
           <MinItemLevel>0</MinItemLevel>
@@ -3054,10 +3054,10 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
+          <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Unknown (Refresh)</Name>
       <Pattern>(?&gt;!Onyxia.*)Unknown|Drops from  in $|Lady Palanseer|Champions' Cache in $|Onyxia in $|Alexstrasza's Gift in $|Sjonnir The Ironshaper in $|Zuramat the Obliterator in $|Drakkari Elemental in $</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -3067,11 +3067,11 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Not found on armory</Name>
       <Pattern>Not found on armory</Pattern>
       <MinItemLevel>0</MinItemLevel>
@@ -3081,7 +3081,7 @@
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
@@ -3372,20 +3372,6 @@
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>false</AppliesToGems>
       <Enabled>false</Enabled>
-    </ItemFilterRegex>
-    <ItemFilterRegex>
-      <RegexList />
-      <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>ALL</Name>
-      <Pattern>.*</Pattern>
-      <MinItemLevel>0</MinItemLevel>
-      <MaxItemLevel>1000</MaxItemLevel>
-      <MinItemQuality>Temp</MinItemQuality>
-      <MaxItemQuality>Heirloom</MaxItemQuality>
-      <AdditiveFilter>true</AdditiveFilter>
-      <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>false</AppliesToGems>
-      <Enabled>true</Enabled>
     </ItemFilterRegex>
   </RegexList>
   <OtherRegexEnabled>true</OtherRegexEnabled>

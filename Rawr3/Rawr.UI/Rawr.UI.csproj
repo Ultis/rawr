@@ -71,8 +71,11 @@
     <Compile Include="BossHandler\BossPicker.xaml.cs">
       <DependentUpon>BossPicker.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BuffsControl.xaml.cs">
+    <Compile Include="Buffs\BuffsControl.xaml.cs">
       <DependentUpon>BuffsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Buffs\SaveBuffSetDialog.xaml.cs">
+      <DependentUpon>SaveBuffSetDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="CalculationDisplay.xaml.cs">
       <DependentUpon>CalculationDisplay.xaml</DependentUpon>
@@ -205,7 +208,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
-    <Page Include="BuffsControl.xaml">
+    <Page Include="Buffs\BuffsControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buffs\SaveBuffSetDialog.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>

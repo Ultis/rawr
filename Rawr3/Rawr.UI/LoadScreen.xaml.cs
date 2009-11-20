@@ -25,6 +25,7 @@ namespace Rawr.UI
         {
             Classes = new Dictionary<string, Type>();
             Classes["Talents.xml"] = typeof(SavedTalentSpec);
+            Classes["BuffSets.xml"] = typeof(SavedBuffSet);
             Classes["EnchantCache.xml"] = typeof(Enchant);
             Classes["ItemCache.xml"] = typeof(ItemCache);
             Classes["BuffCache.xml"] = typeof(Buff);
@@ -57,7 +58,7 @@ namespace Rawr.UI
                     StringWriter sw = new StringWriter();
                     info.Invoke(null, new object[] { sw });
 
-					Stream writer = FileUtils.GetFileStream(kvp.Key, true);
+                    Stream writer = FileUtils.GetFileStream(kvp.Key, true);
                     StringReader reader = new StringReader(sw.ToString());
 
                     int READ_CHUNK = 1024 * 1024;
@@ -101,27 +102,27 @@ namespace Rawr.UI
                 Calculations.RegisterModel(typeof(Rawr.Bear.CalculationsBear));
                 Calculations.RegisterModel(typeof(Rawr.Cat.CalculationsCat));
                 Calculations.RegisterModel(typeof(Rawr.DPSDK.CalculationsDPSDK));
-				Calculations.RegisterModel(typeof(Rawr.DPSWarr.CalculationsDPSWarr));
-				//Calculations.RegisterModel(typeof(Rawr.Elemental.CalculationsElemental));
-				Calculations.RegisterModel(typeof(Rawr.Enhance.CalculationsEnhance));
-				Calculations.RegisterModel(typeof(Rawr.Healadin.CalculationsHealadin));
-				//Calculations.RegisterModel(typeof(Rawr.HolyPriest.CalculationsHolyPriest));
-				//Calculations.RegisterModel(typeof(Rawr.Hunter.CalculationsHunter));
-				Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
-				Calculations.RegisterModel(typeof(Rawr.Moonkin.CalculationsMoonkin));
+                Calculations.RegisterModel(typeof(Rawr.DPSWarr.CalculationsDPSWarr));
+                //Calculations.RegisterModel(typeof(Rawr.Elemental.CalculationsElemental));
+                Calculations.RegisterModel(typeof(Rawr.Enhance.CalculationsEnhance));
+                Calculations.RegisterModel(typeof(Rawr.Healadin.CalculationsHealadin));
+                //Calculations.RegisterModel(typeof(Rawr.HolyPriest.CalculationsHolyPriest));
+                //Calculations.RegisterModel(typeof(Rawr.Hunter.CalculationsHunter));
+                Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
+                Calculations.RegisterModel(typeof(Rawr.Moonkin.CalculationsMoonkin));
 #if SILVERLIGHT
-				Calculations.RegisterModel(typeof(Rawr.ProtPaladin.CalculationsProtPaladin));
+                Calculations.RegisterModel(typeof(Rawr.ProtPaladin.CalculationsProtPaladin));
 #endif
-				Calculations.RegisterModel(typeof(Rawr.ProtWarr.CalculationsProtWarr));
-				//Calculations.RegisterModel(typeof(Rawr.RestoSham.CalculationsRestoSham));
-				Calculations.RegisterModel(typeof(Rawr.Retribution.CalculationsRetribution));
-				Calculations.RegisterModel(typeof(Rawr.Rogue.CalculationsRogue));
-				//Calculations.RegisterModel(typeof(Rawr.ShadowPriest.CalculationsShadowPriest));
-				Calculations.RegisterModel(typeof(Rawr.TankDK.CalculationsTankDK));
-				Calculations.RegisterModel(typeof(Rawr.Tree.CalculationsTree));
-				//Calculations.RegisterModel(typeof(Rawr.Warlock.CalculationsWarlock));
+                Calculations.RegisterModel(typeof(Rawr.ProtWarr.CalculationsProtWarr));
+                //Calculations.RegisterModel(typeof(Rawr.RestoSham.CalculationsRestoSham));
+                Calculations.RegisterModel(typeof(Rawr.Retribution.CalculationsRetribution));
+                Calculations.RegisterModel(typeof(Rawr.Rogue.CalculationsRogue));
+                //Calculations.RegisterModel(typeof(Rawr.ShadowPriest.CalculationsShadowPriest));
+                Calculations.RegisterModel(typeof(Rawr.TankDK.CalculationsTankDK));
+                Calculations.RegisterModel(typeof(Rawr.Tree.CalculationsTree));
+                //Calculations.RegisterModel(typeof(Rawr.Warlock.CalculationsWarlock));
 
-				string[] files = new List<string>(Classes.Keys).ToArray();
+                string[] files = new List<string>(Classes.Keys).ToArray();
 
                 FileUtils f = new FileUtils(files, progressUpdated);
                 f.DownloadIfNotExists(new EventHandler(filesLoaded));
@@ -136,24 +137,24 @@ namespace Rawr.UI
             }
         }
 
-		private void progressUpdated(object sender, EventArgs e)
-		{
-			FileUtils f = sender as FileUtils;
-			TextBlockLoadProgress.Text = f.Status;
-			ProgressBarLoadProgress.Value = f.Progress;
-		}
+        private void progressUpdated(object sender, EventArgs e)
+        {
+            FileUtils f = sender as FileUtils;
+            TextBlockLoadProgress.Text = f.Status;
+            ProgressBarLoadProgress.Value = f.Progress;
+        }
 
         private void filesLoaded(object sender, EventArgs e)
         {
             FileUtils f = sender as FileUtils;
-			foreach (string file in f.Filenames)
-			{
-				MethodInfo info = Classes[file].GetMethod("Load");
-				if (info != null)
-				{
-					info.Invoke(null, new object[] { new StreamReader(FileUtils.GetFileStream(file, false), Encoding.UTF8) });
-				}
-			}
+            foreach (string file in f.Filenames)
+            {
+                MethodInfo info = Classes[file].GetMethod("Load");
+                if (info != null)
+                {
+                    info.Invoke(null, new object[] { new StreamReader(FileUtils.GetFileStream(file, false), Encoding.UTF8) });
+                }
+            }
             if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
         }
 	}

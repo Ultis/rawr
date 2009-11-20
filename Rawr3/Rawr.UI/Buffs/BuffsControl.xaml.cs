@@ -20,10 +20,7 @@ namespace Rawr.UI
             get { return character; }
             set
             {
-                if (character != null)
-                {
-                    character.CalculationsInvalidated -= new EventHandler(Character_ItemsChanged);
-                }
+                if (character != null) { character.CalculationsInvalidated -= new EventHandler(Character_ItemsChanged); }
                 character = value;
                 _loadingBuffsFromCharacter = true;
                 BuildControls();
@@ -33,6 +30,7 @@ namespace Rawr.UI
                     LoadBuffsFromCharacter();
                 }
                 UpdateEnabledStates();
+                UpdateSavedSets();
                 _loadingBuffsFromCharacter = false;
             }
         }
@@ -48,34 +46,36 @@ namespace Rawr.UI
             }
             LoadBuffsFromCharacter();
             UpdateEnabledStates();
+            UpdateSavedSets();
         }
 
         private bool _loadingBuffsFromCharacter;
         private void LoadBuffsFromCharacter()
         {
-			try
-			{
-				_loadingBuffsFromCharacter = true;
+            try
+            {
+                _loadingBuffsFromCharacter = true;
 
-				if (CheckBoxes == null || Character == null || Character.ActiveBuffs == null) return;
-				foreach (KeyValuePair<Buff, CheckBox> kvp in CheckBoxes)
-				{
-					kvp.Value.IsChecked = false;                
-				}
-				List<CheckBox> toCheck = new List<CheckBox>();
-				foreach (Buff b in Character.ActiveBuffs)
-				{
-					if (CheckBoxes.ContainsKey(b))
-					{
-						toCheck.Add(CheckBoxes[b]);
-					}
-				}
-				foreach (CheckBox cb in toCheck) cb.IsChecked = true;
-			}
-			finally
-			{
-				_loadingBuffsFromCharacter = false;
-			}
+                if (CheckBoxes == null || Character == null || Character.ActiveBuffs == null) return;
+                foreach (KeyValuePair<Buff, CheckBox> kvp in CheckBoxes)
+                {
+                    kvp.Value.IsChecked = false;
+                }
+                List<CheckBox> toCheck = new List<CheckBox>();
+                foreach (Buff b in Character.ActiveBuffs)
+                {
+                    if (CheckBoxes.ContainsKey(b))
+                    {
+                        toCheck.Add(CheckBoxes[b]);
+                    }
+                }
+                foreach (CheckBox cb in toCheck) cb.IsChecked = true;
+            }
+            finally
+            {
+                _loadingBuffsFromCharacter = false;
+                UpdateSavedSets();
+            }
         }
 
         private void UpdateCharacterBuffs()
@@ -193,13 +193,88 @@ namespace Rawr.UI
                 Buff b = (Buff)cb.Tag;
                 UpdateEnabledStates();
                 UpdateCharacterBuffs();
+                UpdateSavedSets();
                 Character.OnCalculationsInvalidated();
             }
         }
 
-		public BuffsControl()
-		{
-			InitializeComponent();
-		}
-	}
+        public BuffsControl()
+        {
+            InitializeComponent();
+        }
+
+        public bool HasCustomSets { get; private set; }
+
+        private bool updating;
+        private void UpdateSavedSets()
+        {
+            SavedBuffSetList savedSets = SavedBuffSet.AllSets;
+            SavedBuffSet current = null;
+            updating = true;
+            foreach (SavedBuffSet sbs in savedSets)
+            {
+                if (sbs.Equals(Character.ActiveBuffs))
+                {
+                    current = sbs;
+                    break;
+                }
+            }
+
+            if (current != null)
+            {
+                HasCustomSets = false;
+                SavedCombo.ItemsSource = savedSets;
+                SavedCombo.SelectedItem = current;
+                SaveDeleteButton.Content = "Delete";
+            }
+            else
+            {
+                HasCustomSets = true;
+                current = new SavedBuffSet("Custom", Character.ActiveBuffs);
+                SavedBuffSetList currentList = new SavedBuffSetList();
+                currentList.AddRange(savedSets);
+                currentList.Add(current);
+                SavedCombo.ItemsSource = null;
+                SavedCombo.ItemsSource = currentList;
+                SavedCombo.SelectedItem = current;
+                SaveDeleteButton.Content = "Save";
+            }
+            updating = false;
+        }
+
+        private void SaveDelete_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            SavedBuffSet currentSet = SavedCombo.SelectedItem as SavedBuffSet;
+            if (HasCustomSets)
+            {
+                SaveBuffSetDialog dialog = new SaveBuffSetDialog(currentSet.BuffSet);
+                dialog.Closed += new EventHandler(dialog_Closed);
+                dialog.Show();
+            }
+            else
+            {
+                SavedBuffSet.AllSets.Remove(currentSet);
+                UpdateSavedSets();
+            }
+        }
+
+        private void dialog_Closed(object sender, EventArgs e)
+        {
+            if (((ChildWindow)sender).DialogResult.GetValueOrDefault(false))
+            {
+                UpdateSavedSets();
+            }
+        }
+
+        private void SavedCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!updating)
+            {
+                SavedBuffSet newSet = SavedCombo.SelectedItem as SavedBuffSet;
+                Character.ActiveBuffs = newSet.BuffSet;
+                //character_ClassChanged(this, EventArgs.Empty);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+    }
 }

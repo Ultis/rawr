@@ -60,6 +60,9 @@
     <Compile Include="..\..\Rawr.Hunter\CharacterCalculationsHunter.cs">
       <Link>CharacterCalculationsHunter.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Hunter\CombatFactors.cs">
+      <Link>CombatFactors.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Hunter\ComparisonCalculationHunter.cs">
       <Link>ComparisonCalculationHunter.cs</Link>
     </Compile>
@@ -77,6 +80,12 @@
     </Compile>
     <Compile Include="..\..\Rawr.Hunter\ShotPriority.cs">
       <Link>ShotPriority.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Hunter\Skills.Base.cs">
+      <Link>Skills.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Hunter\Skills.Shots.cs">
+      <Link>Skills.Shots.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelHunter.xaml.cs">
       <DependentUpon>CalculationOptionsPanelHunter.xaml</DependentUpon>

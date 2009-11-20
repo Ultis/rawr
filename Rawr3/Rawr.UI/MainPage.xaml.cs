@@ -11,10 +11,10 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Rawr;
 #if !SILVERLIGHT
 using Microsoft.Win32;
 #endif
+using Rawr;
 
 namespace Rawr.UI
 {
@@ -172,7 +172,6 @@ namespace Rawr.UI
             Character.SerializeCalculationOptions();
         }
 
-
         private void ModelCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!Character.IsLoading)
@@ -182,8 +181,7 @@ namespace Rawr.UI
                 Calculations.LoadModel(Calculations.GetModel(Character.CurrentModel));
             }
         }
-
-
+        
         private void Instance_ItemsChanged(object sender, EventArgs e)
         {
             Character.InvalidateItemInstances();
@@ -465,6 +463,7 @@ namespace Rawr.UI
 					"EnchantCache.xml",
 					"ItemCache.xml",
 					"Talents.xml",
+                    "BuffSets.xml",
 					"ItemSource.xml",
 					"ItemFilter.xml",
 					"Settings.xml"}).Delete();

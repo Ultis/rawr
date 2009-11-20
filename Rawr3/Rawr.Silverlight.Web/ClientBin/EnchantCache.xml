@@ -692,7 +692,7 @@
     <Slot>Head</Slot>
     <Stats>
       <Stamina>10</Stamina>
-      <BlockValue>15</BlockValue>
+      <BlockValue>30</BlockValue>
       <DefenseRating>10</DefenseRating>
     </Stats>
   </Enchant>
@@ -702,7 +702,7 @@
     <Slot>Legs</Slot>
     <Stats>
       <Stamina>10</Stamina>
-      <BlockValue>15</BlockValue>
+      <BlockValue>30</BlockValue>
       <DefenseRating>10</DefenseRating>
     </Stats>
   </Enchant>
@@ -2171,7 +2171,7 @@
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>2986</Id>
+    <Id>3875</Id>
     <Name>Lesser Inscription of the Axe</Name>
     <Slot>Shoulders</Slot>
     <Stats>
@@ -2207,7 +2207,7 @@
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>2978</Id>
+    <Id>3876</Id>
     <Name>Lesser Inscription of the Pinnacle</Name>
     <Slot>Shoulders</Slot>
     <Stats>
@@ -2474,11 +2474,27 @@
     </Stats>
   </Enchant>
   <Enchant>
+    <Id>3878</Id>
+    <Name>Mind Amplification Dish</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Stamina>45</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
     <Id>3859</Id>
     <Name>Springy Arachnoweave</Name>
     <Slot>Back</Slot>
     <Stats>
       <SpellPower>27</SpellPower>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3605</Id>
+    <Name>Flexweave Underlay</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <Agility>23</Agility>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2604,37 +2620,23 @@
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>3878</Id>
-    <Name>Mind Amplification Dish</Name>
-    <Slot>Head</Slot>
+    <Id>3790</Id>
+    <Name>Black Magic</Name>
+    <Slot>OneHand</Slot>
     <Stats>
-      <Stamina>45</Stamina>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3605</Id>
-    <Name>Flexweave Underlay</Name>
-    <Slot>Back</Slot>
-    <Stats>
-      <Agility>23</Agility>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3875</Id>
-    <Name>Lesser Inscription of the Axe</Name>
-    <Slot>Shoulders</Slot>
-    <Stats>
-      <AttackPower>30</AttackPower>
-      <CritRating>10</CritRating>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3876</Id>
-    <Name>Lesser Inscription of the Pinnacle</Name>
-    <Slot>Shoulders</Slot>
-    <Stats>
-      <DodgeRating>15</DodgeRating>
-      <DefenseRating>10</DefenseRating>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellHit</Trigger>
+          <Stats>
+            <HasteRating>250</HasteRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>35</Cooldown>
+          <Chance>0.35</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
   </Enchant>
 </ArrayOfEnchant>

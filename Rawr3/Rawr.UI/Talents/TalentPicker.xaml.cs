@@ -18,7 +18,7 @@ namespace Rawr.UI
             get { return character; }
             set
             {
-                if (character != null) character.ClassChanged -= new EventHandler(character_ClassChanged);
+                if (character != null) { character.ClassChanged -= new EventHandler(character_ClassChanged); }
                 character = value;
                 if (character != null)
                 {
@@ -42,9 +42,9 @@ namespace Rawr.UI
             UpdateSavedSpecs();
         }
 
-		public TalentPicker()
-		{
-			// Required to initialize variables
+        public TalentPicker()
+        {
+            // Required to initialize variables
             InitializeComponent();
             Tree1.Tree = 0;
             Tree2.Tree = 1;
@@ -54,7 +54,7 @@ namespace Rawr.UI
             Tree2.TalentsChanged += new EventHandler(TalentsChanged);
             Tree3.TalentsChanged += new EventHandler(TalentsChanged);
             Glyph.TalentsChanged += new EventHandler(TalentsChanged);
-		}
+        }
 
         public void TalentsChanged(object sender, EventArgs e)
         {

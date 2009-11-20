@@ -162,6 +162,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>NetworkSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SavedBuffSet.cs" />
     <Compile Include="SavedTalentSpec.cs" />
     <Compile Include="SavedVariablesParser.cs" />
     <Compile Include="SerializableDictionary.cs" />

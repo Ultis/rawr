@@ -567,6 +567,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DefaultDataFiles\BuffSets.xml" />
     <Content Include="DefaultDataFiles\ItemCache.xml" />
     <Content Include="DefaultDataFiles\ItemFilter.xml" />
     <Content Include="DefaultDataFiles\ItemSource.xml" />

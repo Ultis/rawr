@@ -1,0 +1,1576 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<ArrayOfSavedBuffSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SavedBuffSet>
+    <Name>UnBuffed</Name>
+    <SetAsString>System.Collections.Generic.List`1[Rawr.Buff]</SetAsString>
+    <BuffSet>
+      <Buff>
+        <Name>Strength of Earth Totem</Name>
+        <Group>Agility and Strength</Group>
+        <Stats>
+          <Agility>155</Agility>
+          <Strength>155</Strength>
+        </Stats>
+        <Source>Shaman</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Enhancing Totems (Agility/Strength)</Name>
+            <Stats>
+              <Agility>23</Agility>
+              <Strength>23</Strength>
+            </Stats>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+              <string xsi:nil="true" />
+              <string xsi:nil="true" />
+              <string xsi:nil="true" />
+              <string xsi:nil="true" />
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+          <string xsi:nil="true" />
+          <string xsi:nil="true" />
+          <string xsi:nil="true" />
+          <string xsi:nil="true" />
+          <string>Agility and Strength</string>
+          <string>Agility</string>
+          <string>Strength</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Enhancing Totems (Agility/Strength)</Name>
+        <Stats>
+          <Agility>23</Agility>
+          <Strength>23</Strength>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+          <string xsi:nil="true" />
+          <string xsi:nil="true" />
+          <string xsi:nil="true" />
+          <string xsi:nil="true" />
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </BuffSet>
+  </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>FullyBuffed</Name>
+    <SetAsString>System.Collections.Generic.List`1[Rawr.Buff]</SetAsString>
+    <BuffSet>
+      <Buff>
+        <Name>Strength of Earth Totem</Name>
+        <Group>Agility and Strength</Group>
+        <Stats>
+          <Agility>155</Agility>
+          <Strength>155</Strength>
+        </Stats>
+        <Source>Shaman</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Enhancing Totems (Agility/Strength)</Name>
+            <Stats>
+              <Agility>23</Agility>
+              <Strength>23</Strength>
+            </Stats>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Agility and Strength</string>
+          <string>Agility</string>
+          <string>Strength</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Enhancing Totems (Agility/Strength)</Name>
+        <Stats>
+          <Agility>23</Agility>
+          <Strength>23</Strength>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Stoneskin Totem</Name>
+        <Group>Armor (Stackable)</Group>
+        <Stats>
+          <BonusArmor>1150</BonusArmor>
+        </Stats>
+        <Source>Shaman</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Improved Stoneskin Totem (Armor)</Name>
+            <Stats>
+              <BonusArmor>230</BonusArmor>
+            </Stats>
+            <Source>Shaman</Source>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Armor (Stackable)</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Improved Stoneskin Totem (Armor)</Name>
+        <Stats>
+          <BonusArmor>230</BonusArmor>
+        </Stats>
+        <Source>Shaman</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Devotion Aura</Name>
+        <Group>Armor</Group>
+        <Stats>
+          <BonusArmor>1205</BonusArmor>
+        </Stats>
+        <Source>Paladin</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Improved Devotion Aura (Armor)</Name>
+            <Stats>
+              <BonusArmor>602</BonusArmor>
+            </Stats>
+            <Source>Prot Paladin</Source>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Armor</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Improved Devotion Aura (Armor)</Name>
+        <Stats>
+          <BonusArmor>602</BonusArmor>
+        </Stats>
+        <Source>Prot Paladin</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Ancestral Healing</Name>
+        <Group>Damage Reduction (Major %)</Group>
+        <Stats>
+          <DamageTakenMultiplier>-0.1</DamageTakenMultiplier>
+        </Stats>
+        <Source>Resto Shaman</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Damage Reduction (Major %)</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Blessing of Might</Name>
+        <Group>Attack Power</Group>
+        <Stats>
+          <AttackPower>550</AttackPower>
+        </Stats>
+        <Source>Paladin</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Improved Blessing of Might</Name>
+            <Stats>
+              <AttackPower>137</AttackPower>
+            </Stats>
+            <Source>Ret Paladin</Source>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Attack Power</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Improved Blessing of Might</Name>
+        <Stats>
+          <AttackPower>137</AttackPower>
+        </Stats>
+        <Source>Ret Paladin</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Abomination's Might</Name>
+        <Group>Attack Power (%)</Group>
+        <Stats>
+          <BonusAttackPowerMultiplier>0.1</BonusAttackPowerMultiplier>
+        </Stats>
+        <Source>Blood Death Knight</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Attack Power (%)</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Sanctified Retribution</Name>
+        <Group>Damage (%)</Group>
+        <Stats>
+          <BonusDamageMultiplier>0.03</BonusDamageMultiplier>
+        </Stats>
+        <Source>Ret Paladin</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Damage (%)</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Blessing of Sanctuary</Name>
+        <Group>Damage Reduction (Minor %)</Group>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>DamageAvoided</Trigger>
+              <Stats>
+                <ManaorEquivRestore>0.02</ManaorEquivRestore>
+              </Stats>
+              <Duration>0</Duration>
+              <Cooldown>0</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+          <DamageTakenMultiplier>-0.03</DamageTakenMultiplier>
+        </Stats>
+        <Source>Prot Paladin</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Blessing of Sanctuary (Str/Sta Bonus)</Name>
+            <Group>Stat Multiplier</Group>
+            <Stats>
+              <BonusStrengthMultiplier>0.1</BonusStrengthMultiplier>
+              <BonusStaminaMultiplier>0.1</BonusStaminaMultiplier>
+            </Stats>
+            <Source>Prot Paladin</Source>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string>SanctuaryKings</string>
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Damage Reduction (Minor %)</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Heroism/Bloodlust</Name>
+        <Group>Heroism/Bloodlust</Group>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <SpellHaste>0.3</SpellHaste>
+                <PhysicalHaste>0.3</PhysicalHaste>
+                <RangedHaste>0.3</RangedHaste>
+              </Stats>
+              <Duration>40</Duration>
+              <Cooldown>600</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <Source>Shaman</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Heroism/Bloodlust</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Swift Retribution</Name>
+        <Group>Haste (%)</Group>
+        <Stats>
+          <SpellHaste>0.03</SpellHaste>
+          <PhysicalHaste>0.03</PhysicalHaste>
+          <RangedHaste>0.03</RangedHaste>
+        </Stats>
+        <Source>Ret Paladin</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Haste (%)</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Commanding Shout</Name>
+        <Group>Health</Group>
+        <Stats>
+          <Health>2250</Health>
+        </Stats>
+        <Source>Warrior</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Commanding Presence (Health)</Name>
+            <Stats>
+              <Health>562</Health>
+            </Stats>
+            <Source>Warrior</Source>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Health</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Commanding Presence (Health)</Name>
+        <Stats>
+          <Health>562</Health>
+        </Stats>
+        <Source>Warrior</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Rampage</Name>
+        <Group>Physical Critical Strike Chance</Group>
+        <Stats>
+          <PhysicalCrit>0.05</PhysicalCrit>
+        </Stats>
+        <Source>Fury Warrior</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Physical Critical Strike Chance</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Windfury Totem</Name>
+        <Group>Physical Haste</Group>
+        <Stats>
+          <PhysicalHaste>0.16</PhysicalHaste>
+        </Stats>
+        <Source>Shaman</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Improved Windfury Totem</Name>
+            <Stats>
+              <PhysicalHaste>0.03448283</PhysicalHaste>
+            </Stats>
+            <Source>Enhance Shaman</Source>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Physical Haste</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Improved Windfury Totem</Name>
+        <Stats>
+          <PhysicalHaste>0.03448283</PhysicalHaste>
+        </Stats>
+        <Source>Enhance Shaman</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Power Word: Fortitude</Name>
+        <Group>Stamina</Group>
+        <Stats>
+          <Stamina>165</Stamina>
+        </Stats>
+        <Source>Priest</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Improved Power Word: Fortitude</Name>
+            <Stats>
+              <Stamina>49</Stamina>
+            </Stats>
+            <Source>Priest</Source>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Stamina</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Improved Power Word: Fortitude</Name>
+        <Stats>
+          <Stamina>49</Stamina>
+        </Stats>
+        <Source>Priest</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Mark of the Wild</Name>
+        <Group>Stat Add</Group>
+        <Stats>
+          <BonusArmor>750</BonusArmor>
+          <Agility>37</Agility>
+          <Stamina>37</Stamina>
+          <Strength>37</Strength>
+          <Intellect>37</Intellect>
+          <Spirit>37</Spirit>
+          <FrostResistanceBuff>54</FrostResistanceBuff>
+          <NatureResistanceBuff>54</NatureResistanceBuff>
+          <FireResistanceBuff>54</FireResistanceBuff>
+          <ShadowResistanceBuff>54</ShadowResistanceBuff>
+          <ArcaneResistanceBuff>54</ArcaneResistanceBuff>
+        </Stats>
+        <Source>Druid</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Improved Mark of the Wild</Name>
+            <Stats>
+              <BonusArmor>300</BonusArmor>
+              <Agility>14</Agility>
+              <Stamina>14</Stamina>
+              <Strength>14</Strength>
+              <Intellect>14</Intellect>
+              <Spirit>14</Spirit>
+              <FrostResistanceBuff>75</FrostResistanceBuff>
+              <NatureResistanceBuff>75</NatureResistanceBuff>
+              <FireResistanceBuff>75</FireResistanceBuff>
+              <ShadowResistanceBuff>75</ShadowResistanceBuff>
+              <ArcaneResistanceBuff>75</ArcaneResistanceBuff>
+            </Stats>
+            <Source>Druid</Source>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>StatArmor</string>
+          <string>Mark of the Wild</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Improved Mark of the Wild</Name>
+        <Stats>
+          <BonusArmor>300</BonusArmor>
+          <Agility>14</Agility>
+          <Stamina>14</Stamina>
+          <Strength>14</Strength>
+          <Intellect>14</Intellect>
+          <Spirit>14</Spirit>
+          <FrostResistanceBuff>75</FrostResistanceBuff>
+          <NatureResistanceBuff>75</NatureResistanceBuff>
+          <FireResistanceBuff>75</FireResistanceBuff>
+          <ShadowResistanceBuff>75</ShadowResistanceBuff>
+          <ArcaneResistanceBuff>75</ArcaneResistanceBuff>
+        </Stats>
+        <Source>Druid</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Blessing of Kings</Name>
+        <Group>Stat Multiplier</Group>
+        <Stats>
+          <BonusSpiritMultiplier>0.1</BonusSpiritMultiplier>
+          <BonusAgilityMultiplier>0.1</BonusAgilityMultiplier>
+          <BonusIntellectMultiplier>0.1</BonusIntellectMultiplier>
+        </Stats>
+        <Source>Paladin</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Blessing of Kings (Str/Sta Bonus)</Name>
+            <Group>Stat Multiplier</Group>
+            <Stats>
+              <BonusStrengthMultiplier>0.1</BonusStrengthMultiplier>
+              <BonusStaminaMultiplier>0.1</BonusStaminaMultiplier>
+            </Stats>
+            <Source>Paladin</Source>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string>SanctuaryKings</string>
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Blessing of Kings</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Blessing of Kings (Str/Sta Bonus)</Name>
+        <Group>Stat Multiplier</Group>
+        <Stats>
+          <BonusStrengthMultiplier>0.1</BonusStrengthMultiplier>
+          <BonusStaminaMultiplier>0.1</BonusStaminaMultiplier>
+        </Stats>
+        <Source>Paladin</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>SanctuaryKings</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Heroic Presence</Name>
+        <Group>Racial Buffs</Group>
+        <Stats>
+          <SpellHit>0.01</SpellHit>
+          <PhysicalHit>0.01</PhysicalHit>
+        </Stats>
+        <Source>Draenei</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Racial Buffs</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Sunder Armor</Name>
+        <Group>Armor (Major)</Group>
+        <Stats>
+          <ArmorPenetration>0.2</ArmorPenetration>
+        </Stats>
+        <Source>Warrior</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Armor (Major)</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Faerie Fire</Name>
+        <Group>Armor (Minor)</Group>
+        <Stats>
+          <ArmorPenetration>0.05</ArmorPenetration>
+        </Stats>
+        <Source>Druid</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Armor (Minor)</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Heart of the Crusader</Name>
+        <Group>Critical Strike Chance Taken</Group>
+        <Stats>
+          <SpellCrit>0.03</SpellCrit>
+          <PhysicalCrit>0.03</PhysicalCrit>
+        </Stats>
+        <Source>Ret Paladin</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Critical Strike Chance Taken</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Scorpid Sting</Name>
+        <Group>Melee Hit Chance Reduction</Group>
+        <Stats>
+          <Miss>0.03</Miss>
+        </Stats>
+        <Source>Hunter</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Melee Hit Chance Reduction</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Flask of Endless Rage</Name>
+        <Group>Elixirs and Flasks</Group>
+        <Stats>
+          <AttackPower>180</AttackPower>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Flask of Endless Rage (Mixology)</Name>
+            <Stats>
+              <AttackPower>80</AttackPower>
+            </Stats>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Battle Elixir</string>
+          <string>Guardian Elixir</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Indestructible Potion</Name>
+        <Group>Potion</Group>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <BonusArmor>3500</BonusArmor>
+              </Stats>
+              <Duration>120</Duration>
+              <Cooldown>1200</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements>
+          <Buff>
+            <Name>Indestructible Potion (Double Pot Trick)</Name>
+            <Stats>
+              <SpecialEffects>
+                <SpecialEffect>
+                  <Trigger>Use</Trigger>
+                  <Stats>
+                    <BonusArmor>3500</BonusArmor>
+                  </Stats>
+                  <Duration>119</Duration>
+                  <Cooldown>1200</Cooldown>
+                  <Chance>1</Chance>
+                  <MaxStack>1</MaxStack>
+                </SpecialEffect>
+              </SpecialEffects>
+              <SpecialEffectCount>1</SpecialEffectCount>
+            </Stats>
+            <SetThreshold>0</SetThreshold>
+            <Improvements />
+            <IsCustom>false</IsCustom>
+            <AllowedClasses>
+              <CharacterClass>DeathKnight</CharacterClass>
+              <CharacterClass>Druid</CharacterClass>
+              <CharacterClass>Hunter</CharacterClass>
+              <CharacterClass>Mage</CharacterClass>
+              <CharacterClass>Paladin</CharacterClass>
+              <CharacterClass>Priest</CharacterClass>
+              <CharacterClass>Rogue</CharacterClass>
+              <CharacterClass>Shaman</CharacterClass>
+              <CharacterClass>Warlock</CharacterClass>
+              <CharacterClass>Warrior</CharacterClass>
+            </AllowedClasses>
+            <ConflictingBuffs>
+              <string xsi:nil="true" />
+            </ConflictingBuffs>
+          </Buff>
+        </Improvements>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Potion</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Indestructible Potion (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <BonusArmor>3500</BonusArmor>
+              </Stats>
+              <Duration>119</Duration>
+              <Cooldown>1200</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Fish Feast</Name>
+        <Group>Food</Group>
+        <Stats>
+          <Stamina>40</Stamina>
+          <AttackPower>80</AttackPower>
+          <SpellPower>46</SpellPower>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs>
+          <string>Food</string>
+        </ConflictingBuffs>
+      </Buff>
+      <Buff>
+        <Name>Toughness</Name>
+        <Group>Profession Buffs</Group>
+        <Stats>
+          <Stamina>60</Stamina>
+        </Stats>
+        <Source>Mining [450]</Source>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <ConflictingBuffs />
+      </Buff>
+    </BuffSet>
+  </SavedBuffSet>
+</ArrayOfSavedBuffSet>
