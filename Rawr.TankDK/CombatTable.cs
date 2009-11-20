@@ -253,7 +253,8 @@ namespace Rawr.TankDK
 
             //damage multipliers
             float spellPowerMult = 1f + stats.BonusSpellPowerMultiplier;
-            float frostSpellPowerMult = 1f + stats.BonusSpellPowerMultiplier + Math.Max((stats.BonusFrostDamageMultiplier - stats.BonusShadowDamageMultiplier), 0f); //implement razorice here later
+            float frostSpellPowerMult = 1f + stats.BonusSpellPowerMultiplier + Math.Max((stats.BonusFrostDamageMultiplier), 0f); //implement razorice here later
+            float shadowSpellPowerMult = 1f + stats.BonusSpellPowerMultiplier + Math.Max((stats.BonusShadowDamageMultiplier), 0f); //implement razorice here later
 
             float physPowerMult = 1f + stats.BonusPhysicalDamageMultiplier;
             // Covers all % physical damage increases.  Blood Frenzy, FI.
@@ -932,12 +933,12 @@ namespace Rawr.TankDK
 
                 NecrosisMult += spellPowerMult - 1f;
                 BloodPlagueMult += spellPowerMult - 1f;
-                DeathCoilMult += spellPowerMult - 1f;
+                DeathCoilMult += shadowSpellPowerMult - 1f;
                 FrostFeverMult += frostSpellPowerMult - 1f;
                 HowlingBlastMult += frostSpellPowerMult - 1f;
                 IcyTouchMult += frostSpellPowerMult - 1f;
-                UnholyBlightMult += spellPowerMult - 1f;
-                otherShadowMult += spellPowerMult - 1f;
+                UnholyBlightMult += shadowSpellPowerMult - 1f;
+                otherShadowMult += shadowSpellPowerMult - 1f;
                 otherArcaneMult += spellPowerMult - 1f;
                 otherFrostMult += frostSpellPowerMult - 1f;
             }

@@ -1817,7 +1817,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // CF becomes EP - increases magic damage taken by targets 4, 9, 13% in addition to disease damage
             // Increases crit strike chance by 1% per point
             if (character.DeathKnightTalents.EbonPlaguebringer > 0) {
-                FullCharacterStats.BonusCritChance += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
+                FullCharacterStats.PhysicalCrit += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
+                FullCharacterStats.SpellCrit += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
                 float fBonus = 0f;
                 switch (character.DeathKnightTalents.EbonPlaguebringer)
                 {
