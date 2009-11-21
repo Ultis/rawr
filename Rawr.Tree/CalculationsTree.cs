@@ -397,7 +397,13 @@ applied and result is scaled down by 100)",
                     resultNew += effect.GetAverageStats(0.0f, 1.0f, 2.0f, FightDuration);   // 0 cooldown, 100% chance to use
                 } else if (effect.Trigger == Trigger.SpellCast ) {
                     resultNew += effect.GetAverageStats(CastInterval, 1.0f, CastInterval, FightDuration);
-                } else if ( effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellHit) {
+                }
+                else if (effect.Trigger == Trigger.HealingSpellCast)
+                {
+                    // Same as SpellCast, but split to allow easir placement of breakpoints
+                    resultNew += effect.GetAverageStats(CastInterval, 1.0f, CastInterval, FightDuration);
+                }
+                else if (effect.Trigger == Trigger.HealingSpellHit) {
                     // Heal interval measures time between HoTs as well, direct heals are a different interval
                     resultNew += effect.GetAverageStats(HealInterval, 1.0f, CastInterval, FightDuration);
                 } else if (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.HealingSpellCrit) {
@@ -480,11 +486,15 @@ applied and result is scaled down by 100)",
             float rejuvTicksPerMinute = 0;
 
             #region WildGrowthPerMinute
-            float wgCastTime = wildGrowth.CastTime / 60f * rotSettings.WildGrowthPerMinute;
-            float wgMPS = wildGrowth.ManaCost / 60f * rotSettings.WildGrowthPerMinute;
-            float wgHPS = wildGrowth.PeriodicTick * wildGrowth.maxTargets * wildGrowth.Duration / 60f * rotSettings.WildGrowthPerMinute;  // Assume no overhealing
-            castsPerMinute += rotSettings.WildGrowthPerMinute;
-            healsPerMinute += rotSettings.WildGrowthPerMinute * 10; // assumption it will go 10 times ;)
+                // If talent isn't chosen disregard WildGrowth
+            float WildGrowthPerMinute = (calculatedStats.LocalCharacter.DruidTalents.WildGrowth > 0) ? rotSettings.WildGrowthPerMinute : 0;
+                
+            float wgCastTime = wildGrowth.CastTime / 60f * WildGrowthPerMinute;
+            float wgMPS = wildGrowth.ManaCost / 60f * WildGrowthPerMinute;
+            float wgHPS = wildGrowth.PeriodicTick * wildGrowth.maxTargets * wildGrowth.Duration / 60f * WildGrowthPerMinute;  // Assume no overhealing
+
+            castsPerMinute += WildGrowthPerMinute;
+            healsPerMinute += WildGrowthPerMinute * 10; // assumption it will go 10 times ;)
             #endregion
 
             #region HotsOnTanks
@@ -542,7 +552,8 @@ applied and result is scaled down by 100)",
             float swiftHPS = 0.0f;
             float swiftMPS = 0.0f;
             float swiftCastTime = 0.0f;
-            if ((hots > 0) && (rotSettings.SwiftmendPerMin > 0)) {
+            if ((hots > 0) && (rotSettings.SwiftmendPerMin > 0) && ( calculatedStats.LocalCharacter.DruidTalents.Swiftmend > 0) )
+            {
                 swift = new Swiftmend(calculatedStats, stats,(rotSettings.rejuvOnTank ? rejuvenate : null), (rotSettings.rgOnTank ? regrowth : null));
 
                 swiftCastTime = swift.CastTime * rotSettings.SwiftmendPerMin / 60.0f;
